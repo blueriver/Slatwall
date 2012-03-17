@@ -39,39 +39,25 @@ Notes:
 <cfparam name="rc.subscriptionBenefit" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:subscription.listsubscriptionbenefits" type="list">
-	<cfif !rc.edit>
-		<cf_SlatwallActionCaller action="admin:subscription.editsubscriptionbenefit" queryString="subscriptionBenefitID=#rc.subscriptionBenefit.getSubscriptionBenefitID()#" type="list">
-	</cfif>
-</ul>
-
 <cfoutput>
-	<div class="svoadminsubscriptionbenefitdetail">
-		<cfif rc.edit>
-			<form name="BenefitEdit" action="#buildURL('admin:subscription.savesubscriptionbenefit')#" method="post">
-				<input type="hidden" name="subscriptionBenefitID" value="#rc.subscriptionBenefit.getSubscriptionBenefitID()#" />
-		</cfif>
+	<cf_SlatwallDetailForm object="#rc.subscriptionBenefit#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionBenefit#" edit="#rc.edit#" />
 		
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="subscriptionBenefitName" edit="#rc.edit#" first="true">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="accessCodeType" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="priceGroupQuantity" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="priceGroups" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="promotionQuantity" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="promotions" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categoryQuantity" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categories" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contentQuantity" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="content" edit="#rc.edit#">
-		</dl>
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallDetailHeaderSection>
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="subscriptionBenefitName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="accessCodeType" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="priceGroupQuantity" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="priceGroups" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="promotionQuantity" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="promotions" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categoryQuantity" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categories" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contentQuantity" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contents" edit="#rc.edit#">
+			</cf_SlatwallDetailHeaderSection>
+		</cf_SlatwallDetailHeader>
 		
-		<cfif rc.edit>
-				<cf_SlatwallActionCaller action="admin:subscription.listsubscriptionbenefits" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_SlatwallActionCaller action="admin:subscription.savesubscriptionbenefit" type="submit" class="button">
-			</form>
-		</cfif>
-		
-	</div>	
-		
+	</cf_SlatwallDetailForm>
 </cfoutput>
+

@@ -48,6 +48,8 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:product.listproducttype" type="list">
 				<cf_SlatwallActionCaller action="admin:product.listoptiongroup" type="list">
 				<cf_SlatwallActionCaller action="admin:product.listbrand" type="list">
+				<cf_SlatwallActionCaller action="admin:product.listsubscriptionterm" type="list">
+				<cf_SlatwallActionCaller action="admin:product.listsubscriptionbenefit" type="list">
 			</ul>
 		</div>
 	</div>

@@ -55,7 +55,7 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPriceGroup" fkcolumn="subscriptionBenefitID" inversejoincolumn="priceGroupID" cascade="all";
 	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPromotion" fkcolumn="subscriptionBenefitID" inversejoincolumn="promotionID" cascade="all";
 	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
-	property name="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
+	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
 		
 	// Remote Properties
 	
@@ -67,13 +67,19 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	
 	// Non-Persistent Properties
 
-	public Promotion function init(){
+	public any function init(){
 		// set default collections for association management methods
 		if(isNull(variables.priceGroups)){
 		   variables.priceGroups = [];
 		}
 		if(isNull(variables.promotions)){
 		   variables.promotions = [];
+		}
+		if(isNull(variables.categories)){
+		   variables.categories = [];
+		}
+		if(isNull(variables.contents)){
+		   variables.contents = [];
 		}
 		return super.init();
 	}
@@ -89,6 +95,18 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 			arrayPrepend(variables.accessCodeTypeOptions,{name=rbKey("define.none"),value=""});
 		}
 		return variables.accessCodeTypeOptions;
+    }
+    
+    public array function getContentsOptions() {
+		if(!structKeyExists(variables, "contentsOptions")) {
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallContent");
+			smartList.addSelect(propertyIdentifier="title", alias="name");
+			smartList.addSelect(propertyIdentifier="contentID", alias="value");
+			smartList.addFilter(propertyIdentifier="restrictAccessFlag", value="1");
+			smartList.addOrder("title|ASC");
+			variables.contentsOptions = smartList.getRecords();
+		}
+		return variables.contentsOptions;
     }
     
 	

@@ -39,6 +39,36 @@ Notes:
 <cfparam name="rc.promotion" type="any">
 <cfparam name="rc.edit" type="boolean">
 
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.promotion#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallDetailHeaderSection>
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#" title="#$.slatwall.rbkey('define.active')#">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#" first="true">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" value="#dateFormat(rc.promotion.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getStartDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="endDateTime" value="#dateFormat(rc.promotion.getEndDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getEndDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumUseCount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumAccountUseCount" edit="#rc.edit#">
+			</cf_SlatwallDetailHeaderSection>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup>
+			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewards" />
+			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewardexclusions" />
+			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifiers" />
+			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifierexclusions" />
+			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotioncodes" />
+			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotiondescription" />
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
+</cfoutput>
+<!---
+<cfparam name="rc.promotion" type="any">
+<cfparam name="rc.edit" type="boolean">
+
 <!---
 <cfif rc.edit>
 	<cfset getAssetWire().addJSVariable("getProductTypeTreeAPIKey", $.slatwall.getAPIKey('productservice/getproductyypetree','post')) />
@@ -111,3 +141,4 @@ Notes:
 		</form>
 	</div>
 </cfoutput>
+--->

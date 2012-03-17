@@ -92,6 +92,10 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentationPropertyName() {
+		return "title";
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

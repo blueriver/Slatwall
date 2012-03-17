@@ -67,7 +67,7 @@
 				<entry key="BaseEntity"><value>baseService</value></entry>
 				<entry key="Brand"><value>brandService</value></entry>
 				<entry key="BrandProductType"><value>brandService</value></entry>
-				<entry key="Category"><value>categoryService</value></entry>
+				<entry key="Category"><value>contentService</value></entry>
 				<entry key="Comment"><value>commentService</value></entry>
 				<entry key="CommentRelationship"><value>commentService</value></entry>
 				<entry key="Content"><value>contentService</value></entry>

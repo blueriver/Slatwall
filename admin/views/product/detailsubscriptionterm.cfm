@@ -39,36 +39,22 @@ Notes:
 <cfparam name="rc.subscriptionTerm" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:subscription.listsubscriptionterms" type="list">
-	<cfif !rc.edit>
-		<cf_SlatwallActionCaller action="admin:subscription.editsubscriptionterm" queryString="subscriptionTermID=#rc.subscriptionTerm.getSubscriptionTermID()#" type="list">
-	</cfif>
-</ul>
-
 <cfoutput>
-	<div class="svoadminsubscriptiontermdetail">
-		<cfif rc.edit>
-			<form name="TermEdit" action="#buildURL('admin:subscription.savesubscriptionterm')#" method="post">
-				<input type="hidden" name="subscriptionTermID" value="#rc.subscriptionTerm.getSubscriptionTermID()#" />
-		</cfif>
+	<cf_SlatwallDetailForm object="#rc.subscriptionTerm#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionTerm#" edit="#rc.edit#" />
 		
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionTermName" edit="#rc.edit#" first="true">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="initialTerm" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="renewalTerm" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="gracePeriodTerm" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="allowProrateFlag" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="autoRetryPaymentDays" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionBenefits" edit="#rc.edit#">
-		</dl>
-		
-		<cfif rc.edit>
-				<cf_SlatwallActionCaller action="admin:subscription.listsubscriptionterms" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_SlatwallActionCaller action="admin:subscription.savesubscriptionterm" type="submit" class="button">
-			</form>
-		</cfif>
-		
-	</div>	
-		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallDetailHeaderSection>
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionTermName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="initialTerm" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="renewalTerm" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="gracePeriodTerm" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="allowProrateFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="autoRetryPaymentDays" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionBenefits" edit="#rc.edit#">
+			</cf_SlatwallDetailHeaderSection>
+		</cf_SlatwallDetailHeader>
+
+	</cf_SlatwallDetailForm>
 </cfoutput>
+

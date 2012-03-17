@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,14 +36,5 @@
 Notes:
 
 --->
-<cfparam name="rc.subscriptionTermSmartList" type="any" />
-
-<cfoutput>
-	
-<cf_SlatwallActionBar type="listing" object="#rc.subscriptionTermSmartList#" />
-
-<cf_SlatwallListingDisplay smartList="#rc.subscriptionTermSmartList#" recordEditAction="admin:product.editsubscriptionterm">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionTermName" />
-</cf_SlatwallListingDisplay>
-
-</cfoutput>
+<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">

@@ -64,7 +64,7 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	
 	// Non-Persistent Properties
 
-	public Promotion function init(){
+	public any function init(){
 		// set default collections for association management methods
 		if(isNull(variables.subscriptionBenefits)){
 		   variables.subscriptionBenefits = [];

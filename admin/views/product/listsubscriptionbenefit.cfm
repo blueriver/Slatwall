@@ -36,35 +36,15 @@
 Notes:
 
 --->
-<cfparam name="rc.subscriptionBenefits" type="any" />
+<cfparam name="rc.subscriptionBenefitSmartList" type="any" />
 
 <cfoutput>
-<ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:subscription.createsubscriptionbenefit" type="list">
-</ul>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.subscriptionBenefitSmartList#" />
 
-<div class="svoadminsubscriptionbenefitlist">
-<cfif arrayLen(rc.subscriptionBenefits) gt 0>
-	<table id="Benefits" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.subscriptionBenefit.subscriptionBenefitName")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.subscriptionBenefits#" index="local.subscriptionBenefit">
-			<tr>
-				<td class="varWidth">#local.subscriptionBenefit.getSubscriptionBenefitName()#</td>
-				<td class="administration">
-		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:subscription.editsubscriptionbenefit" querystring="subscriptionBenefitId=#local.subscriptionBenefit.getSubscriptionBenefitID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:subscription.detailsubscriptionbenefit" querystring="subscriptionBenefitId=#local.subscriptionBenefit.getSubscriptionBenefitID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:subscription.deletesubscriptionbenefit" querystring="subscriptionBenefitId=#local.subscriptionBenefit.getSubscriptionBenefitID()#" class="delete" type="list" disabled="#local.subscriptionBenefit.isNotDeletable()#" confirmrequired="true">
-		          </ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-<cfelse>
-<em>#rc.$.Slatwall.rbKey("admin.subscription.nosubscriptionBenefitsdefined")#</em>
-</cfif>
-</div>
+<cf_SlatwallListingDisplay smartList="#rc.subscriptionBenefitSmartList#" recordEditAction="admin:product.editsubscriptionbenefit">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionBenefitName" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>
+
