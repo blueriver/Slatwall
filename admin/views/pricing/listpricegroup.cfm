@@ -39,45 +39,14 @@ Notes:
 <cfparam name="rc.priceGroupSmartList" type="any" />
 
 <cfoutput>
-<ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:pricegroup.createpricegroup" type="list">
-</ul>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.priceGroupSmartList#" />
 
-<div class="svoadminpricegrouplist">
-<cfif arrayLen(rc.priceGroupSmartList.getPageRecords()) gt 0>
-	<table id="PriceGroups" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.pricegroup.priceGroupName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.priceGroupCode")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.inheritsFrom")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.activeFlag")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.priceGroupSmartList.getPageRecords()#" index="local.PriceGroup">
-			<tr>
-				<td class="varWidth">#local.PriceGroup.getPriceGroupName()#</td>
-				<td>#local.PriceGroup.getPriceGroupCode()#</td>
-				<td>
-					<cfif !isNull(local.priceGroup.getParentPriceGroup())>
-						<a href="#buildURL(action='admin:pricegroup.detailpricegroup', querystring='priceGroupId=#local.priceGroup.getParentPriceGroup().getPriceGroupId()#')#">#local.priceGroup.getParentPriceGroup().getPriceGroupName()#</a>
-					<cfelse>
-						#rc.$.Slatwall.rbKey("entity.pricegroup.inheritsFromNothing")#
-					</cfif>	
-				</td>
-				<td>#yesNoFormat(local.PriceGroup.getActiveFlag())#</td>
-				<td class="administration">
-		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:pricegroup.editpricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:pricegroup.detailpricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:pricegroup.deletepricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="delete" type="list" disabled="#local.pricegroup.isNotDeletable()#" confirmrequired="true">
-		          </ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-	<cf_SlatwallSmartListPager smartList="#rc.priceGroupSmartList#">
-<cfelse>
-<em>#rc.$.Slatwall.rbKey("admin.pricegroup.nopricegroupsdefined")#</em>
-</cfif>
-</div>
+<cf_SlatwallListingDisplay smartList="#rc.priceGroupSmartList#" recordEditAction="admin:pricing.editpricegroup">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
+	<cf_SlatwallListingColumn propertyIdentifier="priceGroupCode" />
+	<cf_SlatwallListingColumn propertyIdentifier="inheritsFrom" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>

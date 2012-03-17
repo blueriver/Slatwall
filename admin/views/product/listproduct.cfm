@@ -40,9 +40,9 @@ Notes:
 
 <cfoutput>
 	
-	<cf_SlatwallActionBar type="listing" object="#rc.productSmartList#" rc="#rc#" />
+	<cf_SlatwallActionBar type="listing" object="#rc.productSmartList#" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" rc="#rc#" recordEditAction="admin:product.editproduct">
+	<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" recordEditAction="admin:product.editproduct">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
 		<cf_SlatwallListingColumn propertyIdentifier="productCode" />
 		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" />

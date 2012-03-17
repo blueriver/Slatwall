@@ -36,38 +36,17 @@
 Notes:
 
 --->
-<cfparam name="rc.promotions" type="any" />
+<cfparam name="rc.promotionSmartList" type="any" />
 
 <cfoutput>
 	
-<div class="svoadminpromotionlist">
-<cfif arrayLen(rc.promotions) gt 0>
-	<table id="Promotions" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.promotion.promotionName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.promotion.startDateTime")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.promotion.endDateTime")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.promotion.activeFlag")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.promotions#" index="Local.Promotion">
-			<tr>
-				<td class="varWidth">#local.Promotion.getPromotionName()#</td>
-				<td>#dateFormat(local.Promotion.getStartDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.Promotion.getStartDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#</td>
-				<td>#dateFormat(local.Promotion.getEndDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.Promotion.getEndDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#</td>
-				<td>#yesNoFormat(local.Promotion.getActiveFlag())#</td>
-				<td class="administration">
-		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:promotion.edit" querystring="promotionID=#local.promotion.getPromotionID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:promotion.detail" querystring="promotionID=#local.promotion.getPromotionID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionID=#local.promotion.getPromotionID()#" class="delete" type="list" disabled="#local.promotion.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.promotion.delete_validateisDeletable')#" confirmrequired="true">
-		          </ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-<cfelse>
-<em>#rc.$.Slatwall.rbKey("admin.pricing.nopromotionsdefined")#</em>
-</cfif>
-</div>
+<cf_SlatwallActionBar type="listing" object="#rc.promotionSmartList#" />
+
+<cf_SlatwallListingDisplay smartList="#rc.promotionSmartList#" recordEditAction="admin:product.editbrand">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionName" />
+	<cf_SlatwallListingColumn propertyIdentifier="startDateTime" />
+	<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>

@@ -47,6 +47,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect("admin:pricing.listpromotion");
 	}
 	
+	/*
 	public void function detailpromotion(required struct rc) {
 		param name="rc.promotionID" default="";
 		param name="rc.promotionRewardID" default="";
@@ -344,5 +345,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:pricegroup.editPriceGroup", querystring="priceGroupid=#priceGroupId#",preserve="message,messagetype");
 		
 	}
+	
+	*/
 
 }
