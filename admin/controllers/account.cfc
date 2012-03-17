@@ -44,7 +44,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.listaccounts");
 	}
-	
+	/*
 	public void function detail(required struct rc) {
 		param name="rc.accountID" default="";
 		param name="rc.edit" default="false";
@@ -101,4 +101,5 @@ component extends="BaseController" persistent="false" accessors="true" output="f
         	getFW().redirect(action="admin:account.list",preserve="message");	
 		}
 	}
+	*/
 }
