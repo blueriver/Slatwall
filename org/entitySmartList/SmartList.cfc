@@ -775,6 +775,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		stateStruct.keywords = duplicate(variables.keywords);
 		stateStruct.pageRecordsStart = duplicate(variables.pageRecordsStart);
 		stateStruct.pageRecordsShow = duplicate(variables.pageRecordsShow);
+		stateStruct.currentPageDeclaration = duplicate(variables.currentPageDeclaration);
 		stateStruct.entityJoinOrder = duplicate(variables.entityJoinOrder);
 		
 		return stateStruct;

@@ -47,6 +47,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="shippingRateIncreaseDollar" ormtype="big_decimal";
 	property name="useRateTableFlag" ormtype="boolean";
 	property name="activeFlag" ormtype="boolean";
+	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (Many-to-One)
 	property name="eligibleAddressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="eligibleAddressZoneID";

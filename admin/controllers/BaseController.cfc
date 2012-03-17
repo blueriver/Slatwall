@@ -238,8 +238,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function genericSaveMethod(required string entityName, required struct rc) {
-		
-		
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
