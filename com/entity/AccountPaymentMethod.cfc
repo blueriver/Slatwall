@@ -40,6 +40,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	// Persistent Properties
 	property name="accountPaymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="accountPaymentMethodName" ormType="string";
 	
 	// Related Object Properties (Many-to-One)
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32";

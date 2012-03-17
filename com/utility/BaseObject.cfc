@@ -773,7 +773,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		return encryptedValue;
 	}
 	
-	public void function decryptValue(required string value) {
+	public string function decryptValue(required string value) {
 		var decryptedValue = "";
 		if(!isNull(arguments.value) && arguments.value != "") {
 			if(setting("advanced_encryptionKeyGenerator") == ""){

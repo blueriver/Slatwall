@@ -46,7 +46,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function create(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
 		if(!rc.account.isNew()){
-			redirectToOverview();
+			redirectToView();
 		} else {
 			prepareEditData(rc);
 			getFW().setView("frontend:account.create");
@@ -118,7 +118,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(rc.account.hasAccountAddress(rc.accountAddress)){
 			getFW().setView("frontend:account.editaddress");
 		} else {
-			redirectToOverview();
+			redirectToView();
 		}
 	}
 	
@@ -135,7 +135,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				getFW().setView("frontend:account.listaddress");
 			}
 		} else {
-			redirectToOverview();
+			redirectToView();
 		}
 	}
 	
@@ -152,14 +152,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(rc.account.hasAccountPaymentMethod(rc.accountPaymentMethod)){
 			getFW().setView("frontend:account.editpaymentmethod");
 		} else {
-			redirectToOverview();
+			redirectToView();
 		}
 	}
 	
 	public void function createPaymentMethod(required struct rc) {
 		// if no payment method ID passed redirect to overview
 		if(rc.$.event("paymentMethodID") == ""){
-			redirectToOverview();
+			redirectToView();
 		}
 		rc.accountPaymentMethodID = "";
 		rc.account = rc.$.slatwall.getCurrentAccount();
@@ -171,7 +171,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function savePaymentMethod(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
-		var paymentMethod = getPaymentService().getPaymentMethod(rc.$.event("paymentMethodID"));
+		var paymentMethod = getPaymentService().getPaymentMethod(rc.$.event("paymentMethod.paymentMethodID"));
 		rc.accountPaymentMethod = getAccountService().invokeMethod( "getAccountPaymentMethod#paymentMethod.getPaymentMethodType()#",{1=rc.accountPaymentMethodID,2=true});
 		// make sure PaymentMethod belongs to this account
 		if(rc.account.hasAccountPaymentMethod(rc.accountPaymentMethod) || rc.accountPaymentMethod.isNew()){
@@ -180,16 +180,19 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			if(rc.accountPaymentMethod.hasErrors()) {
 				getFW().setView("frontend:account.editpaymentmethod");
 			} else {
-				rc.paymentMethods = getPaymentService().listPaymentMethod();
-				getFW().setView("frontend:account.listpaymentmethod");
+				redirectToView("listpaymentmethod");
 			}
 		} else {
-			redirectToOverview();
+			redirectToView();
 		}
 	}
 	
-	private void function redirectToOverview() {
-		getFW().redirectExact("/my-account");
+	private void function redirectToView(string view="") {
+		if(view == ""){
+			getFW().redirectExact("/my-account");
+		} else {
+			getFW().redirectExact("/my-account/?showitem=listpaymentmethod");
+		}
 	}
 	
 	// Special account specific logic to require a user to be logged in

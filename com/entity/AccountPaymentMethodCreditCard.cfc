@@ -89,11 +89,8 @@ component displayname="Account Payment Method Credit Card" entityname="SlatwallA
 		setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
 	}
 	
-	public void function getCreditCardNumber() {
-		if(!structKeyExists(variables,"creditCardNumber")) {
-			variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
-		}
-		return variables.creditCardNumber;
+	public string function getCreditCardNumber() {
+		return decryptValue(getCreditCardNumberEncrypted());
 	}
 	
 	// ==================  END:  Overridden Methods ========================

@@ -66,6 +66,6 @@ Notes:
 		</cfif>
 	</div>
 	<div class="svoaccountcreatepaymentmethodcreditcard">
-		<a href="#$.createHREF(filename='my-account', queryString='showitem=createPaymentMethod&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#')#">Add Payment Method</a>
+		<a href="#$.createHREF(filename='my-account', queryString='showitem=createPaymentMethod&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#')#">Add Credit Card</a>
 	</div>
 </cfoutput>

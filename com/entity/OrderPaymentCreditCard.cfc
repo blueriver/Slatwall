@@ -118,7 +118,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		}
 	}
 	
-	public void function getCreditCardNumber() {
+	public string function getCreditCardNumber() {
 		if(!structKeyExists(variables,"creditCardNumber")) {
 			variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
 		}
