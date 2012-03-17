@@ -45,7 +45,7 @@ Notes:
 
 		<input type="hidden" name="accountPaymentMethodID" value="#rc.accountPaymentMethodID#" />
 		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.accountPaymentMethod.getPaymentMethod().getPaymentMethodID()#" />
-		#view("frontend:account/editpaymentmethod#rc.accountPaymentMethod.getPaymentMethodType()#")#;
+		#view("frontend:account/editpaymentmethod#rc.accountPaymentMethod.getPaymentMethodType()#")#
 		
 		<input type="hidden" name="slatAction" value="frontend:account.savePaymentMethod" />
 		<button type="submit">Save</button>

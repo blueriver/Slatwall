@@ -114,14 +114,15 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
 		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
 		if(getCreditCardType() != "Invalid" && setting("paymentMethod_creditCard_storeCreditCardWithOrderPayment") == 1) {
-			setCreditCardNumberEncrypted(encryptCreditCardNumber(arguments.creditCardNumber));
+			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
 		}
 	}
 	
-	public void function encryptCreditCardNumber() {
-		if(!isNull(getCreditCardNumber()) && getCreditCardNumber() != "") {
-			variables.creditCardNumber = getService("encryptionService").encryptValue(getCreditCardNumber());
+	public void function getCreditCardNumber() {
+		if(!structKeyExists(variables,"creditCardNumber")) {
+			variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
 		}
+		return variables.creditCardNumber;
 	}
 	
 	public string function getExpirationDate() {

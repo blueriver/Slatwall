@@ -37,8 +37,8 @@ Notes:
 
 --->
 <cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="nameOnCreditCard" property="nameOnCreditCard" edit="true">
-<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="creditCardType" property="creditCardType" edit="true">
-<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="nameOnCreditCard" property="creditCardNumber" edit="true">
-<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="nameOnCreditCard" property="expirationMonth" edit="true">
-<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="nameOnCreditCard" property="expirationYear" edit="true">
+<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="creditCardNumber" property="creditCardNumber" edit="true">
+<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="expirationMonth" property="expirationMonth" edit="true">
+<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="expirationYear" property="expirationYear" edit="true">
+<cf_SlatwallAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="billingAddress." edit="true">
 

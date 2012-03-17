@@ -38,6 +38,13 @@ Notes:
 */
 component extends="BaseService" {
 	
+	public any function init() {
+		if(!encryptionKeyExists()){
+			createEncryptionKey();
+		}
+		return super.init();
+	}
+	
 	public string function encryptValue(required string value) {
 		return encrypt(arguments.value,getEncryptionKey(),getEncrptionAlgorithm(),getEncrptionEncoding());
 	}
@@ -47,12 +54,7 @@ component extends="BaseService" {
 	}
 	
 	public string function createEncryptionKey() {
-		var theKey = "";
-		if(structKeyexists(arguments,keySize)){
-			theKey = generateSecretKey(getEncrptionAlgorithm(),getEncrptionKeySize());
-		} else {
-			theKey = generateSecretKey(getEncrptionAlgorithm());
-		}
+		var	theKey = generateSecretKey(getEncrptionAlgorithm(),getEncrptionKeySize());
 		storeEncryptionKey(theKey);
 		return theKey;
 	}
@@ -68,7 +70,7 @@ component extends="BaseService" {
 	public string function getEncryptionKey() {
 		var encryptionFileData = fileRead(getEncryptionKeyFilePath());
 		var encryptionInfoXML = xmlParse(encryptionFileData);
-		return encryptionInfoXML.crypt.key;
+		return encryptionInfoXML.crypt.key.xmlText;
 	}
 	
 	private string function getEncrptionKeySize() {
@@ -87,8 +89,12 @@ component extends="BaseService" {
 		return "key.xml.cfm";
 	}
 	
+	private boolean function encryptionKeyExists() {
+		return fileExists(getEncryptionKeyFilePath());
+	}
+	
 	private void function storeEncryptionKey(required string key) {
-		var theKey = "<crypt><key>#arguments.key#</key></crypt>"
+		var theKey = "<crypt><key>#arguments.key#</key></crypt>";
 		fileWrite(getEncryptionKeyFilePath(),theKey);
 	}
 	

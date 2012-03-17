@@ -761,6 +761,30 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 	}
 	
+	public string function encryptValue(required string value) {
+		var encryptedValue = "";
+		if(!isNull(arguments.value) && arguments.value != "") {
+			if(setting("advanced_encryptionKeyGenerator") == ""){
+				encryptedValue = getService("encryptionService").encryptValue(arguments.value);
+			} else {
+				encryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("advanced_encryptionKeyGenerator") ).getIntegrationCFC().encryptValue(arguments.value);
+			}
+		}
+		return encryptedValue;
+	}
+	
+	public void function decryptValue(required string value) {
+		var decryptedValue = "";
+		if(!isNull(arguments.value) && arguments.value != "") {
+			if(setting("advanced_encryptionKeyGenerator") == ""){
+				decryptedValue = getService("encryptionService").decryptValue(arguments.value);
+			} else {
+				decryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("advanced_encryptionKeyGenerator") ).getIntegrationCFC().decryptValue(arguments.value);
+			}
+		}
+		return decryptedValue;
+	}
+	
 	// ===========================  END:  UTILITY METHODS ===========================================
 	
 	// ========================= START: DELIGATION HELPERS ==========================================

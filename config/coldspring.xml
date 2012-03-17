@@ -207,6 +207,7 @@
 	<bean id="dataService" parent="parentService" class="Slatwall.com.service.DataService">
         <property name="DAO"><ref bean="dataDAO" /></property>
 	</bean>
+	<bean id="encryptionService" class="Slatwall.com.service.EncryptionService" />
 	<bean id="fulfillmentService" parent="parentService" class="Slatwall.com.service.FulfillmentService">
         <property name="DAO"><ref bean="fulfillmentDAO" /></property>
 		<property name="settingService"><ref bean="settingService" /></property>

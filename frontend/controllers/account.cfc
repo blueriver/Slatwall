@@ -171,14 +171,16 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function savePaymentMethod(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
-		rc.accountPaymentMethod = getAccountService().getAccountPaymentMethod(rc.accountPaymentMethodID);
+		var paymentMethod = getPaymentService().getPaymentMethod(rc.$.event("paymentMethodID"));
+		rc.accountPaymentMethod = getAccountService().invokeMethod( "getAccountPaymentMethod#paymentMethod.getPaymentMethodType()#",{1=rc.accountPaymentMethodID,2=true});
 		// make sure PaymentMethod belongs to this account
 		if(rc.account.hasAccountPaymentMethod(rc.accountPaymentMethod) || rc.accountPaymentMethod.isNew()){
 			rc.accountPaymentMethod.setAccount(rc.account);
-			rc.accountPaymentMethod = getAccountService().saveAccountPaymentMethod(accountPaymentMethod=rc.accountPaymentMethod, data=rc);
+			rc.accountPaymentMethod = getAccountService().invokeMethod("saveAccountPaymentMethod#paymentMethod.getPaymentMethodType()#",{1=rc.accountPaymentMethod, 2=rc});
 			if(rc.accountPaymentMethod.hasErrors()) {
 				getFW().setView("frontend:account.editpaymentmethod");
 			} else {
+				rc.paymentMethods = getPaymentService().listPaymentMethod();
 				getFW().setView("frontend:account.listpaymentmethod");
 			}
 		} else {

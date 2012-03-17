@@ -75,6 +75,27 @@ component displayname="Account Payment Method Credit Card" entityname="SlatwallA
 
 	// ================== START: Overridden Methods ========================
 	
+	public any function getBillingAddress() {
+		if(isNull(variables.billingAddress)) {
+			return getService("addressService").newAddress();
+		} else {
+			return variables.billingAddress;
+		}
+	}
+	
+	public void function setCreditCardNumber(required string creditCardNumber) {
+		variables.creditCardNumber = arguments.creditCardNumber;
+		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
+		setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+	}
+	
+	public void function getCreditCardNumber() {
+		if(!structKeyExists(variables,"creditCardNumber")) {
+			variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
+		}
+		return variables.creditCardNumber;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

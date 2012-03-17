@@ -409,6 +409,10 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	*/
 	// Frontend Views
+	public void function detailViewUpdate(required struct rc) {
+		
+	}
+	
 	public void function updateFrontendViews(required struct rc) {
 		
 		var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
