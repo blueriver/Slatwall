@@ -63,10 +63,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		lock scope="Session" timeout="45" {
 			// Get the relavent info and objects for this order payment
 			var processOK = false;
-			var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
+			var paymentMethod = arguments.orderPayment.getPaymentMethod();
 			var providerService = getIntegrationService().getPaymentIntegrationCFC(paymentMethod.getIntegration());
 			
-			if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
+			if(arguments.orderPayment.getPaymentMethodType() eq "creditCard") {
 				// Setup the actuall processing information
 				if(!structKeyExists(arguments, "transactionAmount")) {
 					arguments.transactionAmount = arguments.orderPayment.getAmount();

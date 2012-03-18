@@ -45,12 +45,13 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="nextBillDate" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";
 	property name="renewalTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="renewalTermID";
 	property name="gracePeriodTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
 	
 	// Related Object Properties (one-to-many)
+	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -67,12 +68,34 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 
 
 
+	public void function setOrderItem(required any orderItem) {
+		variables.orderItem = arguments.orderItem;
+		var subscriptionTerm = orderItem.getSku().getSubscriptionTerm();
+		setInitialTerm(subscriptionTerm.getInitialTerm());
+		setRenewalTerm(subscriptionTerm.getRenewalTerm());
+		setGracePeriodTerm(subscriptionTerm.getGracePeriodTerm());
+		setAllowProrateFlag(subscriptionTerm.getAllowProrateFlag());
+		setRenewalPrice(orderItem.getSku().getRenewalPrice());
+		for(var subscriptionBenefit in subscriptionTerm.getSubscriptionBenefits()) {
+			var subscriptionUsageBenefit = getService("subscriptionService").newSubscriptionUsageBenefit();
+			subscriptionUsageBenefit.copyFromSubscriptionBenefit(subscriptionBenefit);
+			addSubscriptionUsageBenefit(subscriptionUsageBenefit);
+		}
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// subscriptionUsageBenefits (one-to-many)    
+	public void function addSubscriptionUsageBenefit(required any subscriptionUsageBenefit) {    
+		arguments.subscriptionUsageBenefit.setSubscriptionUsage( this );    
+	}    
+	public void function removeSubscriptionUsageBenefit(required any subscriptionUsageBenefit) {    
+		arguments.subscriptionUsageBenefit.removeSubscriptionUsage( this );    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

@@ -349,7 +349,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Process All Payments and Save the ones that were successful
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-			var transactionType = setting('paymentMethod_#arguments.order.getOrderPayments()[i].getPaymentMethodID()#_checkoutTransactionType');
+			var transactionType = setting('paymentMethod_#arguments.order.getOrderPayments()[i].getPaymentMethodType()#_checkoutTransactionType');
 			
 			if(transactionType != 'none') {
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
@@ -431,7 +431,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						
 							// Send out the e-mail
 							getUtilityEmailService().sendOrderConfirmationEmail(order=order);
-						
+							
+							// setup subscription data if this was subscription order
+							setupSubscriptionOrder(order);
+							
 							processOK = true;
 						}
 					}
@@ -439,6 +442,20 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}// END OF LOCK
 		return processOK;
+	}
+	
+	public void function setupSubscriptionOrder(required any order) {
+		for(var orderItem in arguments.order.getOrderItems()) {
+			if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
+				var subscriptionUsage = getService("subscriptionService").newSubscriptionUsage();
+				subscriptionUsage.setOrderItem(orderItem);
+				var subscriptionOrder = getService("subscriptionService").newSubscriptionOrder();
+				subscriptionOrder.setOrder(arguments.order);
+				subscriptionOrder.setSubscriptionOrderType(this.getTypeBySystemCode("sotInitial"));
+				subscriptionOrder.setSubscriptionUsage(subscriptionUsage);
+				getService("subscriptionService").saveSubscriptionOrder(subscriptionOrder);
+			}
+		}
 	}
 	
 	public any function getOrderRequirementsList(required any order) {
@@ -468,7 +485,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
 	
 		// If fulfillment method is shipping do this
-		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
+		if(arguments.orderFulfillment.getFulfillmentMethodType() == "shipping") {
 			// define some variables for backward compatibility
 			param name="data.saveAccountAddress" default="0";
 			param name="data.saveAccountAddressName" default="";

@@ -47,7 +47,7 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	
 	// Related Object Properties (many-to-one)
 	property name="subscriptionBenefit" cfc="SubscriptionBenefit" fieldtype="many-to-one" fkcolumn="subscriptionBenefitID";
-	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";
+	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" inverse="true";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -55,7 +55,7 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="priceGroupID" cascade="all";
 	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPromotion" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="promotionID" cascade="all";
 	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID" cascade="all";
-	property name="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID" cascade="all";
+	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID" cascade="all";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -68,14 +68,58 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	
 	// Non-Persistent Properties
 
-
-
+	public any function init(){
+		// set default collections for association management methods
+		if(isNull(variables.priceGroups)){
+		   variables.priceGroups = [];
+		}
+		if(isNull(variables.promotions)){
+		   variables.promotions = [];
+		}
+		if(isNull(variables.categories)){
+		   variables.categories = [];
+		}
+		if(isNull(variables.contents)){
+		   variables.contents = [];
+		}
+		return super.init();
+	}
+	
+	public void function copyFromSubscriptionBenefit(required any subscriptionBenefit) {
+		setSubscriptionBenefit(arguments.subscriptionBenefit);
+		setPriceGroups(arguments.subscriptionBenefit.getPriceGroups());
+		setPriceGroupQuantity(arguments.subscriptionBenefit.getpriceGroupQuantity());
+		setPromotions(arguments.subscriptionBenefit.getPromotions());
+		setPromotionQuantity(arguments.subscriptionBenefit.getPromotionQuantity());
+		setCategories(arguments.subscriptionBenefit.getCategories());
+		setCategoryQuantity(arguments.subscriptionBenefit.getCategoryQuantity());
+		setContents(arguments.subscriptionBenefit.getContents());
+		setContentQuantity(arguments.subscriptionBenefit.getContentQuantity());
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// subscriptionUsage (many-to-one)    
+	public void function setSubscriptionUsage(required any subscriptionUsage) {    
+		variables.subscriptionUsage = arguments.subscriptionUsage;    
+		if(isNew() or !arguments.subscriptionUsage.hasSubscriptionUsageBenefit( this )) {    
+			arrayAppend(arguments.subscriptionUsage.getSubscriptionUsageBenefits(), this);    
+		}    
+	}    
+	public void function removeSubscriptionUsage(any subscriptionUsage) {    
+		if(!structKeyExists(arguments, "subscriptionUsage")) {    
+			arguments.subscriptionUsage = variables.subscriptionUsage;    
+		}    
+		var index = arrayFind(arguments.subscriptionUsage.getSubscriptionUsageBenefits(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.subscriptionUsage.getSubscriptionUsageBenefits(), index);    
+		}    
+		structDelete(variables, "subscriptionUsage");    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

@@ -48,6 +48,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	// Mura Service Injection
 	property name="contentManager" type="any";
 	
+	public any function init(required any fw) {
+		setContentManager( getCMSBean("contentManager") );
+		
+		return super.init(fw);
+	}
+		
 	public void function before(required any rc) {
 		getFW().setView("frontend:event.blank");
 	}
