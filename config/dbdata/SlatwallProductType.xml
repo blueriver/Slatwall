@@ -4,7 +4,7 @@
 		<column name="parentProductTypeID" />
 		<column name="productTypeName" update="false" />
 		<column name="systemCode" />
-		<column name="activeFlag" update="false" />
+		<column name="activeFlag" datatype="bit" update="false" />
 	</Columns>
 	<Records>
 		<Record productTypeID="444df2f7ea9c87e60051f3cd87b435a1" parentProductTypeID="NULL" productTypeName="Merchandise" systemCode="merchandise" activeFlag="1" />
