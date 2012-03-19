@@ -45,7 +45,6 @@ Notes:
 <cf_SlatwallListingDisplay smartList="#rc.brandSmartList#" recordEditAction="admin:product.editbrand">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="brandName" />
 	<cf_SlatwallListingColumn propertyIdentifier="brandWebsite" />
-	<cf_SlatwallListingColumn propertyIdentifier="productCount" />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>
