@@ -700,7 +700,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			#valueProperty#
 		ORDER BY
 			#nameProperty# ASC", getHQLParams());
-			
+		
 		variables.whereGroups = originalWhereGroup;
 		
 		return results;

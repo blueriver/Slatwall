@@ -526,7 +526,24 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
-		return rbKey("entity.#getClassName()#.#arguments.propertyName#");
+		var exactMatch = rbKey("entity.#getClassName()#.#arguments.propertyName#");
+		if(right(exactMatch, 8) != "_missing") {
+			return exactMatch;
+		}
+		var genericMatch = rbKey("entity.define.#arguments.propertyName#");
+		if(right(genericMatch, 8) != "_missing") {
+			return genericMatch;
+		}
+		return exactMatch;
+	}
+	
+	// @hint public method to get the rbKey value for a property in a subentity
+	public string function getTitleByPropertyIdentifier( required string propertyIdentifier ) {
+		if(find(".", arguments.propertyIdentifier)) {
+			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc#");
+			return exampleEntity.getTitleByPropertyIdentifier( replace(arguments.propertyIdentifier, "#listFirst(arguments.propertyIdentifier, '.')#.", '') );
+		}
+		return getPropertyTitle( arguments.propertyIdentifier );
 	}
 	
 	// @hint public method for returning the name of the field for this property, this is used a lot by the SlatwallPropertyDisplay

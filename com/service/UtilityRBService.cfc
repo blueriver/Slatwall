@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -15,12 +15,12 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
     Linking this library statically or dynamically with other modules is
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -35,30 +35,8 @@
 
 Notes:
 
---->
-<cfif thisTag.executionMode is "start">
-	<cfoutput>
-		<div class="tabbable tabs-left row-fluid">
-	</cfoutput>
-<cfelse>
-	<cfoutput>
-			<cfset activeTab = thistag.tabs[1].view />
-			<div class="span2">
-				<ul class="nav nav-tabs">
-					<cfloop array="#thistag.tabs#" index="tab">
-						<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.context.$.slatwall.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
-					</cfloop>
-				</ul>
-			</div>
-			<div class="span10">
-				<div class="tab-content">
-					<cfloop array="#thistag.tabs#" index="tab">
-						<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="tab#listLast(tab.view, '/')#">
-							#request.context.$.slatwall.getFW().view(tab.view, {rc=request.context})#
-						</div>
-					</cfloop>
-				</div>
-			</div>
-		</div>
-	</cfoutput>
-</cfif>
+*/
+component extends="BaseService" accessors="true" {
+	
+	
+}

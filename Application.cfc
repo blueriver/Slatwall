@@ -250,6 +250,10 @@ component extends="org.fw1.framework" output="false" {
 			setupResponse();
 		}
 		
+		if(structKeyExists(url, "modal") && url.modal) {
+			request.layouts = [ "/Slatwall/admin/layouts/modal.cfm" ];
+		}
+		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
 		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");

@@ -73,9 +73,9 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var itemName = getFW().getItem( rc.slatAction );
 		
 		rc.itemEntityName = "";
-		rc.listAction = rc.slatAction; 
+		rc.listAction = rc.slatAction;
 		rc.saveAction = rc.slatAction;
-		rc.detailAction = rc.slatAction;		
+		rc.detailAction = rc.slatAction;
 		rc.deleteAction = rc.slatAction;
 		rc.editAction = rc.slatAction;
 		rc.createAction = rc.slatAction;

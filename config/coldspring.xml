@@ -73,13 +73,13 @@
 				<entry key="Content"><value>contentService</value></entry>
 				<entry key="Country"><value>addressService</value></entry>
 				<entry key="CreditCardTransaction"><value>paymentService</value></entry>
-				<entry key="FulfillmentMethod"><value>fufillmentService</value></entry>
+				<entry key="FulfillmentMethod"><value>fulfillmentService</value></entry>
 				<entry key="Image"><value>?</value></entry>
 				<entry key="Integration"><value>integrationService</value></entry>
 				<entry key="Inventory"><value>inventoryService</value></entry>
 				<entry key="Location"><value>locationService</value></entry>
 				<entry key="LocationAddress"><value>locationService</value></entry>
-				<entry key="MeasurmentUnit"><value>?</value></entry>
+				<entry key="MeasurmentUnit"><value>settingService</value></entry>
 				<entry key="Option"><value>optionService</value></entry>
 				<entry key="OptionGroup"><value>optionService</value></entry>
 				<entry key="Order"><value>orderService</value></entry>

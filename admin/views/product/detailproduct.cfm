@@ -36,11 +36,46 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" default="false" />
 <cfparam name="rc.product" type="any" />
+<cfparam name="rc.edit" type="boolean" default="false" />
+
 
 <cfoutput>
-	
+	<cf_SlatwallDetailForm object="#rc.product#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.product#" edit="#rc.edit#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallDetailHeaderSection>
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="activeFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="publishedFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="remoteID" edit="#rc.edit#">
+			</cf_SlatwallDetailHeaderSection>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup>
+			<cf_SlatwallTab view="admin:product/producttabs/skus" />
+			<!---
+			<cf_SlatwallTab view="admin:product/producttabs/settings" />
+			<cf_SlatwallTab view="admin:product/producttabs/alternateimages" />
+			<cf_SlatwallTab view="admin:product/producttabs/customattributes" />
+			<cf_SlatwallTab view="admin:product/producttabs/productcategories" />
+			<cf_SlatwallTab view="admin:product/producttabs/productpages" />
+			<cf_SlatwallTab view="admin:product/producttabs/productreviews" />
+			<cf_SlatwallTab view="admin:product/producttabs/relatedproducts" />
+			--->
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
+
+</cfoutput>
+
+
+<!---
 <cfif rc.edit>
 	<form name="ProductEdit" enctype="multipart/form-data" method="post">
 		<input type="hidden" name="slatAction" value="admin:product.saveproduct" />
@@ -66,7 +101,7 @@ Notes:
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="remoteID" edit="#rc.edit#">	
 	</cfif>
 </dl>
-<!---
+
 <div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
 	<ul>
 		<li><a href="##tabSkus" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.skus")#</span></a></li>	
@@ -124,5 +159,3 @@ Notes:
 </cfif>
 
 --->
-
-</cfoutput>
