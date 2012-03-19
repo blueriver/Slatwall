@@ -45,47 +45,11 @@ Notes:
 	<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" recordEditAction="admin:product.editproduct">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
 		<cf_SlatwallListingColumn propertyIdentifier="productCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" />
-		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" />
+		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="price" />
 	</cf_SlatwallListingDisplay>
 
 </cfoutput>
-
-<!---
-<cfif rc.productSmartList.getRecordsCount()>
-	<table id="ProductList" class="listing-grid stripe">
-		<tr>
-			<th>#rc.$.Slatwall.rbKey("entity.product.productType")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.productCode")#</th>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.publishedFlag")#</th>
-			<th>&nbsp</th>
-		</tr>	
-		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
-			<tr>
-				<td><a href="#buildURL(action='admin:product.detailproducttype', querystring='productTypeID=#local.Product.getProductType().getProductTypeID()#')#">#local.product.getProductType().getProductTypeName()#</a></td>
-				<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
-				<td>#local.Product.getProductCode()#</td>
-				<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
-				<td>#yesNoFormat(local.Product.getPublishedFlag())#</td>
-				<td class="administration">
-					<cfset local.ProductID = local.Product.getProductID() />
-		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="detail" type="list">
-					  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
-		          </ul>     						
-				</td>
-				
-			</tr>
-		</cfloop>
-	</table>
-	<cf_SlatwallSmartListPager smartList="#rc.ProductSmartList#">
-<cfelse>
-	<em>#rc.$.Slatwall.rbKey("admin.product.noProductsDefined")#</em>
-</cfif>
---->

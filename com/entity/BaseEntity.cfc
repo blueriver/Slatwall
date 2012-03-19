@@ -115,7 +115,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return true;
 	}
 	
-	
 	// @hint public helper method that delegates to isDeletable
 	public boolean function isNotDeletable() {
 		return !isDeletable();

@@ -48,11 +48,19 @@ Notes:
 						<cfloop array="#thistag.columns#" index="column">
 							<th>
 								<div class="dropdown">
-									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.propertyIdentifier# <span class="caret"></span> </a>
-									<ul class="dropdown-menu">
+									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#attributes.smartList.getPageRecords()[1].getTitleByPropertyIdentifier(column.propertyIdentifier)# <span class="caret"></span> </a>
+									<ul class="dropdown-menu nav">
+										<li class="nav-header">Sort</li>
 										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|ASC')#"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
 										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|DESC')#"><i class="icon-arrow-up"></i> Sort Decending</a></li>
 										<li class="divider"></li>
+										<cfif column.filter>
+											<li class="nav-header">Filter</li>
+											<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
+											<cfloop array="#filterOptions#" index="filter">
+												<li><a href="#attributes.smartList.buildURL( 'F:#column.propertyIdentifier#=#filter["value"]#' )#">#filter['value']#</a></li>
+											</cfloop>
+										</cfif>
 									</ul>
 								</div>
 							</th>
