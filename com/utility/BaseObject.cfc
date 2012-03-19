@@ -527,11 +527,11 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
 		var exactMatch = rbKey("entity.#getClassName()#.#arguments.propertyName#");
-		if(right(exactMatch, 7) != "missing") {
+		if(right(exactMatch, 8) != "_missing") {
 			return exactMatch;
 		}
 		var genericMatch = rbKey("entity.define.#arguments.propertyName#");
-		if(right(genericMatch, 7) != "missing") {
+		if(right(genericMatch, 8) != "_missing") {
 			return genericMatch;
 		}
 		return exactMatch;

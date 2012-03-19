@@ -61,15 +61,48 @@ Notes:
 
 <cfif attributes.text eq "" and not attributes.iconOnly>
 	<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_nav") />
+	
 	<cfif right(attributes.text, 8) eq "_missing" >
-		<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
+		
+		<cfset actionItem = listLast(attributes.action, ".") />
+		
+		<cfif left(actionItem, 4) eq "list" and len(actionItem) gt 4>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.list_nav'), "${itemEntityNamePlural}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#_plural')) />
+		<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.edit_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.create_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.detail_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		</cfif>
+		
 	</cfif>
 </cfif>
 
 <cfif attributes.title eq "">
 	<cfset attributes.title = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
 	<cfif right(attributes.title, 8) eq "_missing" >
-		<cfset attributes.title = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
+		
+		<cfset actionItem = listLast(attributes.action, ".") />
+		
+		<cfif left(actionItem, 4) eq "list" and len(actionItem) gt 4>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.list_title'), "${itemEntityNamePlural}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#_plural')) />
+		<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.edit_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.create_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.detail_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		</cfif>
+		
 	</cfif>
 </cfif>
 

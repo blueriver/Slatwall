@@ -39,12 +39,33 @@ Notes:
 <cfparam name="attributes.type" type="string" />
 <cfparam name="attributes.object" type="any" />
 <cfparam name="attributes.edit" type="boolean" default="false" />
+<cfparam name="attributes.pageTitle" type="string" default="" />
 
 <cfif thisTag.executionMode is "start">
+	<cfsilent>
+		<cfif attributes.pageTitle eq "">
+			<cfset attributes.pageTitle = request.context.$.slatwall.rbKey(replace(request.context.slatAction,':','.','all')) />
+			<cfif right(attributes.pageTitle, 8) eq "_missing">
+				<cfif left(listLast(request.context.slatAction, "."), 4) eq "list">
+					<cfset attributes.pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.list'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
+				<cfelseif left(listLast(request.context.slatAction, "."), 4) eq "edit">
+					<cfset attributes.pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.edit'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
+				<cfelseif left(listLast(request.context.slatAction, "."), 6) eq "create">
+					<cfset attributes.pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.create'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
+				<cfelseif left(listLast(request.context.slatAction, "."), 6) eq "detail">
+					<cfset attributes.pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.detail'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
+				</cfif>
+			</cfif>
+		</cfif>
+		
+		<cfif attributes.type eq "detail" and not attributes.object.isNew()>
+			<cfset attributes.pageTitle &= " - #attributes.object.getSimpleRepresentation()#" />
+		</cfif>
+	</cfsilent>
 	<cfoutput>
 		<div class="actionnav well well-small">
 			<div class="row-fluid">
-				<div class="span4"><h1>#request.context.$.slatwall.rbKey(replace(request.context.slatAction,':','.','all'))#<cfif attributes.type eq "detail" and not attributes.object.isNew()> - #attributes.object.getSimpleRepresentation()#</cfif></h1></div>
+				<div class="span4"><h1>#attributes.pageTitle#</h1></div>
 				<div class="span8">
 					<div class="btn-toolbar">
 						
