@@ -65,8 +65,8 @@ Notes:
 	<cfoutput>
 		<div class="actionnav well well-small">
 			<div class="row-fluid">
-				<div class="span4"><h1>#attributes.pageTitle#</h1></div>
-				<div class="span8">
+				<div class="span6"><h1>#attributes.pageTitle#</h1></div>
+				<div class="span6">
 					<div class="btn-toolbar">
 						
 						<cfif attributes.type eq "listing" >
