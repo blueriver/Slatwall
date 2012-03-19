@@ -7,5 +7,13 @@
  */
 
 jQuery(document).ready(function(e){
-	
+	jQuery('.modalload').click(function(e){
+		var modalLink = jQuery(this).attr( 'href' );
+		if( modalLink.indexOf("?") != -1) {
+			modalLink = modalLink + '&modal=1';
+		} else {
+			modalLink = modalLink + '?modal=1';
+		}
+		jQuery('#adminModal').load( modalLink );
+	});
 });

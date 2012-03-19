@@ -38,7 +38,7 @@ Notes:
 --->
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<div class="tabbable tabs-left">
+		<div class="tabbable tabs-left row-fluid">
 	</cfoutput>
 <cfelse>
 	<cfoutput>

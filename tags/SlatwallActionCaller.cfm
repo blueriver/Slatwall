@@ -47,6 +47,7 @@ Notes:
 <cfparam name="attributes.submit" type="boolean" default="false">
 <cfparam name="attributes.confirm" type="boolean" default="false" />
 <cfparam name="attributes.disabled" type="boolean" default="false" />
+<cfparam name="attributes.modal" type="boolean" default="false" />
 
 
 <cfset attributes.class = Replace(Replace(attributes.action, ":", "", "all"), ".", "", "all") & " " & attributes.class />
@@ -115,14 +116,18 @@ Notes:
     <cfset attributes.confirmtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
 </cfif>
 
+<cfif attributes.modal>
+	<cfset attributes.class &= " modalload" />
+</cfif>
+
 <cfif thisTag.executionMode is "start">
 	<cfif request.customMuraScopeKeys.slatwall.secureDisplay(action=attributes.action)>
 		<cfif attributes.type eq "link">
-			<cfoutput><a href="#request.customMuraScopeKeys.slatwall.buildURL(action=attributes.action,querystring=attributes.querystring)#" title="#attributes.title#" class="#attributes.class#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirm> onclick="return confirmDialog('#attributes.confirmtext#',this.href);"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
+			<cfoutput><a title="#attributes.title#" class="#attributes.class#" href="#request.customMuraScopeKeys.slatwall.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
 		<cfelseif attributes.type eq "list">
-			<cfoutput><li class="#attributes.class#"><a href="#request.customMuraScopeKeys.slatwall.buildURL(action=attributes.action,querystring=attributes.querystring)#" title="#attributes.title#" class="#attributes.class#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirm> onclick="return confirmDialog('#attributes.confirmtext#',this.href);"</cfif>>#attributes.icon##attributes.text#</a></li></cfoutput> 
+			<cfoutput><li class="#attributes.class#"><a title="#attributes.title#" class="#attributes.class#" href="#request.customMuraScopeKeys.slatwall.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></li></cfoutput> 
 		<cfelseif attributes.type eq "button">
-			<cfoutput><button class="btn #attributes.class#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirm> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif> <cfif attributes.submit>type="submit"</cfif>>#attributes.icon##attributes.text#</button></cfoutput>
+			<cfoutput><button class="btn #attributes.class#" title="#attributes.title#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif><cfif attributes.submit>type="submit"</cfif>>#attributes.icon##attributes.text#</button></cfoutput>
 		<cfelseif attributes.type eq "submit">
 			<cfoutput>This action caller type has been discontinued</cfoutput>
 		</cfif>

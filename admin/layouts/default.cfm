@@ -92,6 +92,7 @@ Notes:
 				</div>
 			</div>
 		</div>
+		<div id="adminModal" class="modal"></div>
 		#$.slatwall.getCFStatic().renderIncludes("js")#
 		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
