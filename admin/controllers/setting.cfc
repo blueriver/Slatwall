@@ -435,7 +435,7 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.edit = true;
 		getFW().setView("admin:setting.detailaddresszone");
 	}
-	*/
+	
 	// Frontend Views
 	public void function detailViewUpdate(required struct rc) {
 		

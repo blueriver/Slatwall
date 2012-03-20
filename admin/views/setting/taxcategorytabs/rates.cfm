@@ -36,22 +36,17 @@
 Notes:
 
 --->
-<cfparam name="rc.addressZone" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.taxCategory" type="any" />
 
-<cf_SlatwallDetailForm object="#rc.addressZone#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.addressZone#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" type="list" modal=true />
-	</cf_SlatwallActionBar>
-	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#">
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
-	
-	<cf_SlatwallTabGroup hide="#rc.addressZone.isNew()#">
-		<cf_SlatwallTab view="admin:setting/addresszonetabs/locations" />
-	</cf_SlatwallTabGroup>
-	
-</cf_SlatwallDetailForm>
+<cf_SlatwallListingDisplay smartList="#rc.taxCategory.getTaxCategoryRatesSmartList()#"
+		recordEditAction="admin:setting.edittaxcategoryrate"
+		recordEditQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#"
+		recordEditModal=true
+		recordDeleteAction="admin:setting.deletetaxcategoryrate"
+		recordDeleteQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#">
+		
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="taxRate" />
+	<cf_SlatwallListingColumn propertyIdentifier="addressZone.addressZoneName" />
+</cf_SlatwallListingDisplay>
+
+<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" class="btn btn-primary" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
