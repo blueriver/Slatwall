@@ -80,7 +80,7 @@ Notes:
 								<div class="btn-group">
 									<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.actions')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">
-										<cf_SlatwallActionCaller action="admin:export.list" text="#request.context.$.slatwall.rbKey('define.exportlist')#" type="list">
+										<cf_SlatwallActionCaller action="admin:export.list" queryString="savedStateID=#attributes.object.getSavedStateID()#" text="#request.context.$.slatwall.rbKey('define.exportlist')#" type="list">
 										#thistag.generatedcontent#
 										<cfset thistag.generatedcontent = "" />
 									</ul>
