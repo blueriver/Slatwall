@@ -51,7 +51,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup>
+		<cf_SlatwallTabGroup hide="#rc.addressZone.isNew()#">
 			<cf_SlatwallTab view="admin:setting/addresszonetabs/locations" />
 		</cf_SlatwallTabGroup>
 		
