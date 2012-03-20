@@ -247,10 +247,14 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		if(!rc[ arguments.entityName ].hasErrors()) {
 			getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");
 		} else {
+			rc.edit = true;
 			getFW().setView(action=rc.detailAction);
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_failure");
-			for(var i=1; i<=arrayLen(rc[ arguments.entityName ].getErrors()); i++) {
-				showMessage(rc[ arguments.entityName ].getErrors()[i], "failure");
+			for( var p in rc[ rc.arguments.entityName ].getErrors() ) {
+				local.thisErrorArray = rc[ rc.arguments.entityName ].getErrors()[p];
+				for(var i=1; i<=arrayLen(local.thisErrorArray); i++) {
+					showMessage(local.thisErrorArray[i], "failure");
+				}
 			}
 			if(rc[ arguments.entityName ].isNew()) {
 				rc.slatAction = rc.createAction;
