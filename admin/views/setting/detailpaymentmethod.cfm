@@ -36,65 +36,27 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" type="boolean" default="false" />
 <cfparam name="rc.paymentMethod" type="any" />
-<cfparam name="rc.paymentIntegrations" type="array" />
+<cfparam name="rc.edit" type="boolean" default="false" />
 
-<cfoutput>
-	<div class="svoadmindetailpaymentmethod">
-		<ul id="navTask">
-			<cfif not rc.edit><cf_SlatwallActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#rc.paymentMethod.getPaymentMethodID()#" type="list"></cfif>
-	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
-		</ul>
+<cf_SlatwallDetailForm object="#rc.paymentMethod#" edit="#rc.edit#">
+	<cf_SlatwallActionBar type="detail" object="#rc.paymentMethod#" edit="#rc.edit#">
 		
-		<cfif rc.edit>
-			<form name="PaymentMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
-				<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
-		</cfif>
-		
-		<cfif not arrayLen(rc.paymentIntegrations)>
-			<p>You need to configure a Payment Integration before you can configure this payment method. <cf_SlatwallActionCaller action="admin:integration.list" queryString="F:paymentReadyFlag=1"></p>
-		<cfelse>
-			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
-				<ul>
-					<li><a href="##tabBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
-					<!---<li><a href="##tabWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>--->
-				</ul>
+	</cf_SlatwallActionBar>
 	
-				<div id="tabBasicSettings">
-					
-					<dl class="oneColumn">
-						<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
-						<dt class="spdprovidergateway">
-							#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
-						</dt>
-						<dd id="spdprovidergateway">
-							<cfif rc.edit>
-								<select id="providerGateway" name="providerGateway">
-									<cfloop array="#rc.paymentIntegrations#" index="local.integration">
-										<option value="#local.integration.getIntegrationPackage()#" <cfif rc.paymentMethod.getProviderGateway() eq local.integration.getIntegrationPackage()>selected="selected"</cfif>>#local.integration.getIntegrationName()#</option>
-									</cfloop>
-								</select>
-							<cfelse>
-								#rc.paymentMethod.getIntegration().getIntegrationName()#
-							</cfif>
-						</dd>
-						<!--- include any payment method-specific settings --->
-						<cfif fileExists(expandPath("admin/views/setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#.cfm"))>
-							#view("setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#")#
-						</cfif>
-					</dl>	
-				</div>
-				
-				<!---<div id="tabWorkflowSettings">Under Construction.</div>--->
-			</div>	
-		</cfif>
-		<cfif rc.edit>
-				<div id="actionButtons" class="clearfix">
-					<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-					<cf_SlatwallActionCaller action="admin:setting.savePaymentMethod" type="submit" class="button">
-				</div>
-			</form>
-		</cfif>
-	</div>
-</cfoutput>
+	<cf_SlatwallDetailHeader>
+		<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
+			<cfif rc.paymentMethod.isNew()>
+				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodType" edit="true" fieldType="select">
+			<cfelse>
+				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodType" edit="false" fieldType="select">
+			</cfif>
+		</cf_SlatwallPropertyList>
+	</cf_SlatwallDetailHeader>
+	
+	<cfif not rc.paymentMethod.isNew()>
+		<cfoutput>#view("admin:setting/paymentmethodtypes/#lcase(rc.paymentMethod.getPaymentMethodType())#")#</cfoutput>
+	</cfif>
+</cf_SlatwallDetailForm>

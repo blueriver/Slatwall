@@ -42,43 +42,5 @@ Notes:
 
 <cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethodSmartList#" recordEditAction="admin:setting.editfulfillmentmethod">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
 </cf_SlatwallListingDisplay>
-
-<!---
-<cfparam name="rc.fulfillmentMethods" type="array" />
-<cfoutput>
-	<div class="svoadminListFulfillmentMethods">
-		<ul id="navTask">
-	    	<cf_SlatwallActionCaller action="admin:setting.listFulfillmentMethods" type="list">
-		</ul>
-		
-		<table id="fulfillmentMethodList" class="listing-grid stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listFulfillmentMethods")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.fulfillmentMethod.activeFlag")#</th>
-				<th>&nbsp;</th>
-			</tr>
-				
-			<cfloop array="#rc.fulfillmentMethods#" index="local.thisFulfillmentMethod">
-				<tr>
-					<cfset local.fulfillmentMethodMetaData = getMetaData(local.thisFulfillmentMethod) />
-					<td class="varWidth"><a href="#buildURL(action='admin:setting.detailfulfillmentmethod',querystring='fulfillmentmethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#')#">#local.thisFulfillmentMethod.getFulfillmentMethodName()#</a></td>
-					<td>
-						<cfif local.thisFulfillmentMethod.getActiveFlag()>
-							<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
-						<cfelse>
-							<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.cross_red.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
-						</cfif>
-					</td>
-					<td class="administration">
-						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#" class="detail" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.editFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#" class="edit" type="list">
-						</ul> 						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</div>
-</cfoutput>
---->

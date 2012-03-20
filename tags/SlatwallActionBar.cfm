@@ -57,17 +57,19 @@ Notes:
 					<div class="span6">
 						<div class="btn-toolbar">
 							<cfif attributes.type eq "listing" >
-								<div class="btn-group">
-									<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.show')# <span class="caret"></span></button>
-									<ul class="dropdown-menu">
-										<li><a href="#attributes.object.buildURL('P:Show=10')#">10</a></li>
-										<li><a href="#attributes.object.buildURL('P:Show=25')#">25</a></li>
-										<li><a href="#attributes.object.buildURL('P:Show=50')#">50</a></li>
-										<li><a href="#attributes.object.buildURL('P:Show=100')#">100</a></li>
-										<li><a href="#attributes.object.buildURL('P:Show=500')#">500</a></li>
-										<li><a href="#attributes.object.buildURL('P:Show=all')#">ALL</a></li>
-									</ul>
-								</div>
+								<cfif attributes.object.getRecordsCount() gt 10>
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.show')# <span class="caret"></span></button>
+										<ul class="dropdown-menu">
+											<li><a href="#attributes.object.buildURL('P:Show=10')#">10</a></li>
+											<li><a href="#attributes.object.buildURL('P:Show=25')#">25</a></li>
+											<li><a href="#attributes.object.buildURL('P:Show=50')#">50</a></li>
+											<li><a href="#attributes.object.buildURL('P:Show=100')#">100</a></li>
+											<li><a href="#attributes.object.buildURL('P:Show=500')#">500</a></li>
+											<li><a href="#attributes.object.buildURL('P:Show=all')#">ALL</a></li>
+										</ul>
+									</div>
+								</cfif>
 								<div class="btn-group">
 									<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.actions')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">

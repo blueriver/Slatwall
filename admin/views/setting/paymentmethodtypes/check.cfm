@@ -15,12 +15,12 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
     Linking this library statically or dynamically with other modules is
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -36,12 +36,5 @@
 Notes:
 
 --->
-<cfparam name="rc.paymentMethodSmartList" type="any" />
-
-<cf_SlatwallActionBar type="listing" object="#rc.paymentMethodSmartList#" />
-
-<cf_SlatwallListingDisplay smartList="#rc.paymentMethodSmartList#" recordEditAction="admin:setting.editpaymentmethod">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethodName" />
-	<cf_SlatwallListingColumn propertyIdentifier="paymentMethodType" />
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
-</cf_SlatwallListingDisplay>
+<cfparam name="rc.paymentMethod" type="any" />
+<cfparam name="rc.edit" type="boolean" default="false" />

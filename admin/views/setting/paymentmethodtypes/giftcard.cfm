@@ -36,12 +36,8 @@
 Notes:
 
 --->
-<cfparam name="rc.paymentMethodSmartList" type="any" />
+<cfparam name="rc.paymentMethod" type="any" />
 
-<cf_SlatwallActionBar type="listing" object="#rc.paymentMethodSmartList#" />
-
-<cf_SlatwallListingDisplay smartList="#rc.paymentMethodSmartList#" recordEditAction="admin:setting.editpaymentmethod">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethodName" />
-	<cf_SlatwallListingColumn propertyIdentifier="paymentMethodType" />
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
-</cf_SlatwallListingDisplay>
+<cf_SlatwallTabGroup hide="#rc.paymentMethod.isNew()#">
+	<cf_SlatwallTab view="admin:setting/paymentmethodtypes/giftcardtabs/settings" />
+</cf_SlatwallTabGroup>

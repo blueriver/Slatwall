@@ -36,36 +36,8 @@
 Notes:
 
 --->
-<cfparam name="rc.allSettings" type="struct" />
+<cfparam name="rc.paymentMethod" type="any" />
 
-<cfsilent>
-	<cfset local.yesNoValueOptions = [{name=$.slatwall.rbKey('define.yes'), value=1},{name=$.slatwall.rbKey('define.no'), value=0}] />
-</cfsilent>
-<cfoutput>
-<dl>
-	<dt class="spdcreditcardactiononcheckout">
-		#$.slatwall.rbKey("admin.setting.paymentMethod.creditcardActionOnCheckout")#:
-	</dt>
-	<dd id="spdcreditcardactiononcheckout">
-		<cfif rc.edit>
-			<cfloop list="none,authorize,authorizeAndCharge" index="local.thisActionOption" >
-				<input type="radio" name="paymentmethod_creditCard_checkoutTransactionType" value="#local.thisActionOption#" id="#local.thisActionOption#"<cfif $.Slatwall.setting("paymentMethod_creditCard_checkoutTransactionType") eq local.thisActionOption> checked="checked"</cfif>> <label for="#local.thisActionOption#">#$.slatwall.rbKey("admin.setting.paymentMethod.creditCard.checkoutTransactionType." & local.thisActionOption)#</label> <br>
-			</cfloop>
-		<cfelse>
-			#$.slatwall.rbKey("admin.setting.paymentMethod.creditCard.checkoutTransactionType." & $.Slatwall.setting("paymentMethod_creditCard_checkoutTransactionType"))#
-		</cfif>
-	</dd>
-	<cf_SlatwallPropertyDisplay object="#rc.allSettings.paymentMethod_creditCard_storeCreditCardWithOrderPayment#" title="#rc.$.Slatwall.rbKey('setting.paymentMethod.creditCard.storeCreditCardWithOrderPayment')#" property="settingValue" fieldName="paymentMethod_creditCard_storeCreditCardWithOrderPayment" edit="#rc.edit#" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
-	<cf_SlatwallPropertyDisplay object="#rc.allSettings.paymentMethod_creditCard_storeCreditCardWithAccount#" title="#rc.$.Slatwall.rbKey('setting.paymentMethod.creditCard.storeCreditCardWithAccount')#" property="settingValue" fieldName="paymentMethod_creditCard_storeCreditCardWithAccount" edit="#rc.edit#" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
-	<dt class="spdcreditcardtypes">#$.Slatwall.rbKey("admin.setting.paymentMethod.creditCardsAccepted")#</dt>
-	<dd id="spdcreditcardsaccepted">
-	<cfif rc.edit>
-		<cfloop list="Mastercard,Visa,Amex,Discover,Diners Club,JCB,EnRoute,CarteBlanche" index="local.thisTypeOption" >
-			<input type="checkbox" name="paymentmethod_creditCard_creditCardTypes" value="#local.thisTypeOption#" id="#local.thisTypeOption#"<cfif listFind($.Slatwall.setting("paymentmethod_creditCard_creditCardTypes"),local.thisTypeOption)> checked="checked"</cfif>> <label for="#local.thisTypeOption#">#local.thisTypeOption#</label> <br>
-		</cfloop>
-	<cfelse>
-		#$.Slatwall.setting("paymentmethod_creditCard_creditCardTypes")#
-	</cfif>
-	</dd>	
-</dl>
-</cfoutput>
+<cf_SlatwallTabGroup hide="#rc.paymentMethod.isNew()#">
+	<cf_SlatwallTab view="admin:setting/paymentmethodtypes/creditcardtabs/settings" />
+</cf_SlatwallTabGroup>
