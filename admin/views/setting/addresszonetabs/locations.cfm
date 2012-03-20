@@ -37,14 +37,13 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#" recordEditAction="admin:product.editproduct" recordEditModal=true>
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
-		<cf_SlatwallListingColumn propertyIdentifier="productCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="price" />
+	<cf_SlatwallListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#" recordEditAction="admin:setting.editaddresszonelocation" recordEditQueryString="addressZoneID=#rc.addressZone.getAddressZoneID#" recordEditModal=true>
+		<cf_SlatwallListingColumn propertyIdentifier="countryCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="stateCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="city" />
+		<cf_SlatwallListingColumn propertyIdentifier="postalCode" />
 	</cf_SlatwallListingDisplay>
 	
 	<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" class="btn btn-primary" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
+	<cf_SlatwallActionCaller action="admin:product.createbrand" class="btn btn-primary" modal=true />
 </cfoutput>

@@ -47,7 +47,7 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="endDateTime" ormtype="timestamp";
 	property name="maximumUseCount" ormtype="integer" default="0" dbdefault="0";
 	property name="maximumAccountUseCount" ormtype="integer" default="0" dbdefault="0";
-	property name="activeFlag" ormtype="boolean";
+	property name="activeFlag" ormtype="boolean" default="1";
 	
 	// Related Entities
 	property name="defaultImage" cfc="PromotionImage" fieldtype="many-to-one" fkcolumn="defaultImageID";
@@ -77,22 +77,19 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 			variables.promotionRewards = [];
 		}
 		if(isNull(variables.promotionRewardExclusions)) {
-			variables.promotionRewards = [];
+			variables.promotionRewardExclusions = [];
 		}
 		if(isNull(variables.promotionQualifiers)) {
 			variables.promotionQualifiers = [];
 		}
 		if(isNull(variables.promotionQualifierExclusions)) {
-			variables.promotionQualifiers = [];
+			variables.promotionQualifierExclusions = [];
 		}
 		if(isNull(variables.startDateTime)) {
 			variables.startDateTime = now();
 		}
 		if(isNull(variables.endDateTime)) {
 			variables.endDateTime = now();
-		}
-		if(isNull(variables.activeFlag)) {
-			variables.activeFlag = 1;
 		}
 		return super.init();
 	}

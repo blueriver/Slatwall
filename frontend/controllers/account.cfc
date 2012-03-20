@@ -201,4 +201,20 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			getFW().setView("frontend:account.login");
 		}
 	}
+	
+	public void function verifyEmail(required struct rc) {
+		param name="rc.emailVerificationID" default="";
+		param name="rc.returnURL" default="";
+		
+		var emailVerification = getAccountService().getEmailVerification(rc.emailVerificationID);
+		
+		if(!isNull(emailVerification) && !isNull(emailVerification.getAccountEmailAddress())) {
+			emailVerification.getAccountEmailAddress().setVerifiedFlag( true );
+		}
+		
+		if(rc.returnURL neq "") {
+			getFW().redirectExact(rc.returnURL);
+		}
+	}
+	
 }

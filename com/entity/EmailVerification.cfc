@@ -36,45 +36,43 @@
 Notes:
 
 */
-component displayname="Promotion Reward Exclusion Product Content" entityname="SlatwallPromotionRewardExclusionProductContent" table="SlatwallPromotionRewardExclusionProductContent" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Email Verification" entityname="SlatwallEmailVerification" table="SlatwallEmailVerification" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="promotionRewardExclusionProductContentID" ormtype="string" length="35" fieldtype="id" generator="uuid";
-	property name="contentID" ormtype="string" length="35";
-	property name="contentPath" ormtype="string";
+	property name="emailVerificationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	// Related Object Properties
-	//property name="content" cfc="Content" fieldtype="many-to-one" hint="Mura Content ID" fkcolumn="contentID";
-	property name="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-one" fkcolumn="promotionRewardExclusionID";
+	// Related Object Properties (Many-to-One)
+	property name="accountEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
+	
+	// Related Object Properties (One-to-Many)
+	
+	// Related Object Properties (Many-to-Many)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit Properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
+	// Non-Persistent Properties
 
 
+
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-
-	// Promotion Reward Exclusion (many-to-one)
-	
-	public void function setPromotionRewardExclusion(required any promotionRewardExclusion) {
-	   variables.promotionRewardExclusion = arguments.promotionRewardExclusion;
-	   if(isNew() or !arguments.promotionRewardExclusion.hasProductContent(this)) {
-	       arrayAppend(arguments.promotionRewardExclusion.getProductContent(),this);
-	   }
-	}
-	
-	public void function removePromotionRewardExclusion(any promotionRewardExclusion) {
-		if(!structKeyExists(arguments, 'promotionRewardExclusion')) {
-			arguments.promotionRewardExclusion = variables.promotionRewardExclusion;
-		}
-		var index = arrayFind(arguments.promotionRewardExclusion.getProductContent(),this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.promotionRewardExclusion.getProductContent(),index);
-		}    
-		structDelete(variables, "promotionRewardExclusion");
-    }
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	

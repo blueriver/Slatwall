@@ -40,7 +40,8 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	
 	// Persistent Properties
 	property name="accountEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="emailAddress" ormtype="string" inverse="true";
+	property name="emailAddress" ormtype="string";
+	property name="verifiedFlag" ormtype="boolean";
 	
 	// Related Object Properties (Many-To-One)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";

@@ -38,6 +38,8 @@ Notes:
 --->
 <cfparam name="attributes.smartList" type="any" />
 <cfparam name="attributes.recordEditAction" type="string" default="" />
+<cfparam name="attributes.recordEditQueryString" type="string" default="" />
+<cfparam name="attributes.recordEditModal" type="boolean" default="false" />
 
 <cfif thisTag.executionMode eq "end">
 	<cfoutput>
@@ -78,7 +80,7 @@ Notes:
 							</cfloop>
 							<cfif attributes.recordEditAction neq "">
 								<td>
-									<cf_SlatwallActionCaller action="#attributes.recordEditAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#" class="btn btn-mini" icon="edit" iconOnly="true" />
+									<cf_SlatwallActionCaller action="#attributes.recordEditAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordEditQueryString#" class="btn btn-mini" icon="edit" iconOnly="true" modal="#attributes.recordEditModal#" />
 								</td>
 							</cfif>
 						</tr>

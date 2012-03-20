@@ -89,18 +89,6 @@ Notes:
 										<cfset local.itemName &= local.thisPromotionReward.displayOptionNames() />
 										<cfset local.itemName &= "</p>" />
 									</cfif>
-									<cfif arrayLen(local.thisPromotionReward.getProductContent())>
-										<cfset local.itemName &= "<p>" />
-										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionRewardProduct.productContent') & ": " />
-										<cfset local.itemName &= local.thisPromotionReward.displayProductPageNames() />
-										<cfset local.itemName &= "</p>" />
-									</cfif>
-									<cfif arrayLen(local.thisPromotionReward.getProductCategories())>
-										<cfset local.itemName &= "<p>" />
-										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionRewardProduct.productCategories') & ": " />
-										<cfset local.itemName &= local.thisPromotionReward.displayProductCategoryNames() />
-										<cfset local.itemName &= "</p>" />
-									</cfif>
 									<cfif not len(local.itemName)>
 										<cfset local.itemName &= "<p>" />
 										<cfset local.itemName &= $.Slatwall.rbKey("define.all") />
@@ -190,16 +178,6 @@ Notes:
 		</dl>		
 		<div id="promotionRewardProductInputs" <cfif rc.promotionRewardProduct.isNew() and not rc.promotionRewardProduct.hasErrors()>class="ui-helper-hidden"</cfif> >
 			<dl class="twoColumn">
-				<!---
-				<dt><label for="discountType">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardProduct.discountType")#</label></dt>
-				<dd>
-					<select name="discountType" id="productDiscountType">
-						<option value="percentageOff">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardProduct.discountType.percentageOff")#</option>
-						<option value="amountOff">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardProduct.discountType.amountOff")#</option>
-						<option value="amount">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardProduct.discountType.amount")#</option>
-					</select>
-				</dd>
-				--->
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="discountType" fieldName="promotionRewards[1].discountType" edit="true" fieldType="select" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="percentageOff" fieldName="promotionRewards[1].percentageOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="amountOff" fieldName="promotionRewards[1].amountOff" edit="true" />
@@ -213,8 +191,6 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="brands" fieldName="promotionRewards[1].brands" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="productTypes" fieldName="promotionRewards[1].productTypes" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="products" fieldName="promotionRewards[1].products" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="productContent" value="#rc.promotionRewardProduct.getContentPaths()#" fieldType="multiSelect" fieldName="promotionRewards[1].productContent" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="productCategories" value="#rc.promotionRewardProduct.getCategoryPaths()#" fieldType="multiSelect" fieldName="promotionRewards[1].productCategories" edit="true" />
 				<!--- <cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="skus" fieldName="promotionRewards[1].skus" edit="true" /> --->
 				<!--- <cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="options" fieldName="promotionRewards[1].options" edit="true" /> --->
 			</dl>
@@ -223,16 +199,6 @@ Notes:
 		
 		<div id="promotionRewardShippingInputs" <cfif rc.promotionRewardShipping.isNew() and not rc.promotionRewardShipping.hasErrors()>class="ui-helper-hidden"</cfif> >
 			<dl class="twoColumn">
-				<!---
-				<dt><label for="discountType">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardShipping.discountType")#</label></dt>
-				<dd>
-					<select name="discountType" id="shippingDiscountType">
-						<option value="percentageOff">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff")#</option>
-						<option value="amountOff">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff")#</option>
-						<option value="amount">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardShipping.discountType.amount")#</option>
-					</select>
-				</dd>
-				--->
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardShipping#" property="discountType" fieldName="promotionRewards[1].discountType" edit="true" fieldType="select" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardShipping#" property="percentageOff" fieldName="promotionRewards[1].percentageOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardShipping#" property="amountOff" fieldName="promotionRewards[1].amountOff" edit="true" />

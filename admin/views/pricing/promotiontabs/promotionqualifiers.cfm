@@ -89,18 +89,6 @@ Notes:
 										<cfset local.itemName &= local.thisPromotionQualifier.displayOptionNames() />
 										<cfset local.itemName &= "</p>" />
 									</cfif>
-									<cfif arrayLen(local.thisPromotionQualifier.getProductContent())>
-										<cfset local.itemName &= "<p>" />
-										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionQualifierProduct.productContent') & ": " />
-										<cfset local.itemName &= local.thisPromotionQualifier.displayProductPageNames() />
-										<cfset local.itemName &= "</p>" />
-									</cfif>
-									<cfif arrayLen(local.thisPromotionQualifier.getProductCategories())>
-										<cfset local.itemName &= "<p>" />
-										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionQualifierProduct.productCategories') & ": " />
-										<cfset local.itemName &= local.thisPromotionQualifier.displayProductCategoryNames() />
-										<cfset local.itemName &= "</p>" />
-									</cfif>
 									<cfif not len(local.itemName)>
 										<cfset local.itemName &= "<p>" />
 										<cfset local.itemName &= $.Slatwall.rbKey("define.all") />
@@ -206,8 +194,6 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="brands" fieldName="promotionQualifiers[1].brands" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="productTypes" fieldName="promotionQualifiers[1].productTypes" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="products" fieldName="promotionQualifiers[1].products" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="productContent" value="#rc.promotionQualifierProduct.getContentPaths()#"  fieldType="multiSelect" fieldName="promotionQualifiers[1].productContent" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="productCategories" value="#rc.promotionQualifierProduct.getCategoryPaths()#"  fieldType="multiSelect" fieldName="promotionQualifiers[1].productCategories" edit="true" />
 			</dl>
 			<input type="hidden" name="promotionQualifiers[1].promotionQualifierID" value="#rc.promotionQualifierProduct.getPromotionQualifierID()#"/>
 		</div>

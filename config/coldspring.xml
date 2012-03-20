@@ -74,6 +74,7 @@
 				<entry key="Content"><value>contentService</value></entry>
 				<entry key="Country"><value>addressService</value></entry>
 				<entry key="CreditCardTransaction"><value>paymentService</value></entry>
+				<entry key="EmailAddress"><value>accountService</value></entry>
 				<entry key="FulfillmentMethod"><value>fulfillmentService</value></entry>
 				<entry key="Image"><value>?</value></entry>
 				<entry key="Integration"><value>integrationService</value></entry>
@@ -124,7 +125,13 @@
 				<entry key="PromotionApplied"><value>promotionService</value></entry>
 				<entry key="PromotionCode"><value>promotionService</value></entry>
 				<entry key="PromotionImage"><value>promotionService</value></entry>
+				<entry key="PromotionQualifier"><value>promotionService</value></entry>
+				<entry key="PromotionQualifierExclusion"><value>promotionService</value></entry>
+				<entry key="PromotionQualifierFulfillment"><value>promotionService</value></entry>
+				<entry key="PromotionQualifierOrder"><value>promotionService</value></entry>
+				<entry key="PromotionQualifierProduct"><value>promotionService</value></entry>
 				<entry key="PromotionReward"><value>promotionService</value></entry>
+				<entry key="PromotionRewardExclusion"><value>promotionService</value></entry>
 				<entry key="PromotionRewardOrder"><value>promotionService</value></entry>
 				<entry key="PromotionRewardProduct"><value>promotionService</value></entry>
 				<entry key="PromotionRewardShipping"><value>promotionService</value></entry>
