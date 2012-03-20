@@ -36,29 +36,31 @@
 Notes:
 
 --->
-<cfif thisTag.executionMode is "start">
-	<cfoutput>
-		<div class="tabbable tabs-left row-fluid">
-	</cfoutput>
-<cfelse>
-	<cfoutput>
-			<cfset activeTab = thistag.tabs[1].view />
-			<div class="span2">
-				<ul class="nav nav-tabs">
-					<cfloop array="#thistag.tabs#" index="tab">
-						<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.context.$.slatwall.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
-					</cfloop>
-				</ul>
-			</div>
-			<div class="span10">
-				<div class="tab-content">
-					<cfloop array="#thistag.tabs#" index="tab">
-						<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="tab#listLast(tab.view, '/')#">
-							#request.context.$.slatwall.getFW().view(tab.view, {rc=request.context})#
-						</div>
-					</cfloop>
+<cfif not structKeyExists(request.context, "modal") or not request.context.modal>
+	<cfif thisTag.executionMode is "start">
+		<cfoutput>
+			<div class="tabbable tabs-left row-fluid">
+		</cfoutput>
+	<cfelse>
+		<cfoutput>
+				<cfset activeTab = thistag.tabs[1].view />
+				<div class="span2">
+					<ul class="nav nav-tabs">
+						<cfloop array="#thistag.tabs#" index="tab">
+							<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.context.$.slatwall.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
+						</cfloop>
+					</ul>
+				</div>
+				<div class="span10">
+					<div class="tab-content">
+						<cfloop array="#thistag.tabs#" index="tab">
+							<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="tab#listLast(tab.view, '/')#">
+								#request.context.$.slatwall.getFW().view(tab.view, {rc=request.context})#
+							</div>
+						</cfloop>
+					</div>
 				</div>
 			</div>
-		</div>
-	</cfoutput>
+		</cfoutput>
+	</cfif>
 </cfif>

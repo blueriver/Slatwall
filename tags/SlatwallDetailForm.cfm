@@ -36,19 +36,50 @@
 Notes:
 
 --->
-<cfparam name="attributes.object" type="any" />
-<cfparam name="attributes.edit" type="boolean" default="false" />
-
 <cfif thisTag.executionMode is "start">
+	<cfparam name="attributes.object" type="any" />
+	<cfparam name="attributes.saveaction" type="string" default="#request.context.saveaction#" />
+	<cfparam name="attributes.edit" type="boolean" default="false" />
+	
 	<cfif attributes.edit>
 		<cfoutput>
-		<form method="post" action="?update=1">
-			<input type="hidden" name="slatAction" value="#request.context.saveaction#" />
-			<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
+			<form method="post" action="?update=1">
+				<input type="hidden" name="slatAction" value="#attributes.saveaction#" />
+				<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
+				<cfif structKeyExists(request.context, "modal") and request.context.modal>
+					<div class="modal-header">
+						<cfset pageTitle = request.context.$.slatwall.rbKey(replace(request.context.slatAction,':','.','all')) />
+						<cfif right(pageTitle, 8) eq "_missing">
+							<cfif left(listLast(request.context.slatAction, "."), 4) eq "list">
+								<cfset pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.list'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
+							<cfelseif left(listLast(request.context.slatAction, "."), 4) eq "edit">
+								<cfset pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.edit'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
+							<cfelseif left(listLast(request.context.slatAction, "."), 6) eq "create">
+								<cfset pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.create'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
+							<cfelseif left(listLast(request.context.slatAction, "."), 6) eq "detail">
+								<cfset pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.detail'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
+							</cfif>
+						</cfif>
+						<a class="close" data-dismiss="modal">x</a>
+						<h3>#pageTitle#</h3>
+					</div>
+					<div class="modal-body">
+				</cfif>
 		</cfoutput>
 	</cfif>
 <cfelse>
 	<cfif attributes.edit>
-		</form>
+		<cfoutput>
+				<cfif structKeyExists(request.context, "modal") and request.context.modal>
+					</div>
+					<div class="modal-footer">
+						<div class="btn-group">
+							<a href="##" class="btn close" data-dismiss="modal">#request.context.$.slatwall.rbKey('define.cancel')#</a>
+							<button type="submit" class="btn btn-success">#request.context.$.slatwall.rbKey('define.save')#</button>
+						</div>
+					</div>
+				</cfif>
+			</form>
+		</cfoutput>
 	</cfif>
 </cfif>

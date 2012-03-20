@@ -78,6 +78,22 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 	}
 	
+	public void function createAddressZoneLocation(required struct rc) {
+		editAddressZoneLocation(rc);
+	}
+	
+	public void function editAddressZoneLocation(required struct rc) {
+		param name="rc.addressZoneID" default="";
+		param name="rc.addressID" default="";
+		
+		rc.addressZoneLocation = getAddressService().getAddress( rc.addressID, true );
+		rc.addressZone = getAddressService().getAddressZone( rc.addressZoneID );
+		rc.edit=true;
+		
+		getFW().setView("admin:setting.detailAddressZoneLocation");
+	}
+	
+	/*
 	public void function editsetting(required struct rc) {
 		detail(rc);
 		getFW().setView("admin:setting.detailsetting");
@@ -319,7 +335,7 @@ component extends="BaseController" output="false" accessors="true" {
 		
 	// Integrations Services
 	
-	/*
+	
 	// Address Zones
 	public void function listAddressZones(required struct rc) {
 		rc.addressZones = getSettingService().listAddressZone();

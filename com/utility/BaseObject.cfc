@@ -290,7 +290,7 @@ component displayname="Base Object" accessors="true" output="false" {
 					}
 					
 				// (ONE-TO-MANY) Do this logic if this property is a one-to-many or many-to-many relationship, and the data passed in is of type array	
-				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "one-to-many" && isArray( arguments.data[ currentProperty.name ] ) ) {
+				} else if ( structKeyExists(currentProperty, "fieldType") && (currentProperty.fieldType == "one-to-many" or currentProperty.fieldType == "many-to-many") && isArray( arguments.data[ currentProperty.name ] ) ) {
 					
 					// Set the data of this One-To-Many relationship into it's own local array
 					var oneToManyArrayData = arguments.data[ currentProperty.name ];

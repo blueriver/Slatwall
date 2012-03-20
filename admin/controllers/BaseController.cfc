@@ -244,13 +244,10 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		rc[ arguments.entityName ] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
 		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=rc[ arguments.entityName ], 2=rc} );
 		
-		getFW().setView(action=rc.detailAction);
-		
 		if(!rc[ arguments.entityName ].hasErrors()) {
-			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_success");
-			rc.slatAction = rc.detailAction;
-			rc.edit = false;
+			getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");
 		} else {
+			getFW().setView(action=rc.detailAction);
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_failure");
 			for(var i=1; i<=arrayLen(rc[ arguments.entityName ].getErrors()); i++) {
 				showMessage(rc[ arguments.entityName ].getErrors()[i], "failure");
