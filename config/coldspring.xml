@@ -73,6 +73,7 @@
 				<entry key="Content"><value>contentService</value></entry>
 				<entry key="Country"><value>addressService</value></entry>
 				<entry key="CreditCardTransaction"><value>paymentService</value></entry>
+				<entry key="EmailAddress"><value>accountService</value></entry>
 				<entry key="FulfillmentMethod"><value>fulfillmentService</value></entry>
 				<entry key="Image"><value>?</value></entry>
 				<entry key="Integration"><value>integrationService</value></entry>

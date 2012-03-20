@@ -36,15 +36,20 @@
 Notes:
 
 */
-component displayname="Account Email Address" entityname="SlatwallAccountEmailAddress" table="SlatwallAccountEmailAddress" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Email Verification" entityname="SlatwallEmailVerification" table="SlatwallEmailVerification" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="accountEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="emailAddress" ormtype="string";
-	property name="verifiedFlag" ormtype="boolean";
+	property name="emailVerificationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	// Related Object Properties (Many-To-One)
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	// Related Object Properties (Many-to-One)
+	property name="accountEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
+	
+	// Related Object Properties (One-to-Many)
+	
+	// Related Object Properties (Many-to-Many)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -52,38 +57,20 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non-Persistent Properties
+
+
+
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
-	
+		
 	// ============= START: Bidirectional Helper Methods ===================
-	
-	// Account (many-to-one)
-	public void function setAccount(required any account) {
-		variables.account = arguments.account;
-		if(isNew() or !arguments.account.hasAccountEmailAddress( this )) {
-			arrayAppend(arguments.account.getAccountEmailAddresses(), this);
-		}
-	}
-	public void function removeAccount(any account) {
-		if(!structKeyExists(arguments, "account")) {
-			arguments.account = variables.account;
-		}
-		var index = arrayFind(arguments.account.getAccountEmailAddresses(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.account.getAccountEmailAddresses(), index);
-		}
-		structDelete(variables, "account");
-	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================
-	
-	public string function getSimpleRepresentationPropertyName() {
-		return "emailAddress";
-	}
 	
 	// ==================  END:  Overridden Methods ========================
 	
