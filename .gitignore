@@ -14,3 +14,5 @@ logs/
 assets/images/cache/
 staticAssets/min/
 staticAssets/images/cache
+assets/min/
+assets/css/global.less.css
