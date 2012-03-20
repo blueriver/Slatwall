@@ -42,8 +42,23 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.vendor#" saveAction="admin:vendor.savevendor" edit="#rc.edit#">
-		
-		<cf_SlatwallAddressDisplay address="#rc.vendorAddress.getAddress()#" fieldNamePrefix="vendorAddress[1].address." edit="#rc.edit#" showName="false" showCompany="false">
+		<input type="hidden" name="vendorAddress[1].vendorAddressID" value="#rc.vendorAddress.getVendorAddressID()#" />
+		<cf_SlatwallAddressDisplay address="#rc.vendorAddress.getAddress()#" fieldNamePrefix="vendorAddress[1].address." edit="#rc.edit#">
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
