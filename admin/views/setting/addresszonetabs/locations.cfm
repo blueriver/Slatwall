@@ -37,8 +37,13 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#" recordEditAction="admin:setting.editaddresszonelocation" recordEditQueryString="addressZoneID=#rc.addressZone.getAddressZoneID#" recordEditModal=true>
-		<cf_SlatwallListingColumn propertyIdentifier="countryCode" />
+	<cf_SlatwallListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#"
+			recordEditAction="admin:setting.editaddresszonelocation"
+			recordEditQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#"
+			recordEditModal=true
+			recordDeleteAction="admin:setting.deleteaddresszonelocation">
+			
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryCode" />
 		<cf_SlatwallListingColumn propertyIdentifier="stateCode" />
 		<cf_SlatwallListingColumn propertyIdentifier="city" />
 		<cf_SlatwallListingColumn propertyIdentifier="postalCode" />

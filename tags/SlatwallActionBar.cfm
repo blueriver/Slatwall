@@ -78,10 +78,11 @@ Notes:
 									</ul>
 								</div>
 								<div class="btn-group">
-									<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.exportlist')# <span class="caret"></span></button>
+									<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.actions')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">
-										<cf_SlatwallActionCaller action="admin:export.listfiltered" type="list">
-										<cf_SlatwallActionCaller action="admin:export.list" type="list">
+										<cf_SlatwallActionCaller action="admin:export.list" text="#request.context.$.slatwall.rbKey('define.exportlist')#" type="list">
+										#thistag.generatedcontent#
+										<cfset thistag.generatedcontent = "" />
 									</ul>
 								</div>
 								<div class="btn-group">
@@ -91,8 +92,7 @@ Notes:
 								<div class="btn-group">
 									<cf_SlatwallActionCaller action="#request.context.listAction#" text="#request.context.$.Slatwall.rbKey('define.backtolist')#" class="btn">
 								</div>
-								
-								<cfif len(thistag.generatedcontent)>
+								<cfif !attributes.object.isNew() && len(thistag.generatedcontent)>
 									<div class="btn-group">
 										<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.actions')# <span class="caret"></span></button>
 										<ul class="dropdown-menu">
@@ -101,7 +101,6 @@ Notes:
 									</div>
 									<cfset thistag.generatedcontent = "" />
 								</cfif>
-								
 								<div class="btn-group">
 									<cfif request.context.edit>
 										<cf_SlatwallActionCaller action="#request.context.cancelAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.Slatwall.rbKey('define.cancel')#" class="btn btn-inverse">
