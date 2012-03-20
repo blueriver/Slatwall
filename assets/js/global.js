@@ -7,6 +7,7 @@
  */
 
 jQuery(document).ready(function(e){
+	
 	jQuery('.modalload').click(function(e){
 		var modalLink = jQuery(this).attr( 'href' );
 		if( modalLink.indexOf("?") != -1) {
@@ -16,4 +17,5 @@ jQuery(document).ready(function(e){
 		}
 		jQuery('#adminModal').load( modalLink );
 	});
+	
 });
