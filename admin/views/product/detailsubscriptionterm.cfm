@@ -44,7 +44,7 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionTerm#" edit="#rc.edit#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallDetailHeaderSection>
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionTermName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="initialTerm" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="renewalTerm" edit="#rc.edit#">
@@ -52,7 +52,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="allowProrateFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="autoRetryPaymentDays" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionBenefits" edit="#rc.edit#">
-			</cf_SlatwallDetailHeaderSection>
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
 	</cf_SlatwallDetailForm>

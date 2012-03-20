@@ -41,12 +41,14 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.addressZone#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.addressZone#" edit="#rc.edit#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.addressZone#" edit="#rc.edit#">
+			<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" type="list" modal=true />
+		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallDetailHeaderSection>
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#">
-			</cf_SlatwallDetailHeaderSection>
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup>

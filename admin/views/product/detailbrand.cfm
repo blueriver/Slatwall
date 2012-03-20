@@ -44,13 +44,13 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.brand#" edit="#rc.edit#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallDetailHeaderSection>
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="activeFlag" edit="#rc.edit#" title="#$.slatwall.rbkey('define.active')#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandWebsite" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="urlTitle" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandDisplayTemplate" edit="#rc.edit#">
-			</cf_SlatwallDetailHeaderSection>
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup>

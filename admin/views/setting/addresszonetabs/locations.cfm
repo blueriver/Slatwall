@@ -45,5 +45,4 @@ Notes:
 	</cf_SlatwallListingDisplay>
 	
 	<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" class="btn btn-primary" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
-	<cf_SlatwallActionCaller action="admin:product.createbrand" class="btn btn-primary" modal=true />
 </cfoutput>

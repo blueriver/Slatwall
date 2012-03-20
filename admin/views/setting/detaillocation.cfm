@@ -44,10 +44,10 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.location#" rc="#rc#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallDetailHeaderSection>
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.location#" property="locationName" edit="#rc.edit#">
 				<cf_SlatwallAddressDisplay address="#rc.location.getPrimaryAddress().getAddress()#" showName="false" showCompany="false" edit="#rc.edit#" fieldNamePrefix="primaryAddress.address."  />
-			</cf_SlatwallDetailHeaderSection>
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
 	</cf_SlatwallDetailForm>

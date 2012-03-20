@@ -4,7 +4,7 @@
  */
 
 jQuery(function() {
-
+	
 	jQuery('#addOptionButton').click(function(){
 	 	jQuery('#addOptionHidden').val('true');
 		jQuery('#optionInputs').fadeIn(400);
