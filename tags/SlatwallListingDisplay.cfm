@@ -40,8 +40,19 @@ Notes:
 <cfparam name="attributes.recordEditAction" type="string" default="" />
 <cfparam name="attributes.recordEditQueryString" type="string" default="" />
 <cfparam name="attributes.recordEditModal" type="boolean" default="false" />
+<cfparam name="attributes.recordDeleteAction" type="string" default="" />
+<cfparam name="attributes.recordDeleteQueryString" type="string" default="" />
 
 <cfif thisTag.executionMode eq "end">
+	<cfsilent>
+		<cfset attributes.administativeCount = 0 />
+		<cfif attributes.recordEditAction neq "">
+			<cfset attributes.administativeCount++ />
+		</cfif>
+		<cfif attributes.recordDeleteAction neq "">
+			<cfset attributes.administativeCount++ />
+		</cfif>
+	</cfsilent>
 	<cfoutput>
 		<cfif attributes.smartList.getRecordsCount()>
 			<table class="table table-striped table-bordered">
@@ -67,8 +78,8 @@ Notes:
 								</div>
 							</th>
 						</cfloop>
-						<cfif attributes.recordEditAction neq "">
-							<th>&nbsp;</th>
+						<cfif attributes.administativeCount>
+							<th class="admin#attributes.administativeCount#">&nbsp;</th>
 						</cfif>
 					</tr>
 				</thead>
@@ -78,9 +89,14 @@ Notes:
 							<cfloop array="#thistag.columns#" index="column">
 								<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 							</cfloop>
-							<cfif attributes.recordEditAction neq "">
-								<td>
-									<cf_SlatwallActionCaller action="#attributes.recordEditAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordEditQueryString#" class="btn btn-mini" icon="edit" iconOnly="true" modal="#attributes.recordEditModal#" />
+							<cfif attributes.administativeCount>
+								<td class="admin#attributes.administativeCount#">
+									<cfif attributes.recordEditAction neq "">
+										<cf_SlatwallActionCaller action="#attributes.recordEditAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordEditQueryString#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="#attributes.recordEditModal#" />
+									</cfif>
+									<cfif attributes.recordDeleteAction neq "">
+										<cf_SlatwallActionCaller action="#attributes.recordDeleteAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordDeleteQueryString#" class="btn btn-mini" icon="trash" iconOnly="true" />
+									</cfif>
 								</td>
 							</cfif>
 						</tr>

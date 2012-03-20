@@ -42,7 +42,8 @@ Notes:
 		recordEditAction="admin:setting.editaddresszonelocation"
 		recordEditQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#"
 		recordEditModal=true
-		recordDeleteAction="admin:setting.deleteaddresszonelocation">
+		recordDeleteAction="admin:setting.deleteaddresszonelocation"
+		recordDeleteQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#">
 		
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryCode" />
 	<cf_SlatwallListingColumn propertyIdentifier="stateCode" />

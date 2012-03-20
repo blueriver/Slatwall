@@ -93,6 +93,18 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().setView("admin:setting.detailAddressZoneLocation");
 	}
 	
+	public void function deleteAddressZoneLocation(required struct rc) {
+		param name="rc.addressZoneID" default="";
+		param name="rc.addressID" default="";
+		
+		rc.addressZoneLocation = getAddressService().getAddress( rc.addressID, true );
+		rc.addressZone = getAddressService().getAddressZone( rc.addressZoneID );
+		
+		rc.addressZone.removeAddressZoneLocation( rc.addressZoneLocation );
+		
+		getFW().redirect(action="admin:setting.detailaddresszone", queryString="addressZoneID=#rc.addressZoneID#&messageKeys=admin.setting.deleteaddresszonelocation_success");
+	}
+	
 	/*
 	public void function editsetting(required struct rc) {
 		detail(rc);
