@@ -36,7 +36,20 @@
 Notes:
 
 --->
-<cfoutput>
+<cfparam name="rc.vendorSmartList" type="any" />
+
+<cf_SlatwallActionBar type="listing" object="#rc.vendorSmartList#" />
+
+<cf_SlatwallListingDisplay smartList="#rc.vendorSmartList#" recordEditAction="admin:vendor.editvendor">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorName" />
+	<cf_SlatwallListingColumn propertyIdentifier="accountNumber" />
+	<cf_SlatwallListingColumn propertyIdentifier="vendorWebsite" />
+	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" />
+	<cf_SlatwallListingColumn propertyIdentifier="numberBrands" />
+</cf_SlatwallListingDisplay>
+
+
+<!---<cfoutput>
 <ul id="navTask">
     <cf_SlatwallActionCaller action="admin:vendor.createvendor" type="list">
 </ul>	
@@ -72,7 +85,7 @@ Notes:
 	</table>
 	<cf_SlatwallSmartListPager smartList="#rc.vendorSmartList#">
 </div>
-</cfoutput>
+</cfoutput>--->
 <!---
 <cfif isDefined('args.Brand')>
 	<cfset local.VendorsIterator = args.Brand.getVendorsIterator() />

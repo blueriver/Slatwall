@@ -39,7 +39,36 @@ Notes:
 <cfparam name="rc.vendor" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<ul id="navTask">
+<cf_SlatwallDetailForm object="#rc.vendor#" edit="#rc.edit#">
+	<cf_SlatwallActionBar type="detail" object="#rc.vendor#" edit="#rc.edit#" />
+	
+	<cf_SlatwallDetailHeader>
+		<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="vendorName" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="accountNumber" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="vendorWebsite" edit="#rc.edit#">
+			<cfif not isNull(rc.vendor.getPrimaryEmailAddress())>
+				<input type="hidden" name="primaryEmailAddress.vendorEmailAddressID" value="#rc.Vendor.getPrimaryEmailAddress().getVendorEmailAddressID()#" />
+				<cf_SlatwallPropertyDisplay object="#rc.Vendor.getPrimaryEmailAddress()#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
+			<cfelse>
+				<cfset newVendorEmail = $.slatwall.getService("vendorService").newVendorEmailAddress() />
+				<input type="hidden" name="primaryEmailAddress.vendorEmailAddressID" value="" />
+				<cf_SlatwallPropertyDisplay object="#newVendorEmail#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="">
+			</cfif>
+		</cf_SlatwallPropertyList>
+	</cf_SlatwallDetailHeader>
+	
+	<cf_SlatwallTabGroup>
+		<cf_SlatwallTab view="admin:vendor/vendortabs/vendoraddresses" />
+		<cf_SlatwallTab view="admin:vendor/vendortabs/vendorbrands" />
+		<cfif !rc.vendor.isNew()>
+			<cf_SlatwallTab view="admin:vendor/vendortabs/vendororders" />
+		</cfif>	
+	</cf_SlatwallTabGroup>
+	
+</cf_SlatwallDetailForm>
+
+<!---<ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:vendor.listvendors" type="list">
 	<cfif !rc.edit>
 	<cf_SlatwallActionCaller action="admin:vendor.editvendor" queryString="vendorID=#rc.vendor.getVendorID()#" type="list">
@@ -101,4 +130,4 @@ Notes:
 			</form>
 		</cfif>
 	</div>
-</cfoutput>
+</cfoutput>--->
