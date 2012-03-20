@@ -64,14 +64,23 @@ Notes:
 				<cfset attributes.pageTitle &= " - #attributes.object.getSimpleRepresentation()#" />
 			</cfif>
 		</cfsilent>
+	<cfelse>
 		<cfoutput>
 			<div class="actionnav well well-small">
 				<div class="row-fluid">
 					<div class="span6"><h1>#attributes.pageTitle#</h1></div>
 					<div class="span6">
 						<div class="btn-toolbar">
-							
 							<cfif attributes.type eq "listing" >
+								<cfif len(thistag.generatedcontent)>
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.action')#<span class="caret"></span></button>
+										<ul class="dropdown-menu">
+											#thistag.generatedcontent#	
+										</ul>
+									</div>
+									<cfset thistag.generatedcontent = "" />
+								</cfif>
 								<div class="btn-group">
 									<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.show')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">
@@ -93,14 +102,21 @@ Notes:
 								<div class="btn-group">
 									<cf_SlatwallActionCaller action="#request.context.createAction#" class="btn btn-primary">
 								</div>
-							</cfif>
-		</cfoutput>
-	<cfelse>
-		<cfoutput>
-							<cfif attributes.type eq "detail">
+							<cfelseif attributes.type eq "detail">
 								<div class="btn-group">
 									<cf_SlatwallActionCaller action="#request.context.listAction#" text="#request.context.$.Slatwall.rbKey('define.backtolist')#" class="btn">
 								</div>
+								
+								<cfif len(thistag.generatedcontent)>
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.action')#<span class="caret"></span></button>
+										<ul class="dropdown-menu">
+											#thistag.generatedcontent#	
+										</ul>
+									</div>
+									<cfset thistag.generatedcontent = "" />
+								</cfif>
+								
 								<div class="btn-group">
 									<cfif request.context.edit>
 										<cf_SlatwallActionCaller action="#request.context.cancelAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.Slatwall.rbKey('define.cancel')#" class="btn btn-inverse">
