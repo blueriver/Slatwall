@@ -44,11 +44,11 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.roundingRule#" rc="#rc#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallDetailHeaderSection>
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleExpression" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleDirection" edit="#rc.edit#" fieldType="select">
-			</cf_SlatwallDetailHeaderSection>
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 	</cf_SlatwallDetailForm>

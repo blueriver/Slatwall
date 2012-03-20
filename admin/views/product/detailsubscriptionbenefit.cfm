@@ -44,7 +44,7 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionBenefit#" edit="#rc.edit#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallDetailHeaderSection>
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="subscriptionBenefitName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="accessCodeType" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="priceGroupQuantity" edit="#rc.edit#">
@@ -55,7 +55,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categories" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contentQuantity" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contents" edit="#rc.edit#">
-			</cf_SlatwallDetailHeaderSection>
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 	</cf_SlatwallDetailForm>

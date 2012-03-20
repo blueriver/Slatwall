@@ -45,7 +45,7 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.product#" edit="#rc.edit#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallDetailHeaderSection>
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="publishedFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="#rc.edit#">
@@ -54,7 +54,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="remoteID" edit="#rc.edit#">
-			</cf_SlatwallDetailHeaderSection>
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup>
