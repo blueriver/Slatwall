@@ -94,6 +94,11 @@ Notes:
 				</cfloop>
 			</cfloop> 
 		</dl>
+		<cfif structKeyExists(rc,"accessID")>
+			<input type="hidden" name="access.accessID" value="#rc.accessID#" />
+		<cfelseif structKeyExists(rc,"accessCode")>
+			<input type="hidden" name="access.accessCode" value="#rc.accessCode#" />
+		</cfif>
 		<input type="hidden" name="slatAction" value="frontend:account.save" />
 		<button type="submit">Save</button>
 	</form>
