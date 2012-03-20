@@ -53,6 +53,25 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:vendor.listvendor");
 	}
 	
+	public void function createVendorAddress(required struct rc) {
+		editVendorAddress(rc);
+	}
+	
+	public void function editVendorAddress(required struct rc) {
+		param name="rc.vendorID" default="";
+		param name="rc.vendorAddressID" default="";
+		
+    	rc.vendor = getVendorService().getVendor(rc.vendorID, true);
+    	rc.vendorAddress = getVendorService().getVendorAddress(rc.vendorAddressID, true);
+    	
+       	// If vendorAddress is new then it won't contain an "Address" (vendorAddress is only a relational entity), so create a new one.
+    	if(rc.vendorAddress.isNew()) {
+    		rc.vendorAddress.setAddress(getAddressService().newAddress());	
+    	}
+    	rc.edit = true;
+    	getFW().setView("admin:vendor.detailVendorAddress");
+	}
+	
 	/*
 	public void function listVendors(required struct rc) {
         param name="rc.orderBy" default="vendorId|ASC";

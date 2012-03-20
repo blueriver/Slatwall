@@ -48,10 +48,14 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
+			<cfif rc.account.isNew()>
+				<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">			
+			</cfif>
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	
-	<cf_SlatwallTabGroup>
+	<cf_SlatwallTabGroup hide="#rc.account.isNew()#">
 		<cf_SlatwallTab view="admin:account/accounttabs/addresses" />
 		<cf_SlatwallTab view="admin:account/accounttabs/login" />
 		<cf_SlatwallTab view="admin:account/accounttabs/orders" />
