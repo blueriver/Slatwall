@@ -97,7 +97,7 @@ component extends="BaseService" accessors="true" {
 			return "Slatwall#listGetAt(keyList, keyIndex)#";
 		}
 		
-		throw("The entity name that you have requested: #arguments.entityname# is not in the ORM Library of entity names that is setup in coldsrping.  Please add #entityShortName# to the list of entity mappings in coldspring.");
+		throw("The entity name that you have requested: #arguments.entityname# is not in the ORM Library of entity names that is setup in coldsrping.  Please add #shortEntityName# to the list of entity mappings in coldspring.");
 	}
 
 }
