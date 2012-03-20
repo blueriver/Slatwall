@@ -39,9 +39,9 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.account.getProductReviewsSmartList()#">
-	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="review" />
-	<cf_SlatwallListingColumn propertyIdentifier="rating" />
+	<cf_SlatwallListingColumn propertyIdentifier="rating" filter="true" />
 </cf_SlatwallListingDisplay>
 
 <!---<cfoutput>

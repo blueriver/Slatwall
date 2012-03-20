@@ -40,9 +40,9 @@ Notes:
 
 <cf_SlatwallListingDisplay smartList="#rc.account.getOrdersSmartList()#">
 	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" />
+	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range="true" />
 	<cf_SlatwallListingColumn tdclass="primary"  propertyIdentifier="account.fullName" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" />
+	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="total" />
 </cf_SlatwallListingDisplay>
 
