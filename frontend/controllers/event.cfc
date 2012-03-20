@@ -42,6 +42,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="productService" type="any";
 	property name="contentService" type="any";
 	property name="accountService" type="any";
+	property name="accessService" type="any";
 	property name="sessionService" type="any";
 	property name="requestCacheService" type="any";
 	
@@ -59,7 +60,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onSiteRequestStart(required any rc) {
-		// Make suer that there is a path key in the rc first
+		// Make sure that there is a path key in the rc first
 		if(structKeyExists(arguments.rc, "path")) {
 			// This hook is what enables SEO friendly product URL's... It is also what sets up the product in the slatwall scope, ext
 			var keyLocation = listFind(rc.path, setting('product_urlKey'), "/");
@@ -136,7 +137,16 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			} else if (rc.$.content('filename') == 'order-confirmation') {
 				rc.$.event("slatAction", "frontend:order.confirmation");
 
+			} else {
+				checkAccess(rc);
 			}
+		}
+	}
+	
+	private void function checkAccess(required any rc) {
+		var categoryQuery = rc.$.content().getCategoriesQuery() ;
+		if(!getAccessService().hasAccess(rc.$.content('path'),valueList(categoryQuery.categoryID))){
+			rc.$.event("slatAction", "frontend:account.noaccess");
 		}
 	}
 	

@@ -38,4 +38,53 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
+	public boolean function hasAccess(required any cmsContentIDPath,cmsCategoryIDs) {
+		// make sure there is restricted content in the system before doing any check
+		if(!restrictedContentExists()) {
+			return true;
+		}
+		// get restricted content by path
+		var restrictedContent = getDAO().getRestrictedContentByPath(arguments.cmsContentIDPath);
+		if(isNull(restrictedContent)) {
+			return true;
+		}
+		// get the current content
+		var thisContent = getService("contentService").getContentByCmsContentID(listLast(arguments.cmsContentIDPath));
+		// check if purchase is allowed for this content
+		if(!isNull(thisContent.getAllowPurchaseFlag()) && thisContent.getAllowPurchaseFlag()) {
+			// check if the content was purchased
+			var accountContentAccessSmartList = getAccountContentAccessSmartList();
+			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=$.slatwall.getCurrentAccount().getAccountID());
+			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=thisContent.getContentID());
+			if(accountContentAccessSmartList.getRecordCount()) {
+				return true;
+			}
+		}
+		// check if this content is part of subscription access
+		for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
+			if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(thisContent)) {
+				return true;
+			}
+		}
+		// check if any of this content's category is part of subscription access
+		var categories = getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
+		for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
+			for(var category in categories) {
+				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean function restrictedContentExists() {
+		return getDAO().restrictedContentExists() GT 0;
+	}
+	
+	public string function createAccessCode() {
+		// TODO: access code generation
+		
+	}
+	
 }

@@ -197,7 +197,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	// Special account specific logic to require a user to be logged in
 	public void function after(required struct rc) {
-		if(!rc.$.currentUser().isLoggedIn() && rc.slatAction != "frontend:account.create" && rc.slatAction != "frontend:account.save") {
+		if(!rc.$.currentUser().isLoggedIn() && rc.slatAction != "frontend:account.create" && rc.slatAction != "frontend:account.save" && rc.slatAction != "frontend:account.noaccess") {
 			getFW().setView("frontend:account.login");
 		}
 	}

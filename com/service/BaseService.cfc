@@ -57,6 +57,10 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return getDAO().new(argumentcollection=arguments);
 	}
 
+	public any function count(required string entityName ) {
+		return getDAO().count(argumentcollection=arguments);
+	}
+
 	public any function getSmartList(string entityName, struct data={}){
 		return getDAO().getSmartList(argumentcollection=arguments);
 	}
@@ -122,6 +126,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	 *
 	 *   newXXX()
 	 *
+	 *   countXXX()
+	 *
 	 *   saveXXX( required any xxxEntity )
 	 *
 	 *   deleteXXX( required any xxxEntity )
@@ -159,6 +165,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			return onMissingSaveMethod( missingMethodName, missingMethodArguments );
 		} else if ( lCaseMissingMethodName.startsWith( 'delete' ) )	{
 			return onMissingDeleteMethod( missingMethodName, missingMethodArguments );
+		} else if ( lCaseMissingMethodName.startsWith( 'count' ) ) {
+			return onMissingCountMethod( missingMethodName, missingMethodArguments );
 		}
 
 		throw( 'No matching method for #missingMethodName#().' );
@@ -396,6 +404,20 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		}
 
 		return list( argumentCollection = listArgs );
+	}
+
+
+	/**
+	 * Provides dynamic count methods, by convention, on missing method:
+	 *
+	 *   countXXX()
+	 *
+	 * ...in which XXX is an ORM entity name.
+	 */
+	private function onMissingCountMethod( required string missingMethodName, required struct missingMethodArguments ){
+		var entityName = missingMethodName.substring( 5 );
+
+		return count( entityName );
 	}
 
 

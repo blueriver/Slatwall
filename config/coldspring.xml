@@ -3,6 +3,7 @@
 <beans default-autowire="byName">
 	
 	<!-- DAO Components -->
+	<bean id="accessDAO" class="Slatwall.com.dao.AccessDAO" />
 	<bean id="accountDAO" class="Slatwall.com.dao.AccountDAO" />
 	<bean id="addressDAO" class="Slatwall.com.dao.AddressDAO" />
 	<bean id="attributeDAO" class="Slatwall.com.dao.AttributeDAO" />
@@ -124,7 +125,13 @@
 				<entry key="PromotionApplied"><value>promotionService</value></entry>
 				<entry key="PromotionCode"><value>promotionService</value></entry>
 				<entry key="PromotionImage"><value>promotionService</value></entry>
+				<entry key="PromotionQualifier"><value>promotionService</value></entry>
+				<entry key="PromotionQualifierExclusion"><value>promotionService</value></entry>
+				<entry key="PromotionQualifierFulfillment"><value>promotionService</value></entry>
+				<entry key="PromotionQualifierOrder"><value>promotionService</value></entry>
+				<entry key="PromotionQualifierProduct"><value>promotionService</value></entry>
 				<entry key="PromotionReward"><value>promotionService</value></entry>
+				<entry key="PromotionRewardExclusion"><value>promotionService</value></entry>
 				<entry key="PromotionRewardOrder"><value>promotionService</value></entry>
 				<entry key="PromotionRewardProduct"><value>promotionService</value></entry>
 				<entry key="PromotionRewardShipping"><value>promotionService</value></entry>
@@ -182,6 +189,9 @@
 	</bean>
 	
 	<!-- Service Components - Main -->
+	<bean id="accessService" parent="parentService" class="Slatwall.com.service.AccessService">
+        <property name="DAO"><ref bean="accessDAO" /></property>
+    </bean>
 	<bean id="accountService" parent="parentService" class="Slatwall.com.service.AccountService">
         <property name="DAO"><ref bean="accountDAO" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>

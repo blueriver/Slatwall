@@ -225,6 +225,11 @@ component extends="BaseService" accessors="true" output="false" {
 				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
 			}
 		}
+
+		if(!isNull(arguments.access.getSubscriptionUsageBenefitAccount())) {
+			arguments.access.getSubscriptionUsageBenefitAccount().setAccount(arguments.account);
+			arguments.access.getSubscriptionUsageBenefitAccount().setActiveFlag(1);
+		}
 	}
 	
 	public any function updateCmsUserFromAccount(required any cmsUser, required any Account) {

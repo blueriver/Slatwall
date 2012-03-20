@@ -188,7 +188,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	private void function confirmOrderNumberOpenDateCloseDate() {
 		if((isNull(variables.orderNumber) || variables.orderNumber == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
 			if(setting('order_orderNumberGeneration') == "autoIncrement" || setting('order_orderNumberGeneration') == "") {
-				var maxOrderNumber = ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
+				var maxOrderNumber = getService("orderService").getMaxOrderNumber();
 				if( arrayIsDefined(maxOrderNumber,1) ){
 					setOrderNumber(maxOrderNumber[1] + 1);
 				} else {

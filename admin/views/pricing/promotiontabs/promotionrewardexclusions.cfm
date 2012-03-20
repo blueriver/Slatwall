@@ -82,18 +82,6 @@ Notes:
 									<cfset local.itemName &= local.thisPromotionRewardExclusion.displayOptionNames() />
 									<cfset local.itemName &= "</p>" />
 								</cfif>
-								<cfif arrayLen(local.thisPromotionRewardExclusion.getProductContent())>
-									<cfset local.itemName &= "<p>" />
-									<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionRewardExclusion.productContent') & ": " />
-									<cfset local.itemName &= local.thisPromotionRewardExclusion.displayProductPageNames() />
-									<cfset local.itemName &= "</p>" />
-								</cfif>
-								<cfif arrayLen(local.thisPromotionRewardExclusion.getProductCategories())>
-									<cfset local.itemName &= "<p>" />
-									<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionRewardExclusion.productCategories') & ": " />
-									<cfset local.itemName &= local.thisPromotionRewardExclusion.displayProductCategoryNames() />
-									<cfset local.itemName &= "</p>" />
-								</cfif>
 								<cfif not len(local.itemName)>
 									<cfset local.itemName &= "<p>" />
 									<cfset local.itemName &= $.Slatwall.rbKey("define.all") />
@@ -131,8 +119,6 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardExclusion#" property="brands" fieldName="promotionRewardExclusions[1].brands" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardExclusion#" property="productTypes" fieldName="promotionRewardExclusions[1].productTypes" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardExclusion#" property="products" fieldName="promotionRewardExclusions[1].products" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardExclusion#" property="productContent" value="#rc.promotionRewardExclusion.getContentPaths()#" fieldType="multiSelect" fieldName="promotionRewardExclusions[1].productContent" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardExclusion#" property="productCategories" value="#rc.promotionRewardExclusion.getCategoryPaths()#" fieldType="multiSelect" fieldName="promotionRewardExclusions[1].productCategories" edit="true" />
 				<!--- <cf_SlatwallPropertyDisplay object="#rc.promotionRewardExclusion#" property="skus" fieldName="promotionRewardExclusions[1].skus" edit="true" /> --->
 				<!--- <cf_SlatwallPropertyDisplay object="#rc.promotionRewardExclusion#" property="options" fieldName="promotionRewardExclusions[1].options" edit="true" /> --->
 			</dl>

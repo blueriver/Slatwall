@@ -435,6 +435,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							// setup subscription data if this was subscription order
 							setupSubscriptionOrder(order);
 							
+							// setup content access if this was content purchase
+							setupContentAccess(order);
+							
 							processOK = true;
 						}
 					}
@@ -454,6 +457,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				subscriptionOrder.setSubscriptionOrderType(this.getTypeBySystemCode("sotInitial"));
 				subscriptionOrder.setSubscriptionUsage(subscriptionUsage);
 				getService("subscriptionService").saveSubscriptionOrder(subscriptionOrder);
+			}
+		}
+	}
+	
+	public void function setupContentAccess(required any order) {
+		for(var orderItem in arguments.order.getOrderItems()) {
+			for(var accessContent in orderItem.getSku().getAccessContents()) {
+				var accountContentAccess = getService("AccountService").newAccountContentAccess();
+				accountContentAccess.setAccount($.slatwall.getCurrentAccount());
+				accountContentAccess.setOrderItem(orderItem);
+				accountContentAccess.addAccessContent(accessContent);
+				getService("AccountService").saveAccountContentAccess(accountContentAccess);
 			}
 		}
 	}
@@ -1038,6 +1053,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		this.saveOrder( newOrder );
 		
 		return newOrder;
+	}
+	
+	public any function getMaxOrderNumber() {
+		return getDAO().getMaxOrderNumber();
 	}
 	
 	/**************** LEGACY DEPRECATED METHOD ****************************/
