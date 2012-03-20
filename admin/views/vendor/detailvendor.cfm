@@ -40,7 +40,9 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cf_SlatwallDetailForm object="#rc.vendor#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.vendor#" edit="#rc.edit#" />
+	<cf_SlatwallActionBar type="detail" object="#rc.vendor#" edit="#rc.edit#">
+		<cf_SlatwallActionCaller action="admin:vendor.createvendoraddress" queryString="vendorID=#rc.vendor.getVendorID()#" type="list" modal=true hide="true" />
+	</cf_SlatwallActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList>
@@ -58,7 +60,7 @@ Notes:
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	
-	<cf_SlatwallTabGroup>
+	<cf_SlatwallTabGroup hide="#rc.vendor.isNew()#">
 		<cf_SlatwallTab view="admin:vendor/vendortabs/vendoraddresses" />
 		<cf_SlatwallTab view="admin:vendor/vendortabs/vendorbrands" />
 		<cfif !rc.vendor.isNew()>
