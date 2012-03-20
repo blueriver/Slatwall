@@ -252,7 +252,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var entity = entityService.invokeMethod( "get#rc.itemEntityName#", {1=rc[ entityPrimaryID ]} );
 		
 		if(isNull(entity)) {
-			getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_failure");
+			getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_error");
 		}
 		
 		var deleteOK = entityService.invokeMethod("delete#arguments.entityName#", {1=entity});
@@ -261,7 +261,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");
 		}
 		
-		getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_failure");
+		getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_error");
 	}
 	
 	public void function genericSaveMethod(required string entityName, required struct rc) {
@@ -276,17 +276,19 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		} else {
 			rc.edit = true;
 			getFW().setView(action=rc.detailAction);
-			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_failure");
+			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_error");
 			for( var p in rc[ rc.arguments.entityName ].getErrors() ) {
 				local.thisErrorArray = rc[ rc.arguments.entityName ].getErrors()[p];
 				for(var i=1; i<=arrayLen(local.thisErrorArray); i++) {
-					showMessage(local.thisErrorArray[i], "failure");
+					showMessage(local.thisErrorArray[i], "error");
 				}
 			}
 			if(rc[ arguments.entityName ].isNew()) {
 				rc.slatAction = rc.createAction;
+				rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
 			} else {
 				rc.slatAction = rc.editAction;
+				rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
 			}
 			rc.edit = true;
 		}

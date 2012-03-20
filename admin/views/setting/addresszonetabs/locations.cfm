@@ -36,18 +36,18 @@
 Notes:
 
 --->
-<cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#"
-			recordEditAction="admin:setting.editaddresszonelocation"
-			recordEditQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#"
-			recordEditModal=true
-			recordDeleteAction="admin:setting.deleteaddresszonelocation">
-			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="stateCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="city" />
-		<cf_SlatwallListingColumn propertyIdentifier="postalCode" />
-	</cf_SlatwallListingDisplay>
-	
-	<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" class="btn btn-primary" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
-</cfoutput>
+<cfparam name="rc.addressZone" type="any" />
+
+<cf_SlatwallListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#"
+		recordEditAction="admin:setting.editaddresszonelocation"
+		recordEditQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#"
+		recordEditModal=true
+		recordDeleteAction="admin:setting.deleteaddresszonelocation">
+		
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryCode" />
+	<cf_SlatwallListingColumn propertyIdentifier="stateCode" />
+	<cf_SlatwallListingColumn propertyIdentifier="city" />
+	<cf_SlatwallListingColumn propertyIdentifier="postalCode" />
+</cf_SlatwallListingDisplay>
+
+<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" class="btn btn-primary" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
