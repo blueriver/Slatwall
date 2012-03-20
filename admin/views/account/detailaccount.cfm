@@ -38,8 +38,31 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 <cfparam name="rc.edit" type="boolean" />
+<cfset local.attributeSets = rc.account.getAttributeSets(["astAccount"]);
 
-<ul id="navTask">
+<cf_SlatwallDetailForm object="#rc.account#" edit="#rc.edit#">
+	<cf_SlatwallActionBar type="detail" object="#rc.account#" edit="#rc.edit#" />
+	
+	<cf_SlatwallDetailHeader>
+		<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
+		</cf_SlatwallPropertyList>
+	</cf_SlatwallDetailHeader>
+	
+	<cf_SlatwallTabGroup>
+		<cf_SlatwallTab view="admin:account/accounttabs/addresses" />
+		<cf_SlatwallTab view="admin:account/accounttabs/login" />
+		<cf_SlatwallTab view="admin:account/accounttabs/orders" />
+<!---		<cf_SlatwallTab view="admin:account/accounttabs/carts" />--->
+		<cf_SlatwallTab view="admin:account/accounttabs/productreviews" />
+		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />	
+	</cf_SlatwallTabGroup>
+	
+</cf_SlatwallDetailForm>
+
+<!---<ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:account.list" type="list">
 	<cfif !rc.edit>
 	<cf_SlatwallActionCaller action="admin:account.edit" queryString="accountID=#rc.account.getAccountID()#" type="list">
@@ -100,4 +123,4 @@ Notes:
 			</form>
 		</cfif>
 	</div>
-</cfoutput>
+</cfoutput>--->

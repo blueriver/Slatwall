@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cfoutput>
+<!---<cfoutput>
 	<table id="CartList" class="listing-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.order.createdDateTime")#</th>
@@ -64,4 +64,4 @@ Notes:
 		</cfloop>
 	</table>
 	<cf_SlatwallSmartListPager smartList="#rc.orderSmartList#">
-</cfoutput>
+</cfoutput>--->

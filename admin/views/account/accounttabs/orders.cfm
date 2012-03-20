@@ -38,7 +38,15 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cfoutput>
+<cf_SlatwallListingDisplay smartList="#rc.account.getOrdersSmartList()#">
+	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
+	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" />
+	<cf_SlatwallListingColumn tdclass="primary"  propertyIdentifier="account.fullName" />
+	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" />
+	<cf_SlatwallListingColumn propertyIdentifier="total" />
+</cf_SlatwallListingDisplay>
+
+<!---<cfoutput>
 	<table id="OrderList" class="listing-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
@@ -65,4 +73,4 @@ Notes:
 			</cfif>
 		</cfloop>
 	</table>
-</cfoutput>
+</cfoutput>--->

@@ -199,6 +199,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return "#getFirstName()# #getLastName()#";
 	}
 	
+	public string function getSimpleRepresentationPropertyName() {
+		return "fullName";
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================

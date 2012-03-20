@@ -37,6 +37,6 @@ Notes:
 
 --->
 
-<cfoutput>
+<cf_SlatwallPropertyList>
 	<cf_SlatwallPropertyDisplay object="#rc.account#" property="priceGroups" edit="#rc.edit#" displayType="plain" />
-</cfoutput>
+</cf_SlatwallPropertyList>

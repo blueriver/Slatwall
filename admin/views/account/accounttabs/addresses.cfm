@@ -38,7 +38,17 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cfoutput>
+<cf_SlatwallListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="name" />
+	<cf_SlatwallListingColumn propertyIdentifier="streetAddress" />
+	<cf_SlatwallListingColumn propertyIdentifier="street2Address" />
+	<cf_SlatwallListingColumn propertyIdentifier="city" />
+	<cf_SlatwallListingColumn propertyIdentifier="stateCode" />
+	<cf_SlatwallListingColumn propertyIdentifier="postalCode" />
+</cf_SlatwallListingDisplay>
+
+
+<!---<cfoutput>
 	<table id="AddressList" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.address.name")#</th>
@@ -65,4 +75,4 @@ Notes:
 			</tr>
 		</cfloop>
 	</table>
-</cfoutput>
+</cfoutput>--->
