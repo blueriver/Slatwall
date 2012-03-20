@@ -57,24 +57,15 @@ Notes:
 					<div class="span6">
 						<div class="btn-toolbar">
 							<cfif attributes.type eq "listing" >
-								<cfif len(thistag.generatedcontent)>
-									<div class="btn-group">
-										<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.action')#<span class="caret"></span></button>
-										<ul class="dropdown-menu">
-											#thistag.generatedcontent#	
-										</ul>
-									</div>
-									<cfset thistag.generatedcontent = "" />
-								</cfif>
 								<div class="btn-group">
 									<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.show')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">
-										<li><a href="">10</a></li>
-										<li><a href="">25</a></li>
-										<li><a href="">50</a></li>
-										<li><a href="">100</a></li>
-										<li><a href="">500</a></li>
-										<li><a href="">ALL</a></li>
+										<li><a href="#attributes.object.buildURL('P:Show=10')#">10</a></li>
+										<li><a href="#attributes.object.buildURL('P:Show=25')#">25</a></li>
+										<li><a href="#attributes.object.buildURL('P:Show=50')#">50</a></li>
+										<li><a href="#attributes.object.buildURL('P:Show=100')#">100</a></li>
+										<li><a href="#attributes.object.buildURL('P:Show=500')#">500</a></li>
+										<li><a href="#attributes.object.buildURL('P:Show=all')#">ALL</a></li>
 									</ul>
 								</div>
 								<div class="btn-group">

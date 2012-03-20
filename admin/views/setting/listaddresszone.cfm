@@ -38,12 +38,8 @@ Notes:
 --->
 <cfparam name="rc.addresszoneSmartList" type="any" />
 
-<cfoutput>
-	
 <cf_SlatwallActionBar type="listing" object="#rc.addresszoneSmartList#" rc="#rc#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.addresszoneSmartList#" rc="#rc#" recordEditAction="admin:setting.editaddresszone">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="addresszoneName" />
 </cf_SlatwallListingDisplay>
-
-</cfoutput>

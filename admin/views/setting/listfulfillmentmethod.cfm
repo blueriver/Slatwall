@@ -36,9 +36,16 @@
 Notes:
 
 --->
+<cfparam name="rc.fulfillmentMethodSmartList" type="any" />
 
+<cf_SlatwallActionBar type="listing" object="#rc.fulfillmentMethodSmartList#" />
+
+<cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethodSmartList#" recordEditAction="admin:setting.editfulfillmentmethod">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" />
+</cf_SlatwallListingDisplay>
+
+<!---
 <cfparam name="rc.fulfillmentMethods" type="array" />
-
 <cfoutput>
 	<div class="svoadminListFulfillmentMethods">
 		<ul id="navTask">
@@ -74,3 +81,4 @@ Notes:
 		</table>
 	</div>
 </cfoutput>
+--->
