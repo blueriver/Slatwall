@@ -61,6 +61,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="attributeValues" singularname="attributeValue" cfc="AccountAttributeValue" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
 	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
+	property name="subscriptionUsageBenefitAccounts" singularname="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
@@ -107,6 +108,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 		if(isNull(variables.priceGroups)) {
 			variables.priceGroups = [];
+		}
+		if(isNull(variables.subscriptionUsageBenefitAccounts)) {
+			variables.subscriptionUsageBenefitAccounts = [];
 		}
 		return super.init();
 	}
@@ -277,6 +281,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	public void function removeProductReview(required any productReview) {
 		arguments.productReview.removeAccount(this);
+	}
+	
+	// Subscription Usage Benefits (one-to-many)    
+	public void function addSubscriptionUsageBenefitAccount(required any subscriptionUsageBenefitAccount) {    
+		arguments.subscriptionUsageBenefitAccount.setAccount( this );    
+	}    
+	public void function removeSubscriptionUsageBenefitAccount(required any subscriptionUsageBenefitAccount) {    
+		arguments.subscriptionUsageBenefitAccount.removeAccount( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

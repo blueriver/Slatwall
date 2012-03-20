@@ -71,6 +71,24 @@ component displayname="Subscription Usage Benefit Account" entityname="SlatwallS
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+		variables.account = arguments.account;
+		if(isNew() or !arguments.account.hasSubscriptionUsageBenefitAccount( this )) {
+			arrayAppend(arguments.account.getSubscriptionUsageBenefitAccounts(), this);
+		}
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getSubscriptionUsageBenefitAccounts(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getSubscriptionUsageBenefitAccounts(), index);
+		}
+		structDelete(variables, "account");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================

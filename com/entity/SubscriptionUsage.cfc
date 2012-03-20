@@ -67,6 +67,13 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	// Non-Persistent Properties
 
 
+	public any function init() {
+		if(isNull(variables.subscriptionUsageBenefits)) {
+			variables.subscriptionUsageBenefits = [];
+		}
+		return super.init();
+	}
+	
 
 	public void function setOrderItem(required any orderItem) {
 		variables.orderItem = arguments.orderItem;
