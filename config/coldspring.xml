@@ -3,6 +3,7 @@
 <beans default-autowire="byName">
 	
 	<!-- DAO Components -->
+	<bean id="accessDAO" class="Slatwall.com.dao.AccessDAO" />
 	<bean id="accountDAO" class="Slatwall.com.dao.AccountDAO" />
 	<bean id="addressDAO" class="Slatwall.com.dao.AddressDAO" />
 	<bean id="attributeDAO" class="Slatwall.com.dao.AttributeDAO" />
@@ -181,6 +182,9 @@
 	</bean>
 	
 	<!-- Service Components - Main -->
+	<bean id="accessService" parent="parentService" class="Slatwall.com.service.AccessService">
+        <property name="DAO"><ref bean="accessDAO" /></property>
+    </bean>
 	<bean id="accountService" parent="parentService" class="Slatwall.com.service.AccountService">
         <property name="DAO"><ref bean="accountDAO" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>

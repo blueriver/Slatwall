@@ -77,16 +77,41 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 
 	public void function setOrderItem(required any orderItem) {
 		variables.orderItem = arguments.orderItem;
+		//copy all the info form subscription term
 		var subscriptionTerm = orderItem.getSku().getSubscriptionTerm();
 		setInitialTerm(subscriptionTerm.getInitialTerm());
 		setRenewalTerm(subscriptionTerm.getRenewalTerm());
 		setGracePeriodTerm(subscriptionTerm.getGracePeriodTerm());
 		setAllowProrateFlag(subscriptionTerm.getAllowProrateFlag());
 		setRenewalPrice(orderItem.getSku().getRenewalPrice());
+		// copy all the subscription benefits
 		for(var subscriptionBenefit in subscriptionTerm.getSubscriptionBenefits()) {
 			var subscriptionUsageBenefit = getService("subscriptionService").newSubscriptionUsageBenefit();
 			subscriptionUsageBenefit.copyFromSubscriptionBenefit(subscriptionBenefit);
 			addSubscriptionUsageBenefit(subscriptionUsageBenefit);
+			// add this benefit to access
+			if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerSubscription") {
+				var accessSmartList = getService("accessService").getAccessSmartList();
+				accessSmartList.addFilter(propertyIdentifier="subscriptionUsage_subscriptionUsageID", value=subscriptionUsageBenefit.getSubscriptionUsage().getSubscriptionUsageID());
+				if(!accessSmartList.getRecordCount()) {
+					var access = getService("accessService").newAccess();
+					access.setSubscriptionUsage(subscriptionUsageBenefit.getSubscriptionUsage());
+					getService("accessService").saveAccess(access);
+				}
+			} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerBenefit") {
+				var access = getService("accessService").newAccess();
+				access.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				getService("accessService").saveAccess(access);
+			} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerAccount") {
+				for(var i = 0; i < subscriptionBenefit.getTotalQuantity(); i++) {
+					var subscriptionUsageBenefitAccount = getService("subscriptionService").newSubscriptionUsageBenefitAccount();
+					subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+					getService("subscriptionService").saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+					var access = getService("accessService").newAccess();
+					access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+					getService("accessService").saveAccess(access);
+				}
+			}
 		}
 	}
 	

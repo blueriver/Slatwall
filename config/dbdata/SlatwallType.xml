@@ -107,10 +107,10 @@
 		<Record typeID="444df2b201a098f5b277febb17a7cb0a" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Zip Code" systemCode="vtZipCode" />
 		<Record typeID="444df2b193d8c854256c8cde9d4921b3" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Regex" systemCode="vtRegex" />
 		
-		<Record typeID="444df2f201be608fee51e3de7bbf3960" parentTypeID="NULL" type="Subscription Access Code Types" systemCode="subscriptionAccessCodeType" />
-		<Record typeID="444df2f39c75e88f55a9b993e786aaf2" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Global" systemCode="global" />
-		<Record typeID="444df2f4d19ac22bba4bc12cc38b3ee0" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Benefit" systemCode="perBenefit" />
-		<Record typeID="444df2f5ad81d2a9039a050b8dda814d" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Account" systemCode="perAccount" />
+		<Record typeID="444df2f201be608fee51e3de7bbf3960" parentTypeID="NULL" type="Subscription Access Types" systemCode="subscriptionAccessType" />
+		<Record typeID="444df2f39c75e88f55a9b993e786aaf2" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Global" systemCode="satPerSubscription" />
+		<Record typeID="444df2f4d19ac22bba4bc12cc38b3ee0" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Benefit" systemCode="satPerBenefit" />
+		<Record typeID="444df2f5ad81d2a9039a050b8dda814d" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Account" systemCode="satPerAccount" />
 
 		<Record typeID="444df3100babdbe1086cf951809a60ca" parentTypeID="NULL" type="Subscription Order Types" systemCode="subscriptionOrderType" />
 		<Record typeID="444df311d7615e7cf56b836f515aebd4" parentTypeID="444df3100babdbe1086cf951809a60ca" type="Initial" systemCode="sotInitial" />

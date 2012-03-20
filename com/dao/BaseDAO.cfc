@@ -98,6 +98,10 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		}
 	}
 	
+	public any function count(required any entityName) {
+		return ormExecuteQuery("SELECT count(*) FROM #arguments.entityName#",true);
+	}
+	
 	public void function reloadEntity(required any entity) {
     	entityReload(arguments.entity);
     }

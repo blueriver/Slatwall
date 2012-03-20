@@ -1,4 +1,4 @@
-/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,11 +35,7 @@
 
 Notes:
 
-*/
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
-
-	public any function getCategoriesByCmsCategoryIDs(required any cmsCategoryIDs) {
-		return getDAO().getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
-	}
-	
-}
+--->
+<cfoutput>
+	You don't have access to this page.
+</cfoutput>

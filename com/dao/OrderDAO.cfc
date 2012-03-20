@@ -209,4 +209,9 @@ component extends="BaseDAO" {
 		}
 	}
 
+	public any function getMaxOrderNumber() {
+		return ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
+	}
+	
+
 }

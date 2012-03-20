@@ -38,4 +38,18 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cffunction name="getCategoriesByCmsCategoryIDs" access="public">
+		<cfargument name="CmsCategoryIDs" type="string" />
+			
+		<cfset var hql = " FROM SlatwallCategory sc
+							WHERE sc.cmsCategoryID IN (:CmsCategoryIDs) " />
+			
+		<cfif structKeyExists(server, "railo")>
+			<cfset var returnQuery = ormExecuteQuery(hql, {CmsCategoryIDs=arguments.CmsCategoryIDs}) />
+		<cfelse>
+			<cfset var returnQuery = ormExecuteQuery(hql, {CmsCategoryIDs=listToArray(arguments.CmsCategoryIDs)}) />		
+		</cfif>
+		<cfreturn returnQuery />
+	</cffunction>
+	
 </cfcomponent>

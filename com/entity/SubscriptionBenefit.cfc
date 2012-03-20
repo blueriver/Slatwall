@@ -47,7 +47,7 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	property name="contentQuantity" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="accessCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessCodeTypeID";
+	property name="accessType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessTypeID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -109,6 +109,10 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 		return variables.contentsOptions;
     }
     
+    public numeric function getTotalQuantity() {
+    	// TODO: how is this suppose to be calculated??
+    	return 0;
+    }
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
