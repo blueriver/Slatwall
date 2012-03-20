@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 <cfparam name="rc.edit" type="boolean" />
-<cfset local.attributeSets = rc.account.getAttributeSets(["astAccount"]);
+<!---<cfset local.attributeSets = rc.account.getAttributeSets(["astAccount"]) />--->
 
 <cf_SlatwallDetailForm object="#rc.account#" edit="#rc.edit#">
 	<cf_SlatwallActionBar type="detail" object="#rc.account#" edit="#rc.edit#" />
