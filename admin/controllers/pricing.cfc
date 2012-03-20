@@ -47,7 +47,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect("admin:pricing.listpromotion");
 	}
 	
-	/*
+
 	public void function detailpromotion(required struct rc) {
 		param name="rc.promotionID" default="";
 		param name="rc.promotionRewardID" default="";
@@ -74,7 +74,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 
     public void function createpromotion(required struct rc) {
-    	edit( rc );
+    	editpromotion( rc );
     }
 
 	public void function editpromotion(required struct rc) {
@@ -84,9 +84,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.promotionRewardExclusionID" default="";
 		param name="rc.promotionQualifierExclusionID" default="";
 		
-		detail(rc);
+		detailpromotion(rc);
 		rc.edit = true;
-		getFW().setView("admin:promotion.detail");
+		getFW().setView("admin:pricing.detailpromotion");
 		
 	}
 	 
@@ -107,7 +107,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.savePromotionRewardExclusion" default="false";
 		param name="rc.savePromotionQualifierExclusion" default="false";
 		
-		detail(rc);
+		detailpromotion(rc);
 		// Call the promotion service save method (this is standard)
 		rc.promotion = getPromotionService().savePromotion(rc.promotion, rc);
 		
@@ -115,15 +115,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!rc.promotion.hasErrors()) {
 			rc.message="admin.promotion.save_success";
 			if(rc.savePromotionRewardProduct || rc.savePromotionRewardShipping || rc.savePromotionRewardOrder) {
-				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()#",preserve="message");	
+				getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotion.getPromotionID()#",preserve="message");	
 			} else if ( rc.savePromotionQualifierProduct || rc.savePromotionQualifierFulfillment || rc.savePromotionQualifierOrder ) {
-				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionQualifiers",preserve="message");	
+				getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionQualifiers",preserve="message");	
 			} else if ( rc.savePromotionRewardExclusion ) {
-				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionRewardExclusions",preserve="message");	
+				getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionRewardExclusions",preserve="message");	
 			} else if ( rc.savePromotionQualifierExclusion ) {
-				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionQualifierExclusions",preserve="message");	
+				getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionQualifierExclusions",preserve="message");	
 			} else {
-				getFW().redirect(action="admin:promotion.list",preserve="message");
+				getFW().redirect(action="admin:pricing.listpromotion",preserve="message");
 			}
 		} else {
 			// If one of the sub-options had the error, then find out which one and populate it
@@ -139,7 +139,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 			rc.edit = true;
 			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.create") : rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
-			getFW().setView(action="admin:promotion.detail");
+			getFW().setView(action="admin:pricing.detailpromotion");
 		}
 	}
 	
@@ -156,7 +156,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype="error";
 		}
 			   
-		getFW().redirect(action="admin:promotion.list",preserve="message,messagetype");
+		getFW().redirect(action="admin:pricing.listpromotion",preserve="message,messagetype");
 	}
 
 	public void function deletePromotionCode(required struct rc) {
@@ -173,7 +173,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype = "error";
 		}
 		
-		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
+		getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
 	}
 	
 	public void function deletePromotionReward(required struct rc) {
@@ -190,7 +190,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype = "error";
 		}
 		
-		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
+		getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
 	}
 	
 	public void function deletePromotionRewardExclusion(required struct rc) {
@@ -207,7 +207,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype = "error";
 		}
 		
-		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID###tabPromotionRewardExclusions",preserve="message,messagetype");
+		getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotionID###tabPromotionRewardExclusions",preserve="message,messagetype");
 	}
 	
 	public void function deletePromotionQualifier(required struct rc) {
@@ -224,7 +224,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype = "error";
 		}
 		
-		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID###tabPromotionQualifiers",preserve="message,messagetype");
+		getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotionID###tabPromotionQualifiers",preserve="message,messagetype");
 	}
 	
 	public void function deletePromotionQualifierExclusion(required struct rc) {
@@ -241,10 +241,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype = "error";
 		}
 		
-		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID###tabPromotionQualifierExclusions",preserve="message,messagetype");
+		getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotionID###tabPromotionQualifierExclusions",preserve="message,messagetype");
 	}
 	
-	public void function listPriceGroups(required struct rc) {
+		/*public void function listPriceGroups(required struct rc) {
         param name="rc.orderBy" default="priceGroupId|ASC";
         
         rc.priceGroupSmartList = getPriceGroupService().getPriceGroupSmartList(data=arguments.rc);  
