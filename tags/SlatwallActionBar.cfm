@@ -73,7 +73,6 @@ Notes:
 									<ul class="dropdown-menu">
 										<cf_SlatwallActionCaller action="admin:export.list" queryString="savedStateID=#attributes.object.getSavedStateID()#" text="#request.context.$.slatwall.rbKey('define.exportlist')#" type="list">
 										#thistag.generatedcontent#
-										<cfset thistag.generatedcontent = "" />
 									</ul>
 								</div>
 								<div class="btn-group">
@@ -90,7 +89,6 @@ Notes:
 											#thistag.generatedcontent#	
 										</ul>
 									</div>
-									<cfset thistag.generatedcontent = "" />
 								</cfif>
 								<div class="btn-group">
 									<cfif request.context.edit>
@@ -103,7 +101,7 @@ Notes:
 									</cfif>
 								</div>
 							</cfif>
-							
+							<cfset thistag.generatedcontent = "" />
 						</div>
 					</div>
 				</div>

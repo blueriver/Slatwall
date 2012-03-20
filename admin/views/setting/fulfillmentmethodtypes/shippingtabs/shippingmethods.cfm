@@ -36,26 +36,3 @@
 Notes:
 
 --->
-<cfparam name="rc.fulfillmentMethod" type="any" />
-<cfparam name="rc.edit" type="boolean" default="false" />
-
-<cf_SlatwallDetailForm object="#rc.fulfillmentMethod#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.fulfillmentMethod#" edit="#rc.edit#">
-		
-	</cf_SlatwallActionBar>
-	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodName" edit="#rc.edit#">
-			<cfif rc.fulfillmentMethod.isNew()>
-				<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodType" edit="true" fieldType="select">
-			<cfelse>
-				<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodType" edit="false" fieldType="select">
-			</cfif>
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
-	
-	<cfif not rc.fulfillmentMethod.isNew()>
-		<cfoutput>#view("admin:setting/fulfillmentmethodtypes/#lcase(rc.fulfillmentMethod.getFulfillmentMethodType())#")#</cfoutput>
-	</cfif>
-</cf_SlatwallDetailForm>

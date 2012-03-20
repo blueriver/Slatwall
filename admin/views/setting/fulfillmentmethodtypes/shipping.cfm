@@ -36,7 +36,14 @@
 Notes:
 
 --->
+
+<cf_SlatwallTabGroup hide="#rc.fulfillmentMethod.isNew()#">
+	<cf_SlatwallTab view="admin:setting/fulfillmentmethodtypes/shippingtabs/shippingmethods" />
+</cf_SlatwallTabGroup>
+
+<!---
 <cfoutput>
+	
 	<cfif arrayLen(rc.shippingMethods) gt 0>
 		<table id="shippingMethodList" class="listing-grid stripe">
 			<tr>
@@ -69,3 +76,4 @@ Notes:
 	<br />
 	<br />
 </cfoutput>
+--->
