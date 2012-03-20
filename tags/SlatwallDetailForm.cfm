@@ -48,7 +48,7 @@ Notes:
 				<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
 				<cfif structKeyExists(request.context, "modal") and request.context.modal>
 					<div class="modal-header">
-						<a class="close" data-dismiss="modal">x</a>
+						<a class="close" data-dismiss="modal">&times;</a>
 						<h3>#request.context.pageTitle#</h3>
 					</div>
 					<div class="modal-body">
@@ -62,8 +62,8 @@ Notes:
 					</div>
 					<div class="modal-footer">
 						<div class="btn-group">
-							<a href="##" class="btn close" data-dismiss="modal">#request.context.$.slatwall.rbKey('define.cancel')#</a>
-							<button type="submit" class="btn btn-success">#request.context.$.slatwall.rbKey('define.save')#</button>
+							<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.context.$.slatwall.rbKey('define.cancel')#</a>
+							<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #request.context.$.slatwall.rbKey('define.save')#</button>
 						</div>
 					</div>
 				</cfif>
