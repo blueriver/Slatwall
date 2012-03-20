@@ -136,10 +136,37 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
 		}
 		
+		rc.pageTitle = request.context.$.slatwall.rbKey(replace(rc.slatAction,':','.','all'));
+		if(right(rc.pageTitle, 8) eq "_missing") {
+			if(left(listLast(rc.slatAction, "."), 4) eq "list") {
+				rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
+			} else if (left(listLast(rc.slatAction, "."), 4) eq "edit") {
+				rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
+			} else if (left(listLast(rc.slatAction, "."), 6) eq "create") {
+				rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
+			} else if (left(listLast(rc.slatAction, "."), 6) eq "detail") {
+				rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
+			}
+		}
 	}
 	
 	private void function showMessageKey(required any messageKey) {
-		showMessage(message=rbKey(arguments.messageKey), messageType=listLast(messageKey, "_"));
+		var messageType = listLast(messageKey, "_");
+		var message = rbKey(arguments.messageKey);
+		
+		if(right(message, 8) == "_missing") {
+			if(left(listLast(arguments.messageKey, "."), 4) == "save") {
+				var entityName = listFirst(right(listLast(arguments.messageKey, "."), len(listLast(arguments.messageKey, "."))-4), "_");
+				message = rbKey("admin.define.save_#messageType#");
+				message = replace(message, "${itemEntityName}", rbKey("entity.#entityName#") );
+			} else if (left(listGetAt(arguments.messageKey, 3, "."), 6) == "delete") {
+				var entityName = listFirst(right(listLast(arguments.messageKey, "."), len(listLast(arguments.messageKey, "."))-6), "_");
+				message = rbKey("admin.define.delete_#messageType#");
+				message = replace(message, "${itemEntityName}", rbKey("entity.#entityName#") );
+			}
+		}
+		
+		showMessage(message=message, messageType=messageType);
 	}
 	
 	private void function showMessage(string message="", string messageType="info") {

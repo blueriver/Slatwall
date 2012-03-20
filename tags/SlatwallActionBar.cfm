@@ -42,24 +42,9 @@ Notes:
 		<cfparam name="attributes.type" type="string" />
 		<cfparam name="attributes.object" type="any" />
 		<cfparam name="attributes.edit" type="boolean" default="false" />
-		<cfparam name="attributes.pageTitle" type="string" default="" />
+		<cfparam name="attributes.pageTitle" type="string" default="#request.context.pageTitle#" />
 		
 		<cfsilent>
-			<cfif attributes.pageTitle eq "">
-				<cfset attributes.pageTitle = request.context.$.slatwall.rbKey(replace(request.context.slatAction,':','.','all')) />
-				<cfif right(attributes.pageTitle, 8) eq "_missing">
-					<cfif left(listLast(request.context.slatAction, "."), 4) eq "list">
-						<cfset attributes.pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.list'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
-					<cfelseif left(listLast(request.context.slatAction, "."), 4) eq "edit">
-						<cfset attributes.pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.edit'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
-					<cfelseif left(listLast(request.context.slatAction, "."), 6) eq "create">
-						<cfset attributes.pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.create'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
-					<cfelseif left(listLast(request.context.slatAction, "."), 6) eq "detail">
-						<cfset attributes.pageTitle = replace(request.context.$.slatwall.rbKey('admin.define.detail'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#request.context.itemEntityName#')) />
-					</cfif>
-				</cfif>
-			</cfif>
-			
 			<cfif attributes.type eq "detail" and not attributes.object.isNew()>
 				<cfset attributes.pageTitle &= " - #attributes.object.getSimpleRepresentation()#" />
 			</cfif>
@@ -109,7 +94,7 @@ Notes:
 								
 								<cfif len(thistag.generatedcontent)>
 									<div class="btn-group">
-										<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.action')#<span class="caret"></span></button>
+										<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.actions')# <span class="caret"></span></button>
 										<ul class="dropdown-menu">
 											#thistag.generatedcontent#	
 										</ul>

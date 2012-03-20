@@ -41,7 +41,7 @@ Notes:
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>#$.slatwall.rbKey(replace(rc.slatAction,":",".","all"))# &##124; Slatwall</title>
+		<title>#rc.pageTitle# &##124; Slatwall</title>
 		
 		<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 		<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
