@@ -38,7 +38,15 @@ Notes:
 --->
 <cfparam name="rc.vendor" type="any" />
 
-<cfoutput>
+<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorOrdersSmartList()#">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorOrderNumber" />
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
+	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" />
+	<cf_SlatwallListingColumn propertyIdentifier="total" />
+</cf_SlatwallListingDisplay>
+
+
+<!---<cfoutput>
 	
 	
 	<cfif ArrayLen(rc.vendorOrderSmartList.getPageRecords()) EQ 0>
@@ -70,4 +78,4 @@ Notes:
 		</table>
 	</cfif>
 
-</cfoutput>
+</cfoutput>--->

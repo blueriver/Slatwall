@@ -37,7 +37,20 @@ Notes:
 
 --->
 
-<cfoutput>
+<cfparam name="rc.vendor" type="any" />
+
+<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorAddressesSmartList()#">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="address.streetAddress" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.street2Address" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.city" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.stateCode" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.postalCode" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.countryCode" />
+</cf_SlatwallListingDisplay>
+
+<cf_SlatwallActionCaller action="admin:vendor.createvendoraddress" class="btn btn-primary" queryString="vendorID=#rc.vendor.getVendorID()#" modal=true />
+
+<!---<cfoutput>
 	<table id="AddressList" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.address.streetAddress")#</th>
@@ -92,4 +105,4 @@ Notes:
 	</cfif>
 	
 	
-</cfoutput>
+</cfoutput>--->
