@@ -46,14 +46,11 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="subscriptionBenefitName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="accessCodeType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="priceGroupQuantity" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="accessType" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="maxUseCount" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="priceGroups" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="promotionQuantity" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="promotions" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categoryQuantity" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categories" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contentQuantity" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contents" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>

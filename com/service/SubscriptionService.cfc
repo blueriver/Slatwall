@@ -37,5 +37,22 @@ Notes:
 
 */
 component extends="BaseService" output="false" {
-
+	
+	public any function createSubscriptionUsageBenefitAccountBySubscriptionUsage(required any subscriptionUsage) {
+		for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getSubscriptionUsageBenefits()) {
+			createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit);
+		}
+	}
+	
+	public any function createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(required any subscriptionUsageBenefit) {
+		if(arguments.subscriptionUsageBenefit.getAvailableUseCount() GT 0) {
+			var subscriptionUsageBenefitAccount = this.newSubscriptionUsageBenefitAccount();
+			subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
+			this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+			var access = getService("accessService").newAccess();
+			access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+			getService("accessService").saveAccess(access);
+		}
+	}
+	
 }

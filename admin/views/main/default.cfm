@@ -59,8 +59,8 @@ Notes:
 			<tbody>
 				<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
 					<tr>
-						<td><a href="#buildURL(action='admin:order.detail', queryString='orderID=#local.order.getOrderID()#')#">#local.order.getOrderNumber()#</a></td>
-						<td><a href="#buildURL(action='admin:order.detail', queryString='orderID=#local.order.getOrderID()#')#">#DateFormat(local.order.getOrderOpenDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.order.getOrderOpenDateTime(), "short")#</a></td>
+						<td><a href="#buildURL(action='admin:order.detailorder', queryString='orderID=#local.order.getOrderID()#')#">#local.order.getOrderNumber()#</a></td>
+						<td><a href="#buildURL(action='admin:order.detailorder', queryString='orderID=#local.order.getOrderID()#')#">#DateFormat(local.order.getOrderOpenDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.order.getOrderOpenDateTime(), "short")#</a></td>
 						<cfif !isNull(local.order.getAccount())>
 							<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='accountID=#local.order.getAccount().getAccountID()#')#">#local.order.getAccount().getFullName()#</a></td>
 						<cfelse>
@@ -93,7 +93,7 @@ Notes:
 			<tbody>
 				<cfloop array="#rc.productSmartList.getPageRecords()#" index="local.Product">
 					<tr>
-						<td class="primary"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
+						<td class="primary"><a href="#buildURL(action='admin:product.detailproduct', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
 						<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
 						<td></td>
 						<td>
@@ -126,12 +126,12 @@ Notes:
 			<tbody>
 				<cfloop array="#rc.productReviewSmartList.getPageRecords()#" index="local.productReview">
 					<tr>
-						<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
-						<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
-						<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
+						<td><a href="#buildURL(action='admin:product.detailproduct', querystring='productID=#local.productReview.getProduct().getProductID()#')#">#local.productReview.getProduct().getProductName()#</a></td>
+						<td>#local.productReview.getReviewerName()#</td>
+						<td>#local.productReview.getReviewTitle()#</td>
 						<td>
 							<ul class="btn-group">
-							  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="detail" type="list">
+							  <cf_SlatwallActionCaller action="admin:product.detailproduct" querystring="productID=#local.productReview.getProduct().getProductID()#" class="detail" type="list">
 							</ul>     						
 						</td>
 					</tr>

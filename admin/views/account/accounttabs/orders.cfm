@@ -43,7 +43,7 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range="true" />
 	<cf_SlatwallListingColumn tdclass="primary"  propertyIdentifier="account.fullName" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="total" />
+	<cf_SlatwallListingColumn propertyIdentifier="total" range="true" />
 </cf_SlatwallListingDisplay>
 
 <!---<cfoutput>

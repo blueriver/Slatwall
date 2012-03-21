@@ -108,7 +108,7 @@
 		<Record typeID="444df2b193d8c854256c8cde9d4921b3" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Regex" systemCode="vtRegex" />
 		
 		<Record typeID="444df2f201be608fee51e3de7bbf3960" parentTypeID="NULL" type="Subscription Access Types" systemCode="subscriptionAccessType" />
-		<Record typeID="444df2f39c75e88f55a9b993e786aaf2" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Global" systemCode="satPerSubscription" />
+		<Record typeID="444df2f39c75e88f55a9b993e786aaf2" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Subscription" systemCode="satPerSubscription" />
 		<Record typeID="444df2f4d19ac22bba4bc12cc38b3ee0" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Benefit" systemCode="satPerBenefit" />
 		<Record typeID="444df2f5ad81d2a9039a050b8dda814d" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Account" systemCode="satPerAccount" />
 

@@ -41,7 +41,9 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.subscriptionTerm#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionTerm#" edit="#rc.edit#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionTerm#" edit="#rc.edit#">
+			<cf_SlatwallActionCaller action="admin:product.createsubscriptionbenefit" type="list" modal=true />
+		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>

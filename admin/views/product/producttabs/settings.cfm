@@ -36,7 +36,35 @@
 Notes:
 
 --->
+<cfparam name="rc.product" type="any" />
+<cfset local.valueOptions = [{value="",name=rc.$.Slatwall.rbKey('setting.inherit')},{value="1",name=rc.$.Slatwall.rbKey('define.yes')},{value="0",name=rc.$.Slatwall.rbKey('define.no')}] />
 
+<cf_SlatwallPropertyList>
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="activeFlag" edit="#rc.edit#">
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="manufactureDiscontinuedFlag" edit="#rc.edit#">
+	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('allowBackorderFlag'))# )" />
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="allowBackorderFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
+	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('allowDropShipFlag'))# )" />
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="allowDropShipFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
+	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('allowShippingFlag'))# )" />
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="allowShippingFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
+	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('allowPreorderFlag'))# )" />
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="allowPreorderFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
+	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('callToOrderFlag'))# )" />
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="callToOrderFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
+	<cf_SlatwallPropertyDisplay object="#rc.product#" property="productDisplayTemplate" edit="true" fieldType="select" valueOptions="#rc.product.getProductDisplayTemplateOptions()#">
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityHeldBack" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityHeldBack")#">
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityMinimum" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityMinimum")#">
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityMaximum" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityMaximum")#">
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityOrderMinimum" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityOrderMinimum")#">
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityOrderMaximum" edit="#rc.edit#" fieldType="text"value="#rc.Product.getSetting("quantityOrderMaximum")#">
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#" fieldType="text"value="#rc.Product.getSetting("shippingWeight")#">
+	<cf_SlatwallPropertyDisplay object="#rc.product#" property="shippingWeightUnitCode" edit="true" fieldType="select" valueOptions="#rc.product.getShippingWeightUnitCodeOptions()#">
+	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.product.getInheritedSetting('trackInventoryFlag'))#)" />
+	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="trackInventoryFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
+</cf_SlatwallPropertyList>
+
+<!---
 <!--- set up options for setting select boxes --->
 <cfset local.valueOptions = [{value="",name=rc.$.Slatwall.rbKey('setting.inherit')},{value="1",name=rc.$.Slatwall.rbKey('define.yes')},{value="0",name=rc.$.Slatwall.rbKey('define.no')}] />
 
@@ -468,4 +496,4 @@ Notes:
 		
 		
 	</table>
-</cfoutput>
+</cfoutput>--->

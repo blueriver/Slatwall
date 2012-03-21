@@ -36,8 +36,14 @@
 Notes:
 
 --->
+<cfparam name="rc.product" type="any" />
 
-<cfoutput>
+<cf_SlatwallListingDisplay smartList="#rc.product.getProductReviewsSmartList()#">
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="review" />
+</cf_SlatwallListingDisplay>
+
+<!---<cfoutput>
 	<table id="productCategories" class="listing-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.productReview.createdDateTime")#</th>
@@ -52,4 +58,4 @@ Notes:
 			</tr>	
 		</cfloop>
 	</table>
-</cfoutput>
+</cfoutput>--->

@@ -36,7 +36,9 @@
 Notes:
 
 --->
+<cfparam name="rc.product" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-<cf_slatwallpropertylist>	
-	<cf_SlatwallPropertyDisplay object="#rc.product#" property="relatedProducts" edit="#rc.edit#" />
-</cf_slatwallpropertylist>
+<cf_SlatwallPropertyList>
+	<cf_SlatwallPropertyDisplay object="#rc.product#" property="productDescription" edit="#rc.edit#" fieldType="wysiwyg">
+</cf_SlatwallPropertyList>
