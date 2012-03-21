@@ -64,14 +64,8 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	
 	// Non-Persistent Properties
 
-	public any function init(){
-		// set default collections for association management methods
-		if(isNull(variables.subscriptionBenefits)){
-		   variables.subscriptionBenefits = [];
-		}
-		return super.init();
-	}
-	
+
+
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
