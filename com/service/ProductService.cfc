@@ -54,11 +54,14 @@ component extends="BaseService" accessors="true" {
 	
 	public array function getProductTemplates(required string siteID) {
 
-		var productTemplates = [];  //getContentService().listTemplate(date={templateType="Product",siteID=arguments.siteID});
-		var productTemplates = getContentService().listContent(date={templateFlag="1",siteID=arguments.siteID});
 		var returnArray = [];
-		for(var template in productTemplates) {
-			arrayAppend(returnArray, {name=template.getTitle(), value=template.getContentID()});
+		// No idea why coldspring is calling this method and throwing siteID undefined error, so putting condition here
+		if(structKeyExists(arguments,"siteID")) {
+			var productTemplates = [];  //getContentService().listTemplate(date={templateType="Product",siteID=arguments.siteID});
+			var productTemplates = getContentService().listContent(date={templateFlag="1",siteID=arguments.siteID});
+			for(var template in productTemplates) {
+				arrayAppend(returnArray, {name=template.getTitle(), value=template.getContentID()});
+			}
 		}
 		return returnArray;
 		/*
