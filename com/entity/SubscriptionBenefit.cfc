@@ -41,10 +41,7 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	// Persistent Properties
 	property name="subscriptionBenefitID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="subscriptionBenefitName" ormtype="string";
-	property name="priceGroupQuantity" ormtype="integer";
-	property name="promotionQuantity" ormtype="integer";
-	property name="categoryQuantity" ormtype="string";
-	property name="contentQuantity" ormtype="string";
+	property name="maxUseCount" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
 	property name="accessType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessTypeID";
@@ -84,17 +81,17 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 		return super.init();
 	}
 	
-    public array function getAccessCodeTypeOptions() {
-		if(!structKeyExists(variables, "accessCodeTypeOptions")) {
+    public array function getAccessTypeOptions() {
+		if(!structKeyExists(variables, "accessTypeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
 			smartList.addSelect(propertyIdentifier="typeID", alias="value");
-			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="subscriptionAccessCodeType");
+			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="subscriptionAccessType");
 			smartList.addOrder("type|ASC");
-			variables.accessCodeTypeOptions = smartList.getRecords();
-			arrayPrepend(variables.accessCodeTypeOptions,{name=rbKey("define.none"),value=""});
+			variables.accessTypeOptions = smartList.getRecords();
+			arrayPrepend(variables.accessTypeOptions,{name=rbKey("define.none"),value=""});
 		}
-		return variables.accessCodeTypeOptions;
+		return variables.accessTypeOptions;
     }
     
     public array function getContentsOptions() {
@@ -109,11 +106,7 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 		return variables.contentsOptions;
     }
     
-    public numeric function getTotalQuantity() {
-    	// TODO: how is this suppose to be calculated??
-    	return 0;
-    }
-	
+
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

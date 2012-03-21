@@ -40,10 +40,7 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	
 	// Persistent Properties
 	property name="subscriptionUsageBenefitID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="priceGroupQuantity" ormtype="integer";
-	property name="promotionQuantity" ormtype="integer";
-	property name="categoryQuantity" ormtype="string";
-	property name="contentQuantity" ormtype="string";
+	property name="maxUseCount" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
 	property name="subscriptionBenefit" cfc="SubscriptionBenefit" fieldtype="many-to-one" fkcolumn="subscriptionBenefitID";
@@ -85,16 +82,22 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 		return super.init();
 	}
 	
+	public numeric function getCurrentUseCount() {
+		// TODO: make a service call to get this
+		return 0;
+	}
+	
+	public numeric function getAvailableUseCount() {
+		return getMaxUseCount() - getCurrentUsageCount();
+	}
+	
 	public void function copyFromSubscriptionBenefit(required any subscriptionBenefit) {
 		setSubscriptionBenefit(arguments.subscriptionBenefit);
+		setMaxUseCount(arguments.subscriptionBenefit.getMaxUseCount());
 		setPriceGroups(arguments.subscriptionBenefit.getPriceGroups());
-		setPriceGroupQuantity(arguments.subscriptionBenefit.getpriceGroupQuantity());
 		setPromotions(arguments.subscriptionBenefit.getPromotions());
-		setPromotionQuantity(arguments.subscriptionBenefit.getPromotionQuantity());
 		setCategories(arguments.subscriptionBenefit.getCategories());
-		setCategoryQuantity(arguments.subscriptionBenefit.getCategoryQuantity());
 		setContents(arguments.subscriptionBenefit.getContents());
-		setContentQuantity(arguments.subscriptionBenefit.getContentQuantity());
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
