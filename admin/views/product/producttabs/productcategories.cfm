@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfoutput>
+<!---<cfoutput>
 	<cfif rc.edit>
 		<input type="hidden" name="productCategories" value="" />
 		<input type="hidden" name="productCategoriesFeatured" value="" />
@@ -95,4 +95,4 @@ Notes:
 			<em>#rc.$.Slatwall.rbKey("admin.product.productCategories.noProductCategoriesAssigned")#</em>
 		</cfif>
 	</cfif>	
-</cfoutput>
+</cfoutput>--->
