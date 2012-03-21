@@ -36,28 +36,18 @@
 Notes:
 
 --->
+<cfparam name="rc.type" type="any">
+<cfparam name="rc.edit" type="boolean">
+
 <cfoutput>
-	<div class="span10">
-		#body#
-	</div>
-	<div class="span2">
-		<div class="well" style="padding:8px 0;">
-			<ul class="nav nav-list">
-				<li class="nav-header">#rc.$.slatwall.rbKey('admin.setting')#</li>
-				<cf_SlatwallActionCaller action="admin:setting.detailsetting" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.detailpermissions" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
-				<li class="divider"></li>
-				<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listpaymentmethod" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listtaxcategory" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listaddresszone" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listlocation" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
-				<li class="divider"></li>
-				<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list">
-			</ul>
-		</div>
-	</div>
+	<cf_SlatwallDetailForm object="#rc.Type#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.Type#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.Type#" property="type" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+	</cf_SlatwallDetailForm>
 </cfoutput>

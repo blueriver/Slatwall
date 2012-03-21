@@ -36,16 +36,17 @@
 Notes:
 
 --->
-<cfparam name="attributes.object" type="any" />
+<cfparam name="attributes.object" type="any" default="" />
 
-<cfif not attributes.object.isNew() and (not structKeyExists(request.context, "modal") or not request.context.modal)>
-	<cfif thisTag.executionMode is "start">
+<cfif (not isObject(attributes.object) || not attributes.object.isNew()) and (not structKeyExists(request.context, "modal") or not request.context.modal)>
+	<cfif thisTag.executionMode is "end">
 		<cfoutput>
-			<div class="tabbable tabs-left row-fluid">
-		</cfoutput>
-	<cfelse>
-		<cfoutput>
+			<cfparam name="thistag.tabs" default="#arrayNew(1)#" />
+			<cfparam name="activeTab" default="system" />
+			<cfif arrayLen(thistag.tabs)>
 				<cfset activeTab = thistag.tabs[1].view />
+			</cfif>
+			<div class="tabbable tabs-left row-fluid">
 				<div class="span2">
 					<ul class="nav nav-tabs">
 						<cfloop array="#thistag.tabs#" index="tab">
@@ -64,7 +65,7 @@ Notes:
 							</div>
 						</cfloop>
 						<cfif isObject(attributes.object)>
-							<div class="tab-pane" id="tabSystem">
+							<div <cfif arrayLen(thistag.tabs)>class="tab-pane"<cfelse>class="tab-pane active"</cfif> id="tabSystem">
 								<cf_SlatwallPropertyList> 
 									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
 									<cfif request.context.$.slatwall.setting('advanced_showRemoteIDFields') && attributes.object.hasProperty('remoteID')>

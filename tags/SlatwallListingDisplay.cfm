@@ -105,22 +105,22 @@ Notes:
 				</thead>
 				<tbody>
 					<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
-						<tr>
+						<tr id="#record.getPrimaryIDValue()#">
 							<cfset firstColumn = true>
 							<cfset firstColumnIcon = "" />
 							<cfloop array="#thistag.columns#" index="column">
 								<cfsilent>
 									<cfif firstColumn>
 										<cfif attributes.expandable>
-											<cfset firstColumnIcon='<a href="##" class="table-expand" data-currentleve="0" data-expandaction="#attributes.expandAction#" data-parentproperty="#attributes.parentPropertyName#.#record.getPrimaryIDPropertyName()#" data-parentid="#record.getPrimaryIDValue()#" data-propertyIdentifiers="#attributes.allpropertyidentifiers#"><i class="icon-plus"></i></a> ' />
+											<cfset firstColumnIcon='<a href="##" class="table-expand depth0" data-depth="0" data-expandaction="#attributes.expandAction#" data-idproperty="#record.getPrimaryIDPropertyName()#" data-parentidproperty="#attributes.parentPropertyName#.#record.getPrimaryIDPropertyName()#" data-parentid="#record.getPrimaryIDValue()#" data-propertyIdentifiers="#record.getPrimaryIDPropertyName()#,#attributes.allpropertyidentifiers#"><i class="icon-plus"></i></a> ' />
 										</cfif>
 										<cfset firstColumn = false />
 									</cfif>
 								</cfsilent>
-								<td class="#column.tdclass#">#firstColumnIcon##record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<td class="#column.tdclass# #replace(column.propertyIdentifier, '.', '-', 'all')#">#firstColumnIcon##record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 							</cfloop>
 							<cfif attributes.administativeCount>
-								<td class="admin#attributes.administativeCount#">
+								<td class="admin admin#attributes.administativeCount#">
 									<cfif attributes.recordEditAction neq "">
 										<cf_SlatwallActionCaller action="#attributes.recordEditAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordEditQueryString#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="#attributes.recordEditModal#" />
 									</cfif>

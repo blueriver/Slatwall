@@ -21,14 +21,16 @@ jQuery(function($){
 	$('.table-expand').click(function(e){
 		e.preventDefault();
 		
-		console.log($(this).data());
-		
 		var data = {};
 		data[ 'slatAction' ] = $(this).data('expandaction');
-		data[ 'F:' + $(this).data('parentproperty') ] = $(this).data('parentid');
+		data[ 'F:' + $(this).data('parentidproperty') ] = $(this).data('parentid');
 		data[ 'propertyIdentifiers' ] = $(this).data('propertyidentifiers');
 		
-		console.log(data);
+		var parentID = $(this).data('parentid');
+		var parentIDProperty  = $(this).data('parentidproperty');
+		var idProperty = $(this).data('idproperty');
+		var parentDepth = $(this).data('depth');
+		var parentIcon = $(this).children('.icon-plus');
 		
 		$.ajax({
 			url: '/plugins/Slatwall/',
@@ -36,12 +38,38 @@ jQuery(function($){
 			dataType: 'json',
 			contentType: 'application/json',
 			success: function(r) {
-				console.log(r);
+				$.each(r["RECORDS"], function(r, rv){
+					var newRow = $('#' + parentID ).clone();
+					$(newRow).attr('ID', rv[ idProperty ])
+					$.each(rv, function(p, pv) {
+						if($(newRow).children('.' + p).children('.table-expand').length) {
+							var newIcon = $(newRow).children('.' + p).children('.table-expand').clone( true );
+							$(newIcon).data('depth', parentDepth + 1);
+							$(newIcon).data('parentID', rv[ idProperty ]);
+							$(newIcon).removeClass('depth' + parentDepth);
+							$(newIcon).addClass('depth' + (parentDepth + 1));
+							$(newRow).children('.' + p).html( newIcon );
+							$(newRow).children('.' + p).append( ' ' + pv );
+						} else {
+							$(newRow).children('.' + p).html(pv);	
+						}
+					});
+					
+					$('#' + parentID ).after(newRow);
+				});
+				
+				$(parentIcon).removeClass('icon-plus');
+				$(parentIcon).addClass('icon-minus');
 			},
 			error: function(r) {
-				console.log(r);
+				alert('Error Loading');
 			}
 		});
+		
+		
+		//$(this).children().removeClass('icon-plus');
+		//$(this).children().addClose('icon-minus');
+		
 	});
 	
 });

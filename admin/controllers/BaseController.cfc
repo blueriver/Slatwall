@@ -203,16 +203,18 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			param name="rc.propertyIdentifiers" type="string" default="";
 			
 			var smartList = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=rc} );
-			var records = smartList.getRecords();
+			var smartListPageRecords = smartList.getPageRecords();
 			var piArray = listToArray(rc.propertyIdentifiers);
 			 
 			rc.records = [];
+			rc.pageRecordsCount = arrayLen(smartListPageRecords);
 			
-			for(var i=1; i<=arrayLen(records); i++) {
-				arrayAppend(rc.records, {});
-				for(var p=1; arrayLen(piArray); p++) {
-					rc.records[i][piArray[p]] = records[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );	
+			for(var i=1; i<=arrayLen(smartListPageRecords); i++) {
+				var thisRecord = {};
+				for(var p=1; p<=arrayLen(piArray); p++) {
+					thisRecord[ piArray[p] ] = smartListPageRecords[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );	
 				}
+				arrayAppend(rc.records, thisRecord);
 			}
 			
 		// If this is a standard call, then look to save the state

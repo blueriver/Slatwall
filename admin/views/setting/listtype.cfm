@@ -36,28 +36,14 @@
 Notes:
 
 --->
+<cfparam name="rc.typeSmartList" type="any" />
+
 <cfoutput>
-	<div class="span10">
-		#body#
-	</div>
-	<div class="span2">
-		<div class="well" style="padding:8px 0;">
-			<ul class="nav nav-list">
-				<li class="nav-header">#rc.$.slatwall.rbKey('admin.setting')#</li>
-				<cf_SlatwallActionCaller action="admin:setting.detailsetting" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.detailpermissions" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
-				<li class="divider"></li>
-				<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listpaymentmethod" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listtaxcategory" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listaddresszone" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listlocation" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
-				<li class="divider"></li>
-				<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list">
-			</ul>
-		</div>
-	</div>
+	
+	<cf_SlatwallActionBar type="listing" object="#rc.typeSmartList#" createAction="" />
+	
+	<cf_SlatwallListingDisplay smartList="#rc.typeSmartList#" recordEditAction="admin:setting.edittype" parentPropertyName="parentType" childPropertyName="childType" recordEditModal=true>
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="type" />
+	</cf_SlatwallListingDisplay>
+
 </cfoutput>
