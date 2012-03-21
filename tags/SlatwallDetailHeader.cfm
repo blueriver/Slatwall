@@ -36,12 +36,26 @@
 Notes:
 
 --->
+<cfparam name="attributes.object" type="any" default="" />
+
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
 		<div class="row-fluid">
 	</cfoutput>
 <cfelse>
 	<cfoutput>
+			<cfif isObject(attributes.object)>
+				<dl class="well well-small" style="float:right;">
+					<cf_SlatwallPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
+					<cfif request.context.$.slatwall.setting('advanced_showRemoteIDFields') && attributes.object.hasProperty('remoteID')>
+						<cf_SlatwallPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.context.$.slatwall.setting('advanced_editRemoteIDFields'), true, false)#" />
+					</cfif>
+					<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdDateTime" />
+					<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdByAccount" />
+					<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedDateTime" />
+					<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedByAccount" />
+				</dl>
+			</cfif>
 		</div>
 	</cfoutput>
 </cfif>

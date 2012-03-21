@@ -44,7 +44,7 @@ Notes:
 	<cf_SlatwallDetailForm object="#rc.product#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.product#" edit="#rc.edit#" />
 		
-		<cf_SlatwallDetailHeader>
+		<cf_SlatwallDetailHeader object="#rc.product#">
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="publishedFlag" edit="#rc.edit#">

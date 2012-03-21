@@ -610,6 +610,16 @@ component displayname="Base Object" accessors="true" output="false" {
 		return "text";
 	}
 	
+	public boolean function hasProperty(required string propertyName) {
+		var properties = getProperties();
+		for(var i=1; i<=arrayLen(properties); i++) {
+			if(properties[i].name == arguments.propertyName) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	// @help public method for getting a recursive list of all the meta data of the properties of an object
 	public array function getProperties(struct metaData=getMetaData(this)) {
 		var properties = arguments.metaData["properties"];
