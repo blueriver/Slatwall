@@ -42,9 +42,24 @@ Notes:
 <cfparam name="attributes.recordEditModal" type="boolean" default="false" />
 <cfparam name="attributes.recordDeleteAction" type="string" default="" />
 <cfparam name="attributes.recordDeleteQueryString" type="string" default="" />
+<cfparam name="attributes.parentPropertyName" type="string" default="" />
+<cfparam name="attributes.childPropertyName" type="string" default="" />
+<cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />
+
+<cfparam name="attributes.administativeCount" type="numeric" default=0 />
+<cfparam name="attributes.expandable" type="boolean" default=false />
+<cfparam name="attributes.allpropertyidentifiers" type="string" default="" />
 
 <cfif thisTag.executionMode eq "end">
 	<cfsilent>
+		<!--- Setup Top Level of Hierarchy if needed --->
+		<cfif len(attributes.parentPropertyName)>
+			<cfset attributes.expandable = true />
+			<cfset attributes.smartList.joinRelatedProperty( attributes.smartList.getBaseEntityName() , attributes.parentPropertyName, "LEFT") />
+			<cfset attributes.smartList.addFilter("#attributes.parentPropertyName#", "NULL") />
+		</cfif>
+		
+		<!--- Setup the count for the number of admin icons --->
 		<cfset attributes.administativeCount = 0 />
 		<cfif attributes.recordEditAction neq "">
 			<cfset attributes.administativeCount++ />
@@ -52,9 +67,14 @@ Notes:
 		<cfif attributes.recordDeleteAction neq "">
 			<cfset attributes.administativeCount++ />
 		</cfif>
+		
+		<!--- Setup the list of all property identifiers --->
+		<cfloop array="#thistag.columns#" index="column">
+			<cfset attributes.allpropertyidentifiers = listAppend(attributes.allpropertyidentifiers, column.propertyIdentifier) />
+		</cfloop>
 	</cfsilent>
 	<cfoutput>
-		<cfif attributes.smartList.getRecordsCount()>
+		<cfif arrayLen(attributes.smartList.getPageRecords())>
 			<table class="table table-striped table-bordered">
 				<thead>
 					<tr>
@@ -86,8 +106,18 @@ Notes:
 				<tbody>
 					<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
 						<tr>
+							<cfset firstColumn = true>
+							<cfset firstColumnIcon = "" />
 							<cfloop array="#thistag.columns#" index="column">
-								<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<cfsilent>
+									<cfif firstColumn>
+										<cfif attributes.expandable>
+											<cfset firstColumnIcon='<a href="##" class="table-expand" data-currentleve="0" data-expandaction="#attributes.expandAction#" data-parentproperty="#attributes.parentPropertyName#.#record.getPrimaryIDPropertyName()#" data-parentid="#record.getPrimaryIDValue()#" data-propertyIdentifiers="#attributes.allpropertyidentifiers#"><i class="icon-plus"></i></a> ' />
+										</cfif>
+										<cfset firstColumn = false />
+									</cfif>
+								</cfsilent>
+								<td class="#column.tdclass#">#firstColumnIcon##record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 							</cfloop>
 							<cfif attributes.administativeCount>
 								<td class="admin#attributes.administativeCount#">

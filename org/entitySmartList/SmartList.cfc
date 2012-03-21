@@ -408,15 +408,23 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 					if(listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter) gt 1) {
 						hqlWhere &= " (";
 						for(var ii=1; ii<=listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter); ii++) {
-							var paramID = "F#replace(filter, ".", "", "all")##i##ii#";
-							addHQLParam(paramID, listGetAt(variables.whereGroups[i].filters[filter], ii, variables.valueDelimiter));
-							hqlWhere &= " #filter# = :#paramID# OR";
+							if(listGetAt(variables.whereGroups[i].filters[filter], ii, variables.valueDelimiter) eq "NULL") {
+								hqlWhere &= " #filter# IS NULL OR";	
+							} else {
+								var paramID = "F#replace(filter, ".", "", "all")##i##ii#";
+								addHQLParam(paramID, listGetAt(variables.whereGroups[i].filters[filter], ii, variables.valueDelimiter));
+								hqlWhere &= " #filter# = :#paramID# OR";
+							}
 						}
 						hqlWhere = left(hqlWhere, len(hqlWhere)-2) & ") AND";
 					} else {
-						var paramID = "F#replace(filter, ".", "", "all")##i#";
-						addHQLParam(paramID, variables.whereGroups[i].filters[filter]);
-						hqlWhere &= " #filter# = :#paramID# AND";
+						if(variables.whereGroups[i].filters[filter] == "NULL") {
+							hqlWhere &= " #filter# IS NULL AND";
+						} else {
+							var paramID = "F#replace(filter, ".", "", "all")##i#";
+							addHQLParam(paramID, variables.whereGroups[i].filters[filter]);
+							hqlWhere &= " #filter# = :#paramID# AND";	
+						}
 					}
 				}
 				

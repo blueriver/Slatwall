@@ -36,45 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.productTypes" type="query" />
+<cfparam name="rc.productTypeSmartList" type="any" />
 
 <cfoutput>
-<ul id="navTask">
-    <!--- <cf_SlatwallActionCaller action="admin:product.createproducttype" type="list"> --->
-</ul>
+	
+	<cf_SlatwallActionBar type="listing" object="#rc.productTypeSmartList#" />
+	
+	<cf_SlatwallListingDisplay smartList="#rc.productTypeSmartList#" recordEditAction="admin:product.editproducttype" parentPropertyName="parentProductType" childPropertyName="childProductTypes">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productTypeName" />
+	</cf_SlatwallListingDisplay>
 
-<table class="listing-grid stripe" id="productTypes">
-    <tr>
-        <th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.producttype")#</th>
-		<th>&nbsp;</th>
-	</tr>
-	<cfif rc.productTypes.recordCount gt 0>
-<cfloop query="rc.productTypes">
-    <cfset local.thisNest = rc.productTypes.treedepth eq 0 ? "neston" : "nest" & rc.productTypes.treedepth & "on" />
-    <tr>
-        <td class="varWidth">
-            <ul class="#local.thisNest#">
-                <li class="Category">#rc.productTypes.productTypeName#</li>
-			</ul>     
-        </td>
-		<td class="administration">
-		  <ul class="four">
-		  	  <cfset local.deleteDisabled = (rc.productTypes.isAssigned gt 0) or (rc.productTypes.childCount gt 0) or (rc.productTypes.systemCode neq "") />
-			  <!--- if this is currently a leaf node in the product type tree, its products will be reassigned to any child types that are added, so indicate whether
-			  	to show modal dialog to alert the user --->
-			  <cfset local.productsReassigned = not rc.productTypes.childCount />
-		      <cf_SlatwallActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="edit" type="list">
-			  <cf_SlatwallActionCaller action="admin:product.detailproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="detail" type="list">
-              <cf_SlatwallActionCaller action="admin:product.createproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" confirmRequired="#local.productsReassigned#" class="add" type="list">
-			  <cf_SlatwallActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#rc.$.Slatwall.rbKey('entity.producttype.delete_validateisassigned')#" confirmrequired="true">
-		  </ul>
-		</td>
-    </tr>
-</cfloop>
-    <cfelse>
-	   <tr>
-	       <td colspan="3">#rc.$.Slatwall.rbKey("admin.product.noproducttypesdefined")#</td>
-	   </tr>
-    </cfif>
-</table>
 </cfoutput>
