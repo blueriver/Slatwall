@@ -211,6 +211,9 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		rc["#arguments.entityName#"] = entityService.invokeMethod( "new#arguments.entityName#" );
+		
+		loadEntitiesFromRCIDs( rc );
+		
 		rc.edit = true;
 		getFW().setView(rc.detailAction);
 	}
@@ -219,7 +222,10 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
-		rc["#arguments.entityName#"] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
+		rc[ "#arguments.entityName#" ] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
+		
+		loadEntitiesFromRCIDs( rc );
+		
 		rc.edit = true;
 		getFW().setView(rc.detailAction);
 	}
@@ -243,6 +249,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		}
 		
 		rc["#arguments.entityName#"] = entity;
+		
+		loadEntitiesFromRCIDs( rc );
 	}
 	
 	public void function genericDeleteMethod(required string entityName, required struct rc) {
@@ -258,7 +266,11 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var deleteOK = entityService.invokeMethod("delete#arguments.entityName#", {1=entity});
 		
 		if (deleteOK) {
-			getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");
+			if(structKeyExists(rc, "returnAction")) {
+				getFW().redirect(action=rc.returnAction, querystring=buildReturnActionQueryString( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" ));	
+			} else {
+				getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
+			}
 		}
 		
 		getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_error");
@@ -294,4 +306,29 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		}
 	}
 	
+	private void function loadEntitiesFromRCIDs(required struct rc) {
+		for(var key in rc) {
+			if(right(key, 2) == "ID" && len(rc[key]) == "32" && !structKeyExists(rc, left(key, len(key)-2))) {
+				var entityName = left(key, len(key)-2);
+				var entityService = getUtilityORMService().getServiceByEntityName( entityName=entityName );
+				var entity = entityService.invokeMethod("get#entityName#", {1=rc[key]});
+				if(!isNull(entity)) {
+					rc[ entityName ] = entity;
+				}
+			}
+		}
+	}
+	
+	private string function buildReturnActionQueryString(string additionalQueryString="", string ignoreKeys="") {
+		var queryString = "";
+		for(var key in url) {
+			if(!listFindNoCase(ignoreKeys, key) && key != "returnAction" && key != "slatAction") {
+				queryString = listAppend(queryString, key & "=" & url[key], "&");
+			}
+		}
+		if(len(arguments.additionalQueryString)) {
+			queryString = listAppend(queryString, arguments.additionalQueryString, "&");
+		}
+		return queryString;
+	}
 }

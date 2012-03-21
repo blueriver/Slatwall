@@ -43,7 +43,8 @@ component displayname="Tax Category" entityname="SlatwallTaxCategory" table="Sla
 	property name="activeFlag" ormtype="boolean";
 	property name="taxCategoryName" ormtype="string";
 	
-	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" inverse="true" cascade="all-delete-orphan";
+	// Related Object Properties (one-to-many)
+	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" type="array" fieldtype="one-to-many" fkcolumn="taxCategoryID" inverse="true" cascade="all-delete-orphan";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -62,24 +63,19 @@ component displayname="Tax Category" entityname="SlatwallTaxCategory" table="Sla
 		return super.init();
 	}
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Tax Category Rates
-	public void function addTaxCategoryRate(required TaxCategoryRate taxCategoryRate) {
-	   arguments.taxCategoryRate.setTaxCategory(this);
-	}
-	
-	public void function removeTaxCategoryRate(required TaxCategoryRate taxCategoryRate) {
-	   arguments.taxCategoryRate.removeTaxCategory(this);
-	}
-	
-	/******* END Association management methods for bidirectional relationships **************/
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Tax Category Rates (one-to-many)
+	public void function addTaxCategoryRate(required any taxCategoryRate) {
+		arguments.taxCategoryRate.setTaxCategory( this );
+	}
+	public void function removeTaxCategoryRate(required any taxCategoryRate) {
+		arguments.taxCategoryRate.removeTaxCategory( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

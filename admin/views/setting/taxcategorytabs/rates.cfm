@@ -43,10 +43,10 @@ Notes:
 		recordEditQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#"
 		recordEditModal=true
 		recordDeleteAction="admin:setting.deletetaxcategoryrate"
-		recordDeleteQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#">
+		recordDeleteQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#&returnAction=admin:setting.detailtaxcategory">
 		
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="taxRate" />
 	<cf_SlatwallListingColumn propertyIdentifier="addressZone.addressZoneName" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" class="btn btn-primary" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
+<cf_SlatwallActionCaller action="admin:setting.createtaxcategoryrate" class="btn btn-primary" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" modal=true />

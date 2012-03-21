@@ -56,37 +56,35 @@ component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" t
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Tax Category
-	
-	public void function setTaxCategory(required TaxCategory taxCategory) {
-	   variables.taxCategory = arguments.taxCategory;
-	   if(isNew() or !arguments.taxCategory.hasTaxCategoryRate(this)) {
-	       arrayAppend(arguments.taxCategory.getTaxCategoryRates(),this);
-	   }
-	}
-	
-	public void function removeTaxCategory(TaxCategory taxCategory) {
-	   if(!structKeyExists(arguments,"taxCategory")) {
-	   		arguments.taxCategory = variables.taxCategory;
-	   }
-       var index = arrayFind(arguments.taxCategory.getTaxCategoryRates(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.taxCategory.getTaxCategoryRates(),index);
-       }    
-       structDelete(variables,"taxCategory");
-    }
-	
-	/******* END Association management methods for bidirectional relationships **************/
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Tax Category (many-to-one)
+	public void function setTaxCategory(required any taxCategory) {
+		variables.taxCategory = arguments.taxCategory;
+		if(isNew() or !arguments.taxCategory.hasTaxCategoryRate( this )) {
+			arrayAppend(arguments.taxCategory.getTaxCategoryRates(), this);
+		}
+	}
+	public void function removeTaxCategory(any taxCategory) {
+		if(!structKeyExists(arguments, "taxCategory")) {
+			arguments.taxCategory = variables.taxCategory;
+		}
+		var index = arrayFind(arguments.taxCategory.getTaxCategoryRates(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.taxCategory.getTaxCategoryRates(), index);
+		}
+		structDelete(variables, "taxCategory");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
