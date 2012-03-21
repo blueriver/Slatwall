@@ -36,10 +36,9 @@
 Notes:
 
 --->
-<cfparam name="attributes.object" type="any" default="" />
-<cfparam name="attributes.hide" type="boolean" default="false" />
+<cfparam name="attributes.object" type="any" />
 
-<cfif not attributes.hide and (not structKeyExists(request.context, "modal") or not request.context.modal)>
+<cfif not attributes.object.isNew() and (not structKeyExists(request.context, "modal") or not request.context.modal)>
 	<cfif thisTag.executionMode is "start">
 		<cfoutput>
 			<div class="tabbable tabs-left row-fluid">

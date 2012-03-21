@@ -55,7 +55,7 @@ Notes:
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	
-	<cf_SlatwallTabGroup hide="#rc.account.isNew()#">
+	<cf_SlatwallTabGroup object="#rc.account#">
 		<cf_SlatwallTab view="admin:account/accounttabs/addresses" />
 		<cf_SlatwallTab view="admin:account/accounttabs/login" />
 		<cf_SlatwallTab view="admin:account/accounttabs/orders" />
@@ -65,66 +65,3 @@ Notes:
 	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>
-
-<!---<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:account.list" type="list">
-	<cfif !rc.edit>
-	<cf_SlatwallActionCaller action="admin:account.edit" queryString="accountID=#rc.account.getAccountID()#" type="list">
-	</cfif>
-</ul>
-
-<cfoutput>
-	<div class="svoadminaccountdetail">
-		<cfif rc.edit>
-			<form name="accountEdit" action="#buildURL(action='admin:account.save')#" method="post">
-				<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
-		</cfif>
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="lastName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="firstName" edit="#rc.edit#" first="true">
-			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="company" edit="#rc.edit#">
-		</dl>
-
-		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
-			<ul>
-				<li><a href="##tabAddresses" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.addresses")#</span></a></li>
-				<li><a href="##tabLogin" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.login")#</span></a></li>
-				<li><a href="##tabOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.orders")#</span></a></li>
-				<li><a href="##tabCarts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.carts")#</span></a></li>
-				<li><a href="##tabProductReviews" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.productReviews")#</span></a></li>
-				<li><a href="##tabPriceGroups" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.PriceGroups")#</span></a></li>
-				<cfloop array="#rc.attributeSets#" index="local.attributeSet">
-					<li><a href="##tabCustomAttributes_#local.attributeSet.getAttributeSetID()#" onclick="return false;"><span>#local.attributeSet.getAttributeSetName()#</span></a></li>
-				</cfloop>
-			</ul>
-		
-			<div id="tabAddresses">
-				#view("admin:account/accounttabs/addresses")#
-			</div>
-			<div id="tabLogin">
-				#view("admin:account/accounttabs/login")#
-			</div>
-			<div id="tabOrders">
-				#view("admin:account/accounttabs/orders")#
-			</div>
-			<div id="tabCarts">
-				#view("admin:account/accounttabs/carts")#
-			</div>
-			<div id="tabProductReviews">
-				#view("admin:account/accounttabs/productreviews")#
-			</div>
-			<div id="tabPriceGroups">
-				#view("admin:account/accounttabs/pricegroups")#
-			</div>
-			#view("account/accounttabs/customattributes")#
-		</div>
-		
-		<cfif rc.edit>
-			<div id="actionButtons" class="clearfix">
-				<cf_SlatwallActionCaller action="admin:account.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_SlatwallActionCaller action="admin:account.save" type="submit" class="button">
-			</div>
-			</form>
-		</cfif>
-	</div>
-</cfoutput>--->

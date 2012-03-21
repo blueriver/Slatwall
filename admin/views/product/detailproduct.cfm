@@ -58,7 +58,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup hide="#rc.product.isNew()#" object="#rc.product#">
+		<cf_SlatwallTabGroup object="#rc.product#">
 			<cf_SlatwallTab view="admin:product/producttabs/skus" />
 			<cf_SlatwallTab view="admin:product/producttabs/productdescription" />
 			<cf_SlatwallTab view="admin:product/producttabs/settings" />

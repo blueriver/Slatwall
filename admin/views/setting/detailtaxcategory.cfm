@@ -51,7 +51,7 @@ Notes:
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	
-	<cf_SlatwallTabGroup hide="#rc.taxCategory.isNew()#">
+	<cf_SlatwallTabGroup object="#rc.taxCategory#">
 		<cf_SlatwallTab view="admin:setting/taxcategorytabs/rates" />
 	</cf_SlatwallTabGroup>
 	

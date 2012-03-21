@@ -36,67 +36,23 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" default="false" />
 <cfparam name="rc.optiongroup" type="any" />
- 
-<cfoutput>
-	<ul id="navTask">
-		<cf_SlatwallActionCaller action="admin:option.listoptiongroups" type="list">
-		<cfif !rc.edit>
-			<cf_SlatwallActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list">
-		<cfelse>
-			<cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list">
-		</cfif>
-	</ul>
+<cfparam name="rc.edit" default="false" />
 
-	<cfif rc.edit>
-		<form name="OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" method="post">
-			<input type="hidden" name="slatAction" value="admin:option.saveoptiongroup" />
-			<input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
-	</cfif>
-	
-		    <dl class="twoColumn">
-		    	<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="optionGroupName" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="optionGroupCode" edit="#rc.edit#" toggle="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="imageGroupFlag" edit="#rc.edit#" />
-				<cfif rc.edit>
-					<!--- if editing, display field for image uploading --->
-					<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="OptionGroupImage" edit="#rc.edit#" fieldType="file" tooltip=true>
-				</cfif>
-				<cfif len(rc.OptionGroup.getOptionGroupImage())>
-					<!--- if editing, and optiongroup has an image, display it  --->
-					<dt>
-						#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupimage")#
-					</dt>
-					<dd>
-						<a href="#rc.OptionGroup.getImagePath()#">#rc.OptionGroup.getImage("40")#</a>
-					<cfif rc.edit>
-						<input type="checkbox" name="removeImage" value="1" id="chkRemoveImage"> <label for="chkRemoveImage">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
-					</cfif>
-					</dd>
-				</cfif>
-			</dl>
-			
-			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
-				<ul>
-					<li><a href="##tabOptions" onclick="return false;"><span>#rc.$.Slatwall.rbKey("entity.optionGroup.options")#</span></a></li>	
-					<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("entity.optionGroup.optionGroupDescription")#</span></a></li>
-				</ul>
-			
-				<div id="tabOptions">
-					#view("option/optiongrouptabs/options")#
-				</div>
-				<div id="tabDescription">
-					<cf_SlatwallPropertyDisplay object="#rc.optionGroup#" property="optionGroupDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
-				</div>
-			</div>
-			
-	<cfif rc.edit>
-			<div id="actionButtons" class="clearfix">
-				<cf_SlatwallActionCaller action="admin:option.listoptiongroups" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_SlatwallActionCaller action="admin:option.saveoptiongroup" type="submit" class="button">
-			</div>
-		</form>
-	</cfif>
-	
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.optiongroup#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="optionGroupName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="optionGroupCode" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.optiongroup#">
+			<cf_SlatwallTab view="admin:product/optiongrouptabs/options" />
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
 </cfoutput>
