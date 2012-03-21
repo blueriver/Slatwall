@@ -43,6 +43,7 @@ Notes:
 		<cfparam name="attributes.object" type="any" />
 		<cfparam name="attributes.edit" type="boolean" default="false" />
 		<cfparam name="attributes.pageTitle" type="string" default="#request.context.pageTitle#" />
+		<cfparam name="attributes.showCreate" type="boolean" default="true" />
 		
 		<cfsilent>
 			<cfif attributes.type eq "detail" and not attributes.object.isNew()>
@@ -77,9 +78,11 @@ Notes:
 										#thistag.generatedcontent#
 									</ul>
 								</div>
-								<div class="btn-group">
-									<cf_SlatwallActionCaller action="#request.context.createAction#" class="btn btn-primary" icon="plus icon-white">
-								</div>
+								<cfif attributes.showCreate>
+									<div class="btn-group">
+										<cf_SlatwallActionCaller action="#request.context.createAction#" class="btn btn-primary" icon="plus icon-white">
+									</div>
+								</cfif>
 							<cfelseif attributes.type eq "detail">
 								<div class="btn-group">
 									<cf_SlatwallActionCaller action="#request.context.listAction#" text="#request.context.$.Slatwall.rbKey('define.backtolist')#" class="btn" icon="arrow-left">
@@ -94,7 +97,7 @@ Notes:
 								</cfif>
 								<div class="btn-group">
 									<cfif request.context.edit>
-										<cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">
+										<cfif not attributes.object.isNew()><cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
 										<cf_SlatwallActionCaller action="#request.context.cancelAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.Slatwall.rbKey('define.cancel')#" class="btn btn-inverse" icon="remove icon-white">
 										<cf_SlatwallActionCaller action="#request.context.saveAction#" text="#request.context.$.Slatwall.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
 									<cfelse>

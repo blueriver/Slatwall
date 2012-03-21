@@ -39,49 +39,14 @@ Notes:
 <cfparam name="rc.stockAdjustmentSmartList" type="any" />
 
 <cfoutput>
-<ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:stockadjustment.createStockAdjustment" type="list">
-</ul>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.stockAdjustmentSmartList#" />
 
-<div class="svoadminstockadjustmentlist">
-<cfif arrayLen(rc.stockAdjustmentSmartList.getPageRecords()) gt 0>
-	<table id="StockAdjustments" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.stockadjustment.createDateTime")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.stockadjustment.fromLocation")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.stockadjustment.toLocation")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.stockadjustment.type")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.stockadjustment.status")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.stockAdjustmentSmartList.getPageRecords()#" index="local.StockAdjustment">
-			<tr>
-				<td class="varWidth">#DateFormat(local.StockAdjustment.getCreatedDateTime(), "medium")#</td>
-				<td>
-					<cfif !isNull(local.StockAdjustment.getFromLocation())>
-						#local.StockAdjustment.getFromLocation().getLocationName()#
-					</cfif>
-				</td>
-				<td>
-					<cfif !isNull(local.StockAdjustment.getToLocation())>
-						#local.StockAdjustment.getToLocation().getLocationName()#
-					</cfif>
-				</td>
-				<td>#local.StockAdjustment.getStockAdjustmentType().getType()#</td>
-				<td>#local.StockAdjustment.getStockAdjustmentStatusType().getType()#</td>
-				<td class="administration">
-		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:stockadjustment.editstockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getStockAdjustmentID()#" class="edit" type="list" disabled="#local.stockadjustment.getStockAdjustmentStatusType().getSystemCode() EQ 'sastClosed'#">            
-					  <cf_SlatwallActionCaller action="admin:stockadjustment.detailstockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getStockAdjustmentID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:stockadjustment.deletestockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getStockAdjustmentID()#" class="delete" type="list" disabled="#local.stockadjustment.isNotDeletable()#" confirmrequired="true">
-		          </ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-	<cf_SlatwallSmartListPager smartList="#rc.stockAdjustmentSmartList#">
-<cfelse>
-<em>#rc.$.Slatwall.rbKey("admin.stockadjustment.nostockadjustmentsdefined")#</em>
-</cfif>
-</div>
+<cf_SlatwallListingDisplay smartList="#rc.stockAdjustmentSmartList#" recordEditAction="admin:account.editaccount">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stockAdjustmentType" />
+	<cf_SlatwallListingColumn propertyIdentifier="stockAdjustmentStatusType.type" filter=true />
+	<cf_SlatwallListingColumn propertyIdentifier="fromLocation.locationName" filter=true />
+	<cf_SlatwallListingColumn propertyIdentifier="toLocation.locationName" filter=true />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>

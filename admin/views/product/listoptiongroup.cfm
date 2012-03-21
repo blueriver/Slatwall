@@ -40,39 +40,12 @@ Notes:
 
 <cfoutput>
 	
-	<cf_SlatwallActionBar type="listing" object="#rc.optionGroupSmartList#" rc="#rc#" />
+	<cf_SlatwallActionBar type="listing" object="#rc.optionGroupSmartList#" />
 	
-	<cfif arrayLen(rc.optionGroupSmartList.getPageRecords()) gt 0>
-		<table class="table table-striped table-bordered">
-			<thead>
-				<tr>
-					<th class="handle" style="display:none;"></th>
-					<th class="varWidth">#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupname")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.optiongroup.optionGroupCode")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.optiongroup.options")#</th>
-					<th>&nbsp;</th>
-				</tr>
-			</thead>
-			<tbody id="OptionGroupList">
-				<cfloop array="#rc.optionGroupSmartList.getPageRecords()#" index="local.thisOptionGroup">
-					<tr class="OptionGroup" id="#local.thisOptionGroup.getOptionGroupID()#">
-						<td class="handle" style="display:none;"><img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.drag_handle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#" /></td>
-						<td class="varWidth">#local.thisOptionGroup.getOptionGroupName()#</td>
-						<td>#local.thisOptionGroup.getOptionGroupCode()#</td>
-						<td>#local.thisOptionGroup.getOptionsCount()#</td>
-						<td class="administration">
-						  <ul class="three">
-						  	  <cf_SlatwallActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="edit" type="list">
-				              <cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="detail" type="list">
-							  <cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="delete" type="list" disabled="#local.thisOptionGroup.isNotDeletable()#" confirmrequired="true">
-						  </ul>		
-						</td>
-					</tr>
-				</cfloop>
-		    </tbody>
-		</table>
-		<cf_SlatwallSmartListPager smartList="#rc.optionGroupSmartList#">
-	<cfelse>
-		<p><em>#rc.$.Slatwall.rbKey("admin.option.listoptiongroups.noOptionGroups")#</em></p>
-	</cfif>
+	<cf_SlatwallListingDisplay smartList="#rc.optionGroupSmartList#" recordEditAction="admin:product.editoptiongroup">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="optionGroupName" />
+		<cf_SlatwallListingColumn propertyIdentifier="optionGroupCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="optionsCount" />
+	</cf_SlatwallListingDisplay>
+	
 </cfoutput>

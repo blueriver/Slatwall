@@ -36,6 +36,17 @@
 Notes:
 
 --->
+<cfparam name="rc.stockReceiverSmartList" type="any" />
+
 <cfoutput>
 	
+<cf_SlatwallActionBar type="listing" object="#rc.stockReceiverSmartList#" />
+
+<cf_SlatwallListingDisplay smartList="#rc.stockReceiverSmartList#" recordEditAction="admin:account.editaccount">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="packingSlipNumber" />
+	<cf_SlatwallListingColumn propertyIdentifier="boxCount" />
+	<cf_SlatwallListingColumn propertyIdentifier="receiverType" />
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>

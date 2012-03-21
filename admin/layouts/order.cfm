@@ -46,7 +46,6 @@ Notes:
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.order')#</li>
 				<cf_SlatwallActionCaller action="admin:order.listorder" type="list">
 				<cf_SlatwallActionCaller action="admin:order.listorderfulfillment" type="list">
-				<cf_SlatwallActionCaller action="admin:order.listcart" type="list">
 			</ul>
 		</div>
 	</div>
