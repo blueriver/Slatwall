@@ -38,6 +38,9 @@ Notes:
 --->
 <cfparam name="rc.typeSmartList" type="any" />
 
+<cfset rc.typeSmartList.joinRelatedProperty( rc.typeSmartList.getBaseEntityName() , "parentType", "LEFT") />
+<cfset rc.typeSmartList.addFilter("parentType", "NULL") />
+
 <cfoutput>
 	
 	<cf_SlatwallActionBar type="listing" object="#rc.typeSmartList#" createAction="" />

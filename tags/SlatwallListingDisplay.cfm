@@ -55,8 +55,10 @@ Notes:
 		<!--- Setup Top Level of Hierarchy if needed --->
 		<cfif len(attributes.parentPropertyName)>
 			<cfset attributes.expandable = true />
+			<!---
 			<cfset attributes.smartList.joinRelatedProperty( attributes.smartList.getBaseEntityName() , attributes.parentPropertyName, "LEFT") />
 			<cfset attributes.smartList.addFilter("#attributes.parentPropertyName#", "NULL") />
+			--->
 		</cfif>
 		
 		<!--- Setup the count for the number of admin icons --->
