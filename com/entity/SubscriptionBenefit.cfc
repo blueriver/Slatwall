@@ -54,7 +54,8 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
 	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
 		
-	// Remote Properties
+	// Remote properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";

@@ -52,9 +52,9 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	// Related Object Properties (one-to-many)
 	
 	// Related Object Properties (many-to-many)
-	property name="subscriptionBenefits" singularname="subscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionTermBenefit" fkcolumn="subscriptionTermID" inversejoincolumn="subscriptionBenefitID" cascade="all";
 	
-	// Remote Properties
+	// Remote properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";

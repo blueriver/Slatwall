@@ -52,7 +52,8 @@ component displayname="Term" entityname="SlatwallTerm" table="SlatwallTerm" pers
 	
 	// Related Object Properties (many-to-many)
 	
-	// Remote Properties
+	// Remote properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
