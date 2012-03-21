@@ -41,10 +41,8 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.subscriptionTerm#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionTerm#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:product.createsubscriptionbenefit" type="list" modal=true />
-		</cf_SlatwallActionBar>
-		
+		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionTerm#" edit="#rc.edit#" />
+
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionTermName" edit="#rc.edit#">
@@ -53,7 +51,6 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="gracePeriodTerm" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="allowProrateFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="autoRetryPaymentDays" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionBenefits" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
