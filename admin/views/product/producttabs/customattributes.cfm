@@ -40,6 +40,8 @@ AttributeValueID in the name is used to lookup the saved value and update. For n
 it is set to 0
 
 --->
+
+<cfset rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]) />
 <cfoutput>
 	<cfloop array="#rc.attributeSets#" index="local.attributeSet">
 		<div id="tabCustomAttributes_#local.attributeSet.getAttributeSetID()#">

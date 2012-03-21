@@ -84,11 +84,13 @@ Notes:
 				</dl>
 			</cfif>
 		</cfloop>
-		<div class="buttons">
+<!---		<div class="buttons">
 			<a class="button" id="addImage">#rc.$.Slatwall.rbKey("admin.product.edit.addImage")#</a>
-		</div>
+		</div>--->
 		
-		<dl id="imageUploadTemplate" class="hideElement">
+<cf_SlatwallActionCaller action="admin:product.createproductimage" class="btn btn-primary" queryString="productID=#rc.product.getProductID()#" modal=true />
+		
+<!---		<dl id="imageUploadTemplate" class="hideElement">
 			<dt class="spdimagefile"> Upload Image </dt>
 			<dd class="spdimagefile">
 				<input type="hidden" name="imageID" value="" />
@@ -97,6 +99,6 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.image#" fieldName="imageType" property="imageType" edit="true" allowNullOption="false">
 			<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageName" fieldName="imageName" edit="true">
 			<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" fieldName="imageDescription" fieldType="textarea" edit="true" toggle="hide">
-		</dl>
+		</dl>--->
 	</cfif>	
 </cfoutput>

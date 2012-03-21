@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfoutput>
+<!---<cfoutput>
 	<cfif rc.edit>
 		<input type="hidden" name="productContentIDPaths" value="" />
 		<cfif rc.productPages.recordCount() gt 0>
@@ -91,4 +91,4 @@ Notes:
 			<em>#rc.$.Slatwall.rbKey("admin.product.productPages.noProductPagesAssigned")#</em>
 		</cfif>
 	</cfif>	
-</cfoutput>
+</cfoutput>--->

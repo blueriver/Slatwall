@@ -41,16 +41,13 @@ Notes:
 	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#">
 		<cf_SlatwallListingColumn propertyIdentifier="skuCode" />
 		<cf_SlatwallListingColumn propertyIdentifier="isDefault" />
-		<!---
-		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
-		--->
-		<cf_SlatwallListingColumn propertyIdentifier="price" />
+		<cf_SlatwallListingColumn propertyIdentifier="imageFile" />
+		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="salePriceExpirationDateTime" range="true" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:product.createsku" queryString="productID=#rc.product.getProductID()#" modal=true />
+	<cf_SlatwallActionCaller action="admin:product.createsku" class="btn btn-primary" queryString="productID=#rc.product.getProductID()#" modal=true />
 </cfoutput>
 
 <!---

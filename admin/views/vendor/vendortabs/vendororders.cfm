@@ -40,9 +40,9 @@ Notes:
 
 <cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorOrdersSmartList()#">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorOrderNumber" />
-	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
-	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" />
-	<cf_SlatwallListingColumn propertyIdentifier="total" />
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="total" range="true" />
 </cf_SlatwallListingDisplay>
 
 
