@@ -47,6 +47,7 @@
 		<Record settingID="dbb327a8b50ef28662b75a32d01ece1d" settingName="advanced_logDatabaseClearAfterDays" settingValue="30" />
 		<Record settingID="dbb327aaf8f644aedaf190b32f3c48e4" settingName="advanced_logMessages" settingValue="General" />
 		<Record settingID="dbb327ada425f5cd38dfecb702a7e24e" settingName="advanced_showRemoteIDFields" settingValue="0" />
+		<Record settingID="dbb327bfb08b7eaaff39fca1d317a60e" settingName="advanced_editRemoteIDFields" settingValue="0" />
 		<Record settingID="dbb327abbbe32d31cc7c2b8e1e4c0c4c" settingName="advanced_dateFormat" settingValue="mmm dd, yyyy" />
 		<Record settingID="dbb327ac9f8ef0c160cd8b5c4f07ddfa" settingName="advanced_timeFormat" settingValue="hh:mm tt" />
 		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="advanced_currencyLocale" settingValue="English (US)" />
@@ -62,7 +63,7 @@
 <!--
 Below Are UUID's to use... delete after using
 	
-	dbb327bfb08b7eaaff39fca1d317a60e
+	
 	dbb327c0a19a5dc3e9fd2b167606f0ff
 	dbb327c1b246cefc0a4d6146458c61d6
 	dbb327c2f0ece6ff03d81c53d840d8bc

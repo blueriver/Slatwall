@@ -52,10 +52,13 @@ component extends="BaseController" output=false accessors=true {
 	property name="utilityTagService" type="any";
 	property name="utilityORMService" type="any";
 	
-	
-	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:product.listproduct");
+	}
+	
+	public void function createProduct(required struct rc) {
+		rc.product = getProductService().newProduct();
+		rc.edit = true;
 	}
 
 /*

@@ -54,7 +54,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup>
+		<cf_SlatwallTabGroup object="#rc.promotion#">
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewards" />
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewardexclusions" />
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifiers" />

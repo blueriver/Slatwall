@@ -37,71 +37,21 @@ Notes:
 
 --->
 <cfparam name="rc.product" type="any" />
-<cfparam name="rc.optionGroups" type="any" />
+<!--- <cfparam name="rc.optionGroups" type="any" /> --->
 
 <cfoutput>
-<form method="post" action="#rc.$.slatwall.getSlatwallRootPath()#/">
-	<input type="hidden" name="slatAction" value="admin:product.saveproduct" />
-	<dl class="dl-horizontal">
-		<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="true">
-	    <cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="true">
-	</dl>
-	<!---
-	<!--- list option groups --->
-	<div>
-	    <h4>#rc.$.Slatwall.rbKey("admin.product.selectoptions")#</h4>
-		<cfif arrayLen(rc.optionGroups) gt 0>
-			<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-			<cfset local.options = local.thisOptionGroup.getOptions() />
-			<p><a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideDown();">#rc.$.Slatwall.rbKey("entity.option.optionGroup")#: #local.thisOptionGroup.getOptionGroupName()#</a></p>
-			<div class="optionsSelector" id="selectOptions#local.thisOptionGroup.getOptionGroupID()#" style="display:none;">
-				<a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideUp();">[#rc.$.Slatwall.rbKey("sitemanager.content.fields.close")#]</a>
-			<cfif arrayLen(local.options)>
-				<cfset local.optionIndex = 1 />	
-				<ul>
-				<cfloop array="#local.options#" index="local.thisOption">
-					<li><input type="checkbox" name="options.#local.thisOptionGroup.getSortOrder()#" id="option#local.thisOption.getOptionID()#" value="#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
-	            <cfset local.optionIndex++ />
-				</cfloop>
-				</ul>
-			<cfelse>
-				<!--- no options in this optiongroup defined --->
-				<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsingroup")#</em></p>
-				<cf_SlatwallActionCaller action="admin:option.create" queryString="optionGroupID=#local.thisOptionGroup.getOptionGroupID()#">
-			</cfif>
-			</div>
-			</cfloop>
-			<cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="link">
-		<cfelse>
-			 <!--- no options defined --->
-			<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
-		</cfif>
-	</div>
-	<!--- list subscription terms --->
-	<div>
-	    <h4>#rc.$.Slatwall.rbKey("admin.product.selectsubscriptionterms")#</h4>
-		<cfif arrayLen(rc.subscriptionTerms) gt 0>
-			<div class="subscriptionTermsSelector">
-				<ul>
-					<cfset local.i = 0 />
-					<cfloop array="#rc.subscriptionTerms#" index="local.thisSubscriptionTerm">
-						<cfset local.i++ />
-						<li><input type="checkbox" name="subscriptionTerm[#i#].subscriptiontermID" id="subscriptionTerm#local.thisSubscriptionTerm.getSubscriptionTermID()#" value="#local.thisSubscriptionTerm.getSubscriptionTermID()#" /> <label for="subscriptionTerm#local.thisSubscriptionTerm.getSubscriptionTermID()#">#thisSubscriptionTerm.getSubscriptionTermName()#</label></li>
-					</cfloop>
-				</ul>
-			</div>
-			<cf_SlatwallActionCaller action="admin:subscription.createsubscriptionterm" type="link">
-		<cfelse>
-			 <!--- no options defined --->
-			<p><em>#rc.$.Slatwall.rbKey("admin.subscription.nosubscriptiontermsdefined")#</em></p>
-		</cfif>
-	</div>
-	<div id="actionButtons" class="clearfix">
-		<cf_SlatwallActionCaller action="admin:product.list" type="link" class="btn" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-		<cf_SlatwallActionCaller action="admin:product.save" type="button" submit="true" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />
-	</div>
-	--->
-</form>
+	<cf_SlatwallDetailForm object="#rc.product#" edit="true">
+		<cf_SlatwallActionBar type="detail" object="#rc.product#" edit="true"></cf_SlatwallActionBar>
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="true">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="true">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="true">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="true">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="true">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+	</cf_SlatwallDetailForm>
 </cfoutput>

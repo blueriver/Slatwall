@@ -43,7 +43,7 @@ Notes:
 		<cfparam name="attributes.object" type="any" />
 		<cfparam name="attributes.edit" type="boolean" default="false" />
 		<cfparam name="attributes.pageTitle" type="string" default="#request.context.pageTitle#" />
-		<cfparam name="attributes.showCreate" type="boolean" default="true" />
+		<cfparam name="attributes.createAction" type="string" default="#request.context.createAction#" />
 		
 		<cfsilent>
 			<cfif attributes.type eq "detail" and not attributes.object.isNew()>
@@ -57,6 +57,7 @@ Notes:
 					<div class="span6"><h1>#attributes.pageTitle#</h1></div>
 					<div class="span6">
 						<div class="btn-toolbar">
+							<!--- Listing --->
 							<cfif attributes.type eq "listing" >
 								<cfif attributes.object.getRecordsCount() gt 10>
 									<div class="btn-group">
@@ -78,11 +79,21 @@ Notes:
 										#thistag.generatedcontent#
 									</ul>
 								</div>
-								<cfif attributes.showCreate>
+								<cfif len(attributes.createAction)>
 									<div class="btn-group">
-										<cf_SlatwallActionCaller action="#request.context.createAction#" class="btn btn-primary" icon="plus icon-white">
+										<cfif listLen(attributes.createAction) eq 1>
+											<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white">
+										<cfelse>
+											<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i> #request.context.$.slatwall.rbKey('define.create')# <span class="caret"></span></button>
+											<ul class="dropdown-menu">
+												<cfloop list="#attributes.createAction#" index="action">
+													<cf_SlatwallActionCaller action="#action#" type="list">
+												</cfloop>
+											</ul>
+										</cfif>
 									</div>
 								</cfif>
+							<!--- Detail --->
 							<cfelseif attributes.type eq "detail">
 								<div class="btn-group">
 									<cf_SlatwallActionCaller action="#request.context.listAction#" text="#request.context.$.Slatwall.rbKey('define.backtolist')#" class="btn" icon="arrow-left">

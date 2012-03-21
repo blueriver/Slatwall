@@ -53,15 +53,12 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="publishedFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="remoteID" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup hide="#rc.product.isNew()#">
+		<cf_SlatwallTabGroup object="#rc.product#">
 			<cf_SlatwallTab view="admin:product/producttabs/skus" />
 			<cf_SlatwallTab view="admin:product/producttabs/productdescription" />
 			<cf_SlatwallTab view="admin:product/producttabs/settings" />

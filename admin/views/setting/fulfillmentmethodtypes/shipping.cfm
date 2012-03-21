@@ -37,43 +37,7 @@ Notes:
 
 --->
 
-<cf_SlatwallTabGroup hide="#rc.fulfillmentMethod.isNew()#">
+<cf_SlatwallTabGroup object="#rc.fulfillmentMethod#">
 	<cf_SlatwallTab view="admin:setting/fulfillmentmethodtypes/shippingtabs/shippingmethods" />
+	<cf_SlatwallTab view="admin:setting/fulfillmentmethodtypes/shippingtabs/settings" />
 </cf_SlatwallTabGroup>
-
-<!---
-<cfoutput>
-	
-	<cfif arrayLen(rc.shippingMethods) gt 0>
-		<table id="shippingMethodList" class="listing-grid stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
-				<th>&nbsp</th>
-			</tr>
-			<cfloop array="#rc.shippingMethods#" index="local.shippingMethod">
-				<tr>
-					<td class="varWidth">#local.shippingMethod.getShippingMethodName()#</td>
-					<td class="administration">
-						<cfif rc.edit>
-							<ul class="three">
-								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="detail" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="edit" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="delete" type="list" disabled="#local.shippingMethod.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.shippingMethod.delete_validateIsDeletable')#" confirmRequired="true">
-							</ul>
-						<cfelse>
-							<ul class="one">
-								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="detail" type="list">
-							</ul>
-						</cfif>						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</cfif>
-	<cfif rc.edit>
-		<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" class="button">
-	</cfif>
-	<br />
-	<br />
-</cfoutput>
---->

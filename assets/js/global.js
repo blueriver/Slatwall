@@ -6,16 +6,42 @@
  * 
  */
 
-jQuery(document).ready(function(e){
+jQuery(function($){
 	
-	jQuery('.modalload').click(function(e){
-		var modalLink = jQuery(this).attr( 'href' );
+	$('.modalload').click(function(e){
+		var modalLink = $(this).attr( 'href' );
 		if( modalLink.indexOf("?") != -1) {
 			modalLink = modalLink + '&modal=1';
 		} else {
 			modalLink = modalLink + '?modal=1';
 		}
-		jQuery('#adminModal').load( modalLink );
+		$('#adminModal').load( modalLink );
+	});
+	
+	$('.table-expand').click(function(e){
+		e.preventDefault();
+		
+		console.log($(this).data());
+		
+		var data = {};
+		data[ 'slatAction' ] = $(this).data('expandaction');
+		data[ 'F:' + $(this).data('parentproperty') ] = $(this).data('parentid');
+		data[ 'propertyIdentifiers' ] = $(this).data('propertyidentifiers');
+		
+		console.log(data);
+		
+		$.ajax({
+			url: '/plugins/Slatwall/',
+			data: data,
+			dataType: 'json',
+			contentType: 'application/json',
+			success: function(r) {
+				console.log(r);
+			},
+			error: function(r) {
+				console.log(r);
+			}
+		});
 	});
 	
 });

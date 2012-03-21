@@ -53,5 +53,8 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
+		<cf_SlatwallTagGroup object="#rc.term#">
+		</cf_SlatwallTagGroup>
+		
 	</cf_SlatwallDetailForm>
 </cfoutput>

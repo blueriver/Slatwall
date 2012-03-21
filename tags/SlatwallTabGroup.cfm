@@ -36,9 +36,9 @@
 Notes:
 
 --->
-<cfparam name="attributes.hide" type="boolean" default="false" />
+<cfparam name="attributes.object" type="any" />
 
-<cfif not attributes.hide and (not structKeyExists(request.context, "modal") or not request.context.modal)>
+<cfif not attributes.object.isNew() and (not structKeyExists(request.context, "modal") or not request.context.modal)>
 	<cfif thisTag.executionMode is "start">
 		<cfoutput>
 			<div class="tabbable tabs-left row-fluid">
@@ -51,6 +51,9 @@ Notes:
 						<cfloop array="#thistag.tabs#" index="tab">
 							<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.context.$.slatwall.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
 						</cfloop>
+						<cfif isObject(attributes.object)>
+							<li><a href="##tabSystem" data-toggle="tab">#request.context.$.slatwall.rbKey('define.system')#</a></li>
+						</cfif>
 					</ul>
 				</div>
 				<div class="span10">
@@ -60,6 +63,20 @@ Notes:
 								#request.context.$.slatwall.getFW().view(tab.view, {rc=request.context})#
 							</div>
 						</cfloop>
+						<cfif isObject(attributes.object)>
+							<div class="tab-pane" id="tabSystem">
+								<cf_SlatwallPropertyList> 
+									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
+									<cfif request.context.$.slatwall.setting('advanced_showRemoteIDFields') && attributes.object.hasProperty('remoteID')>
+										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.context.$.slatwall.setting('advanced_editRemoteIDFields'), true, false)#" />
+									</cfif>
+									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdDateTime" />
+									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdByAccount" />
+									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedDateTime" />
+									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedByAccount" />
+								</cf_SlatwallPropertyList>
+							</div>
+						</cfif>
 					</div>
 				</div>
 			</div>

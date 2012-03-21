@@ -38,6 +38,6 @@ Notes:
 --->
 <cfparam name="rc.paymentMethod" type="any" />
 
-<cf_SlatwallTabGroup hide="#rc.paymentMethod.isNew()#">
+<cf_SlatwallTabGroup object="#rc.paymentMethod#">
 	<cf_SlatwallTab view="admin:setting/paymentmethodtypes/creditcardtabs/settings" />
 </cf_SlatwallTabGroup>

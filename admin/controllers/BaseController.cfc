@@ -196,15 +196,37 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	public void function genericListMethod(required string entityName, required struct rc) {
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		
-		var savedStateKey = lcase( "list#arguments.entityName#smartlistsavedstateid" );
+		var httpRequestData = getHTTPRequestData();
+		// If this is an ajax call, just get the smart list
+		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
+			
+			param name="rc.propertyIdentifiers" type="string" default="";
+			
+			var smartList = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=rc} );
+			var records = smartList.getRecords();
+			var piArray = listToArray(rc.propertyIdentifiers);
+			 
+			rc.records = [];
+			
+			for(var i=1; i<=arrayLen(records); i++) {
+				arrayAppend(rc.records, {});
+				for(var p=1; arrayLen(piArray); p++) {
+					rc.records[i][piArray[p]] = records[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );	
+				}
+			}
+			
+		// If this is a standard call, then look to save the state
+		} else {
+			var savedStateKey = lcase( rc.slatAction );
 		
-		if(getSessionService().hasValue( savedStateKey )) {
-			rc.savedStateID = getSessionService().getValue( savedStateKey );
+			if(getSessionService().hasValue( savedStateKey )) {
+				rc.savedStateID = getSessionService().getValue( savedStateKey );
+			}
+			
+			rc["#arguments.entityName#smartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=rc} );
+			
+			getSessionService().setValue( savedStateKey, rc["#arguments.entityName#smartList"].getSavedStateID() );
 		}
-		
-		rc["#arguments.entityName#smartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=rc} );
-		
-		getSessionService().setValue( savedStateKey, rc["#arguments.entityName#smartList"].getSavedStateID() );
 	}
 	
 	public void function genericCreateMethod(required string entityName, required struct rc) {

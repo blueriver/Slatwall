@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.orderFulfillmentSmartList#" showCreate=false />
+<cf_SlatwallActionBar type="listing" object="#rc.orderFulfillmentSmartList#" createAction="" />
 
 <cf_SlatwallListingDisplay smartList="#rc.orderFulfillmentSmartList#">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
