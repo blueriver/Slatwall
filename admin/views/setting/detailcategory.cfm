@@ -36,41 +36,19 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
-	
-	<cffunction name="restrictedContentExists" access="public" returntype="boolean">
-		<cfreturn ormExecuteQuery("SELECT count(*) FROM SlatwallContent WHERE restrictAccessFlag = 1",true) GT 0 />
-	</cffunction>
+<cfparam name="rc.category" type="any">
+<cfparam name="rc.edit" type="boolean">
 
-	<cffunction name="getRestrictedContentByPath" access="public">
-		<cfargument name="cmsContentIDPath" type="string" />
-			
-		<cfset var hql = " FROM SlatwallContent sc
-							WHERE sc.restrictAccessFlag = 1
-							AND sc.cmsContentID IN (:cmsContentIDPath) " />
-			
-		<cfif structKeyExists(server, "railo")>
-			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=arguments.cmsContentIDPath}) />
-		<cfelse>
-			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=listToArray(arguments.cmsContentIDPath)}) />		
-		</cfif>
-		<cfif arrayLen(returnQuery)>
-			<cfreturn returnQuery[1] />
-		</cfif>
-	</cffunction>
-	
-	<cffunction name="getCategoriesByCmsCategoryIDs" access="public">
-		<cfargument name="CmsCategoryIDs" type="string" />
-			
-		<cfset var hql = " FROM SlatwallCategory sc
-							WHERE sc.cmsCategoryID IN (:CmsCategoryIDs) " />
-			
-		<cfif structKeyExists(server, "railo")>
-			<cfset var returnQuery = ormExecuteQuery(hql, {CmsCategoryIDs=arguments.CmsCategoryIDs}) />
-		<cfelse>
-			<cfset var returnQuery = ormExecuteQuery(hql, {CmsCategoryIDs=listToArray(arguments.CmsCategoryIDs)}) />		
-		</cfif>
-		<cfreturn returnQuery />
-	</cffunction>
-	
-</cfcomponent>
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.category#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.category#" edit="#rc.edit#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.category#" property="categoryName">
+				<cf_SlatwallPropertyDisplay object="#rc.category#" property="restrictAccessFlag" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+
+	</cf_SlatwallDetailForm>
+</cfoutput>

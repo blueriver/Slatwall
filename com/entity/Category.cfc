@@ -44,6 +44,7 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 	property name="cmsCategoryID" ormtype="string";
 	property name="cmsCategoryIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
+	property name="restrictAccessFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
 	

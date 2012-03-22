@@ -38,25 +38,4 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
-	<cffunction name="restrictedContentExists" access="public">
-		<cfreturn ormExecuteQuery("SELECT count(*) FROM SlatwallContent WHERE restrictAccessFlag = 1",true) />
-	</cffunction>
-
-	<cffunction name="getRestrictedContentByPath" access="public">
-		<cfargument name="cmsContentIDPath" type="string" />
-			
-		<cfset var hql = " FROM SlatwallContent sc
-							WHERE sc.restrictAccessFlag = 1
-							AND sc.cmsContentID IN (:cmsContentIDPath) " />
-			
-		<cfif structKeyExists(server, "railo")>
-			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=arguments.cmsContentIDPath}) />
-		<cfelse>
-			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=listToArray(arguments.cmsContentIDPath)}) />		
-		</cfif>
-		<cfif arrayLen(returnQuery)>
-			<cfreturn returnQuery[1] />
-		</cfif>
-	</cffunction>
-	
 </cfcomponent>

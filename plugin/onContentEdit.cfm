@@ -40,14 +40,25 @@ Notes:
 <cfset slatwallProductSmartList = getService("productService").getSmartList(entityName="SlatwallProduct") />
 <cfset slatwallProductSmartList.addFilter(propertyIdentifier="productType_systemCode", value="contentAccess") />
 <cfset slatwallProducts = slatwallProductSmartList.getRecords() />
+<cfset restrictedContent = getService("contentService").getRestrictedContentByPath($.content("path")) />
+<cfset restrictedParent = false />
+<cfif !isNull(restrictedContent) AND restrictedContent.getcmsContentID() NEQ $.content("contentID")>
+	<cfset restrictedParent = true />
+	<cfset slatwallContent.setRestrictAccessFlag(1) />
+</cfif>
 <cfoutput>
 	<dl class="oneColumn">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="templateFlag" fieldName="slatwallData.templateFlag" edit="true">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="productListingFlag" fieldName="slatwallData.productListingFlag" edit="true">
+		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="templateFlag" fieldName="slatwallData.templateFlag" edit="#!restrictedParent#">
+		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="productListingFlag" fieldName="slatwallData.productListingFlag" edit="#!restrictedParent#">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="showProductInSubPagesFlag" fieldName="slatwallData.showProductInSubPagesFlag" edit="true" titleClass="productListingFlagRelated" valueClass="productListingFlagRelated">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="disableProductAssignmentFlag" fieldName="slatwallData.disableProductAssignmentFlag" edit="true" titleClass="productListingFlagRelated" valueClass="productListingFlagRelated">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="defaultProductsPerPage" fieldName="slatwallData.defaultProductsPerPage" edit="true" titleClass="productListingFlagRelated" valueClass="productListingFlagRelated">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="restrictAccessFlag" fieldName="slatwallData.restrictAccessFlag" edit="true">
+		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="restrictAccessFlag" fieldName="slatwallData.restrictAccessFlag" edit="#!restrictedParent#">
+		<cfif restrictedParent>
+			<input type="hidden" name="slatwallData.templateFlag" value="0" />
+			<input type="hidden" name="slatwallData.productListingFlag" value="0" />
+			<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />
+		</cfif>
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true" titleClass="restrictAccessFlagRelated" valueClass="restrictAccessFlagRelated">
 		
 		<!--- show all the skus for this content --->
@@ -128,7 +139,11 @@ Notes:
 <script type="text/javascript">
 var $ = jQuery;
 function setupTemplateFlagDisplay() {
-	var selectedValue = $('input[name="slatwallData.templateFlag"]:checked').val();
+	if ($('input[name="slatwallData.templateFlag"]:checked').length > 0) {
+		var selectedValue = $('input[name="slatwallData.templateFlag"]:checked').val();
+	} else {
+		var selectedValue = $('input[name="slatwallData.templateFlag"]').val();
+	}
 	if(selectedValue == 1){
 		$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).change();
 		$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
@@ -136,7 +151,11 @@ function setupTemplateFlagDisplay() {
 }
 
 function setupProductListingFlagDisplay() {
-	var selectedValue = $('input[name="slatwallData.productListingFlag"]:checked').val();
+	if($('input[name="slatwallData.productListingFlag"]:checked').length > 0) {
+		var selectedValue = $('input[name="slatwallData.productListingFlag"]:checked').val();
+	} else {
+		var selectedValue = $('input[name="slatwallData.productListingFlag"]').val();
+	}
 	if(selectedValue == 1){
 		$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).change();
 		$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
@@ -150,7 +169,11 @@ function setupProductListingFlagDisplay() {
 }
 
 function setupRestrictAccessFlagDisplay() {
-	var selectedValue = $('input[name="slatwallData.restrictAccessFlag"]:checked').val();
+	if ($('input[name="slatwallData.restrictAccessFlag"]:checked').length > 0) {
+		var selectedValue = $('input[name="slatwallData.restrictAccessFlag"]:checked').val();
+	} else {
+		var selectedValue = $('input[name="slatwallData.restrictAccessFlag"]').val();
+	}
 	if(selectedValue == 1){
 		$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).change();
 		$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).change();

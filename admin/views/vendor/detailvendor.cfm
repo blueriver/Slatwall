@@ -60,12 +60,10 @@ Notes:
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	
-	<cf_SlatwallTabGroup hide="#rc.vendor.isNew()#">
+	<cf_SlatwallTabGroup object="#rc.vendor#">
 		<cf_SlatwallTab view="admin:vendor/vendortabs/vendoraddresses" />
 		<cf_SlatwallTab view="admin:vendor/vendortabs/vendorbrands" />
-		<cfif !rc.vendor.isNew()>
-			<cf_SlatwallTab view="admin:vendor/vendortabs/vendororders" />
-		</cfif>	
+		<cf_SlatwallTab view="admin:vendor/vendortabs/vendororders" />
 	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>

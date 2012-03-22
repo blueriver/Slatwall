@@ -40,11 +40,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public boolean function hasAccess(required any cmsContentIDPath,cmsCategoryIDs) {
 		// make sure there is restricted content in the system before doing any check
-		if(!restrictedContentExists()) {
+		if(!getService("contentService").restrictedContentExists()) {
 			return true;
 		}
 		// get restricted content by path
-		var restrictedContent = getDAO().getRestrictedContentByPath(arguments.cmsContentIDPath);
+		var restrictedContent = getService("contentService").getRestrictedContentByPath(arguments.cmsContentIDPath);
 		if(isNull(restrictedContent)) {
 			return true;
 		}
@@ -67,7 +67,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		// check if any of this content's category is part of subscription access
-		var categories = getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
+		var categories = getService("contentService").getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
 		for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
 			for(var category in categories) {
 				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
@@ -76,10 +76,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		return false;
-	}
-	
-	public boolean function restrictedContentExists() {
-		return getDAO().restrictedContentExists() GT 0;
 	}
 	
 	public string function createAccessCode() {
