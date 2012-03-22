@@ -39,7 +39,6 @@ Notes:
 <cfparam name="rc.product" type="any" />
 <cfparam name="rc.edit" type="boolean" default="false" />
 
-
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.product#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.product#" edit="#rc.edit#">
@@ -73,89 +72,3 @@ Notes:
 	</cf_SlatwallDetailForm>
 
 </cfoutput>
-
-
-<!---
-<cfif rc.edit>
-	<form name="ProductEdit" enctype="multipart/form-data" method="post">
-		<input type="hidden" name="slatAction" value="admin:product.saveproduct" />
-		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
-</cfif>
-
-<dl class="dl-horizontal">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="publishedFlag" edit="#rc.edit#">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
-	<cfif rc.edit>
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="true">
-	<cfelse>
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="false" valueLink="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#">
-	</cfif>
-	<cfif rc.edit>
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="true">
-	<cfelse>
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="false" valueLink="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#">
-	</cfif>
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="urlTitle" edit="#rc.edit#" valueLink="#rc.product.getProductURL()#">
-	<cfif $.slatwall.setting('advanced_showRemoteIDFields')>
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="remoteID" edit="#rc.edit#">	
-	</cfif>
-</dl>
-
-<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
-	<ul>
-		<li><a href="##tabSkus" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.skus")#</span></a></li>	
-		<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.webdescription")#</span></a></li>
-		<li><a href="##tabProductSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productsettings")#</span></a></li>
-		<li><a href="##tabProductPages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productpages")#</span></a></li>
-		<li><a href="##tabProductCategories" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productCategoryAssignment")#</span></a></li>
-		<li><a href="##tabRelatedProducts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.relatedproducts")#</span></a></li>
-		<li><a href="##tabAlternateImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.alternateimages")#</span></a></li>
-		<li><a href="##tabProductReviews" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productreviews")#</span></a></li>
-		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
-			<li><a href="##tabCustomAttributes_#local.attributeSet.getAttributeSetID()#" onclick="return false;"><span>#local.attributeSet.getAttributeSetName()#</span></a></li>
-		</cfloop>
-	</ul>
-
-	<div id="tabSkus">
-		#view("product/producttabs/skus")#
-	</div>
-	<div id="tabDescription">
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productDescription" edit="#rc.edit#" fieldType="wysiwyg">
-	</div>
-	<div id="tabProductSettings">
-		#view("product/producttabs/settings")#
-	</div>
-	<div id="tabProductPages">
-		#view("product/producttabs/productpages")#
-	</div>
-	<div id="tabProductCategories">
-		#view("product/producttabs/productcategories")#
-	</div>
-	<div id="tabRelatedProducts">
-		#view("product/producttabs/relatedproducts")#
-	</div>
-	<div id="tabAlternateImages">
-		#view("product/producttabs/alternateimages")#
-	</div>
-	<div id="tabProductReviews">
-		#view("product/producttabs/productreviews")#
-	</div>
-	#view("product/producttabs/customattributes")#
-</div>
-
-
-<cfif rc.edit>
-	<div id="actionButtons" class="clearfix">
-		<cf_SlatwallActionCaller action="admin:product.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-		<cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" disabled="#rc.product.isNotDeletable()#" type="link" class="button" confirmrequired="true">
-		<cf_SlatwallActionCaller action="admin:product.save" type="submit" class="button">
-	</div>
-	</form>
-	
-	<cfinclude template="dialogs/pricegrouprateskuupdate.cfm">
-	<cfinclude template="dialogs/priceautofill.cfm">
-	<cfinclude template="dialogs/weightautofill.cfm">
-</cfif>
-
---->

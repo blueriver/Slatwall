@@ -36,44 +36,15 @@
 Notes:
 
 --->
-
-
-<!---
 <cfoutput>
-	<table id="AttributeSets" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetName')#</th>
-			<th>#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetType')#</th>
-			<th>#rc.$.Slatwall.rbKey('admin.product.detailProductType.attributeSetAssigned')#</th>	
-		</tr>
-		<!--- assigned attributeSetIDs --->
-		<input type="hidden" name="attributeSetIDs" value="" />
-		<cfset local.attributeSetIDs = "" />
-		<cfloop array="#rc.productType.getAttributeSetAssignments()#" index="local.AttributeSetAssignment">
-			<cfset local.attributeSetIDs = listAppend(local.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) />
-		</cfloop>	
-		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
-			<tr>
-				<td class="property varWidth">
-					<cf_SlatwallPropertyDisplay object="#attributeSet#" property="attributeSetName" edit="false" displaytype="plain">
-				</td>
-				<td>
-					<cf_SlatwallPropertyDisplay object="#attributeSet.getAttributeSetType()#" property="type" edit="false" displaytype="plain">
-				</td>
-				<td>
-					<cfif attributeSet.getGlobalFlag()>
-						#rc.$.Slatwall.rbKey('define.yes')# (#rc.$.Slatwall.rbKey('define.global')#)
-					<cfelse>
-						<cfset local.assignedFlag = listFind(attributeSetIDs,attributeSet.getAttributeSetID()) />
-						<cfif rc.edit>
-							<input type="checkbox" name="attributeSetIDs" value="#attributeSet.getAttributeSetID()#" <cfif assignedFlag>checked </cfif>>
-						<cfelse>
-							#yesNoFormat(assignedFlag)#
-						</cfif>
-					</cfif>
-				</td>
-			</tr>
-		</cfloop>
-	</table>
+
+	<cf_SlatwallListingDisplay smartList="#rc.productType.getProductsSmartList()#" recordEditAction="admin:product.editproduct">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" linkAction="admin:product.detailproduct" />
+		<cf_SlatwallListingColumn propertyIdentifier="productCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="price" range=true />
+	</cf_SlatwallListingDisplay>
+	
 </cfoutput>
---->
