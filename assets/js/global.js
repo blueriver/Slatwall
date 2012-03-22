@@ -9,6 +9,7 @@
 jQuery(function($){
 	
 	$('.modalload').click(function(e){
+		$('#adminModal').html('');
 		var modalLink = $(this).attr( 'href' );
 		if( modalLink.indexOf("?") != -1) {
 			modalLink = modalLink + '&modal=1';
@@ -45,11 +46,13 @@ jQuery(function($){
 					
 					$.each(rv, function(p, pv) {
 						if($(newRow).children('.' + p).children('.table-expand').length) {
+							
 							var newIcon = $(newRow).children('.' + p).children('.table-expand').clone( true );
-							$(newIcon).data('depth', parentDepth + 1);
-							$(newIcon).data('parentID', rv[ idProperty ]);
+							$(newIcon).attr('data-depth', parentDepth + 1);
+							$(newIcon).attr('data-parentid', rv[ idProperty ]);
 							$(newIcon).removeClass('depth' + parentDepth);
 							$(newIcon).addClass('depth' + (parentDepth + 1));
+							
 							$(newRow).children('.' + p).html( newIcon );
 							$(newRow).children('.' + p).append( ' ' + pv );
 						} else {
@@ -71,10 +74,6 @@ jQuery(function($){
 				alert('Error Loading');
 			}
 		});
-		
-		
-		//$(this).children().removeClass('icon-plus');
-		//$(this).children().addClose('icon-minus');
 		
 	});
 	
