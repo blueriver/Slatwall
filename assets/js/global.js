@@ -39,8 +39,10 @@ jQuery(function($){
 			contentType: 'application/json',
 			success: function(r) {
 				$.each(r["RECORDS"], function(r, rv){
-					var newRow = $('#' + parentID ).clone();
+					
+					var newRow = $('#' + parentID ).clone( true );
 					$(newRow).attr('ID', rv[ idProperty ])
+					
 					$.each(rv, function(p, pv) {
 						if($(newRow).children('.' + p).children('.table-expand').length) {
 							var newIcon = $(newRow).children('.' + p).children('.table-expand').clone( true );
@@ -53,6 +55,10 @@ jQuery(function($){
 						} else {
 							$(newRow).children('.' + p).html(pv);	
 						}
+					});
+					
+					$.each($(newRow).children('.admin').children('a'), function(i, v) {
+						$(v).attr('href', $(v).attr('href').replace(parentID, rv[idProperty]));
 					});
 					
 					$('#' + parentID ).after(newRow);
