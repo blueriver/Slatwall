@@ -38,8 +38,28 @@ Notes:
 --->
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.attributeSet" type="any" />
+
+<cf_SlatwallDetailForm object="#rc.attributeSet#" edit="#rc.edit#">
+	<cf_SlatwallActionBar type="detail" object="#rc.attributeSet#" edit="#rc.edit#" />
+	
+	<cf_SlatwallDetailHeader>
+		<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetName" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetCode" edit="#rc.edit#">
+			<cfif listFind( "astProduct,astProductCustomization",rc.attributeSet.getAttributeSetType().getSystemCode() )>
+				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#rc.edit#">
+			</cfif>
+			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#">
+		</cf_SlatwallPropertyList>
+	</cf_SlatwallDetailHeader>
+	
+	<cf_SlatwallTabGroup object="#rc.attributeSet#">
+		<cf_SlatwallTab view="admin:setting/attributesettabs/attributes" />
+	</cf_SlatwallTabGroup>
+	
+</cf_SlatwallDetailForm>
  
-<cfoutput>
+<!---<cfoutput>
 	<ul id="navTask">
 		<cf_SlatwallActionCaller action="admin:attribute.listAttributeSets" type="list">
 		<cfif !rc.edit><cf_SlatwallActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetid=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
@@ -79,4 +99,4 @@ Notes:
 		</div>
 		</form>
 	</cfif>
-</cfoutput>
+</cfoutput>--->

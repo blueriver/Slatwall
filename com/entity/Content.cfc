@@ -88,6 +88,31 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	
+	public void function addSku(required any sku) {
+		// set this side of relationship
+		if(!hasSku(arguments.sku)) {
+			arrayAppend(variables.skus,arguments.sku);
+		}
+		// now set the other side of relationship
+		if(!arguments.sku.hasAccessContent(this)) {
+			arguments.sku.addAccessContent(this);
+		}
+	}
+
+	public void function removeSku(required any sku) {
+		// remove this side of relationship
+		var index = arrayFind(variables.skus, arguments.sku);
+		if(index > 0) {
+			arrayDeleteAt(variables.skus, index);
+		}
+		// now remove the other side of relationship
+		if(arguments.sku.hasAccessContent(this)) {
+			arguments.sku.removeAccessContent(this);
+		}
+	}
+	
+
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================

@@ -107,6 +107,18 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 		return variables.contentsOptions;
     }
     
+    public array function getCategoriesOptions() {
+		if(!structKeyExists(variables, "categoriesOptions")) {
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallCategory");
+			smartList.addSelect(propertyIdentifier="categoryName", alias="name");
+			smartList.addSelect(propertyIdentifier="categoryID", alias="value");
+			smartList.addFilter(propertyIdentifier="restrictAccessFlag", value="1");
+			smartList.addOrder("categoryName|ASC");
+			variables.categoriesOptions = smartList.getRecords();
+		}
+		return variables.categoriesOptions;
+    }
+    
 
 	// ============ START: Non-Persistent Property Methods =================
 	

@@ -64,10 +64,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.vendor = getVendorService().getVendor(rc.vendorID, true);
     	rc.vendorAddress = getVendorService().getVendorAddress(rc.vendorAddressID, true);
     	
-       	// If vendorAddress is new then it won't contain an "Address" (vendorAddress is only a relational entity), so create a new one.
-    	if(rc.vendorAddress.isNew()) {
-    		rc.vendorAddress.setAddress(getAddressService().newAddress());	
-    	}
     	rc.edit = true;
     	getFW().setView("admin:vendor.detailVendorAddress");
 	}

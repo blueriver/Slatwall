@@ -484,6 +484,30 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		arguments.promotionQualifierExclusion.removeSku( this );
 	}
 	
+	// Access Content (many-to-many)
+	public void function addAccessContent(required any content) {
+		// set this side of relationship
+		if(!hasAccessContent(arguments.content)) {
+			arrayAppend(variables.accessContents,arguments.content);
+		}
+		// now set the other side of relationship
+		if(!arguments.content.hasSku(this)) {
+			arguments.content.addSku(this);
+		}
+	}
+	
+	public void function removeAccessContent(required any content) {
+		// remove this side of relationship
+		var index = arrayFind(variables.accessContents, arguments.content);
+		if(index > 0) {
+			arrayDeleteAt(variables.accessContents, index);
+		}
+		// now remove the other side of relationship
+		if(arguments.content.hasSku(this)) {
+			arguments.content.removeSku(this);
+		}
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
