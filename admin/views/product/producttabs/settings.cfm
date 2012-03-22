@@ -52,7 +52,7 @@ Notes:
 	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="allowPreorderFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
 	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('callToOrderFlag'))# )" />
 	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="callToOrderFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
-	<!---<cf_SlatwallPropertyDisplay object="#rc.product#" property="productDisplayTemplate" edit="true" fieldType="select" valueOptions="#rc.product.getProductDisplayTemplateOptions()#">--->
+	<cf_SlatwallPropertyDisplay object="#rc.product#" property="productDisplayTemplate" edit="true" fieldType="select" valueOptions="#rc.product.getProductDisplayTemplateOptions()#">
 	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityHeldBack" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityHeldBack")#">
 	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityMinimum" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityMinimum")#">
 	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityMaximum" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityMaximum")#">

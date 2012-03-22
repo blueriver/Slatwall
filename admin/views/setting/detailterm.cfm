@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.Term#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.Term#" rc="#rc#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.Term#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -53,8 +53,9 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTagGroup object="#rc.term#">
-		</cf_SlatwallTagGroup>
+		<cf_SlatwallTabGroup object="#rc.term#">
+			
+		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>

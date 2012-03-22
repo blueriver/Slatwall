@@ -36,82 +36,30 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" default="false" >
 <cfparam name="rc.productType" type="any" />
-<cfparam name="rc.parentProductTypeID" type="string" default="" />
+<cfparam name="rc.edit" default="false" >
 
 <cfoutput>
-	<ul id="navTask">
-	    <cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
-		<cfif !rc.edit><cf_SlatwallActionCaller action="admin:product.editproducttype" querystring="productTypeID=#rc.productType.getProductTypeID()#" type="list"></cfif>
-	</ul>
-	
-	<cfif rc.edit>
-		<form name="ProductTypeForm" id="ProductTypeForm" action="#buildURL(action='admin:product.saveproducttype')#" method="post">
-		<input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
-	</cfif>
+	<cf_SlatwallDetailForm object="#rc.productType#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.productType#" edit="#rc.edit#">
+		</cf_SlatwallActionBar>
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="activeFlag" edit="#rc.edit#">
+				<cfif not(isNull(rc.productType.getParentProductType()))>
+					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType">
+				</cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.productType#">
+			<cf_SlatwallTab view="admin:product/producttypetabs/products" />
+			<cf_SlatwallTab view="admin:product/producttypetabs/settings" />
+			<cf_SlatwallTab view="admin:product/producttypetabs/attributesets" />
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
 
-    <dl class="twoColumn">
-    	<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#" first="true">
-		
-		<cfset local.parentLink = rc.productType.hasParentProductType() ? buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.productType.getParentProductType().getProductTypeID()#') : "" />
-		<cfif isNull(rc.productType.getSystemCode()) or rc.productType.getSystemCode() eq "">
-			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" valueLink="#local.parentLink#" edit="#rc.edit#">
-		</cfif>
-		
-		<!---
-		<cfif rc.edit>
-			<cfset local.tree = rc.productType.getProductTypeTree() />
-			<dt><label for="parentProductType.productTypeID">#$.Slatwall.rbKey('entity.producttype.parentProductType')#</label></dt>
-			<dd>
-				<select name="parentProductType.productTypeID" id="parentProductType.productTypeID" onchange="alertDialog('#$.Slatwall.rbKey("admin.product.changeParentProductType_confirm")#');">
-		            <option value=""<cfif isNull(rc.productType.getParentProductType())> selected</cfif>>None</option>
-			        <cfloop query="local.tree">
-					    <cfif not listFind(local.tree.productTypeNamePath,rc.productType.getProductTypeName())><!--- can't be child of itself or any of its children --->
-			            <cfset ThisDepth = local.tree.TreeDepth />
-			            <cfif ThisDepth><cfset bullet="-"><cfelse><cfset bullet=""></cfif>
-			            <option value="#local.tree.productTypeID#"<cfif (!isNull(rc.productType.getParentProductType()) and rc.productType.getParentProductType().getProductTypeID() eq local.tree.productTypeID) or rc.parentProductTypeID eq local.tree.productTypeID> selected="selected"</cfif>>
-			                #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##bullet##local.tree.productTypeName#
-			            </option>
-						</cfif>
-			        </cfloop>
-		        </select>
-			</dd>
-		<cfelse>
-			<cfset local.parentLink = rc.productType.hasParentProductType() ? buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.productType.getParentProductType().getProductTypeID()#') : "" />
-			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" valueLink="#local.parentLink#" edit="false">
-		</cfif>
-		--->
-		
-		<cfif $.slatwall.setting('advanced_showRemoteIDFields')>
-			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="remoteID" edit="#rc.edit#">	
-		</cfif>
-		
-	</dl>
-	<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
-		<ul>
-			<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabDescription')#</span></a></li>
-			<li><a href="##tabSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabSettings')#</span></a></li>	
-			<li><a href="##tabAttributeSets" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabAttributeSets')#</span></a></li>
-		</ul>
-		<div id="tabDescription">
-			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" fieldType="wysiwyg">
-		</div>
-		<div id="tabSettings">
-			#view("product/producttypetabs/settings")#
-		</div>
-		<div id="tabAttributeSets">
-			#view("product/producttypetabs/attributesets")#
-		</div>
-	</div>
-	<cfif rc.edit>
-		<div id="actionButtons" class="clearfix">
-			<cf_SlatwallActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cfif !rc.productType.isNew()>
-				<cf_SlatwallActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" disabled="#rc.productType.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.producttype.delete_validateisassigned')#" confirmrequired="true">
-			</cfif>
-			<cf_SlatwallActionCaller action="admin:product.saveproducttype" type="submit" class="button">
-		</div>
-	</form>
-	</cfif>
 </cfoutput>

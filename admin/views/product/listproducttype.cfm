@@ -38,9 +38,12 @@ Notes:
 --->
 <cfparam name="rc.productTypeSmartList" type="any" />
 
+<cfset rc.productTypeSmartList.joinRelatedProperty( rc.productTypeSmartList.getBaseEntityName() , "parentProductType", "LEFT") />
+<cfset rc.productTypeSmartList.addFilter("parentProductType", "NULL") />
+
 <cfoutput>
 	
-	<cf_SlatwallActionBar type="listing" object="#rc.productTypeSmartList#" />
+	<cf_SlatwallActionBar type="listing" object="#rc.productTypeSmartList#" createAction="admin:product.createmerchandiseproducttype,admin:product.createsubscriptionproducttype,admin:product.createcontentaccessproducttype" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.productTypeSmartList#" recordEditAction="admin:product.editproducttype" parentPropertyName="parentProductType" childPropertyName="childProductTypes">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productTypeName" />

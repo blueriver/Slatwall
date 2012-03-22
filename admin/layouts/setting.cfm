@@ -46,6 +46,7 @@ Notes:
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.setting')#</li>
 				<cf_SlatwallActionCaller action="admin:setting.detailsetting" type="list">
 				<cf_SlatwallActionCaller action="admin:setting.detailpermissions" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
 				<li class="divider"></li>
 				<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">
 				<cf_SlatwallActionCaller action="admin:setting.listpaymentmethod" type="list">

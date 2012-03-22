@@ -36,44 +36,18 @@
 Notes:
 
 --->
+<cfparam name="rc.type" type="any">
+<cfparam name="rc.edit" type="boolean">
 
-
-<!---
 <cfoutput>
-	<table id="AttributeSets" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetName')#</th>
-			<th>#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetType')#</th>
-			<th>#rc.$.Slatwall.rbKey('admin.product.detailProductType.attributeSetAssigned')#</th>	
-		</tr>
-		<!--- assigned attributeSetIDs --->
-		<input type="hidden" name="attributeSetIDs" value="" />
-		<cfset local.attributeSetIDs = "" />
-		<cfloop array="#rc.productType.getAttributeSetAssignments()#" index="local.AttributeSetAssignment">
-			<cfset local.attributeSetIDs = listAppend(local.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) />
-		</cfloop>	
-		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
-			<tr>
-				<td class="property varWidth">
-					<cf_SlatwallPropertyDisplay object="#attributeSet#" property="attributeSetName" edit="false" displaytype="plain">
-				</td>
-				<td>
-					<cf_SlatwallPropertyDisplay object="#attributeSet.getAttributeSetType()#" property="type" edit="false" displaytype="plain">
-				</td>
-				<td>
-					<cfif attributeSet.getGlobalFlag()>
-						#rc.$.Slatwall.rbKey('define.yes')# (#rc.$.Slatwall.rbKey('define.global')#)
-					<cfelse>
-						<cfset local.assignedFlag = listFind(attributeSetIDs,attributeSet.getAttributeSetID()) />
-						<cfif rc.edit>
-							<input type="checkbox" name="attributeSetIDs" value="#attributeSet.getAttributeSetID()#" <cfif assignedFlag>checked </cfif>>
-						<cfelse>
-							#yesNoFormat(assignedFlag)#
-						</cfif>
-					</cfif>
-				</td>
-			</tr>
-		</cfloop>
-	</table>
+	<cf_SlatwallDetailForm object="#rc.Type#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.Type#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.Type#" property="type" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+	</cf_SlatwallDetailForm>
 </cfoutput>
---->
