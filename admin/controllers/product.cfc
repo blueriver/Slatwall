@@ -56,9 +56,25 @@ component extends="BaseController" output=false accessors=true {
 		getFW().redirect(action="admin:product.listproduct");
 	}
 	
-	public void function createProduct(required struct rc) {
+	public void function createMerchandiseProduct(required struct rc) {
 		rc.product = getProductService().newProduct();
+		getFW().setView("admin:product.createproduct");
 		rc.edit = true;
+		rc.baseProductType = "merchandise";
+	}
+	
+	public void function createSubscriptionProduct(required struct rc) {
+		rc.product = getProductService().newProduct();
+		getFW().setView("admin:product.createproduct");
+		rc.edit = true;
+		rc.baseProductType = "sunscription";
+	}
+	
+	public void function createContentAccessProduct(required struct rc) {
+		rc.product = getProductService().newProduct();
+		getFW().setView("admin:product.createproduct");
+		rc.edit = true;
+		rc.baseProductType = "contentAccess";
 	}
 
 /*
