@@ -36,14 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.vendor" type="any">
-<cfparam name="rc.vendorAddress" type="any">
+<cfparam name="rc.account" type="any">
+<cfparam name="rc.accountAddress" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.vendor#" saveAction="admin:vendor.savevendor" edit="#rc.edit#">
-		<input type="hidden" name="vendorAddress[1].vendorAddressID" value="#rc.vendorAddress.getVendorAddressID()#" />
-		<cf_SlatwallAddressDisplay address="#rc.vendorAddress.getAddress()#" fieldNamePrefix="vendorAddress[1].address." showCompany="false" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.account#" saveAction="admin:account.saveaccount" edit="#rc.edit#">
+		<input type="hidden" name="accountAddress[1].accountAddressID" value="#rc.accountAddress.getAccountAddressID()#" />
+		<cf_SlatwallAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="accountAddress[1].address." edit="#rc.edit#">
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>
