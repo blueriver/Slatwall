@@ -73,6 +73,13 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================
+
+	public any function getAddress() {
+		if(isNull(variables.address)) {
+			variables.address = getService("addressService").newAddress();
+		}
+		return variables.address;
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

@@ -105,4 +105,43 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:setting.detailaddresszone", queryString="addressZoneID=#rc.addressZoneID#&messageKeys=admin.setting.deleteaddresszonelocation_success");
 	}
 	
+	public void function createAccountAttributeSet( required struct rc ) {    
+		param name="rc.attributeSetID" default="";
+		
+		rc.attributeSet = getAttributeService().getAttributeSet( rc.attributeSetID, true );
+		var asType = getService("typeService").getTypeBySystemCode( "astAccount" );
+		rc.attributeSet.setAttributeSetType( asType );
+		rc.edit = true;
+		rc.listAction = "admin:setting.listattributeset"; 
+		rc.saveAction = "admin:setting.saveattributeset";
+		rc.cancelAction = "admin:setting.listattributeset";
+		getFW().setView( "admin:setting.detailattributeset" );
+	}
+	
+	public void function createProductAttributeSet( required struct rc ) {    
+		param name="rc.attributeSetID" default="";
+		
+		rc.attributeSet = getAttributeService().getAttributeSet( rc.attributeSetID, true );
+		var asType = getService("typeService").getTypeBySystemCode( "astProduct" );
+		rc.attributeSet.setAttributeSetType( asType );
+		rc.edit = true;
+		rc.listAction = "admin:setting.listattributeset"; 
+		rc.saveAction = "admin:setting.saveattributeset";
+		rc.cancelAction = "admin:setting.listattributeset";
+		getFW().setView( "admin:setting.detailattributeset" );
+	}
+
+	public void function createProductCustomizationAttributeSet( required struct rc ) {    
+		param name="rc.attributeSetID" default="";
+		
+		rc.attributeSet = getAttributeService().getAttributeSet( rc.attributeSetID, true );
+		var asType = getService("typeService").getTypeBySystemCode( "astProductCustomization" );
+		rc.attributeSet.setAttributeSetType( asType );
+		rc.edit = true;
+		rc.listAction = "admin:setting.listattributeset"; 
+		rc.saveAction = "admin:setting.saveattributeset";
+		rc.cancelAction = "admin:setting.listattributeset";
+		getFW().setView( "admin:setting.detailattributeset" );
+	}
+	
 }

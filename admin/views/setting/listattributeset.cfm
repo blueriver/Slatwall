@@ -37,8 +37,17 @@ Notes:
 
 --->
 <cfparam name="rc.attributeSetSmartList" type="any" />
+	
+<cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createAction="admin:setting.createaccountattributeset,admin:setting.createproductattributeset,admin:setting.createproductcustomizationattributeset" />
 
-<cfoutput>
+<cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#" recordEditAction="admin:setting.editattributeset">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeSetName" />
+	<cf_SlatwallListingColumn propertyIdentifier="attributeSetType.type" />
+	<cf_SlatwallListingColumn propertyIdentifier="globalFlag" />
+</cf_SlatwallListingDisplay>
+
+
+<!---<cfoutput>
 	<ul id="navTask">
 	    <cf_SlatwallActionCaller action="admin:attribute.createAttributeSet" type="list">
 	</ul>
@@ -76,4 +85,4 @@ Notes:
 		<p><em>#rc.$.Slatwall.rbKey("admin.attribute.listattributesets.noAttributeSets")#</em></p>
 	</cfif>
 	</div>
-</cfoutput>
+</cfoutput>--->

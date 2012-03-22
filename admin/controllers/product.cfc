@@ -61,6 +61,9 @@ component extends="BaseController" output=false accessors=true {
 		getFW().setView("admin:product.createproduct");
 		rc.edit = true;
 		rc.baseProductType = "merchandise";
+		rc.listAction = "admin:product.listproduct"; 
+		rc.saveAction = "admin:product.saveproduct";
+		rc.cancelAction = "admin:product.listproduct";
 	}
 	
 	public void function createSubscriptionProduct(required struct rc) {
@@ -68,6 +71,9 @@ component extends="BaseController" output=false accessors=true {
 		getFW().setView("admin:product.createproduct");
 		rc.edit = true;
 		rc.baseProductType = "sunscription";
+		rc.listAction = "admin:product.listproduct"; 
+		rc.saveAction = "admin:product.saveproduct";
+		rc.cancelAction = "admin:product.listproduct";
 	}
 	
 	public void function createContentAccessProduct(required struct rc) {
@@ -75,6 +81,9 @@ component extends="BaseController" output=false accessors=true {
 		getFW().setView("admin:product.createproduct");
 		rc.edit = true;
 		rc.baseProductType = "contentAccess";
+		rc.listAction = "admin:product.listproduct"; 
+		rc.saveAction = "admin:product.saveproduct";
+		rc.cancelAction = "admin:product.listproduct";
 	}
 
 /*

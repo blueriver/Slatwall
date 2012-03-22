@@ -56,11 +56,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
     	rc.account = getAccountService().getAccount(rc.accountID, true);
     	rc.accountAddress = getAccountService().getAccountAddress(rc.accountAddressID, true);
-    	
-       	// If accountAddress is new then it won't contain an "Address" (accountAddress is only a relational entity), so create a new one.
-    	if(rc.accountAddress.isNew()) {
-    		rc.accountAddress.setAddress(getAddressService().newAddress());	
-    	}
+    
     	rc.edit = true;
     	getFW().setView("admin:account.detailAccountAddress");
 	}

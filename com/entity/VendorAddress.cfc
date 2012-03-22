@@ -45,9 +45,16 @@ component displayname="Vendor Address" entityname="SlatwallVendorAddress" table=
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 
+
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// ============ START: Non-Persistent Property Methods =================
 	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+
 	// vendor (many-to-one)
 	public void function setVendor(required any vendor) {
 		variables.vendor = arguments.vendor;
@@ -67,17 +74,17 @@ component displayname="Vendor Address" entityname="SlatwallVendorAddress" table=
 		structDelete(variables,"vendor");
 	}
 	
-	/******* END: Association management methods for bidirectional relationships **************/
+	// ================== START: Overridden Methods ========================
+
+	public any function getAddress() {
+		if(isNull(variables.address)) {
+			variables.address = getService("addressService").newAddress();
+		}
+		return variables.address;
+	}
 	
-	
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-	
+	// ==================  END:  Overridden Methods ========================
+
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
