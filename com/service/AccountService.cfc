@@ -89,7 +89,7 @@ component extends="BaseService" accessors="true" output="false" {
 		return account;
 	}
 	
-	public any function saveAccount(required any account, required struct data, required string siteID) {
+	public any function saveAccount(required any account, required struct data, required string siteID=request.context.$.event('siteID')) {
 		
 		var wasNew = arguments.account.isNew();
 		

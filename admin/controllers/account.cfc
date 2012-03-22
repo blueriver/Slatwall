@@ -39,11 +39,32 @@ Notes:
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
 	property name="accountService";
+	property name="addressService";
 	property name="priceGroupService";
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.listaccount");
 	}
+	
+	public void function createAccountAddress(required struct rc) {
+		editAccountAddress(rc);
+	}
+	
+	public void function editAccountAddress(required struct rc) {
+		param name="rc.accountID" default="";
+		param name="rc.accountAddressID" default="";
+		
+    	rc.account = getAccountService().getAccount(rc.accountID, true);
+    	rc.accountAddress = getAccountService().getAccountAddress(rc.accountAddressID, true);
+    	
+       	// If accountAddress is new then it won't contain an "Address" (accountAddress is only a relational entity), so create a new one.
+    	if(rc.accountAddress.isNew()) {
+    		rc.accountAddress.setAddress(getAddressService().newAddress());	
+    	}
+    	rc.edit = true;
+    	getFW().setView("admin:account.detailAccountAddress");
+	}
+	
 	/*
 	public void function detail(required struct rc) {
 		param name="rc.accountID" default="";

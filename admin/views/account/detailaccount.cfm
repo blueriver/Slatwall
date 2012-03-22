@@ -41,7 +41,9 @@ Notes:
 <!---<cfset local.attributeSets = rc.account.getAttributeSets(["astAccount"]) />--->
 
 <cf_SlatwallDetailForm object="#rc.account#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.account#" edit="#rc.edit#" />
+	<cf_SlatwallActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
+		<cf_SlatwallActionCaller action="admin:account.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
+	</cf_SlatwallActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList>

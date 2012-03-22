@@ -47,6 +47,8 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="postalCode" />
 </cf_SlatwallListingDisplay>
 
+<cf_SlatwallActionCaller action="admin:account.createaccountaddress" class="btn btn-primary" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+
 
 <!---<cfoutput>
 	<table id="AddressList" class="listing-grid stripe">
