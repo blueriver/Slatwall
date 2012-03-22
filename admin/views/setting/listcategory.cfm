@@ -36,41 +36,15 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
-	
-	<cffunction name="restrictedContentExists" access="public" returntype="boolean">
-		<cfreturn ormExecuteQuery("SELECT count(*) FROM SlatwallContent WHERE restrictAccessFlag = 1",true) GT 0 />
-	</cffunction>
+<cfparam name="rc.categorySmartList" type="any" />
 
-	<cffunction name="getRestrictedContentByPath" access="public">
-		<cfargument name="cmsContentIDPath" type="string" />
-			
-		<cfset var hql = " FROM SlatwallContent sc
-							WHERE sc.restrictAccessFlag = 1
-							AND sc.cmsContentID IN (:cmsContentIDPath) " />
-			
-		<cfif structKeyExists(server, "railo")>
-			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=arguments.cmsContentIDPath}) />
-		<cfelse>
-			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=listToArray(arguments.cmsContentIDPath)}) />		
-		</cfif>
-		<cfif arrayLen(returnQuery)>
-			<cfreturn returnQuery[1] />
-		</cfif>
-	</cffunction>
+<cfoutput>
 	
-	<cffunction name="getCategoriesByCmsCategoryIDs" access="public">
-		<cfargument name="CmsCategoryIDs" type="string" />
-			
-		<cfset var hql = " FROM SlatwallCategory sc
-							WHERE sc.cmsCategoryID IN (:CmsCategoryIDs) " />
-			
-		<cfif structKeyExists(server, "railo")>
-			<cfset var returnQuery = ormExecuteQuery(hql, {CmsCategoryIDs=arguments.CmsCategoryIDs}) />
-		<cfelse>
-			<cfset var returnQuery = ormExecuteQuery(hql, {CmsCategoryIDs=listToArray(arguments.CmsCategoryIDs)}) />		
-		</cfif>
-		<cfreturn returnQuery />
-	</cffunction>
-	
-</cfcomponent>
+<cf_SlatwallActionBar type="listing" object="#rc.categorySmartList#" createAction="" />
+
+<cf_SlatwallListingDisplay smartList="#rc.categorySmartList#" recordEditAction="admin:setting.editcategory" recordEditModal=true>
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="categoryName" />
+	<cf_SlatwallListingColumn propertyIdentifier="restrictAccessFlag" />
+</cf_SlatwallListingDisplay>
+
+</cfoutput>

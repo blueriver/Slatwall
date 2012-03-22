@@ -57,6 +57,8 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
 				<li class="divider"></li>
 				<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list">
+				<li class="divider"></li>
+				<cf_SlatwallActionCaller action="admin:setting.listcategory" type="list">
 			</ul>
 		</div>
 	</div>

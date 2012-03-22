@@ -38,6 +38,14 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
+	public boolean function restrictedContentExists() {
+		return getDAO().restrictedContentExists();
+	}
+	
+	public any function getRestrictedContentByPath(required any cmsContentIDPath) {
+		return getDAO().getRestrictedContentByPath(arguments.cmsContentIDPath);
+	}
+	
 	public any function getCategoriesByCmsCategoryIDs(required any cmsCategoryIDs) {
 		return getDAO().getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
 	}
