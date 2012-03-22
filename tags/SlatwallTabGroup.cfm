@@ -47,7 +47,7 @@ Notes:
 				<cfset activeTab = thistag.tabs[1].view />
 			</cfif>
 			<div class="tabbable tabs-left row-fluid">
-				<div class="span2">
+				<div class="tabsLeft">
 					<ul class="nav nav-tabs">
 						<cfloop array="#thistag.tabs#" index="tab">
 							<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.context.$.slatwall.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
@@ -57,25 +57,29 @@ Notes:
 						</cfif>
 					</ul>
 				</div>
-				<div class="span10">
+				<div class="tabsRight">
 					<div class="tab-content">
 						<cfloop array="#thistag.tabs#" index="tab">
 							<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="tab#listLast(tab.view, '/')#">
-								#request.context.$.slatwall.getFW().view(tab.view, {rc=request.context})#
+								<div class="row-fluid">
+									#request.context.$.slatwall.getFW().view(tab.view, {rc=request.context})#
+								</div>
 							</div>
 						</cfloop>
 						<cfif isObject(attributes.object)>
 							<div <cfif arrayLen(thistag.tabs)>class="tab-pane"<cfelse>class="tab-pane active"</cfif> id="tabSystem">
-								<cf_SlatwallPropertyList> 
-									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
-									<cfif request.context.$.slatwall.setting('advanced_showRemoteIDFields') && attributes.object.hasProperty('remoteID')>
-										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.context.$.slatwall.setting('advanced_editRemoteIDFields'), true, false)#" />
-									</cfif>
-									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdDateTime" />
-									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdByAccount" />
-									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedDateTime" />
-									<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedByAccount" />
-								</cf_SlatwallPropertyList>
+								<div class="row-fluid">
+									<cf_SlatwallPropertyList> 
+										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
+										<cfif request.context.$.slatwall.setting('advanced_showRemoteIDFields') && attributes.object.hasProperty('remoteID')>
+											<cf_SlatwallPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.context.$.slatwall.setting('advanced_editRemoteIDFields'), true, false)#" />
+										</cfif>
+										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdDateTime" />
+										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdByAccount" />
+										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedDateTime" />
+										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedByAccount" />
+									</cf_SlatwallPropertyList>
+								</div>
 							</div>
 						</cfif>
 					</div>

@@ -41,7 +41,7 @@ Notes:
 	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
 	
 	<cfoutput>
-		<div class="span6">
+		<div class="span4">
 			<cfif attributes.edit>
 				<fieldset class="dl-horizontal">
 			<cfelse>
