@@ -40,10 +40,13 @@ Notes:
 component accessors="true" output="false" displayname="VirtualMerchant" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
 	// Custom Properties that need to be set by the end user
-	property name="merchantID" displayname="Merchant ID" type="string";
+	property name="merchantID" displayname="VirtualMerchant ID (6 Digit)" type="string";
 	property name="userID" displayname="Virtual Merchant User ID" type="string";
 	property name="pin" displayname="Virtual Merchant PIN" type="string";
-	property name="liveModeFlag" displayname="Live Mode" type="boolean";
+	property name="testMerchantID" displayname="Test VirtualMerchant ID (6 Diget)" type="string";
+	property name="testUserID" displayname="Test User ID" type="string";
+	property name="testPin" displayname="Test PIN" type="string";
+	property name="testAccountFlag" displayname="Use Test Account (This is used for seperate test accounts that can be setup)" type="boolean";
 	
 	//Global variables
 	variables.liveGatewayAddress = "https://www.myvirtualmerchant.com/VirtualMerchant/process.do";
@@ -55,7 +58,10 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		setMerchantID("");
 		setUserID("");
 		setPin("");
-		setLiveModeFlag(false);
+		setTestMerchantID("");
+		setTestUserID("");
+		setTestPin("");
+		setTestAccountFlag(false);
 		
 		variables.transactionCodes = {
 			authorize="ccauthonly",
@@ -85,9 +91,9 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 	private string function getRequestData(required any requestBean){
 		
 		var requestData = "";
-		requestData = "ssl_transaction_type=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#&ssl_show_form=false";
-		requestData = listAppend(requestData,getLoginNVP(),"&");
-		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
+		requestData = "ssl_transaction_type=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#&ssl_show_form=false&ssl_result_format=ASCII";
+		requestData = listAppend(requestData, getLoginNVP(),"&");
+		requestData = listAppend(requestData, getPaymentNVP(requestBean),"&");
 		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
 			requestData = listAppend(requestData,"ORIGID=#requestBean.getProviderTransactionID()#","&");
 		}
@@ -99,9 +105,16 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 	private string function getLoginNVP(){
 		
 		var loginData = [];
-		arrayAppend(loginData,"ssl_merchant_id=#getMerchantID()#");
-		arrayAppend(loginData,"ssl_user_id=#getUserID()#");
-		arrayAppend(loginData,"ssl_pin=#getPin()#");
+		
+		if(getTestAccountFlag()){
+			arrayAppend(loginData,"ssl_merchant_id=#getTestMerchantID()#");
+			arrayAppend(loginData,"ssl_user_id=#getTestUserID()#");
+			arrayAppend(loginData,"ssl_pin=#getTestPin()#");
+		} else {
+			arrayAppend(loginData,"ssl_merchant_id=#getMerchantID()#");
+			arrayAppend(loginData,"ssl_user_id=#getUserID()#");
+			arrayAppend(loginData,"ssl_pin=#getPin()#");
+		}
 		
 		return arrayToList(loginData,"&");
 	}
@@ -109,9 +122,15 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 	private string function getPaymentNVP(required any requestBean){
 		
 		var paymentData = [];
+		arrayAppend(paymentData,"ssl_amount=#requestBean.getTransactionAmount()#");
 		arrayAppend(paymentData,"ssl_card_number=#requestBean.getCreditCardNumber()#");
 		arrayAppend(paymentData,"ssl_card_present=N");
 		arrayAppend(paymentData,"ssl_exp_date=#Left(requestBean.getExpirationMonth(),2)##Right(requestBean.getExpirationYear(),2)#");
+		arrayAppend(paymentData,"ssl_avs_address=#requestBean.getBillingStreetAddress()#");
+		arrayAppend(paymentData,"ssl_avs_zip=#requestBean.getBillingPostalCode()#");
+		arrayAppend(paymentData,"ssl_cvv2cvc2_indicator=1");
+		arrayAppend(paymentData,"ssl_cvv2cvc2=#requestBean.getSecurityCode()#");
+		
 		return arrayToList(paymentData,"&");
 		
 	}
@@ -120,7 +139,7 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
-		httpRequest.setUrl(getGatewayAddress());
+		httpRequest.setUrl(getGatewayAddress() & "?" & requestData);
 		httpRequest.setPort(443);
 		httpRequest.setTimeout(45);
 		httpRequest.setResolveurl(false);
@@ -133,23 +152,16 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 	}
 	
 	private string function getGatewayAddress(){
-		if(getLiveModeFlag()){
-			return variables.liveGatewayAddress;
-		} else {
+		if(getTestAccountFlag()){
 			return variables.testGatewayAddress;
+		} else {
+			return variables.liveGatewayAddress;
 		}
 	}
 	
 	private any function getResponseBean(required struct rawResponse, required any requestData, required any requestBean){
 		
 		var response = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
-		
-		var responseDataArray = listToArray(rawResponse.fileContent,"&");
-		var responseData = {};
-		
-		for(var item in responseDataArray){
-			responseData[listFirst(item,"=")] = listRest(item,"=");
-		}
 		
 		// Populate the data with the raw response & request
 		var data = {
@@ -158,16 +170,26 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		};
 		response.setData(data);
 		
+		var responseDataArray = listToArray(rawResponse.fileContent,chr(10));
+		var responseData = {};
+		
+		for(var item in responseDataArray){
+			responseData[listFirst(item,"=")] = listRest(item,"=");
+		}
+		
 		// Add message for what happened
 		response.addMessage(responseData["ssl_result"], responseData["ssl_result_message"]);
 		
 		// Set the status Code
 		response.setStatusCode(responseData["ssl_result"]);
 		
+		// Set the transaction ID
+		response.setTransactionID(responseData["ssl_txn_id"]);
+		
 		// Check to see if it was successful
 		if(responseData["ssl_result"] != 0) {
 			// Transaction did not go through
-			response.addError(responseData["errorCode"], responseData["errorMessage"]);
+			response.addError("processing", responseData["ssl_result_message"]);
 		} else {
 			if(requestBean.getTransactionType() == "authorize") {
 				response.setAmountAuthorized(requestBean.getTransactionAmount());
@@ -179,11 +201,11 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 			} else if(requestBean.getTransactionType() == "credit") {
 				response.setAmountCredited(requestBean.getTransactionAmount());
 			}
+			
+			response.setAuthorizationCode(responseData["ssl_approval_code"]);
+			response.setAVSCode( responseData["ssl_avs_response"] );
+			
 		}
-		
-		response.setTransactionID(responseData["ssl_txn_id"]);
-		response.setAuthorizationCode(responseData["ssl_approval_code"]);
-		response.setAVSCode( responseData["ssl_avs_response"] );
 		
 		if(responseData["ssl_cvv2_response"] == 'M') {
 			response.setSecurityCodeMatch(true);
