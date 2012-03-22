@@ -37,13 +37,24 @@ Notes:
 
 --->
 <cfif thisTag.executionMode is "start">
+	<cfparam name="request.context.edit" type="boolean" default="false" />
+	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
+	
 	<cfoutput>
-		<div class="span4">
-			<dl class="dl-horizontal">
+		<div class="span6">
+			<cfif attributes.edit>
+				<fieldset class="dl-horizontal">
+			<cfelse>
+				<dl class="dl-horizontal">
+			</cfif>
 	</cfoutput>
 <cfelse>
 	<cfoutput>
-			</dl>
+			<cfif attributes.edit>
+				</fieldset>
+			<cfelse>
+				</dl>
+			</cfif>
 		</div>
 	</cfoutput>
 </cfif>

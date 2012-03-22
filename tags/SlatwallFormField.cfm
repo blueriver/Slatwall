@@ -162,7 +162,9 @@ Notes:
 		</cfcase>
 		<cfcase value="yesno">
 			<cfoutput>
-				<input tabindex="#request.context.tabindex#" type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="1" <cfif isBoolean(attributes.value) && attributes.value>checked="checked"</cfif> /><span class="#attributes.fieldClass# yes">#yesNoFormat(1)#</span><cfset request.context.tabindex++ /><input tabindex="#request.context.tabindex#" type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="0" <cfif (isboolean(attributes.value) && not attributes.value) || not isBoolean(attributes.value)>checked="checked"</cfif> /><span class="#attributes.fieldClass# no">#yesNoFormat(0)#</span>
+				<label class="radio inline"><input tabindex="#request.context.tabindex#" type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="1" <cfif isBoolean(attributes.value) && attributes.value>checked="checked"</cfif> />#yesNoFormat(1)#</label>
+				<cfset request.context.tabindex++ />
+				<label class="radio inline"><input tabindex="#request.context.tabindex#" type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="0" <cfif (isboolean(attributes.value) && not attributes.value) || not isBoolean(attributes.value)>checked="checked"</cfif> />#yesNoFormat(0)#</label>
 			</cfoutput>
 		</cfcase>
 	</cfswitch>

@@ -43,7 +43,7 @@ Notes:
 	
 	<cfif attributes.edit>
 		<cfoutput>
-			<form method="post" action="?update=1">
+			<form method="post" action="?update=1" class="form-horizontal">
 				<input type="hidden" name="slatAction" value="#attributes.saveaction#" />
 				<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
 				<cfif structKeyExists(request.context, "modal") and request.context.modal>

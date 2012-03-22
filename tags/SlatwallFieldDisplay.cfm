@@ -66,11 +66,13 @@ Notes:
 		<cfcase value="dl">
 			<cfif attributes.edit>
 				<cfoutput>
-					<dt class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></dt>
-					<dd class="#attributes.valueClass#">
-						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-						<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
-					</dd>
+					<div class="control-group">
+						<label for="#attributes.fieldName#" class="control-label">#attributes.title#</label></dt>
+						<div class="controls">
+							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+							<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
+						</div>
+					</div>
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
@@ -78,7 +80,7 @@ Notes:
 					<cfif attributes.valueLink neq "">
 						<dd class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></dd>
 					<cfelse>
-						<dd class="#attributes.valueClass#">#attributes.value#</dd>
+						<dd class="#attributes.valueClass#">#attributes.value#&nbsp;</dd>
 					</cfif>
 				</cfoutput>
 			</cfif>
