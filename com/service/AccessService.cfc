@@ -50,29 +50,53 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 		// get the current content
 		var thisContent = getService("contentService").getContentByCmsContentID(listLast(arguments.cmsContentIDPath));
+		// get the purchase required content
+		var purchaseRequiredContent = getService("contentService").getPurchaseRequiredContentByPath(arguments.cmsContentIDPath);
+		// get the subscription required content
+		var subscriptionRequiredContent = getService("contentService").getSubscriptionRequiredContentByPath(arguments.cmsContentIDPath);
+		var purchasedAccess = false;
+		var subcriptionAccess = false;
+		
 		// check if purchase is allowed for this content
 		if(!isNull(thisContent.getAllowPurchaseFlag()) && thisContent.getAllowPurchaseFlag()) {
 			// check if the content was purchased
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
 			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=$.slatwall.getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=thisContent.getContentID());
-			if(accountContentAccessSmartList.getRecordsCount()) {
+			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
 				return true;
+			} else if(accountContentAccessSmartList.getRecordsCount()) {
+				purchasedAccess = true;
+			}
+			// check if the content is not allowed for purchase but requires purchase of parent
+		} else if((isNull(thisContent.getAllowPurchaseFlag()) || !thisContent.getAllowPurchaseFlag()) && !isNull(purchaseRequiredContent)) {
+			// check if any parent content was purchased
+			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
+			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=$.slatwall.getCurrentAccount().getAccountID());
+			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=purchaseRequiredContent.getContentID());
+			// check if the content requires subcription in addition to purchase
+			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
+				return true;
+			} else if(accountContentAccessSmartList.getRecordsCount()) {
+				purchasedAccess = true;
 			}
 		}
-		// check if this content is part of subscription access
-		for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
-			if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(thisContent)) {
-				return true;
-			}
-		}
-		// check if any of this content's category is part of subscription access
-		if(arguments.cmsCategoryIDs != "") {
-			var categories = getService("contentService").getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
+		// check if this content is part of subscription access and doesn't require purchase or it does require purchased and was purchased
+		if(isNull(purchaseRequiredContent) || purchasedAccess) {
+			// check if content is part of subscription access
 			for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
-				for(var category in categories) {
-					if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
-						return true;
+				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(thisContent)) {
+					return true;
+				}
+			}
+			// check if any of this content's category is part of subscription access
+			if(arguments.cmsCategoryIDs != "") {
+				var categories = getService("contentService").getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
+				for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
+					for(var category in categories) {
+						if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
+							return true;
+						}
 					}
 				}
 			}

@@ -59,6 +59,40 @@ Notes:
 		</cfif>
 	</cffunction>
 	
+	<cffunction name="getPurchaseRequiredContentByPath" access="public">
+		<cfargument name="cmsContentIDPath" type="string" />
+			
+		<cfset var hql = " FROM SlatwallContent sc
+							WHERE sc.requirePurchaseFlag = 1
+							AND sc.cmsContentID IN (:cmsContentIDPath) " />
+			
+		<cfif structKeyExists(server, "railo")>
+			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=arguments.cmsContentIDPath}) />
+		<cfelse>
+			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=listToArray(arguments.cmsContentIDPath)}) />		
+		</cfif>
+		<cfif arrayLen(returnQuery)>
+			<cfreturn returnQuery[1] />
+		</cfif>
+	</cffunction>
+	
+	<cffunction name="getSubscriptionRequiredContentByPath" access="public">
+		<cfargument name="cmsContentIDPath" type="string" />
+			
+		<cfset var hql = " FROM SlatwallContent sc
+							WHERE sc.requireSubscriptionFlag = 1
+							AND sc.cmsContentID IN (:cmsContentIDPath) " />
+			
+		<cfif structKeyExists(server, "railo")>
+			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=arguments.cmsContentIDPath}) />
+		<cfelse>
+			<cfset var returnQuery = ormExecuteQuery(hql, {cmsContentIDPath=listToArray(arguments.cmsContentIDPath)}) />		
+		</cfif>
+		<cfif arrayLen(returnQuery)>
+			<cfreturn returnQuery[1] />
+		</cfif>
+	</cffunction>
+	
 	<cffunction name="getCategoriesByCmsCategoryIDs" access="public">
 		<cfargument name="CmsCategoryIDs" type="string" />
 			

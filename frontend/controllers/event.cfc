@@ -170,16 +170,20 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		// loop through all the struct key and see if any value is set
 		var saveAsSlatwallPage = false;
 		for(var key in rc.slatwallData) {
+			// bug in formField tag, sends checkbox with first value empty
+			if(lcase(key).endsWith("flag")) {
+				rc.slatwallData[key] = arrayToList(listToArray(rc.slatwallData[key]));
+			}
 			// if any flag is set to 1, save this content in slatwall 
 			if(lcase(key).endsWith("flag") && rc.slatwallData[key] == 1) {
 				saveAsSlatwallPage = true;
-				break;
+				//break;
 			}
 		}
 		if(saveAsSlatwallPage) {
 			saveSlatwallPage(rc);
-		} else {
-			deleteSlatwallPage(rc);
+		//} else {
+			//deleteSlatwallPage(rc);
 		}
 		if(slatwallData.allowPurchaseFlag) {
 			if(slatwallData.addSku){
@@ -192,8 +196,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onAfterContentDelete(required any rc) {
-		deleteSlatwallPage(rc);
-		deleteSlatwallProduct(rc);
+		delinkSlatwallPage(rc);
+		deleteContentSkus(rc);
 	}
 	
 	private void function saveSlatwallPage(required any rc) {
@@ -205,12 +209,23 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		content = getContentService().saveContent(content,rc.slatwallData);
 	}
 	
+	private void function delinkSlatwallPage(required any rc) {
+		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
+		if(!content.isNew()) {
+			content.setCmsContentID("");
+			content.setCmsContentIDPath("");
+			getContentService().saveContent(content);
+		}
+	}
+	
+	/*
 	private void function deleteSlatwallPage(required any rc) {
 		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
 		if(!content.isNew()) {
 			getContentService().deleteContent(content);
 		}
 	}
+	*/
 	
 	private void function saveSlatwallProduct(required any rc) {
 		var content = $.event('contentBean');
@@ -250,7 +265,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	private void function deleteContentSkus(required any rc) {
 		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
 		while(arrayLen(content.getSkus())){
-			content.removeSku(content.getSkus()[1]);
+			var thisSku = content.getSkus()[1];
+			content.removeSku(thisSku);
 		}
 		getContentService().saveContent(content);
 	}

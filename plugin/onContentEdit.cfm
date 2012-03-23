@@ -46,84 +46,108 @@ Notes:
 	<cfset restrictedParent = true />
 	<cfset slatwallContent.setRestrictAccessFlag(1) />
 </cfif>
+<cfset purchaseRequiredContent = getService("contentService").getPurchaseRequiredContentByPath($.content("path")) />
+<cfset purchaseRequiredParent = false />
+<cfif !isNull(purchaseRequiredContent) AND purchaseRequiredContent.getcmsContentID() NEQ $.content("contentID")>
+	<cfset purchaseRequiredParent = true />
+</cfif>
+<cfset subscriptionRequiredContent = getService("contentService").getSubscriptionRequiredContentByPath($.content("path")) />
+<cfset subscriptionRequiredParent = false />
+<cfif !isNull(subscriptionRequiredContent) AND subscriptionRequiredContent.getcmsContentID() NEQ $.content("contentID")>
+	<cfset subscriptionRequiredParent = true />
+</cfif>
 <cfoutput>
+	<cfif restrictedParent>
+		<input type="hidden" name="slatwallData.templateFlag" value="0" />
+		<input type="hidden" name="slatwallData.productListingFlag" value="0" />
+		<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />
+	</cfif>
 	<dl class="oneColumn">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="templateFlag" fieldName="slatwallData.templateFlag" edit="#!restrictedParent#">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="productListingFlag" fieldName="slatwallData.productListingFlag" edit="#!restrictedParent#">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="showProductInSubPagesFlag" fieldName="slatwallData.showProductInSubPagesFlag" edit="true" titleClass="productListingFlagRelated" valueClass="productListingFlagRelated">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="disableProductAssignmentFlag" fieldName="slatwallData.disableProductAssignmentFlag" edit="true" titleClass="productListingFlagRelated" valueClass="productListingFlagRelated">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="defaultProductsPerPage" fieldName="slatwallData.defaultProductsPerPage" edit="true" titleClass="productListingFlagRelated" valueClass="productListingFlagRelated">
+		<div class="productListingFlagRelated">
+			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="showProductInSubPagesFlag" fieldName="slatwallData.showProductInSubPagesFlag" edit="true">
+			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="disableProductAssignmentFlag" fieldName="slatwallData.disableProductAssignmentFlag" edit="true">
+			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="defaultProductsPerPage" fieldName="slatwallData.defaultProductsPerPage" edit="true">
+		</div>
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="restrictAccessFlag" fieldName="slatwallData.restrictAccessFlag" edit="#!restrictedParent#">
-		<cfif restrictedParent>
-			<input type="hidden" name="slatwallData.templateFlag" value="0" />
-			<input type="hidden" name="slatwallData.productListingFlag" value="0" />
-			<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />
-		</cfif>
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true" titleClass="restrictAccessFlagRelated" valueClass="restrictAccessFlagRelated">
-		
-		<!--- show all the skus for this content --->
-		<cfif arrayLen(slatwallContent.getSkus())>
-			<dt>
-				<label>This Content is currently assigned to these skus:</label>
-			</dt>
-			<dd>
-				<table>
-					<tr>
-						<th>Product</th>
-						<th>Sku Code</th>
-						<th>Price</th>
-						<th></th>
-					</tr>
-					<cfloop array="#slatwallContent.getSkus()#" index="sku">
-						<tr>
-							<td><a href="/plugins/slatwall/?slatAction=product.edit&productID=#sku.getProduct().getProductID()#">#sku.getProduct().getProductName()#</a></td>
-							<td>#sku.getSkuCode()#</td>
-							<td>#sku.getPrice()#</td>
-							<td><a href="" class="delete" /></td>
-						</tr>					
-					</cfloop>
-				</table>
-			</dd>
-			<input type="hidden" name="slatwallData.addSku" value="0" />
-			<dt>Add Another Sku <a href="##" id="allowPurchaseFlagRelatedLink" onclick="toggleDisplay('allowPurchaseFlagRelated','Expand','Close');return setupAddSku();return false;">[Expand]</a></dt>
-		<cfelse>
-			<input type="hidden" name="slatwallData.addSku" value="1" />
-		</cfif>
-		
-		<!--- add new sku --->
-		<div class="allowPurchaseFlagRelated" id="allowPurchaseFlagRelated">
-			<dt>
-				<label for="slatwallData.product.productID">Sell Access through an existing or new Product </label>
-			</dt>
-			<dd>
-				<div>
-					Product: 
-					<div>
-						<select name="slatwallData.product.productID">
-							<option value="">New Product</option>
-							<cfloop array="#slatwallProducts#" index="product">
-								<option value="#product.getProductID()#">#product.getProductName()#</option>
+		<div class="restrictAccessFlagRelated">
+			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true">
+			<div class="requirePurchaseFlag">
+				<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="requirePurchaseFlag" fieldName="slatwallData.requirePurchaseFlag" edit="true" fieldType="checkbox">
+				<div class="requirePurchaseFlagInherit"></div>
+			</div>
+			<div class="requireSubscriptionFlag">
+				<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="requireSubscriptionFlag" fieldName="slatwallData.requireSubscriptionFlag" edit="true" fieldType="checkbox">
+				<div class="requireSubscriptionFlagInherit"></div>
+			</div>
+					
+			<div class="allowPurchaseFlagRelated" id="allowPurchaseFlagRelated">
+				<!--- show all the skus for this content --->
+				<cfif arrayLen(slatwallContent.getSkus())>
+					<dt>
+						<label>This Content is currently assigned to these skus:</label>
+					</dt>
+					<dd>
+						<table>
+							<tr>
+								<th>Product</th>
+								<th>Sku Code</th>
+								<th>Price</th>
+								<th></th>
+							</tr>
+							<cfloop array="#slatwallContent.getSkus()#" index="sku">
+								<tr>
+									<td><a href="/plugins/slatwall/?slatAction=product.edit&productID=#sku.getProduct().getProductID()#">#sku.getProduct().getProductName()#</a></td>
+									<td>#sku.getSkuCode()#</td>
+									<td>#sku.getPrice()#</td>
+									<td><a href="" class="delete" /></td>
+								</tr>					
 							</cfloop>
-						</select>
+						</table>
+					</dd>
+					<input type="hidden" name="slatwallData.addSku" value="0" />
+					<dt>Add Another Sku <a href="##" id="addSkuRelatedLink" onclick="toggleDisplay('addSkuRelated','Expand','Close');return setupAddSku();return false;">[Expand]</a></dt>
+				<cfelse>
+					<input type="hidden" name="slatwallData.addSku" value="1" />
+				</cfif>
+				
+				<!--- add new sku --->
+				<div class="addSkuRelated" id="addSkuRelated">
+					<dt>
+						<label for="slatwallData.product.productID">Sell Access through an existing or new Product </label>
+					</dt>
+					<dd>
+						<div>
+							Product: 
+							<div>
+								<select name="slatwallData.product.productID">
+									<option value="">New Product</option>
+									<cfloop array="#slatwallProducts#" index="product">
+										<option value="#product.getProductID()#">#product.getProductName()#</option>
+									</cfloop>
+								</select>
+							</div>
+						</div>
+						</br>
+						<div>
+							Sku:
+							<div>
+								<select name="slatwallData.product.sku.skuID">
+									<option value="">New Sku</option>
+								</select>
+							</div>	
+						</div>
+					</dd>
+					<div class="skuRelated">
+						<dt>
+							<label for="slatwallData.product.price">Price</label>
+						</dt>
+						<dd>
+							<input name="slatwallData.product.price" value="" />
+						</dd>
 					</div>
 				</div>
-				</br>
-				<div>
-					Sku:
-					<div>
-						<select name="slatwallData.product.sku.skuID">
-							<option value="">New Sku</option>
-						</select>
-					</div>	
-				</div>
-			</dd>
-			<div class="skuRelated">
-				<dt>
-					<label for="slatwallData.product.price">Price</label>
-				</dt>
-				<dd>
-					<input name="slatwallData.product.price" value="" />
-				</dd>
 			</div>
 		</div>
 	</dl>
@@ -137,6 +161,8 @@ Notes:
 
 <cfoutput>
 <script type="text/javascript">
+var #toscript(purchaseRequiredParent,"purchaseRequiredParent")#
+var #toscript(subscriptionRequiredParent,"subscriptionRequiredParent")#
 var $ = jQuery;
 function setupTemplateFlagDisplay() {
 	if ($('input[name="slatwallData.templateFlag"]:checked').length > 0) {
@@ -187,20 +213,51 @@ function setupRestrictAccessFlagDisplay() {
 
 function setupAllowPurchaseFlagDisplay() {
 	var selectedValue = $('input[name="slatwallData.allowPurchaseFlag"]:checked').val();
-	if(selectedValue == 1 && $('input[name="slatwallData.addSku"]').val() == 1){
+	if(selectedValue == 1){
 		$('.allowPurchaseFlagRelated').show();
 	} else {
 		$('.allowPurchaseFlagRelated').hide();
 	}
+	if($('input[name="slatwallData.addSku"]').val() == 1) {
+		$('.addSkuRelated').show();
+	} else {
+		$('.addSkuRelated').hide();
+	}
+	setupRequirePurchaseFlagDisplay();
+}
+
+function setupRequirePurchaseFlagDisplay() {
+	var selectedValue = $('input[name="slatwallData.allowPurchaseFlag"]:checked').val();
+	if(selectedValue == 0){
+		$('.requirepurchaseflagfield').hide();
+	} else {
+		$('.requirepurchaseflagfield').show();
+	}
+	// show inherited value
+	if(purchaseRequiredParent && (selectedValue == undefined || selectedValue == "0")) {
+		$('.requirePurchaseFlagInherit').html('<span>Currently purchase required by parent</span>');
+	} else if(!purchaseRequiredParent) {
+		$('.requirePurchaseFlagInherit').html('<span>Currently purchase not required by parent</span>');
+	}
+}
+
+function setupRequireSubscriptionFlagDisplay() {
+	var selectedValue = $('input[name="slatwallData.requireSubscriptionFlag"]:checked').val();
+	$('.requireSubscriptionFlagInherit').html('<span>Currently subscription required by parent</span>');
+	// show inherited value
+	if(subscriptionRequiredParent && (selectedValue == undefined || selectedValue == "0")) {
+		$('.requireSubscriptionFlagInherit').html('<span>Currently subscription required by parent</span>');
+	} else if(!subscriptionRequiredParent) {
+		$('.requireSubscriptionFlagInherit').html('<span>Currently subscription not required by parent</span>');
+	}
 }
 
 function setupAddSku() {
-	if ($('.allowPurchaseFlagRelated').is(':visible')) {
+	if ($('.addSkuRelated').is(':visible')) {
 		$('input[name="slatwallData.addSku"]').val(1);
 	} else {
 		$('input[name="slatwallData.addSku"]').val(0);
 	}
-	console.log($('input[name="slatwallData.addSku"]').val());
 }
 	
 $(document).ready(function(){
@@ -223,6 +280,10 @@ $(document).ready(function(){
 	
 	$('input[name="slatwallData.allowPurchaseFlag"]').change(function(){
 		setupAllowPurchaseFlagDisplay();
+	});
+
+	$('input[name="slatwallData.requireSubscriptionFlag"]').change(function(){
+		setupRequireSubscriptionFlagDisplay();
 	});
 
 	$('select[name="slatwallData.product.sku.skuID"]').change(function() {
@@ -260,7 +321,8 @@ $(document).ready(function(){
 	setupTemplateFlagDisplay();
 	setupProductListingFlagDisplay();
 	setupRestrictAccessFlagDisplay();
-	
+	setupAllowPurchaseFlagDisplay();
+	setupRequireSubscriptionFlagDisplay();
 });
 </script>
 </cfoutput>
