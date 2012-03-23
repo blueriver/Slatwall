@@ -61,10 +61,13 @@ Notes:
 					<ul class="nav">
 						<a href="#buildURL(action='admin:main.default')#" class="brand"><img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
 						<li class="dropdown">
-							<a href="##" class="dropdown-toggle"	data-toggle="dropdown">Reload<b class="caret"></b></a>
+							<a href="##" class="dropdown-toggle" data-toggle="dropdown">Developer Tool<b class="caret"></b></a>
 							<ul class="dropdown-menu">
-								<li><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true" />Slatwall</a></li>
-								<li><a href="/admin/index.cfm?appreload&reload=appreload" />Mura</a></li>
+								<li><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true" />Reload Slatwall</a></li>
+								<li><a href="/admin/index.cfm?appreload&reload=appreload" />Reload Mura</a></li>
+								<li><a href="#$.slatwall.getSlatwallRootPath()#/?slatAction=admin:setting.updateSkuCache" />Update Sku Cache</a></li>
+								<li><a href="#$.slatwall.getSlatwallRootPath()#/?slatAction=admin:setting.detailslatwallupdate" />Update Slatwall</a></li>
+								<li><a href="#$.slatwall.getSlatwallRootPath()#/?slatAction=admin:setting.detailviewupdate" />Update Front-end Views</a></li>
 							</ul>
 						</li>
 					</ul>
