@@ -78,6 +78,12 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 	}
 	
+	public void function editsetting(required struct rc) {
+		detailsetting(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailsetting");
+	}
+	
 	public void function createAddressZoneLocation(required struct rc) {
 		editAddressZoneLocation(rc);
 	}
