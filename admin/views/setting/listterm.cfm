@@ -40,9 +40,9 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.termSmartList#" rc="#rc#" />
+<cf_SlatwallActionBar type="listing" object="#rc.termSmartList#" createModal="true" />
 
-<cf_SlatwallListingDisplay smartList="#rc.termSmartList#" rc="#rc#" recordEditAction="admin:setting.editterm">
+<cf_SlatwallListingDisplay smartList="#rc.termSmartList#" recordEditAction="admin:setting.editterm">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="termName" />
 </cf_SlatwallListingDisplay>
 

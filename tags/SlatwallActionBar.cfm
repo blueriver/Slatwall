@@ -44,6 +44,7 @@ Notes:
 		<cfparam name="attributes.edit" type="boolean" default="false" />
 		<cfparam name="attributes.pageTitle" type="string" default="#request.context.pageTitle#" />
 		<cfparam name="attributes.createAction" type="string" default="#request.context.createAction#" />
+		<cfparam name="attributes.createModal" type="boolean" default="false" />
 		
 		<cfsilent>
 			<cfif attributes.type eq "detail" and not attributes.object.isNew()>
@@ -82,7 +83,11 @@ Notes:
 								<cfif len(attributes.createAction)>
 									<div class="btn-group">
 										<cfif listLen(attributes.createAction) eq 1>
-											<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white">
+											<cfif attributes.createModal>
+												<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white" modal="true" queryString="returnAction=#request.context.slatAction#">
+											<cfelse>
+												<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white">
+											</cfif>
 										<cfelse>
 											<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i> #request.context.$.slatwall.rbKey('define.create')# <span class="caret"></span></button>
 											<ul class="dropdown-menu">
