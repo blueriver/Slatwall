@@ -37,6 +37,7 @@ Notes:
 
 --->
 
+<!---
 <cfoutput>
 	
 	<cfif ArrayLen(rc.vendorOrderItemSmartList.getRecords()) GT 0>
@@ -92,3 +93,4 @@ Notes:
 		#$.slatwall.rbKey("admin.vendorOrder.detail.tab.items.noItems")#
 	</cfif>
 </cfoutput>
+--->

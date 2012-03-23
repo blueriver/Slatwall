@@ -36,100 +36,30 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" default="false" />
-<cfparam name="rc.VendorOrder" type="any" />
-
-<!---<cfset local.vendorOrderActionOptions = rc.VendorOrder.getActionOptions() />--->
-<cfset local.vendor = rc.VendorOrder.getVendor() />
+<cfparam name="rc.vendorOrder" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-
-<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:vendorOrder.listvendororders" type="list">
-</ul>
-
-<!--- Display buttons of available vendorOrder actions --->
-<!---<cfloop array="#local.vendorOrderActionOptions#" index="local.thisAction">
-<cfset local.action = lcase( replace(local.thisAction.getVendorOrderActionType().getSystemCode(),"oat","","one") ) />
-	<cfif local.action neq "cancel" or (local.action eq "cancel" and !rc.vendorOrder.getQuantity())>
-	<cf_SlatwallActionCaller action="admin:vendorOrder.#local.action#vendorOrder" querystring="vendorOrderid=#rc.VendorOrder.getVendorOrderID()#" class="button" confirmRequired="true" />
-	</cfif>
-</cfloop>--->
-
-
-
-
-<div class="svoadminvendororderdetail">
-	
-	<cfif rc.edit>
-			
-		#$.slatwall.getValidateThis().getValidationScript(theObject=rc.vendorOrder, formName="VendorOrderEdit")#
+	<cf_SlatwallDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
-		<form name="VendorOrderEdit" id="VendorOrderEdit" action="#buildURL('admin:vendorOrder.saveVendorOrder')#" method="post">
-			<input type="hidden" name="VendorOrderID" value="#rc.VendorOrder.getVendorOrderID()#" />
-	
-			<dl class="twoColumn">
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="true">
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="true">
-			</dl>
-			
-			<cf_SlatwallActionCaller action="admin:vendorOrder.listvendorOrders" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="admin:vendorOrder.savevendorOrder" type="submit" class="button">
-		</form>
-	</cfif>
-	
-	
-	<cfif NOT rc.edit>
-		<div class="basicOrderInfo">
-			<table class="listing-grid stripe" id="basicVendorOrderInfo" style="width:400px;">
-				<tr>
-					<th colspan="2">#$.Slatwall.rbKey("admin.vendorOrder.detail.basicvendorOrderinfo")#</th>
-				</tr>
-				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder#" property="VendorOrderNumber" edit="false" displayType="table">
-				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendorOrderType()#" property="Type" edit="false"  displayType="table">
-				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder#" property="createdDateTime" edit="false"  displayType="table">
-				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendor()#" property="vendorName" edit="false"  displayType="table">
-				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendor().getPrimaryEmailAddress()#" property="emailAddress" edit="false" displayType="table">
-			</table>
-		</div>
-		<div class="paymentInfo">
-			<p><strong>#$.Slatwall.rbKey("admin.vendorOrder.detail.vendorOrdertotals")#</strong></p>
-			<dl class="orderTotals">
-				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.subtotal")#</dt>
-				<dd>#rc.vendorOrder.getFormattedValue('subtotal', 'currency')#</dd>---> 
-				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totaltax")#</dt>--->
-				<!---<dd>#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#</dd>--->
-				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totalFulfillmentCharge")#</dt>--->
-				<!---<dd>#rc.vendorOrder.getFormattedValue('fulfillmentTotal', 'currency')#</dd>--->
-				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totalDiscounts")#</dt>--->
-				<!---<dd>#rc.vendorOrder.getFormattedValue('discountTotal', 'currency')#</dd>--->
-				<dt><strong>#$.Slatwall.rbKey("admin.vendorOrder.detail.total")#</strong></dt> 
-				<dd><strong>#rc.vendorOrder.getFormattedValue('total', 'currency')#</strong></dd>
-			</dl>
-			
-			<div class="buttons">
-				<cf_SlatwallActionCaller action="admin:stockreceiver.createStockReceiverVendorOrder" text="#$.slatwall.rbKey('admin.stockreceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" disabled="#ArrayLen(rc.vendorOrderItemSmartList.getRecords()) EQ 0#" disabledtext="#$.Slatwall.rbKey("admin.vendorOrder.detail.disabledReceive")#" />
-			</div>
-		</div>
-		<div class="clear">
-			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
-				<ul>	
-					<li><a href="##tabVendorOrderItems" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderItems")#</span></a></li>
-					<li><a href="##tabStockReceiverVendorOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.stockReceiverVendorOrders")#</span></a></li>
-					<li><a href="##tabVendorOrderProducts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderProducts")#</span></a></li>
-				</ul>
-			
-				<div id="tabVendorOrderItems">
-					#view("vendorOrder/vendorordertabs/items")# 
-				</div>
-				<div id="tabStockReceiverVendorOrders">
-					#view("vendorOrder/vendorordertabs/stockreceivers")# 
-				</div>
-				<div id="tabVendorOrderProducts">
-					#view("vendorOrder/vendorordertabs/products")# 
-				</div>
-			</div> <!-- tabs -->
-		</div>
-	</cfif>
-</div>
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cfif rc.vendorOrder.isNew()>
+					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="true">
+				<cfelse>
+					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="false">
+				</cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="#rc.edit#">
+				
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.vendorOrder#">
+			<cf_SlatwallTab view="admin:vendor/vendorordertabs/items" />
+			<cf_SlatwallTab view="admin:vendor/vendorordertabs/products" />
+			<cf_SlatwallTab view="admin:vendor/vendorordertabs/stockreceivers" />
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
 </cfoutput>

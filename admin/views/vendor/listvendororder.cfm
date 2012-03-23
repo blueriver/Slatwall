@@ -36,53 +36,13 @@
 Notes:
 
 --->
-<cfparam name="rc.$" type="any" />
 <cfparam name="rc.vendorOrderSmartList" type="any" />
-<cfparam name="rc.isSearch" default=0 />
-<cfparam name="rc.showAdvancedSearch" default=false />
 
-<cfoutput>
-<form action="#buildURL('admin:vendororder.listvendororders')#" method="post">
-	<input type="hidden" name="isSearch" value="1" />
-	<input name="Keyword" value="#rc.Keyword#" /> 
-	<div id="advancedSearchOptions" <cfif !rc.showAdvancedSearch>style="display:none;"</cfif>>
-		#$.Slatwall.rbKey("entity.vendorOrder.vendorOrderCreatedDateTime")#: 
-		<input type="date" value="#rc.vendorOrderDateStart#" name="vendorOrderDateStart" class="datepicker" /> to <input type="date" value="#rc.vendorOrderDateEnd#" name="vendorOrderDateEnd" class="datepicker" /> 
-		<cfif len(rc.vendorOrderDateStart) gt 0 or len(rc.vendorOrderDateEnd) gt 0>
-			<a href="##" id="clearDates">#$.slatwall.rbKey('admin.search.cleardates')#</a><br>
-		</cfif>
-	</div>
-	<button type="submit">#rc.$.Slatwall.rbKey("admin.vendorOrder.search")#</button>&nbsp;&nbsp;
-	<a href="##" id="showAdvancedSearch"<cfif rc.showAdvancedSearch> style="display:none;"</cfif>>#$.slatwall.rbKey("admin.vendorOrder.list.showAdvancedSearch")#</a>
-</form>
+<cf_SlatwallActionBar type="listing" object="#rc.vendorOrderSmartList#" />
 
-<cfif rc.isSearch>
-	<h4>#rc.vendorOrderSmartList.getRecordsCount()# #$.slatwall.rbKey("admin.vendorOrder.list.searchresultsfound")#</h4>
-</cfif>
-
-<table id="VendorOrderList" class="listing-grid stripe">
-	<tr>
-		<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
-		<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderCreatedDateTime")#</th>
-		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.vendor.vendorName")#</th>
-		<th>#rc.$.Slatwall.rbKey("entity.vendor.vendorOrderType")#</th>
-		<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.total")#</th>
-		<th>&nbsp</th>
-	</tr>
-	<cfloop array="#rc.vendorOrderSmartList.getPageRecords()#" index="local.vendorOrder">
-		<tr>
-			<td>#Local.VendorOrder.getVendorOrderNumber()#</td>
-			<td>#DateFormat(Local.VendorOrder.getCreatedDateTime(), "medium")#</td>
-			<td class="varWidth">#Local.VendorOrder.getVendor().getVendorName()#</td>
-			<td >#Local.VendorOrder.getVendorOrderType().getType()#</td>
-			<td>#local.vendorOrder.getFormattedValue('total', 'currency')#</td>
-			<td class="administration">
-				<ul class="one">
-				  <cf_SlatwallActionCaller action="admin:vendororder.detailvendororder" querystring="vendorOrderID=#local.vendorOrder.getVendorOrderID()#" class="detail" type="list">
-				</ul>     						
-			</td>
-		</tr>
-	</cfloop>
-</table>
-<cf_SlatwallSmartListPager smartList="#rc.vendorOrderSmartList#">
-</cfoutput>
+<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#" recordEditAction="admin:vendor.editvendororder">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" />
+	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" />
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
+	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" />
+</cf_SlatwallListingDisplay>

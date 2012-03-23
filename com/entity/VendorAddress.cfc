@@ -62,7 +62,6 @@ component displayname="Vendor Address" entityname="SlatwallVendorAddress" table=
 			arrayAppend(arguments.vendor.getVendorAddresses(),this);
 		}
 	}
-	
 	public void function removeVendor(any vendor) {
 		if(!structKeyExists(arguments, "vendor")) {
 			arguments.vendor = variables.vendor;
