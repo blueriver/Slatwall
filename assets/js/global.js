@@ -11,7 +11,14 @@ var ajaxlock = 0;
 
 jQuery(function($){
 	
+	
+	
+	var jQueryDateFormat = convertCFMLDateFormat( slatwall.dateFormat );
+	
+	console.log( jQueryDateFormat ); 
+	
 	$('.datetimepicker').datepicker({
+		dateFormat: jQueryDateFormat,
 		duration: '',  
         showTime: true,  
         constrainInput: false,
@@ -113,4 +120,10 @@ function toggleTable( toggleLink ) {
 			});
 		}
 	}
+}
+
+function convertCFMLDateFormat( dateFormat ) {
+	dateFormat = dateFormat.replace('mmm', 'M');
+	dateFormat = dateFormat.replace('yyyy', 'yy');
+	return dateFormat;
 }
