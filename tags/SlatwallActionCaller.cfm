@@ -79,6 +79,9 @@ Notes:
 		<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
 			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.detail_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.delete_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
 		</cfif>
 		
 	</cfif>
@@ -102,6 +105,9 @@ Notes:
 		<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
 			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.detail_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.delete_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
 		</cfif>
 		
 	</cfif>
