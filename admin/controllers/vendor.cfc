@@ -53,7 +53,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:vendor.listvendor");
 	}
 	
-	public void function createVendorAddress(required struct rc) {
+/*	public void function createVendorAddress(required struct rc) {
 		editVendorAddress(rc);
 	}
 	
@@ -66,7 +66,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	
     	rc.edit = true;
     	getFW().setView("admin:vendor.detailVendorAddress");
-	}
+	}*/
 	
 	/*
 	public void function listVendors(required struct rc) {

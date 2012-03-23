@@ -42,8 +42,8 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.account#" saveAction="admin:account.saveaccount" edit="#rc.edit#">
-		<input type="hidden" name="accountAddress[1].accountAddressID" value="#rc.accountAddress.getAccountAddressID()#" />
-		<cf_SlatwallAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="accountAddress[1].address." edit="#rc.edit#">
+		<input type="hidden" name="accountAddresses[1].accountAddressID" value="#rc.accountAddress.getAccountAddressID()#" />
+		<cf_SlatwallAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="accountAddresses[1].address." edit="#rc.edit#">
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>
