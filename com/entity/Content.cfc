@@ -44,8 +44,10 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="cmsContentID" ormtype="string";
 	property name="cmsContentIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
-	property name="allowPurchaseFlag" ormtype="boolean";
 	property name="restrictAccessFlag" ormtype="boolean";
+	property name="allowPurchaseFlag" ormtype="boolean";
+	property name="requirePurchaseFlag" ormtype="boolean";
+	property name="requireSubscriptionFlag" ormtype="boolean";
 	property name="templateFlag" ormtype="boolean";
 	property name="productListingFlag" ormtype="boolean";
 	property name="defaultProductsPerPage" ormtype="integer";

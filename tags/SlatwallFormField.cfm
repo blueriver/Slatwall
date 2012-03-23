@@ -72,7 +72,7 @@ Notes:
 		<cfcase value="checkbox">
 			<cfoutput>
 				<input type="hidden" name="#attributes.fieldName#" value="" />
-				<input tabindex="#request.context.tabindex#" type="checkbox" name="#attributes.fieldName#" value="1" class="#attributes.fieldClass#" <cfif attributes.value> checked="checked"</cfif> />
+				<input tabindex="#request.context.tabindex#" type="checkbox" name="#attributes.fieldName#" value="1" class="#attributes.fieldClass#" <cfif attributes.value EQ "1"> checked="checked"</cfif> />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="checkboxgroup">
