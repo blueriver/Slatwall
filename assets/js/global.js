@@ -32,7 +32,7 @@ jQuery(function($){
 		} else {
 			modalLink = modalLink + '?modal=1';
 		}
-		$('#adminModal').load( modalLink );
+		$('#adminModal').load( modalLink, function(){bindFormValidation();} );
 	});
 	
 	$('.table-expand').click(function(e){
