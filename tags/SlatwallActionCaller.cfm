@@ -73,6 +73,9 @@ Notes:
 		<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
 			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.edit_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		<cfelseif left(actionItem, 4) eq "save" and len(actionItem) gt 4>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.save_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
 		<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
 			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.create_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
@@ -99,6 +102,9 @@ Notes:
 		<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
 			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.edit_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
+		<cfelseif left(actionItem, 4) eq "save" and len(actionItem) gt 4>
+			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.save_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
 		<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
 			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.create_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#')) />
