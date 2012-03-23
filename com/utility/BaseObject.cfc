@@ -534,7 +534,13 @@ component displayname="Base Object" accessors="true" output="false" {
 		
 		for(var i=1; i<=arrayLen(validations); i++) {
 			if(validations[i].propertyName == arguments.propertyName) {
-				validationClass = listAppend(validationClass, validations[i].valtype, " ");		
+				var validationType = validations[i].valtype;
+				
+				if(validationType == "numeric") {
+					validationType = "number";
+				}
+				
+				validationClass = listAppend(validationClass, validationType, " ");		
 			}
 		} 
 		
