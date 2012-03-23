@@ -62,7 +62,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	
 	public string function getResizedImagePath(numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		arguments.imagePath = getImagePath();
-		return getService("utilityFileService").getResizedImagePath(argumentCollection=arguments);
+		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
 	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {

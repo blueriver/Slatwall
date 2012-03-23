@@ -83,7 +83,7 @@ component displayname="Product Image" entityname="SlatwallProductImage" table="S
 			arguments.height = setting("product_imageheight#arguments.size#");
 		}
 		arguments.imagePath = getImagePath();
-		return getService("utilityFileService").getResizedImagePath(argumentCollection=arguments);
+		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

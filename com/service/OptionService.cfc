@@ -131,7 +131,7 @@ component extends="BaseService" accessors="true" {
 		
 		var imageName = createUUID() & "." & arguments.imageUploadResult.serverFileExt;
 		var filePath = arguments.entity.getImageDirectory() & imageName;
-		var imageSaved = getService("utilityFileService").saveImage(uploadResult=arguments.imageUploadResult,filePath=filePath);
+		var imageSaved = getService("imageService").saveImage(uploadResult=arguments.imageUploadResult,filePath=filePath);
 		if(imageSaved) {
 			// if this was a new image where a pre-existing one existed for this object, delete the old image
 			if(arguments.entity.hasImage()) {
