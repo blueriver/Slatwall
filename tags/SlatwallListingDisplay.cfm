@@ -45,6 +45,7 @@ Notes:
 <cfparam name="attributes.parentPropertyName" type="string" default="" />
 <cfparam name="attributes.childPropertyName" type="string" default="" />
 <cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />
+<cfparam name="attributes.selectFieldName" type="string" default="" />
 
 <cfparam name="attributes.administativeCount" type="numeric" default=0 />
 <cfparam name="attributes.expandable" type="boolean" default=false />
@@ -67,6 +68,9 @@ Notes:
 			<cfset attributes.administativeCount++ />
 		</cfif>
 		<cfif attributes.recordDeleteAction neq "">
+			<cfset attributes.administativeCount++ />
+		</cfif>
+		<cfif attributes.selectFieldName neq "">
 			<cfset attributes.administativeCount++ />
 		</cfif>
 		
@@ -128,6 +132,9 @@ Notes:
 									</cfif>
 									<cfif attributes.recordDeleteAction neq "">
 										<cf_SlatwallActionCaller action="#attributes.recordDeleteAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordDeleteQueryString#" class="btn btn-mini" icon="trash" iconOnly="true" />
+									</cfif>
+									<cfif attributes.selectFieldName neq "">
+										<button class="btn btn-primary listing-select">Select</button>
 									</cfif>
 								</td>
 							</cfif>
