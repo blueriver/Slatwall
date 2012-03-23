@@ -54,6 +54,7 @@ function bindAlerts() {
 	$('.alert-confirm').click(function(e){
 		e.preventDefault();
 		$('#adminConfirm > .modal-body').html( $(this).data('confirm') );
+		$('#adminConfirm .btn-primary').attr( 'href', $(this).attr('href') );
 		$('#adminConfirm').modal();
 	});
 	$('.alert-disabled').click(function(e){

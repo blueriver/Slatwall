@@ -111,7 +111,7 @@ Notes:
 			<div class="modal-body"></div>
 			<div class="modal-footer">
 				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #$.slatwall.rbKey('define.no')#</a>
-				<a href="##" class="btn btn-primary" data-dismiss="modal"><i class="icon-ok icon-white"></i> #$.slatwall.rbKey('define.yes')#</a>
+				<a href="##" class="btn btn-primary"><i class="icon-ok icon-white"></i> #$.slatwall.rbKey('define.yes')#</a>
 			</div>
 		</div>
 		#$.slatwall.getCFStatic().renderIncludes("js")#
