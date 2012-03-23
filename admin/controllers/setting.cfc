@@ -69,19 +69,26 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		rc.shippingWeightUnitCodeOptions = getSettingService().getMeaurementUnitOptions(measurementType="weight");
 		rc.customIntegrations = getIntegrationService().listIntegrationFilterByCustomActiveFlag(1);
-		
-		var rootCategoryID = rc.$.slatwall.setting("product_rootProductCategory");
-		if(rootCategoryID == "0") {
-			rc.rootCategory = rc.$.slatwall.rbKey("define.all");
-		} else {
-			rc.rootCategory = getCMSBean("categoryManager").read(categoryID=rootCategoryID).getName();
-		}
 	}
 	
 	public void function editsetting(required struct rc) {
 		detailsetting(rc);
 		rc.edit = true;
 		getFW().setView("admin:setting.detailsetting");
+	}
+	
+	public void function savesetting(required struct rc) {
+		for(var item in rc) {
+			if(!isObject(item)) {
+				var setting = getSettingService().getBySettingName(item);
+				if(!setting.isNew()) {
+					setting.setSettingValue(rc[item]);
+					getSettingService().save(entity=setting);
+				}
+			}
+		}
+		getSettingService().reloadConfiguration();
+		getFW().redirect(action="admin:setting.detailsetting");
 	}
 	
 	public void function createAddressZoneLocation(required struct rc) {

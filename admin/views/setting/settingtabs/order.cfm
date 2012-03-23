@@ -48,10 +48,6 @@ Notes:
 			<th class="primary">#rc.$.Slatwall.rbKey('setting')#</th>
 			<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
 		</tr>
-		<tr>
-			<th class="primary">#rc.$.Slatwall.rbKey('setting')#</th>
-			<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
-		</tr>
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailFrom#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailFrom')#" fieldName="order_orderPlacedEmailFrom">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailCC')#" fieldName="order_orderPlacedEmailCC">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailBCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailBCC')#" fieldName="order_orderPlacedEmailBCC">

@@ -47,6 +47,7 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.category#" property="categoryName">
 				<cf_SlatwallPropertyDisplay object="#rc.category#" property="restrictAccessFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.category#" property="allowProductAssignmentFlag" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
