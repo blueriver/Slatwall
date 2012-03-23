@@ -1,3 +1,9 @@
+/**
+ * 
+ * @depends /jquery-ui-1.8.16.custom.min.js
+ * 
+ */
+
 /*
 * jQuery timepicker addon
 * By: Trent Richardson [http://trentrichardson.com]

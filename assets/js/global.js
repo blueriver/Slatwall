@@ -1,6 +1,7 @@
 /**
  * @depends /jquery-1.7.1.min.js
  * @depends /jquery-ui-1.8.16.custom.min.js
+ * @depends /jquery-ui-timepicker-addon.js
  * @depends /jquery-validate-1.9.0.min.js
  * @depends /bootstrap.min.js
  * 
@@ -9,6 +10,9 @@
 var ajaxlock = 0;
 
 jQuery(function($){
+	
+	$('.datetimepicker').datetimepicker();
+	$('.datepicker').datepicker();
 	
 	$('.modalload').click(function(e){
 		$('#adminModal').html('');
@@ -27,6 +31,7 @@ jQuery(function($){
 	});
 	
 });
+
 
 function toggleTable( toggleLink ) {
 	if(ajaxlock == 0) {
