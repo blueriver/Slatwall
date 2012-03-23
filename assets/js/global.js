@@ -11,14 +11,8 @@ var ajaxlock = 0;
 
 jQuery(function($){
 	
-	
-	
-	var jQueryDateFormat = convertCFMLDateFormat( slatwall.dateFormat );
-	
-	console.log( jQueryDateFormat ); 
-	
 	$('.datetimepicker').datepicker({
-		dateFormat: jQueryDateFormat,
+		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
 		duration: '',  
         showTime: true,  
         constrainInput: false,
@@ -38,7 +32,7 @@ jQuery(function($){
 		} else {
 			modalLink = modalLink + '?modal=1';
 		}
-		$('#adminModal').load( modalLink );
+		$('#adminModal').load( modalLink, function(){bindFormValidation();} );
 	});
 	
 	$('.table-expand').click(function(e){
@@ -46,7 +40,14 @@ jQuery(function($){
 		toggleTable( this );
 	});
 	
+	bindFormValidation();
 });
+
+function bindFormValidation() {
+	$.each($('form'), function(index, value) {
+		$(value).validate();
+	});
+}
 
 
 function toggleTable( toggleLink ) {

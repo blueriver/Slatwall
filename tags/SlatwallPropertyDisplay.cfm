@@ -154,6 +154,7 @@ Notes:
 		
 		<!--- If this is in edit mode then get the pertinent field info --->
 		<cfif attributes.edit>
+			<cfset attributes.fieldClass = listAppend(attributes.fieldClass, attributes.object.getPropertyValidationClass( attributes.property ), " ") />
 			<cfif attributes.fieldName eq "">
 				<cfset attributes.fieldName = attributes.object.getPropertyFieldName( attributes.property ) />
 			</cfif>
@@ -164,13 +165,6 @@ Notes:
 				<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
 			</cfif>
 		</cfif>
-		
-		<!--- Set up all of the classes --->
-		<cfset attributes.titleClass = trim("title #lcase(attributes.property)#title #attributes.titleClass#") />
-		<cfset attributes.valueClass = trim("value #lcase(attributes.property)#value #attributes.valueClass#") />
-		<cfset attributes.valueLinkClass = trim("valuelink #lcase(attributes.property)#valuelink #attributes.valueLinkClass#") />
-		<cfset attributes.fieldClass = trim("field #lcase(attributes.property)#field #attributes.fieldClass#") />
-		
 		
 		<!--- Add the error class to the form field if it didn't pass validation --->
 		<cfif attributes.object.hasError(attributes.property)>
