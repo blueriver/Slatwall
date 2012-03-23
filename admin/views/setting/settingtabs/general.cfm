@@ -48,6 +48,9 @@ Notes:
 			<th class="primary">#rc.$.Slatwall.rbKey('setting')#</th>
 			<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
 		</tr>
+		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_urlKey#" title="#rc.$.Slatwall.rbKey('setting.product.urlKey')#" fieldName="product_urlKey">
+		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_missingimagepath#" title="#rc.$.Slatwall.rbKey('setting.product.missingimagepath')#" fieldName="product_missingimagepath">
+		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imageextension#" title="#rc.$.Slatwall.rbKey('setting.product.imageextension')#" fieldName="product_imageextension">
 		<tr class="spdadvanced_logmessages">
 			<td class="title primary">#rc.$.slatwall.rbKey('setting.advanced.logmessages')#</td>
 			<cfif rc.edit>
@@ -62,8 +65,6 @@ Notes:
 				<td class="value">#rc.allSettings.advanced_logMessages.getSettingValue()#</td>
 			</cfif>
 		</tr>
-		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_logExceptionsToDatabaseFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.logExceptionsToDatabaseFlag')#" fieldName="advanced_logExceptionsToDatabaseFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
-		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_logDatabaseClearAfterDays#" title="#rc.$.Slatwall.rbKey('setting.advanced.logDatabaseClearAfterDays')#" fieldName="advanced_logDatabaseClearAfterDays">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_showRemoteIDFields#" title="#rc.$.Slatwall.rbKey('setting.advanced.showRemoteIDFields')#" fieldName="advanced_showRemoteIDFields" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_editRemoteIDFields#" title="#rc.$.Slatwall.rbKey('setting.advanced.editRemoteIDFields')#" fieldName="advanced_editRemoteIDFields" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_dateFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.dateFormat')#" fieldName="advanced_dateFormat">
