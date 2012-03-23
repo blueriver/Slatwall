@@ -156,7 +156,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	private void function confirmWhereGroup(required numeric whereGroup) {
 		for(var i=1; i<=arguments.whereGroup; i++) {
 			if(arrayLen(variables.whereGroups) < i) {
-				arrayAppend(variables.whereGroups, {filters={},likeFilters={},ranges={}});
+				arrayAppend(variables.whereGroups, {filters={},likeFilters={},inFilters={},ranges={}});
 			}
 		}
 	}
@@ -305,6 +305,13 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] = arguments.value;
 	}
 	
+	public void function addInFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		
+		variables.whereGroups[arguments.whereGroup].inFilters[aliasedProperty] = arguments.value;
+	}
+	
 	public void function addRange(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
@@ -330,7 +337,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.searchScoreProperties[arguments.propertyIdentifier] = arguments.weight;
 	}
 	
-	public void function addHQLParam(required string paramName, required string paramValue) {
+	public void function addHQLParam(required string paramName, required any paramValue) {
 		variables.hqlParams[ arguments.paramName ] = arguments.paramValue;
 	}
 	
@@ -390,7 +397,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		// Loop over where groups
 		for(var i=1; i<=arrayLen(variables.whereGroups); i++) {
-			if( structCount(variables.whereGroups[i].filters) || structCount(variables.whereGroups[i].likeFilters) || structCount(variables.whereGroups[i].ranges) ) {
+			if( structCount(variables.whereGroups[i].filters) || structCount(variables.whereGroups[i].likeFilters) || structCount(variables.whereGroups[i].inFilters) || structCount(variables.whereGroups[i].ranges) ) {
 				if(len(hqlWhere) == 0) {
 					if(!arguments.suppressWhere) {
 						hqlWhere &= " WHERE";
@@ -443,6 +450,18 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 						addHQLParam(paramID, variables.whereGroups[i].likeFilters[likeFilter]);
 						hqlWhere &= " #likeFilter# LIKE :#paramID# AND";
 					}
+				}
+				
+				// Add Where Group In Filters
+				for(var inFilter in variables.whereGroups[i].inFilters) {
+					var paramID = "LF#replace(inFilter, ".", "", "all")##i#";
+					var paramValue = variables.whereGroups[i].inFilters[inFilter];
+					if(structKeyExists(server, "railo")) {
+						addHQLParam(paramID, paramValue);
+					} else {
+						addHQLParam(paramID, listToArray(paramValue));
+					}
+					hqlWhere &= " #inFilter# IN (:#paramID#) AND";
 				}
 				
 				// Add Where Group Ranges
