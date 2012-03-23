@@ -43,6 +43,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	property name="errorBean" type="any";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
 	property name="messageBean" type="any";
 	property name="populatedSubProperties" type="array";
+	property name="validations" type="struct";
 	
 	// Constructor Metod
 	public any function init() {
@@ -522,6 +523,33 @@ component displayname="Base Object" accessors="true" output="false" {
 		
 		// By default just return non
 		return "none";
+	}
+	
+	// @hint public method for returning the validation class of a property
+	public string function getPropertyValidationClass( required string propertyName, string context="save" ) {
+		
+		var validationClass = "";
+		
+		var validations = getValidations(arguments.context);
+		
+		for(var i=1; i<=arrayLen(validations); i++) {
+			if(validations[i].propertyName == arguments.propertyName) {
+				validationClass = listAppend(validationClass, validations[i].valtype, " ");		
+			}
+		} 
+		
+		return validationClass;
+	}
+	
+	// @hind public method to see all of the validations for a particular context
+	public array function getValidations( string context="save") {
+		if(!structKeyExists(variables, "validations")) {
+			variables.validations = {};
+		}
+		if(!structKeyExists(variables.validations, arguments.context)) {
+			variables.validations[ arguments.context ] = getValidateThis().getValidator(theObject=this).getValidations(Context=arguments.context);
+		}
+		return variables.validations[ arguments.context ];
 	}
 	
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
