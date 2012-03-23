@@ -182,7 +182,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	}
 	
 	public string function getResizedImagePath(numeric width=0, numeric height=0) {
-		return getService("utilityFileService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
+		return getService("imageService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
 	}
 	
 	public boolean function hasImage() {

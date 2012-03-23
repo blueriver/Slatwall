@@ -55,7 +55,7 @@ Notes:
 	
 		<div class="actionnav well well-small">
 			<div class="row-fluid">
-				<div class="span4"><h1>#rc.$.slatwall.rbKey('admin.setting.detailsetting')#</h1></div>
+				<div class="span4"><h1>#replace(rc.$.Slatwall.rbKey('admin.define.detail'), "${itemEntityName}", rc.$.Slatwall.rbKey('entity.setting'))#</h1></div>
 				<div class="span8">
 					<div class="btn-toolbar">
 						<div class="btn-group">

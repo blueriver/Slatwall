@@ -295,7 +295,7 @@ component extends="BaseService" accessors="true" {
 		alternateImage = Super.save(entity=alternateImage, data=arguments.data);
 		if(!alternateImage.hasErrors()) {
 			var imagePath = imageDirectory & alternateImage.getImageID() & "." & imageExt;
-			var imageSaved = getService("utilityFileService").saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath ,allowedExtensions="jpg,jpeg,png,gif");	
+			var imageSaved = getService("imageService").saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath ,allowedExtensions="jpg,jpeg,png,gif");	
 			if(!imageSaved) {
 				// if there was an error with the file upload, we dont want to set an error because we want all valid image uploads and entity saving to proceed
 				// but we remove the image entity that had the file error and set a flag in the request cache service
@@ -313,7 +313,7 @@ component extends="BaseService" accessors="true" {
 	
 	public boolean function removeAlternateImage(required any image,required any product) {
 		arguments.product.removeProductImage(arguments.image);
-		return getService("utilityFileService").removeImage(arguments.image.getImagePath());
+		return getService("imageService").removeImage(arguments.image.getImagePath());
 	}
 	
 	public any function saveProduct(required any product, required struct data) {

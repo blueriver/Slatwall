@@ -69,13 +69,26 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		rc.shippingWeightUnitCodeOptions = getSettingService().getMeaurementUnitOptions(measurementType="weight");
 		rc.customIntegrations = getIntegrationService().listIntegrationFilterByCustomActiveFlag(1);
-		
-		var rootCategoryID = rc.$.slatwall.setting("product_rootProductCategory");
-		if(rootCategoryID == "0") {
-			rc.rootCategory = rc.$.slatwall.rbKey("define.all");
-		} else {
-			rc.rootCategory = getCMSBean("categoryManager").read(categoryID=rootCategoryID).getName();
+	}
+	
+	public void function editsetting(required struct rc) {
+		detailsetting(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailsetting");
+	}
+	
+	public void function savesetting(required struct rc) {
+		for(var item in rc) {
+			if(!isObject(item)) {
+				var setting = getSettingService().getBySettingName(item);
+				if(!setting.isNew()) {
+					setting.setSettingValue(rc[item]);
+					getSettingService().save(entity=setting);
+				}
+			}
 		}
+		getSettingService().reloadConfiguration();
+		getFW().redirect(action="admin:setting.detailsetting");
 	}
 	
 	public void function createAddressZoneLocation(required struct rc) {
@@ -142,6 +155,54 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.saveAction = "admin:setting.saveattributeset";
 		rc.cancelAction = "admin:setting.listattributeset";
 		getFW().setView( "admin:setting.detailattributeset" );
+	}
+
+	// Frontend Views
+	public void function detailViewUpdate(required struct rc) {
+
+	}
+	
+	public void function updateFrontendViews(required struct rc) {
+
+		var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
+		var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#rc.$.event('siteid')#/includes/display_objects/custom/slatwall/"));
+
+		getUtilityFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
+		getFW().redirect(action="admin:main");
+	}
+	
+	// slatwall update
+	public void function detailSlatwallUpdate(required struct rc) {
+
+		var versions = getUpdateService().getAvailableVersions();
+		rc.availableDevelopVersion = versions.develop;
+		rc.availableMasterVersion = versions.master;
+
+		rc.currentVersion = getPluginConfig().getApplication().getValue('SlatwallVersion');
+		if(find("-", rc.currentVersion)) {
+			rc.currentBranch = "develop";
+		} else {
+			rc.currentBranch = "master";
+		}
+
+	}
+
+	public void function updateSlatwall(required struct rc) {
+		getUpdateService().update(branch=rc.updateBranch);
+		rc.message = rbKey("admin.setting.updateslatwall_success");
+		getFW().redirect(action="admin:setting.detailslatwallupdate?reload=true", preserve="message");	
+	}
+
+	public void function updateSkuCache(required struct rc) {
+		getSkuCacheService().updateAllSkus();
+		rc.message = rbKey("admin.setting.updateSkuCache_success");
+		getFW().redirect(action="admin:main.default", preserve="message");	
+	}
+
+	public void function updateProductCache(required struct rc) {
+		getSkuCacheService().updateAllProducts();
+		rc.message = rbKey("admin.setting.updateProductCache_success");
+		getFW().redirect(action="admin:main.default", preserve="message");	
 	}
 	
 }

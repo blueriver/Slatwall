@@ -277,7 +277,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arguments.height = setting("product_imageheight#arguments.size#");
 		}
 		arguments.imagePath=getImagePath();
-		return getService("utilityFileService").getResizedImagePath(argumentCollection=arguments);
+		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
 	public boolean function imageExists() {

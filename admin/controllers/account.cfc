@@ -46,7 +46,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:account.listaccount");
 	}
 	
-	public void function createAccountAddress(required struct rc) {
+/*	public void function createAccountAddress(required struct rc) {
 		editAccountAddress(rc);
 	}
 	
@@ -59,7 +59,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     
     	rc.edit = true;
     	getFW().setView("admin:account.detailAccountAddress");
-	}
+	}*/
 	
 	/*
 	public void function detail(required struct rc) {

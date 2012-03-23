@@ -45,6 +45,7 @@ Notes:
 <cf_SlatwallListingDisplay smartList="#rc.categorySmartList#" recordEditAction="admin:setting.editcategory" recordEditQueryString="returnAction=admin:setting.listcategory"  recordEditModal="true">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="categoryName" />
 	<cf_SlatwallListingColumn propertyIdentifier="restrictAccessFlag" />
+	<cf_SlatwallListingColumn propertyIdentifier="allowProductAssignmentFlag" />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>
