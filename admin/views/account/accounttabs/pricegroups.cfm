@@ -37,17 +37,5 @@ Notes:
 
 --->
 
-	<!---
-	<cf_SlatwallPropertyDisplay object="#rc.account#" property="priceGroups" edit="#rc.edit#" displayType="plain" />
-	--->
-<div class="span6">
-	<strong>Select</strong>
-	<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsSmartList()#" selectFieldName="account.priceGroup">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
-		<cf_SlatwallListingColumn propertyIdentifier="priceGroupCode" />
-	</cf_SlatwallListingDisplay>
-</div>
-<div class="span6">
-	<strong>Selected</strong>
-	
-</div>
+<!---<cf_SlatwallMultiselector object="#rc.account#" property="priceGroups" />--->
+<cfset test = rc.account.getPriceGroupsSmartList() />

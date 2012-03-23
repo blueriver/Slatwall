@@ -36,21 +36,38 @@
 Notes:
 
 --->
-<cfparam name="rc.addressZone" type="any" />
 
-<cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#"
-			recordEditAction="admin:setting.editaddresszonelocation"
-			recordEditQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#"
-			recordEditModal=true
-			recordDeleteAction="admin:setting.deleteaddresszonelocation"
-			recordDeleteQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#">
+<cfparam name="attributes.object" type="any" />
+<cfparam name="attributes.propertyName" type="string" />
+<cfparam name="attributes.selectedValues" type="string" default="" />
+<cfparam name="attributes.optionsSmartList" type="string" default="" />
+<cfparam name="attributes.selectedSmartList" type="string" default="" />
+
+<cfif thisTag.executionMode eq "end">
+	<cfsilent>
+		<cfif not isObject(attributes.optionsSmartList)>
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="stateCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="city" />
-		<cf_SlatwallListingColumn propertyIdentifier="postalCode" />
-	</cf_SlatwallListingDisplay>
-</cfoutput>
-
-<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" class="btn btn-primary" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
+		</cfif>
+		<cfif not isObject(attributes.selectedSmartList)>
+			
+		</cfif>
+	</cfsilent>
+	<cfoutput>
+		<div class="row-fluid">
+			<div class="span6">
+				<h4>Select</h4>
+				<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsSmartList()#" selectFieldName="account.priceGroup">
+					<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
+					<cf_SlatwallListingColumn propertyIdentifier="priceGroupCode" />
+				</cf_SlatwallListingDisplay>
+			</div>
+			<div class="span6">
+				<h4>Selected</h4>
+				<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsSmartList()#" selectFieldName="account.priceGroup">
+					<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
+					<cf_SlatwallListingColumn propertyIdentifier="priceGroupCode" />
+				</cf_SlatwallListingDisplay>
+			</div>
+		</div>
+	</cfoutput>
+</cfif>

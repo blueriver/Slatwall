@@ -230,12 +230,22 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 				// Create an example entity so that we can read the meta data
 				var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
 				
-				// Loop over the properties in the example entity to 
-				for(var i=1; i<=arrayLen(exampleEntity.getProperties()); i++) {
-					if( structKeyExists(exampleEntity.getProperties()[i], "fkcolumn") && exampleEntity.getProperties()[i].fkcolumn == getPropertyMetaData( propertyName ).fkcolumn ) {
-						smartList.addFilter("#exampleEntity.getProperties()[i].name#.#getPrimaryIDPropertyName()#", getPrimaryIDValue());
+				// If its a one-to-many, then add filter
+				if(getPropertyMetaData( propertyName ).fieldtype == "one-to-many") {
+					// Loop over the properties in the example entity to 
+					for(var i=1; i<=arrayLen(exampleEntity.getProperties()); i++) {
+						if( structKeyExists(exampleEntity.getProperties()[i], "fkcolumn") && exampleEntity.getProperties()[i].fkcolumn == getPropertyMetaData( propertyName ).fkcolumn ) {
+							smartList.addFilter("#exampleEntity.getProperties()[i].name#.#getPrimaryIDPropertyName()#", getPrimaryIDValue());
+						}
 					}
+					
+				// Otherwise add a where clause for many to many
+				} else if (getPropertyMetaData( propertyName ).fieldtype == "many-to-many") {
+					
+					smartList.addWhereCondition("EXISTS (SELECT r FROM #getEntityName()# t INNER JOIN t.#getPropertyMetaData( propertyName ).name# r WHERE r.#exampleEntity.getPrimaryIDPropertyName()# = a#lcase(exampleEntity.getEntityName())#.#exampleEntity.getPrimaryIDPropertyName()# AND t.#getPrimaryIDPropertyName()# = '#getPrimaryIDValue()#')");
+					
 				}
+				
 				
 				variables[ cacheKey ] = smartList;
 			}
