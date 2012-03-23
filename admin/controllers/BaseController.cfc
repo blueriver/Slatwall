@@ -308,7 +308,11 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=rc[ arguments.entityName ], 2=rc} );
 		
 		if(!rc[ arguments.entityName ].hasErrors()) {
-			getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");
+			if(structKeyExists(rc, "returnAction")) {
+				getFW().redirect(action=rc.returnAction, querystring=buildReturnActionQueryString( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" ));	
+			} else {
+				getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
+			}
 		} else {
 			rc.edit = true;
 			getFW().setView(action=rc.detailAction);

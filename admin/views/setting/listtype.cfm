@@ -45,7 +45,7 @@ Notes:
 	
 	<cf_SlatwallActionBar type="listing" object="#rc.typeSmartList#" createAction="" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.typeSmartList#" recordEditAction="admin:setting.edittype" parentPropertyName="parentType" childPropertyName="childType" recordEditModal=true>
+	<cf_SlatwallListingDisplay smartList="#rc.typeSmartList#" recordEditAction="admin:setting.edittype" recordEditQueryString="returnAction=admin:setting.listtype" parentPropertyName="parentType" childPropertyName="childType" recordEditModal=true>
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="type" />
 	</cf_SlatwallListingDisplay>
 
