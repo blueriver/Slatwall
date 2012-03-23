@@ -49,7 +49,7 @@ Notes:
 			<cfif listFind( "astProduct,astProductCustomization",rc.attributeSet.getAttributeSetType().getSystemCode() )>
 				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#rc.edit#">
 			</cfif>
-			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#" fieldType="wysiwyg">
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	
