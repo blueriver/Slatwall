@@ -99,6 +99,21 @@ Notes:
 			</div>
 		</div>
 		<div id="adminModal" class="modal fade"></div>
+		<div id="adminDisabled" class="modal">
+			<div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>#$.slatwall.rbKey('define.disabled')#</h3></div>
+			<div class="modal-body"></div>
+			<div class="modal-footer">
+				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-ok icon-white"></i> #$.slatwall.rbKey('define.ok')#</a>
+			</div>
+		</div>
+		<div id="adminConfirm" class="modal">
+			<div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>#$.slatwall.rbKey('define.confirm')#</h3></div>
+			<div class="modal-body"></div>
+			<div class="modal-footer">
+				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #$.slatwall.rbKey('define.no')#</a>
+				<a href="##" class="btn btn-primary" data-dismiss="modal"><i class="icon-ok icon-white"></i> #$.slatwall.rbKey('define.yes')#</a>
+			</div>
+		</div>
 		#$.slatwall.getCFStatic().renderIncludes("js")#
 		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>

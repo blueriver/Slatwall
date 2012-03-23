@@ -121,11 +121,19 @@ Notes:
 
 <cfif attributes.disabled>
     <cfset attributes.disabledtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
-	<cfset attributes.class &= " disabled" />
-</cfif>
-
-<cfif attributes.confirm>
-    <cfset attributes.confirmtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
+	<cfif right(attributes.disabledtext, "8") eq "_missing">
+		<cfset attributes.disabledtext = replace(request.customMuraScopeKeys.slatwall.rbKey("admin.define.delete_disabled"),'${itemEntityName}',request.customMuraScopeKeys.slatwall.rbKey('entity.#request.context.itementityname#')) />
+	</cfif>
+	<cfset attributes.class &= " disabled alert-disabled" />
+	<cfset attributes.confirm = false />
+<cfelse>
+	<cfif attributes.confirm>
+	    <cfset attributes.confirmtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
+		<cfif right(attributes.confirmtext, "8") eq "_missing">
+			<cfset attributes.confirmtext = replace(request.customMuraScopeKeys.slatwall.rbKey("admin.define.delete_confirm"),'${itemEntityName}',request.customMuraScopeKeys.slatwall.rbKey('entity.#request.context.itementityname#')) />
+		</cfif>
+		<cfset attributes.class &= " alert-confirm" />
+	</cfif>
 </cfif>
 
 <cfif attributes.modal>

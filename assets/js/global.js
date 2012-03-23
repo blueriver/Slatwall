@@ -40,6 +40,7 @@ jQuery(function($){
 		toggleTable( this );
 	});
 	
+	bindAlerts();
 	bindFormValidation();
 });
 
@@ -49,6 +50,18 @@ function bindFormValidation() {
 	});
 }
 
+function bindAlerts() {
+	$('.alert-confirm').click(function(e){
+		e.preventDefault();
+		$('#adminConfirm > .modal-body').html( $(this).data('confirm') );
+		$('#adminConfirm').modal();
+	});
+	$('.alert-disabled').click(function(e){
+		e.preventDefault();
+		$('#adminDisabled > .modal-body').html( $(this).data('disabled') );
+		$('#adminDisabled').modal();
+	});
+}
 
 function toggleTable( toggleLink ) {
 	if(ajaxlock == 0) {
