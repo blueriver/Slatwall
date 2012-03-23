@@ -40,9 +40,9 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.locationSmartList#" rc="#rc#" />
+<cf_SlatwallActionBar type="listing" object="#rc.locationSmartList#" createModal="true" />
 
-<cf_SlatwallListingDisplay smartList="#rc.locationSmartList#" rc="#rc#" recordEditAction="admin:setting.editlocation">
+<cf_SlatwallListingDisplay smartList="#rc.locationSmartList#" recordEditAction="admin:setting.editlocation" recordEditQueryString="returnAction=admin:setting.listlocation" recordEditModal="true" recordDeleteAction="admin:setting.deletelocation">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="locationName" />
 </cf_SlatwallListingDisplay>
 

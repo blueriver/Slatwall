@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm action="admin:setting.saveroundingRule" primaryKey="roundingRuleID" primaryID="#rc.roundingRule.getRoundingRuleID()#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.roundingRule#" rc="#rc#" />
+	<cf_SlatwallDetailForm object="#rc.roundingRule#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.roundingRule#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
