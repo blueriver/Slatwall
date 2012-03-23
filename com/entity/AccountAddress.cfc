@@ -75,10 +75,10 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 	// ================== START: Overridden Methods ========================
 
 	public any function getAddress() {
-		if(isNull(variables.address)) {
-			variables.address = getService("addressService").newAddress();
+		if(!isNull(variables.address)) {
+			return variables.address;
 		}
-		return variables.address;
+		return getService("addressService").newAddress();
 	}
 	
 	// ==================  END:  Overridden Methods ========================

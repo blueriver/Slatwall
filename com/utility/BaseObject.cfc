@@ -708,7 +708,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 		
 		// If no properties could be identified as a simpleRepresentaition 
-		throw("There is no Simple Representation Property Name for #getClassName()#");
+		throw("There is no Simple Representation Property Name for #getClassName()#.  You can either override getSimpleRepresentation() or override getSimpleRepresentationPropertyName() in the entity, but be sure to do it at the bottom iside of commented sectin for overrides.");
 	}
 	
 	// @help Public Method that allows you to get a serialized JSON struct of all the simple values in the variables scope.  This is very useful for compairing objects before and after a populate

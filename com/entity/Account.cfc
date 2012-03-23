@@ -82,6 +82,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="fullName" persistent="false";
 	property name="emailAddress" persistent="false";
 	property name="phoneNumber" persistent="false";
+	property name="address" persistent="false";
 	property name="password" persistent="false";
 	
 	public any function init() {
@@ -174,33 +175,19 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public string function getPhoneNumber() {
-		if(!isNull(getPrimaryPhoneNumber()) && !isNull(getPrimaryPhoneNumber().getPhoneNumber())) {
-			return getPrimaryPhoneNumber().getPhoneNumber();
-		}
-		return "";
+		return getPrimaryPhoneNumber().getPhoneNumber();
 	}
 	
 	public string function getEmailAddress() {
-		if(!isNull(getPrimaryEmailAddress()) && !isNull(getPrimaryEmailAddress().getEmailAddress())) {
-			return getPrimaryEmailAddress().getEmailAddress();
-		}
-		return "";
+		return getPrimaryEmailAddress().getEmailAddress();
 	}
 	
 	public string function getAddress() {
-		if(!isNull(getPrimaryAddress()) && !isNull(getPrimaryAddress().getAddress())) {
-			return getPrimaryAddress().getAddress();
-		} else {
-			return getService("addressService").newAddress();
-		}
+		return getPrimaryAddress().getAddress();
 	}
 	
 	public string function getFullName() {
 		return "#getFirstName()# #getLastName()#";
-	}
-	
-	public string function getSimpleRepresentationPropertyName() {
-		return "fullName";
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -298,6 +285,44 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "fullName";
+	}
+	
+	public any function getPrimaryEmailAddress() {
+		if(!isNull(variables.primaryEmailAddress)) {
+			return variables.primaryEmailAddress;
+		} else if (arrayLen(getAccountEmailAddresses())) {
+			setPrimaryEmailAddress(getAccountEmailAddresses()[i]);
+			return getAccountEmailAddresses()[i];
+		} else {
+			return getService("accountService").newAccountEmailAddress();
+		}
+	}
+	
+	public any function getPrimaryPhoneNumber() {
+		if(!isNull(variables.primaryPhoneNumber)) {
+			return variables.primaryPhoneNumber;
+		} else if (arrayLen(getAccountPhoneNumbers())) {
+			setPrimaryPhoneNumber(getAccountPhoneNumbers()[i]);
+			return getAccountPhoneNumbers()[i];
+		} else {
+			return getService("accountService").newAccountPhoneNumber();
+		}
+	}
+	
+	public any function getPrimaryAddress() {
+		if(!isNull(variables.primaryAddress)) {
+			return variables.primaryAddress;
+		} else if (arrayLen(getAccountAddresses())) {
+			setPrimaryAddress(getAccountAddresses()[i]);
+			return getAccountAddresses()[i];
+		} else {
+			return getService("accountService").newAccountAddress();
+		}
+	}
+	
 	
 	// ==================  END:  Overridden Methods ========================
 	

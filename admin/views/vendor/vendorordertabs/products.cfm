@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-
+<!---
 <cfoutput>
 	<cfif ArrayLen(rc.vendorProductSmartList.getRecords())>
 		#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproducts_description")#
@@ -48,7 +48,7 @@ Notes:
 				<th></th>
 			</tr>
 				
-			<!---<cfloop array="#rc.vendorProducts#" index="local.product">--->
+			<!--- <cfloop array="#rc.vendorProducts#" index="local.product"> --->
 			<tbody class="productsFromVendorOutput">
 				<!---<cfloop array="#rc.vendorOrder.getVendor().getBrands()#" index="local.brand">
 					<cfloop array="#local.brand.getProducts()#" index="local.product">--->
@@ -102,3 +102,4 @@ Notes:
 	
 	<div id="addEditProductToOrder" class="ui-helper-hidden"></div>
 </cfoutput>
+--->

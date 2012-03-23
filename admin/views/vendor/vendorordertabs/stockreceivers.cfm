@@ -37,6 +37,8 @@ Notes:
 
 --->
 
+
+<!---
 <cfparam name="rc.stockReceiverVendorOrderSmartList">
 
 <cfoutput>
@@ -73,3 +75,4 @@ Notes:
 	</cfif>
 	<div class="clear"></div>
 </cfoutput>
+--->

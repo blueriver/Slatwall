@@ -87,22 +87,6 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		return super.init();
 	}
 	
-	/*public numeric function getTotalItems() {
-		return arrayLen(getVendorOrderItems());
-	}*/
-	
-	// TODO: may need to refactor the next 4 methods to more efficient HQL
-	/*public numeric function getTotalQuantity() {
-		if(!structKeyExists(variables,"totalQuantity")) {
-			var vendorOrderItems = getOrderItems();
-			variables.totalQuantity = 0;
-			for(var i=1; i<=arrayLen(vendorOrderItems); i++) {
-				variables.totalQuantity += vendorOrderItems[i].getQuantity(); 
-			}			
-		}
-		return variables.totalQuantity;
-	}*/
-	
 	public numeric function getSubtotal() {
 		var subtotal = 0;
 		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
@@ -110,43 +94,6 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		}
 		return subtotal;
 	}
-	
-	/*public numeric function getTaxTotal() {
-		return 999.99;
-		
-		var taxTotal = 0;
-		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
-			taxTotal += getVendorOrderItems()[i].getTaxAmount();
-		}
-		return taxTotal;
-	}*/
-	
-	/*public numeric function getItemAmountTotal() {
-		return 999.99;
-		
-		var Total = 0;
-		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
-			Total += getVendorOrderItems()[i].getAmount();
-		}
-		return Total;
-	}/*
-	
-	/*public numeric function getFulfillmentAmountTotal() {
-		return 0;
-	}
-	
-	public numeric function getVendorOrderAmountTotal() {
-		return 0;
-	}*/
-	
-
-	/*public numeric function getFulfillmentTotal() {
-		var fulfillmentTotal = 0;
-		for(var i=1; i<=arrayLen(getVendorOrderFulfillments()); i++) {
-			fulfillmentTotal += getVendorOrderFulfillments()[i].getFulfillmentCharge();
-		}
-		return fulfillmentTotal;
-	}*/
 	
 	public numeric function getTotal() {
 		return getSubtotal() /*+ getTaxTotal() + getFulfillmentTotal()*/;
@@ -161,15 +108,6 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	public boolean function isProductInVendorOrder(required any productID) {
 		return getService("VendorOrderService").isProductInVendorOrder(arguments.productID, this.getVendorOrderId());
 	}
-	
-	/*
-		Helper methods for Add Product / Vendor Order Item dialog
-	*/
-	
-	
-	/*
-		Check if the bellow methods are still needed.
-	*/
 	
 	// This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. If either are not found, it returns a blank VendorOrderItem
 	public any function getVendorOrderItemForSkuAndLocation(required any skuID, required any locationID) {
@@ -200,13 +138,6 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		return 0;	
 	}
 	
-	/*public any function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
-		return getService("VendorOrderService").getQuantityOfStockAlreadyOnOrder(arguments.vendorOrderId, arguments.stockID);
-	}
-	
-	public any function getQuantityOfStockAlreadyReceived(required any vendorOrderID, required any stockID) {
-		return getService("VendorOrderService").getQuantityOfStockAlreadyReceived(arguments.vendorOrderId, arguments.stockID);
-	}*/
 	public any function getQuantityOfStockAlreadyOnOrder(required any skuID, required any locationID) {
 		return getService("VendorOrderService").getQuantityOfStockAlreadyOnOrder(getVendorOrderID(), arguments.skuID, arguments.locationID);
 	}
@@ -225,7 +156,33 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Vendor (many-to-one)
+	public void function setVendor(required any vendor) {
+		variables.vendor = arguments.vendor;
+		if(isNew() or !arguments.vendor.hasVendorOrder( this )) {
+			arrayAppend(arguments.vendor.getVendorOrders(), this);
+		}
+	}
+	public void function removeVendor(any vendor) {
+		if(!structKeyExists(arguments, "vendor")) {
+			arguments.vendor = variables.vendor;
+		}
+		var index = arrayFind(arguments.vendor.getVendorOrders(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendor.getVendorOrders(), index);
+		}
+		structDelete(variables, "vendor");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentation() {
+		return "#getVendor().getVendorName()# - #getVendorOrderNumber()#";
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
