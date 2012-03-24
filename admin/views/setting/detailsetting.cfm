@@ -74,6 +74,7 @@ Notes:
 		<cf_SlatwallTabGroup>
 			<cf_SlatwallTab view="admin:setting/settingtabs/general" />
 			<cf_SlatwallTab view="admin:setting/settingtabs/order" />
+			<cf_SlatwallTab view="admin:setting/settingtabs/advanced" />
 		</cf_SlatwallTabGroup>
 		
 	<cfif rc.edit>
