@@ -39,7 +39,13 @@ Notes:
 
 <cfparam name="rc.vendor" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorAddressesSmartList()#">
+<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorAddressesSmartList()#"
+		recordEditAction="admin:vendor.editvendoraddress"
+		recordEditQueryString="vendorID=#rc.vendor.getVendorID()#"
+		recordEditModal=true
+		recordDeleteAction="admin:vendor.deletevendoraddress"
+		recordDeleteQueryString="vendorID=#rc.vendor.getVendorID()#&returnaction=admin:vendor.detailvendor">
+			
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="address.streetAddress" />
 	<cf_SlatwallListingColumn propertyIdentifier="address.street2Address" />
 	<cf_SlatwallListingColumn propertyIdentifier="address.city" />
@@ -49,60 +55,3 @@ Notes:
 </cf_SlatwallListingDisplay>
 
 <cf_SlatwallActionCaller action="admin:vendor.createvendoraddress" class="btn btn-primary" queryString="vendorID=#rc.vendor.getVendorID()#" modal=true />
-
-<!---<cfoutput>
-	<table id="AddressList" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.address.streetAddress")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.street2Address")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.city")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.stateCode")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.postalCode")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.countryCode")#</th>
-			<th>&nbsp</th>
-		</tr>
-
-		<cfloop array="#rc.vendor.getVendorAddresses()#" index="local.vendorAddress">
-			<tr>
-				<td class="varWidth">#Local.vendorAddress.getAddress().getStreetAddress()#</td>
-				<td>#Local.vendorAddress.getAddress().getStreet2Address()#</td>
-				<td>#Local.vendorAddress.getAddress().getCity()#</td>
-				<td>#Local.vendorAddress.getAddress().getStateCode()#</td>
-				<td>#Local.vendorAddress.getAddress().getPostalCode()#</td>
-				<td>#Local.vendorAddress.getAddress().getCountryCode()#</td>
-				<td class="administration">
-					<ul class="three">
-						<cf_SlatwallActionCaller action="admin:vendor.editvendor" querystring="vendorId=#rc.vendor.getVendorId()#&vendorAddressID=#local.vendorAddress.getVendorAddressID()#" class="edit" type="list">
-						<!---<cf_SlatwallActionCaller action="admin:vendor.detailvendoraddress" querystring="vendorId=#rc.vendor.getVendorId()#&vendorAddressID=#local.vendorAddress.getVendorAddressID()#" class="detail" type="list">--->
-						<cf_SlatwallActionCaller action="admin:vendor.deletevendoraddress" querystring="vendorId=#rc.vendor.getVendorId()#&vendorAddressID=#local.vendorAddress.getVendorAddressID()#" class="delete" type="list" disabled="#NOT local.vendorAddress.isDeletable()#" confirmrequired="true">
-					</ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-	
-	<!--- We are in Add or Edit mode (not view) --->
-	<cfif rc.edit>
-		<!--- If the VendorAddress is new, then that means that we are just editing the PriceGroup --->
-		<cfif rc.vendorAddress.isNew()>
-			<button type="button" id="addVendorAddressButton" value="true">#rc.$.Slatwall.rbKey("admin.vendoraddress.edit.addVendorAddress")#</button>
-		</cfif>
-		
-		<div id="vendorAddressInputs" <cfif rc.vendorAddress.isNew() AND !rc.vendorAddress.hasErrors()>class="ui-helper-hidden"</cfif> >
-			<strong>#rc.$.Slatwall.rbKey("admin.vendoraddress.edit.addVendorAddress")#</strong>
-			<cfinclude template="vendoraddressdisplay.cfm">
-			
-			
-			<!--- The populateSubProperties is read by the implicit save() handler to determine if it should process the saveVendorAddress() method. --->
-			<cfif rc.vendorAddress.isNew() && not rc.vendorAddress.hasErrors()>
-				<input type="hidden" name="ignoreProperties" id="ignoreProperties" value="vendorAddresses"/>	<!--- value is case-sensitive! --->
-			<cfelse>
-				<input type="hidden" name="ignoreProperties" id="ignoreProperties" value=""/>
-			</cfif>
-		</div>
-
-		<br /><br />
-	</cfif>
-	
-	
-</cfoutput>--->
