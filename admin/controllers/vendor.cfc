@@ -53,6 +53,28 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:vendor.listvendor");
 	}
 	
+	public void function detailVendorOrder(required struct rc) {
+		super.genericDetailMethod("vendororder",rc);
+		getVendorOrderDetailData(rc);
+	}
+	
+	public void function editVendorOrder(required struct rc) {
+		super.genericEditMethod("vendororder",rc);
+		getVendorOrderDetailData(rc);
+	}
+	
+	public void function getVendorOrderDetailData(required struct rc) {
+		// Get Receivers
+		rc.stockReceiverVendorOrderSmartList = getStockService().getStockReceiverVendorOrderSmartList();
+		rc.stockReceiverVendorOrderSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
+		
+		// Get Vendor's Products
+		rc.vendorProductSmartList = getProductService().getProductSmartList();
+		rc.vendorProductSmartList.addFilter("brand.vendors.vendorID", rc.VendorOrder.getVendor().getVendorID());
+	}
+	
+	
+
 /*	public void function createVendorAddress(required struct rc) {
 		editVendorAddress(rc);
 	}

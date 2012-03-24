@@ -38,44 +38,10 @@ Notes:
 --->
 <cfparam name="rc.vendor" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorOrdersSmartList()#">
+<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorOrdersSmartList()#" recordDetailAction="admin:vendor.detailvendororder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorOrderNumber" />
 	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="total" range="true" />
 </cf_SlatwallListingDisplay>
 
-
-<!---<cfoutput>
-	
-	
-	<cfif ArrayLen(rc.vendorOrderSmartList.getPageRecords()) EQ 0>
-		#rc.$.Slatwall.rbKey("admin.vendor.detail.tab.vendorOrders.noOrders")#
-	<cfelse>	
-		<table id="VendorOrderList" class="listing-grid stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderCreatedDateTime")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderType")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.total")#</th>
-				<th>&nbsp</th>
-			</tr>
-			
-			
-			<cfloop array="#rc.vendorOrderSmartList.getPageRecords()#" index="local.vendorOrder">
-				<tr>
-					<td class="varWidth">#Local.VendorOrder.getVendorOrderNumber()#</td>
-					<td>#DateFormat(Local.VendorOrder.getCreatedDateTime(), "medium")#</td>
-					<td>#Local.VendorOrder.getVendorOrderType().getType()#</td>
-					<td>#local.VendorOrder.getFormattedValue('total', 'currency')#</td>
-					<td class="administration">
-						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:vendorOrder.detailvendororder" querystring="vendorOrderID=#local.vendorOrder.getVendorOrderID()#" class="detail" type="list">
-						</ul>     						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</cfif>
-
-</cfoutput>--->

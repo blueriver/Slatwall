@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#"></cf_SlatwallActionBar>
+		<cf_SlatwallActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -57,8 +57,8 @@ Notes:
 		
 		<cf_SlatwallTabGroup object="#rc.vendorOrder#">
 			<cf_SlatwallTab view="admin:vendor/vendorordertabs/items" />
-			<cf_SlatwallTab view="admin:vendor/vendorordertabs/products" />
 			<cf_SlatwallTab view="admin:vendor/vendorordertabs/stockreceivers" />
+			<cf_SlatwallTab view="admin:vendor/vendorordertabs/products" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
