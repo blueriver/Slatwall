@@ -39,8 +39,12 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.attributeSet" type="any" />
 
+<cfoutput>
+	
 <cf_SlatwallDetailForm object="#rc.attributeSet#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.attributeSet#" edit="#rc.edit#" />
+	<cf_SlatwallActionBar type="detail" object="#rc.attributeSet#" edit="#rc.edit#">
+		<cf_SlatwallActionCaller action="admin:setting.createattribute" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" type="list" modal=true />
+	</cf_SlatwallActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList>
@@ -52,13 +56,14 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#" fieldType="wysiwyg">
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
-	
+	<input type="hidden" name="attributeSetType.typeID" value="#rc.attributeSet.getAttributeSetType().getTypeID()#" />
 	<cf_SlatwallTabGroup object="#rc.attributeSet#">
 		<cf_SlatwallTab view="admin:setting/attributesettabs/attributes" />
 	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>
- 
+
+</cfoutput>
 <!---<cfoutput>
 	<ul id="navTask">
 		<cf_SlatwallActionCaller action="admin:attribute.listAttributeSets" type="list">

@@ -36,7 +36,20 @@
 Notes:
 
 --->
+<cfparam name="rc.attributeSet" type="any" />
+
 <cfoutput>
+
+	<cf_SlatwallListingDisplay smartList="#rc.attributeSet.getAttributesSmartList()#" recordEditAction="admin:setting.editattribute">
+		<cf_SlatwallListingColumn propertyIdentifier="attributeCode" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeName" /> 
+	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:setting.createattribute" class="btn btn-primary" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
+	
+</cfoutput>
+
+<!---<cfoutput>
 	<cfif arrayLen(rc.attributeSet.getAttributes()) GT 0>
 		<table class="listing-grid stripe" id="Options">
 			<thead>
@@ -148,4 +161,4 @@ Notes:
 		<br /><br />
 		
 	</cfif>
-</cfoutput>
+</cfoutput>--->
