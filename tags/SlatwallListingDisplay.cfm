@@ -46,6 +46,7 @@ Notes:
 <cfparam name="attributes.childPropertyName" type="string" default="" />
 <cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />
 <cfparam name="attributes.selectFieldName" type="string" default="" />
+<cfparam name="attributes.removeFieldName" type="string" default="" />
 
 <cfparam name="attributes.administativeCount" type="numeric" default=0 />
 <cfparam name="attributes.expandable" type="boolean" default=false />
@@ -64,13 +65,13 @@ Notes:
 		
 		<!--- Setup the count for the number of admin icons --->
 		<cfset attributes.administativeCount = 0 />
-		<cfif attributes.recordEditAction neq "">
+		<cfif len(attributes.recordEditAction)>
 			<cfset attributes.administativeCount++ />
 		</cfif>
-		<cfif attributes.recordDeleteAction neq "">
+		<cfif len(attributes.recordDeleteAction)>
 			<cfset attributes.administativeCount++ />
 		</cfif>
-		<cfif attributes.selectFieldName neq "">
+		<cfif len(attributes.selectFieldName) or len(attributes.removeFieldName)>
 			<cfset attributes.administativeCount++ />
 		</cfif>
 		
@@ -81,7 +82,13 @@ Notes:
 	</cfsilent>
 	<cfoutput>
 		<cfif arrayLen(attributes.smartList.getPageRecords())>
-			<table class="table table-striped table-bordered">
+			<cfif len(attributes.selectFieldName)>
+				<table class="table table-striped table-bordered multiselector-selecttable" data-selectfield="#attributes.selectFieldName#">
+			<cfelseif len(attributes.removeFieldName)>
+				<table class="table table-striped table-bordered multiselector-removetable" data-removefield="#attributes.removeFieldName#">
+			<cfelse>
+				<table class="table table-striped table-bordered">
+			</cfif>
 				<thead>
 					<tr>
 						<cfloop array="#thistag.columns#" index="column">
@@ -134,7 +141,10 @@ Notes:
 										<cf_SlatwallActionCaller action="#attributes.recordDeleteAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordDeleteQueryString#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#record.isNotDeletable()#" confirm="true" />
 									</cfif>
 									<cfif attributes.selectFieldName neq "">
-										<button class="btn btn-primary listing-select">Select</button>
+										<button class="btn btn-primary multiselector-select" data-fieldname="#attributes.selectFieldName#" data-fieldvalue="#record.getPrimaryIDValue()#">Select</button>
+									</cfif>
+									<cfif attributes.removeFieldName neq "">
+										<button class="btn btn-primary multiselector-remove" data-fieldname="#attributes.removeFieldName#" data-fieldvalue="#record.getPrimaryIDValue()#">Remove</button>
 									</cfif>
 								</td>
 							</cfif>

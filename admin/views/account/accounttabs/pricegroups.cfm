@@ -37,5 +37,4 @@ Notes:
 
 --->
 
-<!---<cf_SlatwallMultiselector object="#rc.account#" property="priceGroups" />--->
-<cfset test = rc.account.getPriceGroupsSmartList() />
+<cf_SlatwallMultiselector object="#rc.account#" propertyName="priceGroups" />

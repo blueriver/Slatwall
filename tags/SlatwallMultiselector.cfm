@@ -39,35 +39,44 @@ Notes:
 
 <cfparam name="attributes.object" type="any" />
 <cfparam name="attributes.propertyName" type="string" />
+<cfparam name="attributes.fieldName" type="string" default="#attributes.propertyName#" />
+
 <cfparam name="attributes.selectedValues" type="string" default="" />
 <cfparam name="attributes.optionsSmartList" type="string" default="" />
 <cfparam name="attributes.selectedSmartList" type="string" default="" />
 
 <cfif thisTag.executionMode eq "end">
-	<cfsilent>
-		<cfif not isObject(attributes.optionsSmartList)>
-			
-		</cfif>
-		<cfif not isObject(attributes.selectedSmartList)>
-			
-		</cfif>
-	</cfsilent>
-	<cfoutput>
-		<div class="row-fluid">
-			<div class="span6">
-				<h4>Select</h4>
-				<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsSmartList()#" selectFieldName="account.priceGroup">
-					<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
-					<cf_SlatwallListingColumn propertyIdentifier="priceGroupCode" />
-				</cf_SlatwallListingDisplay>
+	
+	<cfif not isObject(attributes.optionsSmartList)>
+		<cfset attributes.optionsSmartList = attributes.object.getPropertyOptionsSmartList( attributes.propertyName ) />
+	</cfif>
+	<cfif not isObject(attributes.selectedSmartList)>
+		<cfset attributes.selectedSmartList = attributes.object.getPropertySmartList( attributes.propertyName ) />
+	</cfif>
+	<cfset allValues = evaluate( "attributes.object.get#attributes.propertyName#()") />
+	<cfloop array="#allValues#" index="thisValue">
+		<cfset attributes.selectedValues = listAppend(attributes.selectedValues, thisValue.getPrimaryIDValue()) />
+	</cfloop>
+	
+	<cfif arrayLen(attributes.optionsSmartList.getPageRecords())>
+		<cfset nameProperty = attributes.optionsSmartList.getPageRecords()[1].getSimpleRepresentationPropertyName() />
+
+		<cfoutput>
+			<div class="multiselector row-fluid">
+				<div class="span6">
+					<h4>Select</h4>
+					<cf_SlatwallListingDisplay smartList="#attributes.optionsSmartList#" selectFieldName="#attributes.fieldName#" selector=true>
+						<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="#nameProperty#" />
+					</cf_SlatwallListingDisplay>
+				</div>
+				<div class="span6">
+					<h4>Selected</h4>
+					<cf_SlatwallListingDisplay smartList="#attributes.selectedSmartList#" removeFieldName="#attributes.fieldName#">
+						<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="#nameProperty#" />
+					</cf_SlatwallListingDisplay>
+				</div>
+				<input type="hidden" name="#attributes.propertyName#" value="#attributes.selectedValues#" />
 			</div>
-			<div class="span6">
-				<h4>Selected</h4>
-				<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsSmartList()#" selectFieldName="account.priceGroup">
-					<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
-					<cf_SlatwallListingColumn propertyIdentifier="priceGroupCode" />
-				</cf_SlatwallListingDisplay>
-			</div>
-		</div>
-	</cfoutput>
+		</cfoutput>
+	</cfif>
 </cfif>

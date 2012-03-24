@@ -169,119 +169,161 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return variables.modifiedDateTime;
 	}
 	
+	// @hint returns true the passed in property has value that is unique, and false if the value for the property is already in the DB
+	public boolean function hasUniqueProperty( required string propertyName ) {
+		return getService("dataService").isUniqueProperty(propertyName=propertyName, entity=this);
+	}
+	
+	// @hint returns true if given property contains any of the entities passed into the entityArray argument. 
+	public boolean function hasAnyInProperty( required string propertyName, array entityArray ) {
+		
+		for(var entity in arguments.entityArray) {
+			// evaluate is used instead of invokeMethod() because hasXXX() is an implicit orm function
+			if( evaluate("has#propertyName#( entity )") ){
+				return true;
+			}
+		}
+		return false;
+		
+	}
+	
+	// @hint returns an array of name/value pairs that can function as options for a many-to-one property
+	public array function getPropertyOptions( required string propertyName ) {
+		
+		var cacheKey = "#arguments.propertyName#Options";
+			
+		if(!structKeyExists(variables, cacheKey)) {
+			variables[ cacheKey ] = [];
+			
+			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
+			var smartList = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
+			
+			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( arguments.propertyName ).cfc#");
+			
+			smartList.addSelect(propertyIdentifier=exampleEntity.getSimpleRepresentationPropertyName(), alias="name");
+			smartList.addSelect(propertyIdentifier=exampleEntity.getPrimaryIDPropertyName(), alias="value"); 
+			
+			smartList.addOrder("#exampleEntity.getSimpleRepresentationPropertyName()#|ASC");
+			
+			variables[ cacheKey ] = smartList.getRecords();
+			
+			// If this is a many-to-one related property, then add a 'select' to the top of the list
+			if(getPropertyMetaData( propertyName ).fieldType == "many-to-one") {
+				arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});	
+			}
+		}
+		
+		return variables[ cacheKey ];
+		
+	}
+	
+	// @hint returns a smart list or records that can be used as options for a many-to-one property
+	public any function getPropertyOptionsSmartList( required string propertyName ) {
+		var cacheKey = "#arguments.propertyName#OptionsSmartList";
+		
+		if(!structKeyExists(variables, cacheKey)) {
+			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
+			variables[ cacheKey ] = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
+		}
+		
+		return variables[ cacheKey ];
+	}
+	
+	// @hint returns a smart list of the current values for a given one-to-many or many-to-many property
+	public any function getPropertySmartList( required string propertyName ) {
+		var cacheKey = "#arguments.propertyName#SmartList";
+		
+		if(!structKeyExists(variables, cacheKey)) {
+			
+			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
+			var smartList = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
+			
+			// Create an example entity so that we can read the meta data
+			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
+			
+			// If its a one-to-many, then add filter
+			if(getPropertyMetaData( arguments.propertyName ).fieldtype == "one-to-many") {
+				// Loop over the properties in the example entity to 
+				for(var i=1; i<=arrayLen(exampleEntity.getProperties()); i++) {
+					if( structKeyExists(exampleEntity.getProperties()[i], "fkcolumn") && exampleEntity.getProperties()[i].fkcolumn == getPropertyMetaData( arguments.propertyName ).fkcolumn ) {
+						smartList.addFilter("#exampleEntity.getProperties()[i].name#.#getPrimaryIDPropertyName()#", getPrimaryIDValue());
+					}
+				}
+				
+			// Otherwise add a where clause for many to many
+			} else if (getPropertyMetaData( arguments.propertyName ).fieldtype == "many-to-many") {
+				
+				smartList.addWhereCondition("EXISTS (SELECT r FROM #getEntityName()# t INNER JOIN t.#getPropertyMetaData( arguments.propertyName ).name# r WHERE r.#exampleEntity.getPrimaryIDPropertyName()# = a#lcase(exampleEntity.getEntityName())#.#exampleEntity.getPrimaryIDPropertyName()# AND t.#getPrimaryIDPropertyName()# = '#getPrimaryIDValue()#')");
+				
+			}
+			
+			variables[ cacheKey ] = smartList;
+		}
+		
+		return variables[ cacheKey ];
+	}
+	
+	// @hint returns a struct of the current entities in a given property.  The struck is key'd based on the primaryID of the entities
+	public struct function getPropertyStruct( required string propertyName ) {
+		var cacheKey = "#arguments.propertyName#Struct";
+			
+		if(!structKeyExists(variables, cacheKey)) {
+			variables[ cacheKey ] = {};
+			
+			var values = variables[ arguments.propertyName ];
+			
+			for(var i=1; i<=arrayLen(values); i++) {
+				variables[cacheKey][ values[i].getPrimaryIDValue() ] = values[i];
+			}
+		}
+		
+		return variables[ cacheKey ];
+	
+	}
+	
+	
+	
 	// @hint Generic abstract dynamic ORM methods by convention via onMissingMethod.
 	public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
 		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
 		if( left(arguments.missingMethodName, 9) == "hasUnique") {
 			
-			return getService("dataService").isUniqueProperty(propertyName=right(arguments.missingMethodName, len(arguments.missingMethodName) - 9), entity=this);
+			return hasUnique( right(arguments.missingMethodName, len(arguments.missingMethodName) - 9) );
 		
 		// hasAnyXXX() 			Where XXX is one-to-many or many-to-many property and we want to see if it has any of an array of entities
 		} else if( left(arguments.missingMethodName, 6) == "hasAny") {
 			
-			for(var object in arguments.missingMethodArguments[1]) {
-				// evaluate is used instead of invokeMethod() because hasXXX() is an implicit orm function
-				if( evaluate("has#right(arguments.missingMethodName, len(arguments.missingMethodName) - 6)#( object)") ){
-					return true;
-				}
-			}
-			return false;
-		
+			return hasAnyInProperty(propertyName=right(arguments.missingMethodName, len(arguments.missingMethodName) - 6), entityArray=arguments.missingMethodArguments[1]);
+			
 		// getXXXOptions()		Where XXX is a one-to-many or many-to-many property that we need an array of valid options returned 		
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 7) == "Options") {
 			
-			var cacheKey = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
+			return getPropertyOptions( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-10) );
 			
-			if(!structKeyExists(variables, cacheKey)) {
-				variables[ cacheKey ] = [];
-				
-				var propertyName = left(cacheKey, len(cacheKey)-7);
-				var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( propertyName ).cfc );
-				var smartList = entityService.invokeMethod("get#getPropertyMetaData( propertyName ).cfc#SmartList", arguments.missingMethodArguments);
-				
-				var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
-				
-				smartList.addSelect(propertyIdentifier=exampleEntity.getSimpleRepresentationPropertyName(), alias="name");
-				smartList.addSelect(propertyIdentifier=exampleEntity.getPrimaryIDPropertyName(), alias="value"); 
-				smartList.addOrder("#exampleEntity.getSimpleRepresentationPropertyName()#|ASC");
-				
-				variables[ cacheKey ] = smartList.getRecords();
-				
-				// If this is a many-to-one related property, then add a 'select' to the top of the list
-				if(getPropertyMetaData( propertyName ).fieldType == "many-to-one") {
-					arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});	
-				}
-			}
+		// getXXXOptionsSmartList()		Where XXX is a one-to-many or many-to-many property that we need an array of valid options returned 
+		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 7) == "OptionsSmartList") {
 			
-			return variables[ cacheKey ];
-		
+			return getPropertyOptionsSmartList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-19) );
+			
 		// getXXXSmartList()	Where XXX is a one-to-many or many-to-many property where we to return a smartList instead of just an array
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 9) == "SmartList") {
 			
-			var cacheKey = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
+			return getPropertySmartList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-12) );
 			
-			if(!structKeyExists(variables, cacheKey)) {
-				variables[ cacheKey ] = [];
-				
-				var propertyName = left(cacheKey, len(cacheKey)-9);
-				var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( propertyName ).cfc );
-				var smartList = entityService.invokeMethod("get#getPropertyMetaData( propertyName ).cfc#SmartList", arguments.missingMethodArguments);
-				
-				// Create an example entity so that we can read the meta data
-				var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
-				
-				// If its a one-to-many, then add filter
-				if(getPropertyMetaData( propertyName ).fieldtype == "one-to-many") {
-					// Loop over the properties in the example entity to 
-					for(var i=1; i<=arrayLen(exampleEntity.getProperties()); i++) {
-						if( structKeyExists(exampleEntity.getProperties()[i], "fkcolumn") && exampleEntity.getProperties()[i].fkcolumn == getPropertyMetaData( propertyName ).fkcolumn ) {
-							smartList.addFilter("#exampleEntity.getProperties()[i].name#.#getPrimaryIDPropertyName()#", getPrimaryIDValue());
-						}
-					}
-					
-				// Otherwise add a where clause for many to many
-				} else if (getPropertyMetaData( propertyName ).fieldtype == "many-to-many") {
-					
-					smartList.addWhereCondition("EXISTS (SELECT r FROM #getEntityName()# t INNER JOIN t.#getPropertyMetaData( propertyName ).name# r WHERE r.#exampleEntity.getPrimaryIDPropertyName()# = a#lcase(exampleEntity.getEntityName())#.#exampleEntity.getPrimaryIDPropertyName()# AND t.#getPrimaryIDPropertyName()# = '#getPrimaryIDValue()#')");
-					
-				}
-				
-				
-				variables[ cacheKey ] = smartList;
-			}
-			
-			return variables[ cacheKey ];
-		
 		// getXXXStruct()		Where XXX is a one-to-many or many-to-many property where we want a key delimited struct
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 6) == "Struct") {
-			var cacheKey = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
 			
-			if(!structKeyExists(variables, cacheKey)) {
-				variables[ cacheKey ] = {};
-				
-				var propertyName = left(cacheKey, len(cacheKey)-6);
-				var values = this.invokeMethod("get#propertyName#");
-				
-				for(var i=1; i<=arrayLen(values); i++) {
-					variables[cacheKey][ values[i].getPrimaryIDValue() ] = values[i];
-				}
-			}
-			
-			return variables[ cacheKey ];
+			return getPropertyStruct( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-9) );
 			
 		// getXXXCount()		Where XXX is a one-to-many or many-to-many property where we want to get the count of that property
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 5) == "Count") {
 			
-			var propertyName = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
-			propertyName = left(propertyName, len(propertyName)-5);
-			
-			return arrayLen(variables[ propertyName ]);
+			return arrayLen(variables[ left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-8) ]);
 			
 		// getXXX() 			Where XXX is either and attributeID or attributeCode
 		} else if (left(arguments.missingMethodName, 3) == "get") {
 			
-			var propertyName = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
-			return getAttributeValue(propertyName);
+			return getAttributeValue(right(arguments.missingMethodName, len(arguments.missingMethodName)-3));
 			
 		}
 		

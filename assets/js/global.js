@@ -11,6 +11,8 @@ var ajaxlock = 0;
 
 jQuery(function($){
 	
+	console.log($('input[data-mytest=1]'));
+	
 	$('.datetimepicker').datepicker({
 		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
 		duration: '',  
