@@ -62,7 +62,7 @@ Notes:
 						<cfelse>
 							<cfset params.edit = false />
 						</cfif>
-						#view("frontend:checkout/fulfillment/#local.fulfillment.getFulfillmentMethod().getFulfillmentMethodType()#", params)# 
+						#view("frontend:checkout/fulfillment/#local.fulfillment.getFulfillmentMethodType()#", params)# 
 					</div>
 					<cfif arrayLen($.slatwall.cart().getOrderFulfillments()) gt 1>
 						<div class="fulfillmentItems">

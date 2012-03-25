@@ -4,5 +4,8 @@
 		<property name="subscriptionBenefitName">
 			<rule type="required" contexts="save" />
 		</property>
+		<property name="accessType">
+			<rule type="required" contexts="save" />
+		</property>
 	</objectProperties>
 </validateThis>

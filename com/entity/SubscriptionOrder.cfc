@@ -44,7 +44,7 @@ component displayname="Subscription Order" entityname="SlatwallSubscriptionOrder
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="subscriptionOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionOrderTypeID";
-	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";
+	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" cascade="all";
 		
 	// Related Object Properties (one-to-many)
 	
