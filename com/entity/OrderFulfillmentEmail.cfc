@@ -36,14 +36,14 @@
 Notes:
 
 */
-component displayname="Order Fulfillment Pickup" entityname="SlatwallOrderFulfillmentPickup" table="SlatwallOrderFulfillment" persistent="true" output="false" accessors="true" extends="OrderFulfillment" discriminatorvalue="pickup" {
+component displayname="Order Fulfillment Email" entityname="SlatwallOrderFulfillmentEmail" table="SlatwallOrderFulfillment" persistent="true" output="false" accessors="true" extends="OrderFulfillment" discriminatorvalue="email" {
 	
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	
+	property name="emailAddress" ormtype="string"; 
 
 	public any function init() {
-		setFulfillmentMethodType("pickup");
+		setFulfillmentMethodType("email");
 		
 		return super.init();
 	}
@@ -57,6 +57,18 @@ component displayname="Order Fulfillment Pickup" entityname="SlatwallOrderFulfil
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
+	
+	public boolean function isProcessable() {
+		if(!super.isProcessable()) {
+			return false;
+		}
+		
+		if(isNull(variables.emailAddress) || variables.emailAddress == "" ) {
+			return false;
+		}
+		
+		return true;
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

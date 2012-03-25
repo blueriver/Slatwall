@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,32 +35,4 @@
 
 Notes:
 
-*/
-component displayname="Order Fulfillment Pickup" entityname="SlatwallOrderFulfillmentPickup" table="SlatwallOrderFulfillment" persistent="true" output="false" accessors="true" extends="OrderFulfillment" discriminatorvalue="pickup" {
-	
-	// Persistent Properties
-	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	
-
-	public any function init() {
-		setFulfillmentMethodType("pickup");
-		
-		return super.init();
-	}
-	
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-	
-	// ================== START: Overridden Methods ========================
-	
-	// ==================  END:  Overridden Methods ========================
-	
-	// =================== START: ORM Event Hooks  =========================
-	
-	// ===================  END:  ORM Event Hooks  =========================
-}
+--->

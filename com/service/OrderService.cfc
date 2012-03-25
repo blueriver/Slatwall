@@ -160,17 +160,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
 		if(!structKeyExists(arguments, "orderFulfillment"))	{
-			var osArray = arguments.order.getOrderFulfillments();
-			if(!arrayLen(osArray)) {
-				// TODO: This next is a hack... later the type of Fulfillment created should be dynamic
-				arguments.orderFulfillment = this.newOrderFulfillmentShipping();
-			
+			var thisFulfillmentMethodType = arguments.sku.getEligibleFulfillmentMethods()[1].getFulfillmentMethodType();
+			// check if there is a fulfillment method of this type in the order
+			for(var fulfillment in arguments.order.getOrderFulfillments()) {
+				if(fulfillment.getFulfillmentMethodType() == thisFulfillmentMethodType) {
+					arguments.orderFulfillment = fulfillment;
+					break;
+				}
+			}
+			// if no fulfillment of this type found then create a new one 
+			if(!structKeyExists(arguments, "orderFulfillment")) {
+				// use the first fulfillment method allowed for sku
+				arguments.orderFulfillment = this.new("SlatwallOrderFulfillment#thisFulfillmentMethodType#");
 				arguments.orderFulfillment.setOrder(arguments.order);
 			
 				// Push the fulfillment into the hibernate scope
 				getDAO().save(arguments.orderFulfillment);
-			} else {
-				arguments.orderFulfillment = osArray[1];
 			}
 		}
 	

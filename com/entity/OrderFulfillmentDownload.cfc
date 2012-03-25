@@ -36,14 +36,14 @@
 Notes:
 
 */
-component displayname="Order Fulfillment Pickup" entityname="SlatwallOrderFulfillmentPickup" table="SlatwallOrderFulfillment" persistent="true" output="false" accessors="true" extends="OrderFulfillment" discriminatorvalue="pickup" {
+component displayname="Order Fulfillment Download" entityname="SlatwallOrderFulfillmentDownload" table="SlatwallOrderFulfillment" persistent="true" output="false" accessors="true" extends="OrderFulfillment" discriminatorvalue="download" {
 	
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 
 	public any function init() {
-		setFulfillmentMethodType("pickup");
+		setFulfillmentMethodType("download");
 		
 		return super.init();
 	}

@@ -127,6 +127,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
  	   if(isNull(variables.subscriptionBenefits)) {
 	       variables.subscriptionBenefits = [];
 	   }
+ 	   if(isNull(variables.eligibleFulfillmentMethods)) {
+	       variables.eligibleFulfillmentMethods = [];
+	   }
 
        return super.init();
     }
@@ -293,6 +296,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	//get BaseProductType 
 	public any function getBaseProductType() {
 		return this.getProduct().getBaseProductType();
+	}
+	
+	//get eligibleFulfillmentMethods
+	public array function getEligibleFulfillmentMethods() {
+		if(!arrayLen(getEligibleFulfillmentMethods())) {
+			return getProduct().getEligibleFulfillmentMethods();
+		}
+		return variables.eligibleFulfillmentMethods;
 	}
 	
 	// START: Price Methods

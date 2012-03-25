@@ -45,7 +45,7 @@ Notes:
 
 <cfif !isNull(params.orderPayment.getBillingAddress())>
 	<cfset local.address = params.orderPayment.getBillingAddress() />
-<cfelseif arrayLen($.slatwall.cart().getOrderFulfillments()) eq 1 and not isNull($.slatwall.cart().getOrderFulfillments()[1].getAddress())>
+<cfelseif arrayLen($.slatwall.cart().getOrderFulfillments()) EQ 1 AND $.slatwall.cart().getOrderFulfillments()[1].getFulfillmentMethodType() EQ "shipping" AND not isNull($.slatwall.cart().getOrderFulfillments()[1].getAddress())>
 	<cfset local.sameAsShipping = true />
 	<cfset local.address = $.slatwall.cart().getOrderFulfillments()[1].getAddress().copyAddress() />
 <cfelse>

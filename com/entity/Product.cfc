@@ -88,7 +88,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProduct" fkcolumn="productID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
-	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID"; 
+	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallProductEligibleFulfillmentMethod" fkcolumn="productID" inversejoincolumn="fulfillmentMethodID"; 
 	property name="relatedProducts" singularname="relatedProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallRelatedProduct" fkcolumn="productID" inversejoincolumn="relatedProductID";
 
 	// Remote Properties
@@ -480,6 +480,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	//get merchandisetype 
 	public any function getBaseProductType() {
 		return getProductType().getBaseProductType();
+	}
+	
+	//get eligibleFulfillmentMethods
+	public array function getEligibleFulfillmentMethods() {
+		if(!arrayLen(getEligibleFulfillmentMethods())) {
+			return getProductType().getEligibleFulfillmentMethods();
+		}
+		return variables.eligibleFulfillmentMethods;
 	}
 	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {
