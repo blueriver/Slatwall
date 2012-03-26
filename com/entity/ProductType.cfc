@@ -87,7 +87,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
-	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID"; 
+	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallProductTypeEligibleFulfillmentMethod" fkcolumn="productTypeID" inversejoincolumn="fulfillmentMethodID"; 
 
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
@@ -119,6 +119,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
  		}
 		if(isNull(variables.priceGroupRates)) {
 			variables.priceGroupRates = [];
+		}
+		if(isNull(variables.eligibleFulfillmentMethods)) {
+			variables.eligibleFulfillmentMethods = [];
 		}
 		
 		return super.init();
@@ -176,6 +179,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 			return getService("ProductService").getProductType(listFirst(getProductTypeIDPath())).getSystemCode();
 		}
 		return getSystemCode();
+	}
+	
+	//get eligibleFulfillmentMethods
+	public array function getEligibleFulfillmentMethods() {
+		if(!arrayLen(variables.eligibleFulfillmentMethods)) {
+			return getService("ProductService").getProductType(listFirst(getProductTypeIDPath())).getEligibleFulfillmentMethods();
+		}
+		return variables.eligibleFulfillmentMethods;
 	}
 	
     public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {

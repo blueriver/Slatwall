@@ -36,43 +36,11 @@
 Notes:
 
 --->
+<cfparam name="rc.vendorOrder" type="any" />
 
+<cf_SlatwallListingDisplay smartList="#rc.stockReceiverVendorOrderSmartList#" recordDetailAction="admin:warehouse.detailStockReceiver" recordDetailQueryString="returnaction=admin:vendor.detailvendororder&vendorOrderID=#rc.VendorOrder.getVendorOrderID()#">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
+	<cf_SlatwallListingColumn propertyIdentifier="boxCount" />
+	<cf_SlatwallListingColumn propertyIdentifier="packingSlipNumber" />
+</cf_SlatwallListingDisplay>
 
-<!---
-<cfparam name="rc.stockReceiverVendorOrderSmartList">
-
-<cfoutput>
-	<!---<div class="buttons">
-		<cf_SlatwallActionCaller action="admin:stockreceiver.createStockReceiverVendorOrder" text="#$.slatwall.rbKey('admin.stockreceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" />
-	</div>--->
-	
-	<cfif ArrayLen(rc.stockReceiverVendorOrderSmartList.getRecords()) GT 0>
-	
-		<table class="listing-grid stripe">
-			<tr>
-				<th class="varWidth">#$.slatwall.rbKey("entity.stockreceiver.createdDateTime")#</th>
-				<th>#$.slatwall.rbKey("entity.stockreceiver.boxCount")#</th>
-				<th>#$.slatwall.rbKey("entity.stockreceiver.packingSlipNumber")#</th>
-				<th></th>
-			</tr>
-				
-			<cfloop array="#rc.stockReceiverVendorOrderSmartList.getRecords()#" index="local.stockReceiverVendorOrder">
-				<tr>
-					<td class="varWidth">#DateFormat(local.stockReceiverVendorOrder.getCreatedDateTime(), "medium")#</td>
-					<td>#local.stockReceiverVendorOrder.getBoxCount()#</td>
-					<td>#local.stockReceiverVendorOrder.getPackingSlipNumber()#</td>
-					<td class="administration">
-						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:stockReceiver.detailStockReceiver" querystring="stockReceiverID=#local.stockReceiverVendorOrder.getStockReceiverID()#&vendorOrderId=#rc.VendorOrderId#" class="detail" type="list">
-						</ul>     						
-					</td>
-				</tr>
-				
-			</cfloop>
-		</table>
-	<cfelse>
-		#$.slatwall.rbKey("admin.vendorOrder.detail.tab.stockReceivers.noStockReceivers")#
-	</cfif>
-	<div class="clear"></div>
-</cfoutput>
---->

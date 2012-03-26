@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,23 +35,44 @@
 
 Notes:
 
---->
+*/
+component displayname="Order Fulfillment Email" entityname="SlatwallOrderFulfillmentEmail" table="SlatwallOrderFulfillment" persistent="true" output="false" accessors="true" extends="OrderFulfillment" discriminatorvalue="email" {
+	
+	// Persistent Properties
+	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="emailAddress" ormtype="string"; 
 
-<cfparam name="rc.vendor" type="any" />
-
-<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorAddressesSmartList()#"
-		recordEditAction="admin:vendor.editvendoraddress"
-		recordEditQueryString="vendorID=#rc.vendor.getVendorID()#"
-		recordEditModal=true
-		recordDeleteAction="admin:vendor.deletevendoraddress"
-		recordDeleteQueryString="vendorID=#rc.vendor.getVendorID()#&returnaction=admin:vendor.detailvendor">
-			
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="address.streetAddress" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.street2Address" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.city" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.stateCode" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.postalCode" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.countryCode" />
-</cf_SlatwallListingDisplay>
-
-<cf_SlatwallActionCaller action="admin:vendor.createvendoraddress" class="btn btn-primary" queryString="vendorID=#rc.vendor.getVendorID()#" modal=true />
+	public any function init() {
+		setFulfillmentMethodType("email");
+		
+		return super.init();
+	}
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	public boolean function isProcessable() {
+		if(!super.isProcessable()) {
+			return false;
+		}
+		
+		if(isNull(variables.emailAddress) || variables.emailAddress == "" ) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
+}

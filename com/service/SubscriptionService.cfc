@@ -38,20 +38,55 @@ Notes:
 */
 component extends="BaseService" output="false" {
 	
-	public any function createSubscriptionUsageBenefitAccountBySubscriptionUsage(required any subscriptionUsage) {
-		for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getSubscriptionUsageBenefits()) {
-			createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit);
+	public boolean function createSubscriptionUsageBenefitAccountByAccess(required any access, required any account) {
+		var subscriptionUsageBenefitAccountCreated = false;
+		if(!isNull(arguments.access.getSubscriptionUsageBenefitAccount()) && isNull(arguments.access.getSubscriptionUsageBenefitAccount().getAccount())) {
+			arguments.access.getSubscriptionUsageBenefitAccount().setAccount(arguments.account);
+			arguments.access.getSubscriptionUsageBenefitAccount().setActiveFlag(1);
+			subscriptionUsageBenefitAccountCreated = true;
+		} else if(!isNull(arguments.access.getSubscriptionUsageBenefit())) {
+			var subscriptionUsageBenefitAccount = createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(arguments.access.getSubscriptionUsageBenefit(), arguments.account);
+			if(!isNull(subscriptionUsageBenefitAccount)) {
+				subscriptionUsageBenefitAccountCreated = true;
+			}
+		} else if(!isNull(arguments.access.getSubscriptionUsage())) {
+			var subscriptionUsageBenefitAccountArray = createSubscriptionUsageBenefitAccountBySubscriptionUsage(arguments.access.getSubscriptionUsage(), arguments.account);
+			if(arrayLen(subscriptionUsageBenefitAccountArray)) {
+				subscriptionUsageBenefitAccountCreated = true;
+			}
 		}
+		return subscriptionUsageBenefitAccountCreated;
 	}
 	
-	public any function createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(required any subscriptionUsageBenefit) {
+	// Create subscriptionUsageBenefitAccount by subscription usage, returns array of all subscriptionUsageBenefitAccountArray created
+	public any function createSubscriptionUsageBenefitAccountBySubscriptionUsage(required any subscriptionUsage, any account) {
+		var subscriptionUsageBenefitAccountArray = [];
+		for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getSubscriptionUsageBenefits()) {
+			var data.subscriptionUsageBenefit = subscriptionUsageBenefit;
+			data.account = arguments.account;
+			var subscriptionUsageBenefitAccount = createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(argumentCollection=data);
+			if(!isNull(subscriptionUsageBenefitAccount)) {
+				arrayAppend(subscriptionUsageBenefitAccountArray,subscriptionUsageBenefitAccount);
+			}
+		}
+		return subscriptionUsageBenefitAccountArray;
+	}
+	
+	public any function createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(required any subscriptionUsageBenefit, any account) {
 		if(arguments.subscriptionUsageBenefit.getAvailableUseCount() GT 0) {
 			var subscriptionUsageBenefitAccount = this.newSubscriptionUsageBenefitAccount();
 			subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
 			this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-			var access = getService("accessService").newAccess();
-			access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-			getService("accessService").saveAccess(access);
+			// if account is passed then set the account to this benefit else create an access record to be used for account creation
+			if(structKeyExists(arguments,"account")) {
+				subscriptionUsageBenefitAccount.setAccount(arguments.account);
+				subscriptionUsageBenefitAccount.setActiveFlag(1);
+			} else {
+				var access = getService("accessService").newAccess();
+				access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+				getService("accessService").saveAccess(access);
+			}
+			return subscriptionUsageBenefitAccount;
 		}
 	}
 	

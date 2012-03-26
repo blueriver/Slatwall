@@ -115,18 +115,31 @@ Notes:
 			<br style="clear:both;" />
 	
 			<div id="bottom" style="margin-top: 15px; float: left; clear: both; width: 600px;">
-				<div id="shippingAddress" style="width:190px; margin-right:10px; float:left;">
-					<strong>Shipping Address</strong><br /><br />
-					<cfif len(order.getOrderFulfillments()[1].getAddress().getName())>#order.getOrderFulfillments()[1].getAddress().getName()#<br /></cfif>
-					<cfif len(order.getOrderFulfillments()[1].getAddress().getStreetAddress())>#order.getOrderFulfillments()[1].getAddress().getStreetAddress()#<br /></cfif>
-					<cfif len(order.getOrderFulfillments()[1].getAddress().getStreet2Address())>#order.getOrderFulfillments()[1].getAddress().getStreet2Address()#<br /></cfif>
-					#order.getOrderFulfillments()[1].getAddress().getCity()#, #order.getOrderFulfillments()[1].getAddress().getStateCode()# #order.getOrderFulfillments()[1].getAddress().getPostalCode()#<br />
-					#order.getOrderFulfillments()[1].getAddress().getCountryCode()#
-				</div>
-				<div id="shippingMethod" style="width:190px; margin-right:10px; float:left;">
-					<strong>Shipping Method</strong><br /><br />
-					#order.getOrderFulfillments()[1].getShippingMethod().getShippingMethodName()#
-				</div>
+				<cfloop array="#order.getOrderFulfillments()#" index="local.orderFulfillment">
+					<cfif orderFulfillment.getFulfillmentMethodType() EQ "shipping">
+						<div id="shippingAddress" style="width:190px; margin-right:10px; float:left;">
+							<strong>Shipping Address</strong><br /><br />
+							<cfif len(order.getOrderFulfillments()[1].getAddress().getName())>#order.getOrderFulfillments()[1].getAddress().getName()#<br /></cfif>
+							<cfif len(order.getOrderFulfillments()[1].getAddress().getStreetAddress())>#order.getOrderFulfillments()[1].getAddress().getStreetAddress()#<br /></cfif>
+							<cfif len(order.getOrderFulfillments()[1].getAddress().getStreet2Address())>#order.getOrderFulfillments()[1].getAddress().getStreet2Address()#<br /></cfif>
+							#order.getOrderFulfillments()[1].getAddress().getCity()#, #order.getOrderFulfillments()[1].getAddress().getStateCode()# #order.getOrderFulfillments()[1].getAddress().getPostalCode()#<br />
+							#order.getOrderFulfillments()[1].getAddress().getCountryCode()#
+						</div>
+						<div id="shippingMethod" style="width:190px; margin-right:10px; float:left;">
+							<strong>Shipping Method</strong><br /><br />
+							#order.getOrderFulfillments()[1].getShippingMethod().getShippingMethodName()#
+						</div>
+					<cfelseif orderFulfillment.getFulfillmentMethodType() EQ "email">
+						<div id="emailAddress" style="width:190px; margin-right:10px; float:left;">
+							<strong>Delivery Email</strong><br /><br />
+							#orderFulfillment.getEmailAddress()#
+						</div>
+					<cfelseif orderFulfillment.getFulfillmentMethodType() EQ "auto">
+						<div id="fulfillmentAuto" style="width:190px; margin-right:10px; float:left;">
+							<strong>Auto Fulfilled</strong><br /><br />
+						</div>
+					</cfif>
+				</cfloop>
 				<table id="total" style="border-spacing: 0px; border-collapse: collapse; border: 1px solid ##d8d8d8; text-align: left; font-size: 12px; width:200px; float:left;">
 					<thead>
 						<tr>
@@ -174,7 +187,7 @@ Notes:
 						<tbody>
 							<cfloop array="#order.getOrderPayments()#" index="orderPayment">
 								<tr>
-									<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#application.slatwall.pluginConfig.getApplication().getValue("rbFactory").getKeyValue(session.rb,"admin.setting.paymentMethod.#orderPayment.getPaymentMethodID()#")#</td>
+									<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#application.slatwall.pluginConfig.getApplication().getValue("rbFactory").getKeyValue(session.rb,"admin.setting.paymentMethod.#orderPayment.getPaymentMethodType()#")#</td>
 									<td style="border: 1px solid ##d8d8d8; padding:0px 5px; width:100px;">#orderPayment.getFormattedValue('amount', 'currency')#</td>
 								</tr>
 							</cfloop>

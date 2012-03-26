@@ -38,43 +38,21 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="name" />
-	<cf_SlatwallListingColumn propertyIdentifier="streetAddress" />
-	<cf_SlatwallListingColumn propertyIdentifier="street2Address" />
-	<cf_SlatwallListingColumn propertyIdentifier="city" />
-	<cf_SlatwallListingColumn propertyIdentifier="stateCode" />
-	<cf_SlatwallListingColumn propertyIdentifier="postalCode" />
+<cf_SlatwallListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#"
+		recordEditAction="admin:account.editaccountaddress"
+		recordEditQueryString="accountID=#rc.account.getAccountID()#"
+		recordEditModal=true
+		recordDeleteAction="admin:account.deleteaccountaddress"
+		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:account.detailaccount">
+			
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountAddressName" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.name" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.streetAddress" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.street2Address" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.city" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.stateCode" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.postalCode" />
 </cf_SlatwallListingDisplay>
 
 <cf_SlatwallActionCaller action="admin:account.createaccountaddress" class="btn btn-primary" queryString="accountID=#rc.account.getAccountID()#" modal=true />
 
-
-<!---<cfoutput>
-	<table id="AddressList" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.address.name")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.streetAddress")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.street2Address")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.city")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.stateCode")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.address.postalCode")#</th>
-			<th>&nbsp</th>
-		</tr>
-		<cfloop array="#rc.account.getAccountAddresses()#" index="local.accountAddress">
-			<tr>
-				<td class="varWidth">#Local.accountAddress.getAccountAddressName()#</td>
-				<td>#Local.accountAddress.getAddress().getStreetAddress()#</td>
-				<td>#Local.accountAddress.getAddress().getStreet2Address()#</td>
-				<td>#Local.accountAddress.getAddress().getCity()#</td>
-				<td>#Local.accountAddress.getAddress().getStateCode()#</td>
-				<td>#Local.accountAddress.getAddress().getPostalCode()#</td>
-				<td class="administration">
-					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:accountAddress.detail" querystring="accountAddressID=#local.accountAddress.getAccountAddressID()#" class="detail" type="list">
-					</ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-</cfoutput>--->

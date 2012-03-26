@@ -36,6 +36,14 @@
 Notes:
 
 --->
+<cfparam name="rc.vendorOrder" type="any" />
+
+<cf_SlatwallListingDisplay smartList="#rc.vendorProductSmartList#">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
+	<cf_SlatwallListingColumn propertyIdentifier="productCode" />
+	<!--- implement this --->
+	<b>add/edit to order</b>
+</cf_SlatwallListingDisplay>
 
 <!---
 <cfoutput>

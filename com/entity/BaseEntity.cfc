@@ -288,7 +288,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
 		if( left(arguments.missingMethodName, 9) == "hasUnique") {
 			
-			return hasUnique( right(arguments.missingMethodName, len(arguments.missingMethodName) - 9) );
+			return hasUniqueProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 9) );
 		
 		// hasAnyXXX() 			Where XXX is one-to-many or many-to-many property and we want to see if it has any of an array of entities
 		} else if( left(arguments.missingMethodName, 6) == "hasAny") {

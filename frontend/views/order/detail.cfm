@@ -74,7 +74,7 @@ Notes:
 					<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
 					<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
 					<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
-					<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
+					<th>#$.slatwall.rbKey("define.quantityshipped")#</th>
 					<th>#$.slatwall.rbKey("entity.orderitem.extendedprice")#</th>
 				</tr>
 				<cfloop array="#rc.order.getOrderItems()#" index="local.orderItem">

@@ -196,40 +196,21 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// if there is no error and access code or link is passed then setup accounts subscription benefits
 		if(!arguments.account.hasErrors() && structKeyExists(arguments.data,"access")) {
+			var subscriptionUsageBenefitAccountCreated = false;
 			if(structKeyExists(arguments.data.access,"accessID")) {
 				var access = getService("accessService").getAccess(arguments.data.access.accessID);
 			} else if(structKeyExists(arguments.data.access,"accessCode")) {
 				var access = getService("accessService").getAccessByAccessCode(arguments.data.access.accessCode);
 			}
 			if(!isNull(access)) {
-				setSubscriptionUsageBenefitAccountByAccess(account,access);
+				subscriptionUsageBenefitAccountCreated = getSevice("subscriptionService").createSubscriptionUsageBenefitAccountByAccess(access, account);
+			}
+			if(!subscriptionUsageBenefitAccountCreated) {
+				//return access code error
 			}
 		}
 		
 		return arguments.account;
-	}
-	
-	public void function setSubscriptionUsageBenefitAccountByAccess(required any account,required any access) {
-		if(!isNull(arguments.access.getSubscriptionUsageBenefit())) {
-			var subscriptionUsageBenefitAccount = getSevice("subscriptionService").newSubscriptionUsageBenefitAccount();
-			subscriptionUsageBenefitAccount.setAccount(arguments.account);
-			subscriptionUsageBenefitAccount.setActiveFlag(1);
-			subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(arguments.access.getSubscriptionUsageBenefit);
-		}
-		
-		if(!isNull(arguments.access.getSubscriptionUsage())) {
-			for(var subscriptionUsageBenefit in arguments.access.getSubscriptionUsage().getSubscriptionUsageBenefits()) {
-				var subscriptionUsageBenefitAccount = getSevice("subscriptionService").newSubscriptionUsageBenefitAccount();
-				subscriptionUsageBenefitAccount.setAccount(arguments.account);
-				subscriptionUsageBenefitAccount.setActiveFlag(1);
-				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
-			}
-		}
-
-		if(!isNull(arguments.access.getSubscriptionUsageBenefitAccount())) {
-			arguments.access.getSubscriptionUsageBenefitAccount().setAccount(arguments.account);
-			arguments.access.getSubscriptionUsageBenefitAccount().setActiveFlag(1);
-		}
 	}
 	
 	public any function updateCmsUserFromAccount(required any cmsUser, required any Account) {

@@ -40,6 +40,8 @@ Notes:
 <cfparam name="attributes.recordEditAction" type="string" default="" />
 <cfparam name="attributes.recordEditQueryString" type="string" default="" />
 <cfparam name="attributes.recordEditModal" type="boolean" default="false" />
+<cfparam name="attributes.recordDetailAction" type="string" default="" />
+<cfparam name="attributes.recordDetailQueryString" type="string" default="" />
 <cfparam name="attributes.recordDeleteAction" type="string" default="" />
 <cfparam name="attributes.recordDeleteQueryString" type="string" default="" />
 <cfparam name="attributes.parentPropertyName" type="string" default="" />
@@ -66,6 +68,9 @@ Notes:
 		<!--- Setup the count for the number of admin icons --->
 		<cfset attributes.administativeCount = 0 />
 		<cfif len(attributes.recordEditAction)>
+			<cfset attributes.administativeCount++ />
+		</cfif>
+		<cfif len(attributes.recordDetailAction)>
 			<cfset attributes.administativeCount++ />
 		</cfif>
 		<cfif len(attributes.recordDeleteAction)>
@@ -136,6 +141,9 @@ Notes:
 								<td class="admin admin#attributes.administativeCount#">
 									<cfif attributes.recordEditAction neq "">
 										<cf_SlatwallActionCaller action="#attributes.recordEditAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordEditQueryString#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="#attributes.recordEditModal#" />
+									</cfif>
+									<cfif attributes.recordDetailAction neq "">
+										<cf_SlatwallActionCaller action="#attributes.recordDetailAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordDetailQueryString#" class="btn btn-mini" icon="eye-open" iconOnly="true" />
 									</cfif>
 									<cfif attributes.recordDeleteAction neq "">
 										<cf_SlatwallActionCaller action="#attributes.recordDeleteAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordDeleteQueryString#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#record.isNotDeletable()#" confirm="true" />

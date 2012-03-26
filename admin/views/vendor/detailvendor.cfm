@@ -50,14 +50,8 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="accountNumber" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="vendorWebsite" edit="#rc.edit#">
 			
-			<cfif not isNull(rc.vendor.getPrimaryEmailAddress())>
-				<input type="hidden" name="primaryEmailAddress.vendorEmailAddressID" value="#rc.Vendor.getPrimaryEmailAddress().getVendorEmailAddressID()#" />
-				<cf_SlatwallPropertyDisplay object="#rc.Vendor.getPrimaryEmailAddress()#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
-			<cfelse>
-				<cfset newVendorEmail = $.slatwall.getService("vendorService").newVendorEmailAddress() />
-				<input type="hidden" name="primaryEmailAddress.vendorEmailAddressID" value="" />
-				<cf_SlatwallPropertyDisplay object="#newVendorEmail#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="">
-			</cfif>
+			<input type="hidden" name="primaryEmailAddress.vendorEmailAddressID" value="#rc.Vendor.getPrimaryEmailAddress().getVendorEmailAddressID()#" />
+			<cf_SlatwallPropertyDisplay object="#rc.Vendor.getPrimaryEmailAddress()#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
 			
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>

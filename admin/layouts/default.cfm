@@ -95,8 +95,8 @@ Notes:
 						<cf_SlatwallActionCaller action="admin:warehouse" type="list" icon="barcode icon-white">
 						<cf_SlatwallActionCaller action="admin:integration" type="list" icon="random icon-white">
 						<cf_SlatwallActionCaller action="admin:report" type="list" icon="th-list icon-white">
-						<cf_SlatwallActionCaller action="admin:setting" type="list" icon="user icon-white">
-						<cf_SlatwallActionCaller action="admin:help" type="list" icon="user icon-white">
+						<cf_SlatwallActionCaller action="admin:setting" type="list" icon="cog icon-white">
+						<cf_SlatwallActionCaller action="admin:help" type="list" icon="question-sign icon-white">
 					</ul>
 				</div>
 			</div>

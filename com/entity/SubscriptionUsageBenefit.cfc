@@ -94,10 +94,18 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	public void function copyFromSubscriptionBenefit(required any subscriptionBenefit) {
 		setSubscriptionBenefit(arguments.subscriptionBenefit);
 		setMaxUseCount(arguments.subscriptionBenefit.getMaxUseCount());
-		setPriceGroups(arguments.subscriptionBenefit.getPriceGroups());
-		setPromotions(arguments.subscriptionBenefit.getPromotions());
-		setCategories(arguments.subscriptionBenefit.getCategories());
-		setContents(arguments.subscriptionBenefit.getContents());
+		for(var priceGroup in arguments.subscriptionBenefit.getPriceGroups()) {
+			addPriceGroup(priceGroup);
+		}
+		for(var promotion in arguments.subscriptionBenefit.getPromotions()) {
+			addPromotion(promotion);
+		}
+		for(var category in arguments.subscriptionBenefit.getCategories()) {
+			addCategory(category);
+		}
+		for(var content in arguments.subscriptionBenefit.getContents()) {
+			addContent(content);
+		}
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

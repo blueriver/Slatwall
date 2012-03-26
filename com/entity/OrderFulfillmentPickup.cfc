@@ -42,6 +42,12 @@ component displayname="Order Fulfillment Pickup" entityname="SlatwallOrderFulfil
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 
+	public any function init() {
+		setFulfillmentMethodType("pickup");
+		
+		return super.init();
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

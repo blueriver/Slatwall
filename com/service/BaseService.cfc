@@ -136,6 +136,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	 *
 	 *   getXXXByYYY( required any yyyFilterValue, boolean isReturnNewOnNotFound = false )
 	 *
+	 *   getXXXByYYYANDZZZ( required array [yyyFilterValue,zzzFilterValue], boolean isReturnNewOnNotFound = false )
+	 *		AND here is case sensetive to avoid matching in property name i.e brAND
+	 *
 	 *   listXXX( struct filterCriteria, string sortOrder, struct options )
 	 *
 	 *   listXXXFilterByYYY( required any yyyFilterValue, string sortOrder, struct options )
@@ -187,6 +190,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	 *
 	 *   getXXXByYYY( required any yyyFilterValue, boolean isReturnNewOnNotFound = false )
 	 *
+	 *   getXXXByYYYAndZZZ( required array [yyyFilterValue,zzzFilterValue], boolean isReturnNewOnNotFound = false )
+	 *		AND here is case sensetive to avoid matching in property name i.e brAND
+	 *
 	 * ...in which XXX is an ORM entity name, and YYY is an entity property name.
 	 *
 	 * NOTE: Ordered arguments only--named arguments not supported.
@@ -199,8 +205,17 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		if ( entityName.matches( '(?i).+by.+' ) ) {
 			var tokens = entityName.split( '(?i)by', 2 );
 			entityName = tokens[ 1 ];
-			var filter = { '#tokens[ 2 ]#' = missingMethodArguments[ 1 ] };
-			return get( entityName, filter, isReturnNewOnNotFound );
+			if( tokens[ 2 ].matches( '.+AND.+' ) ) {
+				tokens = tokens[ 2 ].split( 'AND' );
+				var filter = {};
+				for(var i = 1; i <= arrayLen(tokens); i++) {
+					filter[ tokens[ i ] ] = missingMethodArguments[ 1 ][ i ];
+				}
+				return get( entityName, filter, isReturnNewOnNotFound );
+			} else {
+				var filter = { '#tokens[ 2 ]#' = missingMethodArguments[ 1 ] };
+				return get( entityName, filter, isReturnNewOnNotFound );
+			}
 		} else {
 			var id = missingMethodArguments[ 1 ];
 			return get( entityName, id, isReturnNewOnNotFound );

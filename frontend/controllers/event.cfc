@@ -167,6 +167,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onAfterContentSave(required any rc) {
+		if(!structKeyExists(rc,"slatwallData")) {
+			return;
+		}
 		// loop through all the struct key and see if any value is set
 		var saveAsSlatwallPage = false;
 		for(var key in rc.slatwallData) {

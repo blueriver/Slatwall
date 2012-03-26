@@ -51,22 +51,6 @@ Notes:
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_urlKey#" title="#rc.$.Slatwall.rbKey('setting.product.urlKey')#" fieldName="product_urlKey">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_missingimagepath#" title="#rc.$.Slatwall.rbKey('setting.product.missingimagepath')#" fieldName="product_missingimagepath">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imageextension#" title="#rc.$.Slatwall.rbKey('setting.product.imageextension')#" fieldName="product_imageextension">
-		<tr class="spdadvanced_logmessages">
-			<td class="title primary">#rc.$.slatwall.rbKey('setting.advanced.logmessages')#</td>
-			<cfif rc.edit>
-				<td class="value">
-					<select name="advanced_logmessages">
-						<option value="None" <cfif rc.allSettings.advanced_logmessages.getSettingValue() eq "none">selected="selected"</cfif>>#$.slatwall.rbKey("define.none")#</option>
-						<option value="General" <cfif rc.allSettings.advanced_logmessages.getSettingValue() eq "general">selected="selected"</cfif>>#$.slatwall.rbKey("define.general")#</option>
-						<option value="Detail" <cfif rc.allSettings.advanced_logmessages.getSettingValue() eq "detail">selected="selected"</cfif>>#$.slatwall.rbKey("define.detail")#</option>
-					</select>
-				</td>
-			<cfelse>
-				<td class="value">#rc.allSettings.advanced_logMessages.getSettingValue()#</td>
-			</cfif>
-		</tr>
-		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_showRemoteIDFields#" title="#rc.$.Slatwall.rbKey('setting.advanced.showRemoteIDFields')#" fieldName="advanced_showRemoteIDFields" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
-		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_editRemoteIDFields#" title="#rc.$.Slatwall.rbKey('setting.advanced.editRemoteIDFields')#" fieldName="advanced_editRemoteIDFields" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_dateFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.dateFormat')#" fieldName="advanced_dateFormat">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_timeFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.timeFormat')#" fieldName="advanced_timeFormat">
 		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_currencyLocale#" title="#rc.$.Slatwall.rbKey('setting.advanced.currencyLocale')#" fieldName="advanced_currencyLocale" fieldType="select" valueOptions="#local.localeOptions#">
@@ -84,7 +68,5 @@ Notes:
 				<td class="value">#rc.allSettings.advanced_currencyType.getSettingValue()#</td>
 			</cfif>
 		</tr>
-		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_useProductCacheFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.useProductCacheFlag')#" fieldName="advanced_useProductCacheFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
-		<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_useSkuCacheFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.useSkuCacheFlag')#" fieldName="advanced_useSkuCacheFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 	</table>
 </cfoutput>

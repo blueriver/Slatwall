@@ -160,17 +160,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
 		if(!structKeyExists(arguments, "orderFulfillment"))	{
-			var osArray = arguments.order.getOrderFulfillments();
-			if(!arrayLen(osArray)) {
-				// TODO: This next is a hack... later the type of Fulfillment created should be dynamic
-				arguments.orderFulfillment = this.newOrderFulfillmentShipping();
-			
+			var thisFulfillmentMethodType = arguments.sku.getEligibleFulfillmentMethods()[1].getFulfillmentMethodType();
+			// check if there is a fulfillment method of this type in the order
+			for(var fulfillment in arguments.order.getOrderFulfillments()) {
+				if(fulfillment.getFulfillmentMethodType() == thisFulfillmentMethodType) {
+					arguments.orderFulfillment = fulfillment;
+					break;
+				}
+			}
+			// if no fulfillment of this type found then create a new one 
+			if(!structKeyExists(arguments, "orderFulfillment")) {
+				// use the first fulfillment method allowed for sku
+				arguments.orderFulfillment = this.new("SlatwallOrderFulfillment#thisFulfillmentMethodType#");
 				arguments.orderFulfillment.setOrder(arguments.order);
 			
 				// Push the fulfillment into the hibernate scope
 				getDAO().save(arguments.orderFulfillment);
-			} else {
-				arguments.orderFulfillment = osArray[1];
 			}
 		}
 	
@@ -447,15 +452,57 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return processOK;
 	}
 	
-	public void function setupSubscriptionOrder(required any order) {
+	public void function setupSubscriptionOrder(required any order,string subscriptionOrderType="sotInitial") {
 		for(var orderItem in arguments.order.getOrderItems()) {
 			if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
-				var subscriptionUsage = getService("subscriptionService").newSubscriptionUsage();
-				subscriptionUsage.setOrderItem(orderItem);
-				var subscriptionOrder = getService("subscriptionService").newSubscriptionOrder();
+				// create subscription order
+				var subscriptionOrder = getService("subscriptionService").getSubscriptionOrderByOrder(orderItem.getOrder(),true);
 				subscriptionOrder.setOrder(arguments.order);
-				subscriptionOrder.setSubscriptionOrderType(this.getTypeBySystemCode("sotInitial"));
+				subscriptionOrder.setSubscriptionOrderType(this.getTypeBySystemCode(arguments.subscriptionOrderType));
+				var subscriptionUsage = getService("subscriptionService").getSubscriptionUsageByOrderItem(orderItem,true);
 				subscriptionOrder.setSubscriptionUsage(subscriptionUsage);
+				subscriptionUsage.setOrderItem(orderItem);
+				// copy all the subscription benefits
+				for(var subscriptionBenefit in orderItem.getSku().getSubscriptionBenefits()) {
+					var subscriptionUsageBenefit = getService("subscriptionService").getSubscriptionUsageBenefitBySubscriptionBenefitANDSubscriptionUsage([subscriptionBenefit,subscriptionUsage],true);
+					subscriptionUsageBenefit.copyFromSubscriptionBenefit(subscriptionBenefit);
+					subscriptionUsage.addSubscriptionUsageBenefit(subscriptionUsageBenefit);
+					// call save on this entity to make it persistent so we can use it for further lookup
+					getService("subscriptionService").saveSubscriptionUsageBenefit(subscriptionUsageBenefit);
+					// create subscriptionUsageBenefitAccount for this account
+					var subscriptionUsageBenefitAccount = getService("subscriptionService").getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
+					subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+					subscriptionUsageBenefitAccount.setAccount(orderItem.getOrder().getAccount());
+					getService("subscriptionService").saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+					// add this benefit to access
+					if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerSubscription") {
+						var accessSmartList = getService("accessService").getAccessSmartList();
+						accessSmartList.addFilter(propertyIdentifier="subscriptionUsage_subscriptionUsageID", value=subscriptionUsageBenefit.getSubscriptionUsage().getSubscriptionUsageID());
+						if(!accessSmartList.getRecordCount()) {
+							var access = getService("accessService").getAccessBySubscriptionUsage(subscriptionUsage,true);
+							access.setSubscriptionUsage(subscriptionUsage);
+							getService("accessService").saveAccess(access);
+						}
+					} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerBenefit") {
+						var access = getService("accessService").getAccessBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
+						access.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+						getService("accessService").saveAccess(access);
+					} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerAccount") {
+						// TODO: this should get moved to DAO because adding large number of records like this could timeout
+						// check how many access records already exists and create new ones
+						var subscriptionUsageBenefitAccountSmartList = getService("subscriptionService").getSubscriptionUsageBenefitAccountSmartList();
+						subscriptionUsageBenefitAccountSmartList.addFilter(propertyIdentifier="subscriptionUsageBenefit_subscriptionUsageBenefitID", value=subscriptionUsageBenefit.getSubscriptionUsageBenefitID());
+						var recordCountForCreation = subscriptionBenefit.getTotalQuantity() - subscriptionUsageBenefitAccountSmartList.getRecordCount();
+						for(var i = 0; i < recordCountForCreation; i++) {
+							var subscriptionUsageBenefitAccount = getService("subscriptionService").newSubscriptionUsageBenefitAccount();
+							subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+							getService("subscriptionService").saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+							var access = getService("accessService").newAccess();
+							access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+							getService("accessService").saveAccess(access);
+						}
+					}
+				}
 				getService("subscriptionService").saveSubscriptionOrder(subscriptionOrder);
 			}
 		}
@@ -609,7 +656,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function copyFulfillmentAddress(required any order) {
 		for(var orderFulfillment in order.getOrderFulfillments()) {
-			if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
+			if(orderFulfillment.getFulfillmentMethodType() == "shipping") {
 				if(!isNull(orderFulfillment.getAccountAddress())) {
 					orderFulfillment.setShippingAddress( orderFulfillment.getAccountAddress().getAddress().copyAddress() );
 					orderFulfillment.removeAccountAddress();
