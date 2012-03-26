@@ -38,7 +38,6 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 <cfparam name="rc.edit" type="boolean" />
-<!---<cfset local.attributeSets = rc.account.getAttributeSets(["astAccount"]) />--->
 
 <cf_SlatwallDetailForm object="#rc.account#" edit="#rc.edit#">
 	<cf_SlatwallActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
@@ -60,6 +59,7 @@ Notes:
 		<cf_SlatwallTab view="admin:account/accounttabs/orders" />
 		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />
 		<cf_SlatwallTab view="admin:account/accounttabs/productreviews" />
+		<cf_SlatwallTab view="admin:account/accounttabs/customattributes" />
 	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>

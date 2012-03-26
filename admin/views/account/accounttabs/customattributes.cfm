@@ -40,7 +40,7 @@ AttributeValueID in the name is used to lookup the saved value and update. For n
 it is set to 0
 
 --->
-<cfparam name="rc.attributeSets" />
+<cfset rc.attributeSets = rc.account.getAttributeSets(["astAccount"]) />
 
 <cfoutput>
 	<cfset attributeValueIndex = 0 />
