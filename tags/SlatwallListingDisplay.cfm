@@ -83,9 +83,9 @@ Notes:
 	<cfoutput>
 		<cfif arrayLen(attributes.smartList.getPageRecords())>
 			<cfif len(attributes.selectFieldName)>
-				<table class="table table-striped table-bordered multiselector-selecttable" data-selectfield="#attributes.selectFieldName#">
+				<table class="table table-striped table-bordered multiselector-optiontable" data-selectfield="#attributes.selectFieldName#">
 			<cfelseif len(attributes.removeFieldName)>
-				<table class="table table-striped table-bordered multiselector-removetable" data-removefield="#attributes.removeFieldName#">
+				<table class="table table-striped table-bordered multiselector-selectedtable" data-removefield="#attributes.removeFieldName#">
 			<cfelse>
 				<table class="table table-striped table-bordered">
 			</cfif>
