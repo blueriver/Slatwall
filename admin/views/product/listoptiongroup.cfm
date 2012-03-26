@@ -42,7 +42,7 @@ Notes:
 	
 	<cf_SlatwallActionBar type="listing" object="#rc.optionGroupSmartList#" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.optionGroupSmartList#" recordEditAction="admin:product.editoptiongroup">
+	<cf_SlatwallListingDisplay smartList="#rc.optionGroupSmartList#" recordEditAction="admin:product.editoptiongroup" sortProperty="sortOrder">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="optionGroupName" />
 		<cf_SlatwallListingColumn propertyIdentifier="optionGroupCode" />
 	</cf_SlatwallListingDisplay>

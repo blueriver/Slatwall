@@ -55,9 +55,9 @@ Notes:
 	</cf_SlatwallDetailHeader>
 	
 	<cf_SlatwallTabGroup object="#rc.account#">
+		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />
 		<cf_SlatwallTab view="admin:account/accounttabs/addresses" />
 		<cf_SlatwallTab view="admin:account/accounttabs/orders" />
-		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />
 		<cf_SlatwallTab view="admin:account/accounttabs/productreviews" />
 		<cf_SlatwallTab view="admin:account/accounttabs/customattributes" />
 	</cf_SlatwallTabGroup>
