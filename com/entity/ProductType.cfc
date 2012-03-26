@@ -183,8 +183,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	//get eligibleFulfillmentMethods
 	public array function getEligibleFulfillmentMethods() {
-		if(!arrayLen(getEligibleFulfillmentMethods())) {
-			return getBaseProductType().getEligibleFulfillmentMethods();
+		if(!arrayLen(variables.eligibleFulfillmentMethods)) {
+			return getService("ProductService").getProductType(listFirst(getProductTypeIDPath())).getEligibleFulfillmentMethods();
 		}
 		return variables.eligibleFulfillmentMethods;
 	}

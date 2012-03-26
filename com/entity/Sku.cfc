@@ -300,7 +300,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	//get eligibleFulfillmentMethods
 	public array function getEligibleFulfillmentMethods() {
-		if(!arrayLen(getEligibleFulfillmentMethods())) {
+		if(!arrayLen(variables.eligibleFulfillmentMethods)) {
 			return getProduct().getEligibleFulfillmentMethods();
 		}
 		return variables.eligibleFulfillmentMethods;

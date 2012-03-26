@@ -484,7 +484,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	//get eligibleFulfillmentMethods
 	public array function getEligibleFulfillmentMethods() {
-		if(!arrayLen(getEligibleFulfillmentMethods())) {
+		if(!arrayLen(variables.eligibleFulfillmentMethods)) {
 			return getProductType().getEligibleFulfillmentMethods();
 		}
 		return variables.eligibleFulfillmentMethods;
