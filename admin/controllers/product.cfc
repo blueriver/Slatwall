@@ -85,6 +85,15 @@ component extends="BaseController" output=false accessors=true {
 		rc.saveAction = "admin:product.saveproduct";
 		rc.cancelAction = "admin:product.listproduct";
 	}
+	
+	public void function editProductType( required struct rc ) {
+		param name="rc.productTypeID" default="";
+		rc.productType = getProductService().getProductType( rc.productTypeID,true );
+		rc.attributeSetSmartList = getAttributeService().getAttributeSetSmartList();
+		rc.attributeSetSmartList.addFilter( "attributeSetType.systemCode","astProduct" );
+		rc.attributeSetSmartList.addFilter( "attributeSetType.systemCode","astProductCustomization" );
+		getFW().setView("admin:product.detailproducttype");
+	}
 
 /*
 public void function before(required struct rc) {

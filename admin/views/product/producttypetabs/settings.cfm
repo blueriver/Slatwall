@@ -41,7 +41,7 @@ Notes:
 <cfset local.valueOptions = [{value="",name=rc.$.Slatwall.rbKey('setting.inherit')},{value="1",name=rc.$.Slatwall.rbKey('define.yes')},{value="0",name=rc.$.Slatwall.rbKey('define.no')}] />
 
 <cfoutput>
-	<table class="listing-grid stripe" id="productTypeSettings">
+	<table class="table table-striped table-bordered" id="productTypeSettings">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey('entity.setting.settingName')#</th>
 			<th>#rc.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
@@ -50,11 +50,8 @@ Notes:
 		
 		<!--- Allow Backorder Flag --->
 		<tr>
-			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.allowBackorderFlag")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.allowBackorderFlag_hint")#</span>
-				</a>
+			<td>
+				#rc.$.Slatwall.rbKey("setting.product.allowBackorderFlag")#
 			</td>
 			<td>
 				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.productType.getInheritedSetting('allowBackorderFlag'))# )" />
@@ -74,11 +71,8 @@ Notes:
 		
 		<!--- Allow Dropship Flag --->
 		<tr>
-			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.allowDropShipFlag")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.allowDropshipFlag_hint")#</span>
-				</a>
+			<td>
+				#rc.$.Slatwall.rbKey("setting.product.allowDropShipFlag")#
 			</td>
 			<td>
 				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.productType.getInheritedSetting('allowDropShipFlag'))# )" />
@@ -99,10 +93,7 @@ Notes:
 		<!--- Allow Preorder Flag --->
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.allowPreorderFlag")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.allowPreorderFlag_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.allowPreorderFlag")#
 			</td>
 			<td>
 				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.productType.getInheritedSetting('allowPreorderFlag'))# )" />
@@ -123,10 +114,7 @@ Notes:
 		<!--- Allow Shipping Flag --->
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.allowShippingFlag")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.allowShippingFlag_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.allowShippingFlag")#
 			</td>
 			<td>
 				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.productType.getInheritedSetting('allowShippingFlag'))# )" />
@@ -147,10 +135,7 @@ Notes:
 		<!--- Call To Order Flag --->
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.callToOrderFlag")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.callToOrderFlag_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.callToOrderFlag")#
 			</td>
 			<td>
 				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.productType.getInheritedSetting('callToOrderFlag'))# )" />
@@ -171,10 +156,7 @@ Notes:
 		<!--- Product Display Template --->
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.productDisplayTemplate")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.productDisplayTemplate_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.productDisplayTemplate")#
 			</td>
 			<td>
 				<cfif rc.edit>
@@ -204,16 +186,15 @@ Notes:
 		</cfif>
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.quantityHeldBack")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.quantityHeldBack_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.quantityHeldBack")#
 			</td>
 			<td>
 				<cfif rc.edit><input type="radio" name="inheritQuantityHeldBack" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityHeldBack" edit="#rc.edit#" displayType="plain" fieldType="text">
 				<cfif rc.edit><input type="radio" name="inheritQuantityHeldBack" value="1" class="checkClear" data-checkClear=".quantityheldbackfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
-				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityHeldBack")# )
+				<cfif !local.definedhere or rc.edit>
+					#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityHeldBack")# )
+				</cfif>
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -236,16 +217,15 @@ Notes:
 		</cfif>
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.quantityMinimum")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.quantityMinimum_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.quantityMinimum")#
 			</td>
 			<td>
 				<cfif rc.edit><input type="radio" name="inheritQuantityMinimum" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityMinimum" edit="#rc.edit#" displayType="plain" fieldType="text">
 				<cfif rc.edit><input type="radio" name="inheritQuantityMinimum" value="1" class="checkClear" data-checkClear=".quantityminimumfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
-				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityMinimum")# )
+				<cfif !local.definedhere or rc.edit>
+					#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityMinimum")# )
+				</cfif>
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -268,16 +248,15 @@ Notes:
 		</cfif>
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.quantityMaximum")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.quantityMaximum_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.quantityMaximum")#
 			</td>
 			<td>
 				<cfif rc.edit><input type="radio" name="inheritQuantityMaximum" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
 					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityMaximum" edit="#rc.edit#" displayType="plain" fieldType="text">
 				<cfif rc.edit><input type="radio" name="inheritQuantityMaximum" value="1" class="checkClear" data-checkClear=".quantitymaximumfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
+				<cfif !local.definedhere or rc.edit>
 					#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityMaximum")# )
+				</cfif>
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -300,16 +279,15 @@ Notes:
 		</cfif>
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.quantityOrderMinimum")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.quantityOrderMinimum_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.quantityOrderMinimum")#
 			</td>
 			<td>
 				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMinimum" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMinimum" edit="#rc.edit#" displayType="plain" fieldType="text">
 				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMinimum" value="1" class="checkClear" data-checkClear=".quantityorderminimumfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
-				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMinimum")# )
+				<cfif !local.definedhere or rc.edit>
+					#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMinimum")# )
+				</cfif>
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -332,16 +310,15 @@ Notes:
 		</cfif>
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.quantityOrderMaximum")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.quantityOrderMaximum_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.quantityOrderMaximum")#
 			</td>
 			<td>
 				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMaximum" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMaximum" edit="#rc.edit#" displayType="plain" fieldType="text">
 				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMaximum" value="1" class="checkClear" data-checkClear=".quantityordermaximumfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
-				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMaximum")# )
+				<cfif !local.definedhere or rc.edit>
+					#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMaximum")# )
+				</cfif>
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -364,16 +341,15 @@ Notes:
 		</cfif>
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.shippingWeight")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.shippingWeight_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.shippingWeight")#
 			</td>
 			<td>
 				<cfif rc.edit><input type="radio" name="inheritShippingWeight" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="shippingWeight" edit="#rc.edit#" displayType="plain" fieldType="text">
 				<cfif rc.edit><input type="radio" name="inheritShippingWeight" value="1" class="checkClear" data-checkClear=".shippingweightfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
-				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("shippingWeight")# )
+				<cfif !local.definedhere or rc.edit>
+					#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("shippingWeight")# )
+				</cfif>
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -390,10 +366,7 @@ Notes:
 		<!--- Shipping Weight Unit Code --->
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.shippingWeightUnitCode")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.shippingWeightUnitCode_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.shippingWeightUnitCode")#
 			</td>
 			<td>
 				<cfif rc.edit>
@@ -419,10 +392,7 @@ Notes:
 		<!--- Track Inventory Flag --->
 		<tr>
 			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.trackInventoryFlag")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.trackInventoryFlag_hint")#</span>
-				</a>
+				#rc.$.Slatwall.rbKey("setting.product.trackInventoryFlag")#
 			</td>
 			<td>
 				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.productType.getInheritedSetting('trackInventoryFlag'))# )" />
