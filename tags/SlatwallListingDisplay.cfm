@@ -94,7 +94,7 @@ Notes:
 		<cfif len(attributes.selectFieldName)>
 			<cfset thistag.selectable = true />
 			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'select', ' ') />
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-select', ' ') />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-selectfield="#attributes.selectFieldName#"', " ") />
 		</cfif>
 		
@@ -102,7 +102,7 @@ Notes:
 		<cfif len(attributes.multiselectFieldName)>
 			<cfset thistag.multiselectable = true />
 			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'multiselect', ' ') />
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-multiselect', ' ') />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
 		
@@ -110,7 +110,7 @@ Notes:
 		<cfif len(attributes.parentPropertyName)>
 			<cfset thistag.expandable = true />
 			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'expandable', ' ') />
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-expandaction="#attributes.expandAction#"', " ") />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-propertyIdentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#"', " ") />
@@ -122,7 +122,7 @@ Notes:
 		<cfif len(attributes.sortProperty)>
 			<cfset thistag.sortable = true />
 			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'sortable', ' ') />
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
 			
 		</cfif>
 		
