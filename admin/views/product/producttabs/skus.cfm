@@ -40,7 +40,7 @@ Notes:
 
 	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#">
 		<cf_SlatwallListingColumn propertyIdentifier="skuCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="isDefault" />
+		<cf_SlatwallListingColumn propertyIdentifier="defaultFlag" />
 		<cf_SlatwallListingColumn propertyIdentifier="imageFile" />
 		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />

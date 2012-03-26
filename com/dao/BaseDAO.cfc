@@ -99,6 +99,10 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 	}
 	
 	public any function count(required any entityName) {
+		// Adds the Slatwall Prefix to the entityName when needed.
+		if(left(arguments.entityName,8) != "Slatwall") {
+			arguments.entityName = "Slatwall#arguments.entityName#";
+		}
 		return ormExecuteQuery("SELECT count(*) FROM #arguments.entityName#",true);
 	}
 	

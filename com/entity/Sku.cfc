@@ -100,6 +100,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="salePriceDiscountType" type="string" persistent="false";
 	property name="salePriceDiscountAmount" type="string" persistent="false";
 	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
+	property name="defaultFlag" type="boolean" persistent="false";
 	
 	public Sku function init() {
        // set default collections for association management methods
@@ -134,11 +135,16 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        return super.init();
     }
     
-    public boolean function isNotDefaultSku() {
-    	if(getProduct().getDefaultSku().getSkuID() != getSkuID()) {
+    public boolean function getDefaultFlag() {
+    	if(getProduct().getDefaultSku().getSkuID() == getSkuID()) {
     		return true;
     	}
-    	return false;
+    	return false; 
+    }
+    
+    // used by validate this
+    public boolean function isNotDefaultSku() {
+		return !getDefaultFlag();
     }
     
     // @hint this method validates that this skus has a unique option combination that no other sku has

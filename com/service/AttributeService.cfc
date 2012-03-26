@@ -98,6 +98,13 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 		}		
 	}
 	*/
+	
+	public any function saveAttributeOption( required any entity, struct data, string context="save" ) {
+		if( !isNumeric(trim(arguments.data.sortOrder)) ) {
+			arguments.data.sortOrder = this.countAttributeOption() + 1;
+		}
+		return super.save(argumentCollection=arguments);
+	}
 		
 	public any function getAttributeSets(array systemCode) {
 		var smartList = this.getAttributeSetSmartList();
