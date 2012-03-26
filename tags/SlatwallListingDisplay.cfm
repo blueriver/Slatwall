@@ -36,38 +36,46 @@
 Notes:
 
 --->
-<cfparam name="attributes.smartList" type="any" />
-<cfparam name="attributes.tableattributes" type="string" default="" />  <!--- Pass in additional html attributes for the table --->
-<cfparam name="attributes.tableclass" type="string" default="" />  <!--- Pass in additional classes for the table --->
-
-<cfparam name="attributes.recordEditAction" type="string" default="" />
-<cfparam name="attributes.recordEditQueryString" type="string" default="" />
-<cfparam name="attributes.recordEditModal" type="boolean" default="false" />
-<cfparam name="attributes.recordDetailAction" type="string" default="" />
-<cfparam name="attributes.recordDetailQueryString" type="string" default="" />
-<cfparam name="attributes.recordDeleteAction" type="string" default="" />
-<cfparam name="attributes.recordDeleteQueryString" type="string" default="" />
-
-<!--- Expandable --->
-<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
-<cfparam name="attributes.childPropertyName" type="string" default="" />
-<cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />  
-
-<!--- Sorting --->
-<cfparam name="attributes.sortAction" type="string" default="" />  <!--- Setting this value will turn on Sorting --->
-
-<!--- Multiselect --->
-<cfparam name="attributes.selectFieldName" type="string" default="" />  <!--- Setting this value will turn on Select --->
-<cfparam name="attributes.removeFieldName" type="string" default="" />
-
-<!--- Local Variables --->
-<cfparam name="thistag.allpropertyidentifiers" type="string" default="" />
-<cfparam name="thistag.selectable" type="string" default="false" />
-<cfparam name="thistag.expandable" type="string" default="false" />
-<cfparam name="thistag.sortable" type="string" default="false" />
-
 <cfif thisTag.executionMode eq "end">
+	<cfparam name="attributes.smartList" type="any" />
+	<cfparam name="attributes.tableattributes" type="string" default="" />  <!--- Pass in additional html attributes for the table --->
+	<cfparam name="attributes.tableclass" type="string" default="" />  <!--- Pass in additional classes for the table --->
+	
+	<cfparam name="attributes.recordEditAction" type="string" default="" />
+	<cfparam name="attributes.recordEditQueryString" type="string" default="" />
+	<cfparam name="attributes.recordEditModal" type="boolean" default="false" />
+	<cfparam name="attributes.recordDetailAction" type="string" default="" />
+	<cfparam name="attributes.recordDetailQueryString" type="string" default="" />
+	<cfparam name="attributes.recordDeleteAction" type="string" default="" />
+	<cfparam name="attributes.recordDeleteQueryString" type="string" default="" />
+	
+	<!--- Expandable --->
+	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
+	<cfparam name="attributes.childPropertyName" type="string" default="" />
+	<cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />  
+	
+	<!--- Sorting --->
+	<cfparam name="attributes.sortProperty" type="string" default="" />  <!--- Setting this value will turn on Sorting --->
+	
+	<!--- Single Select & Multiselect --->
+	<cfparam name="attributes.selectFieldName" type="string" default="" />			<!--- Setting this value will turn on single Select --->
+	<cfparam name="attributes.multiselectFieldName" type="string" default="" />		<!--- Setting this value will turn on Multiselect --->
+	<cfparam name="attributes.selectedValues" type="string" default="" />			
+	
+	<!--- ThisTag Variables used just inside --->
+	<cfparam name="thistag.columns" type="array" default="#arrayNew(1)#" />
+	<cfparam name="thistag.allpropertyidentifiers" type="string" default="" />
+	
+	<cfparam name="thistag.selectable" type="string" default="false" />
+	<cfparam name="thistag.multiselectable" type="string" default="false" />
+	<cfparam name="thistag.expandable" type="string" default="false" />
+	<cfparam name="thistag.sortable" type="string" default="false" />
+	
+	<cfparam name="thistag.exampleEntity" type="string" default="" />
+
 	<cfsilent>
+		<!--- Setup the example entity --->
+		<cfset thistag.exampleEntity = createObject("component", "Slatwall.com.entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '')#") />
 		
 		<!--- Setup the default table class --->
 		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-striped table-bordered', ' ') />
@@ -77,27 +85,38 @@ Notes:
 			<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
 		</cfloop>
 		
+		<!--- Setup Select --->
+		<cfif len(attributes.selectFieldName)>
+			<cfset thistag.selectable = true />
+			
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'select', ' ') />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-selectfield="#attributes.selectFieldName#"', " ") />
+		</cfif>
+		
 		<!--- Setup Multiselect --->
 		<cfif len(attributes.selectFieldName)>
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'multiselect multiselect-options', ' ') />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-selectfield="#attributes.selectFieldName#"', " ") />
-		<cfelseif len(attributes.removeFieldName)>
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'multiselect multiselect-selected', ' ') />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-selectfield="#attributes.removeFieldName#"', " ") />
+			<cfset thistag.multiselectable = true />
+			
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'multiselect', ' ') />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
 		
 		<!--- Setup Expandable --->
 		<cfif len(attributes.parentPropertyName)>
+			<cfset thistag.expandable = true />
+			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'expandable', ' ') />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-expandaction="#attributes.expandAction#"', " ") />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-propertyIdentifiers="#record.getPrimaryIDPropertyName()#,#local.allpropertyidentifiers#"', " ") />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-parentidproperty="#attributes.parentPropertyName#.#record.getPrimaryIDPropertyName()#"', " ") />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-idproperty="#record.getPrimaryIDPropertyName()#"', " ") />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-propertyIdentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#"', " ") />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-parentidproperty="#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
 		</cfif>
 		
 		<!--- Setup Sortability --->
-		<cfif len(attributes.sortAction)>
+		<cfif len(attributes.sortProperty)>
+			<cfset thistag.sortable = true />
+			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'sortable', ' ') />
 			
 		</cfif>
@@ -111,9 +130,6 @@ Notes:
 			<cfset attributes.administativeCount++ />
 		</cfif>
 		<cfif len(attributes.recordDeleteAction)>
-			<cfset attributes.administativeCount++ />
-		</cfif>
-		<cfif len(attributes.selectFieldName) or len(attributes.removeFieldName)>
 			<cfset attributes.administativeCount++ />
 		</cfif>
 	</cfsilent>
@@ -150,13 +166,23 @@ Notes:
 				<tbody>
 					<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
 						<tr id="#record.getPrimaryIDValue()#">
+							<!--- Selectable --->
+							<cfif thistag.selectable>
+								<td><input type="radio" name="#attributes.selectFieldName#" <cfif record.getPrimaryIDValue() eq attributes.selectedValue>checked="checked"</cfif> /></td>
+							</cfif>
+							<cfif thistag.multiselectable>
+								<td><a href="##" class="table-action-multiselect"><i class="icon-check"></i></a></td>
+							</cfif>
+							<cfif thistag.sortable>
+								<td><a href="##" class="table-action-sort"><i class="icon-move"></i></a></td>
+							</cfif>
 							<cfset firstColumn = true>
 							<cfset firstColumnIcon = "" />
 							<cfloop array="#thistag.columns#" index="column">
 								<cfsilent>
 									<cfif firstColumn>
 										<cfif thistag.expandable>
-											<cfset firstColumnIcon='<a href="##" class="table-expand depth0" data-depth="0"  data-parentid="#record.getPrimaryIDValue()#"><i class="icon-plus"></i></a> ' />
+											<cfset firstColumnIcon='<a href="##" class="table-action-expand depth0" data-depth="0"  data-parentid="#record.getPrimaryIDValue()#"><i class="icon-plus"></i></a> ' />
 										</cfif>
 										<cfset firstColumn = false />
 									</cfif>
@@ -173,12 +199,6 @@ Notes:
 									</cfif>
 									<cfif attributes.recordDeleteAction neq "">
 										<cf_SlatwallActionCaller action="#attributes.recordDeleteAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordDeleteQueryString#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#record.isNotDeletable()#" confirm="true" />
-									</cfif>
-									<cfif attributes.selectFieldName neq "">
-										<button class="btn btn-primary multiselector-select" data-fieldname="#attributes.selectFieldName#" data-fieldvalue="#record.getPrimaryIDValue()#"><i class="icon-plus icon-white"></i></button>
-									</cfif>
-									<cfif attributes.removeFieldName neq "">
-										<button class="btn btn-primary multiselector-remove" data-fieldname="#attributes.removeFieldName#" data-fieldvalue="#record.getPrimaryIDValue()#"><i class="icon-minus icon-white"></i></button>
 									</cfif>
 								</td>
 							</cfif>

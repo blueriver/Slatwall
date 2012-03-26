@@ -36,5 +36,6 @@
 Notes:
 
 --->
-
-<cf_SlatwallMultiselector object="#rc.account#" propertyName="priceGroups" />
+<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsOptionsSmartList()#">
+	
+</cf_SlatwallListingDisplay>
