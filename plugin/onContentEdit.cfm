@@ -234,9 +234,9 @@ function setupRequirePurchaseFlagDisplay() {
 		$('.requirepurchaseflagfield').show();
 	}
 	// show inherited value
-	if(purchaseRequiredParent && (selectedValue == undefined || selectedValue == "0")) {
+	if(purchaseRequiredParent == "true" && (selectedValue == undefined || selectedValue == "0")) {
 		$('.requirePurchaseFlagInherit').html('<span>Currently purchase required by parent</span>');
-	} else if(!purchaseRequiredParent) {
+	} else if(purchaseRequiredParent == "false") {
 		$('.requirePurchaseFlagInherit').html('<span>Currently purchase not required by parent</span>');
 	}
 }
@@ -245,9 +245,9 @@ function setupRequireSubscriptionFlagDisplay() {
 	var selectedValue = $('input[name="slatwallData.requireSubscriptionFlag"]:checked').val();
 	$('.requireSubscriptionFlagInherit').html('<span>Currently subscription required by parent</span>');
 	// show inherited value
-	if(subscriptionRequiredParent && (selectedValue == undefined || selectedValue == "0")) {
+	if(subscriptionRequiredParent == "true" && (selectedValue == undefined || selectedValue == "0")) {
 		$('.requireSubscriptionFlagInherit').html('<span>Currently subscription required by parent</span>');
-	} else if(!subscriptionRequiredParent) {
+	} else if(subscriptionRequiredParent == "false") {
 		$('.requireSubscriptionFlagInherit').html('<span>Currently subscription not required by parent</span>');
 	}
 }
