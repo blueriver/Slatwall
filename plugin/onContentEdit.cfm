@@ -40,6 +40,7 @@ Notes:
 <cfset slatwallProductSmartList = getService("productService").getSmartList(entityName="SlatwallProduct") />
 <cfset slatwallProductSmartList.addFilter(propertyIdentifier="productType_systemCode", value="contentAccess") />
 <cfset slatwallProducts = slatwallProductSmartList.getRecords() />
+<cfset restrictedContentTemplates = getService("contentService").listContentFilterByTemplateFlag(1) />
 <cfset restrictedParent = false />
 <cfset purchaseRequiredParent = false />
 <cfset subscriptionRequiredParent = false />
@@ -74,6 +75,12 @@ Notes:
 		</div>
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="restrictAccessFlag" fieldName="slatwallData.restrictAccessFlag" edit="#!restrictedParent#">
 		<div class="restrictAccessFlagRelated">
+			<cfset local.valueOptions = [] />
+			<cfloop array="#restrictedContentTemplates#" index="local.restrictedContentTemplate">
+				<cfset arrayAppend(valueOptions,{value=restrictedContentTemplate.getContentID(),name=restrictedContentTemplate.getTitle()}) />
+			</cfloop>
+			<cfset local.selectedRestrictedContentTemplateContentID = isNull(slatwallContent.getRestrictedContentTemplateContent())?"":slatwallContent.getRestrictedContentTemplateContent().getContentID() />
+			<cf_SlatwallFieldDisplay title="Restricted Page Template" fieldName="slatwallData.restrictedContentTemplateContent_contentID" fieldType="select" valueOptions="#valueOptions#" value="#selectedRestrictedContentTemplateContentID#" edit="true">
 			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true">
 			<div class="requirePurchaseFlag">
 				<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="requirePurchaseFlag" fieldName="slatwallData.requirePurchaseFlag" edit="true" fieldType="checkbox">
@@ -98,7 +105,7 @@ Notes:
 								<th>Price</th>
 								<th></th>
 							</tr>
-							<cfloop array="#slatwallContent.getSkus()#" index="sku">
+							<cfloop array="#slatwallContent.getSkus()#" index="local.sku">
 								<tr>
 									<td><a href="/plugins/slatwall/?slatAction=product.edit&productID=#sku.getProduct().getProductID()#">#sku.getProduct().getProductName()#</a></td>
 									<td>#sku.getSkuCode()#</td>
@@ -125,7 +132,7 @@ Notes:
 							<div>
 								<select name="slatwallData.product.productID">
 									<option value="">New Product</option>
-									<cfloop array="#slatwallProducts#" index="product">
+									<cfloop array="#slatwallProducts#" index="local.product">
 										<option value="#product.getProductID()#">#product.getProductName()#</option>
 									</cfloop>
 								</select>

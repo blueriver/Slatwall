@@ -147,6 +147,18 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var categoryQuery = rc.$.content().getCategoriesQuery() ;
 		if(!getAccessService().hasAccess(rc.$.content('path'),valueList(categoryQuery.categoryID))){
 			rc.$.event("slatAction", "frontend:account.noaccess");
+			// save the current content to be used on the barrier page
+			rc.$.event("restrictedContent",$.content());
+			// get the slatwall content
+			var slatwallContent = getContentService().getContentByCmsContentID($.content("contentID"));
+			// set slatwallContent in rc to be used on the barrier page
+			rc.$.event("slatwallContent",slatwallContent);
+			// get the barrier page template
+			var restrictedContentTemplate = slatwallContent.getRestrictedContentTemplateContent();
+			// set the content to the barrier page template
+			if(!isNull(restrictedContentTemplate)) {
+				rc.$.event('contentBean', getContentManager().getActiveContent(restrictedContentTemplate.getCmsContentID(), rc.$.event('siteid'), true));
+			}
 		}
 	}
 	
