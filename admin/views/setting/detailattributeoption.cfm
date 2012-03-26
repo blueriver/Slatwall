@@ -36,31 +36,22 @@
 Notes:
 
 --->
-<cfparam name="rc.attribute" type="any">
-<cfparam name="rc.attributeset" type="any" default="#rc.attribute.getAttributeSet()#">
+<cfparam name="rc.attributeOption" type="any">
+<cfparam name="rc.attribute" type="any" default="#rc.attributeoption.getAttribute()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.attribute#" saveAction="admin:setting.saveattribute" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.attribute#" edit="#rc.edit#" backAction="admin:setting.detailAttributeSet" backQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
-		<input type="hidden" name="attributeSet.attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.attributeOption#" edit="#rc.edit#" backAction="admin:setting.detailAttribute" backQueryString="attributeID=#rc.attribute.getAttributeID()#" />
+		<input type="hidden" name="attributeOptions[1].attributeOptionID" value="#rc.attributeOption.getAttributeOptionID()#" />
 
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="requiredFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeHint" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="defaultValue" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeType" valueDefault="444df2a5a9088e72342c0b5eaf731c64" edit="#rc.edit and rc.attribute.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.attributeOption#" property="sortOrder" fieldName="attributeOptions[1].sortOrder" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.attributeOption#" property="attributeOptionValue" fieldName="attributeOptions[1].attributeOptionValue" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.attributeOption#" property="attributeOptionLabel" fieldName="attributeOptions[1].attributeOptionLabel" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
-
-		<cf_SlatwallTabGroup object="#rc.attribute#">
-			<cf_SlatwallTab view="admin:setting/attributetabs/attributeoptions" />
-			<cf_SlatwallTab view="admin:setting/attributetabs/description" />
-		</cf_SlatwallTabGroup>
 
 	</cf_SlatwallDetailForm>
 </cfoutput>

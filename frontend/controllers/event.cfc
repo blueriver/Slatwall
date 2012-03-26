@@ -147,6 +147,18 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var categoryQuery = rc.$.content().getCategoriesQuery() ;
 		if(!getAccessService().hasAccess(rc.$.content('path'),valueList(categoryQuery.categoryID))){
 			rc.$.event("slatAction", "frontend:account.noaccess");
+			// save the current content to be used on the barrier page
+			rc.$.event("restrictedContent",$.content());
+			// get the slatwall content
+			var slatwallContent = getContentService().getContentByCmsContentID($.content("contentID"));
+			// set slatwallContent in rc to be used on the barrier page
+			rc.$.event("slatwallContent",slatwallContent);
+			// get the barrier page template
+			var restrictedContentTemplate = slatwallContent.getRestrictedContentTemplateContent();
+			// set the content to the barrier page template
+			if(!isNull(restrictedContentTemplate)) {
+				rc.$.event('contentBean', getContentManager().getActiveContent(restrictedContentTemplate.getCmsContentID(), rc.$.event('siteid'), true));
+			}
 		}
 	}
 	
@@ -184,16 +196,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			}
 		}
 		if(saveAsSlatwallPage) {
-			saveSlatwallPage(rc);
-		//} else {
-			//deleteSlatwallPage(rc);
-		}
-		if(slatwallData.allowPurchaseFlag) {
-			if(slatwallData.addSku){
-				saveSlatwallProduct(rc);
+			var content = saveSlatwallPage(rc);
+			if(slatwallData.allowPurchaseFlag) {
+				if(slatwallData.addSku){
+					saveSlatwallProduct(rc,content);
+				}
+			} else {
+				deleteContentSkus(rc);
 			}
-		} else {
-			deleteContentSkus(rc);
 		}
 		
 	}
@@ -203,13 +213,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		deleteContentSkus(rc);
 	}
 	
-	private void function saveSlatwallPage(required any rc) {
+	private any function saveSlatwallPage(required any rc) {
 		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
 		content.setCmsSiteID(rc.$.event('siteID'));
 		content.setCmsContentID(rc.$.content("contentID"));
 		content.setCmsContentIDPath(rc.$.content("path"));
 		content.setTitle(rc.$.content("title"));
 		content = getContentService().saveContent(content,rc.slatwallData);
+		return content;
 	}
 	
 	private void function delinkSlatwallPage(required any rc) {
@@ -230,17 +241,20 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	*/
 	
-	private void function saveSlatwallProduct(required any rc) {
-		var content = $.event('contentBean');
-		var slatwallContent = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
+	private void function saveSlatwallProduct(required any rc,any content) {
+		if(structKeyExists(arguments,"content")) {
+			var slatwallContent = arguments.content;
+		} else {
+			var slatwallContent = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
+		}
 		// if sku is selected, related sku to content
 		if(rc.slatwallData.product.sku.skuID != "") {
 			var sku = getService("SkuService").getSku(rc.slatwallData.product.sku.skuID, true);
 			sku.addAccessContent(slatwallContent);
 		} else {
 			var product = getProductService().getProduct(rc.slatwallData.product.productID, true);
-			product.setProductName(content.getTitle());
-			product.setPublishedFlag(content.getApproved());
+			product.setProductName(rc.$.content("title"));
+			product.setPublishedFlag(rc.$.content("approved"));
 			var newProduct = false;
 			if(product.isNew()){
 				newProduct = true;

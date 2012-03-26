@@ -89,7 +89,11 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
-	
+
+	public string function getSimpleRepresentationPropertyName() {
+		return "attributeOptionLabel";
+	}
+
 	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================

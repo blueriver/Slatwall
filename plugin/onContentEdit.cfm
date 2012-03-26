@@ -40,21 +40,24 @@ Notes:
 <cfset slatwallProductSmartList = getService("productService").getSmartList(entityName="SlatwallProduct") />
 <cfset slatwallProductSmartList.addFilter(propertyIdentifier="productType_systemCode", value="contentAccess") />
 <cfset slatwallProducts = slatwallProductSmartList.getRecords() />
-<cfset restrictedContent = getService("contentService").getRestrictedContentByPath($.content("path")) />
+<cfset restrictedContentTemplates = getService("contentService").listContentFilterByTemplateFlag(1) />
 <cfset restrictedParent = false />
-<cfif !isNull(restrictedContent) AND restrictedContent.getcmsContentID() NEQ $.content("contentID")>
-	<cfset restrictedParent = true />
-	<cfset slatwallContent.setRestrictAccessFlag(1) />
-</cfif>
-<cfset purchaseRequiredContent = getService("contentService").getPurchaseRequiredContentByPath($.content("path")) />
 <cfset purchaseRequiredParent = false />
-<cfif !isNull(purchaseRequiredContent) AND purchaseRequiredContent.getcmsContentID() NEQ $.content("contentID")>
-	<cfset purchaseRequiredParent = true />
-</cfif>
-<cfset subscriptionRequiredContent = getService("contentService").getSubscriptionRequiredContentByPath($.content("path")) />
 <cfset subscriptionRequiredParent = false />
-<cfif !isNull(subscriptionRequiredContent) AND subscriptionRequiredContent.getcmsContentID() NEQ $.content("contentID")>
-	<cfset subscriptionRequiredParent = true />
+<cfif Not $.content().getIsNew()>
+	<cfset restrictedContent = getService("contentService").getRestrictedContentByPath($.content("path")) />
+	<cfif !isNull(restrictedContent) AND restrictedContent.getcmsContentID() NEQ $.content("contentID")>
+		<cfset restrictedParent = true />
+		<cfset slatwallContent.setRestrictAccessFlag(1) />
+	</cfif>
+	<cfset purchaseRequiredContent = getService("contentService").getPurchaseRequiredContentByPath($.content("path")) />
+	<cfif !isNull(purchaseRequiredContent) AND purchaseRequiredContent.getcmsContentID() NEQ $.content("contentID")>
+		<cfset purchaseRequiredParent = true />
+	</cfif>
+	<cfset subscriptionRequiredContent = getService("contentService").getSubscriptionRequiredContentByPath($.content("path")) />
+	<cfif !isNull(subscriptionRequiredContent) AND subscriptionRequiredContent.getcmsContentID() NEQ $.content("contentID")>
+		<cfset subscriptionRequiredParent = true />
+	</cfif>
 </cfif>
 <cfoutput>
 	<cfif restrictedParent>
@@ -72,6 +75,12 @@ Notes:
 		</div>
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="restrictAccessFlag" fieldName="slatwallData.restrictAccessFlag" edit="#!restrictedParent#">
 		<div class="restrictAccessFlagRelated">
+			<cfset local.valueOptions = [] />
+			<cfloop array="#restrictedContentTemplates#" index="local.restrictedContentTemplate">
+				<cfset arrayAppend(valueOptions,{value=restrictedContentTemplate.getContentID(),name=restrictedContentTemplate.getTitle()}) />
+			</cfloop>
+			<cfset local.selectedRestrictedContentTemplateContentID = isNull(slatwallContent.getRestrictedContentTemplateContent())?"":slatwallContent.getRestrictedContentTemplateContent().getContentID() />
+			<cf_SlatwallFieldDisplay title="Restricted Page Template" fieldName="slatwallData.restrictedContentTemplateContent_contentID" fieldType="select" valueOptions="#valueOptions#" value="#selectedRestrictedContentTemplateContentID#" edit="true">
 			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true">
 			<div class="requirePurchaseFlag">
 				<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="requirePurchaseFlag" fieldName="slatwallData.requirePurchaseFlag" edit="true" fieldType="checkbox">
@@ -96,7 +105,7 @@ Notes:
 								<th>Price</th>
 								<th></th>
 							</tr>
-							<cfloop array="#slatwallContent.getSkus()#" index="sku">
+							<cfloop array="#slatwallContent.getSkus()#" index="local.sku">
 								<tr>
 									<td><a href="/plugins/slatwall/?slatAction=product.edit&productID=#sku.getProduct().getProductID()#">#sku.getProduct().getProductName()#</a></td>
 									<td>#sku.getSkuCode()#</td>
@@ -123,7 +132,7 @@ Notes:
 							<div>
 								<select name="slatwallData.product.productID">
 									<option value="">New Product</option>
-									<cfloop array="#slatwallProducts#" index="product">
+									<cfloop array="#slatwallProducts#" index="local.product">
 										<option value="#product.getProductID()#">#product.getProductName()#</option>
 									</cfloop>
 								</select>

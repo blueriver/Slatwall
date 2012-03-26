@@ -55,6 +55,7 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="disableProductAssignmentFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
+	property name="restrictedContentTemplateContent" cfc="Content" fieldtype="many-to-one" fkcolumn="restrictedContentTemplateContentID";
 	
 	// Related Object Properties (one-to-many)
 	
