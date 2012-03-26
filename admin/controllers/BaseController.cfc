@@ -176,7 +176,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		arrayAppend(request.context.messages, arguments);
 	}
 	
-	// Implicet onMissingMethod() to handle standard CRUD
+	// Implicit onMissingMethod() to handle standard CRUD
 	public void function onMissingMethod() {
 		if( left(arguments.missingMethodName, 4) == "list" ) {
 			genericListMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
