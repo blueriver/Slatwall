@@ -11,8 +11,6 @@ var ajaxlock = 0;
 
 jQuery(function($){
 	
-	console.log($('input[data-mytest=1]'));
-	
 	$('.datetimepicker').datepicker({
 		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
 		duration: '',  
@@ -37,18 +35,21 @@ jQuery(function($){
 		$('#adminModal').load( modalLink, function(){bindFormValidation();} );
 	});
 	
-	$('.table-expand').click(function(e){
-		e.preventDefault();
-		toggleTable( this );
-	});
-	
 	bindAlerts();
 	bindFormValidation();
+	bindTableClasses();
 });
 
 function bindFormValidation() {
 	$.each($('form'), function(index, value) {
 		$(value).validate();
+	});
+}
+
+function bindTableClasses() {
+	$('.table-action-expand').click(function(e){
+		e.preventDefault();
+		toggleTable( this );
 	});
 }
 
@@ -76,16 +77,20 @@ function toggleTable( toggleLink ) {
 			ajaxlock = 0;
 		} else {
 			
-			var data = {};
-			data[ 'slatAction' ] = $(toggleLink).data('expandaction');
-			data[ 'F:' + $(toggleLink).data('parentidproperty') ] = $(toggleLink).data('parentid');
-			data[ 'propertyIdentifiers' ] = $(toggleLink).data('propertyidentifiers');
+			var idProperty = $(toggleLink).closest('table').data('idproperty');
+			var parentIDProperty = $(toggleLink).closest('table').data('parentidproperty');
+			var propertyIdentifiers = $(toggleLink).closest('table').data('propertyidentifiers');
+			var expandAction = $(toggleLink).closest('table').data('expandaction');
 			
 			var parentID = $(toggleLink).data('parentid');
-			var parentIDProperty  = $(toggleLink).data('parentidproperty');
-			var idProperty = $(toggleLink).data('idproperty');
-			var parentDepth = $(toggleLink).data('depth');
-			var parentIcon = $(toggleLink).children('.icon-plus');
+			var depth = $(toggleLink).data('depth');
+			var icon = $(toggleLink).children('.icon-plus');
+			
+			var data = {};
+			data[ 'slatAction' ] = expandAction;
+			data[ 'F:' + parentIDProperty ] = parentID;
+			data[ 'propertyIdentifiers' ] = propertyIdentifiers;
+			
 			
 			$.ajax({
 				url: '/plugins/Slatwall/',
@@ -99,19 +104,21 @@ function toggleTable( toggleLink ) {
 						$(newRow).attr('ID', rv[ idProperty ])
 						
 						$.each(rv, function(p, pv) {
-							if($(newRow).children('.' + p).children('.table-expand').length) {
+							
+							if($(newRow).children('.' + p).children('.table-action-expand').length) {
 								
-								var newIcon = $(newRow).children('.' + p).children('.table-expand').clone( true );
+								var newIcon = $(newRow).children('.' + p).children('.table-action-expand').clone( true );
 								
-								$(newIcon).data('depth', parentDepth + 1);
+								$(newIcon).data('depth', depth + 1);
 								$(newIcon).data('parentid', rv[ idProperty ]);
 								
-								$(newIcon).removeClass('depth' + parentDepth);
-								$(newIcon).addClass('depth' + (parentDepth + 1));
+								$(newIcon).removeClass('depth' + depth);
+								$(newIcon).addClass('depth' + (depth + 1));
 								
 								$(newRow).children('.' + p).html( newIcon );
 								$(newRow).children('.' + p).append( ' ' + pv );
 							} else {
+								
 								$(newRow).children('.' + p).html(pv);	
 							}
 						});
@@ -124,8 +131,9 @@ function toggleTable( toggleLink ) {
 					});
 					
 					$(toggleLink).addClass('open');
-					$(parentIcon).removeClass('icon-plus');
-					$(parentIcon).addClass('icon-minus');
+					
+					$(icon).removeClass('icon-plus');
+					$(icon).addClass('icon-minus');
 					
 					ajaxlock = 0;
 				},

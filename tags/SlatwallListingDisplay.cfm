@@ -37,10 +37,10 @@ Notes:
 
 --->
 <cfif thisTag.executionMode eq "end">
+	<!--- Required --->
 	<cfparam name="attributes.smartList" type="any" />
-	<cfparam name="attributes.tableattributes" type="string" default="" />  <!--- Pass in additional html attributes for the table --->
-	<cfparam name="attributes.tableclass" type="string" default="" />  <!--- Pass in additional classes for the table --->
 	
+	<!--- Admin Actions --->
 	<cfparam name="attributes.recordEditAction" type="string" default="" />
 	<cfparam name="attributes.recordEditQueryString" type="string" default="" />
 	<cfparam name="attributes.recordEditModal" type="boolean" default="false" />
@@ -57,20 +57,25 @@ Notes:
 	<!--- Sorting --->
 	<cfparam name="attributes.sortProperty" type="string" default="" />  <!--- Setting this value will turn on Sorting --->
 	
-	<!--- Single Select & Multiselect --->
+	<!--- Single Select --->
 	<cfparam name="attributes.selectFieldName" type="string" default="" />			<!--- Setting this value will turn on single Select --->
+	<cfparam name="attributes.selectValue" type="string" default="" />
+	
+	<!--- Multiselect --->
 	<cfparam name="attributes.multiselectFieldName" type="string" default="" />		<!--- Setting this value will turn on Multiselect --->
-	<cfparam name="attributes.selectedValues" type="string" default="" />			
+	<cfparam name="attributes.multiselectValues" type="string" default="" />
+	
+	<!--- Helper / Additional / Custom --->
+	<cfparam name="attributes.tableattributes" type="string" default="" />  <!--- Pass in additional html attributes for the table --->
+	<cfparam name="attributes.tableclass" type="string" default="" />  <!--- Pass in additional classes for the table --->	
 	
 	<!--- ThisTag Variables used just inside --->
 	<cfparam name="thistag.columns" type="array" default="#arrayNew(1)#" />
 	<cfparam name="thistag.allpropertyidentifiers" type="string" default="" />
-	
 	<cfparam name="thistag.selectable" type="string" default="false" />
 	<cfparam name="thistag.multiselectable" type="string" default="false" />
 	<cfparam name="thistag.expandable" type="string" default="false" />
 	<cfparam name="thistag.sortable" type="string" default="false" />
-	
 	<cfparam name="thistag.exampleEntity" type="string" default="" />
 
 	<cfsilent>
@@ -89,15 +94,15 @@ Notes:
 		<cfif len(attributes.selectFieldName)>
 			<cfset thistag.selectable = true />
 			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'select', ' ') />
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-select', ' ') />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-selectfield="#attributes.selectFieldName#"', " ") />
 		</cfif>
 		
 		<!--- Setup Multiselect --->
-		<cfif len(attributes.selectFieldName)>
+		<cfif len(attributes.multiselectFieldName)>
 			<cfset thistag.multiselectable = true />
 			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'multiselect', ' ') />
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-multiselect', ' ') />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
 		
@@ -105,7 +110,7 @@ Notes:
 		<cfif len(attributes.parentPropertyName)>
 			<cfset thistag.expandable = true />
 			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'expandable', ' ') />
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-expandaction="#attributes.expandAction#"', " ") />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-propertyIdentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#"', " ") />
@@ -117,7 +122,7 @@ Notes:
 		<cfif len(attributes.sortProperty)>
 			<cfset thistag.sortable = true />
 			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'sortable', ' ') />
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
 			
 		</cfif>
 		
@@ -135,9 +140,27 @@ Notes:
 	</cfsilent>
 	<cfoutput>
 		<cfif arrayLen(attributes.smartList.getPageRecords())>
+			<cfif thistag.selectable>
+				<input type="hidden" name="#attributes.selectFieldName#" value="#attributes.selectValue#" />
+			</cfif>
+			<cfif thistag.multiselectable>
+				<input type="hidden" name="#attributes.multiselectFieldName#" value="#attributes.multiselectValues#" />
+			</cfif>
 			<table class="#attributes.tableclass#" #attributes.tableattributes#>
 				<thead>
 					<tr>
+						<!--- Selectable --->
+						<cfif thistag.selectable>
+							<td>&nbsp;</td>
+						</cfif>
+						<!--- Multiselectable --->
+						<cfif thistag.multiselectable>
+							<td>&nbsp;</td>
+						</cfif>
+						<!--- Sortable --->
+						<cfif thistag.sortable>
+							<td>&nbsp;</td>
+						</cfif>
 						<cfloop array="#thistag.columns#" index="column">
 							<th>
 								<div class="dropdown">
@@ -168,11 +191,13 @@ Notes:
 						<tr id="#record.getPrimaryIDValue()#">
 							<!--- Selectable --->
 							<cfif thistag.selectable>
-								<td><input type="radio" name="#attributes.selectFieldName#" <cfif record.getPrimaryIDValue() eq attributes.selectedValue>checked="checked"</cfif> /></td>
+								<td><a href="##" class="table-action-select"><cfif record.getPrimaryIDValue() eq attributes.selectValue><i class="slatwall-ui-raido-checked"></i><cfelse><i class="slatwall-ui-raido"></i></cfif></a></td>
 							</cfif>
+							<!--- Multiselectable --->
 							<cfif thistag.multiselectable>
-								<td><a href="##" class="table-action-multiselect"><i class="icon-check"></i></a></td>
+								<td><a href="##" class="table-action-multiselect"><cfif listFindNoCase(attributes.multiselectValues, record.getPrimaryIDValue())><i class="slatwall-ui-checkbox-checked"></i><cfelse><i class="slatwall-ui-checkbox"></i></cfif></a></td>
 							</cfif>
+							<!--- Sortable --->
 							<cfif thistag.sortable>
 								<td><a href="##" class="table-action-sort"><i class="icon-move"></i></a></td>
 							</cfif>
@@ -180,6 +205,7 @@ Notes:
 							<cfset firstColumnIcon = "" />
 							<cfloop array="#thistag.columns#" index="column">
 								<cfsilent>
+									<!--- Expandable --->
 									<cfif firstColumn>
 										<cfif thistag.expandable>
 											<cfset firstColumnIcon='<a href="##" class="table-action-expand depth0" data-depth="0"  data-parentid="#record.getPrimaryIDValue()#"><i class="icon-plus"></i></a> ' />
