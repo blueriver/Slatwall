@@ -42,7 +42,6 @@ Notes:
 
 	<cf_SlatwallListingDisplay smartList="#rc.attributeSet.getAttributesSmartList()#" 
 							   recordEditAction="admin:setting.editattribute" 
-							   recordEditModal="true" 
 							   recordEditQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
 							   recordDeleteAction="admin:setting.deleteattribute"
 							   recordDeleteQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#&returnAction=admin:setting.detailAttributeSet">
