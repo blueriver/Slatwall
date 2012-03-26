@@ -46,6 +46,9 @@ Notes:
 		<cfparam name="attributes.createAction" type="string" default="#request.context.createAction#" />
 		<cfparam name="attributes.createModal" type="boolean" default="false" />
 		
+		<cfparam name="attributes.backAction" type="string" default="#request.context.listAction#" />
+		<cfparam name="attributes.backQueryString" type="string" default="" />
+		
 		<cfsilent>
 			<cfif attributes.type eq "detail" and not attributes.object.isNew()>
 				<cfset attributes.pageTitle &= " - #attributes.object.getSimpleRepresentation()#" />
@@ -101,7 +104,7 @@ Notes:
 							<!--- Detail --->
 							<cfelseif attributes.type eq "detail">
 								<div class="btn-group">
-									<cf_SlatwallActionCaller action="#request.context.listAction#" text="#request.context.$.Slatwall.rbKey('define.backtolist')#" class="btn" icon="arrow-left">
+									<cf_SlatwallActionCaller action="#attributes.backAction#" class="btn" icon="arrow-left">
 								</div>
 								<cfif !attributes.object.isNew() && len(thistag.generatedcontent)>
 									<div class="btn-group">
