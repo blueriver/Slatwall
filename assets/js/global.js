@@ -46,13 +46,6 @@ function bindFormValidation() {
 	});
 }
 
-function bindTableClasses() {
-	$('.table-action-expand').click(function(e){
-		e.preventDefault();
-		toggleTable( this );
-	});
-}
-
 function bindAlerts() {
 	$('.alert-confirm').click(function(e){
 		e.preventDefault();
@@ -67,7 +60,103 @@ function bindAlerts() {
 	});
 }
 
-function toggleTable( toggleLink ) {
+function bindTableClasses() {
+	$('.table-action-expand').click(function(e){
+		e.preventDefault();
+		tableExpandClick( this );
+	});
+	$('.table-action-multiselect').click(function(e){
+		e.preventDefault();
+		tableMultiselectClick( this );
+	});
+	$('.table-action-sort').click(function(e){
+		e.preventDefault();
+	});
+	$('.table-sortable .sortable').sortable({
+		update: function(event, ui) {
+			tableApplySort(event, ui);
+		}
+	});
+}
+
+function tableApplySort(event, ui) {
+	
+	var recordID = $(ui.item).attr('ID');
+	var tableName = $(ui.item).closest('table').data('tablename');
+	var idProperty = $(ui.item).closest('table').data('idproperty');
+	var newSortOrder = 0;
+	
+	var allOriginalSortOrders = $(ui.item).parent().find('.table-action-sort').map( function(){ return $(this).data("sortpropertyvalue");}).get();
+	var minSortOrder = Math.min.apply( Math, allOriginalSortOrders );
+	
+	$.each($(ui.item).parent().children(), function(index, value) {
+		$(value).find('.table-action-sort').data('sortpropertyvalue', index + minSortOrder);
+		$(value).find('.table-action-sort').attr('data-sortpropertyvalue', index + minSortOrder);
+		if($(value).attr('ID') == recordID) {
+			newSortOrder = index + minSortOrder;
+		}
+	});
+	
+	var data = {
+		slatAction : 'admin:main.updateSortOrder',
+		recordIDColumn : idProperty,
+		recordID : recordID,
+		tableName : tableName,
+		newSortOrder : newSortOrder
+	};
+		
+	$.ajax({
+		url: '/plugins/Slatwall/',
+		async: false,
+		data: data,
+		dataType: 'json',
+		contentType: 'application/json',
+		success: function(r) {
+			console.log('success');
+		},
+		error: function(r) {
+			alert('Error Loading');
+		}
+	});
+}
+
+function tableMultiselectClick( toggleLink ) {
+	
+	var field = $( 'input[name=' + $(toggleLink).closest('table').data('multiselectfield') + ']' );
+	var currentValues = $(field).val().split(',');
+	
+	var blankIndex = currentValues.indexOf('');
+	if(blankIndex > -1) {
+		currentValues.splice(blankIndex, 1);	
+	}
+	
+	if( $(toggleLink).children('.slatwall-ui-checkbox-checked').length ) {
+		
+		var icon = $(toggleLink).children('.slatwall-ui-checkbox-checked');
+		
+		$(icon).removeClass('slatwall-ui-checkbox-checked');
+		$(icon).addClass('slatwall-ui-checkbox');
+		
+		var valueIndex = currentValues.indexOf( $(toggleLink).data('idvalue') );
+		
+		currentValues.splice(valueIndex, 1);
+		
+	} else {
+		
+		var icon = $(toggleLink).children('.slatwall-ui-checkbox');
+		
+		$(icon).removeClass('slatwall-ui-checkbox');
+		$(icon).addClass('slatwall-ui-checkbox-checked');
+		
+		currentValues.push( $(toggleLink).data('idvalue') );
+	}
+	
+	console.log(currentValues);
+	
+	$(field).val(currentValues.join(','));
+}
+
+function tableExpandClick( toggleLink ) {
 	if(ajaxlock == 0) {
 		ajaxlock = 1;
 		

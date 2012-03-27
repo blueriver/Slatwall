@@ -42,6 +42,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="productService" type="any";
 	property name="orderService" type="any";
 	property name="vendorService" type="any";
+	property name="dataService" type="any";
 	
 	public void function default(required struct rc) {
 		
@@ -76,5 +77,10 @@ component extends="BaseController" output=false accessors=true {
 			getFW().getPluginConfig().getPluginManager().announceEvent("onSiteError",rc.$.event());
 			getFW().getPluginConfig().getPluginManager().announceEvent("onGlobalMissingTemplate",rc.$.event());	
 		}
+	}
+	
+	public function updateSortOrder(required struct rc) {
+		getDataService().updateRecordSortOrder(argumentCollection=rc);
+		setView("admin:main.default");
 	}
 }

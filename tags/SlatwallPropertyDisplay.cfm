@@ -174,5 +174,6 @@ Notes:
 		</cfif>
 	</cfsilent>
 	
+	
 	<cf_SlatwallFieldDisplay attributecollection="#attributes#" />
 </cfif>

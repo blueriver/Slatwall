@@ -38,6 +38,35 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cffunction name="updateRecordSortOrder">
+		<cfargument name="recordIDColumn" />
+		<cfargument name="recordID" />
+		<cfargument name="tableName" />
+		<cfargument name="newSortOrder" />
+		
+		<cfset var rs = "" />
+		
+		<cflock timeout="60" name="updateSortOrder#arguments.tableName#">
+			<cftransaction>
+				<!--- Move everything after the record's old sortOrder down 1 --->
+				<cfquery name="rs">
+					UPDATE #tableName# SET sortOrder = sortOrder - 1 WHERE sortOrder > (SELECT sortOrder FROM #arguments.tableName# WHERE #recordIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.recordID#" /> )
+				</cfquery>
+				
+				<!--- Move everything including the existing record in the spot of the new sortOrder up 1 --->
+				<cfquery name="rs">
+					UPDATE #tableName# SET sortOrder = sortOrder + 1 WHERE sortOrder >= <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" />
+				</cfquery>
+				
+				<!--- Update the record with it's new sort order --->
+				<cfquery name="rs">
+					UPDATE #tableName# SET sortOrder = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" /> WHERE #recordIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.recordID#" />
+				</cfquery>
+			</cftransaction>
+		</cflock>
+		
+	</cffunction>
+	
 	<cffunction name="deleteAllOrders">
 		<cfquery datasource="#application.configBean.getDataSource()#">
 			UPDATE SlatwallSession SET orderID = null;

@@ -39,6 +39,7 @@ Notes:
 <cfif thisTag.executionMode eq "end">
 	<!--- Required --->
 	<cfparam name="attributes.smartList" type="any" />
+	<cfparam name="attributes.edit" type="boolean" default="false" />
 	
 	<!--- Admin Actions --->
 	<cfparam name="attributes.recordEditAction" type="string" default="" />
@@ -123,6 +124,8 @@ Notes:
 			<cfset thistag.sortable = true />
 			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-tablename="#attributes.smartList.getBaseEntityName()#"', " ") />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
 			
 		</cfif>
 		
@@ -186,20 +189,20 @@ Notes:
 						</cfif>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody <cfif thistag.sortable>class="sortable"</cfif>>
 					<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
 						<tr id="#record.getPrimaryIDValue()#">
 							<!--- Selectable --->
 							<cfif thistag.selectable>
-								<td><a href="##" class="table-action-select"><cfif record.getPrimaryIDValue() eq attributes.selectValue><i class="slatwall-ui-raido-checked"></i><cfelse><i class="slatwall-ui-raido"></i></cfif></a></td>
+								<td><a href="##" class="table-action-select" data-idvalue="#record.getPrimaryIDValue()#"><cfif record.getPrimaryIDValue() eq attributes.selectValue><i class="slatwall-ui-raido-checked"></i><cfelse><i class="slatwall-ui-raido"></i></cfif></a></td>
 							</cfif>
 							<!--- Multiselectable --->
 							<cfif thistag.multiselectable>
-								<td><a href="##" class="table-action-multiselect"><cfif listFindNoCase(attributes.multiselectValues, record.getPrimaryIDValue())><i class="slatwall-ui-checkbox-checked"></i><cfelse><i class="slatwall-ui-checkbox"></i></cfif></a></td>
+								<td><a href="##" class="table-action-multiselect" data-idvalue="#record.getPrimaryIDValue()#"><cfif listFindNoCase(attributes.multiselectValues, record.getPrimaryIDValue())><i class="slatwall-ui-checkbox-checked"></i><cfelse><i class="slatwall-ui-checkbox"></i></cfif></a></td>
 							</cfif>
 							<!--- Sortable --->
 							<cfif thistag.sortable>
-								<td><a href="##" class="table-action-sort"><i class="icon-move"></i></a></td>
+								<td><a href="##" class="table-action-sort" data-idvalue="#record.getPrimaryIDValue()#" data-sortPropertyValue="#record.getValueByPropertyIdentifier( attributes.sortProperty )#"><i class="icon-move"></i></a></td>
 							</cfif>
 							<cfset firstColumn = true>
 							<cfset firstColumnIcon = "" />

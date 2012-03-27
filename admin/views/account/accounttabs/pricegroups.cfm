@@ -36,6 +36,12 @@
 Notes:
 
 --->
-<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsOptionsSmartList()#" multiselectFieldName="priceGroups">
+<cfset selectedPriceGroups = rc.account.getPriceGroups() />
+<cfset selectedPriceGroupIDs = "" />
+<cfloop array="#selectedPriceGroups#" index="pg">
+	<cfset selectedPriceGroupIDs = listAppend(selectedPriceGroupIDs, pg.getPrimaryIDValue()) />
+</cfloop>
+
+<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsOptionsSmartList()#" multiselectFieldName="priceGroups" multiselectValues="#selectedPriceGroupIDs#" edit="#rc.edit#">
 	<cf_SlatwallListingColumn propertyIdentifier="priceGroupName" tdclass="primary" />
 </cf_SlatwallListingDisplay>

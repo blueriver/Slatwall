@@ -169,4 +169,8 @@ component displayname="Data Service" extends="BaseService" {
 	public any function fromBundle(required any bundle, required string tableList) {
 		getDAO().toBundle(argumentcollection=arguments);
 	}
+	
+	public any function updateRecordSortOrder(required string recordIDColumn, required string recordID, required string tableName, required numeric newSortOrder) {
+		getDAO().updateRecordSortOrder(argumentcollection=arguments);
+	}
 }
