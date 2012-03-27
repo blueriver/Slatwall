@@ -48,8 +48,8 @@ Notes:
 							   recordEditQueryString="attributeID=#rc.attribute.getAttributeID()#"
 							   recordEditModal="true"
 							   recordDeleteAction="admin:setting.deleteattributeoption"
-							   recordDeleteQueryString="attributeID=#rc.attribute.getAttributeID()#&returnAction=admin:setting.detailAttribute">
-		<cf_SlatwallListingColumn propertyIdentifier="sortOrder" />
+							   recordDeleteQueryString="attributeID=#rc.attribute.getAttributeID()#&returnAction=admin:setting.detailAttribute"
+							   sortProperty="sortOrder">
 		<cf_SlatwallListingColumn propertyIdentifier="attributeOptionValue" /> 
 		<cf_SlatwallListingColumn propertyIdentifier="attributeOptionLabel" /> 
 	</cf_SlatwallListingDisplay>

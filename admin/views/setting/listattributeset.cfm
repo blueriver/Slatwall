@@ -40,49 +40,8 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createAction="admin:setting.createaccountattributeset,admin:setting.createproductattributeset,admin:setting.createproductcustomizationattributeset" />
 
-<cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#" recordEditAction="admin:setting.editattributeset">
+<cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#" recordEditAction="admin:setting.editattributeset" sortProperty="sortOrder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeSetName" />
 	<cf_SlatwallListingColumn propertyIdentifier="attributeSetType.type" />
 	<cf_SlatwallListingColumn propertyIdentifier="globalFlag" />
 </cf_SlatwallListingDisplay>
-
-
-<!---<cfoutput>
-	<ul id="navTask">
-	    <cf_SlatwallActionCaller action="admin:attribute.createAttributeSet" type="list">
-	</ul>
-
-	<div class="svoadminattributelistattributesets">
-	<cfif arrayLen(rc.attributeSetSmartList.getPageRecords()) GT 0>
-		<table class="listing-grid stripe" id="AttributeSets">
-			<thead>
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.attributeSet.attributeSetName")#</th>
-				<th>#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetType')#</th>
-				<th>#rc.$.Slatwall.rbKey('entity.attributeSet.globalFlag')#</th>
-				<th>&nbsp;</th>
-			</tr>
-			</thead>
-			<tbody id="AttributeSetList">
-				<cfloop array="#rc.attributeSetSmartList.getPageRecords()#" index="local.thisAttributeSet">
-					<tr class="attributeSet" id="#local.thisAttributeSet.getAttributeSetID()#">
-						<td class="varWidth">#local.thisAttributeSet.getAttributeSetName()#</td>
-						<td>#local.thisAttributeSet.getAttributeSetType().getType()#</td>
-						<td>#yesNoformat(local.thisAttributeSet.getGlobalFlag())#</td>
-						<td class="administration">
-							<ul class="three">
-								<cf_SlatwallActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetID=#local.thisAttributeSet.getAttributeSetID()#" class="edit" type="list">
-								<cf_SlatwallActionCaller action="admin:attribute.detailAttributeSet" querystring="attributeSetID=#local.thisAttributeSet.getAttributeSetID()#" class="detail" type="list">
-								<cf_SlatwallActionCaller action="admin:attribute.deleteAttributeSet" querystring="attributeSetID=#local.thisAttributeSet.getAttributeSetID()#" class="delete" type="list" disabled="#local.thisAttributeSet.isNotDeletable()#" confirmrequired="true">
-							</ul>		
-						</td>
-					</tr>
-				</cfloop>
-		    </tbody>
-		</table>
-		<cf_SlatwallSmartListPager smartList="#rc.attributeSetSmartList#">
-	<cfelse>
-		<p><em>#rc.$.Slatwall.rbKey("admin.attribute.listattributesets.noAttributeSets")#</em></p>
-	</cfif>
-	</div>
-</cfoutput>--->
