@@ -81,16 +81,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="pages" cfc="Content" fieldtype="many-to-many" linktable="SlatwallProductPage" fkcolumn="productID" inversejoincolumn="contentID";
+	property name="listingPages" singularname="listingPage" cfc="Content" fieldtype="many-to-many" linktable="SlatwallProductListingPage" fkcolumn="productID" inversejoincolumn="contentID";
 	property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID";
-	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallProductEligibleFulfillmentMethod" fkcolumn="productID" inversejoincolumn="fulfillmentMethodID";
 	property name="relatedProducts" singularname="relatedProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallRelatedProduct" fkcolumn="productID" inversejoincolumn="relatedProductID";
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProduct" fkcolumn="productID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
-	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
 	
 	// Remote Properties
@@ -263,44 +260,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     	return averageRating;
     }
 	
-	// promotionQualifiers (many-to-many)
-	public void function addPromotionQualifier(required any promotionQualifier) {
-	   arguments.promotionQualifier.addProduct(this);
-	}
-	
-	public void function removePromotionQualifier(required any promotionQualifier) {
-	   arguments.promotionQualifier.removeProduct(this);
-	}
-	
-	// promotionRewardExclusions (many-to-many)
-	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
-	   arguments.promotionRewardExclusion.addProduct(this);
-	}
-	
-	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
-	   arguments.promotionRewardExclusion.removeProduct(this);
-	}
-	
-	// promotionQualifierExclusions (many-to-many)
-	public void function addPromotionQualifierExclusion(required any promotionQualifierExclusion) {
-	   arguments.promotionQualifierExclusion.addProduct(this);
-	}
-	
-	public void function removePromotionQualifierExclusion(required any promotionQualifierExclusion) {
-	   arguments.promotionQualifierExclusion.removeProduct(this);
-	}
-	
-	// product images (one-to-many)
-	public void function addProductImage(required any productImage) {
-	   arguments.productImage.setProduct(this);
-	}
-	
-	public void function removeProductImage(required any productImage) {
-	   arguments.productImage.removeProduct(this);
-	}
-	
-	
-
 	public struct function getOptionGroupsStruct() {
 		if( !structKeyExists(variables, "optionGroupsStruct") ) {
 			variables.optionGroupsStruct = {};
@@ -756,6 +715,29 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 		structDelete(variables, "brand");
 	}
+		
+	// Attribute Set Assignments (one-to-many)
+	public void function addAttributeSetAssignment(required any attributeSetAssignment) {
+		arguments.attributeSetAssignment.setProduct( this );
+	}
+	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
+		arguments.attributeSetAssignment.removeProduct( this );
+	}
+	// Attribute Values (one-to-many)
+	public void function addAttributeValue(required any attributeValue) {
+		arguments.attributeValue.setProduct( this );
+	}
+	public void function removeAttributeValue(required any attributeValue) {
+		arguments.attributeValue.removeProduct( this );
+	}
+	
+	// Product Images (one-to-many)
+	public void function addProductImage(required any productImage) {
+		arguments.productImage.setProduct( this );
+	}
+	public void function removeProductImage(required any productImage) {
+		arguments.productImage.removeProduct( this );
+	}
 	
 	// Skus (one-to-many)
 	public void function addSku(required any sku) {
@@ -765,14 +747,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		arguments.sku.removeProduct( this );
 	}
 	
-	// Attribute Values (one-to-many)
-	public void function addAttributeValue(required any attributeValue) {
-		arguments.attributeValue.setProduct( this );
-	}
-	public void function removeAttributeValue(required any attributeValue) {
-		arguments.attributeValue.removeProduct( this );
-	}
-	
 	// Product Reviews (one-to-many)
 	public void function addProductReview(required any productReview) {
 		arguments.productReview.setProduct( this );
@@ -780,16 +754,70 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public void function removeProductReview(required any productReview) {
 		arguments.productReview.removeProduct( this );
 	}
-
-	// Promotion Rewards (one-to-many)
-	public void function addPromotionReward(required any promotionReward) {
-		arguments.promotionReward.setProduct( this );
+	
+	// Listing Pages (many-to-many - owner)
+	public void function addListingPage(required any listingPage) {
+		if(isNew() or !hasListingPage(arguments.listingPage)) {
+			arrayAppend(variables.listingPages, arguments.listingPage);
+		}
+		if(arguments.listingPage.isNew() or !arguments.listingPage.hasProduct( this )) {
+			arrayAppend(arguments.listingPage.getProducts(), this);
+		}
 	}
-	public void function removePromotionReward(required any promotionReward) {
-		arguments.promotionReward.removeProduct( this );
+	public void function removeListingPage(required any listingPage) {
+		var thisIndex = arrayFind(variables.listingPages, arguments.listingPage);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.listingPages, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.listingPage.getProducts(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.listingPage.getProducts(), thatIndex);
+		}
 	}
 	
-
+	// Categories (many-to-many - owner)
+	public void function addCategory(required any category) {
+		if(isNew() or !hasCategory(arguments.category)) {
+			arrayAppend(variables.categories, arguments.category);
+		}
+		if(arguments.category.isNew() or !arguments.category.hasProduct( this )) {
+			arrayAppend(arguments.category.getProducts(), this);
+		}
+	}
+	public void function removeCategory(required any category) {
+		var thisIndex = arrayFind(variables.categories, arguments.category);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.categories, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.category.getProducts(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.category.getProducts(), thatIndex);
+		}
+	}
+	
+	// Promotion Rewards (many-to-many - inverse)    
+	public void function addPromotionReward(required any promotionReward) {    
+		arguments.promotionReward.addProduct( this );    
+	}    
+	public void function removePromotionReward(required any promotionReward) {    
+		arguments.promotionReward.removeProduct( this );    
+	}
+	
+	// Promotion Qualifiers (many-to-many - inverse)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.addProduct( this );
+	}
+	public void function removePromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.removeProduct( this );
+	}
+	
+	// Price Group Rates (many-to-many - inverse)
+	public void function addPriceGroupRate(required any priceGroupRate) {
+		arguments.priceGroupRate.addProduct( this );
+	}
+	public void function removePriceGroupRate(required any priceGroupRate) {
+		arguments.priceGroupRate.removeProduct( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
