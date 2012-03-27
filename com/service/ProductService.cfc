@@ -487,7 +487,7 @@ component extends="BaseService" accessors="true" {
 		
 		arguments.productType.populate(data=arguments.data);
 
-		// set attributeSetAssignemnts
+/*		// set attributeSetAssignemnts
 		// remove the ones not selected, loop in reverse to prevent shifting of array items
     	var attributeSetAssignmentCount = arrayLen(arguments.productType.getAttributeSetAssignments());
     	for(var i = attributeSetAssignmentCount; i > 0; i--){
@@ -510,7 +510,7 @@ component extends="BaseService" accessors="true" {
 	    			arguments.productType.addAttributeSetAssignment(attributeSetAssignment);
     			}
     		}
-    	}
+    	}*/
     	
 		arguments.productType.validate();
 
@@ -525,7 +525,9 @@ component extends="BaseService" accessors="true" {
 			
 			// Call entitySave on the productType 
 			getDAO().save(target=arguments.productType);
-		}
+		} else {
+            getService("requestCacheService").setValue("ormHasErrors", true);
+        }
 		
 		return arguments.productType;
 	}
