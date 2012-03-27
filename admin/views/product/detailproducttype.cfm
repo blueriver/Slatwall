@@ -43,12 +43,11 @@ Notes:
 	<cf_SlatwallDetailForm object="#rc.productType#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.productType#" edit="#rc.edit#">
 		</cf_SlatwallActionBar>
-		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="activeFlag" edit="#rc.edit#">
-				<cfif not(isNull(rc.productType.getParentProductType()))>
-					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType">
+				<cfif !isNull(rc.productType.getParentProductType())>
+					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" edit="#rc.edit#">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
