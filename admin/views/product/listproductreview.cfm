@@ -36,22 +36,18 @@
 Notes:
 
 --->
+<cfparam name="rc.productReviewSmartList" type="any" />
+
 <cfoutput>
-	<div class="span10">
-		#body#
-	</div>
-	<div class="span2">
-		<div class="well" style="padding:8px 0;">
-			<ul class="nav nav-list">
-				<li class="nav-header">#rc.$.slatwall.rbKey('admin.product')#</li>
-				<cf_SlatwallActionCaller action="admin:product.listproduct" type="list">
-				<cf_SlatwallActionCaller action="admin:product.listproducttype" type="list">
-				<cf_SlatwallActionCaller action="admin:product.listoptiongroup" type="list">
-				<cf_SlatwallActionCaller action="admin:product.listbrand" type="list">
-				<cf_SlatwallActionCaller action="admin:product.listsubscriptionterm" type="list">
-				<cf_SlatwallActionCaller action="admin:product.listsubscriptionbenefit" type="list">
-				<cf_SlatwallActionCaller action="admin:product.listproductreview" type="list">
-			</ul>
-		</div>
-	</div>
+	<cf_SlatwallActionBar type="listing" object="#rc.productReviewSmartList#" createAction="" />
+	
+	<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#" recordEditAction="admin:product.editproductreview">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="reviewTitle" />
+		<cf_SlatwallListingColumn propertyIdentifier="reviewerName" />
+		<cf_SlatwallListingColumn propertyIdentifier="rating" />
+		<cf_SlatwallListingColumn propertyIdentifier="product.productName" />
+		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
+		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
+	</cf_SlatwallListingDisplay>
+
 </cfoutput>

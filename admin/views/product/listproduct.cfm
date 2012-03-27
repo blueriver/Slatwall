@@ -41,7 +41,6 @@ Notes:
 <cfoutput>
 	<cf_SlatwallActionBar type="listing" object="#rc.productSmartList#" createAction="admin:product.createmerchandiseproduct,admin:product.createsubscriptionproduct,admin:product.createcontentaccessproduct" />
 	
-	<input type="hidden" name="returnAction" value="admin:product.detailproduct" />
 	<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" recordEditAction="admin:product.editproduct">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
 		<cf_SlatwallListingColumn propertyIdentifier="productCode" />

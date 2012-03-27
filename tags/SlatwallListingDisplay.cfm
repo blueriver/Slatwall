@@ -104,6 +104,8 @@ Notes:
 			<cfset thistag.multiselectable = true />
 			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-multiselect', ' ') />
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-condensed', ' ') />
+			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
 		
