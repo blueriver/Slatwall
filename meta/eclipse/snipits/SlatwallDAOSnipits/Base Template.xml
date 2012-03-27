@@ -2,7 +2,7 @@
 <snippet filetemplate="false" extension="">
 <name>Base Template</name>
 <help></help>
-<starttext><![CDATA[/*
+<starttext><![CDATA[<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -39,49 +39,9 @@
 
 Notes:
 
-*/
-component displayname="$${Display Name}" entityname="$${EntityName}" table="$${EntityName}" persistent="true" accessors="true" extends="BaseEntity" {
+--->
+<cfcomponent extends="BaseDAO">
 	
-	// Persistent Properties
-	property name="$${idPropertyName}" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-
-	// Related Object Properties (many-to-one)
-	
-	// Related Object Properties (one-to-many)
-	
-	// Related Object Properties (many-to-many - owner)
-
-	// Related Object Properties (many-to-many - inverse)
-	
-	// Remote Properties
-	property name="remoteID" ormtype="string";
-	
-	// Audit Properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Non-Persistent Properties
-
-
-
-	
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-
-	// ================== START: Overridden Methods ========================
-	
-	// ==================  END:  Overridden Methods ========================
-	
-	// =================== START: ORM Event Hooks  =========================
-	
-	// ===================  END:  ORM Event Hooks  =========================
-}]]></starttext>
+</cfcomponent>]]></starttext>
 <endtext><![CDATA[]]></endtext>
 </snippet>
