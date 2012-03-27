@@ -505,7 +505,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public void function addAccessContent(required any content) {
 		// set this side of relationship
 		if(!hasAccessContent(arguments.content)) {
-			arrayAppend(variables.accessContents,arguments.content);
+			arrayAppend(variables.accessContents, arguments.content);
 		}
 		// now set the other side of relationship
 		if(!arguments.content.hasSku(this)) {

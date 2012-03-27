@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <snippet filetemplate="false" extension="">
-<name>Bidirectional Many-To-One</name>
+<name>Bidirectional Helper Many-To-One</name>
 <help></help>
 <starttext><![CDATA[	// $${Comment Name} (many-to-one)
 	public void function set$${PropertyMethod}(required any $${propertyName}) {

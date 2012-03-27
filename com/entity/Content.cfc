@@ -115,7 +115,6 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 		}
 	}
 	
-
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================

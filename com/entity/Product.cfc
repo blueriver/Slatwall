@@ -65,9 +65,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="shippingWeightUnitCode" ormtype="string";
 	property name="trackInventoryFlag" ormtype="boolean";
 	
-	// Related Object Properties (One-To-One)
+	// Related Object Properties (one-to-one)
 	property name="productCache" fieldType="one-to-one" cfc="ProductCache" cascade="delete";
-		
+	
 	// Related Object Properties (many-to-one)
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
@@ -80,17 +80,19 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
-	// Related Object Properties (many-to-many)
+	// Related Object Properties (many-to-many - owner)
 	property name="pages" cfc="Content" fieldtype="many-to-many" linktable="SlatwallProductPage" fkcolumn="productID" inversejoincolumn="contentID";
 	property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID";
+	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallProductEligibleFulfillmentMethod" fkcolumn="productID" inversejoincolumn="fulfillmentMethodID";
+	property name="relatedProducts" singularname="relatedProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallRelatedProduct" fkcolumn="productID" inversejoincolumn="relatedProductID";
+	
+	// Related Object Properties (many-to-many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProduct" fkcolumn="productID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
-	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallProductEligibleFulfillmentMethod" fkcolumn="productID" inversejoincolumn="fulfillmentMethodID"; 
-	property name="relatedProducts" singularname="relatedProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallRelatedProduct" fkcolumn="productID" inversejoincolumn="relatedProductID";
-
+	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
@@ -261,90 +263,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     	return averageRating;
     }
 	
-	
-	// Product Type (many-to-one)
-	
-	public void function setProductType(required ProductType ProductType) {
-	   variables.productType = arguments.ProductType;
-	   if(isNew() or !arguments.ProductType.hasProduct(this)) {
-	       arrayAppend(arguments.ProductType.getProducts(),this);
-	   }
-	}
-	
-	public void function removeProductType(required ProductType ProductType) {
-       var index = arrayFind(arguments.ProductType.getProducts(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.ProductType.getProducts(),index);
-       }    
-       structDelete(variables,"productType");
-    }
-    
-    // Brand (many-to-one)
-	
-	public void function setBrand(required Brand Brand) {
-	   variables.Brand = arguments.Brand;
-	   if(isNew() or !arguments.Brand.hasProduct(this)) {
-	       arrayAppend(arguments.Brand.getProducts(),this);
-	   }
-	}
-	
-	public void function removeBrand(required Brand Brand) {
-       var index = arrayFind(arguments.Brand.getProducts(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.Brand.getProducts(),index);
-       }    
-       structDelete(variables,"Brand");
-    }
-	
-	
-	// Skus (one-to-many)
-	
-	public void function setSkus(required array skus) {
-		// first, clear existing collection
-		variables.skus = [];
-		for( var i=1; i<= arraylen(arguments.Skus); i++ ) {
-			var thisSku = arguments.skus[i];
-			if(isObject(thisSku) && thisSku.getClassName() == "SlatwallSku") {
-				addSku(thisSku);
-			}
-		}
-	}
-	
-	public void function addSku(required any sku) {
-	   arguments.sku.setProduct(this);
-	}
-	
-	public void function removeSku(required any sku) {
-	   arguments.sku.removeProduct(this);
-	}
-	
-	// attributeValues (one-to-many)
-	public void function addAttribtueValue(required any attributeValue) {
-	   arguments.attributeValue.setProduct(this);
-	}
-	
-	public void function removeAttributeValue(required any attributeValue) {
-	   arguments.attributeValue.removeProduct(this);
-	}
-	
-	// productReviews (one-to-many)
-	public void function addProductReview(required any productReview) {
-	   arguments.productReview.setProduct(this);
-	}
-	
-	public void function removeProductReview(required any productReview) {
-	   arguments.productReview.removeProduct(this);
-	}
-	
-	// promotionRewards (many-to-many)
-	public void function addPromotionReward(required any promotionReward) {
-	   arguments.promotionReward.addProduct(this);
-	}
-	
-	public void function removePromotionReward(required any promotionReward) {
-	   arguments.promotionReward.removeProduct(this);
-	}
-	
 	// promotionQualifiers (many-to-many)
 	public void function addPromotionQualifier(required any promotionQualifier) {
 	   arguments.promotionQualifier.addProduct(this);
@@ -381,7 +299,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.productImage.removeProduct(this);
 	}
 	
-	/************   END Association Management Methods   *******************/
+	
 
 	public struct function getOptionGroupsStruct() {
 		if( !structKeyExists(variables, "optionGroupsStruct") ) {
@@ -802,6 +720,76 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+
+	// Product Type (many-to-one)
+	public void function setProductType(required any productType) {
+		variables.productType = arguments.productType;
+		if(isNew() or !arguments.productType.hasProduct( this )) {
+			arrayAppend(arguments.productType.getProducts(), this);
+		}
+	}
+	public void function removeProductType(any productType) {
+		if(!structKeyExists(arguments, "productType")) {
+			arguments.productType = variables.productType;
+		}
+		var index = arrayFind(arguments.productType.getProducts(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.productType.getProducts(), index);
+		}
+		structDelete(variables, "productType");
+	}
+	
+	// Brand (many-to-one)
+	public void function setBrand(required any brand) {
+		variables.brand = arguments.brand;
+		if(isNew() or !arguments.brand.hasProduct( this )) {
+			arrayAppend(arguments.brand.getProducts(), this);
+		}
+	}
+	public void function removeBrand(any brand) {
+		if(!structKeyExists(arguments, "brand")) {
+			arguments.brand = variables.brand;
+		}
+		var index = arrayFind(arguments.brand.getProducts(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.brand.getProducts(), index);
+		}
+		structDelete(variables, "brand");
+	}
+	
+	// Skus (one-to-many)
+	public void function addSku(required any sku) {
+		arguments.sku.setProduct( this );
+	}
+	public void function removeSku(required any sku) {
+		arguments.sku.removeProduct( this );
+	}
+	
+	// Attribute Values (one-to-many)
+	public void function addAttributeValue(required any attributeValue) {
+		arguments.attributeValue.setProduct( this );
+	}
+	public void function removeAttributeValue(required any attributeValue) {
+		arguments.attributeValue.removeProduct( this );
+	}
+	
+	// Product Reviews (one-to-many)
+	public void function addProductReview(required any productReview) {
+		arguments.productReview.setProduct( this );
+	}
+	public void function removeProductReview(required any productReview) {
+		arguments.productReview.removeProduct( this );
+	}
+
+	// Promotion Rewards (one-to-many)
+	public void function addPromotionReward(required any promotionReward) {
+		arguments.promotionReward.setProduct( this );
+	}
+	public void function removePromotionReward(required any promotionReward) {
+		arguments.promotionReward.removeProduct( this );
+	}
+	
+
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
