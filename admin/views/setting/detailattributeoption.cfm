@@ -47,7 +47,6 @@ Notes:
 
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.attributeOption#" property="sortOrder" fieldName="attributeOptions[1].sortOrder" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.attributeOption#" property="attributeOptionValue" fieldName="attributeOptions[1].attributeOptionValue" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.attributeOption#" property="attributeOptionLabel" fieldName="attributeOptions[1].attributeOptionLabel" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
