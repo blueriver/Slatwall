@@ -80,7 +80,7 @@ Notes:
 				<cfset arrayAppend(valueOptions,{value=restrictedContentTemplate.getContentID(),name=restrictedContentTemplate.getTitle()}) />
 			</cfloop>
 			<cfset local.selectedRestrictedContentTemplateContentID = isNull(slatwallContent.getRestrictedContentTemplateContent())?"":slatwallContent.getRestrictedContentTemplateContent().getContentID() />
-			<cf_SlatwallFieldDisplay title="Restricted Page Template" fieldName="slatwallData.restrictedContentTemplateContent_contentID" fieldType="select" valueOptions="#valueOptions#" value="#selectedRestrictedContentTemplateContentID#" edit="true">
+			<cf_SlatwallFieldDisplay title="Restricted Page Template" fieldName="slatwallData.restrictedContentTemplateContent.contentID" fieldType="select" valueOptions="#valueOptions#" value="#selectedRestrictedContentTemplateContentID#" edit="true">
 			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true">
 			<div class="requirePurchaseFlag">
 				<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="requirePurchaseFlag" fieldName="slatwallData.requirePurchaseFlag" edit="true" fieldType="checkbox">
