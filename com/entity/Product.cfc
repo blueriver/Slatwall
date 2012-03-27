@@ -103,6 +103,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";
 	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
 	property name="brandName" type="string" persistent="false";
+	property name="brandOptions" type="array" persistent="false";
 	property name="productDisplayTemplateOptions" type="array" persistent="false";
 	property name="salePriceDetailsForSkus" type="struct" persistent="false";
 	property name="shippingWeightUnitCodeOptions" type="array" persistent="false";
@@ -152,29 +153,28 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   return Super.init();
 	}
 	
-    public any function getProductTypeOptions() {
+    public any function getProductTypeOptions( string baseProductType ) {
 		if(!structKeyExists(variables, "productTypeOptions")) {
-			var productTypeTree = getProductTypeTree();
-			var productTypeOptions = [];
-			
-			for(var i=1; i <= productTypeTree.recordCount; i++) {
-				// only get the leaf nodes of the tree (those with no children)
-				if( productTypeTree.childCount[i] == 0 ) {
-					arrayAppend(productTypeOptions, {value=productTypeTree.productTypeID[i], name=listChangeDelims(productTypeTree.productTypeNamePath[i], " &raquo; ")});
-				}
+			if(!structKeyExists(arguments, "baseProductType")) {
+				arguments.baseProductType = getProductType().getBaseProductType();
 			}
 			
-			variables.productTypeOptions = productTypeOptions;
-			arrayPrepend(variables.productTypeOptions, {value="", name=rbKey('define.select')});
+			var smartList = getPropertyOptionsSmartList( "productType" );
+			smartList.addLikeFilter( "productTypeIDPath", "#getService('productService').getProductTypeBySystemCode( arguments.baseProductType ).getProductTypeID()#%" );
+			smartList.addWhereCondition( "NOT EXISTS( SELECT pt FROM SlatwallProductType pt WHERE pt.parentProductType.productTypeID = aslatwallproducttype.productTypeID)");
+			
+			var records = smartList.getRecords();
+			
+			variables.productTypeOptions = [];
+			
+			for(var i=1; i<=arrayLen(records); i++) {
+				arrayAppend(variables.productTypeOptions, {name=records[i].getSimpleRepresentation(), value=records[i].getProductTypeID()});
+			}
 		}
 		return variables.productTypeOptions;
 	}
     
-    public any function getProductTypeTree() {
-        return getService("ProductService").getProductTypeTree();
-    }
-    
-    public array function getSkus(boolean sorted=false, boolean fetchOptions=false) {
+	public array function getSkus(boolean sorted=false, boolean fetchOptions=false) {
         if(!arguments.sorted && !arguments.fetchOptions) {
         	return variables.skus;
         }
@@ -605,6 +605,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			}
 		}
 		return variables.brandName;
+	}
+	
+	public array function getBrandOptions() {
+		var options = getPropertyOptions( "brand" );
+		options[1].name = rbKey('define.none');
+		return options;
 	}
 	
 	public string function getTitle() {

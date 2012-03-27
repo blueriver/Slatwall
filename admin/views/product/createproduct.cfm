@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.product" type="any" />
-<!--- <cfparam name="rc.optionGroups" type="any" /> --->
+<cfparam name="rc.baseProductType" type="string" />
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.product#" edit="true">
@@ -48,10 +48,41 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="true">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="true">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="true" createAction="admin:product.createbrand">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="true">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="true" valueOptions="#rc.product.getProductTypeOptions( rc.baseProductType )#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="true">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
+		<cfif rc.baseProductType eq "merchandise">
+			<div class="row-fluid">
+				<cfset optionsSmartList = $.slatwall.getService("optionService").getOptionSmartList() />
+				<cfset optionsSmartList.addOrder("optionGroup.sortOrder|ASC") />
+				<cf_SlatwallListingDisplay smartList="#optionsSmartList#" multiselectfieldname="options" edit="true">
+					<cf_SlatwallListingColumn propertyIdentifier="optionGroup.optionGroupName" filter=true />
+					<cf_SlatwallListingColumn propertyIdentifier="optionName" tdclass="primary" />
+				</cf_SlatwallListingDisplay>
+			</div>
+		<cfelseif rc.baseProductType eq "subscription">
+			<div class="row-fluid">
+				<div class="span6">
+					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectsubscriptionbenifits')#</h5>
+					<br />
+					<cf_SlatwallListingDisplay smartList="SubscriptionBenefit" multiselectFieldName="subscriptionBenefits" edit="true">
+						<cf_SlatwallListingColumn propertyIdentifier="subscriptionBenefitName" tdclass="primary" />
+					
+					</cf_SlatwallListingDisplay>
+				</div>
+				<div class="span6">
+					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectsubscriptionterms')#</h5>
+					<br />
+					<cf_SlatwallListingDisplay smartList="SubscriptionTerm" multiselectFieldName="subscriptionTerms" edit="true">
+						<cf_SlatwallListingColumn propertyIdentifier="subscriptionTermName" tdclass="primary" />
+						
+					</cf_SlatwallListingDisplay>
+				</div>
+			</div>
+		<cfelseif rc.baseProductType eq "contentAccess">
+			
+		</cfif>
 	</cf_SlatwallDetailForm>
 </cfoutput>

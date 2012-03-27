@@ -50,9 +50,8 @@ Notes:
 	<cfparam name="attributes.recordDeleteAction" type="string" default="" />
 	<cfparam name="attributes.recordDeleteQueryString" type="string" default="" />
 	
-	<!--- Expandable --->
+	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
-	<cfparam name="attributes.childPropertyName" type="string" default="" />
 	<cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />  
 	
 	<!--- Sorting --->
@@ -80,6 +79,10 @@ Notes:
 	<cfparam name="thistag.exampleEntity" type="string" default="" />
 
 	<cfsilent>
+		<cfif isSimpleValue(attributes.smartList)>
+			<cfset attributes.smartList = request.context.$.Slatwall.getService("utilityORMService").getServiceByEntityName( attributes.smartList ).invokeMethod("get#attributes.smartList#SmartList") />
+		</cfif>
+		
 		<!--- Setup the example entity --->
 		<cfset thistag.exampleEntity = createObject("component", "Slatwall.com.entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '')#") />
 		
@@ -109,7 +112,7 @@ Notes:
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
 		
-		<!--- Setup Expandable --->
+		<!--- Setup Hierarchy Expandable --->
 		<cfif len(attributes.parentPropertyName)>
 			<cfset thistag.expandable = true />
 			
@@ -170,9 +173,14 @@ Notes:
 							<td>&nbsp;</td>
 						</cfif>
 						<cfloop array="#thistag.columns#" index="column">
+							<cfsilent>
+								<cfif not len(column.title)>
+									<cfset column.title = attributes.smartList.getPageRecords()[1].getTitleByPropertyIdentifier(column.propertyIdentifier) />
+								</cfif>
+							</cfsilent>
 							<th>
 								<div class="dropdown">
-									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#attributes.smartList.getPageRecords()[1].getTitleByPropertyIdentifier(column.propertyIdentifier)# <span class="caret"></span> </a>
+									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
 									<ul class="dropdown-menu nav">
 										<li class="nav-header">Sort</li>
 										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|ASC')#"><i class="icon-arrow-down"></i> Sort Ascending</a></li>

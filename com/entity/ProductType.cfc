@@ -354,6 +354,17 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentation() {
+		if(!isNull(getParentProductType())) {
+			return getParentProductType().getSimpleRepresentation() & " &raquo; " & getProductTypeName();
+		}
+		return getProductTypeName();
+	}
+	
+	// ==================  END:  Overridden Methods ========================
+	
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
@@ -371,3 +382,4 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }
+

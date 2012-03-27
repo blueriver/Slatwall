@@ -28,9 +28,9 @@ jQuery(function($){
 		$('#adminModal').html('');
 		var modalLink = $(this).attr( 'href' );
 		if( modalLink.indexOf("?") != -1) {
-			modalLink = modalLink + '&modal=1';
+			modalLink = modalLink + '&modal=1&tabIndex=' + slatwall.tabIndex;
 		} else {
-			modalLink = modalLink + '?modal=1';
+			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
 		}
 		$('#adminModal').load( modalLink, function(){bindFormValidation();} );
 	});

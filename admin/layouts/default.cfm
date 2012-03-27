@@ -36,6 +36,8 @@
 Notes:
 
 --->
+<cfparam name="rc.tabIndex" default="1" />
+
 <cfoutput>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,8 +51,9 @@ Notes:
 		#$.slatwall.getCFStatic().renderIncludes("css")#
 		<script type="text/javascript">
 			var slatwall = {
-				dateFormat : '#$.slatwall.setting("advanced_dateFormat")#',
-				timeFormat : '#$.slatwall.setting("advanced_timeFormat")#'
+				dateFormat : '#$.slatwall.setting("advanced_dateFormat")#'
+				,timeFormat : '#$.slatwall.setting("advanced_timeFormat")#'
+				,tabIndex : #rc.tabIndex#
 			};
 		</script>
 	</head>

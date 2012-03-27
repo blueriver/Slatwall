@@ -195,8 +195,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!structKeyExists(variables, cacheKey)) {
 			variables[ cacheKey ] = [];
 			
-			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
-			var smartList = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
+			var smartList = getPropertyOptionsSmartList( arguments.propertyName );
 			
 			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( arguments.propertyName ).cfc#");
 			

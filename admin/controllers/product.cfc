@@ -48,7 +48,6 @@ component extends="BaseController" output=false accessors=true {
 	public void function createMerchandiseProduct(required struct rc) {
 		rc.product = getProductService().newProduct();
 		rc.baseProductType = "merchandise";
-		rc.productTypeOptions = rc.product.getProductTypeOptions( "merchandise" );
 		
 		rc.pageTitle = replace(rbKey('admin.define.create'), '${itemEntityName}', rbKey('entity.product')); 
 		rc.listAction = "admin:product.listproduct"; 
@@ -62,7 +61,6 @@ component extends="BaseController" output=false accessors=true {
 	public void function createSubscriptionProduct(required struct rc) {
 		rc.product = getProductService().newProduct();
 		rc.baseProductType = "subscription";
-		rc.productTypeOptions = rc.product.getProductTypeOptions( "subscription" );
 		
 		rc.pageTitle = replace(rbKey('admin.define.create'), '${itemEntityName}', rbKey('entity.product')); 
 		rc.listAction = "admin:product.listproduct"; 
@@ -76,7 +74,6 @@ component extends="BaseController" output=false accessors=true {
 	public void function createContentAccessProduct(required struct rc) {
 		rc.product = getProductService().newProduct();
 		rc.baseProductType = "contentAccess";
-		rc.productTypeOptions = rc.product.getProductTypeOptions( "contentAccess" );
 				
 		rc.pageTitle = replace(rbKey('admin.define.create'), '${itemEntityName}', rbKey('entity.product')); 
 		rc.listAction = "admin:product.listproduct"; 
@@ -89,38 +86,38 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function createMerchandiseProductType(required struct rc) {
 		rc.producttype = getProductService().newProductType();
-		rc.productType.setParentProductType( getProductService().getProductTypeBySystemCode("merchandise") );
-		getFW().setView("admin:product.detailproducttype");
-		rc.edit = true;
-		rc.parentProductType = "merchandise";
+		rc.baseProductType = "merchandise";
+		
 		rc.listAction = "admin:product.listproducttype"; 
 		rc.saveAction = "admin:product.saveproducttype";
 		rc.cancelAction = "admin:product.listproducttype";
+		
+		rc.edit = true;
+		getFW().setView("admin:product.detailproducttype");
 	}
 	
 	public void function createSubscriptionProductType(required struct rc) {
 		rc.producttype = getProductService().newProductType();
-		rc.productType.setParentProductType( getProductService().getProductTypeBySystemCode("subscription") );
-		getFW().setView("admin:product.detailproducttype");
-		rc.edit = true;
-		rc.parentProductType = "subscription";
+		rc.baseProductType = "subscription";
+		
 		rc.listAction = "admin:product.listproducttype"; 
 		rc.saveAction = "admin:product.saveproducttype";
 		rc.cancelAction = "admin:product.listproducttype";
+		
+		rc.edit = true;
+		getFW().setView("admin:product.detailproducttype");
 	}
 	
 	public void function createContentAccessProductType(required struct rc) {
 		rc.producttype = getProductService().newProductType();
-		rc.productType.setParentProductType( getProductService().getProductTypeBySystemCode("contentAccess") );
-		getFW().setView("admin:product.detailproducttype");
-		rc.edit = true;
-		rc.parentProductType = "contentAccess";
+		rc.baseProductType = "contentAccess";
+		
 		rc.listAction = "admin:product.listproducttype"; 
 		rc.saveAction = "admin:product.saveproducttype";
 		rc.cancelAction = "admin:product.listproducttype";
+		
+		rc.edit = true;
+		getFW().setView("admin:product.detailproducttype");
 	}
 
 }
-
-
-

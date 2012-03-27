@@ -43,10 +43,7 @@ Notes:
 </cfloop>
 
 
-<div class="well well-small well-tight">
-	<h4>Select The Price Groups For This Account</h4>	
 <cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsOptionsSmartList()#" multiselectFieldName="priceGroups" multiselectValues="#selectedPriceGroupIDs#" edit="#rc.edit#">
 	<cf_SlatwallListingColumn propertyIdentifier="priceGroupName" tdclass="primary" />
 	
 </cf_SlatwallListingDisplay>
-</div>

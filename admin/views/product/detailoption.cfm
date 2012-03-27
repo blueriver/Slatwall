@@ -36,14 +36,24 @@
 Notes:
 
 --->
-<cfparam name="rc.optionGroup" type="any" />
+<cfparam name="rc.option" type="any" />
+<cfparam name="rc.optiongroup" type="any" default="#rc.option.getOptionGroup()#" />
+<cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-
-	<cf_SlatwallListingDisplay smartList="#rc.optionGroup.getOptionsSmartList()#" recordEditAction="admin:product.editoption" recordEditModal=true recordDeleteAction="admin:product.deleteoption">
-		<cf_SlatwallListingColumn propertyIdentifier="optionName" tdclass="primary" />
-		<cf_SlatwallListingColumn propertyIdentifier="optionCode" />
-	</cf_SlatwallListingDisplay>
-	
-	<cf_SlatwallActionCaller action="admin:product.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" class="btn btn-primary" modal=true />
+	<cf_SlatwallDetailForm object="#rc.optiongroup#" edit="#rc.edit#" saveAction="admin:product.saveoptiongroup">
+		<cf_SlatwallActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#" />
+		
+		<input type="hidden" name="options[1].optionID" value="#rc.option.getOptionID()#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.option#" fieldName="options[1].optionName" property="optionName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.option#" fieldName="options[1].optionCode" property="optionCode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.option#" fieldName="options[1].optionImage" property="optionImage" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.option#" fieldName="options[1].optionDescription" property="optionDescription" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+	</cf_SlatwallDetailForm>
 </cfoutput>
