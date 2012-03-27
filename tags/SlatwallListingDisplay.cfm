@@ -121,12 +121,15 @@ Notes:
 		
 		<!--- Setup Sortability --->
 		<cfif len(attributes.sortProperty)>
-			<cfset thistag.sortable = true />
-			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-tablename="#attributes.smartList.getBaseEntityName()#"', " ") />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
-			
+			<cfif not arrayLen(attributes.smartList.getOrders())>
+				<cfset thistag.sortable = true />
+				
+				<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
+				<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-tablename="#attributes.smartList.getBaseEntityName()#"', " ") />
+				<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
+				
+				<cfset attributes.smartList.addOrder("#attributes.sortProperty#|ASC") />
+			</cfif>
 		</cfif>
 		
 		<!--- Setup the count for the number of admin icons --->
