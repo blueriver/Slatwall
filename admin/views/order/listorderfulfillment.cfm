@@ -47,7 +47,6 @@ Notes:
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
 	<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" />
 	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
-	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" filter=true />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>
