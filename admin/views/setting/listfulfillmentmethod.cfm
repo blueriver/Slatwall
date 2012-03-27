@@ -40,7 +40,7 @@ Notes:
 
 <cf_SlatwallActionBar type="listing" object="#rc.fulfillmentMethodSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethodSmartList#" recordEditAction="admin:setting.editfulfillmentmethod">
+<cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethodSmartList#" recordEditAction="admin:setting.editfulfillmentmethod" sortProperty="sortOrder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
 </cf_SlatwallListingDisplay>

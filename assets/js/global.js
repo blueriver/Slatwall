@@ -112,7 +112,7 @@ function tableApplySort(event, ui) {
 		dataType: 'json',
 		contentType: 'application/json',
 		success: function(r) {
-			console.log('success');
+			
 		},
 		error: function(r) {
 			alert('Error Loading');

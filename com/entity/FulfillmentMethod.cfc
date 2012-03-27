@@ -43,6 +43,7 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	property name="fulfillmentMethodName" ormtype="string";
 	property name="fulfillmentMethodType" ormtype="string";
 	property name="activeFlag" ormtype="boolean" default="false";
+	property name="sortOrder" ormtype="integer";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
