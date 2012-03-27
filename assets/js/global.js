@@ -151,8 +151,6 @@ function tableMultiselectClick( toggleLink ) {
 		currentValues.push( $(toggleLink).data('idvalue') );
 	}
 	
-	console.log(currentValues);
-	
 	$(field).val(currentValues.join(','));
 }
 
