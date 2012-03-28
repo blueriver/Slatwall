@@ -53,17 +53,125 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return smartList;
 	}
 	
-	/**
-	/* @hint sets up initial skus when products are created
-	*/
 	public boolean function createSkus(required any product, required struct data ) {
-		// check to see if any options were selected
+		
+		// Create Merchandise Propduct Skus Based On Options
+		if(arguments.product.getProductType().getBaseProductType() == "merchandise") {
+			
+			// If options were passed in create multiple skus
+			if(structKeyExists(arguments.data, "options") && len(arguments.data.options)) {
+				
+				var optionGroups = {};
+				var totalCombos = 1;
+				var indexedKeys = [];
+				var currentIndexesByKey = {};
+				var keyToChange = "";
+				
+				// Loop over all the options to put them into a struct by groupID
+				for(var i=1; i<=listLen(arguments.data.options); i++) {
+					var option = getOptionService().getOption( listGetAt(arguments.data.options, i) );
+					if(!structKeyExists(optionGroups, option.getOptionGroup().getOptionGroupID())) {
+						optionGroups[ option.getOptionGroup().getOptionGroupID() ] = [];
+					}
+					arrayAppend(optionGroups[ option.getOptionGroup().getOptionGroupID() ], option);
+				}
+				
+				// Loop over the groups to see how many we will be creating and to setup the option indexes to use
+				for(var key in optionGroups) {
+					arrayAppend(indexedKeys, key);
+					currentIndexesByKey[ key ] = 1;
+					totalCombos = totalCombos * arrayLen(optionGroups[key]);
+				}
+								
+				// Create a sku with 1 option from each group, and then update the indexes properly for the next loop
+				for(var i = 1; i<=totalCombos; i++) {
+					var newSku = this.newSku();
+					newSku.setPrice(arguments.data.price);
+					newSku.setSkuCode(arguments.product.getProductCode() & "-#i#");
+					arguments.product.addSku(newSku);
+					if(i==1) {
+						arguments.product.setDefaultSku(newSku);
+					}
+					for(var key in optionGroups) {
+						newSku.addOption( optionGroups[key][ currentIndexesByKey[key] ]);	
+					}
+					if(i < totalCombos) {
+						var indexesUpdated = false;
+						var changeKeyIndex = 1;
+						while(indexesUpdated == false) {
+							if(currentIndexesByKey[ indexedKeys[ changeKeyIndex ] ] < arrayLen(optionGroups[ indexedKeys[ changeKeyIndex ] ])) {
+								currentIndexesByKey[ indexedKeys[ changeKeyIndex ] ]++;
+								indexesUpdated = true;
+							} else {
+								currentIndexesByKey[ indexedKeys[ changeKeyIndex ] ] = 1;
+								changeKeyIndex++;
+							}
+						}
+					}
+				}
+				
+			// If no options were passed in we will just create a single sku
+			} else {
+				
+				var thisSku = this.newSku();
+				thisSku.setProduct(arguments.product);
+				thisSku.setPrice(arguments.data.price);
+				thisSku.setSkuCode(arguments.product.getProductCode() & "-1");
+				arguments.product.setDefaultSku( thisSku );
+				
+			}
+			
+		// Create Subscription Product Skus Based On SubscriptionTerm and SubscriptionBenifit
+		} else if (arguments.product.getProductType().getBaseProductType() == "subscription") {
+						
+			// Make sure there was at least one subscription benifit
+			if(!structKeyExists(arguments.data, "subscriptionBenefits") || !listLen(arguments.data.subscriptionBenefits)) {
+				arguments.product.addError("subscriptionBenefits", rbKey('entity.product.subscriptionbenifitsrequired'));
+			}
+			
+			// Make sure there was at least one subscription term passed in
+			if(!structKeyExists(arguments.data, "subscriptionTerms") || !listLen(arguments.data.subscriptionTerms)) {
+				arguments.product.addError("subscriptionTerms", rbKey('entity.product.subscriptiontermsrequired'));
+			}
+			
+			
+			// If the product still doesn't have any errors then we can create the skus
+			if(!arguments.product.hasErrors()) {
+				for(var i=1; i <= listLen(arguments.data.subscriptionTerms); i++){
+					var thisSku = this.newSku();
+					thisSku.setProduct(arguments.product);
+					thisSku.setPrice(arguments.data.price);
+					thisSku.setRenewalPrice(arguments.data.price);
+					thisSku.setSubscriptionTerm( getSubscriptionService().getSubscriptionTerm(listGetAt(arguments.data.subscriptionTerms, i)) );
+					thisSku.setSkuCode(arguments.product.getProductCode() & "-#i#");
+					for(var b=1; b <= listLen(arguments.data.subscriptionBenefits); b++) {
+						thisSku.addSubscriptionBenefit( getSubscriptionService().getSubscriptionBenefit( listGetAt(arguments.data.subscriptionBenefits, b) ) );
+					}
+					if(i==1) {
+						arguments.product.setDefaultSku( thisSku );	
+					}
+				}
+			}
+			
+		// Create Content Access Product Skus Based On Pages
+		} else if (arguments.product.getProductType().getBaseProductType() == "contentAccess") {
+			
+		} else {
+			throw("There was an unexpected error when creating this product");
+		}
+		
+		return true;
+		/*
+		// Create Merchandise Propduct Skus Based On Options
 		if(structKeyExists(arguments.data, "options") && !structIsEmpty(arguments.data.options)) {
 			var options = arguments.data.options;
 			var comboList = getOptionCombinations(options);
+			
 			createSkusFromOptions(comboList,arguments.product,arguments.data.price);
+			
+		// Create Subscription Product Skus Based On SubscriptionTerm and SubscriptionBenifit
 		} else if(structKeyExists(arguments.data, "subscriptionTerm") && arrayLen(arguments.data.subscriptionTerm)) {  
-			// create subscription skus
+			
 			for(var i=1; i <= arrayLen(arguments.data.subscriptionTerm); i++){
 				var thisSku = this.newSku();
 				thisSku.setProduct(arguments.product);
@@ -82,7 +190,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
 			arguments.product.setDefaultSku(thisSku);
 		}
-		return true;
+		*/
+		
 	}
 
 	/**

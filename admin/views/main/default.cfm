@@ -197,6 +197,4 @@ Notes:
 		</div>
 	</div>
 </div>
-
-<input name="test" type="text" value="hello" data-mytest="1" />
 </cfoutput>

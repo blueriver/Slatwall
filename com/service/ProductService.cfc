@@ -99,6 +99,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL="") {
+		throw("Tell Greg to fix the reference to this!");
 		var smartList = getDAO().getSmartList(entityName="SlatwallProduct", data=arguments.data, currentURL=arguments.currentURL);
 		
 		if( structKeyExists(arguments.data, "showSubPageProducts") && arguments.data.showSubPageProducts) {
@@ -171,30 +172,27 @@ component extends="BaseService" accessors="true" {
 		// populate bean from values in the data Struct
 		arguments.product.populate(arguments.data);
 		
-		// set up sku(s) if this is a new product
-		if(arguments.product.isNew()) {
-			getSkuService().createSkus(arguments.Product,arguments.data);
+		// If this is a new product and it doesn't have any errors... there are a few additional steps we need to take
+		if(arguments.product.isNew() && !arguments.product.hasErrors()) {
+			
+			// Create Skus
+			getSkuService().createSkus(arguments.product, arguments.data);
+			
+			// if urlTitle wasn't set in bean, default it to the product's name.
+			if(arguments.Product.getUrlTitle() == "") {
+				arguments.Product.setUrlTitle(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
+			}
+			
+			// make sure that the UrlTitle doesn't already exist, if it does then just rename with a number until it doesn't
+			var lastAppended = 1;
+			var uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
+			while(!uniqueUrlTitle) {
+				arguments.Product.setUrlTitle(arguments.Product.getUrlTitle() & lastAppended);	
+				uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
+				lastAppended += 1;
+			}
 		}
 		
-		// check for images to upload
-		if(structKeyExists(arguments.data,"images")) {
-			saveAlternateImages(arguments.Product,arguments.data.images);
-		}
-		
-		// if urlTitle wasn't set in bean, default it to the product's name.
-		if(arguments.Product.getUrlTitle() == "") {
-			arguments.Product.setUrlTitle(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
-		}
-		
-		// make sure that the UrlTitle doesn't already exist, if it does then just rename with a number until it doesn't
-		var lastAppended = 1;
-		var uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
-		while(!uniqueUrlTitle) {
-			arguments.Product.setUrlTitle(arguments.Product.getUrlTitle() & lastAppended);	
-			uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
-			lastAppended += 1;
-		}
-				
 		// validate the product
 		arguments.product.validate();
 		
