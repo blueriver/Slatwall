@@ -223,29 +223,25 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     
     // ============ START: Non-Persistent Property Methods =================
 	
-	public any function getParentProductTypeOptions() {
+	public any function getParentProductTypeOptions( string baseProductType ) {
 		if(!structKeyExists(variables, "parentProductTypeOptions")) {
-			variables.parentProductTypeOptions=[];
+			if(!structKeyExists(arguments, "baseProductType")) {
+				arguments.baseProductType = getBaseProductType();
+			}
 			
-			// Add a null value to the options for none.
-			//arrayAppend(variables.parentProductTypeOptions, {value="", name=rbKey('define.none')});
+			var smartList = getPropertyOptionsSmartList( "parentProductType" );
+			smartList.addLikeFilter( "productTypeIDPath", "#getService('productService').getProductTypeBySystemCode( arguments.baseProductType ).getProductTypeID()#%" );
 			
-			// Get product type tree query
-			var ptt = getProductTypeTree();
+			var records = smartList.getRecords();
 			
-			// Loop over all records in product type tree
-			for(var i=1; i<=ptt.recordCount; i++) {
-				
-				// This logic makes it so that it can't be child of itself or any of its children
-				if(!listFindNoCase(ptt.idpath[i], this.getProductTypeID())) {
-					var option = {};
-					option.value = ptt.productTypeID[i];
-					option.name = replace(ptt.productTypeNamePath[i], ",", "&nbsp;&raquo;&nbsp;", "all");
-					arrayAppend(variables.parentProductTypeOptions, option);
+			variables.parentProductTypeOptions = [];
+			
+			for(var i=1; i<=arrayLen(records); i++) {
+				if(records[i].getProductTypeName() != getProductTypeName()) {
+					arrayAppend(variables.parentProductTypeOptions, {name=records[i].getSimpleRepresentation(), value=records[i].getProductTypeID()});	
 				}
 			}
 		}
-		
 		return variables.parentProductTypeOptions;
 	}
 	
