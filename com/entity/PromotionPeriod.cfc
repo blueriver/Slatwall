@@ -42,9 +42,16 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	property name="promotionPeriodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
+	property name="maximumUseCount" ormtype="integer" default="0" dbdefault="0";
+	property name="maximumAccountUseCount" ormtype="integer" default="0" dbdefault="0";
 	
-	// Related Entities
-	// property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	// Related Object Properties (many-to-one)
+	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	
+	// Related Object Properties (one-to-many)   
+	property name="promotionPeriodPromotionCodes" singularname="promotionPeriodPromotionCode" cfc="PromotionPeriodPromotionCode" fkcolumn="promotionPeriodID" cascade="all-delete-orphan";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -72,6 +79,23 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 			arrayDeleteAt(arguments.account.getPromotionPeriods(), index);    
 		}    
 		structDelete(variables, "promotion");    
+	}
+	
+	// promotionRewards (one-to-many)
+	public void function addPromotionReward(required any promotionReward) {
+	   arguments.promotionReward.setPromotion(this);
+	}
+	
+	public void function removePromotionReward(required any promotionReward) {
+		arguments.promotionReward.removePromotion(this);
+	}
+	
+	// promotionQualifiers (one-to-many)    
+	public void function addPromotionQualifier(required any promotionQualifier) {    
+		arguments.promotionQualifier.setPromotion( this );    
+	}    
+	public void function removePromotionQualifier(required any promotionQualifier) {    
+		arguments.PromotionQualifier.removePromotion( this );    
 	}
 	
    // =============  END:  Bidirectional Helper Methods ===================

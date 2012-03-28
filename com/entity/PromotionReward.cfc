@@ -44,8 +44,8 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="amountOff" ormType="big_decimal";
 	property name="amount" ormType="big_decimal" hint="can't apply to order rewards";
 	
-	// Related Entities
-	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	// Related Object Properties (many-to-one)
+	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
 	
 	// Special Related Discriminator Property
 	property name="rewardType" length="255" insert="false" update="false";
@@ -64,24 +64,24 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
-	// Promotion (many-to-one)
+	// Promotion Period (many-to-one)
 	
-	public void function setPromotion(required Promotion promotion) {
-		variables.promotion = arguments.promotion;
-		if(!arguments.promotion.hasPromotionReward(this)) {
-			arrayAppend(arguments.promotion.getPromotionRewards(),this);
+	public void function setPromotionPeriod(required promotionPeriod promotionPeriod) {
+		variables.promotionPeriod = arguments.promotionPeriod;
+		if(!arguments.promotionPeriod.hasPromotionReward(this)) {
+			arrayAppend(arguments.promotionPeriod.getPromotionRewards(),this);
 		}
 	}
 	
-	public void function removePromotion(Promotion promotion) {
-	   if(!structKeyExists(arguments,"promotion")) {
-	   		arguments.promotion = variables.promotion;
+	public void function removePromotionPeriod(PromotionPeriod promotionPeriod) {
+	   if(!structKeyExists(arguments,"promotionPeriod")) {
+	   		arguments.promotionPeriod = variables.promotionPeriod;
 	   }
-       var index = arrayFind(arguments.promotion.getPromotionRewards(),this);
+       var index = arrayFind(arguments.promotionPeriod.getPromotionRewards(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.promotion.getPromotionRewards(), index);
+           arrayDeleteAt(arguments.promotionPeriod.getPromotionRewards(), index);
        }
-       structDelete(variables,"promotion");
+       structDelete(variables,"promotionPeriod");
     }
     
     /************   END Association Management Methods   *******************/

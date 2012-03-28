@@ -45,7 +45,7 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="maximumPrice" ormtype="big_decimal"; 
 	
 	// Related Entities
-	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
 	
 	// Special Related Discriminator Property
 	property name="qualifierType" length="255" insert="false" update="false";
@@ -64,24 +64,24 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	
 	// ============ Association management methods for bidirectional relationships =================
 	
-	// Promotion (many-to-one)
+	// Promotion Period (many-to-one)
 	
-	public void function setPromotion(required Promotion promotion) {
-		variables.promotion = arguments.promotion;
-		if(isNew() || !arguments.promotion.hasPromotionQualifier(this)) {
-			arrayAppend(arguments.promotion.getPromotionQualifiers(),this);
+	public void function setPromotionPeriod(required PromotionPeriod promotionPeriod) {
+		variables.promotionPeriod = arguments.promotionPeriod;
+		if(isNew() || !arguments.promotionPeriod.hasPromotionQualifier(this)) {
+			arrayAppend(arguments.promotionPeriod.getPromotionQualifiers(),this);
 		}
 	}
 	
-	public void function removePromotion(Promotion promotion) {
-	   if(!structKeyExists(arguments,"promotion")) {
-	   		arguments.promotion = variables.promotion;
+	public void function removePromotionPeriod(PromotionPeriod promotionPeriod) {
+	   if(!structKeyExists(arguments,"promotionPeriod")) {
+	   		arguments.promotionPeriod = variables.promotionPeriod;
 	   }
-       var index = arrayFind(arguments.promotion.getPromotionQualifiers(),this);
+       var index = arrayFind(arguments.promotionPeriod.getPromotionQualifiers(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.promotion.getPromotionQualifiers(), index);
+           arrayDeleteAt(arguments.promotionPeriod.getPromotionQualifiers(), index);
        }
-       structDelete(variables,"promotion");
+       structDelete(variables,"promotionPeriod");
     }
     
     // ============   END Association Management Methods   =================
