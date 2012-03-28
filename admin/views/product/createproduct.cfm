@@ -58,7 +58,7 @@ Notes:
 				<cfset optionsSmartList = $.slatwall.getService("optionService").getOptionSmartList() />
 				<cfset optionsSmartList.addOrder("optionGroup.sortOrder|ASC") />
 				<cfif optionsSmartList.getRecordsCount()>
-					<cf_SlatwallListingDisplay smartList="#rc.optionsSmartList#" multiselectfieldname="options" edit="true">
+					<cf_SlatwallListingDisplay smartList="#optionsSmartList#" multiselectfieldname="options" edit="true">
 						<cf_SlatwallListingColumn propertyIdentifier="optionGroup.optionGroupName" filter=true />
 						<cf_SlatwallListingColumn propertyIdentifier="optionName" tdclass="primary" />
 					</cf_SlatwallListingDisplay>
