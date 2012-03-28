@@ -81,12 +81,12 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all-delete-orphan";
 	
-	// Related Object Properties (Many-To-Many)
+	// Related Object Properties (Many-To-Many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
+
+	// Related Object Properties (Many-To-Many - owner)
 	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallProductTypeEligibleFulfillmentMethod" fkcolumn="productTypeID" inversejoincolumn="fulfillmentMethodID"; 
 
 	// Non-Persistent Properties
@@ -108,15 +108,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		if(isNull(variables.promotionRewards)) {
 			variables.promotionRewards = [];
 		}
-		if(isNull(variables.promotionRewardExclusions)) {
-			variables.promotionRewardExclusions = [];
-		}
 		if(isNull(variables.promotionQualifiers)) {
 			variables.promotionQualifiers = [];
 		}
-		if(isNull(variables.promotionQualifierExclusions)) {
- 			variables.promotionQualifierExclusions = [];
- 		}
 		if(isNull(variables.priceGroupRates)) {
 			variables.priceGroupRates = [];
 		}
@@ -326,22 +320,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeProductType( this );
-	}
-	
-	// Promotion Reward Exclusions (many-to-many)
-	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
-		arguments.promotionRewardExclusion.addProductType( this );
-	}
-	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
-		arguments.promotionRewardExclusion.removeProductType( this );
-	}
-	
-	// Promotion Qualifier Exclusions (many-to-many)
-	public void function addPromotionQualifierExclusion(required any promotionQualifierExclusion) {
-		arguments.promotionQualifierExclusion.addProductType(this);
-	}
-	public void function removePromotionQualifierExclusion(required any promotionQualifierExclusion) {
-		arguments.promotionQualifierExclusion.removeProductType(this);
 	}
 	
 	// priceGroupRates (many-to-many)

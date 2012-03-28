@@ -47,21 +47,21 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="endDateTime" edit="#rc.edit#">
+	<!---			<cfif rc.promotion.isNew()>
+					<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" edit="#rc.edit#">
+					<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="endDateTime" edit="#rc.edit#">
+				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumUseCount" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumAccountUseCount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumAccountUseCount" edit="#rc.edit#">--->
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.promotion#">
+<!---		<cf_SlatwallTabGroup object="#rc.promotion#">
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewards" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewardexclusions" />
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifiers" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifierexclusions" />
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotioncodes" />
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotiondescription" />
-		</cf_SlatwallTabGroup>
+		</cf_SlatwallTabGroup>--->
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>

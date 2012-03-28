@@ -127,12 +127,10 @@
 				<entry key="PromotionCode"><value>promotionService</value></entry>
 				<entry key="PromotionImage"><value>promotionService</value></entry>
 				<entry key="PromotionQualifier"><value>promotionService</value></entry>
-				<entry key="PromotionQualifierExclusion"><value>promotionService</value></entry>
 				<entry key="PromotionQualifierFulfillment"><value>promotionService</value></entry>
 				<entry key="PromotionQualifierOrder"><value>promotionService</value></entry>
 				<entry key="PromotionQualifierProduct"><value>promotionService</value></entry>
 				<entry key="PromotionReward"><value>promotionService</value></entry>
-				<entry key="PromotionRewardExclusion"><value>promotionService</value></entry>
 				<entry key="PromotionRewardOrder"><value>promotionService</value></entry>
 				<entry key="PromotionRewardProduct"><value>promotionService</value></entry>
 				<entry key="PromotionRewardShipping"><value>promotionService</value></entry>
