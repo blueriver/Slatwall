@@ -58,7 +58,7 @@ Notes:
 				<cfset optionsSmartList = $.slatwall.getService("optionService").getOptionSmartList() />
 				<cfset optionsSmartList.addOrder("optionGroup.sortOrder|ASC") />
 				<cfif optionsSmartList.getRecordsCount()>
-					<cf_SlatwallListingDisplay smartList="#optionsSmartList#" multiselectfieldname="options" edit="true">
+					<cf_SlatwallListingDisplay smartList="#rc.optionsSmartList#" multiselectfieldname="options" edit="true">
 						<cf_SlatwallListingColumn propertyIdentifier="optionGroup.optionGroupName" filter=true />
 						<cf_SlatwallListingColumn propertyIdentifier="optionName" tdclass="primary" />
 					</cf_SlatwallListingDisplay>
@@ -84,7 +84,13 @@ Notes:
 				</div>
 			</div>
 		<cfelseif rc.baseProductType eq "contentAccess">
-			
+			<cfset contentAccessList = $.slatwall.getService("contentService").getContentSmartList() />
+			<cfset contentAccessList.addFilter("allowPurchaseFlag", 1) />
+			<cf_SlatwallErrorDisplay object="#rc.product#" errorName="accessContents" />
+			<cf_SlatwallFieldDisplay fieldType="yesno" fieldName="bundleContentAccess" value="0" title="Would you like to bundle all pages selected into a single sku?" edit="true" />
+			<cf_SlatwallListingDisplay smartList="#contentAccessList#" multiselectFieldName="accessContents" edit="true">
+				<cf_SlatwallListingColumn propertyIdentifier="title" tdclass="primary" />
+			</cf_SlatwallListingDisplay>
 		</cfif>
 	</cf_SlatwallDetailForm>
 </cfoutput>

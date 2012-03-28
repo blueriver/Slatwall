@@ -41,6 +41,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="optionService" type="any";
 	property name="productService" type="any";
 	property name="subscriptionService" type="any";
+	property name="contentService" type="any";
 	
 	public any function getSkuSmartList(string productID, struct data={}){
 		arguments.entityName = "SlatwallSku";
@@ -134,7 +135,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.product.addError("subscriptionTerms", rbKey('entity.product.subscriptiontermsrequired'));
 			}
 			
-			
 			// If the product still doesn't have any errors then we can create the skus
 			if(!arguments.product.hasErrors()) {
 				for(var i=1; i <= listLen(arguments.data.subscriptionTerms); i++){
@@ -155,118 +155,42 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 		// Create Content Access Product Skus Based On Pages
 		} else if (arguments.product.getProductType().getBaseProductType() == "contentAccess") {
+			// Make sure there was at least one contentAccess Product
+			if(!structKeyExists(arguments.data, "accessContents") || !listLen(arguments.data.accessContents)) {
+				arguments.product.addError("accessContents", rbKey('entity.product.accesscontentsrequired'));
+			}
 			
+			// If the product still doesn't have any errors then we can create the skus
+			if(!arguments.product.hasErrors()) {
+				if(structKeyExists(arguments.data, "bundleContentAccess") && arguments.data.bundleContentAccess) {
+					var newSku = this.newSku();
+					newSku.setPrice(arguments.data.price);
+					newSku.setSkuCode(arguments.product.getProductCode() & "-1");
+					newSku.setProduct(arguments.product);
+					for(var c=1; c<=listLen(arguments.data.accessContents); c++) {
+						newSku.addAccessContent( getContentService().getContent( listGetAt(arguments.data.accessContents, c) ) );
+					}
+					arguments.product.setDefaultSku(newSku);
+				} else {
+					for(var c=1; c<=listLen(arguments.data.accessContents); c++) {
+						var newSku = this.newSku();
+						newSku.setPrice(arguments.data.price);
+						newSku.setSkuCode(arguments.product.getProductCode() & "-#c#");
+						newSku.setProduct(arguments.product);
+						newSku.addAccessContent( getContentService().getContent( listGetAt(arguments.data.accessContents, c) ) );
+						if(c==1) {
+							arguments.product.setDefaultSku(newSku);	
+						}
+					}
+				}
+			}
 		} else {
 			throw("There was an unexpected error when creating this product");
 		}
 		
 		return true;
-		/*
-		// Create Merchandise Propduct Skus Based On Options
-		if(structKeyExists(arguments.data, "options") && !structIsEmpty(arguments.data.options)) {
-			var options = arguments.data.options;
-			var comboList = getOptionCombinations(options);
-			
-			createSkusFromOptions(comboList,arguments.product,arguments.data.price);
-			
-		// Create Subscription Product Skus Based On SubscriptionTerm and SubscriptionBenifit
-		} else if(structKeyExists(arguments.data, "subscriptionTerm") && arrayLen(arguments.data.subscriptionTerm)) {  
-			
-			for(var i=1; i <= arrayLen(arguments.data.subscriptionTerm); i++){
-				var thisSku = this.newSku();
-				thisSku.setProduct(arguments.product);
-				thisSku.setPrice(arguments.data.price);
-				thisSku.setRenewalPrice(arguments.data.price);
-				thisSku.setSubscriptionTerm(getSubscriptionService().getSubscriptionTerm(arguments.data.subscriptionTerm[i]));
-				thisSku.setSkuCode(arguments.product.getProductCode() & "-#i#");
-				if(i==1){
-					arguments.product.setDefaultSku(thisSku);
-				}
-			}
-		} else {  // no options were selected so create a default sku
-			var thisSku = this.newSku();
-			thisSku.setProduct(arguments.product);
-			thisSku.setPrice(arguments.data.price);
-			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
-			arguments.product.setDefaultSku(thisSku);
-		}
-		*/
-		
 	}
 
-	/**
-	/* @hint takes a list of optionID combinations and generates skus
-	*/
-	public void function createSkusFromOptions (required string comboList, required any product, required price) {
-		for(  i=1; i<=listLen(arguments.comboList,";");i++ ) {
-			//every option combination represents 1 Sku, so we create it
-			var thisCombo = listGetAt(arguments.comboList,i,";");
-			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price},arguments.product);
-			// set the first sku as the default one
-			if(i==1) {
-				arguments.product.setDefaultSku(thisSku);
-			}
-		}
-	}
-
-	public any function createSkuFromStruct (required struct data, required any product) {
-		var thisSku = this.newSku();
-		thisSku.setProduct(arguments.product);
-		thisSku.setPrice(arguments.data.price);
-		var comboCode = "";
-		// loop through optionID's within the option combination and set them into the sku
-		for( j=1;j<=listLen(arguments.data.options);j++ ) {
-			var thisOptionID = listGetAt(arguments.data.options,j);
-			var thisOption = this.getOption(thisOptionID);
-			thisSku.addOption(thisOption);
-			thisSku.setImageFile(thisSku.generateImageFileName());
-			// generate code from options to be used in Sku Code
-			comboCode = listAppend(comboCode,thisOption.getOptionCode(),"-");
-		}
-		if( structKeyExists(arguments.data,"skuCode") && len(arguments.data.skuCode) ) {
-			thisSku.setSkuCode(arguments.data.skuCode);
-		} else {
-			thisSku.setSkuCode( listPrepend(comboCode,arguments.product.getProductCode(),"-") );
-		}
-		return thisSku;
-	}
-
-	
-	/**
-	/* @hint takes a struct of optionGroup (keys are option group sort orders) and lists of optionID's (values) and returns a list of all possible optionID combinations 
-	/* (combinations are semicolon-delimited and option id's within each combination are comma-delimited )
-	*/
-	public string function getOptionCombinations (required struct options) {
-		// use struct keys to make sure options are ordered by sort order of option group
-		var optionsKeyArray = structKeyArray(options);
-		arraySort(optionsKeyArray,"numeric");
-		// pick the first group and create the array for cartesian output
-		var optionComboArray = listToArray(options[optionsKeyArray[1]]); 
-		// loop for second to last group
-		for(var i = 2; i <= arrayLen(optionsKeyArray); i++){
-			var optionComboArrayLen = arrayLen(optionComboArray);
-			var optionTempArray = [];
-			// loop through each item in the group
-			for(var j = 1; j <= optionComboArrayLen; j++){
-				var thisOptionArray = listToArray(options[optionsKeyArray[i]]);
-				var currentOptionList = optionComboArray[j];
-				// loop through each item in the group
-				for(var optionID in thisOptionArray){
-					// new combination by appending to the existing values
-					var thisCombo = listAppend(currentOptionList,optionID);
-					arrayAppend(optionComboArray,thisCombo);
-				}
-				// store old value to be discarded
-				arrayAppend(optionTempArray,currentOptionList);
-			}
-			// discard old values because now we have new combination
-			for(var item in optionTempArray){
-				arrayDelete(optionComboArray,item);
-			}
-		}
-		return arrayToList(optionComboArray,";");
-	}
-	
 	public any function processImageUpload(required any Sku, required struct imageUploadResult) {
 		var imagePath = arguments.Sku.getImagePath();
 		var imageSaved = getService("imageService").saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath,allowedExtensions="jpg,jpeg,png,gif");

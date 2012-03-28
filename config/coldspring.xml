@@ -305,6 +305,9 @@
 	<bean id="skuService" parent="parentService" class="Slatwall.com.service.SkuService">
         <property name="DAO"><ref bean="SkuDAO" /></property>
 		<property name="optionService"><ref bean="optionService" /></property>
+		<property name="productService"><ref bean="productService" /></property>
+		<property name="subscriptionService"><ref bean="subscriptionService" /></property>
+		<property name="contentService"><ref bean="contentService" /></property>
     </bean>
 	<bean id="skuCacheService" parent="parentService" class="Slatwall.com.service.SkuCacheService">
         <property name="DAO"><ref bean="SkuCacheDAO" /></property>
