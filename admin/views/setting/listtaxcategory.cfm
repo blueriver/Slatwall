@@ -44,6 +44,7 @@ Notes:
 
 <cf_SlatwallListingDisplay smartList="#rc.taxCategorySmartList#" rc="#rc#" recordEditAction="admin:setting.editTaxCategory">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="taxCategoryName" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>
