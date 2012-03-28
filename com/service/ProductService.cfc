@@ -47,15 +47,6 @@ component extends="BaseService" accessors="true" {
 	property name="utilityFileService" type="any";
 	property name="utilityTagService" type="any";
 	
-	public array function getProductTemplates(required string siteID) {
-		var returnArray = [];
-		var productTemplates = getContentService().listContent({templateFlag="1",cmsSiteID=arguments.siteID});
-		for(var template in productTemplates) {
-			arrayAppend(returnArray, {name=template.getTitle(), value=template.getContentID()});
-		}
-		return returnArray;
-	}
-
 	public any function getProductSmartList(struct data={}, currentURL="") {
 		arguments.entityName = "SlatwallProduct";
 		
