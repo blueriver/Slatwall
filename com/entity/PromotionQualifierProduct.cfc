@@ -41,13 +41,16 @@ component displayname="Promotion Qualifier Product" entityname="SlatwallPromotio
 	// Persistent Properties
 	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	// Related Object Properties (many-to-many)
+	// Related Object Properties (many-to-many - owner)
 	property name="eligiblePriceGroups" singularname="eligiblePriceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductEligiblePriceGroup" fkcolumn="promotionQualifierID" inversejoincolumn="priceGroupID";
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductBrand" fkcolumn="promotionQualifierID" inversejoincolumn="brandID";
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductOption" fkcolumn="promotionQualifierID" inversejoincolumn="optionID";
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductSku" fkcolumn="promotionQualifierID" inversejoincolumn="skuID";
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProduct" fkcolumn="promotionQualifierID" inversejoincolumn="productID";
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProductType" fkcolumn="promotionQualifierID" inversejoincolumn="productTypeID";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID";
+	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID";
+	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID";
 	
 	public any function init() {
 
