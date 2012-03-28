@@ -89,6 +89,15 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	   return super.init();
 	}
 
+	public any function getBrandDisplayTemplateOptions() {
+		if(!structKeyExists(variables, "brandDisplayTemplateOptions")) {
+			variables.brandDisplayTemplateOptions = getService("contentService").getDisplayTemplates(siteID=$.event('siteid'));
+			arrayPrepend(variables.brandDisplayTemplateOptions, {value="", name="#rbKey('define.select')#"});
+		}
+		
+		return variables.brandDisplayTemplateOptions;
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

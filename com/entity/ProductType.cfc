@@ -251,7 +251,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
     public any function getProductDisplayTemplateOptions() {
 		if(!structKeyExists(variables, "productDisplayTemplateOptions")) {
-			variables.productDisplayTemplateOptions = getService("productService").getProductTemplates(siteID=$.event('siteid'));
+			variables.productDisplayTemplateOptions = getService("contentService").getDisplayTemplates(siteID=$.event('siteid'));
 			arrayPrepend(variables.productDisplayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('productDisplayTemplate')# )"});
 		}
 		

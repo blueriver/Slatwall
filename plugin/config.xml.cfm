@@ -79,7 +79,7 @@ Notes:
 	<eventHandler event="onSiteRequestStart" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onRenderStart" component="fw1EventAdapter" persist="false"/>	
 	<eventHandler event="onRenderEnd" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onAfterCategoryUpdate" component="fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onAfterCategorySave" component="fw1EventAdapter" persist="false"/>	
 	<eventHandler event="onAfterCategoryDelete" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onContentEdit" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onAfterContentSave" component="fw1EventAdapter" persist="false"/>	

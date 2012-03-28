@@ -162,17 +162,18 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 	}
 	
-	public void function onAfterCategoryUpdate(required any rc) {
+	public void function onAfterCategorySave(required any rc) {
+		var categoryBean = rc.$.event("categoryBean");
 		var category = getContentService().getCategoryByCmsCategoryID(rc.$.event("categoryID"),true);
 		category.setCmsSiteID(rc.$.event('siteID'));
 		category.setCmsCategoryID(rc.$.event("categoryID"));
-		category.setCmsCategoryIDPath(rc.$.category("path"));
-		category.setCategoryName(rc.$.category("name"));
+		category.setCmsCategoryIDPath(categoryBean.getPath());
+		category.setCategoryName(categoryBean.getName());
 		category = getContentService().saveCategory(category);
 	}
 	
 	public void function onAfterCategoryDelete(required any rc) {
-		var category = getContentService().getContentByCmsCategoryID(rc.$.event("categoryID"),true);
+		var category = getContentService().getCategoryByCmsCategoryID(rc.$.event("categoryID"),true);
 		if(!category.isNew()) {
 			getContentService().deleteCategory(category);
 		}
@@ -247,6 +248,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		} else {
 			var slatwallContent = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
 		}
+		rc.slatwallData.product.accessContents = slatwallContent.getContentID();
 		// if sku is selected, related sku to content
 		if(rc.slatwallData.product.sku.skuID != "") {
 			var sku = getService("SkuService").getSku(rc.slatwallData.product.sku.skuID, true);
@@ -255,26 +257,16 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			var product = getProductService().getProduct(rc.slatwallData.product.productID, true);
 			product.setProductName(rc.$.content("title"));
 			product.setPublishedFlag(rc.$.content("approved"));
-			var newProduct = false;
 			if(product.isNew()){
-				newProduct = true;
 				// if new product set up required properties
 				var productType = getProductService().getProductTypeBySystemCode("contentAccess");
 				product.setProductType(productType);
 				product.setProductCode(createUUID());
 				product.setActiveFlag(1);
-			}
-			product = getProductService().saveProduct( product, rc.slatwallData.product );
-			if(newProduct) {
-				var sku = product.getDefaultSku();
+				product = getProductService().saveProduct( product, rc.slatwallData.product );
 			} else {
-				// if exsiting product, create new sku
-				var sku = getService("SkuService").newSku();
-				sku.setProduct(product);
+				getService("SkuService").createSkus( product, rc.slatwallData.product );
 			}
-			sku.setPrice(val(rc.slatwallData.product.price));
-			sku.addAccessContent(slatwallContent);
-			getService("SkuService").saveSkus(sku);
 		}
 		
 	}
