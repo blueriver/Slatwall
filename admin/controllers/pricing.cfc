@@ -54,7 +54,44 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if( rc.promotion.isNew() ) {
 			rc.promotionPeriod = getPromotionService().newPromotionPeriod();
 		}
+
 		getFW().setView( "admin:pricing.detailpromotion" );
+	}
+
+	public void function createPromotionRewardProduct(required struct rc) {
+		rc.promotionreward = getPromotionService().newPromotionRewardProduct();
+		if( structKeyExists(rc,"promotionperiodID") ) {
+			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
+		}
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#";
+		rc.saveAction = "admin:pricing.savepromotionrewardproduct";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#";
+		rc.edit = true;
+		getFW().setView("admin:pricing.detailpromotionreward");
+	}
+
+	public void function createPromotionRewardShipping(required struct rc) {
+		rc.promotionreward = getPromotionService().newPromotionRewardShipping();
+		if( structKeyExists(rc,"promotionperiodID") ) {
+			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
+		} 		 
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#";
+		rc.saveAction = "admin:pricing.savepromotionrewardshipping";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#";		
+		rc.edit = true;
+		getFW().setView("admin:pricing.detailpromotionreward");
+	}
+	
+	public void function createPromotionRewardOrder(required struct rc) {
+		rc.promotionreward = getPromotionService().newPromotionRewardOrder();
+		if( structKeyExists(rc,"promotionperiodID") ) {
+			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
+		}
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#";
+		rc.saveAction = "admin:pricing.savepromotionrewardorder";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#";		
+		rc.edit = true;
+		getFW().setView("admin:pricing.detailpromotionreward");
 	}
 
 

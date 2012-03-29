@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,10 +36,30 @@
 Notes:
 
 --->
-<cfparam name="rc.promotion" type="any">
+<cfparam name="rc.promotionperiod" type="any">
+<cfparam name="rc.promotion" type="any" default="#rc.promotionperiod.getPromotion()#">
 <cfparam name="rc.edit" type="boolean">
 
-<cf_SlatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
-	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
-</cf_SlatwallPropertyList>
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.promotionperiod#" saveAction="admin:pricing.savepromotionperiod" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.promotionperiod#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
+
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="startdatetime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="enddatetime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumusecount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumaccountusecount" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+
+	</cf_SlatwallDetailForm>
+	
+	<cf_SlatwallTabGroup object="#rc.promotionperiod#">
+			<cf_SlatwallTab view="admin:pricing/promotionperiodtabs/promotionperiodcodes" />
+			<cf_SlatwallTab view="admin:pricing/promotionperiodtabs/promotionrewards" />
+			<cf_SlatwallTab view="admin:pricing/promotionperiodtabs/promotionqualifiers" />
+	</cf_SlatwallTabGroup>
+	
+</cfoutput>

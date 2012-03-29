@@ -106,6 +106,11 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		}
 		return true;
 	}
+	
+	public string function getSimpleRepresentation() {
+		return "test";
+			//return getPromotionPeriod().getPromotion().getPromotionName();
+	}
 
 	// ============ START: Non-Persistent Property Methods =================
 
@@ -133,9 +138,9 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	public array function getDiscountTypeOptions() {
 		return [
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amount"), value="amount"}
+			{name=rbKey("admin.pricing.promotionreward.discountType.percentageOff"), value="percentageOff"},
+			{name=rbKey("admin.pricing.promotionreward.discountType.amountOff"), value="amountOff"},
+			{name=rbKey("admin.pricing.promotionreward.discountType.amount"), value="amount"}
 		];
 	}
 	
