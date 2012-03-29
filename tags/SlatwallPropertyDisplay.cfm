@@ -66,6 +66,7 @@ Notes:
 	<cfparam name="attributes.displayType" default="dl" />								<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 	
 	<cfparam name="attributes.errors" type="array" default="#arrayNew(1)#" />			<!--- hint: This holds any errors for the current field if needed --->
+	<cfparam name="attributes.displayVisible" type="string" default="" />				<!--- hint: binds visibility of element to another form value (ie displayVisible="{inputname}:{inputvalue}") --->
 	
 	<!---
 		attributes.fieldType have the following options:

@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfoutput>
+<!---<cfoutput>
 	<cfif arrayLen(rc.promotion.getPromotionQualifiers()) GT 0>
 		<table class="listing-grid stripe">
 			<thead>
@@ -219,4 +219,4 @@ Notes:
 		
 		<br /><br />
 	</cfif>
-</cfoutput>
+</cfoutput>--->

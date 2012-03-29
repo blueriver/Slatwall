@@ -36,35 +36,36 @@
 Notes:
 
 --->
-<cfparam name="rc.promotion" type="any">
+<cfparam name="rc.promotionreward" type="any">
+<cfparam name="rc.promotionperiod" type="any" default="#rc.promotionreward.getPromotionPeriod()#" />
 <cfparam name="rc.edit" type="boolean">
 
+<cfset local.rewardType = rc.promotionReward.getRewardType() />
+
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.promotion#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" />
-		
+	<cf_SlatwallDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" backAction="admin:pricing.detailpromotionperiod" backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
-				<cfif rc.promotion.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].startDateTime" property="startDateTime" edit="#rc.edit#">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].endDateTime" property="endDateTime" edit="#rc.edit#">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].maximumUseCount" property="maximumUseCount" edit="#rc.edit#">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].maximumAccountUseCount" property="maximumAccountUseCount" edit="#rc.edit#">
-					<input type="hidden" name="promotionPeriods[1].promotionPeriodID" value="#rc.promotionPeriod.getPromotionPeriodID()#" />
+				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
+				<input type="hidden" name="returnAction" value="admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionrewards" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="discountType" fieldType="select" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="percentageOff" edit="#rc.edit#" displayVisible="discountType:percentageOff">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amountOff" edit="#rc.edit#" displayVisible="discountType:amountOff" />
+				<cfif rewardType neq "order">
+					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" displayVisible="discountType:amount"  />
 				</cfif>
+				<cfswitch expression="#local.rewardType#" >
+					<cfcase value="product">
+					</cfcase>
+					<cfcase value="shipping">
+					</cfcase>
+					<cfcase value="order">
+					</cfcase>
+				</cfswitch>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.promotion#">
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionperiods" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotioncodes" />
-<!---			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewards" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifiers" />--->
-		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>

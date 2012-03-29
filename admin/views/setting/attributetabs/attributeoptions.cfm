@@ -51,7 +51,7 @@ Notes:
 							   recordDeleteQueryString="attributeID=#rc.attribute.getAttributeID()#&returnAction=admin:setting.detailAttribute"
 							   sortProperty="sortOrder">
 		<cf_SlatwallListingColumn propertyIdentifier="attributeOptionValue" /> 
-		<cf_SlatwallListingColumn propertyIdentifier="attributeOptionLabel" /> 
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeOptionLabel" /> 
 	</cf_SlatwallListingDisplay>
 	
 	<cf_SlatwallActionCaller action="admin:setting.createattributeoption" class="btn btn-primary" queryString="attributeid=#rc.attribute.getAttributeID()#" modal=true />

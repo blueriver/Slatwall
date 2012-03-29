@@ -187,6 +187,8 @@ component extends="org.fw1.framework" output="false" {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
 		
+		request.footer = "";
+		
 		// Verify that the application is setup
 		verifyApplicationSetup();
 		

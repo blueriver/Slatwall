@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,10 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.promotion" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="attributes.title" type="string" default="">
+<cfparam name="attributes.actions" type="string" />
+<cfparam name="attributes.queryString" type="string" default="" />
+<cfparam name="attributes.modal" type="boolean" default="false" />
 
-<cf_SlatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
-	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
-</cf_SlatwallPropertyList>
+<cfif thisTag.executionMode is "start">
+	<cfoutput>
+		<div class="btn-group">
+		<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i>#attributes.title# <span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<cfloop list="#attributes.actions#" index="action">
+					<cf_SlatwallActionCaller action="#action#" type="list" modal="#attributes.modal#" querystring="#attributes.queryString#" />
+				</cfloop>
+			</ul>
+		</div>
+	</cfoutput>
+</cfif>

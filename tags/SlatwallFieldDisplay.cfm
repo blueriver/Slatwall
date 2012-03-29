@@ -60,7 +60,38 @@ Notes:
 	<cfparam name="attributes.displayType" default="dl" />								<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 	
 	<cfparam name="attributes.errors" type="array" default="#arrayNew(1)#" />			<!--- hint: This holds any errors for the current field if needed --->
+	<cfparam name="attributes.displayVisible" type="string" default="" />				<!--- hint: binds visibility of element to another property value (ie displayVisible="{inputname}:{inputvalue}") --->
+
+
+	<cfset attributes.fieldName = trim(attributes.fieldName) eq "" and structKeyExists(attributes,"property") ? attributes.property : attributes.fieldname />
 	
+	<cfif trim(attributes.displayVisible) neq "">
+		<cfset propertyName = trim(listFirst(attributes.displayVisible,":")) />
+		<cfset propertyValue = trim(listLast(attributes.displayVisible,":")) />
+		<cfsavecontent variable="showHideScript">
+			<cfoutput>
+				<script type="text/javascript">
+					<cfif attributes.edit>
+					var $thisFormElement#attributes['fieldName']# = $('input[name=#attributes["fieldName"]#]').parents('div.control-group');
+					var $boundElement#attributes['fieldName']# = $('select[name=#propertyName#]');
+					showOnPropertyValue($boundElement#attributes['fieldName']#.val(),'#propertyValue#',$thisFormElement#attributes['fieldName']#);
+					(function($){
+						$boundElement#attributes['fieldName']#.change(function(){	
+							$selectedValue = $(this).val();
+							showOnPropertyValue( $selectedValue,'#propertyValue#',$thisFormElement#attributes['fieldName']# );	
+						});
+					})(jQuery);
+					<cfelse>
+					//alert($.trim($('.#propertyName#Value').html()));
+					showOnPropertyValue( $.trim($('.#propertyName#Value').html()),'#propertyValue#',$('.#attributes["fieldName"]#Title') );
+					showOnPropertyValue( $.trim($('.#propertyName#Value').html()),'#propertyValue#',$('.#attributes["fieldName"]#Value') );
+					</cfif>
+				</script>
+			</cfoutput>
+		</cfsavecontent>
+		<cfset request.footer &= showHideScript />
+	</cfif>
+
 	<cfswitch expression="#attributes.displaytype#">
 		<!--- DL Case --->
 		<cfcase value="dl">
@@ -76,11 +107,11 @@ Notes:
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
-					<dt class="#attributes.titleClass#">#attributes.title#</dt>
+					<dt class="#attributes.fieldName#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#</dt>
 					<cfif attributes.valueLink neq "">
-						<dd class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></dd>
+						<dd class="#attributes.fieldName#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></dd>
 					<cfelse>
-						<dd class="#attributes.valueClass#">#attributes.value#&nbsp;</dd>
+						<dd class="#attributes.fieldName#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</dd>
 					</cfif>
 				</cfoutput>
 			</cfif>
@@ -90,8 +121,8 @@ Notes:
 			<cfif attributes.edit>
 				<cfoutput>
 					<tr>
-						<td class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></td>
-						<td class="#attributes.valueClass#">
+						<td class="#attributes.fieldName#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#</label></td>
+						<td class="#attributes.fieldName#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
 							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
 							<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 						</td>
@@ -100,11 +131,11 @@ Notes:
 			<cfelse>
 				<cfoutput>
 					<tr>
-						<td class="#attributes.titleClass#">#attributes.title#</td>
+						<td class="#attributes.fieldName#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#</td>
 						<cfif attributes.valueLink neq "">
-							<td class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
+							<td class="#attributes.fieldName#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
 						<cfelse>
-							<td class="#attributes.valueClass#">#attributes.value#</td>
+							<td class="#attributes.fieldName#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</td>
 						</cfif>
 					</tr>
 				</cfoutput>
@@ -114,19 +145,19 @@ Notes:
 		<cfcase value="span">
 			<cfif attributes.edit>
 				<cfoutput>
-					<span class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></span>
-					<span class="#attributes.valueClass#">
+					<span class="#attributes.fieldName#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#</label></span>
+					<span class="#attributes.fieldName#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
 						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
 						<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 					</span>
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
-					<span class="#attributes.titleClass#">#attributes.title#: </span>
+					<span class="#attributes.fieldName#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#: </span>
 					<cfif attributes.valueLink neq "">
-						<span class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></span>
+						<span class="#attributes.fieldName#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></span>
 					<cfelse>
-						<span class="#attributes.valueClass#">#attributes.value#</span>
+						<span class="#attributes.fieldName#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</span>
 					</cfif>
 				</cfoutput>
 			</cfif>

@@ -250,7 +250,7 @@ Notes:
 			</table>
 			<cf_SlatwallSmartListPager smartList="#attributes.smartList#" />
 		<cfelse>
-			<em>#replace(request.context.$.Slatwall.rbKey("entity.define.norecords"), "${entityNamePlural}", request.context.$.Slatwall.rbKey("entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '', 'all')#_plural"))#</em>
+			<p><em>#replace(request.context.$.Slatwall.rbKey("entity.define.norecords"), "${entityNamePlural}", request.context.$.Slatwall.rbKey("entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '', 'all')#_plural"))#</em></p>
 		</cfif>
 	</cfoutput>
 </cfif>
