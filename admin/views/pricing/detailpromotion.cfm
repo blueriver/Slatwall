@@ -47,98 +47,23 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#">
-	<!---			<cfif rc.promotion.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" edit="#rc.edit#">
-					<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="endDateTime" edit="#rc.edit#">
+				<cfif rc.promotion.isNew()>
+					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].startDateTime" property="startDateTime" edit="#rc.edit#">
+					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].endDateTime" property="endDateTime" edit="#rc.edit#">
+					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].maximumUseCount" property="maximumUseCount" edit="#rc.edit#">
+					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].maximumAccountUseCount" property="maximumAccountUseCount" edit="#rc.edit#">
+					<input type="hidden" name="promotionPeriods[1].promotionPeriodID" value="#rc.promotionPeriod.getPromotionPeriodID()#" />
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumUseCount" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumAccountUseCount" edit="#rc.edit#">--->
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-<!---		<cf_SlatwallTabGroup object="#rc.promotion#">
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewards" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifiers" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotioncodes" />
+		<cf_SlatwallTabGroup object="#rc.promotion#">
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotiondescription" />
-		</cf_SlatwallTabGroup>--->
+			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionperiods" />
+			<!---<cf_SlatwallTab view="admin:pricing/promotiontabs/promotioncodes" />--->
+<!---			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewards" />
+			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifiers" />--->
+		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>
-<!---
-<cfparam name="rc.promotion" type="any">
-<cfparam name="rc.edit" type="boolean">
-
-<!---
-<cfif rc.edit>
-	<cfset getAssetWire().addJSVariable("getProductTypeTreeAPIKey", $.slatwall.getAPIKey('productservice/getproductyypetree','post')) />
-</cfif>
---->
-
-<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
-	<cfif !rc.edit>
-	<cf_SlatwallActionCaller action="admin:promotion.edit" queryString="promotionID=#rc.promotion.getPromotionID()#" type="list">
-	</cfif>
-</ul>
-
-<cfoutput>
-	<div class="svoadminpromotiondetail">
-		<cfif rc.edit>
-		<form name="PromotionEdit" action="#buildURL('admin:promotion.save')#" method="post">
-			<input type="hidden" name="PromotionID" value="#rc.Promotion.getPromotionID()#" />
-		</cfif>
-			<dl class="twoColumn">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#" first="true">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" value="#dateFormat(rc.promotion.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getStartDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="endDateTime" value="#dateFormat(rc.promotion.getEndDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getEndDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumUseCount" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumAccountUseCount" edit="#rc.edit#">
-				
-				<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
-					<ul>
-						<li><a href="##tabPromotionRewards" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewards')#</span></a></li>
-						<li><a href="##tabPromotionRewardExclusions" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewardExclusions')#</span></a></li>
-						<li><a href="##tabPromotionQualifiers" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionQualifiers')#</span></a></li>
-						<li><a href="##tabPromotionQualifierExclusions" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionQualifierExclusions')#</span></a></li>
-						<li><a href="##tabPromotionCodes" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionCodes')#</span></a></li>
-						<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabDescription')#</span></a></li>
-						<li><a href="##tabSummary" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabSummary')#</span></a></li>
-					</ul>
-					<div id="tabPromotionRewards">
-						#view("promotion/promotiontabs/promotionrewards")#
-					</div>
-					<div id="tabPromotionRewardExclusions">
-						#view("promotion/promotiontabs/promotionrewardexclusions")#
-					</div>
-					<div id="tabPromotionQualifiers">
-						#view("promotion/promotiontabs/promotionqualifiers")#
-					</div>
-					<div id="tabPromotionQualifierExclusions">
-						#view("promotion/promotiontabs/promotionqualifierexclusions")#
-					</div>
-					<div id="tabPromotionCodes">
-						#view("promotion/promotiontabs/promotioncodes")#
-					</div>
-					<div id="tabDescription">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
-					</div>
-					<div id="tabSummary">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
-					</div>
-				</div>
-			</dl>
-			<cfif rc.edit>
-			<div id="actionButtons" class="clearfix">
-				<cf_SlatwallActionCaller action="admin:promotion.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif Not rc.promotion.isNew()>
-					<cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionid=#rc.promotion.getPromotionID()#" class="button" type="link" disabled="#rc.promotion.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.promotion.delete_validateisDeletable')#" confirmrequired="true">
-				</cfif>
-				<cf_SlatwallActionCaller action="admin:promotion.save" type="submit" class="button">
-			</div>
-			</cfif>
-		</form>
-	</div>
-</cfoutput>
---->

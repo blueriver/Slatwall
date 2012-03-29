@@ -65,7 +65,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function detailsetting(required struct rc) {
 		rc.edit = false;
 		rc.allSettings = getSettingService().getSettings();
-		rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
+		//rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
 		
 		rc.shippingWeightUnitCodeOptions = getSettingService().getMeaurementUnitOptions(measurementType="weight");
 		rc.customIntegrations = getIntegrationService().listIntegrationFilterByCustomActiveFlag(1);

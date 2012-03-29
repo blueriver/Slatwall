@@ -46,7 +46,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function default(required struct rc) {
 		getFW().redirect("admin:pricing.listpromotion");
 	}
-	
+
+	public void function createPromotion() {
+		param name="rc.promotionID" default="";
+		rc.edit = "true";
+		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
+		if( rc.promotion.isNew() ) {
+			rc.promotionPeriod = getPromotionService().newPromotionPeriod();
+		}
+		getFW().setView( "admin:pricing.detailpromotion" );
+	}
+
 
 /*	public void function detailpromotion(required struct rc) {
 		param name="rc.promotionID" default="";

@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,10 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.promotion" type="any">
+<cfparam name="rc.promotionCode" type="any">
+<cfparam name="rc.promotion" type="any" default="#rc.promotionCode.getPromotion()#">
 <cfparam name="rc.edit" type="boolean">
 
-<cf_SlatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
-	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
-</cf_SlatwallPropertyList>
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.promotion#" saveAction="admin:pricing.savepromotion" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+		<input type="hidden" name="promotioncodes[1].promotioncodeID" value="#rc.promotionCode.getPromotionCodeID()#" />
+
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="promotioncode" fieldName="promotionCodes[1].promotioncode" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+
+	</cf_SlatwallDetailForm>
+</cfoutput>

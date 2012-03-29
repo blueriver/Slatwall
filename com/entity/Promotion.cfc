@@ -62,22 +62,18 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non-persistent properties
+	property name="startDateTime" persistent="false";
+	property name="endDateTime" persistent="false"; 
+	
 	public Promotion function init(){
 		// set default collections for association management methods
 		if(isNull(variables.promotionCodes)){
 		   variables.promotionCodes = [];
 		}
-		if(isNull(variables.promotionRewards)) {
-			variables.promotionRewards = [];
-		}
-		if(isNull(variables.promotionQualifiers)) {
-			variables.promotionQualifiers = [];
-		}
-		if(isNull(variables.startDateTime)) {
-			variables.startDateTime = now();
-		}
-		if(isNull(variables.endDateTime)) {
-			variables.endDateTime = now();
+		
+		if(isNull(variables.promotionPeriods)) {
+			variables.promotionPeriods = [];
 		}
 		return super.init();
 	}
@@ -128,6 +124,43 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	}
 
 	// ============ START: Non-Persistent Property Methods =================
+	
+	// gets the start and end DateTimes for the current or the most recent promotion period
+	public any function getStartDateTime() {
+		if( !structKeyExists( variables,"startDateTime" ) ) {
+			for( var i=1; i<=arrayLen(getPromotionPeriods());i++ ) {
+				local.thisPromotionPeriod = getPromotionPeriods()[i];
+				if( local.thisPromotionPeriod.isCurrent() ) {
+					variables.startDateTime = local.thisPromotionPeriod.getStartDateTime();
+					variables.endDateTime = local.thisPromotionPeriod.getEndDateTime();
+					break;
+				}
+				else {
+					variables.startDateTime = !structKeyExists(variables,"startDateTime") ? local.thisPromotionPeriod.getStartDateTime() : local.thisPromotionPeriod.getEndDateTime() > variables.endDateTime ? local.thisPromotionPeriod.getStartDateTime() : variables.startDateTime;
+					variables.endDateTime = !structKeyExists(variables,"endDateTime") ? local.thisPromotionPeriod.getEndDateTime() : local.thisPromotionPeriod.getEndDateTime() > variables.endDateTime ? local.thisPromotionPeriod.getEndDateTime() : variables.endDateTime;
+				}
+			}
+		}
+		return variables.startDateTime;
+	}
+	
+	public any function getEndDateTime() {
+		if( !structKeyExists( variables,"endDateTime" ) ) {
+			for( var i=1; i<=arrayLen(getPromotionPeriods());i++ ) {
+				local.thisPromotionPeriod = getPromotionPeriods()[i];
+				if( local.thisPromotionPeriod.isCurrent() ) {
+					variables.startDateTime = local.thisPromotionPeriod.getStartDateTime();
+					variables.endDateTime = local.thisPromotionPeriod.getEndDateTime();
+					break;
+				}
+				else {
+					variables.startDateTime = !structKeyExists(variables,"startDateTime") ? local.thisPromotionPeriod.getStartDateTime() : local.thisPromotionPeriod.getEndDateTime() > variables.endDateTime ? local.thisPromotionPeriod.getStartDateTime() : variables.startDateTime;
+					variables.endDateTime = !structKeyExists(variables,"endDateTime") ? local.thisPromotionPeriod.getEndDateTime() : local.thisPromotionPeriod.getEndDateTime() > variables.endDateTime ? local.thisPromotionPeriod.getEndDateTime() : variables.endDateTime;
+				}
+			}
+		}
+		return variables.endDateTime;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

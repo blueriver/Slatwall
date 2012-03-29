@@ -4,14 +4,6 @@
 		<property name="promotionName">
 			<rule type="required" contexts="save" />
 		</property>
-		<property name="startDateTime">
-			<rule type="required" contexts="save" />
-			<rule type="date" contexts="save" />
-		</property>
-		<property name="endDateTime">
-			<rule type="required" contexts="save" />
-			<rule type="date" contexts="save" />
-		</property>
 		<property name="appliedPromotions">
 			<rule type="collectionSize" contexts="delete">
 				<param name="max" value="0" />

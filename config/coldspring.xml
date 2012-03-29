@@ -126,6 +126,7 @@
 				<entry key="PromotionApplied"><value>promotionService</value></entry>
 				<entry key="PromotionCode"><value>promotionService</value></entry>
 				<entry key="PromotionImage"><value>promotionService</value></entry>
+				<entry key="PromotionPeriod"><value>promotionService</value></entry>
 				<entry key="PromotionQualifier"><value>promotionService</value></entry>
 				<entry key="PromotionQualifierFulfillment"><value>promotionService</value></entry>
 				<entry key="PromotionQualifierOrder"><value>promotionService</value></entry>

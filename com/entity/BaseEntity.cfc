@@ -231,12 +231,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// @hint returns a smart list of the current values for a given one-to-many or many-to-many property
 	public any function getPropertySmartList( required string propertyName ) {
 		var cacheKey = "#arguments.propertyName#SmartList";
-		
+		//writeDump(var=arguments.propertyName,abort=true);
 		if(!structKeyExists(variables, cacheKey)) {
 			
 			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
 			var smartList = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
-			
+			//writeDump(var=smartlist,abort=true,top="3");
 			// Create an example entity so that we can read the meta data
 			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
 			

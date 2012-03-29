@@ -100,7 +100,10 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	
    // =============  END:  Bidirectional Helper Methods ===================
 
-
+	public boolean function isCurrent() {
+		var currentDateTime = now();
+		return getStartDateTime() <= currentDateTime && getEndDateTime() > currentDateTime;
+	}
 
 	// ============ START: Non-Persistent Property Methods =================
 	

@@ -36,7 +36,25 @@
 Notes:
 
 --->
+
+<cfparam name="rc.promotion" type="any">
+<cfparam name="rc.edit" type="boolean">
+
 <cfoutput>
+
+	<cf_SlatwallListingDisplay smartList="#rc.promotion.getPromotionCodesSmartList()#"
+							   recordEditAction="admin:pricing.editpromotioncode"
+							   recordEditModal="true"
+							   recordDeleteAction="admin:pricing.deletepromotioncode"
+							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotion&promotionID=#rc.promotion.getPromotionID()#">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionCode" />
+	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:pricing.createpromotioncode" class="btn btn-primary" queryString="promotionID=#rc.promotion.getPromotionID()#" modal="true" />
+</cfoutput>
+
+
+<!---<cfoutput>
 <cfif rc.edit>
 <div class="buttons">
 	<a class="button" id="addPromotionCode">#rc.$.Slatwall.rbKey("admin.promotion.edit.addPromotionCode")#</a>
@@ -186,4 +204,4 @@ Notes:
 </tbody>
 </table>
 </cfif>
-</cfoutput>
+</cfoutput>--->

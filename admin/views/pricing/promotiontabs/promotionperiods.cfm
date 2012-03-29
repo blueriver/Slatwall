@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -39,7 +39,20 @@ Notes:
 <cfparam name="rc.promotion" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<cf_SlatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
-	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
-</cf_SlatwallPropertyList>
+<cfset local.ppSmartList= new Slatwall.org.entitySmartList.SmartList("SlatwallPromotionPeriod")  />
+<cfset local.ppSmartList.addFilter( "promotion.promotionID",rc.promotion.getPromotionID() ) />
+
+<cfoutput>
+
+	<cf_SlatwallListingDisplay smartList="#local.ppSmartList#"
+							   recordEditAction="admin:pricing.editPromotionperiod" 
+							   recordDeleteAction="admin:pricing.deletepromotionperiod"
+							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotion">
+		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" />
+		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" />
+	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:pricing.createpromotionperiod" class="btn btn-primary" queryString="promotionID=#rc.promotion.getPromotionID()#" />
+</cfoutput>
