@@ -91,12 +91,7 @@ Notes:
 												<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white">
 											</cfif>
 										<cfelse>
-											<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i> #request.context.$.slatwall.rbKey('define.create')# <span class="caret"></span></button>
-											<ul class="dropdown-menu">
-												<cfloop list="#attributes.createAction#" index="action">
-													<cf_SlatwallActionCaller action="#action#" type="list">
-												</cfloop>
-											</ul>
+											<cf_SlatwallActionCallerDropdown title=" #request.context.$.slatwall.rbKey('define.create')# " actions="#attributes.createAction#" queryString="returnAction=#request.context.slatAction#" modal="#attributes.createModal#">
 										</cfif>
 									</div>
 								</cfif>
