@@ -123,6 +123,7 @@ Notes:
 		#$.slatwall.getCFStatic().renderIncludes("js")#
 		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
+		#request.footer#
 	</body>
 </html>
 </cfoutput>

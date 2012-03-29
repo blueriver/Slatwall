@@ -234,6 +234,14 @@ function tableExpandClick( toggleLink ) {
 	}
 }
 
+function showOnPropertyValue(value,targetValue,targetElement) {
+	if( value == targetValue ) {
+		targetElement.show();
+	} else {
+		targetElement.hide().find('input').val('');
+	}
+}
+
 function convertCFMLDateFormat( dateFormat ) {
 	dateFormat = dateFormat.replace('mmm', 'M');
 	dateFormat = dateFormat.replace('yyyy', 'yy');
