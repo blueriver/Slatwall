@@ -242,7 +242,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			{settingName="page_editAccount",title="Edit Account",fileName="edit-account",isNav="1",isLocked="1"},
 			{settingName="page_createAccount",title="Create Account",fileName="create-account",isNav="1",isLocked="1"},
 			{settingName="page_checkout",title="Checkout",fileName="checkout",isNav="1",isLocked="1"},
-			{title="Default Product Template",fileName="default-product-template",isNav="0",isLocked="0",templateFlag="1"}
+			{title="Default Template",fileName="default-template",isNav="0",isLocked="0",templateFlag="1"}
 		];
 		
 		var assignedSites = getPluginConfig().getAssignedSites();
@@ -297,7 +297,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			thisPage.setCmsContentID(arguments.muraPage.getContentID());
 			thisPage.setCmsContentIDPath(arguments.muraPage.getPath());
 			thisPage.setTitle(arguments.muraPage.getTitle());
-			thisPage = getService("contentService").saveContent(thisPage,arguments.pageAttributes);
+			thisPage = getService("contentService").saveContent(thisPage, arguments.pageAttributes);
 		}
 	}
 	

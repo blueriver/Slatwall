@@ -49,10 +49,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// Persistent Properties - Inheritence Settings
 	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowDropshipFlag" ormtype="boolean";
 	property name="allowPreorderFlag" ormtype="boolean";
-	property name="allowShippingFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
+	property name="eligableFulfillmentMethods" ormtype="string";
 	property name="productDisplayTemplate" ormtype="string";
 	property name="productTypeDisplayTemplate" ormtype="string";
 	property name="quantityHeldBack" ormtype="integer";
@@ -207,7 +206,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     		return getParentProductType().getSetting( arguments.settingName );
     	}
     	
-    	return setting("product_#arguments.settingName#");
+    	throw("You have asked for a setting that doesn't exist in the Base Product Type of: #getBaseProductType()#");
     }
     
     public any function getWhereSettingDefined( required string settingName ) {
@@ -217,7 +216,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     		return getParentProductType().getWhereSettingDefined( arguments.settingName );
     	}
     	
-    	return {type="Global"};
+    	throw("You have asked where a setting is defined for a setting that doesn't exist in the Base Product Type of: #getBaseProductType()#");
     }
     // END: Setting Methods
     

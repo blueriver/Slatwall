@@ -54,9 +54,9 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.productType#">
-			<cf_SlatwallTab view="admin:product/producttypetabs/products" />
 			<cf_SlatwallTab view="admin:product/producttypetabs/settings" />
 			<cf_SlatwallTab view="admin:product/producttypetabs/attributesets" />
+			<cf_SlatwallTab view="admin:product/producttypetabs/products" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
