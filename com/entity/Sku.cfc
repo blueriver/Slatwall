@@ -111,12 +111,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
  	   if(isNull(variables.promotionQualifiers)) {
 	       variables.promotionQualifiers = [];
 	   }
- 	   if(isNull(variables.promotionRewardExclusions)) {
-	       variables.promotionRewardExclusions = [];
-	   }
- 	   if(isNull(variables.promotionQualifierExclusions)) {
-	       variables.promotionQualifierExclusions = [];
-	   }
 	   if(isNull(variables.priceGroupRates)) {
 	   	   variables.priceGroupRates = [];
 	   }
@@ -471,15 +465,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public void function removePromotionReward(required any promotionReward) {
 		arguments.promotionReward.removeSku( this );
 	}
-		
-	// Promotion Reward Exclusions (one-to-many)
-	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
-		arguments.promotionRewardExclusion.addSku( this );
-	}
-	
-	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
-		arguments.promotionRewardExclusion.removeSku( this );
-	}
 
 	// Promotion Qualifiers (one-to-many)
 	public void function addPromotionQualifier(required any promotionQualifier) {
@@ -488,15 +473,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeSku( this );
-	}
-	
-	// Promotion Qualifier Exclusions (one-to-many)
-	public void function addPromotionQualifierExclusion(required any promotionQualifierExclusion) {
-		arguments.promotionQualifierExclusion.addSku( this );
-	}
-	
-	public void function removePromotionQualifierExclusion(required any promotionQualifierExclusion) {
-		arguments.promotionQualifierExclusion.removeSku( this );
 	}
 	
 	// Access Content (many-to-many)

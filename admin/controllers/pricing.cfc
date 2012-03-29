@@ -48,7 +48,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 
-	public void function detailpromotion(required struct rc) {
+/*	public void function detailpromotion(required struct rc) {
 		param name="rc.promotionID" default="";
 		param name="rc.promotionRewardID" default="";
 		param name="rc.promotionQualifierID" default="";
@@ -193,23 +193,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
 	}
 	
-	public void function deletePromotionRewardExclusion(required struct rc) {
-		
-		var promotionRewardExclusion = getPromotionService().getPromotionRewardExclusion(rc.promotionRewardExclusionID);
-		rc.promotionID = promotionRewardExclusion.getPromotion().getPromotionID();
-		
-		var deleteOK = getPromotionService().deletePromotionRewardExclusion(promotionRewardExclusion);
-		
-		if( deleteOK ) {
-			rc.message = rbKey("admin.promotion.deletePromotionRewardExclusion_success");
-		} else {
-			rc.message = rbKey("admin.promotion.deletePromotionRewardExclusion_error");
-			rc.messagetype = "error";
-		}
-		
-		getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotionID###tabPromotionRewardExclusions",preserve="message,messagetype");
-	}
-	
 	public void function deletePromotionQualifier(required struct rc) {
 		
 		var promotionQualifier = getPromotionService().getPromotionQualifier(rc.promotionQualifierID);
@@ -225,24 +208,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		
 		getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotionID###tabPromotionQualifiers",preserve="message,messagetype");
-	}
-	
-	public void function deletePromotionQualifierExclusion(required struct rc) {
-		
-		var promotionQualifierExclusion = getPromotionService().getPromotionQualifierExclusion(rc.promotionQualifierExclusionID);
-		rc.promotionID = promotionQualifierExclusion.getPromotion().getPromotionID();
-		
-		var deleteOK = getPromotionService().deletePromotionQualifierExclusion(promotionQualifierExclusion);
-		
-		if( deleteOK ) {
-			rc.message = rbKey("admin.promotion.deletePromotionQualifierExclusion_success");
-		} else {
-			rc.message = rbKey("admin.promotion.deletePromotionQualifierExclusion_error");
-			rc.messagetype = "error";
-		}
-		
-		getFW().redirect(action="admin:pricing.editpromotion",querystring="promotionID=#rc.promotionID###tabPromotionQualifierExclusions",preserve="message,messagetype");
-	}
+	}*/
 	
 		/*public void function listPriceGroups(required struct rc) {
         param name="rc.orderBy" default="priceGroupId|ASC";
