@@ -91,6 +91,38 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().setView("admin:pricing.detailpromotionreward");
 	}
 
+	public void function createPromotionQualifierProduct(required struct rc) {
+		rc.promotionQualifier = getPromotionService().newPromotionQualifierProduct();
+		if( structKeyExists(rc,"promotionperiodID") ) {
+			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
+		}
+		rc.saveAction = "admin:pricing.savepromotionqualifierproduct";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionqualifiers";
+		rc.edit = true;
+		getFW().setView("admin:pricing.detailpromotionqualifier");
+	}
+
+	public void function createPromotionQualifierFulfillment(required struct rc) {
+		rc.promotionQualifier = getPromotionService().newPromotionQualifierFulfillment();
+		if( structKeyExists(rc,"promotionperiodID") ) {
+			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
+		} 		 
+		rc.saveAction = "admin:pricing.savepromotionqualifierfulfillment";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionqualifiers";
+		rc.edit = true;
+		getFW().setView("admin:pricing.detailpromotionqualifier");
+	}
+	
+	public void function createPromotionQualifierOrder(required struct rc) {
+		rc.promotionQualifier = getPromotionService().newPromotionQualifierOrder();
+		if( structKeyExists(rc,"promotionperiodID") ) {
+			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
+		}
+		rc.saveAction = "admin:pricing.savepromotionqualifierorder";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionqualifiers";
+		rc.edit = true;
+		getFW().setView("admin:pricing.detailpromotionqualifier");
+	}
 
 /*	public void function detailpromotion(required struct rc) {
 		param name="rc.promotionID" default="";

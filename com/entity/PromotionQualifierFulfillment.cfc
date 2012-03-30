@@ -124,23 +124,11 @@ component displayname="Promotion Qualifier Fulfillment" entityname="SlatwallProm
     }
 	
 	/*-----  End Relationship Management Methods  -----*/
-	
-	public array function getFulfillmentMethodsOptions() {
-		var fulfillmentMethodsOptions = [];
-		var fulfillmentMethods = getService("fulfillmentService").listFulfillmentMethodFilterByActiveFlag( true );
-		
-		for( var i=1;i<=arrayLen(fulFillmentMethods);i++ ) {
-			local.thisFulfillmentMethod = fulfillmentMethods[i];
-			local.thisID = local.thisFulfillmentMethod.getFulfillmentMethodID();
-			arrayAppend( fulfillmentMethodsOptions, {name=rbKey("admin.setting.fulfillmentmethod.#local.thisID#"),value=local.thisID} );
-		}
-		return fulfillmentMethodsOptions;
-	}
 
 	public string function displayFulfillmentMethodNames() {
 		var fulfillmentMethodNames = "";
 		for( var i=1; i<=arrayLen(this.getFulfillmentMethods());i++ ) {
-			fulfillmentMethodNames = listAppend(fulfillmentMethodNames,rbKey("admin.setting.fulfillmentmethod.#this.getFulfillmentMethods()[i].getFulfillmentMethodID()#"));
+			fulfillmentMethodNames = listAppend(fulfillmentMethodNames,this.getFulfillmentMethods()[i].getFulfillmentMethodName());
 		}
 		return fulfillmentMethodNames;
 	}

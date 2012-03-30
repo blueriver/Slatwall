@@ -63,8 +63,8 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-persistent properties
-	property name="startDateTime" persistent="false";
-	property name="endDateTime" persistent="false"; 
+	property name="startDateTime" type="date" persistent="false";
+	property name="endDateTime" type="date" persistent="false"; 
 	
 	public Promotion function init(){
 		// set default collections for association management methods

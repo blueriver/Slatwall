@@ -73,8 +73,7 @@ Notes:
 						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedSkus" edit="#rc.edit#" />
 					</cfcase>
 					<cfcase value="shipping">
-					</cfcase>
-					<cfcase value="order">
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="shippingMethods" edit="#rc.edit#" />
 					</cfcase>
 				</cfswitch>
 			</cf_SlatwallPropertyList>
