@@ -41,3 +41,6 @@ Notes:
 <cf_SlatwallListingDisplay smartList="#rc.priceGroup.getPriceGroupRatesSmartList()#">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="amount" />
 </cf_SlatwallListingDisplay>
+
+<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate" class="btn btn-primary" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
+	

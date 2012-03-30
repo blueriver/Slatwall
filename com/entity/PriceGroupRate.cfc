@@ -66,6 +66,8 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID";
 	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID";
 	
+	// Non-persistent entities
+	property name="type" persistent="false";
 	
 	public PriceGroupRate function init() {
 	   // set default collections for association management methods
@@ -288,6 +290,14 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 			return "";
 		}
     }
+    
+    public array function getTypeOptions() {
+		return [
+			{name=rbKey("entity.priceGroupRate.priceGroupRateType.percentageOff"), value="percentageOff"},
+			{name=rbKey("entity.priceGroupRate.priceGroupRateType.amountOff"), value="amountOff"},
+			{name=rbKey("entity.priceGroupRate.priceGroupRateType.amount"), value="amount"}
+		];
+	}
     
         
 
