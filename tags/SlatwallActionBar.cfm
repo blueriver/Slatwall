@@ -48,7 +48,7 @@ Notes:
 		<cfparam name="attributes.backAction" type="string" default="#request.context.listAction#" />
 		<cfparam name="attributes.backQueryString" type="string" default="" />
 		<cfparam name="attributes.cancelAction" type="string" default="#request.context.cancelAction#" />
-		<cfparam name="attributes.cancelQueryString" type="string" default="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" />
+		<cfparam name="attributes.cancelQueryString" type="string" default="" />
 		<cfsilent>
 			<cfif attributes.type eq "detail" and not attributes.object.isNew()>
 				<cfset attributes.pageTitle &= " - #attributes.object.getSimpleRepresentation()#" />
@@ -98,6 +98,8 @@ Notes:
 								</cfif>
 							<!--- Detail --->
 							<cfelseif attributes.type eq "detail">
+								<!--- set default value for cancel action querystring --->
+								<cfset attributes.cancelQueryString = len(attributes.cancelQueryString) > 0 ? attributes.cancelQueryString : "#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#";
 								<div class="btn-group">
 									<cf_SlatwallActionCaller action="#attributes.backAction#" queryString="#attributes.backQueryString#" class="btn" icon="arrow-left">
 								</div>
