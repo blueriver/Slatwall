@@ -99,7 +99,7 @@ Notes:
 							<!--- Detail --->
 							<cfelseif attributes.type eq "detail">
 								<!--- set default value for cancel action querystring --->
-								<cfset attributes.cancelQueryString = len(attributes.cancelQueryString) > 0 ? attributes.cancelQueryString : "#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#";
+								<cfset attributes.cancelQueryString = (len(trim(attributes.cancelQueryString)) gt 0) ? attributes.cancelQueryString : "#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" />
 								<div class="btn-group">
 									<cf_SlatwallActionCaller action="#attributes.backAction#" queryString="#attributes.backQueryString#" class="btn" icon="arrow-left">
 								</div>
