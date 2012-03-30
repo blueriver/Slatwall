@@ -44,7 +44,11 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" backAction="admin:pricing.detailpromotionperiod" backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" 
+							  cancelAction="admin:pricing.detailpromotionperiod"
+							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionrewards" 
+							  backAction="admin:pricing.detailpromotionperiod" 
+							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionrewards" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
@@ -57,6 +61,16 @@ Notes:
 				</cfif>
 				<cfswitch expression="#local.rewardType#" >
 					<cfcase value="product">
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="rewardCanApplyToQualifierFlag" edit="#rc.edit#" />
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="itemRewardQuantity" edit="#rc.edit#" />
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumOrderRewardQuantity" edit="#rc.edit#" />
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="roundingRule" edit="#rc.edit#" />
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="brands" edit="#rc.edit#" />
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="productTypes" edit="#rc.edit#" />
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="products" edit="#rc.edit#" />
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedProductTypes" edit="#rc.edit#" />
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedProducts" edit="#rc.edit#" />
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedSkus" edit="#rc.edit#" />
 					</cfcase>
 					<cfcase value="shipping">
 					</cfcase>
