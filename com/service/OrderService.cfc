@@ -194,8 +194,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
 						
 						itemExists = true;
-						orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-						orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+						// do not increment quantity for content access product
+						if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
+							orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+							orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+						}
 						break;
 						
 					}
