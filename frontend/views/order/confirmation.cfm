@@ -63,7 +63,7 @@ Notes:
 				<cfloop array="#rc.order.getOrderItems()#" index="local.orderItem">
 					<tr>
 						<td>#local.orderItem.getSku().getSkuCode()#</td>
-						<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
+						<td class="varWidth"><cfif Not isNull(local.orderItem.getSku().getProduct().getBrand())>#local.orderItem.getSku().getProduct().getBrand().getBrandName()# </cfif>#local.orderItem.getSku().getProduct().getProductName()#</td>
 						<td>#local.orderItem.getFormattedValue('price', 'currency')#</td>
 						<td>#int(local.orderItem.getQuantity())#</td>
 						<td>#local.orderItem.getQuantityDelivered()#</td>

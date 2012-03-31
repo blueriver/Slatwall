@@ -53,6 +53,7 @@
 				<entry key="AccountAddress"><value>accountService</value></entry>
 				<entry key="AccountAttributeSetAssignment"><value>accountService</value></entry>
 				<entry key="AccountAttributeValue"><value>attributeService</value></entry>
+				<entry key="AccountContentAccess"><value>accountService</value></entry>
 				<entry key="AccountCustomizedAttributeSet"><value>attributeService</value></entry>
 				<entry key="AccountEmailAddress"><value>accountService</value></entry>
 				<entry key="AccountPaymentMethod"><value>accountService</value></entry>
