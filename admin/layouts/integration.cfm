@@ -45,6 +45,12 @@ Notes:
 			<ul class="nav nav-list">
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.integration')#</li>
 				<cf_SlatwallActionCaller action="admin:product.listintegration" type="list">
+				<cfset local.integrationSubsystems = $.slatwall.getService('integrationService').getActiveFW1Subsystems() />
+				<cfloop array="#local.integrationSubsystems#" index="local.intsys">
+					<li>
+						<a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a>
+					</li>
+				</cfloop>
 			</ul>
 		</div>
 	</div>
