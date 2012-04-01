@@ -46,6 +46,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="sessionService" type="any";
 	property name="userUtility" type="any";
 	
+	public any function init(required any fw) {
+		setUserUtility( getCMSBean("userUtility") );
+		
+		return super.init(arguments.fw);
+	}
+	
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="";
 		param name="rc.orderRequirementsList" default="";
