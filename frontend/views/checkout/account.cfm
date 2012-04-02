@@ -108,7 +108,7 @@ Notes:
 								<a href="?doaction=logout">Logout</a>
 							</cfif>
 						</dl>
-						<cf_SlatwallActionCaller action="frontend:checkout.saveaccount" type="submit">
+						<cf_SlatwallActionCaller action="frontend:checkout.saveorderaccount" type="button">
 					</form>
 				</div>
 			<cfelseif not listFind(rc.orderRequirementsList, 'account')>

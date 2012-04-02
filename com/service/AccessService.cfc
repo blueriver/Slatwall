@@ -64,6 +64,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=$.slatwall.getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=thisContent.getContentID());
 			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
+				logAccess(content=thisContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
 				purchasedAccess = true;
@@ -76,6 +77,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=purchaseRequiredContent.getContentID());
 			// check if the content requires subcription in addition to purchase
 			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
+				logAccess(content=thisContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
 				purchasedAccess = true;
@@ -86,6 +88,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// check if content is part of subscription access
 			for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
 				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(thisContent)) {
+					logAccess(content=thisContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
 					return true;
 				}
 			}
@@ -95,6 +98,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
 					for(var category in categories) {
 						if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
+							logAccess(content=thisContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
 							return true;
 						}
 					}
@@ -102,6 +106,18 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		return false;
+	}
+	
+	public void function logAccess(required any content) {
+		var contentAccess = this.newContentAccess();
+		contentAccess.setContent(arguments.content);
+		contentAccess.setAccount($.slatwall.getCurrentAccount());
+		if(structKeyExists(arguments,"subscriptionUsageBenefit")) {
+			contentAccess.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
+		} else if(structKeyExists(arguments,"accountContentAccess")) {
+			contentAccess.setAccountContentAccess(arguments.accountContentAccess);
+		}
+		this.saveContentAccess(contentAccess);
 	}
 	
 	public string function createAccessCode() {
