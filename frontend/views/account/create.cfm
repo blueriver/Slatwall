@@ -41,6 +41,7 @@ Notes:
 	<form name="account" method="post">
 		<h4>Account Details</h4>
 		<dl>
+			<cf_SlatwallErrorDisplay object="#rc.account#" errorName="cmsError" />
 			<!--- login info --->
 			<dt class="spdemailaddress">
 				<label for="emailAddress" class="required">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label>
