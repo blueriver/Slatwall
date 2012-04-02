@@ -47,11 +47,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="imageFile" ormtype="string" length="50";
 	
 	// Persistent Properties - Inheritence Settings
-	property name="allowShippingFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
 	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowDropshipFlag" ormtype="boolean";
+	property name="allowPreorderFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
+	property name="eligableFulfillmentMethods" ormtype="string";
 	property name="quantityHeldBack" ormtype="integer";
 	property name="quantityMinimum" ormtype="integer";
 	property name="quantityMaximum" ormtype="integer";
@@ -77,7 +76,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
-	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID";
 	property name="accessContents" singularname="accessContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="skuID" inversejoincolumn="contentID"; 
 	property name="subscriptionBenefits" singularname="subscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSkuSubscriptionBenefit" fkcolumn="skuID" inversejoincolumn="subscriptionBenefitID";
 	

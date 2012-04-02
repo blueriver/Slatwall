@@ -85,9 +85,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
 
-	// Related Object Properties (Many-To-Many - owner)
-	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallProductTypeEligibleFulfillmentMethod" fkcolumn="productTypeID" inversejoincolumn="fulfillmentMethodID"; 
-
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
 	property name="productDisplayTemplateOptions" type="array" persistent="false";
@@ -344,7 +341,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		super.preInsert();
 		setProductTypeIDPath( buildIDPathList() );
 		getService("skuCacheService").updateFromProductType( this );
-		
 	}
 	
 	public void function preUpdate(struct oldData){

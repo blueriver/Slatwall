@@ -51,10 +51,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Persistent Properties - Inheritence Settings
 	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowDropshipFlag" ormtype="boolean";
 	property name="allowPreorderFlag" ormtype="boolean";
-	property name="allowShippingFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
+	property name="eligableFulfillmentMethods" ormtype="string";
 	property name="productDisplayTemplate" ormtype="string";
 	property name="quantityHeldBack" ormtype="integer";
 	property name="quantityMinimum" ormtype="integer";
