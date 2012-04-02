@@ -231,12 +231,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// @hint returns a smart list of the current values for a given one-to-many or many-to-many property
 	public any function getPropertySmartList( required string propertyName ) {
 		var cacheKey = "#arguments.propertyName#SmartList";
-		
+		//writeDump(var=arguments.propertyName,abort=true);
 		if(!structKeyExists(variables, cacheKey)) {
 			
 			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
 			var smartList = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
-			
+			//writeDump(var=smartlist,abort=true,top="3");
 			// Create an example entity so that we can read the meta data
 			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
 			
@@ -299,16 +299,15 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			
 			return getPropertyOptions( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-10) );
 
-		// getXXXSmartList()	Where XXX is a one-to-many or many-to-many property where we to return a smartList instead of just an array
-		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 9) == "SmartList") {
-			
-			return getPropertySmartList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-12) );
-			
 		// getXXXOptionsSmartList()		Where XXX is a one-to-many or many-to-many property that we need an array of valid options returned 
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 16) == "OptionsSmartList") {
 			
 			return getPropertyOptionsSmartList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-19) );
 			
+		// getXXXSmartList()	Where XXX is a one-to-many or many-to-many property where we to return a smartList instead of just an array
+		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 9) == "SmartList") {
+			
+			return getPropertySmartList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-12) );
 			
 		// getXXXStruct()		Where XXX is a one-to-many or many-to-many property where we want a key delimited struct
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 6) == "Struct") {

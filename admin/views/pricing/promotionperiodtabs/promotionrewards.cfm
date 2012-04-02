@@ -37,7 +37,29 @@ Notes:
 
 --->
 
+<cfparam name="rc.promotionperiod" type="any">
+<cfparam name="rc.edit" type="boolean">
+
 <cfoutput>
+	<cf_SlatwallListingDisplay smartList="#rc.promotionperiod.getPromotionRewardsSmartList()#"
+							   recordEditAction="admin:pricing.editpromotionreward"
+							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
+							   recordDeleteAction="admin:pricing.deletepromotionreward"
+							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
+		<cf_SlatwallListingColumn propertyIdentifier="rewardTypeDisplay" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="rewardItems" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="discount" />
+	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCallerDropdown
+						title="#$.slatwall.rbKey('define.create')#"
+						actions="admin:pricing.createpromotionrewardproduct,admin:pricing.createpromotionrewardshipping,admin:pricing.createpromotionrewardorder" 
+						queryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#" />
+	
+	<!---<cf_SlatwallActionCaller action="admin:pricing.createpromotionreward" class="btn btn-primary" queryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#" modal="true" />--->
+</cfoutput>
+
+<!---<cfoutput>
 	<cfif arrayLen(rc.promotion.getPromotionRewards()) GT 0>
 		<table class="listing-grid stripe">
 			<thead>
@@ -220,4 +242,4 @@ Notes:
 		
 		<br /><br />
 	</cfif>
-</cfoutput>
+</cfoutput>--->

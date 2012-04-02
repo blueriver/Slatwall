@@ -43,9 +43,10 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.orderSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" recordEditAction="admin:account.editaccount">
+<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" recordDetailAction="admin:order.detailorder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
+	<cf_SlatwallListingColumn propertyIdentifier="total" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderType.type" filter=true />
 	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" filter=true />
 	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range=true />

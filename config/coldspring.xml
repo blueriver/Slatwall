@@ -53,6 +53,7 @@
 				<entry key="AccountAddress"><value>accountService</value></entry>
 				<entry key="AccountAttributeSetAssignment"><value>accountService</value></entry>
 				<entry key="AccountAttributeValue"><value>attributeService</value></entry>
+				<entry key="AccountContentAccess"><value>accountService</value></entry>
 				<entry key="AccountCustomizedAttributeSet"><value>attributeService</value></entry>
 				<entry key="AccountEmailAddress"><value>accountService</value></entry>
 				<entry key="AccountPaymentMethod"><value>accountService</value></entry>
@@ -91,6 +92,7 @@
 				<entry key="OrderDeliveryPickup"><value>orderService</value></entry>
 				<entry key="OrderDeliveryShipping"><value>orderService</value></entry>
 				<entry key="OrderFulfillment"><value>orderService</value></entry>
+				<entry key="OrderFulfillmentAuto"><value>orderService</value></entry>
 				<entry key="OrderFulfillmentPickup"><value>orderService</value></entry>
 				<entry key="OrderFulfillmentShipping"><value>orderService</value></entry>
 				<entry key="OrderItem"><value>orderService</value></entry>
@@ -126,6 +128,7 @@
 				<entry key="PromotionApplied"><value>promotionService</value></entry>
 				<entry key="PromotionCode"><value>promotionService</value></entry>
 				<entry key="PromotionImage"><value>promotionService</value></entry>
+				<entry key="PromotionPeriod"><value>promotionService</value></entry>
 				<entry key="PromotionQualifier"><value>promotionService</value></entry>
 				<entry key="PromotionQualifierFulfillment"><value>promotionService</value></entry>
 				<entry key="PromotionQualifierOrder"><value>promotionService</value></entry>

@@ -44,6 +44,10 @@ component displayname="Promotion Qualifier Order" entityname="SlatwallPromotionQ
 
 	// ============ START: Non-Persistent Property Methods =================
 	
+	public string function getQualifierType() {
+		return "order";
+	}	
+	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================

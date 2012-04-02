@@ -47,7 +47,8 @@ Notes:
 		<cfparam name="attributes.createModal" type="boolean" default="false" />
 		<cfparam name="attributes.backAction" type="string" default="#request.context.listAction#" />
 		<cfparam name="attributes.backQueryString" type="string" default="" />
-		
+		<cfparam name="attributes.cancelAction" type="string" default="#request.context.cancelAction#" />
+		<cfparam name="attributes.cancelQueryString" type="string" default="" />
 		<cfsilent>
 			<cfif attributes.type eq "detail" and not attributes.object.isNew()>
 				<cfset attributes.pageTitle &= " - #attributes.object.getSimpleRepresentation()#" />
@@ -91,17 +92,14 @@ Notes:
 												<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white">
 											</cfif>
 										<cfelse>
-											<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i> #request.context.$.slatwall.rbKey('define.create')# <span class="caret"></span></button>
-											<ul class="dropdown-menu">
-												<cfloop list="#attributes.createAction#" index="action">
-													<cf_SlatwallActionCaller action="#action#" type="list">
-												</cfloop>
-											</ul>
+											<cf_SlatwallActionCallerDropdown title=" #request.context.$.slatwall.rbKey('define.create')# " actions="#attributes.createAction#" queryString="returnAction=#request.context.slatAction#" modal="#attributes.createModal#">
 										</cfif>
 									</div>
 								</cfif>
 							<!--- Detail --->
 							<cfelseif attributes.type eq "detail">
+								<!--- set default value for cancel action querystring --->
+								<cfset attributes.cancelQueryString = (len(trim(attributes.cancelQueryString)) gt 0) ? attributes.cancelQueryString : "#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" />
 								<div class="btn-group">
 									<cf_SlatwallActionCaller action="#attributes.backAction#" queryString="#attributes.backQueryString#" class="btn" icon="arrow-left">
 								</div>
@@ -116,7 +114,7 @@ Notes:
 								<div class="btn-group">
 									<cfif request.context.edit>
 										<cfif not attributes.object.isNew()><cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
-										<cf_SlatwallActionCaller action="#request.context.cancelAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.Slatwall.rbKey('define.cancel')#" class="btn btn-inverse" icon="remove icon-white">
+										<cf_SlatwallActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#request.context.$.Slatwall.rbKey('define.cancel')#" class="btn btn-inverse" icon="remove icon-white">
 										<cf_SlatwallActionCaller action="#request.context.saveAction#" text="#request.context.$.Slatwall.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
 									<cfelse>
 										<cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">

@@ -36,26 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.priceGroup" type="any">
+<cfparam name="rc.promotionCode" type="any">
+<cfparam name="rc.promotion" type="any" default="#rc.promotionCode.getPromotion()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-		</cf_SlatwallActionBar>
-		
+	<cf_SlatwallDetailForm object="#rc.promotion#" saveAction="admin:pricing.savepromotion" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+		<input type="hidden" name="promotioncodes[1].promotioncodeID" value="#rc.promotionCode.getPromotionCodeID()#" />
+
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupCode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="promotioncode" fieldName="promotionCodes[1].promotioncode" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.priceGroup#">
-			<cf_SlatwallTab view="admin:pricing/pricegrouptabs/rates" />
-		</cf_SlatwallTabGroup>
-		
+
 	</cf_SlatwallDetailForm>
 </cfoutput>

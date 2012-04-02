@@ -54,7 +54,7 @@ Notes:
 			<tr>
 				<td>#local.orderItem.getSku().getSkuCode()#</td>
 				<td class="varWidth">
-					<strong>#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</strong>
+					<strong><cfif Not isNull(local.orderItem.getSku().getProduct().getBrand())>#local.orderItem.getSku().getProduct().getBrand().getBrandName()# </cfif>#local.orderItem.getSku().getProduct().getProductName()#</strong>
 					<cfif local.orderItem.hasAttributeValue() or arrayLen(local.orderItem.getSku().getOptions())>
 					  <ul class="inlineAdmin">
 			          	<li class="zoomIn">           

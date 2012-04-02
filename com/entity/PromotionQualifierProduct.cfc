@@ -69,6 +69,15 @@ component displayname="Promotion Qualifier Product" entityname="SlatwallPromotio
 		if(isNull(variables.productTypes)) {
 			variables.productTypes = [];
 		}
+		if(isNull(variables.excludedProducts)) {
+			variables.excludedProducts = [];
+		}	   
+		if(isNull(variables.excludedProductTypes)) {
+			variables.excludedProductTypes = [];
+		}
+		if(isNull(variables.excludedSkus)) {
+			variables.excludedSkus = [];
+		}
 		return super.init();
 	}
 	

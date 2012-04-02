@@ -40,6 +40,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 
 	property name="roundingRuleService" type="any";
 	property name="utilityService" type="any";
+
 	
 	/*public any function savePromotion(required any promotion, struct data={}) {
 		// Turn off sub-property populating because it will be managed manually in this method.

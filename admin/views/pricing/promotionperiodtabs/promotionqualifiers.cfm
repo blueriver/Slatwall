@@ -37,7 +37,28 @@ Notes:
 
 --->
 
+<cfparam name="rc.promotionperiod" type="any">
+<cfparam name="rc.edit" type="boolean">
+
 <cfoutput>
+	<cf_SlatwallListingDisplay smartList="#rc.promotionperiod.getPromotionQualifiersSmartList()#"
+							   recordEditAction="admin:pricing.editpromotionqualifier"
+							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
+							   recordDeleteAction="admin:pricing.deletepromotionqualifier"
+							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
+		<cf_SlatwallListingColumn propertyIdentifier="qualifierTypeDisplay" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="qualifierItems" />
+	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCallerDropdown
+						title="#$.slatwall.rbKey('define.create')#"
+						actions="admin:pricing.createpromotionqualifierproduct,admin:pricing.createpromotionqualifierfulfillment,admin:pricing.createpromotionqualifierorder" 
+						queryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#" />
+	
+</cfoutput>
+
+
+<!---<cfoutput>
 	<cfif arrayLen(rc.promotion.getPromotionQualifiers()) GT 0>
 		<table class="listing-grid stripe">
 			<thead>
@@ -219,4 +240,4 @@ Notes:
 		
 		<br /><br />
 	</cfif>
-</cfoutput>
+</cfoutput>--->

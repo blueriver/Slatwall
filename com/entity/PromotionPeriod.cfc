@@ -49,7 +49,7 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Related Object Properties (one-to-many)   
-	property name="promotionPeriodPromotionCodes" singularname="promotionPeriodPromotionCode" cfc="PromotionPeriodPromotionCode" fkcolumn="promotionPeriodID" cascade="all-delete-orphan";
+	property name="promotionPeriodPromotionCodes" singularname="promotionPeriodPromotionCode" cfc="PromotionPeriodPromotionCode" fieldtype="one-to-many" fkcolumn="promotionPeriodID" cascade="all-delete-orphan";
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	
@@ -100,7 +100,14 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	
    // =============  END:  Bidirectional Helper Methods ===================
 
-
+	public boolean function isCurrent() {
+		var currentDateTime = now();
+		return getStartDateTime() <= currentDateTime && getEndDateTime() > currentDateTime;
+	}
+	
+	public string function getSimpleRepresentation() {
+		return getPromotion().getPromotionName();
+	}
 
 	// ============ START: Non-Persistent Property Methods =================
 	

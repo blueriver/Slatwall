@@ -194,8 +194,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
 						
 						itemExists = true;
-						orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-						orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+						// do not increment quantity for content access product
+						if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
+							orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+							orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+						}
 						break;
 						
 					}
@@ -435,7 +438,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							logSlatwall(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
 						
 							// Send out the e-mail
-							getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+							if(!structKeyExists(arguments.data,"doNotSendOrderConfirmationEmail") || !arguments.data.doNotSendOrderConfirmationEmail) {
+								getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+							}
 							
 							// setup subscription data if this was subscription order
 							setupSubscriptionOrder(order);
@@ -462,6 +467,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var subscriptionUsage = getService("subscriptionService").getSubscriptionUsageByOrderItem(orderItem,true);
 				subscriptionOrder.setSubscriptionUsage(subscriptionUsage);
 				subscriptionUsage.setOrderItem(orderItem);
+				// call save on this entity to make it persistent so we can use it for further lookup
+				getService("subscriptionService").saveSubscriptionUsage(subscriptionUsage);
 				// copy all the subscription benefits
 				for(var subscriptionBenefit in orderItem.getSku().getSubscriptionBenefits()) {
 					var subscriptionUsageBenefit = getService("subscriptionService").getSubscriptionUsageBenefitBySubscriptionBenefitANDSubscriptionUsage([subscriptionBenefit,subscriptionUsage],true);

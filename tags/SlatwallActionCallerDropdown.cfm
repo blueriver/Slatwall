@@ -36,26 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.priceGroup" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="attributes.title" type="string" default="">
+<cfparam name="attributes.actions" type="string" />
+<cfparam name="attributes.queryString" type="string" default="" />
+<cfparam name="attributes.modal" type="boolean" default="false" />
 
-<cfoutput>
-	<cf_SlatwallDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-		</cf_SlatwallActionBar>
-		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupCode" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.priceGroup#">
-			<cf_SlatwallTab view="admin:pricing/pricegrouptabs/rates" />
-		</cf_SlatwallTabGroup>
-		
-	</cf_SlatwallDetailForm>
-</cfoutput>
+<cfif thisTag.executionMode is "start">
+	<cfoutput>
+		<div class="btn-group">
+		<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i>#attributes.title# <span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<cfloop list="#attributes.actions#" index="action">
+					<cf_SlatwallActionCaller action="#action#" type="list" modal="#attributes.modal#" querystring="#attributes.queryString#" />
+				</cfloop>
+			</ul>
+		</div>
+	</cfoutput>
+</cfif>

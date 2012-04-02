@@ -55,6 +55,12 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="shippingReadyFlag" ormtype="boolean";
 	property name="shippingActiveFlag" ormtype="boolean";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
 	// Non-Persistent properties
 	property name="activeFlag" type="boolean" persistent="false";
 	
@@ -148,6 +154,10 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
+	
+	public boolean function isDeletable() {
+		return false;
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 		

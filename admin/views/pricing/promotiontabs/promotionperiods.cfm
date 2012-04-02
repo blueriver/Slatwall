@@ -36,26 +36,23 @@
 Notes:
 
 --->
-<cfparam name="rc.priceGroup" type="any">
+<cfparam name="rc.promotion" type="any">
 <cfparam name="rc.edit" type="boolean">
 
+<cfset local.ppSmartList= new Slatwall.org.entitySmartList.SmartList("SlatwallPromotionPeriod")  />
+<cfset local.ppSmartList.addFilter( "promotion.promotionID",rc.promotion.getPromotionID() ) />
+
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-		</cf_SlatwallActionBar>
-		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupCode" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.priceGroup#">
-			<cf_SlatwallTab view="admin:pricing/pricegrouptabs/rates" />
-		</cf_SlatwallTabGroup>
-		
-	</cf_SlatwallDetailForm>
+
+	<cf_SlatwallListingDisplay smartList="#local.ppSmartList#"
+							   recordEditAction="admin:pricing.editPromotionperiod" 
+							   recordDeleteAction="admin:pricing.deletepromotionperiod"
+							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotion">
+		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" />
+		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" />
+	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:pricing.createpromotionperiod" class="btn btn-primary" queryString="promotionID=#rc.promotion.getPromotionID()#" />
 </cfoutput>

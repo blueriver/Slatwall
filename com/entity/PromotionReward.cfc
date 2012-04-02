@@ -61,6 +61,9 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	// Non-persistent entities
 	property name="discountType" persistent="false";
+	property name="discount" persistent="false" type="string"; 
+	property name="rewardTypeDisplay" persistent="false";
+	property name="rewardItems" type="string" persistent="false";
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
@@ -106,6 +109,10 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		}
 		return true;
 	}
+	
+	public string function getSimpleRepresentation() {
+		return getPromotionPeriod().getPromotion().getPromotionName();
+	}
 
 	// ============ START: Non-Persistent Property Methods =================
 
@@ -123,6 +130,77 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 			}
 		}
 		return variables.DiscountType;
+	}	
+	
+	public string function getDiscount() {
+		if( !structKeyExists(variables,"discount") ) {
+			if( getDiscountType() == "percentageOff" ) {
+				variables.discount = getPercentageOff() & " " & rbKey('entity.promotionReward.discountType.percentageOffShort');
+			} else if( getDiscountType() == "amountOff" ) {
+				variables.discount = formatValue( getAmountOff(),"currency" ) & " " & rbKey('entity.promotionReward.discountType.amountOffShort');
+			} else if( getDiscountType() == "amount" ) {
+				variables.discount = formatValue( getAmount(),"currency" ) & " " & rbKey('entity.promotionReward.discountType.amountShort');
+			}
+		}
+		return variables.discount;
+	}
+	
+	public string function getRewardTypeDisplay() {
+		return rbKey( "entity.promotionReward.rewardType." & getRewardType() );
+	}
+	
+	public string function getRewardItems() {
+		if( !structKeyExists( variables,"rewardItems" ) ) {
+			variables.rewardItems = "";
+			if( getRewardType() eq "product" ) {
+				var items = "";
+				if( arrayLen(getSkus()) ) {
+					items &= "<p>";
+					items &= rbKey('entity.promotionRewardProduct.skus') & ": ";
+					items &= displaySkuCodes();
+					items &= "</p>";
+				}
+				if( arrayLen(getProducts()) ) {
+					items &= "<p>";
+					items &= rbKey('entity.promotionRewardProduct.products') & ": ";
+					items &= displayProductNames();
+					items &= "</p>";
+				}
+				if( arrayLen(getProductTypes()) ) {
+					items &= "<p>";
+					items &= $.Slatwall.rbKey('entity.promotionRewardProduct.productTypes') & ": ";
+					items &= displayProductTypeNames();
+					items &= "</p>";
+				}
+				if( arrayLen(getBrands()) ) {
+					items &= "<p>";
+					items &= $.Slatwall.rbKey('entity.promotionRewardProduct.brands') & ": ";
+					items &= displayBrandNames();
+					items &= "</p>";
+				}
+				if( arrayLen(getOptions()) ) {
+					items &= "<p>";
+					items &= $.Slatwall.rbKey('entity.promotionRewardProduct.options') & ": ";
+					items &= displayOptionNames();
+					items &= "</p>";
+				}
+				if( len(items) == 0 ) {
+					items &= "<p>";
+					items &= $.Slatwall.rbKey("define.all");
+					items &= "</p>";
+				}
+			} else if( getRewardType() == "shipping" ) {
+				if( arrayLen(getShippingMethods()) ) {
+					items = displayShippingMethodNames();
+				} else {
+					items = $.Slatwall.rbKey("define.all");
+				}
+			} else if( getRewardType() == "order" ) {
+				items = $.Slatwall.rbKey("define.na");
+			}
+			variables.rewardItems = items;	
+		}
+		return variables.rewardItems;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -133,9 +211,9 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	public array function getDiscountTypeOptions() {
 		return [
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amount"), value="amount"}
+			{name=rbKey("admin.pricing.promotionreward.discountType.percentageOff"), value="percentageOff"},
+			{name=rbKey("admin.pricing.promotionreward.discountType.amountOff"), value="amountOff"},
+			{name=rbKey("admin.pricing.promotionreward.discountType.amount"), value="amount"}
 		];
 	}
 	

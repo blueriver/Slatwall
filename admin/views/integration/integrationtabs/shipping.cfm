@@ -36,5 +36,19 @@
 Notes:
 
 --->
-<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
-<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+<cf_SlatwallPropertyDisplay object="#rc.integration#" property="shippingActiveFlag" edit="#rc.edit#" />
+						
+<!--- Dynamic Settings --->
+<cfloop array="#rc.integration.getIntegrationCFCSettings('shipping')#" index="local.property">
+	<cfset local.propertyTitle = "" />
+	<cfif structKeyExists(local.property, "displayName")>
+		<cfset local.propertyTitle = local.property.displayName />
+	<cfelse>
+		<cfset local.propertyTitle = local.property.name />
+	</cfif>
+	<cfset local.propertyEditType = "" />
+	<cfif structKeyExists(local.property, "editType")>
+		<cfset local.propertyEditType = local.property.editType />
+	</cfif>
+	<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('shipping')#" fieldName="shippingIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" fieldType="#local.propertyEditType#">
+</cfloop>

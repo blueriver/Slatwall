@@ -44,6 +44,10 @@ component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewa
 
 	// ============ START: Non-Persistent Property Methods =================
 	
+	public string function getRewardType() {
+		return "order";
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 
 	public string function getDiscountType() {
@@ -65,8 +69,8 @@ component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewa
 
 	public array function getDiscountTypeOptions() {
 		return [
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"}
+			{name=rbKey("admin.pricing.promotionreward.discountType.percentageOff"), value="percentageOff"},
+			{name=rbKey("admin.pricing.promotionreward.discountType.amountOff"), value="amountOff"}
 		];
 	}
 	

@@ -36,10 +36,37 @@
 Notes:
 
 --->
+<cfparam name="rc.integration" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-<cfparam name="rc.integration" />
-<cfparam name="rc.edit" />
-
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.integration#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.integration#" deleteAction="" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.integration#" property="integrationPackage" edit="false">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.integration#">
+			<cfif rc.integration.getCustomReadyFlag()>
+				<cf_SlatwallTab view="admin:integration/integrationtabs/custom" />
+			</cfif>
+			<cfif rc.integration.getDataReadyFlag()>
+				<cf_SlatwallTab view="admin:integration/integrationtabs/data" />
+			</cfif>
+			<cfif rc.integration.getPaymentReadyFlag()>
+				<cf_SlatwallTab view="admin:integration/integrationtabs/payment" />
+			</cfif>
+			<cfif rc.integration.getShippingReadyFlag()>
+				<cf_SlatwallTab view="admin:integration/integrationtabs/shipping" />
+			</cfif>
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
+</cfoutput>
+<!---
 <cfoutput>
 	<div class="svoadminintegrationdetail">
 		<ul id="navTask">
@@ -142,9 +169,9 @@ Notes:
 		<cfif rc.edit>
 			<div id="actionButtons">
 				<cf_SlatwallActionCaller action="admin:integration.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_SlatwallActionCaller action="admin:integration.save" type="submit" class="button">
+				<cf_SlatwallActionCaller action="admin:integration.save" type="button" class="button">
 			</form>
 			</div>
 		</cfif>
 	</div>
-</cfoutput>
+</cfoutput>--->

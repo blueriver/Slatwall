@@ -36,26 +36,32 @@
 Notes:
 
 --->
-<cfparam name="rc.priceGroup" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.pricegrouprate" type="any" />
+<cfparam name="rc.pricegroup" type="any" default="#rc.pricegrouprate.getPricegroup()#" />
+<cfparam name="rc.edit" type="boolean" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-		</cf_SlatwallActionBar>
-		
+	<cf_SlatwallDetailForm object="#rc.pricegrouprate#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.pricegrouprate#" edit="#rc.edit#" 
+							  cancelAction="admin:pricing.detailpricegroup"
+							  cancelQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" 
+							  backAction="admin:pricing.detailpricegroup" 
+							  backQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupCode" edit="#rc.edit#">
+				<input type="hidden" name="pricegroup.pricegroupID" value="#rc.pricegroup.getPricegroupID()#" />
+				<input type="hidden" name="returnAction" value="admin:pricing.detailpricegroup&pricegroupID=#rc.pricegroup.getpricegroupID()#" />
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="globalFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="type" fieldType="select" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="percentageOff" edit="#rc.edit#" displayVisible="type:percentageOff">
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amountOff" edit="#rc.edit#" displayVisible="type:amountOff" />
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amount" edit="#rc.edit#" displayVisible="type:amount"  />
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="roundingRule" edit="#rc.edit#" displayVisible="type:percentageOff">
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="productTypes" edit="#rc.edit#" displayVisible="globalFlag:0" />
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="products" edit="#rc.edit#" displayVisible="globalFlag:0" />
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.priceGroup#">
-			<cf_SlatwallTab view="admin:pricing/pricegrouptabs/rates" />
-		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>

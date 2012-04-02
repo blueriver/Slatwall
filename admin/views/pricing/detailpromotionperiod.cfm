@@ -36,26 +36,30 @@
 Notes:
 
 --->
-<cfparam name="rc.priceGroup" type="any">
+<cfparam name="rc.promotionperiod" type="any">
+<cfparam name="rc.promotion" type="any" default="#rc.promotionperiod.getPromotion()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-		</cf_SlatwallActionBar>
-		
+	<cf_SlatwallDetailForm object="#rc.promotionperiod#" saveAction="admin:pricing.savepromotionperiod" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.promotionperiod#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
+
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroup#" property="priceGroupCode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="startdatetime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="enddatetime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumusecount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumaccountusecount" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.priceGroup#">
-			<cf_SlatwallTab view="admin:pricing/pricegrouptabs/rates" />
-		</cf_SlatwallTabGroup>
-		
+
 	</cf_SlatwallDetailForm>
+	
+	<cf_SlatwallTabGroup object="#rc.promotionperiod#">
+			<cf_SlatwallTab view="admin:pricing/promotionperiodtabs/promotionperiodcodes" />
+			<cf_SlatwallTab view="admin:pricing/promotionperiodtabs/promotionrewards" />
+			<cf_SlatwallTab view="admin:pricing/promotionperiodtabs/promotionqualifiers" />
+	</cf_SlatwallTabGroup>
+	
 </cfoutput>

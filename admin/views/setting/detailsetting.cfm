@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.edit" type="boolean" />
 <cfparam name="rc.allSettings" type="struct" />
-<cfparam name="rc.productTemplateOptions" type="any" />
+<!---<cfparam name="rc.productTemplateOptions" type="any" />--->
 <cfparam name="rc.shippingWeightUnitCodeOptions" type="any" />
 <cfparam name="rc.customIntegrations" type="array" />
 
