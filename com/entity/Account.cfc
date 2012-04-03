@@ -294,8 +294,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(!isNull(variables.primaryEmailAddress)) {
 			return variables.primaryEmailAddress;
 		} else if (arrayLen(getAccountEmailAddresses())) {
-			setPrimaryEmailAddress(getAccountEmailAddresses()[i]);
-			return getAccountEmailAddresses()[i];
+			return getAccountEmailAddresses()[1];
 		} else {
 			return getService("accountService").newAccountEmailAddress();
 		}
@@ -305,8 +304,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(!isNull(variables.primaryPhoneNumber)) {
 			return variables.primaryPhoneNumber;
 		} else if (arrayLen(getAccountPhoneNumbers())) {
-			setPrimaryPhoneNumber(getAccountPhoneNumbers()[i]);
-			return getAccountPhoneNumbers()[i];
+			return getAccountPhoneNumbers()[1];
 		} else {
 			return getService("accountService").newAccountPhoneNumber();
 		}
@@ -316,8 +314,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(!isNull(variables.primaryAddress)) {
 			return variables.primaryAddress;
 		} else if (arrayLen(getAccountAddresses())) {
-			setPrimaryAddress(getAccountAddresses()[i]);
-			return getAccountAddresses()[i];
+			return getAccountAddresses()[1];
 		} else {
 			return getService("accountService").newAccountAddress();
 		}

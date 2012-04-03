@@ -97,10 +97,10 @@ component extends="BaseService" accessors="true" output="false" {
 		arguments.account = super.save(entity=arguments.account, data=arguments.data);
 		
 		// Account Email
-		if( structKeyExists(arguments.data, "emailAddress") && isNull(arguments.account.getPrimaryEmailAddress()) ) {
+		if( structKeyExists(arguments.data, "emailAddress") ) {
 			
 			// Setup Email Address
-			var accountEmailAddress = this.newAccountEmailAddress();
+			var accountEmailAddress = arguments.account.getPrimaryEmailAddress();
 			accountEmailAddress.populate(arguments.data);
 			accountEmailAddress.setAccount(arguments.account);
 			arguments.account.setPrimaryEmailAddress(accountEmailAddress);
@@ -114,11 +114,11 @@ component extends="BaseService" accessors="true" output="false" {
 
 		}
 
-		// Account Phone Number
-		if( structKeyExists(arguments.data, "phoneNumber") && isNull(arguments.account.getPrimaryPhoneNumber())) {
+		// Account Phone Number, not required - how to set only if required by account? 
+		if( structKeyExists(arguments.data, "phoneNumber") && arguments.data.phoneNumber != "") {
 			
 			// Setup Phone Number
-			var accountPhoneNumber = this.newAccountPhoneNumber();
+			var accountPhoneNumber = arguments.account.getPrimaryPhoneNumber();
 			accountPhoneNumber.populate(arguments.data);
 			accountPhoneNumber.setAccount(arguments.account);
 			arguments.account.setPrimaryPhoneNumber(accountPhoneNumber);
@@ -168,6 +168,7 @@ component extends="BaseService" accessors="true" output="false" {
 					getRequestCacheService().setValue("ormHasErrors", true);
 					// add all the cms errors
 					for(var error in cmsUser.getErrors()) {
+						arguments.account.addError(error, cmsUser.getErrors()[error]);
 						arguments.account.addError("CMSError", cmsUser.getErrors()[error]);
 					}
 				}
@@ -199,6 +200,7 @@ component extends="BaseService" accessors="true" output="false" {
 					getRequestCacheService().setValue("ormHasErrors", true);
 					// add all the cms errors
 					for(var error in cmsUser.getErrors()) {
+						arguments.account.addError(error, cmsUser.getErrors()[error]);
 						arguments.account.addError("CMSError", cmsUser.getErrors()[error]);
 					}
 				}
@@ -306,4 +308,32 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		return smartList;
 	}
+	
+	public boolean function deleteAccount(required any account) {
+	
+		// Set the primary fields temporarily in the local scope so we can reset if delete fails
+		var primaryEmailAddress = arguments.account.getPrimaryEmailAddress();
+		var primaryPhoneNumber = arguments.account.getPrimaryPhoneNumber();
+		var primaryAddress = arguments.account.getPrimaryAddress();
+		
+		// Remove the primary fields so that we can delete this entity
+		arguments.account.setPrimaryEmailAddress(javaCast("null", ""));
+		arguments.account.setPrimaryPhoneNumber(javaCast("null", ""));
+		arguments.account.setPrimaryAddress(javaCast("null", ""));
+	
+		// Use the base delete method to check validation
+		var deleteOK = super.delete(arguments.account);
+		
+		// If the delete failed, then we just reset the primary fields in account and return false
+		if(!deleteOK) {
+			arguments.account.setPrimaryEmailAddress(primaryEmailAddress);
+			arguments.account.setPrimaryPhoneNumber(primaryPhoneNumber);
+			arguments.account.setPrimaryAddress(primaryAddress);
+		
+			return false;
+		}
+	
+		return true;
+	}
+	
 }
