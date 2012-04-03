@@ -141,6 +141,10 @@ component extends="BaseService" accessors="true" output="false" {
 			if(!cmsUser.getIsNew()) {
 				getRequestCacheService().setValue("ormHasErrors", true);
 				arguments.account.addError("emailAddress", "This E-Mail Address is already in use with another Account.");
+				// make sure password is entered 
+			} else if(!len(trim(arguments.data.password))) {
+				getRequestCacheService().setValue("ormHasErrors", true);
+				arguments.account.addError("password", "The field Password is required.");
 			} else {
 				// Setup a new mura user
 				cmsUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
