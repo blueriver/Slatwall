@@ -83,12 +83,13 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	}
 	
 	public numeric function getCurrentUseCount() {
-		// TODO: make a service call to get this
-		return 0;
+		var subscriptionUsageBenefitAccountSmartList = getService("SubscriptionService").getSubscriptionUsageBenefitAccountSmartList();
+		subscriptionUsageBenefitAccountSmartList.addFilter(propertyIdentifier="subscriptionUsageBenefit_subscriptionUsageBenefitID", value=variables.subscriptionUsageBenefitID);
+		return subscriptionUsageBenefitAccountSmartList.getRecordsCount();
 	}
 	
 	public numeric function getAvailableUseCount() {
-		return getMaxUseCount() - getCurrentUsageCount();
+		return getMaxUseCount() - getCurrentUseCount();
 	}
 	
 	public void function copyFromSubscriptionBenefit(required any subscriptionBenefit) {

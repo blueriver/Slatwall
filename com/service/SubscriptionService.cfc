@@ -63,7 +63,10 @@ component extends="BaseService" output="false" {
 		var subscriptionUsageBenefitAccountArray = [];
 		for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getSubscriptionUsageBenefits()) {
 			var data.subscriptionUsageBenefit = subscriptionUsageBenefit;
-			data.account = arguments.account;
+			// if account is passed then set the account to this benefit else create an access record to be used for account creation
+			if(structKeyExists(arguments,"account")) {
+				data.account = arguments.account;
+			}
 			var subscriptionUsageBenefitAccount = createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(argumentCollection=data);
 			if(!isNull(subscriptionUsageBenefitAccount)) {
 				arrayAppend(subscriptionUsageBenefitAccountArray,subscriptionUsageBenefitAccount);
