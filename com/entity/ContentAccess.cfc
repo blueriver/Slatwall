@@ -1,4 +1,4 @@
-<!---
+﻿/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,36 +35,46 @@
 
 Notes:
 
---->
-<cfoutput>
-<div class="accountDetails">
-	<form name="account" method="post">
-		<h4>Login Details</h4>
-		<dl>
-			<cf_SlatwallErrorDisplay object="#rc.account#" errorName="cmsError" />
-			<!--- login info --->
-			<dt class="spdemailaddress">
-				<label for="emailAddress" class="required">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label>
-			</dt>
-			<dd id="spdemailaddress">
-				<cfset emailValue = "" />
-				<cfif not isNull(rc.account.getPrimaryEmailAddress()) and not isNull(rc.account.getPrimaryEmailAddress().getEmailAddress())>
-					<cfset emailValue = rc.account.getPrimaryEmailAddress().getEmailAddress() />	
-				</cfif>
-				<input type="text" name="emailAddress" value="#emailValue#" />
-				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="primaryEmailAddress" for="emailAddress" />
-			</dd>
-			<dt class="spdpassword">
-				<label for="password">Password</label>
-			</dt>
-			<dd id="spdpassword">
-				<input type="password" name="password" value="" />
-				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="password" for="password" />
-			</dd>
-		</dl>
-		<input type="hidden" name="slatAction" value="frontend:account.save" />
-		<button type="submit">Save</button>
-	</form>
-</div>
-</cfoutput>
+*/
+component displayname="Content Access" entityname="SlatwallContentAccess" table="SlatwallContentAccess" persistent="true" accessors="true" extends="BaseEntity" {
+	
+	// Persistent Properties
+	property name="contentAccessID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	// Related Object Properties (many-to-one)
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="content" cfc="Content" fieldtype="many-to-one" fkcolumn="contentID";
+	property name="accountContentAccess" cfc="AccountContentAccess" fieldtype="many-to-one" fkcolumn="accountContentAccessID";
+	property name="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitID";
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit Properties
+	property name="createdDateTime" ormtype="timestamp";
+	
+	// Non-Persistent Properties
 
+
+
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
+}

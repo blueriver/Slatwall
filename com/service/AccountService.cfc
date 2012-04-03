@@ -149,18 +149,27 @@ component extends="BaseService" accessors="true" output="false" {
 				
 				// Update mura user with values from account
 				cmsUser = updateCmsUserFromAccount(cmsUser, arguments.account);
-				cmsUser.save();
+				cmsUser = cmsUser.save();
 				
-				// Set the mura userID in the account
-				arguments.account.setCmsAccountID(cmsUser.getUserID());
-									
-				// If there currently isn't a user logged in, then log in this new account
-				var currentUser = getRequestCacheService().getValue("muraScope").currentUser();
-				if(!currentUser.isLoggedIn()) {
-					// Login the mura User
-					getUserUtility().loginByUserID(cmsUser.getUserID(), arguments.siteID);
-					// Set the account in the session scope
-					getSessionService().getCurrent().setAccount(arguments.account);
+				// check if there was any validation error during cms user save
+				if(structIsEmpty(cmsUser.getErrors())) {
+					// Set the mura userID in the account
+					arguments.account.setCmsAccountID(cmsUser.getUserID());
+										
+					// If there currently isn't a user logged in, then log in this new account
+					var currentUser = getRequestCacheService().getValue("muraScope").currentUser();
+					if(!currentUser.isLoggedIn()) {
+						// Login the mura User
+						getUserUtility().loginByUserID(cmsUser.getUserID(), arguments.siteID);
+						// Set the account in the session scope
+						getSessionService().getCurrent().setAccount(arguments.account);
+					}
+				} else {
+					getRequestCacheService().setValue("ormHasErrors", true);
+					// add all the cms errors
+					for(var error in cmsUser.getErrors()) {
+						arguments.account.addError("CMSError", cmsUser.getErrors()[error]);
+					}
 				}
 			}
 		}
@@ -183,8 +192,16 @@ component extends="BaseService" accessors="true" output="false" {
 					cmsUser.setPassword("");	
 				}
 				
+				cmsUser = cmsUser.save();
 				
-				cmsUser.save();
+				// check if there was any validation error during cms user save
+				if(!structIsEmpty(cmsUser.getErrors())) {
+					getRequestCacheService().setValue("ormHasErrors", true);
+					// add all the cms errors
+					for(var error in cmsUser.getErrors()) {
+						arguments.account.addError("CMSError", cmsUser.getErrors()[error]);
+					}
+				}
 			}
 			
 			// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.

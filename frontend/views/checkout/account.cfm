@@ -61,6 +61,7 @@ Notes:
 						<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 						<cfif rc.edit eq "account"><h4>Edit Account Details</h4><cfelse><h4>New Customer</h4></cfif>
 						<dl>
+							<cf_SlatwallErrorDisplay object="#rc.account#" errorName="cmsError" />
 							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.firstName" property="firstName" edit="true">
 							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.lastName" property="lastName" edit="true">
 							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.company" property="company" edit="true">
@@ -107,7 +108,7 @@ Notes:
 								<a href="?doaction=logout">Logout</a>
 							</cfif>
 						</dl>
-						<cf_SlatwallActionCaller action="frontend:checkout.saveaccount" type="submit">
+						<cf_SlatwallActionCaller action="frontend:checkout.saveorderaccount" type="button">
 					</form>
 				</div>
 			<cfelseif not listFind(rc.orderRequirementsList, 'account')>

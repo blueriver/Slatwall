@@ -41,6 +41,7 @@ Notes:
 	<form name="account" method="post">
 		<h4>Account Details</h4>
 		<dl>
+			<cf_SlatwallErrorDisplay object="#rc.account#" errorName="cmsError" />
 			<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="firstName" property="firstName" edit="true">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="lastName" property="lastName" edit="true">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="company" property="company" edit="true">
