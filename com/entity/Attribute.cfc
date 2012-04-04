@@ -146,6 +146,10 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
+
+	public any function getAttributeOptionsSmartlist() {
+		return Super.getPropertyOptionsSmartList( "attributeOptions" );
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 		
