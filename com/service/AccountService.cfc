@@ -131,6 +131,36 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 		}
 		
+		// Account address
+		if(structKeyExists(arguments.data, "primaryAddress")) {
+			// Setup Account Address
+			var accountAddress = arguments.account.getPrimaryAddress();
+			accountAddress.populate(arguments.data.primaryAddress);
+			accountAddress.setAccount(arguments.account);
+			arguments.account.setPrimaryAddress(accountAddress);
+
+			// Validate Address
+			accountAddress.getAddress().validate();
+			if(accountAddress.getAddress().hasErrors()) {
+				getRequestCacheService().setValue("ormHasErrors", true);
+			}
+		}
+		
+		// if there is no error and access code or link is passed then validate it
+		if(!arguments.account.hasErrors() && structKeyExists(arguments.data,"access")) {
+			var subscriptionUsageBenefitAccountCreated = false;
+			if(structKeyExists(arguments.data.access,"accessID")) {
+				var access = getService("accessService").getAccess(arguments.data.access.accessID);
+			} else if(structKeyExists(arguments.data.access,"accessCode")) {
+				var access = getService("accessService").getAccessByAccessCode(arguments.data.access.accessCode);
+			} 
+			if(isNull(access)) {
+				//return access code error
+				getRequestCacheService().setValue("ormHasErrors", true);
+				arguments.account.addError("access", "The access code you provided is invalid.");
+			}
+		}
+		
 		
 		// If the account doesn't have errors, is new, has and email address and password, has a password passed in, and not supposed to be a guest account. then attempt to setup the username and password in Mura
 		if( !arguments.account.hasErrors() && wasNew && !isNull(arguments.account.getPrimaryEmailAddress()) && structKeyExists(arguments.data, "password") && (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) ) {
@@ -217,22 +247,11 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 		}
 		
-		// if there is no error and access code or link is passed then setup accounts subscription benefits
-		if(!arguments.account.hasErrors() && structKeyExists(arguments.data,"access")) {
-			var subscriptionUsageBenefitAccountCreated = false;
-			if(structKeyExists(arguments.data.access,"accessID")) {
-				var access = getService("accessService").getAccess(arguments.data.access.accessID);
-			} else if(structKeyExists(arguments.data.access,"accessCode")) {
-				var access = getService("accessService").getAccessByAccessCode(arguments.data.access.accessCode);
-			}
-			if(!isNull(access)) {
-				subscriptionUsageBenefitAccountCreated = getSevice("subscriptionService").createSubscriptionUsageBenefitAccountByAccess(access, account);
-			}
-			if(!subscriptionUsageBenefitAccountCreated) {
-				//return access code error
-			}
+		// if all validation passed and setup accounts subscription benefits based on access 
+		if(!arguments.account.hasErrors() && !isNull(access)) {
+			subscriptionUsageBenefitAccountCreated = getSevice("subscriptionService").createSubscriptionUsageBenefitAccountByAccess(access, arguments.account);
 		}
-		
+
 		return arguments.account;
 	}
 	
