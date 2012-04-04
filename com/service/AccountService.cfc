@@ -97,10 +97,10 @@ component extends="BaseService" accessors="true" output="false" {
 		arguments.account = super.save(entity=arguments.account, data=arguments.data);
 		
 		// Account Email
-		if( structKeyExists(arguments.data, "emailAddress") && isNull(arguments.account.getPrimaryEmailAddress()) ) {
+		if( structKeyExists(arguments.data, "emailAddress") ) {
 			
 			// Setup Email Address
-			var accountEmailAddress = this.newAccountEmailAddress();
+			var accountEmailAddress = arguments.account.getPrimaryEmailAddress();
 			accountEmailAddress.populate(arguments.data);
 			accountEmailAddress.setAccount(arguments.account);
 			arguments.account.setPrimaryEmailAddress(accountEmailAddress);
@@ -114,11 +114,11 @@ component extends="BaseService" accessors="true" output="false" {
 
 		}
 
-		// Account Phone Number
-		if( structKeyExists(arguments.data, "phoneNumber") && isNull(arguments.account.getPrimaryPhoneNumber())) {
+		// Account Phone Number, not required - how to set only if required by account? 
+		if( structKeyExists(arguments.data, "phoneNumber") && arguments.data.phoneNumber != "") {
 			
 			// Setup Phone Number
-			var accountPhoneNumber = this.newAccountPhoneNumber();
+			var accountPhoneNumber = arguments.account.getPrimaryPhoneNumber();
 			accountPhoneNumber.populate(arguments.data);
 			accountPhoneNumber.setAccount(arguments.account);
 			arguments.account.setPrimaryPhoneNumber(accountPhoneNumber);
@@ -131,6 +131,36 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 		}
 		
+		// Account address
+		if(structKeyExists(arguments.data, "primaryAddress")) {
+			// Setup Account Address
+			var accountAddress = arguments.account.getPrimaryAddress();
+			accountAddress.populate(arguments.data.primaryAddress);
+			accountAddress.setAccount(arguments.account);
+			arguments.account.setPrimaryAddress(accountAddress);
+
+			// Validate Address
+			accountAddress.getAddress().validate();
+			if(accountAddress.getAddress().hasErrors()) {
+				getRequestCacheService().setValue("ormHasErrors", true);
+			}
+		}
+		
+		// if there is no error and access code or link is passed then validate it
+		if(!arguments.account.hasErrors() && structKeyExists(arguments.data,"access")) {
+			var subscriptionUsageBenefitAccountCreated = false;
+			if(structKeyExists(arguments.data.access,"accessID")) {
+				var access = getService("accessService").getAccess(arguments.data.access.accessID);
+			} else if(structKeyExists(arguments.data.access,"accessCode")) {
+				var access = getService("accessService").getAccessByAccessCode(arguments.data.access.accessCode);
+			} 
+			if(isNull(access)) {
+				//return access code error
+				getRequestCacheService().setValue("ormHasErrors", true);
+				arguments.account.addError("access", "The access code you provided is invalid.");
+			}
+		}
+		
 		
 		// If the account doesn't have errors, is new, has and email address and password, has a password passed in, and not supposed to be a guest account. then attempt to setup the username and password in Mura
 		if( !arguments.account.hasErrors() && wasNew && !isNull(arguments.account.getPrimaryEmailAddress()) && structKeyExists(arguments.data, "password") && (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) ) {
@@ -140,7 +170,11 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			if(!cmsUser.getIsNew()) {
 				getRequestCacheService().setValue("ormHasErrors", true);
-				arguments.account.addError("primaryEmailAddress", "This E-Mail Address is already in use with another Account.");
+				arguments.account.addError("emailAddress", "This E-Mail Address is already in use with another Account.");
+				// make sure password is entered 
+			} else if(!len(trim(arguments.data.password))) {
+				getRequestCacheService().setValue("ormHasErrors", true);
+				arguments.account.addError("password", "The field Password is required.");
 			} else {
 				// Setup a new mura user
 				cmsUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
@@ -168,6 +202,7 @@ component extends="BaseService" accessors="true" output="false" {
 					getRequestCacheService().setValue("ormHasErrors", true);
 					// add all the cms errors
 					for(var error in cmsUser.getErrors()) {
+						arguments.account.addError(error, cmsUser.getErrors()[error]);
 						arguments.account.addError("CMSError", cmsUser.getErrors()[error]);
 					}
 				}
@@ -199,6 +234,7 @@ component extends="BaseService" accessors="true" output="false" {
 					getRequestCacheService().setValue("ormHasErrors", true);
 					// add all the cms errors
 					for(var error in cmsUser.getErrors()) {
+						arguments.account.addError(error, cmsUser.getErrors()[error]);
 						arguments.account.addError("CMSError", cmsUser.getErrors()[error]);
 					}
 				}
@@ -211,22 +247,11 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 		}
 		
-		// if there is no error and access code or link is passed then setup accounts subscription benefits
-		if(!arguments.account.hasErrors() && structKeyExists(arguments.data,"access")) {
-			var subscriptionUsageBenefitAccountCreated = false;
-			if(structKeyExists(arguments.data.access,"accessID")) {
-				var access = getService("accessService").getAccess(arguments.data.access.accessID);
-			} else if(structKeyExists(arguments.data.access,"accessCode")) {
-				var access = getService("accessService").getAccessByAccessCode(arguments.data.access.accessCode);
-			}
-			if(!isNull(access)) {
-				subscriptionUsageBenefitAccountCreated = getSevice("subscriptionService").createSubscriptionUsageBenefitAccountByAccess(access, account);
-			}
-			if(!subscriptionUsageBenefitAccountCreated) {
-				//return access code error
-			}
+		// if all validation passed and setup accounts subscription benefits based on access 
+		if(!arguments.account.hasErrors() && !isNull(access)) {
+			subscriptionUsageBenefitAccountCreated = getSevice("subscriptionService").createSubscriptionUsageBenefitAccountByAccess(access, arguments.account);
 		}
-		
+
 		return arguments.account;
 	}
 	
@@ -306,4 +331,32 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		return smartList;
 	}
+	
+	public boolean function deleteAccount(required any account) {
+	
+		// Set the primary fields temporarily in the local scope so we can reset if delete fails
+		var primaryEmailAddress = arguments.account.getPrimaryEmailAddress();
+		var primaryPhoneNumber = arguments.account.getPrimaryPhoneNumber();
+		var primaryAddress = arguments.account.getPrimaryAddress();
+		
+		// Remove the primary fields so that we can delete this entity
+		arguments.account.setPrimaryEmailAddress(javaCast("null", ""));
+		arguments.account.setPrimaryPhoneNumber(javaCast("null", ""));
+		arguments.account.setPrimaryAddress(javaCast("null", ""));
+	
+		// Use the base delete method to check validation
+		var deleteOK = super.delete(arguments.account);
+		
+		// If the delete failed, then we just reset the primary fields in account and return false
+		if(!deleteOK) {
+			arguments.account.setPrimaryEmailAddress(primaryEmailAddress);
+			arguments.account.setPrimaryPhoneNumber(primaryPhoneNumber);
+			arguments.account.setPrimaryAddress(primaryAddress);
+		
+			return false;
+		}
+	
+		return true;
+	}
+	
 }

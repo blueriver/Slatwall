@@ -65,30 +65,8 @@ Notes:
 							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.firstName" property="firstName" edit="true">
 							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.lastName" property="lastName" edit="true">
 							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.company" property="company" edit="true">
-							<cfif rc.edit neq "account">
-								<dt class="spdemailaddress">
-									<label for="account.emailAddress" class="required">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label>
-								</dt>
-								<dd id="spdemailaddress">
-									<cfset emailValue = "" />
-									<cfif not isNull(rc.account.getPrimaryEmailAddress()) and not isNull(rc.account.getPrimaryEmailAddress().getEmailAddress())>
-										<cfset emailValue = rc.account.getPrimaryEmailAddress().getEmailAddress() />	
-									</cfif>
-									<input type="text" name="account.emailAddress" value="#emailValue#" />
-									<cf_SlatwallErrorDisplay object="#rc.account#" errorName="primaryEmailAddress" for="account.emailAddress" />
-								</dd>
-								<dt class="spdphonenumber">
-									<label for="account.phoneNumber" class="required">#$.slatwall.rbKey('entity.accountPhoneNumber.phoneNumber')#</label>
-								</dt>
-								<dd id="spdphonenumber">
-									<cfset phoneValue = "" />
-									<cfif not isNull(rc.account.getPrimaryPhoneNumber()) and not isNull(rc.account.getPrimaryPhoneNumber().getPhoneNumber())>
-										<cfset phoneValue = rc.account.getPrimaryPhoneNumber().getPhoneNumber() />	
-									</cfif>
-									<input type="text" name="account.phoneNumber" value="#phoneValue#" />
-									<cf_SlatwallErrorDisplay object="#rc.account#" errorName="primaryPhoneNumber" for="account.phoneNumber" />
-								</dd>
-							</cfif>
+							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.emailAddress" property="emailAddress" edit="true">
+							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.phoneNumber" property="phoneNumber" edit="true">
 							<cfif rc.account.isGuestAccount()>
 								<dt class="spdguestcheckout">
 									<label for="account.createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label>

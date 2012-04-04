@@ -210,8 +210,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onAfterContentDelete(required any rc) {
-		delinkSlatwallPage(rc);
 		deleteContentSkus(rc);
+		delinkSlatwallPage(rc);
 	}
 	
 	private any function saveSlatwallPage(required any rc) {
@@ -255,10 +255,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			sku.addAccessContent(slatwallContent);
 		} else {
 			var product = getProductService().getProduct(rc.slatwallData.product.productID, true);
-			product.setProductName(rc.$.content("title"));
 			product.setPublishedFlag(rc.$.content("approved"));
 			if(product.isNew()){
 				// if new product set up required properties
+				product.setProductName(rc.$.content("title"));
 				var productType = getProductService().getProductTypeBySystemCode("contentAccess");
 				product.setProductType(productType);
 				product.setProductCode(createUUID());
@@ -273,11 +273,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	private void function deleteContentSkus(required any rc) {
 		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
-		while(arrayLen(content.getSkus())){
-			var thisSku = content.getSkus()[1];
-			content.removeSku(thisSku);
+		if(!content.isNew()) {
+			while(arrayLen(content.getSkus())){
+				var thisSku = content.getSkus()[1];
+				content.removeSku(thisSku);
+			}
+			getContentService().saveContent(content);
 		}
-		getContentService().saveContent(content);
 	}
 
 }

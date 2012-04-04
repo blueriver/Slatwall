@@ -43,6 +43,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="userUtility" type="any";
 	property name="paymentService" type="any";
 	
+	public any function init(required any fw) {
+		setUserUtility( getCMSBean("userUtility") );
+		
+		return super.init(arguments.fw);
+	}
+	
 	public void function create(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
 		if(!rc.account.isNew()){
