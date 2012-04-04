@@ -920,7 +920,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function to return a Setting
 	public any function setting(required string settingName) {
-		return getService("settingService").getSettingValue(arguments.settingName);
+		return getService("settingService").getSettingValue(settingName=arguments.settingName);
 	}
 	
 	// @hint  helper function for building URL's

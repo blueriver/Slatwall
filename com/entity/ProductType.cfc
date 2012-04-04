@@ -47,22 +47,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="productTypeDescription" ormtype="string" length="4000";
 	property name="systemCode" ormtype="string";
 	
-	// Persistent Properties - Inheritence Settings
-	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
-	property name="callToOrderFlag" ormtype="boolean";
-	property name="eligableFulfillmentMethods" ormtype="string";
-	property name="productDisplayTemplate" ormtype="string";
-	property name="productTypeDisplayTemplate" ormtype="string";
-	property name="quantityHeldBack" ormtype="integer";
-	property name="quantityMinimum" ormtype="integer";
-	property name="quantityMaximum" ormtype="integer";
-	property name="quantityOrderMinimum" ormtype="integer";
-	property name="quantityOrderMaximum" ormtype="integer";
-	property name="shippingWeight" ormtype="integer";
-	property name="shippingWeightUnitCode" ormtype="string";
-	property name="trackInventoryFlag" ormtype="boolean";
-	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	

@@ -46,23 +46,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency" default="0";
 	property name="imageFile" ormtype="string" length="50";
 	
-	// Persistent Properties - Inheritence Settings
-	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
-	property name="callToOrderFlag" ormtype="boolean";
-	property name="eligableFulfillmentMethods" ormtype="string";
-	property name="quantityHeldBack" ormtype="integer";
-	property name="quantityMinimum" ormtype="integer";
-	property name="quantityMaximum" ormtype="integer";
-	property name="quantityOrderMinimum" ormtype="integer";
-	property name="quantityOrderMaximum" ormtype="integer";
-	property name="shippingWeight" ormtype="big_decimal" formatType="weight";
-	property name="shippingWeightUnitCode" ormtype="string";
-	property name="trackInventoryFlag" ormtype="boolean";
-
-	// Related Object Properties (One-To-One)
-	property name="skuCache" fieldType="one-to-one" cfc="SkuCache" cascade="delete";
-	
 	// Related Object Properties (Many-to-One)
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
 	property name="subscriptionTerm" cfc="SubscriptionTerm" fieldtype="many-to-one" fkcolumn="subscriptionTermID";

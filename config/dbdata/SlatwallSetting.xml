@@ -30,7 +30,6 @@
 		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="advanced_currencyLocale" settingValue="English (US)" />
 		<Record settingID="dbb327b0b5496521002aa35ab68ab120" settingName="advanced_currencyType" settingValue="Local" />
 		<Record settingID="dbb327bba727c794a7661ef523b17973" settingName="advanced_useProductCacheFlag" settingValue="1" />
-		<Record settingID="dbb327b9e285426311f9c61725aeee89" settingName="advanced_useSkuCacheFlag" settingValue="0" />
 		<Record settingID="dbb327bca316435a854e3e0fef05d620" settingName="advanced_encryptionKeySize" settingValue="" />
 		<Record settingID="dbb327bdce581788826d306add807b50" settingName="advanced_encryptionKeyLocation" settingValue="" />
 		<Record settingID="dbb327beecf7fd4910cf361917a691b9" settingName="advanced_encryptionKeyGenerator" settingValue="" />

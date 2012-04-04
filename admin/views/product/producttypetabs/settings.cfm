@@ -41,7 +41,7 @@ Notes:
 	<cf_SlatwallSettingTable object="#rc.productType#" edit="#rc.edit#" hasInheritance="#!isNull(rc.productType.getParentProductType())#">
 		<cf_SlatwallSetting settingName="productTypeDisplayTemplate" title="#$.slatwall.rbKey('setting.productType.productTypeDisplayTemplate')#" />
 		<cf_SlatwallSetting settingName="productDisplayTemplate" />
-		<cf_SlatwallSetting settingName="titleString" />
+		<cf_SlatwallSetting settingName="productTitleString" />
 		<cf_SlatwallSetting settingName="imageWidthSmall" />
 		<cf_SlatwallSetting settingName="imageHeightSmall" />
 		<cf_SlatwallSetting settingName="imageWidthMedium" />

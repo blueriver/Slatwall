@@ -43,6 +43,13 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="settingName" ormtype="string";
 	property name="settingValue" ormtype="string";
 	
+	// Related Object Properties (many-to-one)
+	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
@@ -57,8 +64,12 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
-	// ===================  END:  ORM Event Hooks  =========================	
+	// ===================  END:  ORM Event Hooks  =========================
 }
