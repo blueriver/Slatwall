@@ -38,35 +38,27 @@ Notes:
 --->
 
 <cfoutput>
-	<cf_SlatwallSettingTable object="#rc.productType#" edit="#rc.edit#" hasInheritance="#!isNull(rc.productType.getParentProductType())#">
-		<cf_SlatwallSetting settingName="productTypeDisplayTemplate" title="#$.slatwall.rbKey('setting.productType.productTypeDisplayTemplate')#" />
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="productTypeDisplayTemplate" />
 		<cf_SlatwallSetting settingName="productDisplayTemplate" />
 		<cf_SlatwallSetting settingName="productTitleString" />
-		<cf_SlatwallSetting settingName="imageWidthSmall" />
-		<cf_SlatwallSetting settingName="imageHeightSmall" />
-		<cf_SlatwallSetting settingName="imageWidthMedium" />
-		<cf_SlatwallSetting settingName="imageHeightMedium" />
-		<cf_SlatwallSetting settingName="imageWidthLarge" />
-		<cf_SlatwallSetting settingName="imageHeightLarge" />
-		<cf_SlatwallSetting settingName="quantityOrderMinimum" />
-		<cf_SlatwallSetting settingName="quantityOrderMaximum" />
-		<cfif rc.productType.getBaseProductType() eq "merchandise">
-			<cf_SlatwallSetting settingName="trackInventoryFlag" />
-			<cf_SlatwallSetting settingName="allowBackorderFlag" />
-			<cf_SlatwallSetting settingName="allowPreorderFlag" />
-			<cf_SlatwallSetting settingName="callToOrderFlag" />
-			<cf_SlatwallSetting settingName="quantityHeldBack" />
-			<cf_SlatwallSetting settingName="quantityMinimum" />
-			<cf_SlatwallSetting settingName="quantityMaximum" />
-			<cf_SlatwallSetting settingName="shippingWeight" />
-			<cf_SlatwallSetting settingName="shippingWeightUnitCode" />
-		<cfelseif rc.productType.getBaseProductType() eq "subscription">
-			
-		<cfelseif rc.productType.getBaseProductType() eq "contentAccess">
-			
-		</cfif> 
+		<cf_SlatwallSetting settingName="productImageSmallWidth" />
+		<cf_SlatwallSetting settingName="productImageSmallHeight" />
+		<cf_SlatwallSetting settingName="productImageMediumWidth" />
+		<cf_SlatwallSetting settingName="productImageMediumHeight" />
+		<cf_SlatwallSetting settingName="productImageLargeWidth" />
+		<cf_SlatwallSetting settingName="productImageLargeHeight" />
+		<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" />
+		<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" />
 	</cf_SlatwallSettingTable>
-	<cf_SlatwallListingDisplay smartList="FulfillmentMethod" multiselectfieldname="eligableFulfillmentMethod">
-		<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethodName" />
-	</cf_SlatwallListingDisplay>
+	<cfif rc.productType.getBaseProductType() eq "merchandise">
+		<cf_SlatwallSettingTable>
+			<cf_SlatwallSetting settingName="skuTrackInventoryFlag" />
+			<cf_SlatwallSetting settingName="skuAllowBackorderFlag" />
+			<cf_SlatwallSetting settingName="skuAllowPreorderFlag" />
+			<cf_SlatwallSetting settingName="skuHoldBackQuantity" />
+			<cf_SlatwallSetting settingName="skuShippingWeight" />
+			<cf_SlatwallSetting settingName="skuShippingWeightUnitCode" />
+		</cf_SlatwallSettingTable>
+	</cfif> 
 </cfoutput>

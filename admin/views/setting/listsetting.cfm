@@ -61,6 +61,7 @@ Notes:
 		<cf_SlatwallSetting settingName="globalURLKeyBrand" />
 		<cf_SlatwallSetting settingName="globalURLKeyProduct" />
 		<cf_SlatwallSetting settingName="globalURLKeyProductType" />
+		<cf_SlatwallSetting settingName="globalWeightUnitCode" />
 		<cf_SlatwallSetting settingName="brandDisplayTemplate" />
 		<cf_SlatwallSetting settingName="productDisplayTemplate" />
 		<cf_SlatwallSetting settingName="productImageSmallWidth" />
@@ -69,6 +70,8 @@ Notes:
 		<cf_SlatwallSetting settingName="productImageMediumHeight" />
 		<cf_SlatwallSetting settingName="productImageLargeWidth" />
 		<cf_SlatwallSetting settingName="productImageLargeHeight" />
+		<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" />
+		<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" />
 		<cf_SlatwallSetting settingName="productTitleString" />
 		<cf_SlatwallSetting settingName="productTypeDisplayTemplate" />
 		<cf_SlatwallSetting settingName="skuEligablePaymentMethods" />

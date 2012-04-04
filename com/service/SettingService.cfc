@@ -87,6 +87,7 @@ Notes:
 			globalURLKeyBrand = {fieldType="text"},
 			globalURLKeyProduct = {fieldType="text"},
 			globalURLKeyProductType = {fieldType="text"},
+			globalWeightUnitCode = {fieldType="select"},
 			
 			// Product
 			productDisplayTemplate = {fieldType="select"},
@@ -130,6 +131,10 @@ Notes:
 		
 		public any function getSettingOptionsSmartList(required string settingName) {
 			
+		}
+		
+		public any function getSettingMetaData(required string settingName) {
+			return variables.settingMetaData[ arguments.settingName ];
 		}
 		
 		public any function getAllSettingsQuery() {
@@ -256,8 +261,10 @@ Notes:
 				}
 			}
 			
-			if(structKeyExists(variables.settingMetaData[arguments.settingName], "formatType")) {
-				settingDetails.settingValueFormatted = formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].formatType);
+			if( structKeyExists(variables.settingMetaData[arguments.settingName], "formatType") ) {
+				settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].formatType);
+			} else if( structKeyExists(variables.settingMetaData[arguments.settingName], "fieldType") ) {
+				settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].fieldType);
 			} else {
 				settingDetails.settingValueFormatted = settingDetails.settingValue;
 			}

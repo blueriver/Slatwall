@@ -45,7 +45,7 @@ Notes:
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" fieldType="#rc.$.slatwall.getService("settingService").getSettingMetaData#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 	</cf_SlatwallDetailForm>

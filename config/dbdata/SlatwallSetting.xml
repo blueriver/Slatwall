@@ -23,6 +23,7 @@
 		<Record settingID="dbb327c1b246cefc0a4d6146458c61d6" settingName="globalURLKeyBrand" settingValue="sb" />
 		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="globalURLKeyProduct" settingValue="sp" />
 		<Record settingID="dbb327c2f0ece6ff03d81c53d840d8bc" settingName="globalURLKeyProductType" settingValue="spt" />
+		<Record settingID="dbb327ce945924088883f9c07d7f04ae" settingName="globalWeightUnitCode" settingValue="lb" />
 		
 		<Record settingID="dbb32799a1090790de93f0b6dd6b36ef" settingName="productImageSmallWidth" settingValue="150" />
 		<Record settingID="dbb3278e9caff52a94d1999ca909a4bb" settingName="productImageSmallHeight" settingValue="150" />
@@ -60,7 +61,7 @@ Below Are UUID's to use... delete after using
 	
 	
 	
-	dbb327ce945924088883f9c07d7f04ae
+	
 	dbb327cfedfe1808ddd67b8102144e22
 	dbb327d09e27ea5cd8cf8a7772f7af27
 	dbb327d1de2f05f1483ca1805e4e5c3f

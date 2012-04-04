@@ -67,6 +67,21 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 
 	// ================== START: Overridden Methods ========================
 	
+	public string function getPropertyFieldType(required string propertyName) {
+		if(propertyName == "settingValue") {
+			return getService("settingService").getSettingMetaData(getSettingName()).fieldType;	
+		}
+		return super.getPropertyFieldType(propertyName=arguments.propertyName);
+	}
+
+	public array function getSettingValueOptions() {
+		return getService("settingService").getSettingOptions(getSettingName());
+	}
+	
+	public any function getSettingValueOptionsSmartList() {
+		return getService("settingService").getSettingOptionsSmartList(getSettingName());	
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

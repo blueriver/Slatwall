@@ -795,7 +795,7 @@ component displayname="Base Object" accessors="true" output="false" {
 				return timeFormat(arguments.value, setting("globalTimeFormat"));
 			}
 			case "weight": {
-				return arguments.value & " " & setting("globalWeightFormat");
+				return arguments.value & " " & setting("globalWeightUnitCode");
 			}
 			case "pixels": {
 				return arguments.value & "px";
