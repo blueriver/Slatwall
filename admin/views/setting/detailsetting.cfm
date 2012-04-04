@@ -36,46 +36,17 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" type="boolean" />
-<cfparam name="rc.allSettings" type="struct" />
-<!---<cfparam name="rc.productTemplateOptions" type="any" />--->
-<cfparam name="rc.shippingWeightUnitCodeOptions" type="any" />
-<cfparam name="rc.customIntegrations" type="array" />
-
-<cfsilent>
-	<cfset local.yesNoValueOptions = [{name=$.slatwall.rbKey('define.yes'), value=1},{name=$.slatwall.rbKey('define.no'), value=0}] />
-</cfsilent>
+<cfparam name="rc.setting" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cfif rc.edit>
-		<form action="#buildURL(action='admin:setting.savesetting')#" method="post">
-	</cfif>
-	
-		<div class="actionnav well well-small">
-			<div class="row-fluid">
-				<div class="span4"><h1>#replace(rc.$.Slatwall.rbKey('admin.define.detail'), "${itemEntityName}", rc.$.Slatwall.rbKey('entity.setting'))#</h1></div>
-				<div class="span8">
-					<div class="btn-toolbar">
-						<div class="btn-group">
-							<cfif rc.edit>
-							<a href="#buildURL(action='admin:setting.detailsetting')#" class="btn btn-inverse">Cancel</a>
-							<button class="btn btn-success" type="submit">Save</button>
-							<cfelse>
-								<a href="#buildURL(action='admin:setting.editsetting')#" class="btn btn-primary">Edit</a>
-							</cfif>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+	<cf_SlatwallDetailForm object="#rc.setting#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.setting#" />
 		
-		<cf_SlatwallTabGroup>
-			<cf_SlatwallTab view="admin:setting/settingtabs/general" />
-			<cf_SlatwallTab view="admin:setting/settingtabs/order" />
-			<cf_SlatwallTab view="admin:setting/settingtabs/advanced" />
-		</cf_SlatwallTabGroup>
-		
-	<cfif rc.edit>
-		</form>
-	</cfif>
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+	</cf_SlatwallDetailForm>
 </cfoutput>

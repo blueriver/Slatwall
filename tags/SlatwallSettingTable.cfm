@@ -37,38 +37,35 @@ Notes:
 
 --->
 <cfif thisTag.executionMode is "end">
-	<cfparam name="attributes.object" type="any" />
-	<cfparam name="attributes.edit" type="boolean" default="false" />
-	<cfparam name="attributes.hasInheritance" type="boolean" default="true" />
 	<cfparam name="thistag.settings" type="array" default="#arrayNew(1)#" />
+	<cfparam name="thistag.hasInheritedValues" type="boolean" default="false" />
 	
+	<cfsilent>
+		<cfloop array="#thistag.settings#" index="thisSetting">
+			
+		</cfloop>
+	</cfsilent>
 	<cfoutput>
 		<table class="table table-striped table-bordered">
 			<tr>
-				<th class="varWidth">#request.context.$.Slatwall.rbKey('entity.setting.settingName')#</th>
+				<th class="primary">#request.context.$.Slatwall.rbKey('entity.setting.settingName')#</th>
 				<th>#request.context.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
-				<cfif attributes.hasInheritance><th>#request.context.$.Slatwall.rbKey('admin.productType.settingDefinedIn')#</th></cfif>
+				<cfif thistag.hasInheritedValues>
+					<th>#request.context.$.Slatwall.rbKey('defined.inherited')#</th>
+				</cfif>
+				<th>&nbsp;</th>
 			</tr>
 			<cfloop array="#thistag.settings#" index="thisSetting">
 				<tr>
-					<td>
-						#request.context.$.Slatwall.rbKey("setting.product.#thisSetting.settingName#")#
+					<td class="primary">
+						#request.context.$.Slatwall.rbKey("setting.#thisSetting.settingName#")#
 					</td>
 					<td>
-						<cf_SlatwallPropertyDisplay object="#request.context.productType#" property="#thisSetting.settingName#" edit="#attributes.edit#" displayType="plain">
+						#thisSetting.settingDetails.settingValueFormatted#
 					</td>
-					<cfif attributes.hasInheritance>
-						<cfset local.thisSettingSourequest.contexte = request.context.ProductType.getWhereSettingDefined("#thisSetting.settingName#") />
-						<td>
-							<cfif local.thisSettingSource.type eq "Global">
-								<a href="#buildURL(action='admin:setting.detail')#">#request.context.$.Slatwall.rbKey('entity.setting.global')#</a>
-							<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq request.context.ProductType.getProductTypeID()>
-								<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
-							<cfelse>
-								#local.thisSettingSource.name#
-							</cfif>
-						</td>
-					</cfif>
+					<td class="admin admin1">
+						<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+					</td>
 				</tr>
 			</cfloop>
 		</table>

@@ -40,7 +40,7 @@ Notes:
 	<cfif thisTag.executionMode is "start">
 		
 		<cfparam name="attributes.type" type="string" />
-		<cfparam name="attributes.object" type="any" />
+		<cfparam name="attributes.object" type="any" default="" />
 		<cfparam name="attributes.edit" type="boolean" default="false" />
 		<cfparam name="attributes.pageTitle" type="string" default="#request.context.pageTitle#" />
 		<cfparam name="attributes.createAction" type="string" default="#request.context.createAction#" />

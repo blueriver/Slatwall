@@ -797,6 +797,9 @@ component displayname="Base Object" accessors="true" output="false" {
 			case "weight": {
 				return arguments.value & " " & setting("globalWeightFormat");
 			}
+			case "pixels": {
+				return arguments.value & "px";
+			}
 		}
 		
 		return arguments.value;
@@ -918,9 +921,14 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
 	
-	// @hint  helper function to return a Setting
-	public any function setting(required string settingName) {
-		return getService("settingService").getSettingValue(settingName=arguments.settingName, object=this);
+	// @hint helper function to return a Setting
+	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
+		return getService("settingService").getSettingValue(settingName=arguments.settingName, object=this, formatValue=arguments.formatValue);
+	}
+	
+	// @hint helper function to return the details of a setting
+	public struct function getSettingDetails(required any settingName, array filterEntities=[]) {
+		return getService("settingService").getSettingDetails(settingName=arguments.settingName, object=this);
 	}
 	
 	// @hint  helper function for building URL's

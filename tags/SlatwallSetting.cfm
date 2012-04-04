@@ -38,6 +38,15 @@ Notes:
 --->
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.settingName" type="string" />
+	<cfparam name="attributes.settingObject" type="any" default="" />
+	<cfparam name="attributes.settingFilterEntities" type="array" default="#arrayNew(1)#" />
+	<cfparam name="attributes.settingDetails" type="any" default="" />
+	
+	<cfif isObject(attributes.settingObject)>
+		<cfset attributes.settingDetails = attributes.settingObject.getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
+	<cfelse>
+		<cfset attributes.settingDetails = request.context.$.slatwall.getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
+	</cfif>
 	
 	<cfassociate basetag="cf_SlatwallSettingTable" datacollection="settings">
 </cfif>

@@ -43,6 +43,7 @@ Notes:
 	
 	<!--- Used For Caching --->
 	<cfproperty name="allSettingsQuery" type="query" />
+	<cfproperty name="globalSettingValues" type="struct" />
 	
 	<!--- Used As Meta information --->
 	<cfproperty name="settingMetaData" type="struct" />
@@ -50,6 +51,8 @@ Notes:
 	<cfproperty name="settingPrefixInOrder" type="array" />
 	
 	<cfscript>
+		variables.globalSettingValues = {};
+		
 		variables.settingPrefixInOrder = ["productType", "product", "stock", "brand", "sku"];
 		
 		variables.settingLookupOrder = {
@@ -63,7 +66,6 @@ Notes:
 			brandDisplayTemplate = {fieldType="select"},
 			
 			// Global
-			
 			globalCurrencyLocale = {fieldType="select"},
 			globalCurrencyType = {fieldType="select"},
 			globalDateFormat = {fieldType="text"},
@@ -88,13 +90,15 @@ Notes:
 			
 			// Product
 			productDisplayTemplate = {fieldType="select"},
-			productImageSmallWidth = {fieldType="numeric"},
-			productImageSmallHeight = {fieldType="numeric"},
-			productImageMediumWidth = {fieldType="numeric"},
-			productImageMediumHeight = {fieldType="numeric"},
-			productImageLargeWidth = {fieldType="numeric"},
-			productImageLargeHeight = {fieldType="numeric"},
+			productImageSmallWidth = {fieldType="numeric", formatType="pixels"},
+			productImageSmallHeight = {fieldType="numeric", formatType="pixels"},
+			productImageMediumWidth = {fieldType="numeric", formatType="pixels"},
+			productImageMediumHeight = {fieldType="numeric", formatType="pixels"},
+			productImageLargeWidth = {fieldType="numeric", formatType="pixels"},
+			productImageLargeHeight = {fieldType="numeric", formatType="pixels"},
 			productTitleString = {fieldType="text"},
+			
+			// Product Type
 			productTypeDisplayTemplate = {fieldType="select"},
 			
 			// Sku
@@ -106,14 +110,13 @@ Notes:
 			skuHoldBackQuantity = {fieldType="numeric"},
 			skuOrderMinimumQuantity = {fieldType="numeric"},
 			skuOrderMaximumQuantity = {fieldType="numeric"},
-			skuShippingWeight = {fieldType="numeric"},
+			skuShippingWeight = {fieldType="numeric", formatType="weight"},
 			skuShippingWeightUnitCode = {fieldType="select"},
+			skuTrackInventoryFlag = {fieldType="yesno"},
 			skuQATSIncludesQNDOROFlag = {fieldType="yesno"},
 			skuQATSIncludesQNDOVOFlag = {fieldType="yesno"},
-			skuQATSIncludesQNDOSAFlag = {fieldType="yesno"},
-						
-			// Stock
-			stockTrackInventoryFlag = {fieldType="yesno"}
+			skuQATSIncludesQNDOSAFlag = {fieldType="yesno"}
+			
 		};
 		
 		public any function getSettingOptions(required string settingName) {
@@ -142,17 +145,10 @@ Notes:
 			}
 		}
 		
-		public any function removeSettingValue(required any settingID) {
-			clearAllSettingsQuery();
-			getDAO().removeSettingValue(argumentCollection=arguments);
-		}
-		
-		public any function addSettingValue(required any settingName, required string settingValue, struct settingRelationships={}) {
-			clearAllSettingsQuery();
-			getDAO().addSettingValue(argumentCollection=arguments);
-		}
-		
-		public any function getSettingValue(required string settingName, any entity, array filterEntities) {
+		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
+			if(arguments.formatValue) {
+				return getSettingDetails(argumentCollection=arguments).settingValueFormatted;	
+			}
 			return getSettingDetails(argumentCollection=arguments).settingValue;
 		}
 		
@@ -163,6 +159,8 @@ Notes:
 			var settingRecord = "";
 			var settingDetails = {
 				settingValue = "",
+				settingValueFormatted = "",
+				settingID = "",
 				settingRelationships = {}
 			};
 			
@@ -172,6 +170,7 @@ Notes:
 				if(settingRecord.recordCount) {
 					foundValue = true;
 					settingDetails.settingValue = settingRecord.settingValue;
+					settingDetails.settingID = settingRecord.settingID;
 				}
 				
 			// If this is not a global setting, but one with a prefix, then we need to check the relationships
@@ -196,6 +195,7 @@ Notes:
 					if(settingRecord.recordCount) {
 						foundValue = true;
 						settingDetails.settingValue = settingRecord.settingValue;
+						settingDetails.settingID = settingRecord.settingID;
 					} else {
 						structClear(settingDetails.settingRelationships);
 					}
@@ -234,6 +234,7 @@ Notes:
 						if(settingRecord.recordCount) {
 							foundValue = true;
 							settingDetails.settingValue = settingRecord.settingValue;
+							settingDetails.settingID = settingRecord.settingID;
 						} else {
 							structClear(settingDetails.settingRelationships);
 						}
@@ -250,8 +251,15 @@ Notes:
 					if(settingRecord.recordCount) {
 						foundValue = true;
 						settingDetails.settingValue = settingRecord.settingValue;
+						settingDetails.settingID = settingRecord.settingID;
 					}
 				}
+			}
+			
+			if(structKeyExists(variables.settingMetaData[arguments.settingName], "formatType")) {
+				settingDetails.settingValueFormatted = formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].formatType);
+			} else {
+				settingDetails.settingValueFormatted = settingDetails.settingValue;
 			}
 
 			return settingDetails;
@@ -270,6 +278,7 @@ Notes:
 		
 		<cfquery name="rs" dbType="query">
 			SELECT
+				allSettings.settingID,
 				allSettings.settingValue
 			FROM
 				allSettings
