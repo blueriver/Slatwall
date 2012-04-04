@@ -10,7 +10,7 @@
 		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="globalCurrencyLocale" settingValue="English (US)" />
 		<Record settingID="dbb327b0b5496521002aa35ab68ab120" settingName="globalCurrencyType" settingValue="Local" />
 		<Record settingID="dbb327abbbe32d31cc7c2b8e1e4c0c4c" settingName="globalDateFormat" settingValue="mmm dd, yyyy" />
-		<Record settingID="dbb327aaf8f644aedaf190b32f3c48e4" settingName="globalLogMessages" settingValue="general" />
+		<Record settingID="dbb327aaf8f644aedaf190b32f3c48e4" settingName="globalLogMessages" settingValue="General" />
 		<Record settingID="dbb327ada425f5cd38dfecb702a7e24e" settingName="globalRemoteIDShowFlag" settingValue="0" />
 		<Record settingID="dbb327bfb08b7eaaff39fca1d317a60e" settingName="globalRemoteIDEditFlag" settingValue="0" />
 		<Record settingID="dbb327ac9f8ef0c160cd8b5c4f07ddfa" settingName="globalTimeFormat" settingValue="hh:mm tt" />

@@ -37,29 +37,27 @@ Notes:
 
 --->
 <cfparam name="rc.product" type="any" />
-<cfset local.valueOptions = [{value="",name=rc.$.Slatwall.rbKey('setting.inherit')},{value="1",name=rc.$.Slatwall.rbKey('define.yes')},{value="0",name=rc.$.Slatwall.rbKey('define.no')}] />
 
-<cf_SlatwallPropertyList spanClass="span12">
-	<cf_SlatwallPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="manufactureDiscontinuedFlag" edit="#rc.edit#">
-	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('allowBackorderFlag'))# )" />
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="allowBackorderFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
-	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('allowDropShipFlag'))# )" />
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="allowDropShipFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
-	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('allowShippingFlag'))# )" />
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="allowShippingFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
-	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('allowPreorderFlag'))# )" />
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="allowPreorderFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
-	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# ( #yesNoFormat(rc.product.getInheritedSetting('callToOrderFlag'))# )" />
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="callToOrderFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
-	<cf_SlatwallPropertyDisplay object="#rc.product#" property="productDisplayTemplate" edit="true" fieldType="select" valueOptions="#rc.product.getProductDisplayTemplateOptions()#">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityHeldBack" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityHeldBack")#">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityMinimum" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityMinimum")#">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityMaximum" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityMaximum")#">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityOrderMinimum" edit="#rc.edit#" fieldType="text" value="#rc.Product.getSetting("quantityOrderMinimum")#">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="quantityOrderMaximum" edit="#rc.edit#" fieldType="text"value="#rc.Product.getSetting("quantityOrderMaximum")#">
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#" fieldType="text"value="#rc.Product.getSetting("shippingWeight")#">
-	<cf_SlatwallPropertyDisplay object="#rc.product#" property="shippingWeightUnitCode" edit="true" fieldType="select" valueOptions="#rc.product.getShippingWeightUnitCodeOptions()#">
-	<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.product.getInheritedSetting('trackInventoryFlag'))#)" />
-	<cf_SlatwallPropertyDisplay object="#rc.Product#" property="trackInventoryFlag" edit="#rc.edit#" fieldType="select" valueOptions="#local.valueOptions#">
-</cf_SlatwallPropertyList>
+<cf_SlatwallSettingTable>
+	<cf_SlatwallSetting settingName="productTypeDisplayTemplate" />
+	<cf_SlatwallSetting settingName="productDisplayTemplate" />
+	<cf_SlatwallSetting settingName="productTitleString" />
+	<cf_SlatwallSetting settingName="productImageSmallWidth" />
+	<cf_SlatwallSetting settingName="productImageSmallHeight" />
+	<cf_SlatwallSetting settingName="productImageMediumWidth" />
+	<cf_SlatwallSetting settingName="productImageMediumHeight" />
+	<cf_SlatwallSetting settingName="productImageLargeWidth" />
+	<cf_SlatwallSetting settingName="productImageLargeHeight" />
+	<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" />
+	<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" />
+</cf_SlatwallSettingTable>
+<cfif rc.product.getProductType().getBaseProductType() eq "merchandise">
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="skuTrackInventoryFlag" />
+		<cf_SlatwallSetting settingName="skuAllowBackorderFlag" />
+		<cf_SlatwallSetting settingName="skuAllowPreorderFlag" />
+		<cf_SlatwallSetting settingName="skuHoldBackQuantity" />
+		<cf_SlatwallSetting settingName="skuShippingWeight" />
+		<cf_SlatwallSetting settingName="skuShippingWeightUnitCode" />
+	</cf_SlatwallSettingTable>
+</cfif>

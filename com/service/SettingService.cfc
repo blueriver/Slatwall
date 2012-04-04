@@ -40,6 +40,7 @@ Notes:
 
 	<!--- Injected from Coldspring --->
 	<cfproperty name="contentService" type="any" />
+	<cfproperty name="utilityORMService" type="any" />
 	
 	<!--- Used For Caching --->
 	<cfproperty name="allSettingsQuery" type="query" />
@@ -72,17 +73,17 @@ Notes:
 			globalEncryptionKeySize = {fieldType="select"},
 			globalEncryptionKeyLocation = {fieldType="text"},
 			globalEncryptionKeyGenerator = {fieldType="text"},
+			globalImageExtension = {fieldType="text"},
 			globalLogMessages = {fieldType="select"},
-			globalRemoteIDShowFlag = {fieldType="yesno"},
-			globalRemoteIDEditFlag = {fieldType="yesno"},
-			globalTimeFormat = {fieldType="text"},
-			globalMissingImagePath = {fieldType="string"},
-			globalImageExtension = {fieldType="string"},
+			globalMissingImagePath = {fieldType="text"},
 			globalOrderPlacedEmailFrom = {fieldType="text"},
 			globalOrderPlacedEmailCC = {fieldType="text"},
 			globalOrderPlacedEmailBCC = {fieldType="text"},
 			globalOrderPlacedEmailSubjectString = {fieldType="text"},
 			globalOrderNumberGeneration = {fieldType="select"},
+			globalRemoteIDShowFlag = {fieldType="yesno"},
+			globalRemoteIDEditFlag = {fieldType="yesno"},
+			globalTimeFormat = {fieldType="text"},
 			globalUseProductCacheFlag = {fieldType="yesno"},
 			globalURLKeyBrand = {fieldType="text"},
 			globalURLKeyProduct = {fieldType="text"},
@@ -91,12 +92,12 @@ Notes:
 			
 			// Product
 			productDisplayTemplate = {fieldType="select"},
-			productImageSmallWidth = {fieldType="numeric", formatType="pixels"},
-			productImageSmallHeight = {fieldType="numeric", formatType="pixels"},
-			productImageMediumWidth = {fieldType="numeric", formatType="pixels"},
-			productImageMediumHeight = {fieldType="numeric", formatType="pixels"},
-			productImageLargeWidth = {fieldType="numeric", formatType="pixels"},
-			productImageLargeHeight = {fieldType="numeric", formatType="pixels"},
+			productImageSmallWidth = {fieldType="text", formatType="pixels"},
+			productImageSmallHeight = {fieldType="text", formatType="pixels"},
+			productImageMediumWidth = {fieldType="text", formatType="pixels"},
+			productImageMediumHeight = {fieldType="text", formatType="pixels"},
+			productImageLargeWidth = {fieldType="text", formatType="pixels"},
+			productImageLargeHeight = {fieldType="text", formatType="pixels"},
 			productTitleString = {fieldType="text"},
 			
 			// Product Type
@@ -105,13 +106,13 @@ Notes:
 			// Sku
 			skuAllowBackorderFlag = {fieldType="yesno"},
 			skuAllowPreorderFlag = {fieldType="yesno"},
-			skuEligableFulfillmentMethods = {fieldType="listingMultiselect"},
-			skuEligablePaymentMethods = {fieldType="listingMultiselect"},
-			skuEligableOrderOrigins = {fieldType="listingMultiselect"},
-			skuHoldBackQuantity = {fieldType="numeric"},
-			skuOrderMinimumQuantity = {fieldType="numeric"},
-			skuOrderMaximumQuantity = {fieldType="numeric"},
-			skuShippingWeight = {fieldType="numeric", formatType="weight"},
+			skuEligableFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
+			skuEligablePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
+			skuEligableOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigins"},
+			skuHoldBackQuantity = {fieldType="text"},
+			skuOrderMinimumQuantity = {fieldType="text"},
+			skuOrderMaximumQuantity = {fieldType="text"},
+			skuShippingWeight = {fieldType="text", formatType="weight"},
 			skuShippingWeightUnitCode = {fieldType="select"},
 			skuTrackInventoryFlag = {fieldType="yesno"},
 			skuQATSIncludesQNDOROFlag = {fieldType="yesno"},
@@ -120,17 +121,22 @@ Notes:
 			
 		};
 		
-		public any function getSettingOptions(required string settingName) {
+		public array function getSettingOptions(required string settingName) {
 			switch(arguments.settingName) {
 				case "brandDisplayTemplate": case "productDisplayTemplate": case "productTypeDisplayTemplate" :
 					return getContentService().getDisplayTemplateOptions();
-				case "globalCurrencyFormat":
+				case "globalCurrencyLocale":
 					return ['Chinese (China)','Chinese (Hong Kong)','Chinese (Taiwan)','Dutch (Belgian)','Dutch (Standard)','English (Australian)','English (Canadian)','English (New Zealand)','English (UK)','English (US)','French (Belgian)','French (Canadian)','French (Standard)','French (Swiss)','German (Austrian)','German (Standard)','German (Swiss)','Italian (Standard)', 'Italian (Swiss)','Japanese','Korean','Norwegian (Bokmal)','Norwegian (Nynorsk)','Portuguese (Brazilian)','Portuguese (Standard)','Spanish (Mexican)','Spanish (Modern)','Spanish (Standard)','Swedish'];
+				case "globalCurrencyType":
+					return ['None','Local','International'];
+				case "globalLogMessages":
+					return ['None','General','Detail'];
 			}
+			throw("You have asked for a select list of a setting named '#arguments.settingName#' and the options for that setting have not been setup yet.  Open the SettingService, and configure options for this setting.")
 		}
 		
 		public any function getSettingOptionsSmartList(required string settingName) {
-			
+			return getUtilityORMService().getServiceByEntityName( variables.settingMetaData[ arguments.settingName ] ).invokeMethod("get#arguments.settingName#SmartList");
 		}
 		
 		public any function getSettingMetaData(required string settingName) {

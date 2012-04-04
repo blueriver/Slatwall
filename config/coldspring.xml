@@ -305,6 +305,8 @@
     </bean>
     <bean id="settingService" parent="parentService" class="Slatwall.com.service.SettingService">
         <property name="DAO"><ref bean="settingDAO" /></property>
+		<property name="contentService"><ref bean="contentService" /></property>
+		<property name="utilityORMService"><ref bean="utilityORMService" /></property>
     </bean>
 	<bean id="shippingService" parent="parentService" class="Slatwall.com.service.ShippingService">
         <property name="DAO"><ref bean="shippingDAO" /></property>

@@ -71,8 +71,8 @@ Notes:
 								<div class="row-fluid">
 									<cf_SlatwallPropertyList spanClass="span12"> 
 										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
-										<cfif request.context.$.slatwall.setting('advanced_showRemoteIDFields') && attributes.object.hasProperty('remoteID')>
-											<cf_SlatwallPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.context.$.slatwall.setting('advanced_editRemoteIDFields'), true, false)#" />
+										<cfif request.context.$.slatwall.setting('globalRemoteIDShowFlag') && attributes.object.hasProperty('remoteID')>
+											<cf_SlatwallPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.context.$.slatwall.setting('globalRemoteIDEditFlag'), true, false)#" />
 										</cfif>
 										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdDateTime" />
 										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdByAccount" />
