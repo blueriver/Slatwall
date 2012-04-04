@@ -38,4 +38,17 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cffunction name="getAllSettingsQuery">
+		<cfset var rs = "" />
+		
+		<cfquery name="rs">
+			SELECT
+				*
+			FROM
+				SlatwallSetting
+		</cfquery>
+		
+		<cfreturn rs />
+	</cffunction>
+	
 </cfcomponent>

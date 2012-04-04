@@ -783,19 +783,19 @@ component displayname="Base Object" accessors="true" output="false" {
 				}
 			}
 			case "currency": {
-				return LSCurrencyFormat(arguments.value, setting("advanced_currencyType"), setting("advanced_currencyLocale"));
+				return LSCurrencyFormat(arguments.value, setting("globalCurrencyType"), setting("globalCurrencyLocale"));
 			}
 			case "datetime": {
-				return dateFormat(arguments.value, setting("advanced_dateFormat")) & " " & TimeFormat(value, setting("advanced_timeFormat"));
+				return dateFormat(arguments.value, setting("globalDateFormat")) & " " & TimeFormat(value, setting("globalTimeFormat"));
 			}
 			case "date": {
-				return dateFormat(arguments.value, setting("advanced_dateFormat"));
+				return dateFormat(arguments.value, setting("globalDateFormat"));
 			}
 			case "time": {
-				return timeFormat(arguments.value, setting("advanced_timeFormat"));
+				return timeFormat(arguments.value, setting("globalTimeFormat"));
 			}
 			case "weight": {
-				return arguments.value & " " & setting("advanced_weightFormat");
+				return arguments.value & " " & setting("globalWeightFormat");
 			}
 		}
 		
@@ -825,10 +825,10 @@ component displayname="Base Object" accessors="true" output="false" {
 	public string function encryptValue(required string value) {
 		var encryptedValue = "";
 		if(!isNull(arguments.value) && arguments.value != "") {
-			if(setting("advanced_encryptionKeyGenerator") == ""){
+			if(setting("globalEncryptionKeyGenerator") == ""){
 				encryptedValue = getService("encryptionService").encryptValue(arguments.value);
 			} else {
-				encryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("advanced_encryptionKeyGenerator") ).getIntegrationCFC().encryptValue(arguments.value);
+				encryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("globalEncryptionKeyGenerator") ).getIntegrationCFC().encryptValue(arguments.value);
 			}
 		}
 		return encryptedValue;
@@ -837,10 +837,10 @@ component displayname="Base Object" accessors="true" output="false" {
 	public string function decryptValue(required string value) {
 		var decryptedValue = "";
 		if(!isNull(arguments.value) && arguments.value != "") {
-			if(setting("advanced_encryptionKeyGenerator") == ""){
+			if(setting("globalEncryptionKeyGenerator") == ""){
 				decryptedValue = getService("encryptionService").decryptValue(arguments.value);
 			} else {
-				decryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("advanced_encryptionKeyGenerator") ).getIntegrationCFC().decryptValue(arguments.value);
+				decryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("globalEncryptionKeyGenerator") ).getIntegrationCFC().decryptValue(arguments.value);
 			}
 		}
 		return decryptedValue;
@@ -920,7 +920,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function to return a Setting
 	public any function setting(required string settingName) {
-		return getService("settingService").getSettingValue(settingName=arguments.settingName);
+		return getService("settingService").getSettingValue(settingName=arguments.settingName, object=this);
 	}
 	
 	// @hint  helper function for building URL's

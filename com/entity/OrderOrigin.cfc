@@ -36,34 +36,44 @@
 Notes:
 
 */
-component displayname="Product Cache" entityname="SlatwallProductCache" table="SlatwallProductCache" persistent="true" accessors="true" extends="BaseEntity" {
-	
-	// Related Object Properties (Many-to-One)
-	property name="productID" ormtype="string" length="32" fieldtype="id" generator="foreign" params="{property='product'}";
-	property name="product" fieldtype="one-to-one" cfc="Product" constrained="true";
+component displayname="Order Origin" entityname="SlatwallOrderOrigin" table="SlatwallOrderOrigin" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="skuImageFileList" ormtype="string" length="4000";
+	property name="orderOriginID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="activeFlag" ormtype="boolean" formatType="yesno";
+	property name="orderOriginName" ormtype="string";
+	property name="orderOriginType" ormtype="string";
 	
-	// Persistent Properties (Calculations)
-	property name="salePrice" ormtype="big_decimal" default=0;
-	property name="salePriceExpirationDateTime" ormtype="timestamp";
-	property name="qoh" ormtype="integer" default=0;
-	property name="qosh" ormtype="integer" default=0;
-	property name="qndoo" ormtype="integer" default=0;
-	property name="qndorvo" ormtype="integer" default=0;
-	property name="qndosa" ormtype="integer" default=0;
-	property name="qnroro" ormtype="integer" default=0;
-	property name="qnrovo" ormtype="integer" default=0;
-	property name="qnrosa" ormtype="integer" default=0;
-	property name="qats" ormtype="integer" default=0;
-	property name="qiats" ormtype="integer" default=0;
+	// Related Object Properties (many-to-one)
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+
+	
+	public array function getFulfillmentMethodTypeOptions() {
+		var options = [
+			{name="Shipping", value="web"},
+			{name="In Person", value="inPerson"},
+			{name="Phone", value="phone"},
+			{name="External", value="external"}
+		];
+		return options;
+	}
+
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

@@ -60,21 +60,20 @@ Notes:
 		
 		variables.settingMetaData = {
 			// Brand
-			brandURLKey = {fieldType="yesno"},
 			brandDisplayTemplate = {fieldType="select"},
 			
 			// Global
-			globalLogMessages = {fieldType="select"},
-			globalShowRemoteIDFieldsFlag = {fieldType="yesno"},
-			globalEditRemoteIDFieldsFlag = {fieldType="yesno"},
-			globalDateFormat = {fieldType="text"},
-			globalTimeFormat = {fieldType="text"},
-			globalLogMessages = {fieldType="select"},
+			
 			globalCurrencyLocale = {fieldType="select"},
 			globalCurrencyType = {fieldType="select"},
+			globalDateFormat = {fieldType="text"},
 			globalEncryptionKeySize = {fieldType="select"},
 			globalEncryptionKeyLocation = {fieldType="text"},
 			globalEncryptionKeyGenerator = {fieldType="text"},
+			globalLogMessages = {fieldType="select"},
+			globalRemoteIDShowFlag = {fieldType="yesno"},
+			globalRemoteIDEditFlag = {fieldType="yesno"},
+			globalTimeFormat = {fieldType="text"},
 			globalMissingImagePath = {fieldType="string"},
 			globalImageExtension = {fieldType="string"},
 			globalOrderPlacedEmailFrom = {fieldType="text"},
@@ -82,6 +81,10 @@ Notes:
 			globalOrderPlacedEmailBCC = {fieldType="text"},
 			globalOrderPlacedEmailSubjectString = {fieldType="text"},
 			globalOrderNumberGeneration = {fieldType="select"},
+			globalUseProductCacheFlag = {fieldType="yesno"},
+			globalURLKeyBrand = {fieldType="text"},
+			globalURLKeyProduct = {fieldType="text"},
+			globalURLKeyProductType = {fieldType="text"},
 			
 			// Product
 			productDisplayTemplate = {fieldType="select"},
@@ -92,8 +95,6 @@ Notes:
 			productImageLargeWidth = {fieldType="numeric"},
 			productImageLargeHeight = {fieldType="numeric"},
 			productTitleString = {fieldType="text"},
-			productUseCacheFlag = {fieldType="yesno"},
-			productURLKey = {fieldType="text"},
 			productTypeDisplayTemplate = {fieldType="select"},
 			
 			// Sku
@@ -102,11 +103,15 @@ Notes:
 			skuEligableFulfillmentMethods = {fieldType="listingMultiselect"},
 			skuEligablePaymentMethods = {fieldType="listingMultiselect"},
 			skuEligableOrderOrigins = {fieldType="listingMultiselect"},
+			skuHoldBackQuantity = {fieldType="numeric"},
 			skuOrderMinimumQuantity = {fieldType="numeric"},
 			skuOrderMaximumQuantity = {fieldType="numeric"},
 			skuShippingWeight = {fieldType="numeric"},
 			skuShippingWeightUnitCode = {fieldType="select"},
-			
+			skuQATSIncludesQNDOROFlag = {fieldType="yesno"},
+			skuQATSIncludesQNDOVOFlag = {fieldType="yesno"},
+			skuQATSIncludesQNDOSAFlag = {fieldType="yesno"},
+						
 			// Stock
 			stockTrackInventoryFlag = {fieldType="yesno"}
 		};
@@ -128,6 +133,7 @@ Notes:
 			if(!structKeyExists(variables, "allSettingsQuery")) {
 				variables.allSettingsQuery = getDAO().getAllSettingsQuery();
 			}
+			return variables.allSettingsQuery;
 		}
 		
 		public any function clearAllSettingsQuery() {
@@ -150,7 +156,7 @@ Notes:
 			return getSettingDetails(argumentCollection=arguments).settingValue;
 		}
 		
-		public any function getSettingDetials(required string settingName, any entity, array filterEntities) {
+		public any function getSettingDetails(required string settingName, any object, array filterEntities) {
 			
 			// Create some placeholder Var's
 			var foundValue = false;
@@ -161,11 +167,11 @@ Notes:
 			};
 			
 			// If this is a global setting there isn't much we need to do because we already know there aren't any relationships
-			if(left(arguments.settingName) == "global") {
+			if(left(arguments.settingName, 6) == "global") {
 				settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName);
 				if(settingRecord.recordCount) {
 					foundValue = true;
-					settingDetails.settingValue = settingRecord.settingValue;	
+					settingDetails.settingValue = settingRecord.settingValue;
 				}
 				
 			// If this is not a global setting, but one with a prefix, then we need to check the relationships
@@ -184,8 +190,8 @@ Notes:
 				}
 				
 				// If the setting prefix is the same as the entityName than check that relationship first
-				if(settingPrefix == arguments.entity.getClassName()) {
-					settingDetails.settingRelationships[ arguments.entity.getPrimaryIDPropertyName() ] = arguments.entity.getPrimaryIDValue();
+				if(settingPrefix == arguments.object.getClassName()) {
+					settingDetails.settingRelationships[ arguments.object.getPrimaryIDPropertyName() ] = arguments.object.getPrimaryIDValue();
 					settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
 					if(settingRecord.recordCount) {
 						foundValue = true;
@@ -196,14 +202,14 @@ Notes:
 				}
 				
 				// If we haven't found a value yet, check to see if there is a lookup order
-				if(!foundValue && structKeyExists(getSettingLookupOrder(), arguments.entity.getClassName()) && structKeyExists(getSettingLookupOrder(), settingPrefix)) {
+				if(!foundValue && structKeyExists(getSettingLookupOrder(), arguments.object.getClassName()) && structKeyExists(getSettingLookupOrder(), settingPrefix)) {
 					
 					var hasPathRelationship = false;
 					var pathList = "";
 					var relationshipValue = "";
 					var nextLookupOrderIndex = 1;
 					var nextPathListIndex = 0;
-					var settingLookupArray = getSettingLookupOrder()[ arguments.entity.getClassName() ];
+					var settingLookupArray = getSettingLookupOrder()[ arguments.object.getClassName() ];
 					
 					do {
 						// If there was an & in the lookupKey then we should split into multiple relationships
@@ -213,13 +219,13 @@ Notes:
 							// If this relationship is a path, then we need to attemptThis multiple times
 							if(right(listLast(allRelationships[r], "."), 4) == "path") {
 								if(len(pathList)) {
-									pathList = arguments.entity.getValueByPropertyIdentifier(allRelationships[r]);
+									pathList = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
 									nextPathListIndex = listLen(pathList);
 								}
 								relationshipValue = listGetAt(pathList, nextPathListIndex);
 								nextPathListIndex--;
 							} else {
-								relationshipValue = arguments.entity.getValueByPropertyIdentifier(allRelationships[r]);
+								relationshipValue = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
 							}
 							settingDetails.settingRelationships[ listLast(allRelationships[r], ".") ] = relationshipValue;
 						}
@@ -248,38 +254,31 @@ Notes:
 				}
 			}
 
-			return settingDetials;
+			return settingDetails;
 		}
 		
 	</cfscript>
 	
 	<cffunction name="getSettingRecordBySettingRelationships">
 		<cfargument name="settingName" type="string" required="true" />
-		<cfargument name="settingRelationships" type="struct" />
+		<cfargument name="settingRelationships" type="struct" default="#structNew()#" />
 		
 		<cfset var allSettings = getAllSettingsQuery() />
 		<cfset var relationship = "">
 		<cfset var rs = "">
-		<cfset var i = "">
+		<cfset var key = "">
 		
 		<cfquery name="rs" dbType="query">
 			SELECT
 				allSettings.settingValue
 			FROM
 				allSettings
-			
-			<cfif structKeyExists(arguments, "settingRelationships") and structCount(arguments.settingRelationships)>
 				WHERE
-				
-				<cfloop from="1" to="#structCount(arguments.settingRelationships)#" index="i">
-					allSettings.#listGetAt(structKeyList(arguments.settingRelationships),i)# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships[listGetAt(structKeyList(arguments.settingRelationships),i)]#">
-					<cfif structCount(arguments.settingRelationships) gt i>
-						AND
-					</cfif>
+					allSettings.settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#">
+				<cfloop collection="#arguments.settingRelationships#" item="key">
+					AND
+						allSettings.#key# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships[ key ]#">
 				</cfloop>
-				
-			</cfif>
-			
 		</cfquery> 
 		
 		

@@ -119,9 +119,6 @@ component extends="org.fw1.framework" output="false" {
 					serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
 					serviceFactory.loadBeansFromXmlObj( xml );
 					
-					// Set mura as the parent Bean Factory
-					// serviceFactory.setParent( application.serviceFactory );
-					
 					// Set a data service coldspring as the child factory, with the Slatwall as it's parent
 					integrationService = serviceFactory.getBean("integrationService");
 					serviceFactory = integrationService.updateColdspringWithDataIntegration( serviceFactory, xml );
@@ -142,7 +139,7 @@ component extends="org.fw1.framework" output="false" {
 						defaultFailureMessagePrefix = ""
 					};
 					
-					// Create The 
+					// Create The Validate This Facade object
 					var vtFacade = new ValidateThis.ValidateThis(validateThisConfig);
 					
 					// Place the validation facade object in the plugin config application scope
@@ -161,7 +158,7 @@ component extends="org.fw1.framework" output="false" {
 					getBeanFactory().getBean("updateService").runScripts();
 					
 					// Load all Slatwall Settings
-					getBeanFactory().getBean("settingService").reloadConfiguration();
+					//getBeanFactory().getBean("settingService").reloadConfiguration();
 					
 					// Reload All Integrations
 					getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
@@ -170,7 +167,7 @@ component extends="org.fw1.framework" output="false" {
 					variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
 					
 					// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
-					getBeanFactory().getBean("settingService").verifyMuraRequirements();
+					//getBeanFactory().getBean("settingService").verifyMuraRequirements();
 					
 					// Log that the application is finished setting up
 					writeLog(file="Slatwall", text="Application Setup Complete");
@@ -193,7 +190,7 @@ component extends="org.fw1.framework" output="false" {
 		verifyApplicationSetup();
 		
 		// Run Sku Cache & Product Cache Update Threads if needed
-		getBeanFactory().getBean("skuCacheService").executeSkuCacheUpdates();
+		getBeanFactory().getBean("productCacheService").executeProductCacheUpdates();
 		
 		if(!getBeanFactory().getBean("requestCacheService").keyExists(key="ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
