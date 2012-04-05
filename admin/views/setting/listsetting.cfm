@@ -43,9 +43,11 @@ Notes:
 		<cf_SlatwallSetting settingName="globalCurrencyLocale" />
 		<cf_SlatwallSetting settingName="globalCurrencyType" />
 		<cf_SlatwallSetting settingName="globalDateFormat" />
+		<cf_SlatwallSetting settingName="globalEncryptionAlgorithm" />
+		<cf_SlatwallSetting settingName="globalEncryptionEncoding" />
 		<cf_SlatwallSetting settingName="globalEncryptionKeySize" />
 		<cf_SlatwallSetting settingName="globalEncryptionKeyLocation" />
-		<cf_SlatwallSetting settingName="globalEncryptionKeyGenerator" />
+		<cf_SlatwallSetting settingName="globalEncryptionService" />
 		<cf_SlatwallSetting settingName="globalLogMessages" />
 		<cf_SlatwallSetting settingName="globalRemoteIDShowFlag" />
 		<cf_SlatwallSetting settingName="globalRemoteIDEditFlag" />

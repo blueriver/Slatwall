@@ -37,7 +37,11 @@ Notes:
 
 --->
 <cfparam name="rc.setting" type="any">
+<cfparam name="rc.settingName" type="string">
 <cfparam name="rc.edit" type="boolean">
+
+<!--- This logic set the setting name if the setting entity is new --->
+<cfset rc.setting.setSettingName(rc.settingName) />
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.setting#" edit="#rc.edit#">

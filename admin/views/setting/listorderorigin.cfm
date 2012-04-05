@@ -36,38 +36,16 @@
 Notes:
 
 --->
-<cfif thisTag.executionMode is "end">
-	<cfparam name="thistag.settings" type="array" default="#arrayNew(1)#" />
-	<cfparam name="thistag.hasInheritedValues" type="boolean" default="false" />
+<cfparam name="rc.orderOriginSmartList" type="any" />
+
+<cfoutput>
 	
-	<cfsilent>
-		<cfloop array="#thistag.settings#" index="thisSetting">
-			
-		</cfloop>
-	</cfsilent>
-	<cfoutput>
-		<table class="table table-striped table-bordered">
-			<tr>
-				<th class="primary">#request.context.$.Slatwall.rbKey('entity.setting.settingName')#</th>
-				<th>#request.context.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
-				<cfif thistag.hasInheritedValues>
-					<th>#request.context.$.Slatwall.rbKey('defined.inherited')#</th>
-				</cfif>
-				<th>&nbsp;</th>
-			</tr>
-			<cfloop array="#thistag.settings#" index="thisSetting">
-				<tr>
-					<td class="primary">
-						#request.context.$.Slatwall.rbKey("setting.#thisSetting.settingName#")#
-					</td>
-					<td>
-						#thisSetting.settingDetails.settingValueFormatted#
-					</td>
-					<td class="admin admin1">
-						<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</cfoutput>
-</cfif>
+<cf_SlatwallActionBar type="listing" object="#rc.orderOriginSmartList#" createModal="true" />
+
+<cf_SlatwallListingDisplay smartList="#rc.orderOriginSmartList#" recordEditAction="admin:setting.editorderorigin" recordEditQueryString="returnAction=admin:setting.listorderorigin" recordEditModal="true">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderOriginName" />
+	<cf_SlatwallListingColumn propertyIdentifier="orderOriginType" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
+</cf_SlatwallListingDisplay>
+
+</cfoutput>

@@ -833,10 +833,10 @@ component displayname="Base Object" accessors="true" output="false" {
 	public string function encryptValue(required string value) {
 		var encryptedValue = "";
 		if(!isNull(arguments.value) && arguments.value != "") {
-			if(setting("globalEncryptionKeyGenerator") == ""){
+			if(setting("globalEncryptionService") == "internal"){
 				encryptedValue = getService("encryptionService").encryptValue(arguments.value);
 			} else {
-				encryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("globalEncryptionKeyGenerator") ).getIntegrationCFC().encryptValue(arguments.value);
+				encryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("globalEncryptionIntegration") ).getIntegrationCFC().encryptValue(arguments.value);
 			}
 		}
 		return encryptedValue;
@@ -844,11 +844,11 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	public string function decryptValue(required string value) {
 		var decryptedValue = "";
-		if(!isNull(arguments.value) && arguments.value != "") {
-			if(setting("globalEncryptionKeyGenerator") == ""){
+		if(!isNull(arguments.value) && arguments.value != "internal") {
+			if(setting("globalEncryptionService") == ""){
 				decryptedValue = getService("encryptionService").decryptValue(arguments.value);
 			} else {
-				decryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("globalEncryptionKeyGenerator") ).getIntegrationCFC().decryptValue(arguments.value);
+				decryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("globalEncryptionIntegration") ).getIntegrationCFC().decryptValue(arguments.value);
 			}
 		}
 		return decryptedValue;

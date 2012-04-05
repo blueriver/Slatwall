@@ -35,6 +35,9 @@
 
 Notes:
 
+globalOrderNumberGeneration
+globalEncryptionKeySize
+
 --->
 <cfcomponent extends="BaseService" output="false" accessors="true">
 
@@ -70,9 +73,11 @@ Notes:
 			globalCurrencyLocale = {fieldType="select"},
 			globalCurrencyType = {fieldType="select"},
 			globalDateFormat = {fieldType="text"},
-			globalEncryptionKeySize = {fieldType="select"},
+			globalEncryptionAlgorithm = {fieldType="select"},
+			globalEncryptionEncoding = {fieldType="select"},
 			globalEncryptionKeyLocation = {fieldType="text"},
-			globalEncryptionKeyGenerator = {fieldType="text"},
+			globalEncryptionKeySize = {fieldType="select"},
+			globalEncryptionService = {fieldType="select"},
 			globalImageExtension = {fieldType="text"},
 			globalLogMessages = {fieldType="select"},
 			globalMissingImagePath = {fieldType="text"},
@@ -131,6 +136,20 @@ Notes:
 					return ['None','Local','International'];
 				case "globalLogMessages":
 					return ['None','General','Detail'];
+				case "globalEncryptionKeySize":
+					return ['128','256','512'];
+				case "globalEncryptionAlgorithm":
+					return ['AES','DES','DES-EDE','DESX','RC2','RC4','RC5','PBE','MD2','MD5','RIPEMD160','SHA-1','SHA-224','SHA-256','SHA-384','SHA-512','HMAC-MD5','HMAC-RIPEMD160','HMAC-SHA1','HMAC-SHA224','HMAC-SHA256','HMAC-SHA384','HMAC-SHA512','RSA','DSA','Diffie-Hellman','CFMX_COMPAT','BLOWFISH'];
+				case "globalEncryptionEncoding":
+					return ['Base64','Hex','UU'];
+				case "globalEncryptionService":
+					return [{name='Internal', value='internal'}];
+				case "globalWeightUnitCode": case "skuShippingWeightUnitCode":
+					var optionSL = this.getMeasurementUnitSmartList();
+					optionSL.addFilter('measurementType', 'weight');
+					optionSL.addSelect('unitName', 'name');
+					optionSL.addSelect('unitCode', 'value');
+					return optionSL.getRecords();
 			}
 			throw("You have asked for a select list of a setting named '#arguments.settingName#' and the options for that setting have not been setup yet.  Open the SettingService, and configure options for this setting.")
 		}

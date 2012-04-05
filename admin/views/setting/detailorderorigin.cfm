@@ -36,38 +36,20 @@
 Notes:
 
 --->
-<cfif thisTag.executionMode is "end">
-	<cfparam name="thistag.settings" type="array" default="#arrayNew(1)#" />
-	<cfparam name="thistag.hasInheritedValues" type="boolean" default="false" />
-	
-	<cfsilent>
-		<cfloop array="#thistag.settings#" index="thisSetting">
-			
-		</cfloop>
-	</cfsilent>
-	<cfoutput>
-		<table class="table table-striped table-bordered">
-			<tr>
-				<th class="primary">#request.context.$.Slatwall.rbKey('entity.setting.settingName')#</th>
-				<th>#request.context.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
-				<cfif thistag.hasInheritedValues>
-					<th>#request.context.$.Slatwall.rbKey('defined.inherited')#</th>
-				</cfif>
-				<th>&nbsp;</th>
-			</tr>
-			<cfloop array="#thistag.settings#" index="thisSetting">
-				<tr>
-					<td class="primary">
-						#request.context.$.Slatwall.rbKey("setting.#thisSetting.settingName#")#
-					</td>
-					<td>
-						#thisSetting.settingDetails.settingValueFormatted#
-					</td>
-					<td class="admin admin1">
-						<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</cfoutput>
-</cfif>
+<cfparam name="rc.orderOrigin" type="any">
+<cfparam name="rc.edit" type="boolean">
+
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.orderOrigin#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.orderOrigin#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList spanClass="span12">
+				<cf_SlatwallPropertyDisplay object="#rc.orderOrigin#" property="orderOriginName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.orderOrigin#" property="activeFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.orderOrigin#" property="orderOriginType" edit="#rc.orderOrigin.isNew()#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+
+	</cf_SlatwallDetailForm>
+</cfoutput>

@@ -10,15 +10,19 @@
 		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="globalCurrencyLocale" settingValue="English (US)" />
 		<Record settingID="dbb327b0b5496521002aa35ab68ab120" settingName="globalCurrencyType" settingValue="Local" />
 		<Record settingID="dbb327abbbe32d31cc7c2b8e1e4c0c4c" settingName="globalDateFormat" settingValue="mmm dd, yyyy" />
-		<Record settingID="dbb327aaf8f644aedaf190b32f3c48e4" settingName="globalLogMessages" settingValue="General" />
-		<Record settingID="dbb327ada425f5cd38dfecb702a7e24e" settingName="globalRemoteIDShowFlag" settingValue="0" />
-		<Record settingID="dbb327bfb08b7eaaff39fca1d317a60e" settingName="globalRemoteIDEditFlag" settingValue="0" />
-		<Record settingID="dbb327ac9f8ef0c160cd8b5c4f07ddfa" settingName="globalTimeFormat" settingValue="hh:mm tt" />
-		<Record settingID="dbb3279cee21f040e126e9e499710707" settingName="globalMissingImagePath" settingValue="/plugins/Slatwall/assets/images/missingimage.jpg" />
+		<Record settingID="dbb327d09e27ea5cd8cf8a7772f7af27" settingName="globalEncryptionAlgorithm" settingValue="AES" />
+		<Record settingID="dbb327d1de2f05f1483ca1805e4e5c3f" settingName="globalEncryptionEncoding" settingValue="Base64" />
+		<Record settingID="dbb327cfedfe1808ddd67b8102144e22" settingName="globalEncryptionKeySize" settingValue="128" />
+		<Record settingID="dbb327d2f7588b6eb2652cbfc635564b" settingName="globalEncryptionService" settingValue="internal" />
 		<Record settingID="dbb3279be8c752977fefc8768918e8df" settingName="globalImageExtension" settingValue="jpg" />
+		<Record settingID="dbb327aaf8f644aedaf190b32f3c48e4" settingName="globalLogMessages" settingValue="General" />
+		<Record settingID="dbb3279cee21f040e126e9e499710707" settingName="globalMissingImagePath" settingValue="/plugins/Slatwall/assets/images/missingimage.jpg" />
 		<Record settingID="dbb327a3e256e78458125906a2f8c05a" settingName="globalOrderPlacedEmailFrom" settingValue="info@mySlatwallStore.com" />
 		<Record settingID="dbb327a60fb3a58e2dd6dc93f164d46c" settingName="globalOrderPlacedEmailSubjectString" settingValue="Order Confirmation - Order Number: ${orderNumber}" />
 		<Record settingID="dbb327badb02af9dd10a31a0cc93692d" settingName="globalOrderNumberGeneration" settingValue="autoIncrement" />
+		<Record settingID="dbb327ada425f5cd38dfecb702a7e24e" settingName="globalRemoteIDShowFlag" settingValue="0" />
+		<Record settingID="dbb327bfb08b7eaaff39fca1d317a60e" settingName="globalRemoteIDEditFlag" settingValue="0" />
+		<Record settingID="dbb327ac9f8ef0c160cd8b5c4f07ddfa" settingName="globalTimeFormat" settingValue="hh:mm tt" />
 		<Record settingID="dbb327bba727c794a7661ef523b17973" settingName="globalUseProductCacheFlag" settingValue="0" />
 		<Record settingID="dbb327c1b246cefc0a4d6146458c61d6" settingName="globalURLKeyBrand" settingValue="sb" />
 		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="globalURLKeyProduct" settingValue="sp" />
@@ -60,12 +64,6 @@ Below Are UUID's to use... delete after using
 	
 	
 	
-	
-	
-	dbb327cfedfe1808ddd67b8102144e22
-	dbb327d09e27ea5cd8cf8a7772f7af27
-	dbb327d1de2f05f1483ca1805e4e5c3f
-	dbb327d2f7588b6eb2652cbfc635564b
 	dbb327d3f6444d22ddcdc2afb43a899b
 	dbb327d4c90cce1f86b1ce56cd44a891
 	dbb327d5c8200946403aefdb964ce106
