@@ -46,7 +46,10 @@ component displayname="Measurement Unit" entityname="SlatwallMeasurementUnit" ta
 	
 	// Persistent Properties
 	property name="unitCode" ormtype="string" fieldtype="id";
-	property name="measurementType" ormtype="string";
+	property name="measurementType" ormtype="string" formFieldType="select";
 	property name="unitName" ormtype="string";
 	
+	public array function getMeasurementTypeOptions() {
+		return [{name=rbKey('define.length'), value='length'},{name=rbKey('define.weight'), value='weight'}];
+	}
 }

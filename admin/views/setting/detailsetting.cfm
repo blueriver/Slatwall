@@ -44,7 +44,7 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.setting#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList spanClass="span12">
 				<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>

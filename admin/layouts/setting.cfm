@@ -54,6 +54,8 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:setting.listaddresszone" type="list">
 				<cf_SlatwallActionCaller action="admin:setting.listlocation" type="list">
 				<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listmeasurementunit" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listorderorigin" type="list">
 				<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
 				<li class="divider"></li>
 				<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list">

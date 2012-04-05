@@ -84,7 +84,7 @@
 				<entry key="Inventory"><value>inventoryService</value></entry>
 				<entry key="Location"><value>locationService</value></entry>
 				<entry key="LocationAddress"><value>locationService</value></entry>
-				<entry key="MeasurmentUnit"><value>settingService</value></entry>
+				<entry key="MeasurementUnit"><value>settingService</value></entry>
 				<entry key="Option"><value>optionService</value></entry>
 				<entry key="OptionGroup"><value>optionService</value></entry>
 				<entry key="Order"><value>orderService</value></entry>
@@ -104,6 +104,7 @@
 				<entry key="OrderItemStatusActionAbstract"><value>orderService</value></entry>
 				<entry key="OrderItemStatusActionProduct"><value>orderService</value></entry>
 				<entry key="OrderItemStatusActionProductType"><value>orderService</value></entry>
+				<entry key="OrderOrigin"><value>settingService</value></entry>
 				<entry key="OrderPayment"><value>orderService</value></entry>
 				<entry key="OrderPaymentCash"><value>orderService</value></entry>
 				<entry key="OrderPaymentCheck"><value>orderService</value></entry>

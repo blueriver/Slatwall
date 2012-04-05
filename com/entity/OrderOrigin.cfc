@@ -42,7 +42,7 @@ component displayname="Order Origin" entityname="SlatwallOrderOrigin" table="Sla
 	property name="orderOriginID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" formatType="yesno";
 	property name="orderOriginName" ormtype="string";
-	property name="orderOriginType" ormtype="string";
+	property name="orderOriginType" ormtype="string" formFieldType="select";
 	
 	// Related Object Properties (many-to-one)
 	
@@ -64,7 +64,7 @@ component displayname="Order Origin" entityname="SlatwallOrderOrigin" table="Sla
 	// Non-Persistent Properties
 
 	
-	public array function getFulfillmentMethodTypeOptions() {
+	public array function getOrderOriginTypeOptions() {
 		var options = [
 			{name="Shipping", value="web"},
 			{name="In Person", value="inPerson"},

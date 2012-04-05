@@ -603,6 +603,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		// Get the Meta Data for the property
 		var propertyMeta = getPropertyMetaData( arguments.propertyName );
 		
+		// Check to see if there is a meta data called 'formFieldType'
+		if( structKeyExists(propertyMeta, "formFieldType") ) {
+			return propertyMeta.formFieldType;
+		}
+		
 		// If this isn't a Relationship property then run the lookup on ormType then type.
 		if( !structKeyExists(propertyMeta, "fieldType") || propertyMeta.fieldType == "column" ) {
 			
@@ -637,7 +642,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "one-to-many" ) {
 			throw("There is now property field type for one-to-many relationship properties");
 		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-many" ) {
-			return "multiselect";
+			return "listingMultiselect";
 		}
 		
 		// Default case if no matches were found is a text field

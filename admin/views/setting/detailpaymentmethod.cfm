@@ -48,11 +48,7 @@ Notes:
 		<cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
-			<cfif rc.paymentMethod.isNew()>
-				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodType" edit="true" fieldType="select">
-			<cfelse>
-				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodType" edit="false" fieldType="select">
-			</cfif>
+			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodType" edit="#rc.paymentMethod.isNew()#">
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	
