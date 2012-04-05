@@ -36,19 +36,27 @@
 Notes:
 
 --->
-<cfparam name="rc.product" type="any" />
-<cfparam name="rc.sku" type="any" />
-<cfparam name="rc.edit" type="boolean" default="false" />
+<cfparam name="rc.sku" type="any">
+<cfparam name="rc.product" type="any" default="#rc.sku.getProduct()#">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.product#" saveAction="admin:product.saveproduct" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.sku#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:product.detailproduct" backQueryString="productID=#rc.product.getProductID()#" />
 		
-		<input type="hidden" name="skus[1].skuID" value="#rc.sku.getSkuID()#" />
-		
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.sku#" property="price" edit="#rc.edit#">
-		</cf_SlatwallPropertyList>
-		
-	</cf_SlatwallDetailForm>
+		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
 
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="activeFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="price" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="skuCode" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+
+		<cf_SlatwallTabGroup object="#rc.sku#">
+			
+		</cf_SlatwallTabGroup>
+
+	</cf_SlatwallDetailForm>
 </cfoutput>

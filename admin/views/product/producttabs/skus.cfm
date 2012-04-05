@@ -38,8 +38,12 @@ Notes:
 --->
 <cfoutput>
 
-	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#">
-		<cf_SlatwallListingColumn propertyIdentifier="skuCode" />
+	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#" 
+			recordDetailAction="admin:product.detailsku"
+			recordDetailQueryString="productID=#rc.product.getProductID()#"
+			recordEditAction="admin:product.editsku"
+			recordEditQueryString="productID=#rc.product.getProductID()#">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="skuCode" />
 		<cf_SlatwallListingColumn propertyIdentifier="defaultFlag" />
 		<cf_SlatwallListingColumn propertyIdentifier="imageFile" />
 		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />

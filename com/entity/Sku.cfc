@@ -40,6 +40,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Persistent Properties
 	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="activeFlag" ormtype="boolean" default="1";
 	property name="skuCode" ormtype="string" unique="true" length="50";
 	property name="listPrice" ormtype="big_decimal" formatType="currency" default="0";
 	property name="price" ormtype="big_decimal" formatType="currency" default="0";
