@@ -44,7 +44,11 @@ Notes:
 	
 	<cfif attributes.edit>
 		<cfoutput>
-			<form method="post" action="?update=1&#attributes.saveActionQueryString#" class="form-horizontal">
+			<cfif len(attributes.saveActionQueryString)>
+				<form method="post" action="?s=1&#attributes.saveActionQueryString#" class="form-horizontal">
+			<cfelse>
+				<form method="post" action="?s=1" class="form-horizontal">
+			</cfif>
 				<cfif structKeyExists(request.context, "returnAction")>
 					<input type="hidden" name="returnAction" value="#request.context.returnAction#" />
 				</cfif>
