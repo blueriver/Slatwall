@@ -219,17 +219,15 @@ globalEncryptionKeySize
 					throw("You have asked for a setting with an invalid prefix.  The setting that was asked for was #arguments.settingName#");	
 				}
 				
-				// If the setting prefix is the same as the entityName than check that relationship first
-				if(settingPrefix == arguments.object.getClassName()) {
-					settingDetails.settingRelationships[ arguments.object.getPrimaryIDPropertyName() ] = arguments.object.getPrimaryIDValue();
-					settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
-					if(settingRecord.recordCount) {
-						foundValue = true;
-						settingDetails.settingValue = settingRecord.settingValue;
-						settingDetails.settingID = settingRecord.settingID;
-					} else {
-						structClear(settingDetails.settingRelationships);
-					}
+				// First Check to see if there is a setting the is explicitly defined to this object
+				settingDetails.settingRelationships[ arguments.object.getPrimaryIDPropertyName() ] = arguments.object.getPrimaryIDValue();
+				settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
+				if(settingRecord.recordCount) {
+					foundValue = true;
+					settingDetails.settingValue = settingRecord.settingValue;
+					settingDetails.settingID = settingRecord.settingID;
+				} else {
+					structClear(settingDetails.settingRelationships);
 				}
 				
 				// If we haven't found a value yet, check to see if there is a lookup order
@@ -237,6 +235,7 @@ globalEncryptionKeySize
 					
 					var hasPathRelationship = false;
 					var pathList = "";
+					var relationshipKey = "";
 					var relationshipValue = "";
 					var nextLookupOrderIndex = 1;
 					var nextPathListIndex = 0;
@@ -249,6 +248,7 @@ globalEncryptionKeySize
 						for(var r=1; r<=arrayLen(allRelationships); r++) {
 							// If this relationship is a path, then we need to attemptThis multiple times
 							if(right(listLast(allRelationships[r], "."), 4) == "path") {
+								relationshipKey = left(listLast(allRelationships[r], "."), len(listLast(allRelationships[r], "."))-4);
 								if(pathList == "") {
 									pathList = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
 									nextPathListIndex = listLen(pathList);
@@ -256,9 +256,10 @@ globalEncryptionKeySize
 								relationshipValue = listGetAt(pathList, nextPathListIndex);
 								nextPathListIndex--;
 							} else {
+								relationshipKey = listLast(allRelationships[r], ".");
 								relationshipValue = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
 							}
-							settingDetails.settingRelationships[ listLast(allRelationships[r], ".") ] = relationshipValue;
+							settingDetails.settingRelationships[ relationshipKey ] = relationshipValue;
 						}
 						
 						settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);

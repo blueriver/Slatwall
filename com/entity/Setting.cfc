@@ -85,7 +85,15 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	
 	// =================== START: ORM Event Hooks  =========================
 	
+	public void function preInsert() {
+		getService("settingService").clearAllSettingsQuery();
+	}
+	
 	public void function preUpdate(struct oldData) {
+		getService("settingService").clearAllSettingsQuery();
+	}
+	
+	public void function preDelete() {
 		getService("settingService").clearAllSettingsQuery();
 	}
 	

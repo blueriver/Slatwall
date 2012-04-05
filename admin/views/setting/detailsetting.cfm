@@ -40,17 +40,34 @@ Notes:
 <cfparam name="rc.settingName" type="string">
 <cfparam name="rc.edit" type="boolean">
 
+<cfparam name="rc.brandID" default="" />
+<cfparam name="rc.productTypeID" default="" />
+<cfparam name="rc.productID" default="" />
+<cfparam name="rc.skuID" default="" />
+
+<cfset local.returnActionQueryString="productID=#rc.productID#&brandID=#rc.brandID#&productTypeID=#rc.productTypeID#&skuID=#rc.skuID#" />
+
 <!--- This logic set the setting name if the setting entity is new --->
 <cfset rc.setting.setSettingName(rc.settingName) />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.setting#" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.setting#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString#">
 		<cf_SlatwallActionBar type="detail" object="#rc.setting#" />
+		
+		<input type="hidden" name="settingName" value="#rc.settingName#" />
+		
+		<input type="hidden" name="brand.brandID" value="#rc.brandID#" /> 
+		<input type="hidden" name="productType.productTypeID" value="#rc.productTypeID#" />
+		<input type="hidden" name="product.productID" value="#rc.productID#" />
+		<input type="hidden" name="sku.skuID" value="#rc.skuID#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList spanClass="span12">
 				<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
+			<cfif !rc.setting.isNew() && (len(rc.brandID) || len(rc.productTypeID) || len(rc.productID) || len(rc.skuID))>
+				<cf_SlatwallActionCaller action="admin:setting.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&returnAction=#request.context.returnAction#&#local.returnActionQueryString#" class="btn btn-danger" />
+			</cfif>
 		</cf_SlatwallDetailHeader>
 	</cf_SlatwallDetailForm>
 </cfoutput>

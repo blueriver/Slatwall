@@ -70,7 +70,9 @@ Notes:
 						<td>
 							<cfif thisSetting.settingDetails.settingInherited>
 								<cfif !structCount(thisSetting.settingDetails.settingRelationships)>
-									#request.context.$.Slatwall.rbKey('define.global')#
+									<cf_SlatwallActionCaller action="admin:setting.listsetting" text="#request.context.$.Slatwall.rbKey('define.global')#"/>
+								<cfelse>
+									#structKeyList(thisSetting.settingDetails.settingRelationships)#
 								</cfif>
 							<cfelse>
 								#request.context.$.Slatwall.rbKey('define.here')#
@@ -78,7 +80,19 @@ Notes:
 						</td>
 					</cfif>
 					<td class="admin admin1">
-						<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+						<cfif thisSetting.settingDetails.settingInherited>
+							<cfif isObject(thisSetting.settingObject)>
+								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+							<cfelse>
+								<cf_SlatwallActionCaller action="admin:setting.editesetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+							</cfif>
+						<cfelse>
+							<cfif isObject(thisSetting.settingObject)>
+								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+							<cfelse>
+								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+							</cfif>
+						</cfif>
 					</td>
 				</tr>
 			</cfloop>

@@ -39,11 +39,12 @@ Notes:
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.object" type="any" />
 	<cfparam name="attributes.saveaction" type="string" default="#request.context.saveaction#" />
+	<cfparam name="attributes.saveActionQueryString" type="string" default="" />
 	<cfparam name="attributes.edit" type="boolean" default="false" />
 	
 	<cfif attributes.edit>
 		<cfoutput>
-			<form method="post" action="?update=1" class="form-horizontal">
+			<form method="post" action="?update=1&#attributes.saveActionQueryString#" class="form-horizontal">
 				<cfif structKeyExists(request.context, "returnAction")>
 					<input type="hidden" name="returnAction" value="#request.context.returnAction#" />
 				</cfif>
