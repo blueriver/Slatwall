@@ -84,8 +84,6 @@ component displayname="Base Object" accessors="true" output="false" {
 		return variables.populatedSubProperties; 
 	}
 	
-	
-	
 	// =========================  END:  ACCESSOR OVERRIDES ==========================================
 	
 	// =============================== START: ERRORS ================================================
@@ -447,7 +445,7 @@ component displayname="Base Object" accessors="true" output="false" {
 					value = evaluate("this.get#pa[i]#()");
 				} else if(isArray(value)) {
 					for(var ii=1; ii<=arrayLen(value); ii++) {
-						arrayAppend(arrayValue, value[ii].getPropertyValueByIdentifier(pa[i], arguments.formatValue));
+						arrayAppend(arrayValue, value[ii].getValueByPropertyIdentifier(pa[i], arguments.formatValue));
 					}
 					return arrayValue;
 				} else {
@@ -804,6 +802,12 @@ component displayname="Base Object" accessors="true" output="false" {
 			}
 			case "pixels": {
 				return arguments.value & "px";
+			}
+			case "url": {
+				return '<a href="#arguments.value#" target="blank">' & arguments.value & '</a>';
+			}
+			case "email": {
+				return '<a href="mailto:#arguments.value#">' & arguments.value & '</a>';
 			}
 		}
 		

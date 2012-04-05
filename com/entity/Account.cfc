@@ -80,7 +80,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Non Persistent
 	property name="fullName" persistent="false";
-	property name="emailAddress" persistent="false";
+	property name="emailAddress" persistent="false" formatType="email";
 	property name="phoneNumber" persistent="false";
 	property name="address" persistent="false";
 	property name="password" persistent="false";

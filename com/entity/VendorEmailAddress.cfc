@@ -40,7 +40,7 @@ component displayname="Vendor Email Address" entityname="SlatwallVendorEmailAddr
 	
 	// Persistent Properties
 	property name="vendorEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="emailAddress" ormtype="string";
+	property name="emailAddress" ormtype="string" formatType="email";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -52,36 +52,39 @@ component displayname="Vendor Email Address" entityname="SlatwallVendorEmailAddr
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// vendor (many-to-one)
-	public void function setVendor(required any vendor) {
-		variables.vendor = arguments.vendor;
-		if(isNew() or !arguments.vendor.hasVendorEmailAddress(this)) {
-			arrayAppend(arguments.vendor.getVendorEmailAddresses(),this);
-		}
-	}
-	
-	public void function removeVendor(any vendor) {
-		if(!structKeyExists(arguments, "vendor")) {
-			arguments.vendor = variables.vendor;
-		}
-		var index = arrayFind(arguments.vendor.getVendorEmailAddresses(),this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.vendor.getVendorEmailAddresses(),index);
-		}
-		structDelete(variables,"vendor");
-	}
-	
-	/******* END: Association management methods for bidirectional relationships **************/
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Vendor (many-to-one)    
+	public void function setVendor(required any vendor) {    
+		variables.vendor = arguments.vendor;    
+		if(isNew() or !arguments.vendor.hasVendorEmailAddress( this )) {    
+			arrayAppend(arguments.vendor.getVendorEmailAddresses(), this);    
+		}    
+	}    
+	public void function removeVendor(any vendor) {    
+		if(!structKeyExists(arguments, "vendor")) {    
+			arguments.vendor = variables.vendor;    
+		}    
+		var index = arrayFind(arguments.vendor.getVendorEmailAddresses(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.vendor.getVendorEmailAddresses(), index);    
+		}    
+		structDelete(variables, "vendor");    
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "emailAddress";
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
