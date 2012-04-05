@@ -39,15 +39,22 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallSettingTable>
-		<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" settingObject="#rc.productType#" />
+		<cf_SlatwallSetting settingName="skuAllowBackorderFlag" />
+		<cf_SlatwallSetting settingName="skuAllowPreorderFlag" />
+		<cf_SlatwallSetting settingName="skuEligableFulfillmentMethods" />
+		<cf_SlatwallSetting settingName="skuEligableOrderOrigins" />
+		<cf_SlatwallSetting settingName="skuEligablePaymentMethods" />
+		<cf_SlatwallSetting settingName="skuHoldBackQuantity" />
+		<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" />
+		<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" />
+		<cf_SlatwallSetting settingName="skuShippingWeight" />
+		<cf_SlatwallSetting settingName="skuShippingWeightUnitCode" />
+		<cf_SlatwallSetting settingName="skuTrackInventoryFlag" />
+		<cf_SlatwallSetting settingName="skuQATSIncludesQNROROFlag" />
+		<cf_SlatwallSetting settingName="skuQATSIncludesQNROVOFlag" />
+		<cf_SlatwallSetting settingName="skuQATSIncludesQNROSAFlag" />
 		<cfif rc.productType.getBaseProductType() eq "merchandise">
-			<cf_SlatwallSetting settingName="skuTrackInventoryFlag" settingObject="#rc.productType#" />
-			<cf_SlatwallSetting settingName="skuAllowBackorderFlag" settingObject="#rc.productType#" />
-			<cf_SlatwallSetting settingName="skuAllowPreorderFlag" settingObject="#rc.productType#" />
-			<cf_SlatwallSetting settingName="skuHoldBackQuantity" settingObject="#rc.productType#" />
-			<cf_SlatwallSetting settingName="skuShippingWeight" settingObject="#rc.productType#" />
-			<cf_SlatwallSetting settingName="skuShippingWeightUnitCode" settingObject="#rc.productType#" />
+			<!--- Wrap this arround settings if you want to disable them for certain product types --->
 		</cfif>
 	</cf_SlatwallSettingTable>
 </cfoutput>

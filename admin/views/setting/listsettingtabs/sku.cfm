@@ -38,9 +38,19 @@ Notes:
 --->
 <cfoutput>
 	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="skuAllowBackorderFlag" />
+		<cf_SlatwallSetting settingName="skuAllowPreorderFlag" />
+		<cf_SlatwallSetting settingName="skuEligableFulfillmentMethods" />
+		<cf_SlatwallSetting settingName="skuEligableOrderOrigins" />
+		<cf_SlatwallSetting settingName="skuEligablePaymentMethods" />
+		<cf_SlatwallSetting settingName="skuHoldBackQuantity" />
 		<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" />
 		<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" />
-		<cf_SlatwallSetting settingName="skuEligablePaymentMethods" />
-		<cf_SlatwallSetting settingName="skuEligableOrderOrigins" />
+		<cf_SlatwallSetting settingName="skuShippingWeight" />
+		<cf_SlatwallSetting settingName="skuShippingWeightUnitCode" />
+		<cf_SlatwallSetting settingName="skuTrackInventoryFlag" />
+		<cf_SlatwallSetting settingName="skuQATSIncludesQNROROFlag" />
+		<cf_SlatwallSetting settingName="skuQATSIncludesQNROVOFlag" />
+		<cf_SlatwallSetting settingName="skuQATSIncludesQNROSAFlag" />
 	</cf_SlatwallSettingTable>
 </cfoutput>

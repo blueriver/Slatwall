@@ -72,7 +72,12 @@ Notes:
 								<cfif !structCount(thisSetting.settingDetails.settingRelationships)>
 									<cf_SlatwallActionCaller action="admin:setting.listsetting" text="#request.context.$.Slatwall.rbKey('define.global')#"/>
 								<cfelse>
-									#structKeyList(thisSetting.settingDetails.settingRelationships)#
+									<cfif structCount(thisSetting.settingDetails.settingRelationships) eq 1>
+										<cfif structKeyList(thisSetting.settingDetails.settingRelationships) eq "productTypeID">
+											<cfset local.productType = request.context.$.slatwall.getService("productService").getProductType(thisSetting.settingDetails.settingRelationships.productTypeID) />
+											<cf_SlatwallActionCaller action="admin:product.detailProductType" text="#local.productType.getSimpleRepresentation()#" queryString="productTypeID=#thisSetting.settingDetails.settingRelationships.productTypeID#">
+										</cfif>
+									</cfif>
 								</cfif>
 							<cfelse>
 								#request.context.$.Slatwall.rbKey('define.here')#
@@ -84,7 +89,7 @@ Notes:
 							<cfif isObject(thisSetting.settingObject)>
 								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							<cfelse>
-								<cf_SlatwallActionCaller action="admin:setting.editesetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							</cfif>
 						<cfelse>
 							<cfif isObject(thisSetting.settingObject)>

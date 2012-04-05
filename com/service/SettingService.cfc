@@ -112,17 +112,18 @@ globalEncryptionKeySize
 			skuAllowBackorderFlag = {fieldType="yesno"},
 			skuAllowPreorderFlag = {fieldType="yesno"},
 			skuEligableFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
-			skuEligablePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
 			skuEligableOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigins"},
+			skuEligablePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
 			skuHoldBackQuantity = {fieldType="text"},
 			skuOrderMinimumQuantity = {fieldType="text"},
 			skuOrderMaximumQuantity = {fieldType="text"},
+			skuQATSIncludesQNROROFlag = {fieldType="yesno"},
+			skuQATSIncludesQNROVOFlag = {fieldType="yesno"},
+			skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
 			skuShippingWeight = {fieldType="text", formatType="weight"},
 			skuShippingWeightUnitCode = {fieldType="select"},
-			skuTrackInventoryFlag = {fieldType="yesno"},
-			skuQATSIncludesQNDOROFlag = {fieldType="yesno"},
-			skuQATSIncludesQNDOVOFlag = {fieldType="yesno"},
-			skuQATSIncludesQNDOSAFlag = {fieldType="yesno"}
+			skuTrackInventoryFlag = {fieldType="yesno"}
+			
 			
 		};
 		
@@ -219,64 +220,67 @@ globalEncryptionKeySize
 					throw("You have asked for a setting with an invalid prefix.  The setting that was asked for was #arguments.settingName#");	
 				}
 				
-				// First Check to see if there is a setting the is explicitly defined to this object
-				settingDetails.settingRelationships[ arguments.object.getPrimaryIDPropertyName() ] = arguments.object.getPrimaryIDValue();
-				settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
-				if(settingRecord.recordCount) {
-					foundValue = true;
-					settingDetails.settingValue = settingRecord.settingValue;
-					settingDetails.settingID = settingRecord.settingID;
-				} else {
-					structClear(settingDetails.settingRelationships);
-				}
-				
-				// If we haven't found a value yet, check to see if there is a lookup order
-				if(!foundValue && structKeyExists(getSettingLookupOrder(), arguments.object.getClassName()) && structKeyExists(getSettingLookupOrder(), settingPrefix)) {
+				// If an object was passed in, then first we can look for relationships based on that persistent object
+				if(structKeyExists(arguments, "object") && arguments.object.isPersistent()) {
+					// First Check to see if there is a setting the is explicitly defined to this object
+					settingDetails.settingRelationships[ arguments.object.getPrimaryIDPropertyName() ] = arguments.object.getPrimaryIDValue();
+					settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
+					if(settingRecord.recordCount) {
+						foundValue = true;
+						settingDetails.settingValue = settingRecord.settingValue;
+						settingDetails.settingID = settingRecord.settingID;
+					} else {
+						structClear(settingDetails.settingRelationships);
+					}
 					
-					var hasPathRelationship = false;
-					var pathList = "";
-					var relationshipKey = "";
-					var relationshipValue = "";
-					var nextLookupOrderIndex = 1;
-					var nextPathListIndex = 0;
-					var settingLookupArray = getSettingLookupOrder()[ arguments.object.getClassName() ];
-					
-					do {
-						// If there was an & in the lookupKey then we should split into multiple relationships
-						allRelationships = listToArray(settingLookupArray[nextLookupOrderIndex], "&");
+					// If we haven't found a value yet, check to see if there is a lookup order
+					if(!foundValue && structKeyExists(getSettingLookupOrder(), arguments.object.getClassName()) && structKeyExists(getSettingLookupOrder(), settingPrefix)) {
 						
-						for(var r=1; r<=arrayLen(allRelationships); r++) {
-							// If this relationship is a path, then we need to attemptThis multiple times
-							if(right(listLast(allRelationships[r], "."), 4) == "path") {
-								relationshipKey = left(listLast(allRelationships[r], "."), len(listLast(allRelationships[r], "."))-4);
-								if(pathList == "") {
-									pathList = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
-									nextPathListIndex = listLen(pathList);
+						var hasPathRelationship = false;
+						var pathList = "";
+						var relationshipKey = "";
+						var relationshipValue = "";
+						var nextLookupOrderIndex = 1;
+						var nextPathListIndex = 0;
+						var settingLookupArray = getSettingLookupOrder()[ arguments.object.getClassName() ];
+						
+						do {
+							// If there was an & in the lookupKey then we should split into multiple relationships
+							allRelationships = listToArray(settingLookupArray[nextLookupOrderIndex], "&");
+							
+							for(var r=1; r<=arrayLen(allRelationships); r++) {
+								// If this relationship is a path, then we need to attemptThis multiple times
+								if(right(listLast(allRelationships[r], "."), 4) == "path") {
+									relationshipKey = left(listLast(allRelationships[r], "."), len(listLast(allRelationships[r], "."))-4);
+									if(pathList == "") {
+										pathList = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
+										nextPathListIndex = listLen(pathList);
+									}
+									relationshipValue = listGetAt(pathList, nextPathListIndex);
+									nextPathListIndex--;
+								} else {
+									relationshipKey = listLast(allRelationships[r], ".");
+									relationshipValue = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
 								}
-								relationshipValue = listGetAt(pathList, nextPathListIndex);
-								nextPathListIndex--;
-							} else {
-								relationshipKey = listLast(allRelationships[r], ".");
-								relationshipValue = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
+								settingDetails.settingRelationships[ relationshipKey ] = relationshipValue;
 							}
-							settingDetails.settingRelationships[ relationshipKey ] = relationshipValue;
-						}
-						
-						settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
-						if(settingRecord.recordCount) {
-							foundValue = true;
-							settingDetails.settingValue = settingRecord.settingValue;
-							settingDetails.settingID = settingRecord.settingID;
-							settingDetails.settingInherited = true;
-						} else {
-							structClear(settingDetails.settingRelationships);
-						}
-						
-						if(nextPathListIndex==0) {
-							nextLookupOrderIndex ++;
-							pathList="";
-						}
-					} while (!foundValue && nextLookupOrderIndex <= arrayLen(settingLookupArray));
+							
+							settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
+							if(settingRecord.recordCount) {
+								foundValue = true;
+								settingDetails.settingValue = settingRecord.settingValue;
+								settingDetails.settingID = settingRecord.settingID;
+								settingDetails.settingInherited = true;
+							} else {
+								structClear(settingDetails.settingRelationships);
+							}
+							
+							if(nextPathListIndex==0) {
+								nextLookupOrderIndex ++;
+								pathList="";
+							}
+						} while (!foundValue && nextLookupOrderIndex <= arrayLen(settingLookupArray));
+					}
 				}
 				
 				// If we still haven't found a value yet, lets look for this with no relationships
@@ -286,7 +290,9 @@ globalEncryptionKeySize
 						foundValue = true;
 						settingDetails.settingValue = settingRecord.settingValue;
 						settingDetails.settingID = settingRecord.settingID;
-						settingDetails.settingInherited = true;
+						if(structKeyExists(arguments, "object") && arguments.object.isPersistent()) {
+							settingDetails.settingInherited = true;
+						}
 					}
 				}
 			}
