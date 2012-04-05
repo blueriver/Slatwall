@@ -44,7 +44,7 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.measurementUnit#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList spanClass="span12">
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.measurementUnit#" property="unitCode" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.measurementUnit#" property="unitName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.measurementUnit#" property="measurementType" edit="#rc.measurementUnit.isNew()#">

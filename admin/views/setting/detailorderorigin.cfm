@@ -44,7 +44,7 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.orderOrigin#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList spanClass="span12">
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.orderOrigin#" property="orderOriginName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.orderOrigin#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.orderOrigin#" property="orderOriginType" edit="#rc.orderOrigin.isNew()#">

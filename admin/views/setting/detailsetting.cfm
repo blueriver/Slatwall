@@ -62,7 +62,7 @@ Notes:
 		<input type="hidden" name="sku.skuID" value="#rc.skuID#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList spanClass="span12">
+			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 			<cfif !rc.setting.isNew() && (len(rc.brandID) || len(rc.productTypeID) || len(rc.productID) || len(rc.skuID))>

@@ -37,12 +37,12 @@ Notes:
 
 --->
 <cfif thisTag.executionMode is "start">
-	<cfparam name="attributes.spanClass" type="string" default="span4" />
+	<cfparam name="attributes.divClass" type="string" default="span12" />
 	<cfparam name="request.context.edit" type="boolean" default="false" />
 	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
 	
 	<cfoutput>
-		<div class="#attributes.spanClass#">
+		<div class="#attributes.divClass#">
 			<cfif attributes.edit>
 				<fieldset class="dl-horizontal">
 			<cfelse>
