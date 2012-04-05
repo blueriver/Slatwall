@@ -316,13 +316,32 @@ globalEncryptionKeySize
 				allSettings
 				WHERE
 					allSettings.settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#">
-				<cfloop collection="#arguments.settingRelationships#" item="key">
-					AND
-						allSettings.#key# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships[ key ]#">
-				</cfloop>
+				  AND
+					<cfif structKeyExists(settingRelationships, "productTypeID")>
+						allSettings.productTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.productTypeID#" > 
+					<cfelse>
+						allSettings.productTypeID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "productID")>
+						allSettings.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.productID#" > 
+					<cfelse>
+						allSettings.productID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "skuID")>
+						allSettings.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.skuID#" > 
+					<cfelse>
+						allSettings.skuID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "brandID")>
+						allSettings.brandID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.brandID#" > 
+					<cfelse>
+						allSettings.brandID IS NULL
+					</cfif>
 		</cfquery> 
-		
-		
+				
 		<cfreturn rs />		
 	</cffunction>
 	

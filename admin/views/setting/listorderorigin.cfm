@@ -42,7 +42,11 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.orderOriginSmartList#" createModal="true" />
 
-<cf_SlatwallListingDisplay smartList="#rc.orderOriginSmartList#" recordEditAction="admin:setting.editorderorigin" recordEditQueryString="returnAction=admin:setting.listorderorigin" recordEditModal="true">
+<cf_SlatwallListingDisplay smartList="#rc.orderOriginSmartList#"
+		recordEditAction="admin:setting.editorderorigin"
+		recordEditQueryString="returnAction=admin:setting.listorderorigin"
+		recordDeleteAction="admin:setting.deleteorderorigin"
+		recordEditModal="true">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderOriginName" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderOriginType" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />

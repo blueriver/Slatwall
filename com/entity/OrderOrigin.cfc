@@ -66,9 +66,10 @@ component displayname="Order Origin" entityname="SlatwallOrderOrigin" table="Sla
 	
 	public array function getOrderOriginTypeOptions() {
 		var options = [
-			{name="Shipping", value="web"},
+			{name="Web", value="web"},
 			{name="In Person", value="inPerson"},
 			{name="Phone", value="phone"},
+			{name="Mail In", value="mail"},
 			{name="External", value="external"}
 		];
 		return options;

@@ -844,8 +844,8 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	public string function decryptValue(required string value) {
 		var decryptedValue = "";
-		if(!isNull(arguments.value) && arguments.value != "internal") {
-			if(setting("globalEncryptionService") == ""){
+		if(!isNull(arguments.value) && arguments.value != "") {
+			if(setting("globalEncryptionService") == "internal"){
 				decryptedValue = getService("encryptionService").decryptValue(arguments.value);
 			} else {
 				decryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("globalEncryptionIntegration") ).getIntegrationCFC().decryptValue(arguments.value);

@@ -54,7 +54,7 @@ component extends="BaseService" {
 	}
 	
 	public string function createEncryptionKey() {
-		var	theKey = generateSecretKey(getEncrptionAlgorithm(), setting("globalEncryptionKeySize"));
+		var	theKey = generateSecretKey(setting("globalEncryptionAlgorithm"), setting("globalEncryptionKeySize"));
 		storeEncryptionKey(theKey);
 		return theKey;
 	}
