@@ -60,13 +60,14 @@ Notes:
 		<cf_SlatwallTabGroup object="#rc.product#">
 			<cf_SlatwallTab view="admin:product/producttabs/skus" />
 			<cf_SlatwallTab view="admin:product/producttabs/productdescription" />
-			<cf_SlatwallTab view="admin:product/producttabs/settings" />
 			<cf_SlatwallTab view="admin:product/producttabs/productpages" />
 			<cf_SlatwallTab view="admin:product/producttabs/productcategories" />
 			<cf_SlatwallTab view="admin:product/producttabs/alternateimages" />
 			<cf_SlatwallTab view="admin:product/producttabs/productreviews" />
 			<cf_SlatwallTab view="admin:product/producttabs/customattributes" />
 			<cf_SlatwallTab view="admin:product/producttabs/relatedproducts" />
+			<cf_SlatwallTab view="admin:product/producttabs/productsettings" />
+			<cf_SlatwallTab view="admin:product/producttabs/skusettings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

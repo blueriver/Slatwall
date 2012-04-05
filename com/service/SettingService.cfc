@@ -62,7 +62,7 @@ globalEncryptionKeySize
 		variables.settingLookupOrder = {
 			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath&sku.product.brand.brandID", "sku.product.productType.productTypeIDPath"],
 			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
-			product = ["productType.productTypeIDPath&brand.brandID", "productTypeIDPath"]
+			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"]
 		};
 		
 		variables.settingMetaData = {
@@ -191,7 +191,8 @@ globalEncryptionKeySize
 				settingValue = "",
 				settingValueFormatted = "",
 				settingID = "",
-				settingRelationships = {}
+				settingRelationships = {},
+				settingInherited = false
 			};
 			
 			// If this is a global setting there isn't much we need to do because we already know there aren't any relationships
@@ -248,7 +249,7 @@ globalEncryptionKeySize
 						for(var r=1; r<=arrayLen(allRelationships); r++) {
 							// If this relationship is a path, then we need to attemptThis multiple times
 							if(right(listLast(allRelationships[r], "."), 4) == "path") {
-								if(len(pathList)) {
+								if(pathList == "") {
 									pathList = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
 									nextPathListIndex = listLen(pathList);
 								}
@@ -265,12 +266,14 @@ globalEncryptionKeySize
 							foundValue = true;
 							settingDetails.settingValue = settingRecord.settingValue;
 							settingDetails.settingID = settingRecord.settingID;
+							settingDetails.settingInherited = true;
 						} else {
 							structClear(settingDetails.settingRelationships);
 						}
 						
-						if(!len(pathList) || nextPathListIndex==0) {
-							nextLookupOrderIndex ++;	
+						if(nextPathListIndex==0) {
+							nextLookupOrderIndex ++;
+							pathList="";
 						}
 					} while (!foundValue && nextLookupOrderIndex <= arrayLen(settingLookupArray));
 				}
@@ -282,6 +285,7 @@ globalEncryptionKeySize
 						foundValue = true;
 						settingDetails.settingValue = settingRecord.settingValue;
 						settingDetails.settingID = settingRecord.settingID;
+						settingDetails.settingInherited = true;
 					}
 				}
 			}

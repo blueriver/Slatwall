@@ -39,25 +39,12 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cf_SlatwallSettingTable>
-	<cf_SlatwallSetting settingName="productTypeDisplayTemplate" />
-	<cf_SlatwallSetting settingName="productDisplayTemplate" />
-	<cf_SlatwallSetting settingName="productTitleString" />
-	<cf_SlatwallSetting settingName="productImageSmallWidth" />
-	<cf_SlatwallSetting settingName="productImageSmallHeight" />
-	<cf_SlatwallSetting settingName="productImageMediumWidth" />
-	<cf_SlatwallSetting settingName="productImageMediumHeight" />
-	<cf_SlatwallSetting settingName="productImageLargeWidth" />
-	<cf_SlatwallSetting settingName="productImageLargeHeight" />
-	<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" />
-	<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" />
+	<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="productImageSmallWidth" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="productImageSmallHeight" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="productImageMediumWidth" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="productImageMediumHeight" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="productImageLargeWidth" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="productImageLargeHeight" settingObject="#rc.product#" />
 </cf_SlatwallSettingTable>
-<cfif rc.product.getProductType().getBaseProductType() eq "merchandise">
-	<cf_SlatwallSettingTable>
-		<cf_SlatwallSetting settingName="skuTrackInventoryFlag" />
-		<cf_SlatwallSetting settingName="skuAllowBackorderFlag" />
-		<cf_SlatwallSetting settingName="skuAllowPreorderFlag" />
-		<cf_SlatwallSetting settingName="skuHoldBackQuantity" />
-		<cf_SlatwallSetting settingName="skuShippingWeight" />
-		<cf_SlatwallSetting settingName="skuShippingWeightUnitCode" />
-	</cf_SlatwallSettingTable>
-</cfif>

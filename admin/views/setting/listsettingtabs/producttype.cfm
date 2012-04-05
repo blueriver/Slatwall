@@ -37,14 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallActionBar type="static" />
-	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/sku" />
-	</cf_SlatwallTabGroup>
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="productTypeDisplayTemplate" />
+	</cf_SlatwallSettingTable>
 </cfoutput>

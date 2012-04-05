@@ -42,7 +42,10 @@ Notes:
 	
 	<cfsilent>
 		<cfloop array="#thistag.settings#" index="thisSetting">
-			
+			<cfif thisSetting.settingDetails.settingInherited>
+				<cfset thistag.hasInheritedValues = true />
+				<cfbreak />
+			</cfif>
 		</cfloop>
 	</cfsilent>
 	<cfoutput>
@@ -51,7 +54,7 @@ Notes:
 				<th class="primary">#request.context.$.Slatwall.rbKey('entity.setting.settingName')#</th>
 				<th>#request.context.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
 				<cfif thistag.hasInheritedValues>
-					<th>#request.context.$.Slatwall.rbKey('defined.inherited')#</th>
+					<th>#request.context.$.Slatwall.rbKey('define.inheritance')#</th>
 				</cfif>
 				<th>&nbsp;</th>
 			</tr>
@@ -63,6 +66,17 @@ Notes:
 					<td>
 						#thisSetting.settingDetails.settingValueFormatted#
 					</td>
+					<cfif thistag.hasInheritedValues>
+						<td>
+							<cfif thisSetting.settingDetails.settingInherited>
+								<cfif !structCount(thisSetting.settingDetails.settingRelationships)>
+									#request.context.$.Slatwall.rbKey('define.global')#
+								</cfif>
+							<cfelse>
+								#request.context.$.Slatwall.rbKey('define.here')#
+							</cfif>
+						</td>
+					</cfif>
 					<td class="admin admin1">
 						<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 					</td>
