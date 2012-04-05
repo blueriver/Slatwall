@@ -148,6 +148,17 @@ Notes:
 		<cfif len(attributes.recordDeleteAction)>
 			<cfset attributes.administativeCount++ />
 		</cfif>
+		
+		<!--- Setup the primary representation column if no columns were passed in --->
+		<cfif not arrayLen(thistag.columns)>
+			<cfset arrayAppend(thistag.columns, {
+				propertyIdentifier = thistag.exampleentity.getSimpleRepresentationPropertyName(),
+				title = "",
+				tdClass="primary",
+				filter = false,
+				sort = false
+			}) />
+		</cfif>
 	</cfsilent>
 	<cfoutput>
 		<cfif arrayLen(attributes.smartList.getPageRecords())>

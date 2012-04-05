@@ -177,6 +177,9 @@ globalEncryptionKeySize
 		}
 		
 		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
+			if(!structKeyExists(variables.settingMetaData, arguments.settingName)) {
+				throw("You have asked for a setting by the name of '#arguments.settingName#' which is not a valid setting in the system.  A list of valid settings can be found in the SettingService.cfc");
+			}
 			if(arguments.formatValue) {
 				return getSettingDetails(argumentCollection=arguments).settingValueFormatted;	
 			}

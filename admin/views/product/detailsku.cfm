@@ -55,7 +55,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 
 		<cf_SlatwallTabGroup object="#rc.sku#">
-			<cf_SlatwallTab view="admin:product/producttabs/skusettings" />
+			<cf_SlatwallTab view="admin:product/skutabs/skusettings" />
 		</cf_SlatwallTabGroup>
 
 	</cf_SlatwallDetailForm>

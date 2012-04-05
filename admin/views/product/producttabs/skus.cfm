@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+	
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -44,7 +44,7 @@ Notes:
 			recordEditQueryString="productID=#rc.product.getProductID()#">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="skuCode" />
 		
-		<cfif rc.product.getProductType().getBaseProductType() eq "merchandise">
+		<cfif rc.product.getProductType().getBaseProductType() eq "merchandise" && rc.product.getSkusSmartList().getRecordsCount() gt 1>
 			<cf_SlatwallListingColumn propertyIdentifier="optionsDisplay" />
 		<cfelseif  rc.product.getProductType().getBaseProductType() eq "subscription">
 			<cf_SlatwallListingColumn propertyIdentifier="subscriptionTerm.subscriptionTermName" />

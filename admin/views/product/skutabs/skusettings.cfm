@@ -38,7 +38,6 @@ Notes:
 --->
 <cfparam name="rc.sku" type="any" />
 
-
 <cf_SlatwallSettingTable>
 	<cf_SlatwallSetting settingName="skuAllowBackorderFlag" settingObject="#rc.sku#" />
 	<cf_SlatwallSetting settingName="skuAllowPreorderFlag" settingObject="#rc.sku#" />
