@@ -710,23 +710,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		arguments.productReview.removeProduct( this );
 	}
 	
-	// Listing Pages (many-to-many - owner)
-	public void function addListingPage(required any listingPage) {
-		if(isNew() or !hasListingPage(arguments.listingPage)) {
-			arrayAppend(variables.listingPages, arguments.listingPage);
-		}
-		if(arguments.listingPage.isNew() or !arguments.listingPage.hasProduct( this )) {
-			arrayAppend(arguments.listingPage.getProducts(), this);
-		}
-	}
-	public void function removeListingPage(required any listingPage) {
-		var thisIndex = arrayFind(variables.listingPages, arguments.listingPage);
-		if(thisIndex > 0) {
-			arrayDeleteAt(variables.listingPages, thisIndex);
-		}
-		var thatIndex = arrayFind(arguments.listingPage.getProducts(), this);
-		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.listingPage.getProducts(), thatIndex);
+	// Listing Pages (many-to-many - owner)    
+	public void function addListingPage(required any listingPage) {    
+		if(isNew() or !hasListingPage(arguments.listingPage)) {    
+			arrayAppend(variables.listingPages, arguments.listingPage);    
+		}    
+		if(arguments.listingPage.isNew() or !arguments.listingPage.hasListingProduct( this )) {    
+			arrayAppend(arguments.listingPage.getListingProducts(), this);    
+		}    
+	}    
+	public void function removeListingPage(required any listingPage) {    
+		var thisIndex = arrayFind(variables.listingPages, arguments.listingPage);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.listingPages, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.listingPage.getListingProducts(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.listingPage.getListingProducts(), thatIndex);
 		}
 	}
 	

@@ -61,6 +61,7 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="contentID" inversejoincolumn="skuID" inverse="true";
+	property name="listingProducts" singularname="listingProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallProductListingPage" fkcolumn="contentID" inversejoincolumn="productID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -96,6 +97,14 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	}
 	public void function removeSku(required any sku) {
 		arguments.sku.removeAccessContent( this );
+	}
+	
+	// Listing Products (many-to-many - inverse)    
+	public void function addListingProduct(required any listingProduct) {    
+		arguments.listingProduct.addListingPage( this );    
+	}    
+	public void function removeListingProduct(required any listingProduct) {    
+		arguments.listingProduct.removeListingPage( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
