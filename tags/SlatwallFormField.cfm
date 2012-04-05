@@ -103,7 +103,7 @@ Notes:
 			</cfoutput>
 		</cfcase>
 		<cfcase value="listingMultiselect">
-			<cf_SlatwallListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" edit="true"></cf_SlatwallListingDisplay>
+			<cf_SlatwallListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectvalues="#attributes.value#" edit="true"></cf_SlatwallListingDisplay>
 		</cfcase>
 		<cfcase value="multiselect">
 			<cfoutput>
