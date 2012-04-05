@@ -36,59 +36,7 @@
 Notes:
 
 --->
+<cfparam name="rc.product" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-<!---<cfoutput>
-	<cfif rc.edit>
-		<input type="hidden" name="productContentIDPaths" value="" />
-		<cfif rc.productPages.recordCount() gt 0>
-			<table id="productPages" class="listing-grid stripe">
-				<tr>
-					<th></th>
-					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
-				</tr>
-				<cfloop condition="rc.productPages.hasNext()">
-					<cfset local.thisProductPage = rc.productPages.next() />
-					<tr>
-						<td>
-							<input type="checkbox"<cfif local.thisProductPage.getValue("excludeFromAssignment")> disabled="true"</cfif> id="#local.thisProductPage.getContentID()#" name="productContentIDPaths" value="#listChangeDelims(local.thisProductPage.getPath(),' ')#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
-						</td>
-						<cfset local.thisNest = local.thisProductPage.getTreeDepth() eq 0 ? "neston" : "nest" & local.thisProductPage.getTreeDepth() & "on" />
-						<td class="varWidth">
-							<ul class="#local.thisNest#">
-				                <li class="Category"><label for="#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label></li>
-							</ul> 
-						</td>
-					</tr>	
-				</cfloop>
-			</table>
-		<cfelse>
-			<p><em>#rc.$.Slatwall.rbKey("admin.product.noproductpagesdefined")#</em></p>
-		</cfif>
-	<cfelse>
-		<cfif arrayLen(rc.product.getProductContent())>
-			<table id="ProductPages" class="listing-grid stripe">
-				<tr>
-					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
-					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.pagePath")#</th>
-					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.preview")#</th>
-				</tr>
-				<cfloop condition="rc.productPages.hasNext()">
-					<cfset local.thisProductPage = rc.productPages.next() />
-					<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())>
-						<tr>
-							<td class="varWidth">#listChangeDelims(local.thisProductPage.getTitle()," &raquo; ")#</td>
-							<td>#listChangeDelims(local.thisProductPage.getMenuTitlePath()," &raquo; ")#</td>
-							<td class="administration">
-								<ul class="one">
-									<li class="preview"><a href="#local.thisProductPage.getURL()#" target="_blank">Preview</a></li>
-								</ul>
-							</td>
-						</tr>
-					</cfif>
-				</cfloop>
-			</table>
-		<cfelse>
-			<em>#rc.$.Slatwall.rbKey("admin.product.productPages.noProductPagesAssigned")#</em>
-		</cfif>
-	</cfif>	
-</cfoutput>--->
+<cf_SlatwallPropertyDisplay object="#rc.product#" property="listingPages" edit="#rc.edit#" displayType="plain">

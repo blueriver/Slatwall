@@ -436,6 +436,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint Public method to retrieve a value based on a propertyIdentifier string format
 	public any function getValueByPropertyIdentifier(required string propertyIdentifier, boolean formatValue=false) {
 		var value = javaCast("null", "");
+		var newValue = "";
 		var arrayValue = arrayNew(1);
 		var pa = listToArray(arguments.propertyIdentifier, "._");
 		
@@ -443,13 +444,21 @@ component displayname="Base Object" accessors="true" output="false" {
 			try {
 				if(isNull(value)) {
 					value = evaluate("this.get#pa[i]#()");
+					if(isSimpleValue(value) && arguments.formatValue) {
+						value = getFormattedValue(pa[i]);
+					}
 				} else if(isArray(value)) {
 					for(var ii=1; ii<=arrayLen(value); ii++) {
 						arrayAppend(arrayValue, value[ii].getValueByPropertyIdentifier(pa[i], arguments.formatValue));
 					}
 					return arrayValue;
 				} else {
-					value = evaluate("value.get#pa[i]#()");
+					newValue = evaluate("value.get#pa[i]#()");
+					if(isSimpleValue(newValue) && arguments.formatValue) {
+						value = value.getFormattedValue(pa[i]);
+					} else {
+						value = newValue;
+					}
 				}	
 			} catch (any e) {
 				return "";
@@ -459,9 +468,11 @@ component displayname="Base Object" accessors="true" output="false" {
 			return "";
 		}
 		
+		/*
 		if(isSimpleValue(value) && arguments.formatValue) {
 			return this.formatValue(value, getPropertyFormatType(pa[1]));
 		}
+		*/
 		
 		return value;
 	}
@@ -804,10 +815,10 @@ component displayname="Base Object" accessors="true" output="false" {
 				return arguments.value & "px";
 			}
 			case "url": {
-				return '<a href="#arguments.value#" target="blank">' & arguments.value & '</a>';
+				return '<a href="#arguments.value#" target="_blank">' & arguments.value & '</a>';
 			}
 			case "email": {
-				return '<a href="mailto:#arguments.value#">' & arguments.value & '</a>';
+				return '<a href="mailto:#arguments.value#" target="_blank">' & arguments.value & '</a>';
 			}
 		}
 		

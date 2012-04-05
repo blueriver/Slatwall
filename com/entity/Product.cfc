@@ -498,41 +498,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// END: Quantity Methods
 	
-	// Start: Setting Methods
-	
-	// Generic setting accessor
-	public any function getSetting( required string settingName ) {
-		if(structKeyExists(variables,arguments.settingName)) {
-			return variables[arguments.settingName];
-		}
-		
-		return getInheritedSetting( arguments.settingName );
-	}
-	
-	// Get the setting inherited
-	public any function getInheritedSetting( required string settingName ) {
-		if(!isNull(getProductType())) {
-			return getProductType().getSetting(arguments.settingName);
-		}
-		
-		// so a CF error won't be thrown during validtion if the product type wasn't selected
-		return setting("product_" & arguments.settingName);
-	}
-	
-	// Get source of setting
-	public any function getWhereSettingDefined( required string settingName ) {
-		if(structKeyExists(variables,arguments.settingName)) {
-			return {type="Product"};
-		} else if(!isNull(getProductType())) {
-			return getProductType().getWhereSettingDefined( arguments.settingName );
-		}
-
-		// so a CF error won't be thrown during validtion if the product type wasn't selected
-		return {type="Global"};
-	}
-	
-	// END: Setting Methods
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public struct function getAttributeValuesByAttributeIDStruct() {

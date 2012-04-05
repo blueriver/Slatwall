@@ -167,36 +167,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return getService("priceGroupService").getRateForProductTypeBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
     
-    // START: Setting Methods
-    public any function getSetting(required string settingName) {
-        if(structKeyExists(variables, arguments.settingName)) {
-            return variables[arguments.settingName];
-        }
-		
-		return getInheritedSetting( arguments.settingName );
-    }
-
-    public any function getInheritedSetting( required string settingName ) {
-    	if(!isNull(getParentProductType())) {
-    		return getParentProductType().getSetting( arguments.settingName );
-    	}
-    	
-    	throw("You have asked for a setting that doesn't exist in the Base Product Type of: #getBaseProductType()#");
-    }
-    
-    public any function getWhereSettingDefined( required string settingName ) {
-    	if(structKeyExists(variables,arguments.settingName)) {
-    		return {type="Product Type", name=getProductTypeName(), id=getProductTypeID()};
-    	} else if (!isNull(getParentProductType())) {
-    		return getParentProductType().getWhereSettingDefined( arguments.settingName );
-    	}
-    	
-    	throw("You have asked where a setting is defined for a setting that doesn't exist in the Base Product Type of: #getBaseProductType()#");
-    }
-    // END: Setting Methods
-    
     // ============ START: Non-Persistent Property Methods =================
-	
 	public any function getParentProductTypeOptions( string baseProductType ) {
 		if(!structKeyExists(variables, "parentProductTypeOptions")) {
 			if(!structKeyExists(arguments, "baseProductType")) {
