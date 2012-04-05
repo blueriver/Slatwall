@@ -422,7 +422,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						if(paymentsProcessed) {
 						
 							// If this order is the same as the current cart, then set the current cart to a new order
-							if(order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
+							if(!isNull(getSessionService().getCurrent().getOrder()) && order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
 								getSessionService().getCurrent().setOrder(JavaCast("null", ""));
 							}
 						
@@ -485,7 +485,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerSubscription") {
 						var accessSmartList = getService("accessService").getAccessSmartList();
 						accessSmartList.addFilter(propertyIdentifier="subscriptionUsage_subscriptionUsageID", value=subscriptionUsageBenefit.getSubscriptionUsage().getSubscriptionUsageID());
-						if(!accessSmartList.getRecordCount()) {
+						if(!accessSmartList.getRecordsCount()) {
 							var access = getService("accessService").getAccessBySubscriptionUsage(subscriptionUsage,true);
 							access.setSubscriptionUsage(subscriptionUsage);
 							getService("accessService").saveAccess(access);

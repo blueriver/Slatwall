@@ -249,7 +249,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// if all validation passed and setup accounts subscription benefits based on access 
 		if(!arguments.account.hasErrors() && !isNull(access)) {
-			subscriptionUsageBenefitAccountCreated = getSevice("subscriptionService").createSubscriptionUsageBenefitAccountByAccess(access, arguments.account);
+			subscriptionUsageBenefitAccountCreated = getService("subscriptionService").createSubscriptionUsageBenefitAccountByAccess(access, arguments.account);
 		}
 
 		return arguments.account;
