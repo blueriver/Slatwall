@@ -58,6 +58,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return getDAO().getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
 	}
 	
+	public any function getCmsCategoriesByCmsContentID(required any cmsContentID) {
+		return getDAO().getCmsCategoriesByCmsContentID(arguments.cmsContentID);
+	}
+	
 	public array function getDisplayTemplates(required string siteID) {
 		var returnArray = [];
 		var displayTemplates = this.listContent({templateFlag="1",cmsSiteID=arguments.siteID});

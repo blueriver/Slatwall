@@ -38,7 +38,7 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-	public boolean function hasAccess(required any cmsContentIDPath,cmsCategoryIDs) {
+	public boolean function hasAccess(required any cmsContentIDPath) {
 		// make sure there is restricted content in the system before doing any check
 		if(!getService("contentService").restrictedContentExists()) {
 			return true;
@@ -49,7 +49,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			return true;
 		}
 		// get the current content
-		var thisContent = getService("contentService").getContentByCmsContentID(listLast(arguments.cmsContentIDPath));
+		// var thisContent = getService("contentService").getContentByCmsContentID(listLast(arguments.cmsContentIDPath));
 		// get the purchase required content
 		var purchaseRequiredContent = getService("contentService").getPurchaseRequiredContentByPath(arguments.cmsContentIDPath);
 		// get the subscription required content
@@ -57,48 +57,51 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var purchasedAccess = false;
 		var subcriptionAccess = false;
 		
-		// check if purchase is allowed for this content
-		if(!isNull(thisContent.getAllowPurchaseFlag()) && thisContent.getAllowPurchaseFlag()) {
+		// check if purchase is allowed for restricted content
+		if(!isNull(restrictedContent.getAllowPurchaseFlag()) && restrictedContent.getAllowPurchaseFlag()) {
 			// check if the content was purchased
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
 			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=$.slatwall.getCurrentAccount().getAccountID());
-			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=thisContent.getContentID());
+			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=restrictedContent.getContentID());
 			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
-				logAccess(content=thisContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
+				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
 				purchasedAccess = true;
 			}
 			// check if the content is not allowed for purchase but requires purchase of parent
-		} else if((isNull(thisContent.getAllowPurchaseFlag()) || !thisContent.getAllowPurchaseFlag()) && !isNull(purchaseRequiredContent)) {
+		} else if((isNull(restrictedContent.getAllowPurchaseFlag()) || !restrictedContent.getAllowPurchaseFlag()) && !isNull(purchaseRequiredContent)) {
 			// check if any parent content was purchased
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
 			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=$.slatwall.getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=purchaseRequiredContent.getContentID());
 			// check if the content requires subcription in addition to purchase
 			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
-				logAccess(content=thisContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
+				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
 				purchasedAccess = true;
 			}
 		}
-		// check if this content is part of subscription access and doesn't require purchase or it does require purchased and was purchased
+		// check if restricted content is part of subscription access and doesn't require purchase or it does require purchased and was purchased
 		if(isNull(purchaseRequiredContent) || purchasedAccess) {
 			// check if content is part of subscription access
 			for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
-				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(thisContent)) {
-					logAccess(content=thisContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
+				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(restrictedContent)) {
+					logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
 					return true;
 				}
 			}
+			
+			// get all the cms categories assigned to the restricted content
+			var cmsCategoryIDs = getService("contentService").getCmsCategoriesByCmsContentID(restrictedContent.getCmsContentID());;
 			// check if any of this content's category is part of subscription access
-			if(arguments.cmsCategoryIDs != "") {
-				var categories = getService("contentService").getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
+			if(cmsCategoryIDs != "") {
+				var categories = getService("contentService").getCategoriesByCmsCategoryIDs(cmsCategoryIDs);
 				for(var subscriptionUsageBenefitAccount in $.slatwall.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
 					for(var category in categories) {
 						if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
-							logAccess(content=thisContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
+							logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
 							return true;
 						}
 					}

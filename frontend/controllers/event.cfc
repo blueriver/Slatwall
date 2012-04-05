@@ -144,8 +144,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	private void function checkAccess(required any rc) {
-		var categoryQuery = rc.$.content().getCategoriesQuery() ;
-		if(!getAccessService().hasAccess(rc.$.content('path'),valueList(categoryQuery.categoryID))){
+		if(!getAccessService().hasAccess(rc.$.content('path'))){
 			rc.$.event("slatAction", "frontend:account.noaccess");
 			// save the current content to be used on the barrier page
 			rc.$.event("restrictedContent",$.content());

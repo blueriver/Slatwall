@@ -107,4 +107,17 @@ Notes:
 		<cfreturn returnQuery />
 	</cffunction>
 	
+	<cffunction name="getCmsCategoriesByCmsContentID" access="public">
+		<cfargument name="cmsContentID" type="string" />
+			
+		<cfquery name="local.returnQuery">
+			SELECT categoryID
+			FROM tcontentcategoryassign 
+			INNER JOIN tcontent ON tcontentcategoryassign.contentHistID = tcontent.contentHistID
+			WHERE tcontent.active = 1
+			AND tcontent.contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.cmsContentID#" />
+		</cfquery>
+		<cfreturn valueList(returnQuery.categoryID) />
+	</cffunction>
+	
 </cfcomponent>
