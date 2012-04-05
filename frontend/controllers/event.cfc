@@ -255,10 +255,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			sku.addAccessContent(slatwallContent);
 		} else {
 			var product = getProductService().getProduct(rc.slatwallData.product.productID, true);
-			product.setPublishedFlag(rc.$.content("approved"));
 			if(product.isNew()){
 				// if new product set up required properties
 				product.setProductName(rc.$.content("title"));
+				product.setPublishedFlag(rc.$.content("approved"));
 				var productType = getProductService().getProductTypeBySystemCode("contentAccess");
 				product.setProductType(productType);
 				product.setProductCode(createUUID());
