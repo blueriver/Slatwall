@@ -73,6 +73,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="optionsDisplay" persistent="false";
 	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePriceDetails" type="struct" persistent="false";
@@ -176,6 +177,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}
 		return newSkuCode;
 	}
+    
+    public string function getOptionsDisplay(delimiter=" ") {
+    	var dspOptions = "";
+    	for(var i=1;i<=arrayLen(getOptions());i++) {
+    		dspOptions = listAppend(dspOptions, getOptions()[i].getOptionName(), arguments.delimiter);
+    	}
+		return dspOptions;
+    }
     
     public string function displayOptions(delimiter=" ") {
     	var dspOptions = "";

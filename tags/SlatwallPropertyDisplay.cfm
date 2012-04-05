@@ -50,6 +50,7 @@ Notes:
 	
 	<cfparam name="attributes.value" type="string" default="" />						<!--- hint: This can be used to override the value of a property --->
 	<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />		<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
+	<cfparam name="attributes.valueOptionsSmartList" type="any" default="" />			<!--- hint: This can either be either an entityName string, or an actual smartList --->
 	<cfparam name="attributes.valueDefault" type="string" default="" />					<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
 	<cfparam name="attributes.valueLink" type="string" default="" />					<!--- hint: if specified, will wrap property value with an achor tag using the attribute as the href value --->
 	<cfparam name="attributes.valueFormatType" type="string" default="" />				<!--- hint: This can be used to defined the format of this property wehn it is displayed --->
@@ -164,6 +165,8 @@ Notes:
 			</cfif>
 			<cfif listFindNoCase("checkboxgroup,radiogroup,select,multiselect", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
 				<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
+			<cfelseif listFindNoCase("listingMultiselect", attributes.fieldType)>
+				<cfset attributes.valueOptionsSmartList = attributes.object.invokeMethod( "get#attributes.property#OptionsSmartList" ) />
 			</cfif>
 		</cfif>
 		

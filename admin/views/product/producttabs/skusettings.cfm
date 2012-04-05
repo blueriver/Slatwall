@@ -39,20 +39,20 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cf_SlatwallSettingTable>
-	<cf_SlatwallSetting settingName="skuAllowBackorderFlag" />
-	<cf_SlatwallSetting settingName="skuAllowPreorderFlag" />
-	<cf_SlatwallSetting settingName="skuEligableFulfillmentMethods" />
-	<cf_SlatwallSetting settingName="skuEligableOrderOrigins" />
-	<cf_SlatwallSetting settingName="skuEligablePaymentMethods" />
-	<cf_SlatwallSetting settingName="skuHoldBackQuantity" />
-	<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" />
-	<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" />
-	<cf_SlatwallSetting settingName="skuShippingWeight" />
-	<cf_SlatwallSetting settingName="skuShippingWeightUnitCode" />
-	<cf_SlatwallSetting settingName="skuTrackInventoryFlag" />
-	<cf_SlatwallSetting settingName="skuQATSIncludesQNROROFlag" />
-	<cf_SlatwallSetting settingName="skuQATSIncludesQNROVOFlag" />
-	<cf_SlatwallSetting settingName="skuQATSIncludesQNROSAFlag" />
+	<cf_SlatwallSetting settingName="skuAllowBackorderFlag" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuAllowPreorderFlag" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuEligableFulfillmentMethods" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuEligableOrderOrigins" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuEligablePaymentMethods" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuHoldBackQuantity" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuShippingWeight" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuShippingWeightUnitCode" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuTrackInventoryFlag" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuQATSIncludesQNROROFlag" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuQATSIncludesQNROVOFlag" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuQATSIncludesQNROSAFlag" settingObject="#rc.product#" />
 	<cfif rc.product.getProductType().getBaseProductType() eq "merchandise">
 		<!--- Wrap this arround settings if you want to disable them for certain product types --->
 	</cfif>
