@@ -72,6 +72,13 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 		}
 		return super.getPropertyFieldType(propertyName=arguments.propertyName);
 	}
+	
+	public string function getPropertyTitle(required string propertyName) {
+		if(propertyName == "settingValue") {
+			return rbKey('setting.#getSettingName()#');
+		}
+		return super.getPropertyTitle(propertyName=arguments.propertyName);
+	}
 
 	public array function getSettingValueOptions() {
 		return getService("settingService").getSettingOptions(getSettingName());
