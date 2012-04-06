@@ -58,37 +58,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="utilityFileService" type="any";
 	
 	public void function default() {
-		getFW().redirect(action="admin:setting.detailsetting");
-	}
-	
-	// Global Settings
-	public void function detailsetting(required struct rc) {
-		rc.edit = false;
-		rc.allSettings = getSettingService().getSettings();
-		//rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
-		
-		rc.shippingWeightUnitCodeOptions = getSettingService().getMeaurementUnitOptions(measurementType="weight");
-		rc.customIntegrations = getIntegrationService().listIntegrationFilterByCustomActiveFlag(1);
-	}
-	
-	public void function editsetting(required struct rc) {
-		detailsetting(rc);
-		rc.edit = true;
-		getFW().setView("admin:setting.detailsetting");
-	}
-	
-	public void function savesetting(required struct rc) {
-		for(var item in rc) {
-			if(!isObject(item)) {
-				var setting = getSettingService().getBySettingName(item);
-				if(!setting.isNew()) {
-					setting.setSettingValue(rc[item]);
-					getSettingService().save(entity=setting);
-				}
-			}
-		}
-		getSettingService().reloadConfiguration();
-		getFW().redirect(action="admin:setting.detailsetting");
+		getFW().redirect(action="admin:setting.listsetting");
 	}
 	
 	public void function createAddressZoneLocation(required struct rc) {

@@ -51,8 +51,8 @@ Notes:
 		#$.slatwall.getCFStatic().renderIncludes("css")#
 		<script type="text/javascript">
 			var slatwall = {
-				dateFormat : '#$.slatwall.setting("advanced_dateFormat")#'
-				,timeFormat : '#$.slatwall.setting("advanced_timeFormat")#'
+				dateFormat : '#$.slatwall.setting("globalDateFormat")#'
+				,timeFormat : '#$.slatwall.setting("globalTimeFormat")#'
 				,tabIndex : #rc.tabIndex#
 			};
 		</script>

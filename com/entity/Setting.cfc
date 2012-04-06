@@ -43,6 +43,12 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="settingName" ormtype="string";
 	property name="settingValue" ormtype="string";
 	
+	// Related Object Properties (many-to-one)
+	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
@@ -57,8 +63,39 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
+	
+	public string function getPropertyFieldType(required string propertyName) {
+		if(propertyName == "settingValue") {
+			return getService("settingService").getSettingMetaData(getSettingName()).fieldType;	
+		}
+		return super.getPropertyFieldType(propertyName=arguments.propertyName);
+	}
+
+	public array function getSettingValueOptions() {
+		return getService("settingService").getSettingOptions(getSettingName());
+	}
+	
+	public any function getSettingValueOptionsSmartList() {
+		return getService("settingService").getSettingOptionsSmartList(getSettingName());	
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
-	// ===================  END:  ORM Event Hooks  =========================	
+	public void function preInsert() {
+		getService("settingService").clearAllSettingsQuery();
+	}
+	
+	public void function preUpdate(struct oldData) {
+		getService("settingService").clearAllSettingsQuery();
+	}
+	
+	public void function preDelete() {
+		getService("settingService").clearAllSettingsQuery();
+	}
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

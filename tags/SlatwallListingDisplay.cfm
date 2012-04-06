@@ -87,7 +87,7 @@ Notes:
 		<cfset thistag.exampleEntity = createObject("component", "Slatwall.com.entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '')#") />
 		
 		<!--- Setup the default table class --->
-		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-striped table-bordered', ' ') />
+		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-striped table-bordered table-condensed', ' ') />
 		
 		<!--- Setup the list of all property identifiers to be used later --->
 		<cfloop array="#thistag.columns#" index="column">
@@ -107,7 +107,7 @@ Notes:
 			<cfset thistag.multiselectable = true />
 			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-multiselect', ' ') />
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-condensed', ' ') />
+			<!---<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-condensed', ' ') />--->
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
@@ -147,6 +147,17 @@ Notes:
 		</cfif>
 		<cfif len(attributes.recordDeleteAction)>
 			<cfset attributes.administativeCount++ />
+		</cfif>
+		
+		<!--- Setup the primary representation column if no columns were passed in --->
+		<cfif not arrayLen(thistag.columns)>
+			<cfset arrayAppend(thistag.columns, {
+				propertyIdentifier = thistag.exampleentity.getSimpleRepresentationPropertyName(),
+				title = "",
+				tdClass="primary",
+				filter = false,
+				sort = false
+			}) />
 		</cfif>
 	</cfsilent>
 	<cfoutput>

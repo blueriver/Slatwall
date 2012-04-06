@@ -46,42 +46,38 @@ Notes:
 			SELECT
 				MIN(salePriceExpirationDateTime) as 'nextExpiration'
 			FROM
-				SlatwallSkuCache
+				SlatwallProductCache
 		</cfquery>
 		<cfreturn rs.nextExpiration />
 	</cffunction>
 	
-	<cffunction name="getExpiredSkuCacheSkus">
+	<cffunction name="getExpiredProductCacheProducts">
 		
 		<cfset var rs = "" />
 		
 		<cfquery name="rs">
 			SELECT
-				skuID
+				productID
 			FROM
-				SlatwallSkuCache
+				SlatwallProductCache
 			WHERE
-				skuCacheExpirationDateTime < <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+				salePriceExpirationDateTime < <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
 		</cfquery>
-		<cfreturn rs.nextExpiration />
+		<cfreturn rs />
 	</cffunction>
 	
-	<cffunction name="getSkuQuery">
-		<cfargument name="skuID" type="string" />
+	<cffunction name="getUniqueProductSkuImageFiles">
+		<cfargument name="productID" type="string" />
 		
 		<cfset var rs="" />
 		
 		<cfquery name="rs">
-			SELECT
-				SlatwallSku.skuID,
-				SlatwallSku.remoteID,
-				SlatwallSku.productID
+			SELECT DISTINCT
+				SlatwallSku.imageFile
 			FROM
 				SlatwallSku
-			<cfif structKeyExists(arguments, "skuID")>
 			WHERE
-				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
-			</cfif>
+				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
 		</cfquery>
 		
 		<cfreturn rs />
@@ -111,40 +107,6 @@ Notes:
 		<cfreturn rs />
 	</cffunction>
 	
-	<cffunction name="getUniqueProductSkuImageFiles">
-		<cfargument name="productID" type="string" />
-		
-		<cfset var rs="" />
-		
-		<cfquery name="rs">
-			SELECT DISTINCT
-				SlatwallSku.imageFile
-			FROM
-				SlatwallSku
-			WHERE
-				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
-		</cfquery>
-		
-		<cfreturn rs />
-	</cffunction>
-	
-	<cffunction name="getSkuCacheQuery">
-		<cfargument name="skuID" type="string" required="true" />
-		
-		<cfset var rs="" />
-		
-		<cfquery name="rs">
-			SELECT
-				*
-			FROM
-				SlatwallSkuCache
-			WHERE
-				SlatwallSkuCache.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
-		</cfquery>
-		
-		<cfreturn rs />
-	</cffunction>
-	
 	<cffunction name="getProductCacheQuery">
 		<cfargument name="productID" type="string" required="true" />
 		
@@ -155,80 +117,11 @@ Notes:
 				*
 			FROM
 				SlatwallProductCache
+			WHERE
+				productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
 		</cfquery>
 		
 		<cfreturn rs />
-	</cffunction>
-	
-	<cffunction name="updateSkuCache">
-		<cfargument name="skuID" type="string" required="true">
-		<cfargument name="data" type="struct" required="true">
-		
-		<cfset var rs = "" />
-		<cfset var updateResult = "" />
-		
-		<cfset var columnName = "" />
-		<cfset var loopCount = 0 />
-		
-		<cfset var bitColumns = "allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,trackInventoryFlag" />
-		<cfset var dateTimeColumns = "salePriceExpirationDateTime" />
-		<cfset var moneyColumns = "salePrice" />
-		<cfset var integerColumns = "qoh,qosh,qndoo,qndorvo,qndosa,qnroro,qnrovo,qnrosa,quantityHeldBack,shippingWeight" />
-		
-		<cfquery name="rs" result="updateResult">
-			UPDATE
-				SlatwallSkuCache
-			SET
-				<cfloop collection="#arguments.data#" item="columnName">
-					<cfif arguments.data[ columnName ] eq "NULL">
-						#columnName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="" null="yes">,
-					<cfelse>
-						<cfif listFindNoCase(bitColumns, columnName)>
-							#columnName# = <cfqueryparam cfsqltype="cf_sql_bit" value="#arguments.data[ columnName ]#">,
-						<cfelseif listFindNoCase(dateTimeColumns, columnName)>
-							#columnName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#arguments.data[ columnName ]#">,
-						<cfelseif listFindNoCase(moneyColumns, columnName)>
-							#columnName# = <cfqueryparam cfsqltype="cf_sql_money" value="#arguments.data[ columnName ]#">,
-						<cfelseif listFindNoCase(integerColumns, columnName)>
-							#columnName# = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.data[ columnName ]#">,
-						</cfif>
-					</cfif>
-				</cfloop>
-				modifiedDateTime = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-			WHERE
-				skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
-		</cfquery>
-		
-		<cfif not updateResult.recordCount>
-			<cfquery name="rs" result="updateResult">
-				INSERT INTO	SlatwallSkuCache (
-					<cfloop collection="#arguments.data#" item="columnName">
-						#columnName#,
-					</cfloop>
-					skuID,
-					createdDateTime
-				) VALUES (
-					<cfloop collection="#arguments.data#" item="columnName">
-						<cfif arguments.data[ columnName ] eq "NULL">
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="" null="yes">,
-						<cfelse>
-							<cfif listFindNoCase(bitColumns, columnName)>
-								<cfqueryparam cfsqltype="cf_sql_bit" value="#arguments.data[ columnName ]#">,
-							<cfelseif listFindNoCase(dateTimeColumns, columnName)>
-								<cfqueryparam cfsqltype="cf_sql_timestamp" value="#arguments.data[ columnName ]#">,
-							<cfelseif listFindNoCase(moneyColumns, columnName)>
-								<cfqueryparam cfsqltype="cf_sql_money" value="#arguments.data[ columnName ]#">,
-							<cfelseif listFindNoCase(integerColumns, columnName)>
-								<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.data[ columnName ]#">,
-							</cfif>
-						</cfif>
-					</cfloop>
-					<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">,
-					<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-				)
-			</cfquery>
-		</cfif>
-		
 	</cffunction>
 	
 	<cffunction name="updateProductCache">

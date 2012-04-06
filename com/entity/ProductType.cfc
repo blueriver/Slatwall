@@ -47,23 +47,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="productTypeDescription" ormtype="string" length="4000";
 	property name="systemCode" ormtype="string";
 	
-	// Persistent Properties - Inheritence Settings
-	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowDropshipFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
-	property name="allowShippingFlag" ormtype="boolean";
-	property name="callToOrderFlag" ormtype="boolean";
-	property name="productDisplayTemplate" ormtype="string";
-	property name="productTypeDisplayTemplate" ormtype="string";
-	property name="quantityHeldBack" ormtype="integer";
-	property name="quantityMinimum" ormtype="integer";
-	property name="quantityMaximum" ormtype="integer";
-	property name="quantityOrderMinimum" ormtype="integer";
-	property name="quantityOrderMaximum" ormtype="integer";
-	property name="shippingWeight" ormtype="integer";
-	property name="shippingWeightUnitCode" ormtype="string";
-	property name="trackInventoryFlag" ormtype="boolean";
-	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
@@ -85,9 +68,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
-
-	// Related Object Properties (Many-To-Many - owner)
-	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallProductTypeEligibleFulfillmentMethod" fkcolumn="productTypeID" inversejoincolumn="fulfillmentMethodID"; 
 
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
@@ -187,59 +167,26 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return getService("priceGroupService").getRateForProductTypeBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
     
-    // START: Setting Methods
-    public any function getSetting(required string settingName) {
-        if(structKeyExists(variables, arguments.settingName)) {
-            return variables[arguments.settingName];
-        }
-		
-		return getInheritedSetting( arguments.settingName );
-    }
-
-    public any function getInheritedSetting( required string settingName ) {
-    	if(!isNull(getParentProductType())) {
-    		return getParentProductType().getSetting( arguments.settingName );
-    	}
-    	
-    	return setting("product_#arguments.settingName#");
-    }
-    
-    public any function getWhereSettingDefined( required string settingName ) {
-    	if(structKeyExists(variables,arguments.settingName)) {
-    		return {type="Product Type", name=getProductTypeName(), id=getProductTypeID()};
-    	} else if (!isNull(getParentProductType())) {
-    		return getParentProductType().getWhereSettingDefined( arguments.settingName );
-    	}
-    	
-    	return {type="Global"};
-    }
-    // END: Setting Methods
-    
     // ============ START: Non-Persistent Property Methods =================
-	
-	public any function getParentProductTypeOptions() {
+	public any function getParentProductTypeOptions( string baseProductType ) {
 		if(!structKeyExists(variables, "parentProductTypeOptions")) {
-			variables.parentProductTypeOptions=[];
+			if(!structKeyExists(arguments, "baseProductType")) {
+				arguments.baseProductType = getBaseProductType();
+			}
 			
-			// Add a null value to the options for none.
-			//arrayAppend(variables.parentProductTypeOptions, {value="", name=rbKey('define.none')});
+			var smartList = getPropertyOptionsSmartList( "parentProductType" );
+			smartList.addLikeFilter( "productTypeIDPath", "#getService('productService').getProductTypeBySystemCode( arguments.baseProductType ).getProductTypeID()#%" );
 			
-			// Get product type tree query
-			var ptt = getProductTypeTree();
+			var records = smartList.getRecords();
 			
-			// Loop over all records in product type tree
-			for(var i=1; i<=ptt.recordCount; i++) {
-				
-				// This logic makes it so that it can't be child of itself or any of its children
-				if(!listFindNoCase(ptt.idpath[i], this.getProductTypeID())) {
-					var option = {};
-					option.value = ptt.productTypeID[i];
-					option.name = replace(ptt.productTypeNamePath[i], ",", "&nbsp;&raquo;&nbsp;", "all");
-					arrayAppend(variables.parentProductTypeOptions, option);
+			variables.parentProductTypeOptions = [];
+			
+			for(var i=1; i<=arrayLen(records); i++) {
+				if(records[i].getProductTypeName() != getProductTypeName()) {
+					arrayAppend(variables.parentProductTypeOptions, {name=records[i].getSimpleRepresentation(), value=records[i].getProductTypeID()});	
 				}
 			}
 		}
-		
 		return variables.parentProductTypeOptions;
 	}
 	
@@ -349,7 +296,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		super.preInsert();
 		setProductTypeIDPath( buildIDPathList() );
 		getService("skuCacheService").updateFromProductType( this );
-		
 	}
 	
 	public void function preUpdate(struct oldData){

@@ -48,7 +48,7 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="price" range=true />
+		<cf_SlatwallListingColumn propertyIdentifier="defaultSku.price" range=true />
 	</cf_SlatwallListingDisplay>
 
 </cfoutput>

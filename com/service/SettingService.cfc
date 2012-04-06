@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,292 +35,328 @@
 
 Notes:
 
-*/
-component extends="BaseService" output="false" accessors="true"  {
+globalOrderNumberGeneration
+globalEncryptionKeySize
+
+--->
+<cfcomponent extends="BaseService" output="false" accessors="true">
+
+	<!--- Injected from Coldspring --->
+	<cfproperty name="contentService" type="any" />
+	<cfproperty name="utilityORMService" type="any" />
 	
-	// Mura Service Injection on Init
-	property name="configBean" type="any";
-	property name="contentManager" type="any";
-	property name="categoryManager" type="any";
-	property name="feedManager" type="any";
+	<!--- Used For Caching --->
+	<cfproperty name="allSettingsQuery" type="query" />
+	<cfproperty name="globalSettingValues" type="struct" />
 	
-	// Global Properties Set in Application Scope
+	<!--- Used As Meta information --->
+	<cfproperty name="settingMetaData" type="struct" />
+	<cfproperty name="settingLookupOrder" type="struct" />
+	<cfproperty name="settingPrefixInOrder" type="array" />
 	
-	property name="settings" type="struct";
-	property name="permissions" type="struct";
-	property name="shippingMethods" type="struct";
-	property name="shippingServices" type="struct";
-	property name="paymentMethods" type="struct";
-	property name="paymentServices" type="struct";
-	property name="permissionActions" type="struct";
-	
-	public any function init() {
-		setConfigBean( getCMSBean("configBean") );
-		setContentManager( getCMSBean("contentManager") );
-		setCategoryManager( getCMSBean("categoryManager") );
-		setFeedManager( getCMSBean("feedManager") );
+	<cfscript>
+		variables.globalSettingValues = {};
 		
-		return super.init();
-	}
+		variables.settingPrefixInOrder = ["productType", "product", "stock", "brand", "sku"];
 		
-	public void function reloadConfiguration() {
-		var settingsList = this.listSetting();
+		variables.settingLookupOrder = {
+			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath&sku.product.brand.brandID", "sku.product.productType.productTypeIDPath"],
+			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
+			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"]
+		};
 		
-		variables.permissions = {};
-		variables.settings = {};
-		variables.shippingServices = {};
-		variables.paymentServices = {};
-		
-		getPermissionActions();
-		getShippingServices();
-		getPaymentServices();
-		
-		// Load Settings & Permissions
-		for(var i = 1; i <= arrayLen(settingsList); i++) {
+		variables.settingMetaData = {
+			// Brand
+			brandDisplayTemplate = {fieldType="select"},
 			
-			if( listFirst( settingsList[i].getSettingName(), "_") == "permission") {
-				// Set the permission value in the permissions scop 
-				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
-			} else {
-				// Set the global setting value in the settings scope
-				variables.settings[ settingsList[i].getSettingName() ] = settingsList[i];	
+			// Global
+			globalCurrencyLocale = {fieldType="select"},
+			globalCurrencyType = {fieldType="select"},
+			globalDateFormat = {fieldType="text"},
+			globalEncryptionAlgorithm = {fieldType="select"},
+			globalEncryptionEncoding = {fieldType="select"},
+			globalEncryptionKeyLocation = {fieldType="text"},
+			globalEncryptionKeySize = {fieldType="select"},
+			globalEncryptionService = {fieldType="select"},
+			globalImageExtension = {fieldType="text"},
+			globalLogMessages = {fieldType="select"},
+			globalMissingImagePath = {fieldType="text"},
+			globalOrderPlacedEmailFrom = {fieldType="text"},
+			globalOrderPlacedEmailCC = {fieldType="text"},
+			globalOrderPlacedEmailBCC = {fieldType="text"},
+			globalOrderPlacedEmailSubjectString = {fieldType="text"},
+			globalOrderNumberGeneration = {fieldType="select"},
+			globalRemoteIDShowFlag = {fieldType="yesno"},
+			globalRemoteIDEditFlag = {fieldType="yesno"},
+			globalTimeFormat = {fieldType="text"},
+			globalUseProductCacheFlag = {fieldType="yesno"},
+			globalURLKeyBrand = {fieldType="text"},
+			globalURLKeyProduct = {fieldType="text"},
+			globalURLKeyProductType = {fieldType="text"},
+			globalWeightUnitCode = {fieldType="select"},
+			
+			// Product
+			productDisplayTemplate = {fieldType="select"},
+			productImageSmallWidth = {fieldType="text", formatType="pixels"},
+			productImageSmallHeight = {fieldType="text", formatType="pixels"},
+			productImageMediumWidth = {fieldType="text", formatType="pixels"},
+			productImageMediumHeight = {fieldType="text", formatType="pixels"},
+			productImageLargeWidth = {fieldType="text", formatType="pixels"},
+			productImageLargeHeight = {fieldType="text", formatType="pixels"},
+			productTitleString = {fieldType="text"},
+			
+			// Product Type
+			productTypeDisplayTemplate = {fieldType="select"},
+			
+			// Sku
+			skuAllowBackorderFlag = {fieldType="yesno"},
+			skuAllowPreorderFlag = {fieldType="yesno"},
+			skuEligableFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
+			skuEligableOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigins"},
+			skuEligablePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
+			skuHoldBackQuantity = {fieldType="text"},
+			skuOrderMinimumQuantity = {fieldType="text"},
+			skuOrderMaximumQuantity = {fieldType="text"},
+			skuQATSIncludesQNROROFlag = {fieldType="yesno"},
+			skuQATSIncludesQNROVOFlag = {fieldType="yesno"},
+			skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
+			skuShippingWeight = {fieldType="text", formatType="weight"},
+			skuShippingWeightUnitCode = {fieldType="select"},
+			skuTrackInventoryFlag = {fieldType="yesno"}
+			
+			
+		};
+		
+		public array function getSettingOptions(required string settingName) {
+			switch(arguments.settingName) {
+				case "brandDisplayTemplate": case "productDisplayTemplate": case "productTypeDisplayTemplate" :
+					return getContentService().getDisplayTemplateOptions();
+				case "globalCurrencyLocale":
+					return ['Chinese (China)','Chinese (Hong Kong)','Chinese (Taiwan)','Dutch (Belgian)','Dutch (Standard)','English (Australian)','English (Canadian)','English (New Zealand)','English (UK)','English (US)','French (Belgian)','French (Canadian)','French (Standard)','French (Swiss)','German (Austrian)','German (Standard)','German (Swiss)','Italian (Standard)', 'Italian (Swiss)','Japanese','Korean','Norwegian (Bokmal)','Norwegian (Nynorsk)','Portuguese (Brazilian)','Portuguese (Standard)','Spanish (Mexican)','Spanish (Modern)','Spanish (Standard)','Swedish'];
+				case "globalCurrencyType":
+					return ['None','Local','International'];
+				case "globalLogMessages":
+					return ['None','General','Detail'];
+				case "globalEncryptionKeySize":
+					return ['128','256','512'];
+				case "globalEncryptionAlgorithm":
+					return ['AES','DES','DES-EDE','DESX','RC2','RC4','RC5','PBE','MD2','MD5','RIPEMD160','SHA-1','SHA-224','SHA-256','SHA-384','SHA-512','HMAC-MD5','HMAC-RIPEMD160','HMAC-SHA1','HMAC-SHA224','HMAC-SHA256','HMAC-SHA384','HMAC-SHA512','RSA','DSA','Diffie-Hellman','CFMX_COMPAT','BLOWFISH'];
+				case "globalEncryptionEncoding":
+					return ['Base64','Hex','UU'];
+				case "globalEncryptionService":
+					return [{name='Internal', value='internal'}];
+				case "globalWeightUnitCode": case "skuShippingWeightUnitCode":
+					var optionSL = this.getMeasurementUnitSmartList();
+					optionSL.addFilter('measurementType', 'weight');
+					optionSL.addSelect('unitName', 'name');
+					optionSL.addSelect('unitCode', 'value');
+					return optionSL.getRecords();
+			}
+			throw("You have asked for a select list of a setting named '#arguments.settingName#' and the options for that setting have not been setup yet.  Open the SettingService, and configure options for this setting.")
+		}
+		
+		public any function getSettingOptionsSmartList(required string settingName) {
+			return getUtilityORMService().getServiceByEntityName( variables.settingMetaData[ arguments.settingName ] ).invokeMethod("get#arguments.settingName#SmartList");
+		}
+		
+		public any function getSettingMetaData(required string settingName) {
+			return variables.settingMetaData[ arguments.settingName ];
+		}
+		
+		public any function getAllSettingsQuery() {
+			if(!structKeyExists(variables, "allSettingsQuery")) {
+				variables.allSettingsQuery = getDAO().getAllSettingsQuery();
+			}
+			return variables.allSettingsQuery;
+		}
+		
+		public any function clearAllSettingsQuery() {
+			if(structKeyExists(variables, "allSettingsQuery")) {
+				structDelete(variables, "allSettingsQuery");
 			}
 		}
 		
-	}
-	
-	public struct function getSettings(boolean reload=false) {
-		if(!structKeyExists(variables, "settings") || arguments.reload == true) {
-			reloadConfiguration();
+		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
+			if(!structKeyExists(variables.settingMetaData, arguments.settingName)) {
+				throw("You have asked for a setting by the name of '#arguments.settingName#' which is not a valid setting in the system.  A list of valid settings can be found in the SettingService.cfc");
+			}
+			if(arguments.formatValue) {
+				return getSettingDetails(argumentCollection=arguments).settingValueFormatted;	
+			}
+			return getSettingDetails(argumentCollection=arguments).settingValue;
 		}
-		return variables.settings;
-	}
-	
-	public struct function getPermissions(boolean reload=false) {
-		if(!structKeyExists(variables, "permissions") || arguments.reload == true) {
-			reloadConfiguration();
-		}
-		return variables.permissions;
-	}
-	
-	public any function getSettingValue(required string settingName) {
-		if( structKeyExists(variables.settings,arguments.settingName) ) {
-			return variables.settings[ arguments.settingName ].getSettingValue();
-		} else {
-			return "";
-		}	
-	}
-	
-	public any function getPermissionValue(required string permissionName) {
-		if(structKeyExists(variables.permissions, arguments.permissionName)) {
-			return variables.permissions[ arguments.permissionName ].getSettingValue();
-		} else {
-			return "";
-		}
-	}
-	
-	public any function getBySettingName(required string settingName) {
-		if(structKeyExists(variables.settings, arguments.settingName)) {
-			return variables.settings[ arguments.settingName ];
-		} else {
-			var setting = this.newSetting();
-			setting.setSettingName(arguments.settingName);
-			return	setting;
-		}
-	}
-	
-	public any function getByPermissionName(required string permissionName) {
-		if(structKeyExists(variables.permissions, arguments.permissionName)) {
-			return variables.permissions[ arguments.permissionName ];
-		} else {
-			return this.newSetting();	
-		}
-	}
-	
-	public struct function getPermissionActions(boolean reload=false) {
-		if(!structKeyExists(variables, "permissionActions") || !structCount(variables.permissionActions) || arguments.reload) {
-			variables.permissionActions = structNew();
-			var dirLocation = expandPath("/plugins/Slatwall/admin/controllers");
-			var dirList = directoryList(dirLocation,"false","name","*.cfc");
-			for(var i=1; i<= arrayLen(dirList); i++) {
-				var controllerName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
-				var controller = createObject("component", "Slatwall.admin.controllers.#controllerName#");
-				var controllerMetaData = getMetaData(controller);
-				if(controllerName != "BaseController") {
-					variables.permissionActions[ "#controllerName#" ] = arrayNew(1);
-					for(var ii=1; ii <= arrayLen(controllerMetaData.functions); ii++) {
-						if(FindNoCase("before", controllerMetaData.functions[ii].name) == 0 && FindNoCase("service", controllerMetaData.functions[ii].name) == 0 && FindNoCase("get", controllerMetaData.functions[ii].name) == 0 && FindNoCase("set", controllerMetaData.functions[ii].name) == 0 && FindNoCase("init", controllerMetaData.functions[ii].name) == 0 && FindNoCase("dashboard", controllerMetaData.functions[ii].name) == 0) {
-							arrayAppend(variables.permissionActions[ "#controllerName#" ], controllerMetaData.functions[ii].name);
+		
+		public any function getSettingDetails(required string settingName, any object, array filterEntities) {
+			
+			// Create some placeholder Var's
+			var foundValue = false;
+			var settingRecord = "";
+			var settingDetails = {
+				settingValue = "",
+				settingValueFormatted = "",
+				settingID = "",
+				settingRelationships = {},
+				settingInherited = false
+			};
+			
+			// If this is a global setting there isn't much we need to do because we already know there aren't any relationships
+			if(left(arguments.settingName, 6) == "global") {
+				settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName);
+				if(settingRecord.recordCount) {
+					foundValue = true;
+					settingDetails.settingValue = settingRecord.settingValue;
+					settingDetails.settingID = settingRecord.settingID;
+				}
+				
+			// If this is not a global setting, but one with a prefix, then we need to check the relationships
+			} else {
+				var settingPrefix = "";
+				
+				for(var i=1; i<=arrayLen(getSettingPrefixInOrder()); i++) {
+					if(left(arguments.settingName, len(getSettingPrefixInOrder()[i])) == getSettingPrefixInOrder()[i]) {
+						settingPrefix = getSettingPrefixInOrder()[i];
+						break;
+					}
+				}
+				
+				if(!len(settingPrefix)) {
+					throw("You have asked for a setting with an invalid prefix.  The setting that was asked for was #arguments.settingName#");	
+				}
+				
+				// If an object was passed in, then first we can look for relationships based on that persistent object
+				if(structKeyExists(arguments, "object") && arguments.object.isPersistent()) {
+					// First Check to see if there is a setting the is explicitly defined to this object
+					settingDetails.settingRelationships[ arguments.object.getPrimaryIDPropertyName() ] = arguments.object.getPrimaryIDValue();
+					settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
+					if(settingRecord.recordCount) {
+						foundValue = true;
+						settingDetails.settingValue = settingRecord.settingValue;
+						settingDetails.settingID = settingRecord.settingID;
+					} else {
+						structClear(settingDetails.settingRelationships);
+					}
+					
+					// If we haven't found a value yet, check to see if there is a lookup order
+					if(!foundValue && structKeyExists(getSettingLookupOrder(), arguments.object.getClassName()) && structKeyExists(getSettingLookupOrder(), settingPrefix)) {
+						
+						var hasPathRelationship = false;
+						var pathList = "";
+						var relationshipKey = "";
+						var relationshipValue = "";
+						var nextLookupOrderIndex = 1;
+						var nextPathListIndex = 0;
+						var settingLookupArray = getSettingLookupOrder()[ arguments.object.getClassName() ];
+						
+						do {
+							// If there was an & in the lookupKey then we should split into multiple relationships
+							allRelationships = listToArray(settingLookupArray[nextLookupOrderIndex], "&");
+							
+							for(var r=1; r<=arrayLen(allRelationships); r++) {
+								// If this relationship is a path, then we need to attemptThis multiple times
+								if(right(listLast(allRelationships[r], "."), 4) == "path") {
+									relationshipKey = left(listLast(allRelationships[r], "."), len(listLast(allRelationships[r], "."))-4);
+									if(pathList == "") {
+										pathList = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
+										nextPathListIndex = listLen(pathList);
+									}
+									relationshipValue = listGetAt(pathList, nextPathListIndex);
+									nextPathListIndex--;
+								} else {
+									relationshipKey = listLast(allRelationships[r], ".");
+									relationshipValue = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
+								}
+								settingDetails.settingRelationships[ relationshipKey ] = relationshipValue;
+							}
+							
+							settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
+							if(settingRecord.recordCount) {
+								foundValue = true;
+								settingDetails.settingValue = settingRecord.settingValue;
+								settingDetails.settingID = settingRecord.settingID;
+								settingDetails.settingInherited = true;
+							} else {
+								structClear(settingDetails.settingRelationships);
+							}
+							
+							if(nextPathListIndex==0) {
+								nextLookupOrderIndex ++;
+								pathList="";
+							}
+						} while (!foundValue && nextLookupOrderIndex <= arrayLen(settingLookupArray));
+					}
+				}
+				
+				// If we still haven't found a value yet, lets look for this with no relationships
+				if(!foundValue) {
+					settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName);
+					if(settingRecord.recordCount) {
+						foundValue = true;
+						settingDetails.settingValue = settingRecord.settingValue;
+						settingDetails.settingID = settingRecord.settingID;
+						if(structKeyExists(arguments, "object") && arguments.object.isPersistent()) {
+							settingDetails.settingInherited = true;
 						}
 					}
-					arraySort(variables.permissionActions[ "#controllerName#" ], "textnocase", "asc" );
 				}
 			}
-		}
-		return variables.permissionActions;
-	}
-
-	public any function saveAddressZone(required any entity, struct data) {
-		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"addressZoneLocations") ) {
-			for(var i in arguments.data.addressZoneLocations) {
-				if(left(i,3) == "new" && len(i) >= 4) {
-					var addressZoneLocation = newAddressZoneLocation();
-					addressZoneLocation.populate(arguments.data.addressZoneLocations[i]);
-					addressZoneLocation.setAddressZone(arguments.entity);
-					arguments.entity.addAddressZoneLocation(addressZoneLocation);
-				} else {
-					var addressZoneLocation = this.getAddressZoneLocation(i);
-					if(!isNull(addressZoneLocation)) {
-						addressZoneLocation.populate(arguments.data.addressZoneLocations[i]);
-						addressZoneLocation.setAddressZone(arguments.entity);
-						arguments.entity.addAddressZoneLocation(addressZoneLocation);	
-					}
-				}
+			
+			if( structKeyExists(variables.settingMetaData[arguments.settingName], "formatType") ) {
+				settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].formatType);
+			} else if( structKeyExists(variables.settingMetaData[arguments.settingName], "fieldType") ) {
+				settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].fieldType);
+			} else {
+				settingDetails.settingValueFormatted = settingDetails.settingValue;
 			}
-		}
-		return save(argumentcollection=arguments);
-	}
-	
-	public struct function getMailServerSettings() {
-		var config = getConfigBean();
-		var settings = {};
-		if(!config.getUseDefaultSMTPServer()) {
-			settings = {
-				server = config.getMailServerIP(),
-				username = config.getMailServerUsername(),
-				password = config.getMailServerPassword(),
-				port = config.getMailServerSMTPPort(),
-				useSSL = config.getMailServerSSL(),
-				useTLS = config.getMailServerTLS()
-			};
-		}
-		return settings;
-	}
-	
-	public array function getMeaurementUnitOptions(required string measurementType) {
-		var smartList = this.getMeasurementUnitSmartList();
-		smartList.addFilter("measurementType", arguments.measurementType);
-		
-		smartList.addSelect("unitCode", "value");
-		smartList.addSelect("unitName", "name");
-		
-		
-		return smartList.getRecords();
-	}
-	
-	// -------------- Start Mura Setup Functions
-	public any function verifyMuraRequirements() {
-		logSlatwall("Setting Service - verifyMuraRequirements - Started", true);
-		verifyMuraRequiredPages();
-		verifyMuraFrontendViews();
-		pullMuraCategory();
-		logSlatwall("Setting Service - verifyMuraRequirements - Finished", true);
-	}
-	
-	private void function verifyMuraFrontendViews() {
-		logSlatwall("Setting Service - verifyMuraFrontendViews - Started", true);
-		var assignedSites = getPluginConfig().getAssignedSites();
-		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			logSlatwall("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
-			
-			var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
-			var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#assignedSites["siteID"][i]#/includes/display_objects/custom/slatwall/"));
-			
-			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
-		}
-		logSlatwall("Setting Service - verifyMuraFrontendViews - Finished", true);
-	}
 
-	private void function verifyMuraRequiredPages() {
-		logSlatwall("Setting Service - verifyMuraRequiredPages - Started", true);
+			return settingDetails;
+		}
 		
-		var requiredMuraPages = [
-			{settingName="page_shoppingCart",title="Shopping Cart",fileName="shopping-cart",isNav="1",isLocked="1"},
-			{settingName="page_orderStatus",title="Order Status",fileName="order-status",isNav="1",isLocked="1"},
-			{settingName="page_orderConfirmation",title="Order Confirmation",fileName="order-confirmation",isNav="0",isLocked="1"},
-			{settingName="page_myAccount",title="My Account",fileName="my-account",isNav="1",isLocked="1"},
-			{settingName="page_editAccount",title="Edit Account",fileName="edit-account",isNav="1",isLocked="1"},
-			{settingName="page_createAccount",title="Create Account",fileName="create-account",isNav="1",isLocked="1"},
-			{settingName="page_checkout",title="Checkout",fileName="checkout",isNav="1",isLocked="1"},
-			{title="Default Product Template",fileName="default-product-template",isNav="0",isLocked="0",templateFlag="1"}
-		];
+	</cfscript>
+	
+	<cffunction name="getSettingRecordBySettingRelationships">
+		<cfargument name="settingName" type="string" required="true" />
+		<cfargument name="settingRelationships" type="struct" default="#structNew()#" />
 		
-		var assignedSites = getPluginConfig().getAssignedSites();
-		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			logSlatwall("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#", true);
-			var thisSiteID = assignedSites["siteID"][i];
-			
-			for(var page in requiredMuraPages) {
-				if(structKeyExists(page,"settingName")) {
-					createMuraPageAndSetting(page,thisSiteID);
-				} else {
-					var muraPage = createMuraPage(page,thisSiteID);
-					createSlatwallPage(muraPage,page);
-				}
-			}
-		}
-		logSlatwall("Setting Service - verifyMuraRequiredPages - Finished", true);
-	}
+		<cfset var allSettings = getAllSettingsQuery() />
+		<cfset var relationship = "">
+		<cfset var rs = "">
+		<cfset var key = "">
+		
+		<cfquery name="rs" dbType="query">
+			SELECT
+				allSettings.settingID,
+				allSettings.settingValue
+			FROM
+				allSettings
+				WHERE
+					allSettings.settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#">
+				  AND
+					<cfif structKeyExists(settingRelationships, "productTypeID")>
+						allSettings.productTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.productTypeID#" > 
+					<cfelse>
+						allSettings.productTypeID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "productID")>
+						allSettings.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.productID#" > 
+					<cfelse>
+						allSettings.productID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "skuID")>
+						allSettings.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.skuID#" > 
+					<cfelse>
+						allSettings.skuID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "brandID")>
+						allSettings.brandID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.brandID#" > 
+					<cfelse>
+						allSettings.brandID IS NULL
+					</cfif>
+		</cfquery> 
+				
+		<cfreturn rs />		
+	</cffunction>
 	
-	private void function createMuraPageAndSetting(required struct page,required any siteID) {
-		var setting = getBySettingName(arguments.page.settingName);
-		if(setting.isNew() || setting.getSettingValue() == ""){
-			var muraPage = createMuraPage(arguments.page,arguments.siteID);
-			setting.setSettingValue(arguments.page.fileName);
-			this.saveSetting(setting);
-		}
-	}
-	
-	private any function createMuraPage(required struct page,required any siteID) {
-		// Setup Mura Page
-		var thisPage = getContentManager().getActiveContentByFilename(filename=arguments.page.fileName, siteid=arguments.siteID);
-		if(thisPage.getIsNew()) {
-			thisPage.setDisplayTitle(arguments.page.title);
-			thisPage.setHTMLTitle(arguments.page.title);
-			thisPage.setMenuTitle(arguments.page.title);
-			thisPage.setIsNav(arguments.page.isNav);
-			thisPage.setActive(1);
-			thisPage.setApproved(1);
-			thisPage.setIsLocked(arguments.page.isLocked);
-			thisPage.setParentID("00000000000000000000000000000000001");
-			thisPage.setFilename(arguments.page.fileName);
-			thisPage.setSiteID(arguments.siteID);
-			thisPage.save();
-		}
-		return thisPage;
-	}
-	
-	private void function createSlatwallPage(required any muraPage, required struct pageAttributes) {
-		var thisPage = getService("contentService").getcontentByCmsContentID(arguments.muraPage.getContentID(),true);
-		if(thisPage.isNew()){
-			thisPage.setCmsSiteID(arguments.muraPage.getSiteID());
-			thisPage.setCmsContentID(arguments.muraPage.getContentID());
-			thisPage.setCmsContentIDPath(arguments.muraPage.getPath());
-			thisPage.setTitle(arguments.muraPage.getTitle());
-			thisPage = getService("contentService").saveContent(thisPage,arguments.pageAttributes);
-		}
-	}
-	
-	private void function pullMuraCategory() {
-		logSlatwall("Setting Service - pullMuraCategory - Started", true);
-		var assignedSites = getPluginConfig().getAssignedSites();
-		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			logSlatwall("Pull mura category For Site ID: #assignedSites["siteID"][i]#");
-			
-			var categoryQuery = getCategoryManager().getCategoriesBySiteID(siteID=assignedSites["siteID"][i]);
-			for(var j=1; j<=categoryQuery.recordcount; j++) {
-				var category = getService("contentService").getCategoryByCmsCategoryID(categoryQuery.categoryID[j],true);
-				if(category.isNew()){
-					category.setCmsSiteID(categoryQuery.siteID[j]);
-					category.setCmsCategoryID(categoryQuery.categoryID[j]);
-					category.setCmsCategoryIDPath(categoryQuery.path[j]);
-					category.setCategoryName(categoryQuery.name[j]);
-					category = getService("contentService").saveCategory(category);
-				}
-			}
-		}
-		logSlatwall("Setting Service - pullMuraCategory - Finished", true);
-	}
-
-
-}
+</cfcomponent>

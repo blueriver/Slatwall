@@ -63,7 +63,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		// Make sure that there is a path key in the rc first
 		if(structKeyExists(arguments.rc, "path")) {
 			// This hook is what enables SEO friendly product URL's... It is also what sets up the product in the slatwall scope, ext
-			var keyLocation = listFind(rc.path, setting('product_urlKey'), "/");
+			var keyLocation = listFind(rc.path, setting('globalURLKeyProduct'), "/");
 	
 			if( keyLocation && keyLocation < listLen(rc.path,"/") ) {
 				// Load Product
@@ -79,7 +79,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 					
 					// Check if this came from a product listing page and setup the base crumb list array
 					if( keyLocation gt 2) {
-						var listingPageFilename = left(rc.path, find("/#setting('product_urlKey')#/", rc.path)-1);
+						var listingPageFilename = left(rc.path, find("/#setting('globalURLKeyProduct')#/", rc.path)-1);
 						listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
 						getRequestCacheService().setValue("currentListingPageOfProduct", getContentManager().getActiveContentByFilename(listingPageFilename, rc.$.event('siteid'), true));
 						var crumbDataArray = getRequestCacheService().getValue("currentListingPageOfProduct").getCrumbArray();

@@ -43,10 +43,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="activeFlag" ormtype="boolean" hint="As Brands Get Old, They would be marked as Not Active";
 	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
 	property name="brandName" ormtype="string" hint="This is the common name that the brand goes by.";
-	property name="brandWebsite" ormtype="string" hint="This is the Website of the brand";
-	
-	// Persistent Properties - Inheritence Settings
-	property name="brandDisplayTemplate" ormtype="string";
+	property name="brandWebsite" ormtype="string" formatType="url" hint="This is the Website of the brand";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -83,15 +80,6 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	   return super.init();
 	}
 
-	public any function getBrandDisplayTemplateOptions() {
-		if(!structKeyExists(variables, "brandDisplayTemplateOptions")) {
-			variables.brandDisplayTemplateOptions = getService("contentService").getDisplayTemplates(siteID=$.event('siteid'));
-			arrayPrepend(variables.brandDisplayTemplateOptions, {value="", name="#rbKey('define.select')#"});
-		}
-		
-		return variables.brandDisplayTemplateOptions;
-	}
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

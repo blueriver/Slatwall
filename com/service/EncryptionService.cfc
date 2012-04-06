@@ -46,25 +46,17 @@ component extends="BaseService" {
 	}
 	
 	public string function encryptValue(required string value) {
-		return encrypt(arguments.value,getEncryptionKey(),getEncrptionAlgorithm(),getEncrptionEncoding());
+		return encrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));
 	}
 
 	public string function decryptValue(required string value) {
-		return decrypt(arguments.value,getEncryptionKey(),getEncrptionAlgorithm(),getEncrptionEncoding());
+		return decrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));
 	}
 	
 	public string function createEncryptionKey() {
-		var	theKey = generateSecretKey(getEncrptionAlgorithm(),getEncrptionKeySize());
+		var	theKey = generateSecretKey(setting("globalEncryptionAlgorithm"), setting("globalEncryptionKeySize"));
 		storeEncryptionKey(theKey);
 		return theKey;
-	}
-	
-	public string function getEncrptionAlgorithm() {
-		return "AES";	
-	}
-	
-	public string function getEncrptionEncoding() {
-		return "Base64";	
 	}
 	
 	public string function getEncryptionKey() {
@@ -73,16 +65,12 @@ component extends="BaseService" {
 		return encryptionInfoXML.crypt.key.xmlText;
 	}
 	
-	private string function getEncrptionKeySize() {
-		return setting("advanced_encryptionKeySize") NEQ "" ? setting("advanced_encryptionKeySize") : "128";	
-	}
-	
 	private string function getEncryptionKeyFilePath() {
-		return getEncryptionKeyLocation() & getEncryptionKeyFileName();
+		return setting("globalEncryptionKeyLocation") & getEncryptionKeyFileName();
 	}
 	
 	private string function getEncryptionKeyLocation() {
-		return setting("advanced_encryptionKeyLocation") NEQ "" ? setting("advanced_encryptionKeyLocation") : "#getSlatwallRootDirectory()#/config/";
+		return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : "#getSlatwallRootDirectory()#/config/";
 	}
 	
 	private string function getEncryptionKeyFileName() {

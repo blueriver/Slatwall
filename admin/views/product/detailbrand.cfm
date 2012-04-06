@@ -49,13 +49,13 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandWebsite" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="urlTitle" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandDisplayTemplate" edit="#rc.edit#" fieldType="select" valueOptions="#rc.brand.getBrandDisplayTemplateOptions()#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.brand#">
 			<cf_SlatwallTab view="admin:product/brandtabs/products" />
 			<cf_SlatwallTab view="admin:product/brandtabs/vendors" />
+			<cf_SlatwallTab view="admin:product/brandtabs/brandsettings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

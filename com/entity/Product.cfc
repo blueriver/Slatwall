@@ -45,25 +45,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productName" ormtype="string" notNull="true" hint="Primary Notation for the Product to be Called By";
 	property name="productCode" ormtype="string" unique="true" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
-	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
 	property name="sortOrder" ormtype="integer";
-	
-	// Persistent Properties - Inheritence Settings
-	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowDropshipFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
-	property name="allowShippingFlag" ormtype="boolean";
-	property name="callToOrderFlag" ormtype="boolean";
-	property name="productDisplayTemplate" ormtype="string";
-	property name="quantityHeldBack" ormtype="integer";
-	property name="quantityMinimum" ormtype="integer";
-	property name="quantityMaximum" ormtype="integer";
-	property name="quantityOrderMinimum" ormtype="integer";
-	property name="quantityOrderMaximum" ormtype="integer";
-	property name="shippingWeight" ormtype="integer";
-	property name="shippingWeightUnitCode" ormtype="string";
-	property name="trackInventoryFlag" ormtype="boolean";
 	
 	// Related Object Properties (one-to-one)
 	property name="productCache" fieldType="one-to-one" cfc="ProductCache" cascade="delete";
@@ -514,41 +497,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// END: Quantity Methods
 	
-	// Start: Setting Methods
-	
-	// Generic setting accessor
-	public any function getSetting( required string settingName ) {
-		if(structKeyExists(variables,arguments.settingName)) {
-			return variables[arguments.settingName];
-		}
-		
-		return getInheritedSetting( arguments.settingName );
-	}
-	
-	// Get the setting inherited
-	public any function getInheritedSetting( required string settingName ) {
-		if(!isNull(getProductType())) {
-			return getProductType().getSetting(arguments.settingName);
-		}
-		
-		// so a CF error won't be thrown during validtion if the product type wasn't selected
-		return setting("product_" & arguments.settingName);
-	}
-	
-	// Get source of setting
-	public any function getWhereSettingDefined( required string settingName ) {
-		if(structKeyExists(variables,arguments.settingName)) {
-			return {type="Product"};
-		} else if(!isNull(getProductType())) {
-			return getProductType().getWhereSettingDefined( arguments.settingName );
-		}
-
-		// so a CF error won't be thrown during validtion if the product type wasn't selected
-		return {type="Global"};
-	}
-	
-	// END: Setting Methods
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public struct function getAttributeValuesByAttributeIDStruct() {
@@ -761,23 +709,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		arguments.productReview.removeProduct( this );
 	}
 	
-	// Listing Pages (many-to-many - owner)
-	public void function addListingPage(required any listingPage) {
-		if(isNew() or !hasListingPage(arguments.listingPage)) {
-			arrayAppend(variables.listingPages, arguments.listingPage);
-		}
-		if(arguments.listingPage.isNew() or !arguments.listingPage.hasProduct( this )) {
-			arrayAppend(arguments.listingPage.getProducts(), this);
-		}
-	}
-	public void function removeListingPage(required any listingPage) {
-		var thisIndex = arrayFind(variables.listingPages, arguments.listingPage);
-		if(thisIndex > 0) {
-			arrayDeleteAt(variables.listingPages, thisIndex);
-		}
-		var thatIndex = arrayFind(arguments.listingPage.getProducts(), this);
-		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.listingPage.getProducts(), thatIndex);
+	// Listing Pages (many-to-many - owner)    
+	public void function addListingPage(required any listingPage) {    
+		if(isNew() or !hasListingPage(arguments.listingPage)) {    
+			arrayAppend(variables.listingPages, arguments.listingPage);    
+		}    
+		if(arguments.listingPage.isNew() or !arguments.listingPage.hasListingProduct( this )) {    
+			arrayAppend(arguments.listingPage.getListingProducts(), this);    
+		}    
+	}    
+	public void function removeListingPage(required any listingPage) {    
+		var thisIndex = arrayFind(variables.listingPages, arguments.listingPage);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.listingPages, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.listingPage.getListingProducts(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.listingPage.getListingProducts(), thatIndex);
 		}
 	}
 	

@@ -48,11 +48,7 @@ Notes:
 		<cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="activeFlag" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodName" edit="#rc.edit#">
-			<cfif rc.fulfillmentMethod.isNew()>
-				<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodType" edit="true" fieldType="select">
-			<cfelse>
-				<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodType" edit="false" fieldType="select">
-			</cfif>
+			<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodType" edit="#rc.fulfillmentMethod.isNew()#">
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	

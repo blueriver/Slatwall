@@ -84,8 +84,6 @@ component displayname="Base Object" accessors="true" output="false" {
 		return variables.populatedSubProperties; 
 	}
 	
-	
-	
 	// =========================  END:  ACCESSOR OVERRIDES ==========================================
 	
 	// =============================== START: ERRORS ================================================
@@ -438,6 +436,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint Public method to retrieve a value based on a propertyIdentifier string format
 	public any function getValueByPropertyIdentifier(required string propertyIdentifier, boolean formatValue=false) {
 		var value = javaCast("null", "");
+		var newValue = "";
 		var arrayValue = arrayNew(1);
 		var pa = listToArray(arguments.propertyIdentifier, "._");
 		
@@ -445,13 +444,21 @@ component displayname="Base Object" accessors="true" output="false" {
 			try {
 				if(isNull(value)) {
 					value = evaluate("this.get#pa[i]#()");
+					if(isSimpleValue(value) && arguments.formatValue) {
+						value = getFormattedValue(pa[i]);
+					}
 				} else if(isArray(value)) {
 					for(var ii=1; ii<=arrayLen(value); ii++) {
-						arrayAppend(arrayValue, value[ii].getPropertyValueByIdentifier(pa[i], arguments.formatValue));
+						arrayAppend(arrayValue, value[ii].getValueByPropertyIdentifier(pa[i], arguments.formatValue));
 					}
 					return arrayValue;
 				} else {
-					value = evaluate("value.get#pa[i]#()");
+					newValue = evaluate("value.get#pa[i]#()");
+					if(isSimpleValue(newValue) && arguments.formatValue) {
+						value = value.getFormattedValue(pa[i]);
+					} else {
+						value = newValue;
+					}
 				}	
 			} catch (any e) {
 				return "";
@@ -461,9 +468,11 @@ component displayname="Base Object" accessors="true" output="false" {
 			return "";
 		}
 		
+		/*
 		if(isSimpleValue(value) && arguments.formatValue) {
 			return this.formatValue(value, getPropertyFormatType(pa[1]));
 		}
+		*/
 		
 		return value;
 	}
@@ -603,6 +612,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		// Get the Meta Data for the property
 		var propertyMeta = getPropertyMetaData( arguments.propertyName );
 		
+		// Check to see if there is a meta data called 'formFieldType'
+		if( structKeyExists(propertyMeta, "formFieldType") ) {
+			return propertyMeta.formFieldType;
+		}
+		
 		// If this isn't a Relationship property then run the lookup on ormType then type.
 		if( !structKeyExists(propertyMeta, "fieldType") || propertyMeta.fieldType == "column" ) {
 			
@@ -637,7 +651,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "one-to-many" ) {
 			throw("There is now property field type for one-to-many relationship properties");
 		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-many" ) {
-			return "multiselect";
+			return "listingMultiselect";
 		}
 		
 		// Default case if no matches were found is a text field
@@ -783,19 +797,28 @@ component displayname="Base Object" accessors="true" output="false" {
 				}
 			}
 			case "currency": {
-				return LSCurrencyFormat(arguments.value, setting("advanced_currencyType"), setting("advanced_currencyLocale"));
+				return LSCurrencyFormat(arguments.value, setting("globalCurrencyType"), setting("globalCurrencyLocale"));
 			}
 			case "datetime": {
-				return dateFormat(arguments.value, setting("advanced_dateFormat")) & " " & TimeFormat(value, setting("advanced_timeFormat"));
+				return dateFormat(arguments.value, setting("globalDateFormat")) & " " & TimeFormat(value, setting("globalTimeFormat"));
 			}
 			case "date": {
-				return dateFormat(arguments.value, setting("advanced_dateFormat"));
+				return dateFormat(arguments.value, setting("globalDateFormat"));
 			}
 			case "time": {
-				return timeFormat(arguments.value, setting("advanced_timeFormat"));
+				return timeFormat(arguments.value, setting("globalTimeFormat"));
 			}
 			case "weight": {
-				return arguments.value & " " & setting("advanced_weightFormat");
+				return arguments.value & " " & setting("globalWeightUnitCode");
+			}
+			case "pixels": {
+				return arguments.value & "px";
+			}
+			case "url": {
+				return '<a href="#arguments.value#" target="_blank">' & arguments.value & '</a>';
+			}
+			case "email": {
+				return '<a href="mailto:#arguments.value#" target="_blank">' & arguments.value & '</a>';
 			}
 		}
 		
@@ -825,10 +848,10 @@ component displayname="Base Object" accessors="true" output="false" {
 	public string function encryptValue(required string value) {
 		var encryptedValue = "";
 		if(!isNull(arguments.value) && arguments.value != "") {
-			if(setting("advanced_encryptionKeyGenerator") == ""){
+			if(setting("globalEncryptionService") == "internal"){
 				encryptedValue = getService("encryptionService").encryptValue(arguments.value);
 			} else {
-				encryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("advanced_encryptionKeyGenerator") ).getIntegrationCFC().encryptValue(arguments.value);
+				encryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("globalEncryptionIntegration") ).getIntegrationCFC().encryptValue(arguments.value);
 			}
 		}
 		return encryptedValue;
@@ -837,10 +860,10 @@ component displayname="Base Object" accessors="true" output="false" {
 	public string function decryptValue(required string value) {
 		var decryptedValue = "";
 		if(!isNull(arguments.value) && arguments.value != "") {
-			if(setting("advanced_encryptionKeyGenerator") == ""){
+			if(setting("globalEncryptionService") == "internal"){
 				decryptedValue = getService("encryptionService").decryptValue(arguments.value);
 			} else {
-				decryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("advanced_encryptionKeyGenerator") ).getIntegrationCFC().decryptValue(arguments.value);
+				decryptedValue = getService("integrationService").getIntegrationByIntegrationPackage( setting("globalEncryptionIntegration") ).getIntegrationCFC().decryptValue(arguments.value);
 			}
 		}
 		return decryptedValue;
@@ -918,9 +941,14 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
 	
-	// @hint  helper function to return a Setting
-	public any function setting(required string settingName) {
-		return getService("settingService").getSettingValue(arguments.settingName);
+	// @hint helper function to return a Setting
+	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
+		return getService("settingService").getSettingValue(settingName=arguments.settingName, object=this, formatValue=arguments.formatValue);
+	}
+	
+	// @hint helper function to return the details of a setting
+	public struct function getSettingDetails(required any settingName, array filterEntities=[]) {
+		return getService("settingService").getSettingDetails(settingName=arguments.settingName, object=this);
 	}
 	
 	// @hint  helper function for building URL's

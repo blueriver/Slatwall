@@ -56,16 +56,8 @@ component displayname="Product Cache" entityname="SlatwallProductCache" table="S
 	property name="qnroro" ormtype="integer" default=0;
 	property name="qnrovo" ormtype="integer" default=0;
 	property name="qnrosa" ormtype="integer" default=0;
-	
-	// Persistent Properties (Settings)
-	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowDropshipFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
-	property name="allowShippingFlag" ormtype="boolean";
-	property name="callToOrderFlag" ormtype="boolean";
-	property name="quantityHeldBack" ormtype="integer";
-	property name="shippingWeight" ormtype="integer";
-	property name="trackInventoryFlag" ormtype="boolean";
+	property name="qats" ormtype="integer" default=0;
+	property name="qiats" ormtype="integer" default=0;
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";

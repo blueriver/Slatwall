@@ -43,6 +43,7 @@ Notes:
 	<cfparam name="attributes.fieldClass" type="string" default="" />
 	<cfparam name="attributes.value" type="any" default="" />
 	<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />
+	<cfparam name="attributes.valueOptionsSmartList" type="any" default="" />
 	
 	
 	<!---
@@ -100,6 +101,9 @@ Notes:
 			<cfoutput>
 				<input tabindex="#request.context.tabindex#" type="file" name="#attributes.fieldName#" class="#attributes.fieldClass#" />
 			</cfoutput>
+		</cfcase>
+		<cfcase value="listingMultiselect">
+			<cf_SlatwallListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectvalues="#attributes.value#" edit="true"></cf_SlatwallListingDisplay>
 		</cfcase>
 		<cfcase value="multiselect">
 			<cfoutput>

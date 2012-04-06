@@ -44,8 +44,8 @@ Notes:
 		<div class="well" style="padding:8px 0;">
 			<ul class="nav nav-list">
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.setting')#</li>
-				<cf_SlatwallActionCaller action="admin:setting.detailsetting" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.detailpermissions" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listsetting" type="list">
+				<!---<cf_SlatwallActionCaller action="admin:setting.listpermission" type="list">--->
 				<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
 				<li class="divider"></li>
 				<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">
@@ -54,6 +54,8 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:setting.listaddresszone" type="list">
 				<cf_SlatwallActionCaller action="admin:setting.listlocation" type="list">
 				<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listmeasurementunit" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listorderorigin" type="list">
 				<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
 				<li class="divider"></li>
 				<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list">

@@ -40,46 +40,30 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Persistent Properties
 	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="activeFlag" ormtype="boolean" default="1";
 	property name="skuCode" ormtype="string" unique="true" length="50";
 	property name="listPrice" ormtype="big_decimal" formatType="currency" default="0";
 	property name="price" ormtype="big_decimal" formatType="currency" default="0";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency" default="0";
 	property name="imageFile" ormtype="string" length="50";
 	
-	// Persistent Properties - Inheritence Settings
-	property name="allowShippingFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
-	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowDropshipFlag" ormtype="boolean";
-	property name="callToOrderFlag" ormtype="boolean";
-	property name="quantityHeldBack" ormtype="integer";
-	property name="quantityMinimum" ormtype="integer";
-	property name="quantityMaximum" ormtype="integer";
-	property name="quantityOrderMinimum" ormtype="integer";
-	property name="quantityOrderMaximum" ormtype="integer";
-	property name="shippingWeight" ormtype="big_decimal" formatType="weight";
-	property name="shippingWeightUnitCode" ormtype="string";
-	property name="trackInventoryFlag" ormtype="boolean";
-
-	// Related Object Properties (One-To-One)
-	property name="skuCache" fieldType="one-to-one" cfc="SkuCache" cascade="delete";
-	
-	// Related Object Properties (Many-to-One)
+	// Related Object Properties (many-to-one)
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
 	property name="subscriptionTerm" cfc="SubscriptionTerm" fieldtype="many-to-one" fkcolumn="subscriptionTermID";
 	
-	// Related Object Properties (One-to-Many)
+	// Related Object Properties (one-to-many)
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="skuID" cfc="Stock" inverse="true" cascade="all";
 	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="skuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan";
 	
-	// Related Object Properties (Many-to-Many)
+	// Related Object Properties (many-to-many - owner)
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
-	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID";
 	property name="accessContents" singularname="accessContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="skuID" inversejoincolumn="contentID"; 
 	property name="subscriptionBenefits" singularname="subscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSkuSubscriptionBenefit" fkcolumn="skuID" inversejoincolumn="subscriptionBenefitID";
+	
+	// Related Object Properties (many-to-many - inverse)
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -91,6 +75,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="optionsDisplay" persistent="false";
 	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePriceDetails" type="struct" persistent="false";
@@ -194,6 +179,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}
 		return newSkuCode;
 	}
+    
+    public string function getOptionsDisplay(delimiter=" ") {
+    	var dspOptions = "";
+    	for(var i=1;i<=arrayLen(getOptions());i++) {
+    		dspOptions = listAppend(dspOptions, getOptions()[i].getOptionName(), arguments.delimiter);
+    	}
+		return dspOptions;
+    }
     
     public string function displayOptions(delimiter=" ") {
     	var dspOptions = "";
@@ -340,30 +333,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// END: Quantity Helper Methods
 	
-	// Generic setting accessor
-	public any function getSetting( required string settingName ) {
-		if(structKeyExists(variables, arguments.settingName)) {
-			return variables[arguments.settingName];
-		}
-		
-		return getInheritedSetting( arguments.settingName );
-	}
-	
-	// Get the setting inherited
-	public any function getInheritedSetting( required string settingName ) {
-		return getProduct().getSetting( arguments.settingName );
-	}
-	
-	// Get source of setting
-	public any function getWhereSettingDefined( required string settingName ) {
-		if(structKeyExists(variables, arguments.settingName)) {
-			return {type="Sku"};
-		}
-		return getProduct().getWhereSettingDefined( arguments.settingName );
-	}
-	
-	// END: Setting Methods
-    
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public any function getCurrentAccountPrice() {
@@ -475,28 +444,24 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		arguments.promotionQualifier.removeSku( this );
 	}
 	
-	// Access Content (many-to-many)
-	public void function addAccessContent(required any content) {
-		// set this side of relationship
-		if(!hasAccessContent(arguments.content)) {
-			arrayAppend(variables.accessContents, arguments.content);
-		}
-		// now set the other side of relationship
-		if(!arguments.content.hasSku(this)) {
-			arguments.content.addSku(this);
-		}
-	}
-	
-	public void function removeAccessContent(required any content) {
-		// remove this side of relationship
-		var index = arrayFind(variables.accessContents, arguments.content);
-		if(index > 0) {
-			arrayDeleteAt(variables.accessContents, index);
-		}
-		// now remove the other side of relationship
-		if(arguments.content.hasSku(this)) {
-			arguments.content.removeSku(this);
-		}
+	// Access Contents (many-to-many - owner)    
+	public void function addAccessContent(required any accessContent) {    
+		if(isNew() or !hasAccessContent(arguments.accessContent)) {    
+			arrayAppend(variables.accessContents, arguments.accessContent);    
+		}    
+		if(arguments.accessContent.isNew() or !arguments.accessContent.hasSku( this )) {    
+			arrayAppend(arguments.accessContent.getSkus(), this);    
+		}    
+	}    
+	public void function removeAccessContent(required any accessContent) {    
+		var thisIndex = arrayFind(variables.accessContents, arguments.accessContent);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.accessContents, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.accessContent.getSkus(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.accessContent.getSkus(), thatIndex);    
+		}    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
