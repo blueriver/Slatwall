@@ -485,12 +485,12 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     		setImageFile(generateImageFileName());
     	}
 		super.preInsert();
-		getService("skuCacheService").updateFromSku( this );
+		getService("productCacheService").updateFromSku( this );
     }
     
 	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
-		getService("skuCacheService").updateFromSku( this );
+		getService("productCacheService").updateFromSku( this );
 	}
     
 	// ===================  END:  ORM Event Hooks  =========================

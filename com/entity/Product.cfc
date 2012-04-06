@@ -795,12 +795,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function postInsert() {
 		super.postInsert();
-		getService("skuCacheService").updateFromProduct( this );
+		getService("productCacheService").updateFromProduct( this );
 	}
 	
 	public void function postUpdate() {
 		super.postUpdate(argumentcollection=arguments);
-		getService("skuCacheService").updateFromProduct( this );
+		getService("productCacheService").updateFromProduct( this );
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

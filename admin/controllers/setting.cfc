@@ -50,7 +50,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="roundingRuleService" type="any";
 	property name="settingService" type="any";
 	property name="shippingService" type="any";
-	property name="skuCacheService" type="any";
+	property name="productCacheService" type="any";
 	property name="taxService" type="any";
 	property name="termService" type="any";
 	property name="updateService" type="any";
@@ -164,13 +164,13 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 
 	public void function updateSkuCache(required struct rc) {
-		getSkuCacheService().updateAllSkus();
+		getproductCacheService().updateAllSkus();
 		rc.message = rbKey("admin.setting.updateSkuCache_success");
 		getFW().redirect(action="admin:main.default", preserve="message");	
 	}
 
 	public void function updateProductCache(required struct rc) {
-		getSkuCacheService().updateAllProducts();
+		getproductCacheService().updateAllProducts();
 		rc.message = rbKey("admin.setting.updateProductCache_success");
 		getFW().redirect(action="admin:main.default", preserve="message");	
 	}

@@ -167,7 +167,8 @@ component extends="org.fw1.framework" output="false" {
 					variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
 					
 					// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
-					//getBeanFactory().getBean("settingService").verifyMuraRequirements();
+					var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
+					muraIntegrationService.setupIntegration();
 					
 					// Log that the application is finished setting up
 					writeLog(file="Slatwall", text="Application Setup Complete");

@@ -172,12 +172,12 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
 	public void function preInsert(){
 		super.preInsert();
-		getService("skuCacheService").updateFromPromotion( this );
+		getService("productCacheService").updateFromPromotion( this );
 	}
 	
 	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
-		getService("skuCacheService").updateFromPromotion( this );
+		getService("productCacheService").updateFromPromotion( this );
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

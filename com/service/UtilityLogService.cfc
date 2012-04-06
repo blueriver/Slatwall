@@ -73,7 +73,7 @@ Notes:
 		<cfargument name="logType" default="Information" /><!--- Information  |  Error  |  Fatal  |  Warning  --->
 		<cfargument name="generalLog" type="boolean" default="false" />
 		
-		<cfif setting("advanced_logMessages") neq "none" and (setting("advanced_logMessages") eq "detail" or arguments.generalLog)>
+		<cfif setting("globalLogMessages") neq "none" and (setting("globalLogMessages") eq "detail" or arguments.generalLog)>
 			<cfif generalLog>
 				<cfset var logText = "General Log" />
 			<cfelse>

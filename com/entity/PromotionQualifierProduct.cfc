@@ -308,12 +308,12 @@ component displayname="Promotion Qualifier Product" entityname="SlatwallPromotio
 	// TODO: find out if we need to use the SkuCache service for product Qualifiers
 /*	public void function preInsert(){
 		super.preInsert();
-		getService("skuCacheService").updateFromPromotionQualifierProduct( this );
+		getService("productCacheService").updateFromPromotionQualifierProduct( this );
 	}*/
 	
 /*	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
-		getService("skuCacheService").updateFromPromotionQualifierProduct( this );
+		getService("productCacheService").updateFromPromotionQualifierProduct( this );
 	}*/
 	
 	// ===================  END:  ORM Event Hooks  =========================

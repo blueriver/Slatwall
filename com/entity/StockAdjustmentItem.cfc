@@ -108,12 +108,12 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 	
 	public void function preInsert(){
 		super.preInsert();
-		getService("skuCacheService").updateFromStockAdjustmentItem( this );
+		getService("productCacheService").updateFromStockAdjustmentItem( this );
 	}
 	
 	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
-		getService("skuCacheService").updateFromStockAdjustmentItem( this );
+		getService("productCacheService").updateFromStockAdjustmentItem( this );
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

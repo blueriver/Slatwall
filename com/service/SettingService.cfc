@@ -122,8 +122,16 @@ globalEncryptionKeySize
 			skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
 			skuShippingWeight = {fieldType="text", formatType="weight"},
 			skuShippingWeightUnitCode = {fieldType="select"},
-			skuTrackInventoryFlag = {fieldType="yesno"}
+			skuTrackInventoryFlag = {fieldType="yesno"},
 			
+			// CMS pages
+			pageShoppingCart = {fieldType="text"},
+			pageOrderStatus = {fieldType="text"},
+			pageOrderConfirmation = {fieldType="text"},
+			pageMyAccount = {fieldType="text"},
+			pageEditAccount = {fieldType="text"},
+			pageCreateAccount = {fieldType="text"},
+			pageCheckout = {fieldType="text"}
 			
 		};
 		

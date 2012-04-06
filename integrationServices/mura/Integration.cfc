@@ -38,7 +38,18 @@ Notes:
 */
 component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
+	// Mura Service Injection on Init
+	property name="configBean" type="any";
+	property name="contentManager" type="any";
+	property name="categoryManager" type="any";
+	property name="feedManager" type="any";
+
 	public any function init() {
+		setConfigBean( getCMSBean("configBean") );
+		setContentManager( getCMSBean("contentManager") );
+		setCategoryManager( getCMSBean("categoryManager") );
+		setFeedManager( getCMSBean("feedManager") );
+
 		return this;
 	}
 	
@@ -53,4 +64,154 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	public boolean function isFW1Subsystem() {
 		return false;
 	}
+	
+	public struct function getMailServerSettings() {
+		var config = getConfigBean();
+		var settings = {};
+		if(!config.getUseDefaultSMTPServer()) {
+			settings = {
+				server = config.getMailServerIP(),
+				username = config.getMailServerUsername(),
+				password = config.getMailServerPassword(),
+				port = config.getMailServerSMTPPort(),
+				useSSL = config.getMailServerSSL(),
+				useTLS = config.getMailServerTLS()
+			};
+		}
+		return settings;
+	}
+	
+	public void function setupIntegration() {
+		logSlatwall("Setting Service - verifyMuraRequirements - Started", true);
+		verifyMuraFrontendViews();
+		verifyMuraRequiredPages();
+		pullMuraCategory();
+		logSlatwall("Setting Service - verifyMuraRequirements - Finished", true);
+	}
+	
+	private void function verifyMuraFrontendViews() {
+		logSlatwall("Setting Service - verifyMuraFrontendViews - Started", true);
+		var assignedSites = getPluginConfig().getAssignedSites();
+		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			logSlatwall("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
+			
+			var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
+			var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#assignedSites["siteID"][i]#/includes/display_objects/custom/slatwall/"));
+			
+			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
+		}
+		logSlatwall("Setting Service - verifyMuraFrontendViews - Finished", true);
+	}
+
+	private void function verifyMuraRequiredPages() {
+		logSlatwall("Setting Service - verifyMuraRequiredPages - Started", true);
+		
+		var requiredMuraPages = [
+			{settingName="pageShoppingCart",title="Shopping Cart",fileName="shopping-cart",isNav="1",isLocked="1"},
+			{settingName="pageOrderStatus",title="Order Status",fileName="order-status",isNav="1",isLocked="1"},
+			{settingName="pageOrderConfirmation",title="Order Confirmation",fileName="order-confirmation",isNav="0",isLocked="1"},
+			{settingName="pageMyAccount",title="My Account",fileName="my-account",isNav="1",isLocked="1"},
+			{settingName="pageEditAccount",title="Edit Account",fileName="edit-account",isNav="1",isLocked="1"},
+			{settingName="pageCreateAccount",title="Create Account",fileName="create-account",isNav="1",isLocked="1"},
+			{settingName="pageCheckout",title="Checkout",fileName="checkout",isNav="1",isLocked="1"},
+			{title="Default Template",fileName="default-template",isNav="0",isLocked="0",templateFlag="1"}
+		];
+		
+		var assignedSites = getPluginConfig().getAssignedSites();
+		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			logSlatwall("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#", true);
+			var thisSiteID = assignedSites["siteID"][i];
+			
+			for(var page in requiredMuraPages) {
+				if(structKeyExists(page,"settingName")) {
+					createMuraPageAndSetting(page,thisSiteID);
+				} else {
+					var muraPage = createMuraPage(page,thisSiteID);
+					var slatwallContent = createSlatwallContent(muraPage,page);
+					// set this as default template
+					if(page.fileName == "default-template") {
+						var productDisplayTemplateSetting = getService("settingService").getSettingBySettingName("productDisplayTemplate",true);
+						if(productDisplayTemplateSetting.isNew()) {
+							productDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
+							getService("settingService").saveSetting(productDisplayTemplateSetting);
+						}
+						var productTypeDisplayTemplateSetting = getService("settingService").getSettingBySettingName("productTypeDisplayTemplate",true);
+						if(productTypeDisplayTemplateSetting.isNew()) {
+							productTypeDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
+							getService("settingService").saveSetting(productTypeDisplayTemplateSetting);
+						}
+						var brandDisplayTemplateSetting = getService("settingService").getSettingBySettingName("brandDisplayTemplate",true);
+						if(brandDisplayTemplateSetting.isNew()) {
+							brandDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
+							getService("settingService").saveSetting(brandDisplayTemplateSetting);
+						}
+					}
+				}
+			}
+		}
+		logSlatwall("Setting Service - verifyMuraRequiredPages - Finished", true);
+	}
+	
+	private void function createMuraPageAndSetting(required struct page,required any siteID) {
+		var setting = getService("settingService").getSettingBySettingName(arguments.page.settingName,true);
+		if(setting.isNew() || setting.getSettingValue() == ""){
+			var muraPage = createMuraPage(arguments.page,arguments.siteID);
+			setting.setSettingValue(arguments.page.fileName);
+			getService("settingService").saveSetting(setting);
+		}
+	}
+	
+	private any function createMuraPage(required struct page,required any siteID) {
+		// Setup Mura Page
+		var thisPage = getContentManager().getActiveContentByFilename(filename=arguments.page.fileName, siteid=arguments.siteID);
+		if(thisPage.getIsNew()) {
+			thisPage.setDisplayTitle(arguments.page.title);
+			thisPage.setHTMLTitle(arguments.page.title);
+			thisPage.setMenuTitle(arguments.page.title);
+			thisPage.setIsNav(arguments.page.isNav);
+			thisPage.setActive(1);
+			thisPage.setApproved(1);
+			thisPage.setIsLocked(arguments.page.isLocked);
+			thisPage.setParentID("00000000000000000000000000000000001");
+			thisPage.setFilename(arguments.page.fileName);
+			thisPage.setSiteID(arguments.siteID);
+			thisPage.save();
+		}
+		return thisPage;
+	}
+	
+	private any function createSlatwallContent(required any muraPage, required struct pageAttributes) {
+		var thisPage = getService("contentService").getcontentByCmsContentID(arguments.muraPage.getContentID(),true);
+		if(thisPage.isNew()){
+			thisPage.setCmsSiteID(arguments.muraPage.getSiteID());
+			thisPage.setCmsContentID(arguments.muraPage.getContentID());
+			thisPage.setCmsContentIDPath(arguments.muraPage.getPath());
+			thisPage.setTitle(arguments.muraPage.getTitle());
+			thisPage = getService("contentService").saveContent(thisPage,arguments.pageAttributes);
+		}
+		return thisPage;
+	}
+	
+	private void function pullMuraCategory() {
+		logSlatwall("Setting Service - pullMuraCategory - Started", true);
+		var assignedSites = getPluginConfig().getAssignedSites();
+		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			logSlatwall("Pull mura category For Site ID: #assignedSites["siteID"][i]#");
+			
+			var categoryQuery = getCategoryManager().getCategoriesBySiteID(siteID=assignedSites["siteID"][i]);
+			for(var j=1; j<=categoryQuery.recordcount; j++) {
+				var category = getService("contentService").getCategoryByCmsCategoryID(categoryQuery.categoryID[j],true);
+				if(category.isNew()){
+					category.setCmsSiteID(categoryQuery.siteID[j]);
+					category.setCmsCategoryID(categoryQuery.categoryID[j]);
+					category.setCmsCategoryIDPath(categoryQuery.path[j]);
+					category.setCategoryName(categoryQuery.name[j]);
+					category = getService("contentService").saveCategory(category);
+				}
+			}
+		}
+		logSlatwall("Setting Service - pullMuraCategory - Finished", true);
+	}
+
+	
 }
