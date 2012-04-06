@@ -61,6 +61,7 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list">
 				<li class="divider"></li>
 				<cf_SlatwallActionCaller action="admin:setting.listcategory" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listcontent" type="list">
 			</ul>
 		</div>
 	</div>
