@@ -163,7 +163,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 				optionString &= "-#option.getOptionCode()#";
 			}
 		}
-		return "#getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
+		return "#getProduct().getProductCode()##optionString#.#setting('globalImageExtension')#";
 	}
 	
 	//@hint this method generated sku code based on assigned options
@@ -232,7 +232,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		
 		// If no image Exists use the defult missing image 
 		if(!fileExists(expandPath(path))) {
-			path = setting('product_missingimagepath');
+			path = setting('globalMissingImagePath');
 		}
 		
 		// If there were sizes specified, get the resized image path
@@ -267,8 +267,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			} else {
 				arguments.size = "small";
 			}
-			arguments.width = setting("product_imagewidth#arguments.size#");
-			arguments.height = setting("product_imageheight#arguments.size#");
+			arguments.width = setting("productImage#arguments.size#Width");
+			arguments.height = setting("productImage#arguments.size#Height");
 		}
 		arguments.imagePath=getImagePath();
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);

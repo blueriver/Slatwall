@@ -210,16 +210,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getProductURL() {
-		return $.createHREF(filename="#setting('product_urlKey')#/#getURLTitle()#");
+		return $.createHREF(filename="#setting('globalURLKeyProduct')#/#getURLTitle()#");
 	}
 	
 	public string function getListingProductURL(string filename=$.content('filename')) {
-		return $.createHREF(filename="#arguments.filename#/#setting('product_urlKey')#/#getURLTitle()#");
+		return $.createHREF(filename="#arguments.filename#/#setting('globalURLKeyProduct')#/#getURLTitle()#");
 	}
 	
 	public string function getTemplate() {
 		if(!structKeyExists(variables, "template") || variables.template == "") {
-			return setting('product_defaultTemplate');
+			return setting('productDisplayTemplate');
 		} else {
 			return variables.template;
 		}
@@ -563,7 +563,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public string function getTitle() {
 		if(!structKeyExists(variables, "title")) {
-			variables.title = getService("utilityService").replaceStringTemplate(template=setting('product_titleString'), object=this);
+			variables.title = getService("utilityService").replaceStringTemplate(template=setting('productTitleString'), object=this);
 		}
 		return variables.title;
 	}

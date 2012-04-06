@@ -79,8 +79,8 @@ component displayname="Product Image" entityname="SlatwallProductImage" table="S
 			} else {
 				arguments.size = "small";
 			}
-			arguments.width = setting("product_imagewidth#arguments.size#");
-			arguments.height = setting("product_imageheight#arguments.size#");
+			arguments.width = setting("productImage#arguments.size#Width");
+			arguments.height = setting("productImage#arguments.size#Height");
 		}
 		arguments.imagePath = getImagePath();
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
