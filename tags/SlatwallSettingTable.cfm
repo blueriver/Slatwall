@@ -49,7 +49,7 @@ Notes:
 		</cfloop>
 	</cfsilent>
 	<cfoutput>
-		<table class="table table-striped table-bordered">
+		<table class="table table-striped table-bordered table-condensed">
 			<tr>
 				<th class="primary">#request.context.$.Slatwall.rbKey('entity.setting.settingName')#</th>
 				<th>#request.context.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
