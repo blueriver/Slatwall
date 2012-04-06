@@ -122,7 +122,7 @@ globalEncryptionKeySize
 			skuAllowBackorderFlag = {fieldType="yesno"},
 			skuAllowPreorderFlag = {fieldType="yesno"},
 			skuEligableFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
-			skuEligableOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigins"},
+			skuEligableOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
 			skuEligablePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
 			skuHoldBackQuantity = {fieldType="text"},
 			skuOrderMinimumQuantity = {fieldType="text"},
@@ -153,6 +153,8 @@ globalEncryptionKeySize
 				case "globalEncryptionEncoding":
 					return ['Base64','Hex','UU'];
 				case "globalEncryptionService":
+					return [{name='Internal', value='internal'}];
+				case "globalOrderNumberGeneration":
 					return [{name='Internal', value='internal'}];
 				case "globalWeightUnitCode": case "skuShippingWeightUnitCode":
 					var optionSL = this.getMeasurementUnitSmartList();
@@ -195,7 +197,7 @@ globalEncryptionKeySize
 			return getSettingDetails(argumentCollection=arguments).settingValue;
 		}
 		
-		public any function getSettingDetails(required string settingName, any object, array filterEntities) {
+		public any function getSettingDetails(required string settingName, any object, array filterEntities, boolean disableFormatting=false) {
 			
 			// Create some placeholder Var's
 			var foundValue = false;
@@ -309,14 +311,39 @@ globalEncryptionKeySize
 				}
 			}
 			
-			if( structKeyExists(variables.settingMetaData[arguments.settingName], "formatType") ) {
-				settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].formatType);
-			} else if( structKeyExists(variables.settingMetaData[arguments.settingName], "fieldType") ) {
-				settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].fieldType);
+			if(!disableFormatting) {
+				if( structKeyExists(variables.settingMetaData[arguments.settingName], "formatType") ) {
+					settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].formatType);
+				} else if( structKeyExists(variables.settingMetaData[arguments.settingName], "fieldType") ) {
+					if(variables.settingMetaData[arguments.settingName].fieldType == "listingMultiselect") {
+						settingDetails.settingValueFormatted = "";
+						for(var i=1; i<=listLen(settingDetails.settingValue); i++) {
+							var thisID = listGetAt(settingDetails.settingValue, i);
+							settingDetails.settingValueFormatted = listAppend(settingDetails.settingValueFormatted, " " & getUtilityORMService().getServiceByEntityName( variables.settingMetaData[ arguments.settingName ].listingMultiselectEntityName ).invokeMethod("get#variables.settingMetaData[ arguments.settingName ].listingMultiselectEntityName#", {1=thisID}).getSimpleRepresentation());	
+						}
+					} else if (variables.settingMetaData[arguments.settingName].fieldType == "select") {
+						var options = getSettingOptions(arguments.settingName);
+						for(var i=1; i<=arrayLen(options); i++) {
+							if(isStruct(options[i])) {
+								if(options[i]['value'] == settingDetails.settingValue) {
+									settingDetails.settingValueFormatted = options[i]['name'];
+									break;
+								}
+							} else {
+								settingDetails.settingValueFormatted = settingDetails.settingValue;
+								break;
+							}
+						}
+					} else {
+						settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].fieldType);	
+					}
+				} else {
+					settingDetails.settingValueFormatted = settingDetails.settingValue;
+				}
 			} else {
 				settingDetails.settingValueFormatted = settingDetails.settingValue;
 			}
-
+			
 			return settingDetails;
 		}
 		

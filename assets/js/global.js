@@ -32,7 +32,7 @@ jQuery(function($){
 		} else {
 			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
 		}
-		$('#adminModal').load( modalLink, function(){bindFormValidation();} );
+		$('#adminModal').load( modalLink, function(){bindFormValidation();bindTableClasses();} );
 	});
 	
 	bindAlerts();
