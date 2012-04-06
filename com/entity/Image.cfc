@@ -71,7 +71,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 		
 		// If no image Exists use the defult missing image 
 		if(!fileExists(expandPath(path))) {
-			path = setting('product_missingimagepath');
+			path = setting('globalMissingImagePath');
 		}
 		
 		// If there were sizes specified, get the resized image path
