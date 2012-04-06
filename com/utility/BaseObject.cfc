@@ -478,7 +478,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 
 	public any function getFormattedValue(required string propertyName, string formatType ) {
-			arguments.value = invokeMethod("get#arguments.propertyName#");
+		arguments.value = invokeMethod("get#arguments.propertyName#");
 		
 		// This is the null format option
 		if(isNull(arguments.value)) {
@@ -491,6 +491,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		// check if a formatType was passed in, if not then use the getPropertyFormatType() method to figure out what it should be by default
 		if(!structKeyExists(arguments, "formatType")) {
 			arguments.formatType = getPropertyFormatType( arguments.propertyName );
+		}
+		
+		// If the formatType is custom then deligate back to the property specific getXXXFormatted() method.
+		if(arguments.formatType eq "custom") {
+			return this.invokeMethod("get#arguments.propertyName#Formatted");	
 		}
 		
 		return formatValue(value=arguments.value, formatType=arguments.formatType);

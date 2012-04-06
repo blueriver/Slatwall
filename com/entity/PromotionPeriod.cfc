@@ -42,8 +42,8 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	property name="promotionPeriodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
-	property name="maximumUseCount" ormtype="integer" default="0" dbdefault="0";
-	property name="maximumAccountUseCount" ormtype="integer" default="0" dbdefault="0";
+	property name="maximumUseCount" ormtype="integer" default="0" dbdefault="0" formatType="custom";
+	property name="maximumAccountUseCount" ormtype="integer" default="0" dbdefault="0" formatType="custom";
 	
 	// Related Object Properties (many-to-one)
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
@@ -59,6 +59,20 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
  
+ 
+	public any function getMaximumUseCountFormatted() {
+		if(isNull(getMaximumUseCount()) || !isNumeric(getMaximumUseCount()) || getMaximumUseCount() lt 1) {
+			return rbKey('define.unlimited');
+		}
+		return getMaximumUseCount();
+	}
+	
+	public any function getMaximumAccountUseCountFormatted() {
+		if(isNull(getMaximumAccountUseCount()) || !isNumeric(getMaximumAccountUseCount()) || getMaximumAccountUseCount() lt 1) {
+			return rbKey('define.unlimited');
+		}
+		return getMaximumAccountUseCount();
+	}
 
 	// ============= START: Bidirectional Helper Methods ===================
 	
