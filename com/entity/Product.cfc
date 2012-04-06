@@ -45,7 +45,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productName" ormtype="string" notNull="true" hint="Primary Notation for the Product to be Called By";
 	property name="productCode" ormtype="string" unique="true" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
-	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
 	property name="sortOrder" ormtype="integer";
 	
