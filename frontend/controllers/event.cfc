@@ -64,7 +64,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(structKeyExists(arguments.rc, "path")) {
 			// This hook is what enables SEO friendly product URL's... It is also what sets up the product in the slatwall scope, ext
 			var keyLocation = listFind(rc.path, setting('globalURLKeyProduct'), "/");
-	
+			
 			if( keyLocation && keyLocation < listLen(rc.path,"/") ) {
 				// Load Product
 				getRequestCacheService().setValue("currentProductURLTitle", listGetAt(rc.path, keyLocation+1, "/"));

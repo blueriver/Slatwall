@@ -358,14 +358,14 @@ globalEncryptionKeySize
 		<cfset var rs = "">
 		<cfset var key = "">
 		
-		<cfquery name="rs" dbType="query">
+		<cfquery name="rs" dbType="query" >
 			SELECT
 				allSettings.settingID,
 				allSettings.settingValue
 			FROM
 				allSettings
 				WHERE
-					allSettings.settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#">
+					UPPER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#UCASE(arguments.settingName)#">
 				  AND
 					<cfif structKeyExists(settingRelationships, "productTypeID")>
 						allSettings.productTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.productTypeID#" > 
