@@ -19,7 +19,7 @@
 		<Record settingID="dbb3279cee21f040e126e9e499710707" settingName="globalMissingImagePath" settingValue="/plugins/Slatwall/assets/images/missingimage.jpg" />
 		<Record settingID="dbb327a3e256e78458125906a2f8c05a" settingName="globalOrderPlacedEmailFrom" settingValue="info@mySlatwallStore.com" />
 		<Record settingID="dbb327a60fb3a58e2dd6dc93f164d46c" settingName="globalOrderPlacedEmailSubjectString" settingValue="Order Confirmation - Order Number: ${orderNumber}" />
-		<Record settingID="dbb327badb02af9dd10a31a0cc93692d" settingName="globalOrderNumberGeneration" settingValue="autoIncrement" />
+		<Record settingID="dbb327d4c90cce1f86b1ce56cd44a891" settingName="globalOrderNumberGeneration" settingValue="Internal" />
 		<Record settingID="dbb327ada425f5cd38dfecb702a7e24e" settingName="globalRemoteIDShowFlag" settingValue="0" />
 		<Record settingID="dbb327bfb08b7eaaff39fca1d317a60e" settingName="globalRemoteIDEditFlag" settingValue="0" />
 		<Record settingID="dbb327ac9f8ef0c160cd8b5c4f07ddfa" settingName="globalTimeFormat" settingValue="hh:mm tt" />
@@ -66,7 +66,7 @@ Below Are UUID's to use... delete after using
 	
 	
 	
-	dbb327d4c90cce1f86b1ce56cd44a891
+	
 	dbb327d5c8200946403aefdb964ce106
 	dbb327d6cc7ad9b1b202a98cbd96fb92
 	dbb327d70434ec8ffb6d3702bfc41dcc
