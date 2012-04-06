@@ -133,16 +133,19 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 						var productDisplayTemplateSetting = getService("settingService").getSettingBySettingName("productDisplayTemplate",true);
 						if(productDisplayTemplateSetting.isNew()) {
 							productDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
+							productDisplayTemplateSetting.setSettingName("productDisplayTemplate");
 							getService("settingService").saveSetting(productDisplayTemplateSetting);
 						}
 						var productTypeDisplayTemplateSetting = getService("settingService").getSettingBySettingName("productTypeDisplayTemplate",true);
 						if(productTypeDisplayTemplateSetting.isNew()) {
 							productTypeDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
+							productTypeDisplayTemplateSetting.setSettingName("productTypeDisplayTemplate");
 							getService("settingService").saveSetting(productTypeDisplayTemplateSetting);
 						}
 						var brandDisplayTemplateSetting = getService("settingService").getSettingBySettingName("brandDisplayTemplate",true);
 						if(brandDisplayTemplateSetting.isNew()) {
 							brandDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
+							brandDisplayTemplateSetting.setSettingName("brandDisplayTemplate");
 							getService("settingService").saveSetting(brandDisplayTemplateSetting);
 						}
 					}
@@ -157,6 +160,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		if(setting.isNew() || setting.getSettingValue() == ""){
 			var muraPage = createMuraPage(arguments.page,arguments.siteID);
 			setting.setSettingValue(arguments.page.fileName);
+			setting.setSettingName(arguments.page.settingName);
 			getService("settingService").saveSetting(setting);
 		}
 	}
