@@ -40,10 +40,12 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	
 	// Persistent Properties
 	property name="contentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
 	property name="title" ormtype="string";
 	property name="cmsContentID" ormtype="string";
-	property name="cmsContentIDPath" ormtype="string";
+	//property name="cmsContentIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
+	
 	property name="restrictAccessFlag" ormtype="boolean";
 	property name="allowPurchaseFlag" ormtype="boolean";
 	property name="requirePurchaseFlag" ormtype="boolean";
@@ -51,6 +53,7 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="templateFlag" ormtype="boolean";
 	property name="productListingFlag" ormtype="boolean";
 	property name="defaultProductsPerPage" ormtype="integer";
+	
 	property name="showProductInSubPagesFlag" ormtype="boolean";
 	property name="disableProductAssignmentFlag" ormtype="boolean";
 	
