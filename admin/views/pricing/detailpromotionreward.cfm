@@ -40,19 +40,26 @@ Notes:
 <cfparam name="rc.promotionperiod" type="any" default="#rc.promotionreward.getPromotionPeriod()#" />
 <cfparam name="rc.edit" type="boolean">
 
+<!--- prevent editing promotion reward if its promotion period has expired --->
+<cfif rc.edit and rc.promotionperiod.isExpired()>
+	<cfset rc.edit = false />
+	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionreward.editdisabled'),messageType="info"}) />
+</cfif>
+
 <cfset local.rewardType = rc.promotionReward.getRewardType() />
 
 <cfoutput>
+	Expired: #rc.promotionreward.getPromotionPeriod().isExpired()#
 	<cf_SlatwallDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" 
 							  cancelAction="admin:pricing.detailpromotionperiod"
-							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionrewards" 
+							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" 
 							  backAction="admin:pricing.detailpromotionperiod" 
-							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionrewards" />
+							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
-				<input type="hidden" name="returnAction" value="admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionrewards" />
+				<input type="hidden" name="returnAction" value="admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="discountType" fieldType="select" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="percentageOff" edit="#rc.edit#" displayVisible="discountType:percentageOff">
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amountOff" edit="#rc.edit#" displayVisible="discountType:amountOff" />

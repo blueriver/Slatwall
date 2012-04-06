@@ -44,8 +44,7 @@ Notes:
 
 <cf_SlatwallListingDisplay smartList="#rc.promotionSmartList#" recordEditAction="admin:pricing.editpromotion">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionName" />
-	<cf_SlatwallListingColumn propertyIdentifier="startDateTime" />
-	<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
+	<cf_SlatwallListingColumn propertyIdentifier="currentFlag" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
 </cf_SlatwallListingDisplay>
 

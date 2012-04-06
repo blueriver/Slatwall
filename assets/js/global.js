@@ -34,7 +34,12 @@ jQuery(function($){
 		}
 		$('#adminModal').load( modalLink, function(){bindFormValidation();bindTableClasses();} );
 	});
-	
+
+	if( window.location.hash ) {
+		var hash = window.location.hash.substring(1);
+		$('a[href=#' + hash + ']').tab('show');
+	}
+				
 	bindAlerts();
 	bindFormValidation();
 	bindTableClasses();

@@ -119,6 +119,14 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 		return getStartDateTime() <= currentDateTime && getEndDateTime() > currentDateTime;
 	}
 	
+	public boolean function isExpired() {
+		return getEndDateTime() < now();
+	}
+	
+	public boolean function isDeletable () {
+		return !isExpired() && getPromotion().isDeletable();
+	}
+	
 	public string function getSimpleRepresentation() {
 		return getPromotion().getPromotionName();
 	}

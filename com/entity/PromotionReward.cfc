@@ -63,7 +63,7 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="discountType" persistent="false";
 	property name="discount" persistent="false" type="string"; 
 	property name="rewardTypeDisplay" persistent="false";
-	property name="rewardItems" type="string" persistent="false";
+	property name="rewards" type="string" persistent="false";
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
@@ -110,8 +110,8 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		return true;
 	}
 	
-	public string function getSimpleRepresentation() {
-		return getPromotionPeriod().getPromotion().getPromotionName();
+	public string function getSimpleRepresentationPropertyName() {
+		return "rewards";
 	}
 
 	// ============ START: Non-Persistent Property Methods =================
@@ -149,61 +149,48 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		return rbKey( "entity.promotionReward.rewardType." & getRewardType() );
 	}
 	
-	public string function getRewardItems() {
-		if( !structKeyExists( variables,"rewardItems" ) ) {
-			variables.rewardItems = "";
+	public string function getRewards() {
+		if( !structKeyExists( variables,"rewards" ) ) {
+			variables.rewards = "";
 			if( getRewardType() eq "product" ) {
 				var items = "";
 				if( arrayLen(getSkus()) ) {
-					items &= "<p>";
-					items &= rbKey('entity.promotionRewardProduct.skus') & ": ";
-					items &= displaySkuCodes();
-					items &= "</p>";
+					items = listAppend(items,rbKey('entity.promotionRewardProduct.skus') & ": " & displaySkuCodes());
 				}
 				if( arrayLen(getProducts()) ) {
-					items &= "<p>";
-					items &= rbKey('entity.promotionRewardProduct.products') & ": ";
-					items &= displayProductNames();
-					items &= "</p>";
+					items = listAppend(items,rbKey('entity.promotionRewardProduct.products') & ": " & displayProductNames());
 				}
 				if( arrayLen(getProductTypes()) ) {
-					items &= "<p>";
-					items &= $.Slatwall.rbKey('entity.promotionRewardProduct.productTypes') & ": ";
-					items &= displayProductTypeNames();
-					items &= "</p>";
+					items = listAppend(items,rbKey('entity.promotionRewardProduct.productTypes') & ": " & displayProductTypeNames());
 				}
 				if( arrayLen(getBrands()) ) {
-					items &= "<p>";
-					items &= $.Slatwall.rbKey('entity.promotionRewardProduct.brands') & ": ";
-					items &= displayBrandNames();
-					items &= "</p>";
+					items = listAppend(items,rbKey('entity.promotionRewardProduct.brands') & ": " & displayBrandNames());
 				}
 				if( arrayLen(getOptions()) ) {
-					items &= "<p>";
-					items &= $.Slatwall.rbKey('entity.promotionRewardProduct.options') & ": ";
-					items &= displayOptionNames();
-					items &= "</p>";
+					items = listAppend(items,rbKey('entity.promotionRewardProduct.options') & ": " & displayOptionNames());
 				}
 				if( len(items) == 0 ) {
-					items &= "<p>";
-					items &= $.Slatwall.rbKey("define.all");
-					items &= "</p>";
+					items = rbKey("define.all");
 				}
 			} else if( getRewardType() == "shipping" ) {
 				if( arrayLen(getShippingMethods()) ) {
 					items = displayShippingMethodNames();
 				} else {
-					items = $.Slatwall.rbKey("define.all");
+					items = rbKey("define.all");
 				}
 			} else if( getRewardType() == "order" ) {
-				items = $.Slatwall.rbKey("define.na");
+				items = rbKey("define.na");
 			}
-			variables.rewardItems = items;	
+			variables.rewards = items;	
 		}
-		return variables.rewardItems;
+		return variables.rewards;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
+
+	public boolean function isDeletable() {
+		return !getPromotionPeriod().isExpired() && getPromotionPeriod().getPromotion().isDeletable();
+	}
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	

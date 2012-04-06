@@ -40,6 +40,12 @@ Notes:
 <cfparam name="rc.promotion" type="any" default="#rc.promotionperiod.getPromotion()#">
 <cfparam name="rc.edit" type="boolean">
 
+<!--- prevent editing promotion period if it has expired --->
+<cfif rc.edit and rc.promotionperiod.isExpired()>
+	<cfset rc.edit = false />
+	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionperiod.editdisabled'),messageType="info"}) />
+</cfif>
+
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.promotionperiod#" saveAction="admin:pricing.savepromotionperiod" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.promotionperiod#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
@@ -57,7 +63,6 @@ Notes:
 	</cf_SlatwallDetailForm>
 	
 	<cf_SlatwallTabGroup object="#rc.promotionperiod#">
-			<cf_SlatwallTab view="admin:pricing/promotionperiodtabs/promotionperiodcodes" />
 			<cf_SlatwallTab view="admin:pricing/promotionperiodtabs/promotionrewards" />
 			<cf_SlatwallTab view="admin:pricing/promotionperiodtabs/promotionqualifiers" />
 	</cf_SlatwallTabGroup>

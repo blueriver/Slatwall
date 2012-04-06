@@ -50,6 +50,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function subSystemBefore(required struct rc) {
+		param name="rc.messages" default="#arrayNew(1)#"; 
 		
 		// If user is not logged in redirect to front end otherwise If the user does not have access to this, then display a page that shows "No Access"
 		if (!structKeyExists(session, "mura") || !len(rc.$.currentUser().getMemberships())) {
@@ -170,9 +171,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	private void function showMessage(string message="", string messageType="info") {
-		if(!structKeyExists(request.context, "messages")) {
-			request.context.messages = [];
-		}
 		arrayAppend(request.context.messages, arguments);
 	}
 	

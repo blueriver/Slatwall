@@ -48,6 +48,10 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="promotioncode" fieldName="promotionCodes[1].promotioncode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="startDateTime" fieldName="promotionCodes[1].startDateTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="endDateTime" fieldName="promotionCodes[1].endDateTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumUseCount" fieldName="promotionCodes[1].maximumUseCount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumAccountUseCount" fieldName="promotionCodes[1].maximumAccountUseCount" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 

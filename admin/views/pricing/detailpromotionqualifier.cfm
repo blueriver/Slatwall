@@ -40,19 +40,25 @@ Notes:
 <cfparam name="rc.promotionPeriod" type="any" default="#rc.promotionQualifier.getPromotionPeriod()#" />
 <cfparam name="rc.edit" type="boolean">
 
+<!--- prevent editing promotion qualifier if its promotion period has expired --->
+<cfif rc.edit and rc.promotionperiod.isExpired()>
+	<cfset rc.edit = false />
+	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionqualifier.editdisabled'),messageType="info"}) />
+</cfif>
+
 <cfset local.qualifierType = rc.promotionQualifier.getQualifierType() />
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.promotionQualifier#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.promotionQualifier#" edit="#rc.edit#" 
 							  cancelAction="admin:pricing.detailpromotionperiod"
-							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionqualifiers" 
+							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" 
 							  backAction="admin:pricing.detailpromotionperiod" 
-							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionqualifiers" />
+							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
-				<input type="hidden" name="returnAction" value="admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionqualifiers" />
+				<input type="hidden" name="returnAction" value="admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" />
 					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumQuantity" edit="#rc.edit#" />
 					<cfif listFindNoCase("product,order",local.qualifierType)>
 						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumPrice" edit="#rc.edit#" />

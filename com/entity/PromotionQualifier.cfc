@@ -62,7 +62,7 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	// Non-persistent entities
 	property name="discountType" persistent="false";
 	property name="qualifierTypeDisplay" type="string" persistent="false";
-	property name="qualifierItems" type="string" persistent="false";
+	property name="qualifiers" type="string" persistent="false";
 	
 	// ============ Association management methods for bidirectional relationships =================
 	
@@ -88,8 +88,8 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
     
     // ============   END Association Management Methods   =================
 
-	public string function getSimpleRepresentation() {
-		return getPromotionPeriod().getPromotion().getPromotionName();
+	public string function getSimpleRepresentationPropertyName() {
+		return "qualifiers";
 	}
 
 	// ============ START: Non-Persistent Property Methods =================
@@ -99,80 +99,57 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 		return rbKey( "entity.promotionQualifier.qualifierType." & getQualifierType() );
 	}
 	
-	public string function getQualifierItems() {
+	public string function getQualifiers() {
 		if( !structKeyExists( variables,"qualifierItems" ) ) {
-			variables.qualifierItems = "";
+			variables.qualifiers = "";
 			if( getQualifierType() eq "product" ) {
 				var items = "";
 				if( arrayLen(getSkus()) ) {
-					items &= "<p>";
-					items &= rbKey('entity.promotionQualifierProduct.skus') & ": ";
-					items &= displaySkuCodes();
-					items &= "</p>";
+					items = listAppend( items,rbKey('entity.promotionQualifierProduct.skus') & ": " & displaySkuCodes() );
 				}
 				if( arrayLen(getProducts()) ) {
-					items &= "<p>";
-					items &= rbKey('entity.promotionQualifierProduct.products') & ": ";
-					items &= displayProductNames();
-					items &= "</p>";
+					items = listAppend( items,rbKey('entity.promotionQualifierProduct.products') & ": " & displayProductNames() );
 				}
 				if( arrayLen(getProductTypes()) ) {
-					items &= "<p>";
-					items &= $.Slatwall.rbKey('entity.promotionQualifierProduct.productTypes') & ": ";
-					items &= displayProductTypeNames();
-					items &= "</p>";
+					items = listAppend( items,rbKey('entity.promotionQualifierProduct.productTypes') & ": " & displayProductTypeNames() );
 				}
 				if( arrayLen(getBrands()) ) {
-					items &= "<p>";
-					items &= $.Slatwall.rbKey('entity.promotionQualifierProduct.brands') & ": ";
-					items &= displayBrandNames();
-					items &= "</p>";
+					items = listAppend( items,rbKey('entity.promotionQualifierProduct.brands') & ": " & displayBrandNames() );
 				}
 				if( arrayLen(getOptions()) ) {
-					items &= "<p>";
-					items &= $.Slatwall.rbKey('entity.promotionQualifierProduct.options') & ": ";
-					items &= displayOptionNames();
-					items &= "</p>";
+					items = listAppend( items,rbKey('entity.promotionQualifierProduct.options') & ": " & displayOptionNames() );
 				}
 				if( len(items) == 0 ) {
-					items &= "<p>";
-					items &= $.Slatwall.rbKey("define.all");
-					items &= "</p>";
+					items = rbKey("define.all");
 				}
 			} else if( getQualifierType() == "fulfillment" ) {
 				if( arrayLen(getFulfillmentMethods()) ) {
-					items &= "<p>";
-					items &= rbKey('entity.promotionQualifierFulfillment.fulfillmentMethods') & ": ";
-					items &= displayFulfillmentMethodNames();
-					items &= "</p>";
+					items = listAppend( items,rbKey('entity.promotionQualifierFulfillment.fulfillmentMethods') & ": " & displayFulfillmentMethodNames() );
 				}
 				if( arrayLen(getShippingMethods()) ) {
-					items &= "<p>";
-					items &= rbKey('entity.promotionQualifierFulfillment.shippingMethods') & ": ";
-					items &= displayShippingMethodNames();
-					items &= "</p>";
+					items = listAppend( items,rbKey('entity.promotionQualifierFulfillment.shippingMethods') & ": " & displayShippingMethodNames() );
 				}
 				if( arrayLen(getAddressZones()) ) {
-					items &= "<p>";
-					items &= rbKey('entity.promotionQualifierFulfillment.addressZones') & ": ";
-					items &= displayAddressZoneNames();
-					items &= "</p>";
+					items = listAppend( items,rbKey('entity.promotionQualifierFulfillment.addressZones') & ": " & displayAddressZoneNames() );
 				}
 				if( len(items) == 0 ) {
-					items &= "<p>";
-					items &= $.Slatwall.rbKey("define.all");
-					items &= "</p>";
+					items &= rbKey("define.all");
 				}			
 			} else if( getQualifierType() == "order" ) {
-				items = $.Slatwall.rbKey("define.na");
+				items = rbKey("define.na");
 			}
-			variables.qualifierItems = items;	
+			variables.qualifiers = items;	
 		}
-		return variables.qualifierItems;
+		return variables.qualifiers;
 	}
 		
 	// ============  END:  Non-Persistent Property Methods =================
+
+	public boolean function isDeletable() {
+		return !getPromotionPeriod().isExpired() && getPromotionPeriod().getPromotion().isDeletable();
+	}
 		
+	
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
