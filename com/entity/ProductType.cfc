@@ -71,8 +71,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
-	property name="productDisplayTemplateOptions" type="array" persistent="false";
-	property name="shippingWeightUnitCodeOptions" type="array" persistent="false";
 
 	public ProductType function init(){
 		// set default collections for association management methods
@@ -190,23 +188,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return variables.parentProductTypeOptions;
 	}
 	
-    public any function getProductDisplayTemplateOptions() {
-		if(!structKeyExists(variables, "productDisplayTemplateOptions")) {
-			variables.productDisplayTemplateOptions = getService("contentService").getDisplayTemplates(siteID=$.event('siteid'));
-			arrayPrepend(variables.productDisplayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('productDisplayTemplate')# )"});
-		}
-		
-		return variables.productDisplayTemplateOptions;
-	}
-	
-	public any function getShippingWeightUnitCodeOptions() {
-		if(!structKeyExists(variables, "shippingWeightUnitCodeOptions")) {
-			variables.shippingWeightUnitCodeOptions = getService("settingService").getMeaurementUnitOptions(measurementType="weight");
-			arrayPrepend(variables.shippingWeightUnitCodeOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('shippingWeightUnitCode')# )"});
-		}
-		return variables.shippingWeightUnitCodeOptions; 
-	}
-    
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================

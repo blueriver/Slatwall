@@ -44,7 +44,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		switch(entity.getEntityName()) {
 			case "SlatwallStockReceiverItem": {
-				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
+				if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
 					var inventory = this.newInventory();
 					inventory.setQuantityIn(arguments.entity.getQuantity());
 					inventory.setStock(arguments.entity.getStock());
@@ -58,7 +58,7 @@ component extends="BaseService" accessors="true" output="false" {
 				break;
 			}
 			case "SlatwallOrderDeliveryItem": {
-				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
+				if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
 					var inventory = this.newInventory();
 					inventory.setQuantityOut(arguments.entity.getQuantity());
 					inventory.setStock(arguments.entity.getStock());
@@ -68,7 +68,7 @@ component extends="BaseService" accessors="true" output="false" {
 				break;
 			}
 			case "SlatwallVendorOrderDeliveryItem": {
-				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
+				if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
 					var inventory = this.newInventory();
 					inventory.setQuantityOut(arguments.entity.getQuantity());
 					inventory.setStock(arguments.entity.getStock());
@@ -78,7 +78,7 @@ component extends="BaseService" accessors="true" output="false" {
 				break;
 			}
 			case "SlatwallStockAdjustmentDeliveryItem": {
-				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
+				if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
 					var inventory = this.newInventory();
 					inventory.setQuantityOut(arguments.entity.getQuantity());
 					inventory.setStock(arguments.entity.getStock());
@@ -148,11 +148,11 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public numeric function getQATS(required any entity) {
-		return arguments.entity.getQuantity('QNC') + arguments.entity.getQuantity('QE') - arguments.entity.getSetting("quantityHeldBack");
+		return arguments.entity.getQuantity('QNC') + arguments.entity.getQuantity('QE') - arguments.entity.setting("skuHoldBackQuantity");
 	}
 	
 	public numeric function getQIATS(required any entity) {
-		return arguments.entity.getQuantity('QNC') - arguments.entity.getSetting("quantityHeldBack");
+		return arguments.entity.getQuantity('QNC') - arguments.entity.setting("skuHoldBackQuantity");
 	}
 	
 	

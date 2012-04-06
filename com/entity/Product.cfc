@@ -87,9 +87,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
 	property name="brandName" type="string" persistent="false";
 	property name="brandOptions" type="array" persistent="false";
-	property name="productDisplayTemplateOptions" type="array" persistent="false";
 	property name="salePriceDetailsForSkus" type="struct" persistent="false";
-	property name="shippingWeightUnitCodeOptions" type="array" persistent="false";
 	property name="title" type="string" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
@@ -528,23 +526,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.salePriceDetailsForSkus;
 	}
 	
-	public any function getProductDisplayTemplateOptions() {
-		if(!structKeyExists(variables, "productDisplayTemplateOptions")) {
-			variables.productDisplayTemplateOptions = getService("contentService").getDisplayTemplates(siteID=$.event('siteid'));
-			arrayPrepend(variables.productDisplayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('productDisplayTemplate')# )"});
-		}
-		
-		return variables.productDisplayTemplateOptions;
-	}
-	
-	public any function getShippingWeightUnitCodeOptions() {
-		if(!structKeyExists(variables, "shippingWeightUnitCodeOptions")) {
-			variables.shippingWeightUnitCodeOptions = getService("settingService").getMeaurementUnitOptions(measurementType="weight");
-			arrayPrepend(variables.shippingWeightUnitCodeOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('shippingWeightUnitCode')# )"});
-		}
-		return variables.shippingWeightUnitCodeOptions; 
-	}
-
 	public string function getBrandName() {
 		if(!structKeyExists(variables, "brandName")) {
 			variables.brandName = "";

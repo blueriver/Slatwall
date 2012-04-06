@@ -238,49 +238,5 @@ component accessors="true" output="false" extends="BaseObject" {
 		
 		return outputScript;
 	}
-	
-	
-	/*
-	// Public methods that expose some of the base objects private methods
-	public string function rbKey(required string key, string local) {
-		return super.rbKey(argumentCollection=arguments);
-	}
-	
-	public string function round(required any value, string roundingExpression="0.00", string roundingDirection="Closest") {
-		return super.round(argumentCollection=arguments);
-	}
-	
-	public string function setting(required string settingName) {
-		return super.setting(argumentcollection=arguments);
-	}
-	
-	public string function getAPIKey(required string resource, required string verb) {
-		return super.getAPIKey(argumentcollection=arguments);
-	}
-	
-	public string function getSlatwallRootPath() {
-		return super.getSlatwallRootPath(argumentcollection=arguments);
-	}
-	
-	public string function getSlatwallRootDirectory() {
-		return super.getSlatwallRootDirectory(argumentcollection=arguments);
-	}
-	
-	public any function getCFStatic() {
-		return super.getCFStatic(argumentcollection=arguments);
-	}
-	
-	public any function getValidateThis() {
-		return super.getValidateThis(argumentcollection=arguments);
-	}
-	
-	public any function buildURL() {
-		return super.buildURL(argumentcollection=arguments);
-	}
-	
-	public any function secureDisplay() {
-		return super.secureDisplay(argumentcollection=arguments);
-	}
-	// END: Public methods that expose some of the base objects private methods
-	*/
+
 }

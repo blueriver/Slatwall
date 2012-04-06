@@ -70,9 +70,6 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 		return variables[quantityType];
 	}
 	
-	public any function getSetting(required string settingName) {
-		return getSku().getSetting(arguments.settingName);
-	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

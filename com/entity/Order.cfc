@@ -195,7 +195,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 					setOrderNumber(1);
 				}
 			} else {
-				setOrderNumber( getService("integrationService").getIntegrationByIntegrationPackage( setting('order_orderNumberGeneration') ).getIntegrationCFC().getNewOrderNumber(order=this) );
+				setOrderNumber( getService("integrationService").getIntegrationByIntegrationPackage( setting('globalOrderNumberGeneration') ).getIntegrationCFC().getNewOrderNumber(order=this) );
 			}
 			
 			setOrderOpenDateTime( now() );

@@ -365,28 +365,28 @@ globalEncryptionKeySize
 			FROM
 				allSettings
 				WHERE
-					UPPER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#UCASE(arguments.settingName)#">
+					LOWER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
 				  AND
 					<cfif structKeyExists(settingRelationships, "productTypeID")>
-						allSettings.productTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.productTypeID#" > 
+						LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
 					<cfelse>
 						allSettings.productTypeID IS NULL
 					</cfif>
 				  AND
 					<cfif structKeyExists(settingRelationships, "productID")>
-						allSettings.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.productID#" > 
+						LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
 					<cfelse>
 						allSettings.productID IS NULL
 					</cfif>
 				  AND
 					<cfif structKeyExists(settingRelationships, "skuID")>
-						allSettings.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.skuID#" > 
+						LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
 					<cfelse>
 						allSettings.skuID IS NULL
 					</cfif>
 				  AND
 					<cfif structKeyExists(settingRelationships, "brandID")>
-						allSettings.brandID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships.brandID#" > 
+						LOWER(allSettings.brandID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.brandID)#" > 
 					<cfelse>
 						allSettings.brandID IS NULL
 					</cfif>

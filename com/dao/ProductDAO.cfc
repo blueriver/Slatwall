@@ -148,7 +148,7 @@ Notes:
 				arrayAppend(productExtraData,{name="manufactureDiscontinuedFlag",value="0"});
 			}
 			if(!arrayFindNoCase(columnList,"product_template")){
-				arrayAppend(productExtraData,{name="template",value=setting('product_defaultTemplate')});
+				arrayAppend(productExtraData,{name="template",value=setting('productDefaultTemplate')});
 			}
 	
 			var skuExtraData = [];
@@ -302,7 +302,7 @@ Notes:
 			//set sku image to product default image
 			dataQuery.setSql("
 				UPDATE SlatwallSku
-				SET imageFile = (SELECT productCode + '.' + '#setting("product_imageExtension")#' FROM SlatwallProduct WHERE SlatwallSku.productID = SlatwallProduct.productID)
+				SET imageFile = (SELECT productCode + '.' + '#setting("globalImageExtension")#' FROM SlatwallProduct WHERE SlatwallSku.productID = SlatwallProduct.productID)
 				FROM SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
 				WHERE SlatwallSku.imageFile IS NULL
 			");

@@ -46,10 +46,10 @@ Notes:
 		<cfset var $ = request.context.$ />
 		
 		<cfmail to="#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()# <#arguments.order.getAccount().getEmailAddress()#>"
-				from="#setting('order_orderPlacedEmailFrom')#"
-				subject="#getUtilityService().replaceStringTemplate(template=setting('order_orderPlacedEmailSubject'), object=arguments.order)#"
-				bcc="#setting('order_orderPlacedEmailBCC')#"
-				cc="#setting('order_orderPlacedEmailCC')#" >
+				from="#setting('globalOrderPlacedEmailFrom')#"
+				subject="#getUtilityService().replaceStringTemplate(template=setting('globalOrderPlacedEmailSubjectString'), object=arguments.order)#"
+				bcc="#setting('globalOrderPlacedEmailBCC')#"
+				cc="#setting('globalOrderPlacedEmailCC')#" >
 			<cfmailpart type="text/plain">
 				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderplacedtext.cfm" />
 			</cfmailpart>
