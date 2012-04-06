@@ -107,13 +107,13 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		logSlatwall("Setting Service - verifyMuraRequiredPages - Started", true);
 		
 		var requiredMuraPages = [
-			{settingName="pageShoppingCart",title="Shopping Cart",fileName="shopping-cart",isNav="1",isLocked="1"},
-			{settingName="pageOrderStatus",title="Order Status",fileName="order-status",isNav="1",isLocked="1"},
-			{settingName="pageOrderConfirmation",title="Order Confirmation",fileName="order-confirmation",isNav="0",isLocked="1"},
-			{settingName="pageMyAccount",title="My Account",fileName="my-account",isNav="1",isLocked="1"},
-			{settingName="pageEditAccount",title="Edit Account",fileName="edit-account",isNav="1",isLocked="1"},
-			{settingName="pageCreateAccount",title="Create Account",fileName="create-account",isNav="1",isLocked="1"},
-			{settingName="pageCheckout",title="Checkout",fileName="checkout",isNav="1",isLocked="1"},
+			{settingName="globalPageShoppingCart",title="Shopping Cart",fileName="shopping-cart",isNav="1",isLocked="1"},
+			{settingName="globalPageOrderStatus",title="Order Status",fileName="order-status",isNav="1",isLocked="1"},
+			{settingName="globalPageOrderConfirmation",title="Order Confirmation",fileName="order-confirmation",isNav="0",isLocked="1"},
+			{settingName="globalPageMyAccount",title="My Account",fileName="my-account",isNav="1",isLocked="1"},
+			{settingName="globalPageEditAccount",title="Edit Account",fileName="edit-account",isNav="1",isLocked="1"},
+			{settingName="globalPageCreateAccount",title="Create Account",fileName="create-account",isNav="1",isLocked="1"},
+			{settingName="globalPageCheckout",title="Checkout",fileName="checkout",isNav="1",isLocked="1"},
 			{title="Default Template",fileName="default-template",isNav="0",isLocked="0",templateFlag="1"}
 		];
 		

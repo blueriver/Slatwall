@@ -94,6 +94,14 @@ globalEncryptionKeySize
 			globalURLKeyProduct = {fieldType="text"},
 			globalURLKeyProductType = {fieldType="text"},
 			globalWeightUnitCode = {fieldType="select"},
+			globalPageShoppingCart = {fieldType="text"},
+			globalPageOrderStatus = {fieldType="text"},
+			globalPageOrderConfirmation = {fieldType="text"},
+			globalPageMyAccount = {fieldType="text"},
+			globalPageEditAccount = {fieldType="text"},
+			globalPageCreateAccount = {fieldType="text"},
+			globalPageCheckout = {fieldType="text"},
+			
 			
 			// Product
 			productDisplayTemplate = {fieldType="select"},
@@ -122,16 +130,7 @@ globalEncryptionKeySize
 			skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
 			skuShippingWeight = {fieldType="text", formatType="weight"},
 			skuShippingWeightUnitCode = {fieldType="select"},
-			skuTrackInventoryFlag = {fieldType="yesno"},
-			
-			// CMS pages
-			pageShoppingCart = {fieldType="text"},
-			pageOrderStatus = {fieldType="text"},
-			pageOrderConfirmation = {fieldType="text"},
-			pageMyAccount = {fieldType="text"},
-			pageEditAccount = {fieldType="text"},
-			pageCreateAccount = {fieldType="text"},
-			pageCheckout = {fieldType="text"}
+			skuTrackInventoryFlag = {fieldType="yesno"}
 			
 		};
 		
