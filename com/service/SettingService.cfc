@@ -164,7 +164,7 @@ globalEncryptionKeySize
 		}
 		
 		public any function getSettingOptionsSmartList(required string settingName) {
-			return getUtilityORMService().getServiceByEntityName( variables.settingMetaData[ arguments.settingName ] ).invokeMethod("get#arguments.settingName#SmartList");
+			return getUtilityORMService().getServiceByEntityName( variables.settingMetaData[ arguments.settingName ].listingMultiselectEntityName ).invokeMethod("get#arguments.settingName#SmartList");
 		}
 		
 		public any function getSettingMetaData(required string settingName) {
