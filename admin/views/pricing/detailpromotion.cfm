@@ -47,8 +47,6 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
 				<cfif rc.promotion.isNew()>
 					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].startDateTime" property="startDateTime" edit="#rc.edit#">
 					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].endDateTime" property="endDateTime" edit="#rc.edit#">
@@ -62,6 +60,7 @@ Notes:
 		<cf_SlatwallTabGroup object="#rc.promotion#">
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionperiods" />
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotioncodes" />
+			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotiondescription" />
 <!---			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewards" />
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifiers" />--->
 		</cf_SlatwallTabGroup>

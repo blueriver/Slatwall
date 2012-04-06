@@ -124,13 +124,6 @@ Notes:
 		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
 		#request.footer#
-		<cfif structKeyExists(rc,"selectedtab")>
-			<script>
-				(function($){
-					$('a[href=##tab#rc.selectedtab#]').tab('show');
-				})(jQuery);
-			</script>
-		</cfif>
 	</body>
 </html>
 </cfoutput>

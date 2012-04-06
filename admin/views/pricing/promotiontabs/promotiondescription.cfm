@@ -37,12 +37,7 @@ Notes:
 
 --->
 
-<cfparam name="rc.promotionperiod" type="any">
-<cfparam name="rc.edit" type="boolean">
-
-<cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.promotionperiod.getPromotion().getPromotionCodesSmartList()#" multiSelectFieldName="promotionPeriodPromotionCodeID" multiSelectValue="">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionCode" />
-	</cf_SlatwallListingDisplay>
-	
-</cfoutput>
+<cf_SlatwallPropertyList>
+	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
+	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
+</cf_SlatwallPropertyList>

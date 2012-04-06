@@ -63,8 +63,7 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-persistent properties
-	property name="startDateTime" type="date" persistent="false";
-	property name="endDateTime" type="date" persistent="false"; 
+	property name="currentFlag" type="boolean" persistent="false"; 
 	
 	public Promotion function init(){
 		// set default collections for association management methods
@@ -77,9 +76,38 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 		}
 		return super.init();
 	}
- 
 
-	/******* Association management methods for bidirectional relationships **************/
+	// @hint this method validates that promotion codes are unique
+	public any function hasUniquePromotionCodes() {
+		var promotionCodeList = "";
+		
+		for(var promotionCode in getPromotionCodes()){
+			if(listFindNoCase(promotionCodeList, promotionCode.getPromotionCode())) {
+				return false;
+			} else {
+				promotionCodeList = listAppend(promotionCodeList, promotionCode.getPromotionCode());
+			}
+		}
+		return true;
+	}
+
+	// ============ START: Non-Persistent Property Methods =================
+
+	public boolean function getCurrentFlag() {
+		var isCurrent = false;
+		for( var i=1; i<= arrayLen(getPromotionPeriods()); i++ ) {
+			local.thisPromotionPeriod = getPromotionPeriods()[1];
+			if( local.thisPromotionPeriod.isCurrent() ) {
+				isCurrent = true;
+				break;
+			}
+		}
+		return isCurrent;
+	}	
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
 
 	// promotionPeriods (one-to-many)
 	public void function addPromotionPeriod(required any PromotionPeriod) {
@@ -107,66 +135,11 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 		arguments.promotionApplied.removePromotion(this);
 	}
 	
-    /************   END Association Management Methods   *******************/
-
-	// @hint this method validates that promotion codes are unique
-	public any function hasUniquePromotionCodes() {
-		var promotionCodeList = "";
-		
-		for(var promotionCode in getPromotionCodes()){
-			if(listFindNoCase(promotionCodeList, promotionCode.getPromotionCode())) {
-				return false;
-			} else {
-				promotionCodeList = listAppend(promotionCodeList, promotionCode.getPromotionCode());
-			}
-		}
-		return true;
-	}
-
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// gets the start and end DateTimes for the current or the most recent promotion period
-	public any function getStartDateTime() {
-		if( !structKeyExists( variables,"startDateTime" ) ) {
-			for( var i=1; i<=arrayLen(getPromotionPeriods());i++ ) {
-				local.thisPromotionPeriod = getPromotionPeriods()[i];
-				if( local.thisPromotionPeriod.isCurrent() ) {
-					variables.startDateTime = local.thisPromotionPeriod.getStartDateTime();
-					variables.endDateTime = local.thisPromotionPeriod.getEndDateTime();
-					break;
-				}
-				else {
-					variables.startDateTime = !structKeyExists(variables,"startDateTime") ? local.thisPromotionPeriod.getStartDateTime() : local.thisPromotionPeriod.getEndDateTime() > variables.endDateTime ? local.thisPromotionPeriod.getStartDateTime() : variables.startDateTime;
-					variables.endDateTime = !structKeyExists(variables,"endDateTime") ? local.thisPromotionPeriod.getEndDateTime() : local.thisPromotionPeriod.getEndDateTime() > variables.endDateTime ? local.thisPromotionPeriod.getEndDateTime() : variables.endDateTime;
-				}
-			}
-		}
-		return variables.startDateTime;
-	}
-	
-	public any function getEndDateTime() {
-		if( !structKeyExists( variables,"endDateTime" ) ) {
-			for( var i=1; i<=arrayLen(getPromotionPeriods());i++ ) {
-				local.thisPromotionPeriod = getPromotionPeriods()[i];
-				if( local.thisPromotionPeriod.isCurrent() ) {
-					variables.startDateTime = local.thisPromotionPeriod.getStartDateTime();
-					variables.endDateTime = local.thisPromotionPeriod.getEndDateTime();
-					break;
-				}
-				else {
-					variables.startDateTime = !structKeyExists(variables,"startDateTime") ? local.thisPromotionPeriod.getStartDateTime() : local.thisPromotionPeriod.getEndDateTime() > variables.endDateTime ? local.thisPromotionPeriod.getStartDateTime() : variables.startDateTime;
-					variables.endDateTime = !structKeyExists(variables,"endDateTime") ? local.thisPromotionPeriod.getEndDateTime() : local.thisPromotionPeriod.getEndDateTime() > variables.endDateTime ? local.thisPromotionPeriod.getEndDateTime() : variables.endDateTime;
-				}
-			}
-		}
-		return variables.endDateTime;
-	}
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
-	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	public boolean function isDeletable() {
+		return arrayLen( getAppliedPromotions() ) == 0;
+	}
 	
 	// =================== START: ORM Event Hooks  =========================
 	

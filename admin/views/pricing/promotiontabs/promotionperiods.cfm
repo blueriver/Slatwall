@@ -45,7 +45,8 @@ Notes:
 <cfoutput>
 
 	<cf_SlatwallListingDisplay smartList="#local.ppSmartList#"
-							   recordEditAction="admin:pricing.editPromotionperiod" 
+							   recordEditAction="admin:pricing.editPromotionperiod"
+							   recorddetailaction="admin:pricing.detailpromotionperiod"
 							   recordDeleteAction="admin:pricing.deletepromotionperiod"
 							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotion">
 		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" />
