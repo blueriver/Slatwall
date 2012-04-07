@@ -47,12 +47,12 @@ Notes:
 							   recorddetailaction="admin:pricing.detailpromotionreward"
 							   recordDeleteAction="admin:pricing.deletepromotionreward"
 							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
-		<cf_SlatwallListingColumn propertyIdentifier="rewardTypeDisplay" />
+		<cf_SlatwallListingColumn propertyIdentifier="rewardType" filter="true" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="rewards" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="discount" />
 	</cf_SlatwallListingDisplay>
 	
-	<cfif rc.edit>
+	<cfif !rc.promotionperiod.isExpired()>
 		<cf_SlatwallActionCallerDropdown
 							title="#$.slatwall.rbKey('define.create')#"
 							actions="admin:pricing.createpromotionrewardproduct,admin:pricing.createpromotionrewardshipping,admin:pricing.createpromotionrewardorder" 

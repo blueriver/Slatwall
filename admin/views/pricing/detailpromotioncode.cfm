@@ -41,17 +41,17 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.promotion#" saveAction="admin:pricing.savepromotion" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.promotioncode#" saveAction="admin:pricing.savepromotioncode" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
-		<input type="hidden" name="promotioncodes[1].promotioncodeID" value="#rc.promotionCode.getPromotionCodeID()#" />
-
+		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
+		<input type="hidden" name="returnAction" value="admin:pricing.detailpromotion&promotionID=#rc.promotion.getPromotionID()#" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="promotioncode" fieldName="promotionCodes[1].promotioncode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="startDateTime" fieldName="promotionCodes[1].startDateTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="endDateTime" fieldName="promotionCodes[1].endDateTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumUseCount" fieldName="promotionCodes[1].maximumUseCount" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumAccountUseCount" fieldName="promotionCodes[1].maximumAccountUseCount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="promotioncode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="startDateTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="endDateTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumUseCount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumAccountUseCount" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 

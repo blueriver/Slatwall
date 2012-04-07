@@ -42,14 +42,13 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	property name="promotionPeriodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
-	property name="maximumUseCount" ormtype="integer" default="0" dbdefault="0" formatType="custom";
-	property name="maximumAccountUseCount" ormtype="integer" default="0" dbdefault="0" formatType="custom";
+	property name="maximumUseCount" ormtype="integer" notnull="false" formatType="custom";
+	property name="maximumAccountUseCount" ormtype="integer" notnull="false" formatType="custom";
 	
 	// Related Object Properties (many-to-one)
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Related Object Properties (one-to-many)   
-	property name="promotionPeriodPromotionCodes" singularname="promotionPeriodPromotionCode" cfc="PromotionPeriodPromotionCode" fieldtype="one-to-many" fkcolumn="promotionPeriodID" cascade="all-delete-orphan";
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	
@@ -61,14 +60,14 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
  
  
 	public any function getMaximumUseCountFormatted() {
-		if(isNull(getMaximumUseCount()) || !isNumeric(getMaximumUseCount()) || getMaximumUseCount() lt 1) {
+		if(isNull(getMaximumUseCount()) || !isNumeric(getMaximumUseCount()) || getMaximumUseCount() == 0) {
 			return rbKey('define.unlimited');
 		}
 		return getMaximumUseCount();
 	}
 	
 	public any function getMaximumAccountUseCountFormatted() {
-		if(isNull(getMaximumAccountUseCount()) || !isNumeric(getMaximumAccountUseCount()) || getMaximumAccountUseCount() lt 1) {
+		if(isNull(getMaximumAccountUseCount()) || !isNumeric(getMaximumAccountUseCount()) || getMaximumAccountUseCount() == 0) {
 			return rbKey('define.unlimited');
 		}
 		return getMaximumAccountUseCount();

@@ -43,7 +43,7 @@ Notes:
 <!--- prevent editing promotion qualifier if its promotion period has expired --->
 <cfif rc.edit and rc.promotionperiod.isExpired()>
 	<cfset rc.edit = false />
-	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionqualifier.editdisabled'),messageType="info"}) />
+	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionqualifier.edit_disabled'),messageType="info"}) />
 </cfif>
 
 <cfset local.qualifierType = rc.promotionQualifier.getQualifierType() />

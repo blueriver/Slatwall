@@ -43,8 +43,8 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	property name="promotionCode" ormtype="string";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
-	property name="maximumUseCount" ormtype="integer" notnull="false";
-	property name="maximumAccountUseCount" ormtype="integer" notnull="false";
+	property name="maximumUseCount" ormtype="integer" notnull="false" formatType="custom";
+	property name="maximumAccountUseCount" ormtype="integer" notnull="false" formatType="custom";
 	
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
@@ -58,8 +58,28 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	// Related Object Properties (Many-To-Many)
 	property name="orders" singularname="order" cfc="Order" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID";
 	
-	/******* Association management methods for bidirectional relationships **************/
+
+	public any function getMaximumUseCountFormatted() {
+		if(isNull(getMaximumUseCount()) || !isNumeric(getMaximumUseCount()) || getMaximumUseCount() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return getMaximumUseCount();
+	}
 	
+	public any function getMaximumAccountUseCountFormatted() {
+		if(isNull(getMaximumAccountUseCount()) || !isNumeric(getMaximumAccountUseCount()) || getMaximumAccountUseCount() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return getMaximumAccountUseCount();
+	}
+
+    
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+
     // Promotion (many-to-one)
 	public void function setPromotion(required any promotion) {
 		variables.promotion = arguments.promotion;
@@ -81,8 +101,18 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 		structDelete(variables, "promotion");
     }
 	
-    /************   END Association Management Methods   *******************/
-    
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ============ START: Overridden Methods =================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "promotionCode";
+	}
+	
+	// ============  END:  Overridden Methods =================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
     // Override the preInsert method to set a promotion code
     public void function preInsert() {
 		if(isNull(getPromotionCode()) || getPromotionCode() == ""){
@@ -90,16 +120,6 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 		}
 		super.preInsert();
     }
-
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-	
-	// =================== START: ORM Event Hooks  =========================
-	
+    
 	// ===================  END:  ORM Event Hooks  =========================   
 }

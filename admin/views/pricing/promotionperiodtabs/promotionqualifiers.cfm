@@ -44,13 +44,14 @@ Notes:
 	<cf_SlatwallListingDisplay smartList="#rc.promotionperiod.getPromotionQualifiersSmartList()#"
 							   recordEditAction="admin:pricing.editpromotionqualifier"
 							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
+							   recorddetailaction="admin:pricing.detailpromotionqualifier"
 							   recordDeleteAction="admin:pricing.deletepromotionqualifier"
 							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
-		<cf_SlatwallListingColumn propertyIdentifier="qualifierTypeDisplay" />
+		<cf_SlatwallListingColumn propertyIdentifier="qualifierType" filter="true" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="qualifiers" />
 	</cf_SlatwallListingDisplay>
 	
-	<cfif rc.edit>
+	<cfif !rc.promotionperiod.isExpired()>
 		<cf_SlatwallActionCallerDropdown
 							title="#$.slatwall.rbKey('define.create')#"
 							actions="admin:pricing.createpromotionqualifierproduct,admin:pricing.createpromotionqualifierfulfillment,admin:pricing.createpromotionqualifierorder" 

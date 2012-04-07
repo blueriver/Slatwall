@@ -301,33 +301,36 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	public void function genericSaveMethod(required string entityName, required struct rc) {
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
-		
-		rc[ arguments.entityName ] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
-		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=rc[ arguments.entityName ], 2=rc} );
-		
-		if(!rc[ arguments.entityName ].hasErrors()) {
+		// make sure there is no name clash between the entity name and a form field that has been submitted
+		var entity = !structKeyExists( rc,arguments.entityName ) ? arguments.entityName : arguments.entityName & "entity";
+				
+		rc[ entity ] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
+		rc[ entity ] = entityService.invokeMethod( "save#arguments.entityName#", {1=rc[ entity ], 2=rc} );
+		if(!rc[ entity ].hasErrors()) {
 			if(structKeyExists(rc, "returnAction")) {
 				getFW().redirect(action=rc.returnAction, querystring=buildReturnActionQueryString( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" ));	
 			} else {
-				getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
+				getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ entity ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
 			}
 		} else {
 			rc.edit = true;
+			writeDump(var=rc[entity].getErrors(),abort=true);
 			getFW().setView(action=rc.detailAction);
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_error");
-			for( var p in rc[ rc.arguments.entityName ].getErrors() ) {
-				local.thisErrorArray = rc[ rc.arguments.entityName ].getErrors()[p];
+			for( var p in rc[ entity ].getErrors() ) {
+				local.thisErrorArray = rc[ entity ].getErrors()[p];
 				for(var i=1; i<=arrayLen(local.thisErrorArray); i++) {
 					showMessage(local.thisErrorArray[i], "error");
 				}
 			}
-			if(rc[ arguments.entityName ].isNew()) {
+			if(rc[ entity ].isNew()) {
 				rc.slatAction = rc.createAction;
 				rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
 			} else {
 				rc.slatAction = rc.editAction;
 				rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
 			}
+			rc[ arguments.entityName ] = rc[ entity ];
 			rc.edit = true;
 		}
 	}

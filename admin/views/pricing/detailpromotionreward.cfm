@@ -43,13 +43,12 @@ Notes:
 <!--- prevent editing promotion reward if its promotion period has expired --->
 <cfif rc.edit and rc.promotionperiod.isExpired()>
 	<cfset rc.edit = false />
-	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionreward.editdisabled'),messageType="info"}) />
+	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionreward.edit_disabled'),messageType="info"}) />
 </cfif>
 
 <cfset local.rewardType = rc.promotionReward.getRewardType() />
 
 <cfoutput>
-	Expired: #rc.promotionreward.getPromotionPeriod().isExpired()#
 	<cf_SlatwallDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" 
 							  cancelAction="admin:pricing.detailpromotionperiod"
