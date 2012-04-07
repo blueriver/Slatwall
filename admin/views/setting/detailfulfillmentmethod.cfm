@@ -52,7 +52,8 @@ Notes:
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	
-	<cfif not rc.fulfillmentMethod.isNew()>
-		<cfoutput>#view("admin:setting/fulfillmentmethodtypes/#lcase(rc.fulfillmentMethod.getFulfillmentMethodType())#")#</cfoutput>
-	</cfif>
+	<cf_SlatwallTabGroup object="#rc.fulfillmentMethod#">
+		<cf_SlatwallTab view="admin:setting/fulfillmentmethodtabs/#lcase(rc.fulfillmentMethod.getFulfillmentMethodType())#">
+	</cf_SlatwallTabGroup>
+
 </cf_SlatwallDetailForm>

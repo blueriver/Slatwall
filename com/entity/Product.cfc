@@ -340,14 +340,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getProductType().getBaseProductType();
 	}
 	
-	//get eligibleFulfillmentMethods
-	public array function getEligibleFulfillmentMethods() {
-		if(!arrayLen(variables.eligibleFulfillmentMethods)) {
-			return getProductType().getEligibleFulfillmentMethods();
-		}
-		return variables.eligibleFulfillmentMethods;
-	}
-	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {
 		var smartList = getService("optionService").getOptionSmartList();
 		smartList.addFilter("optionGroup_optionGroupID",arguments.optionGroupID);

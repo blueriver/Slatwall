@@ -36,17 +36,22 @@
 Notes:
 
 --->
-<cfparam name="rc.fulfillmentMethod" type="any" />
+<cfparam name="rc.orderItem" type="any" />
+<cfparam name="rc.order" type="any" default="#rc.orderItem.getOrder()#" />
+<cfparam name="rc.edit" default="false" />
 
-<!---
-<cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethod.getShippingMethodsSmartList()#"
-		recordEditAction="admin:setting.editshippingmethod"
-		recordEditQueryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#"
-		recordEditModal=true>
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.orderItem#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="shippingMethodName" />
-	
-</cf_SlatwallListingDisplay>
---->
+		<input type="hidden" name="order.orderID" value="#rc.order.getOrderID()#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="sku" edit="#rc.orderItem.isNew()#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+	</cf_SlatwallDetailForm>
 
-<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" class="btn btn-primary" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" modal=true />
+</cfoutput>

@@ -289,16 +289,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return this.getProduct().getBaseProductType();
 	}
 	
-	//get eligibleFulfillmentMethods
-	public array function getEligibleFulfillmentMethods() {
-		if(!arrayLen(variables.eligibleFulfillmentMethods)) {
-			return getProduct().getEligibleFulfillmentMethods();
-		}
-		return variables.eligibleFulfillmentMethods;
-	}
-	
 	// START: Price Methods
-	
 	public numeric function getPriceByPromotion( required any promotion) {
 		return getService("promotionService").calculateSkuPriceBasedOnPromotion(sku=this, promotion=arguments.promotion);
 	}
@@ -310,11 +301,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
 		return getService("priceGroupService").getRateForSkuBasedOnPriceGroup(sku=this, priceGroup=arguments.priceGroup);
 	}
-	
 	// END: Price Methods
 	
 	// Start: Quantity Helper Methods
-	
 	public numeric function getQuantity(required string quantityType, string locationID) {
 		if(structKeyExists(arguments, "locationID")) {
 			return getService("stockService").getStockBySkuAndLocation(this, getService("locationService").getLocation(arguments.locationID)).invokeMethod("getQuantity", {quantityType=arguments.quantityType});
@@ -330,7 +319,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}
 		return variables[quantityType];
 	}
-	
 	// END: Quantity Helper Methods
 	
 	// ============ START: Non-Persistent Property Methods =================

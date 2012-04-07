@@ -47,31 +47,23 @@ Notes:
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderNumber" edit="false">
-				<!---
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="publishedFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="productName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="productCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="brand" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="productType" edit="#rc.edit#">
-				--->
+			<cf_SlatwallPropertyList divclass="span8">
+				<cfif !rc.order.isNew()>
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderNumber" edit="false">
+				</cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.order.isNew()#">
+			</cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divclass="span4">
+				<cfif !rc.order.isNew()>
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.order#">
-			<!---
-			<cf_SlatwallTab view="admin:product/producttabs/skus" />
-			<cf_SlatwallTab view="admin:product/producttabs/productdescription" />
-			<cf_SlatwallTab view="admin:product/producttabs/productpages" />
-			<cf_SlatwallTab view="admin:product/producttabs/productcategories" />
-			<cf_SlatwallTab view="admin:product/producttabs/alternateimages" />
-			<cf_SlatwallTab view="admin:product/producttabs/productreviews" />
-			<cf_SlatwallTab view="admin:product/producttabs/customattributes" />
-			<cf_SlatwallTab view="admin:product/producttabs/relatedproducts" />
-			<cf_SlatwallTab view="admin:product/producttabs/productsettings" />
-			<cf_SlatwallTab view="admin:product/producttabs/skusettings" />
-			--->
+			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" />
+			<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

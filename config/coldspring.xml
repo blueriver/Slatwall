@@ -246,6 +246,7 @@
         <property name="DAO"><ref bean="orderDAO" /></property>
 		<property name="accountService"><ref bean="accountService" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
+		<property name="fulfillmentService"><ref bean="fulfillmentService" /></property>
 		<property name="locationService"><ref bean="locationService" /></property>
 		<property name="paymentService"><ref bean="paymentService" /></property>
 		<property name="priceGroupService"><ref bean="priceGroupService" /></property>

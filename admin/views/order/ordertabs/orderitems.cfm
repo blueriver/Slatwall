@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+	
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -36,15 +36,15 @@
 Notes:
 
 --->
-
-<cfparam name="rc.shippingMethod" type="any">
-<cfparam name="rc.fulfillmentMethod" type="any" default="#rc.shippingMethod.getFulfillmentMethod()#">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.order" type="any" />
+<cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.shippingMethod#" saveAction="admin:setting.saveshippingmethod" edit="#rc.edit#">
-		<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
-		
-		<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#">
-	</cf_SlatwallDetailForm>
+	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderItemsSmartList()#" 
+			recordEditAction="admin:order.editorderitem"
+			recordEditQueryString="productID=#rc.order.getOrderID()#">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.skuCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
+	</cf_SlatwallListingDisplay>
+	
 </cfoutput>

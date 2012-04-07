@@ -37,7 +37,3 @@ Notes:
 
 --->
 
-<cf_SlatwallTabGroup object="#rc.fulfillmentMethod#">
-	<cf_SlatwallTab view="admin:setting/fulfillmentmethodtypes/shippingtabs/shippingmethods" />
-	<cf_SlatwallTab view="admin:setting/fulfillmentmethodtypes/shippingtabs/settings" />
-</cf_SlatwallTabGroup>

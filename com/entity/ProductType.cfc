@@ -153,14 +153,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return getSystemCode();
 	}
 	
-	//get eligibleFulfillmentMethods
-	public array function getEligibleFulfillmentMethods() {
-		if(!arrayLen(variables.eligibleFulfillmentMethods)) {
-			return getService("ProductService").getProductType(listFirst(getProductTypeIDPath())).getEligibleFulfillmentMethods();
-		}
-		return variables.eligibleFulfillmentMethods;
-	}
-	
     public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
 		return getService("priceGroupService").getRateForProductTypeBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
