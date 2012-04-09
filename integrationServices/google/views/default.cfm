@@ -1,0 +1,1 @@
+<a href="?slatAction=google:main.createproductfeed">Create Google Product Feed</a>

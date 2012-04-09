@@ -189,7 +189,6 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		if(thisPage.isNew()){
 			thisPage.setCmsSiteID(arguments.muraPage.getSiteID());
 			thisPage.setCmsContentID(arguments.muraPage.getContentID());
-			thisPage.setCmsContentIDPath(arguments.muraPage.getPath());
 			thisPage.setTitle(arguments.muraPage.getTitle());
 			thisPage = getService("contentService").saveContent(thisPage,arguments.pageAttributes);
 		}

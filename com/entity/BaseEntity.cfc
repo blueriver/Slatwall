@@ -169,6 +169,26 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return variables.modifiedDateTime;
 	}
 	
+	// @hint private method to help build IDPath lists based on parent properties
+	public string function buildIDPathList(required string parentPropertyName) {
+		var idPathList = "";
+		
+		var thisEntity = this;
+		var hasParent = true;
+		
+		do {
+			idPathList = listPrepend(idPathList, thisEntity.getPrimaryIDValue());
+			if( isNull( evaluate("thisEntity.get#arguments.parentPropertyName#()") ) ) {
+				hasParent = false;
+			} else {
+				thisEntity = evaluate("thisEntity.get#arguments.parentPropertyName#()");
+			}
+		} while( hasParent );
+		
+		return idPathList;
+	}
+	
+	
 	// @hint returns true the passed in property has value that is unique, and false if the value for the property is already in the DB
 	public boolean function hasUniqueProperty( required string propertyName ) {
 		return getService("dataService").isUniqueProperty(propertyName=propertyName, entity=this);

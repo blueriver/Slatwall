@@ -107,27 +107,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return variables.productTypeIDPath;
 	}
 	
-	public string function buildIDPathList() {
-		var idPathList = "";
-		
-		var thisProductType = this;
-		var hasParent = true;
-		do {
-			idPathList = listPrepend(idPathList, thisProductType.getProductTypeID());
-			if( isNull(thisProductType.getParentProductType()) ) {
-				hasParent = false;
-			} else {
-				thisProductType = thisProductType.getParentProductType();
-			}
-		} while( hasParent );
-		
-		return idPathList;
-	}
-	
-	public any function getProductTypeTree() {
-		return getService("ProductService").getProductTypeTree();
-	}
-	
 	public array function getInheritedAttributeSetAssignments(){
 		// Todo get by all the parent productTypeIDs
 		var attributeSetAssignments = getService("AttributeService").getAttributeSetAssignmentSmartList().getRecords();
@@ -267,13 +246,13 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	public void function preInsert(){
 		super.preInsert();
-		setProductTypeIDPath( buildIDPathList() );
+		setProductTypeIDPath( buildIDPathList( "parentProductType" ) );
 		getService("productCacheService").updateFromProductType( this );
 	}
 	
 	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
-		setProductTypeIDPath( buildIDPathList() );
+		setProductTypeIDPath( buildIDPathList( "parentProductType" ) );
 		getService("productCacheService").updateFromProductType( this );
 	}
 	

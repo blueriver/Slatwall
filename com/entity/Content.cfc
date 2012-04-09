@@ -40,27 +40,29 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	
 	// Persistent Properties
 	property name="contentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="contentIDPath" ormtype="string";
 	
 	property name="title" ormtype="string";
 	property name="cmsContentID" ormtype="string";
-	//property name="cmsContentIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
 	
-	property name="restrictAccessFlag" ormtype="boolean";
-	property name="allowPurchaseFlag" ormtype="boolean";
-	property name="requirePurchaseFlag" ormtype="boolean";
-	property name="requireSubscriptionFlag" ormtype="boolean";
-	property name="templateFlag" ormtype="boolean";
-	property name="productListingFlag" ormtype="boolean";
-	property name="defaultProductsPerPage" ormtype="integer";
+	property name="allowPurchaseFlag" ormtype="boolean";  // property
+	property name="disableProductAssignmentFlag" ormtype="boolean"; // property
+	property name="templateFlag" ormtype="boolean"; // property
 	
-	property name="showProductInSubPagesFlag" ormtype="boolean";
-	property name="disableProductAssignmentFlag" ormtype="boolean";
+	property name="restrictAccessFlag" ormtype="boolean";  // setting
+	property name="requirePurchaseFlag" ormtype="boolean";  // setting
+	property name="requireSubscriptionFlag" ormtype="boolean"; // setting
+	property name="productListingFlag" ormtype="boolean"; // setting
+	property name="defaultProductsPerPage" ormtype="integer"; // setting
+	property name="showProductInSubPagesFlag" ormtype="boolean"; // setting
 	
 	// Related Object Properties (many-to-one)
-	property name="restrictedContentTemplateContent" cfc="Content" fieldtype="many-to-one" fkcolumn="restrictedContentTemplateContentID";
+	property name="restrictedContentTemplateContent" cfc="Content" fieldtype="many-to-one" fkcolumn="restrictedContentTemplateContentID";  // setting
+	property name="parentContent" cfc="Content" fieldtype="many-to-one" fkcolumn="parentContentID";
 	
 	// Related Object Properties (one-to-many)
+	property name="childContents" singularname="childContent" cfc="Content" type="array" fieldtype="one-to-many" fkcolumn="parentContentID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="contentID" inversejoincolumn="skuID" inverse="true";
@@ -94,6 +96,32 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Child Contents (one-to-many)    
+	public void function addChildContent(required any childContent) {    
+		arguments.childContent.setParentContent( this );    
+	}    
+	public void function removeChildContent(required any childContent) {    
+		arguments.childContent.removeParentContent( this );    
+	}
+	
+	// Parent Content (many-to-one)
+	public void function setParentContent(required any parentContent) {
+		variables.parentContent = arguments.parentContent;
+		if(isNew() or !arguments.parentContent.hasChildContent( this )) {
+			arrayAppend(arguments.parentContent.getChildContents(), this);
+		}
+	}
+	public void function removeParentContent(any parentContent) {
+		if(!structKeyExists(arguments, "parentContent")) {
+			arguments.parentContent = variables.parentContent;
+		}
+		var index = arrayFind(arguments.parentContent.getChildContents(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.parentContent.getChildContents(), index);
+		}
+		structDelete(variables, "parentContent");
+	}
+	
 	// Skus (many-to-many - inverse)
 	public void function addSku(required any sku) {
 		arguments.sku.addAccessContent( this );
@@ -121,6 +149,16 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		setContentIDPath( buildIDPathList( "parentContent" ) );
+	}
+	
+	public void function preUpdate(struct oldData){
+		super.preUpdate(argumentcollection=arguments);
+		setContentIDPath( buildIDPathList( "parentContent" ) );
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

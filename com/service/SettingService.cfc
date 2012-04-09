@@ -71,6 +71,15 @@ globalEncryptionKeySize
 			// Brand
 			brandDisplayTemplate = {fieldType="select"},
 			
+			// Content
+			contentRestrictAccessFlag = {fieldType="yesno"},
+			contentRequirePurchaseFlag = {fieldType="yesno"},
+			contentRequireSubscriptionFlag = {fieldType="yesno"},
+			contentProductListingFlag = {fieldType="yesno"},
+			contentDefaultProductsPerPage = {fieldType="text"},
+			contentIncludeChildContentProductsFlag = {fieldType="yesno"},
+			contentIncludeChildContentProductsFlag = {fieldType="yesno"},
+			
 			// Global
 			globalCurrencyLocale = {fieldType="select"},
 			globalCurrencyType = {fieldType="select"},

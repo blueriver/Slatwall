@@ -1,1 +1,0 @@
-<a href="?slatAction=google:main.createsitemap">Create Google Sitemap</a>
