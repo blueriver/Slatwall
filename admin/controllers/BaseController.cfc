@@ -220,8 +220,9 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		} else {
 			var savedStateKey = lcase( rc.slatAction );
 			
-			
 			/*
+			
+			Commented out until I can figure out all the listing display stuff -Greg
 			
 			if(getSessionService().hasValue( savedStateKey )) {
 				rc.savedStateID = getSessionService().getValue( savedStateKey );
@@ -293,8 +294,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var deleteOK = entityService.invokeMethod("delete#arguments.entityName#", {1=entity});
 		
 		if (deleteOK) {
-			if(structKeyExists(rc, "returnAction")) {
-				getFW().redirect(action=rc.returnAction, querystring=buildReturnActionQueryString( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" ));	
+			if(structKeyExists(rc, "returnAction") && rc.returnAction != "") {
+				redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
 			} else {
 				getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
 			}
@@ -303,38 +304,39 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_error");
 	}
 	
+	
 	public void function genericSaveMethod(required string entityName, required struct rc) {
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
-		// make sure there is no name clash between the entity name and a form field that has been submitted
-		var entity = !structKeyExists( rc,arguments.entityName ) ? arguments.entityName : arguments.entityName & "entity";
-				
-		rc[ entity ] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
-		rc[ entity ] = entityService.invokeMethod( "save#arguments.entityName#", {1=rc[ entity ], 2=rc} );
-		if(!rc[ entity ].hasErrors()) {
+		
+		var data = duplicate(rc);
+		
+		rc[ arguments.entityName ] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
+		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=rc[ arguments.entityName ], 2=data} );
+
+		if(!rc[ arguments.entityName ].hasErrors()) {
 			if(structKeyExists(rc, "returnAction")) {
 				getFW().redirect(action=rc.returnAction, querystring=buildReturnActionQueryString( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" ));	
 			} else {
-				getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ entity ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
+				getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
 			}
 		} else {
 			rc.edit = true;
 			getFW().setView(action=rc.detailAction);
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_error");
-			for( var p in rc[ entity ].getErrors() ) {
-				local.thisErrorArray = rc[ entity ].getErrors()[p];
+			for( var p in rc[ rc.arguments.entityName ].getErrors() ) {
+				local.thisErrorArray = rc[ rc.arguments.entityName ].getErrors()[p];
 				for(var i=1; i<=arrayLen(local.thisErrorArray); i++) {
 					showMessage(local.thisErrorArray[i], "error");
 				}
 			}
-			if(rc[ entity ].isNew()) {
+			if(rc[ arguments.entityName ].isNew()) {
 				rc.slatAction = rc.createAction;
 				rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
 			} else {
 				rc.slatAction = rc.editAction;
 				rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
 			}
-			rc[ arguments.entityName ] = rc[ entity ];
 			rc.edit = true;
 		}
 	}
@@ -350,6 +352,16 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				}
 			}
 		}
+	}
+	
+	private void function redirectToReturnAction(string additionalQueryString="") {
+		var raArray = listToArray(request.context.returnAction, chr(35));
+		var qs = buildReturnActionQueryString( arguments.additionalQueryString );
+		if(arrayLen(raArray) eq 2) {
+			qs &= "#chr(35)##raArray[2]#";
+		}
+		
+		getFW().redirect(action=raArray[1], querystring=qs);
 	}
 	
 	private string function buildReturnActionQueryString(string additionalQueryString="", string ignoreKeys="") {

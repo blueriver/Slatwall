@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,15 +35,7 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfcomponent extends="BaseDAO">
 	
-	property name="accountService";
-	property name="addressService";
-	property name="priceGroupService";
-	
-	public void function default(required struct rc) {
-		getFW().redirect(action="admin:account.listaccount");
-	}
-	
-}
+</cfcomponent>
