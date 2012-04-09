@@ -314,7 +314,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			}
 		} else {
 			rc.edit = true;
-			writeDump(var=rc[entity].getErrors(),abort=true);
 			getFW().setView(action=rc.detailAction);
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_error");
 			for( var p in rc[ entity ].getErrors() ) {
