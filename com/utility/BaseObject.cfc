@@ -235,7 +235,14 @@ component displayname="Base Object" accessors="true" output="false" {
 						
 						// If the value isn't blank, or we can't set to null... then we just set the value.
 						} else {
-							_setProperty(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
+							
+							// Before setting the value, we want to check for any confirmXXX keys that may have been passed in
+							if(!structKeyExists(arguments.data, "confirm#currentProperty.name#") || (arguments.data[ "confirm#currentProperty.name#" ] == arguments.data[ currentProperty.name ])) {
+								_setProperty(currentProperty.name, trim(arguments.data[ currentProperty.name ]));	
+							} else {
+								addError(currentProperty.name, rbKey('define.notconfirmed'));
+							}
+							
 						}
 					
 				// (MANY-TO-ONE) Do this logic if this property is a many-to-one relationship, and the data passed in is of type struct
