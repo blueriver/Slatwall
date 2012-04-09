@@ -57,7 +57,7 @@ globalEncryptionKeySize
 	<cfscript>
 		variables.globalSettingValues = {};
 		
-		variables.settingPrefixInOrder = ["productType", "product", "stock", "brand", "sku"];
+		variables.settingPrefixInOrder = ["fulfillmentMethod", "paymentMethod", "productType", "product", "stock", "brand", "sku"];
 		
 		variables.settingLookupOrder = {
 			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath&sku.product.brand.brandID", "sku.product.productType.productTypeIDPath"],
@@ -130,9 +130,9 @@ globalEncryptionKeySize
 			// Sku
 			skuAllowBackorderFlag = {fieldType="yesno"},
 			skuAllowPreorderFlag = {fieldType="yesno"},
-			skuEligableFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
-			skuEligableOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
-			skuEligablePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
+			skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
+			skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
+			skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
 			skuHoldBackQuantity = {fieldType="text"},
 			skuOrderMinimumQuantity = {fieldType="text"},
 			skuOrderMaximumQuantity = {fieldType="text"},
@@ -141,7 +141,10 @@ globalEncryptionKeySize
 			skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
 			skuShippingWeight = {fieldType="text", formatType="weight"},
 			skuShippingWeightUnitCode = {fieldType="select"},
-			skuTrackInventoryFlag = {fieldType="yesno"}
+			skuTrackInventoryFlag = {fieldType="yesno"},
+			
+			// Payment Method
+			paymentMethodStoreCreditCardNumber = {fieldType="yesno"}
 			
 		};
 		

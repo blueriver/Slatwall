@@ -42,9 +42,9 @@ Notes:
 	<cf_SlatwallSettingTable>
 		<cf_SlatwallSetting settingName="skuAllowBackorderFlag" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="skuAllowPreorderFlag" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="skuEligableFulfillmentMethods" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="skuEligableOrderOrigins" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="skuEligablePaymentMethods" settingObject="#rc.productType#" />
+		<cf_SlatwallSetting settingName="skuEligibleFulfillmentMethods" settingObject="#rc.productType#" />
+		<cf_SlatwallSetting settingName="skuEligibleOrderOrigins" settingObject="#rc.productType#" />
+		<cf_SlatwallSetting settingName="skuEligiblePaymentMethods" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="skuHoldBackQuantity" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" settingObject="#rc.productType#" />

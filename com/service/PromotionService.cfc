@@ -261,7 +261,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 									( !arrayLen( reward.getOptions() ) || reward.hasAnyOption( orderItem.getSku().getOptions() ) )
 								) {
 									
-									// If there is not applied Price Group, or if this reward has the applied pricegroup as an eligable one then use priceExtended... otherwise use skuPriceExtended and then adjust the discount.
+									// If there is not applied Price Group, or if this reward has the applied pricegroup as an eligible one then use priceExtended... otherwise use skuPriceExtended and then adjust the discount.
 									if( isNull(orderItem.getAppliedPriceGroup()) || reward.hasEligiblePriceGroup( orderItem.getAppliedPriceGroup() ) ) {
 										
 										// Calculate based on price, which could be a priceGroup price

@@ -40,9 +40,9 @@ Notes:
 	<cf_SlatwallSettingTable>
 		<cf_SlatwallSetting settingName="skuAllowBackorderFlag" />
 		<cf_SlatwallSetting settingName="skuAllowPreorderFlag" />
-		<cf_SlatwallSetting settingName="skuEligableFulfillmentMethods" />
-		<cf_SlatwallSetting settingName="skuEligableOrderOrigins" />
-		<cf_SlatwallSetting settingName="skuEligablePaymentMethods" />
+		<cf_SlatwallSetting settingName="skuEligibleFulfillmentMethods" />
+		<cf_SlatwallSetting settingName="skuEligibleOrderOrigins" />
+		<cf_SlatwallSetting settingName="skuEligiblePaymentMethods" />
 		<cf_SlatwallSetting settingName="skuHoldBackQuantity" />
 		<cf_SlatwallSetting settingName="skuOrderMinimumQuantity" />
 		<cf_SlatwallSetting settingName="skuOrderMaximumQuantity" />

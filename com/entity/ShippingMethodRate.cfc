@@ -36,15 +36,29 @@
 Notes:
 
 */
-component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="SlatwallShippingRate" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodRate" table="SlatwallShippingMethodRate" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="shippingRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="minWeight" ormtype="int";
-	property name="maxWeight" ormtype="int";
-	property name="minPrice" ormtype="big_decimal";
-	property name="maxPrice" ormtype="big_decimal";
-	property name="shippingRate" ormtype="big_decimal";
+	property name="shippingMethodRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	//property name="minWeight" ormtype="int";
+	//property name="maxWeight" ormtype="int";
+	//property name="minPrice" ormtype="big_decimal";
+	//property name="maxPrice" ormtype="big_decimal";
+	//property name="shippingRate" ormtype="big_decimal";
+	//property name="shippingProvider" ormtype="string";
+	//property name="shippingProviderMethod" ormtype="string";
+	
+	// Related Object Properties (many-to-one)
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many - owner)
+	
+	// Related Object Properties (many-to-many - inverse)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -68,35 +82,29 @@ component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="S
 		return variables.addressZoneOptions;
 	}
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Shipping Method (many-to-one)
-	
-	public void function setShippingMethod(required ShippingMethod shippingMethod) {
-	   variables.shippingMethod = arguments.shippingMethod;
-	   if(isNew() or !arguments.shippingMethod.hasShippingRate(this)) {
-	       arrayAppend(arguments.shippingMethod.getShippingRates(),this);
-	   }
-	}
-	
-	public void function removeShippingMethod(ShippingMethod shippingMethod) {
-	   if(!structKeyExists(arguments,"shippingMethod")) {
-	   		arguments.shippingMethod = variables.shippingMethod;
-	   }
-       var index = arrayFind(arguments.shippingMethod.getShippingRates(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.shippingMethod.getShippingRates(),index);
-       }
-       structDelete(variables,"shippingMethod");
-    }
-    
-    /******* END: Association management methods for bidirectional relationships **************/
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Shipping Method (many-to-one)
+	public void function setShippingMethod(required any shippingMethod) {
+		variables.shippingMethod = arguments.shippingMethod;
+		if(isNew() or !arguments.shippingMethod.hasShippingMethodRate( this )) {
+			arrayAppend(arguments.shippingMethod.getShippingMethodRates(), this);
+		}
+	}
+	public void function removeShippingMethod(any shippingMethod) {
+		if(!structKeyExists(arguments, "shippingMethod")) {
+			arguments.shippingMethod = variables.shippingMethod;
+		}
+		var index = arrayFind(arguments.shippingMethod.getShippingMethodRates(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.shippingMethod.getShippingMethodRates(), index);
+		}
+		structDelete(variables, "shippingMethod");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

@@ -40,24 +40,21 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	
 	// Persistent Properties
 	property name="shippingMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="shippingMethodName" ormtype="string";
-	property name="shippingProvider" ormtype="string";
-	property name="shippingProviderMethod" ormtype="string";
-	property name="shippingRateIncreasePercentage" ormtype="big_decimal";
-	property name="shippingRateIncreaseDollar" ormtype="big_decimal";
-	property name="useRateTableFlag" ormtype="boolean";
 	property name="activeFlag" ormtype="boolean";
+	property name="shippingMethodName" ormtype="string";
 	property name="sortOrder" ormtype="integer";
 	
-	// Related Object Properties (Many-to-One)
+	// Related Object Properties (many-to-one)
 	property name="eligibleAddressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="eligibleAddressZoneID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	
-	// Related Object Properties (One-to-Many)
-	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
+	// Related Object Properties (one-to-many)
+	property name="shippingMethodRates" singularname="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
 	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillmentShipping" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true";
 	
-	// Related Object Properties (Many-to-Many)
+	// Related Object Properties (many-to-many - owner)
+	
+	// Related Object Properties (many-to-many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierFulfillment" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierFulfillmentShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionQualifierID" inverse="true";
 
@@ -74,8 +71,8 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 		if(isNull(variables.activeFlag)) {
 			variables.activeFlag = 1;
 		}
-		if(isNull(variables.shippingRates)) {
-			variables.shippingRates = [];
+		if(isNull(variables.shippingMethodRates)) {
+			variables.shippingMethodRates = [];
 		}
 		if(isNull(variables.orderFulfillments)) {
 			variables.orderFulfillments = [];
@@ -143,12 +140,12 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 		arguments.promotionReward.removeShipppingMethod( this );    
 	}
 	
-	// Shipping Rates (one-to-many)
-	public void function addShippingRate(required any shippingRate) {
-		arguments.shippingRate.setShippingMethod( this );
-	}
-	public void function removeShippingRate(required any shippingRate) {
-		arguments.shippingRate.removeShippingMethod( this );
+	// Shipping Method Rates (one-to-many)    
+	public void function addShippingMethodRate(required any shippingMethodRate) {    
+		arguments.shippingMethodRate.setShippingMethod( this );    
+	}    
+	public void function removeShippingMethodRate(required any shippingMethodRate) {    
+		arguments.shippingMethodRate.removeShippingMethod( this );    
 	}
 	
 	// Fulfillment Method (many-to-one)

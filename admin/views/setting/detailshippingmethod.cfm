@@ -43,8 +43,12 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.shippingMethod#" saveAction="admin:setting.saveshippingmethod" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.shippingMethod#" edit="#rc.edit#">	
+		</cf_SlatwallActionBar>
+	
 		<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
 		
 		<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#">
+		
 	</cf_SlatwallDetailForm>
 </cfoutput>

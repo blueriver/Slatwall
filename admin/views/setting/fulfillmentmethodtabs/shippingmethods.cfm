@@ -40,12 +40,10 @@ Notes:
 <cfparam name="rc.fulfillmentMethod" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethod.getShippingMethodsSmartList()#"
-		recordEditAction="admin:setting.editshippingmethod"
-		recordEditQueryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#"
-		recordEditModal=true>
+		recordEditAction="admin:setting.editshippingmethod">
 		
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="shippingMethodName" />
 	
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" class="btn btn-primary" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" modal=true />
+<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" class="btn btn-primary" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" />

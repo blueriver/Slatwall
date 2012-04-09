@@ -108,7 +108,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
 		if(!structKeyExists(arguments, "orderFulfillment"))	{
-			var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligableFulfillmentMethods'),1)).getFulfillmentMethodType();
+			var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligibleFulfillmentMethods'),1)).getFulfillmentMethodType();
 			// check if there is a fulfillment method of this type in the order
 			for(var fulfillment in arguments.order.getOrderFulfillments()) {
 				if(fulfillment.getFulfillmentMethodType() == thisFulfillmentMethodType) {

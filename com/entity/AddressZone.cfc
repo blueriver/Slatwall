@@ -44,7 +44,7 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 	
 	// Related Object Properties (One-To-Many) - These are for doing delete validation to ensure that there are no entities using this address zone
 	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
-	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
+	property name="shippingMethodRates" singularname="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
 	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
 	
 	// Related Object Properties (Many-To-Many)
@@ -79,12 +79,12 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 		arguments.shippingMethod.removeAddressZone( this );    
 	}
 	
-	// Shipping Rates (one-to-many)
-	public void function addShippingRate(required any shippingRate) {
-		arguments.shippingRate.setAddressZone( this );
-	}
-	public void function removeShippingRate(required any shippingRate) {
-		arguments.shippingRate.removeAddressZone( this );
+	// Shipping Method Rates (one-to-many)    
+	public void function addShippingMethodRate(required any shippingMethodRate) {    
+		arguments.shippingMethodRate.setAddressZone( this );    
+	}    
+	public void function removeShippingMethodRate(required any shippingMethodRate) {    
+		arguments.shippingMethodRate.removeAddressZone( this );    
 	}
 	
 	// Tax Category Rates (one-to-many)

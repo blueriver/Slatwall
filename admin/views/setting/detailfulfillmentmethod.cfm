@@ -53,7 +53,10 @@ Notes:
 	</cf_SlatwallDetailHeader>
 	
 	<cf_SlatwallTabGroup object="#rc.fulfillmentMethod#">
-		<cf_SlatwallTab view="admin:setting/fulfillmentmethodtabs/#lcase(rc.fulfillmentMethod.getFulfillmentMethodType())#">
+		<cfif rc.fulfillmentMethod.getFulfillmentMethodType() eq "shipping">
+			<cf_SlatwallTab view="admin:setting/fulfillmentmethodtabs/shippingmethods">	
+		</cfif>
+		<cf_SlatwallTab view="admin:setting/fulfillmentmethodtabs/fulfillmentsettings">
 	</cf_SlatwallTabGroup>
 
 </cf_SlatwallDetailForm>
