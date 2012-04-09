@@ -10,7 +10,7 @@
 	<bean id="baseDAO" class="Slatwall.com.dao.BaseDAO" />
 	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
 	<bean id="commentDAO" class="Slatwall.com.dao.CommentDAO" />
-	<bean id="contentDAO" class="Slatwall.com.dao.contentDAO" />
+	<bean id="contentDAO" class="Slatwall.com.dao.ContentDAO" />
 	<bean id="dataDAO" class="Slatwall.com.dao.DataDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
 	<bean id="integrationDAO" class="Slatwall.com.dao.IntegrationDAO" />

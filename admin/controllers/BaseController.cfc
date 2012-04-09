@@ -195,6 +195,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		var httpRequestData = getHTTPRequestData();
+		
 		// If this is an ajax call, just get the smart list
 		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
 			
@@ -218,10 +219,14 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		// If this is a standard call, then look to save the state
 		} else {
 			var savedStateKey = lcase( rc.slatAction );
-		
+			
+			
+			/*
+			
 			if(getSessionService().hasValue( savedStateKey )) {
 				rc.savedStateID = getSessionService().getValue( savedStateKey );
 			}
+			*/
 			
 			rc["#arguments.entityName#smartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=rc} );
 			

@@ -100,7 +100,7 @@ component extends="BaseDAO" {
 			  	AND SlatwallAddress.addressID = SlatwallOrderFulfillment.shippingAddressID
 			  	AND SlatwallOrder.orderStatusTypeID = orderStatusType.typeID";		  	
 		
-	// keyword search on order number, or account lastname or company	 	
+		// keyword search on order number, or account lastname or company	 	
 		if(structKeyExists(arguments,"keyword") && len(trim(arguments.keyword)) > 0) {
 			if(isNumeric(arguments.keyword)) {
 				sql &= " AND SlatwallOrder.orderNumber = :searchOrderNumber";
@@ -110,22 +110,26 @@ component extends="BaseDAO" {
 				searchAccount = true;
 			}
 		}
+		
 		// date search
 		if(structKeyExists(arguments,"orderDateStart") && len(arguments.orderDateStart) > 0 && isDate(arguments.orderDateStart)) {
 			sql &= " AND SlatwallOrder.orderOpenDateTime >= :searchDateStart";
 			searchDateStart = true;
-		} 
+		}
+		
 		// date search
 		if(structKeyExists(arguments,"orderDateEnd") && len(arguments.orderDateEnd) > 0 && isDate(arguments.orderDateEnd)) {
 			orderDateEnd = dateAdd('s',85399,orderDateEnd);
 			sql &= " AND SlatwallOrder.orderOpenDateTime <= :searchDateEnd";
 			searchDateEnd = true;
-		} 
+		}
+		
 		// status code
 		if(structKeyExists(arguments,"statusCode") && len(arguments.statusCode) > 0) {
 			sql&= " AND orderStatusType.systemCode in (:searchStatusCode)";
 			searchStatusCode = true;
 		} 
+		
 		// query ordering
 		if(structKeyExists(arguments,"orderBy") && len(arguments.orderby) > 0) {
 			var orderField = listFirst(arguments.orderBy,"|");
@@ -137,6 +141,7 @@ component extends="BaseDAO" {
 		}
 		
 		qOrders.setSQL(sql);
+		
 		// param values
 		if(searchOrderNumber) {
 			qOrders.addParam(name="searchOrderNumber", value="#arguments.keyword#", cfsqltype="cf_sql_integer");
@@ -158,20 +163,6 @@ component extends="BaseDAO" {
 	
 	public struct function getQuantityPriceSkuAlreadyReturned(required any orderID, required any skuID) {
 		var params = [arguments.orderID, arguments.skuID];	
-		/*var hql = " SELECT new map(sum(oi.quantity) as quantity)
-					FROM SlatwallOrderItem oi
-					WHERE oi.order.relatedOrder.vendorOrderID = ?
-					AND voi.stock.sku.skuID = ?    
-					AND voi.stock.location.locationID = ?                ";
-					
-		var hql = " SELECT distinct oi
-					FROM SlatwallOrderItem oi, SlatwallOrder o
-					JOIN o.referencingOrders ros
-					JOIN ros.orderItem oi2
-					JOIN oi2.
-					JOIN voi.stock s
-					WHERE s.sku.skuID = sk.skuID
-					AND vo.vendorOrderID = ?"; */
 
 		var hql = " SELECT new map(sum(oi.quantity) as quantity, sum(oi.price) as price)
 					FROM SlatwallOrderItem oi
