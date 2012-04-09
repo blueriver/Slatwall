@@ -149,7 +149,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			// save the current content to be used on the barrier page
 			rc.$.event("restrictedContent",$.content());
 			// get the slatwall content
-			var slatwallContent = getContentService().getContentByCmsContentID($.content("contentID"));
+			var slatwallContent = getContentService().getRestrictedContentByPath($.content("path"));
 			// set slatwallContent in rc to be used on the barrier page
 			rc.$.event("slatwallContent",slatwallContent);
 			// get the barrier page template
