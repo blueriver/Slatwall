@@ -230,12 +230,12 @@ component displayname="Base Object" accessors="true" output="false" {
 				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) ) {
 					
 						// If the value is blank, then we check to see if the property can be set to NULL.
-						if( arguments.data[ currentProperty.name ] == "" && ( !structKeyExists(currentProperty, "notNull") || !currentProperty.notNull ) ) {
+						if( trim(arguments.data[ currentProperty.name ]) == "" && ( !structKeyExists(currentProperty, "notNull") || !currentProperty.notNull ) ) {
 							_setProperty(currentProperty.name);
 						
 						// If the value isn't blank, or we can't set to null... then we just set the value.
 						} else {
-							_setProperty(currentProperty.name, arguments.data[ currentProperty.name ]);
+							_setProperty(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
 						}
 					
 				// (MANY-TO-ONE) Do this logic if this property is a many-to-one relationship, and the data passed in is of type struct
