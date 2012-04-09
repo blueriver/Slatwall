@@ -41,22 +41,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="addressService" type="any";
 	property name="integrationService" type="any";
 
-	public any function saveShippingMethod(required any entity, struct data) {
-		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"shippingRates") ) {
-			for(var i=1; i<=arrayLen(arguments.data.shippingRates); i++) {	
-				if( len(arguments.data.shippingRates[i].shippingRateID) > 0 ) {
-					var rate = this.getShippingRate(arguments.data.shippingRates[i].shippingRateID);
-					rate.populate(data=arguments.data.shippingRates[i]);
-		         } else {
-		         	var rate = this.newShippingRate();
-		         	rate.populate(data=arguments.data.shippingRates[i]);
-		         	arguments.entity.addShippingRate(rate);
-		         }
-			}
-		}
-		return save(argumentcollection=arguments);
-	}
-	
 	public array function populateOrderShippingMethodOptions(required any orderFulfillmentShipping) {
 		var shippingMethods = this.listShippingMethodFilterByActiveFlag(1);
 		var shippingProviders = [];

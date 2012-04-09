@@ -36,19 +36,26 @@
 Notes:
 
 --->
-
-<cfparam name="rc.shippingMethod" type="any">
+<cfparam name="rc.shippingMethod" type="any" />
 <cfparam name="rc.fulfillmentMethod" type="any" default="#rc.shippingMethod.getFulfillmentMethod()#">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.edit" type="boolean" />
 
-<cfoutput>
-	<cf_SlatwallDetailForm object="#rc.shippingMethod#" saveAction="admin:setting.saveshippingmethod" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.shippingMethod#" edit="#rc.edit#">	
-		</cf_SlatwallActionBar>
+<cf_SlatwallDetailForm object="#rc.shippingMethod#" edit="#rc.edit#">
+	<cf_SlatwallActionBar type="detail" object="#rc.shippingMethod#" edit="#rc.edit#"></cf_SlatwallActionBar>
 	
+	<cfif rc.edit>
 		<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
-		
-		<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#">
-		
-	</cf_SlatwallDetailForm>
-</cfoutput>
+	</cfif>
+	
+	<cf_SlatwallDetailHeader>
+		<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="activeFlag" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#">
+		</cf_SlatwallPropertyList>
+	</cf_SlatwallDetailHeader>
+	
+	<cf_SlatwallTabGroup object="#rc.shippingMethod#">
+		<cf_SlatwallTab view="admin:settings/shippingmethodtabs/shippingmethodrates" />
+	</cf_SlatwallTabGroup>
+	
+</cf_SlatwallDetailForm>
