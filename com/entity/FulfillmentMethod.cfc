@@ -45,13 +45,25 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";
 	
+	// Related Object Properties (many-to-one)
+	
+	// Related Object Properties (one-to-many)
+	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" type="array" fieldtype="one-to-many" fkcolumn="fulfillmentMethodID" cascade="all-delete-orphan" inverse="true";
+	
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	
+		
 	public array function getFulfillmentMethodTypeOptions() {
 		var options = [
 			{name="Shipping", value="shipping"},
@@ -68,6 +80,14 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Shipping Methods (one-to-many)    
+	public void function addShippingMethod(required any shippingMethod) {    
+		arguments.shippingMethod.setFulfillmentMethod( this );    
+	}    
+	public void function removeShippingMethod(required any shippingMethod) {    
+		arguments.shippingMethod.removeFulfillmentMethod( this );    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

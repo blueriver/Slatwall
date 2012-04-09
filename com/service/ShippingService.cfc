@@ -128,7 +128,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Loop over Shipping Providers
 		for(var p=1; p<=arrayLen(shippingProviders); p++) {
-			
+			writeDump(shippingProviders);
+			abort;
 			// Get Provider Service
 			var integration = getIntegrationService().getIntegrationByIntegrationPackage(shippingProviders[p]);
 			var providerService = getIntegrationService().getShippingIntegrationCFC(integration);

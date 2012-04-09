@@ -37,6 +37,3 @@ Notes:
 
 --->
 
-<cf_SlatwallTabGroup object="#rc.fulfillmentMethod#">
-	<cf_SlatwallTab view="admin:setting/fulfillmentmethodtypes/pickuptabs/settings" />
-</cf_SlatwallTabGroup>

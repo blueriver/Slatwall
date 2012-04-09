@@ -120,44 +120,54 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 			return integration.getIntegrationCFC('shipping').getShippingMethods()[ getShippingProviderMethod() ];
 		}
 	}
-
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Shipping Rate (one-to-many)
-	
-	public void function addShippingRate(required any shippingRate) {    
-	   arguments.shippingRate.setShippingMethod(this);    
-	}    
-	    
-	public void function removeShippingRate(required any shippingRate) {    
-	   arguments.shippingRate.removeShippingMethod(this);    
-	}
-	
-	// PromotionRewards (many-to-many)
-	public void function addPromotionReward(required any promotionReward) {
-	   arguments.promotionReward.addShippingMethod(this);
-	}
-	
-	public void function removePromotionReward(required any promotionReward) {
-	   arguments.promotionReward.removeShippingMethod(this);
-	}
-	
-	// PromotionQualifiers (many-to-many)
-	public void function addPromotionQualifier(required any promotionQualifier) {
-	   arguments.promotionQualifier.addShippingMethod(this);
-	}
-	
-	public void function removePromotionQualifier(required any promotionQualifier) {
-	   arguments.promotionQualifier.removeShippingMethod(this);
-	}
-	
-	/******* End: Association management methods for bidirectional relationships **************/
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Promotion Qualifiers (many-to-many - inverse)    
+	public void function addPromotionQualifier(required any promotionQualifier) {    
+		arguments.promotionQualifier.addShippingMethod( this );    
+	}    
+	public void function removePromotionQualifier(required any promotionQualifier) {    
+		arguments.promotionQualifier.removeShippingMethod( this );    
+	}
+	
+	// Promotion Rewards (many-to-many - inverse)    
+	public void function addPromotionReward(required any promotionReward) {    
+		arguments.promotionReward.addShipppingMethod( this );    
+	}    
+	public void function removePromotionReward(required any promotionReward) {    
+		arguments.promotionReward.removeShipppingMethod( this );    
+	}
+	
+	// Shipping Rates (one-to-many)
+	public void function addShippingRate(required any shippingRate) {
+		arguments.shippingRate.setShippingMethod( this );
+	}
+	public void function removeShippingRate(required any shippingRate) {
+		arguments.shippingRate.removeShippingMethod( this );
+	}
+	
+	// Fulfillment Method (many-to-one)
+	public void function setFulfillmentMethod(required any fulfillmentMethod) {
+		variables.fulfillmentMethod = arguments.fulfillmentMethod;
+		if(isNew() or !arguments.fulfillmentMethod.hasShippingMethod( this )) {
+			arrayAppend(arguments.fulfillmentMethod.getShippingMethods(), this);
+		}
+	}
+	public void function removeFulfillmentMethod(any fulfillmentMethod) {
+		if(!structKeyExists(arguments, "fulfillmentMethod")) {
+			arguments.fulfillmentMethod = variables.fulfillmentMethod;
+		}
+		var index = arrayFind(arguments.fulfillmentMethod.getShippingMethods(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.fulfillmentMethod.getShippingMethods(), index);
+		}
+		structDelete(variables, "fulfillmentMethod");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

@@ -87,9 +87,11 @@ Notes:
 				<div class="container-fluid">
 					<ul class="nav">
 						<cf_SlatwallActionCaller action="admin:main" type="list" icon="home icon-white" iconOnly=true>
+						<!---
 						<form class="navbar-form pull-left">
   							<input type="text" class="span2">
 						</form>
+						--->
 						<cf_SlatwallActionCaller action="admin:product" type="list" icon="pencil icon-white">
 						<cf_SlatwallActionCaller action="admin:pricing" type="list" icon="tags icon-white">
 						<cf_SlatwallActionCaller action="admin:order" type="list" icon="inbox icon-white">
