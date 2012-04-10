@@ -36,34 +36,29 @@
 Notes:
 
 --->
-<cfparam name="rc.shippingMethod" type="any" />
-<cfparam name="rc.fulfillmentMethod" type="any" default="#rc.shippingMethod.getFulfillmentMethod()#">
+<cfparam name="rc.shippingMethodRate" type="any" />
+<cfparam name="rc.shippingMethod" type="any" default="#rc.shippingMethodRate.getShippingMethod()#" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cfif rc.shippingMethod.getShippingMethodRatesCount() lt 1>
-	<cfset rc.$.slatwall.showMessageKey('admin.detailshippingmethod.norates_info') />
-</cfif>
-
 <cfoutput>
-	
-	<cf_SlatwallDetailForm object="#rc.shippingMethod#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.shippingMethod#" edit="#rc.edit#" backAction="admin:setting.detailfulfillmentMethod" backQueryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#">
-			<cf_SlatwallActionCaller action="admin:setting.createshippingmethodrate" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" type="list" />
-		</cf_SlatwallActionBar>
+	<cf_SlatwallDetailForm object="#rc.shippingMethodRate#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.shippingMethodRate#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
 		<cfif rc.edit>
-			<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
+			
 		</cfif>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minPrice" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="maxPrice" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minWeight" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="maxWeight" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.shippingMethod#">
-			<cf_SlatwallTab view="admin:setting/shippingmethodtabs/shippingmethodrates" />
+		<cf_SlatwallTabGroup object="#rc.shippingMethodRate#">
+			<!--- <cf_SlatwallTab view="admin:setting/shippingmethodratetabs/settings" /> --->
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

@@ -144,7 +144,7 @@
 				<entry key="Session"><value>sessionService</value></entry>
 				<entry key="Setting"><value>settingService</value></entry>
 				<entry key="ShippingMethod"><value>shippingService</value></entry>
-				<entry key="ShippingRate"><value>shippingService</value></entry>
+				<entry key="ShippingMethodRate"><value>shippingService</value></entry>
 				<entry key="Sku"><value>skuService</value></entry>
 				<entry key="SkuCache"><value>skuCacheService</value></entry>
 				<entry key="State"><value>addressService</value></entry>

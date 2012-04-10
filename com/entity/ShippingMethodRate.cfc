@@ -41,10 +41,10 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	// Persistent Properties
 	property name="shippingMethodRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	//property name="minWeight" ormtype="int";
-	//property name="maxWeight" ormtype="int";
-	//property name="minPrice" ormtype="big_decimal";
-	//property name="maxPrice" ormtype="big_decimal";
+	property name="minWeight" ormtype="int";
+	property name="maxWeight" ormtype="int";
+	property name="minPrice" ormtype="big_decimal";
+	property name="maxPrice" ormtype="big_decimal";
 	//property name="shippingRate" ormtype="big_decimal";
 	//property name="shippingProvider" ormtype="string";
 	//property name="shippingProviderMethod" ormtype="string";
@@ -107,6 +107,14 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentation() {
+		return "";
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
