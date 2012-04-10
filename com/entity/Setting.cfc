@@ -48,6 +48,8 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="many-to-one" fkcolumn="shippingMethodRateID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

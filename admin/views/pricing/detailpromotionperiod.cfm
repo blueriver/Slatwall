@@ -43,7 +43,7 @@ Notes:
 <!--- prevent editing promotion period if it has expired --->
 <cfif rc.edit and rc.promotionperiod.isExpired()>
 	<cfset rc.edit = false />
-	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionperiod.edit_disabled'),messageType="info"}) />
+	<cfset rc.$.slatwall.showMessageKey('admin.pricing.promotionperiod.editdisabled_info') />
 </cfif>
 
 <cfoutput>

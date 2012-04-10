@@ -37,16 +37,10 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallActionBar type="static"></cf_SlatwallActionBar>
-	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/sku" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/shippingmethod" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/shippingmethodrate" />
-	</cf_SlatwallTabGroup>
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="shippingMethodRateAdjustmentType" />
+		<cf_SlatwallSetting settingName="shippingMethodRateAdjustmentAmount" />
+		<cf_SlatwallSetting settingName="shippingMethodRateMinimumAmount" />
+		<cf_SlatwallSetting settingName="shippingMethodRateMaximumAmount" />
+	</cf_SlatwallSettingTable>
 </cfoutput>

@@ -57,14 +57,24 @@ globalEncryptionKeySize
 	<cfscript>
 		variables.globalSettingValues = {};
 		
-		variables.settingPrefixInOrder = ["fulfillmentMethod", "paymentMethod", "productType", "product", "stock", "brand", "sku"];
+		variables.settingPrefixInOrder = [
+			"shippingMethodRate",
+			"fulfillmentMethod",
+			"shippingMethod",
+			"paymentMethod",
+			"productType",
+			"product",
+			"stock",
+			"brand",
+			"sku"];
 		
 		variables.settingLookupOrder = {
 			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath&sku.product.brand.brandID", "sku.product.productType.productTypeIDPath"],
 			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
 			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
-			content = ["contentIDPath"]
+			content = ["contentIDPath"],
+			shippingMethodRate = ["shippingMethod.shippingMethodID"]
 		};
 		
 		variables.settingMetaData = {
@@ -78,7 +88,12 @@ globalEncryptionKeySize
 			contentProductListingFlag = {fieldType="yesno"},
 			contentDefaultProductsPerPage = {fieldType="text"},
 			contentIncludeChildContentProductsFlag = {fieldType="yesno"},
-			contentIncludeChildContentProductsFlag = {fieldType="yesno"},
+	
+			// Fulfillment Method
+			fulfillmentMethodEmailFrom = {fieldType="text"},
+			fulfillmentMethodEmailCC = {fieldType="text"},
+			fulfillmentMethodEmailBCC = {fieldType="text"},
+			fulfillmentMethodEmailSubjectString = {fieldType="text"},
 			
 			// Global
 			globalCurrencyLocale = {fieldType="select"},
@@ -113,6 +128,8 @@ globalEncryptionKeySize
 			globalPageCreateAccount = {fieldType="text"},
 			globalPageCheckout = {fieldType="text"},
 			
+			// Payment Method
+			paymentMethodStoreCreditCardNumber = {fieldType="yesno"},
 			
 			// Product
 			productDisplayTemplate = {fieldType="select"},
@@ -143,8 +160,14 @@ globalEncryptionKeySize
 			skuShippingWeightUnitCode = {fieldType="select"},
 			skuTrackInventoryFlag = {fieldType="yesno"},
 			
-			// Payment Method
-			paymentMethodStoreCreditCardNumber = {fieldType="yesno"}
+			// Shipping Method
+			shippingMethodQualifiedRateSelection = {fieldType="select"},
+			
+			// Shipping Method Rate
+			shippingMethodRateAdjustmentType = {fieldType="select"},
+			shippingMethodRateAdjustmentAmount = {fieldType="text"},
+			shippingMethodRateMinimumAmount = {fieldType="text"},
+			shippingMethodRateMaximumAmount = {fieldType="text"}
 			
 		};
 		
@@ -174,6 +197,10 @@ globalEncryptionKeySize
 					optionSL.addSelect('unitName', 'name');
 					optionSL.addSelect('unitCode', 'value');
 					return optionSL.getRecords();
+				case "shippingMethodQualifiedRateSelection" :
+					return [{name='Sort Order', value='sortOrder'}, {name='Lowest Rate', value='lowest'}, {name='Highest Rate', value='highest'}];
+				case "shippingMethodRateAdjustmentType" :
+					return [{name='Increase Percentage', value='increasePercentage'}, {name='Decrease Percentage', value='decreasePercentage'}, {name='Increase Amount', value='increaseAmount'}, {name='Decrease Amount', value='decreaseAmount'}];
 			}
 			throw("You have asked for a select list of a setting named '#arguments.settingName#' and the options for that setting have not been setup yet.  Open the SettingService, and configure options for this setting.")
 		}
@@ -401,6 +428,18 @@ globalEncryptionKeySize
 						LOWER(allSettings.brandID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.brandID)#" > 
 					<cfelse>
 						allSettings.brandID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "shippingMethodID")>
+						LOWER(allSettings.shippingMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodID)#" > 
+					<cfelse>
+						allSettings.shippingMethodID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "shippingMethodRateID")>
+						LOWER(allSettings.shippingMethodRateID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodRateID)#" > 
+					<cfelse>
+						allSettings.shippingMethodRateID IS NULL
 					</cfif>
 		</cfquery> 
 				

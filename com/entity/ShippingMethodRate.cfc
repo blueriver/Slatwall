@@ -40,16 +40,17 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	
 	// Persistent Properties
 	property name="shippingMethodRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	
-	property name="minWeight" ormtype="int";
-	property name="maxWeight" ormtype="int";
-	property name="minPrice" ormtype="big_decimal";
-	property name="maxPrice" ormtype="big_decimal";
-	//property name="shippingRate" ormtype="big_decimal";
-	//property name="shippingProvider" ormtype="string";
-	//property name="shippingProviderMethod" ormtype="string";
+	property name="minimumFulfillmentWeight" ormtype="int";
+	property name="maximumFulfillmentWeight" ormtype="int";
+	property name="minimumFulfillmentItemPrice" ormtype="big_decimal";
+	property name="maximumFulfillmentItemPrice" ormtype="big_decimal";
+	property name="defaultAmount" ormtype="big_decimal";
+	property name="shippingIntegrationMethod" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
+	property name="shippingIntegration" cfc="Integration" fieldtype="many-to-one" fkcolumn="shippingIntegrationID";
+	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -66,9 +67,19 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
+	// Non Persistent
+	property name="shippingIntegrationMethodOptions" type="array" persistent="false";
+	property name="addressZoneOptions" type="array" persistent="false";
+	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	public array function getShippingIntegrationMethodOptions() {
+		if(!structKeyExists(variables, "shippingIntegrationMethodOptions")) {
+			variables.shippingIntegrationMethodOptions = [{name='', value=''}];
+		}
+		return variables.shippingIntegrationMethodOptions;
+	}
 	
 	public array function getAddressZoneOptions() {
 		if(!structKeyExists(variables, "addressZoneOptions")) {
@@ -81,8 +92,6 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 		}
 		return variables.addressZoneOptions;
 	}
-	
-	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

@@ -55,6 +55,13 @@
 		<Record settingID="dbb327b8fb8c0843e5cb7cd6525e2f6a" settingName="skuShippingWeightUnitCode" settingValue="lb" />
 		<Record settingID="dbb327c6d74a8e837f0cfa41aab9cd94" settingName="skuTrackInventoryFlag" settingValue="0" />
 		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="skuTrackInventoryFlag" settingValue="1" productTypeID="444df2f7ea9c87e60051f3cd87b435a1" />
+		
+		<Record settingID="dbb327d5c8200946403aefdb964ce106" settingName="shippingMethodQualifiedRateSelection" settingValue="lowest" />
+		
+		<Record settingID="dbb327d6cc7ad9b1b202a98cbd96fb92" settingName="shippingMethodRateAdjustmentType" settingValue="increasePercentage" />
+		<Record settingID="dbb327d70434ec8ffb6d3702bfc41dcc" settingName="shippingMethodRateAdjustmentAmount" settingValue="0" />
+		<Record settingID="dbb327d89f25e6cde4b440208652cab4" settingName="shippingMethodRateMinimumAmount" settingValue="0" />
+		<Record settingID="dbb327d9ee2d8254cf6119c0f9b2fc88" settingName="shippingMethodRateMaximumAmount" settingValue="1000" />
 
 	</Records>
 </Table>
@@ -62,16 +69,6 @@
 <!--
 Below Are UUID's to use... delete after using
 	
-	
-	
-	
-	
-	
-	dbb327d5c8200946403aefdb964ce106
-	dbb327d6cc7ad9b1b202a98cbd96fb92
-	dbb327d70434ec8ffb6d3702bfc41dcc
-	dbb327d89f25e6cde4b440208652cab4
-	dbb327d9ee2d8254cf6119c0f9b2fc88
 	dbb327dafcad27b671aa2704594b1cb8
 	dbb327dbd407d87f690e491751eb1b24
 	dbb327dcbc98171b5e3342a808786914
