@@ -99,6 +99,9 @@ component extends="org.fw1.framework" output="false" {
 					
 					// Set vfs root for slatwall
 					getPluginConfig().getApplication().setValue('slatwallVfsRoot', slatwallVfsRoot);
+					if(!directoryExists(slatwallVfsRoot)) {
+						directoryCreate(slatwallVfsRoot);
+					}
 					
 					// Make's sure that our entities get updated
 					ormReload();
