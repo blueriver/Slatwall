@@ -60,5 +60,9 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
+	<cf_SlatwallTabGroup object="#rc.content#">
+		<cf_SlatwallTab view="admin:setting/contenttabs/contentsettings">
+	</cf_SlatwallTabGroup>
+
 	</cf_SlatwallDetailForm>
 </cfoutput>

@@ -42,7 +42,7 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.contentSmartList#" createAction="" />
 
-<cf_SlatwallListingDisplay smartList="#rc.contentSmartList#" recordEditAction="admin:setting.editcontent" recordEditQueryString="returnAction=admin:setting.listcontent"  recordEditModal="true">
+<cf_SlatwallListingDisplay smartList="#rc.contentSmartList#" recordEditAction="admin:setting.editcontent" recordEditQueryString="returnAction=admin:setting.listcontent">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
 	<cf_SlatwallListingColumn propertyIdentifier="templateFlag" />
 	<cf_SlatwallListingColumn propertyIdentifier="productListingFlag" />
