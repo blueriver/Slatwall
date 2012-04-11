@@ -939,6 +939,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		return expandPath("/plugins/Slatwall");
 	}
 	
+	// @hint  helper function the virtual file system directory
+	public any function getSlatwallVFSRootDirectory() {
+		return getPluginConfig().getApplication().getValue("slatwallVfsRoot");
+	}
+	
 	// @hint  helper function to get the database type
 	public string function getDBType() {
 		return application.configbean.getDBType();

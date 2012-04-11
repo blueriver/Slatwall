@@ -37,6 +37,7 @@ Notes:
 
 */
 component displayname="Utility - File Service" persistent="false" extends="BaseService" output="false" hint="This is a utility component which handles common file operations" {
+	property name="utilityTagService" type="any"; 
 	
 	public string function filterFilename(required string filename) {
 		// Lower Case The Filename
@@ -117,5 +118,11 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 			fileCopy(arguments.source,arguments.destination);
 		}
 	}
-
+	
+	// helper method for downloading a file
+	public void function downloadFile(required string fileName, required string filePath, string contentType = 'application/unknown', boolean deleteFile = false) {
+		getUtilityTagService().cfheader(name="Content-Disposition", value="inline; filename=#arguments.fileName#"); 
+		getUtilityTagService().cfcontent(type="#arguments.contentType#", file="#arguments.filePath#", deletefile="#arguments.deleteFile#");
+	}
+	
 }

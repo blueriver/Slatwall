@@ -133,4 +133,19 @@ Notes:
 		<cfreturn result />
 	</cffunction>
 	
+	<cffunction name="cfcontent" output="false">
+		<cfargument name="type" type="string" />
+		<cfargument name="file" type="string" />
+		<cfargument name="deletefile" type="boolean" default="false" />
+		
+		<cfcontent attributecollection="#arguments#"  />
+	</cffunction>
+	
+	<cffunction name="cfheader" output="false">
+		<cfargument name="name" type="string" />
+		<cfargument name="value" type="string" />
+		
+		<cfheader attributecollection="#arguments#"  />
+	</cffunction>
+	
 </cfcomponent>

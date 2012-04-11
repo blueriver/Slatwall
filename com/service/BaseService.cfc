@@ -40,6 +40,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 
 	property name="DAO" type="any";
 	property name="requestCacheService" type="any";
+	property name="utilityFileService" type="any";
 	
 	public any function init() {
 		return super.init();
@@ -112,7 +113,50 @@ component displayname="Base Service" persistent="false" accessors="true" output=
         return arguments.entity;
     }
     
-    
+	/**
+	* exports the given query/array to file.
+	* 
+	* @param data      Data to export. (Required) (Currently only supports query).
+	* @param columns      list of columns to export. (optional, default: all)
+	* @param columnNames      list of column headers to export. (optional, default: none)
+	* @param fileName      file name for export. (default: uuid)
+	* @param fileType      file type for export. (default: csv)
+	*/
+	public void function export(required any data, string columns, string columnNames, string fileName, string fileType = 'csv') {
+		if(!structKeyExists(arguments,"fileName")){
+			arguments.fileName = createUUID() ;
+		}
+		var fileNameWithExt = arguments.fileName & "." & arguments.fileType ;
+		var filePath = getSlatwallVFSRootDirectory() & "/" & fileNameWithExt ;
+		if(isQuery(data) && !structKeyExists(arguments,"columns")){
+			arguments.columns = arguments.data.columnList;
+		}
+		if(structKeyExists(arguments,"columns") && !structKeyExists(arguments,"columnNames")){
+			arguments.columnNames = arguments.columns;
+		}
+		var columnArray = listToArray(arguments.columns);
+		var columnCount = arrayLen(columnArray);
+		
+		if(arguments.fileType == 'csv'){
+			var dataArray=[arguments.columnNames];
+			for(var i=1; i <= data.recordcount; i++){
+				var row = [];
+				for(var j=1; j <= columnCount; j++){
+					arrayAppend(row,'"#data[columnArray[j]][i]#"');
+				}
+				arrayAppend(dataArray,arrayToList(row));
+			}
+			var outputData = arrayToList(dataArray,"#chr(13)##chr(10)#");
+			fileWrite(filePath,outputData);
+		} else {
+			throw("Implement export for fileType #arguments.fileType#");
+		}
+
+		// Open / Download File
+		getUtilityFileService().downloadFile(fileNameWithExt,filePath,"application/#arguments.fileType#",true);
+	}
+		
+		    
  	/**
 	 * Generic ORM CRUD methods and dynamic methods by convention via onMissingMethod.
 	 *
