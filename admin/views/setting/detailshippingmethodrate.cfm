@@ -42,7 +42,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.shippingMethodRate#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.shippingMethodRate#" edit="#rc.edit#"></cf_SlatwallActionBar>
+		<cf_SlatwallActionBar type="detail" object="#rc.shippingMethodRate#" edit="#rc.edit#" backAction="admin:setting.detailShippingMethod" backQueryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"></cf_SlatwallActionBar>
 		
 		<cfif rc.edit>
 			<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.shippingMethod.getShippingMethodID()#" />

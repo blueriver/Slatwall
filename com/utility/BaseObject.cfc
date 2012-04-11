@@ -592,6 +592,15 @@ component displayname="Base Object" accessors="true" output="false" {
 		return exactMatch;
 	}
 	
+	// @hint public method for getting the title hint to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
+	public string function getPropertyHint(required string propertyName) {
+		var exactMatch = rbKey("entity.#getClassName()#.#arguments.propertyName#_hint");
+		if(right(exactMatch, 8) != "_missing") {
+			return exactMatch;
+		}
+		return "";
+	}
+	
 	// @hint public method to get the rbKey value for a property in a subentity
 	public string function getTitleByPropertyIdentifier( required string propertyIdentifier ) {
 		if(find(".", arguments.propertyIdentifier)) {

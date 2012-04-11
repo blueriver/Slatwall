@@ -113,11 +113,11 @@ Notes:
 								</cfif>
 								<div class="btn-group">
 									<cfif request.context.edit>
-										<cfif not attributes.object.isNew()><cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
+										<cfif not attributes.object.isNew()><cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
 										<cf_SlatwallActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#request.context.$.Slatwall.rbKey('define.cancel')#" class="btn btn-inverse" icon="remove icon-white">
 										<cf_SlatwallActionCaller action="#request.context.saveAction#" text="#request.context.$.Slatwall.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
 									<cfelse>
-										<cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">
+										<cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">
 										<cf_SlatwallActionCaller action="#request.context.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.Slatwall.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true">
 									</cfif>
 								</div>

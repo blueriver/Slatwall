@@ -47,6 +47,7 @@ Notes:
 	<cfparam name="attributes.edit" type="boolean" default="false" />					<!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
 	
 	<cfparam name="attributes.title" type="string" default="" />						<!--- hint: This can be used to override the displayName of a property" --->
+	<cfparam name="attributes.hint" type="string" default="" />							<!--- hint: If specified, then this will produce a tooltip around the title --->
 	
 	<cfparam name="attributes.value" type="string" default="" />						<!--- hint: This can be used to override the value of a property --->
 	<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />		<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
@@ -152,6 +153,10 @@ Notes:
 		<!--- Set up the property title --->
 		<cfif attributes.title eq "">
 			<cfset attributes.title = attributes.object.getPropertyTitle( attributes.property ) />
+		</cfif>
+		
+		<cfif attributes.hint eq "">
+			<cfset attributes.hint = attributes.object.getPropertyHint( attributes.property ) />
 		</cfif>
 		
 		<!--- If this is in edit mode then get the pertinent field info --->

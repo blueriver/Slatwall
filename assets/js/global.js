@@ -35,7 +35,15 @@ jQuery(document).ready(function() {
 	bindAlerts();
 	bindFormValidation();
 	bindTableClasses();
+	bindTooltips();
 });
+
+function bindTooltips(){
+	jQuery('.hint').tooltip();
+	jQuery('.hint').click(function(e){
+		e.preventDefault();
+	});
+}
 
 function bindUIElements() {
 	jQuery('.datetimepicker').datepicker({

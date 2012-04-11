@@ -59,9 +59,15 @@ Notes:
 				<th>&nbsp;</th>
 			</tr>
 			<cfloop array="#thistag.settings#" index="thisSetting">
+				<cfsilent>
+					<cfset local.settingHint = request.context.$.Slatwall.rbKey("setting.#thisSetting.settingName#_hint") />
+					<cfif right(local.settingHint, 8) eq "_missing">
+						<cfset local.settingHint = "" />
+					</cfif>
+				</cfsilent>
 				<tr>
 					<td class="primary">
-						#request.context.$.Slatwall.rbKey("setting.#thisSetting.settingName#")#
+						#request.context.$.Slatwall.rbKey("setting.#thisSetting.settingName#")#<cfif len(local.settingHint)> <a href="##" rel="tooltip" class="hint" title="#local.settingHint#"><i class="icon-question-sign"></i></a></cfif>
 					</td>
 					<td>
 						#thisSetting.settingDetails.settingValueFormatted#

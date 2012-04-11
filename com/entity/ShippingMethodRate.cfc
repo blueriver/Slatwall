@@ -120,7 +120,7 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentation() {
-		return "";
+		return "yes";
 	}
 	
 	// ==================  END:  Overridden Methods ========================

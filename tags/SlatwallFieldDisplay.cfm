@@ -41,6 +41,7 @@ Notes:
 	<cfparam name="attributes.edit" type="boolean" default="false" />					<!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
 
 	<cfparam name="attributes.title" type="string" default="" />						<!--- hint: This can be used to override the displayName of a property" --->
+	<cfparam name="attributes.hint" type="string" default="" />							<!--- hint: This is the hint value associated with whatever field we are displaying.  If specified, you will get a tooltip popup --->
 	
 	<cfparam name="attributes.value" type="string" default="" />						<!--- hint: This can be used to override the value of a property --->
 	<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />		<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
@@ -79,7 +80,7 @@ Notes:
 			<cfif attributes.edit>
 				<cfoutput>
 					<div class="control-group">
-						<label for="#attributes.fieldName#" class="control-label">#attributes.title#</label></dt>
+						<label for="#attributes.fieldName#" class="control-label">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></dt>
 						<div class="controls">
 							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
 							<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
@@ -88,7 +89,7 @@ Notes:
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
-					<dt class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#</dt>
+					<dt class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></dt>
 					<cfif attributes.valueLink neq "">
 						<dd class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></dd>
 					<cfelse>
@@ -102,7 +103,7 @@ Notes:
 			<cfif attributes.edit>
 				<cfoutput>
 					<tr>
-						<td class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#</label></td>
+						<td class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></td>
 						<td class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
 							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
 							<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
@@ -112,7 +113,7 @@ Notes:
 			<cfelse>
 				<cfoutput>
 					<tr>
-						<td class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#</td>
+						<td class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
 						<cfif attributes.valueLink neq "">
 							<td class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
 						<cfelse>
@@ -126,7 +127,7 @@ Notes:
 		<cfcase value="span">
 			<cfif attributes.edit>
 				<cfoutput>
-					<span class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#</label></span>
+					<span class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></span>
 					<span class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
 						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
 						<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
@@ -134,7 +135,7 @@ Notes:
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
-					<span class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#: </span>
+					<span class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif>: </span>
 					<cfif attributes.valueLink neq "">
 						<span class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></span>
 					<cfelse>
