@@ -41,10 +41,13 @@ Notes:
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.shippingMethod.getShippingMethodRatesSmartList()#"
 			recordEditAction="admin:setting.editshippingmethodrate">
-			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="addressZone.addressZoneName" />
-		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:setting.createshippingmethodrate" class="btn btn-primary" queryString="ShippingMethodID=#rc.shippingMethod.getShippingMethodID()#" modal="true" />
+	<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.shippingmethodrate')#">
+		<cfset local.integrationOptions = rc.shippingMethod.getShippingMethodRateIntegrationOptions()>
+		<cfloop array="#local.integrationOptions#" index="local.integration">
+			<cf_SlatwallActionCaller text="#local.integration['name']# #rc.$.slatwall.rbKey('define.rate')#" action="admin:setting.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#&integrationID=#local.integration['value']#" modal="true" />
+		</cfloop>
+		<cf_SlatwallActionCaller action="admin:setting.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" modal="true" />
+	</cf_SlatwallActionCallerDropdown>
 </cfoutput>

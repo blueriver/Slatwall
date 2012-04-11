@@ -38,7 +38,12 @@ Notes:
 --->
 <cfparam name="rc.shippingMethodRate" type="any" />
 <cfparam name="rc.shippingMethod" type="any" default="#rc.shippingMethodRate.getShippingMethod()#" />
+<cfparam name="rc.integration" type="any" default="" />
 <cfparam name="rc.edit" type="boolean" />
+
+<cfif not isNull(rc.shippingMethodRate.getShippingIntegration())>
+	<cfset rc.integration = rc.shippingMethodRate.getShippingIntegration() />
+</cfif>
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.shippingMethodRate#" edit="#rc.edit#">
@@ -46,12 +51,18 @@ Notes:
 		
 		<cfif rc.edit>
 			<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.shippingMethod.getShippingMethodID()#" />
+			<cfif isObject(rc.integration)>
+				<input type="hidden" name="shippingIntegration.integrationID" value="#rc.integration.getIntegrationID()#" />
+			</cfif>
 		</cfif>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
+				<cfif isObject(rc.integration)>
+					<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegration" edit="false" value="#rc.integration.getIntegrationName()#">
+					<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegrationMethod" edit="#rc.edit#" fieldtype="select" valueOptions="#rc.integration.getShippingIntegrationMethodOptions(rc.integration.getIntegrationID())#">
+				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="addressZone" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegrationMethod" edit="#rc.edit#" fieldtype="select">
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minimumFulfillmentWeight" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="maximumFulfillmentWeight" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minimumFulfillmentItemPrice" edit="#rc.edit#">
@@ -61,7 +72,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.shippingMethodRate#">
-			<!--- <cf_SlatwallTab view="admin:setting/shippingmethodratetabs/settings" /> --->
+			<cf_SlatwallTab view="admin:setting/shippingmethodratetabs/shippingmethodratesettings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

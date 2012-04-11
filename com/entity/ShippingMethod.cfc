@@ -45,7 +45,6 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="eligibleAddressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="eligibleAddressZoneID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	
 	// Related Object Properties (one-to-many)
@@ -90,32 +89,12 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 		return super.init();
 	}
 	
-	public any function getEligibleAddressZoneOptions() {
-		if(!structKeyExists(variables, "limitedAddressZoneOptins")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAddressZone");
-			smartList.addSelect(propertyIdentifier="addressZoneName", alias="name");
-			smartList.addSelect(propertyIdentifier="addressZoneID", alias="value"); 
-			smartList.addOrder("addressZoneName|ASC");
-			variables.limitedAddressZoneOptins = smartList.getRecords();
-			arrayPrepend(variables.limitedAddressZoneOptins, {value="", name=rbKey('define.all')});
-		}
-		return variables.limitedAddressZoneOptins;
-	}
-	
-	public any function getIntegration() {
-		if(!isNull(getShippingProvider()) && getShippingProvider() neq "Other" && getShippingProvider() neq "") {
-			return getService("integrationService").getIntegrationByIntegrationPackage( getShippingProvider() );	
-		}
-	}
-	
-	public any function getShippingProviderMethodName() {
-		var integration = getIntegration();
-		
-		if(isNull(integration)) {
-			return rbKey("admin.order.detail.shippingProvider.ratetable");
-		} else {
-			return integration.getIntegrationCFC('shipping').getShippingMethods()[ getShippingProviderMethod() ];
-		}
+	public array function getShippingMethodRateIntegrationOptions() {
+		var optionsSL = getService("integrationService").getIntegrationSmartList();
+		optionsSL.addFilter('shippingActiveFlag', '1');
+		optionsSL.addSelect('integrationName', 'name');
+		optionsSL.addSelect('integrationID', 'value');
+		return optionsSL.getRecords();
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

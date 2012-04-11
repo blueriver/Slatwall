@@ -70,13 +70,14 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	// Non Persistent
 	property name="shippingIntegrationMethodOptions" type="array" persistent="false";
 	property name="addressZoneOptions" type="array" persistent="false";
+	property name="shippingMethodRateName" type="string" persistent="false";
 	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public array function getShippingIntegrationMethodOptions() {
+	public array function getShippingIntegrationMethodOptions( required string integrationID ) {
 		if(!structKeyExists(variables, "shippingIntegrationMethodOptions")) {
-			variables.shippingIntegrationMethodOptions = [{name='', value=''}];
+			variables.shippingIntegrationMethodOptions = getService("integrationService").getShippingMethodOptions(arguments.integrationID);
 		}
 		return variables.shippingIntegrationMethodOptions;
 	}
@@ -91,6 +92,36 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 			arrayPrepend(variables.addressZoneOptions, {value="", name=rbKey('define.all')});
 		}
 		return variables.addressZoneOptions;
+	}
+	
+	public string function getShippingMethodRateName() {
+		if(!structKeyExists(variables, "shippingMethodRateName")) {
+			variables.shippingMethodRateName = "";
+			
+			var addressZoneName = "#rbKey('define.all')# #rbKey('entity.addressZone_plural')#";
+			var shippingMethodName = "";
+			
+			if(!isNull(getAddressZone())) {
+				addressZoneName = getAddressZone().getAddressZoneName();
+			}
+			
+			if( !isNull(getShippingIntegration()) ) {
+				if(!isNull(getShipping)) {
+					var shippingMethodOptions = getShippingIntegrationMethodOptions(getShippingIntegration().getIntegrationID());
+					for(var i=1; i<=arrayLen(shippingMethodOptions); i++) {
+						if(shippingMethodOptions[i]['value'] == getShippingIntegrationMethod()) {
+							shippingMethodName = shippingMethodOptions[i]['name'];		
+							break;
+						}
+					}
+				}
+				variables.shippingMethodRateName = "#getShippingIntegration().getIntegrationName()# - #shippingMethodName# - #addressZoneName#";
+			} else {
+				variables.shippingMethodRateName = "#rbKey('define.manual')# - #addressZoneName#";
+			}
+		}
+		
+		return variables.shippingMethodRateName;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -119,8 +150,8 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	
 	// ================== START: Overridden Methods ========================
 	
-	public string function getSimpleRepresentation() {
-		return "yes";
+	public string function getSimpleRepresentationPropertyName() {
+		return "shippingMethodRateName";
 	}
 	
 	// ==================  END:  Overridden Methods ========================

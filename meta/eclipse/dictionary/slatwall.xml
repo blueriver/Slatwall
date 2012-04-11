@@ -6,9 +6,10 @@
                 <values default="auto">
                     <value option="detail"/>
                     <value option="listing"/>
+					<value option="static"/>
                 </values>
             </parameter>
-            <parameter name="object" required="true" type="String">
+            <parameter name="object" required="false" type="String">
                 <values/>
             </parameter>
             <parameter name="edit" required="false" type="Boolean">
@@ -71,7 +72,126 @@
                 <values/>
             </parameter>
 			<parameter name="icon" required="false" type="String">
-                <values/>
+                <value option="adjust"/>
+				<value option="align-center"/>
+				<value option="align-justify"/>
+				<value option="align-left"/>
+				<value option="align-right"/>
+				<value option="arrow-down"/>
+				<value option="arrow-left"/>
+				<value option="arrow-right"/>
+				<value option="arrow-up"/>
+				<value option="asterisk"/>
+				<value option="backward"/>
+				<value option="ban-circle"/>
+				<value option="barcode"/>
+				<value option="bold"/>
+				<value option="book"/>
+				<value option="bookmark"/>
+				<value option="calendar"/>
+				<value option="camera"/>
+				<value option="check"/>
+				<value option="chevron-down"/>
+				<value option="chevron-left"/>
+				<value option="chevron-right"/>
+				<value option="chevron-up"/>
+				<value option="cog"/>
+				<value option="comment"/>
+				<value option="download"/>
+				<value option="download-alt"/>
+				<value option="edit"/>
+				<value option="eject"/>
+				<value option="envelope"/>
+				<value option="exclamation-sign"/>
+				<value option="eye-close"/>
+				<value option="eye-open"/>
+				<value option="facetime-video"/>
+				<value option="fast-backward"/>
+				<value option="fast-forward"/>
+				<value option="file"/>
+				<value option="film"/>
+				<value option="fire"/>
+				<value option="flag"/>
+				<value option="folder-close"/>
+				<value option="folder-open"/>
+				<value option="font"/>
+				<value option="forward"/>
+				<value option="gift"/>
+				<value option="glass"/>
+				<value option="headphones"/>
+				<value option="heart"/>
+				<value option="home"/>
+				<value option="inbox"/>
+				<value option="indent-left"/>
+				<value option="indent-right"/>
+				<value option="info-sign"/>
+				<value option="italic"/>
+				<value option="leaf"/>
+				<value option="list"/>
+				<value option="list-alt"/>
+				<value option="lock"/>
+				<value option="magnet"/>
+				<value option="map-marker"/>
+				<value option="minus"/>
+				<value option="minus-sign"/>
+				<value option="move"/>
+				<value option="music"/>
+				<value option="off"/>
+				<value option="ok"/>
+				<value option="ok-circle"/>
+				<value option="ok-sign"/>
+				<value option="pause"/>
+				<value option="pencil"/>
+				<value option="picture"/>
+				<value option="plane"/>
+				<value option="play"/>
+				<value option="play-circle"/>
+				<value option="plus"/>
+				<value option="plus-sign"/>
+				<value option="print"/>
+				<value option="qrcode"/>
+				<value option="question-sign"/>
+				<value option="random"/>
+				<value option="refresh"/>
+				<value option="remove"/>
+				<value option="remove-circle"/>
+				<value option="remove-sign"/>
+				<value option="repeat"/>
+				<value option="resize-full"/>
+				<value option="resize-horizontal"/>
+				<value option="resize-small"/>
+				<value option="resize-vertical"/>
+				<value option="retweet"/>
+				<value option="road"/>
+				<value option="screenshot"/>
+				<value option="search"/>
+				<value option="share"/>
+				<value option="share-alt"/>
+				<value option="shopping-cart"/>
+				<value option="signal"/>
+				<value option="star"/>
+				<value option="star-empty"/>
+				<value option="step-backward"/>
+				<value option="step-forward"/>
+				<value option="stop"/>
+				<value option="tag"/>
+				<value option="tags"/>
+				<value option="text-height"/>
+				<value option="text-width"/>
+				<value option="th"/>
+				<value option="th-large"/>
+				<value option="th-list"/>
+				<value option="time"/>
+				<value option="tint"/>
+				<value option="trash"/>
+				<value option="upload"/>
+				<value option="user"/>
+				<value option="volume-down"/>
+				<value option="volume-off"/>
+				<value option="volume-up"/>
+				<value option="warning-sign"/>
+				<value option="zoom-in"/>
+				<value option="zoom-out"/>
             </parameter>
 			<parameter name="iconOnly" required="false" type="Boolean">
                  <values default="auto">
@@ -105,24 +225,134 @@
             </parameter>
             <possiblecombinations/>
         </tag>
-		<tag endtagrequired="false" name="cf_SlatwallActionCallerDropdown" single="false"
+		<tag endtagrequired="true" name="cf_SlatwallActionCallerDropdown" single="false"
              xmlstyle="true">
             <parameter name="title" required="false" type="String">
                 <values/>
             </parameter>
-			<parameter name="actions" required="true" type="String">
-                <values/>
+			<parameter name="icon" required="false" type="String">
+                <value option="adjust"/>
+				<value option="align-center"/>
+				<value option="align-justify"/>
+				<value option="align-left"/>
+				<value option="align-right"/>
+				<value option="arrow-down"/>
+				<value option="arrow-left"/>
+				<value option="arrow-right"/>
+				<value option="arrow-up"/>
+				<value option="asterisk"/>
+				<value option="backward"/>
+				<value option="ban-circle"/>
+				<value option="barcode"/>
+				<value option="bold"/>
+				<value option="book"/>
+				<value option="bookmark"/>
+				<value option="calendar"/>
+				<value option="camera"/>
+				<value option="check"/>
+				<value option="chevron-down"/>
+				<value option="chevron-left"/>
+				<value option="chevron-right"/>
+				<value option="chevron-up"/>
+				<value option="cog"/>
+				<value option="comment"/>
+				<value option="download"/>
+				<value option="download-alt"/>
+				<value option="edit"/>
+				<value option="eject"/>
+				<value option="envelope"/>
+				<value option="exclamation-sign"/>
+				<value option="eye-close"/>
+				<value option="eye-open"/>
+				<value option="facetime-video"/>
+				<value option="fast-backward"/>
+				<value option="fast-forward"/>
+				<value option="file"/>
+				<value option="film"/>
+				<value option="fire"/>
+				<value option="flag"/>
+				<value option="folder-close"/>
+				<value option="folder-open"/>
+				<value option="font"/>
+				<value option="forward"/>
+				<value option="gift"/>
+				<value option="glass"/>
+				<value option="headphones"/>
+				<value option="heart"/>
+				<value option="home"/>
+				<value option="inbox"/>
+				<value option="indent-left"/>
+				<value option="indent-right"/>
+				<value option="info-sign"/>
+				<value option="italic"/>
+				<value option="leaf"/>
+				<value option="list"/>
+				<value option="list-alt"/>
+				<value option="lock"/>
+				<value option="magnet"/>
+				<value option="map-marker"/>
+				<value option="minus"/>
+				<value option="minus-sign"/>
+				<value option="move"/>
+				<value option="music"/>
+				<value option="off"/>
+				<value option="ok"/>
+				<value option="ok-circle"/>
+				<value option="ok-sign"/>
+				<value option="pause"/>
+				<value option="pencil"/>
+				<value option="picture"/>
+				<value option="plane"/>
+				<value option="play"/>
+				<value option="play-circle"/>
+				<value option="plus"/>
+				<value option="plus-sign"/>
+				<value option="print"/>
+				<value option="qrcode"/>
+				<value option="question-sign"/>
+				<value option="random"/>
+				<value option="refresh"/>
+				<value option="remove"/>
+				<value option="remove-circle"/>
+				<value option="remove-sign"/>
+				<value option="repeat"/>
+				<value option="resize-full"/>
+				<value option="resize-horizontal"/>
+				<value option="resize-small"/>
+				<value option="resize-vertical"/>
+				<value option="retweet"/>
+				<value option="road"/>
+				<value option="screenshot"/>
+				<value option="search"/>
+				<value option="share"/>
+				<value option="share-alt"/>
+				<value option="shopping-cart"/>
+				<value option="signal"/>
+				<value option="star"/>
+				<value option="star-empty"/>
+				<value option="step-backward"/>
+				<value option="step-forward"/>
+				<value option="stop"/>
+				<value option="tag"/>
+				<value option="tags"/>
+				<value option="text-height"/>
+				<value option="text-width"/>
+				<value option="th"/>
+				<value option="th-large"/>
+				<value option="th-list"/>
+				<value option="time"/>
+				<value option="tint"/>
+				<value option="trash"/>
+				<value option="upload"/>
+				<value option="user"/>
+				<value option="volume-down"/>
+				<value option="volume-off"/>
+				<value option="volume-up"/>
+				<value option="warning-sign"/>
+				<value option="zoom-in"/>
+				<value option="zoom-out"/>
             </parameter>
-			<parameter name="queryString" required="false" type="String">
-                <values/>
-            </parameter>
-			<parameter name="modal" required="false" type="Boolean">
-                <values default="auto">
-                    <value option="true"/>
-                    <value option="false"/>
-                </values>
-            </parameter>
-            <possiblecombinations/>
+			<possiblecombinations/>
         </tag>
 		<tag endtagrequired="false" name="cf_SlatwallAddressDisplay" single="false"
              xmlstyle="true">
