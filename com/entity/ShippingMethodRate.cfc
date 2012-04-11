@@ -75,13 +75,6 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public array function getShippingIntegrationMethodOptions( required string integrationID ) {
-		if(!structKeyExists(variables, "shippingIntegrationMethodOptions")) {
-			variables.shippingIntegrationMethodOptions = getService("integrationService").getShippingMethodOptions(arguments.integrationID);
-		}
-		return variables.shippingIntegrationMethodOptions;
-	}
-	
 	public array function getAddressZoneOptions() {
 		if(!structKeyExists(variables, "addressZoneOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAddressZone");
@@ -106,18 +99,17 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 			}
 			
 			if( !isNull(getShippingIntegration()) ) {
-				if(!isNull(getShipping)) {
-					var shippingMethodOptions = getShippingIntegrationMethodOptions(getShippingIntegration().getIntegrationID());
-					for(var i=1; i<=arrayLen(shippingMethodOptions); i++) {
-						if(shippingMethodOptions[i]['value'] == getShippingIntegrationMethod()) {
-							shippingMethodName = shippingMethodOptions[i]['name'];		
-							break;
-						}
+				var shippingMethodOptions = getShippingIntegration().getShippingMethodOptions();
+				for(var i=1; i<=arrayLen(shippingMethodOptions); i++) {
+					if(shippingMethodOptions[i]['value'] == getShippingIntegrationMethod()) {
+						shippingMethodName = shippingMethodOptions[i]['name'];		
+						break;
 					}
 				}
-				variables.shippingMethodRateName = "#getShippingIntegration().getIntegrationName()# - #shippingMethodName# - #addressZoneName#";
+				
+				variables.shippingMethodRateName = "#getShippingIntegration().getIntegrationName()#: #shippingMethodName#";
 			} else {
-				variables.shippingMethodRateName = "#rbKey('define.manual')# - #addressZoneName#";
+				variables.shippingMethodRateName = "#rbKey('define.manual')#";
 			}
 		}
 		

@@ -41,65 +41,72 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="addressService" type="any";
 	property name="integrationService" type="any";
 
-	public array function populateOrderShippingMethodOptions(required any orderFulfillmentShipping) {
-		var shippingMethods = this.listShippingMethodFilterByActiveFlag(1);
+	public array function updateOrderFulfillmentShippingMethodOptions(required any orderFulfillmentShipping) {
+		var shippingMethods = []; 
 		var shippingProviders = [];
 		var providerRateResponseBeans = [];
+		var rateOptions = [];
 		var methodOptions = [];
 		
+		var shippingMethodsSmartList = arguments.orderFulfillmentShipping.getFulfillmentMethod().getShippingMethodsSmartList();
+		shippingMethodsSmartList.addFilter('activeFlag', 1);
+		
+		shippingMethods = shippingMethodsSmartList.getRecords();
+		
+		
+		/*
 		// Loop over all possible methods
 		for(var i=1; i<=arrayLen(shippingMethods); i++) {
 			
-			// Check the shipping methods eligible address zone to make sure that it is eligible
-			if(shippingMethods[i].getActiveFlag() && (isNull(shippingMethods[i].getEligibleAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getAddress(), addressZone=shippingMethods[i].getEligibleAddressZone()))){
+			// Loop over all possible rates for a given shipping method
+			
+			// If this method uses rate tables, get the quote
+			if(shippingMethods[i].getUseRateTableFlag()) {
+				// Get the Rate for this method and add it to the
+				var methodCharge = 0;
+				var rateExists = false;
+				var rates = shippingMethods[i].getShippingRates();
 				
-				// If this method uses rate tables, get the quote
-				if(shippingMethods[i].getUseRateTableFlag()) {
-					// Get the Rate for this method and add it to the
-					var methodCharge = 0;
-					var rateExists = false;
-					var rates = shippingMethods[i].getShippingRates();
-					
-					for(var r=1;r <= arrayLen(rates); r++) {
-						// Make sure that the shipping address is in the zone of this rate
-					
-						if(isNull(rates[r].getAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getAddress(), addressZone=rates[r].getAddressZone())){
-							
-							var rateApplies = true;
-							
-							var minPrice = IIF(isNull(rates[r].getMinPrice()), 0, rates[r].getMinPrice());
-							var maxPrice = IIF(isNull(rates[r].getMaxPrice()), 10000000000000000, rates[r].getMaxPrice());
-							var minWeight = IIF(isNull(rates[r].getMinWeight()), 0, rates[r].getMinWeight());
-							var maxWeight = IIF(isNull(rates[r].getMaxWeight()), 10000000000000000, rates[r].getMaxWeight());
-							
-							var fullfillmentWeight = arguments.orderFulfillmentShipping.getTotalShippingWeight();
-							var fullfillmentPrice = arguments.orderFulfillmentShipping.getSubtotal();
-							
-							//Check Min/Max Price
-							if( fullfillmentPrice < minPrice || fullfillmentPrice > maxPrice ) {
-								rateApplies = false;
-							}
-							
-							//Check Min/Max Weight
-							if( fullfillmentWeight < minWeight || fullfillmentWeight > maxWeight ) {
-								rateApplies = false;
-							}
-							
-							if(rateApplies && (rates[r].getShippingRate() < methodCharge || methodCharge == 0)) {
-								rateExists = true;
-								if(!isNull(rates[r].getShippingRate())) {
-									methodCharge = rates[r].getShippingRate();	
-								}
+				for(var r=1;r <= arrayLen(rates); r++) {
+					// Make sure that the shipping address is in the zone of this rate
+				
+					if(isNull(rates[r].getAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getAddress(), addressZone=rates[r].getAddressZone())){
+						
+						var rateApplies = true;
+						
+						var minPrice = IIF(isNull(rates[r].getMinPrice()), 0, rates[r].getMinPrice());
+						var maxPrice = IIF(isNull(rates[r].getMaxPrice()), 10000000000000000, rates[r].getMaxPrice());
+						var minWeight = IIF(isNull(rates[r].getMinWeight()), 0, rates[r].getMinWeight());
+						var maxWeight = IIF(isNull(rates[r].getMaxWeight()), 10000000000000000, rates[r].getMaxWeight());
+						
+						var fullfillmentWeight = arguments.orderFulfillmentShipping.getTotalShippingWeight();
+						var fullfillmentPrice = arguments.orderFulfillmentShipping.getSubtotal();
+						
+						//Check Min/Max Price
+						if( fullfillmentPrice < minPrice || fullfillmentPrice > maxPrice ) {
+							rateApplies = false;
+						}
+						
+						//Check Min/Max Weight
+						if( fullfillmentWeight < minWeight || fullfillmentWeight > maxWeight ) {
+							rateApplies = false;
+						}
+						
+						if(rateApplies && (rates[r].getShippingRate() < methodCharge || methodCharge == 0)) {
+							rateExists = true;
+							if(!isNull(rates[r].getShippingRate())) {
+								methodCharge = rates[r].getShippingRate();	
 							}
 						}
 					}
+				}
 					
 					if(rateExists) {
 						var option = this.newOrderShippingMethodOption();
-						option.setShippingMethod(shippingMethods[i]);
-						option.setTotalCharge(methodCharge);
-						option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
-						getDAO().save(option);
+						option.setShippingMethod( shippingMethods[i] );
+						option.setTotalCharge( methodCharge );
+						option.setOrderFulfillmentShipping( arguments.orderFulfillmentShipping );
+						getDAO().save( option );
 					}
 				// If this method doesn't use rate tables, then add the provider to the array of providers that we need to get rates for
 				} else {
@@ -112,8 +119,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Loop over Shipping Providers
 		for(var p=1; p<=arrayLen(shippingProviders); p++) {
-			writeDump(shippingProviders);
-			abort;
+			
 			// Get Provider Service
 			var integration = getIntegrationService().getIntegrationByIntegrationPackage(shippingProviders[p]);
 			var providerService = getIntegrationService().getShippingIntegrationCFC(integration);
@@ -169,6 +175,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 		}
+		*/
 		
 		return methodOptions;
 	}

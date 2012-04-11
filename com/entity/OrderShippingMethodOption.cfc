@@ -38,43 +38,40 @@ Notes:
 */
 component displayname="Order Shipping Method Option" entityname="SlatwallOrderShippingMethodOption" table="SlatwallOrderShippingMethodOption" persistent=true accessors=true output=false extends="BaseEntity" {
 
+	// Persistent Properties
 	property name="orderShippingMethodOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="totalCharge" ormtype="big_decimal";
 	property name="estimatedArrivalDate" ormtype="date";
 	
+	// Related Object Properties (many-To-one)
 	property name="orderFulfillmentShipping" cfc="OrderFulfillmentShipping" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="quotedShippingMethodRate" cfc="ShippingMethodRate" fieldtype="many-to-one" fkcolumn="quotedShippingMethodRateID";
 	
-	/******* Association management methods for bidirectional relationships **************/
 	
-	// Order Shipping (many-to-one)
-	public void function setOrderFulfillmentShipping(required any orderFulfillmentShipping) {
-		variables.orderFulfillmentShipping = arguments.orderFulfillmentShipping;
-		if(isNew() || !arguments.orderFulfillmentShipping.hasOrderShippingMethodOption(this)) {
-			arrayAppend(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(),this);
-		}
-	}
-	
-	public void function removeOrderFulfillmentShipping(any orderFulfillmentShipping) {
-	   if(!structKeyExists(arguments,"orderFulfillmentShipping")) {
-	   		arguments.orderFulfillmentShipping = variables.orderFulfillmentShipping;
-	   }
-       var index = arrayFind(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(), index);
-       }
-       structDelete(variables,"orderFulfillmentShipping");
-    }
-    
-    /******* END Association management methods */ 
-	
-	    
-
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Order Fulfillment Shipping (many-to-one)
+	public void function setOrderFulfillmentShipping(required any orderFulfillmentShipping) {
+		variables.orderFulfillmentShipping = arguments.orderFulfillmentShipping;
+		if(isNew() or !arguments.orderFulfillmentShipping.hasOrderShippingMethodOption( this )) {
+			arrayAppend(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(), this);
+		}
+	}
+	public void function removeOrderFulfillmentShipping(any orderFulfillmentShipping) {
+		if(!structKeyExists(arguments, "orderFulfillmentShipping")) {
+			arguments.orderFulfillmentShipping = variables.orderFulfillmentShipping;
+		}
+		var index = arrayFind(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(), index);
+		}
+		structDelete(variables, "orderFulfillmentShipping");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

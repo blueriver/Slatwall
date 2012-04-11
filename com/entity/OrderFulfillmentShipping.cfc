@@ -41,7 +41,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	// Related Object Properties (Many-To-One)
+	// Related Object Properties (many-To-one)
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID" cascade="all";
 	property name="accountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
@@ -58,9 +58,9 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	}
 	
 	public void function removeAccountAddress() {
-		structDelete(variables,"AccountAddress");     
+		structDelete(variables,"AccountAddress");
 	}
-	 
+
 	public void function removeShippingAddress() {
 		structDelete(variables,"ShippingAddress");
 	}
@@ -91,7 +91,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		if(isNull(getShippingMethod())) {
 			// Force in new shipping options
 			if(!isNull(getAddress()) && arrayLen(variables.orderFulfillmentItems) && !arrayLen(variables.orderShippingMethodOptions)) {
-				getService("ShippingService").populateOrderShippingMethodOptions(this);
+				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( this );
 			}
 			return false;
 		}
@@ -100,27 +100,9 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	}
 	
 	public void function orderFulfillmentItemsChanged() {
-		removeShippingMethodAndMethodOptions();
+		getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( this );
 	}
 	
-	public void function removeShippingMethodAndMethodOptions() {
-		// remove all existing options
-		for(var i = arrayLen(getOrderShippingMethodOptions(false)); i >= 1; i--) {
-			getOrderShippingMethodOptions()[i].removeOrderFulfillmentShipping(this);
-		}
-		setShippingMethod(javaCast("null", ""));
-		setFulfillmentCharge(0);
-	}
-	
-    // Order Shipping Method Options (one-to-many)
-    public void function addOrderShippingMethodOption(required any orderShippingMethodOption) {
-    	arguments.orderShippingMethodOption.addOrderShipping(this);
-    }
-    
-    public void function removeOrderShippingMethodOption(required any orderShippingMethodOption) {
-    	arguments.orderShippingMethodOption.removeOrderShipping(this);
-    }
-
 	public numeric function getShippingCharge() {
 		return getFulfillmentCharge();
 	}
@@ -152,9 +134,18 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Order Shipping Method Options (one-to-many)    
+	public void function addOrderShippingMethodOption(required any orderShippingMethodOption) {    
+		arguments.orderShippingMethodOption.setOrderFulfillmentShipping( this );    
+	}    
+	public void function removeOrderShippingMethodOption(required any orderShippingMethodOption) {    
+		arguments.orderShippingMethodOption.removeOrderFulfillmentShipping( this );    
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
+	
 	
 	// ==================  END:  Overridden Methods ========================
 	

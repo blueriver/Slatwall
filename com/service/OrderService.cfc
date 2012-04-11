@@ -524,8 +524,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// If it has changed we need to update Taxes and Shipping Options
 			if(serializedAddressBefore != serializedAddressAfter) {
-				arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
-				getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
 			}
 		
 			// if address needs to get saved in account

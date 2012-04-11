@@ -50,7 +50,6 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderFulfillmentItems" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderFulfillmentAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" inverse="true" cascade="all-delete-orphan";
-	
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
 	
 	// Special Related Discriminator Property

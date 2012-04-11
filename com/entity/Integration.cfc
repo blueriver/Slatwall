@@ -106,6 +106,17 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 		return false;
 	}
 	
+	public array function getShippingMethodOptions( ) {
+		if(!structKeyExists(variables, "shippingMethodOptions")) {
+			variables.shippingMethodOptions = [];
+			var shippingMethodsStruct = getService("integrationService").getShippingIntegrationCFC( this ).getShippingMethods();
+			for(var key in shippingMethodsStruct) {
+				arrayAppend(variables.shippingMethodOptions, {name=shippingMethodsStruct[key], value=key});
+			}
+		}
+		return variables.shippingMethodOptions;
+	}
+	
 	public any function getIntegrationSetting(required string settingName) {
 		var allSettings = deserializeJSON(getIntegrationSettings());
 		if(structKeyExists(allSettings, arguments.settingName)) {

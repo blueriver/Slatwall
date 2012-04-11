@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.fulfillmentMethod" type="any" default="#rc.shippingMethod.getFulfillmentMethod()#">
 <cfparam name="rc.edit" type="boolean" />
 
-<cfif rc.shippingMethod.getShippingMethodRatesCount() lt 1>
+<cfif !rc.shippingMethod.isNew() && rc.shippingMethod.getShippingMethodRatesCount() lt 1>
 	<cfset rc.$.slatwall.showMessageKey('admin.detailshippingmethod.norates_info') />
 </cfif>
 

@@ -60,7 +60,7 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cfif isObject(rc.integration)>
 					<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegration" edit="false" value="#rc.integration.getIntegrationName()#">
-					<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegrationMethod" edit="#rc.edit#" fieldtype="select" valueOptions="#rc.integration.getShippingIntegrationMethodOptions(rc.integration.getIntegrationID())#">
+					<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegrationMethod" edit="#rc.edit#" fieldtype="select" valueOptions="#rc.integration.getShippingMethodOptions(rc.integration.getIntegrationID())#">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="addressZone" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minimumFulfillmentWeight" edit="#rc.edit#">

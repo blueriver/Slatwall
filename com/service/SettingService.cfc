@@ -64,6 +64,7 @@ globalEncryptionKeySize
 			"paymentMethod",
 			"productType",
 			"product",
+			"content",
 			"stock",
 			"brand",
 			"sku"];

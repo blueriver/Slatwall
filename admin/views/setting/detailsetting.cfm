@@ -40,12 +40,17 @@ Notes:
 <cfparam name="rc.settingName" type="string">
 <cfparam name="rc.edit" type="boolean">
 
-<cfparam name="rc.brandID" default="" />
-<cfparam name="rc.productTypeID" default="" />
-<cfparam name="rc.productID" default="" />
-<cfparam name="rc.skuID" default="" />
+<cfset local.returnActionQueryString = "" />
+<cfset local.hiddenKeyFields = "" />
+<cfset local.hasRelationshipKey = false />
 
-<cfset local.returnActionQueryString="productID=#rc.productID#&brandID=#rc.brandID#&productTypeID=#rc.productTypeID#&skuID=#rc.skuID#" />
+<cfloop collection="#rc#" item="local.key" >
+	<cfif local.key neq "settingID" and right(local.key, 2) eq "ID" and isSimpleValue(rc[local.key]) and len(rc[local.key]) gt 30>
+		<cfset local.hasRelationshipKey = true />
+		<cfset local.returnActionQueryString = listAppend(local.returnActionQueryString, '#local.key#=#rc[local.key]#', '&') />
+		<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#left(local.key, len(local.key)-2)#.#local.key#" value="#rc[local.key]#" />', chr(13)) />
+	</cfif>
+</cfloop>
 
 <!--- This logic set the setting name if the setting entity is new --->
 <cfset rc.setting.setSettingName(rc.settingName) />
@@ -55,17 +60,13 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.setting#" />
 		
 		<input type="hidden" name="settingName" value="#rc.settingName#" />
-		
-		<input type="hidden" name="brand.brandID" value="#rc.brandID#" /> 
-		<input type="hidden" name="productType.productTypeID" value="#rc.productTypeID#" />
-		<input type="hidden" name="product.productID" value="#rc.productID#" />
-		<input type="hidden" name="sku.skuID" value="#rc.skuID#" />
+		#local.hiddenKeyFields#
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
-			<cfif !rc.setting.isNew() && (len(rc.brandID) || len(rc.productTypeID) || len(rc.productID) || len(rc.skuID))>
+			<cfif !rc.setting.isNew() and local.hasRelationshipKey>
 				<cf_SlatwallActionCaller action="admin:setting.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&returnAction=#request.context.returnAction#&#local.returnActionQueryString#" class="btn btn-danger" />
 			</cfif>
 		</cf_SlatwallDetailHeader>
