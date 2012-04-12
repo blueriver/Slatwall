@@ -299,8 +299,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			rc.edit = true;
 			getFW().setView(action=rc.detailAction);
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_error");
-			for( var p in rc[ rc.arguments.entityName ].getErrors() ) {
-				local.thisErrorArray = rc[ rc.arguments.entityName ].getErrors()[p];
+			for( var p in rc[ arguments.entityName ].getErrors() ) {
+				local.thisErrorArray = rc[ arguments.entityName ].getErrors()[p];
 				for(var i=1; i<=arrayLen(local.thisErrorArray); i++) {
 					showMessage(local.thisErrorArray[i], "error");
 				}
