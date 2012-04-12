@@ -41,6 +41,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethod.getShippingMethodsSmartList()#"
 			recordEditAction="admin:setting.editshippingmethod"
+			recordDetailAction="admin:setting.detailshippingmethod"
 			sortproperty="sortOrder">
 			
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="shippingMethodName" />

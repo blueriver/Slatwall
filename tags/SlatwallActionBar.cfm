@@ -43,6 +43,7 @@ Notes:
 		<cfparam name="attributes.object" type="any" default="" />
 		<cfparam name="attributes.edit" type="boolean" default="false" />
 		<cfparam name="attributes.pageTitle" type="string" default="#request.context.pageTitle#" />
+		<cfparam name="attributes.pageSubTitle" type="string" default="" />
 		<cfparam name="attributes.createAction" type="string" default="#request.context.createAction#" />
 		<cfparam name="attributes.createModal" type="boolean" default="false" />
 		<cfparam name="attributes.backAction" type="string" default="#request.context.listAction#" />
@@ -50,15 +51,20 @@ Notes:
 		<cfparam name="attributes.cancelAction" type="string" default="#request.context.cancelAction#" />
 		<cfparam name="attributes.cancelQueryString" type="string" default="" />
 		<cfsilent>
-			<cfif attributes.type eq "detail" and not attributes.object.isNew()>
-				<cfset attributes.pageTitle &= " - #attributes.object.getSimpleRepresentation()#" />
+			<cfif attributes.type eq "detail" and not attributes.object.isNew() and attributes.pageSubTitle eq "">
+				<cfset attributes.pageSubTitle = attributes.object.getSimpleRepresentation() />
 			</cfif>
 		</cfsilent>
 	<cfelse>
 		<cfoutput>
 			<div class="actionnav well well-small">
 				<div class="row-fluid">
-					<div class="span4"><h1>#attributes.pageTitle#</h1></div>
+					<div class="span4">
+						<h1 <cfif !len(attributes.pageSubTitle)>class="noSub"</cfif>>#attributes.pageTitle#</h1>
+						<cfif len(attributes.pageSubTitle)>
+							<h2>#attributes.pageSubTitle#</h2>
+						</cfif>
+					</div>
 					<div class="span8">
 						<div class="btn-toolbar">
 							<!--- Listing --->
@@ -92,7 +98,11 @@ Notes:
 												<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white">
 											</cfif>
 										<cfelse>
-											<cf_SlatwallActionCallerDropdown title=" #request.context.$.slatwall.rbKey('define.create')# " actions="#attributes.createAction#" queryString="returnAction=#request.context.slatAction#" modal="#attributes.createModal#">
+											<cf_SlatwallActionCallerDropdown title="#request.context.$.slatwall.rbKey('define.add')#" icon="plus">
+												<cfloop list="#attributes.createAction#" index="action">
+													<cf_SlatwallActionCaller action="#action#" type="list" queryString="returnAction=#request.context.slatAction#" modal="#attributes.createModal#" /> 
+												</cfloop>
+											</cf_SlatwallActionCallerDropdown>
 										</cfif>
 									</div>
 								</cfif>

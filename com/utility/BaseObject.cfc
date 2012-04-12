@@ -451,7 +451,7 @@ component displayname="Base Object" accessors="true" output="false" {
 			try {
 				if(isNull(value)) {
 					value = evaluate("this.get#pa[i]#()");
-					if(isSimpleValue(value) && arguments.formatValue) {
+					if((isNull(value) || isSimpleValue(value)) && arguments.formatValue) {
 						value = getFormattedValue(pa[i]);
 					}
 				} else if(isArray(value)) {
@@ -487,14 +487,6 @@ component displayname="Base Object" accessors="true" output="false" {
 	public any function getFormattedValue(required string propertyName, string formatType ) {
 		arguments.value = invokeMethod("get#arguments.propertyName#");
 		
-		// This is the null format option
-		if(isNull(arguments.value)) {
-			return "";
-		// This is not a simple value, throw an exception
-		} else if (!isSimpleValue(arguments.value)) {
-			throw("You cannont convert complex values to formatted Values");
-		}
-		
 		// check if a formatType was passed in, if not then use the getPropertyFormatType() method to figure out what it should be by default
 		if(!structKeyExists(arguments, "formatType")) {
 			arguments.formatType = getPropertyFormatType( arguments.propertyName );
@@ -505,7 +497,16 @@ component displayname="Base Object" accessors="true" output="false" {
 			return this.invokeMethod("get#arguments.propertyName#Formatted");	
 		}
 		
-		return formatValue(value=arguments.value, formatType=arguments.formatType);
+		// This is the null format option
+		if(isNull(arguments.value)) {
+			return "";
+		// This is a simple value, so now lets try to actually format the value
+		} else if (isSimpleValue(arguments.value)) {
+			return formatValue(value=arguments.value, formatType=arguments.formatType);
+		}
+		
+		// If the value has not yet been returned, then it is because the value was complex
+		throw("You cannont convert complex values to formatted Values");
 	}
 	
 	// @hint public method for getting the display format for a given property, this is used a lot by the SlatwallPropertyDisplay

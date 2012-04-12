@@ -40,7 +40,15 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.shippingMethod.getShippingMethodRatesSmartList()#"
-			recordEditAction="admin:setting.editshippingmethodrate">
+			recordEditAction="admin:setting.editshippingmethodrate"
+			recordDeleteAction="admin:setting.deleteshippingmethodrate"
+			recordDetailAction="admin:setting.detailshippingmethodrate"
+			recorddeletequerystring="returnAction=admin:setting.detailshippingmethod&shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"
+			sortProperty="sortOrder">
+		<cf_SlatwallListingColumn tdclass="primary" propertyidentifier="shippingMethodRateName" />
+		<cf_SlatwallListingColumn propertyidentifier="fulfillmentWeightRange" />
+		<cf_SlatwallListingColumn propertyidentifier="fulfillmentItemPriceRange" />
+		<cf_SlatwallListingColumn propertyidentifier="defaultAmount" />
 	</cf_SlatwallListingDisplay>
 	
 	<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.shippingmethodrate')#">
