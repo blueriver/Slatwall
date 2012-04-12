@@ -41,10 +41,10 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	// Persistent Properties
 	property name="shippingMethodRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="sortOrder" ormtype="int";
-	property name="minimumFulfillmentWeight" ormtype="int";
-	property name="maximumFulfillmentWeight" ormtype="int";
-	property name="minimumFulfillmentItemPrice" ormtype="big_decimal";
-	property name="maximumFulfillmentItemPrice" ormtype="big_decimal";
+	property name="minimumShipmentWeight" ormtype="int";
+	property name="maximumShipmentWeight" ormtype="int";
+	property name="minimumShipmentItemPrice" ormtype="big_decimal";
+	property name="maximumShipmentItemPrice" ormtype="big_decimal";
 	property name="defaultAmount" ormtype="big_decimal" formatType="custom";
 	property name="shippingIntegrationMethod" ormtype="string";
 	
@@ -71,72 +71,10 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	// Non Persistent
 	property name="shippingIntegrationMethodOptions" type="array" persistent="false";
 	property name="addressZoneOptions" type="array" persistent="false";
+	property name="shipmentWeightRange" type="string" persistent="false";
+	property name="shipmentItemPriceRange" type="string" persistent="false";
 	property name="shippingMethodRateName" type="string" persistent="false";
-	property name="fulfillmentWeightRange" type="string" persistent="false";
-	property name="fulfillmentItemPriceRange" type="string" persistent="false";
 	
-	
-	public string function getDefaultAmountFormatted() {
-		if(isNull(getDefaultAmount())) {
-			return rbKey('define.none');
-		}
-		return formatValue(getDefaultAmount(), "currency");
-	}
-	
-	public string function getFulfillmentWeightRange() {
-		var returnString = "";
-		var lower = 0;
-		var upper = 0;
-		
-		if(!isNull(getMinimumFulfillmentWeight()) && getMinimumFulfillmentWeight() gt 0) {
-			lower = getMinimumFulfillmentWeight();
-		}
-		
-		if(!isNull(getMaximumFulfillmentWeight()) && getMaximumFulfillmentWeight() gt 0) {
-			upper = getMaximumFulfillmentWeight();
-		}
-		
-		if(lower == 0 && upper == 0) {
-			returnString = rbKey('define.any');
-		} else {
-			returnString = formatValue(lower, "weight") & " - ";
-			if(upper gt 0) {
-				returnString &= formatValue(upper, "weight");
-			} else {
-				returnString &= rbKey('define.any');
-			}
-		}
-		
-		return returnString;
-	}
-		
-	public string function getFulfillmentItemPriceRange() {
-		var returnString = "";
-		var lower = 0;
-		var upper = 0;
-		
-		if(!isNull(getMinimumFulfillmentItemPrice()) && getMinimumFulfillmentItemPrice() gt 0) {
-			lower = getMinimumFulfillmentItemPrice();
-		}
-		
-		if(!isNull(getMaximumFulfillmentItemPrice()) && getMaximumFulfillmentItemPrice() gt 0) {
-			upper = getMaximumFulfillmentItemPrice();
-		}
-		
-		if(lower == 0 && upper == 0) {
-			returnString = rbKey('define.any');
-		} else {
-			returnString = formatValue(lower, "currency") & " - ";
-			if(upper gt 0) {
-				returnString &= formatValue(upper, "currency");
-			} else {
-				returnString &= rbKey('define.any');
-			}
-		}
-		
-		
-		return returnString;
-	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -150,6 +88,63 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 			arrayPrepend(variables.addressZoneOptions, {value="", name=rbKey('define.all')});
 		}
 		return variables.addressZoneOptions;
+	}
+	
+	public string function getShipmentWeightRange() {
+		if(!structKeyExists(variables, "shipmentWeightRange")) {
+			variables.shipmentWeightRange = "";
+			
+			var lower = 0;
+			var upper = 0;
+			
+			if(!isNull(getMinimumShipmentWeight()) && getMinimumShipmentWeight() gt 0) {
+				lower = getMinimumshipmentWeight();
+			}
+			
+			if(!isNull(getMaximumShipmentWeight()) && getMaximumShipmentWeight() gt 0) {
+				upper = getMaximumShipmentWeight();
+			}
+			
+			if(lower == 0 && upper == 0) {
+				variables.shipmentWeightRange = rbKey('define.any');
+			} else {
+				variables.shipmentWeightRange = formatValue(lower, "weight") & " - ";
+				if(upper gt 0) {
+					variables.shipmentWeightRange &= formatValue(upper, "weight");
+				} else {
+					variables.shipmentWeightRange &= rbKey('define.any');
+				}
+			}
+		}
+		return variables.shipmentWeightRange;
+	}
+		
+	public string function getShipmentItemPriceRange() {
+		if(!structKeyExists(variables, "shipmentItemPriceRange")) {
+			variables.shipmentItemPriceRange = "";
+			var lower = 0;
+			var upper = 0;
+			
+			if(!isNull(getMinimumShipmentItemPrice()) && getMinimumShipmentItemPrice() gt 0) {
+				lower = getMinimumShipmentItemPrice();
+			}
+			
+			if(!isNull(getMaximumShipmentItemPrice()) && getMaximumShipmentItemPrice() gt 0) {
+				upper = getMaximumShipmentItemPrice();
+			}
+			
+			if(lower == 0 && upper == 0) {
+				variables.shipmentItemPriceRange = rbKey('define.any');
+			} else {
+				variables.shipmentItemPriceRange = formatValue(lower, "currency") & " - ";
+				if(upper gt 0) {
+					variables.shipmentItemPriceRange &= formatValue(upper, "currency");
+				} else {
+					variables.shipmentItemPriceRange &= rbKey('define.any');
+				}
+			}
+		}
+		return variables.shipmentItemPriceRange;
 	}
 	
 	public string function getShippingMethodRateName() {
@@ -204,6 +199,21 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	public string function getDefaultAmountFormatted() {
+		if(isNull(getDefaultAmount())) {
+			return rbKey('define.none');
+		}
+		return formatValue(getDefaultAmount(), "currency");
+	}
+	
+	// ===============  END: Custom Formatting Methods =====================
 	
 	// ================== START: Overridden Methods ========================
 	

@@ -85,7 +85,7 @@
 				<entry key="Inventory"><value>inventoryService</value></entry>
 				<entry key="Location"><value>locationService</value></entry>
 				<entry key="LocationAddress"><value>locationService</value></entry>
-				<entry key="MeasurementUnit"><value>settingService</value></entry>
+				<entry key="MeasurementUnit"><value>measurementUnitService</value></entry>
 				<entry key="Option"><value>optionService</value></entry>
 				<entry key="OptionGroup"><value>optionService</value></entry>
 				<entry key="Order"><value>orderService</value></entry>

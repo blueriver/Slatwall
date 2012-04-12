@@ -34,23 +34,22 @@
     exception statement from your version.
 
 Notes:
-
-	Measurment Types can only be one of the following:
-	
-	length
-	weight
-	
-	
+2/
 */
-component displayname="Measurement Unit" entityname="SlatwallMeasurementUnit" table="SlatwallMeasurementUnit" persistent="true" accessors="true" extends="BaseEntity" {
+component extends="BaseService" output="false" {
+
+	public numeric function convertWeightToGlobalWeightUnit(required numeric weight, required any measurementUnitCode) {
+		if(setting('globalWeightUnitCode') eq arguments.measurementUnitCode) {
+			return arguments.weight;
+		}
+		
+		return convertWeight(arguments.weight, arguments.measurementUnitCode, setting('globalWeightUnitCode'));
+	}
 	
-	// Persistent Properties
-	property name="unitCode" ormtype="string" fieldtype="id";
-	property name="measurementType" ormtype="string" formFieldType="select";
-	property name="unitName" ormtype="string";
-	property name="conversionRatio" ormtype="float";
-	
-	public array function getMeasurementTypeOptions() {
-		return [{name=rbKey('define.length'), value='length'},{name=rbKey('define.weight'), value='weight'}];
+	public numeric function convertWeight(required numeric weight, required originalUnitCode, required convertToUnitCode) {
+		var omu = this.getMeasurementUnit(arguments.originalUnitCode, arguments.originalUnitCode);
+		var nmu = this.getMeasurementUnit(arguments.originalUnitCode, arguments.convertToUnitCode);
+		
+		return (arguments.weight / omu.getConversionRation()) * nmu.getConversionRation();
 	}
 }

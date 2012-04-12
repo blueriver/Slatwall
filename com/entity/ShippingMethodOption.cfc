@@ -36,17 +36,34 @@
 Notes:
 
 */
-component displayname="Order Fulfillment Pickup" entityname="SlatwallOrderFulfillmentPickup" table="SlatwallOrderFulfillment" persistent="true" output="false" accessors="true" extends="OrderFulfillment" discriminatorvalue="pickup" {
-	
-	// Persistent Properties
-	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	
+component displayname="Shipping Method Option" entityname="SlatwallShippingMethodOption" table="SlatwallShippingMethodOption" persistent=true accessors=true output=false extends="BaseEntity" {
 
-	public any function init() {
-		setFulfillmentMethodType("pickup");
-		
-		return super.init();
-	}
+	// Persistent Properties
+	property name="shippingMethodOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="totalCharge" ormtype="big_decimal";
+	property name="totalShippingWeight" ormtype="string";
+	property name="totalShippingItemPrice" ormtype="string";
+	property name="shipToPostalCode" ormtype="string";
+	property name="shipToStateCode" ormtype="string";
+	property name="shipToCountryCode" ormtype="string";
+	property name="shipToCity" ormtype="string";
+
+	// Related Object Properties (many-To-one)
+	property name="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="many-to-one" fkcolumn="shippingMethodRateID";
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
+	
+	// Audit Properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	
+	// Non-Persistent Properties
+	
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -56,6 +73,14 @@ component displayname="Order Fulfillment Pickup" entityname="SlatwallOrderFulfil
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+
 	// ================== START: Overridden Methods ========================
 	
 	// ==================  END:  Overridden Methods ========================

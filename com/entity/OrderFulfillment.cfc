@@ -36,24 +36,27 @@
 Notes:
 
 */
-component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" table="SlatwallOrderFulfillment" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="fulfillmentMethodType" {
+component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" table="SlatwallOrderFulfillment" persistent=true accessors=true output=false extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="fulfillmentCharge" ormtype="big_decimal" default=0;
 	
-	//non-persistent Properties
-	property name="subTotal" type="numeric" persistent="false";
-	property name="taxAmount" type="numeric" persistent="false";
-	
-	// Related Object Properties
+	// Related Object Properties (many-to-one)
+	property name="accountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
+	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderFulfillmentItems" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
-	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderFulfillmentAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" inverse="true" cascade="all-delete-orphan";
-	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
+	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
+	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
-	// Special Related Discriminator Property
-	property name="fulfillmentMethodType" length="255" insert="false" update="false";
+	// Related Object Properties (one-to-many)
+	property name="orderFulfillmentItems" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderFulfillmentAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
+	property name="fulfillmentShippingMethodOptions" singularname="fulfillmentShippingMethodOption" cfc="ShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
+
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -64,60 +67,94 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non-Persistent Properties
+	property name="subTotal" type="numeric" persistent="false";
+	property name="taxAmount" type="numeric" persistent="false";
+	property name="totalShippingWeight" type="numeric" persistent="false";
+	property name="shippingMethodOptions" type="array" persistent="false";
+	property name="accountAddressOptions" type="array" persistent="false";
+	
 	public any function init() {
 		if(isNull(variables.orderFulfillmentItems)) {
 			variables.orderFulfillmentItems = [];
+		}
+		if(isNull(variables.orderShippingMethodOptions)) {
+			variables.orderShippingMethodOptions = [];
 		}
 		
 		return super.init();
 	}
 	
+	public any function getFulfillmentMethodType() {
+		return getFulfillmentMethod().getFulfillmentMethodType();
+	}
+	
+	public void function removeAccountAddress() {
+		structDelete(variables, "AccountAddress");
+	}
+
+	public void function removeShippingAddress() {
+		structDelete(variables, "ShippingAddress");
+	}
+	
 	public boolean function isProcessable() {
-		if(arrayLen(getOrderFulfillmentItems()) && getQuantityUndelivered() > 0 ) {
-			return true;
-		}
-		return false;
-	}
-	
-	//@ hint this method fires any time that there is a change to the orderFulfillmentItems.  It is designed to be overridden by the fulfillment method specific entities to adjust accordingly
-	public void function orderFulfillmentItemsChanged() {
 		
-	}
-	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Order (many-to-one)
-	
-	public void function setOrder(required Order order) {
-		variables.order = arguments.order;
-		if(!arguments.order.hasOrderFulfillment(this)) {
-			arrayAppend(arguments.order.getOrderFulfillments(),this);
+		// Check to make sure that there are more than 0 items in this fulfillment
+		if(!arrayLen(getOrderFulfillmentItems())) {
+			return false;
 		}
+		
+		// If this fulfillmentMethodType is shipping, there are a handful of other things we need to check
+		if(getFulfillmentMethodType() eq "shipping") {
+			if(isNull(getAddress())) {
+				return false;
+			} else {
+				getAddress().validate(context="full");
+				if(getAddress().hasErrors()) {
+					return false;
+				}
+			}
+			
+			if(isNull(getShippingMethod())) {
+				return false;
+			}
+			
+			if(!getService("shippingService").verifyShippingMethodRate( this )) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
-	public void function removeOrder(Order order) {
-	   if(!structKeyExists(arguments,"order")) {
-	   		arguments.order = variables.order;
-	   }
-       var index = arrayFind(arguments.order.getOrderFulfillments(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderFulfillments(), index);
-       }
-       structDelete(variables,"order");
+	
+	public numeric function getDiscountAmount() {
+    	return 0;
     }
     
-    // Order Fulfillment Items (one-to-many)
-    public void function addOrderFulfillmentItem(required OrderItem orderFulfillmentItem) {
-    	arguments.orderFulfillmentItem.setOrderFulfillment(this);
+	public numeric function getDiscountTotal() {
+		return getDiscountAmount() + getItemDiscountAmountTotal();
+	}
+    
+	public numeric function getShippingCharge() {
+		return getFulfillmentCharge();
+	}
+	
+	
+	// Helper method to return either the shippingAddress or accountAddress to be used
+    public any function getAddress(){
+    	if(!isNull(getShippingAddress())){
+    		return getShippingAddress();
+    	} else if(!isNull(getAccountAddress())) {
+    		return getAccountAddress().getAddress();
+    	} else {
+    		return ;
+    	}
     }
-    
-    public void function removeOrderFulfillmentItem(required OrderItem orderFulfillmentItem) {
-    	arguments.orderFulfillmentItem.removeOrderFulfillment(this);
-    }
-    
-    /******* END Association management methods */ 
-    
-    public numeric function getSubTotal() {
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	public numeric function getSubTotal() {
   		if( !structKeyExists(variables,"subTotal") ) {
 	    	variables.subTotal = 0;
 	    	var items = getOrderFulfillmentItems();
@@ -128,7 +165,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	return variables.subTotal;
     }
     
-    public numeric function getTax() {
+    public numeric function getTaxAmount() {
     	if( !structkeyExists(variables, "taxAmount") ) {
     		variables.taxAmount = 0;
 	    	var items = getOrderFulfillmentItems();
@@ -139,25 +176,16 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	return variables.taxAmount;
     }
     
-    public numeric function getDiscountAmount() {
-    	return 0;
-    }
     
    	public numeric function getItemDiscountAmountTotal() {
-		var discountTotal = 0;
-		for(var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++) {
-			discountTotal += getOrderFulfillmentItems()[i].getDiscountAmount();
-		}
-		return discountTotal;
+   		if(!structKeyExists(variables, "itemDiscountAmountTotal")) {
+   			variables.itemDiscountAmountTotal = 0;
+   			for(var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++) {
+				variables.itemDiscountAmountTotal += getOrderFulfillmentItems()[i].getDiscountAmount();
+			}
+   		}
+		return variables.itemDiscountAmountTotal;
 	}
-	
-	public numeric function getDiscountTotal() {
-		return getDiscountAmount() + getItemDiscountAmountTotal();
-	}
-    
-    public numeric function getTotalCharge() {
-    	return getSubTotal() + getTax() + getFulfillmentCharge() - getDiscountTotal();
-    }
     
     public numeric function getQuantityUndelivered() {
     	if(!structKeyExists(variables,"quantityUndelivered")) {
@@ -169,15 +197,62 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	}
     	return variables.quantityUndelivered;
     }
-
-
-	// ============ START: Non-Persistent Property Methods =================
+    
+    public any function getShippingMethodOptions() {
+    	if( !structKeyExists(variables, "shippingMethodOptions")) {
+    		// Set the options to a new array
+    		variables.shippingMethodOptions = [];
+    		
+    		// If there aren't any shippingMethodOptions available, then try to populate this fulfillment
+    		if( !arrayLen(variables.orderShippingMethodOptions) ) {
+    			getService("shippingService").updateOrderShippingMethodOptions( this );
+    		}
+    		
+    		// At this point they have either been populated just before, or there were already options
+    		if( arrayLen(variables.orderShippingMethodOptions) ) {
+    			variables.shippingMethodOptions = [];	
+    		}
+    	}
+    	return variables.shippingMethodOptions; 
+    }
+    
+    public any function getAccountAddressOptions() {
+    	if( !structKeyExists(variables, "accountAddressOptions")) {
+    		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAccountAddress");
+			smartList.addSelect(propertyIdentifier="accountAddressName", alias="name");
+			smartList.addSelect(propertyIdentifier="accountAddressID", alias="value"); 
+			smartList.addFilter(propertyIdentifier="account_accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
+			smartList.addOrder("accountAddressName|ASC");
+			variables.accountAddressOptions = smartList.getRecords();
+		}
+		return variables.accountAddressOptions;
+	}
+	
+	public numeric function getTotalShippingWeight() {
+    	if( !structKeyExists(variables, "totalShippingWeight") ) {
+	    	variables.totalShippingWeight = 0;
+	    	var items = getOrderFulfillmentItems();
+	    	for( var i=1; i<=arrayLen(items); i++ ) {
+	    		var convertedWeight = getService("measurementUnitService").convertWeightToGlobalWeightUnit(items[i].getSku().setting('skuShippingWeight'), items[i].getSku().setting('skuShippingWeightUnitCode'));
+	    		variables.totalShippingWeight += (convertedWeight * items[i].getQuantity());
+	    	}			
+  		}
+    	return variables.totalShippingWeight;
+    }
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
 	
 	// ================== START: Overridden Methods ========================
 	
