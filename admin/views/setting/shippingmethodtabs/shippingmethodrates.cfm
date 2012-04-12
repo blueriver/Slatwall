@@ -46,8 +46,8 @@ Notes:
 			recorddeletequerystring="returnAction=admin:setting.detailshippingmethod&shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"
 			sortProperty="sortOrder">
 		<cf_SlatwallListingColumn tdclass="primary" propertyidentifier="shippingMethodRateName" />
-		<cf_SlatwallListingColumn propertyidentifier="fulfillmentWeightRange" />
-		<cf_SlatwallListingColumn propertyidentifier="fulfillmentItemPriceRange" />
+		<cf_SlatwallListingColumn propertyidentifier="shipmentWeightRange" />
+		<cf_SlatwallListingColumn propertyidentifier="shipmentItemPriceRange" />
 		<cf_SlatwallListingColumn propertyidentifier="defaultAmount" />
 	</cf_SlatwallListingDisplay>
 	

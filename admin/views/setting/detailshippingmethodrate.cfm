@@ -63,10 +63,10 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegrationMethod" edit="#rc.edit#" fieldtype="select" valueOptions="#rc.integration.getShippingMethodOptions(rc.integration.getIntegrationID())#">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="addressZone" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minimumFulfillmentWeight" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="maximumFulfillmentWeight" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minimumFulfillmentItemPrice" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="maximumFulfillmentItemPrice" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minimumShipmentWeight" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="maximumShipmentWeight" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minimumShipmentItemPrice" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="maximumShipmentItemPrice" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="defaultAmount" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
