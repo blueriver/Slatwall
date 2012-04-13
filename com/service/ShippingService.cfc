@@ -159,16 +159,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					}
 				}
 				
-				
 				// If there actually is a rateToUse, then we create a shippingMethodOption
 				if(structCount(rateToUse)) {
-					
+					throw('You stopped here greg... time to finish up!');
 				}
 				
-				
 			}
-			
-		
 		}
 	}
 	
