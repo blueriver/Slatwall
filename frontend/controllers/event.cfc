@@ -264,7 +264,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				product.setActiveFlag(1);
 				product = getProductService().saveProduct( product, rc.slatwallData.product );
 			} else {
-				getService("SkuService").createSkus( product, rc.slatwallData.product );
+				var newSku = getService("SkuService").newSku();
+				newSku.setPrice(rc.slatwallData.product.price);
+				newSku.setProduct(product);
+				newSku.addAccessContent( slatwallContent );
+				getService("SkuService").saveSKU( newSku );
 			}
 		}
 		
