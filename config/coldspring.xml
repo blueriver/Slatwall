@@ -17,6 +17,7 @@
 	<bean id="imageDAO" class="Slatwall.com.dao.ImageDAO" />
 	<bean id="inventoryDAO" class="Slatwall.com.dao.InventoryDAO" />
 	<bean id="locationDAO" class="Slatwall.com.dao.LocationDAO" />
+	<bean id="measurementUnitDAO" class="Slatwall.com.dao.MeasurementUnitDAO" />
 	<bean id="permissionDAO" class="Slatwall.com.dao.PermissionDAO" />
 	<bean id="productDAO" class="Slatwall.com.dao.ProductDAO" />
 	<bean id="productCacheDAO" class="Slatwall.com.dao.ProductCacheDAO" />
@@ -239,6 +240,9 @@
     </bean>
 	<bean id="locationService" parent="parentService" class="Slatwall.com.service.LocationService">
         <property name="DAO"><ref bean="locationDAO" /></property>
+	</bean>
+	<bean id="measurementUnitService" parent="parentService" class="Slatwall.com.service.MeasurementUnitService">
+        <property name="DAO"><ref bean="measurementUnitDAO" /></property>
 	</bean>
     <bean id="optionService" parent="parentService" class="Slatwall.com.service.OptionService">
         <property name="DAO"><ref bean="optionDAO" /></property>

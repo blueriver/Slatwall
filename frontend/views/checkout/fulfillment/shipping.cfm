@@ -130,7 +130,7 @@ Notes:
 			</cfif>
 		</div>
 		
-		<cfif arrayLen(params.orderFulfillment.getOrderShippingMethodOptions())>
+		<cfif arrayLen(params.orderFulfillment.getShippingMethodOptions())>
 			<div class="shippingMethod">
 				<h4>Shipping Method</h4>
 				<cf_SlatwallShippingMethodDisplay orderFulfillmentIndex="#params.orderFulfillmentIndex#" orderFulfillmentShipping="#params.orderFulfillment#" edit="#local.edit#">

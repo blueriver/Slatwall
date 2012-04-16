@@ -68,7 +68,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="subTotal" type="numeric" persistent="false";
+	property name="subtotal" type="numeric" persistent="false";
 	property name="taxAmount" type="numeric" persistent="false";
 	property name="totalShippingWeight" type="numeric" persistent="false";
 	property name="shippingMethodOptions" type="array" persistent="false";
@@ -119,7 +119,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 				return false;
 			}
 			
-			if(!getService("shippingService").verifyShippingMethodRate( this )) {
+			if(!getService("shippingService").verifyOrderFulfillmentShippingMethodRate( this )) {
 				return false;
 			}
 		}
@@ -154,15 +154,15 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public numeric function getSubTotal() {
-  		if( !structKeyExists(variables,"subTotal") ) {
-	    	variables.subTotal = 0;
+	public numeric function getSubtotal() {
+  		if( !structKeyExists(variables,"subtotal") ) {
+	    	variables.subtotal = 0;
 	    	var items = getOrderFulfillmentItems();
 	    	for( var i=1; i<=arrayLen(items); i++ ) {
-	    		variables.subTotal += items[i].getExtendedPrice();
+	    		variables.subtotal += items[i].getExtendedPrice();
 	    	}			
   		}
-    	return variables.subTotal;
+    	return variables.subtotal;
     }
     
     public numeric function getTaxAmount() {
@@ -205,7 +205,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		
     		// If there aren't any shippingMethodOptions available, then try to populate this fulfillment
     		if( !arrayLen(variables.orderShippingMethodOptions) ) {
-    			getService("shippingService").updateOrderShippingMethodOptions( this );
+    			getService("shippingService").updateOrderFulfillmentShippingMethodOptions( this );
     		}
     		
     		// At this point they have either been populated just before, or there were already options

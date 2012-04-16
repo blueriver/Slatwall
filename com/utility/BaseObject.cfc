@@ -440,6 +440,14 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// =========================== START: UTILITY METHODS ===========================================
 	
+	// @hint public method to return a a default value, if the value passed in is null
+	public any function coalesce(any value, required any defaultValue) {
+		if(!structKeyExists(arguments, "value")) {
+			return arguments.defaultValue;
+		}
+		return arguments.value;
+	}
+	
 	// @hint Public method to retrieve a value based on a propertyIdentifier string format
 	public any function getValueByPropertyIdentifier(required string propertyIdentifier, boolean formatValue=false) {
 		var value = javaCast("null", "");

@@ -40,7 +40,7 @@ Notes:
 <cfparam name="attributes.orderFulfillmentIndex" type="string" />
 <cfparam name="attributes.edit" type="boolean" default="true" />
 
-<cfset local.methodOptions = attributes.orderFulfillmentShipping.getOrderShippingMethodOptions() />
+<cfset local.methodOptions = attributes.orderFulfillmentShipping.getShippingMethodOptions() />
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
