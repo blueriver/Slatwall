@@ -310,8 +310,12 @@ globalEncryptionKeySize
 										pathList = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
 										nextPathListIndex = listLen(pathList);
 									}
-									relationshipValue = listGetAt(pathList, nextPathListIndex);
-									nextPathListIndex--;
+									if(nextPathListIndex gt 0) {
+										relationshipValue = listGetAt(pathList, nextPathListIndex);
+										nextPathListIndex--;
+									} else {
+										relationshipValue = "";
+									}
 								} else {
 									relationshipKey = listLast(allRelationships[r], ".");
 									relationshipValue = arguments.object.getValueByPropertyIdentifier(allRelationships[r]);
