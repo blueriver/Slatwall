@@ -36,19 +36,32 @@
 Notes:
 
 */
-component displayname="Order Payment" entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="BaseEntity" discriminatorcolumn="paymentMethodType" {
+component displayname="Order Payment" entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormtype="big_decimal" notnull="true";
 	
+	// Persistent Properties - creditCard Specific
+	property name="nameOnCreditCard" ormType="string";
+	property name="creditCardNumberEncrypted" ormType="string";
+	property name="creditCardLastFour" ormType="string";
+	property name="creditCardType" ormType="string";
+	property name="expirationMonth" ormType="string";
+	property name="expirationYear" ormType="string";
+	
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID";
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32";
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
 	
-	// Special Related Discriminator Property
-	property name="paymentMethodType" length="255" insert="false" update="false";
+	// Related Object Properties (one-to-many)
+	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
+
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -59,6 +72,16 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non-Persistent Properties
+	property name="amountReceived" type="numeric" persistent="false";
+	property name="amountAuthorized" type="numeric" persistent="false";
+	property name="creditCardNumber" persistent="false";
+	property name="securityCode" persistent="false";
+	property name="expirationDate" persistent="false";
+	property name="amountAuthorized" persistent="false";
+	property name="amountCharged" persistent="false";
+	property name="amountCredited" persistent="false";
+	
 	public any function init() {
 		// set the payment type to charge by default
 		if( !structKeyExists(variables,"orderPaymentType") ) {
@@ -67,49 +90,169 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		if(isNull(variables.amount)) {
 			variables.amount = 0;
 		}
+		if(isNull(variables.creditCardTransactions)) {
+			variables.creditCardTransactions = [];
+		}
+		
 		return super.init();
 	}
 	
-	// Helper method that gets overriden by payment method-specific orderpayment entities
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public string function getAuthorizationCodes() {
+		var transactions = getCreditCardTransactions();
+		var authCodes = "";
+		for(var thisTransaction in transactions) {
+			if(!listFind(authCodes,thisTransaction.getAuthorizationCode())) {
+				authCodes = listAppend(authCodes,thisTransaction.getAuthorizationCode());
+			}
+		}
+		return authCodes;
+	}
+	
 	public numeric function getAmountReceived() {
-		return getAmount();
+		return getAmountCharged() - getAmountCredited();
 	}
 	
 	public numeric function getAmountAuthorized() {
-		return getAmount();
+		var amountAuthorized = 0;
+		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+			amountAuthorized += getCreditCardTransactions()[i].getAmountAuthorized();
+		}
+		return amountAuthorized;
 	}
 	
-    /******* Association management methods for bidirectional relationships **************/
-	
-
-	// Order (many-to-one)
-	
-	public void function setOrder(required Order Order) {
-	   variables.Order = arguments.order;
-	   if(!arguments.order.hasOrderPayment(this)) {
-	       arrayAppend(arguments.order.getOrderPayments(),this);
-	   }
+	public numeric function getAmountCharged() {
+		var amountCharged = 0;
+		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+			amountCharged += getCreditCardTransactions()[i].getAmountCharged();
+		}
+		return amountCharged;
 	}
 	
-	public void function removeOrder(required Order Order) {
-       var index = arrayFind(arguments.order.getOrderPayments(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderPayments(),index);
-       }    
-       structDelete(variables,"order");
-    }
+	public numeric function getAmountCredited() {
+		var amountCredited = 0;
+		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+			amountCredited += getCreditCardTransactions()[i].getAmountCredited();
+		}
+		return amountCredited;
+	}
 	
-    /************   END Association Management Methods   *******************/
+	public void function setCreditCardNumber(required string creditCardNumber) {
+		variables.creditCardNumber = arguments.creditCardNumber;
+		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
+		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
+		if(getCreditCardType() != "Invalid" && setting("paymentMethod_creditCard_storeCreditCardWithOrderPayment") == 1) {
+			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+		}
+	}
 	
-	    
-
+	public string function getCreditCardNumber() {
+		if(!structKeyExists(variables,"creditCardNumber")) {
+			variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
+		}
+		return variables.creditCardNumber;
+	}
+	
+	public string function getExpirationDate() {
+		if(!structKeyExists(variables,"expirationDate")) {
+			variables.expirationDate = getExpirationMonth() & "/" & getExpirationYear();
+		}
+		return variables.expirationDate;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public numeric function getAmountReceived() {
+		if(!structKeyExists(variables, "amountReceived")) {
+			variables.amountReceived = getAmount();
+		}
+		return variables.amountReceived;
+	}
+	
+	public numeric function getAmountAuthorized() {
+		if(!structKeyExists(variables, "amountAuthorized")) {
+			variables.amountAuthorized = getAmount();
+		}
+		return variables.amountAuthorized;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Order (many-to-one)
+	public void function setOrder(required any order) {
+		variables.order = arguments.order;
+		if(isNew() or !arguments.order.hasOrderPayment( this )) {
+			arrayAppend(arguments.order.getOrderPayments(), this);
+		}
+	}
+	public void function removeOrder(any order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getOrderPayments(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.order.getOrderPayments(), index);
+		}
+		structDelete(variables, "order");
+	}
+	
+	// Credit Card Transactions (one-to-many)
+	public void function addCreditCardTransaction(required any creditCardTransaction) {
+		arguments.creditCardTransaction.setOrderPayment( this );
+	}
+	public void function removeCreditCardTransaction(required any creditCardTransaction) {
+		arguments.creditCardTransaction.removeOrderPayment( this );
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	

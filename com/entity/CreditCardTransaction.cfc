@@ -67,32 +67,30 @@ component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTr
 		return Super.init();
 	}
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Order Payment (many-to-one)
-	public void function setOrderPayment(required any orderPayment) {
-	   variables.orderPayment = arguments.orderPayment;
-	   if(!arguments.orderPayment.hasCreditCardTransaction(this)) {
-	       arrayAppend(arguments.orderPayment.getCreditCardTransactions(),this);
-	   }
-	}
-	
-	public void function removeOrder(required any orderPayment) {
-       var index = arrayFind(arguments.orderPayment.getCreditCardTransactions(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.orderPayment.getCreditCardTransactions(),index);
-       }    
-       structDelete(variables,"orderPayment");
-    }
-	
-    /************   END Association Management Methods   *******************/
-
 
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Order Payment (many-to-one)
+	public void function setOrderPayment(required any orderPayment) {
+		variables.orderPayment = arguments.orderPayment;
+		if(isNew() or !arguments.orderPayment.hasCreditCardTransaction( this )) {
+			arrayAppend(arguments.orderPayment.getCreditCardTransactions(), this);
+		}
+	}
+	public void function removeOrderPayment(any orderPayment) {
+		if(!structKeyExists(arguments, "orderPayment")) {
+			arguments.orderPayment = variables.orderPayment;
+		}
+		var index = arrayFind(arguments.orderPayment.getCreditCardTransactions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderPayment.getCreditCardTransactions(), index);
+		}
+		structDelete(variables, "orderPayment");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
