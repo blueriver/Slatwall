@@ -291,7 +291,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 
 		if(!rc[ arguments.entityName ].hasErrors()) {
 			if(structKeyExists(rc, "returnAction")) {
-				getFW().redirect(action=rc.returnAction, querystring=buildReturnActionQueryString( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" ));	
+				redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
 			} else {
 				getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
 			}
