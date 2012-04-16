@@ -2,10 +2,10 @@
 <snippet filetemplate="false" extension="">
 <name>Bidirectional Helper Many-To-One</name>
 <help></help>
-<starttext><![CDATA[	// $${Comment Name} (many-to-one)
+<starttext><![CDATA[// $${Comment Name} (many-to-one)
 	public void function set$${PropertyMethod}(required any $${propertyName}) {
 		variables.$${propertyName} = arguments.$${propertyName};
-		if(isNew() or !arguments.$${propertyName}.has$${ForiegnSignluarMethod}( this )) {
+		if(isNew() or !arguments.$${propertyName}.has$${ForiegnSingluarMethod}( this )) {
 			arrayAppend(arguments.$${propertyName}.get$${ForiegnMethod}(), this);
 		}
 	}
