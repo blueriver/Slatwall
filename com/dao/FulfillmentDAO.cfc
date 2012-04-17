@@ -38,4 +38,5 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	
 </cfcomponent>

@@ -77,6 +77,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Non-Persistent Properties
 	property name="optionsDisplay" persistent="false";
 	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
+	property name="eligibleFulfillmentMethods" type="array" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePriceDetails" type="struct" persistent="false";
 	property name="salePrice" type="numeric" formatType="currency" persistent="false";
@@ -104,9 +105,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	   }
  	   if(isNull(variables.subscriptionBenefits)) {
 	       variables.subscriptionBenefits = [];
-	   }
- 	   if(isNull(variables.eligibleFulfillmentMethods)) {
-	       variables.eligibleFulfillmentMethods = [];
 	   }
 
        return super.init();
@@ -374,6 +372,16 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			return getSalePriceDetails()[ "salePriceExpirationDateTime"];
 		}
 		return "";
+	}
+	
+	public array function getEligibleFulfillmentMethods() {
+		if(!structKeyExists(variables, "eligibleFulfillmentMethods")) {
+			var sl = getService("fulfillmentService").getFulfillmentMethodSmartList();
+			sl.addInFilter('fulfillmentMethodID', setting('skuEligibleFulfillmentMethods'));
+			sl.addOrderBy('sortOrder|ASC');
+			variables.eligibleFulfillmentMethods = sl.getRecords();
+		}
+		return variables.eligibleFulfillmentMethods;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

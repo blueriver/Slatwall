@@ -106,22 +106,34 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			throw("You cannot add an item to an order that has been closed or canceled");
 		}
 	
+	
 		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
 		if(!structKeyExists(arguments, "orderFulfillment"))	{
+			
 			var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligibleFulfillmentMethods'),1)).getFulfillmentMethodType();
+			
 			// check if there is a fulfillment method of this type in the order
 			for(var fulfillment in arguments.order.getOrderFulfillments()) {
-				if(fulfillment.getFulfillmentMethodType() == thisFulfillmentMethodType) {
+				if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), fulfillment.getFulfillmentMethod().getFulfillmentMethodID())) {
 					arguments.orderFulfillment = fulfillment;
 					break;
 				}
 			}
+			
 			// if no fulfillment of this type found then create a new one 
 			if(!structKeyExists(arguments, "orderFulfillment")) {
-				// use the first fulfillment method allowed for sku
-				arguments.orderFulfillment = this.new("SlatwallOrderFulfillment#thisFulfillmentMethodType#");
-				arguments.orderFulfillment.setOrder(arguments.order);
-			
+				
+				var fulfillmentMethodOptions = arguments.sku.getEligibleFulfillmentMethods();
+				
+				// If there are at least 1 options, then we create the new method, otherwise stop and just return the order
+				if(arrayLen(fulfillmentMethodOptions)) {
+					arguments.orderFulfillment = this.newSlatwallOrderFulfillment();
+					arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethodOptions[1] );
+					arguments.orderFulfillment.setOrder(arguments.order);
+				} else {
+					return arguments.order;
+				}
+				
 				// Push the fulfillment into the hibernate scope
 				getDAO().save(arguments.orderFulfillment);
 			}
@@ -192,7 +204,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Recalculate the order amounts for tax and promotions and priceGroups
 		recalculateOrderAmounts( arguments.order );
 	
-		save(arguments.order);
+		save( arguments.order );
 	}
 	
 	public void function removeOrderItem(required any order, required string orderItemID) {
@@ -269,7 +281,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(structKeyExists(data, "orderPayments")) {
 			var paymentsDataArray = data.orderPayments;
 			for(var i = 1; i <= arrayLen(paymentsDataArray); i++) {
-				var payment = this.getOrderPaymentCreditCard(paymentsDataArray[i].orderPaymentID, true);
+				var payment = this.getOrderPayment(paymentsDataArray[i].orderPaymentID, true);
 				
 				if((payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
 					if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i],"amount"))	{
@@ -282,7 +294,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					payment.setOrder(arguments.order);
 				
 					// Attempt to Validate & Save Order Payment
-					payment = this.saveOrderPaymentCreditCard(payment, paymentsDataArray[i]);
+					payment = this.saveOrderPayment(payment, paymentsDataArray[i]);
 				
 					// Check to see if this payment has any errors and if so then don't proceed
 					if(payment.hasErrors() || payment.getBillingAddress().hasErrors() || payment.getCreditCardType() == "Invalid") {
@@ -764,7 +776,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return arguments.orderPayment;
 	}
 	
-	/********* START: Order Actions ***************/
+	//================= START: Order Actions ========================
 	
 	public any function applyOrderAction(required string orderID, required string orderActionTypeID) {
 		var order = this.getOrder(arguments.orderID);
@@ -825,7 +837,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getService("utilityService").export(searchQuery);
 	}
 	
-	/********* END: Order Actions ***************/
+	//================= END: Order Actions ========================
 	
 	public void function clearCart() {
 		var currentSession = getSessionService().getCurrent();

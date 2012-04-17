@@ -40,19 +40,4 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	property name="settingService" type="any";
 
-	public any function saveFulfillmentMethod(required any entity, struct data) {
-		if( structKeyExists(arguments, "data") ) {
-			// save fulfillmentMethod-specific settings
-			for(var item in arguments.data) {
-				if(!isObject(arguments.data[item]) && listFirst(item,"_") == "fulfillmentMethod") {
-					var setting = getSettingService().getBySettingName(item);
-					setting.setSettingName(item);
-					setting.setSettingValue(arguments.data[item]);
-					getSettingService().save(entity=setting);
-				}
-			}
-		}
-		return save(argumentcollection=arguments);
-	}
-	
 }

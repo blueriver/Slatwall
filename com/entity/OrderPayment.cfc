@@ -53,7 +53,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID";
-	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
 	
 	// Related Object Properties (one-to-many)
@@ -73,15 +73,14 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="amountReceived" type="numeric" persistent="false";
 	property name="amountAuthorized" type="numeric" persistent="false";
+	property name="amountCharged" type="numeric" persistent="false";
+	property name="amountCredited" type="numeric" persistent="false";
+	property name="amountReceived" type="numeric" persistent="false";
 	property name="creditCardNumber" persistent="false";
-	property name="securityCode" persistent="false";
 	property name="expirationDate" persistent="false";
-	property name="amountAuthorized" persistent="false";
-	property name="amountCharged" persistent="false";
-	property name="amountCredited" persistent="false";
-	
+	property name="securityCode" persistent="false";
+		
 	public any function init() {
 		// set the payment type to charge by default
 		if( !structKeyExists(variables,"orderPaymentType") ) {
@@ -97,20 +96,10 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return super.init();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public string function getPaymentMethodType() {
+		return getPaymentMethod().getPaymentMethodType();
+	}
+
 	public string function getAuthorizationCodes() {
 		var transactions = getCreditCardTransactions();
 		var authCodes = "";
@@ -122,94 +111,67 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return authCodes;
 	}
 	
-	public numeric function getAmountReceived() {
-		return getAmountCharged() - getAmountCredited();
-	}
 	
-	public numeric function getAmountAuthorized() {
-		var amountAuthorized = 0;
-		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-			amountAuthorized += getCreditCardTransactions()[i].getAmountAuthorized();
-		}
-		return amountAuthorized;
-	}
-	
-	public numeric function getAmountCharged() {
-		var amountCharged = 0;
-		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-			amountCharged += getCreditCardTransactions()[i].getAmountCharged();
-		}
-		return amountCharged;
-	}
-	
-	public numeric function getAmountCredited() {
-		var amountCredited = 0;
-		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-			amountCredited += getCreditCardTransactions()[i].getAmountCredited();
-		}
-		return amountCredited;
-	}
-	
-	public void function setCreditCardNumber(required string creditCardNumber) {
-		variables.creditCardNumber = arguments.creditCardNumber;
-		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
-		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
-		if(getCreditCardType() != "Invalid" && setting("paymentMethod_creditCard_storeCreditCardWithOrderPayment") == 1) {
-			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
-		}
-	}
-	
-	public string function getCreditCardNumber() {
-		if(!structKeyExists(variables,"creditCardNumber")) {
-			variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
-		}
-		return variables.creditCardNumber;
-	}
-	
-	public string function getExpirationDate() {
-		if(!structKeyExists(variables,"expirationDate")) {
-			variables.expirationDate = getExpirationMonth() & "/" & getExpirationYear();
-		}
-		return variables.expirationDate;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public numeric function getAmountReceived() {
 		if(!structKeyExists(variables, "amountReceived")) {
-			variables.amountReceived = getAmount();
+			switch(getPaymentMethodType()) {
+				
+				case "creditCard" :
+					variables.amountReceived = getAmountCharged() - getAmountCredited();
+					
+				default :
+					variables.amountReceived = getAmount();
+			}
 		}
 		return variables.amountReceived;
 	}
 	
 	public numeric function getAmountAuthorized() {
 		if(!structKeyExists(variables, "amountAuthorized")) {
-			variables.amountAuthorized = getAmount();
+			switch(getPaymentMethodType()) {
+			
+				case "creditCard" :
+					variables.amountAuthorized = 0;
+					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+						variables.amountAuthorized += getCreditCardTransactions()[i].getAmountAuthorized();
+					}
+					
+				default :
+					variables.amountAuthorized = getAmount();
+			}
 		}
 		return variables.amountAuthorized;
 	}
 	
+	public numeric function getAmountCharged() {
+		if(!structKeyExists(variables, "amountCharged")) {
+			variables.amountCharged = 0;
+			for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+				variables.amountCharged += getCreditCardTransactions()[i].getAmountCharged();
+			}
+		}
+		return variables.amountCharged;
+	}
+	
+	public numeric function getAmountCredited() {
+		if(!structKeyExists(variables, "amountCredited")) {
+			variables.amountCredited = 0;
+			for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+				variables.amountCredited += getCreditCardTransactions()[i].getAmountCredited();
+			}
+			return variables.amountCredited;
+		}
+	}
+	
+	public string function getExpirationDate() {
+		if(!structKeyExists(variables,"expirationDate")) {
+			variables.expirationDate = coalesce(getExpirationMonth(),"") & "/" & coalesce(getExpirationYear(), "");
+		}
+		return variables.expirationDate;
+	}
+		
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
@@ -251,6 +213,23 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
+	
+	
+	public void function setCreditCardNumber(required string creditCardNumber) {
+		variables.creditCardNumber = arguments.creditCardNumber;
+		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
+		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
+		if(getCreditCardType() != "Invalid" && setting("paymentMethod_creditCard_storeCreditCardWithOrderPayment") == 1) {
+			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+		}
+	}
+	
+	public string function getCreditCardNumber() {
+		if(!structKeyExists(variables,"creditCardNumber")) {
+			variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
+		}
+		return variables.creditCardNumber;
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	
