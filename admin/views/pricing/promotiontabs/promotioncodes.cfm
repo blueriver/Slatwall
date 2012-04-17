@@ -46,7 +46,7 @@ Notes:
 							   recordEditAction="admin:pricing.editpromotioncode"
 							   recordEditModal="true"
 							   recordDeleteAction="admin:pricing.deletepromotioncode"
-							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotion&promotionID=#rc.promotion.getPromotionID()#">
+							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionCode" />
 		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" />
 		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />

@@ -40,16 +40,18 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 	
 	// Persistent Properties
 	property name="categoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="categoryIDPath" ormtype="string";
 	property name="categoryName" ormtype="string";
 	property name="cmsCategoryID" ormtype="string";
-	property name="cmsCategoryIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
 	property name="restrictAccessFlag" ormtype="boolean";
 	property name="allowProductAssignmentFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
+	property name="parentCategory" cfc="Category" fieldtype="many-to-one" fkcolumn="parentCategoryID";
 	
 	// Related Object Properties (one-to-many)
+	property name="childCategories" singularname="childCategory" cfc="Category" type="array" fieldtype="one-to-many" fkcolumn="parentCategoryID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="categoryID" inversejoincolumn="productID" inverse="true";
@@ -74,6 +76,32 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 		
 	// ============= START: Bidirectional Helper Methods ===================
 
+	// Child Categories (one-to-many)    
+	public void function addChildCategory(required any childCategory) {    
+		arguments.childCategory.setParentCategory( this );    
+	}    
+	public void function removeChildCategory(required any childCategory) {    
+		arguments.childCategory.removeParentCategory( this );    
+	}
+	
+	// Parent Category (many-to-one)
+	public void function setParentCategory(required any parentCategory) {
+		variables.parentCategory = arguments.parentCategory;
+		if(isNew() or !arguments.parentCategory.hasChildCategory( this )) {
+			arrayAppend(arguments.parentCategory.getChildCategories(), this);
+		}
+	}
+	public void function removeParentCategory(any parentCategory) {
+		if(!structKeyExists(arguments, "parentCategory")) {
+			arguments.parentCategory = variables.parentCategory;
+		}
+		var index = arrayFind(arguments.parentCategory.getChildCategories(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.parentCategory.getChildCategories(), index);
+		}
+		structDelete(variables, "parentCategory");
+	}
+	
 	// products (many-to-many)
 	public void function addProduct(required any product) {
 	   arguments.product.addCategory(this);
@@ -90,6 +118,16 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		setCategoryIDPath( buildIDPathList( "parentCategory" ) );
+	}
+	
+	public void function preUpdate(struct oldData){
+		super.preUpdate(argumentcollection=arguments);
+		setCategoryIDPath( buildIDPathList( "parentCategory" ) );
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

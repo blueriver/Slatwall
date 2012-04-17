@@ -164,10 +164,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function onAfterCategorySave(required any rc) {
 		var categoryBean = rc.$.event("categoryBean");
 		var category = getContentService().getCategoryByCmsCategoryID(rc.$.event("categoryID"),true);
+		var parentCategory = getContentService().getCategoryByCmsCategoryID(categoryBean.getParentID());
+		if(!isNull(parentCategory)) {
+			category.setParentCategory(parentCategory);
+		}
+		category.setCategoryName(categoryBean.getName());
 		category.setCmsSiteID(rc.$.event('siteID'));
 		category.setCmsCategoryID(rc.$.event("categoryID"));
-		category.setCmsCategoryIDPath(categoryBean.getPath());
-		category.setCategoryName(categoryBean.getName());
 		category = getContentService().saveCategory(category);
 	}
 	
