@@ -42,10 +42,6 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		return this;
 	}
 	
-	public string function getIntegrationTypes() {
-		return "data";
-	}
-	
 	public string function getDisplayName() {
 		return "Full Circle";
 	} 

@@ -37,6 +37,7 @@ Notes:
 
 */
 component extends="Slatwall.com.utility.BaseObject" {
+
 	public any function init() {
 		return this;
 	}
@@ -49,12 +50,16 @@ component extends="Slatwall.com.utility.BaseObject" {
 		return "Not Defined";
 	}
 	
-	public xml function getMainMenuLinks() {
-		return xmlNew(false);
-	}
-	
 	public boolean function isFW1Subsystem() {
 		return false;
+	}
+	
+	public xml function getColdspringXML() {
+		return xmlNew();
+	} 
+	
+	public struct function getSettings() {
+		return {};
 	}
 	
 }

@@ -85,5 +85,12 @@ Notes:
 			inside of the integration service
 		--->
 	</cffunction>
+	
+	<cffunction name="getColdspringXML" returntype="xml">
+		<!---
+			This method should return a valid coldspring xml that overrides the default xml
+		--->
+		
+	</cffunction> 
 
 </cfinterface>

@@ -53,6 +53,13 @@ component accessors="true" output="false" extends="BaseObject" {
 		return getService("requestCacheService").getValue("currentProduct");
 	}
 	
+	public any function getCurrentContent() {
+		if(!getService("requestCacheService").keyExists("currentContent")) {
+			getService("requestCacheService").setValue( "currentContent", getService("productService").getContentByCMSContentID( request.muraScope.content('contentID'), true ) );
+		}
+		return getService("requestCacheService").getValue("currentContent");
+	}
+	
 	public any function getCurrentSession() {
 		return getService("sessionService").getCurrent();
 	}
@@ -186,6 +193,16 @@ component accessors="true" output="false" extends="BaseObject" {
 			return evaluate("getProductList(arguments.contentID).get#arguments.property#()");
 		} else {
 			return getProductList(arguments.contentID);
+		}
+	}
+	
+	public any function content(string property, string value) {
+		if(isDefined("arguments.property") && isDefined("arguments.value")) {
+			return evaluate("getCurrentContent().set#arguments.property#(#arguments.value#)");
+		} else if (isDefined("arguments.property")) {
+			return evaluate("getCurrentContent().get#arguments.property#()");
+		} else {
+			return getCurrentContent();
 		}
 	}
 	
