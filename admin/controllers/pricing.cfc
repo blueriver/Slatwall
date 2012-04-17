@@ -64,7 +64,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
 		}
 		rc.saveAction = "admin:pricing.savepromotionrewardproduct";
-		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionrewards";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards";
 		rc.edit = true;
 		getFW().setView("admin:pricing.detailpromotionreward");
 	}
@@ -75,7 +75,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
 		} 		 
 		rc.saveAction = "admin:pricing.savepromotionrewardshipping";
-		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionrewards";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards";
 		rc.edit = true;
 		getFW().setView("admin:pricing.detailpromotionreward");
 	}
@@ -86,7 +86,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
 		}
 		rc.saveAction = "admin:pricing.savepromotionrewardorder";
-		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionrewards";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards";
 		rc.edit = true;
 		getFW().setView("admin:pricing.detailpromotionreward");
 	}
@@ -97,7 +97,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
 		}
 		rc.saveAction = "admin:pricing.savepromotionqualifierproduct";
-		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionqualifiers";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers";
 		rc.edit = true;
 		getFW().setView("admin:pricing.detailpromotionqualifier");
 	}
@@ -108,7 +108,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
 		} 		 
 		rc.saveAction = "admin:pricing.savepromotionqualifierfulfillment";
-		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionqualifiers";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers";
 		rc.edit = true;
 		getFW().setView("admin:pricing.detailpromotionqualifier");
 	}
@@ -119,7 +119,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.promotionperiod = getPromotionService().getPromotionperiod( rc.promotionPeriodID );
 		}
 		rc.saveAction = "admin:pricing.savepromotionqualifierorder";
-		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()#&selectedtab=promotionqualifiers";
+		rc.cancelAction = "admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID###tabpromotionqualifiers";
 		rc.edit = true;
 		getFW().setView("admin:pricing.detailpromotionqualifier");
 	}
