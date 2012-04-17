@@ -48,20 +48,13 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.content#" property="title">
 				<cf_SlatwallPropertyDisplay object="#rc.content#" property="cmsContentID" edit="false">
 				<cf_SlatwallPropertyDisplay object="#rc.content#" property="templateFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="productListingFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="defaultProductsPerPage" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="showProductInSubPagesFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.content#" property="disableProductAssignmentFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="showProductInSubPagesFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="restrictAccessFlag" edit="false">
 				<cf_SlatwallPropertyDisplay object="#rc.content#" property="allowPurchaseFlag" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="requirePurchaseFlag" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="requireSubscriptionFlag" edit="false">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
 	<cf_SlatwallTabGroup object="#rc.content#">
-		<cf_SlatwallTab view="admin:setting/contenttabs/contentsettings">
+		<cf_SlatwallTab view="admin:setting/contenttabs/settings">
 	</cf_SlatwallTabGroup>
 
 	</cf_SlatwallDetailForm>

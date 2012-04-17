@@ -50,15 +50,15 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="disableProductAssignmentFlag" ormtype="boolean"; // property
 	property name="templateFlag" ormtype="boolean"; // property
 	
-	property name="restrictAccessFlag" ormtype="boolean";  // setting
-	property name="requirePurchaseFlag" ormtype="boolean";  // setting
-	property name="requireSubscriptionFlag" ormtype="boolean"; // setting
-	property name="productListingFlag" ormtype="boolean"; // setting
-	property name="defaultProductsPerPage" ormtype="integer"; // setting
-	property name="showProductInSubPagesFlag" ormtype="boolean"; // setting
+	//property name="restrictAccessFlag" ormtype="boolean";  // setting
+	//property name="requirePurchaseFlag" ormtype="boolean";  // setting
+	//property name="requireSubscriptionFlag" ormtype="boolean"; // setting
+	//property name="productListingFlag" ormtype="boolean"; // setting
+	//property name="defaultProductsPerPage" ormtype="integer"; // setting
+	//property name="showProductInSubPagesFlag" ormtype="boolean"; // setting
 	
 	// Related Object Properties (many-to-one)
-	property name="restrictedContentTemplateContent" cfc="Content" fieldtype="many-to-one" fkcolumn="restrictedContentTemplateContentID";  // setting
+	//property name="restrictedContentTemplateContent" cfc="Content" fieldtype="many-to-one" fkcolumn="restrictedContentTemplateContentID";  // setting
 	property name="parentContent" cfc="Content" fieldtype="many-to-one" fkcolumn="parentContentID";
 	
 	// Related Object Properties (one-to-many)

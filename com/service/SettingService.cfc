@@ -89,6 +89,7 @@ globalEncryptionKeySize
 			contentProductListingFlag = {fieldType="yesno"},
 			contentDefaultProductsPerPage = {fieldType="text"},
 			contentIncludeChildContentProductsFlag = {fieldType="yesno"},
+			contentRestrictedContentDisplayTemplate = {fieldType="select"},
 	
 			// Fulfillment Method
 			fulfillmentMethodEmailFrom = {fieldType="text"},
@@ -174,7 +175,7 @@ globalEncryptionKeySize
 		
 		public array function getSettingOptions(required string settingName) {
 			switch(arguments.settingName) {
-				case "brandDisplayTemplate": case "productDisplayTemplate": case "productTypeDisplayTemplate" :
+				case "brandDisplayTemplate": case "productDisplayTemplate": case "productTypeDisplayTemplate" : case "contentRestrictedContentDisplayTemplate" :
 					return getContentService().getDisplayTemplateOptions();
 				case "globalCurrencyLocale":
 					return ['Chinese (China)','Chinese (Hong Kong)','Chinese (Taiwan)','Dutch (Belgian)','Dutch (Standard)','English (Australian)','English (Canadian)','English (New Zealand)','English (UK)','English (US)','French (Belgian)','French (Canadian)','French (Standard)','French (Swiss)','German (Austrian)','German (Standard)','German (Swiss)','Italian (Standard)', 'Italian (Swiss)','Japanese','Korean','Norwegian (Bokmal)','Norwegian (Nynorsk)','Portuguese (Brazilian)','Portuguese (Standard)','Spanish (Mexican)','Spanish (Modern)','Spanish (Standard)','Swedish'];
