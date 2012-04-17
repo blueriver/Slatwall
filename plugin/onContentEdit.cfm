@@ -41,7 +41,7 @@ Notes:
 <cfset slatwallProductSmartList.addFilter(propertyIdentifier="productType_systemCode", value="contentAccess") />
 <cfset slatwallProducts = slatwallProductSmartList.getRecords() />
 <cfset restrictedContentTemplates = getService("contentService").listContentFilterByTemplateFlag(1) />
-<cfset restrictedParent = false />
+<!---<cfset restrictedParent = false />
 <cfset purchaseRequiredParent = false />
 <cfset subscriptionRequiredParent = false />
 <cfif Not $.content().getIsNew()>
@@ -58,13 +58,24 @@ Notes:
 	<cfif !isNull(subscriptionRequiredContent) AND subscriptionRequiredContent.getcmsContentID() NEQ $.content("contentID")>
 		<cfset subscriptionRequiredParent = true />
 	</cfif>
-</cfif>
+</cfif>--->
 <cfoutput>
-	<cfif restrictedParent>
+	<!---<cfif restrictedParent>
 		<input type="hidden" name="slatwallData.templateFlag" value="0" />
 		<input type="hidden" name="slatwallData.productListingFlag" value="0" />
 		<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />
-	</cfif>
+	</cfif>--->
+	<cfoutput>
+		<cf_SlatwallSettingTable>
+			<cf_SlatwallSetting settingName="contentRestrictAccessFlag" settingObject="#slatwallContent#" />
+			<cf_SlatwallSetting settingName="contentRequirePurchaseFlag" settingObject="#slatwallContent#" />
+			<cf_SlatwallSetting settingName="contentRequireSubscriptionFlag" settingObject="#slatwallContent#" />
+			<cf_SlatwallSetting settingName="contentProductListingFlag" settingObject="#slatwallContent#" />
+			<cf_SlatwallSetting settingName="contentDefaultProductsPerPage" settingObject="#slatwallContent#" />
+			<cf_SlatwallSetting settingName="contentIncludeChildContentProductsFlag" settingObject="#slatwallContent#" />
+			<cf_SlatwallSetting settingName="contentRestrictedContentDisplayTemplate" settingObject="#slatwallContent#" />
+		</cf_SlatwallSettingTable>
+	</cfoutput>
 	<dl class="oneColumn">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="templateFlag" fieldName="slatwallData.templateFlag" edit="#!restrictedParent#">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="productListingFlag" fieldName="slatwallData.productListingFlag" edit="#!restrictedParent#">
