@@ -50,6 +50,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function subSystemBefore(required struct rc) {
+		/*
 		// If user is not logged in redirect to front end otherwise If the user does not have access to this, then display a page that shows "No Access"
 		if (!structKeyExists(session, "mura") || !len(rc.$.currentUser().getMemberships())) {
 			if(left(rc.$.siteConfig().getLoginURL(), 1) eq "/") {
@@ -60,6 +61,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		} else if( getFW().secureDisplay(rc.slatAction) == false ) {
 			getFW().setView("admin:main.noaccess");
 		}
+		*/
 		
 		// Check to see if any message keys were passed via the URL
 		if(structKeyExists(rc, "messageKeys")) {
@@ -135,7 +137,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
 		}
 		
-		rc.pageTitle = request.context.$.slatwall.rbKey(replace(rc.slatAction,':','.','all'));
+		rc.pageTitle = rbKey(replace(rc.slatAction,':','.','all'));
 		if(right(rc.pageTitle, 8) eq "_missing") {
 			if(left(listLast(rc.slatAction, "."), 4) eq "list") {
 				rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));

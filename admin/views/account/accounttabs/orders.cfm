@@ -45,32 +45,3 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="total" range="true" />
 </cf_SlatwallListingDisplay>
-
-<!---<cfoutput>
-	<table id="OrderList" class="listing-grid stripe">
-		<tr>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
-			<th>&nbsp</th>
-		</tr>
-		<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
-			<cfif local.order.getOrderStatusType().getSystemCode() neq "ostNotPlaced">
-			<tr>
-				<td>#Local.Order.getOrderNumber()#</td>
-				<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
-				<td class="varWidth"><cfif not isNull(local.order.getAccount())>#Local.Order.getAccount().getFullName()#</cfif></td>
-				<td>#Local.Order.getOrderStatusType().getType()#</td>
-				<td>#local.order.getFormattedValue('total', 'currency')#</td>
-				<td class="administration">
-					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="detail" type="list">
-					</ul>     						
-				</td>
-			</tr>
-			</cfif>
-		</cfloop>
-	</table>
-</cfoutput>--->

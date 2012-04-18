@@ -137,7 +137,7 @@ component extends="BaseService" accessors="true" {
 				// but we remove the image entity that had the file error and set a flag in the request cache service
 				arguments.product.removeProductImage(alternateImage);
 				getDAO().delete(alternateImage);
-				getService("requestCacheService").setValue("uploadFileError",true);
+				//getService("requestCacheService").setValue("uploadFileError", true);
 			}
 		} else {
 			//delete file in the temp directory
@@ -185,7 +185,7 @@ component extends="BaseService" accessors="true" {
         if(!arguments.product.hasErrors()) {
         	arguments.product = getDAO().save(target=arguments.product);
         } else {
-            getService("requestCacheService").setValue("ormHasErrors", true);
+            getSlatwallScope().setORMHasErrors( true );
         }
         
         // Return the product
@@ -229,7 +229,7 @@ component extends="BaseService" accessors="true" {
 			// Call entitySave on the productType 
 			getDAO().save(target=arguments.productType);
 		} else {
-            getService("requestCacheService").setValue("ormHasErrors", true);
+            getSlatwallScope().setORMHasErrors( true );
         }
 		
 		return arguments.productType;

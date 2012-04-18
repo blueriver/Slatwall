@@ -39,7 +39,6 @@ Notes:
 component displayname="Base Service" persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" hint="This is a base service that all services will extend" {
 
 	property name="DAO" type="any";
-	property name="requestCacheService" type="any";
 	property name="utilityFileService" type="any";
 	
 	public any function init() {
@@ -80,7 +79,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		}
 			
 		// Setup ormHasErrors because it didn't pass validation
-		getService("requestCacheService").setValue("ormHasErrors", true);
+		getSlatwallScope().setORMHasErrors( true );
 
 		return false;
 	}
@@ -106,7 +105,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
         if(!arguments.entity.hasErrors()) {
             arguments.entity = getDAO().save(target=arguments.entity);
         } else {
-            getService("requestCacheService").setValue("ormHasErrors", true);
+            getSlatwallScope().setORMHasErrors( true );
         }
 
         // Return the entity

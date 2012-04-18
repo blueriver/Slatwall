@@ -40,16 +40,6 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_SlatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="false" title="#rc.$.Slatwall.rbKey("define.email")# / #rc.$.Slatwall.rbKey("define.username")#">
+	<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="false" title="#request.slatwallScope.rbKey("define.email")# / #rc.$.Slatwall.rbKey("define.username")#">
 	<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">
 </cf_SlatwallPropertyList>
-
-<!---
-<cfoutput>
-	<div class="svoadminaccountdetaillogin">
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="false" title="#rc.$.Slatwall.rbKey("define.email")# / #rc.$.Slatwall.rbKey("define.username")#" />
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#" />
-		</dl>
-	</div>
-</cfoutput>--->

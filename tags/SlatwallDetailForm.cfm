@@ -70,8 +70,8 @@ Notes:
 					</div>
 					<div class="modal-footer">
 						<div class="btn-group">
-							<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.context.$.slatwall.rbKey('define.cancel')#</a>
-							<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #request.context.$.slatwall.rbKey('define.save')#</button>
+							<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.cancel')#</a>
+							<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.save')#</button>
 						</div>
 					</div>
 				</cfif>

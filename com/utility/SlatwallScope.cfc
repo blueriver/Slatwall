@@ -38,46 +38,75 @@ Notes:
 */
 component accessors="true" output="false" extends="BaseObject" {
 
+	property name="ormHasErrors";
+	property name="currentProductID";
+	property name="currentProductURLTitle";
+	property name="currentContentID";
+	property name="currentCMSContentID";
+	
+	property name="currentProduct";
+	property name="currentContent";
+	property name="currentProductList";
+	property name="currentCart";
+	property name="currentAccount";
+	property name="currentSession";
+	
 	public any function init() {
+		setORMHasErrors(false);
+		setCurrentProductID("");
+		setCurrentProductURLTitle("");
+		setCurrentContentID("");
+		setCurrentCMSContentID("");
+		
 		return this;
 	}
 	
 	public any function getCurrentProduct() {
-		if(!getService("requestCacheService").keyExists("currentProduct")) {
-			if(getService("requestCacheService").keyExists("currentProductID")) {
-				getService("requestCacheService").setValue("currentProduct", getService("productService").getProduct(getService("requestCacheService").getValue("currentProductID")));
-			} else {
-				getService("requestCacheService").setValue("currentProduct", getService("productService").newProduct());	
+		if(!structKeyExists(variables, "currentProduct")) {
+			variables.currentProduct = getService("productService").getProduct(getCurrentProductID());
+			if( isNull(variables.currentProduct) ) {
+				variables.currentProduct = getService("productService").getProductByURLTitle(getCurrentProductURLTitle(), true);
 			}
 		}
-		return getService("requestCacheService").getValue("currentProduct");
+		return variables.currentProduct;
 	}
 	
 	public any function getCurrentContent() {
-		if(!getService("requestCacheService").keyExists("currentContent")) {
-			getService("requestCacheService").setValue( "currentContent", getService("productService").getContentByCMSContentID( request.muraScope.content('contentID'), true ) );
+		if(!structKeyExists(variables, "currentContent")) {
+			variables.currentContent = getService("contentService").getContent(getCurrentContentID());
+			if(isNull(variables.currentContent)) {
+				variables.currentContent = getService("contentService").getContentByCMSContentID(getCurrentCMSContentID(), true);
+			}
 		}
-		return getService("requestCacheService").getValue("currentContent");
-	}
-	
-	public any function getCurrentSession() {
-		return getService("sessionService").getCurrent();
+		return variables.currentProduct;
 	}
 	
 	public any function getCurrentAccount() {
-		if(!isNull(getCurrentSession().getAccount())) {
-			return getCurrentSession().getAccount();
-		} else {
-			return getService("AccountService").newAccount();	
+		if(!structKeyExists(variables, "currentAccount")) {
+			if(!isNull(getCurrentSession().getAccount())) {
+				variables.currentAccount = getCurrentSession().getAccount();
+			} else {
+				variables.currentAccount = getService("AccountService").newAccount();
+			}
 		}
+		return variables.currentAccount;
 	}
 	
 	public any function getCurrentCart() {
-		if(!isNull(getCurrentSession().getOrder())) {
-			return getCurrentSession().getOrder();
-		} else {
-			return getService("OrderService").newOrder();	
+		if(!structKeyExists(variables, "currentCart")) {
+			if(!isNull(getCurrentSession().getOrder())) {
+				variables.currentCart = getCurrentSession().getOrder();
+			} else {
+				variables.currentCart = getService("orderService").newOrder();	
+			}
 		}
+	}
+	
+	public any function getCurrentSession() {
+		if(!structKeyExists(variables, "currentSession")) {
+			variables.currentSession = getService("sessionService").getPropperSession();
+		}
+		return variables.currentSession;
 	}
 	
 	private struct function getProductListData(string contentID="") {
@@ -226,34 +255,22 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 	}
 	
-	public void function addVTScript( ) {
-		var script = getValidateThis().getValidationScript( argumentcollection = arguments );
-		
-		if(!getService("requestCacheService").keyExists("vtScripts")) {
-			getService("requestCacheService").setValue("vtScripts", []);	
+	public boolean function hasValue(required string key) {
+		if(structKeyExists(variables, arguments.key)) {
+			return true; 
 		}
-		
-		arrayAppend(getService("requestCacheService").getValue("vtScripts"), script);
-	}
-	
-	public string function renderVTScript() {
-		var scripts = [];
-		var outputScript = "";
-		
-		if(getService("requestCacheService").keyExists("vtScripts")) {
-			scripts = getService("requestCacheService").getValue("vtScripts");
-		}
-		
-		outputScript &= '<script type="text/javascript">';
-		outputScript &= 'jQuery(document).ready(function(){';
-		 
-		for(var i=1; i<=arrayLen(scripts); i++) {
-			outputScript &= replace(replace(replace(replace(scripts[i],'<script type="text/javascript">',''),'</script>',''),'/*<![CDATA[*/','','all'),'/*]]>*/','','all');
-		}
-		
-		outputScript &= '});</script>';
-		
-		return outputScript;
+		return false;
 	}
 
+	public any function getValue(required string key) {
+		if(structKeyExists(variables, arguments.key)) {
+			return variables[ arguments.key ]; 
+		}
+		
+		throw("You have requested '#arguments.key#' as a value in the slatwall scope, however that value has not been set in the request.  In the futuer you should check for it's existance with hasValue().");
+	}
+	
+	public void function setValue(required string key, required any value) {
+		variables[ arguments.key ] = arguments.value;
+	}
 }

@@ -52,6 +52,7 @@ component extends="org.fw1.framework" output="false" {
 	variables.framework.subsystemdelimiter=":";
 	variables.framework.generateSES = false;
 	variables.framework.SESOmitIndex = true;
+	variables.framework.reload = "reload";
 	
 	// If we are installed inside of mura, then use the core application settings, otherwise use standalone settings
 	if( fileExists(expandPath("../../config/applicationSettings.cfm")) ) {
@@ -88,6 +89,32 @@ component extends="org.fw1.framework" output="false" {
 	
 	this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
 	
+	public void function setValue(required any key, required any value) {
+		param name="application.slatwall" default="#structNew()#";
+		
+		application.slatwall[ arguments.key ] = arguments.value;
+	}
+	
+	public any function getValue(required any key) {
+		param name="application.slatwall" default="#structNew()#";
+		
+		if( structKeyExists(application.slatwall, arguments.key)) {
+			return application.slatwall[ arguments.key ];	
+		}
+		
+		throw("You have requested a value for '#arguments.key#' from the core slatwall application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
+	}
+	
+	public boolean function hasValue(required any key) {
+		param name="application.slatwall" default="#structNew()#";
+		
+		if(structKeyExists(application.slatwall, arguments.key)) {
+			return true;	
+		}
+		
+		return false;
+	}
+	
 	public void function verifyApplicationSetup() {
 		
 		if(structKeyExists(url, variables.framework.reload)) {
@@ -106,21 +133,26 @@ component extends="org.fw1.framework" output="false" {
 					// Log that the application is starting it's setup
 					writeLog(file="Slatwall", text="Application Setup Started");
 					
-					application.slatwall = structNew();
-					application.slatwall.version = "";
-					application.slatwall.initialized = false;
-					application.slatwall.fw = this;
-					application.slatwall.slatwallVfsRoot = this.mappings[ "/slatwallVfsRoot" ];
+					
+					setValue("initialized", false);
+					
+					setValue("fw", this);
+					
+					setValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
+					
+					setValue("validateThis", new ValidateThis.ValidateThis({definitionPath = "/Slatwall/com/validation/",injectResultIntoBO = true,defaultFailureMessagePrefix = ""}));
 					
 					// Make sure the correct version is in the application scope
 					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
 					if( fileExists( versionFile ) ) {
-						application.slatwall.version = trim(fileRead(versionFile));
+						setValue("version", trim(fileRead(versionFile)));
+					} else {
+						setValue("version", "unknown");
 					}
 					
 					// Set vfs root for slatwall 
-					if(!directoryExists(application.slatwall.slatwallVfsRoot)) {
-						directoryCreate(application.slatwall.slatwallVfsRoot);
+					if(!directoryExists( getValue("slatwallVfsRoot") )) {
+						directoryCreate( getValue("slatwallVfsRoot") );
 					}
 					
 					// This will force the Taffy API to reload on next request
@@ -156,23 +188,6 @@ component extends="org.fw1.framework" output="false" {
 					
 					//========================= END: Coldsping Setup =========================
 					
-					//========================= ValidateThis Setup =========================
-					
-					// Setup the ValidateThis Framework
-					
-					var validateThisConfig = {
-						definitionPath = "/Slatwall/com/validation/",
-						injectResultIntoBO = true,
-						defaultFailureMessagePrefix = ""
-					};
-					
-					// Create The Validate This Facade object
-					var vtFacade = new ValidateThis.ValidateThis(validateThisConfig);
-					
-					// Place the validation facade object in the plugin config application scope
-					application.slatwall.validateThis = vtFacade;
-					
-					//========================= END: ValidateThis Setup =========================
 					
 					// Build RB Factory
 					rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
@@ -195,7 +210,7 @@ component extends="org.fw1.framework" output="false" {
 					muraIntegrationService.setupIntegration();
 					
 					// Set initialized to true
-					application.slatwall.initialized = true;
+					setValue("initialized", true);
 					
 					// Log that the application is finished setting up
 					writeLog(file="Slatwall", text="Application Setup Complete");
@@ -203,53 +218,30 @@ component extends="org.fw1.framework" output="false" {
 			}
 		}
 	}
-
-	public void function setupRequest() {
-		
+	
+	public void function setupGlobalRequest() {
 		// Verify that the application is setup
 		verifyApplicationSetup();
 		
 		// Run Sku Cache & Product Cache Update Threads if needed
 		getBeanFactory().getBean("productCacheService").executeProductCacheUpdates();
 		
-		if(!getBeanFactory().getBean("requestCacheService").keyExists(key="ormHasErrors")) {
-			getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
-		}
-		
-		// Look for mura Scope in the request context.  If it doens't exist add it.
-		if (!structKeyExists(request.context,"$")){
-			if (!structKeyExists(request, "muraScope")) {
-				request.muraScope = application.serviceFactory.getBean("muraScope").init(application.serviceFactory.getBean("contentServer").bindToDomain());
-			}
-			request.context.$ = request.muraScope;
-		}
-		
-		// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
-		if(request.context.$.event('siteid') == "") {
-			request.context.$.event('siteid', session.siteid);
-		}
-		
-		// Setup slatwall scope in request cache If it doesn't already exist
-		if(!getBeanFactory().getBean("requestCacheService").keyExists(key="slatwallScope")) {
-			getBeanFactory().getBean("requestCacheService").setValue(key="slatwallScope", value= new Slatwall.com.utility.SlatwallScope());	
-		}
-		
-		// Inject slatwall scope into the mura scope
-		if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
-			request.context.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
-		}
-		
-		// Add a reference to the mura scope to the request cache service
-		getBeanFactory().getBean("requestCacheService").setValue(key="muraScope", value=request.context.$);
+		// Set up Slatwall Scope inside of request
+		request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
 		
 		// Confirm Session Setup
 		getBeanFactory().getBean("sessionService").confirmSession();
+	}
+
+	public void function setupRequest() {
+		// Call the setup of the global Request
+		setupGlobalRequest();
 		
-		// Setup structured Data
+		// Setup structured Data if a request context exists meaning that a full action was called
 		var structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
 		if(structCount(structuredData)) {
 			structAppend(request.context, structuredData);	
-		}
+		}	
 		
 		// Run subsytem specific logic.
 		if(getSubsystem(request.context.slatAction) == "admin") {
@@ -263,7 +255,6 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupView() {
-		
 		var httpRequestData = getHTTPRequestData();
 		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
 			setupResponse();
@@ -288,19 +279,30 @@ component extends="org.fw1.framework" output="false" {
 		}
 	}
 	
-	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
-
+	// This is used to setup the frontend path to pull from the siteid directory or the theme directory if the file exists
+	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
+		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
+			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
+			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
+			
+			if(fileExists(expandPath(themeView))) {
+				arguments.fullPath = themeView;	
+			} else if (fileExists(expandPath(siteView))) {
+				arguments.fullPath = siteView;
+			}
+			
+		}
+		return arguments.fullPath;
+	}
+	
 	// This handels all of the ORM persistece.
 	public void function endSlatwallLifecycle() {
-		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
-			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
+		if(request.slatwallScope.getORMHasErrors()) {
 			ormClearSession();
 		} else {
 			ormFlush();
 		}
 	}
-
-	// ===================== APPLICATION HELPER FUNCTIONS =============================
 	
 	// Uses the current mura user to check security against a given action
 	public boolean function secureDisplay(required string action) {
@@ -310,7 +312,7 @@ component extends="org.fw1.framework" output="false" {
 		if(getSubsystem(arguments.action) != "admin") {
 			hasAccess = true;
 		} else {
-			if(request.context.$.currentUser().getS2()) {
+			if(request.muraScope.currentUser().getS2()) {
 				hasAccess = true;
 			} else if (listLen( request.context.$.currentUser().getMemberships() ) >= 1) {
 				var rolesWithAccess = "";
@@ -349,20 +351,12 @@ component extends="org.fw1.framework" output="false" {
 		location(arguments.location, arguments.addToken);
 	}
 	
-	// This is used to setup the frontend path to pull from the siteid directory or the theme directory if the file exists
-	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
-		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
-			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
-			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
-			
-			if(fileExists(expandPath(themeView))) {
-				arguments.fullPath = themeView;	
-			} else if (fileExists(expandPath(siteView))) {
-				arguments.fullPath = siteView;
-			}
-			
-		}
-		return arguments.fullPath;
-	}	
+	// Additional redirect function that allows us to redirect to a setting.  This can be defined in an integration as well
+	public void function redirectSetting(required string settingName) {
+		endSlatwallLifecycle();
+		
+	}
+	
+	
 	
 }

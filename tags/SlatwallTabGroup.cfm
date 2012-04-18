@@ -50,10 +50,10 @@ Notes:
 				<div class="tabsLeft">
 					<ul class="nav nav-tabs">
 						<cfloop array="#thistag.tabs#" index="tab">
-							<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.context.$.slatwall.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
+							<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.slatwallScope.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
 						</cfloop>
 						<cfif isObject(attributes.object)>
-							<li><a href="##tabSystem" data-toggle="tab">#request.context.$.slatwall.rbKey('define.system')#</a></li>
+							<li><a href="##tabSystem" data-toggle="tab">#request.slatwallScope.rbKey('define.system')#</a></li>
 						</cfif>
 					</ul>
 				</div>
@@ -62,7 +62,7 @@ Notes:
 						<cfloop array="#thistag.tabs#" index="tab">
 							<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="tab#listLast(tab.view, '/')#">
 								<div class="row-fluid">
-									#request.context.$.slatwall.getFW().view(tab.view, {rc=request.context})#
+									#request.slatwallScope.getFW().view(tab.view, {rc=request.context})#
 								</div>
 							</div>
 						</cfloop>
@@ -71,8 +71,8 @@ Notes:
 								<div class="row-fluid">
 									<cf_SlatwallPropertyList> 
 										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
-										<cfif request.context.$.slatwall.setting('globalRemoteIDShowFlag') && attributes.object.hasProperty('remoteID')>
-											<cf_SlatwallPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.context.$.slatwall.setting('globalRemoteIDEditFlag'), true, false)#" />
+										<cfif request.slatwallScope.setting('globalRemoteIDShowFlag') && attributes.object.hasProperty('remoteID')>
+											<cf_SlatwallPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.slatwallScope.setting('globalRemoteIDEditFlag'), true, false)#" />
 										</cfif>
 										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdDateTime" />
 										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdByAccount" />

@@ -612,7 +612,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 			// Validate the order Fulfillment
 			arguments.orderFulfillment.validate();
-			if(!getRequestCacheService().getValue("ormHasErrors")) {
+			if(!getSlatwallScope().getORMHasErrors()) {
 				getDAO().flushORMSession();
 			}
 		}
@@ -728,7 +728,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			arguments.entity = getDAO().save(target=orderDelivery);
 		} else {
-			getService("requestCacheService").setValue("ormHasErrors", true);
+			getSlatwallScope().setORMHasErrors( true );
 		}
 	
 		return orderDelivery;
@@ -770,7 +770,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			getDAO().save(address);
 			getDAO().save(arguments.orderPayment);
 		} else {
-			getRequestCacheService().setValue("ormHasErrors", true);
+			getSlatwallScope().setORMHasErrors( true );
 		}
 	
 		return arguments.orderPayment;
@@ -1006,7 +1006,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							var refundOK = getPaymentService().processPayment(newOrderPayment, "credit", order.getTotal(), order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getProviderTransactionID());
 							// refund is required for this order but didn't go through. Don't persist anything.
 							if(!refundOK){
-								getService("requestCacheService").setValue("ormHasErrors", true);
+								getSlatwallScope().setORMHasErrors( true );
 							}
 							// Once a transaction with a charge is found no need to loop any further
 							break;

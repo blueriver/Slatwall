@@ -51,23 +51,23 @@ Notes:
 	<cfoutput>
 		<table class="table table-striped table-bordered table-condensed">
 			<tr>
-				<th class="primary">#request.context.$.Slatwall.rbKey('entity.setting.settingName')#</th>
-				<th>#request.context.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
+				<th class="primary">#request.slatwallScope.rbKey('entity.setting.settingName')#</th>
+				<th>#request.slatwallScope.rbKey('entity.setting.settingValue')#</th>
 				<cfif thistag.hasInheritedValues>
-					<th>#request.context.$.Slatwall.rbKey('define.inheritance')#</th>
+					<th>#request.slatwallScope.rbKey('define.inheritance')#</th>
 				</cfif>
 				<th>&nbsp;</th>
 			</tr>
 			<cfloop array="#thistag.settings#" index="thisSetting">
 				<cfsilent>
-					<cfset local.settingHint = request.context.$.Slatwall.rbKey("setting.#thisSetting.settingName#_hint") />
+					<cfset local.settingHint = request.slatwallScope.rbKey("setting.#thisSetting.settingName#_hint") />
 					<cfif right(local.settingHint, 8) eq "_missing">
 						<cfset local.settingHint = "" />
 					</cfif>
 				</cfsilent>
 				<tr>
 					<td class="primary">
-						#request.context.$.Slatwall.rbKey("setting.#thisSetting.settingName#")#<cfif len(local.settingHint)> <a href="##" rel="tooltip" class="hint" title="#local.settingHint#"><i class="icon-question-sign"></i></a></cfif>
+						#request.slatwallScope.rbKey("setting.#thisSetting.settingName#")#<cfif len(local.settingHint)> <a href="##" rel="tooltip" class="hint" title="#local.settingHint#"><i class="icon-question-sign"></i></a></cfif>
 					</td>
 					<td>
 						#thisSetting.settingDetails.settingValueFormatted#
@@ -76,17 +76,17 @@ Notes:
 						<td>
 							<cfif thisSetting.settingDetails.settingInherited>
 								<cfif !structCount(thisSetting.settingDetails.settingRelationships)>
-									<cf_SlatwallActionCaller action="admin:setting.listsetting" text="#request.context.$.Slatwall.rbKey('define.global')#"/>
+									<cf_SlatwallActionCaller action="admin:setting.listsetting" text="#request.slatwallScope.rbKey('define.global')#"/>
 								<cfelse>
 									<cfif structCount(thisSetting.settingDetails.settingRelationships) eq 1>
 										<cfif structKeyList(thisSetting.settingDetails.settingRelationships) eq "productTypeID">
-											<cfset local.productType = request.context.$.slatwall.getService("productService").getProductType(thisSetting.settingDetails.settingRelationships.productTypeID) />
+											<cfset local.productType = request.slatwallScope.getService("productService").getProductType(thisSetting.settingDetails.settingRelationships.productTypeID) />
 											<cf_SlatwallActionCaller action="admin:product.detailProductType" text="#local.productType.getSimpleRepresentation()#" queryString="productTypeID=#thisSetting.settingDetails.settingRelationships.productTypeID#">
 										</cfif>
 									</cfif>
 								</cfif>
 							<cfelse>
-								#request.context.$.Slatwall.rbKey('define.here')#
+								#request.slatwallScope.rbKey('define.here')#
 							</cfif>
 						</td>
 					</cfif>

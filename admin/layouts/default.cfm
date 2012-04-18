@@ -45,14 +45,14 @@ Notes:
 		<meta charset="utf-8">
 		<title>#rc.pageTitle# &##124; Slatwall</title>
 		
-		<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
-		<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
+		<link rel="icon" href="#request.slatwallScope.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
+		<link rel="shortcut icon" href="#request.slatwallScope.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		#$.slatwall.getCFStatic().renderIncludes("css")#
+		#request.slatwallScope.getCFStatic().renderIncludes("css")#
 		<script type="text/javascript">
 			var slatwall = {
-				dateFormat : '#$.slatwall.setting("globalDateFormat")#'
-				,timeFormat : '#$.slatwall.setting("globalTimeFormat")#'
+				dateFormat : '#request.slatwallScope.setting("globalDateFormat")#'
+				,timeFormat : '#request.slatwallScope.setting("globalTimeFormat")#'
 				,tabIndex : #rc.tabIndex#
 			};
 		</script>
@@ -62,15 +62,15 @@ Notes:
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<ul class="nav">
-						<a href="#buildURL(action='admin:main.default')#" class="brand"><img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
+						<a href="#buildURL(action='admin:main.default')#" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
 						<li class="dropdown">
 							<a href="##" class="dropdown-toggle" data-toggle="dropdown">Developer Tool<b class="caret"></b></a>
 							<ul class="dropdown-menu">
-								<li><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true" />Reload Slatwall</a></li>
+								<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?reload=true" />Reload Slatwall</a></li>
 								<li><a href="/admin/index.cfm?appreload&reload=appreload" />Reload Mura</a></li>
-								<li><a href="#$.slatwall.getSlatwallRootPath()#/?slatAction=admin:setting.updateSkuCache" />Update Sku Cache</a></li>
-								<li><a href="#$.slatwall.getSlatwallRootPath()#/?slatAction=admin:setting.detailslatwallupdate" />Update Slatwall</a></li>
-								<li><a href="#$.slatwall.getSlatwallRootPath()#/?slatAction=admin:setting.detailviewupdate" />Update Front-end Views</a></li>
+								<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.updateSkuCache" />Update Sku Cache</a></li>
+								<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.detailslatwallupdate" />Update Slatwall</a></li>
+								<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.detailviewupdate" />Update Front-end Views</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -108,23 +108,23 @@ Notes:
 		</div>
 		<div id="adminModal" class="modal fade"></div>
 		<div id="adminDisabled" class="modal">
-			<div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>#$.slatwall.rbKey('define.disabled')#</h3></div>
+			<div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>#request.slatwallScope.rbKey('define.disabled')#</h3></div>
 			<div class="modal-body"></div>
 			<div class="modal-footer">
-				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-ok icon-white"></i> #$.slatwall.rbKey('define.ok')#</a>
+				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.ok')#</a>
 			</div>
 		</div>
 		<div id="adminConfirm" class="modal">
-			<div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>#$.slatwall.rbKey('define.confirm')#</h3></div>
+			<div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>#request.slatwallScope.rbKey('define.confirm')#</h3></div>
 			<div class="modal-body"></div>
 			<div class="modal-footer">
-				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #$.slatwall.rbKey('define.no')#</a>
-				<a href="##" class="btn btn-primary"><i class="icon-ok icon-white"></i> #$.slatwall.rbKey('define.yes')#</a>
+				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.no')#</a>
+				<a href="##" class="btn btn-primary"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.yes')#</a>
 			</div>
 		</div>
-		#$.slatwall.getCFStatic().renderIncludes("js")#
-		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
-		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
+		#request.slatwallScope.getCFStatic().renderIncludes("js")#
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
 	</body>
 </html>
 </cfoutput>

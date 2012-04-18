@@ -43,23 +43,3 @@ Notes:
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="review" />
 	<cf_SlatwallListingColumn propertyIdentifier="rating" filter="true" />
 </cf_SlatwallListingDisplay>
-
-<!---<cfoutput>
-	<table id="productCategories" class="listing-grid stripe">
-		<tr>
-			<th>#rc.$.Slatwall.rbKey("entity.productReview.createdDateTime")#</th>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.productReview.review")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.productReview.rating")#</th>
-		</tr>
-		<cfloop array="#rc.account.getProductReviews()#" index="local.review">
-			<tr>
-				<td>#dateFormat(review.getCreatedDateTime())#</td>
-				<td class="varWidth">
-					<strong>#local.review.getReviewTitle()#</strong><br/ >
-					#local.review.getReview()#
-				</td>
-				<td>#local.review.getRating()#</td>
-			</tr>	
-		</cfloop>
-	</table>
-</cfoutput>--->

@@ -61,7 +61,7 @@ Notes:
 </cfif>
 
 <cfif attributes.text eq "" and not attributes.iconOnly>
-	<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_nav") />
+	<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_nav") />
 	
 	<cfif right(attributes.text, 8) eq "_missing" >
 		
@@ -69,68 +69,68 @@ Notes:
 		
 		<cfif left(actionItem, 4) eq "list" and len(actionItem) gt 4>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.list_nav'), "${itemEntityNamePlural}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#_plural'), "all") />
+			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.list_nav'), "${itemEntityNamePlural}", request.slatwallScope.rbKey('entity.#actionItemEntityName#_plural'), "all") />
 		<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.edit_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.edit_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		<cfelseif left(actionItem, 4) eq "save" and len(actionItem) gt 4>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.save_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.save_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.create_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.create_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.detail_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.detail_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.text = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.delete_nav'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.delete_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		</cfif>
 		
 	</cfif>
 </cfif>
 
 <cfif attributes.title eq "">
-	<cfset attributes.title = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
+	<cfset attributes.title = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
 	<cfif right(attributes.title, 8) eq "_missing" >
 		
 		<cfset actionItem = listLast(attributes.action, ".") />
 		
 		<cfif left(actionItem, 4) eq "list" and len(actionItem) gt 4>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.list_title'), "${itemEntityNamePlural}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#_plural'), "all") />
+			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.list_title'), "${itemEntityNamePlural}", request.slatwallScope.rbKey('entity.#actionItemEntityName#_plural'), "all") />
 		<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.edit_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.edit_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		<cfelseif left(actionItem, 4) eq "save" and len(actionItem) gt 4>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.save_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.save_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.create_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.create_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.detail_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.detail_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
 			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.title = replace(request.customMuraScopeKeys.slatwall.rbKey('admin.define.delete_title'), "${itemEntityName}", request.context.$.slatwall.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.delete_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		</cfif>
 		
 	</cfif>
 </cfif>
 
 <cfif attributes.disabled>
-    <cfset attributes.disabledtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
+    <cfset attributes.disabledtext = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
 	<cfif right(attributes.disabledtext, "8") eq "_missing">
-		<cfset attributes.disabledtext = replace(request.customMuraScopeKeys.slatwall.rbKey("admin.define.delete_disabled"),'${itemEntityName}',request.customMuraScopeKeys.slatwall.rbKey('entity.#request.context.itementityname#'), "all") />
+		<cfset attributes.disabledtext = replace(request.request.slatwallScope.rbKey("admin.define.delete_disabled"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
 	</cfif>
 	<cfset attributes.class &= " disabled alert-disabled" />
 	<cfset attributes.confirm = false />
 <cfelse>
 	<cfif attributes.confirm>
-	    <cfset attributes.confirmtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
+	    <cfset attributes.confirmtext = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
 		<cfif right(attributes.confirmtext, "8") eq "_missing">
-			<cfset attributes.confirmtext = replace(request.customMuraScopeKeys.slatwall.rbKey("admin.define.delete_confirm"),'${itemEntityName}',request.customMuraScopeKeys.slatwall.rbKey('entity.#request.context.itementityname#'), "all") />
+			<cfset attributes.confirmtext = replace(request.slatwallScope.rbKey("admin.define.delete_confirm"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
 		</cfif>
 		<cfset attributes.class &= " alert-confirm" />
 	</cfif>
@@ -141,11 +141,11 @@ Notes:
 </cfif>
 
 <cfif thisTag.executionMode is "start">
-	<cfif request.customMuraScopeKeys.slatwall.secureDisplay(action=attributes.action)>
+	<cfif request.slatwallScope.secureDisplay(action=attributes.action)>
 		<cfif attributes.type eq "link">
-			<cfoutput><a title="#attributes.title#" class="#attributes.class#" href="#request.customMuraScopeKeys.slatwall.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
+			<cfoutput><a title="#attributes.title#" class="#attributes.class#" href="#request.slatwallScope.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
 		<cfelseif attributes.type eq "list">
-			<cfoutput><li class="#attributes.class#"><a title="#attributes.title#" class="#attributes.class#" href="#request.customMuraScopeKeys.slatwall.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></li></cfoutput> 
+			<cfoutput><li class="#attributes.class#"><a title="#attributes.title#" class="#attributes.class#" href="#request.slatwallScope.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></li></cfoutput> 
 		<cfelseif attributes.type eq "button">
 			<cfoutput><button class="btn #attributes.class#" title="#attributes.title#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif><cfif attributes.submit>type="submit"</cfif>>#attributes.icon##attributes.text#</button></cfoutput>
 		<cfelseif attributes.type eq "submit">

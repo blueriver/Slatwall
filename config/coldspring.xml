@@ -188,66 +188,60 @@
 		<property name="utilityService"><ref bean="utilityService" /></property>
 	</bean>
 
-	<!-- Parent Main Service & Helper Components -->
-	<bean id="requestCacheService" class="Slatwall.com.service.RequestCacheService" />
-	<bean id="parentService" abstract="true">
-		<property name="requestCacheService"><ref bean="requestCacheService" /></property>
-	</bean>
-	
 	<!-- Service Components - Main -->
-	<bean id="accessService" parent="parentService" class="Slatwall.com.service.AccessService">
+	<bean id="accessService" class="Slatwall.com.service.AccessService">
         <property name="DAO"><ref bean="accessDAO" /></property>
     </bean>
-	<bean id="accountService" parent="parentService" class="Slatwall.com.service.AccountService">
+	<bean id="accountService" class="Slatwall.com.service.AccountService">
         <property name="DAO"><ref bean="accountDAO" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
 		<property name="priceGroupService"><ref bean="priceGroupService" /></property>
     </bean>
-	<bean id="addressService" parent="parentService" class="Slatwall.com.service.AddressService">
+	<bean id="addressService" class="Slatwall.com.service.AddressService">
         <property name="DAO"><ref bean="addressDAO" /></property>
     </bean>
-	<bean id="attributeService" parent="parentService" class="Slatwall.com.service.AttributeService">
+	<bean id="attributeService" class="Slatwall.com.service.AttributeService">
         <property name="DAO"><ref bean="attributeDAO" /></property>
     </bean>
-	<bean id="baseService" parent="parentService" class="Slatwall.com.service.BaseService">
+	<bean id="baseService" class="Slatwall.com.service.BaseService">
         <property name="DAO"><ref bean="baseDAO" /></property>
 	</bean>
-	<bean id="brandService" parent="parentService" class="Slatwall.com.service.BrandService">
+	<bean id="brandService" class="Slatwall.com.service.BrandService">
         <property name="DAO"><ref bean="brandDAO" /></property>
 	</bean>
-	<bean id="commentService" parent="parentService" class="Slatwall.com.service.CommentService">
+	<bean id="commentService" class="Slatwall.com.service.CommentService">
         <property name="DAO"><ref bean="commentDAO" /></property>
 	</bean>
-	<bean id="contentService" parent="parentService" class="Slatwall.com.service.ContentService">
+	<bean id="contentService" class="Slatwall.com.service.ContentService">
         <property name="DAO"><ref bean="contentDAO" /></property>
 	</bean>
-	<bean id="dataService" parent="parentService" class="Slatwall.com.service.DataService">
+	<bean id="dataService" class="Slatwall.com.service.DataService">
         <property name="DAO"><ref bean="dataDAO" /></property>
 	</bean>
 	<bean id="encryptionService" class="Slatwall.com.service.EncryptionService" />
-	<bean id="fulfillmentService" parent="parentService" class="Slatwall.com.service.FulfillmentService">
+	<bean id="fulfillmentService" class="Slatwall.com.service.FulfillmentService">
         <property name="DAO"><ref bean="fulfillmentDAO" /></property>
 		<property name="settingService"><ref bean="settingService" /></property>
     </bean>
-	<bean id="integrationService" parent="parentService" class="Slatwall.com.service.IntegrationService">
+	<bean id="integrationService" class="Slatwall.com.service.IntegrationService">
         <property name="DAO"><ref bean="integrationDAO" /></property>
     </bean>
-	<bean id="inventoryService" parent="parentService" class="Slatwall.com.service.InventoryService">
+	<bean id="inventoryService" class="Slatwall.com.service.InventoryService">
         <property name="DAO"><ref bean="inventoryDAO" /></property>
     </bean>
-	<bean id="imageService" parent="parentService" class="Slatwall.com.service.ImageService">
+	<bean id="imageService" class="Slatwall.com.service.ImageService">
         <property name="DAO"><ref bean="imageDAO" /></property>
     </bean>
-	<bean id="locationService" parent="parentService" class="Slatwall.com.service.LocationService">
+	<bean id="locationService" class="Slatwall.com.service.LocationService">
         <property name="DAO"><ref bean="locationDAO" /></property>
 	</bean>
-	<bean id="measurementUnitService" parent="parentService" class="Slatwall.com.service.MeasurementUnitService">
+	<bean id="measurementUnitService" class="Slatwall.com.service.MeasurementUnitService">
         <property name="DAO"><ref bean="measurementUnitDAO" /></property>
 	</bean>
-    <bean id="optionService" parent="parentService" class="Slatwall.com.service.OptionService">
+    <bean id="optionService" class="Slatwall.com.service.OptionService">
         <property name="DAO"><ref bean="optionDAO" /></property>
     </bean>
-	<bean id="orderService" parent="parentService" class="Slatwall.com.service.OrderService">
+	<bean id="orderService" class="Slatwall.com.service.OrderService">
         <property name="DAO"><ref bean="orderDAO" /></property>
 		<property name="accountService"><ref bean="accountService" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
@@ -264,16 +258,16 @@
 		<property name="stockService"><ref bean="stockService" /></property>
 		<property name="typeService"><ref bean="typeService" /></property>
     </bean>
-	<bean id="paymentService" parent="parentService" class="Slatwall.com.service.PaymentService">
+	<bean id="paymentService" class="Slatwall.com.service.PaymentService">
         <property name="DAO"><ref bean="paymentDAO" /></property>
 		<property name="integrationService"><ref bean="integrationService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
 		<property name="settingService"><ref bean="settingService" /></property>
     </bean>
-	<bean id="permissionService" parent="parentService" class="Slatwall.com.service.PermissionService">
+	<bean id="permissionService" class="Slatwall.com.service.PermissionService">
         <property name="DAO"><ref bean="permissionDAO" /></property>
     </bean>
-    <bean id="productService" parent="parentService" class="Slatwall.com.service.ProductService">
+    <bean id="productService" class="Slatwall.com.service.ProductService">
         <property name="DAO"><ref bean="productDAO" /></property>
 		<property name="skuDAO"><ref bean="skuDAO" /></property>
 		<property name="productTypeDAO"><ref bean="productTypeDAO" /></property>
@@ -283,81 +277,81 @@
 		<property name="utilityFileService"><ref bean="utilityFileService" /></property>  
         <property name="utilityTagService"><ref bean="utilityTagService" /></property>
     </bean>
-	<bean id="productCacheService" parent="parentService" class="Slatwall.com.service.ProductCacheService">
+	<bean id="productCacheService" class="Slatwall.com.service.ProductCacheService">
         <property name="DAO"><ref bean="productCacheDAO" /></property>
 		<property name="inventoryService"><ref bean="inventoryService" /></property>
 		<property name="promotionService"><ref bean="promotionService" /></property>
 		<property name="skuService"><ref bean="skuService" /></property>
 		<property name="utilityTagService"><ref bean="utilityTagService" /></property>
     </bean>
-	<bean id="priceGroupService" parent="parentService" class="Slatwall.com.service.PriceGroupService">
+	<bean id="priceGroupService" class="Slatwall.com.service.PriceGroupService">
         <property name="DAO"><ref bean="PriceGroupDAO" /></property>
 		<property name="sessionService"><ref bean="SessionService" /></property>
 		<property name="skuService"><ref bean="SkuService" /></property>
 		<property name="productService"><ref bean="ProductService" /></property>
 	</bean>
-	<bean id="promotionService" parent="parentService" class="Slatwall.com.service.PromotionService">
+	<bean id="promotionService" class="Slatwall.com.service.PromotionService">
         <property name="DAO"><ref bean="PromotionDAO" /></property>
 		<property name="roundingRuleService"><ref bean="roundingRuleService" /></property>
 		<property name="utilityService"><ref bean="utilityService" /></property>
 	</bean>
-	<bean id="reportService" parent="parentService" class="Slatwall.com.service.ReportService">
+	<bean id="reportService" class="Slatwall.com.service.ReportService">
         <property name="DAO"><ref bean="ReportDAO" /></property>
 	</bean>
-	<bean id="roundingRuleService" parent="parentService" class="Slatwall.com.service.RoundingRuleService">
+	<bean id="roundingRuleService" class="Slatwall.com.service.RoundingRuleService">
         <property name="DAO"><ref bean="RoundingRuleDAO" /></property>
 	</bean>
-    <bean id="sessionService" parent="parentService" class="Slatwall.com.service.SessionService">
+    <bean id="sessionService" class="Slatwall.com.service.SessionService">
         <property name="DAO"><ref bean="SessionDAO" /></property>
 		<property name="accountService"><ref bean="accountService" /></property>
 		<property name="orderService"><ref bean="orderService" /></property>
 		<property name="utilityTagService"><ref bean="utilityTagService" /></property>
     </bean>
-    <bean id="settingService" parent="parentService" class="Slatwall.com.service.SettingService">
+    <bean id="settingService" class="Slatwall.com.service.SettingService">
         <property name="DAO"><ref bean="settingDAO" /></property>
 		<property name="contentService"><ref bean="contentService" /></property>
 		<property name="utilityORMService"><ref bean="utilityORMService" /></property>
     </bean>
-	<bean id="shippingService" parent="parentService" class="Slatwall.com.service.ShippingService">
+	<bean id="shippingService" class="Slatwall.com.service.ShippingService">
         <property name="DAO"><ref bean="shippingDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
 		<property name="integrationService"><ref bean="integrationService" /></property>
     </bean>
-	<bean id="skuService" parent="parentService" class="Slatwall.com.service.SkuService">
+	<bean id="skuService" class="Slatwall.com.service.SkuService">
         <property name="DAO"><ref bean="SkuDAO" /></property>
 		<property name="optionService"><ref bean="optionService" /></property>
 		<property name="productService"><ref bean="productService" /></property>
 		<property name="subscriptionService"><ref bean="subscriptionService" /></property>
 		<property name="contentService"><ref bean="contentService" /></property>
     </bean>
-	<bean id="stockService" parent="parentService" class="Slatwall.com.service.StockService">
+	<bean id="stockService" class="Slatwall.com.service.StockService">
         <property name="DAO"><ref bean="stockDAO" /></property>
 		<property name="locationService"><ref bean="locationService" /></property>
 		<property name="skuService"><ref bean="skuService" /></property>
 		<property name="typeService"><ref bean="typeService" /></property>
     </bean>
-    <bean id="subscriptionService" parent="parentService" class="Slatwall.com.service.SubscriptionService">
+    <bean id="subscriptionService" class="Slatwall.com.service.SubscriptionService">
         <property name="DAO"><ref bean="SubscriptionDAO" /></property>
     </bean>
-	<bean id="taxService" parent="parentService" class="Slatwall.com.service.TaxService">
+	<bean id="taxService" class="Slatwall.com.service.TaxService">
         <property name="DAO"><ref bean="taxDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
     </bean>
-    <bean id="typeService" parent="parentService" class="Slatwall.com.service.TypeService">
+    <bean id="typeService" class="Slatwall.com.service.TypeService">
         <property name="DAO"><ref bean="TypeDAO" /></property>
     </bean>
-    <bean id="termService" parent="parentService" class="Slatwall.com.service.TermService">
+    <bean id="termService" class="Slatwall.com.service.TermService">
         <property name="DAO"><ref bean="TermDAO" /></property>
     </bean>
-    <bean id="updateService" parent="parentService" class="Slatwall.com.service.UpdateService">
+    <bean id="updateService" class="Slatwall.com.service.UpdateService">
     	<property name="DAO"><ref bean="updateDAO" /></property>
     	<property name="utilityFileService"><ref bean="utilityFileService" /></property>
     </bean>
-    <bean id="vendorService" parent="parentService" class="Slatwall.com.service.VendorService">
+    <bean id="vendorService" class="Slatwall.com.service.VendorService">
         <property name="DAO"><ref bean="VendorDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
     </bean>
-	<bean id="vendorOrderService" parent="parentService" class="Slatwall.com.service.VendorOrderService">
+	<bean id="vendorOrderService" class="Slatwall.com.service.VendorOrderService">
         <property name="DAO"><ref bean="VendorOrderDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
 		<property name="taxService"><ref bean="taxService" /></property>

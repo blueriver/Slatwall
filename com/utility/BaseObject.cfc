@@ -928,14 +928,24 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// ========================= START: DELIGATION HELPERS ==========================================
 	
-	// @hint  rounding function
-	public string function round(required any value, string roundingExpression="0.00", string roundingDirection="Closest") {
-		return getService("roundingRuleService").roundValue(argumentcollection=arguments);
+	// @hint  helper function for returning the fw from the application scope
+	public any function getFW() {
+		return application.slatwall.fw;
+	}
+	
+	// @hint  helper function for returning the slatwallScope from the request scope
+	public any function getSlatwallScope() {
+		return request.slatwallScope;
 	}
 	
 	// @hint  function for returning the any of the services in the application
 	public any function getService(required string serviceName) {
 		return getFW().getBeanFactory().getBean( arguments.serviceName );
+	}
+	
+	// @hint  rounding function
+	public string function round(required any value, string roundingExpression="0.00", string roundingDirection="Closest") {
+		return getService("roundingRuleService").roundValue(argumentcollection=arguments);
 	}
 	
 	// @hint  helper function absolute url path from site root
@@ -945,12 +955,12 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function the file system directory
 	public string function getSlatwallRootDirectory() {
-		return expandPath("/plugins/Slatwall");
+		return expandPath("/Slatwall");
 	}
 	
 	// @hint  helper function the virtual file system directory
 	public any function getSlatwallVFSRootDirectory() {
-		return application.slatwall.slatwallVfsRoot;
+		return getFW().getValue("slatwallVfsRoot");
 	}
 	
 	// @hint  helper function to get the database type
@@ -960,30 +970,29 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function to return the Slatwall RB Factory in any component
 	public any function getRBFactory() {
-		return application.slatwall.rbFactory;
-	}
-	
-	// @hint  helper function for returning the fw
-	public any function getFW() {
-		return application.slatwall.fw;
+		return getFW().getValue("rbFactory");
 	}
 	
 	// @hint  helper function for returning the Validate This Facade Object
 	public any function getValidateThis() {
-		return application.slatwall.validateThis;
+		return getFW().getValue("validateThis");
 	}
 	
 	// @hint  helper function for returning the Validate This Facade Object
 	public any function getCFStatic() {
-		if(!structKeyExists(application.slatwall, "cfstatic")) {
-			application.slatwall.cfstatic = createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
+		if( !getFW().hasValue("cfstatic") ) {
+			
+			getFW().setValue("cfstatic", createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
 				staticDirectory = expandPath( '/plugins/Slatwall/assets/' ),
 				staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/assets/",
 				minifyMode = 'package',
 				checkforupdates = true
-				);
+				)
+			);
+			
 		}
-		return application.slatwall.cfstatic;
+		
+		return getFW().getValue("cfstatic");
 	}
 	
 	// @hint  helper function for returning a new API key for a specific resource for this session
@@ -1029,7 +1038,8 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint  helper function to get a bean for the underlying CMS (mura for now)
 	public any function getCMSBean( required any beanName ) {
 		return application.serviceFactory.getBean( arguments.beanName );
-	} 
+	}
+	
 	
 	// =========================  END:  DELIGATION HELPERS ==========================================
 	

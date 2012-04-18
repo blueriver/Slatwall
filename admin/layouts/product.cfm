@@ -43,7 +43,7 @@ Notes:
 	<div class="span2">
 		<div class="well" style="padding:8px 0;">
 			<ul class="nav nav-list">
-				<li class="nav-header">#rc.$.slatwall.rbKey('admin.product')#</li>
+				<li class="nav-header">#request.slatwallScope.rbKey('admin.product')#</li>
 				<cf_SlatwallActionCaller action="admin:product.listproduct" type="list">
 				<cf_SlatwallActionCaller action="admin:product.listproducttype" type="list">
 				<cf_SlatwallActionCaller action="admin:product.listoptiongroup" type="list">

@@ -88,7 +88,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
         if(!arguments.comment.hasErrors()) {
             arguments.comment = getDAO().save(target=arguments.comment);
         } else {
-            getService("requestCacheService").setValue("ormHasErrors", true);
+            getSlatwallScope().setORMHasErrors( true );
         }
         
         return arguments.comment;

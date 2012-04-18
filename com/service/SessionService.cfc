@@ -42,26 +42,15 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="orderService" type="any";
 	property name="utilityTagService" type="any";
 	
-	public void function confirmSession() {
-		getCurrent();
-	}
-	
 	public any function getCurrent() {
-		if(!getRequestCacheService().keyExists("currentSession")) {
-			getRequestCacheService().setValue("currentSession", getPropperSession());
-		}
-		return getRequestCacheService().getValue("currentSession");
+		getSlatwallScope().getCurrentSession();
 	}
 	
-	public any function getCurrentAccount() {
-		if(getRequestCacheService().keyExists("currentSession")) {
-			return getRequestCacheService().getValue("currentSession").getAccount();
-		} else {
-			return JavaCast("null", "");
-		}
+	public void function confirmSession() {
+		getSlatwallScope().getCurrentSession();
 	}
 	
-	private any function getPropperSession() {
+	public any function getPropperSession() {
 		// Figure out the appropriate session ID and create a new one if necessary
 		if(!isDefined('session.slatwall.sessionID')) {
 			if(structKeyExists(cookie, "slatwallSessionID")) {
@@ -80,7 +69,7 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 		// Setup account here
-		var cmsUser = getRequestCacheService().getValue("muraScope").currentUser();
+		var cmsUser = request.muraScope.currentUser();
 		
 		if(cmsUser.isLoggedIn()) {
 			// Load the account

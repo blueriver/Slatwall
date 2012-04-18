@@ -43,7 +43,7 @@ Notes:
 	<div class="span2">
 		<div class="well" style="padding:8px 0;">
 			<ul class="nav nav-list">
-				<li class="nav-header">#rc.$.slatwall.rbKey('admin.account')#</li>
+				<li class="nav-header">#request.slatwallScope.rbKey('admin.account')#</li>
 				<cf_SlatwallActionCaller action="admin:account.listaccount" type="list">
 			</ul>
 		</div>

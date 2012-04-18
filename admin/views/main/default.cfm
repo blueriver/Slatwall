@@ -46,13 +46,13 @@ Notes:
 <cfoutput>
 <div class="row-fluid">
 	<div class="span6">
-		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.neworders")#</h3>
+		<h3>#request.slatwallScope.rbKey("admin.main.dashboard.neworders")#</h3>
 		<table class="table table-stripe table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.account.fullname")#</th>
+					<th>#request.slatwallScope.rbKey("entity.order.orderNumber")#</th>
+					<th>#request.slatwallScope.rbKey("entity.order.orderOpenDateTime")#</th>
+					<th>#request.slatwallScope.rbKey("entity.account.fullname")#</th>
 					<th>&nbsp;</th>
 				</tr>
 			</thead>
@@ -80,13 +80,13 @@ Notes:
 		</div>
 	</div>
 	<div class="span6">
-		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentproductupdates")#</h3>
+		<h3>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductupdates")#</h3>
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th>#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-					<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
-					<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
+					<th>#request.slatwallScope.rbKey("entity.product.productName")#</th>
+					<th>#request.slatwallScope.rbKey("define.modifiedDateTime")#</th>
+					<th>#request.slatwallScope.rbKey("define.modifiedByAccount")#</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -113,20 +113,20 @@ Notes:
 <br />
 <div class="row-fluid">
 	<div class="span6">
-		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentproductreviews")#</h3>
+		<h3>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductreviews")#</h3>
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th>#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.productReview.reviewerName")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.productReview.reviewTitle")#</th>
+					<th>#request.slatwallScope.rbKey("entity.product.productName")#</th>
+					<th>#request.slatwallScope.rbKey("entity.productReview.reviewerName")#</th>
+					<th>#request.slatwallScope.rbKey("entity.productReview.reviewTitle")#</th>
 					<th class="administration">&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
 				<cfloop array="#rc.productReviewSmartList.getPageRecords()#" index="local.productReview">
 					<tr>
-						<td><a href="#buildURL(action='admin:product.detailproduct', querystring='productID=#local.productReview.getProduct().getProductID()#')#">#local.productReview.getProduct().getProductName()#</a></td>
+						<td><a href="#request.slatwallScope.buildURL(action='admin:product.detailproduct', querystring='productID=#local.productReview.getProduct().getProductID()#')#">#local.productReview.getProduct().getProductName()#</a></td>
 						<td>#local.productReview.getReviewerName()#</td>
 						<td>#local.productReview.getReviewTitle()#</td>
 						<td>
@@ -143,13 +143,13 @@ Notes:
 		</div>
 	</div>
 	<div class="span6">
-		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentvendorupdates")#</h3>
+		<h3>#request.slatwallScope.rbKey("admin.main.dashboard.recentvendorupdates")#</h3>
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th>#rc.$.Slatwall.rbKey("entity.vendor.vendorName")#</th>
-					<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
-					<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
+					<th>#request.slatwallScope.rbKey("entity.vendor.vendorName")#</th>
+					<th>#request.slatwallScope.rbKey("define.modifiedDateTime")#</th>
+					<th>#request.slatwallScope.rbKey("define.modifiedByAccount")#</th>
 					<th>&nbsp;</th>
 				</tr>
 			</thead>
@@ -174,12 +174,12 @@ Notes:
 <br />
 <div class="row-fluid">
 	<div class="span6">
-		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentvendororderupdates")#</h3>
+		<h3>#request.slatwallScope.rbKey("admin.main.dashboard.recentvendororderupdates")#</h3>
 		<table class="table table-striped table-bordered table-condensed">
 			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
-				<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
-				<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
+				<th>#request.slatwallScope.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
+				<th>#request.slatwallScope.rbKey("define.modifiedDateTime")#</th>
+				<th>#request.slatwallScope.rbKey("define.modifiedByAccount")#</th>
 				<th>&nbsp;</th>
 			</tr>
 			<cfloop array="#rc.vendorOrderSmartList.getPageRecords()#" index="local.vendorOrder">

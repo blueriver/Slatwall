@@ -47,9 +47,9 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		if(isNull(stock)) {
 			
-			if(getRequestCacheService().hasValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#")) {
+			if(getSlatwallScope().hasValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#")) {
 				// Set the stock in the requestCache so that duplicates for this stock don't get created.
-				stock = getRequestCacheService().getValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#");
+				stock = getSlatwallScope().getValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#");
 				
 			} else {
 				stock = this.newStock();
@@ -58,7 +58,7 @@ component extends="BaseService" accessors="true" output="false" {
 				getDAO().save(stock);
 				
 				// Set the stock in the requestCache so that duplicates for this stock don't get created.
-				getRequestCacheService().setValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#", stock);
+				getSlatwallScope().setValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#", stock);
 				
 			}
 		}

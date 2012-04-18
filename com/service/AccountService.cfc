@@ -57,7 +57,7 @@ component extends="BaseService" accessors="true" output="false" {
 		var loginResult = getUserUtility().login(username=arguments.username, password=arguments.password, siteID=arguments.siteID);
 		
 		if(loginResult) {
-			getRequestCacheService().clearCache(keys="currentSession");
+			getSlatwallScope().setCurrentSession(javaCast("null", ""));
 		}
 		
 		return loginResult;
@@ -108,7 +108,7 @@ component extends="BaseService" accessors="true" output="false" {
 			// Validate This Object
 			accountEmailAddress.validate();
 			if(accountEmailAddress.hasErrors()) {
-				getRequestCacheService().setValue("ormHasErrors", true);
+				getSlatwallScope().setORMHasErrors( true );
 				arguments.account.addError("emailAddress", "The Email address has errors");
 			}
 
@@ -126,7 +126,7 @@ component extends="BaseService" accessors="true" output="false" {
 			// Validate This Object
 			accountPhoneNumber.validate();
 			if(accountPhoneNumber.hasErrors()) {
-				getRequestCacheService().setValue("ormHasErrors", true);
+				getSlatwallScope().setORMHasErrors( true );
 				arguments.account.addError("phoneNumber", "The Phone Number has errors");
 			}
 		}
@@ -142,7 +142,7 @@ component extends="BaseService" accessors="true" output="false" {
 			// Validate Address
 			accountAddress.getAddress().validate();
 			if(accountAddress.getAddress().hasErrors()) {
-				getRequestCacheService().setValue("ormHasErrors", true);
+				getSlatwallScope().setORMHasErrors( true );
 			}
 		}
 		
@@ -156,7 +156,7 @@ component extends="BaseService" accessors="true" output="false" {
 			} 
 			if(isNull(access)) {
 				//return access code error
-				getRequestCacheService().setValue("ormHasErrors", true);
+				getSlatwallScope().setORMHasErrors( true );
 				arguments.account.addError("access", "The access code you provided is invalid.");
 			}
 		}
@@ -169,11 +169,11 @@ component extends="BaseService" accessors="true" output="false" {
 			var cmsUser = getUserManager().getBean().loadBy(siteID=arguments.siteID, username=arguments.account.getPrimaryEmailAddress().getEmailAddress());
 			
 			if(!cmsUser.getIsNew()) {
-				getRequestCacheService().setValue("ormHasErrors", true);
+				getSlatwallScope().setORMHasErrors( true );
 				arguments.account.addError("emailAddress", "This E-Mail Address is already in use with another Account.");
 				// make sure password is entered 
 			} else if(!len(trim(arguments.data.password))) {
-				getRequestCacheService().setValue("ormHasErrors", true);
+				getSlatwallScope().setORMHasErrors( true );
 				arguments.account.addError("password", "The field Password is required.");
 			} else {
 				// Setup a new mura user
@@ -191,7 +191,7 @@ component extends="BaseService" accessors="true" output="false" {
 					arguments.account.setCmsAccountID(cmsUser.getUserID());
 										
 					// If there currently isn't a user logged in, then log in this new account
-					var currentUser = getRequestCacheService().getValue("muraScope").currentUser();
+					var currentUser = request.muraScope.currentUser();
 					if(!currentUser.isLoggedIn()) {
 						// Login the mura User
 						getUserUtility().loginByUserID(cmsUser.getUserID(), arguments.siteID);
@@ -199,7 +199,7 @@ component extends="BaseService" accessors="true" output="false" {
 						getSessionService().getCurrent().setAccount(arguments.account);
 					}
 				} else {
-					getRequestCacheService().setValue("ormHasErrors", true);
+					getSlatwallScope().setORMHasErrors( true );
 					// add all the cms errors
 					for(var error in cmsUser.getErrors()) {
 						arguments.account.addError(error, cmsUser.getErrors()[error]);
@@ -231,7 +231,7 @@ component extends="BaseService" accessors="true" output="false" {
 				
 				// check if there was any validation error during cms user save
 				if(!structIsEmpty(cmsUser.getErrors())) {
-					getRequestCacheService().setValue("ormHasErrors", true);
+					getSlatwallScope().setORMHasErrors( true );
 					// add all the cms errors
 					for(var error in cmsUser.getErrors()) {
 						arguments.account.addError(error, cmsUser.getErrors()[error]);
@@ -241,7 +241,7 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 			// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.
-			var currentUser = getRequestCacheService().getValue("muraScope").currentUser();
+			var currentUser = request.muraScope.currentUser();
 			if(currentUser.getUserID() == cmsUser.getUserID()) {
 				getUserUtility().loginByUserID(cmsUser.getUserID(), arguments.siteID);	
 			}

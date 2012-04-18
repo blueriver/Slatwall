@@ -80,7 +80,7 @@ Notes:
 
 	<cfsilent>
 		<cfif isSimpleValue(attributes.smartList)>
-			<cfset attributes.smartList = request.context.$.Slatwall.getService("utilityORMService").getServiceByEntityName( attributes.smartList ).invokeMethod("get#attributes.smartList#SmartList") />
+			<cfset attributes.smartList = request.slatwallScope.getService("utilityORMService").getServiceByEntityName( attributes.smartList ).invokeMethod("get#attributes.smartList#SmartList") />
 		</cfif>
 		
 		<!--- Setup the example entity --->
@@ -261,7 +261,7 @@ Notes:
 			</table>
 			<cf_SlatwallSmartListPager smartList="#attributes.smartList#" />
 		<cfelse>
-			<p><em>#replace(request.context.$.Slatwall.rbKey("entity.define.norecords"), "${entityNamePlural}", request.context.$.Slatwall.rbKey("entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '', 'all')#_plural"))#</em></p>
+			<p><em>#replace(request.slatwallScope.rbKey("entity.define.norecords"), "${entityNamePlural}", request.slatwallScope.rbKey("entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '', 'all')#_plural"))#</em></p>
 		</cfif>
 	</cfoutput>
 </cfif>
