@@ -45,48 +45,21 @@ Notes:
 	</cfif>
 </cfsilent>
 <plugin>
-<name>Slatwall</name>
-<package>Slatwall</package>
-<directoryFormat>packageOnly</directoryFormat>
-<provider>Slatwall</provider>
-<version><cfoutput>#local.version#</cfoutput></version>
-<providerURL>http://www.getslatwall.com/</providerURL>
-<category>Application</category>
-<ormcfclocation>com/entity</ormcfclocation>
-<customtagpaths>tags</customtagpaths>
-<mappings>
-       <mapping name="ValidateThis" directory="org/ValidateThis"/>
-</mappings>
-<settings>
-	<setting>
-		<name>sendUsageStats</name>
-		<label>Send Usage Statistics</label>
-		<hint>This option allows Slatwall to automatically sent usage information to the developers in an effort to help them improve the software.</hint>
-		<type>select</type>
-		<required>true</required>
-		<validation></validation>
-		<regex></regex>
-		<message></message>
-		<defaultvalue>anonymous</defaultvalue>
-		<optionlist>none^anonymous^full</optionlist>
-		<optionlabellist>None^Anonymous^With IP, Domain and Site Info</optionlabellist>
-	</setting>	
-</settings>
-
-<eventHandlers>
-	<eventHandler event="onApplicationLoad" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
-	<eventHandler event="onGlobalSessionStart" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
-	<eventHandler event="onSiteRequestStart" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
-	<eventHandler event="onRenderStart" component="integrationServices.mura.fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onRenderEnd" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
-	<eventHandler event="onAfterCategorySave" component="integrationServices.mura.fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onAfterCategoryDelete" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
-	<eventHandler event="onContentEdit" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
-	<eventHandler event="onAfterContentSave" component="integrationServices.mura.fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onAfterContentDelete" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
-	<eventHandler event="onAdminModuleNav" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
-</eventHandlers>
-<displayobjects location="global">
-	<displayobject name="Account" displaymethod="account_detail" component="integrationServices.mura.fw1DisplayAdapter" persist="false"/>
-</displayobjects>
+	<name>Slatwall</name>
+	<package>Slatwall</package>
+	<directoryFormat>packageOnly</directoryFormat>
+	<provider>Slatwall</provider>
+	<version><cfoutput>#local.version#</cfoutput></version>
+	<providerURL>http://www.getslatwall.com/</providerURL>
+	<category>Application</category>
+	<ormcfclocation>com/entity</ormcfclocation>
+	<customtagpaths>tags</customtagpaths>
+	<mappings>
+	       <mapping name="ValidateThis" directory="org/ValidateThis"/>
+	</mappings>
+	<settings />
+	<eventHandlers>
+		<eventHandler event="onApplicationLoad" component="integrationServices.mura.eventHandler" persist="false"/>
+	</eventHandlers>
+	<displayObjects />
 </plugin>

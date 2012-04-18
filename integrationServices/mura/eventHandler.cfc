@@ -1,11 +1,11 @@
-component {
+component extends="mura.plugin.pluginGenericEventHandler" {
 	
-	// On Application Load, we can clear the slatwall application key so that the application get reloaded on the next request
-	public void function onApplicationLoad() {
-		if(structKeyExists(application, "")) {
-			
+	// On Application Load, we can clear the slatwall application key and register all of the methods in this eventHandler with the config
+	public void function onApplicationLoad(required any event) {
+		if(structKeyExists(application, "slatwall")) {
+			structDelete(application, "slatwall");
 		}
+		variables.pluginConfig.addEventHandler(this);
 	}
-	
 	
 }
