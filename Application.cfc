@@ -38,12 +38,46 @@ Notes:
 */
 component extends="org.fw1.framework" output="false" {
 
-	include "../../config/applicationSettings.cfm";
-	include "../../config/mappings.cfm";
-	include "../mappings.cfm";
+	// Setup Framwork Configuration
+	variables.framework=structNew();
+	variables.framework.applicationKey="SlatwallFW1";
+	variables.framework.base="/Slatwall";
+	variables.framework.action="slatAction";
+	variables.framework.error="admin:main.error";
+	variables.framework.home="admin:main.default";
+	variables.framework.defaultSection="main";
+	variables.framework.defaultItem="default";
+	variables.framework.usingsubsystems=true;
+	variables.framework.defaultSubsystem = "admin";
+	variables.framework.subsystemdelimiter=":";
+	variables.framework.generateSES = false;
+	variables.framework.SESOmitIndex = true;
 	
-	include "fw1Config.cfm";
-	this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
+	// If a CMSApplicationSettings file exists, then we can use whatever is in there
+	if( fileExists(expandPath("integrationServices/applicationSetup.cfm")) ) {
+		include "integrationServices/CMSApplicationSettings.cfm";
+	}
+	
+	// Setup an application name if one isn't already setup
+	if(!structKeyExists(this, "name")) {
+		this.name = "slatwall" & hash(getCurrentTemplatePath());
+	}
+	
+	// Start: Mapping Setup (We check for the mappings first because they may already be identified by the CMS)
+	if(!structKeyExists(this, "mappings")) {
+		this.mappings = {};
+	}
+	if(!structKeyExists(this.mappings, "/coldspring")) {
+		this.mappings[ "/coldspring" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/coldspring";	
+	}
+	if(!structKeyExists(this.mappings, "/ValidateThis")) {
+		this.mappings[ "/ValidateThis" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/ValidateThis";	
+	}
+	if(!structKeyExists(this.mappings, "/slatwallVfsRoot")) {
+		this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
+	}
+	// End: Mapping Setup
+	
 	
 	public void function verifyApplicationSetup() {
 		
@@ -321,4 +355,5 @@ component extends="org.fw1.framework" output="false" {
 		}
 		return arguments.fullPath;
 	}	
+	
 }
