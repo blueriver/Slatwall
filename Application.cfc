@@ -53,31 +53,40 @@ component extends="org.fw1.framework" output="false" {
 	variables.framework.generateSES = false;
 	variables.framework.SESOmitIndex = true;
 	
-	// If a CMSApplicationSettings file exists, then we can use whatever is in there
-	if( fileExists(expandPath("integrationServices/applicationSetup.cfm")) ) {
-		include "integrationServices/CMSApplicationSettings.cfm";
-	}
+	// If we are installed inside of mura, then use the core application settings, otherwise use standalone settings
+	if( fileExists(expandPath("../../config/applicationSettings.cfm")) ) {
+		
+		include "../../config/applicationSettings.cfm";
+		include "../../config/mappings.cfm";
+		include "../mappings.cfm";
 	
-	// Setup an application name if one isn't already setup
-	if(!structKeyExists(this, "name")) {
+	// Default Standalone settings
+	} else {
+		
 		this.name = "slatwall" & hash(getCurrentTemplatePath());
+		
+		this.mappings[ "/Slatwall" ] = getDirectoryFromPath(getCurrentTemplatePath());
+		this.mappings[ "/coldspring" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/coldspring";
+		this.mappings[ "/ValidateThis" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/ValidateThis";
+		
+		this.ormenabled = true;
+		this.datasource = "slatwall";
+		
+		this.ormsettings = {};
+		this.ormsettings.cfclocation = ["com/entity"];
+		this.ormSettings.dbcreate = "update";
+		this.ormSettings.flushAtRequestEnd = false;
+		this.ormsettings.eventhandling = true;
+		this.ormSettings.automanageSession = false;
+		this.ormSettings.savemapping = false;
+		this.ormSettings.skipCFCwitherror = false;
+		this.ormSettings.useDBforMapping = true;
+		this.ormSettings.autogenmap = true;
+		this.ormSettings.logsql = false;
+		
 	}
 	
-	// Start: Mapping Setup (We check for the mappings first because they may already be identified by the CMS)
-	if(!structKeyExists(this, "mappings")) {
-		this.mappings = {};
-	}
-	if(!structKeyExists(this.mappings, "/coldspring")) {
-		this.mappings[ "/coldspring" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/coldspring";	
-	}
-	if(!structKeyExists(this.mappings, "/ValidateThis")) {
-		this.mappings[ "/ValidateThis" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/ValidateThis";	
-	}
-	if(!structKeyExists(this.mappings, "/slatwallVfsRoot")) {
-		this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
-	}
-	// End: Mapping Setup
-	
+	this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
 	
 	public void function verifyApplicationSetup() {
 		
