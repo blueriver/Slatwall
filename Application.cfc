@@ -230,7 +230,7 @@ component extends="org.fw1.framework" output="false" {
 		request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
 		
 		// Confirm Session Setup
-		getBeanFactory().getBean("sessionService").confirmSession();
+		request.slatwallScope.getCurrentSession();
 	}
 
 	public void function setupRequest() {

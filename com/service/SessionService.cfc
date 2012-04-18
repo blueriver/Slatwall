@@ -42,14 +42,6 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="orderService" type="any";
 	property name="utilityTagService" type="any";
 	
-	public any function getCurrent() {
-		getSlatwallScope().getCurrentSession();
-	}
-	
-	public void function confirmSession() {
-		getSlatwallScope().getCurrentSession();
-	}
-	
 	public any function getPropperSession() {
 		// Figure out the appropriate session ID and create a new one if necessary
 		if(!isDefined('session.slatwall.sessionID')) {

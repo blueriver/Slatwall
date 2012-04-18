@@ -15,19 +15,20 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 	public void function onSiteRequestStart(required any $) {
 		
-		getFW().setupGloablRequest();
+		getFW().setupGlobalRequest();
 		
-		$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+		/*
+		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 		
 		if( len($.event('path')) ) {
-			var keyLocation = listFind($.event('path'), setting('globalURLKeyProduct'), "/");
+			var keyLocation = listFind($.event('path'), request.slatwallScope.setting('globalURLKeyProduct'), "/");
 			
 			if( keyLocation && keyLocation < listLen($.event('path'),"/") ) {
 				
 			}
 		}
 		
-		/*
+		
 		// Make sure that there is a path key in the rc first
 		if(structKeyExists(arguments.rc, "path")) {
 			// This hook is what enables SEO friendly product URL's... It is also what sets up the product in the slatwall scope, ext
