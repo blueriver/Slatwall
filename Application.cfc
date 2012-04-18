@@ -38,26 +38,12 @@ Notes:
 */
 component extends="org.fw1.framework" output="false" {
 
-	// If the page request was an admin request then we need to setup all of the defaults from mura 
-	if(isAdminRequest()) {
-		include "../../config/applicationSettings.cfm";
-		include "../../config/mappings.cfm";
-		include "../mappings.cfm";
-	}
+	include "../../config/applicationSettings.cfm";
+	include "../../config/mappings.cfm";
+	include "../mappings.cfm";
 	
 	include "fw1Config.cfm";
-	variables.slatwallVfsRoot = "ram:///" & this.name;
-	this.mappings[ "/slatwallVfsRoot" ] = variables.slatwallVfsRoot;
-	
-	public void function setPluginConfig(required any pluginConfig) {
-		application.slatwall.pluginConfig = arguments.pluginConfig; 
-	}
-	
-	public any function getPluginConfig() {
-		if( isDefined('application.slatwall.pluginConfig') ) {
-			return application.slatwall.pluginConfig;	
-		}
-	}
+	this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
 	
 	public void function verifyApplicationSetup() {
 		
@@ -78,29 +64,25 @@ component extends="org.fw1.framework" output="false" {
 					writeLog(file="Slatwall", text="Application Setup Started");
 					
 					application.slatwall = structNew();
+					application.slatwall.version = "";
 					application.slatwall.initialized = false;
+					application.slatwall.fw = this;
+					application.slatwall.slatwallVfsRoot = this.mappings[ "/slatwallVfsRoot" ];
+					
+					// Make sure the correct version is in the application scope
+					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
+					if( fileExists( versionFile ) ) {
+						application.slatwall.version = trim(fileRead(versionFile));
+					}
+					
+					// Set vfs root for slatwall 
+					if(!directoryExists(application.slatwall.slatwallVfsRoot)) {
+						directoryCreate(application.slatwall.slatwallVfsRoot);
+					}
 					
 					// This will force the Taffy API to reload on next request
 					if(structKeyExists(application, "_taffy")){
 						structDelete(application,"_taffy");	
-					}
-					
-					// This sets up the Plugin Config for later use
-					setPluginConfig( application.pluginManager.getConfig(listLast(getDirectoryFromPath(getCurrentTemplatePath()), application.configBean.getFileDelim())));
-					
-					// Make sure the correct version is in the plugin config
-					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
-					if( fileExists( versionFile ) ) {
-						getPluginConfig().getApplication().setValue('SlatwallVersion', trim(fileRead(versionFile)));
-					}
-					
-					// Set this in the application scope to be used on the frontend
-					getPluginConfig().getApplication().setValue( "fw", this);
-					
-					// Set vfs root for slatwall
-					getPluginConfig().getApplication().setValue('slatwallVfsRoot', slatwallVfsRoot);
-					if(!directoryExists(slatwallVfsRoot)) {
-						directoryCreate(slatwallVfsRoot);
 					}
 					
 					// Make's sure that our entities get updated
@@ -115,7 +97,7 @@ component extends="org.fw1.framework" output="false" {
 					var xml = "";
 					var xmlPath = "";
 			
-				    xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
+				    xmlPath = expandPath( '/Slatwall/config/coldspring.xml' );
 					xml = xmlParse(FileRead("#xmlPath#")); 
 					
 					// Build Coldspring factory
@@ -127,8 +109,7 @@ component extends="org.fw1.framework" output="false" {
 					serviceFactory = integrationService.updateColdspringWithDataIntegration( serviceFactory, xml );
 					
 					// Place the service factory into the required application scopes
-					getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
-					setBeanFactory( getPluginConfig().getApplication().getValue( "serviceFactory" ) );
+					setBeanFactory( serviceFactory );
 					
 					//========================= END: Coldsping Setup =========================
 					
@@ -146,22 +127,19 @@ component extends="org.fw1.framework" output="false" {
 					var vtFacade = new ValidateThis.ValidateThis(validateThisConfig);
 					
 					// Place the validation facade object in the plugin config application scope
-					getPluginConfig().getApplication().setValue("validateThis", vtFacade);
+					application.slatwall.validateThis = vtFacade;
 					
 					//========================= END: ValidateThis Setup =========================
 					
 					// Build RB Factory
 					rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
-					getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
+					application.slatwall.rbFactory = rbFactory;
 					
 					// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
-					getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/dbdata"));
+					getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
 					
 					// Run Scripts
 					getBeanFactory().getBean("updateService").runScripts();
-					
-					// Load all Slatwall Settings
-					//getBeanFactory().getBean("settingService").reloadConfiguration();
 					
 					// Reload All Integrations
 					getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
@@ -173,22 +151,17 @@ component extends="org.fw1.framework" output="false" {
 					var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
 					muraIntegrationService.setupIntegration();
 					
+					// Set initialized to true
+					application.slatwall.initialized = true;
+					
 					// Log that the application is finished setting up
 					writeLog(file="Slatwall", text="Application Setup Complete");
-					
-					application.slatwall.initialized = true;
 				}
 			}
 		}
 	}
 
 	public void function setupRequest() {
-		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
-		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
-			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
-		}
-		
-		request.footer = "";
 		
 		// Verify that the application is setup
 		verifyApplicationSetup();
@@ -211,7 +184,7 @@ component extends="org.fw1.framework" output="false" {
 		// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
 		if(request.context.$.event('siteid') == "") {
 			request.context.$.event('siteid', session.siteid);
-		}		
+		}
 		
 		// Setup slatwall scope in request cache If it doesn't already exist
 		if(!getBeanFactory().getBean("requestCacheService").keyExists(key="slatwallScope")) {
@@ -285,11 +258,6 @@ component extends="org.fw1.framework" output="false" {
 	}
 
 	// ===================== APPLICATION HELPER FUNCTIONS =============================
-	
-	// Checks if the request is an admin request or not
-	public boolean function isAdminRequest() {
-		return not structKeyExists(request,"servletEvent");
-	}
 	
 	// Uses the current mura user to check security against a given action
 	public boolean function secureDisplay(required string action) {

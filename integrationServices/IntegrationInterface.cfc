@@ -60,25 +60,6 @@ Notes:
 		--->
 	</cffunction>
 	
-	
-	<cffunction name="getMainMenuLinks" access="public" returntype="xml">
-		<!---
-			This method should return formated XML that defines any main menu links
-			In this format:
-			
-			<menu>
-				<menuTitle></menuTitle>
-				<subSection>
-					<subSectionTitle></subSectionTitle>
-					<link displayName="" action="" />
-					<link displayName="" action="" />
-					<link displayName="" action="" />
-					<link displayName="" action="" />
-				</subSection>
-			</menu>
-		--->	
-	</cffunction>
-	
 	<cffunction name="isFW1Subsystem" access="public" returntype="boolean">
 		<!---
 			This method should return true only if there is a /views/main/default.cfm file

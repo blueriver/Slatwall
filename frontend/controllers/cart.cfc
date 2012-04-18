@@ -52,7 +52,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function clearCart(required struct rc) {
-		getOrderService().clearCart();	
+		getOrderService().clearCart();
+		
+		/*
+		redirect(action='', querystring='');
+		redirectExact(fullURL='');
+		redirectSetting(settingName='');
+		*/
+		
+		settingRedirect( 'gloablShoppingCartURL' );
 		
 		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
 	}

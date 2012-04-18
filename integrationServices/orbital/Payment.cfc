@@ -50,7 +50,7 @@ Notes:
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="getPaymentMethods">
+	<cffunction name="getPaymentMethodTypes" returntype="string">
 		<cfreturn "creditCard" />
 	</cffunction>
 	

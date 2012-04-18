@@ -75,7 +75,7 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		return this;
 	}
 	
-	public any function getPaymentMethods() {
+	public string function getPaymentMethodTypes() {
 		return "creditCard";
 	}
 	

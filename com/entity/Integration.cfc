@@ -42,8 +42,6 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="integrationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="integrationPackage" ormtype="string";
 	property name="integrationName" ormtype="string";
-	property name="integrationSettings" ormtype="string" length="4000";
-	
 	property name="installedFlag" ormtype="boolean";
 	
 	property name="customReadyFlag" ormtype="boolean";
@@ -65,45 +63,11 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="activeFlag" type="boolean" persistent="false";
 	
 	public any function init() {
-		if(isNull(variables.customReadyFlag)) {
-			variables.customReadyFlag = 0;
-		}
-		if(isNull(variables.customActiveFlag)) {
-			variables.customActiveFlag = 0;
-		}
-		if(isNull(variables.dataReadyFlag)) {
-			variables.dataReadyFlag = 0;
-		}
-		if(isNull(variables.dataActiveFlag)) {
-			variables.dataActiveFlag = 0;
-		}
-		if(isNull(variables.paymentReadyFlag)) {
-			variables.paymentReadyFlag = 0;
-		}
-		if(isNull(variables.paymentActiveFlag)) {
-			variables.paymentActiveFlag = 0;
-		}
-		if(isNull(variables.shippingReadyFlag)) {
-			variables.shippingReadyFlag = 0;
-		}
-		if(isNull(variables.shippingActiveFlag)) {
-			variables.shippingActiveFlag = 0;
-		}
 		if(isNull(variable.installedFlag)) {
 			variable.installedFlag = 0;
 		}
-		if(isNull(variables.integrationSettings)) {
-			variables.integrationSettings = serializeJSON(structNew());
-		}
 		
 		return super.init();
-	}
-	
-	public boolean function getActiveFlag() {
-		if(getDataActiveFlag() || getPaymentActiveFlag() || getShippingActiveFlag() || getCustomActiveFlag()) {
-			return true;
-		}
-		return false;
 	}
 	
 	public array function getShippingMethodOptions( ) {
@@ -117,20 +81,6 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 		return variables.shippingMethodOptions;
 	}
 	
-	public any function getIntegrationSetting(required string settingName) {
-		var allSettings = deserializeJSON(getIntegrationSettings());
-		if(structKeyExists(allSettings, arguments.settingName)) {
-			return allSettings[ arguments.settingName ];
-		} else {
-			return "";
-		}
-	}
-	
-	public any function setIntegrationSetting(required string settingName, required any settingValue) {
-		var allSettings = deserializeJSON(getIntegrationSettings());
-		allSettings[arguments.settingName] = arguments.settingValue;
-		setIntegrationSettings(serializeJSON(allSettings));
-	}
 	
 	public any function getIntegrationCFC( string integrationType="") {
 		switch (arguments.integrationType) {

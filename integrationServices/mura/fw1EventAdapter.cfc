@@ -41,7 +41,7 @@ Notes:
 	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted,generateses,view,layout">
 	
 	<!--- Include FW/1 configuration that is shared between then adapter and the application. --->
-	<cfinclude template="fw1Config.cfm">
+	<cfinclude template="../../fw1Config.cfm">
 	
 	<cffunction name="onMissingMethod">
 		<cfargument name="missingMethodName" />
@@ -56,7 +56,7 @@ Notes:
 	
 	<cffunction name="onContentEdit">
 		<cfargument name="$" />
-		<cfinclude template="plugin/onContentEdit.cfm" />
+		<cfinclude template="../../plugin/onContentEdit.cfm" />
 	</cffunction>
 	
 	<cffunction name="onRenderStart">

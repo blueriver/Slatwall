@@ -74,8 +74,8 @@ component extends="BaseController" output=false accessors=true {
 	
 	public function error(required struct rc) {
 		if(structKeyExists(rc, "$")) {
-			getFW().getPluginConfig().getPluginManager().announceEvent("onSiteError",rc.$.event());
-			getFW().getPluginConfig().getPluginManager().announceEvent("onGlobalMissingTemplate",rc.$.event());	
+			getFW().getPluginConfig().getPluginManager().announceEvent("onSiteError", rc.$.event());
+			getFW().getPluginConfig().getPluginManager().announceEvent("onGlobalMissingTemplate", rc.$.event());
 		}
 	}
 	

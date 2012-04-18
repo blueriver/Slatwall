@@ -51,7 +51,7 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 		return this;
 	}
 	
-	public any function getPaymentMethods() {
+	public string function getPaymentMethodTypes() {
 		return "dwolla";
 	}
 	

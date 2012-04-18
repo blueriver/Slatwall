@@ -74,19 +74,19 @@ Notes:
 </settings>
 
 <eventHandlers>
-	<eventHandler event="onApplicationLoad" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onGlobalSessionStart" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onSiteRequestStart" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onRenderStart" component="fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onRenderEnd" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onAfterCategorySave" component="fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onAfterCategoryDelete" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onContentEdit" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onAfterContentSave" component="fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onAfterContentDelete" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onAdminModuleNav" component="fw1EventAdapter" persist="false"/>
+	<eventHandler event="onApplicationLoad" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
+	<eventHandler event="onGlobalSessionStart" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
+	<eventHandler event="onSiteRequestStart" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
+	<eventHandler event="onRenderStart" component="integrationServices.mura.fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onRenderEnd" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
+	<eventHandler event="onAfterCategorySave" component="integrationServices.mura.fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onAfterCategoryDelete" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
+	<eventHandler event="onContentEdit" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
+	<eventHandler event="onAfterContentSave" component="integrationServices.mura.fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onAfterContentDelete" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
+	<eventHandler event="onAdminModuleNav" component="integrationServices.mura.fw1EventAdapter" persist="false"/>
 </eventHandlers>
 <displayobjects location="global">
-	<displayobject name="Account" displaymethod="account_detail" component="fw1DisplayAdapter" persist="false"/>
+	<displayobject name="Account" displaymethod="account_detail" component="integrationServices.mura.fw1DisplayAdapter" persist="false"/>
 </displayobjects>
 </plugin>

@@ -216,5 +216,10 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		logSlatwall("Setting Service - pullMuraCategory - Finished", true);
 	}
 
-	
+	public any function getPluginConfig() {
+		if(!structKeyExists(variables, "pluginConfig")) {
+			variables.pluginConfig = application.pluginManager.getConfig("Slatwall", application.configBean.getFileDelim());
+		}
+		return variables.pluginConfig;
+	}
 }

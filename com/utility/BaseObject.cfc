@@ -935,7 +935,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  function for returning the any of the services in the application
 	public any function getService(required string serviceName) {
-		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.serviceName);
+		return getFW().getBeanFactory().getBean( arguments.serviceName );
 	}
 	
 	// @hint  helper function absolute url path from site root
@@ -950,7 +950,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function the virtual file system directory
 	public any function getSlatwallVFSRootDirectory() {
-		return getPluginConfig().getApplication().getValue("slatwallVfsRoot");
+		return application.slatwall.slatwallVfsRoot;
 	}
 	
 	// @hint  helper function to get the database type
@@ -960,22 +960,17 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function to return the Slatwall RB Factory in any component
 	public any function getRBFactory() {
-		return getPluginConfig().getApplication().getValue("rbFactory");
-	}
-	
-	// @hint  helper function for returning the plugin config inside of any component in the application
-	public any function getPluginConfig() {
-		return application.slatwall.pluginConfig;
+		return application.slatwall.rbFactory;
 	}
 	
 	// @hint  helper function for returning the fw
 	public any function getFW() {
-		return getPluginConfig().getApplication().getValue('fw');
+		return application.slatwall.fw;
 	}
 	
 	// @hint  helper function for returning the Validate This Facade Object
 	public any function getValidateThis() {
-		return getPluginConfig().getApplication().getValue('validateThis');
+		return application.slatwall.validateThis;
 	}
 	
 	// @hint  helper function for returning the Validate This Facade Object

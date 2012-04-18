@@ -42,7 +42,7 @@ component extends="Slatwall.com.utility.BaseObject" {
 		return this;
 	}
 	
-	public string function getPaymentMethods() {
+	public string function getPaymentMethodTypes() {
 		return "";
 	}
 	

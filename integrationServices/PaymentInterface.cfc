@@ -43,7 +43,7 @@ Notes:
 		
 	</cffunction>
 	
-	<cffunction name="getPaymentMethods">
+	<cffunction name="getPaymentMethodTypes" access="public" returntype="string">
 	</cffunction>
 		
 </cfinterface>
