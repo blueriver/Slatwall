@@ -63,7 +63,7 @@ component extends="mura.plugin.plugincfc" output="false" {
 	public void function toBundle(pluginConfig, bundle, siteid) {
 		
 		// Add DB Data to the /plugin/customSettings folder
-		var bundleUtility = createObject("component", "bundleUtility").init();
+		var bundleUtility = createObject("component", "integrationsServices.mura.bundleUtility").init();
 		bundleUtility.toBundle(argumentcollection=arguments);
 	}
 		

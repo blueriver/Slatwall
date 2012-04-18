@@ -8,4 +8,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		variables.pluginConfig.addEventHandler(this);
 	}
 	
+	public void function onSiteRequestStart(required any rc) {
+		
+	}
 }
