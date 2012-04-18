@@ -208,11 +208,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getProductURL() {
-		return $.createHREF(filename="#setting('globalURLKeyProduct')#/#getURLTitle()#");
+		return request.muraScope.createHREF(filename="#setting('globalURLKeyProduct')#/#getURLTitle()#");
 	}
 	
-	public string function getListingProductURL(string filename=$.content('filename')) {
-		return $.createHREF(filename="#arguments.filename#/#setting('globalURLKeyProduct')#/#getURLTitle()#");
+	public string function getListingProductURL(string filename=request.muraScope.content('filename')) {
+		return request.muraScope.createHREF(filename="#arguments.filename#/#setting('globalURLKeyProduct')#/#getURLTitle()#");
 	}
 	
 	public string function getTemplate() {
@@ -224,7 +224,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getAlternateImageDirectory() {
-    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/";	
+    	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/";	
     }
     
     public numeric function getProductRating() {

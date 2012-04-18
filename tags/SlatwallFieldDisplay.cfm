@@ -62,18 +62,7 @@ Notes:
 	<cfparam name="attributes.displayType" default="dl" />								<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 	
 	<cfparam name="attributes.errors" type="array" default="#arrayNew(1)#" />			<!--- hint: This holds any errors for the current field if needed --->
-	<cfparam name="attributes.displayVisible" type="string" default="" />				<!--- hint: binds visibility of element to another property value (ie displayVisible="{inputname}:{inputvalue}") --->
-
-
-	<cfset attributes.fieldName = trim(attributes.fieldName) eq "" and structKeyExists(attributes,"property") ? attributes.property : attributes.fieldname />
 	
-	<!--- set up a js-friendly (no . or []) field handle from the field name  --->
-	<cfset fieldHandle = listFirst(attributes['fieldName'],'.[') />
-	<cfif trim(attributes.displayVisible) neq "">
-		<!--- set up a class hook for the field element so we can control visibility --->
-		<cfset attributes.fieldClass = len(attributes.fieldClass) gt 0 ? attributes.fieldClass & " #fieldHandle#Field" : "#fieldHandle#Field" />
-	</cfif>
-
 	<cfswitch expression="#attributes.displaytype#">
 		<!--- DL Case --->
 		<cfcase value="dl">
@@ -162,30 +151,4 @@ Notes:
 			</cfif>
 		</cfcase>
 	</cfswitch>
-	
-	<cfif trim(attributes.displayVisible) neq "">
-		<cfset propertyName = trim(listFirst(attributes.displayVisible,":")) />
-		<cfset propertyValue = trim(listLast(attributes.displayVisible,":")) />
-		<cfsavecontent variable="showHideScript">
-			<cfoutput>
-				<script type="text/javascript">
-					<cfif attributes.edit>
-					var $thisFormElement#fieldHandle# = $('form :input.#fieldHandle#Field').parents('div.control-group');
-					var $boundElement#fieldHandle# = $('form :input[name=#propertyName#]');
-					showOnPropertyValue($boundElement#fieldHandle#.val(),'#propertyValue#',$thisFormElement#fieldHandle#);
-					(function($){
-						$boundElement#fieldHandle#.change(function(){	
-							$selectedValue = $(this).val();
-							showOnPropertyValue( $selectedValue,'#propertyValue#',$thisFormElement#fieldHandle# );	
-						});
-					})(jQuery);
-					<cfelse>
-					showOnPropertyValue( $.trim($('.#propertyName#Value').html()),'#propertyValue#',$('.#fieldHandle#Title') );
-					showOnPropertyValue( $.trim($('.#propertyName#Value').html()),'#propertyValue#',$('.#fieldHandle#Value') );
-					</cfif>
-				</script>
-			</cfoutput>
-		</cfsavecontent>
-		<cfset request.footer &= showHideScript />
-	</cfif>
 </cfif>

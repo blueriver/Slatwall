@@ -69,7 +69,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
     }
     
     public string function getImageDirectory() {
-    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
+    	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }
 	
 	public array function getOptions(orderby, sortType="text", direction="asc") {

@@ -61,14 +61,13 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 
 		// Load Session
-		var currentSession = this.getSession(session.slatwall.sessionID);
+		var currentSession = this.getSession(session.slatwall.sessionID, true);
 		
-		// If No Session in Database create a new one.
-		if(isNull(currentSession)) {
-			currentSession = this.newSession();
+		
+		if(!structKeyExists(request, "muraScope")) {
+			request.muraScope = application.serviceFactory.getBean("muraScope").init(application.serviceFactory.getBean("contentServer").bindToDomain());
 		}
-		
-		// Setup account here
+
 		var cmsUser = request.muraScope.currentUser();
 		
 		if(cmsUser.isLoggedIn()) {

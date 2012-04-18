@@ -41,11 +41,10 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfif !rc.shippingMethod.isNew() && rc.shippingMethod.getShippingMethodRatesCount() lt 1>
-	<cfset rc.$.slatwall.showMessageKey('admin.detailshippingmethod.norates_info') />
+	<cfset request.slatwallScope.showMessageKey('admin.detailshippingmethod.norates_info') />
 </cfif>
 
 <cfoutput>
-	
 	<cf_SlatwallDetailForm object="#rc.shippingMethod#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.shippingMethod#" edit="#rc.edit#" backAction="admin:setting.detailfulfillmentMethod" backQueryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#">
 			<cf_SlatwallActionCaller action="admin:setting.createshippingmethodrate" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" type="list" />

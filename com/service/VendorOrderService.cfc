@@ -106,7 +106,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 				params['R:createdDateTime'] = "#dateStart#,#dateEnd#";
  			} else {
- 				arguments.data.message = #arguments.data.$.slatwall.rbKey("admin.vendorOrder.search.invaliddates")#;
+ 				arguments.data.message = #request.slatwallScope.rbKey("admin.vendorOrder.search.invaliddates")#;
  				arguments.data.messagetype = "warning";
  			}
 		}

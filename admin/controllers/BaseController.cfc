@@ -50,19 +50,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function subSystemBefore(required struct rc) {
-		/*
-		// If user is not logged in redirect to front end otherwise If the user does not have access to this, then display a page that shows "No Access"
-		if (!structKeyExists(session, "mura") || !len(rc.$.currentUser().getMemberships())) {
-			if(left(rc.$.siteConfig().getLoginURL(), 1) eq "/") {
-				location(url=rc.$.siteConfig().getLoginURL(), addtoken=false);
-			} else {
-				location(url="/#rc.$.siteConfig().getLoginURL()#", addtoken=false);	
-			}
-		} else if( getFW().secureDisplay(rc.slatAction) == false ) {
-			getFW().setView("admin:main.noaccess");
-		}
-		*/
-		
 		// Check to see if any message keys were passed via the URL
 		if(structKeyExists(rc, "messageKeys")) {
 			var messageKeys = listToArray(rc.messageKeys);

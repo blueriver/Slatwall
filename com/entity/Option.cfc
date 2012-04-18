@@ -79,7 +79,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
     }
     
     public string function getImageDirectory() {
-    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
+    	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }
     
     /******* Association management methods for bidirectional relationships **************/

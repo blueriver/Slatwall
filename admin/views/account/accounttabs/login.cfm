@@ -40,6 +40,6 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_SlatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="false" title="#request.slatwallScope.rbKey("define.email")# / #rc.$.Slatwall.rbKey("define.username")#">
+	<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="false" title="#request.slatwallScope.rbKey("define.email")# / #request.slatwallScope.rbKey("define.username")#">
 	<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">
 </cf_SlatwallPropertyList>

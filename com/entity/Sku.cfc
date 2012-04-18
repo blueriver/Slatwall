@@ -217,7 +217,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     
     // START: Image Methods
 	public string function getImageDirectory() {
-    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/default/";	
+    	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/default/";	
     }
     
     public string function getImagePath() {

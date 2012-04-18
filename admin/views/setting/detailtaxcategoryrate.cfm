@@ -48,7 +48,7 @@ Notes:
 		<cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyDisplay object="#rc.taxCategoryRate#" fieldname="taxcategoryrates[1].taxRate" property="taxrate" edit="#rc.edit#">
 			
-			<cfset rc.taxCategoryRate.getAddressZoneOptions()[1]["name"] = $.slatwall.rbKey('define.all') />
+			<cfset rc.taxCategoryRate.getAddressZoneOptions()[1]["name"] = request.slatwallScope.rbKey('define.all') />
 			<cf_SlatwallPropertyDisplay object="#rc.taxCategoryRate#" fieldname="taxcategoryrates[1].addressZone.addressZoneID" property="addressZone" edit="#rc.edit#">
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>

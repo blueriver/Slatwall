@@ -36,7 +36,6 @@
 Notes:
 
 --->
-<cfparam name="rc.$" type="any">
 <cfparam name="rc.cmsUserGroups" type="query">
 <cfparam name="rc.permissionActions" type="struct">
 <cfparam name="rc.permissionSettings" type="struct">
@@ -61,14 +60,14 @@ Notes:
 				<cfloop list="#local.allControllers#" index="local.controller">
 					<tr>
 						<td class="varWidth" style="background-color:##adceee;">
-							<cfif Right(rc.$.Slatwall.rbKey("admin.#local.controller#_permission"),8) neq "_missing">
-								<cfset local.thisControllerName = rc.$.Slatwall.rbKey("admin.#local.controller#_permission") />
+							<cfif Right(request.slatwallScope.rbKey("admin.#local.controller#_permission"),8) neq "_missing">
+								<cfset local.thisControllerName = request.slatwallScope.rbKey("admin.#local.controller#_permission") />
 							<cfelse>
-								<cfset local.thisControllerName = rc.$.Slatwall.rbKey("admin.#local.controller#") />
+								<cfset local.thisControllerName = request.slatwallScope.rbKey("admin.#local.controller#") />
 							</cfif>
 							
-							<cfif Right(rc.$.Slatwall.rbKey("admin.#local.controller#_hint"),8) neq "_missing">
-								<a href="##" class="tooltip"><strong>#local.thisControllerName#</strong><span>#rc.$.Slatwall.rbKey("admin.#local.controller#_hint")#</span></a>
+							<cfif Right(request.slatwallScope.rbKey("admin.#local.controller#_hint"),8) neq "_missing">
+								<a href="##" class="tooltip"><strong>#local.thisControllerName#</strong><span>#request.slatwallScope.rbKey("admin.#local.controller#_hint")#</span></a>
 							<cfelse>
 								<strong>#local.thisControllerName#</strong>
 							</cfif>

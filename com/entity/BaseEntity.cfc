@@ -42,11 +42,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
-		// Place reference to mura scope in entity
-		if(!structKeyExists(request, "muraScope")) {
-			request.muraScope = new mura.MuraScope('default');
-		}
-		variables.$ = request.muraScope;
 		
 		return super.init();
 	}

@@ -128,14 +128,10 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 
 	// Frontend Views
-	public void function detailViewUpdate(required struct rc) {
-
-	}
-	
 	public void function updateFrontendViews(required struct rc) {
 
 		var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
-		var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#rc.$.event('siteid')#/includes/display_objects/custom/slatwall/"));
+		var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#rc.siteid#/includes/display_objects/custom/slatwall/"));
 
 		getUtilityFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
 		getFW().redirect(action="admin:main");
@@ -148,7 +144,7 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.availableDevelopVersion = versions.develop;
 		rc.availableMasterVersion = versions.master;
 
-		rc.currentVersion = getPluginConfig().getApplication().getValue('SlatwallVersion');
+		rc.currentVersion = getFW().getValue('SlatwallVersion');
 		if(find("-", rc.currentVersion)) {
 			rc.currentBranch = "develop";
 		} else {
