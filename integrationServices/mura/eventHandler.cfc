@@ -21,6 +21,16 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		
 	}
 	
+	// For admin request start, we call the Slatwall Event Handler that gets the request setup
+	public void function onGlobalRequestStart(required any $) {
+		getSlatwallFW1Application().setupGlobalRequest();
+	}
+	
+	// For admin request end, we call the endLifecycle
+	public void function onGlobalRequestEnd(required any $) {
+		getSlatwallFW1Application().endSlatwallLifecycle();
+	}
+	
 	public void function onSiteRequestStart(required any $) {
 		
 		// Call the Slatwall Event Handler that gets the request setup
@@ -80,6 +90,11 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		}
 	}
 	
+	// At the end of a frontend request, we call the endLifecycle
+	public any function onSiteRequestEnd(required any $) {
+		getSlatwallFW1Application().endSlatwallLifecycle();
+	}
+	
 	// Hook into the onRender start so that we can do any slatActions that might have been called
 	public any function onRenderStart(required any $) {
 		if(len($.event('slatAction'))) {
@@ -87,11 +102,6 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 			abort;
 			$.content('body', $.content('body') & getSlatwallFW1Application().doAction($.event('slatAction')));
 		}
-	}
-	
-	// At the end of rendoring, lets clean up and persist any DB changes
-	public any function onRenderEnd(required any $) {
-		getSlatwallFW1Application().endSlatwallLifecycle();
 	}
 	
 	public void function onContentEdit(required any $) { 
