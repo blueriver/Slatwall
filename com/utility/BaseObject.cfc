@@ -928,11 +928,6 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// ========================= START: DELIGATION HELPERS ==========================================
 	
-	// @hint  helper function for returning the fw from the application scope
-	public any function getFW() {
-		return application.slatwall.fw;
-	}
-	
 	// @hint  helper function for returning the slatwallScope from the request scope
 	public any function getSlatwallScope() {
 		return request.slatwallScope;
@@ -940,7 +935,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  function for returning the any of the services in the application
 	public any function getService(required string serviceName) {
-		return getFW().getBeanFactory().getBean( arguments.serviceName );
+		return application.slatwallfw1.factory.getBean( arguments.serviceName );
 	}
 	
 	// @hint  rounding function
@@ -960,7 +955,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function the virtual file system directory
 	public any function getSlatwallVFSRootDirectory() {
-		return getFW().getValue("slatwallVfsRoot");
+		return getApplicationValue("slatwallVfsRoot");
 	}
 	
 	// @hint  helper function to get the database type
@@ -970,19 +965,19 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function to return the Slatwall RB Factory in any component
 	public any function getRBFactory() {
-		return getFW().getValue("rbFactory");
+		return getApplicationValue("rbFactory");
 	}
 	
 	// @hint  helper function for returning the Validate This Facade Object
 	public any function getValidateThis() {
-		return getFW().getValue("validateThis");
+		return getApplicationValue("validateThis");
 	}
 	
 	// @hint  helper function for returning the Validate This Facade Object
 	public any function getCFStatic() {
-		if( !getFW().hasValue("cfstatic") ) {
+		if( !hasApplicationValue("cfstatic") ) {
 			
-			getFW().setValue("cfstatic", createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
+			setApplicationValue("cfstatic", createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
 				staticDirectory = expandPath( '/plugins/Slatwall/assets/' ),
 				staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/assets/",
 				minifyMode = 'package',
@@ -992,7 +987,7 @@ component displayname="Base Object" accessors="true" output="false" {
 			
 		}
 		
-		return getFW().getValue("cfstatic");
+		return getApplicationValue("cfstatic");
 	}
 	
 	// @hint  helper function for returning a new API key for a specific resource for this session
@@ -1015,14 +1010,9 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getService("settingService").getSettingDetails(settingName=arguments.settingName, object=this, filterEntities=arguments.filterEntities);
 	}
 	
-	// @hint  helper function for building URL's
-	public string function buildURL() {
-		return getFW().buildURL(argumentCollection = arguments);
-	}
-	
 	// @hint  helper function for getting checking security
 	public boolean function secureDisplay() {
-		return getFW().secureDisplay(argumentCollection = arguments);
+		return getService("permissionService").secureDisplay(argumentCollection = arguments);
 	}
 	
 	// @hint  helper function for using the Slatwall Log service.
@@ -1035,9 +1025,38 @@ component displayname="Base Object" accessors="true" output="false" {
 		getService("utilityLogService").logException(exception=arguments.exception);		
 	}
 	
-	// @hint  helper function to get a bean for the underlying CMS (mura for now)
+	// @hint helper function to get a bean for the underlying CMS (mura for now)
 	public any function getCMSBean( required any beanName ) {
 		return application.serviceFactory.getBean( arguments.beanName );
+	}
+	
+	// @hint facade method to set values in the slatwall application scope 
+	public void function setApplicationValue(required any key, required any value) {
+		param name="application.slatwall" default="#structNew()#";
+		
+		application.slatwall[ arguments.key ] = arguments.value;
+	}
+	
+	// @hint facade method to get values from the slatwall application scope
+	public any function getApplicationValue(required any key) {
+		param name="application.slatwall" default="#structNew()#";
+		
+		if( structKeyExists(application.slatwall, arguments.key)) {
+			return application.slatwall[ arguments.key ];
+		}
+		
+		throw("You have requested a value for '#arguments.key#' from the core slatwall application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
+	}
+	
+	// @hint facade method to check the slatwall application scope for a value
+	public boolean function hasApplicationValue(required any key) {
+		param name="application.slatwall" default="#structNew()#";
+		
+		if(structKeyExists(application.slatwall, arguments.key)) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	

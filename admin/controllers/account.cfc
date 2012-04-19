@@ -38,10 +38,6 @@ Notes:
 */
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
-	property name="accountService";
-	property name="addressService";
-	property name="priceGroupService";
-	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.listaccount");
 	}

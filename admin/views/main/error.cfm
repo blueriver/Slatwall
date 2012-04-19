@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<!---
+
 <cfset arguments.exception = request.exception />
 <cfif structKeyExists(application,"configBean")>
 	<cfif not application.configBean.getDebuggingEnabled()>
@@ -50,4 +50,3 @@ Notes:
 	</cfif>
 </cfif>
 <cfabort>
---->

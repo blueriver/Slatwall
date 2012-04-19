@@ -38,4 +38,8 @@ Notes:
 */
 component extends="BaseService" output="false" {
 
+	// Uses the current mura user to check security against a given action
+	public boolean function secureDisplay(required string action) {
+		return true;
+	}
 }

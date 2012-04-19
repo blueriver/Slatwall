@@ -38,6 +38,8 @@ Notes:
 --->
 <cfparam name="attributes.object" type="any" default="" />
 
+<cfset variables.fw = caller.this />
+
 <cfif (not isObject(attributes.object) || not attributes.object.isNew()) and (not structKeyExists(request.context, "modal") or not request.context.modal)>
 	<cfif thisTag.executionMode is "end">
 		<cfoutput>
@@ -62,7 +64,7 @@ Notes:
 						<cfloop array="#thistag.tabs#" index="tab">
 							<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="tab#listLast(tab.view, '/')#">
 								<div class="row-fluid">
-									#request.slatwallScope.getFW().view(tab.view, {rc=request.context})#
+									#variables.fw.view(tab.view, {rc=request.context})#
 								</div>
 							</div>
 						</cfloop>

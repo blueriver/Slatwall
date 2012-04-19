@@ -1,10 +1,20 @@
 component extends="mura.plugin.pluginGenericEventHandler" {
+
+	private any function getSlatwallFW1Application() {
+		if(!structKeyExists(request, "slatwallFW1Application")) {
+			request.slatwallFW1Application = createObject("component", "Slatwall.Application");
+		}
+		return request.slatwallFW1Application;
+	}
 	
 	// On Application Load, we can clear the slatwall application key and register all of the methods in this eventHandler with the config
 	public void function onApplicationLoad() {
 		
 		// Set this object as an event handler
 		variables.pluginConfig.addEventHandler(this);
+		
+		// Load the Slatwall Application if Mura Reloads
+		getSlatwallFW1Application().onApplicationStart();
 		
 		// Setup slatwall as not initialized so that it loads on next request
 		application.slatwall.initialized = false;
@@ -13,12 +23,11 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 	public void function onSiteRequestStart(required any $) {
 		
-		getFW().setupGlobalRequest();
+		getSlatwallFW1Application().setupGlobalRequest();
+		
+		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwall.slatwallScope);
 		
 		/*
-		request.custommurascopekeys.slatwall = request.slatwallScope;
-		
-		
 		if( len($.event('path')) ) {
 			var keyLocation = listFind($.event('path'), request.slatwallScope.setting('globalURLKeyProduct'), "/");
 			
@@ -27,11 +36,9 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 			}
 		}
 		
-		
 		// Make sure that there is a path key in the rc first
 		if(structKeyExists(arguments.rc, "path")) {
 			// This hook is what enables SEO friendly product URL's... It is also what sets up the product in the slatwall scope, ext
-			
 			
 			if( keyLocation && keyLocation < listLen(rc.path,"/") ) {
 				// Load Product
@@ -64,20 +71,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 			}
 		}
 		*/
-	}
-	
-	
-	
-	// ============ Start: Helpers ================
-	private void function doAction() {
 		
 	}
 	
-	private any function getFW() {
-		if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "fw")) {
-			application.slatwall = {};
-			application.slatwall.fw = createObject("component", "Slatwall.Application");
-		}
-		return application.slatwall.fw;
-	}
 }

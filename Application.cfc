@@ -89,40 +89,14 @@ component extends="org.fw1.framework" output="false" {
 	
 	this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
 	
-	public void function setValue(required any key, required any value) {
-		param name="application.slatwall" default="#structNew()#";
-		
-		application.slatwall[ arguments.key ] = arguments.value;
-	}
-	
-	public any function getValue(required any key) {
-		param name="application.slatwall" default="#structNew()#";
-		
-		if( structKeyExists(application.slatwall, arguments.key)) {
-			return application.slatwall[ arguments.key ];	
-		}
-		
-		throw("You have requested a value for '#arguments.key#' from the core slatwall application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
-	}
-	
-	public boolean function hasValue(required any key) {
-		param name="application.slatwall" default="#structNew()#";
-		
-		if(structKeyExists(application.slatwall, arguments.key)) {
-			return true;	
-		}
-		
-		return false;
-	}
-	
 	public void function verifyApplicationSetup() {
 		
 		if(structKeyExists(url, variables.framework.reload)) {
-			application.slatwall.initialized = false;
+			request.slatwallScope.setApplicationValue("initialized", false);
 		}
 		
 		// Check to see if out application stuff is initialized
-		if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
+		if(!request.slatwallScope.hasApplicationValue("initialized") || !request.slatwallScope.getApplicationValue("initialized")) {
 			
 			// If not, lock the application until this is finished
 			lock scope="Application" timeout="120"  {
@@ -133,26 +107,23 @@ component extends="org.fw1.framework" output="false" {
 					// Log that the application is starting it's setup
 					writeLog(file="Slatwall", text="Application Setup Started");
 					
+					request.slatwallScope.setApplicationValue("initialized", false);
 					
-					setValue("initialized", false);
+					request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
 					
-					setValue("fw", this);
-					
-					setValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
-					
-					setValue("validateThis", new ValidateThis.ValidateThis({definitionPath = "/Slatwall/com/validation/",injectResultIntoBO = true,defaultFailureMessagePrefix = ""}));
+					request.slatwallScope.setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = "/Slatwall/com/validation/",injectResultIntoBO = true,defaultFailureMessagePrefix = ""}));
 					
 					// Make sure the correct version is in the application scope
 					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
 					if( fileExists( versionFile ) ) {
-						setValue("version", trim(fileRead(versionFile)));
+						request.slatwallScope.setApplicationValue("version", trim(fileRead(versionFile)));
 					} else {
-						setValue("version", "unknown");
+						request.slatwallScope.setApplicationValue("version", "unknown");
 					}
 					
 					// Set vfs root for slatwall 
-					if(!directoryExists( getValue("slatwallVfsRoot") )) {
-						directoryCreate( getValue("slatwallVfsRoot") );
+					if(!directoryExists( request.slatwallScope.getApplicationValue("slatwallVfsRoot") )) {
+						directoryCreate( request.slatwallScope.getApplicationValue("slatwallVfsRoot") );
 					}
 					
 					// This will force the Taffy API to reload on next request
@@ -171,7 +142,7 @@ component extends="org.fw1.framework" output="false" {
 					var rbFactory = "";
 					var xml = "";
 					var xmlPath = "";
-			
+
 				    xmlPath = expandPath( '/Slatwall/config/coldspring.xml' );
 					xml = xmlParse(FileRead("#xmlPath#")); 
 					
@@ -183,12 +154,11 @@ component extends="org.fw1.framework" output="false" {
 					integrationService = serviceFactory.getBean("integrationService");
 					serviceFactory = integrationService.updateColdspringWithDataIntegration( serviceFactory, xml );
 					
-					// Place the service factory into the required application scopes
+					// Now place the service factory as the fw1 bean
 					setBeanFactory( serviceFactory );
 					
 					//========================= END: Coldsping Setup =========================
-					
-					
+
 					// Build RB Factory
 					rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
 					application.slatwall.rbFactory = rbFactory;
@@ -210,7 +180,7 @@ component extends="org.fw1.framework" output="false" {
 					muraIntegrationService.setupIntegration();
 					
 					// Set initialized to true
-					setValue("initialized", true);
+					request.slatwallScope.setApplicationValue("initialized", true);
 					
 					// Log that the application is finished setting up
 					writeLog(file="Slatwall", text="Application Setup Complete");
@@ -220,14 +190,14 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupGlobalRequest() {
+		// Set up Slatwall Scope inside of request
+		request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
+		
 		// Verify that the application is setup
 		verifyApplicationSetup();
 		
 		// Run Sku Cache & Product Cache Update Threads if needed
 		getBeanFactory().getBean("productCacheService").executeProductCacheUpdates();
-		
-		// Set up Slatwall Scope inside of request
-		request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
 		
 		// Confirm Session Setup
 		request.slatwallScope.getCurrentSession();
@@ -241,7 +211,7 @@ component extends="org.fw1.framework" output="false" {
 		var structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
 		if(structCount(structuredData)) {
 			structAppend(request.context, structuredData);	
-		}	
+		}
 		
 		// Run subsytem specific logic.
 		if(getSubsystem(request.context.slatAction) == "admin") {
@@ -252,6 +222,8 @@ component extends="org.fw1.framework" output="false" {
 			request.context.sectionTitle = getSubsystem(request.context.slatAction);
 			request.context.itemTitle = getSection(request.context.slatAction);
 		}
+		
+		writeLog(file="Slatwall", text="Setup Request Finished");
 	}
 	
 	public void function setupView() {
@@ -304,36 +276,6 @@ component extends="org.fw1.framework" output="false" {
 		}
 	}
 	
-	// Uses the current mura user to check security against a given action
-	public boolean function secureDisplay(required string action) {
-		var hasAccess = false;
-		var permissionName = UCASE("PERMISSION_#getSubsystem(arguments.action)#_#getSection(arguments.action)#_#getItem(arguments.action)#");
-		
-		if(getSubsystem(arguments.action) != "admin") {
-			hasAccess = true;
-		} else {
-			if(request.muraScope.currentUser().getS2()) {
-				hasAccess = true;
-			} else if (listLen( request.context.$.currentUser().getMemberships() ) >= 1) {
-				var rolesWithAccess = "";
-				if(find("save", permissionName)) {
-					rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "edit")); 
-					listAppend(rolesWithAccess, application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "update")));
-				} else {
-					rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=permissionName);
-				}
-				
-				for(var i=1; i<= listLen(rolesWithAccess); i++) {
-					if( find( listGetAt(rolesWithAccess, i), request.context.$.currentUser().getMemberships() ) ) {
-						hasAccess=true;
-						break;
-					}
-				}
-			}
-		}
-		return hasAccess;
-	}
-	
 	// Allows for integration services to have a seperate directory structure
 	public any function getSubsystemDirPrefix( string subsystem ) {
 		if ( subsystem eq '' ) {
@@ -356,7 +298,5 @@ component extends="org.fw1.framework" output="false" {
 		endSlatwallLifecycle();
 		
 	}
-	
-	
 	
 }

@@ -50,6 +50,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function subSystemBefore(required struct rc) {
+		rc.fw = getFW();
+		
 		// Check to see if any message keys were passed via the URL
 		if(structKeyExists(rc, "messageKeys")) {
 			var messageKeys = listToArray(rc.messageKeys);
@@ -136,6 +138,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
 			}
 		}
+		
 	}
 	
 	// Implicit onMissingMethod() to handle standard CRUD
