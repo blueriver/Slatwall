@@ -60,6 +60,7 @@ Notes:
 	<settings />
 	<eventHandlers>
 		<eventHandler event="onApplicationLoad" component="integrationServices.mura.eventHandler" persist="false"/>
+		<eventHandler event="onContentEdit" component="integrationServices.mura.eventHandler" persist="false"/>
 	</eventHandlers>
 	<displayObjects />
 </plugin>
