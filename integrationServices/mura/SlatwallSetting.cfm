@@ -43,10 +43,14 @@ Notes:
 	<cfparam name="attributes.settingDetails" type="any" default="" />
 	
 	<cfif isObject(attributes.settingObject)>
-		<cfset attributes.settingDetails = attributes.settingObject.getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
+	<cfset attributes.settingDetails = attributes.settingObject.getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
 	<cfelse>
-		<cfset attributes.settingDetails = request.slatwallScope.getService("settingService").getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
+	<cfset attributes.settingDetails = request.slatwallScope.getService("settingService").getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
 	</cfif>
-	
-	<cfassociate basetag="cf_SlatwallSettingTable" datacollection="settings">
+	<cfif request.slatwallScope.getService("settingService").getSettingMetaData(attributes.settingName).fieldType EQ "select">
+	<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("setting.#attributes.settingName#_hint")#" fieldName="slatwallData.setting.#attributes.settingName#" fieldType="#request.slatwallScope.getService("settingService").getSettingMetaData(attributes.settingName).fieldType#" valueOptions="#request.slatwallScope.getService("settingService").getSettingOptions(attributes.settingName)#" value="#attributes.settingDetails.settingValueFormatted#" edit="true">
+	<cfelse>
+	<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("setting.#attributes.settingName#_hint")#" fieldName="slatwallData.setting.#attributes.settingName#" fieldType="#request.slatwallScope.getService("settingService").getSettingMetaData(attributes.settingName).fieldType#" value="#attributes.settingDetails.settingValueFormatted#" edit="true">
+	</cfif>
+	<!---#thisSetting.settingDetails.settingValueFormatted#--->
 </cfif>

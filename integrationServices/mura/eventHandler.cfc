@@ -105,9 +105,6 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	}
 	
 	public void function onContentEdit(required any $) { 
-		// setup slatwall request
-		getSlatwallFW1Application().setupGlobalRequest();
-		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 		include "onContentEdit.cfm";
 	}
 	
