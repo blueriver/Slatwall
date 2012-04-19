@@ -121,7 +121,7 @@ Notes:
 <cfif attributes.disabled>
     <cfset attributes.disabledtext = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
 	<cfif right(attributes.disabledtext, "8") eq "_missing">
-		<cfset attributes.disabledtext = replace(request.request.slatwallScope.rbKey("admin.define.delete_disabled"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
+		<cfset attributes.disabledtext = replace(request.slatwallScope.rbKey("admin.define.delete_disabled"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
 	</cfif>
 	<cfset attributes.class &= " disabled alert-disabled" />
 	<cfset attributes.confirm = false />
