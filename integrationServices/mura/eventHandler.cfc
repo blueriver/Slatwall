@@ -95,12 +95,19 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		getSlatwallFW1Application().endSlatwallLifecycle();
 	}
 	
-	// Hook into the onRender start so that we can do any slatActions that might have been called
+	// Hook into the onRender start so that we can do any slatActions that might have been called, or if the current content is a listing page
 	public any function onRenderStart(required any $) {
+		// Check for any slatActions that might have been passed in
 		if(len($.event('slatAction'))) {
-			writeDump($.event('slatAction'));
-			abort;
 			$.content('body', $.content('body') & getSlatwallFW1Application().doAction($.event('slatAction')));
+		}
+		
+		// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
+		$.slatwall.setCurrentContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
+		
+		// Check to see if the current content is a listing page, so that we add our frontend view to the content body
+		if(isBoolean($.slatwall.getCurrentContent().setting('contentProductListingFlag')) && $.slatwall.getCurrentContent().setting('contentProductListingFlag')) {
+			$.content('body', $.content('body') & getSlatwallFW1Application().doAction('frontend:product.listcontentproducts'));
 		}
 	}
 	
