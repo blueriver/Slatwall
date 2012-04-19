@@ -41,12 +41,14 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	// Persistent Properties
 	property name="scheduleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="scheduleName" ormtype="string";
-	property name="frequency" ormtype="integer";
-	property name="recursInterval" ormtype="string";
-	property name="recursWeekDays" ormtype="string";
-	property name="recursMonthDays" ormtype="string";
-	property name="startTime" ormtype="timestamp";
-	property name="endTime" ormtype="timestamp";
+	
+	property name="recuringType" ormtype="string";			// Daily, Weekly, Monthly										Daily	
+	property name="recuringInterval" ormtype="integer";		// 1 - x														1		
+	property name="daysOfWeekToRun" ormtype="string";		// 1, 2, 3, 4, 5, 6, 7											NULL	(required if recuringType is weekly)
+	property name="daysOfMonthToRun" ormtype="string";		// 1 - 31			[1,10,20]									NULL	(required if recuringType is monthly)
+	property name="frequencyInterval" ormtype="integer";	// 1 - x (minutes)												15		
+	property name="frequencyStartTime" ormtype="timestamp";	//																4 PM	
+	property name="frequencyEndTime" ormtype="timestamp";	//																12 PM	
 	
 	
 	// Related Object Properties (many-to-one)

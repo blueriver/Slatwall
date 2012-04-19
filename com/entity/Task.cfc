@@ -44,6 +44,7 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	property name="activeFlag" ormtype="boolean" formatType="yesno";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
+	property name="nextRunDateTime" ormtype="timestamp";
 		
 	// Related Object Properties (many-to-one)
 	property name="schedule" cfc="Schedule" fieldtype="many-to-one" fkcolumn="scheduleID";
