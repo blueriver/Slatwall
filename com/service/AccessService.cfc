@@ -61,7 +61,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(!isNull(restrictedContent.getAllowPurchaseFlag()) && restrictedContent.getAllowPurchaseFlag()) {
 			// check if the content was purchased
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
-			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=request.muraScope.slatwall.getCurrentAccount().getAccountID());
+			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=request.slatwallScope.getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=restrictedContent.getContentID());
 			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
 				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
@@ -73,7 +73,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		} else if((isNull(restrictedContent.getAllowPurchaseFlag()) || !restrictedContent.getAllowPurchaseFlag()) && !isNull(purchaseRequiredContent)) {
 			// check if any parent content was purchased
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
-			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=request.muraScope.getCurrentAccount().getAccountID());
+			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=request.slatwallScope.getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=purchaseRequiredContent.getContentID());
 			// check if the content requires subcription in addition to purchase
 			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
