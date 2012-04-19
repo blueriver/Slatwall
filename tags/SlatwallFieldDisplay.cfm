@@ -78,11 +78,11 @@ Notes:
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
-					<dt class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></dt>
+					<dt class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></dt>
 					<cfif attributes.valueLink neq "">
-						<dd class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></dd>
+						<dd class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></dd>
 					<cfelse>
-						<dd class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</dd>
+						<dd class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</dd>
 					</cfif>
 				</cfoutput>
 			</cfif>
@@ -92,8 +92,8 @@ Notes:
 			<cfif attributes.edit>
 				<cfoutput>
 					<tr>
-						<td class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></td>
-						<td class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
+						<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></td>
+						<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
 							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
 							<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 						</td>
@@ -102,11 +102,11 @@ Notes:
 			<cfelse>
 				<cfoutput>
 					<tr>
-						<td class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
+						<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
 						<cfif attributes.valueLink neq "">
-							<td class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
+							<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
 						<cfelse>
-							<td class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</td>
+							<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</td>
 						</cfif>
 					</tr>
 				</cfoutput>
@@ -116,19 +116,19 @@ Notes:
 		<cfcase value="span">
 			<cfif attributes.edit>
 				<cfoutput>
-					<span class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></span>
-					<span class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
+					<span class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></span>
+					<span class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
 						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
 						<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 					</span>
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
-					<span class="#fieldHandle#Title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif>: </span>
+					<span class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif>: </span>
 					<cfif attributes.valueLink neq "">
-						<span class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></span>
+						<span class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></span>
 					<cfelse>
-						<span class="#fieldHandle#Value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</span>
+						<span class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</span>
 					</cfif>
 				</cfoutput>
 			</cfif>

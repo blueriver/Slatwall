@@ -44,6 +44,7 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	
 	property name="title" ormtype="string";
 	property name="cmsContentID" ormtype="string";
+	property name="cmsContentIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
 	
 	property name="allowPurchaseFlag" ormtype="boolean";  // property

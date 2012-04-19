@@ -38,6 +38,7 @@ Notes:
 globalOrderNumberGeneration
 globalEncryptionKeySize
 
+
 --->
 <cfcomponent extends="BaseService" output="false" accessors="true">
 
@@ -74,7 +75,7 @@ globalEncryptionKeySize
 			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
 			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
-			content = ["contentIDPath"],
+			content = ["contentIDPath", "cmsContentID", "cmsContentIDPath"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"]
 		};
 		
@@ -411,6 +412,18 @@ globalEncryptionKeySize
 				allSettings
 				WHERE
 					LOWER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
+				  AND
+					<cfif structKeyExists(settingRelationships, "contentID")>
+						LOWER(allSettings.contentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.contentID)#" > 
+					<cfelse>
+						allSettings.contentID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "cmsContentID")>
+						LOWER(allSettings.cmsContentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.cmsContentID)#" > 
+					<cfelse>
+						allSettings.cmsContentID IS NULL
+					</cfif>
 				  AND
 					<cfif structKeyExists(settingRelationships, "productTypeID")>
 						LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 

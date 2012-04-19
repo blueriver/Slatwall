@@ -43,6 +43,9 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="settingName" ormtype="string";
 	property name="settingValue" ormtype="string";
 	
+	// Non-Constrained related entity
+	property name="cmsContentID" ormtype="string";
+	
 	// Related Object Properties (many-to-one)
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="content" cfc="Content" fieldtype="many-to-one" fkcolumn="contentID";
