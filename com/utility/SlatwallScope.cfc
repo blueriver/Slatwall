@@ -78,7 +78,7 @@ component accessors="true" output="false" extends="BaseObject" {
 				variables.currentContent = getService("contentService").getContentByCMSContentID(getCurrentCMSContentID(), true);
 			}
 		}
-		return variables.currentProduct;
+		return variables.currentContent;
 	}
 	
 	public any function getCurrentAccount() {
@@ -100,6 +100,7 @@ component accessors="true" output="false" extends="BaseObject" {
 				variables.currentCart = getService("orderService").newOrder();	
 			}
 		}
+		return variables.currentCart;
 	}
 	
 	public any function getCurrentSession() {
@@ -109,6 +110,7 @@ component accessors="true" output="false" extends="BaseObject" {
 		return variables.currentSession;
 	}
 	
+	/*
 	private struct function getProductListData(string contentID="") {
 		var data = {};
 		
@@ -254,16 +256,13 @@ component accessors="true" output="false" extends="BaseObject" {
 			return getService("sessionService");	
 		}
 	}
-	
+	*/
 	public boolean function hasValue(required string key) {
-		if(structKeyExists(variables, arguments.key)) {
-			return true; 
-		}
-		return false;
+		return structKeyExists(variables, arguments.key);
 	}
 
 	public any function getValue(required string key) {
-		if(structKeyExists(variables, arguments.key)) {
+		if(hasValue( arguments.key )) {
 			return variables[ arguments.key ]; 
 		}
 		

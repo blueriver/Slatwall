@@ -57,6 +57,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		
 		if(!structKeyExists(request, "muraScope")) {
+			
 			request.muraScope = application.serviceFactory.getBean("muraScope").init(application.serviceFactory.getBean("contentServer").bindToDomain());
 		}
 

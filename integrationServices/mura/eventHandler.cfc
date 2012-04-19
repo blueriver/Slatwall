@@ -6,10 +6,8 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		// Set this object as an event handler
 		variables.pluginConfig.addEventHandler(this);
 		
-		// Clear out Slatwall from the application so that it gets automatically reloaded on the next request
-		if(structKeyExists(application, "slatwall")) {
-			structDelete(application, "slatwall");
-		}
+		// Setup slatwall as not initialized so that it loads on next request
+		application.slatwall.initialized = false;
 		
 	}
 	
@@ -18,7 +16,8 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		getFW().setupGlobalRequest();
 		
 		/*
-		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+		request.custommurascopekeys.slatwall = request.slatwallScope;
+		
 		
 		if( len($.event('path')) ) {
 			var keyLocation = listFind($.event('path'), request.slatwallScope.setting('globalURLKeyProduct'), "/");
