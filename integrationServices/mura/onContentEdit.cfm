@@ -36,12 +36,13 @@
 Notes:
 
 --->
+
 <cfset slatwallContent = getService("contentService").getContentByCmsContentID($.content("contentID"),true) />
 <cfset slatwallProductSmartList = getService("productService").getSmartList(entityName="SlatwallProduct") />
 <cfset slatwallProductSmartList.addFilter(propertyIdentifier="productType_systemCode", value="contentAccess") />
 <cfset slatwallProducts = slatwallProductSmartList.getRecords() />
 <cfset restrictedContentTemplates = getService("contentService").listContentFilterByTemplateFlag(1) />
-<!---<cfset restrictedParent = false />
+<cfset restrictedParent = false />
 <cfset purchaseRequiredParent = false />
 <cfset subscriptionRequiredParent = false />
 <cfif Not $.content().getIsNew()>
@@ -58,13 +59,13 @@ Notes:
 	<cfif !isNull(subscriptionRequiredContent) AND subscriptionRequiredContent.getcmsContentID() NEQ $.content("contentID")>
 		<cfset subscriptionRequiredParent = true />
 	</cfif>
-</cfif>--->
+</cfif>
 <cfoutput>
-	<!---<cfif restrictedParent>
+	<cfif restrictedParent>
 		<input type="hidden" name="slatwallData.templateFlag" value="0" />
-		<input type="hidden" name="slatwallData.productListingFlag" value="0" />
-		<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />
-	</cfif>--->
+		<!---<input type="hidden" name="slatwallData.productListingFlag" value="0" />
+		<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />--->
+	</cfif>
 	<cfoutput>
 		<cf_SlatwallSettingTable>
 			<cf_SlatwallSetting settingName="contentRestrictAccessFlag" settingObject="#slatwallContent#" />
@@ -176,7 +177,7 @@ Notes:
 <!--- remove this when slatwall scope is available in $ --->
 <cffunction name="getService" access="private">
 	<cfargument name="serviceName" /> 
-	<cfreturn application.slatwall.pluginconfig.getApplication().getValue("serviceFactory").getBean(serviceName) />
+	<cfreturn application.slatwallfw1.factory.getBean(serviceName) />
 </cffunction> 
 
 <cfoutput>

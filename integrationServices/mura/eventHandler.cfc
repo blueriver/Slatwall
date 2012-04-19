@@ -25,7 +25,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		
 		getSlatwallFW1Application().setupGlobalRequest();
 		
-		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwall.slatwallScope);
+		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 		
 		/*
 		if( len($.event('path')) ) {
@@ -74,4 +74,10 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		
 	}
 	
+	public void function onContentEdit(required any $) { 
+		// setup slatwall request
+		getSlatwallFW1Application().setupGlobalRequest();
+		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+		include "onContentEdit.cfm";
+	}
 }
