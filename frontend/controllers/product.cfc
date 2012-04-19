@@ -41,8 +41,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="productService" type="any";
 	
 	public void function detail(required struct rc) {
-		rc.$.content().setTitle(rc.$.slatwall.product().getTitle());
-		rc.$.content().setHTMLTitle(rc.$.slatwall.product().getTitle());
+		
 	}
 	
 	public void function addReview(required struct rc) {

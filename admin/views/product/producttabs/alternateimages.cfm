@@ -36,6 +36,9 @@
 Notes:
 
 --->
+
+<cfoutput>
+<!---
 <cfoutput>
 	<cfset local.images = rc.product.getImages() />
 	<cfif arrayLen(local.images)>
@@ -101,4 +104,5 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" fieldName="imageDescription" fieldType="textarea" edit="true" toggle="hide">
 		</dl>--->
 	</cfif>	
+	--->
 </cfoutput>

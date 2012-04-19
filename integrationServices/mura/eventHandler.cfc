@@ -23,55 +23,75 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 	public void function onSiteRequestStart(required any $) {
 		
+		// Call the Slatwall Event Handler that gets the request setup
 		getSlatwallFW1Application().setupGlobalRequest();
 		
+		// Setup the newly create slatwallScope into the muraScope
 		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 		
-		/*
+		// If we aren't on the homepage we can do our own URL inspection
 		if( len($.event('path')) ) {
-			var keyLocation = listFind($.event('path'), request.slatwallScope.setting('globalURLKeyProduct'), "/");
 			
-			if( keyLocation && keyLocation < listLen($.event('path'),"/") ) {
+			// Inspect the path looking for slatwall URL key, and then setup the proper objects in the slatwallScope
+			var brandKeyLocation = 0;
+			var productKeyLocation = 0;
+			var productTypeKeyLocation = 0;
+			if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/")) {
+				brandKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/");
+				if(brandKeyLocation < listLen($.event('path'),"/")) {
+					$.slatwall.setCurrentBrand( $.slatwall.getService("brandService").getBrandByURLTitle(listGetAt($.event('path'), brandKeyLocation + 1, "/"), true) );
+				}
+			}
+			if(listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/")) {
+				productKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/");
+				if(productKeyLocation < listLen($.event('path'),"/")) {
+					$.slatwall.setCurrentProduct( $.slatwall.getService("productService").getProductByURLTitle(listGetAt($.event('path'), productKeyLocation + 1, "/"), true) );	
+				}
+			}
+			if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/")) {
+				productTypeKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/");
+				if(productTypeKeyLocation < listLen($.event('path'),"/")) {
+					$.slatwall.setCurrentProductType( $.slatwall.getService("productService").getProductTypeByURLTitle(listGetAt($.event('path'), productTypeKeyLocation + 1, "/"), true) );
+				}
+			}
+			
+			// Setup the proper content node and populate it with our FW/1 view on any keys that might have been found, use whichever key was farthest right
+			if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProduct().isNew() && $.slatwall.getCurrentProduct().getActiveFlag() && $.slatwall.getCurrentProduct().getPublishedFlag()) {
+				$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProduct().setting('productDisplayTemplate')));
+				$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
+				$.content('body', $.content('body') & getSlatwallFW1Application().doAction('frontend:product.detail'));
+				$.content().setTitle( $.slatwall.getCurrentProduct().getTitle() );
+				$.content().setHTMLTitle( $.slatwall.getCurrentProduct().getTitle() );
 				
+			} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() && $.slatwall.getCurrentProductType().getPublishedFlag() ) {
+				$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate')));
+				$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
+				$.content('body', $.content('body') & getSlatwallFW1Application().doAction('frontend:producttype.detail'));
+				$.content().setTitle( $.slatwall.getCurrentProductType().getTitle() );
+				$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getTitle() );
+				
+			} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag() && $.slatwall.getCurrentProductType().getPublishedFlag()  ) {
+				$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate')));
+				$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
+				$.content('body', $.content('body') & getSlatwallFW1Application().doAction('frontend:brand.detail'));
+				$.content().setTitle( $.slatwall.getCurrentBrand().getTitle() );
+				$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getTitle() );
 			}
 		}
-		
-		// Make sure that there is a path key in the rc first
-		if(structKeyExists(arguments.rc, "path")) {
-			// This hook is what enables SEO friendly product URL's... It is also what sets up the product in the slatwall scope, ext
-			
-			if( keyLocation && keyLocation < listLen(rc.path,"/") ) {
-				// Load Product
-				getRequestCacheService().setValue("currentProductURLTitle", listGetAt(rc.path, keyLocation+1, "/"));
-				var product = getProductService().getProductByURLTitle(getRequestCacheService().getValue("currentProductURLTitle"));
-				
-				// If Product Exists, is Active, and is published then put the product in the slatwall scope and setup product template for muras contentBean to be loaded later
-				if(!isNull(product) && product.getActiveFlag() && product.getPublishedFlag()) {
-					getRequestCacheService().setValue("currentProduct", product);
-					getRequestCacheService().setValue("currentProductID", product.getProductID());
-					rc.$.event('slatAction', 'frontend:product.detail');
-					rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.setting('productDisplayTemplate'), rc.$.event('siteid'), true));
-					
-					// Check if this came from a product listing page and setup the base crumb list array
-					if( keyLocation gt 2) {
-						var listingPageFilename = left(rc.path, find("/#setting('globalURLKeyProduct')#/", rc.path)-1);
-						listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
-						getRequestCacheService().setValue("currentListingPageOfProduct", getContentManager().getActiveContentByFilename(listingPageFilename, rc.$.event('siteid'), true));
-						var crumbDataArray = getRequestCacheService().getValue("currentListingPageOfProduct").getCrumbArray();
-					} else {
-						var crumbDataArray = getContentManager().getCrumbList(contentID="00000000000000000000000000000000001", siteID=rc.$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
-					}
-					
-					// add the product to the base crumb list array
-					arrayPrepend(crumbDataArray, product.getCrumbData(path=rc.path, siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
-					
-					// Push the new crumb list into the event
-					rc.$.event('crumbdata', crumbDataArray);
-				}	
-			}
+	}
+	
+	// Hook into the onRender start so that we can do any slatActions that might have been called
+	public any function onRenderStart(required any $) {
+		if(len($.event('slatAction'))) {
+			writeDump($.event('slatAction'));
+			abort;
+			$.content('body', $.content('body') & getSlatwallFW1Application().doAction($.event('slatAction')));
 		}
-		*/
-		
+	}
+	
+	// At the end of rendoring, lets clean up and persist any DB changes
+	public any function onRenderEnd(required any $) {
+		getSlatwallFW1Application().endSlatwallLifecycle();
 	}
 	
 	public void function onContentEdit(required any $) { 
@@ -80,4 +100,6 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 		include "onContentEdit.cfm";
 	}
+	
+	
 }

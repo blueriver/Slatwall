@@ -39,46 +39,20 @@ Notes:
 component accessors="true" output="false" extends="BaseObject" {
 
 	property name="ormHasErrors";
-	property name="currentProductID";
-	property name="currentProductURLTitle";
-	property name="currentContentID";
-	property name="currentCMSContentID";
 	
-	property name="currentProduct";
-	property name="currentContent";
-	property name="currentProductList";
-	property name="currentCart";
 	property name="currentAccount";
+	property name="currentBrand";
+	property name="currentCart";
+	property name="currentContent";
+	property name="currentProduct";
+	property name="currentProductType";
+	property name="currentProductSmartList";
 	property name="currentSession";
 	
 	public any function init() {
 		setORMHasErrors(false);
-		setCurrentProductID("");
-		setCurrentProductURLTitle("");
-		setCurrentContentID("");
-		setCurrentCMSContentID("");
 		
 		return this;
-	}
-	
-	public any function getCurrentProduct() {
-		if(!structKeyExists(variables, "currentProduct")) {
-			variables.currentProduct = getService("productService").getProduct(getCurrentProductID());
-			if( isNull(variables.currentProduct) ) {
-				variables.currentProduct = getService("productService").getProductByURLTitle(getCurrentProductURLTitle(), true);
-			}
-		}
-		return variables.currentProduct;
-	}
-	
-	public any function getCurrentContent() {
-		if(!structKeyExists(variables, "currentContent")) {
-			variables.currentContent = getService("contentService").getContent(getCurrentContentID());
-			if(isNull(variables.currentContent)) {
-				variables.currentContent = getService("contentService").getContentByCMSContentID(getCurrentCMSContentID(), true);
-			}
-		}
-		return variables.currentContent;
 	}
 	
 	public any function getCurrentAccount() {
@@ -86,10 +60,17 @@ component accessors="true" output="false" extends="BaseObject" {
 			if(!isNull(getCurrentSession().getAccount())) {
 				variables.currentAccount = getCurrentSession().getAccount();
 			} else {
-				variables.currentAccount = getService("AccountService").newAccount();
+				variables.currentAccount = getService("accountService").newAccount();
 			}
 		}
 		return variables.currentAccount;
+	}
+	
+	public any function getCurrentBrand() {
+		if(!structKeyExists(variables, "currentBrand")) {
+			variables.currentBrand = getService("brandService").newBrand();
+		}
+		return variables.currentBrand;
 	}
 	
 	public any function getCurrentCart() {
@@ -103,6 +84,41 @@ component accessors="true" output="false" extends="BaseObject" {
 		return variables.currentCart;
 	}
 	
+	public any function getCurrentContent() {
+		if(!structKeyExists(variables, "currentContent")) {
+			variables.currentContent = getService("contentService").newContent();
+		}
+		return variables.currentContent;
+	}
+	
+	public any function getCurrentProduct() {
+		if(!structKeyExists(variables, "currentProduct")) {
+			variables.currentProduct = getService("productService").newProduct();
+		}
+		return variables.currentProduct;
+	}
+	
+	public any function getCurrentProductType() {
+		if(!structKeyExists(variables, "currentProductType")) {
+			variables.currentProductType = getService("productService").newProductType();
+		}
+		return variables.currentProductType;
+	}
+	
+	public any function getCurrentProductSmartList() {
+		if(!structKeyExists(variables, "currentProductSmartList")) {
+			variables.currentProductSmartList = getService("productService").getProductSmartList(data=url);
+			variables.currentProductSmartList.addFilter('activeFlag', 1);
+			variables.currentProductSmartList.addFilter('publishedFlag', 1);
+			if(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
+				variables.currentProductSmartList.addLikeFilter('listingPages.cmsContentIDPath', getCurrentContent().getCMSContentID());	
+			} else {
+				variables.currentProductSmartList.addLikeFilter('listingPages.cmsContentID', getCurrentContent().getCMSContentID());
+			}
+		}
+		return variables.currentProductSmartList;
+	}
+	
 	public any function getCurrentSession() {
 		if(!structKeyExists(variables, "currentSession")) {
 			variables.currentSession = getService("sessionService").getPropperSession();
@@ -110,79 +126,7 @@ component accessors="true" output="false" extends="BaseObject" {
 		return variables.currentSession;
 	}
 	
-	/*
-	private struct function getProductListData(string contentID="") {
-		var data = {};
-		
-		// Setup Basic Filters
-		data["F:activeFlag"] = 1;
-		data["F:publishedFlag"] = 1;
-		if(structKeyExists(request, "context")) {
-			structAppend(data, request.context);
-		} else {
-			structAppend(data, form);
-			structAppend(data, url);
-		}
-		
-		// Setup Category stuff
-		if($.event("categoryID") != "") {
-			data["F:productCategories_categoryID"] = $.event("categoryID");
-		}
-		
-		// Setup Content Related filters and settings
-		if(len(arguments.contentID)) {
-			if(arguments.contentID == $.content('contentID')) {
-				var contentBean = $.content();
-			} else {
-				var contentBean = $.getBean("content").loadBy(contentID=arguments.contentID, siteID=$.event('siteID'));
-			}
-			
-			if(contentBean.getShowSubPageProducts() eq "") {
-				data.showSubPageProducts = 1;
-			} else {
-				data.showSubPageProducts = contentBean.getShowSubPageProducts();	
-			}
-		}
-		
-		return data;
-	}
-	
-	public any function getProductList(string contentID="", setupData=true) {
-		if(len(arguments.contentID)) {
-			if(!getService("requestCacheService").keyExists("contentProductList#arguments.contentID##yesNoFormat(arguments.setupData)#")) {
-				
-				var data = {};
-				if(arguments.setupData) {
-					data = getProductListData(arguments.contentID);
-				}
-				
-				var currentURL = $.createHREF(filename=$.content('filename'));
-				if(len(CGI.QUERY_STRING)) {
-					currentURL &= "?" & CGI.QUERY_STRING;
-				}
-				
-				getService("requestCacheService").setValue("contentProductList#arguments.contentID##yesNoFormat(arguments.setupData)#", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data=data, currentURL=currentURL));
-			}
-			return getService("requestCacheService").getValue("contentProductList#arguments.contentID##yesNoFormat(arguments.setupData)#");
-		} else {
-			if(!getService("requestCacheService").keyExists("allProductList#yesNoFormat(arguments.setupData)#")) {
-				
-				var data = {};
-				if(arguments.setupData) {
-					data = getProductListData(arguments.contentID);
-				}
-				
-				var currentURL = $.createHREF(filename=$.content('filename'));
-				if(len(CGI.QUERY_STRING)) {
-					currentURL &= "?" & CGI.QUERY_STRING;
-				}
-				
-				getService("requestCacheService").setValue("allProductList#yesNoFormat(arguments.setupData)#", getService("productService").getProductSmartList(data=data, currentURL=currentURL));
-			}
-			return getService("requestCacheService").getValue("allProductList#yesNoFormat(arguments.setupData)#");
-		}
-	}
-	
+	// =========== These methods serve as a shorthand
 	public any function account(string property, string value) {
 		if(isDefined("arguments.property") && isDefined("arguments.value")) {
 			return evaluate("getCurrentAccount().set#arguments.property#(#arguments.value#)");
@@ -213,17 +157,13 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 	}
 	
-	public any function productList(string property, string value, string contentID) {
-		if(!structKeyExists(arguments, "contentID")) {
-			arguments.contentID = $.content('contentID');
-		}
-		
-		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			return evaluate("getProductList(arguments.contentID).set#arguments.property#(#arguments.value#)");	
-		} else if (structKeyExists(arguments, "property")) {
-			return evaluate("getProductList(arguments.contentID).get#arguments.property#()");
+	public any function productList(string property, string value) {
+		if(isDefined("arguments.property") && isDefined("arguments.value")) {
+			return evaluate("getCurrentProductSmartList().set#arguments.property#(#arguments.value#)");
+		} else if (isDefined("arguments.property")) {
+			return evaluate("getCurrentProductSmartList().get#arguments.property#()");
 		} else {
-			return getProductList(arguments.contentID);
+			return getCurrentProductSmartList();
 		}
 	}
 	
@@ -256,7 +196,8 @@ component accessors="true" output="false" extends="BaseObject" {
 			return getService("sessionService");	
 		}
 	}
-	*/
+	
+	// ======== These are just simple methods used to place ramdom values that are stored for the duration of the request ========
 	public boolean function hasValue(required string key) {
 		return structKeyExists(variables, arguments.key);
 	}

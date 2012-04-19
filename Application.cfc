@@ -216,14 +216,10 @@ component extends="org.fw1.framework" output="false" {
 		// Run subsytem specific logic.
 		if(getSubsystem(request.context.slatAction) == "admin") {
 			controller("admin:BaseController.subSystemBefore");
-		} else if (getSubsystem(request.context.slatAction) == "frontend") {
-			controller("frontend:BaseController.subSystemBefore");
 		} else {
 			request.context.sectionTitle = getSubsystem(request.context.slatAction);
 			request.context.itemTitle = getSection(request.context.slatAction);
 		}
-		
-		writeLog(file="Slatwall", text="Setup Request Finished");
 	}
 	
 	public void function setupView() {
@@ -254,8 +250,8 @@ component extends="org.fw1.framework" output="false" {
 	// This is used to setup the frontend path to pull from the siteid directory or the theme directory if the file exists
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
 		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
-			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
-			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
+			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
+			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
 			
 			if(fileExists(expandPath(themeView))) {
 				arguments.fullPath = themeView;	
@@ -297,6 +293,119 @@ component extends="org.fw1.framework" output="false" {
 	public void function redirectSetting(required string settingName) {
 		endSlatwallLifecycle();
 		
+	}
+	
+	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle
+	public string function doAction(required string action) {
+		var response = "";
+		
+		// first, we double check to make sure all framework defaults are setup
+		setupFrameworkDefaults();
+		
+		// If there was already a view override in the request, then we need to save it to be used later
+		var originalViewOverride = "";
+		if(structKeyExists(request, "overrideViewAction")) {
+			originalViewOverride = request.overrideViewAction;
+			structDelete(request, "overrideViewAction");
+		}
+		
+		// We also need to store the original cfcbase if there was one
+		var originalCFCBase = "";
+		if(structKeyExists(request, "cfcbase")) {
+			originalCFCBase = request.cfcbase;
+			structDelete(request, "cfcbase");
+		}
+		
+		// We also need to store the original base if there was one
+		var originalBase = "";
+		if(structKeyExists(request, "base")) {
+			originalBase = request.base;
+			structDelete(request, "base");
+		}
+		
+		// create a seperate request container to hold simple data
+		request.slatwalldoaction = {};
+		
+		// Place form and URL into the new structure
+		structAppend(request.slatwalldoaction, form);
+		structAppend(request.slatwalldoaction, url);
+		
+		// Do structured data just like a normal request
+		var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections( request.slatwalldoaction );
+		if(structCount(structuredData)) {
+			structAppend(request.slatwalldoaction, structuredData);	
+		}
+		
+		// Place all of this formated data into a var named rc just like a regular request
+		var rc = request.slatwalldoaction;
+		var $ = request.muraScope;
+		
+		// Get Action Details
+		var subsystem = getSubsystem( arguments.action );
+		var section = getSection( arguments.action );
+		var item = getItem( arguments.action );
+		
+		// Setup the cfc base so that the getController method works
+		request.cfcbase = variables.framework.cfcbase;
+		request.base = variables.framework.base;
+				
+		// Call the controller
+		var controller = getController( section = section, subsystem = subsystem );
+		if(isObject(controller)) {
+			doActionController( controller, 'before' );
+			doActionController( controller, 'start' & item );
+			doActionController( controller, item );
+			doActionController( controller, 'end' & item );
+			doActionController( controller, 'after' );
+		}
+				
+		// Was the view overridden in the controller
+		if ( structKeyExists( request, 'overrideViewAction' ) ) {
+			subsystem = getSubsystem( request.overrideViewAction );
+			section = getSection( request.overrideViewAction );
+			item = getItem( request.overrideViewAction );
+			structDelete( request, 'overrideViewAction' );
+		}
+		
+		var viewPath = parseViewOrLayoutPath( subsystem & variables.framework.subsystemDelimiter & section & '/' & item, 'view' );
+		
+		// Include the view
+		savecontent variable="response"  {
+			include "#viewPath#";
+		}
+		
+		// Remove the cfcbase & base from the request so that future actions don't get screwed up
+		structDelete( request, 'cfcbase' );
+		structDelete( request, 'base' );
+		
+		// If there was an override view action before... place it back into the request
+		if(len(originalViewOverride)) {
+			request.overrideViewAction = originalViewOverride;
+		}
+		
+		// If there was a different cfcbase before... place it back into the request
+		if(len(originalCFCBase)) {
+			request.cfcbase = originalCFCBase;
+		}
+		
+		// If there was a different base before... place it back into the request
+		if(len(originalBase)) {
+			request.base = originalBase;
+		}
+		
+		return response;
+	}
+	
+	// This method is only intended to be used by the doAction() method
+	private void function doActionController( any cfc, string method ) {
+		if ( structKeyExists( cfc, method ) || structKeyExists( cfc, 'onMissingMethod' ) ) {
+			try {
+				evaluate( 'cfc.#method#( rc = request.slatwalldoaction )' );
+			} catch ( any e ) {
+				setCfcMethodFailureInfo( cfc, method );
+				rethrow;
+			}
+		}
 	}
 	
 }
