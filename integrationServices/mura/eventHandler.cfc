@@ -19,10 +19,14 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		if(!structKeyExists(request, "slatwallScope")) {
 			// Call the Slatwall Event Handler that gets the request setup
 			getSlatwallFW1Application().setupGlobalRequest();
-			
+		}
+
+		if(!structKeyExists(arguments.$, "slatwall")) {
 			// Setup the newly create slatwallScope into the muraScope
 			arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+		}
 			
+		if(!$.event().valueExists('slatwallData')) {
 			// Setup structured Data 
 			var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections($.getEvent().getAllValues());
 			if(structCount(structuredData)) {
