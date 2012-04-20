@@ -128,7 +128,6 @@ globalEncryptionKeySize
 			globalPageOrderStatus = {fieldType="text"},
 			globalPageOrderConfirmation = {fieldType="text"},
 			globalPageMyAccount = {fieldType="text"},
-			globalPageEditAccount = {fieldType="text"},
 			globalPageCreateAccount = {fieldType="text"},
 			globalPageCheckout = {fieldType="text"},
 			

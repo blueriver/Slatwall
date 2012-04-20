@@ -38,7 +38,7 @@ Notes:
 --->
 <cfoutput>
 	<cfif $.currentUser().isLoggedIn()>
-		#view("account/account_nav")#
+		#view("frontend:account/account_nav")#
 		<div class="svoaccountdetail">
 			<p>Welcome, #$.slatwall.account('fullName')#</p>
 			<h4>#$.slatwall.rbKey("entity.account.accountdetails")#</h4>
@@ -49,6 +49,6 @@ Notes:
 			<hr />
 		</div>
 	<cfelse>
-		#view("account/login")#
+		#view("frontend:account/login")#
 	</cfif>
 </cfoutput>
