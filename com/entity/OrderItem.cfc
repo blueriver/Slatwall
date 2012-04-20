@@ -404,5 +404,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// =================== START: ORM Event Hooks  =========================
 	
+	public void function preUpdate(struct oldData){
+		if(!isNull(getOrderFulfillment())) {
+			getOrderFulfillment().orderFulfillmentItemsChanged();
+		}
+	}
+	
 	// ===================  END:  ORM Event Hooks  =========================
 }
