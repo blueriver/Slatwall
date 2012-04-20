@@ -57,9 +57,6 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Non-Persistent properties
-	property name="activeFlag" type="boolean" persistent="false";
-	
 	public any function init() {
 		if(isNull(variables.installedFlag)) {
 			variables.installedFlag = 0;
@@ -116,12 +113,18 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	
 	// @hint helper function to return a Setting
 	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
-		return getService("settingService").getSettingValue(settingName="integration#getIntegrationPackage()##arguments.settingName#", object=this, filterEntities=arguments.filterEntities, formatValue=arguments.formatValue);
+		if(structKeyExists(getSettings(), arguments.settingName)) {
+			return getService("settingService").getSettingValue(settingName="integration#getIntegrationPackage()##arguments.settingName#", object=this, filterEntities=arguments.filterEntities, formatValue=arguments.formatValue);	
+		}
+		return super.setting(argumentcollection=arguments);
 	}
 	
 	// @hint helper function to return the details of a setting
 	public struct function getSettingDetails(required any settingName, array filterEntities=[]) {
-		return getService("settingService").getSettingDetails(settingName="integration#getIntegrationPackage()##arguments.settingName#", object=this, filterEntities=arguments.filterEntities);
+		if(structKeyExists(getSettings(), arguments.settingName)) {
+			return getService("settingService").getSettingDetails(settingName="integration#getIntegrationPackage()##arguments.settingName#", object=this, filterEntities=arguments.filterEntities);
+		}
+		return super.setting(argumentcollection=arguments);
 	}
 	
 	// ==================  END:  Overridden Methods ========================

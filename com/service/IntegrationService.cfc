@@ -44,7 +44,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="settings" type="any";
 		
 	variables.integrationCFCs = {};
-	variables.dataIntegrationCFCs = {};
 	variables.paymentIntegrationCFCs = {};
 	variables.shippingIntegrationCFCs = {};
 	
@@ -53,7 +52,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			variables.activeFW1Subsystems = [];
 			var integrations = this.listIntegration();
 			for(var i=1; i<=arrayLen(integrations); i++) {
-				if(integrations[i].getActiveFlag() && getIntegrationCFC(integrations[i]).isFW1Subsystem()) {
+				if(getIntegrationCFC(integrations[i]).isFW1Subsystem()) {
 					arrayAppend(variables.activeFW1Subsystems, {subsystem=integrations[i].getIntegrationPackage(), name=integrations[i].getIntegrationName()});
 				}
 			}
