@@ -44,14 +44,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public any function getRestrictedContentBycmsContentID(required any cmsContentID) {
 		var content = this.getContentByCmsContentID(arguments.cmsContentID,true);
-		if(!content.isNew()) {
+		if(content.isNew()) {
 			content.setCmsContentID(arguments.cmsContentID);
 		}
 		var settingDetails = content.getSettingDetails('contentRestrictAccessFlag');
-		if(!content.isNew() && !settingDetails.settingInherited) {
-			return content;
-		} else if(settingDetails.settingInherited) {
-			return this.getContentByCmsContentID(settingDetails.settingRelationships.cmsContentID);
+		if(settingDetails.settingValueformatted){
+			if(!content.isNew() && !settingDetails.settingInherited) {
+				return content;
+			} else if(settingDetails.settingInherited) {
+				return this.getContentByCmsContentID(settingDetails.settingRelationships.cmsContentID);
+			}
 		}
 	}
 	
