@@ -339,6 +339,7 @@ component extends="org.fw1.framework" output="false" {
 		// Place all of this formated data into a var named rc just like a regular request
 		var rc = request.slatwalldoaction;
 		var $ = request.muraScope;
+		rc.$ = $;
 		
 		// Get Action Details
 		var subsystem = getSubsystem( arguments.action );

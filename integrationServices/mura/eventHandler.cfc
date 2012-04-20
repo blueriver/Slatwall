@@ -23,7 +23,11 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 	// For admin request start, we call the Slatwall Event Handler that gets the request setup
 	public void function onGlobalRequestStart(required any $) {
+		// Call the Slatwall Event Handler that gets the request setup
 		getSlatwallFW1Application().setupGlobalRequest();
+		
+		// Setup the newly create slatwallScope into the muraScope
+		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 	}
 	
 	// For admin request end, we call the endLifecycle
@@ -38,7 +42,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		
 		// Setup the newly create slatwallScope into the muraScope
 		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
-		
+
 		// If we aren't on the homepage we can do our own URL inspection
 		if( len($.event('path')) ) {
 			
@@ -97,6 +101,8 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 	// Hook into the onRender start so that we can do any slatActions that might have been called, or if the current content is a listing page
 	public any function onRenderStart(required any $) {
+		// check if user has access to this page
+		checkAccess($);
 		// Check for any slatActions that might have been passed in
 		if(len($.event('slatAction'))) {
 			$.content('body', $.content('body') & getSlatwallFW1Application().doAction($.event('slatAction')));
@@ -111,9 +117,173 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		}
 	}
 	
+	private void function checkAccess(required any $) {
+		if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'))){
+			$.event("slatAction", "frontend:account.noaccess");
+			// save the current content to be used on the barrier page
+			$.event("restrictedContent",$.content());
+			// get the slatwall content
+			var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
+			// set slatwallContent in rc to be used on the barrier page
+			$.event("slatwallContent",slatwallContent);
+			// get the barrier page template
+			var restrictedContentTemplate = $.slatwall.getService("contentService").getContent(slatwallContent.getSettingDetails('contentRestrictedContentDisplayTemplate').settingvalue);
+			// set the content to the barrier page template
+			if(!isNull(restrictedContentTemplate)) {
+				$.event('contentBean', $.getBean("content").loadBy(contentID=restrictedContentTemplate.getCMSContentID()));
+			}
+		}
+	}
+	
+	// on category save, create/update the category in slatwall
+	public void function onAfterCategorySave(required any $) {
+		setupSlatwallScope($);
+		var categoryBean = $.event("categoryBean");
+		var category = $.slatwall.getService("contentService").getCategoryByCmsCategoryID(categoryBean.getCategoryID(),true);
+		var parentCategory = $.slatwall.getService("contentService").getCategoryByCmsCategoryID(categoryBean.getParentID());
+		if(!isNull(parentCategory)) {
+			category.setParentCategory(parentCategory);
+		}
+		category.setCategoryName(categoryBean.getName());
+		category.setCmsSiteID($.event('siteID'));
+		category.setCmsCategoryID(categoryBean.getCategoryID());
+		category = $.slatwall.getService("contentService").saveCategory(category);
+	}
+	
+	// on category delete, try to delete slatwall category
+	public void function onAfterCategoryDelete(required any $) {
+		setupSlatwallScope($);
+		var category = $.slatwall.getService("contentService").getCategoryByCmsCategoryID($.event("categoryID"),true);
+		if(!category.isNew() && category.isDeletable()) {
+			$.slatwall.getService("contentService").deleteCategory(category);
+		}
+	}
+	
 	public void function onContentEdit(required any $) { 
 		include "onContentEdit.cfm";
 	}
 	
+	public void function onAfterContentSave(required any $) {
+		setupSlatwallScope($);
+		if(!structKeyExists($.getEvent().getAllValues(),"slatwallData")) {
+			return;
+		}
+		var slatwallData = $.getEvent().getAllValues().slatwallData;
+		var slatwallContent = saveSlatwallPage($);
+		if(!isNull(slatwallContent) && slatwallData.allowPurchaseFlag) {
+			if(slatwallData.addSku){
+				saveSlatwallProduct($,slatwallContent);
+			}
+		} else {
+			deleteContentSkus($);
+		}
+	}
+
+	private any function saveSlatwallPage(required any $) {
+		var slatwallData = $.getEvent().getAllValues().slatwallData;
+		var slatwallContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("contentID"),true);
+		slatwallContent.setCmsSiteID($.event('siteID'));
+		slatwallContent.setCmsContentID($.content("contentID"));
+		slatwallContent.setCmsContentIDPath($.content("path"));
+		slatwallContent.setTitle($.content("title"));
+		var contentRestrictAccessFlag = slatwallContent.getSettingDetails('contentRestrictAccessFlag');
+		var contentProductListingFlag = slatwallContent.getSettingDetails('contentProductListingFlag');
+		// check if content needs to be saved
+		if(slatwallData.templateFlag || slatwallData.setting.contentProductListingFlag != "" || contentProductListingFlag.settingValueFormatted || slatwallData.setting.contentRestrictAccessFlag != "" || contentRestrictAccessFlag.settingValueFormatted) {
+			// set the parent content
+			var parentContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("parentID"));
+			if(!isNull(parentContent)) {
+				slatwallContent.setParentContent(parentContent);
+			}
+			slatwallContent = $.slatwall.getService("contentService").saveContent(slatwallContent,slatwallData);
+			// now save all the content settings
+			saveSlatwallSetting($,slatwallData.setting,slatwallContent);
+			return slatwallContent;
+		}
+	}
 	
+	private void function saveSlatwallSetting(required any $, required struct settingData, required any slatwallContent) {
+		for(var settingName in arguments.settingData) {
+			// create new setting if there is data 
+			if(arguments.settingData[settingName] != "") {
+				var setting = $.slatwall.getService("settingService").getSettingBySettingNameANDcmsContentID([settingName,arguments.slatwallContent.getCmsContentID()],true);
+				setting.setSettingName(settingName);
+				// setting value coming in with comma, temporary fix is list last
+				setting.setSettingValue(listLast(arguments.settingData[settingName]));
+				//setting.setContent(arguments.slatwallContent);
+				setting.setcmsContentID(arguments.slatwallContent.getCmsContentID());
+				$.slatwall.getService("settingService").saveSetting(setting);
+			}
+		}
+	}
+	
+	private void function saveSlatwallProduct(required any $, any slatwallContent) {
+		var slatwallData = $.getEvent().getAllValues().slatwallData;
+		slatwallData.product.accessContents = slatwallContent.getContentID();
+		// if sku is selected, related sku to content
+		if(slatwallData.product.sku.skuID != "") {
+			var sku = $.slatwall.getService("SkuService").getSku(slatwallData.product.sku.skuID, true);
+			sku.addAccessContent(slatwallContent);
+		} else {
+			var product = $.slatwall.getService("ProductService").getProduct(slatwallData.product.productID, true);
+			if(product.isNew()){
+				// if new product set up required properties
+				product.setProductName($.content("title"));
+				product.setPublishedFlag($.content("approved"));
+				var productType = $.slatwall.getService("ProductService").getProductTypeBySystemCode("contentAccess");
+				product.setProductType(productType);
+				product.setProductCode(createUUID());
+				product.setActiveFlag(1);
+				product = $.slatwall.getService("ProductService").saveProduct( product, slatwallData.product );
+			} else {
+				var newSku = $.slatwall.getService("SkuService").newSku();
+				newSku.setPrice(slatwallData.product.price);
+				newSku.setProduct(product);
+				newSku.addAccessContent( slatwallContent );
+				$.slatwall.getService("SkuService").saveSKU( newSku );
+			}
+		}
+		
+	}
+	
+	public void function onAfterContentDelete(required any $) {
+		deleteContentSkus($);
+		deleteSlatwallPage($);
+	}
+	
+	private void function deleteContentSkus(required any $) {
+		var slatwallContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("contentID"),true);
+		if(!slatwallContent.isNew()) {
+			while(arrayLen(slatwallContent.getSkus())){
+				var thisSku = slatwallContent.getSkus()[1];
+				slatwallContent.removeSku(thisSku);
+			}
+			$.slatwall.getService("contentService").saveContent(slatwallContent);
+		}
+	}
+
+	private void function deleteSlatwallPage(required any $) {
+		var slatwallContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("contentID"),true);
+		if(!slatwallContent.isNew() && !slatwallContent.isDeletable()) {
+			slatwallContent.setCmsContentID("");
+			slatwallContent.setCmsContentIDPath("");
+			$.slatwall.getService("contentService").saveContent(slatwallContent);
+		} else if(!slatwallContent.isNew()) {
+			$.slatwall.getService("contentService").deleteContent(slatwallContent);
+		}
+	}
+	
+	// in here to setup slatwall scope for onXXXSave and onXXXDelete methods. The onGobalRequestStart on not setting it 
+	private void function setupSlatwallScope(required any $) {
+		getSlatwallFW1Application().setupGlobalRequest();
+		// Setup the newly create slatwallScope into the muraScope
+		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+		// Setup structured Data 
+		var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections($.getEvent().getAllValues());
+		if(structCount(structuredData)) {
+			for(var key in structuredData) {
+				$.event(key,structuredData[key]);
+			}
+		}
+	}
 }

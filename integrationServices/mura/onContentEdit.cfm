@@ -54,24 +54,22 @@ Notes:
 		<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />--->
 	</cfif>
 	<dl class="oneColumn">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="templateFlag" fieldName="slatwallData.templateFlag" edit="#!contentRestrictAccessFlag.settingValueFormatted#">
+		<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("entity.content.templateFlag_hint")#" fieldName="slatwallData.templateFlag" fieldType="yesno" value="#slatwallContent.getTemplateFlag()#" edit="#!contentRestrictAccessFlag.settingValueFormatted#">
 		<cf_SlatwallSetting settingName="contentProductListingFlag" settingObject="#slatwallContent#" />
 		<div class="productListingFlagRelated">
 			<cf_SlatwallSetting settingName="contentIncludeChildContentProductsFlag" settingObject="#slatwallContent#" />
 			<cf_SlatwallSetting settingName="contentDefaultProductsPerPage" settingObject="#slatwallContent#" />
-			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="disableProductAssignmentFlag" fieldName="slatwallData.disableProductAssignmentFlag" edit="true">
+			<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("entity.content.disableProductAssignmentFlag_hint")#" fieldName="slatwallData.disableProductAssignmentFlag" fieldType="yesno" value="#slatwallContent.getDisableProductAssignmentFlag()#" edit="true">
 		</div>
 		<cf_SlatwallSetting settingName="contentRestrictAccessFlag" settingObject="#slatwallContent#" />
 		<div class="restrictAccessFlagRelated">
 			<cf_SlatwallSetting settingName="contentRestrictedContentDisplayTemplate" settingObject="#slatwallContent#" />
-			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true">
+			<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("entity.content.allowPurchaseFlag_hint")#" fieldName="slatwallData.allowPurchaseFlag" fieldType="yesno" value="#slatwallContent.getAllowPurchaseFlag()#" edit="true">
 			<div class="requirePurchaseFlag">
 				<cf_SlatwallSetting settingName="contentRequirePurchaseFlag" settingObject="#slatwallContent#" />
-				<div class="requirePurchaseFlagInherit"></div>
 			</div>
 			<div class="requireSubscriptionFlag">
 				<cf_SlatwallSetting settingName="contentRequireSubscriptionFlag" settingObject="#slatwallContent#" />
-				<div class="requireSubscriptionFlagInherit"></div>
 			</div>
 					
 			<div class="allowPurchaseFlagRelated" id="allowPurchaseFlagRelated">
@@ -147,8 +145,6 @@ Notes:
 
 <cfoutput>
 <script type="text/javascript">
-var #toscript(contentRequirePurchaseFlag.settingValueFormatted,"purchaseRequiredParent")#
-var #toscript(contentRequireSubscriptionFlag.settingValueFormatted,"subscriptionRequiredParent")#
 var $ = jQuery;
 function setupTemplateFlagDisplay() {
 	if ($('input[name="slatwallData.templateFlag"]:checked').length > 0) {
@@ -173,7 +169,7 @@ function setupProductListingFlagDisplay() {
 		$('input[name="slatwallData.setting.contentRestrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
 		$('.productListingFlagRelated').show();
 	} else {
-		$('input[name="slatwallData.setting.contentIncludeChildContentProductsFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.setting.contentIncludeChildContentProductsFlag"]').filter('[value=""]').prop('checked', true).change();
 		$('input[name="slatwallData.disableProductAssignmentFlag"]').filter('[value=0]').prop('checked', true).change();
 		$('input[name="slatwallData.setting.contentDefaultProductsPerPage"]').val('');
 		$('.productListingFlagRelated').hide();
@@ -214,27 +210,10 @@ function setupAllowPurchaseFlagDisplay() {
 
 function setupRequirePurchaseFlagDisplay() {
 	var selectedValue = $('input[name="slatwallData.allowPurchaseFlag"]:checked').val();
-	if(selectedValue == 0){
-		$('.requirepurchaseflagfield').hide();
+	if(selectedValue == undefined || selectedValue == "0"){
+		$('.requirePurchaseFlag').hide();
 	} else {
-		$('.requirepurchaseflagfield').show();
-	}
-	// show inherited value
-	if(purchaseRequiredParent == "true" && (selectedValue == undefined || selectedValue == "0")) {
-		$('.requirePurchaseFlagInherit').html('<span>Currently purchase required by parent</span>');
-	} else if(purchaseRequiredParent == "false") {
-		$('.requirePurchaseFlagInherit').html('<span>Currently purchase not required by parent</span>');
-	}
-}
-
-function setupRequireSubscriptionFlagDisplay() {
-	var selectedValue = $('input[name="slatwallData.requireSubscriptionFlag"]:checked').val();
-	$('.requireSubscriptionFlagInherit').html('<span>Currently subscription required by parent</span>');
-	// show inherited value
-	if(subscriptionRequiredParent == "true" && (selectedValue == undefined || selectedValue == "0")) {
-		$('.requireSubscriptionFlagInherit').html('<span>Currently subscription required by parent</span>');
-	} else if(subscriptionRequiredParent == "false") {
-		$('.requireSubscriptionFlagInherit').html('<span>Currently subscription not required by parent</span>');
+		$('.requirePurchaseFlag').show();
 	}
 }
 
@@ -267,11 +246,7 @@ $(document).ready(function(){
 	$('input[name="slatwallData.allowPurchaseFlag"]').change(function(){
 		setupAllowPurchaseFlagDisplay();
 	});
-
-	$('input[name="slatwallData.setting.contentRequirePurchaseFlag"]').change(function(){
-		setupRequireSubscriptionFlagDisplay();
-	});
-
+	
 	$('select[name="slatwallData.product.sku.skuID"]').change(function() {
 		if($(this).val() != ""){
 			$('.skuRelated').hide();
@@ -308,7 +283,6 @@ $(document).ready(function(){
 	setupProductListingFlagDisplay();
 	setupRestrictAccessFlagDisplay();
 	setupAllowPurchaseFlagDisplay();
-	setupRequireSubscriptionFlagDisplay();
 });
 </script>
 </cfoutput>
