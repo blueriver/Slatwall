@@ -135,7 +135,7 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 		super.preInsert();
 		
 		// This bit of logic sets a product review as whatever the current account is (We might want to move this to the service)
-		if( isNull(variables.account) && !isNull(getService("SessionService").getCurrentAccount()) ) {
+		if( isNull(variables.account) && !isNull(getSlatwallScope().getCurrentAccount()) ) {
 			setAccount(getSlatwallScope().getCurrentAccount());
 		}
 	}

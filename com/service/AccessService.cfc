@@ -63,7 +63,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(!isNull(restrictedContent.getAllowPurchaseFlag()) && restrictedContent.getAllowPurchaseFlag()) {
 			// check if the content was purchased
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
-			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=request.slatwallScope.getCurrentAccount().getAccountID());
+			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=getSlatwallScope().getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=restrictedContent.getContentID());
 			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredContentID == "") {
 				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
@@ -75,7 +75,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		} else if((isNull(restrictedContent.getAllowPurchaseFlag()) || !restrictedContent.getAllowPurchaseFlag()) && purchaseRequiredContentID != "") {
 			// check if any parent content was purchased
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
-			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=request.slatwallScope.getCurrentAccount().getAccountID());
+			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=getSlatwallScope().getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=purchaseRequiredContentID);
 			// check if the content requires subcription in addition to purchase
 			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredContentID == "") {
@@ -88,7 +88,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// check if restricted content is part of subscription access and doesn't require purchase or it does require purchased and was purchased
 		if(purchaseRequiredContentID == "" || purchasedAccess) {
 			// check if content is part of subscription access
-			for(var subscriptionUsageBenefitAccount in request.slatwallScope.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
+			for(var subscriptionUsageBenefitAccount in getSlatwallScope().getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
 				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(restrictedContent)) {
 					logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
 					return true;
@@ -100,7 +100,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// check if any of this content's category is part of subscription access
 			if(cmsCategoryIDs != "") {
 				var categories = getService("contentService").getCategoriesByCmsCategoryIDs(cmsCategoryIDs);
-				for(var subscriptionUsageBenefitAccount in request.slatwallScope.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
+				for(var subscriptionUsageBenefitAccount in getSlatwallScope().getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
 					for(var category in categories) {
 						if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
 							logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
@@ -116,7 +116,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public void function logAccess(required any content) {
 		var contentAccess = this.newContentAccess();
 		contentAccess.setContent(arguments.content);
-		contentAccess.setAccount(request.slatwallScope.getCurrentAccount());
+		contentAccess.setAccount(getSlatwallScope().getCurrentAccount());
 		if(structKeyExists(arguments,"subscriptionUsageBenefit")) {
 			contentAccess.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
 		} else if(structKeyExists(arguments,"accountContentAccess")) {
