@@ -46,8 +46,6 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	
 	property name="customReadyFlag" ormtype="boolean";
 	property name="customActiveFlag" ormtype="boolean";
-	property name="dataReadyFlag" ormtype="boolean";
-	property name="dataActiveFlag" ormtype="boolean";
 	property name="paymentReadyFlag" ormtype="boolean";
 	property name="paymentActiveFlag" ormtype="boolean";
 	property name="shippingReadyFlag" ormtype="boolean";
@@ -63,8 +61,8 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="activeFlag" type="boolean" persistent="false";
 	
 	public any function init() {
-		if(isNull(variable.installedFlag)) {
-			variable.installedFlag = 0;
+		if(isNull(variables.installedFlag)) {
+			variables.installedFlag = 0;
 		}
 		
 		return super.init();

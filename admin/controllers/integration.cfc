@@ -43,36 +43,5 @@ component extends="BaseController" output=false accessors=true {
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:integration.listintegration");
 	}
-	/*
-	public void function list(required struct rc) {
-		rc.integrationSmartList = getIntegrationService().getIntegrationSmartList(rc);
-		rc.integrationSmartList.addOrder("integrationName|ASC");
-	}
 	
-	public void function detail(required struct rc) {
-		param name="rc.integrationPackage" default="";
-		param name="rc.edit" default="false";
-		
-		rc.integration = getIntegrationService().getIntegrationByIntegrationPackage(rc.integrationPackage);
-		rc.itemTitle &= ": " & rc.integration.getIntegrationName();
-	}
-
-	public void function edit(required struct rc) {
-		detail(arguments.rc);
-		getFW().setView("admin:integration.detail");
-		rc.edit = true;
-	}
-
-	public void function save(required struct rc) {
-		detail(arguments.rc);
-		
-		rc.integration = getIntegrationService().saveIntegration(rc.integration, rc);
-	   
-		if(!rc.integration.hasErrors()) {
-			getFW().redirect(action="admin:integration.list", querystring="message=admin.integration.save_success");
-		} else {
-			getFW().setView(action="admin:integration.detail");
-		}
-	}
-	*/
 }

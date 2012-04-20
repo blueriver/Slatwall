@@ -70,15 +70,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return variables.integrationCFCs[ arguments.integration.getIntegrationPackage() ];
 	}
 
-	public any function getDataIntegrationCFC(required any integration) {
-		if(!structKeyExists(variables.dataIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
-			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Data").init();
-			populateIntegrationCFCFromIntegration(integrationCFC, arguments.integration);
-			variables.dataIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
-		}
-		return variables.dataIntegrationCFCs[ arguments.integration.getIntegrationPackage() ];
-	}
-	
 	public any function getPaymentIntegrationCFC(required any integration) {
 		if(!structKeyExists(variables.paymentIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
 			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Payment").init();
@@ -104,7 +95,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Turn off the installed and ready flags on any previously setup integration entities
 		for(var i=1; i<=arrayLen(integrationList); i++) {
 			integrationList[i].setInstalledFlag(0);
-			integrationList[i].setDataReadyFlag(0);
 			integrationList[i].setPaymentReadyFlag(0);
 			integrationList[i].setShippingReadyFlag(0);
 			integrationList[i].setCustomReadyFlag(0);
@@ -143,14 +133,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						switch (thisType) {
 							case "custom": {
 								integration.setCustomReadyFlag(1);
-								break;
-							}
-							case "data": {
-								var dataCFC = createObject("component", "Slatwall.integrationServices.#integrationPackage#.Data").init();
-								var dataMeta = getMetaData(dataCFC);
-								if(structKeyExists(dataMeta, "Implements") && structKeyExists(dataMeta.implements, "Slatwall.integrationServices.DataInterface")) {
-									integration.setDataReadyFlag(1);
-								}
 								break;
 							}
 							case "payment": {
