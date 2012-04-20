@@ -269,12 +269,10 @@ $(document).ready(function(){
 			dataType: "json",
 			contentType: 'application/json',
 			success: function(r) {
-				console.log("Success");
-				console.log(r);
 				$('select[name="slatwallData.product.sku.skuID"]').html('');
 				$('select[name="slatwallData.product.sku.skuID"]').append('<option value="">New Sku</option>');
-				if(r.RECORDSCOUNT > 0){
-					$.each(r.PAGERECORDS,function(index,value){
+				if(r.PAGERECORDSCOUNT > 0){
+					$.each(r.RECORDS,function(index,value){
 						var option = '<option value="'+value.skuID+'">$'+value.price+' - '+value.skuCode+'</option>';
 						$('select[name="slatwallData.product.sku.skuID"]').append(option);
 					});
