@@ -165,23 +165,32 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		// If this is an ajax call, just get the smart list
 		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
-			
 			param name="rc.propertyIdentifiers" type="string" default="";
 			
-			var smartList = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=rc} );
-			var smartListPageRecords = smartList.getPageRecords();
-			var piArray = listToArray(rc.propertyIdentifiers);
-			 
-			rc.records = [];
-			rc.pageRecordsCount = arrayLen(smartListPageRecords);
+			try {
+				var smartList = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=rc} );
+				var smartListPageRecords = smartList.getPageRecords();
+				var piArray = listToArray(rc.propertyIdentifiers);
+	
+				rc.records = [];
+				rc.pageRecordsCount = arrayLen(smartListPageRecords);
 			
-			for(var i=1; i<=arrayLen(smartListPageRecords); i++) {
-				var thisRecord = {};
-				for(var p=1; p<=arrayLen(piArray); p++) {
-					thisRecord[ piArray[p] ] = smartListPageRecords[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );	
+			
+				for(var i=1; i<=arrayLen(smartListPageRecords); i++) {
+					var thisRecord = {};
+					for(var p=1; p<=arrayLen(piArray); p++) {
+						thisRecord[ piArray[p] ] = smartListPageRecords[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );	
+					}
+					arrayAppend(rc.records, thisRecord);
 				}
-				arrayAppend(rc.records, thisRecord);
+				
+			} catch(any e) {
+				
+				writeOutput( serializeJSON(e) );
+				abort;
+				
 			}
+			
 			
 		// If this is a standard call, then look to save the state
 		} else {

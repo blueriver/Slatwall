@@ -43,17 +43,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="subscriptionService" type="any";
 	property name="contentService" type="any";
 	
-	public any function getSkuSmartList(string productID, struct data={}){
-		arguments.entityName = "SlatwallSku";
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		
-		if( structKeyExists(arguments,"productID") ) {
-			smartList.addFilter(propertyIdentifier="product_productID", value=arguments.productID);
-		}
-		
-		return smartList;
-	}
-	
 	public boolean function createSkus(required any product, required struct data ) {
 		
 		// Create Merchandise Propduct Skus Based On Options

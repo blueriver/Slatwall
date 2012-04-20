@@ -245,7 +245,9 @@ function tableExpandClick( toggleLink ) {
 					ajaxlock = 0;
 				},
 				error: function(r) {
-					alert('Error Loading');
+					console.log(r);
+					
+					alert('Error Loading, check console for results.');
 					
 					ajaxlock = 0;
 				}

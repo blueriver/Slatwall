@@ -245,6 +245,12 @@ component extends="org.fw1.framework" output="false" {
 		endSlatwallLifecycle();
 		var httpRequestData = getHTTPRequestData();
 		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
+			if(structKeyExists(request.context, "fw")) {
+				structDelete(request.context, "fw");
+			}
+			if(structKeyExists(request.context, "$")) {
+				structDelete(request.context, "$");
+			}
 			writeOutput( serializeJSON(request.context) );
 			abort;
 		}

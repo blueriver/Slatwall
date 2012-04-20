@@ -257,15 +257,20 @@ $(document).ready(function(){
 	
 	$('select[name="slatwallData.product.productID"]').change(function() {
 		
-		var postData = {
-			apiKey: '#request.slatwallScope.getService("sessionService").getAPIKey("sku", "get")#',
-		};
+		var postData = {};
+		postData['F:product_productID'] = $('select[name="slatwallData.product.productID"]').val();
+		postData['P:Show'] = 'all';
+		postData['propertyIdentifiers'] = 'skuID,skuCode,price';
+
 		$.ajax({
 			type: 'get',
-			url: '/plugins/Slatwall/api/index.cfm/sku/smartlist/?F:product_productID='+$('select[name="slatwallData.product.productID"]').val(),
+			url: '/plugins/Slatwall/?slatAction=admin:product.listsku',
 			data: postData,
 			dataType: "json",
+			contentType: 'application/json',
 			success: function(r) {
+				console.log("Success");
+				console.log(r);
 				$('select[name="slatwallData.product.sku.skuID"]').html('');
 				$('select[name="slatwallData.product.sku.skuID"]').append('<option value="">New Sku</option>');
 				if(r.RECORDSCOUNT > 0){
@@ -274,6 +279,9 @@ $(document).ready(function(){
 						$('select[name="slatwallData.product.sku.skuID"]').append(option);
 					});
 				}
+			}, error: function(r) {
+				console.log("Error");
+				console.log(r);
 			}
 		});
 		
