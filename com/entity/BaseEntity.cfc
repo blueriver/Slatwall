@@ -369,14 +369,14 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			this.setCreatedDateTime(timestamp);
 		}
 		if(structKeyExists(this,"setCreatedByAccount")){
-			setCreatedByAccount(getService("SessionService").getCurrentAccount());
+			setCreatedByAccount(request.slatwallScope.getCurrentAccount());
 		}
 		
 		if(structKeyExists(this,"setModifiedDateTime")){
 			this.setModifiedDateTime(timestamp);
 		}
 		if(structKeyExists(this,"setModifiedByAccount")){
-			setModifiedByAccount(getService("SessionService").getCurrentAccount());
+			setModifiedByAccount(request.slatwallScope.getCurrentAccount());
 		}
 		
 	}
@@ -392,7 +392,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			this.setModifiedDateTime(timestamp);
 		}
 		if(structKeyExists(this,"setModifiedByAccount")){
-			setModifiedByAccount(getService("SessionService").getCurrentAccount());
+			setModifiedByAccount(request.slatwallScope.getCurrentAccount());
 		}
 	}
 	
