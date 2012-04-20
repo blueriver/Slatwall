@@ -48,7 +48,12 @@ Notes:
 	<cfif local.key neq "settingID" and right(local.key, 2) eq "ID" and isSimpleValue(rc[local.key]) and len(rc[local.key]) gt 30>
 		<cfset local.hasRelationshipKey = true />
 		<cfset local.returnActionQueryString = listAppend(local.returnActionQueryString, '#local.key#=#rc[local.key]#', '&') />
-		<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#left(local.key, len(local.key)-2)#.#local.key#" value="#rc[local.key]#" />', chr(13)) />
+		<cfif local.key eq "contentID">
+			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="cmsContentID" value="#rc.content.getCMSContentID()#" />', chr(13)) />	
+		<cfelse>
+			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#left(local.key, len(local.key)-2)#.#local.key#" value="#rc[local.key]#" />', chr(13)) />	
+		</cfif>
+		
 	</cfif>
 </cfloop>
 
