@@ -53,12 +53,6 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 			ExpressMailInternational="Express Mail International"
 		};
 		
-		variables.settings = {
-			accountID = {fieldType="text"},
-			passPhrase = {fieldType="text", encryptValue=true},
-			fromPostalCode = {fieldType="text"}
-		};
-		
 		return this;
 	}
 	

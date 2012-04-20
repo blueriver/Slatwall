@@ -44,6 +44,7 @@ globalEncryptionKeySize
 
 	<!--- Injected from Coldspring --->
 	<cfproperty name="contentService" type="any" />
+	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="utilityORMService" type="any" />
 	
 	<!--- Used For Caching --->
@@ -209,11 +210,17 @@ globalEncryptionKeySize
 		}
 		
 		public any function getSettingOptionsSmartList(required string settingName) {
-			return getUtilityORMService().getServiceByEntityName( variables.settingMetaData[ arguments.settingName ].listingMultiselectEntityName ).invokeMethod("get#variables.settingMetaData[ arguments.settingName ].listingMultiselectEntityName#SmartList");
+			return getUtilityORMService().getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#SmartList");
 		}
 		
 		public any function getSettingMetaData(required string settingName) {
-			return variables.settingMetaData[ arguments.settingName ];
+			if(structKeyExists(variables.settingMetaData, arguments.settingName)) {
+				return variables.settingMetaData[ arguments.settingName ];	
+			} else if (structKeyExists(getIntegrationService().getAllSettings(), arguments.settingName)) {
+				return getIntegrationService().getAllSettings()[ arguments.settingName ];
+			}
+			
+			throw("You have asked for a setting '#arguments.settingName#' which has no meta information. Make sure that you either add this setting to the settingService or your integration.");
 		}
 		
 		public any function getAllSettingsQuery() {
@@ -230,9 +237,6 @@ globalEncryptionKeySize
 		}
 		
 		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
-			if(!structKeyExists(variables.settingMetaData, arguments.settingName)) {
-				throw("You have asked for a setting by the name of '#arguments.settingName#' which is not a valid setting in the system.  A list of valid settings can be found in the SettingService.cfc");
-			}
 			if(arguments.formatValue) {
 				return getSettingDetails(argumentCollection=arguments).settingValueFormatted;	
 			}
@@ -364,16 +368,16 @@ globalEncryptionKeySize
 			}
 			
 			if(!disableFormatting) {
-				if( structKeyExists(variables.settingMetaData[arguments.settingName], "formatType") ) {
-					settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].formatType);
-				} else if( structKeyExists(variables.settingMetaData[arguments.settingName], "fieldType") ) {
-					if(variables.settingMetaData[arguments.settingName].fieldType == "listingMultiselect") {
+				if( structKeyExists(getSettingMetaData(arguments.settingName), "formatType") ) {
+					settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, getSettingMetaData(arguments.settingName).formatType);
+				} else if( structKeyExists(getSettingMetaData(arguments.settingName), "fieldType") ) {
+					if(getSettingMetaData(arguments.settingName).fieldType == "listingMultiselect") {
 						settingDetails.settingValueFormatted = "";
 						for(var i=1; i<=listLen(settingDetails.settingValue); i++) {
 							var thisID = listGetAt(settingDetails.settingValue, i);
-							settingDetails.settingValueFormatted = listAppend(settingDetails.settingValueFormatted, " " & getUtilityORMService().getServiceByEntityName( variables.settingMetaData[ arguments.settingName ].listingMultiselectEntityName ).invokeMethod("get#variables.settingMetaData[ arguments.settingName ].listingMultiselectEntityName#", {1=thisID}).getSimpleRepresentation());	
+							settingDetails.settingValueFormatted = listAppend(settingDetails.settingValueFormatted, " " & getUtilityORMService().getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#", {1=thisID}).getSimpleRepresentation());	
 						}
-					} else if (variables.settingMetaData[arguments.settingName].fieldType == "select") {
+					} else if (getSettingMetaData(arguments.settingName).fieldType == "select") {
 						var options = getSettingOptions(arguments.settingName);
 						for(var i=1; i<=arrayLen(options); i++) {
 							if(isStruct(options[i])) {
@@ -387,7 +391,7 @@ globalEncryptionKeySize
 							}
 						}
 					} else {
-						settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, variables.settingMetaData[arguments.settingName].fieldType);	
+						settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, getSettingMetaData(arguments.settingName).fieldType);	
 					}
 				} else {
 					settingDetails.settingValueFormatted = settingDetails.settingValue;

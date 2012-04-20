@@ -50,7 +50,7 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 		return "Authorize.Net";
 	}
 	
-	public string function getSettings() {
+	public struct function getSettings() {
 		var settings = {
 			
 		};

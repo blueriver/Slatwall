@@ -119,13 +119,6 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 		return super.setting(argumentcollection=arguments);
 	}
 	
-	// @hint helper function to return the details of a setting
-	public struct function getSettingDetails(required any settingName, array filterEntities=[]) {
-		if(structKeyExists(getSettings(), arguments.settingName)) {
-			return getService("settingService").getSettingDetails(settingName="integration#getIntegrationPackage()##arguments.settingName#", object=this, filterEntities=arguments.filterEntities);
-		}
-		return super.setting(argumentcollection=arguments);
-	}
 	
 	// ==================  END:  Overridden Methods ========================
 		

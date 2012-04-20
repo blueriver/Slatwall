@@ -42,6 +42,15 @@ component accessors="true" output="false" displayname="Endicia" extends="Slatwal
 		return this;
 	}
 	
+	public struct function getSettings() {
+		variables.settings = {
+			accountID = {fieldType="text", displayName="Account ID"},
+			passPhrase = {fieldType="text", displayName="Pass Phrase", encryptValue=true},
+			fromPostalCode = {fieldType="text", displayName="From Postal Code"}
+		};
+		return variables.settings;
+	}
+	
 	public string function getIntegrationTypes() {
 		return "shipping";
 	}

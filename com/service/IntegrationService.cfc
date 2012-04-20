@@ -42,7 +42,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	// Place holder properties that get populated lazily
 	property name="settings" type="any";
-		
+	
+	variables.allSettings = {};
+	variables.activeFW1Subsystems = [];	
 	variables.integrationCFCs = {};
 	variables.paymentIntegrationCFCs = {};
 	variables.shippingIntegrationCFCs = {};
@@ -58,6 +60,19 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 		return variables.activeFW1Subsystems;
+	}
+	
+	public any function getAllSettings() {
+		
+			variables.allSettings = {};
+			var integrations = this.listIntegration();
+			for(var i=1; i<=arrayLen(integrations); i++) {
+				for(var settingName in integrations[i].getSettings()) {
+					variables.allSettings['integration#integrations[i].getIntegrationPackage()##settingName#'] = integrations[i].getSettings()[ settingName ];
+				}
+			}
+		
+		return variables.allSettings;
 	}
 
 	public any function getIntegrationCFC(required any integration) {
