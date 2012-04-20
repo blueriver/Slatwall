@@ -403,7 +403,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							}
 							
 							// setup subscription data if this was subscription order
-							setupSubscriptionOrder(order);
+							setupSubscriptionOrderItem(order);
 							
 							// setup content access if this was content purchase
 							setupContentAccess(order);
@@ -417,16 +417,20 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return processOK;
 	}
 	
-	public void function setupSubscriptionOrder(required any order,string subscriptionOrderType="sotInitial") {
+	public void function setupSubscriptionOrderItem(required any order,string subscriptionOrderItemType="soitInitial") {
 		for(var orderItem in arguments.order.getOrderItems()) {
 			if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
-				// create subscription order
-				var subscriptionOrder = getService("subscriptionService").getSubscriptionOrderByOrder(orderItem.getOrder(),true);
-				subscriptionOrder.setOrder(arguments.order);
-				subscriptionOrder.setSubscriptionOrderType(this.getTypeBySystemCode(arguments.subscriptionOrderType));
-				var subscriptionUsage = getService("subscriptionService").getSubscriptionUsageByOrderItem(orderItem,true);
-				subscriptionOrder.setSubscriptionUsage(subscriptionUsage);
-				subscriptionUsage.setOrderItem(orderItem);
+				// create subscription orderItem
+				var subscriptionOrderItem = getService("subscriptionService").getSubscriptionOrderItemByOrderItem(orderItem,true);
+				subscriptionOrderItem.setOrderItem(orderItem);
+				subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode(arguments.subscriptionOrderItemType));
+				var subscriptionUsage = subscriptionOrderItem.getSubscriptionUsage();
+				if(isNull(subscriptionUsage)) {
+					var subscriptionUsage = getService("subscriptionService").newSubscriptionUsage();
+				} 
+				subscriptionUsage.setActiveFlag(1);
+				subscriptionUsage.setnextBillDate(orderItem.getSku().getSubscriptionTerm().getInitialTerm().getDueDate());
+				subscriptionOrderItem.setSubscriptionUsage(subscriptionUsage);
 				// call save on this entity to make it persistent so we can use it for further lookup
 				getService("subscriptionService").saveSubscriptionUsage(subscriptionUsage);
 				// copy all the subscription benefits
