@@ -157,7 +157,7 @@ Notes:
 			}
 			
 			var timeStamp = now();
-			var administratorID = getService("SessionService").getCurrentAccount().getAccountID();
+			var administratorID = getSlatwallScope().getCurrentAccount().getAccountID();
 			
 			var dataQuery = new Query();
 			dataQuery.setDatasource(application.configBean.getDatasource());
@@ -322,7 +322,7 @@ Notes:
 			var value = createObject( "java", "java.lang.StringBuilder" ).init();
 	
 			var timeStamp = now();
-			var administratorID = getService("SessionService").getCurrentAccount().getAccountID();
+			var administratorID = getSlatwallScope().getCurrentAccount().getAccountID();
 			
 			if(arrayFindNoCase(arguments.columnList,arguments.lookupColumn)){
 				lookupColumnValue = arguments.data[arguments.lookupColumn][arguments.rowNumber];

@@ -39,11 +39,6 @@ Notes:
 
 component accessors="true" output="false" displayname="Endicia" implements="Slatwall.integrationServices.ShippingInterface" extends="Slatwall.integrationServices.BaseShipping" {
 	
-	// Custom Properties that need to be set by the end user
-	property name="accountID" validateRequired displayname="Endicia Account Number" type="string";
-	property name="passPhrase" validateRequired displayname="PassPhrase" type="string";
-	property name="fromPostalCode" validateRequired displayname="Shipping From Postal Code" type="string";
-	
 	public any function init() {
 		// Insert Custom Logic Here 
 		variables.shippingMethods = {
@@ -57,6 +52,13 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 			PriorityMailInternational="Priority Mail International",
 			ExpressMailInternational="Express Mail International"
 		};
+		
+		variables.settings = {
+			accountID = {fieldType="text"},
+			passPhrase = {fieldType="text", encryptValue=true},
+			fromPostalCode = {fieldType="text"}
+		};
+		
 		return this;
 	}
 	

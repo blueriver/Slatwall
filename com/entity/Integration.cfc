@@ -82,12 +82,8 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	}
 	
 	
-	public any function getIntegrationCFC( string integrationType="") {
+	public any function getIntegrationCFC( string integrationType="" ) {
 		switch (arguments.integrationType) {
-			case "data" : {
-				return getService("integrationService").getDataIntegrationCFC(this);
-				break;
-			}
 			case "payment" : {
 				return getService("integrationService").getPaymentIntegrationCFC(this);
 				break;
@@ -102,8 +98,8 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 		}
 	}
 	
-	public any function getIntegrationCFCSettings(required string integrationType) {
-		return getService("integrationService").getIntegrationCFCSettings(getIntegrationCFC(arguments.integrationType));
+	public any function getSettings() {
+		return getIntegrationCFC().getSettings();
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -118,6 +114,16 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	
 	public boolean function isDeletable() {
 		return false;
+	}
+	
+	// @hint helper function to return a Setting
+	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
+		return getService("settingService").getSettingValue(settingName="integration#getIntegrationPackage()##arguments.settingName#", object=this, filterEntities=arguments.filterEntities, formatValue=arguments.formatValue);
+	}
+	
+	// @hint helper function to return the details of a setting
+	public struct function getSettingDetails(required any settingName, array filterEntities=[]) {
+		return getService("settingService").getSettingDetails(settingName="integration#getIntegrationPackage()##arguments.settingName#", object=this, filterEntities=arguments.filterEntities);
 	}
 	
 	// ==================  END:  Overridden Methods ========================

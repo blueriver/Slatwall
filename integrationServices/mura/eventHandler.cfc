@@ -69,21 +69,21 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 			if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProduct().isNew() && $.slatwall.getCurrentProduct().getActiveFlag() && $.slatwall.getCurrentProduct().getPublishedFlag()) {
 				$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProduct().setting('productDisplayTemplate')));
 				$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-				$.content('body', $.content('body') & getSlatwallFW1Application().doAction('frontend:product.detail'));
+				$.content('body', $.content('body') & doAction('frontend:product.detail'));
 				$.content().setTitle( $.slatwall.getCurrentProduct().getTitle() );
 				$.content().setHTMLTitle( $.slatwall.getCurrentProduct().getTitle() );
 				
 			} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() && $.slatwall.getCurrentProductType().getPublishedFlag() ) {
 				$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate')));
 				$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-				$.content('body', $.content('body') & getSlatwallFW1Application().doAction('frontend:producttype.detail'));
+				$.content('body', $.content('body') & doAction('frontend:producttype.detail'));
 				$.content().setTitle( $.slatwall.getCurrentProductType().getTitle() );
 				$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getTitle() );
 				
 			} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag() && $.slatwall.getCurrentProductType().getPublishedFlag()  ) {
 				$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate')));
 				$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-				$.content('body', $.content('body') & getSlatwallFW1Application().doAction('frontend:brand.detail'));
+				$.content('body', $.content('body') & doAction('frontend:brand.detail'));
 				$.content().setTitle( $.slatwall.getCurrentBrand().getTitle() );
 				$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getTitle() );
 			}
@@ -107,8 +107,26 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		
 		// Check to see if the current content is a listing page, so that we add our frontend view to the content body
 		if(isBoolean($.slatwall.getCurrentContent().setting('contentProductListingFlag')) && $.slatwall.getCurrentContent().setting('contentProductListingFlag')) {
-			$.content('body', $.content('body') & getSlatwallFW1Application().doAction('frontend:product.listcontentproducts'));
+			$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
 		}
+		
+		// Render any of the 'special' pages that might need to be rendered
+		if($.content('filename') == $.slatwall.setting('globalPageShoppingCart')) {
+			$.content('body', $.content('body') & doAction('frontend:cart.detail'));
+		} else if($.content('filename') == $.slatwall.setting('globalPageOrderStatus')) {
+			$.content('body', $.content('body') & doAction('frontend:order.detail'));
+		} else if($.content('filename') == $.slatwall.setting('globalPageOrderConfirmation')) {
+			$.content('body', $.content('body') & doAction('frontend:order.confirmation'));
+		} else if($.content('filename') == $.slatwall.setting('globalPageMyAccount')) {
+			$.content('body', $.content('body') & doAction('frontend:account.detail'));
+		} else if($.content('filename') == $.slatwall.setting('globalPageEditAccount')) {
+			$.content('body', $.content('body') & doAction('frontend:account.edit'));
+		} else if($.content('filename') == $.slatwall.setting('globalPageCreateAccount')) {
+			$.content('body', $.content('body') & doAction('frontend:account.create'));
+		} else if($.content('filename') == $.slatwall.setting('globalPageCheckout')) {
+			$.content('body', $.content('body') & doAction('frontend:checkout.detail'));
+		}
+		
 	}
 	
 	public void function onContentEdit(required any $) { 
@@ -116,6 +134,15 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		getSlatwallFW1Application().setupGlobalRequest();
 		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 		include "onContentEdit.cfm";
+	}
+	
+	
+	// Helper Method for doAction()
+	public string function doAction(required any action) {
+		if(!structKeyExists(url, "$")) {
+			url.$ = request.muraScope;
+		}
+		return getSlatwallFW1Application().doAction(arguments.action);
 	}
 	
 	

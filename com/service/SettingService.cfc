@@ -68,7 +68,8 @@ globalEncryptionKeySize
 			"content",
 			"stock",
 			"brand",
-			"sku"];
+			"sku"
+		];
 		
 		variables.settingLookupOrder = {
 			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath&sku.product.brand.brandID", "sku.product.productType.productTypeIDPath"],
@@ -253,7 +254,7 @@ globalEncryptionKeySize
 			};
 			
 			// If this is a global setting there isn't much we need to do because we already know there aren't any relationships
-			if(left(arguments.settingName, 6) == "global") {
+			if(left(arguments.settingName, 6) == "global" || left(arguments.settingName, 11) == "integration") {
 				settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName);
 				if(settingRecord.recordCount) {
 					foundValue = true;

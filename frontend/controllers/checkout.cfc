@@ -58,31 +58,31 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.guestAccountOK" default="false";
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
-		if(!arrayLen(rc.$.slatwall.cart().getOrderItems())) {
-			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
+		if(!arrayLen(getSlatwallScope().cart().getOrderItems())) {
+			getFW().redirectSetting( settingName='globalPageShoppingCart' );
 		}
 		
 		// Insure that all items in the cart are within their max constraint
-		if(!rc.$.slatwall.cart().hasItemsQuantityWithinMaxOrderQuantity()) {
-			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart',queryString='slatAction=frontend:cart.forceItemQuantityUpdate'));
+		if(!getSlatwallScope().cart().hasItemsQuantityWithinMaxOrderQuantity()) {
+			getFW().redirectSetting( settingName='globalPageShoppingCart', queryString='slatAction=frontend:cart.forceItemQuantityUpdate' );
 		}
 		
 		// Recaluclate Order Totals In Case something has changed
-		getOrderService().recalculateOrderAmounts(rc.$.slatwall.cart());
+		getOrderService().recalculateOrderAmounts(getSlatwallScope().cart());
 		
 		// get the list of requirements left for this order to be processed
-		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
+		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(getSlatwallScope().cart());
 		
 		// Account Setup Logic
-		if ( isNull(rc.$.slatwall.cart().getAccount()) ) {
+		if ( isNull(getSlatwallScope().cart().getAccount()) ) {
 			// When no account is in the order then just set a new account in the rc so it works
 			// We don't need to put account in the rc.orderRequirementsList because it will already be there
 			rc.account = getAccountService().newAccount();
 		} else {
 			// If the account on cart is the same as the one logged in then set the rc.account from cart
 			// OR If the cart is using a guest account, and this method was called from a different controller that says guest accounts are ok, then pass in the cart account
-			if( rc.$.slatwall.cart().getAccount().getAccountID() == rc.$.slatwall.account().getAccountID() || (rc.$.slatwall.cart().getAccount().isGuestAccount() && rc.guestAccountOK) ) {
-				rc.account = rc.$.slatwall.cart().getAccount();
+			if( getSlatwallScope().cart().getAccount().getAccountID() == getSlatwallScope().account().getAccountID() || (getSlatwallScope().cart().getAccount().isGuestAccount() && rc.guestAccountOK) ) {
+				rc.account = getSlatwallScope().cart().getAccount();
 			} else {
 				rc.account = getAccountService().newAccount();
 				// Here we need to add it to the requirements list because the cart might have already had an account
@@ -154,7 +154,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.guestAccountOK = true;
 		
 		// Insure that all items in the cart are within their max constraint
-		if(!rc.$.slatwall.cart().hasItemsQuantityWithinMaxOrderQuantity()) {
+		if(!getSlatwallScope().cart().hasItemsQuantityWithinMaxOrderQuantity()) {
 			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart',queryString='slatAction=frontend:cart.forceItemQuantityUpdate'));
 		}
 		

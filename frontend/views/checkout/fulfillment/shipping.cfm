@@ -85,7 +85,7 @@ Notes:
 						</dd>
 					</dl>
 					<cfloop from="1" to="#arrayLen($.slatwall.account().getAccountAddresses())#" index="local.addressIndex">
-						<cfset local.accountAddress = $.slatwall.account().getAccountAddresses()[local.addressIndex] />
+						<cfset local.accountAddress = request.slatwallScope.account().getAccountAddresses()[local.addressIndex] />
 						<div id="shippingAddress_#local.addressIndex#" class="addressBlock" style="display:none;">
 							<!--- Uncomment if you want to be able to rename address nicknames during checkout --->
 							<!---

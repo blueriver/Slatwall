@@ -72,13 +72,6 @@ component extends="BaseController" output=false accessors=true {
 		rc.stockReceiverSmartList.setPageRecordsShow(10);
 	}
 	
-	public function error(required struct rc) {
-		if(structKeyExists(rc, "$")) {
-			getFW().getPluginConfig().getPluginManager().announceEvent("onSiteError", rc.$.event());
-			getFW().getPluginConfig().getPluginManager().announceEvent("onGlobalMissingTemplate", rc.$.event());
-		}
-	}
-	
 	public function updateSortOrder(required struct rc) {
 		getDataService().updateRecordSortOrder(argumentCollection=rc);
 		setView("admin:main.default");

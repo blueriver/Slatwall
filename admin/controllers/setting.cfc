@@ -129,7 +129,7 @@ component extends="BaseController" output="false" accessors="true" {
 
 	// Frontend Views
 	public void function updateFrontendViews(required struct rc) {
-
+		
 		var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
 		var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#rc.siteid#/includes/display_objects/custom/slatwall/"));
 
@@ -171,4 +171,7 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:main.default", preserve="message");	
 	}
 	
+	public void function detailviewupdate() {
+		
+	}
 }

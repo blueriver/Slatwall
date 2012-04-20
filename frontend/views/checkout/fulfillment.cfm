@@ -49,7 +49,7 @@ Notes:
 						<input type="hidden" name="slatAction" value="frontend:checkout.saveOrderFulfillments" />
 				</cfif>
 				<cfset local.orderFulfillmentIndex = 1 />
-				<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="local.fulfillment">
+				<cfloop array="#request.slatwallScope.cart().getOrderFulfillments()#" index="local.fulfillment">
 					<div class="fulfillmentOptions">
 						<cfset params = structNew() />
 						<cfset params.orderFulfillment = local.fulfillment />

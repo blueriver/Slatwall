@@ -151,8 +151,7 @@ component extends="org.fw1.framework" output="false" {
 					serviceFactory.loadBeansFromXmlObj( xml );
 					
 					// Set a data service coldspring as the child factory, with the Slatwall as it's parent
-					integrationService = serviceFactory.getBean("integrationService");
-					serviceFactory = integrationService.updateColdspringWithDataIntegration( serviceFactory, xml );
+					serviceFactory = serviceFactory.getBean("integrationService").updateColdspringWithDataIntegration( serviceFactory, xml );
 					
 					// Now place the service factory as the fw1 bean
 					setBeanFactory( serviceFactory );
@@ -212,6 +211,10 @@ component extends="org.fw1.framework" output="false" {
 		if(structCount(structuredData)) {
 			structAppend(request.context, structuredData);	
 		}
+		
+		// Setup a $ in the request context, and the slatwallScope shortcut
+		request.context.$ = {};
+		request.context.$.slatwall = request.slatwallScope;
 		
 		// Run subsytem specific logic.
 		if(getSubsystem(request.context.slatAction) == "admin") {
@@ -302,43 +305,65 @@ component extends="org.fw1.framework" output="false" {
 		// first, we double check to make sure all framework defaults are setup
 		setupFrameworkDefaults();
 		
-		// If there was already a view override in the request, then we need to save it to be used later
+		var originalContext = {};
+		var originalServices = [];
 		var originalViewOverride = "";
+		var originalCFCBase = "";
+		var originalBase = "";
+		
+		
+		// If there was already a request.context, then we need to save it to be used later
+		if(structKeyExists(request, "context")) {
+			originalContext = request.context;
+			structDelete(request, "context");
+		}
+		
+		// If there was already a request.services, then we need to save it to be used later
+		if(structKeyExists(request, "services")) {
+			originalServices = request.services;
+			structDelete(request, "services");
+		}
+		
+		// If there was already a view override in the request, then we need to save it to be used later
 		if(structKeyExists(request, "overrideViewAction")) {
 			originalViewOverride = request.overrideViewAction;
 			structDelete(request, "overrideViewAction");
 		}
 		
 		// We also need to store the original cfcbase if there was one
-		var originalCFCBase = "";
 		if(structKeyExists(request, "cfcbase")) {
 			originalCFCBase = request.cfcbase;
 			structDelete(request, "cfcbase");
 		}
 		
 		// We also need to store the original base if there was one
-		var originalBase = "";
 		if(structKeyExists(request, "base")) {
 			originalBase = request.base;
 			structDelete(request, "base");
 		}
 		
-		// create a seperate request container to hold simple data
-		request.slatwalldoaction = {};
+		// create a new request context to hold simple data, and an empty request services so that the view() function works
+		request.context = {};
+		request.services = [];
 		
 		// Place form and URL into the new structure
-		structAppend(request.slatwalldoaction, form);
-		structAppend(request.slatwalldoaction, url);
+		structAppend(request.context, form);
+		structAppend(request.context, url);
+		
+		if(!structKeyExists(request.context, "$")) {
+			request.context.$ = {};
+			request.context.$.slatwall = request.slatwallScope;
+		}
 		
 		// Do structured data just like a normal request
-		var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections( request.slatwalldoaction );
+		var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections( request.context );
 		if(structCount(structuredData)) {
-			structAppend(request.slatwalldoaction, structuredData);	
+			structAppend(request.context, structuredData);	
 		}
 		
 		// Place all of this formated data into a var named rc just like a regular request
-		var rc = request.slatwalldoaction;
-		var $ = request.muraScope;
+		var rc = request.context;
+		request.context.$ = request.muraScope;
 		
 		// Get Action Details
 		var subsystem = getSubsystem( arguments.action );
@@ -348,15 +373,15 @@ component extends="org.fw1.framework" output="false" {
 		// Setup the cfc base so that the getController method works
 		request.cfcbase = variables.framework.cfcbase;
 		request.base = variables.framework.base;
-				
+
 		// Call the controller
 		var controller = getController( section = section, subsystem = subsystem );
 		if(isObject(controller)) {
-			doActionController( controller, 'before' );
-			doActionController( controller, 'start' & item );
-			doActionController( controller, item );
-			doActionController( controller, 'end' & item );
-			doActionController( controller, 'after' );
+			doController( controller, 'before' );
+			doController( controller, 'start' & item );
+			doController( controller, item );
+			doController( controller, 'end' & item );
+			doController( controller, 'after' );
 		}
 				
 		// Was the view overridden in the controller
@@ -364,7 +389,6 @@ component extends="org.fw1.framework" output="false" {
 			subsystem = getSubsystem( request.overrideViewAction );
 			section = getSection( request.overrideViewAction );
 			item = getItem( request.overrideViewAction );
-			structDelete( request, 'overrideViewAction' );
 		}
 		
 		var viewPath = parseViewOrLayoutPath( subsystem & variables.framework.subsystemDelimiter & section & '/' & item, 'view' );
@@ -375,8 +399,21 @@ component extends="org.fw1.framework" output="false" {
 		}
 		
 		// Remove the cfcbase & base from the request so that future actions don't get screwed up
+		structDelete( request, 'context' );
+		structDelete( request, 'services' );
+		structDelete( request, 'overrideViewAction' );
 		structDelete( request, 'cfcbase' );
 		structDelete( request, 'base' );
+		
+		// If there was an override view action before... place it back into the request
+		if(structCount(originalContext)) {
+			request.context = originalContext;
+		}
+		
+		// If there was an override view action before... place it back into the request
+		if(arrayLen(originalServices)) {
+			request.services = originalServices;
+		}
 		
 		// If there was an override view action before... place it back into the request
 		if(len(originalViewOverride)) {
@@ -395,7 +432,7 @@ component extends="org.fw1.framework" output="false" {
 		
 		return response;
 	}
-	
+	/*
 	// This method is only intended to be used by the doAction() method
 	private void function doActionController( any cfc, string method ) {
 		if ( structKeyExists( cfc, method ) || structKeyExists( cfc, 'onMissingMethod' ) ) {
@@ -407,5 +444,6 @@ component extends="org.fw1.framework" output="false" {
 			}
 		}
 	}
+	*/
 	
 }

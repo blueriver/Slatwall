@@ -40,6 +40,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	property name="DAO" type="any";
 	
+	// Place holder properties that get populated lazily
+	property name="settings" type="any";
+		
 	variables.integrationCFCs = {};
 	variables.dataIntegrationCFCs = {};
 	variables.paymentIntegrationCFCs = {};
@@ -79,7 +82,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function getPaymentIntegrationCFC(required any integration) {
 		if(!structKeyExists(variables.paymentIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
 			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Payment").init();
-			populateIntegrationCFCFromIntegration(integrationCFC, arguments.integration);
 			variables.paymentIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
 		}
 		return variables.paymentIntegrationCFCs[ arguments.integration.getIntegrationPackage() ];
@@ -88,7 +90,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function getShippingIntegrationCFC(required any integration) {
 		if(!structKeyExists(variables.shippingIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
 			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Shipping").init();
-			populateIntegrationCFCFromIntegration(integrationCFC, arguments.integration);
 			variables.shippingIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
 		}
 		return variables.shippingIntegrationCFCs[ arguments.integration.getIntegrationPackage() ];
@@ -179,107 +180,30 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
-	public any function populateIntegrationCFCFromIntegration(required any integrationCFC, required any integration) {
-		var integrationSettings = deserializeJSON(arguments.integration.getIntegrationSettings());
-		var integrationProperties = getIntegrationCFCSettings(arguments.integrationCFC);
-		
-		for(var i=1; i<=arrayLen(integrationProperties); i++) {
-			if(structKeyExists(integrationSettings, integrationProperties[i].name)) {
-				evaluate("arguments.integrationCFC.set#integrationProperties[i].name#( integrationSettings[integrationProperties[i].name] )");
-			}
-		}
-		
-		return arguments.integrationCFC;
-	}
-	
-	public any function getIntegrationCFCSettings(required any integrationCFC) {
-		var meta = getMetaData(arguments.integrationCFC);
-		if(structKeyExists(meta, "properties")) {
-			return meta.properties;
-		}
-		return [];
-	}
-	
-	public any function saveIntegration(required any integration, struct data) {
-		if(structKeyExists(arguments, "data")) {
-			// Populate the Entity Itself
-			arguments.integration.populate(arguments.data);
-			
-			// Populate Data Integration
-			if(arguments.integration.getDataReadyFlag() && structKeyExists(arguments.data, "dataIntegration")) {
-				var newData = arguments.data.dataIntegration;
-				var settings = arguments.integration.getIntegrationCFCSettings('data');
-				for(var i=1; i<=arrayLen(settings); i++) {
-					if(structKeyExists(newData, settings[i].name)) {
-						arguments.integration.setIntegrationSetting(settings[i].name, newData[settings[i].name]);
-					}
-				}
-				if(structKeyExists(variables.dataIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
-					structDelete(variables.dataIntegrationCFCs, arguments.integration.getIntegrationPackage());
-				}
-			}
-			// Populate Payment Integration
-			if(arguments.integration.getPaymentReadyFlag() && structKeyExists(arguments.data, "paymentIntegration")) {
-				var newData = arguments.data.paymentIntegration;
-				var settings = arguments.integration.getIntegrationCFCSettings('payment');
-				for(var i=1; i<=arrayLen(settings); i++) {
-					if(structKeyExists(newData, settings[i].name)) {
-						arguments.integration.setIntegrationSetting(settings[i].name, newData[settings[i].name]);
-					}
-				}
-				if(structKeyExists(variables.paymentIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
-					structDelete(variables.paymentIntegrationCFCs, arguments.integration.getIntegrationPackage());
-				}
-			}
-			// Populate Shipping Integration
-			if(arguments.integration.getShippingReadyFlag() && structKeyExists(arguments.data, "shippingIntegration")) {
-				var newData = arguments.data.shippingIntegration;
-				var settings = arguments.integration.getIntegrationCFCSettings('shipping');
-				for(var i=1; i<=arrayLen(settings); i++) {
-					if(structKeyExists(newData, settings[i].name)) {
-						arguments.integration.setIntegrationSetting(settings[i].name, newData[settings[i].name]);
-					}
-				}
-				if(structKeyExists(variables.shippingIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
-					structDelete(variables.shippingIntegrationCFCs, arguments.integration.getIntegrationPackage());
-				}
-			}
-			
-			// Remove the activeFW1Subsystems setting so that it gets reloaded
-			if(structKeyExists(variables, "activeFW1Subsystems")) {
-				structDelete(variables, "activeFW1Subsystems");
-			}
-		}
-		
-		return getDAO().save(arguments.integration);
-	}
-	
 	public any function updateColdspringWithDataIntegration(required any serviceFactory, required xml originalXML) {
-		var integrations = this.listIntegration();
-		
-		for(var i=1; i<=arrayLen(integrations); i++) {
+		if(fileExists(expandPath('/Slatwall/integrationServices/coldspring.xml'))) {
+			var newXML = xmlParse(fileRead(expandPath('/Slatwall/integrationServices/coldspring.xml')));
 
-			if(integrations[i].getDataActiveFlag()) {
-				var dataIntegrationCFC = getDataIntegrationCFC( integrations[i] );
-				var newXML = dataIntegrationCFC.getColdspringXML();
-				
-				for(var x=1; x<=arrayLen(newXML.beans.bean); x++) {
-					var newBean = newXML.beans.bean[x];
-					for(var c=1; c<=arrayLen(arguments.originalXML.beans.bean); c++) {
-						if(arguments.originalXML.beans.bean[c].xmlAttributes.id == newBean.xmlAttributes.id) {
-							arguments.originalXML.beans.bean[c].xmlAttributes.class = newBean.xmlAttributes.class;
-						}
+			for(var x=1; x<=arrayLen(newXML.beans.bean); x++) {
+				var newBean = newXML.beans.bean[x];
+				for(var c=1; c<=arrayLen(arguments.originalXML.beans.bean); c++) {
+					if(arguments.originalXML.beans.bean[c].xmlAttributes.id == newBean.xmlAttributes.id) {
+						arguments.originalXML.beans.bean[c].xmlAttributes.class = newBean.xmlAttributes.class;
 					}
 				}
-				
-				var newFactory = createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
-				newFactory.loadBeansFromXmlObj( arguments.originalXML );
-				newFactory.setParent( application.serviceFactory );
-				
-				return newFactory;
 			}
+			
+			var newFactory = createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
+			newFactory.loadBeansFromXmlObj( arguments.originalXML );
+			newFactory.setParent( application.serviceFactory );
+			
+			return newFactory;
 		}
 		
 		return arguments.serviceFactory;
+	}
+	
+	public any function getSettings() {
+		
 	}
 }
