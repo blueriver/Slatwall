@@ -36,71 +36,40 @@
 Notes:
 
 --->
+<cfset slatwallContent = request.slatwallScope.getService("contentService").getContentByCmsContentID($.content("contentID"),true) />
 
-<cfset slatwallContent = getService("contentService").getContentByCmsContentID($.content("contentID"),true) />
-<cfset slatwallProductSmartList = getService("productService").getSmartList(entityName="SlatwallProduct") />
+<cfset slatwallProductSmartList = request.slatwallScope.getService("productService").getSmartList(entityName="SlatwallProduct") />
 <cfset slatwallProductSmartList.addFilter(propertyIdentifier="productType_systemCode", value="contentAccess") />
 <cfset slatwallProducts = slatwallProductSmartList.getRecords() />
-<cfset restrictedContentTemplates = getService("contentService").listContentFilterByTemplateFlag(1) />
-<cfset restrictedParent = false />
-<cfset purchaseRequiredParent = false />
-<cfset subscriptionRequiredParent = false />
-<cfif Not $.content().getIsNew()>
-	<cfset restrictedContent = getService("contentService").getRestrictedContentByPath($.content("path")) />
-	<cfif !isNull(restrictedContent) AND restrictedContent.getcmsContentID() NEQ $.content("contentID")>
-		<cfset restrictedParent = true />
-		<cfset slatwallContent.setRestrictAccessFlag(1) />
-	</cfif>
-	<cfset purchaseRequiredContent = getService("contentService").getPurchaseRequiredContentByPath($.content("path")) />
-	<cfif !isNull(purchaseRequiredContent) AND purchaseRequiredContent.getcmsContentID() NEQ $.content("contentID")>
-		<cfset purchaseRequiredParent = true />
-	</cfif>
-	<cfset subscriptionRequiredContent = getService("contentService").getSubscriptionRequiredContentByPath($.content("path")) />
-	<cfif !isNull(subscriptionRequiredContent) AND subscriptionRequiredContent.getcmsContentID() NEQ $.content("contentID")>
-		<cfset subscriptionRequiredParent = true />
-	</cfif>
-</cfif>
+
+<cfset restrictedContentTemplates = request.slatwallScope.getService("contentService").listContentFilterByTemplateFlag(1) />
+
+<cfset contentRestrictAccessFlag = slatwallContent.getSettingDetails('contentRestrictAccessFlag') />
+<cfset contentRequirePurchaseFlag = slatwallContent.getSettingDetails('contentRequirePurchaseFlag') />
+<cfset contentRequireSubscriptionFlag = slatwallContent.getSettingDetails('contentRequireSubscriptionFlag') />
 <cfoutput>
-	<cfif restrictedParent>
+	<cfif contentRestrictAccessFlag.settingValueFormatted>
 		<input type="hidden" name="slatwallData.templateFlag" value="0" />
 		<!---<input type="hidden" name="slatwallData.productListingFlag" value="0" />
 		<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />--->
 	</cfif>
-	<cfoutput>
-		<cf_SlatwallSettingTable>
-			<cf_SlatwallSetting settingName="contentRestrictAccessFlag" settingObject="#slatwallContent#" />
-			<cf_SlatwallSetting settingName="contentRequirePurchaseFlag" settingObject="#slatwallContent#" />
-			<cf_SlatwallSetting settingName="contentRequireSubscriptionFlag" settingObject="#slatwallContent#" />
-			<cf_SlatwallSetting settingName="contentProductListingFlag" settingObject="#slatwallContent#" />
-			<cf_SlatwallSetting settingName="contentDefaultProductsPerPage" settingObject="#slatwallContent#" />
-			<cf_SlatwallSetting settingName="contentIncludeChildContentProductsFlag" settingObject="#slatwallContent#" />
-			<cf_SlatwallSetting settingName="contentRestrictedContentDisplayTemplate" settingObject="#slatwallContent#" />
-		</cf_SlatwallSettingTable>
-	</cfoutput>
 	<dl class="oneColumn">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="templateFlag" fieldName="slatwallData.templateFlag" edit="#!restrictedParent#">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="productListingFlag" fieldName="slatwallData.productListingFlag" edit="#!restrictedParent#">
+		<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("entity.content.templateFlag_hint")#" fieldName="slatwallData.templateFlag" fieldType="yesno" value="#slatwallContent.getTemplateFlag()#" edit="#!contentRestrictAccessFlag.settingValueFormatted#">
+		<cf_SlatwallSetting settingName="contentProductListingFlag" settingObject="#slatwallContent#" />
 		<div class="productListingFlagRelated">
-			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="showProductInSubPagesFlag" fieldName="slatwallData.showProductInSubPagesFlag" edit="true">
-			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="disableProductAssignmentFlag" fieldName="slatwallData.disableProductAssignmentFlag" edit="true">
-			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="defaultProductsPerPage" fieldName="slatwallData.defaultProductsPerPage" edit="true">
+			<cf_SlatwallSetting settingName="contentIncludeChildContentProductsFlag" settingObject="#slatwallContent#" />
+			<cf_SlatwallSetting settingName="contentDefaultProductsPerPage" settingObject="#slatwallContent#" />
+			<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("entity.content.disableProductAssignmentFlag_hint")#" fieldName="slatwallData.disableProductAssignmentFlag" fieldType="yesno" value="#slatwallContent.getDisableProductAssignmentFlag()#" edit="true">
 		</div>
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="restrictAccessFlag" fieldName="slatwallData.restrictAccessFlag" edit="#!restrictedParent#">
+		<cf_SlatwallSetting settingName="contentRestrictAccessFlag" settingObject="#slatwallContent#" />
 		<div class="restrictAccessFlagRelated">
-			<cfset local.valueOptions = [] />
-			<cfloop array="#restrictedContentTemplates#" index="local.restrictedContentTemplate">
-				<cfset arrayAppend(valueOptions,{value=restrictedContentTemplate.getContentID(),name=restrictedContentTemplate.getTitle()}) />
-			</cfloop>
-			<cfset local.selectedRestrictedContentTemplateContentID = isNull(slatwallContent.getRestrictedContentTemplateContent())?"":slatwallContent.getRestrictedContentTemplateContent().getContentID() />
-			<cf_SlatwallFieldDisplay title="Restricted Page Template" fieldName="slatwallData.restrictedContentTemplateContent.contentID" fieldType="select" valueOptions="#valueOptions#" value="#selectedRestrictedContentTemplateContentID#" edit="true">
-			<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true">
+			<cf_SlatwallSetting settingName="contentRestrictedContentDisplayTemplate" settingObject="#slatwallContent#" />
+			<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("entity.content.allowPurchaseFlag_hint")#" fieldName="slatwallData.allowPurchaseFlag" fieldType="yesno" value="#slatwallContent.getAllowPurchaseFlag()#" edit="true">
 			<div class="requirePurchaseFlag">
-				<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="requirePurchaseFlag" fieldName="slatwallData.requirePurchaseFlag" edit="true" fieldType="checkbox">
-				<div class="requirePurchaseFlagInherit"></div>
+				<cf_SlatwallSetting settingName="contentRequirePurchaseFlag" settingObject="#slatwallContent#" />
 			</div>
 			<div class="requireSubscriptionFlag">
-				<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="requireSubscriptionFlag" fieldName="slatwallData.requireSubscriptionFlag" edit="true" fieldType="checkbox">
-				<div class="requireSubscriptionFlagInherit"></div>
+				<cf_SlatwallSetting settingName="contentRequireSubscriptionFlag" settingObject="#slatwallContent#" />
 			</div>
 					
 			<div class="allowPurchaseFlagRelated" id="allowPurchaseFlagRelated">
@@ -174,16 +143,8 @@ Notes:
 	</dl>
 </cfoutput>
 
-<!--- remove this when slatwall scope is available in $ --->
-<cffunction name="getService" access="private">
-	<cfargument name="serviceName" /> 
-	<cfreturn application.slatwallfw1.factory.getBean(serviceName) />
-</cffunction> 
-
 <cfoutput>
 <script type="text/javascript">
-var #toscript(purchaseRequiredParent,"purchaseRequiredParent")#
-var #toscript(subscriptionRequiredParent,"subscriptionRequiredParent")#
 var $ = jQuery;
 function setupTemplateFlagDisplay() {
 	if ($('input[name="slatwallData.templateFlag"]:checked').length > 0) {
@@ -192,38 +153,38 @@ function setupTemplateFlagDisplay() {
 		var selectedValue = $('input[name="slatwallData.templateFlag"]').val();
 	}
 	if(selectedValue == 1){
-		$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).change();
-		$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.setting.contentProductListingFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.setting.contentRestrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
 	}
 }
 
 function setupProductListingFlagDisplay() {
-	if($('input[name="slatwallData.productListingFlag"]:checked').length > 0) {
-		var selectedValue = $('input[name="slatwallData.productListingFlag"]:checked').val();
+	if($('input[name="slatwallData.setting.contentProductListingFlag"]:checked').length > 0) {
+		var selectedValue = $('input[name="slatwallData.setting.contentProductListingFlag"]:checked').val();
 	} else {
-		var selectedValue = $('input[name="slatwallData.productListingFlag"]').val();
+		var selectedValue = $('input[name="slatwallData.setting.contentProductListingFlag"]').val();
 	}
 	if(selectedValue == 1){
 		$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).change();
-		$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.setting.contentRestrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
 		$('.productListingFlagRelated').show();
 	} else {
-		$('input[name="slatwallData.showProductInSubPagesFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.setting.contentIncludeChildContentProductsFlag"]').filter('[value=""]').prop('checked', true).change();
 		$('input[name="slatwallData.disableProductAssignmentFlag"]').filter('[value=0]').prop('checked', true).change();
-		$('input[name="slatwallData.defaultProductsPerPage"]').val('');
+		$('input[name="slatwallData.setting.contentDefaultProductsPerPage"]').val('');
 		$('.productListingFlagRelated').hide();
 	}
 }
 
 function setupRestrictAccessFlagDisplay() {
-	if ($('input[name="slatwallData.restrictAccessFlag"]:checked').length > 0) {
-		var selectedValue = $('input[name="slatwallData.restrictAccessFlag"]:checked').val();
+	if ($('input[name="slatwallData.setting.contentRestrictAccessFlag"]:checked').length > 0) {
+		var selectedValue = $('input[name="slatwallData.setting.contentRestrictAccessFlag"]:checked').val();
 	} else {
-		var selectedValue = $('input[name="slatwallData.restrictAccessFlag"]').val();
+		var selectedValue = $('input[name="slatwallData.setting.contentRestrictAccessFlag"]').val();
 	}
 	if(selectedValue == 1){
 		$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).change();
-		$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.setting.contentProductListingFlag"]').filter('[value=0]').prop('checked', true).change();
 		$('.restrictAccessFlagRelated').show();
 		setupAllowPurchaseFlagDisplay();
 	} else {
@@ -249,27 +210,10 @@ function setupAllowPurchaseFlagDisplay() {
 
 function setupRequirePurchaseFlagDisplay() {
 	var selectedValue = $('input[name="slatwallData.allowPurchaseFlag"]:checked').val();
-	if(selectedValue == 0){
-		$('.requirepurchaseflagfield').hide();
+	if(selectedValue == undefined || selectedValue == "0"){
+		$('.requirePurchaseFlag').hide();
 	} else {
-		$('.requirepurchaseflagfield').show();
-	}
-	// show inherited value
-	if(purchaseRequiredParent == "true" && (selectedValue == undefined || selectedValue == "0")) {
-		$('.requirePurchaseFlagInherit').html('<span>Currently purchase required by parent</span>');
-	} else if(purchaseRequiredParent == "false") {
-		$('.requirePurchaseFlagInherit').html('<span>Currently purchase not required by parent</span>');
-	}
-}
-
-function setupRequireSubscriptionFlagDisplay() {
-	var selectedValue = $('input[name="slatwallData.requireSubscriptionFlag"]:checked').val();
-	$('.requireSubscriptionFlagInherit').html('<span>Currently subscription required by parent</span>');
-	// show inherited value
-	if(subscriptionRequiredParent == "true" && (selectedValue == undefined || selectedValue == "0")) {
-		$('.requireSubscriptionFlagInherit').html('<span>Currently subscription required by parent</span>');
-	} else if(subscriptionRequiredParent == "false") {
-		$('.requireSubscriptionFlagInherit').html('<span>Currently subscription not required by parent</span>');
+		$('.requirePurchaseFlag').show();
 	}
 }
 
@@ -287,11 +231,11 @@ $(document).ready(function(){
 		setupTemplateFlagDisplay();
 	});
 	
-	$('input[name="slatwallData.productListingFlag"]').change(function(){
+	$('input[name="slatwallData.setting.contentProductListingFlag"]').change(function(){
 		setupProductListingFlagDisplay();
 	});
 	
-	$('input[name="slatwallData.restrictAccessFlag"]').change(function(){
+	$('input[name="slatwallData.setting.contentRestrictAccessFlag"]').change(function(){
 		setupRestrictAccessFlagDisplay();
 	});
 	
@@ -302,11 +246,7 @@ $(document).ready(function(){
 	$('input[name="slatwallData.allowPurchaseFlag"]').change(function(){
 		setupAllowPurchaseFlagDisplay();
 	});
-
-	$('input[name="slatwallData.requireSubscriptionFlag"]').change(function(){
-		setupRequireSubscriptionFlagDisplay();
-	});
-
+	
 	$('select[name="slatwallData.product.sku.skuID"]').change(function() {
 		if($(this).val() != ""){
 			$('.skuRelated').hide();
@@ -318,7 +258,7 @@ $(document).ready(function(){
 	$('select[name="slatwallData.product.productID"]').change(function() {
 		
 		var postData = {
-			apiKey: '#getService("sessionService").getAPIKey("sku", "get")#',
+			apiKey: '#request.slatwallScope.getService("sessionService").getAPIKey("sku", "get")#',
 		};
 		$.ajax({
 			type: 'get',
@@ -343,7 +283,6 @@ $(document).ready(function(){
 	setupProductListingFlagDisplay();
 	setupRestrictAccessFlagDisplay();
 	setupAllowPurchaseFlagDisplay();
-	setupRequireSubscriptionFlagDisplay();
 });
 </script>
 </cfoutput>

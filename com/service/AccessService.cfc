@@ -38,22 +38,24 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-	public boolean function hasAccess(required any cmsContentIDPath) {
+	public boolean function hasAccess(required any cmsContentID) {
 		// make sure there is restricted content in the system before doing any check
 		if(!getService("contentService").restrictedContentExists()) {
 			return true;
 		}
-		// get restricted content by path
-		var restrictedContent = getService("contentService").getRestrictedContentByPath(arguments.cmsContentIDPath);
+		// get restricted content by cmsContentID
+		var restrictedContent = getService("contentService").getRestrictedContentBycmsContentID(arguments.cmsContentID);
 		if(isNull(restrictedContent)) {
 			return true;
 		}
-		// get the current content
-		// var thisContent = getService("contentService").getContentByCmsContentID(listLast(arguments.cmsContentIDPath));
 		// get the purchase required content
-		var purchaseRequiredContent = getService("contentService").getPurchaseRequiredContentByPath(arguments.cmsContentIDPath);
+		// var purchaseRequiredContent = getService("contentService").getPurchaseRequiredContentByPath(arguments.cmsContentIDPath);
+		var purchaseRequiredContentSetting = restrictedContent.getSettingDetails('contentRequirePurchaseFlag');
+		var purchaseRequiredContentID = purchaseRequiredContentSetting.settingValue;
 		// get the subscription required content
-		var subscriptionRequiredContent = getService("contentService").getSubscriptionRequiredContentByPath(arguments.cmsContentIDPath);
+		// var subscriptionRequiredContent = getService("contentService").getSubscriptionRequiredContentByPath(arguments.cmsContentIDPath);
+		var subscriptionRequiredContentSetting = restrictedContent.getSettingDetails('contentRequireSubscriptionFlag');
+		var subscriptionRequiredContentID = subscriptionRequiredContentSetting.settingValue;
 		var purchasedAccess = false;
 		var subcriptionAccess = false;
 		
@@ -63,20 +65,20 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
 			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=request.slatwallScope.getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=restrictedContent.getContentID());
-			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
+			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredContentID == "") {
 				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
 				purchasedAccess = true;
 			}
 			// check if the content is not allowed for purchase but requires purchase of parent
-		} else if((isNull(restrictedContent.getAllowPurchaseFlag()) || !restrictedContent.getAllowPurchaseFlag()) && !isNull(purchaseRequiredContent)) {
+		} else if((isNull(restrictedContent.getAllowPurchaseFlag()) || !restrictedContent.getAllowPurchaseFlag()) && purchaseRequiredContentID != "") {
 			// check if any parent content was purchased
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
 			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=request.slatwallScope.getCurrentAccount().getAccountID());
-			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=purchaseRequiredContent.getContentID());
+			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=purchaseRequiredContentID);
 			// check if the content requires subcription in addition to purchase
-			if(accountContentAccessSmartList.getRecordsCount() && isNull(subscriptionRequiredContent)) {
+			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredContentID == "") {
 				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
@@ -84,7 +86,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		// check if restricted content is part of subscription access and doesn't require purchase or it does require purchased and was purchased
-		if(isNull(purchaseRequiredContent) || purchasedAccess) {
+		if(purchaseRequiredContentID == "" || purchasedAccess) {
 			// check if content is part of subscription access
 			for(var subscriptionUsageBenefitAccount in request.slatwallScope.getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
 				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(restrictedContent)) {

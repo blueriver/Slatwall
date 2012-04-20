@@ -51,16 +51,22 @@ component extends="taffy.core.api" {
 		
 	}
 	
+	private any function getSlatwallFW1Application() {
+		if(!structKeyExists(request, "slatwallFW1Application")) {
+			request.slatwallFW1Application = createObject("component", "Slatwall.Application");
+		}
+		return request.slatwallFW1Application;
+	}
+	
 	//use this instead of onRequestStart()
 	public void function requestStartEvent(){
 		if(!isDefined('url.reload')) {
 			
 			// Setup this request with all of the standard Slatwall Stuff including permissions
-			var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
-			slatwallFW.onRequestStart(cgi.script_name);
+			getSlatwallFW1Application().onRequestStart(cgi.script_name);
 			
 			// Make sure that nobody outside of S2 is using the dashboard
-			if(structKeyExists(url, "dashboard") && !request.context.$.currentUser().getS2()) {
+			if(structKeyExists(url, "dashboard") && !request.muraScope.currentUser().getS2()) {
 				abort;
 			}
 			
@@ -69,7 +75,7 @@ component extends="taffy.core.api" {
 	
 	public any function onTaffyRequest(string verb, string cfc, struct requestArguments, string mimeExt, struct headers) {
 		if(!isDefined('url.reload')) {
-			if(request.context.$.currentUser().getS2()) {
+			if(request.muraScope.currentUser().getS2()) {
 				return true;
 			}
 			
@@ -88,9 +94,9 @@ component extends="taffy.core.api" {
 			} else {
 				resource = arguments.cfc;
 			}
-			
+
 			// Check the session to see if that API Key was granted for that resource
-			if(request.context.$.slatwall.getService("sessionService").verifyAPIKey(resource=resource, verb=arguments.verb, apiKey=apiKey)){
+			if(request.slatwallScope.getService("sessionService").verifyAPIKey(resource=resource, verb=arguments.verb, apiKey=apiKey)){
 				return true;
 			}
 			
@@ -102,8 +108,7 @@ component extends="taffy.core.api" {
 	public void function onRequest( targetPage ){
 		var result = super.onRequest( targetPage );
 		if(!isDefined('url.reload')) {
-			var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
-			slatwallFW.endSlatwallLifecycle();
+			getSlatwallFW1Application().endSlatwallLifecycle();
 		}
 	}
 }

@@ -39,26 +39,15 @@
 component extends="taffy.core.resource" {
 	
 	public any function getService(required string service) {
-		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.service);
+		return application.slatwallfw1.factory.getBean(arguments.service);
 	}
 	
 	public any function getFW() {
-		return getPluginConfig().getApplication().getValue("fw");
-	}
-	
-	public any function getPluginConfig() {
-		return application.slatwall.pluginConfig;
+		return getSlatwallFW1Application();
 	}
 	
 	public string function rbKey(required string key) {
-		return getPluginConfig().getApplication().getValue("rbFactory").getKeyValue(session.rb,arguments.key);
+		return request.slatwallScope.rbKey(arguments.key);
 	}
-	
-	public any function secureDisplay() {
-		return getFW().secureDisplay(argumentcollection=arguments);
-	}
-	
-	public any function buildURL() {
-		return getFW().buildURL(argumentcollection=arguments);
-	}
+
 }

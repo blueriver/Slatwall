@@ -355,15 +355,14 @@ component extends="org.fw1.framework" output="false" {
 			request.context.$.slatwall = request.slatwallScope;
 		}
 		
+		// Add the slatAction to the RC Scope
+		request.context.slatAction = arguments.action;
+		
 		// Do structured data just like a normal request
 		var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections( request.context );
 		if(structCount(structuredData)) {
 			structAppend(request.context, structuredData);	
 		}
-		
-		// Place all of this formated data into a var named rc just like a regular request
-		var rc = request.context;
-		request.context.$ = request.muraScope;
 		
 		// Get Action Details
 		var subsystem = getSubsystem( arguments.action );
@@ -392,6 +391,10 @@ component extends="org.fw1.framework" output="false" {
 		}
 		
 		var viewPath = parseViewOrLayoutPath( subsystem & variables.framework.subsystemDelimiter & section & '/' & item, 'view' );
+		
+		// Place all of this formated data into a var named rc just like a regular request
+		var rc = request.context;
+		var $ = request.context.$;
 		
 		// Include the view
 		savecontent variable="response"  {
@@ -432,18 +435,6 @@ component extends="org.fw1.framework" output="false" {
 		
 		return response;
 	}
-	/*
-	// This method is only intended to be used by the doAction() method
-	private void function doActionController( any cfc, string method ) {
-		if ( structKeyExists( cfc, method ) || structKeyExists( cfc, 'onMissingMethod' ) ) {
-			try {
-				evaluate( 'cfc.#method#( rc = request.slatwalldoaction )' );
-			} catch ( any e ) {
-				setCfcMethodFailureInfo( cfc, method );
-				rethrow;
-			}
-		}
-	}
-	*/
+	
 	
 }

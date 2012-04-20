@@ -47,6 +47,19 @@ Notes:
 	<cfelse>
 		<cfset attributes.settingDetails = request.slatwallScope.getService("settingService").getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
 	</cfif>
-	
-	<cfassociate basetag="cf_SlatwallSettingTable" datacollection="settings">
+	<cfset settingMetaData = request.slatwallScope.getService("settingService").getSettingMetaData(attributes.settingName) />
+	<cfset value = attributes.settingDetails.settingValue />
+	<cfif attributes.settingDetails.settingInherited>
+		<cfset value = "" />
+	</cfif>
+	<cfset valueOptions = [] />
+	<cfset fieldtype = settingMetaData.fieldType />
+	<cfif settingMetaData.fieldType EQ "select">
+		<cfset valueOptions = request.slatwallScope.getService("settingService").getSettingOptions(attributes.settingName) />
+		<cfset arrayPrepend(valueOptions,{name="Inherited (#attributes.settingDetails.settingValue EQ ''?'Not Defined':attributes.settingDetails.settingValueFormatted#)",value=""}) />
+	<cfelseif settingMetaData.fieldType EQ "yesno">
+		<cfset fieldtype = "radiogroup" />
+		<cfset valueOptions = [{name="Yes",value="1"},{name="No",value="0"},{name="Inherited (#attributes.settingDetails.settingValueFormatted#)",value=""}] />
+	</cfif>
+	<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("setting.#attributes.settingName#_hint")#" fieldName="slatwallData.setting.#attributes.settingName#" fieldType="#fieldtype#" valueOptions="#valueOptions#" value="#value#" edit="true">
 </cfif>
