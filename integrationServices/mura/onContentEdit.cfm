@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfset slatwallContent = request.slatwallScope.getService("contentService").getContentByCmsContentID($.content("contentID"),true) />
+<cfset slatwallContent = request.slatwallScope.getService("contentService").getContentByCmsContentID($.content("contentID"), true) />
 
 <cfset slatwallProductSmartList = request.slatwallScope.getService("productService").getSmartList(entityName="SlatwallProduct") />
 <cfset slatwallProductSmartList.addFilter(propertyIdentifier="productType_systemCode", value="contentAccess") />

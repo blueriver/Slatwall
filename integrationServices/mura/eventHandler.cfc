@@ -14,34 +14,6 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		
 	}
 	
-	// For admin request start, we call the Slatwall Event Handler that gets the request setup
-	public void function onGlobalRequestStart(required any $) {
-		if(!structKeyExists(request, "slatwallScope")) {
-			// Call the Slatwall Event Handler that gets the request setup
-			getSlatwallFW1Application().setupGlobalRequest();
-		}
-
-		if(!structKeyExists(arguments.$, "slatwall")) {
-			// Setup the newly create slatwallScope into the muraScope
-			arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
-		}
-			
-		if(!$.event().valueExists('slatwallData')) {
-			// Setup structured Data 
-			var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections($.getEvent().getAllValues());
-			if(structCount(structuredData)) {
-				for(var key in structuredData) {
-					$.event(key,structuredData[key]);
-				}
-			}
-		}
-	}
-	
-	// For admin request end, we call the endLifecycle
-	public void function onGlobalRequestEnd(required any $) {
-		getSlatwallFW1Application().endSlatwallLifecycle();
-	}
-	
 	public void function onSiteRequestStart(required any $) {
 		
 		// Call the Slatwall Event Handler that gets the request setup
@@ -113,7 +85,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		
 		// Check for any slatActions that might have been passed in
 		if(len($.event('slatAction'))) {
-			$.content('body', $.content('body') & getSlatwallFW1Application().doAction($.event('slatAction')));
+			$.content('body', $.content('body') & doAction($.event('slatAction')));
 		}
 		
 		// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
@@ -145,9 +117,8 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 	// on category save, create/update the category in slatwall
 	public void function onAfterCategorySave(required any $) {
-		// This is called manually because for some reaon mura doesn't fire it on its own
-		onGlobalRequestStart($);
-		
+		startSlatwallAdminRequest($);
+				
 		var categoryBean = $.event("categoryBean");
 		var category = $.slatwall.getService("contentService").getCategoryByCmsCategoryID(categoryBean.getCategoryID(),true);
 		var parentCategory = $.slatwall.getService("contentService").getCategoryByCmsCategoryID(categoryBean.getParentID());
@@ -158,27 +129,30 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		category.setCmsSiteID($.event('siteID'));
 		category.setCmsCategoryID(categoryBean.getCategoryID());
 		category = $.slatwall.getService("contentService").saveCategory(category);
+		
+		endSlatwallAdminRequest($);
 	}
 	
 	// on category delete, try to delete slatwall category
 	public void function onAfterCategoryDelete(required any $) {
-		// This is called manually because for some reaon mura doesn't fire it on its own
-		onGlobalRequestStart($);
+		startSlatwallAdminRequest($);
 		
 		var category = $.slatwall.getService("contentService").getCategoryByCmsCategoryID($.event("categoryID"),true);
 		if(!category.isNew() && category.isDeletable()) {
 			$.slatwall.getService("contentService").deleteCategory(category);
 		}
-
+		
+		endSlatwallAdminRequest($);
 	}
 	
-	public void function onContentEdit(required any $) { 
+	public void function onContentEdit(required any $) {
+		startSlatwallAdminRequest($);
 		include "onContentEdit.cfm";
+		endSlatwallAdminRequest($);
 	}
 	
 	public void function onAfterContentSave(required any $) {
-		// This is called manually because for some reaon mura doesn't fire it on its own
-		onGlobalRequestStart($);
+		startSlatwallAdminRequest($);
 		
 		if(!structKeyExists($.getEvent().getAllValues(),"slatwallData")) {
 			return;
@@ -192,14 +166,17 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		} else {
 			deleteContentSkus($);
 		}
+		
+		endSlatwallAdminRequest($);
 	}
 	
 	public void function onAfterContentDelete(required any $) {
-		// This is called manually because for some reaon mura doesn't fire it on its own
-		onGlobalRequestStart($);
+		startSlatwallAdminRequest($);
 		
 		deleteContentSkus($);
 		deleteSlatwallPage($);
+		
+		endSlatwallAdminRequest($);
 	}
 	
 	
@@ -222,19 +199,49 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		return request.slatwallFW1Application;
 	}
 	
+	// For admin request start, we call the Slatwall Event Handler that gets the request setup
+	private void function startSlatwallAdminRequest(required any $) {
+		if(!structKeyExists(request, "slatwallScope")) {
+			// Call the Slatwall Event Handler that gets the request setup
+			getSlatwallFW1Application().setupGlobalRequest();
+					
+			// Setup the newly create slatwallScope into the muraScope
+			arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+		
+			// Setup structured Data 
+			var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections($.getEvent().getAllValues());
+			if(structCount(structuredData)) {
+				for(var key in structuredData) {
+					$.event(key,structuredData[key]);
+				}
+			}
+		}
+	}
+	
+	// For admin request end, we call the endLifecycle
+	private void function endSlatwallAdminRequest(required any $) {
+		getSlatwallFW1Application().endSlatwallLifecycle();
+	}
 	
 	// Helper method to do our access check
 	private void function checkAccess(required any $) {
 		if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'))){
-			$.event("slatAction", "frontend:account.noaccess");
+			
+			// Set the content of the current content to noAccess
+			$.content('body', doAction('frontend:account.noaccess'));
+			
 			// save the current content to be used on the barrier page
 			$.event("restrictedContent",$.content());
+			
 			// get the slatwall content
 			var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
+			
 			// set slatwallContent in rc to be used on the barrier page
 			$.event("slatwallContent",slatwallContent);
+			
 			// get the barrier page template
 			var restrictedContentTemplate = $.slatwall.getService("contentService").getContent(slatwallContent.getSettingDetails('contentRestrictedContentDisplayTemplate').settingvalue);
+			
 			// set the content to the barrier page template
 			if(!isNull(restrictedContentTemplate)) {
 				$.event('contentBean', $.getBean("content").loadBy(contentID=restrictedContentTemplate.getCMSContentID()));

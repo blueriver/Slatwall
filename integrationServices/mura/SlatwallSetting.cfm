@@ -47,6 +47,12 @@ Notes:
 	<cfelse>
 		<cfset attributes.settingDetails = request.slatwallScope.getService("settingService").getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
 	</cfif>
+	
+	<!--- Some custom hack to make it so that settingIngeritted is actually false --->
+	<cfif structKeyExists(attributes.settingDetails.settingRelationships, "cmsContentID") && attributes.settingDetails.settingRelationships.cmsContentID eq attributes.settingObject.getCMSContentID()>
+		<cfset attributes.settingDetails.settingInherited = false />
+	</cfif>
+	
 	<cfset settingMetaData = request.slatwallScope.getService("settingService").getSettingMetaData(attributes.settingName) />
 	<cfset value = attributes.settingDetails.settingValue />
 	<cfif attributes.settingDetails.settingInherited>
