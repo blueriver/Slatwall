@@ -76,7 +76,7 @@ globalEncryptionKeySize
 			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
 			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
-			content = ["contentIDPath", "cmsContentID", "cmsContentIDPath"],
+			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"]
 		};
 		
@@ -330,7 +330,13 @@ globalEncryptionKeySize
 								foundValue = true;
 								settingDetails.settingValue = settingRecord.settingValue;
 								settingDetails.settingID = settingRecord.settingID;
-								settingDetails.settingInherited = true;
+								
+								// Add custom logic for cmsContentID
+								if(structKeyExists(settingDetails.settingRelationships, "cmsContentID")) {
+									settingDetails.settingInherited = false;	
+								} else {
+									settingDetails.settingInherited = true;
+								}
 							} else {
 								structClear(settingDetails.settingRelationships);
 							}
