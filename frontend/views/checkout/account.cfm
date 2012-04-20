@@ -52,7 +52,7 @@ Notes:
 			<cfif listFind(rc.orderRequirementsList, 'account') || rc.edit eq "account">
 				<cfif listFind(rc.orderRequirementsList, 'account')>
 					<cfset $.event('loginSlatAction', 'frontend:checkout.loginAccount') />
-					#view("account/login")#
+					#view("frontend:account/login")#
 				</cfif>
 				<div class="accountDetails">
 					<form name="account" method="post" action="?update=1">

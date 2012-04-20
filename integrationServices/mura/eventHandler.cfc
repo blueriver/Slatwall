@@ -104,9 +104,12 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		} else if($.content('filename') == $.slatwall.setting('globalPageOrderConfirmation')) {
 			$.content('body', $.content('body') & doAction('frontend:order.confirmation'));
 		} else if($.content('filename') == $.slatwall.setting('globalPageMyAccount')) {
-			$.content('body', $.content('body') & doAction('frontend:account.detail'));
-		} else if($.content('filename') == $.slatwall.setting('globalPageEditAccount')) {
-			$.content('body', $.content('body') & doAction('frontend:account.edit'));
+			// Checks for My-Account page
+			if($.event('showitem') != ""){
+				$.content('body', $.content('body') & doAction('frontend:account.#$.event("showitem")#'));
+			} else {
+				$.content('body', $.content('body') & doAction('frontend:account.detail'));
+			}
 		} else if($.content('filename') == $.slatwall.setting('globalPageCreateAccount')) {
 			$.content('body', $.content('body') & doAction('frontend:account.create'));
 		} else if($.content('filename') == $.slatwall.setting('globalPageCheckout')) {
