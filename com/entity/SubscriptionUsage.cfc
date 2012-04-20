@@ -40,18 +40,19 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	
 	// Persistent Properties
 	property name="subscriptionUsageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="activeFlag" ormtype="boolean" formatType="yesno";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency";
 	property name="nextBillDate" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
-	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";
 	property name="renewalTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="renewalTermID";
 	property name="gracePeriodTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
 	
 	// Related Object Properties (one-to-many)
 	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan";
+	property name="subscriptionOrderItems" singularname="subscriptionOrderItem" cfc="SubscriptionOrderItem" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -98,6 +99,14 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	}    
 	public void function removeSubscriptionUsageBenefit(required any subscriptionUsageBenefit) {    
 		arguments.subscriptionUsageBenefit.removeSubscriptionUsage( this );    
+	}
+	
+	// Subscription Order Items (one-to-many)    
+	public void function addSubscriptionOrderItem(required any subscriptionOrderItem) {    
+		arguments.subscriptionOrderItem.setSubscriptionUsage( this );    
+	}    
+	public void function removeSubscriptionOrderItem(required any subscriptionOrderItem) {    
+		arguments.subscriptionOrderItem.removeSubscriptionUsage( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

@@ -112,9 +112,9 @@
 		<Record typeID="444df2f4d19ac22bba4bc12cc38b3ee0" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Benefit" systemCode="satPerBenefit" />
 		<Record typeID="444df2f5ad81d2a9039a050b8dda814d" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Account" systemCode="satPerAccount" />
 
-		<Record typeID="444df3100babdbe1086cf951809a60ca" parentTypeID="NULL" type="Subscription Order Types" systemCode="subscriptionOrderType" />
-		<Record typeID="444df311d7615e7cf56b836f515aebd4" parentTypeID="444df3100babdbe1086cf951809a60ca" type="Initial" systemCode="sotInitial" />
-		<Record typeID="444df312935fa6b9866a813b3f4793a2" parentTypeID="444df3100babdbe1086cf951809a60ca" type="Renewal" systemCode="sotRenewal" />
+		<Record typeID="444df3100babdbe1086cf951809a60ca" parentTypeID="NULL" type="Subscription Order Item Types" systemCode="subscriptionOrderItemType" />
+		<Record typeID="444df311d7615e7cf56b836f515aebd4" parentTypeID="444df3100babdbe1086cf951809a60ca" type="Initial" systemCode="soitInitial" />
+		<Record typeID="444df312935fa6b9866a813b3f4793a2" parentTypeID="444df3100babdbe1086cf951809a60ca" type="Renewal" systemCode="soitRenewal" />
 
 	</Records>
 </Table>

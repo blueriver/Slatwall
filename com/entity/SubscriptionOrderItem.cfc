@@ -36,16 +36,16 @@
 Notes:
 
 */
-component displayname="Subscription Order" entityname="SlatwallSubscriptionOrder" table="SlatwallSubscriptionOrder" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Subscription Order Item" entityname="SlatwallSubscriptionOrderItem" table="SlatwallSubscriptionOrderItem" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="subscriptionOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="subscriptionOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties (many-to-one)
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="subscriptionOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionOrderTypeID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="subscriptionOrderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionOrderItemTypeID";
 	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" cascade="all";
-		
+
 	// Related Object Properties (one-to-many)
 	
 	// Related Object Properties (many-to-many)
@@ -69,6 +69,24 @@ component displayname="Subscription Order" entityname="SlatwallSubscriptionOrder
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Sunscription Usage (many-to-one)
+	public void function setSubscriptionUsage(required any subscriptionUsage) {
+		variables.subscriptionUsage = arguments.subscriptionUsage;
+		if(isNew() or !arguments.subscriptionUsage.hasSubscriptionOrderItem( this )) {
+			arrayAppend(arguments.subscriptionUsage.getSubscriptionOrderItems(), this);
+		}
+	}
+	public void function removeSubscriptionUsage(any subscriptionUsage) {
+		if(!structKeyExists(arguments, "subscriptionUsage")) {
+			arguments.subscriptionUsage = variables.subscriptionUsage;
+		}
+		var index = arrayFind(arguments.subscriptionUsage.getSubscriptionOrderItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.subscriptionUsage.getSubscriptionOrderItems(), index);
+		}
+		structDelete(variables, "subscriptionUsage");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
