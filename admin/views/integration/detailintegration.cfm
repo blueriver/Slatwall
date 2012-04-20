@@ -46,22 +46,17 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.integration#" property="integrationPackage" edit="false">
+				<cfif rc.integration.getShippingReadyFlag()>
+					<cf_SlatwallPropertyDisplay object="#rc.integration#" property="shippingActiveFlag" edit="#rc.edit#" />
+				</cfif>
+				<cfif rc.integration.getPaymentReadyFlag()>
+					<cf_SlatwallPropertyDisplay object="#rc.integration#" property="paymentActiveFlag" edit="#rc.edit#" />
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.integration#">
-			<cfif rc.integration.getCustomReadyFlag()>
-				<cf_SlatwallTab view="admin:integration/integrationtabs/custom" />
-			</cfif>
-			<cfif rc.integration.getDataReadyFlag()>
-				<cf_SlatwallTab view="admin:integration/integrationtabs/data" />
-			</cfif>
-			<cfif rc.integration.getPaymentReadyFlag()>
-				<cf_SlatwallTab view="admin:integration/integrationtabs/payment" />
-			</cfif>
-			<cfif rc.integration.getShippingReadyFlag()>
-				<cf_SlatwallTab view="admin:integration/integrationtabs/shipping" />
-			</cfif>
+			<cf_SlatwallTab view="admin:integration/integrationtabs/settings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

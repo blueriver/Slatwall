@@ -36,15 +36,10 @@
 Notes:
 
 --->
-<cfparam name="rc.integrationSmartList" type="any" />
 
-<cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.integrationSmartList#" createAction="" />
-	
-	<cf_SlatwallListingDisplay smartList="#rc.integrationSmartList#" recordEditAction="admin:integration.editintegration">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="integrationName" />
-		<cf_SlatwallListingColumn propertyIdentifier="paymentActiveFlag" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="shippingActiveFlag" filter=true />
-	</cf_SlatwallListingDisplay>
-
-</cfoutput>
+<!--- Dynamic Settings --->
+<cf_SlatwallSettingTable>
+	<cfloop collection="#rc.integration.getSettings()#" item="local.settingName">
+		<cf_SlatwallSetting settingName="#local.settingName#" />
+	</cfloop>
+</cf_SlatwallSettingTable>
