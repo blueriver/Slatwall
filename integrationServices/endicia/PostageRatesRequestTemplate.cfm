@@ -40,8 +40,8 @@
 	<PostageRatesRequest>
 		<RequesterID>Slatwall</RequesterID>
 		<CertifiedIntermediary>
-			<AccountID>#variables.accountID#</AccountID>
-			<PassPhrase>#variables.passPhrase#</PassPhrase>
+			<AccountID>#setting('accountID')#</AccountID>
+			<PassPhrase>#setting('passPhrase')#</PassPhrase>
 		</CertifiedIntermediary>
 		<cfif arguments.requestBean.getShipToCountryCode() eq "US">
 			<MailClass>Domestic</MailClass>
@@ -53,7 +53,7 @@
 		<Machinable>True</Machinable>
 		<InsuredValue>#totalItemsValue#</InsuredValue>
 		<Services CertifiedMail="OFF" COD="OFF" DeliveryConfirmation="OFF" ElectronicReturnReceipt="OFF" InsuredMail="OFF" RestrictedDelivery="OFF" ReturnReceipt="OFF" SignatureConfirmation="OFF" />
-		<FromPostalCode>#variables.fromPostalCode#</FromPostalCode>
+		<FromPostalCode>#setting('fromPostalCode')#</FromPostalCode>
 		<ToPostalCode>#arguments.requestBean.getShipToPostalCode()#</ToPostalCode>
 		<cfif arguments.requestBean.getShipToCountryCode() neq "US">
 			<ToCountry>#getUSPSCountryFromCountryCode(arguments.requestBean.getShipToCountryCode())#</ToCountry>

@@ -60,8 +60,8 @@ Notes:
 			</cfif>
 		</cfloop>
 	<cfelse>
-		<cfset attributes.settingDisplayName = request.slatwallScope.rbKey("setting.#thisSetting.settingName#") />
-		<cfset attributes.settingHint = request.slatwallScope.rbKey("setting.#thisSetting.settingName#_hint") />
+		<cfset attributes.settingDisplayName = request.slatwallScope.rbKey("setting.#attributes.settingName#") />
+		<cfset attributes.settingHint = request.slatwallScope.rbKey("setting.#attributes.settingName#_hint") />
 		<cfif right(attributes.settingHint, 8) eq "_missing">
 			<cfset attributes.settingHint = "" />
 		</cfif>

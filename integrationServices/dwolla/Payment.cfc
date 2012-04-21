@@ -39,25 +39,14 @@ Notes:
 
 component accessors="true" output="false" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
-	// Custom Properties that need to be set by the end user
-	property name="apiKey" displayname="API Key" type="string";
-	property name="transKey" displayname="API Code" type="string";
-	property name="testModeFlag" displayname="Test Mode" type="boolean" default="true";
-	
-	//Global variables
-	variables.gatewayURL = "https://secure.authorize.net/gateway/transact.dll";
-	
 	public any function init(){
 		return this;
 	}
 	
 	public string function getPaymentMethodTypes() {
-		return "dwolla";
+		return "external";
 	}
 	
-	public any function getDwollaSecureKey() {
-		
-	}
 	
 	
 }

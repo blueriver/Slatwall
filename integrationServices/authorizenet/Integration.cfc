@@ -52,7 +52,9 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 	
 	public struct function getSettings() {
 		var settings = {
-			
+			loginID = {fieldType="text", displayName="Login ID"},
+			transKey = {fieldType="text", displayName="Transaction Key"},
+			testModeFlag = {fieldType="yesno", displayName="Test Mode"}
 		};
 		
 		return settings;

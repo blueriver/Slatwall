@@ -78,9 +78,9 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 	private struct function getRequestData(required any requestBean){
 		var requestData = {};
 		requestData["x_version"] = "3.1";
-		requestData["x_login"] = getLoginID(); 
-		requestData["x_tran_key"] = getTransKey(); 
-		requestData["x_test_request"] = getTestModeFlag(); 
+		requestData["x_login"] = setting('loginID'); 
+		requestData["x_tran_key"] = setting('transKey'); 
+		requestData["x_test_request"] = setting('testModeFlag'); 
 		requestData["x_duplicate_window"] = "600";
 		requestData["x_method"] = "CC";
 		requestData["x_type"] = variables.transactionCodes[requestBean.getTransactionType()];

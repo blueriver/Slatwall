@@ -3,7 +3,7 @@
 <eparcel>
 	<language>en</language>
 	<ratesAndServicesRequest>
-		<merchantCPCID>#variables.CPCID#</merchantCPCID>
+		<merchantCPCID>#setting('CPCID')#</merchantCPCID>
 		<lineItems>
 			<item>
 				<quantity>1</quantity>

@@ -49,4 +49,22 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	public string function getDisplayName() {
 		return "FedEx";
 	}
+	
+	public struct function getSettings() {
+		var settings = {
+			accountNo = {fieldType="text", displayName="FedEx Account Number"},
+			password = {fieldType="password", displayName="FedEx Password"},
+			transactionKey = {fieldType="text", displayName="FedEx Transaction Key"},
+			meterNo = {fieldType="text", displayName="Meter Number"},
+			testingFlag = {fieldType="yesno", displayName="Test Mode"},
+			shipperStreet = {fieldType="text", displayName="Shipping From Street Address"},
+			shipperCity = {fieldType="text", displayName="Shipping From City"},
+			shipperStateCode = {fieldType="text", displayName="Shipping From State Code"},
+			shipperPostalCode = {fieldType="text", displayName="Shipping From Postal Code"},
+			shipperCountryCode = {fieldType="text", displayName="Shipping From Country Code"}
+		};
+		
+		return settings;
+	}
+	
 }

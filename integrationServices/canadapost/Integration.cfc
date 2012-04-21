@@ -11,4 +11,12 @@
 	public string function getDisplayName() {
 		return "Canada Post";
 	}
+	
+	public struct function getSettings() {
+		var settings = {
+			CPCID = {fieldType="text", displayName="CPC Shipping Integration ID"}
+		};
+		
+		return settings;
+	}
 }
