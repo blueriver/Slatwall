@@ -161,7 +161,7 @@
 				<entry key="StockReceiverStockAdjustment"><value>stockService</value></entry>
 				<entry key="StockReceiverVendorOrder"><value>stockService</value></entry>
 				<entry key="SubscriptionBenefit"><value>subscriptionService</value></entry>
-				<entry key="SubscriptionOrder"><value>subscriptionService</value></entry>
+				<entry key="SubscriptionOrderItem"><value>subscriptionService</value></entry>
 				<entry key="SubscriptionTerm"><value>subscriptionService</value></entry>
 				<entry key="SubscriptionUsage"><value>subscriptionService</value></entry>
 				<entry key="SubscriptionUsageBenefit"><value>subscriptionService</value></entry>
