@@ -378,7 +378,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		if(!structKeyExists(variables, "eligibleFulfillmentMethods")) {
 			var sl = getService("fulfillmentService").getFulfillmentMethodSmartList();
 			sl.addInFilter('fulfillmentMethodID', setting('skuEligibleFulfillmentMethods'));
-			sl.addOrderBy('sortOrder|ASC');
+			sl.addOrder('sortOrder|ASC');
 			variables.eligibleFulfillmentMethods = sl.getRecords();
 		}
 		return variables.eligibleFulfillmentMethods;
