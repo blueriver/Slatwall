@@ -78,6 +78,11 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		getSlatwallFW1Application().endSlatwallLifecycle();
 	}
 	
+	// display slatwall link in mura left nav
+	public any function onAdminModuleNav(required any $) {
+		return '<li><a href="' & application.configBean.getContext() & '/plugins/Slatwall">Slatwall</a></li>';
+	}
+	
 	// Hook into the onRender start so that we can do any slatActions that might have been called, or if the current content is a listing page
 	public any function onRenderStart(required any $) {
 		// check if user has access to this page
