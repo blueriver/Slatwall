@@ -382,8 +382,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						if(paymentsProcessed) {
 						
 							// If this order is the same as the current cart, then set the current cart to a new order
-							if(!isNull(getSessionService().getCurrent().getOrder()) && order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
-								getSessionService().getCurrent().setOrder(JavaCast("null", ""));
+							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && order.getOrderID() == getSlatwallScope().getCurrentSession().getOrder().getOrderID()) {
+								getSlatwallScope().getCurrentSession().setOrder(JavaCast("null", ""));
 							}
 						
 							// Update the order status

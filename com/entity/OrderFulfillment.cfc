@@ -127,6 +127,11 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		return true;
 	}
 	
+	public void function orderFulfillmentItemsChanged() {
+		if(getFulfillmentMethodType() == "shipping") {
+			getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( this );
+		}
+	}
 	
 	public numeric function getDiscountAmount() {
     	return 0;

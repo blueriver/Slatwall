@@ -67,10 +67,10 @@ Notes:
 						<cfset params = structNew() />
 						<cfset params.edit = true />
 						<cfset params.paymentMethod = local.paymentMethod />
-						<cfset params.orderPayment = $.slatwall.getService("paymentService").newOrderPaymentCreditCard() />
+						<cfset params.orderPayment = $.slatwall.getService("paymentService").newOrderPayment() />
 						<cfset params.orderPaymentIndex = local.orderPaymentIndex />
 						<cfset local.orderPaymentIndex += 1 />
-						#view("frontend:checkout/payment/creditCard", params)#
+						#view("frontend:checkout/payment/#local.paymentMethod.getPaymentMethodType()#", params)#
 					</cfloop>
 				</cfif>
 				<input type="hidden" name="orderID" value="#$.slatwall.cart().getOrderID()#" />
