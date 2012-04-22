@@ -63,7 +63,7 @@ component extends="BaseService" accessors="true" output="false" {
 		return loginResult;
 	}
 	
-	public any function getAccountByCmsUser(required any cmsUser) {
+	public any function saveAccountByCmsUser(required any cmsUser) {
 		// Load Account based upon the logged in cmsAccountID
 		var account = getDAO().readByCmsAccountID(cmsAccountID = arguments.cmsUser.getUserID());
 		
@@ -80,6 +80,9 @@ component extends="BaseService" accessors="true" output="false" {
 			account = updateAccountFromCmsUser(account, arguments.cmsUser);
 			getDAO().save(target=account);
 			
+			// flush the session so this account persists. Other wise preInsert getCurrentAcount triggers infinite loop.
+			// this should still be looked at because even with flush this method will be called twice.
+			getDAO().flushORMSession();
 		
 		} else {
 			// Update the existing account 
