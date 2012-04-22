@@ -247,7 +247,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				// If this is the one selected, then verify the details
 				if( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod().getShippingMethodID() == arguments.orderFulfillment.getShippingMethod().getShippingMethodID() ) {
-					if( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getTotalCharge != arguments.orderFulfillment.fulfillmentCharge() ||
+					if( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getTotalCharge() != arguments.orderFulfillment.getFulfillmentCharge() ||
 						coalesce(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToPostalCode(), "") != coalesce(arguments.orderFulfillment.getAddress().getPostalCode(), "") ||
 						coalesce(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToStateCode(), "") != coalesce(arguments.orderFulfillment.getAddress().getStateCode(), "") ||
 						coalesce(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToCountryCode(), "") != coalesce(arguments.orderFulfillment.getAddress().getCountryCode(), "") ||
