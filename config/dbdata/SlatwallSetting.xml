@@ -28,6 +28,13 @@
 		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="globalURLKeyProduct" settingValue="sp" />
 		<Record settingID="dbb327c2f0ece6ff03d81c53d840d8bc" settingName="globalURLKeyProductType" settingValue="spt" />
 		<Record settingID="dbb327ce945924088883f9c07d7f04ae" settingName="globalWeightUnitCode" settingValue="lb" />
+
+		<Record settingID="dbb327dafcad27b671aa2704594b1cb8" settingName="globalPageShoppingCart" settingValue="shopping-cart" />
+		<Record settingID="dbb327dbd407d87f690e491751eb1b24" settingName="globalPageOrderStatus" settingValue="order-status" />
+		<Record settingID="dbb327dcbc98171b5e3342a808786914" settingName="globalPageOrderConfirmation" settingValue="order-confirmation" />
+		<Record settingID="dbb327dd9afe049e87b55995fd6d0c53" settingName="globalPageMyAccount" settingValue="my-account" />
+		<Record settingID="dbb327dee0b9187254ea5a78e94c7eec" settingName="globalPageCreateAccount" settingValue="create-account" />
+		<Record settingID="dbb327dfa107f9d30d5a3f863a545ec8" settingName="globalPageCheckout" settingValue="checkout" />
 		
 		<Record settingID="dbb32799a1090790de93f0b6dd6b36ef" settingName="productImageSmallWidth" settingValue="150" />
 		<Record settingID="dbb3278e9caff52a94d1999ca909a4bb" settingName="productImageSmallHeight" settingValue="150" />
@@ -69,12 +76,6 @@
 <!--
 Below Are UUID's to use... delete after using
 	
-	dbb327dafcad27b671aa2704594b1cb8
-	dbb327dbd407d87f690e491751eb1b24
-	dbb327dcbc98171b5e3342a808786914
-	dbb327dd9afe049e87b55995fd6d0c53
-	dbb327dee0b9187254ea5a78e94c7eec
-	dbb327dfa107f9d30d5a3f863a545ec8
 	dbb327e0f1e951fd8214be2c6b3ddb9d
 	dbb327e1d2c1800a19bd9c82374b12a1
 	dbb327e2bfbef63ad4ae55e61c215760
