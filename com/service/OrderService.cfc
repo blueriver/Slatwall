@@ -232,7 +232,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// If the account has changed, then we need to duplicate the cart
 			if(!isNull(arguments.order.getAccount()) && arguments.order.getAccount().getAccountID() != account.getAccountID()) {
 				arguments.order = duplicateOrderWithNewAccount( arguments.order, account );
-				getSessionService().getCurrent().setOrder( arguments.order );
+				getSlatwallScope().getCurrentSession().setOrder( arguments.order );
 			} else {
 				arguments.order.setAccount(account);
 			}
@@ -844,7 +844,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	//================= END: Order Actions ========================
 	
 	public void function clearCart() {
-		var currentSession = getSessionService().getCurrent();
+		var currentSession = getSlatwallScope().getCurrentSession();
 		var cart = currentSession.getOrder();
 		
 		if(!cart.isNew()) {

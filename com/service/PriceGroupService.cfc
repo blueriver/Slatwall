@@ -308,8 +308,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	// Helper method the delegates
 	public numeric function calculateSkuPriceBasedOnCurrentAccount(required any sku) {
-		if(!isNull(getSessionService().getCurrent().getAccount())) {
-			return calculateSkuPriceBasedOnAccount(sku=arguments.sku, account=getSessionService().getCurrent().getAccount());	
+		if(!isNull(getSlatwallScope().getCurrentSession().getAccount())) {
+			return calculateSkuPriceBasedOnAccount(sku=arguments.sku, account=getSlatwallScope().getCurrentSession().getAccount());	
 		} else {
 			return sku.getPrice();
 		}

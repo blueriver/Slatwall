@@ -196,7 +196,7 @@ component extends="BaseService" accessors="true" output="false" {
 						// Login the mura User
 						getUserUtility().loginByUserID(cmsUser.getUserID(), arguments.siteID);
 						// Set the account in the session scope
-						getSessionService().getCurrent().setAccount(arguments.account);
+						getSlatwallScope().getCurrentSession().setAccount(arguments.account);
 					}
 				} else {
 					getSlatwallScope().setORMHasErrors( true );
