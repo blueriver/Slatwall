@@ -263,10 +263,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		if(index > 0) {
 			arrayDeleteAt(arguments.order.getOrderItems(), index);
 		}
-		structDelete(variables, "order");
 		
 		// Remove from order fulfillment to trigger those actions
 		removeOrderFulfillment();
+
+		structDelete(variables, "order");
 	}
 	
 	// Order Fulfillment (many-to-one)
@@ -289,6 +290,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 			
 			// Run Item's Changed Function
 			variables.orderFulfillment.orderFulfillmentItemsChanged();
+			
+			// if this was the last item in the fulfillment remove this fulfillment from order
+			if(!arrayLen(variables.orderFulfillment.getOrderFulfillmentItems())) {
+				variables.order.removeOrderFulfillment(variables.orderFulfillment);
+			}
 		}
 		structDelete(variables, "orderFulfillment");
 	}

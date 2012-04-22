@@ -428,11 +428,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 
 	// Order Fulfillments (one-to-many)
-	public void function addOrderFulfillment(required any orderFulfilment) {
-		arguments.orderFulfilment.setOrder( this );
+	public void function addOrderFulfillment(required any orderFulfillment) {
+		arguments.orderFulfillment.setOrder( this );
 	}
-	public void function removeOrderFulfillment(required any orderFulfilment) {
-		arguments.orderFulfilment.removeOrder( this );
+	public void function removeOrderFulfillment(required any orderFulfillment) {
+		arguments.orderFulfillment.removeOrder( this );
 	}
 
 	// Order Payments (one-to-many)

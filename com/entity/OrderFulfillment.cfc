@@ -249,6 +249,24 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Order (many-to-one)    
+	public void function setOrder(required any order) {    
+		variables.order = arguments.order;    
+		if(isNew() or !arguments.order.hasOrderFulfillment( this )) {    
+			arrayAppend(arguments.order.getOrderFulfillments(), this);    
+		}    
+	}    
+	public void function removeOrder(any order) {    
+		if(!structKeyExists(arguments, "order")) {    
+			arguments.order = variables.order;    
+		}    
+		var index = arrayFind(arguments.order.getOrderFulfillments(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.order.getOrderFulfillments(), index);    
+		}    
+		structDelete(variables, "order");    
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// =============== START: Custom Validation Methods ====================
