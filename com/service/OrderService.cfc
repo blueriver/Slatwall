@@ -427,7 +427,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var subscriptionUsage = subscriptionOrderItem.getSubscriptionUsage();
 				if(isNull(subscriptionUsage)) {
 					var subscriptionUsage = getService("subscriptionService").newSubscriptionUsage();
-				} 
+				}
 				subscriptionUsage.setActiveFlag(1);
 				subscriptionUsage.setnextBillDate(orderItem.getSku().getSubscriptionTerm().getInitialTerm().getDueDate());
 				subscriptionOrderItem.setSubscriptionUsage(subscriptionUsage);
@@ -474,7 +474,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						}
 					}
 				}
-				getService("subscriptionService").saveSubscriptionOrder(subscriptionOrder);
+				getService("subscriptionService").saveSubscriptionOrderItem(subscriptionOrderItem);
 			}
 		}
 	}

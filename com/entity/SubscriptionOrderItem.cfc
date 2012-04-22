@@ -62,7 +62,13 @@ component displayname="Subscription Order Item" entityname="SlatwallSubscription
 	// Non-Persistent Properties
 
 
-
+	public void function setOrderItem(required any orderItem) {
+		variables.orderItem = arguments.orderItem;
+		//copy all the info from order items to subscription usage
+		if(!isNull(variables.subscriptionUsage)) {
+			variables.subscriptionUsage.copyOrderItemInfo(arguments.orderItem);
+		}
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -75,6 +81,10 @@ component displayname="Subscription Order Item" entityname="SlatwallSubscription
 		variables.subscriptionUsage = arguments.subscriptionUsage;
 		if(isNew() or !arguments.subscriptionUsage.hasSubscriptionOrderItem( this )) {
 			arrayAppend(arguments.subscriptionUsage.getSubscriptionOrderItems(), this);
+		}
+		//copy all the info from order items to subscription usage
+		if(!isNull(variables.orderItem)) {
+			variables.subscriptionUsage.copyOrderItemInfo(variables.orderItem);
 		}
 	}
 	public void function removeSubscriptionUsage(any subscriptionUsage) {

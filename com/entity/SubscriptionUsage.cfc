@@ -72,19 +72,21 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		if(isNull(variables.subscriptionUsageBenefits)) {
 			variables.subscriptionUsageBenefits = [];
 		}
+		if(isNull(variables.subscriptionOrderItems)) {
+			variables.subscriptionOrderItems = [];
+		}
 		return super.init();
 	}
 	
 
-	public void function setOrderItem(required any orderItem) {
-		variables.orderItem = arguments.orderItem;
-		//copy all the info form subscription term
+	public void function copyOrderItemInfo(required any orderItem) {
+		setRenewalPrice(arguments.orderItem.getSku().getRenewalPrice());
+		//copy all the info from subscription term
 		var subscriptionTerm = orderItem.getSku().getSubscriptionTerm();
 		setInitialTerm(subscriptionTerm.getInitialTerm());
 		setRenewalTerm(subscriptionTerm.getRenewalTerm());
 		setGracePeriodTerm(subscriptionTerm.getGracePeriodTerm());
 		setAllowProrateFlag(subscriptionTerm.getAllowProrateFlag());
-		setRenewalPrice(orderItem.getSku().getRenewalPrice());
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

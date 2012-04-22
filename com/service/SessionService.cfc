@@ -64,10 +64,10 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		if(cmsUser.isLoggedIn()) {
 			// Load the account
-			var slatwallAccount = getAccountService().getAccountByCmsUser(cmsUser);
+			var slatwallAccount = getAccountService().saveAccountByCmsUser(cmsUser);
 			
 			// Update the account with any changes in the mura user
-			slatwallAccount = getAccountService().updateAccountFromCmsUser(slatwallAccount, cmsUser);
+			//slatwallAccount = getAccountService().updateAccountFromCmsUser(slatwallAccount, cmsUser);
 			
 			// Set the account in the current session
 			currentSession.setAccount(slatwallAccount);
