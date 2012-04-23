@@ -78,7 +78,8 @@ globalEncryptionKeySize
 			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
-			shippingMethodRate = ["shippingMethod.shippingMethodID"]
+			shippingMethodRate = ["shippingMethod.shippingMethodID"],
+			paymentMethod = ["paymentMethodID"]
 		};
 		
 		variables.settingMetaData = {
@@ -133,7 +134,9 @@ globalEncryptionKeySize
 			globalPageCheckout = {fieldType="text"},
 			
 			// Payment Method
-			paymentMethodStoreCreditCardNumber = {fieldType="yesno"},
+			paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno"},
+			paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno"},
+			paymentMethodCheckoutTransactionType = {fieldType="select"},
 			
 			// Product
 			productDisplayTemplate = {fieldType="select"},
@@ -205,6 +208,8 @@ globalEncryptionKeySize
 					return [{name='Sort Order', value='sortOrder'}, {name='Lowest Rate', value='lowest'}, {name='Highest Rate', value='highest'}];
 				case "shippingMethodRateAdjustmentType" :
 					return [{name='Increase Percentage', value='increasePercentage'}, {name='Decrease Percentage', value='decreasePercentage'}, {name='Increase Amount', value='increaseAmount'}, {name='Decrease Amount', value='decreaseAmount'}];
+				case "paymentMethodCheckoutTransactionType" :
+					return [{name='None', value='none'}, {name='Authorize Only', value='authorize'}, {name='Authorize And Charge', value='authorizeAndCharge'}];
 			}
 			throw("You have asked for a select list of a setting named '#arguments.settingName#' and the options for that setting have not been setup yet.  Open the SettingService, and configure options for this setting.")
 		}

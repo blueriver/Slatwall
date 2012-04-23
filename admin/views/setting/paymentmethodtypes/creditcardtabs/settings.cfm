@@ -37,3 +37,9 @@ Notes:
 
 --->
 <cfparam name="rc.paymentMethod" type="any" />
+
+<cf_SlatwallSettingTable>
+	<cf_SlatwallSetting settingName="paymentMethodStoreCreditCardNumberWithOrder" settingObject="#rc.paymentMethod#" />
+	<cf_SlatwallSetting settingName="paymentMethodStoreCreditCardNumberWithAccount" settingObject="#rc.paymentMethod#" />
+	<cf_SlatwallSetting settingName="paymentMethodCheckoutTransactionType" settingObject="#rc.paymentMethod#" />
+</cf_SlatwallSettingTable>

@@ -317,7 +317,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Process All Payments and Save the ones that were successful
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-			var transactionType = setting('paymentMethod_#arguments.order.getOrderPayments()[i].getPaymentMethodType()#_checkoutTransactionType');
+			var transactionType = order.getOrderPayments()[i].getPaymentMethod().setting('paymentMethodCheckoutTransactionType');
 			
 			if(transactionType != 'none') {
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
@@ -1045,9 +1045,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function duplicateOrderWithNewAccount(required any originalOrder, required any newAccount) {
 		
 		var newOrder = this.newOrder();
-		var newOrderFulfillment = this.newOrderFulfillmentShipping();
-		
-		newOrderFulfillment.setOrder( newOrder );
 		
 		// Copy Order Items
 		for(var i=1; i<=arrayLen(arguments.originalOrder.getOrderItems()); i++) {
@@ -1060,6 +1057,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			newOrderItem.setSku( arguments.originalOrder.getOrderItems()[i].getSku() );
 			if(!isNull(arguments.originalOrder.getOrderItems()[i].getStock())) {
 				newOrderItem.setStock( arguments.originalOrder.getOrderItems()[i].getStock() );
+			}
+			// check if there is a fulfillment method of this type in the order
+			for(var fulfillment in newOrder.getOrderFulfillments()) {
+				if(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodID() == fulfillment.getFulfillmentMethod().getFulfillmentMethodID()) {
+					var newOrderFulfillment = fulfillment;
+					break;
+				}
+			}
+			if(isNull(newOrderFulfillment)) {
+				var newOrderFulfillment = this.newOrderFulfillment();
+				newOrderFulfillment.setFulfillmentMethod( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod() );
+				newOrderFulfillment.setOrder( newOrder );
 			}
 			newOrderItem.setOrder( newOrder );
 			newOrderItem.setOrderFulfillment( newOrderFulfillment );

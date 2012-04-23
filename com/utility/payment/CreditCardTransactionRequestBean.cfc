@@ -89,59 +89,59 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	
 	*/
 	
-	public void function populatePaymentInfoWithOrderPayment(required Slatwall.com.entity.OrderPaymentCreditCard orderPaymentCreditCard) {
+	public void function populatePaymentInfoWithOrderPayment(required any orderPayment) {
 		
 		// Populate Credit Card Info
-		setNameOnCreditCard(arguments.orderPaymentCreditCard.getNameOnCreditCard());
-		setCreditCardNumber(arguments.orderPaymentCreditCard.getCreditCardNumber());
-		setCreditCardType(arguments.orderPaymentCreditCard.getCreditCardType());
-		setExpirationMonth(arguments.orderPaymentCreditCard.getExpirationMonth());
-		setExpirationYear(arguments.orderPaymentCreditCard.getExpirationYear());
-		setSecurityCode(arguments.orderPaymentCreditCard.getSecurityCode());
+		setNameOnCreditCard(arguments.orderPayment.getNameOnCreditCard());
+		setCreditCardNumber(arguments.orderPayment.getCreditCardNumber());
+		setCreditCardType(arguments.orderPayment.getCreditCardType());
+		setExpirationMonth(arguments.orderPayment.getExpirationMonth());
+		setExpirationYear(arguments.orderPayment.getExpirationYear());
+		setSecurityCode(arguments.orderPayment.getSecurityCode());
 		
 		// Populate Account Info
-		setAccountFirstName(arguments.orderPaymentCreditCard.getOrder().getAccount().getFirstName());
-		setAccountLastName(arguments.orderPaymentCreditCard.getOrder().getAccount().getLastName());
-		if(!isNull(arguments.orderPaymentCreditCard.getOrder().getAccount().getPrimaryPhoneNumber())) {
-			setAccountPrimaryPhoneNumber(arguments.orderPaymentCreditCard.getOrder().getAccount().getPrimaryPhoneNumber().getPhoneNumber());	
+		setAccountFirstName(arguments.orderPayment.getOrder().getAccount().getFirstName());
+		setAccountLastName(arguments.orderPayment.getOrder().getAccount().getLastName());
+		if(!isNull(arguments.orderPayment.getOrder().getAccount().getPrimaryPhoneNumber())) {
+			setAccountPrimaryPhoneNumber(arguments.orderPayment.getOrder().getAccount().getPrimaryPhoneNumber().getPhoneNumber());	
 		}
-		if(!isNull(arguments.orderPaymentCreditCard.getOrder().getAccount().getPrimaryEmailAddress())) {
-			setAccountPrimaryEmailAddress(arguments.orderPaymentCreditCard.getOrder().getAccount().getPrimaryEmailAddress().getEmailAddress());	
+		if(!isNull(arguments.orderPayment.getOrder().getAccount().getPrimaryEmailAddress())) {
+			setAccountPrimaryEmailAddress(arguments.orderPayment.getOrder().getAccount().getPrimaryEmailAddress().getEmailAddress());	
 		}
 		
 		// Populate Billing Address Info
-		if(!isNull(arguments.orderPaymentCreditCard.getBillingAddress().getName())) {
-			setBillingName(arguments.orderPaymentCreditCard.getBillingAddress().getName());
+		if(!isNull(arguments.orderPayment.getBillingAddress().getName())) {
+			setBillingName(arguments.orderPayment.getBillingAddress().getName());
 		}
-		if(!isNull(arguments.orderPaymentCreditCard.getBillingAddress().getCompany())) {
-			setBillingCompany(arguments.orderPaymentCreditCard.getBillingAddress().getCompany());
+		if(!isNull(arguments.orderPayment.getBillingAddress().getCompany())) {
+			setBillingCompany(arguments.orderPayment.getBillingAddress().getCompany());
 		}
-		if(!isNull(arguments.orderPaymentCreditCard.getBillingAddress().getStreetAddress())) {
-			setBillingStreetAddress(arguments.orderPaymentCreditCard.getBillingAddress().getStreetAddress());
+		if(!isNull(arguments.orderPayment.getBillingAddress().getStreetAddress())) {
+			setBillingStreetAddress(arguments.orderPayment.getBillingAddress().getStreetAddress());
 		}
-		if(!isNull(arguments.orderPaymentCreditCard.getBillingAddress().getStreet2Address())) {
-			setBillingStreet2Address(arguments.orderPaymentCreditCard.getBillingAddress().getStreet2Address());
+		if(!isNull(arguments.orderPayment.getBillingAddress().getStreet2Address())) {
+			setBillingStreet2Address(arguments.orderPayment.getBillingAddress().getStreet2Address());
 		}
-		if(!isNull(arguments.orderPaymentCreditCard.getBillingAddress().getLocality())) {
-			setBillingLocality(arguments.orderPaymentCreditCard.getBillingAddress().getLocality());
+		if(!isNull(arguments.orderPayment.getBillingAddress().getLocality())) {
+			setBillingLocality(arguments.orderPayment.getBillingAddress().getLocality());
 		}
-		if(!isNull(arguments.orderPaymentCreditCard.getBillingAddress().getCity())) {
-			setBillingCity(arguments.orderPaymentCreditCard.getBillingAddress().getCity());
+		if(!isNull(arguments.orderPayment.getBillingAddress().getCity())) {
+			setBillingCity(arguments.orderPayment.getBillingAddress().getCity());
 		}
-		if(!isNull(arguments.orderPaymentCreditCard.getBillingAddress().getStateCode())) {
-			setBillingStateCode(arguments.orderPaymentCreditCard.getBillingAddress().getStateCode());
+		if(!isNull(arguments.orderPayment.getBillingAddress().getStateCode())) {
+			setBillingStateCode(arguments.orderPayment.getBillingAddress().getStateCode());
 		}
-		if(!isNull(arguments.orderPaymentCreditCard.getBillingAddress().getPostalCode())) {
-			setBillingPostalCode(arguments.orderPaymentCreditCard.getBillingAddress().getPostalCode());
+		if(!isNull(arguments.orderPayment.getBillingAddress().getPostalCode())) {
+			setBillingPostalCode(arguments.orderPayment.getBillingAddress().getPostalCode());
 		}
-		if(!isNull(arguments.orderPaymentCreditCard.getBillingAddress().getCountryCode())) {
-			setBillingCountryCode(arguments.orderPaymentCreditCard.getBillingAddress().getCountryCode());
+		if(!isNull(arguments.orderPayment.getBillingAddress().getCountryCode())) {
+			setBillingCountryCode(arguments.orderPayment.getBillingAddress().getCountryCode());
 		}
 		
 		// Populate relavent Misc Info
-		setOrderPaymentID(arguments.orderPaymentCreditCard.getOrderPaymentID());
-		setOrderID(arguments.orderPaymentCreditCard.getOrder().getOrderID());
-		setAccountID(arguments.orderPaymentCreditCard.getOrder().getAccount().getAccountID());
+		setOrderPaymentID(arguments.orderPayment.getOrderPaymentID());
+		setOrderID(arguments.orderPayment.getOrder().getOrderID());
+		setAccountID(arguments.orderPayment.getOrder().getAccount().getAccountID());
 	}
 	
 }

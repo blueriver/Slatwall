@@ -87,7 +87,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					
 					// Make sure that this transaction gets saved to the DB
 					this.saveCreditCardTransaction(transaction);
-					ormFlush();
+					getDAO().flushORMSession();
 
 					// Generate Process Request Bean
 					var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();

@@ -219,14 +219,18 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		variables.creditCardNumber = arguments.creditCardNumber;
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
 		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
-		if(getCreditCardType() != "Invalid" && setting("paymentMethod_creditCard_storeCreditCardWithOrderPayment") == 1) {
+		if(getCreditCardType() != "Invalid" && getPaymentMethod().setting("paymentMethodStoreCreditCardNumberWithOrder") == 1) {
 			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
 		}
 	}
 	
 	public string function getCreditCardNumber() {
 		if(!structKeyExists(variables,"creditCardNumber")) {
-			variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
+			if(coalesce(getCreditCardNumberEncrypted(), "") NEQ "") {
+				variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
+			} else {	
+				variables.creditCardNumber = "";
+			}
 		}
 		return variables.creditCardNumber;
 	}
