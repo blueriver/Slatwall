@@ -187,7 +187,7 @@ Notes:
 						<tbody>
 							<cfloop array="#order.getOrderPayments()#" index="orderPayment">
 								<tr>
-									<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#application.slatwall.pluginConfig.getApplication().getValue("rbFactory").getKeyValue(session.rb,"admin.setting.paymentMethod.#orderPayment.getPaymentMethodType()#")#</td>
+									<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#orderPayment.getPaymentMethod().getPaymentMethodName()#</td>
 									<td style="border: 1px solid ##d8d8d8; padding:0px 5px; width:100px;">#orderPayment.getFormattedValue('amount', 'currency')#</td>
 								</tr>
 							</cfloop>
