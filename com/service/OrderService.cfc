@@ -292,12 +292,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					
 					// Make sure the payment is attached to the order
 					payment.setOrder(arguments.order);
-				
+					
+					// get the payment method
+					var paymentMethod = getService("paymentService").getPaymentMethod(paymentsDataArray[i].paymentMethod.paymentMethodID); 
+
 					// Attempt to Validate & Save Order Payment
-					payment = this.saveOrderPayment(payment, paymentsDataArray[i]);
-				
+					payment = this.saveOrderPayment(entity=payment, data=paymentsDataArray[i], context=paymentMethod.getPaymentMethodType());
+					
 					// Check to see if this payment has any errors and if so then don't proceed
-					if(payment.hasErrors() || payment.getBillingAddress().hasErrors() || payment.getCreditCardType() == "Invalid") {
+					if(payment.hasErrors()) {
 						paymentsOK = false;
 					}
 				}
