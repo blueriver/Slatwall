@@ -54,7 +54,7 @@ Notes:
 					<cfset params.orderPayment = local.orderPayment />
 					<cfset params.orderPaymentIndex = local.orderPaymentIndex />
 					<cfset local.orderPaymentIndex += 1 />
-					<cfif local.orderPayment.hasErrors() or (local.orderPayment.getAmountAuthorized() eq 0 and $.slatwall.setting("paymentMethod_creditCard_checkoutTransactionType") neq "none")>
+					<cfif local.orderPayment.hasErrors() or (local.orderPayment.getAmountAuthorized() eq 0 and params.paymentMethod.setting("paymentMethodCheckoutTransactionType") neq "none")>
 						<cfset local.paymentShown = true />
 						<cfset params.edit = true />
 					<cfelse>

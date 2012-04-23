@@ -273,17 +273,17 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// Order Fulfillment (many-to-one)
 	public void function setOrderFulfillment(required any orderFulfillment) {
 		variables.orderFulfillment = arguments.orderFulfillment;
-		if(isNew() or !arguments.orderFulfillment.hasOrderItem( this )) {
-			arrayAppend(arguments.orderFulfillment.getOrderItems(), this);
+		if(isNew() or !arguments.orderFulfillment.hasOrderFulfillmentItem( this )) {
+			arrayAppend(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
 		}
 	}
 	public void function removeOrderFulfillment(any orderFulfillment) {
 		if(!structKeyExists(arguments, "orderFulfillment")) {
 			arguments.orderFulfillment = variables.orderFulfillment;
 		}
-		var index = arrayFind(arguments.orderFulfillment.getOrderItems(), this);
+		var index = arrayFind(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.orderFulfillment.getOrderItems(), index);
+			arrayDeleteAt(arguments.orderFulfillment.getOrderFulfillmentItems(), index);
 			
 			// IMPORTANT & CUSTOM!!!
 			// if this was the last item in the fulfillment remove this fulfillment from order
