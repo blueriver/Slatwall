@@ -66,6 +66,7 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.comment#" property="createdDateTime">
 					<cf_SlatwallPropertyDisplay object="#rc.comment#" property="createdByAccount">
 				</cfif>
+				<hr />
 				<cf_SlatwallPropertyDisplay object="#rc.comment#" property="comment" displaytype="plain" edit="#rc.comment.isNew()#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
