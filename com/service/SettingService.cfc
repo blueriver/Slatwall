@@ -241,6 +241,16 @@ globalEncryptionKeySize
 			}
 		}
 		
+		public any function saveSetting(required any entity, struct data={}) {
+			if(structKeyExists(arguments.data, "settingName") && structKeyExists(arguments.data, "settingValue")) {
+				var metaData = getSettingMetaData(arguments.data.settingName);
+				if(structKeyExists(metaData, "encryptValue") && metaData.encryptValue == true) {
+					arguments.data.settingValue = encryptValue(arguments.data.settingValue);
+				}
+			}
+			return super.save(argumentcollection=arguments);
+		}
+		
 		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
 			if(arguments.formatValue) {
 				return getSettingDetails(argumentCollection=arguments).settingValueFormatted;	
@@ -475,7 +485,14 @@ globalEncryptionKeySize
 					<cfelse>
 						allSettings.shippingMethodRateID IS NULL
 					</cfif>
-		</cfquery> 
+		</cfquery>
+		
+		<cfif rs.recordCount>
+			<cfset var metaData = getSettingMetaData(arguments.settingName) />
+			<cfif structKeyExists(metaData, "encryptValue") && metaData.encryptValue>
+				<cfset rs.settingValue = decryptValue(rs.settingValue) />
+			</cfif>
+		</cfif>
 				
 		<cfreturn rs />		
 	</cffunction>
