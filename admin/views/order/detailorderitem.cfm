@@ -41,17 +41,17 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderItem#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#"></cf_SlatwallActionBar>
+	<cf_SlatwallDetailForm object="#rc.order#" saveAction="admin:order.saveorder" edit="#rc.edit#">
 		
-		<input type="hidden" name="order.orderID" value="#rc.order.getOrderID()#" />
+		<input type="hidden" name="orderItems[1].orderItemID" value="#rc.orderItem.getOrderItemID()#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="sku" edit="#rc.orderItem.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].sku.skuID" property="sku" edit="#rc.orderItem.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].quantity" property="quantity" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].orderItemStatusType.typeID" property="orderItemStatusType" edit="#rc.edit#" />
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 	</cf_SlatwallDetailForm>
-
 </cfoutput>

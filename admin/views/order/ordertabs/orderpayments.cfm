@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+	
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -35,32 +35,15 @@
 
 Notes:
 
-*/
-component displayname="Order Delivery Shipping" entityname="SlatwallOrderDeliveryShipping" table="SlatwallOrderDelivery" persistent="true" accessors="true" output="false" extends="OrderDelivery" discriminatorvalue="shipping" {
-	
-	// Persistent Properties
-	property name="orderDeliveryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="trackingNumber" ormtype="string";
-	
-	// Related Object Properties
-	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID" cascade="all";
+--->
+<cfparam name="rc.order" type="any" />
+<cfparam name="rc.edit" type="boolean" /> 
 
-
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-	
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-	
-	// ================== START: Overridden Methods ========================
-	
-	// ==================  END:  Overridden Methods ========================
-		
-	// =================== START: ORM Event Hooks  =========================
-	
-	// ===================  END:  ORM Event Hooks  =========================	
-
-}
+<cfoutput>
+	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderPaymentsSmartList()#" 
+			recordDetailAction="admin:order.detailorderpayment"
+			recordDetailModal="true">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_SlatwallListingColumn propertyIdentifier="amount" />
+	</cf_SlatwallListingDisplay>
+</cfoutput>

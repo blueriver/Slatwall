@@ -43,7 +43,8 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.orderFulfillmentSmartList#" createAction="" />
 
-<cf_SlatwallListingDisplay smartList="#rc.orderFulfillmentSmartList#">
+<cf_SlatwallListingDisplay smartList="#rc.orderFulfillmentSmartList#"
+		recorddetailaction="admin:order.detailorderfulfillment">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
 	<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" />
 	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />

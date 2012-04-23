@@ -47,12 +47,12 @@ Notes:
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divclass="span4">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
 				<cfif !isNull(rc.order.getOrderClosedDateTime)>
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyList divclass="span4">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
@@ -72,6 +72,8 @@ Notes:
 		<cf_SlatwallTabGroup object="#rc.order#">
 			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" />
 			<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
+			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" />
+			<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

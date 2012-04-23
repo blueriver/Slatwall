@@ -36,19 +36,13 @@
 Notes:
 
 --->
-
-<cfparam name="rc.orderpayment" type="any" />
-<cfparam name="rc.orderpaymentID" type="string" /> 
+<cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<form class="modal" method="post" action="#buildURL('admin:order.processOrderPaymentRefund')#">
-		<input type="hidden" name="orderPaymentID" value="#rc.orderPaymentID#" />
-		<input type="hidden" name="providerTransactionID" value="#rc.providerTransactionID#" />
-		<p>#rc.$.Slatwall.rbKey("admin.order.enterPaymentRefundAmount")#: #rc.orderpayment.getFormattedValue('amountCharged', 'currency')#</p>
-		$ <input class="refundAmount" type="text" name="refundAmount" value="0" size="10" />
-		<br><br>
-		<div id="actionButtons" class="clearfix">
-			<cf_SlatwallActionCaller action="admin:order.processOrderPaymentRefund" class="button" type="submit" />
-		</div>
-	</form>
+	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderDeliveriesSmartList()#"
+			recordEditAction="admin:order.editorderdelivery">
+			
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="deliveryOpenDateTime" />
+		
+	</cf_SlatwallListingDisplay>
 </cfoutput>
