@@ -110,7 +110,7 @@ component accessors="true" output="false" extends="BaseObject" {
 			variables.currentProductSmartList = getService("productService").getProductSmartList(data=url);
 			variables.currentProductSmartList.addFilter('activeFlag', 1);
 			variables.currentProductSmartList.addFilter('publishedFlag', 1);
-			if(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
+			if(isBoolean(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) && getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
 				variables.currentProductSmartList.addLikeFilter('listingPages.cmsContentIDPath', getCurrentContent().getCMSContentID());	
 			} else {
 				variables.currentProductSmartList.addLikeFilter('listingPages.cmsContentID', getCurrentContent().getCMSContentID());
