@@ -88,7 +88,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
     public any function save(required any entity, struct data, string context="save") {
     	
     	if(!isObject(arguments.entity) || !arguments.entity.isPersistent()) {
-    		throw("The entity being passed to this service is not a persistent entity. Make sure that you aren't calling the oMM method with named arguments. Also, make sure to check the spelling of your 'fieldname' attributes.");
+    		throw("The entity being passed to this service is not a persistent entity. READ THIS!!!! -> Make sure that you aren't calling the oMM method with named arguments. Also, make sure to check the spelling of your 'fieldname' attributes.");
     	}
     	
 		// If data was passed in to this method then populate it with the new data

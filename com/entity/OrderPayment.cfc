@@ -235,6 +235,13 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return variables.creditCardNumber;
 	}
 	
+	public string function getValidationContext(required string context) {
+		if(arguments.context == "save") {
+			return "save#getPaymentMethodType()#";
+		}
+		return arguments.context;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

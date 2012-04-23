@@ -42,22 +42,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="sessionService" type="any";
 	property name="settingService" type="any";
 	
-
-	public any function savePaymentMethod(required any entity, struct data) {
-		if( structKeyExists(arguments, "data") ) {
-			// save paymentMethod-specific settings
-			for(var item in arguments.data) {
-				if(!isObject(arguments.data[item]) && listFirst(item,"_") == "paymentMethod") {
-					var setting = getSettingService().getBySettingName(item);
-					setting.setSettingName(item);
-					setting.setSettingValue(arguments.data[item]);
-					getSettingService().save(entity=setting);
-				}
-			}
-		}
-		return save(argumentcollection=arguments);
-	}
-	
 	public boolean function processPayment(required any orderPayment, required string transactionType, numeric transactionAmount, string providerTransactionID="") {
 		// Lock down this determination so that the values getting called and set don't overlap
 		lock scope="Session" timeout="45" {

@@ -293,11 +293,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					// Make sure the payment is attached to the order
 					payment.setOrder(arguments.order);
 					
-					// get the payment method
-					var paymentMethod = getService("paymentService").getPaymentMethod(paymentsDataArray[i].paymentMethod.paymentMethodID); 
-
 					// Attempt to Validate & Save Order Payment
-					payment = this.saveOrderPayment(entity=payment, data=paymentsDataArray[i], context=paymentMethod.getPaymentMethodType());
+					payment = this.saveOrderPayment(payment, paymentsDataArray[i]);
 					
 					// Check to see if this payment has any errors and if so then don't proceed
 					if(payment.hasErrors()) {
@@ -741,47 +738,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return orderDelivery;
 	}
 	
-	public any function saveOrderPaymentCreditCard(required any orderPayment, struct data={}) {
-	
-		// Populate Order Payment
-		arguments.orderPayment.populate(arguments.data);
-	
-		// Manually Set the scurity code & Credit Card Number because it isn't a persistent property
-		arguments.orderPayment.setSecurityCode(arguments.data.securityCode);
-		arguments.orderPayment.setCreditCardNumber(arguments.data.creditCardNumber);
-	
-		// Validate the order Payment
-		arguments.orderPayment.validate();
-	
-		if(arguments.orderPayment.getCreditCardType() == "Invalid") {
-			arguments.orderPayment.addError(errorName="creditCardNumber", errorMessage="Invalid credit card number.");
-		}
-	
-		var address = arguments.orderPayment.getBillingAddress();
-		
-		// Get Address
-		if(isNull(address)) {
-			// Set a new address in the order payment
-			var address = getAddressService().newAddress();
-		}
-	
-		// Populate Address
-		address.populate(arguments.data.billingAddress);
-	
-		// Validate Address
-		address.validate();
-	
-		arguments.orderPayment.setBillingAddress(address);
-	
-		if(!arguments.orderPayment.hasErrors() && !address.hasErrors()) {
-			getDAO().save(address);
-			getDAO().save(arguments.orderPayment);
-		} else {
-			getSlatwallScope().setORMHasErrors( true );
-		}
-	
-		return arguments.orderPayment;
-	}
 	
 	//================= START: Order Actions ========================
 	
