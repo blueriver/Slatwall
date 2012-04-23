@@ -50,6 +50,13 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	property name="createdDateTime" ormtype="timestamp";
 	property name="modifiedDateTime" ormtype="timestamp";
 	
+	public any function getAccount() {
+		if(!structKeyExists(variables, "account")) {
+			return getService("accountService").newAccount();
+		}
+		return variables.account;
+	}
+	
 	public void function removeAccount() {
 		if(structKeyExists(variables, "account")) {
 			structDelete(variables, "account");	

@@ -42,7 +42,8 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="orderService" type="any";
 	property name="utilityTagService" type="any";
 	
-	public any function getPropperSession() {
+	public void function setPropperSession() {
+		
 		// Figure out the appropriate session ID and create a new one if necessary
 		if(!isDefined('session.slatwall.sessionID')) {
 			if(structKeyExists(cookie, "slatwallSessionID")) {
@@ -54,7 +55,7 @@ component extends="BaseService" accessors="true" output="false" {
 
 		// Load Session
 		var currentSession = this.getSession(session.slatwall.sessionID, true);
-		
+		getSlatwallScope().setCurrentSession( currentSession );
 		
 		if(!structKeyExists(request, "muraScope")) {
 			request.muraScope = application.serviceFactory.getBean("muraScope").init(application.serviceFactory.getBean("contentServer").bindToDomain());
@@ -63,14 +64,12 @@ component extends="BaseService" accessors="true" output="false" {
 		var cmsUser = request.muraScope.currentUser();
 		
 		if(cmsUser.isLoggedIn()) {
+			
 			// Load the account
 			var slatwallAccount = getAccountService().saveAccountByCmsUser(cmsUser);
 			
-			// Update the account with any changes in the mura user
-			//slatwallAccount = getAccountService().updateAccountFromCmsUser(slatwallAccount, cmsUser);
-			
 			// Set the account in the current session
-			currentSession.setAccount(slatwallAccount);
+			currentSession.setAccount( slatwallAccount );
 			
 			// Make sure that the account on the current order is whoever is logged in, if the currentCart already had an account assigned, and it isn't who logged in... then just duplicate the cart
 			if(!isNull(currentSession.getOrder()) && !currentSession.getOrder().isNew()) {
@@ -92,8 +91,6 @@ component extends="BaseService" accessors="true" output="false" {
 		// Save session ID in the session Scope & cookie scope for next request
 		session.slatwall.sessionID = currentSession.getSessionID();
 		getUtilityTagService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
-		
-		return currentSession;
 	}
 	
 	public void function setValue(required string property, required any value) {

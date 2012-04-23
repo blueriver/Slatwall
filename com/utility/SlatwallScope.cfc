@@ -56,14 +56,10 @@ component accessors="true" output="false" extends="BaseObject" {
 	}
 	
 	public any function getCurrentAccount() {
-		if(!structKeyExists(variables, "currentAccount")) {
-			if(!isNull(getCurrentSession().getAccount())) {
-				variables.currentAccount = getCurrentSession().getAccount();
-			} else {
-				variables.currentAccount = getService("accountService").newAccount();
-			}
+		if(!isNull(getCurrentSession().getAccount())) {
+			return getCurrentSession().getAccount();
 		}
-		return variables.currentAccount;
+		return getService("accountService").newAccount();
 	}
 	
 	public any function getCurrentBrand() {
@@ -121,7 +117,7 @@ component accessors="true" output="false" extends="BaseObject" {
 	
 	public any function getCurrentSession() {
 		if(!structKeyExists(variables, "currentSession")) {
-			variables.currentSession = getService("sessionService").getPropperSession();
+			getService("sessionService").setPropperSession();
 		}
 		return variables.currentSession;
 	}

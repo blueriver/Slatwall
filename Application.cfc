@@ -199,7 +199,7 @@ component extends="org.fw1.framework" output="false" {
 		getBeanFactory().getBean("productCacheService").executeProductCacheUpdates();
 		
 		// Confirm Session Setup
-		request.slatwallScope.getCurrentSession();
+		getBeanFactory().getBean("sessionService").setPropperSession();
 	}
 
 	public void function setupRequest() {
