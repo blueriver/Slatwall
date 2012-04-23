@@ -383,15 +383,19 @@ globalEncryptionKeySize
 			}
 			
 			if(!disableFormatting) {
+				// First we look for a formatType in the meta data
 				if( structKeyExists(getSettingMetaData(arguments.settingName), "formatType") ) {
 					settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, getSettingMetaData(arguments.settingName).formatType);
+				// Now we are looking at different fieldTypes
 				} else if( structKeyExists(getSettingMetaData(arguments.settingName), "fieldType") ) {
+					// Listing Multiselect
 					if(getSettingMetaData(arguments.settingName).fieldType == "listingMultiselect") {
 						settingDetails.settingValueFormatted = "";
 						for(var i=1; i<=listLen(settingDetails.settingValue); i++) {
 							var thisID = listGetAt(settingDetails.settingValue, i);
 							settingDetails.settingValueFormatted = listAppend(settingDetails.settingValueFormatted, " " & getUtilityORMService().getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#", {1=thisID}).getSimpleRepresentation());	
 						}
+					// Select
 					} else if (getSettingMetaData(arguments.settingName).fieldType == "select") {
 						var options = getSettingOptions(arguments.settingName);
 						for(var i=1; i<=arrayLen(options); i++) {
@@ -405,9 +409,13 @@ globalEncryptionKeySize
 								break;
 							}
 						}
+					// Password
+					} else if (getSettingMetaData(arguments.settingName).fieldType == "password") {
+						settingDetails.settingValueFormatted = "********";
 					} else {
 						settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, getSettingMetaData(arguments.settingName).fieldType);	
 					}
+				// This is the no deffinition case
 				} else {
 					settingDetails.settingValueFormatted = settingDetails.settingValue;
 				}
