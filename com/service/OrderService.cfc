@@ -89,7 +89,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			throw("You cannot add an item to an order that has been closed or canceled");
 		}
 	
-	
 		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
 		if(!structKeyExists(arguments, "orderFulfillment"))	{
 			

@@ -78,8 +78,7 @@ globalEncryptionKeySize
 			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
-			shippingMethodRate = ["shippingMethod.shippingMethodID"],
-			paymentMethod = ["paymentMethodID"]
+			shippingMethodRate = ["shippingMethod.shippingMethodID"]
 		};
 		
 		variables.settingMetaData = {
@@ -427,6 +426,29 @@ globalEncryptionKeySize
 		}
 		
 	</cfscript>
+	
+	<cffunction name="getSettingRecordCount">
+		<cfargument name="settingName" />
+		<cfargument name="settingValue" />
+		
+		<cfset var allSettings = getAllSettingsQuery() />
+		<cfset var rs = "" />
+		
+		<cfquery name="rs" dbType="query">
+			SELECT
+				count(*) as settingRecordCount
+			FROM
+				allSettings
+			WHERE
+				LOWER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
+			  <cfif structKeyExists(arguments, "settingValue")>
+			  	  AND
+			  	LOWER(allSettings.settingValue) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingValue)#">  
+			  </cfif>
+		</cfquery> 
+		
+		<cfreturn rs.settingRecordCount />
+	</cffunction>
 	
 	<cffunction name="getSettingRecordBySettingRelationships">
 		<cfargument name="settingName" type="string" required="true" />

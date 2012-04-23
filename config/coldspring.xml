@@ -214,6 +214,7 @@
 	</bean>
 	<bean id="contentService" class="Slatwall.com.service.ContentService">
         <property name="DAO"><ref bean="contentDAO" /></property>
+		<property name="settingService"><ref bean="settingService" /></property>
 	</bean>
 	<bean id="dataService" class="Slatwall.com.service.DataService">
         <property name="DAO"><ref bean="dataDAO" /></property>

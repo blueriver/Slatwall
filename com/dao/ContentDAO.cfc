@@ -38,10 +38,6 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
-	<cffunction name="restrictedContentExists" access="public" returntype="boolean">
-		<cfreturn ormExecuteQuery("SELECT count(*) FROM SlatwallSetting WHERE settingName = 'contentRestrictAccessFlag'",true) GT 0 />
-	</cffunction>
-
 	<cffunction name="getRestrictedContentByPath" access="public">
 		<cfargument name="cmsContentIDPath" type="string" />
 			

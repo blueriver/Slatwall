@@ -38,8 +38,10 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
+	property name="settingService" type="any";
+
 	public boolean function restrictedContentExists() {
-		return getDAO().restrictedContentExists();
+		return getSettingService().getSettingRecordCount(settingName="contentRestrictAccessFlag", settingValue=1);
 	}
 	
 	public any function getRestrictedContentBycmsContentID(required any cmsContentID) {
