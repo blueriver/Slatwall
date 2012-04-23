@@ -40,9 +40,10 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="percentageOff" ormType="big_decimal";
+	property name="amount" ormType="big_decimal";
+	property name="amountType" ormType="string" formFieldType="select";
 	property name="amountOff" ormType="big_decimal";
-	property name="amount" ormType="big_decimal" hint="can't apply to order rewards";
+	property name="percentageOff" ormType="big_decimal";
 	
 	// Related Object Properties (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
@@ -60,36 +61,14 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 
 	// Non-persistent entities
+	property name="amountTypeOptions" persistent="false";
 	property name="discountType" persistent="false";
 	property name="discount" persistent="false" type="string"; 
 	property name="rewardTypeDisplay" persistent="false";
 	property name="rewards" type="string" persistent="false";
+		
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Promotion Period (many-to-one)
-	
-	public void function setPromotionPeriod(required promotionPeriod promotionPeriod) {
-		variables.promotionPeriod = arguments.promotionPeriod;
-		if(!arguments.promotionPeriod.hasPromotionReward(this)) {
-			arrayAppend(arguments.promotionPeriod.getPromotionRewards(),this);
-		}
-	}
-	
-	public void function removePromotionPeriod(PromotionPeriod promotionPeriod) {
-	   if(!structKeyExists(arguments,"promotionPeriod")) {
-	   		arguments.promotionPeriod = variables.promotionPeriod;
-	   }
-       var index = arrayFind(arguments.promotionPeriod.getPromotionRewards(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.promotionPeriod.getPromotionRewards(), index);
-       }
-       structDelete(variables,"promotionPeriod");
-    }
-    
-    /************   END Association Management Methods   *******************/
-
-	public boolean function hasValidPercentageOffValue() {
+    public boolean function hasValidPercentageOffValue() {
 		if(getDiscountType() == "percentageOff" && ( isNull(getPercentageOff()) || !isNumeric(getPercentageOff()) || getPercentageOff() > 100 || getPercentageOff() < 0 ) ) {
 			return false;
 		}
@@ -115,7 +94,14 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	}
 
 	// ============ START: Non-Persistent Property Methods =================
-
+	
+	public string function getAmountTypeOptions() {
+		return [
+			{name='Amount Off', value="amountOff"},
+			{name='Percentage Off', value="percentageOff"},
+			{name='Fixed Amount', value="amount"}
+		];
+	}
 	
 	public string function getDiscountType() {
 		if(isNull(variables.DiscountType)) {
@@ -193,6 +179,25 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	}
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Promotion Period (many-to-one)
+	public void function setPromotionPeriod(required any promotionPeriod) {
+		variables.promotionPeriod = arguments.promotionPeriod;
+		if(!arguments.promotionPeriod.hasPromotionReward(this)) {
+			arrayAppend(arguments.promotionPeriod.getPromotionRewards(),this);
+		}
+	}
+	public void function removePromotionPeriod(any promotionPeriod) {
+	   if(!structKeyExists(arguments, "promotionPeriod")) {
+	   		arguments.promotionPeriod = variables.promotionPeriod;
+	   }
+       var index = arrayFind(arguments.promotionPeriod.getPromotionRewards(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.promotionPeriod.getPromotionRewards(), index);
+       }
+       structDelete(variables,"promotionPeriod");
+    }
+    
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
