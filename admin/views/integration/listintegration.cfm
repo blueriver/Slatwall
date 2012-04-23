@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.integrationSmartList" type="any" />
+<cfset rc.integrationSmartList.addFilter('installedFlag', 1) />
 
 <cfoutput>
 	<cf_SlatwallActionBar type="listing" object="#rc.integrationSmartList#" createAction="" />

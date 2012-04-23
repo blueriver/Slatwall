@@ -50,7 +50,15 @@ component extends="BaseService" {
 	}
 
 	public string function decryptValue(required string value) {
-		return decrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));
+		try {
+			return decrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));	
+		} catch (any e) {
+			logSlatwall("Error Decrypting Value: #arguments.value#", true);
+			logSlatwall("Encryption Key: #getEncryptionKey()#", true);
+			logSlatwall("Algorithm: #setting("globalEncryptionAlgorithm")#", true);
+			logSlatwall("Encoding: #setting("globalEncryptionEncoding")#", true);
+			return "";
+		}
 	}
 	
 	public string function createEncryptionKey() {
@@ -66,11 +74,11 @@ component extends="BaseService" {
 	}
 	
 	private string function getEncryptionKeyFilePath() {
-		return setting("globalEncryptionKeyLocation") & getEncryptionKeyFileName();
+		return getEncryptionKeyLocation() & getEncryptionKeyFileName();
 	}
 	
 	private string function getEncryptionKeyLocation() {
-		return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : "#getSlatwallRootDirectory()#/config/";
+		return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/Slatwall/config/');
 	}
 	
 	private string function getEncryptionKeyFileName() {

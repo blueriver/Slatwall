@@ -52,7 +52,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public array function getActiveFW1Subsystems() {
 		if( !structKeyExists(variables, "activeFW1Subsystems") ) {
 			variables.activeFW1Subsystems = [];
-			var integrations = this.listIntegration();
+			var isl = this.getIntegrationSmartList();
+			isl.addFilter('installedFlag', 1);
+			var integrations = isl.getRecords();
 			for(var i=1; i<=arrayLen(integrations); i++) {
 				if(getIntegrationCFC(integrations[i]).isFW1Subsystem()) {
 					arrayAppend(variables.activeFW1Subsystems, {subsystem=integrations[i].getIntegrationPackage(), name=integrations[i].getIntegrationName()});
@@ -65,7 +67,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function getAllSettings() {
 		
 			variables.allSettings = {};
-			var integrations = this.listIntegration();
+			var isl = this.getIntegrationSmartList();
+			isl.addFilter('installedFlag', 1);
+			var integrations = isl.getRecords();
 			for(var i=1; i<=arrayLen(integrations); i++) {
 				for(var settingName in integrations[i].getSettings()) {
 					variables.allSettings['integration#integrations[i].getIntegrationPackage()##settingName#'] = integrations[i].getSettings()[ settingName ];
