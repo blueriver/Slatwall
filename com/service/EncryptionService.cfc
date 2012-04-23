@@ -53,10 +53,7 @@ component extends="BaseService" {
 		try {
 			return decrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));	
 		} catch (any e) {
-			logSlatwall("Error Decrypting Value: #arguments.value#", true);
-			logSlatwall("Encryption Key: #getEncryptionKey()#", true);
-			logSlatwall("Algorithm: #setting("globalEncryptionAlgorithm")#", true);
-			logSlatwall("Encoding: #setting("globalEncryptionEncoding")#", true);
+			logSlatwall("There was an error decrypting the value: #arguments.value#", true);
 			return "";
 		}
 	}
