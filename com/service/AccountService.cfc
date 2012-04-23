@@ -79,10 +79,6 @@ component extends="BaseService" accessors="true" output="false" {
 			// update and save with values from cms user
 			account = updateAccountFromCmsUser(account, arguments.cmsUser);
 			getDAO().save(target=account);
-			
-			// flush the session so this account persists. Other wise preInsert getCurrentAcount triggers infinite loop.
-			// this should still be looked at because even with flush this method will be called twice.
-			getDAO().flushORMSession();
 		
 		} else {
 			// Update the existing account 
