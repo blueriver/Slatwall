@@ -36,18 +36,13 @@
 Notes:
 
 --->
-
-<cfparam name="rc.orderFulfillmentSmartList" type="any" />
+<cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	
-<cf_SlatwallActionBar type="listing" object="#rc.orderFulfillmentSmartList#" createAction="" />
-
-<cf_SlatwallListingDisplay smartList="#rc.orderFulfillmentSmartList#"
-		recorddetailaction="admin:order.detailorderfulfillment">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
-	<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" />
-	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
-</cf_SlatwallListingDisplay>
-
+	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderDeliveriesSmartList()#"
+			recordEditAction="admin:order.editorderdelivery">
+			
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="deliveryOpenDateTime" />
+		
+	</cf_SlatwallListingDisplay>
 </cfoutput>

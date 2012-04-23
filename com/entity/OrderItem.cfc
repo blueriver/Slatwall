@@ -406,6 +406,10 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentation() {
+		return getSku().getProduct().getTitle() & " - " & getSku().getSimpleRepresentation(); 
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

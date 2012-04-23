@@ -73,6 +73,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="totalShippingWeight" type="numeric" persistent="false";
 	property name="shippingMethodOptions" type="array" persistent="false";
 	property name="accountAddressOptions" type="array" persistent="false";
+	property name="discountAmount" type="numeric" persistent="false";
+	property name="chargeAfterDiscount" type="numeric" persistent="false";
 	
 	public any function init() {
 		if(isNull(variables.orderFulfillmentItems)) {
@@ -133,10 +135,6 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		}
 	}
 	
-	public numeric function getDiscountAmount() {
-    	return 0;
-    }
-    
 	public numeric function getDiscountTotal() {
 		return getDiscountAmount() + getItemDiscountAmountTotal();
 	}
@@ -158,6 +156,23 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
 
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public numeric function getDiscountAmount() {
+		if( !structKeyExists(variables, "discountAmount") ) {
+			variables.discountAmount = 0;
+			for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
+				variables.discountAmount += getAppliedPromotions()[i].getDiscountAmount();
+			}
+		}
+		return variables.discountAmount;
+	}
+	
+	public numeric function getChargeAfterDiscount() {
+		if( !structKeyExists(variables, "chargeAfterDiscount") ) {
+			variables.chargeAfterDiscount = getFulfillmentCharge() - getDiscountAmount();
+		}
+		return variables.chargeAfterDiscount;
+	}
 	
 	public numeric function getSubtotal() {
   		if( !structKeyExists(variables,"subtotal") ) {

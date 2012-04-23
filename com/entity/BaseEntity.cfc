@@ -222,7 +222,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			variables[ cacheKey ] = smartList.getRecords();
 			
 			// If this is a many-to-one related property, then add a 'select' to the top of the list
-			if(getPropertyMetaData( propertyName ).fieldType == "many-to-one") {
+			if(getPropertyMetaData( propertyName ).fieldType == "many-to-one" && getPropertyMetaData( propertyName ).cfc != "Type") {
 				arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});	
 			}
 		}
@@ -238,6 +238,10 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!structKeyExists(variables, cacheKey)) {
 			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
 			variables[ cacheKey ] = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
+			// If the cfc is "Type" then we should be looking for a parentTypeSystemCode in the metaData
+			if(getPropertyMetaData( arguments.propertyName ).cfc == "Type") {
+				variables[ cacheKey ].addFilter('parentType.systemCode', arguments.propertyName);
+			}
 		}
 		
 		return variables[ cacheKey ];
