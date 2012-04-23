@@ -42,18 +42,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="commentService" type="any";
 	property name="orderService" type="any";
 	
-	public void function createComment(required struct rc) {
-		param name="rc.commentRelatedEntityName";
-		param name="rc.commentRelatedEntityID";
-		param name="rc.returnURL";
-		
+	public void function saveComment(required struct rc) {
 		var comment = getCommentService().newComment();
 		
 		getCommentService().saveComment(comment, rc);
 		
-		getFW().redirectExact(rc.returnURL);
+		redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
     }
-    
+	
     public void function link(required struct rc) {
     	param name="rc.entity";
     	param name="rc.property";
@@ -62,7 +58,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	switch(rc.entity) {
     		case "order": {
     			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:order.detail", queryString="orderID=#order.getOrderID()#");
+    			getFW().redirect(action="admin:order.detailorder", queryString="orderID=#order.getOrderID()#");
     			break;
     		}
     	}

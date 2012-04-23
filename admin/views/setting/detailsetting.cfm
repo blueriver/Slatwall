@@ -53,7 +53,6 @@ Notes:
 		<cfelse>
 			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#left(local.key, len(local.key)-2)#.#local.key#" value="#rc[local.key]#" />', chr(13)) />	
 		</cfif>
-		
 	</cfif>
 </cfloop>
 

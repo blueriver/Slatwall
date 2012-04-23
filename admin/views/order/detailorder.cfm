@@ -69,7 +69,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.order#">
+		<cf_SlatwallTabGroup object="#rc.order#" allowComments=true>
 			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" />
 			<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
 			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" />
