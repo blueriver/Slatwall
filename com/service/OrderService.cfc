@@ -62,23 +62,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return smartList;
 	}
 	
-	public any function getOrderFulfillmentSmartList(struct data={}) {
-		arguments.entityName = "SlatwallOrderFulfillment";
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		smartList.addOrder("order_orderOpenDateTime|DESC");
-		return smartList;
-	}
-	
-	public any function getOrderStatusOptions(struct data={}) {
-		arguments.entityName = "SlatwallType";
-		var smartlist = getDAO().getSmartList(argumentCollection=arguments);
-		smartList.addSelect("systemCode", "id");
-		smartList.addSelect("type", "name");
-		smartList.addFilter("parentType_systemCode", "orderStatusType");
-		smartList.addFilter("systemCode", "ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled");
-		return smartlist.getRecords();
-	}
-	
 	public any function saveOrder(required any order, struct data={}, string context="save") {
 	
 		// Call the super.save() method to do the base populate & validate logic
