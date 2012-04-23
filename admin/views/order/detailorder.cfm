@@ -39,7 +39,6 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.order" type="any" />
 
-
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
@@ -47,17 +46,26 @@ Notes:
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divclass="span8">
-				<cfif !rc.order.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderNumber" edit="false">
-				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.order.isNew()#">
-			</cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyList divclass="span4">
-				<cfif !rc.order.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
+				<cfif !isNull(rc.order.getOrderClosedDateTime)>
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
 				</cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin">
+			</cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divclass="span4">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAuthorizedTotal">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">
+			</cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divclass="span4">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="subtotal">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="taxtotal">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="fulfillmenttotal">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="discounttotal">
+					<hr />
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="total">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

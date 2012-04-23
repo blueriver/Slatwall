@@ -87,40 +87,42 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	public any function onRenderStart(required any $) {
 		// check if user has access to this page
 		checkAccess($);
-		
-		// Check for any slatActions that might have been passed in
-		if(len($.event('slatAction'))) {
-			$.content('body', $.content('body') & doAction($.event('slatAction')));
-		}
-		
+				
 		// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
 		$.slatwall.setCurrentContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
 		
-		// Check to see if the current content is a listing page, so that we add our frontend view to the content body
-		if(isBoolean($.slatwall.getCurrentContent().setting('contentProductListingFlag')) && $.slatwall.getCurrentContent().setting('contentProductListingFlag')) {
-			$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
+		// Check for any slatActions that might have been passed in and render that page as the first
+		if(len($.event('slatAction'))) {
+			$.content('body', $.content('body') & doAction($.event('slatAction')));
+			
+		// If no slatAction was passed in, then check for keys in mura to determine what page to render
+		} else {
+			// Check to see if the current content is a listing page, so that we add our frontend view to the content body
+			if(isBoolean($.slatwall.getCurrentContent().setting('contentProductListingFlag')) && $.slatwall.getCurrentContent().setting('contentProductListingFlag')) {
+				$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
+			}
+			
+			// Render any of the 'special' pages that might need to be rendered
+			if($.content('filename') == $.slatwall.setting('globalPageShoppingCart')) {
+				$.content('body', $.content('body') & doAction('frontend:cart.detail'));
+			} else if($.content('filename') == $.slatwall.setting('globalPageOrderStatus')) {
+				$.content('body', $.content('body') & doAction('frontend:order.detail'));
+			} else if($.content('filename') == $.slatwall.setting('globalPageOrderConfirmation')) {
+				$.content('body', $.content('body') & doAction('frontend:order.confirmation'));
+			} else if($.content('filename') == $.slatwall.setting('globalPageMyAccount')) {
+				// Checks for My-Account page
+				if($.event('showitem') != ""){
+					$.content('body', $.content('body') & doAction('frontend:account.#$.event("showitem")#'));
+				} else {
+					$.content('body', $.content('body') & doAction('frontend:account.detail'));
+				}
+			} else if($.content('filename') == $.slatwall.setting('globalPageCreateAccount')) {
+				$.content('body', $.content('body') & doAction('frontend:account.create'));
+			} else if($.content('filename') == $.slatwall.setting('globalPageCheckout')) {
+				$.content('body', $.content('body') & doAction('frontend:checkout.detail'));
+			}
 		}
 		
-		// Render any of the 'special' pages that might need to be rendered
-		if($.content('filename') == $.slatwall.setting('globalPageShoppingCart')) {
-			$.content('body', $.content('body') & doAction('frontend:cart.detail'));
-		} else if($.content('filename') == $.slatwall.setting('globalPageOrderStatus')) {
-			$.content('body', $.content('body') & doAction('frontend:order.detail'));
-		} else if($.content('filename') == $.slatwall.setting('globalPageOrderConfirmation')) {
-			$.content('body', $.content('body') & doAction('frontend:order.confirmation'));
-		} else if($.content('filename') == $.slatwall.setting('globalPageMyAccount')) {
-			// Checks for My-Account page
-			if($.event('showitem') != ""){
-				$.content('body', $.content('body') & doAction('frontend:account.#$.event("showitem")#'));
-			} else {
-				$.content('body', $.content('body') & doAction('frontend:account.detail'));
-			}
-		} else if($.content('filename') == $.slatwall.setting('globalPageCreateAccount')) {
-			$.content('body', $.content('body') & doAction('frontend:account.create'));
-		} else if($.content('filename') == $.slatwall.setting('globalPageCheckout')) {
-			$.content('body', $.content('body') & doAction('frontend:checkout.detail'));
-		}
-
 	}
 	
 	// on category save, create/update the category in slatwall

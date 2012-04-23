@@ -43,8 +43,10 @@ Notes:
 	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderItemsSmartList()#" 
 			recordEditAction="admin:order.editorderitem"
 			recordEditQueryString="productID=#rc.order.getOrderID()#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.skuCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
+		<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="price" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
 	</cf_SlatwallListingDisplay>
-	
 </cfoutput>
