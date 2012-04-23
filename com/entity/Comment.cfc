@@ -40,8 +40,8 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	
 	// Persistent Properties
 	property name="commentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="comment" ormtype="string" length="4000";
-	//property name="publicFlag" ormtype="boolean";
+	property name="comment" ormtype="string" length="4000" formFieldType="textarea";
+	property name="publicFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
 	
@@ -111,7 +111,9 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preUpdate(struct oldData) {
-		throw("You cannot update a comment because this would display a fundamental flaw in comment management.");
+		if(oldData.comment != variables.comment) {
+			throw("You cannot update a comment because this would display a fundamental flaw in comment management.");	
+		}
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

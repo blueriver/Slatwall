@@ -39,60 +39,44 @@ Notes:
 
 <!--- These are required Attributes --->
 <cfparam name="attributes.entity" type="any" />
-<cfparam name="attributes.returnURL" type="string" />
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<div class="comments">
-			<div class="commentList">
-				<cfif arrayLen(attributes.entity.getComments()) gt 0>
-					<table class="listing-grid stripe">
-						<tr>
-							<th>#request.muraScope.slatwall.rbKey("define.createdDateTime")#</th>
-							<th>#request.muraScope.slatwall.rbKey("define.createdByAccount")#</th>
-							<th class="varWidth">#request.muraScope.Slatwall.rbKey("entity.comment.comment")#</th>
-						</tr>
-						<cfloop array="#attributes.entity.getComments()#" index="commentRelationship">
-							<tr>
-								<cfif commentRelationship['referencedRelationshipFlag']>
-									<cfset originalEntity = commentRelationship['comment'].getPrimaryRelationship().getRelationshipEntity() />
-									<cfswitch expression="#originalEntity.getClassName()#">
-										<cfcase value="Order">
-											<td class="highlighted">#request.muraScope.slatwall.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
-											<td class="highlighted">#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
-											<td class="varWidth highlighted" colspan="3">This #attributes.entity.getClassName()# was referenced in a comment on <a href="?slatAction=order.detail&orderID=#originalEntity.getOrderID()#">Order Number #originalEntity.getOrderNumber()#</a>.
-										</cfcase>
-										<cfdefaultcase>
-											<td class="varWidth" colspan="3">??? Programming Issue for #originalEntity.getClassName()# entity comments</td>
-										</cfdefaultcase>
-									</cfswitch>
-								<cfelse>
-									<td>#request.muraScope.slatwall.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
+		<cfif arrayLen(attributes.entity.getComments()) gt 0>
+			<table class="table table-striped table-bordered table-condensed">
+				<tr>
+					<th class="primary">#request.slatwallScope.rbKey("entity.comment.comment")#</th>
+					<th>#request.slatwallScope.rbKey("entity.comment.publicFlag")#</th>
+					<th>#request.slatwallScope.rbKey("entity.define.createdByAccount")#</th>
+					<th>#request.slatwallScope.rbKey("entity.define.createdDateTime")#</th>
+					<th class="admin1">&nbsp;</th>
+				</tr>
+				<cfloop array="#attributes.entity.getComments()#" index="commentRelationship">
+					<tr>
+						<cfif commentRelationship['referencedRelationshipFlag']>
+							<cfset originalEntity = commentRelationship['comment'].getPrimaryRelationship().getRelationshipEntity() />
+							<cfswitch expression="#originalEntity.getClassName()#">
+								<cfcase value="Order">
+									<td class="primary" colspan="2">This #attributes.entity.getClassName()# was referenced in a comment on <a href="?slatAction=order.detailorder&orderID=#originalEntity.getOrderID()#">Order Number #originalEntity.getOrderNumber()#</a></td>
 									<td>#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
-									<td class="varWidth">#commentRelationship['comment'].getCommentWithLinks()#</td>
-								</cfif>
-							</tr>
-						</cfloop>
-					</table>
-				</cfif>
-			</div>
-			<div class="newComment">
-				<!---<form name="addComment" method="post" action="?slatAction=admin:comment.createComment" />--->
-					<input type="hidden" name="commentRelationships[1].commentRelationshipID" value="" />
-					<input type="hidden" name="commentRelationships[1].#attributes.entity.getClassName()#.#attributes.entity.getPrimaryIDPropertyName()#" value="#attributes.entity.getPrimaryIDValue()#" />
-					<input type="hidden" name="returnURL" value="#attributes.returnURL#" />
-					<dl class="oneColumn">
-						<dt>New Comment</dt>
-						<dd><cf_SlatwallFormField fieldType="textarea" fieldName="comment"> </dd>
-					</dl>
-					<button id="submitComment">Add Comment</button>
-				<!---</form>--->
-				<script type="text/javascript">
-					jQuery('##submitComment').click(function(e){
-						
-					});
-				</script>
-			</div>
-		</div>
+									<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
+									<td class="admin1">&nbsp;</td>
+								</cfcase>
+								<cfdefaultcase>
+									<td class="primary" colspan="5">??? Programming Issue for #originalEntity.getClassName()# entity comments</td>
+								</cfdefaultcase>
+							</cfswitch>
+						<cfelse>
+							<td class="primary" style="white-space:normal;">#commentRelationship['comment'].getCommentWithLinks()#</td>
+							<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getPublicFlag(), "yesno")#</td>
+							<td>#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
+							<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
+							<td class="admin1"><cf_SlatwallActionCaller action="admin:comment.editcomment" queryString="commentID=#commentRelationship['comment'].getCommentID()#&#attributes.entity.getPrimaryIDPropertyName()#=#attributes.entity.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-mini" icon="pencil" iconOnly="true" /></td>
+						</cfif>
+					</tr>
+				</cfloop>
+			</table>
+		</cfif>
+		<cf_SlatwallActionCaller action="admin:comment.createcomment" querystring="#attributes.entity.getPrimaryIDPropertyName()#=#attributes.entity.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-primary" />
 	</cfoutput>
 </cfif>

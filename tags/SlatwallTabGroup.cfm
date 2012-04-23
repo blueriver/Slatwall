@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="attributes.object" type="any" default="" />
+<cfparam name="attributes.allowComments" type="boolean" default="false"> 
 
 <cfset variables.fw = caller.this />
 
@@ -54,6 +55,9 @@ Notes:
 						<cfloop array="#thistag.tabs#" index="tab">
 							<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.slatwallScope.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
 						</cfloop>
+						<cfif isObject(attributes.object) && attributes.allowComments>
+							<li><a href="##tabComments" data-toggle="tab">#request.slatwallScope.rbKey('entity.comment_plural')# <cfif arrayLen(attributes.object.getComments())><span class="badge">#arrayLen(attributes.object.getComments())#</span></cfif></a></li>
+						</cfif>
 						<cfif isObject(attributes.object)>
 							<li><a href="##tabSystem" data-toggle="tab">#request.slatwallScope.rbKey('define.system')#</a></li>
 						</cfif>
@@ -68,6 +72,11 @@ Notes:
 								</div>
 							</div>
 						</cfloop>
+						<cfif isObject(attributes.object) && attributes.allowComments>
+							<div class="tab-pane" id="tabComments">
+								<cf_SlatwallCommentDisplay entity="#attributes.object#" />
+							</div>
+						</cfif>
 						<cfif isObject(attributes.object)>
 							<div <cfif arrayLen(thistag.tabs)>class="tab-pane"<cfelse>class="tab-pane active"</cfif> id="tabSystem">
 								<div class="row-fluid">
