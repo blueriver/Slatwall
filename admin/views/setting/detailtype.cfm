@@ -45,6 +45,7 @@ Notes:
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.Type#" property="systemCode" edit="false">
 				<cf_SlatwallPropertyDisplay object="#rc.Type#" property="type" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
