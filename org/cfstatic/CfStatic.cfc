@@ -312,18 +312,18 @@
 			var cfstaticJavaloaders   = StructNew();
 
 			// put javaloader instances in server scope due to memory leak issues
-			if( not StructKeyExists(server, '_cfstaticJavaloaders') ){
-				jarsForYui[1]  = ExpandPath('/org/cfstatic/lib/yuiCompressor/yuicompressor-2.4.6.jar');
-				jarsForYui[2]  = ExpandPath('/org/cfstatic/lib/cfstatic.jar');
-				jarsForLess[1] = ExpandPath('/org/cfstatic/lib/less/lesscss-engine-1.3.0.jar');
+			if( not StructKeyExists(application, '_cfstaticJavaloaders') ){
+				jarsForYui[1]  = ExpandPath('/Slatwall/org/cfstatic/lib/yuiCompressor/yuicompressor-2.4.6.jar');
+				jarsForYui[2]  = ExpandPath('/Slatwall/org/cfstatic/lib/cfstatic.jar');
+				jarsForLess[1] = ExpandPath('/Slatwall/org/cfstatic/lib/less/lesscss-engine-1.3.0.jar');
 				
 				cfstaticJavaloaders.yui  = CreateObject('component','Slatwall.org.cfstatic.lib.javaloader.JavaLoader').init( jarsForYui  );
 				cfstaticJavaloaders.less = CreateObject('component','Slatwall.org.cfstatic.lib.javaloader.JavaLoader').init( jarsForLess );
-				server['_cfstaticJavaloaders'] = cfstaticJavaloaders;
+				application['_cfstaticJavaloaders'] = cfstaticJavaloaders;
 			}
 
-			_setYuiCompressor ( CreateObject('component','Slatwall.org.cfstatic.util.YuiCompressor' ).init( server['_cfstaticJavaloaders'].yui  ) );
-			_setLessCompiler  ( CreateObject('component','Slatwall.org.cfstatic.util.LessCompiler'  ).init( server['_cfstaticJavaloaders'].less ) );
+			_setYuiCompressor ( CreateObject('component','Slatwall.org.cfstatic.util.YuiCompressor' ).init( application['_cfstaticJavaloaders'].yui  ) );
+			_setLessCompiler  ( CreateObject('component','Slatwall.org.cfstatic.util.LessCompiler'  ).init( application['_cfstaticJavaloaders'].less ) );
 			_setCssImageParser( CreateObject('component','Slatwall.org.cfstatic.util.CssImageParser').init( _getCssUrl(), $listAppend(_getRootDirectory(), _getCssDirectory(), '/' ) ) );
 		</cfscript>
 	</cffunction>
