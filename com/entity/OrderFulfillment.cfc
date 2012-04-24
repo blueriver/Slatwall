@@ -258,7 +258,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Order (many-to-one)    
+	// Order (many-to-one)
 	public void function setOrder(required any order) {    
 		variables.order = arguments.order;    
 		if(isNew() or !arguments.order.hasOrderFulfillment( this )) {    
@@ -287,6 +287,10 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// ===============  END: Custom Formatting Methods =====================
 	
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentation() {
+		return getOrder().getOrderNumber() & " - " & getFulfillmentMethodType();
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

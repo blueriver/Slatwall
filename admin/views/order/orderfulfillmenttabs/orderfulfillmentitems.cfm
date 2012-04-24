@@ -37,23 +37,14 @@ Notes:
 
 --->
 <cfparam name="rc.orderFulfillment" type="any" />
-<cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderFulfillment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderFulfillment#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:order.processorderfulfillment" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" icon="cog">
-		</cf_SlatwallActionBar>
-		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.orderFulfillment#">
-			<cf_SlatwallTab view="admin:order/orderfulfillmenttabs/orderfulfillmentitems">
-		</cf_SlatwallTabGroup>
-		
-	</cf_SlatwallDetailForm>
+	<cf_SlatwallListingDisplay smartList="#rc.orderFulfillment.getOrderFulfillmentItemsSmartList()#">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
+		<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityUndelivered" />
+	</cf_SlatwallListingDisplay>
 </cfoutput>

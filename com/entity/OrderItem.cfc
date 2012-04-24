@@ -399,7 +399,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
-	
+
 	public string function getSimpleRepresentation() {
 		return getSku().getProduct().getTitle() & " - " & getSku().getSimpleRepresentation(); 
 	}
