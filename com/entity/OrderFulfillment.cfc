@@ -80,8 +80,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		if(isNull(variables.orderFulfillmentItems)) {
 			variables.orderFulfillmentItems = [];
 		}
-		if(isNull(variables.orderShippingMethodOptions)) {
-			variables.orderShippingMethodOptions = [];
+		if(isNull(variables.fulfillmentShippingMethodOptions)) {
+			variables.fulfillmentShippingMethodOptions = [];
 		}
 		
 		return super.init();
@@ -218,14 +218,12 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		variables.shippingMethodOptions = [];
     		
     		// If there aren't any shippingMethodOptions available, then try to populate this fulfillment
-    		if( !arrayLen(variables.orderShippingMethodOptions) ) {
+    		if( !arrayLen(variables.fulfillmentShippingMethodOptions) ) {
     			getService("shippingService").updateOrderFulfillmentShippingMethodOptions( this );
     		}
     		
     		// At this point they have either been populated just before, or there were already options
-    		if( arrayLen(variables.orderShippingMethodOptions) ) {
-    			variables.shippingMethodOptions = [];	
-    		}
+    		variables.shippingMethodOptions = variables.fulfillmentShippingMethodOptions;
     	}
     	return variables.shippingMethodOptions; 
     }
@@ -263,8 +261,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		variables.order = arguments.order;    
 		if(isNew() or !arguments.order.hasOrderFulfillment( this )) {    
 			arrayAppend(arguments.order.getOrderFulfillments(), this);    
-		}    
-	}    
+		}
+	}
 	public void function removeOrder(any order) {    
 		if(!structKeyExists(arguments, "order")) {    
 			arguments.order = variables.order;    
@@ -274,6 +272,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 			arrayDeleteAt(arguments.order.getOrderFulfillments(), index);    
 		}    
 		structDelete(variables, "order");    
+	}
+	
+	// Fulfillment Shipping Method Options (one-to-many)    
+	public void function addFulfillmentShippingMethodOption(required any fulfillmentShippingMethodOption) {    
+		arguments.fulfillmentShippingMethodOption.setOrderFulfillment( this );    
+	}    
+	public void function removeFulfillmentShippingMethodOption(required any fulfillmentShippingMethodOption) {    
+		arguments.fulfillmentShippingMethodOption.removeOrderFulfillment( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

@@ -49,6 +49,9 @@ Notes:
 	<cfparam name="attributes.recordDetailQueryString" type="string" default="" />
 	<cfparam name="attributes.recordDeleteAction" type="string" default="" />
 	<cfparam name="attributes.recordDeleteQueryString" type="string" default="" />
+	<cfparam name="attributes.recordProcessAction" type="string" default="" />
+	<cfparam name="attributes.recordProcessQueryString" type="string" default="" />
+	
 	
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
@@ -146,6 +149,9 @@ Notes:
 			<cfset attributes.administativeCount++ />
 		</cfif>
 		<cfif len(attributes.recordDeleteAction)>
+			<cfset attributes.administativeCount++ />
+		</cfif>
+		<cfif len(attributes.recordProcessAction)>
 			<cfset attributes.administativeCount++ />
 		</cfif>
 		
@@ -252,6 +258,9 @@ Notes:
 									</cfif>
 									<cfif attributes.recordDeleteAction neq "">
 										<cf_SlatwallActionCaller action="#attributes.recordDeleteAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordDeleteQueryString#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#record.isNotDeletable()#" confirm="true" />
+									</cfif>
+									<cfif attributes.recordProcessAction neq "">
+										<cf_SlatwallActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#request.slatwallScope.rbKey('define.process')#" disabled="#record.isNotProcessable()#" />
 									</cfif>
 								</td>
 							</cfif>

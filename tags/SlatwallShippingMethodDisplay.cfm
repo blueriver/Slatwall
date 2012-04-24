@@ -60,7 +60,7 @@ Notes:
 						<cfset local.optionSelected = true />
 					</cfif>
 					<dl>
-						<dt><input type="radio" name="orderFulfillments[#attributes.orderFulfillmentIndex#].orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>checked="checked"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
+						<dt><input type="radio" name="orderFulfillments[#attributes.orderFulfillmentIndex#].fulfillmentShippingMethodOptionID" value="#option.getShippingMethodOptionID()#" <cfif local.optionSelected>checked="checked"</cfif>>#option.getShippingMethodRate().getShippingMethod().getShippingMethodName()#</dt>
 						<dd>#option.getFormattedValue('totalCharge', 'currency')#</dd>
 					</dl>
 				</cfloop>

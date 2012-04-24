@@ -43,22 +43,20 @@ Notes:
 		
 		<!--- All logic in this method is inside of a cftry so that it doesnt cause an exception ---> 
 		<cftry>
-			<cfset var logCode = "" />
-			<cfset var logMsg = "" />
-			<cfset var logDetail = "" />
-				
-			<cfif structKeyExists(arguments.exception, "errNumber")>
-				<cfset logCode = arguments.exception.errNumber />
+			<cflog file="Slatwall" text="START EXCEPTION" />
+			<cfif structKeyExists(arguments.exception, "detail") and isSimpleValue(arguments.exception.detail)>
+				<cflog file="Slatwall" text="#arguments.exception.detail#" />
 			</cfif>
-			<cfif structKeyExists(arguments.exception, "message")>
-				<cfset logMsg = left(arguments.exception.message,255) />
+			<cfif structKeyExists(arguments.exception, "errNumber") and isSimpleValue(arguments.exception.errNumber)>
+				<cflog file="Slatwall" text="#arguments.exception.errNumber#" />
 			</cfif>
-			<cfif structKeyExists(arguments.exception, "stackTrace")>
-				<cfset logDetail = left(arguments.exception.stackTrace, 4000) />
+			<cfif structKeyExists(arguments.exception, "message") and isSimpleValue(arguments.exception.message)>
+				<cflog file="Slatwall" text="#arguments.exception.message#" />
 			</cfif>
-			
-			<cfset logMessage(messageCode = logCode, messageType="Exception", message = logMsg, logType="Error", generalLog = true) />
-			
+			<cfif structKeyExists(arguments.exception, "stackTrace") and isSimpleValue(arguments.exception.stackTrace)>
+				<cflog file="Slatwall" text="#arguments.exception.stackTrace#" />
+			</cfif>
+			<cflog file="Slatwall" text="END EXCEPTION" />
 			<cfcatch>
 				<cflog file="Slatwall" text="Log Exception Error" />
 			</cfcatch>

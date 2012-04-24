@@ -87,6 +87,21 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return true;
 	}
 	
+	// @hint public helper method that delegates to isDeletable
+	public boolean function isNotDeletable() {
+		return !isDeletable();
+	}
+	
+	// @hint public method to determine if this entity can be 'processed', by default it returns true by you can override on an entity by entity basis
+	public boolean function isProcessable( string context="process" ) {
+		return true;
+	}
+	
+	// @hint public helper method that delegates to isProcessable
+	public boolean function isNotProcessable( string context="process" ) {
+		return !isProcessable( context=arguments.context );
+	}
+	
 	// hint overriding the addError method to allow for saying that the error doesn't effect persistance
 	public void function addError( required string errorName, required string errorMessage, boolean persistableError=false ) {
 		if(persistableError) {
@@ -110,10 +125,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return true;
 	}
 	
-	// @hint public helper method that delegates to isDeletable
-	public boolean function isNotDeletable() {
-		return !isDeletable();
-	}
+	
 	
 	
 	// @hint public method that returns the value from the primary ID of this entity

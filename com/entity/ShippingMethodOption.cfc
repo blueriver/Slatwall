@@ -50,6 +50,7 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 
 	// Related Object Properties (many-To-one)
 	property name="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="many-to-one" fkcolumn="shippingMethodRateID";
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -70,6 +71,24 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Order Fulfillment (many-to-one)
+	public void function setOrderFulfillment(required any orderFulfillment) {
+		variables.orderFulfillment = arguments.orderFulfillment;
+		if(isNew() or !arguments.orderFulfillment.hasfulfillmentShippingMethodOption( this )) {
+			arrayAppend(arguments.orderFulfillment.getfulfillmentShippingMethodOptions(), this);
+		}
+	}
+	public void function removeOrderFulfillment(any orderFulfillment) {
+		if(!structKeyExists(arguments, "orderFulfillment")) {
+			arguments.orderFulfillment = variables.orderFulfillment;
+		}
+		var index = arrayFind(arguments.orderFulfillment.getfulfillmentShippingMethodOptions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderFulfillment.getfulfillmentShippingMethodOptions(), index);
+		}
+		structDelete(variables, "orderFulfillment");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

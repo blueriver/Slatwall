@@ -60,6 +60,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Loop over all of the shipping methods & their rates for 
 			for(var m=1; m<=arrayLen(shippingMethods); m++) {
+				
 				var shippingMethodRates = shippingMethods[m].getShippingMethodRates();
 				for(var r=1; r<=arrayLen(shippingMethodRates); r++) {
 					
@@ -90,12 +91,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					responseBeans[ integrations[i].getIntegrationID() ] = integrationShippingAPI.getRates( ratesRequestBean );
 				} catch(any e) {
 					logSlatwall('An error occured with the #integrations[i].getIntegrationName()# integration when trying to call getRates()', true);
+					logSlatwallException(e);
 				}
 				logSlatwall('#integrations[i].getIntegrationName()# Shipping Integration Rates Request - Finished');
 			}
 			
 			// Loop over the shippingMethods again, and loop over each of the rates to find the quote in the response bean.
 			for(var m=1; m<=arrayLen(shippingMethods); m++) {
+				
 				var shippingMethodRates = shippingMethods[m].getShippingMethodRates();
 				
 				for(var r=1; r<=arrayLen(shippingMethodRates); r++) {
@@ -107,6 +110,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						
 						// If this rate is a manual one, then use the default amount
 						if(isNull(shippingMethodRates[r].getShippingIntegration())) {
+							
 							arrayAppend(qualifiedRateOptions, {
 								shippingMethodRate=shippingMethodRates[r],
 								totalCharge=shippingMethodRates[r].getDefaultAmount(),
@@ -149,16 +153,19 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				// If the qualified rate options were returned and then the first one is the rateToUse for right now
 				if(arrayLen(qualifiedRateOptions) gt 0) {
+					
 					var rateToUse = qualifiedRateOptions[1];		
 				}
 				
 				// If the qualified rate options are greater than 1, then we need too loop over them and replace rateToUse with whichever one is best
 				if (arrayLen(qualifiedRateOptions) gt 1) {
 					for(var qr=2; qr<=arrayLen(qualifiedRateOptions); qr++) {
+						
 						if( (shippingMethods[m].setting('shippingMethodQualifiedRateSelection') eq 'sortOrder' && qualifiedRateOptions[ qr ].shippingMethodRate.getSortOrder() < rateToUse.shippingMethodRate.getSortOrder()) ||
 							(shippingMethods[m].setting('shippingMethodQualifiedRateSelection') eq 'lowest' && qualifiedRateOptions[ qr ].totalCharge < rateToUse.totalCharge) ||
 							(shippingMethods[m].setting('shippingMethodQualifiedRateSelection') eq 'highest' && qualifiedRateOptions[ qr ].totalCharge > rateToUse.totalCharge)	) {
-							rateToUse = qualifiedRateOptions[ qr ];
+								
+								rateToUse = qualifiedRateOptions[ qr ];
 						}
 					}
 				}

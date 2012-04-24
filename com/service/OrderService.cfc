@@ -45,6 +45,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="paymentService";
 	property name="priceGroupService";
 	property name="promotionService";
+	property name="shippingService";
 	property name="sessionService";
 	property name="taxService";
 	property name="utilityFormService";
@@ -139,7 +140,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						// do not increment quantity for content access product
 						if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
 							orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-							orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
 						}
 						break;
 						
@@ -585,13 +585,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			address = getAddressService().saveAddress(address);
 			
 			// Check for a shipping method option selected
-			if(structKeyExists(arguments.data, "orderShippingMethodOptionID")) {
-				var methodOption = this.getOrderShippingMethodOption(arguments.data.orderShippingMethodOptionID);
+			if(structKeyExists(arguments.data, "fulfillmentShippingMethodOptionID")) {
+				var methodOption = getShippingService().getShippingMethodOption(arguments.data.fulfillmentShippingMethodOptionID);
 				
 				// Verify that the method option is one for this fulfillment
-				if(!isNull(methodOption) && arguments.orderFulfillment.hasOrderShippingMethodOption(methodOption)) {
+				if(!isNull(methodOption) && arguments.orderFulfillment.hasFulfillmentShippingMethodOption(methodOption)) {
 					// Update the orderFulfillment to have this option selected
-					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethod());
+					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethodRate().getShippingMethod());
 					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCharge());
 				}
 			}

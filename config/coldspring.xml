@@ -145,6 +145,7 @@
 				<entry key="Session"><value>sessionService</value></entry>
 				<entry key="Setting"><value>settingService</value></entry>
 				<entry key="ShippingMethod"><value>shippingService</value></entry>
+				<entry key="ShippingMethodOption"><value>shippingService</value></entry>
 				<entry key="ShippingMethodRate"><value>shippingService</value></entry>
 				<entry key="Sku"><value>skuService</value></entry>
 				<entry key="SkuCache"><value>skuCacheService</value></entry>
@@ -251,6 +252,7 @@
 		<property name="paymentService"><ref bean="paymentService" /></property>
 		<property name="priceGroupService"><ref bean="priceGroupService" /></property>
 		<property name="promotionService"><ref bean="promotionService" /></property>
+		<property name="shippingService"><ref bean="shippingService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
 		<property name="taxService"><ref bean="taxService" /></property>
 		<property name="utilityEmailService"><ref bean="utilityEmailService" /></property>
