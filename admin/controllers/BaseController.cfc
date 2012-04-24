@@ -146,7 +146,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			} else if (left(listLast(rc.slatAction, "."), 6) eq "detail") {
 				rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
 			} else if (left(listLast(rc.slatAction, "."), 7) eq "process") {
-				rc.pageTitle = replace(rbKey('admin.define.prcess'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
+				rc.pageTitle = replace(rbKey('admin.define.process'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
 			}
 		}
 		
@@ -336,6 +336,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		
+		getFW().setLayout( "admin:process.default" );
 		
 		// If we are actually posting the process form, then this logic gets calls the process method for each record
 		if(structKeyExists(rc, "process") && rc.process) {

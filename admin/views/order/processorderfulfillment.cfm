@@ -41,10 +41,10 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallProcessForm>
+		<cf_SlatwallActionBar type="process" />
+		
 		
 		<!---
-		<cf_SlatwallActionBar type="detail" object="#rc.orderFulfillment#" edit="#rc.edit#"></cf_SlatwallActionBar>
-		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="activeFlag" edit="#rc.edit#">

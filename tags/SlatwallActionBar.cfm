@@ -56,6 +56,7 @@ Notes:
 				<cfset attributes.pageSubTitle = attributes.object.getSimpleRepresentation() />
 			</cfif>
 		</cfsilent>
+		
 	<cfelse>
 		<cfoutput>
 			<div class="actionnav well well-small">
@@ -123,7 +124,7 @@ Notes:
 									</div>
 								</cfif>
 								<div class="btn-group">
-									<cfif request.context.edit>
+									<cfif attributes.edit>
 										<cfif not attributes.object.isNew()><cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
 										<cf_SlatwallActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#request.slatwallScope.rbKey('define.cancel')#" class="btn btn-inverse" icon="remove icon-white">
 										<cf_SlatwallActionCaller action="#request.context.saveAction#" text="#request.slatwallScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
@@ -131,6 +132,11 @@ Notes:
 										<cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-danger" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">
 										<cf_SlatwallActionCaller action="#request.context.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true">
 									</cfif>
+								</div>
+							<!--- Process --->
+							<cfelseif attributes.type eq "process">
+								<div class="btn-group">
+									<button type="submit" class="btn btn-primary"><i class="icon-cog icon-white"></i> #request.slatwallScope.rbKey('define.process')#</button>
 								</div>
 							</cfif>
 							<cfset thistag.generatedcontent = "" />
