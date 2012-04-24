@@ -42,14 +42,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="commentService" type="any";
 	property name="orderService" type="any";
 	
-	public void function saveComment(required struct rc) {
-		var comment = getCommentService().newComment();
-		
-		getCommentService().saveComment(comment, rc);
-		
-		redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
-    }
-	
     public void function link(required struct rc) {
     	param name="rc.entity";
     	param name="rc.property";

@@ -50,8 +50,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function subSystemBefore(required struct rc) {
-		rc.fw = getFW();
-		
 		// Check to see if any message keys were passed via the URL
 		if(structKeyExists(rc, "messageKeys")) {
 			var messageKeys = listToArray(rc.messageKeys);
@@ -139,6 +137,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			}
 		}
 		
+		// Place the framework in the rc
+		rc.fw = getFW();
 	}
 	
 	// Implicit onMissingMethod() to handle standard CRUD
@@ -285,10 +285,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
-		var data = rc;
-		
-		rc[ arguments.entityName ] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
-		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=rc[ arguments.entityName ], 2=data} );
+		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
+		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=entity, 2=rc} );
 
 		if(!rc[ arguments.entityName ].hasErrors()) {
 			if(structKeyExists(rc, "returnAction")) {
