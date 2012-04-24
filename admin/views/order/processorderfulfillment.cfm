@@ -38,22 +38,24 @@ Notes:
 --->
 <cfparam name="rc.returnAction" type="string" default="admin:order.listorderfulfillment" />
 <cfparam name="rc.processOrderFulfillmentSmartList" type="any" />
+<cfparam name="rc.multiProcess" type="boolean" />
 
 <cfoutput>
 	<cf_SlatwallProcessForm>
 		<cf_SlatwallActionBar type="process" />
 		
+		<cf_SlatwallProcessOptionBar>
+			<cfif !rc.multiprocess>
+				<cf_SlatwallProcessOption data="trackingNumber" fieldType="text" />
+			</cfif>
+			<cf_SlatwallProcessOption print="packingSlip" />
+			<cf_SlatwallProcessOption email="deliveryConfirmation" />
+		</cf_SlatwallProcessOptionBar>
 		
-		<!---
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="activeFlag" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_SlatwallProcessListing processSmartList="#rc.processOrderFulfillmentSmartList#" processRecordsProperty="orderFulfillmentItems">
+			<cf_SlatwallProcessColumn propertyIdentifier="orderFulfillmentItems" />
+			<cf_SlatwallProcessColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
+		</cf_SlatwallProcessListing>
 		
-		<cf_SlatwallTabGroup object="#rc.orderFulfillment#">
-			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
-		</cf_SlatwallTabGroup>
-		--->
 	</cf_SlatwallProcessForm>
 </cfoutput>

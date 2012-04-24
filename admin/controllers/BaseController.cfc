@@ -333,6 +333,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	public void function genericProcessMethod(required string entityName, required struct rc) {
 		param name="rc.edit" default="false";
 		param name="rc.processContext" default="process";
+		param name="rc.multiProcess" default="false";
 		
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
@@ -359,6 +360,9 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				if(arrayLen(errorEntities)) {
 					rc[ "process#arguments.entityName#SmartList" ] = entityService.invokeMethod( "get#arguments.entityName#SmartList" );
 					rc[ "process#arguments.entityName#SmartList" ].setRecords(errorEntities);
+					if(arrayLen(errorEntities) gt 1) {
+						rc.multiProcess = true;
+					}
 				} else {
 					redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
 				}
@@ -374,9 +378,11 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			rc[ "process#arguments.entityName#SmartList" ] = entityService.invokeMethod( "get#arguments.entityName#SmartList" );
 			rc[ "process#arguments.entityName#SmartList" ].addInFilter(entityPrimaryID, rc[entityPrimaryID]);
 			
-			// If ID was passed but there is no entity for that id, redirect to list
-			if(isNull(rc[ "process#arguments.entityName#SmartList" ].getRecordsCount())) {
+			// If there are no records then redirect to the list action
+			if(!rc[ "process#arguments.entityName#SmartList" ].getRecordsCount()) {
 				getFW().redirect(action=rc.listaction);
+			} else if (rc[ "process#arguments.entityName#SmartList" ].getRecordsCount() gt 1) {
+				rc.multiProcess = true;
 			}
 		}
 	}
