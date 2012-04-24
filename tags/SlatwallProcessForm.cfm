@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
-	
+ 
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -36,18 +36,31 @@
 Notes:
 
 --->
-<cfparam name="rc.order" type="any" />
-<cfparam name="rc.edit" type="boolean" /> 
-
-<cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderFulfillmentsSmartList()#" 
-			recordDetailAction="admin:order.detailorderfulfillment"
-			recordProcessAction="admin:order.processorderfulfillment">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
-		<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" />
-		<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="fulfillmentCharge" />
-		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
-		<cf_SlatwallListingColumn propertyIdentifier="chargeAfterDiscount" />
-	</cf_SlatwallListingDisplay>
-</cfoutput>
+<cfif thisTag.executionMode is "start">
+	<cfoutput>
+		<form method="post" action="?s=1" class="form-horizontal">
+			<input type="hidden" name="returnAction" value="#request.context.returnAction#" />
+			<input type="hidden" name="slatAction" value="#request.context.slatAction#" />
+			<input type="hidden" name="process" value="1" />
+			<cfif request.context.modal>
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">&times;</a>
+					<h3>#request.context.pageTitle#</h3>
+				</div>
+				<div class="modal-body">
+			</cfif>
+	</cfoutput>
+<cfelse>
+	<cfoutput>
+			<cfif request.context.modal>
+				</div>
+				<div class="modal-footer">
+					<div class="btn-group">
+						<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.cancel')#</a>
+						<button type="submit" class="btn btn-success"><i class="icon-cog icon-white"></i> #request.slatwallScope.rbKey('define.process')#</button>
+					</div>
+				</div>
+			</cfif>
+		</form>
+	</cfoutput>
+</cfif>

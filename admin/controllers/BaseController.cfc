@@ -50,6 +50,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function subSystemBefore(required struct rc) {
+		param name="rc.modal" default="false";
+		
 		// Check to see if any message keys were passed via the URL
 		if(structKeyExists(rc, "messageKeys")) {
 			var messageKeys = listToArray(rc.messageKeys);
@@ -122,6 +124,15 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
 			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
 			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
+		} else if (left(itemName, 7) == "process") {
+			rc.itemEntityName = right(itemName, len(itemName)-7);
+			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
+			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
+			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
+			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
+			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
+			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
+			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
 		}
 		
 		rc.pageTitle = rbKey(replace(rc.slatAction,':','.','all'));
@@ -134,6 +145,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
 			} else if (left(listLast(rc.slatAction, "."), 6) eq "detail") {
 				rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
+			} else if (left(listLast(rc.slatAction, "."), 7) eq "process") {
+				rc.pageTitle = replace(rbKey('admin.define.prcess'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));
 			}
 		}
 		
@@ -155,6 +168,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			genericDeleteMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 		} else if ( left(arguments.missingMethodName, 6) == "create" ) {
 			genericCreateMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+		} else if ( left(arguments.missingMethodName, 7) == "process" ) {
+			genericProcessMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 		}
 	}
 	
@@ -312,6 +327,55 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
 			}
 			rc.edit = true;
+		}
+	}
+	
+	public void function genericProcessMethod(required string entityName, required struct rc) {
+		param name="rc.edit" default="false";
+		param name="rc.processContext" default="process";
+		
+		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		
+		// If we are actually posting the process form, then this logic gets calls the process method for each record
+		if(structKeyExists(rc, "process") && rc.process) {
+			rc.errorData = [];
+			var errorEntities = [];
+			
+			if(structKeyExists(rc, "processRecords") && isArray(rc.processRecords)) {
+				for(var i=1; arrayLen(rc.processRecords); i++) {
+					if(structKeyExists(rc.processRecords[i], entityPrimaryID)) {
+						structAppend(rc.processRecords[i], rc.processOptions);
+						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ], 2=true} );
+						var processOK = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
+						if( !processOK ) {
+							arrayAppend(errorEntities, entity);
+							arrayAppend(rc.errorData, rc.processRecords[i]);
+						}
+					}
+				}
+				if(arrayLen(errorEntities)) {
+					rc[ "process#arguments.entityName#SmartList" ] = entityService.invokeMethod( "get#arguments.entityName#SmartList" );
+					rc[ "process#arguments.entityName#SmartList" ].setRecords(errorEntities);
+				} else {
+					redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
+				}
+			}
+		
+		// IF we are just doing the process setup page, run this logic
+		} else {
+			// If no ID was passed in, redirect to list
+			if(!structKeyExists(rc, entityPrimaryID)) {
+				getFW().redirect(action=rc.listaction);
+			}
+			
+			rc[ "process#arguments.entityName#SmartList" ] = entityService.invokeMethod( "get#arguments.entityName#SmartList" );
+			rc[ "process#arguments.entityName#SmartList" ].addInFilter(entityPrimaryID, rc[entityPrimaryID]);
+			
+			// If ID was passed but there is no entity for that id, redirect to list
+			if(isNull(rc[ "process#arguments.entityName#SmartList" ].getRecordsCount())) {
+				getFW().redirect(action=rc.listaction);
+			}
 		}
 	}
 	
