@@ -49,5 +49,9 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
+		<cf_SlatwallListingDisplay smartList="#rc.orderDelivery.getOrderDeliveryItemsSmartList()#">
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.title" />
+		</cf_SlatwallListingDisplay>
+		
 	</cf_SlatwallDetailForm>
 </cfoutput>
