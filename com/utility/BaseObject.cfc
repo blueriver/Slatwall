@@ -977,13 +977,13 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getApplicationValue("validateThis");
 	}
 	
-	// @hint  helper function for returning the Validate This Facade Object
+	// @hint  helper function for returning cfstatic
 	public any function getCFStatic() {
 		if( !hasApplicationValue("cfstatic") ) {
 			
-			setApplicationValue("cfstatic", createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
-				staticDirectory = expandPath( '/plugins/Slatwall/assets/' ),
-				staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/assets/",
+			setApplicationValue("cfstatic", createObject("component", "Slatwall.org.cfstatic.CfStatic").init(
+				staticDirectory = "#getSlatwallRootDirectory()#/assets/",
+				staticUrl = "#getSlatwallRootPath()#/assets/",
 				minifyMode = 'package',
 				checkforupdates = true
 				)

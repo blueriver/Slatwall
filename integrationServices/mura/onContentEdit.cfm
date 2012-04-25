@@ -54,7 +54,7 @@ Notes:
 		<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />--->
 	</cfif>
 	<dl class="oneColumn">
-		<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("entity.content.templateFlag_hint")#" fieldName="slatwallData.templateFlag" fieldType="yesno" value="#slatwallContent.getTemplateFlag()#" edit="#!contentRestrictAccessFlag.settingValueFormatted#">
+		<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("entity.content.templateFlag_hint")#" fieldName="slatwallData.templateFlag" fieldType="yesno" value="#slatwallContent.getTemplateFlag()#" edit="true">
 		<cf_SlatwallSetting settingName="contentProductListingFlag" settingObject="#slatwallContent#" />
 		<div class="productListingFlagRelated">
 			<cf_SlatwallSetting settingName="contentIncludeChildContentProductsFlag" settingObject="#slatwallContent#" />
@@ -164,6 +164,10 @@ function setupProductListingFlagDisplay() {
 	} else {
 		var selectedValue = $('input[name="slatwallData.setting.contentProductListingFlag"]').val();
 	}
+	// check inherited value
+	if(selectedValue == '') {
+		var selectedValue = $('input[name="contentProductListingFlagInherited"]').val();
+	}
 	if(selectedValue == 1){
 		$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).change();
 		$('input[name="slatwallData.setting.contentRestrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
@@ -181,6 +185,10 @@ function setupRestrictAccessFlagDisplay() {
 		var selectedValue = $('input[name="slatwallData.setting.contentRestrictAccessFlag"]:checked').val();
 	} else {
 		var selectedValue = $('input[name="slatwallData.setting.contentRestrictAccessFlag"]').val();
+	}
+	// check inherited value
+	if(selectedValue == '') {
+		var selectedValue = $('input[name="contentRestrictAccessFlagInherited"]').val();
 	}
 	if(selectedValue == 1){
 		$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).change();

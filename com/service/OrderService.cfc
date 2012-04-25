@@ -611,8 +611,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for(var orderFulfillment in order.getOrderFulfillments()) {
 			if(orderFulfillment.getFulfillmentMethodType() == "shipping") {
 				if(!isNull(orderFulfillment.getAccountAddress())) {
-					orderFulfillment.setShippingAddress( orderFulfillment.getAccountAddress().getAddress().copyAddress() );
+					var shippingAddress = orderFulfillment.getAccountAddress().getAddress().copyAddress();
+					orderFulfillment.setShippingAddress( shippingAddress );
 					orderFulfillment.removeAccountAddress();
+					// since copy address creates a new address, call save for persistence
+					getAddressService().saveAddress(shippingAddress);
 					getDAO().save(orderFulfillment);
 				}
 			}

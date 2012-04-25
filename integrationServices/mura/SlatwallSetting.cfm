@@ -51,7 +51,10 @@ Notes:
 	<cfset settingMetaData = request.slatwallScope.getService("settingService").getSettingMetaData(attributes.settingName) />
 	<cfset value = attributes.settingDetails.settingValue />
 	<cfif attributes.settingDetails.settingInherited>
+		<cfoutput><input type="hidden" name="#attributes.settingName#Inherited" value="#value#" /></cfoutput>
 		<cfset value = "" />
+	<cfelse>
+		<cfoutput><input type="hidden" name="#attributes.settingName#Inherited" value="" /></cfoutput>
 	</cfif>
 	<cfset valueOptions = [] />
 	<cfset fieldtype = settingMetaData.fieldType />

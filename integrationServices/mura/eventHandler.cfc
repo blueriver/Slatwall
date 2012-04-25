@@ -189,7 +189,15 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		endSlatwallAdminRequest($);
 	}
 	
+	public void function onAfterPortalSave(required any $) {
+		onAfterContentSave($);
+	}
 	
+	public void function onAfterPortalDelete(required any $) {
+		onAfterContentDelete($);
+	}
+	
+
 	
 	// ========================== Private Helper Methods ==============================
 	

@@ -120,7 +120,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 				
 				case "creditCard" :
 					variables.amountReceived = getAmountCharged() - getAmountCredited();
-					
+					break;
 				default :
 					variables.amountReceived = getAmount();
 			}
@@ -137,7 +137,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
 						variables.amountAuthorized += getCreditCardTransactions()[i].getAmountAuthorized();
 					}
-					
+					break;
 				default :
 					variables.amountAuthorized = getAmount();
 			}

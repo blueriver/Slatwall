@@ -39,13 +39,6 @@ Notes:
 
 component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
-	// Custom Properties that need to be set by the end user
-	property name="vendorID" displayname="Vendor ID (Merchant ID)" type="string";
-	property name="partnerID" displayname="Partner ID (leave blank if no partner)" type="string";
-	property name="username" displayname="Username" type="string";
-	property name="password" displayname="Password" type="string" fieldType="password";
-	property name="liveModeFlag" displayname="Live Mode" type="boolean";
-	
 	//Global variables
 	variables.liveGatewayAddress = "payflowpro.paypal.com";
 	variables.testGatewayAddress = "pilot-payflowpro.paypal.com";
@@ -55,12 +48,6 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 
 	public any function init(){
 		// Set Defaults
-		setPartnerID("");
-		setVendorID("");
-		setUsername("");
-		setPassword("");
-		setLiveModeFlag(false);
-		
 		variables.transactionCodes = {
 			authorize="A",
 			authorizeAndCharge="S",
@@ -98,10 +85,10 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 
 	private string function getLoginNVP(){
 		var loginData = [];
-		arrayAppend(loginData,"USER=#getUserName()#");
-		arrayAppend(loginData,"PARTNER=#getPartnerID()#");
-		arrayAppend(loginData,"VENDOR=#getVendorID()#");
-		arrayAppend(loginData,"PWD=#getPassword()#");
+		arrayAppend(loginData,"USER=#setting('userName')#");
+		arrayAppend(loginData,"PARTNER=#setting('partnerID')#");
+		arrayAppend(loginData,"VENDOR=#setting('vendorID')#");
+		arrayAppend(loginData,"PWD=#setting('password')#");
 		return arrayToList(loginData,"&");
 	}
 	
@@ -158,7 +145,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	}
 	
 	private string function getGatewayAddress(){
-		if(getLiveModeFlag()){
+		if(setting('liveModeFlag')){
 			return variables.liveGatewayAddress;
 		} else {
 			return variables.testGatewayAddress;
