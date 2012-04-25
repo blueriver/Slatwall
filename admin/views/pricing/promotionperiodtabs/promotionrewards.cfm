@@ -49,7 +49,8 @@ Notes:
 							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
 		<cf_SlatwallListingColumn propertyIdentifier="rewardType" filter="true" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="rewards" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="discount" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountType" />
+		<cf_SlatwallListingColumn propertyIdentifier="amount" />
 	</cf_SlatwallListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>

@@ -4,23 +4,12 @@
 		<property name="itemRewardQuantity">
 			<rule type="numeric" contexts="save" />
 		</property>
-		<property name="percentageOff">
-			<rule type="numeric" contexts="save" />
-			<rule type="custom" contexts="save" failureMessage="You must enter a valid value for percentage off.">
-				<param name="methodName" value="hasValidPercentageOffValue" />
-			</rule>
-		</property>
-		<property name="amountOff">
-			<rule type="numeric" contexts="save" />
-			<rule type="custom" contexts="save" failureMessage="You must enter a valid value for amount off.">
-				<param name="methodName" value="hasValidAmountOffValue" />
-			</rule>
+		<property name="amountType">
+			<rule type="required" contexts="save" />
 		</property>
 		<property name="amount">
+			<rule type="required" contexts="save" />
 			<rule type="numeric" contexts="save" />
-			<rule type="custom" contexts="save" failureMessage="You must enter a valid value for amount.">
-				<param name="methodName" value="hasValidAmountValue" />
-			</rule>
 		</property>
 	</objectProperties>
 </validateThis>

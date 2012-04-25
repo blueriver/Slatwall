@@ -62,79 +62,26 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	// Non-persistent entities
 	property name="amountTypeOptions" persistent="false";
-	property name="discountType" persistent="false";
-	property name="discount" persistent="false" type="string"; 
-	property name="rewardTypeDisplay" persistent="false";
 	property name="rewards" type="string" persistent="false";
 		
-	
-    public boolean function hasValidPercentageOffValue() {
-		if(getDiscountType() == "percentageOff" && ( isNull(getPercentageOff()) || !isNumeric(getPercentageOff()) || getPercentageOff() > 100 || getPercentageOff() < 0 ) ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean function hasValidAmountOffValue() {
-		if(getDiscountType() == "amountOff" && ( isNull(getAmountOff()) || !isNumeric(getAmountOff()) ) ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean function hasValidAmountValue() {
-		if(getDiscountType() == "amount" && ( isNull(getAmount()) || !isNumeric(getAmount()) ) ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public string function getSimpleRepresentationPropertyName() {
-		return "rewards";
-	}
 
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public string function getAmountTypeOptions() {
-		return [
-			{name='Amount Off', value="amountOff"},
-			{name='Percentage Off', value="percentageOff"},
-			{name='Fixed Amount', value="amount"}
-		];
-	}
-	
-	public string function getDiscountType() {
-		if(isNull(variables.DiscountType)) {
-			if(!isNull(getPercentageOff()) && isNull(getAmountOff()) && isNull(getAmount())) {
-				variables.DiscountType = "percentageOff";
-			} else if (!isNull(getAmountOff()) && isNull(getPercentageOff()) && isNull(getAmount())) {
-				variables.DiscountType = "amountOff";
-			} else if (!isNull(getAmount()) && isNull(getPercentageOff()) && isNull( getAmountOff())) {
-				variables.DiscountType = "amount";
-			} else {
-				variables.DiscountType = "percentageOff";
-			}
+	public array function getAmountTypeOptions() {
+		if(getRewardType() EQ "order") {
+			return [
+				{name=rbKey("define.amountOff"), value="amountOff"},
+				{name=rbKey("define.percentageOff"), value="percentageOff"}
+			];
+		} else {
+			return [
+				{name=rbKey("define.amountOff"), value="amountOff"},
+				{name=rbKey("define.percentageOff"), value="percentageOff"},
+				{name=rbKey("define.fixedAmount"), value="amount"}
+			];
 		}
-		return variables.DiscountType;
-	}	
-	
-	public string function getDiscount() {
-		if( !structKeyExists(variables,"discount") ) {
-			if( getDiscountType() == "percentageOff" ) {
-				variables.discount = getPercentageOff() & " " & rbKey('entity.promotionReward.discountType.percentageOffShort');
-			} else if( getDiscountType() == "amountOff" ) {
-				variables.discount = formatValue( getAmountOff(),"currency" ) & " " & rbKey('entity.promotionReward.discountType.amountOffShort');
-			} else if( getDiscountType() == "amount" ) {
-				variables.discount = formatValue( getAmount(),"currency" ) & " " & rbKey('entity.promotionReward.discountType.amountShort');
-			}
-		}
-		return variables.discount;
 	}
-	
-	public string function getRewardTypeDisplay() {
-		return rbKey( "entity.promotionReward.rewardType." & getRewardType() );
-	}
-	
+
 	public string function getRewards() {
 		if( !structKeyExists( variables,"rewards" ) ) {
 			variables.rewards = "";
@@ -174,10 +121,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	
 	// ============  END:  Non-Persistent Property Methods =================
 
-	public boolean function isDeletable() {
-		return !getPromotionPeriod().isExpired() && getPromotionPeriod().getPromotion().isDeletable();
-	}
-		
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Promotion Period (many-to-one)
@@ -201,14 +144,18 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
-	public array function getDiscountTypeOptions() {
-		return [
-			{name=rbKey("admin.pricing.promotionreward.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.pricing.promotionreward.discountType.amountOff"), value="amountOff"},
-			{name=rbKey("admin.pricing.promotionreward.discountType.amount"), value="amount"}
-		];
-	}
+	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentationPropertyName() {
+		return "rewards";
+	}
+
+	public boolean function isDeletable() {
+		return !getPromotionPeriod().isExpired() && getPromotionPeriod().getPromotion().isDeletable();
+	}
+		
+	// ==================  END:  Overridden Methods ========================
+
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================

@@ -38,8 +38,12 @@ Notes:
 --->
 <cfparam name="rc.priceGroup" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.priceGroup.getPriceGroupRatesSmartList()#">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="amount" />
+<cf_SlatwallListingDisplay smartList="#rc.priceGroup.getPriceGroupRatesSmartList()#"
+						   recordEditAction="admin:pricing.editpricegrouprate"
+						   recordEditQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#">
+	<cf_SlatwallListingColumn propertyIdentifier="amount" />
+	<cf_SlatwallListingColumn propertyIdentifier="amountType" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="appliesTo" />
 </cf_SlatwallListingDisplay>
 
 <cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate" class="btn btn-primary" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />

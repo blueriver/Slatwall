@@ -40,10 +40,11 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	
 	// Persistent Properties
 	property name="priceGroupRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="percentageOff" ormType="big_decimal";
-	property name="amountOff" ormType="big_decimal";
-	property name="amount" ormType="big_decimal";
 	property name="globalFlag" ormType="boolean" default="false";
+	property name="amount" ormType="big_decimal";
+	property name="amountType" ormType="string" formFieldType="select";
+	property name="percentageOff" ormType="big_decimal"; //to be removed
+	property name="amountOff" ormType="big_decimal"; //to be removed
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -67,7 +68,8 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID";
 	
 	// Non-persistent entities
-	property name="type" persistent="false";
+	property name="amountTypeOptions" persistent="false";
+	property name="appliesTo" type="string" persistent="false";
 	
 	public PriceGroupRate function init() {
 	   // set default collections for association management methods
@@ -93,15 +95,101 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	   return super.init();
 	}
  
-	/******* Association management methods for bidirectional relationships **************/
+
+	// ============ START: Non-Persistent Property Methods =================
 	
-	
-	// Enforce that this entity can only have one of either percentageOff, amountOff or amount at any given time.
-	public void function clearAmounts() {
-		StructDelete(variables, "percentageOff");
-		StructDelete(variables, "amountOff");
-		StructDelete(variables, "amount");
+	public array function getAmountTypeOptions() {
+		return [
+			{name=rbKey("define.amountOff"), value="amountOff"},
+			{name=rbKey("define.percentageOff"), value="percentageOff"},
+			{name=rbKey("define.fixedAmount"), value="amount"}
+		];
 	}
+
+    public string function getAppliesTo(){
+    	var including = "";
+    	var excluding = "";
+    	var finalString = "";
+    	var productsList = "";
+    	var productTypesList = "";
+    	var skusList = "";
+    	var excludedProductsList = "";
+    	var excludedProductTypesList = "";
+    	var excludedSkusList = "";
+    	
+    	if(getGlobalFlag()) {
+    		return rbKey('admin.pricegroup.edit.priceGroupRateAppliesToAllProducts');
+    	}
+    	
+    	// --------- Including --------- 
+    	if(arrayLen(getProducts())) {
+    		productsList = "#arrayLen(getProducts())# Product" & IIF(arrayLen(getProducts()) GT 1, DE('s'), DE(''));
+    	}
+    	if(arrayLen(getProductTypes())) {
+    		productTypesList = "#arrayLen(getProductTypes())# Product Type" & IIF(arrayLen(getProductTypes()) GT 1, DE('s'), DE(''));
+    	}
+    	if(arrayLen(getSkus())) {
+    		SkusList = "#arrayLen(getSkus())# SKU" & IIF(arrayLen(getSkus()) GT 1, DE('s'), DE(''));
+    	}
+    	if(ListLen(productsList)) {
+    		including = ListAppend(including, productsList);
+    	}
+    	if(ListLen(productTypesList)) {
+    		including = ListAppend(including, productTypesList);
+    	} 
+    	if(ListLen(SkusList)) {
+    		including = ListAppend(including, SkusList);
+    	}
+    		
+    	// Replace all commas with " and ".
+    	if(listLen(including)) {
+    		including = Replace(including, ",", " and ");
+    	}
+    		
+    	// --------- Excluding --------- 	
+   		if(arrayLen(getExcludedProducts())) {
+    		excludedProductsList = "#arrayLen(getExcludedProducts())# Product" & IIF(arrayLen(getExcludedProducts()) GT 1, DE('s'), DE(''));
+    	}
+    	if(arrayLen(getExcludedProductTypes())) {
+    		excludedProductTypesList = "#arrayLen(getExcludedProductTypes())# Product Type" & IIF(arrayLen(getExcludedProductTypes()) GT 1, DE('s'), DE(''));
+    	}
+    	if(arrayLen(getExcludedSkus())) {
+    		excludedSkusList = "#arrayLen(getExcludedSkus())# SKU" & IIF(arrayLen(getExcludedSkus()) GT 1, DE('s'), DE(''));
+    	}
+    	
+    	if(ListLen(excludedProductsList)) { 
+    		excluding = ListAppend(excluding, excludedProductsList);
+    	}
+    	if(ListLen(excludedproductTypesList)) {
+    		excluding = ListAppend(excluding, excludedProductTypesList);
+    	} 
+    	if(ListLen(excludedSkusList)) {
+    		excluding = ListAppend(excluding, excludedSkusList);
+    	}
+    		
+    	// Replace all commas with " and ".
+    	if(listLen(excluding)) {
+    		excluding = Replace(excluding, ",", " and ");
+    	}
+    		
+		// Assemble Including and Excluding strings
+    	if(len(including)) {
+    		finalString = "Including: " & including;
+    	}
+    		
+    	if(len(excluding)) {
+    		if(len(including)) {
+    			finalString &= ". ";
+    		}
+    		finalString &= "Excluding: " & excluding;
+    	}
+    		
+    	return finalString;
+    }
+    
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Price Group (many-to-one)
 	public void function setPriceGroup(required any priceGroup) {
@@ -169,145 +257,15 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	   }
     }
 	
-    /************   END Association Management Methods   *******************/
-    
-    public string function getType(){
-    	if(StructKeyExists(variables, "percentageOff") AND isNumeric(variables.percentageOff)) {
-    		return "percentageOff";
-    	} else if(StructKeyExists(variables, "amountOff") AND isNumeric(variables.amountOff)) {
-    		return "amountOff";
-    	} else if(StructKeyExists(variables, "amount") AND isNumeric(variables.amount)) {
-    		return "amount";
-    	}
-    	// Provide a default case.
-    	else {   		
-    		return "percentageOff";
-    	}
-    }
-    
-     public string function getValue(){
-    	if(getType() EQ "percentageOff") {
-    		return getPercentageOff();
-    	} else if(getType() EQ "amountOff") {
-    		return getAmountOff();
-    	} else if(getType() EQ "amount"){
-    		return getAmount();
-    	}
-    }
-    
-    public string function getAppliesToRepresentation(){
-    	var including = "";
-    	var excluding = "";
-    	var finalString = "";
-    	var productsList = "";
-    	var productTypesList = "";
-    	var skusList = "";
-    	var excludedProductsList = "";
-    	var excludedProductTypesList = "";
-    	var excludedSkusList = "";
-    	
-    	if(getGlobalFlag()) {
-    		return rbKey('admin.pricegroup.edit.priceGroupRateAppliesToAllProducts');
-    	}
-    	
-    	/* --------- Including --------- */
-    	if(arrayLen(getProducts())) {
-    		productsList = "#arrayLen(getProducts())# Product" & IIF(arrayLen(getProducts()) GT 1, DE('s'), DE(''));
-    	}
-    	if(arrayLen(getProductTypes())) {
-    		productTypesList = "#arrayLen(getProductTypes())# Product Type" & IIF(arrayLen(getProductTypes()) GT 1, DE('s'), DE(''));
-    	}
-    	if(arrayLen(getSkus())) {
-    		SkusList = "#arrayLen(getSkus())# SKU" & IIF(arrayLen(getSkus()) GT 1, DE('s'), DE(''));
-    	}
-    	if(ListLen(productsList)) {
-    		including = ListAppend(including, productsList);
-    	}
-    	if(ListLen(productTypesList)) {
-    		including = ListAppend(including, productTypesList);
-    	} 
-    	if(ListLen(SkusList)) {
-    		including = ListAppend(including, SkusList);
-    	}
-    		
-    	// Replace all commas with " and ".
-    	if(listLen(including)) {
-    		including = Replace(including, ",", " and ");
-    	}
-    		
-    	/* --------- Excluding --------- */	
-   		if(arrayLen(getExcludedProducts())) {
-    		excludedProductsList = "#arrayLen(getExcludedProducts())# Product" & IIF(arrayLen(getExcludedProducts()) GT 1, DE('s'), DE(''));
-    	}
-    	if(arrayLen(getExcludedProductTypes())) {
-    		excludedProductTypesList = "#arrayLen(getExcludedProductTypes())# Product Type" & IIF(arrayLen(getExcludedProductTypes()) GT 1, DE('s'), DE(''));
-    	}
-    	if(arrayLen(getExcludedSkus())) {
-    		excludedSkusList = "#arrayLen(getExcludedSkus())# SKU" & IIF(arrayLen(getExcludedSkus()) GT 1, DE('s'), DE(''));
-    	}
-    	
-    	if(ListLen(excludedProductsList)) { 
-    		excluding = ListAppend(excluding, excludedProductsList);
-    	}
-    	if(ListLen(excludedproductTypesList)) {
-    		excluding = ListAppend(excluding, excludedProductTypesList);
-    	} 
-    	if(ListLen(excludedSkusList)) {
-    		excluding = ListAppend(excluding, excludedSkusList);
-    	}
-    		
-    	// Replace all commas with " and ".
-    	if(listLen(excluding)) {
-    		excluding = Replace(excluding, ",", " and ");
-    	}
-    		
-		// Assemble Including and Excluding strings
-    	if(len(including)) {
-    		finalString = "Including: " & including;
-    	}
-    		
-    	if(len(excluding)) {
-    		if(len(including)) {
-    			finalString &= ". ";
-    		}
-    		finalString &= "Excluding: " & excluding;
-    	}
-    		
-    	return finalString;
-    }
-    
-    public string function getAmountRepresentation() {
-    	if(getType() EQ "percentageOff") {
-			return variables.percentageOff & "% " & rbKey('entity.priceGroupRate.priceGroupRateType.percentageOffShort');
-		}
-		if(getType() EQ "amountOff") {
-			return DollarFormat(variables.amountOff) & " " & rbKey('entity.priceGroupRate.priceGroupRateType.amountOffShort');
-		}
-		if(getType() EQ "amount") {
-			return DollarFormat(variables.amount);
-		}
-		else {
-			return "";
-		}
-    }
-    
-    public array function getTypeOptions() {
-		return [
-			{name=rbKey("entity.priceGroupRate.priceGroupRateType.percentageOff"), value="percentageOff"},
-			{name=rbKey("entity.priceGroupRate.priceGroupRateType.amountOff"), value="amountOff"},
-			{name=rbKey("entity.priceGroupRate.priceGroupRateType.amount"), value="amount"}
-		];
+    // =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "appliesTo";
 	}
-    
-        
 
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
