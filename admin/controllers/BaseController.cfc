@@ -346,11 +346,14 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			var errorEntities = [];
 			
 			if(structKeyExists(rc, "processRecords") && isArray(rc.processRecords)) {
-				for(var i=1; arrayLen(rc.processRecords); i++) {
+				for(var i=1; i<=arrayLen(rc.processRecords); i++) {
 					if(structKeyExists(rc.processRecords[i], entityPrimaryID)) {
 						structAppend(rc.processRecords[i], rc.processOptions);
-						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ], 2=true} );
+						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ]} );
 						var processOK = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
+						writeDump(processOK);
+						writeDump("process#arguments.entityName#");
+						writeDump(var=entity, top=3);
 						if( !processOK ) {
 							arrayAppend(errorEntities, entity);
 							arrayAppend(rc.errorData, rc.processRecords[i]);
