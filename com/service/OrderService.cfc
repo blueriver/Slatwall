@@ -384,11 +384,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								getUtilityEmailService().sendOrderConfirmationEmail(order=order);
 							}
 							
-							// setup subscription data if this was subscription order
-							setupSubscriptionOrderItem(order);
-							
-							// setup content access if this was content purchase
-							setupContentAccess(order);
+							// Look for 'auto' order fulfillments
+							for(var i=1; i<=arrayLen(order.getOrderFulfillments()); i++) {
+								if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto") {
+									processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocationID')});
+								}
+							}
 							
 							processOK = true;
 						}
@@ -399,77 +400,74 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return processOK;
 	}
 	
-	public void function setupSubscriptionOrderItem(required any order,string subscriptionOrderItemType="soitInitial") {
-		for(var orderItem in arguments.order.getOrderItems()) {
-			if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
-				// create subscription orderItem
-				var subscriptionOrderItem = getService("subscriptionService").getSubscriptionOrderItemByOrderItem(orderItem,true);
-				subscriptionOrderItem.setOrderItem(orderItem);
-				subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode(arguments.subscriptionOrderItemType));
-				var subscriptionUsage = subscriptionOrderItem.getSubscriptionUsage();
-				if(isNull(subscriptionUsage)) {
-					var subscriptionUsage = getService("subscriptionService").newSubscriptionUsage();
-				}
-				subscriptionUsage.setActiveFlag(1);
-				subscriptionUsage.setnextBillDate(orderItem.getSku().getSubscriptionTerm().getInitialTerm().getDueDate());
-				subscriptionOrderItem.setSubscriptionUsage(subscriptionUsage);
+	public void function setupSubscriptionOrderItem(required any orderItem, string subscriptionOrderItemType="soitInitial") {
+		if(!isNull(arguments.orderItem.getSku().getSubscriptionTerm())) {
+			// create subscription orderItem
+			var subscriptionOrderItem = getService("subscriptionService").getSubscriptionOrderItemByOrderItem(arguments.orderItem,true);
+			subscriptionOrderItem.setOrderItem(arguments.orderItem);
+			subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode(arguments.subscriptionOrderItemType));
+			var subscriptionUsage = subscriptionOrderItem.getSubscriptionUsage();
+			if(isNull(subscriptionUsage)) {
+				var subscriptionUsage = getService("subscriptionService").newSubscriptionUsage();
+			}
+			subscriptionUsage.setActiveFlag(1);
+			subscriptionUsage.setnextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getDueDate());
+			subscriptionOrderItem.setSubscriptionUsage(subscriptionUsage);
+			// call save on this entity to make it persistent so we can use it for further lookup
+			getService("subscriptionService").saveSubscriptionUsage(subscriptionUsage);
+			// copy all the subscription benefits
+			for(var subscriptionBenefit in arguments.orderItem.getSku().getSubscriptionBenefits()) {
+				var subscriptionUsageBenefit = getService("subscriptionService").getSubscriptionUsageBenefitBySubscriptionBenefitANDSubscriptionUsage([subscriptionBenefit,subscriptionUsage],true);
+				subscriptionUsageBenefit.copyFromSubscriptionBenefit(subscriptionBenefit);
+				subscriptionUsage.addSubscriptionUsageBenefit(subscriptionUsageBenefit);
 				// call save on this entity to make it persistent so we can use it for further lookup
-				getService("subscriptionService").saveSubscriptionUsage(subscriptionUsage);
-				// copy all the subscription benefits
-				for(var subscriptionBenefit in orderItem.getSku().getSubscriptionBenefits()) {
-					var subscriptionUsageBenefit = getService("subscriptionService").getSubscriptionUsageBenefitBySubscriptionBenefitANDSubscriptionUsage([subscriptionBenefit,subscriptionUsage],true);
-					subscriptionUsageBenefit.copyFromSubscriptionBenefit(subscriptionBenefit);
-					subscriptionUsage.addSubscriptionUsageBenefit(subscriptionUsageBenefit);
-					// call save on this entity to make it persistent so we can use it for further lookup
-					getService("subscriptionService").saveSubscriptionUsageBenefit(subscriptionUsageBenefit);
-					// create subscriptionUsageBenefitAccount for this account
-					var subscriptionUsageBenefitAccount = getService("subscriptionService").getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
-					subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
-					subscriptionUsageBenefitAccount.setAccount(orderItem.getOrder().getAccount());
-					getService("subscriptionService").saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-					// add this benefit to access
-					if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerSubscription") {
-						var accessSmartList = getService("accessService").getAccessSmartList();
-						accessSmartList.addFilter(propertyIdentifier="subscriptionUsage_subscriptionUsageID", value=subscriptionUsageBenefit.getSubscriptionUsage().getSubscriptionUsageID());
-						if(!accessSmartList.getRecordsCount()) {
-							var access = getService("accessService").getAccessBySubscriptionUsage(subscriptionUsage,true);
-							access.setSubscriptionUsage(subscriptionUsage);
-							getService("accessService").saveAccess(access);
-						}
-					} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerBenefit") {
-						var access = getService("accessService").getAccessBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
-						access.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				getService("subscriptionService").saveSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				// create subscriptionUsageBenefitAccount for this account
+				var subscriptionUsageBenefitAccount = getService("subscriptionService").getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
+				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				subscriptionUsageBenefitAccount.setAccount(arguments.orderItem.getOrder().getAccount());
+				getService("subscriptionService").saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+				// add this benefit to access
+				if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerSubscription") {
+					var accessSmartList = getService("accessService").getAccessSmartList();
+					accessSmartList.addFilter(propertyIdentifier="subscriptionUsage_subscriptionUsageID", value=subscriptionUsageBenefit.getSubscriptionUsage().getSubscriptionUsageID());
+					if(!accessSmartList.getRecordsCount()) {
+						var access = getService("accessService").getAccessBySubscriptionUsage(subscriptionUsage,true);
+						access.setSubscriptionUsage(subscriptionUsage);
 						getService("accessService").saveAccess(access);
-					} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerAccount") {
-						// TODO: this should get moved to DAO because adding large number of records like this could timeout
-						// check how many access records already exists and create new ones
-						var subscriptionUsageBenefitAccountSmartList = getService("subscriptionService").getSubscriptionUsageBenefitAccountSmartList();
-						subscriptionUsageBenefitAccountSmartList.addFilter(propertyIdentifier="subscriptionUsageBenefit_subscriptionUsageBenefitID", value=subscriptionUsageBenefit.getSubscriptionUsageBenefitID());
-						var recordCountForCreation = subscriptionBenefit.getTotalQuantity() - subscriptionUsageBenefitAccountSmartList.getRecordCount();
-						for(var i = 0; i < recordCountForCreation; i++) {
-							var subscriptionUsageBenefitAccount = getService("subscriptionService").newSubscriptionUsageBenefitAccount();
-							subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
-							getService("subscriptionService").saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-							var access = getService("accessService").newAccess();
-							access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-							getService("accessService").saveAccess(access);
-						}
+					}
+				} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerBenefit") {
+					var access = getService("accessService").getAccessBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
+					access.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+					getService("accessService").saveAccess(access);
+				} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerAccount") {
+					// TODO: this should get moved to DAO because adding large number of records like this could timeout
+					// check how many access records already exists and create new ones
+					var subscriptionUsageBenefitAccountSmartList = getService("subscriptionService").getSubscriptionUsageBenefitAccountSmartList();
+					subscriptionUsageBenefitAccountSmartList.addFilter(propertyIdentifier="subscriptionUsageBenefit_subscriptionUsageBenefitID", value=subscriptionUsageBenefit.getSubscriptionUsageBenefitID());
+					var recordCountForCreation = subscriptionBenefit.getTotalQuantity() - subscriptionUsageBenefitAccountSmartList.getRecordCount();
+					for(var i = 0; i < recordCountForCreation; i++) {
+						var subscriptionUsageBenefitAccount = getService("subscriptionService").newSubscriptionUsageBenefitAccount();
+						subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+						getService("subscriptionService").saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+						var access = getService("accessService").newAccess();
+						access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+						getService("accessService").saveAccess(access);
 					}
 				}
-				getService("subscriptionService").saveSubscriptionOrderItem(subscriptionOrderItem);
 			}
+			getService("subscriptionService").saveSubscriptionOrderItem(subscriptionOrderItem);
 		}
+		
 	}
 	
-	public void function setupContentAccess(required any order) {
-		for(var orderItem in arguments.order.getOrderItems()) {
-			for(var accessContent in orderItem.getSku().getAccessContents()) {
-				var accountContentAccess = getService("AccountService").newAccountContentAccess();
-				accountContentAccess.setAccount(getSlatwallScope().getCurrentAccount());
-				accountContentAccess.setOrderItem(orderItem);
-				accountContentAccess.addAccessContent(accessContent);
-				getService("AccountService").saveAccountContentAccess(accountContentAccess);
-			}
+	public void function setupOrderItemContentAccess(required any orderItem) {
+		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
+			var accountContentAccess = getService("AccountService").newAccountContentAccess();
+			accountContentAccess.setAccount(getSlatwallScope().getCurrentAccount());
+			accountContentAccess.setOrderItem(arguments.orderItem);
+			accountContentAccess.addAccessContent(accessContent);
+			getService("AccountService").saveAccountContentAccess(accountContentAccess);
 		}
 	}
 	
@@ -959,7 +957,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					case("auto"): {
 						// With an 'auto' type of setup, if no records exist in the data, then we can just create deliveryItems for the unfulfilled quantities of each item
 						if(!structKeyExists(arguments.data, "records")) {
-							// TODO: Sumit needs to add the auto logic here
+							arguments.data.records = [];
+							for(var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
+								arrayAppend(arguments.data.records, {orderItemID=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID, quantity=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getQuantityUndelivered()});
+							}
 						}
 						break;
 					}
@@ -973,6 +974,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						break;
 					}
 					default: {
+						
 						break;
 					}
 				}
@@ -996,6 +998,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								orderDeliveryItem.setOrderItem( orderItem );
 								orderDeliveryItem.setStock( stock );
 								orderDeliveryItem.setQuantity( arguments.data.records[i].quantity );
+								
+								// setup subscription data if this was subscriptionOrder item
+								setupSubscriptionOrderItem( orderItem );
+							
+								// setup content access if this was content purchase
+								setupOrderItemContentAccess( orderItem );
 								
 							} else {
 								arguments.orderFulfillment.addError('orderFulfillmentItem', 'An orderItem with the ID: #arguments.data.records[i].orderItemID# was trying to be processed with this fulfillment, but that orderItem does not exist');

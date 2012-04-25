@@ -48,5 +48,6 @@ Notes:
 		<cf_SlatwallTab view="admin:setting/listsettingtabs/sku" />
 		<cf_SlatwallTab view="admin:setting/listsettingtabs/shippingmethod" />
 		<cf_SlatwallTab view="admin:setting/listsettingtabs/shippingmethodrate" />
+		<cf_SlatwallTab view="admin:setting/listsettingtabs/fulfillmentmethod" />
 	</cf_SlatwallTabGroup>
 </cfoutput>

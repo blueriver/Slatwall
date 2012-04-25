@@ -67,6 +67,8 @@
 		<Record settingID="dbb327e0f1e951fd8214be2c6b3ddb9d" settingName="paymentMethodStoreCreditCardNumberWithOrder" settingValue="0" paymentMethodID="444df303dedc6dab69dd7ebcc9b8036a" />
 		<Record settingID="dbb327e1d2c1800a19bd9c82374b12a1" settingName="paymentMethodStoreCreditCardNumberWithAccount" settingValue="0" paymentMethodID="444df303dedc6dab69dd7ebcc9b8036a" />
 		<Record settingID="dbb327e2bfbef63ad4ae55e61c215760" settingName="paymentMethodCheckoutTransactionType" settingValue="none" paymentMethodID="444df303dedc6dab69dd7ebcc9b8036a" />
+		
+		<Record settingID="dbb327e3c7e233a8163146fd2f22179d" settingName="fulfillmentMethodAutoLocation" settingValue="88e6d435d3ac2e5947c81ab3da60eba2" />
 
 	</Records>
 </Table>
@@ -74,7 +76,7 @@
 <!--
 Below Are UUID's to use... delete after using
 	
-	dbb327e3c7e233a8163146fd2f22179d
+	
 	dbb327e4f28cd7cb53868c55e0cfcd55
 	dbb327e506090fde08cc4855fa14448d
 	dbb327e694534908c60ea354766bf0a8

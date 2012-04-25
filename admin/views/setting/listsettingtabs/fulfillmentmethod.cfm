@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,24 +35,9 @@
 
 Notes:
 
-*/
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
-	
-	public boolean function isLocationBeingUsed(required any location) {
-		return getDAO().isLocationBeingUsed(arguments.location);
-	}
-	
-	public numeric function getLocationCount() {
-		return getDAO().getLocationCount();
-	}
-	
-	public array function getLocationOptions() {
-		var smartList = this.getLocationSmartList();
-		
-		smartList.addSelect('locationID', 'value');
-		smartList.addSelect('locationName', 'name');
-		
-		return smartList.getRecords(); 
-	}
-			
-}
+--->
+<cfoutput>
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="fulfillmentMethodAutoLocation" />
+	</cf_SlatwallSettingTable>
+</cfoutput>
