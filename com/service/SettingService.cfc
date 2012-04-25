@@ -350,7 +350,7 @@ globalEncryptionKeySize
 								settingDetails.settingID = settingRecord.settingID;
 								
 								// Add custom logic for cmsContentID
-								if(structKeyExists(settingDetails.settingRelationships, "cmsContentID")) {
+								if(structKeyExists(settingDetails.settingRelationships, "cmsContentID") && settingDetails.settingRelationships.cmsContentID == arguments.object.getPrimaryIDValue()) {
 									settingDetails.settingInherited = false;	
 								} else {
 									settingDetails.settingInherited = true;
