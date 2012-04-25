@@ -54,7 +54,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.priceGroup#">
-			<cf_SlatwallTab view="admin:pricing/pricegrouptabs/rates" />
+			<cf_SlatwallTab view="admin:pricing/pricegrouptabs/pricegrouprates" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

@@ -49,7 +49,8 @@ component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewa
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
-
+	
+	/*
 	public string function getDiscountType() {
 		if(isNull(variables.DiscountType)) {
 			if( !isNull(getPercentageOff()) && isNull(getAmountOff()) ) {
@@ -62,18 +63,20 @@ component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewa
 		}
 		return variables.DiscountType;
 	}
+	*/
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
-
+	
+	/*
 	public array function getDiscountTypeOptions() {
 		return [
 			{name=rbKey("admin.pricing.promotionreward.discountType.percentageOff"), value="percentageOff"},
 			{name=rbKey("admin.pricing.promotionreward.discountType.amountOff"), value="amountOff"}
 		];
 	}
-	
+	*/
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================

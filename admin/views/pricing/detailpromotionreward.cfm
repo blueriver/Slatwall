@@ -59,12 +59,8 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 				<input type="hidden" name="returnAction" value="admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="discountType" fieldType="select" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="percentageOff" edit="#rc.edit#" displayVisible="discountType:percentageOff">
-				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amountOff" edit="#rc.edit#" displayVisible="discountType:amountOff" />
-				<cfif rewardType neq "order">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" displayVisible="discountType:amount"  />
-				</cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amountType" fieldType="select" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" displayVisible="discountType:amount"  />
 				<cfswitch expression="#local.rewardType#" >
 					<cfcase value="product">
 						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="rewardCanApplyToQualifierFlag" edit="#rc.edit#" />

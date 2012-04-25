@@ -57,8 +57,30 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 	public string function getRewardType() {
 		return "shipping";
 	}
+
+	public string function displayShippingMethodNames() {
+		var shippingMethodNames = "";
+		for( var i=1; i<=arrayLen(this.getShippingMethods());i++ ) {
+			shippingMethodNames = listAppend(shippingMethodNames,this.getShippingMethods()[i].getShippingMethodName());
+		}
+		return shippingMethodNames;
+	}
 	
-	/*-----  Relationship Management Methods for bidirectional relationships -----*/
+	
+	public string function getShippingMethodIDs() {
+		var shippingMethodIDs = "";
+		for( var i=1; i<=arrayLen(this.getShippingMethods());i++ ) {
+			shippingMethodIDs = listAppend(shippingMethodIDs,this.getShippingMethods()[i].getShippingMethodID());
+		}
+		return shippingMethodIDs;
+	}
+
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
 	
 	// shippingMethod (many-to-many)
 	
@@ -85,32 +107,6 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 	       }
 	   }
     }
-	
-	/*-----  End Relationship Management Methods  -----*/
-
-	public string function displayShippingMethodNames() {
-		var shippingMethodNames = "";
-		for( var i=1; i<=arrayLen(this.getShippingMethods());i++ ) {
-			shippingMethodNames = listAppend(shippingMethodNames,this.getShippingMethods()[i].getShippingMethodName());
-		}
-		return shippingMethodNames;
-	}
-	
-	
-	public string function getShippingMethodIDs() {
-		var shippingMethodIDs = "";
-		for( var i=1; i<=arrayLen(this.getShippingMethods());i++ ) {
-			shippingMethodIDs = listAppend(shippingMethodIDs,this.getShippingMethods()[i].getShippingMethodID());
-		}
-		return shippingMethodIDs;
-	}
-
-
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

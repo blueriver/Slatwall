@@ -51,12 +51,10 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<input type="hidden" name="pricegroup.pricegroupID" value="#rc.pricegroup.getPricegroupID()#" />
 				<input type="hidden" name="returnAction" value="admin:pricing.detailpricegroup&pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="globalFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="type" fieldType="select" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="percentageOff" edit="#rc.edit#" displayVisible="type:percentageOff">
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amountOff" edit="#rc.edit#" displayVisible="type:amountOff" />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amount" edit="#rc.edit#" displayVisible="type:amount"  />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="roundingRule" edit="#rc.edit#" displayVisible="type:percentageOff">
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="globalFlag" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amountType" fieldType="select" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amount" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="roundingRule" edit="#rc.edit#" displayVisible="amountType:percentageOff" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="productTypes" edit="#rc.edit#" displayVisible="globalFlag:0" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="products" edit="#rc.edit#" displayVisible="globalFlag:0" />
 			</cf_SlatwallPropertyList>

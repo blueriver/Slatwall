@@ -89,7 +89,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.priceGroupRate.setExcludedProductTypes([]);
 				arguments.priceGroupRate.setExcludedSKUs([]);
 			}
-		} 
+		}
+		return arguments.priceGroupRate; 
 	}
 	
 	public boolean function deletePriceGroup(required any priceGroup){
