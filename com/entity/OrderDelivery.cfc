@@ -42,11 +42,14 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	property name="orderDeliveryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="deliveryOpenDateTime" ormtype="timestamp";
 	property name="deliveryCloseDateTime" ormtype="timestamp";
+	property name="trackingNumber" ormtype="string";
 	
 	// Related Object Properties (Many-To-One)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
+	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	
 	// Related Object Properties (One-To-Many)
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all-delete-orphan" inverse="true";

@@ -62,6 +62,7 @@ Notes:
 							<td class="highlight-ltblue" colspan="#arrayLen(thistag.columns) + 1#">#parentRecord.stringReplace( attributes.processHeaderString )#</td>
 						</tr>
 					</cfif>
+					<input type="hidden" name="processRecords[#hi#].#parentRecord.getPrimaryIDPropertyName()#" value="#parentRecord.getPrimaryIDValue()#" />
 					<cfset processRecords = parentRecord.invokeMethod("get#attributes.processRecordsProperty#") />
 					<cfloop array="#processRecords#" index="processRecord">
 						<cfset ri++ />
@@ -70,7 +71,8 @@ Notes:
 								<td class="#column.tdClass#">#processRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 							</cfloop>
 							<td class="process">
-								<input name="processRecords[#hi#].records[#ri#].quantity" value="" style="width:40px;"/>
+								<input type="hidden" name="processRecords[#hi#].records[#ri#].#processRecord.getPrimaryIDPropertyName()#" value="#processRecord.getPrimaryIDValue()#" style="width:40px;"/>
+								<input type="text" name="processRecords[#hi#].records[#ri#].quantity" value="" style="width:40px;"/>
 							</td>
 						</tr>
 					</cfloop>

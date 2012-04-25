@@ -912,6 +912,10 @@ component displayname="Base Object" accessors="true" output="false" {
 				var entityName = listFirst(right(listLast(arguments.messageKey, "."), len(listLast(arguments.messageKey, "."))-6), "_");
 				message = rbKey("admin.define.delete_#messageType#");
 				message = replace(message, "${itemEntityName}", rbKey("entity.#entityName#") );
+			} else if (left(listGetAt(arguments.messageKey, 3, "."), 7) == "process") {
+				var entityName = listFirst(right(listLast(arguments.messageKey, "."), len(listLast(arguments.messageKey, "."))-7), "_");
+				message = rbKey("admin.define.process_#messageType#");
+				message = replace(message, "${itemEntityName}", rbKey("entity.#entityName#") );
 			}
 		}
 		

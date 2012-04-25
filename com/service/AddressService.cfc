@@ -65,7 +65,7 @@ component extends="BaseService" accessors="true" output="false" {
 		return addressInZone;
 	}
 	
-	public any function copyAddress(required any address) {
+	public any function copyAddress(required any address, saveNewAddress=false) {
 		var addressCopy = this.newAddress();
 		addressCopy.setName(arguments.address.getName());
 		addressCopy.setCompany(arguments.address.getCompany());
@@ -77,6 +77,11 @@ component extends="BaseService" accessors="true" output="false" {
 		addressCopy.setStateCode(arguments.address.getStateCode());
 		addressCopy.setPostalCode(arguments.address.getPostalCode());
 		addressCopy.setCountryCode(arguments.address.getCountryCode());
+		
+		if(arguments.saveNewAddress) {
+			getDAO().save( addressCopy );
+		}
+		
 		return addressCopy;
 	}
 }
