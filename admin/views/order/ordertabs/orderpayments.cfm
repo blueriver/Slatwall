@@ -37,13 +37,15 @@ Notes:
 
 --->
 <cfparam name="rc.order" type="any" />
-<cfparam name="rc.edit" type="boolean" /> 
+<cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderPaymentsSmartList()#" 
 			recordDetailAction="admin:order.detailorderpayment"
-			recordDetailModal="true">
+			recordProcessAction="admin:order.processorderpayment"
+			recordProcessModal="true">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
 		<cf_SlatwallListingColumn propertyIdentifier="amount" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
 	</cf_SlatwallListingDisplay>
 </cfoutput>

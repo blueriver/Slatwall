@@ -42,40 +42,42 @@ Notes:
 	<cfparam name="attributes.saveActionQueryString" type="string" default="" />
 	<cfparam name="attributes.edit" type="boolean" default="false" />
 	
-	<cfif attributes.edit>
-		<cfoutput>
+	<cfoutput>
+		<cfif attributes.edit>
 			<cfif len(attributes.saveActionQueryString)>
 				<form method="post" action="?s=1&#attributes.saveActionQueryString#" class="form-horizontal">
 			<cfelse>
 				<form method="post" action="?s=1" class="form-horizontal">
 			</cfif>
-				<cfif structKeyExists(request.context, "returnAction")>
-					<input type="hidden" name="returnAction" value="#request.context.returnAction#" />
-				</cfif>
-				<input type="hidden" name="slatAction" value="#attributes.saveaction#" />
-				<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
-				<cfif structKeyExists(request.context, "modal") and request.context.modal>
-					<div class="modal-header">
-						<a class="close" data-dismiss="modal">&times;</a>
-						<h3>#request.context.pageTitle#</h3>
-					</div>
-					<div class="modal-body">
-				</cfif>
-		</cfoutput>
-	</cfif>
+			<cfif structKeyExists(request.context, "returnAction")>
+				<input type="hidden" name="returnAction" value="#request.context.returnAction#" />
+			</cfif>
+			<input type="hidden" name="slatAction" value="#attributes.saveaction#" />
+			<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
+		</cfif>
+		<cfif structKeyExists(request.context, "modal") and request.context.modal>
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">&times;</a>
+				<h3>#request.context.pageTitle#</h3>
+			</div>
+			<div class="modal-body">
+		</cfif>
+	</cfoutput>
 <cfelse>
-	<cfif attributes.edit>
-		<cfoutput>
-				<cfif structKeyExists(request.context, "modal") and request.context.modal>
-					</div>
-					<div class="modal-footer">
-						<div class="btn-group">
-							<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.cancel')#</a>
-							<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.save')#</button>
-						</div>
+	<cfoutput>
+		<cfif structKeyExists(request.context, "modal") and request.context.modal>
+			</div>
+			<div class="modal-footer">
+				<cfif attributes.edit>
+					<div class="btn-group">
+						<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.cancel')#</a>
+						<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.save')#</button>
 					</div>
 				</cfif>
+			</div>
+		</cfif>
+		<cfif attributes.edit>
 			</form>
-		</cfoutput>
-	</cfif>
+		</cfif>
+	</cfoutput>
 </cfif>

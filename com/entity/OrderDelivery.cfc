@@ -40,8 +40,6 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	
 	// Persistent Properties
 	property name="orderDeliveryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="deliveryOpenDateTime" ormtype="timestamp";
-	property name="deliveryCloseDateTime" ormtype="timestamp";
 	property name="trackingNumber" ormtype="string";
 	
 	// Related Object Properties (Many-To-One)
@@ -63,6 +61,9 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non-Persistent Properties
+	property name="totalQuantityDelivered" persistent="false" type="numeric" formatType="numeric";
+	
 	public OrderDelivery function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.orderDeliveryItems)) {
@@ -71,7 +72,7 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	   return Super.init();
 	}
 	
-	public any function getTotalQuanityDelivered() {
+	public any function getTotalQuantityDelivered() {
 		var totalDelivered = 0;
 		for(var i=1; i<=arrayLen(getOrderDeliveryItems()); i++) {
 			totalDelivered += getOrderDeliveryItems()[i].getQuantity();

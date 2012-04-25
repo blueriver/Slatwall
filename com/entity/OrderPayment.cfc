@@ -242,6 +242,13 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return arguments.context;
 	}
 	
+	public any function getSimpleRepresentation() {
+		if(getPaymentMethodType() == "creditCard") {
+			return getPaymentMethod().getPaymentMethodName() & " - " & getCreditCardType() & " - ***" & getCreditCardLastFour();	
+		}
+		return getPaymentMethod().getPaymentMethodName();
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

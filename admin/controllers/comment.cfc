@@ -50,7 +50,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	switch(rc.entity) {
     		case "order": {
     			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:order.detailorder", queryString="orderID=#order.getOrderID()#");
+    			getFW().redirect(action="admin:order.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
     			break;
     		}
     	}

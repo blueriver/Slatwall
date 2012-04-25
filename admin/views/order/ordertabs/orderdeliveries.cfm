@@ -39,10 +39,14 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
+	
 	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderDeliveriesSmartList()#"
-			recordEditAction="admin:order.editorderdelivery">
+			recordDetailAction="admin:order.detailorderdelivery"
+			recordDetailModal="true">
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="deliveryOpenDateTime" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" />
+		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
+		<cf_SlatwallListingColumn propertyIdentifier="totalQuantityDelivered" />
 		
 	</cf_SlatwallListingDisplay>
 </cfoutput>

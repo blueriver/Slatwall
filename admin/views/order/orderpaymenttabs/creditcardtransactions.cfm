@@ -37,22 +37,12 @@ Notes:
 
 --->
 <cfparam name="rc.orderPayment" type="any" />
-<cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:order.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#"></cf_SlatwallActionBar>
+	<cf_SlatwallListingDisplay smartList="#rc.orderPayment.getCreditCardTransactionsSmartList()#"
+			recordEditAction="admin:order.editcreditcardtransaction">
+			
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" >
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountReceived" >
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.orderPayment#">
-			<cf_SlatwallTab view="admin:order/orderpaymenttabs/creditcardtransactions" />
-		</cf_SlatwallTabGroup>
-		
-	</cf_SlatwallDetailForm>
+	</cf_SlatwallListingDisplay>
 </cfoutput>

@@ -109,7 +109,7 @@ Notes:
 				<tr class="total">
 					<td>Total</td>
 					<td></td>
-					<td class="quantity">#rc.orderDeliveryShipping.getTotalQuanityDelivered()#</td>
+					<td class="quantity">#rc.orderDeliveryShipping.getTotalQuantityDelivered()#</td>
 				</tr>
 			</table>
 		</div>
