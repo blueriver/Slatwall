@@ -620,6 +620,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function processOrderFulfillment(required any orderFulfillment, struct data={}, required any locationID) {
+		
+		writeDump(var=arguments, top=3);
+		abort;
+		
 		// Get the Order from the fulfillment
 		var order = arguments.orderFulfillment.getOrder();
 		

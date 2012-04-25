@@ -38,14 +38,44 @@ Notes:
 --->
 <cfif thisTag.executionMode eq "end">
 	<cfparam name="attributes.processSmartList" type="any" default="" />
+	<cfparam name="attributes.processHeaderString" type="any" default="" />
 	<cfparam name="attributes.processRecordsProperty" type="string" default="" />
 	
 	<!--- ThisTag Variables used just inside --->
 	<cfparam name="thistag.columns" type="array" default="#arrayNew(1)#" />
 	
 	<cfoutput>
+		<table class="table table-striped table-bordered table-condensed">
+			<thead>
 				<cfloop array="#thistag.columns#" index="column">
+					<th>#column.title#</th>
 				</cfloop>
-		
+				<th>Quantity</th>
+			</thead>
+			<tbody>
+				<cfset hi = 0 />
+				<cfset ri = 0 />
+				<cfloop array="#attributes.processSmartList.getRecords()#" index="parentRecord">
+					<cfset hi++ />
+					<cfif attributes.processSmartList.getRecordsCount() gt 1>
+						<tr>
+							<td class="highlight-ltblue" colspan="#arrayLen(thistag.columns) + 1#">#parentRecord.stringReplace( attributes.processHeaderString )#</td>
+						</tr>
+					</cfif>
+					<cfset processRecords = parentRecord.invokeMethod("get#attributes.processRecordsProperty#") />
+					<cfloop array="#processRecords#" index="processRecord">
+						<cfset ri++ />
+						<tr>
+							<cfloop array="#thistag.columns#" index="column">
+								<td class="#column.tdClass#">#processRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+							</cfloop>
+							<td class="process">
+								<input name="processRecords[#hi#].records[#ri#].quantity" value="" style="width:40px;"/>
+							</td>
+						</tr>
+					</cfloop>
+				</cfloop>
+			</tbody>
+		</table>
 	</cfoutput>
 </cfif>

@@ -51,8 +51,7 @@ Notes:
 	<cfparam name="attributes.recordDeleteQueryString" type="string" default="" />
 	<cfparam name="attributes.recordProcessAction" type="string" default="" />
 	<cfparam name="attributes.recordProcessQueryString" type="string" default="" />
-	
-	
+		
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
 	<cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />  

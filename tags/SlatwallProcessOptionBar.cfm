@@ -44,6 +44,7 @@ Notes:
 	<cfparam name="thistag.options" type="array" default="#arrayNew(1)#" />
 	
 	<cfoutput>
+		<!--- set the tabindex to 1 so that the first options will start with 2 --->
 		<div class="row-fluid">
 			<cf_SlatwallPropertyList divclass="span4">
 				<h4>Process Options</h4>
@@ -52,7 +53,7 @@ Notes:
 				<cfloop array="#thistag.options#" index="option">
 					<cfif len(option.data)>
 						<cfset hasDataOption = true />
-						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.#option.data#" fieldtype="#option.fieldtype#" title="#option.data#">
+						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.#option.data#" fieldtype="#option.fieldtype#" valueOptions="#option.valueOptions#" title="#request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#" )#">
 					</cfif>
 				</cfloop>
 				<cfif not hasDataOption>
@@ -66,22 +67,25 @@ Notes:
 					<cfset hasPrintOrEmailOption = false>
 					<cfif len(option.print)>
 						<cfset hasPrintOrEmailOption = true>
-						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.print.#option.print#" fieldtype="yesno" title="#option.print#">
+						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.print.#option.print#" fieldtype="yesno" title="#request.slatwallScope.rbKey('define.print')# #request.slatwallScope.rbKey('print.#option.print#')#">
 					</cfif>
 					<cfif len(option.email)>
 						<cfset hasPrintOrEmailOption = true>
-						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.email.#option.print#" fieldtype="yesno" title="#option.email#">
+						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.email.#option.email#" fieldtype="yesno" title="#request.slatwallScope.rbKey('define.email')# #request.slatwallScope.rbKey('email.#option.email#')#">
 					</cfif>
 				</cfloop>
 				<cfif not hasPrintOrEmailOption>
 					<em>#request.slatwallScope.rbKey('define.none')#</em>
 				</cfif>
 			</cf_SlatwallPropertyList>
+			<!---
 			<cf_SlatwallPropertyList divclass="span4">
 				<h4>Data Collection</h4>
 				<br />
-				<cf_SlatwallFieldDisplay edit="true" fieldname="dataCollector" fieldtype="text" title="Scan">
+				<cf_SlatwallFieldDisplay edit="true" fieldname="dataCollector" fieldtype="text" title="Scan" fieldclass="firstfocus">
+				<button class="btn">Upload Data File</button>
 			</cf_SlatwallPropertyList>
+			--->
 		</div>
 		<hr />
 	</cfoutput>

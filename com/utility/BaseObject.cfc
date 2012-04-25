@@ -924,6 +924,10 @@ component displayname="Base Object" accessors="true" output="false" {
 		arrayAppend(request.context.messages, arguments);
 	}
 	
+	public string function stringReplace( required string templateString ) {
+		return getService("utilityService").replaceStringTemplate(arguments.templateString, this);
+	}
+	
 	// ===========================  END:  UTILITY METHODS ===========================================
 	
 	// ========================= START: DELIGATION HELPERS ==========================================
