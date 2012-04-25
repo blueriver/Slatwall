@@ -95,28 +95,24 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 		return variables.accessTypeOptions;
     }
     
-    public array function getContentsOptions() {
-		if(!structKeyExists(variables, "contentsOptions")) {
+    public any function getContentsOptionsSmartList() {
+		if(!structKeyExists(variables, "contentsOptionsSmartList")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallContent");
-			smartList.addSelect(propertyIdentifier="title", alias="name");
-			smartList.addSelect(propertyIdentifier="contentID", alias="value");
-			smartList.addFilter(propertyIdentifier="restrictAccessFlag", value="1");
+			smartList.addWhereCondition("exists (FROM SlatwallSetting ss WHERE ss.settingName='contentRestrictAccessFlag' AND ss.settingValue=1 AND ss.cmsContentID = aslatwallcontent.cmsContentID)");
 			smartList.addOrder("title|ASC");
-			variables.contentsOptions = smartList.getRecords();
+			variables.contentsOptionsSmartList = smartList;
 		}
-		return variables.contentsOptions;
+		return variables.contentsOptionsSmartList;
     }
     
-    public array function getCategoriesOptions() {
-		if(!structKeyExists(variables, "categoriesOptions")) {
+    public any function getCategoriesOptionsSmartList() {
+		if(!structKeyExists(variables, "categoriesOptionsSmartList")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallCategory");
-			smartList.addSelect(propertyIdentifier="categoryName", alias="name");
-			smartList.addSelect(propertyIdentifier="categoryID", alias="value");
 			smartList.addFilter(propertyIdentifier="restrictAccessFlag", value="1");
 			smartList.addOrder("categoryName|ASC");
-			variables.categoriesOptions = smartList.getRecords();
+			variables.categoriesOptionsSmartList = smartList;
 		}
-		return variables.categoriesOptions;
+		return variables.categoriesOptionsSmartList;
     }
     
 
