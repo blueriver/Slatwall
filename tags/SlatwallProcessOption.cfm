@@ -44,6 +44,7 @@ Notes:
 	
 	<!--- If the data attribute is defined, the we will use these additional settings --->
 	<cfparam name="attributes.fieldtype" type="string" default="text" />
+	<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />
 	
 	<cfassociate basetag="cf_SlatwallProcessOptionBar" datacollection="options">
 </cfif>

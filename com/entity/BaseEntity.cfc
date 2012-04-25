@@ -252,7 +252,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			variables[ cacheKey ] = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
 			// If the cfc is "Type" then we should be looking for a parentTypeSystemCode in the metaData
 			if(getPropertyMetaData( arguments.propertyName ).cfc == "Type") {
-				variables[ cacheKey ].addFilter('parentType.systemCode', arguments.propertyName);
+				if(structKeyExists(getPropertyMetaData( arguments.propertyName ), "systemCode")) {
+					variables[ cacheKey ].addFilter('parentType.systemCode', getPropertyMetaData( arguments.propertyName ).systemCode);
+				} else {
+					variables[ cacheKey ].addFilter('parentType.systemCode', arguments.propertyName);
+				}
 			}
 		}
 		

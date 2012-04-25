@@ -40,21 +40,33 @@ Notes:
 <cfparam name="rc.processOrderFulfillmentSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 
+<cfsilent>
+	<cfset local.losl = $.slatwall.getService("locationService").getLocationSmartList() />
+	<cfset local.losl.addSelect('locationID', 'value') />
+	<cfset local.losl.addSelect('locationName', 'name') />
+	<cfset local.locationOptions = local.losl.getRecords() />
+</cfsilent>
+
 <cfoutput>
 	<cf_SlatwallProcessForm>
 		<cf_SlatwallActionBar type="process" />
 		
 		<cf_SlatwallProcessOptionBar>
-			<cfif !rc.multiprocess>
+			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#local.locationOptions#" />
+			<cfif !rc.multiProcess>
 				<cf_SlatwallProcessOption data="trackingNumber" fieldType="text" />
 			</cfif>
 			<cf_SlatwallProcessOption print="packingSlip" />
 			<cf_SlatwallProcessOption email="deliveryConfirmation" />
 		</cf_SlatwallProcessOptionBar>
 		
-		<cf_SlatwallProcessListing processSmartList="#rc.processOrderFulfillmentSmartList#" processRecordsProperty="orderFulfillmentItems">
-			<cf_SlatwallProcessColumn propertyIdentifier="orderFulfillmentItems" />
-			<cf_SlatwallProcessColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
+		<cf_SlatwallProcessListing processSmartList="#rc.processOrderFulfillmentSmartList#" processRecordsProperty="orderFulfillmentItems" processHeaderString="Order: ${order.orderNumber}, Order Fulfillment - ${fulfillmentMethod.fulfillmentMethodName}">
+			<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" title="Product" />
+			<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" title="Sku Code" />
+			<cf_SlatwallProcessColumn propertyIdentifier="sku.displayOptions" title="Sku Options" />
+			<cf_SlatwallProcessColumn propertyIdentifier="quantity" title="Quantity Ordered" />
+			<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" title="Quantity Delivered" />
+			<cf_SlatwallProcessColumn propertyIdentifier="quantityUndelivered" title="Quantity Undelivered" />
 		</cf_SlatwallProcessListing>
 		
 	</cf_SlatwallProcessForm>

@@ -44,8 +44,7 @@ Notes:
 	<cfparam name="attributes.value" type="any" default="" />
 	<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />
 	<cfparam name="attributes.valueOptionsSmartList" type="any" default="" />
-	
-	
+		
 	<!---
 		attributes.fieldType have the following options:
 		
@@ -172,4 +171,5 @@ Notes:
 			</cfoutput>
 		</cfcase>
 	</cfswitch>
+	
 </cfif>

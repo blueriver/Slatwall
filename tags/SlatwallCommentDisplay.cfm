@@ -57,10 +57,10 @@ Notes:
 							<cfset originalEntity = commentRelationship['comment'].getPrimaryRelationship().getRelationshipEntity() />
 							<cfswitch expression="#originalEntity.getClassName()#">
 								<cfcase value="Order">
-									<td class="primary" colspan="2">This #attributes.entity.getClassName()# was referenced in a comment on <a href="?slatAction=order.detailorder&orderID=#originalEntity.getOrderID()#">Order Number #originalEntity.getOrderNumber()#</a></td>
-									<td>#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
-									<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
-									<td class="admin1">&nbsp;</td>
+									<td class="primary highlight-ltblue" colspan="2">This #attributes.entity.getClassName()# was referenced in a comment on <a href="?slatAction=order.detailorder&orderID=#originalEntity.getOrderID()#">Order Number #originalEntity.getOrderNumber()#</a></td>
+									<td class="highlight-ltblue">#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
+									<td class="highlight-ltblue">#request.slatwallScope.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
+									<td class="admin1 highlight-ltblue">&nbsp;</td>
 								</cfcase>
 								<cfdefaultcase>
 									<td class="primary" colspan="5">??? Programming Issue for #originalEntity.getClassName()# entity comments</td>

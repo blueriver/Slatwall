@@ -514,18 +514,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var address = getAddressService().getAddress(data.shippingAddress.addressID, true);
 				var newAddressDataStruct = data.shippingAddress;
 			}
-		
+
 			// Populate Address And check if it has changed
 			var serializedAddressBefore = address.getSimpleValuesSerialized();
 			address.populate(newAddressDataStruct);
 			var serializedAddressAfter = address.getSimpleValuesSerialized();
-			
+
 			// If it has changed we need to update Taxes and Shipping Options
 			if(serializedAddressBefore != serializedAddressAfter) {
 				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
 				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
 			}
-		
+
 			// if address needs to get saved in account
 			if(data.saveAccountAddress == 1 || data.addressIndex != 0) {
 				// new account address
@@ -557,17 +557,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
 					arguments.orderFulfillment.removeShippingAddress();
 				}
-				
+
 				// If there was previously an account address and we switch it, then we need to recalculate
 				if(!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
 					arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
 					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
 				}
-				
+
 				// Set the new account address in the order
 				arguments.orderFulfillment.setAccountAddress(accountAddress);
 			} else {
-				
+
 				// If there was previously an account address we need to remove and recalculate
 				if(!isNull(arguments.orderFulfillment.getAccountAddress())) {
 					arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
@@ -622,106 +622,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
-	public any function processOrderFulfillment(required any orderFulfillment, struct data={}, required any locationID) {
-		// Get the Order from the fulfillment
-		var order = arguments.orderFulfillment.getOrder();
-		
-		// Figure out the Fulfillment Method
-		var fulfillmentMethodType = arguments.orderFulfillment.getFulfillmentMethodType();
-		
-		// Create A New Order Delivery Type Based on fulfillment method
-		var orderDelivery = this.new("SlatwallOrderDelivery#fulfillmentMethodType#");
-		
-		// Set the Order As the Order for this Delivery
-		orderDelivery.setOrder(order);
-		orderDelivery.setFulfillmentMethod(arguments.orderFulfillment.getFulfillmentMethod());
-		orderDelivery.setDeliveryOpenDateTime(now());
 	
-		// TODO: change close date to indicate when item was received, downloaded, picked up, etc.
-		orderDelivery.setDeliveryCloseDateTime(now());
 	
-		// Set the location from which this order will be fulfilled. deliverFromLocation is also used when
-		// setting the stock on OrderDeliveryItems.
-		orderDelivery.setLocation(getLocationService().getLocation(arguments.locationID));
 	
-		// Per Fulfillment method set whatever other details need to be set
-		
-		switch(fulfillmentMethodType) {
-			case("shipping"): {
-				// copy the shipping address from the order fulfillment and set it in the delivery
-				orderDelivery.setShippingAddress(getAddressService().copyAddress(arguments.orderFulfillment.getShippingAddress()));
-				orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
-				break;
-			}
-			default: {
-			}
-		}
-		
-		// set the tracking number
-		if(structkeyExists(arguments.data, "trackingNumber") && len(arguments.data.trackingNumber) > 0) {
-			orderDelivery.setTrackingNumber(arguments.data.trackingNumber);
-		}
-	
-		var totalQuantity = 0;
-		
-		// Loop over the items in the fulfillment
-		for(var i = 1; i <= arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
-		
-			var thisOrderItem = arguments.orderFulfillment.getOrderFulfillmentItems()[i];
-			
-			// Check to see if this fulfillment item has any quantity passed to it
-			if(structKeyExists(arguments.data, thisOrderItem.getOrderItemID())) {
-				var thisQuantity = arguments.data[thisOrderItem.getOrderItemID()];
-				
-				// Make sure that the quantity is greater than 1, and that this fulfillment item needs at least 
-				//that many to be delivered
-				if(thisQuantity > 0 && thisQuantity <= thisOrderItem.getQuantityUndelivered()) {
-					// keep track of the total quantity fulfilled
-					totalQuantity += thisQuantity;
-				
-					// Grab the stock that matches the item and the location from which we are delivering
-					var stock = getStockService().getStockBySkuAndLocation(thisOrderItem.getSku(), 
-					                                                       orderDelivery.getLocation());
-					
-					// Create and Populate the delivery item
-					var orderDeliveryItem = this.newOrderDeliveryItem();
-					orderDeliveryItem.setOrderItem(thisOrderItem);
-					orderDeliveryItem.setQuantity(thisQuantity);
-					orderDeliveryItem.setOrderDelivery(orderDelivery);
-					orderDeliveryItem.setStock(stock);
-				
-					// change status of the order item
-					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
-						//order item was fulfilled
-						thisOrderItem.setOrderItemStatusType( getTypeService().getTypeBySystemCode("oistFulfilled") );
-					} else {
-						// TODO: create setting to make this flexible according to business rules
-						thisOrderItem.setOrderItemStatusType( getTypeService().getTypeBySystemCode("oistBackordered") );
-					}
-					
-					
-				}
-			}
-		}
-	
-		orderDelivery.validate();
-	
-		if(!orderDelivery.hasErrors()) {
-			// update the status of the order
-			if(totalQuantity < order.getQuantityUndelivered()) {
-				order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostProcessing"));
-			} else if(order.isPaid()) {
-				order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
-			} else {
-				order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostProcessing"));
-			}
-			arguments.entity = getDAO().save(target=orderDelivery);
-		} else {
-			getSlatwallScope().setORMHasErrors( true );
-		}
-	
-		return orderDelivery;
-	}
 	
 	
 	//================= START: Order Actions ========================
@@ -1030,36 +933,152 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getMaxOrderNumber();
 	}
 	
-	/**************** LEGACY DEPRECATED METHOD ****************************/
-	/*
-	 * This method is only called from the cart controller if the data passed in for 'orderItems'
-	 * was passed in as orderItems.{orderItemID}.property which is the old format that we no longer 
-	use.
-	 * Now to accomplish the same task we are calling saveOrder() from the controller and letting 
-	populate
-	 * and validation take care of it.
-	*/
+	// ===================== START: Process Methods ================================
 	
-	public void function updateOrderItems(required any order, required struct data) {
-	
-		var dataCollections = arguments.data;
-		var orderItems = arguments.order.getOrderItems();
-		for(var i = arrayLen(arguments.order.getOrderItems()); i >= 1; i--)	{
-			if(structKeyExists(dataCollections.orderItem, arguments.order.getOrderItems()[i].getOrderItemID()))	{
-				if(structKeyExists(dataCollections.orderItem["#arguments.order.getOrderItems()[i].getOrderItemID()#"], "quantity")) {
-					arguments.order.getOrderItems()[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+	public any function processOrderFulfillment(required any orderFulfillment, struct data={}, string processContext="process") {
+		
+		// Make sure that a location was passed in
+		if(structKeyExists(arguments.data, "locationID")) {
+			var location = getLocationService().getLocation(  arguments.data.locationID );
+			
+			// Make sure that the location is not Null
+			if(!isNull(location)) {
 				
-					if(dataCollections.orderItem["#arguments.order.getOrderItems()[i].getOrderItemID()#"].quantity <= 0) {
-						arguments.order.getOrderItems()[i].removeOrder(arguments.order);
-					} else {
-						arguments.order.getOrderItems()[i].setQuantity(dataCollections.orderItem["#arguments.order.getOrderItems()[i].getOrderItemID()#"].quantity);
+				// Create a new Order Delivery and set the relevent values
+				var orderDelivery = this.newOrderDelivery();
+				orderDelivery.setDeliveryOpenDateTime( now() );
+				orderDelivery.setDeliveryCloseDateTime( now() ); // TODO: change close date to indicate when item was received, downloaded, picked up, etc.
+				orderDelivery.setFulfillmentMethod( arguments.orderFulfillment.getFulfillmentMethod() );
+				orderDelivery.setLocation( location );
+				
+				// Attach this delivery to the order
+				orderDelivery.setOrder( arguments.orderFulfillment.getOrder() );
+				
+				// Per Fulfillment Method Type set whatever other details need to be set
+				switch(arguments.orderFulfillment.getFulfillmentMethodType()) {
+					case("auto"): {
+						// With an 'auto' type of setup, if no records exist in the data, then we can just create deliveryItems for the unfulfilled quantities of each item
+						if(!structKeyExists(arguments.data, "records")) {
+							// TODO: Sumit needs to add the auto logic here
+						}
+						break;
+					}
+					case("shipping"): {
+						// Set the shippingAddress, shippingMethod & potentially tracking number
+						orderDelivery.setShippingAddress( arguments.orderFulfillment.getShippingAddress().copyAddress( saveNewAddress=true ) );
+						orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
+						if(structkeyExists(arguments.data, "trackingNumber") && len(arguments.data.trackingNumber)) {
+							orderDelivery.setTrackingNumber(arguments.data.trackingNumber);
+						}
+						break;
+					}
+					default: {
+						break;
 					}
 				}
+				
+				// Loop over the records in the data to set the quantity for the delivery
+				if(structKeyExists(arguments.data, "records")) {
+					for(var i=1; i<=arrayLen(arguments.data.records); i++) {
+						
+						// Only add this orderItem to the delivery if it has an orderItemID, a quantity is defined, and the quantity is numeric and gt 1 
+						if(structKeyExists(arguments.data.records[i], "orderItemID") && isSimpleValue(arguments.data.records[i].orderItemID) && structKeyExists(arguments.data.records[i], "quantity") && isNumeric(arguments.data.records[i].quantity) && arguments.data.records[i].quantity > 0) {
+							
+							var orderItem = this.getOrderItem(arguments.data.records[i].orderItemID);
+							if(!isNull(orderItem)) {
+								
+								// Grab the stock that matches the item and the location from which we are delivering
+								var stock = getStockService().getStockBySkuAndLocation(orderItem.getSku(), orderDelivery.getLocation());
+								
+								// Create and Populate a new delivery item
+								var orderDeliveryItem = this.newOrderDeliveryItem();
+								orderDeliveryItem.setOrderDelivery( orderDelivery );
+								orderDeliveryItem.setOrderItem( orderItem );
+								orderDeliveryItem.setStock( stock );
+								orderDeliveryItem.setQuantity( arguments.data.records[i].quantity );
+								
+							} else {
+								arguments.orderFulfillment.addError('orderFulfillmentItem', 'An orderItem with the ID: #arguments.data.records[i].orderItemID# was trying to be processed with this fulfillment, but that orderItem does not exist');
+							}
+
+						}
+						
+					}	
+				}
+				
+				// Validate the orderDelivery
+				orderDelivery.validate();
+				
+				if(!orderDelivery.hasErrors()) {
+					
+					// Call save on the orderDelivery so that it is persisted
+					getDAO().save( orderDelivery );
+					
+					// Update the Order Status
+					updateOrderStatus( arguments.orderFulfillment.getOrder(), true );
+					
+				} else {
+					// TODO: add the errors to the fulfillment so that they can be displayed on the front-end
+					arguments.orderFulfillment.addError('orderDelivery', 'There was an unknown error when creating the orderDelivery for this fulfillment');
+				}
+				
+			} else {
+				arguments.orderFulfillment.addError('location', 'The Location id that was passed in does not represent a valid location');	
 			}
+		} else {
+			arguments.orderFulfillment.addError('location', 'No Location was passed in');
 		}
-	
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
+		
+		return arguments.orderFulfillment;
 	}
 	
+	// =====================  END: Process Methods ==============================
+	
+	// ===================== START: Status Methods ==============================
+	
+	public void function updateOrderStatus( required any order, updateItemStatus=false ) {
+		// First we make sure that this order status is not 'closed', 'canceld', 'notPlaced' or 'onHold' because we cannot automatically update those statuses
+		if(!listFindNoCase("ostNotPlaced,ostOnHold,ostClosed,ostCanceled", arguments.order.getOrderStatusType().getSystemCode())) {
+			
+			// We can check to see if all the items have been delivered and the payments have all been received then we can close this order
+			if(arguments.order.getPaymentAmountReceivedTotal() == arguments.order.getTotal() && getQuantityUndelivered() == 0)	{
+				arguments.order.setOrderStatusType(  getTypeService().getTypeBySystemCode("ostClosed") );
+				
+			// The default case is just to set it to processing
+			} else {
+				arguments.order.setOrderStatusType(  getTypeService().getTypeBySystemCode("ostProcessing") );
+			}
+		}
+		
+		// If we are supposed to update the items as well, loop over all items and pass to 'updateItemStatus'
+		if(arguments.updateItemStatus) {
+			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+				updateOrderItemStatus( arguments.order.getOrderItems()[i] );
+			}
+		}
+	}
+	
+	public void function updateOrderItemStatus( required any orderItem ) {
+		
+		// First we make sure that this order item is not already fully fulfilled, or onHold because we cannont automatically update those statuses
+		if(!listFindNoCase("oistFulfilled,oistOnHold",arguments.orderItem.getOrderItemStatusType().getSystemCode())) {
+			
+			// If the quantityUndelivered is set to 0 then we can mark this as fulfilled
+			if(arguments.orderItem.getQuantityUndelivered() == 0) {
+				arguments.orderItem.setOrderItemStatusType(  getTypeService().getTypeBySystemCode("oistFulfilled") );
+				
+			// If the sku is setup to track inventory and the qoh is 0 then we can set the status to 'backordered'
+			} else if(arguments.orderItem.getSku().setting('skuTrackInventoryFlag') && arguments.orderItem.getSku().getQuantity('qoh') == 0) {
+				arguments.orderItem.setOrderItemStatusType(  getTypeService().getTypeBySystemCode("oistBackordered") );
+					
+			// Otherwise we just set this to 'processing' to show that the item is in limbo
+			} else {
+				arguments.orderItem.setOrderItemStatusType(  getTypeService().getTypeBySystemCode("oistProcessing") );
+				
+			}
+		}
+		
+	}	
+
+	// =====================  END: Status Methods ===============================
 }

@@ -912,6 +912,10 @@ component displayname="Base Object" accessors="true" output="false" {
 				var entityName = listFirst(right(listLast(arguments.messageKey, "."), len(listLast(arguments.messageKey, "."))-6), "_");
 				message = rbKey("admin.define.delete_#messageType#");
 				message = replace(message, "${itemEntityName}", rbKey("entity.#entityName#") );
+			} else if (left(listGetAt(arguments.messageKey, 3, "."), 7) == "process") {
+				var entityName = listFirst(right(listLast(arguments.messageKey, "."), len(listLast(arguments.messageKey, "."))-7), "_");
+				message = rbKey("admin.define.process_#messageType#");
+				message = replace(message, "${itemEntityName}", rbKey("entity.#entityName#") );
 			}
 		}
 		
@@ -922,6 +926,10 @@ component displayname="Base Object" accessors="true" output="false" {
 		param name="request.context.messages" default="#arrayNew(1)#";
 		
 		arrayAppend(request.context.messages, arguments);
+	}
+	
+	public string function stringReplace( required string templateString ) {
+		return getService("utilityService").replaceStringTemplate(arguments.templateString, this);
 	}
 	
 	// ===========================  END:  UTILITY METHODS ===========================================

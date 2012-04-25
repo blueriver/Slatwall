@@ -31,6 +31,13 @@ jQuery(document).ready(function() {
 		jQuery('#adminModal').load( modalLink, function(){bindFormValidation();bindTableClasses();bindUIElements();} );
 	});
 	
+	// Focus on the first tab index
+	if(jQuery('.firstfocus').length) {
+		jQuery('.firstfocus').focus();	
+	} else {
+		jQuery('input[tabindex=1]').focus();
+	}
+	
 	bindUIElements();
 	bindAlerts();
 	bindFormValidation();

@@ -39,6 +39,7 @@ Notes:
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.propertyIdentifier" type="string" />
 	<cfparam name="attributes.title" type="string" default="" />
+	<cfparam name="attributes.tdClass" type="string" default="" />
 	
 	<cfassociate basetag="cf_SlatwallProcessListing" datacollection="columns">
 </cfif>
