@@ -126,6 +126,27 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return options;
 	}
 	
+	public string function getProviderTransactionIDByTransactionType ( required any transactionType ) {
+		var returnID = "";
+		
+		if(arguments.transactionType == "credit") {
+			for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+				if(getCreditCardTransactions()[i].getAmountCharged() > 0) {
+					returnID = getCreditCardTransactions()[i].getProviderTransactionID();
+				}
+			}
+			
+		} else if (arguments.transactionType == "chargePreAuthorization") {
+			for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+				if(getCreditCardTransactions()[i].getAmountAuthorized() > getCreditCardTransactions()[i].getAmountCharged()) {
+					returnID = getCreditCardTransactions()[i].getProviderTransactionID();
+				}
+			}
+		}
+		
+		return returnID;
+	}
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -134,7 +155,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 			switch(getPaymentMethodType()) {
 				
 				case "creditCard" :
-					variables.amountReceived = getAmountCharged() - getAmountCredited();
+					variables.amountReceived = getAmountCharged();
 					break;
 				default :
 					variables.amountReceived = getAmount();
