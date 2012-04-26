@@ -49,4 +49,15 @@ component accessors="true" output="false" displayname="USPS" extends="Slatwall.i
 	public string function getDisplayName() {
 		return "USPS";
 	}
+
+	public struct function getSettings() {
+		var settings = {
+			userID = {fieldType="text", displayName="USPS Web Tools UserID"},
+			shipFromPostalCode = {fieldType="text", displayName="Shipping From Postal Code"},
+			testingFlag = {fieldType="yesno", displayName="Test Mode", settingDefault="1"},
+			useSSLFlag = {fieldType="yesno", displayName="Secure API over SSL", settingDefault="1"}
+		};
+		
+		return settings;
+	}
 }

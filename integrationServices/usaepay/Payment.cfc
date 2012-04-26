@@ -39,10 +39,6 @@ Notes:
 
 <cfcomponent accessors="true" output="false" displayname="USA epay" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" >
 	
-	<cfproperty name="key" displayname="Source Key" type="string" />
-	<cfproperty name="pin" displayname="Pin Number" type="string" />
-	<cfproperty name="testingFlag" displayname="Testing Mode" type="boolean" />
-	
 	<cffunction name="init">
 
 		<cfreturn this />
@@ -65,9 +61,9 @@ Notes:
 			<cfcase value="authorize">
 				<cfmodule template="usaepay.cfm"
 					queryname="q_auth"
-					key="#getKey()#"
-					pin="#getPin()#"
-					sandbox="#getTestingFlag()#"
+					key="#setting('key')#"
+					pin="#setting('pin')#"
+					sandbox="#setting('testingFlag')#"
 					command="authonly"
 					card="#arguments.requestBean.getCreditCardNumber()#"
 					expdate="#left(arguments.requestBean.getExpirationMonth(),2)##left(arguments.requestBean.getExpirationYear(),2)#"
@@ -85,9 +81,9 @@ Notes:
 			<cfcase value="authorizeAndCharge">
 				<cfmodule template="usaepay.cfm"
 					queryname="q_auth"
-					key="#getKey()#"
-					pin="#getPin()#"
-					sandbox="#getTestingFlag()#"
+					key="#setting('key')#"
+					pin="#setting('pin')#"
+					sandbox="#setting('testingFlag')#"
 					command="sale"
 					card="#arguments.requestBean.getCreditCardNumber()#"
 					expdate="#left(arguments.requestBean.getExpirationMonth(),2)##left(arguments.requestBean.getExpirationYear(),2)#"
@@ -106,9 +102,9 @@ Notes:
 				<!--- This needs to get changed for authorization code to show up number --->
 				<cfmodule template="usaepay.cfm"
 					queryname="q_auth"
-					key="#getKey()#"
-					pin="#getPin()#"
-					sandbox="#getTestingFlag()#"
+					key="#setting('key')#"
+					pin="#setting('pin')#"
+					sandbox="#setting('testingFlag')#"
 					command="capture"
 					refnum="#arguments.requestBean.getProviderTransactionID()#"
 					amount="#arguments.requestBean.getTransactionAmount()#"
@@ -119,9 +115,9 @@ Notes:
 			<cfcase value="credit">
 				<cfmodule template="usaepay.cfm"
 					queryname="q_auth"
-					key="#getKey()#"
-					pin="#getPin()#"
-					sandbox="#getTestingFlag()#"
+					key="#setting('key')#"
+					pin="#setting('pin')#"
+					sandbox="#setting('testingFlag')#"
 					command="refund"
 					invoice="#arguments.requestBean.getOrderID()#"
 					refnum="#arguments.requestBean.getProviderTransactionID()#"
@@ -133,9 +129,9 @@ Notes:
 			<cfcase value="void">
 				<cfmodule template="usaepay.cfm"
 					queryname="q_auth"
-					key="#getKey()#"
-					pin="#getPin()#"
-					sandbox="#getTestingFlag()#"
+					key="#setting('key')#"
+					pin="#setting('pin')#"
+					sandbox="#setting('testingFlag')#"
 					command="void"
 					invoice="#arguments.requestBean.getOrderID()#"
 					refnum="#arguments.requestBean.getProviderTransactionID()#"

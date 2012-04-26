@@ -39,12 +39,6 @@ Notes:
 
 component accessors="true" output="false" displayname="USPS" implements="Slatwall.integrationServices.ShippingInterface" extends="Slatwall.integrationServices.BaseShipping" {
 
-	// Custom Properties that need to be set by the end user
-	property name="userID" validateRequired="true" displayname="USPS Web Tools UserID" type="string";
-	property name="shipFromPostalCode" validateRequired="true" displayname="Ship From Postal Code" type="string";
-	property name="testingFlag" displayname="Testing Mode" type="boolean" default="true";
-	property name="useSSLFlag" displayname="Secure API over SSL" type="boolean" default="true";
-	
 	variables.testingURL = "https://secure.shippingapis.com/ShippingAPITest.dll";
 	variables.liveURL = "https://secure.shippingapis.com/ShippingAPI.dll";
 	
@@ -89,14 +83,14 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 		
         var requestURL = "";
         
-        if(variables.testingFlag) {
-        	if(variables.useSSLFlag) {
+        if(setting('testingFlag')) {
+        	if(setting('useSSLFlag')) {
 	        	requestURL = "https://secure.shippingapis.com/ShippingAPITest.dll?API=";
 	        } else {
 	        	requestURL = "http://testing.shippingapis.com/ShippingAPITest.dll?API=";
 	        }	
         } else {
-        	if(variables.useSSLFlag) {
+        	if(setting('useSSLFlag')) {
 	        	requestURL = "https://secure.shippingapis.com/ShippingAPI.dll?API=";
 	        } else {
 	        	requestURL = "http://production.shippingapis.com/ShippingAPI.dll?API=";
@@ -120,7 +114,7 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
         // Setup Request to push to FedEx
         var httpRequest = new http();
         httpRequest.setMethod("GET");
-        if(variables.useSSLFlag) {
+        if(setting('useSSLFlag')) {
 			httpRequest.setPort("443");
 		}else{
 			httpRequest.setPort("80");

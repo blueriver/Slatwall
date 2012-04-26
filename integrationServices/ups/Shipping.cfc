@@ -38,19 +38,6 @@ Notes:
 */
 
 component accessors="true" output="false" displayname="UPS" implements="Slatwall.integrationServices.ShippingInterface" extends="Slatwall.integrationServices.BaseShipping" {
-
-	// Custom Properties that need to be set by the end user
-	property name="apiKey" validateRequired displayname="API Key" type="string";
-	property name="username" displayname="UPS Username" type="string";
-	property name="password" displayname="UPS Password" type="string" fieldType="password";
-	property name="testingFlag" displayname="Testing Mode" type="boolean";
-	property name="shipperNumber" displayname="Shipper Number" type="string";
-	property name="shipFromCity" displayname="Ship From City" type="string";
-	property name="shipFromStateCode" displayname="Ship From State Code" type="string";
-	property name="shipFromPostalCode" displayname="Ship From Postal Code" type="string";
-	property name="shipFromCountryCode" displayname="Ship From Country Code" type="string";
-	property name="pickupTypeCode" displayname="Pickup Type Code (advanced optional)" type="string";
-	property name="customerClassificationCode" displayname="Customer Classification Code (advanced optional)" type="string";
 	
 	variables.testRateURL = "https://wwwcie.ups.com/ups.app/xml/Rate";
 	variables.liveRateURL = "https://www.ups.com/ups.app/xml/Rate";
@@ -59,16 +46,7 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 	variables.shippingMethods = {};
 
 	public any function init() {
-		setAPIKey("");
-		setUsername("");
-		setPassword("");
-		setTestingFlag(true);
-		setShipperNumber("");
-		setShipFromCity("");
-		setShipFromStateCode("");
-		setShipFromPostalCode("");
-		setShipFromCountryCode("");
-		
+
 		variables.shippingMethods = {
 			01="UPS Next Day Air",
 			02="UPS 2nd Day Air",
@@ -83,10 +61,6 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 			59="UPS 2nd Day Air A.M.",
 			65="UPS Saver"
 		};
-		
-		// Set the defaults for these codes
-		setPickupTypeCode(03);
-		setCustomerClassificationCode(04);
 		
 		return this;
 	}

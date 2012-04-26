@@ -1,8 +1,5 @@
 ﻿component accessors="true" output="false" displayname="CanadaPost" implements="Slatwall.integrationServices.ShippingInterface" extends="Slatwall.integrationServices.BaseShipping" {
 
-	// Custom Properties that need to be set by the end user
-	property name="CPCID" validateRequired="true" displayname="CPC Shipping Integration ID" type="string";
-	
 	variables.liveURL = "http://sellonline.canadapost.ca:30000";
 	
 	public any function init() {
