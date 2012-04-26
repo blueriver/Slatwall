@@ -944,8 +944,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				// Create a new Order Delivery and set the relevent values
 				var orderDelivery = this.newOrderDelivery();
-				orderDelivery.setDeliveryOpenDateTime( now() );
-				orderDelivery.setDeliveryCloseDateTime( now() ); // TODO: change close date to indicate when item was received, downloaded, picked up, etc.
 				orderDelivery.setFulfillmentMethod( arguments.orderFulfillment.getFulfillmentMethod() );
 				orderDelivery.setLocation( location );
 				

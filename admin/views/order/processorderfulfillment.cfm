@@ -40,22 +40,16 @@ Notes:
 <cfparam name="rc.processOrderFulfillmentSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 
-<cfsilent>
-	<cfset local.losl = $.slatwall.getService("locationService").getLocationSmartList() />
-	<cfset local.losl.addSelect('locationID', 'value') />
-	<cfset local.losl.addSelect('locationName', 'name') />
-	<cfset local.locationOptions = local.losl.getRecords() />
-</cfsilent>
-
 <cfoutput>
 	<cf_SlatwallProcessForm>
 		<cf_SlatwallActionBar type="process" />
 		
 		<cf_SlatwallProcessOptionBar>
-			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#local.locationOptions#" />
+			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
 			<cfif !rc.multiProcess>
 				<cf_SlatwallProcessOption data="trackingNumber" fieldType="text" />
 			</cfif>
+			<cf_SlatwallProcessOption data="processCreditCard" fieldType="yesno" />
 			<cf_SlatwallProcessOption print="packingSlip" />
 			<cf_SlatwallProcessOption email="deliveryConfirmation" />
 		</cf_SlatwallProcessOptionBar>
@@ -67,6 +61,7 @@ Notes:
 			<cf_SlatwallProcessColumn propertyIdentifier="quantity" title="Quantity Ordered" />
 			<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" title="Quantity Delivered" />
 			<cf_SlatwallProcessColumn propertyIdentifier="quantityUndelivered" title="Quantity Undelivered" />
+			<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1" />
 		</cf_SlatwallProcessListing>
 		
 	</cf_SlatwallProcessForm>

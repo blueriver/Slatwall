@@ -48,9 +48,15 @@ Notes:
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<cfloop array="#thistag.columns#" index="column">
+					<cfif !len(column.title)>
+						<cfif len(column.propertyIdentifier)>
+							<cfset column.title = attributes.processSmartList.getRecords()[1].invokeMethod("get#attributes.processRecordsProperty#").getTitleByPropertyIdentifier(column.propertyIdentifier) />
+						<cfelseif len(column.data)>
+							<cfset column.title = request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#column.data#" ) />
+						</cfif>
+					</cfif>
 					<th>#column.title#</th>
 				</cfloop>
-				<th>Quantity</th>
 			</thead>
 			<tbody>
 				<cfset hi = 0 />
@@ -61,19 +67,20 @@ Notes:
 						<tr>
 							<td class="highlight-ltblue" colspan="#arrayLen(thistag.columns) + 1#">#parentRecord.stringReplace( attributes.processHeaderString )#</td>
 						</tr>
+					<cfelse>
+						<tr style="display:none;"><input type="hidden" name="processRecords[#hi#].#parentRecord.getPrimaryIDPropertyName()#" value="#parentRecord.getPrimaryIDValue()#" /></tr>
 					</cfif>
-					<input type="hidden" name="processRecords[#hi#].#parentRecord.getPrimaryIDPropertyName()#" value="#parentRecord.getPrimaryIDValue()#" />
 					<cfset processRecords = parentRecord.invokeMethod("get#attributes.processRecordsProperty#") />
 					<cfloop array="#processRecords#" index="processRecord">
 						<cfset ri++ />
-						<tr>
+						<tr><input type="hidden" name="processRecords[#hi#].records[#ri#].#processRecord.getPrimaryIDPropertyName()#" value="#processRecord.getPrimaryIDValue()#" style="width:40px;"/>
 							<cfloop array="#thistag.columns#" index="column">
-								<td class="#column.tdClass#">#processRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<cfif len(column.propertyIdentifier)>
+									<td class="#column.tdClass#">#processRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<cfelseif len(column.data)>
+									<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value=""></td>
+								</cfif>
 							</cfloop>
-							<td class="process">
-								<input type="hidden" name="processRecords[#hi#].records[#ri#].#processRecord.getPrimaryIDPropertyName()#" value="#processRecord.getPrimaryIDValue()#" style="width:40px;"/>
-								<input type="text" name="processRecords[#hi#].records[#ri#].quantity" value="" style="width:40px;"/>
-							</td>
 						</tr>
 					</cfloop>
 				</cfloop>

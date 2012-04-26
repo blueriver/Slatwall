@@ -46,25 +46,29 @@ Notes:
 	<cfoutput>
 		<!--- set the tabindex to 1 so that the first options will start with 2 --->
 		<div class="row-fluid">
-			<cf_SlatwallPropertyList divclass="span4">
+			<cf_SlatwallPropertyList divclass="span6">
 				<h4>Process Options</h4>
 				<br />
 				<cfset hasDataOption = false>
 				<cfloop array="#thistag.options#" index="option">
 					<cfif len(option.data)>
 						<cfset hasDataOption = true />
-						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.#option.data#" fieldtype="#option.fieldtype#" valueOptions="#option.valueOptions#" title="#request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#" )#">
+						<cfset hint = request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#_hint" ) />
+						<cfif right(hint, 8) eq "_missing">
+							<cfset hint = "" />
+						</cfif>
+						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.#option.data#" fieldtype="#option.fieldtype#" valueOptions="#option.valueOptions#" title="#request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#" )#" hint="#hint#">
 					</cfif>
 				</cfloop>
 				<cfif not hasDataOption>
 					<em>#request.slatwallScope.rbKey('define.none')#</em>
 				</cfif>
 			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divclass="span4">
+			<cf_SlatwallPropertyList divclass="span6">
 				<h4>Email / Print Options</h4>
 				<br />
+				<cfset hasPrintOrEmailOption = false>
 				<cfloop array="#thistag.options#" index="option">
-					<cfset hasPrintOrEmailOption = false>
 					<cfif len(option.print)>
 						<cfset hasPrintOrEmailOption = true>
 						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.print.#option.print#" fieldtype="yesno" title="#request.slatwallScope.rbKey('define.print')# #request.slatwallScope.rbKey('print.#option.print#')#">
