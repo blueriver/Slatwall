@@ -45,6 +45,10 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
 	property name="nextRunDateTime" ormtype="timestamp";
+	property name="runningFlag" ormtype="boolean" formatType="yesno";
+	property name="timeout" ormtype="int" ;
+	property name="notificationEmails" ormtype="string";
+	property name="taskUrl" ormtype="string";
 		
 	// Related Object Properties (many-to-one)
 	property name="schedule" cfc="Schedule" fieldtype="many-to-one" fkcolumn="scheduleID";
@@ -65,10 +69,9 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	
 	// Non-Persistent Properties
 
-
-
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

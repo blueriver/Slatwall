@@ -64,6 +64,10 @@ Notes:
 				<li class="divider"></li>
 				<cf_SlatwallActionCaller action="admin:setting.listcategory" type="list">
 				<cf_SlatwallActionCaller action="admin:setting.listcontent" type="list">
+				<li class="divider"></li>
+				<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
 			</ul>
 		</div>
 	</div>

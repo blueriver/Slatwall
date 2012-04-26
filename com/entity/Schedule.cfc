@@ -93,6 +93,119 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 		return options;
 	}
 
+	public string function getNextRunDateTime(){
+		var nextRun='';
+		switch(getrecuringType()){
+			case 'Daily':
+				//task is daily
+				
+				//is the next time today?
+				if(isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
+					//currently in the run period. work out next interval
+					nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
+				}else{
+					//next time is tomorrow and start time
+					tomorrow = dateadd("d",1,now());
+					nextRun= createDateTime(year(tomorrow),month(tomorrow),day(tomorrow),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+				}
+				
+			break;
+			
+			case 'Weekly':
+				var todayNumber = dayofweek(now());
+				
+				//is the next time today?
+				if(listfind(getdaysOfWeekToRun(),dayofweek(now())) && isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
+					//it runs today. are we in the window?
+					//currently in the run period. work out next interval
+					nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
+				}else{
+					//next time is next schedule day and start time
+					var nextDay='';
+					
+					for(i=1; i <= listLen(getDaysOfWeekToRun()); i++){
+						if(listgetAt(getDaysOfWeekToRun(),i) > todayNumber){
+							nextDay=listGetAt(getDaysOfWeekToRun(),i);
+						}
+					}
+					
+					if(nextDay ==''){
+						nextDay=listgetAt(getDaysOfWeekToRun(),1);
+					}
+					
+					if(nextDay < todayNumber){
+						nextRunDay = (7-dayofweek(now())) + nextDay;
+					}else{
+						nextRunDay = nextDay - todayNumber;
+					}
+					
+					nextDay = dateadd("d",nextRunDay,now());
+					nextRun= createDateTime(year(nextDay),month(nextDay),day(nextDay),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+				}
+				
+			break;
+			
+			case 'Monthly':
+				//is the next time today?
+				if(listfind(getDaysOfMonthToRun(),day(now())) && isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
+					//it runs today. are we in the window?
+					//currently in the run period. work out next interval
+					nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
+				}else{
+					//next time is next schedule day and start time
+					
+					nextDay='';
+					
+					for(i=1; i <= listLen(getDaysOfMonthToRun()); i++){
+						if(listgetAt(getDaysOfMonthToRun(),i) > day(now)){
+							nextDay=listGetAt(getDaysOfMonthToRun(),i);
+						}
+					}
+					
+					if(nextDay==''){
+						//remember to account for new years!
+						
+						nextDay = listGetAt(getDaysOfMonthToRun,1);
+						nextRun= createDateTime(year(now()),month(now()),nextDay,hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+						nextRun = dateAdd("m",1,nextRun);
+					}else{
+						nextRun= createDateTime(year(now()),month(now()),nextDay,hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+					}
+				}	
+					
+			break;
+			
+		}
+		
+		return nextRun;
+	}
+	
+	private boolean function isBetweenHours(required startTime, required endTime, required testTime){
+		var response = false;
+		var formattedStartTime = createDateTime(year(testTime),month(testTime),day(testTime),hour(startTime),minute(startTime),second(startTime));
+		var formattedEndTime = createDateTime(year(testTime),month(testTime),day(testTime),hour(endTime),minute(endTime),second(endTime));
+		
+		if( formattedStartTime lte testTime && testTime lte formattedEndTime){
+			response=true;
+		}
+		
+		return response;
+	}	
+	
+	private function getNextTimeSlot(required startTime, required numeric interval, required targetTime){
+		var found = false;
+		var processingTime=createDateTime(year(targetTime),month(targetTime),day(targetTime),hour(startTime),minute(startTime),second(startTime));
+		
+		while(!found){
+			
+			if(processingTime gt targetTime){
+				found = true;
+			}else{
+				processingTime=dateAdd("n",interval,processingTime);
+			}
+		}
+		return processingTime;
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
