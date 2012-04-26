@@ -119,15 +119,15 @@ Notes:
 					<cfif orderFulfillment.getFulfillmentMethodType() EQ "shipping">
 						<div id="shippingAddress" style="width:190px; margin-right:10px; float:left;">
 							<strong>Shipping Address</strong><br /><br />
-							<cfif len(order.getOrderFulfillments()[1].getAddress().getName())>#order.getOrderFulfillments()[1].getAddress().getName()#<br /></cfif>
-							<cfif len(order.getOrderFulfillments()[1].getAddress().getStreetAddress())>#order.getOrderFulfillments()[1].getAddress().getStreetAddress()#<br /></cfif>
-							<cfif len(order.getOrderFulfillments()[1].getAddress().getStreet2Address())>#order.getOrderFulfillments()[1].getAddress().getStreet2Address()#<br /></cfif>
-							#order.getOrderFulfillments()[1].getAddress().getCity()#, #order.getOrderFulfillments()[1].getAddress().getStateCode()# #order.getOrderFulfillments()[1].getAddress().getPostalCode()#<br />
-							#order.getOrderFulfillments()[1].getAddress().getCountryCode()#
+							<cfif len(local.orderFulfillment.getAddress().getName())>#local.orderFulfillment.getAddress().getName()#<br /></cfif>
+							<cfif len(local.orderFulfillment.getAddress().getStreetAddress())>#local.orderFulfillment.getAddress().getStreetAddress()#<br /></cfif>
+							<cfif len(local.orderFulfillment.getAddress().getStreet2Address())>#local.orderFulfillment.getAddress().getStreet2Address()#<br /></cfif>
+							#local.orderFulfillment.getAddress().getCity()#, #local.orderFulfillment.getAddress().getStateCode()# #local.orderFulfillment.getAddress().getPostalCode()#<br />
+							#local.orderFulfillment.getAddress().getCountryCode()#
 						</div>
 						<div id="shippingMethod" style="width:190px; margin-right:10px; float:left;">
 							<strong>Shipping Method</strong><br /><br />
-							#order.getOrderFulfillments()[1].getShippingMethod().getShippingMethodName()#
+							#local.orderFulfillment.getShippingMethod().getShippingMethodName()#
 						</div>
 					<cfelseif orderFulfillment.getFulfillmentMethodType() EQ "email">
 						<div id="emailAddress" style="width:190px; margin-right:10px; float:left;">
