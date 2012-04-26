@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -38,19 +38,35 @@ Notes:
 */
 component extends="BaseService" output="false" {
 
-	public array function getDueTasks(numeric maxCount = 5){
-		return getDAO().getDueTasks(maxCount);
+	public any function executeTask( required any task, any taskSchedule ) {
+		var taskResponse = "";
+		
+		if( arguments.task.getTaskMethod() == "url") {
+			taskResponse = url( arguments.task.getTaskURL() );
+		} else {
+			taskResponse = this.invokeMethod( arguments.task.taskMethod );
+		}
+		
+		// logTaskHistorty( arguments.task, taskResults );
 	}
 	
-	public array function excecuteScheduledTasks() {
+	
+	
+	
+	// ================== Start: Task Methods ============================
+	
+	public any function url( required string url ) {
+		var response = {};
+		// Call CFHTTP for a URL
 		
-		// Get the scheduled Tasks
-		
-		// Loop over all secheduled Tasks
-		
-			// Call Execute Task on Task Service
-		
+		return response;
 	}
 	
+	public any function renewSubscriptionOrders() {
+		var response = new Slatwall.com.utility.TaskResponseBean();
+		// Do Logic
 		
+		return response;
+	}
+	
 }

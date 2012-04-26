@@ -274,6 +274,10 @@ globalEncryptionKeySize
 				settingInherited = false
 			};
 			
+			if(structKeyDefault(getSettingMetaData(arguments.settingName), "defaultValue")) {
+				settingDetails.settingValue = getSettingMetaData(arguments.settingName).defaultValue;
+			}
+			
 			// If this is a global setting there isn't much we need to do because we already know there aren't any relationships
 			if(left(arguments.settingName, 6) == "global" || left(arguments.settingName, 11) == "integration") {
 				settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName);

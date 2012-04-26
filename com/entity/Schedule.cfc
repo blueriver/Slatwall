@@ -42,13 +42,14 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	property name="scheduleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="scheduleName" ormtype="string";
 	
-	property name="recuringType" ormtype="string";			// Daily, Weekly, Monthly										Daily	
-	property name="recuringInterval" ormtype="integer";		// 1 - x														1		
-	property name="daysOfWeekToRun" ormtype="string";		// 1, 2, 3, 4, 5, 6, 7											NULL	(required if recuringType is weekly)
-	property name="daysOfMonthToRun" ormtype="string";		// 1 - 31			[1,10,20]									NULL	(required if recuringType is monthly)
-	property name="frequencyInterval" ormtype="integer";	// 1 - x (minutes)												15		
-	property name="frequencyStartTime" ormtype="timestamp";	//																4 PM	
-	property name="frequencyEndTime" ormtype="timestamp";	//																12 PM	
+	property name="recuringType" ormtype="string";										// Daily, Weekly, Monthly										Daily	
+	property name="daysOfWeekToRun" ormtype="string" formfieldType="checkboxgroup";		// 1, 2, 3, 4, 5, 6, 7											NULL	(required if recuringType is weekly)
+	property name="daysOfMonthToRun" ormtype="string" formfieldType="checkboxgroup";	// 1 - 31			[1,10,20]									NULL	(required if recuringType is monthly)
+	
+	// During an individual Day
+	property name="frequencyInterval" ormtype="integer";								// 1 - x (minutes)
+	property name="frequencyStartTime" ormtype="timestamp" formfieldType="time";		// 4 PM	
+	property name="frequencyEndTime" ormtype="timestamp" formfieldType="time";			// 12 PM	
 	
 	
 	// Related Object Properties (many-to-one)
@@ -67,25 +68,35 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
-	public struct function getRecursIntervalOptions() {
+	
+	
+	public any function init() {
+		
+	}
+	
+	public array function getRecursIntervalOptions() {
 		var options = [
-			{name="Daily", value="d"},
-			{name="Weekly", value="w"},
-			{name="Monthly", value="m"}
+			{name="Daily", value="daily"},
+			{name="Weekly", value="weekly"},
+			{name="Monthly", value="monthly"}
 		];
 		return options;
 	}
 
-	public struct function getRecursWeekDaysOptions() {
-		var options = [];
-		for(var i=1; i<=7; i++) {
-			arrayAppend(options,i) ;
-		}
+	public array function getDaysOfWeekToRunOptions() {
+		var options = [
+			{name="Sunday", value="1"},
+			{name="Monday", value="2"},
+			{name="Tuesday", value="3"},
+			{name="Wednesday", value="4"},
+			{name="Thursday", value="5"},
+			{name="Friday", value="6"},
+			{name="Saturday", value="7"}
+		];
 		return options;
 	}
 
-	public struct function getRecursMonthDaysOptions() {
+	public array function getDaysOfMonthToRunOptions() {
 		var options = [];
 		for(var i=1; i<=31; i++) {
 			arrayAppend(options,i) ;
