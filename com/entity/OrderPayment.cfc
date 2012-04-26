@@ -190,6 +190,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 				default :
 					amountAuthorized = getAmount();
 			}
+		}
 		
 		return amountAuthorized;
 	}
