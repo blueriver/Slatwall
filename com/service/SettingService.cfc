@@ -274,7 +274,7 @@ globalEncryptionKeySize
 				settingInherited = false
 			};
 			
-			if(structKeyDefault(getSettingMetaData(arguments.settingName), "defaultValue")) {
+			if(structKeyExists(getSettingMetaData(arguments.settingName), "defaultValue")) {
 				settingDetails.settingValue = getSettingMetaData(arguments.settingName).defaultValue;
 			}
 			

@@ -313,23 +313,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return allPaymentsProcessed;
 	}
 	
-	public boolean function chargeOrderPayment(any orderPayment, required string transactionID) {
-		var chargeOK = getPaymentService().processPayment(arguments.orderPayment, 
-		                                                  "chargePreAuthorization",
-		                                                  arguments.orderPayment.getAmount(),
-		                                                  arguments.transactionID);
-		if(chargeOK) {
-			// set status of the order
-			var order = arguments.orderPayment.getOrder();
-			if(order.getQuantityUndelivered() gt 0)	{
-				order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
-			} else {
-				order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
-			}
-		}
-		return chargeOK;
-	}
-	
 	public any function processOrder(struct data={}) {
 		var processOK = false;
 		
@@ -933,6 +916,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	// ===================== START: Process Methods ================================
 	
+	
+	// Process: Order Fulfillment
 	public any function processOrderFulfillment(required any orderFulfillment, struct data={}, string processContext="process") {
 		
 		// Make sure that a location was passed in
@@ -1040,6 +1025,20 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		return arguments.orderFulfillment;
 	}
+	
+	// Process: Order Payment
+	public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
+		
+		if(structKeyExists(arguments.data, "amount") && structKeyExists(arguments.data, "trasactionType")) {
+			if( !structKeyExists(arguments.data, "providerTransactionID") ) {
+				arguments.orderPayment.getPropperProviderTransactionID( arguments.transactionType );
+			}
+			getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount);	
+		}
+		
+		return arguments.orderPayment;
+	}
+	
 	
 	// =====================  END: Process Methods ==============================
 	

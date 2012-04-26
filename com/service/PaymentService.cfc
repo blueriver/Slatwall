@@ -49,7 +49,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		];
 	}
 	
-	public boolean function processPayment(required any orderPayment, required string transactionType, numeric transactionAmount, string providerTransactionID="") {
+	public boolean function processPayment(required any orderPayment, required string transactionType, required numeric transactionAmount, string providerTransactionID="") {
 		// Lock down this determination so that the values getting called and set don't overlap
 		lock scope="Session" timeout="45" {
 			// Get the relavent info and objects for this order payment
@@ -59,13 +59,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			if(arguments.orderPayment.getPaymentMethodType() eq "creditCard") {
 				// Setup the actuall processing information
-				if(!structKeyExists(arguments, "transactionAmount")) {
-					arguments.transactionAmount = arguments.orderPayment.getAmount();
-				}
-					
+				
+				
 				// Chech if it's a duplicate transaction. Determination is made based on matching
 				// transactionType and transactionAmount for this payment in last 60 sec.
-			
 				var isDuplicateTransaction = getDAO().isDuplicateCreditCardTransaction(orderPaymentID=arguments.orderPayment.getOrderPaymentID(),transactionType=arguments.transactionType,transactionAmount=arguments.transactionAmount);
 				if(isDuplicateTransaction){
 					processOK = true;
@@ -87,9 +84,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					requestBean.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
 					
 					requestBean.setTransactionID(transaction.getCreditCardTransactionID());
-					requestBean.setTransactionType(arguments.transactionType);
-					requestBean.setTransactionAmount(arguments.transactionAmount);
-					requestBean.setProviderTransactionID(arguments.providerTransactionID);
+					requestBean.setTransactionType( arguments.transactionType );
+					requestBean.setTransactionAmount( arguments.transactionAmount );
+					requestBean.setProviderTransactionID( arguments.providerTransactionID );
+					
 					requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
 					
 					// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
