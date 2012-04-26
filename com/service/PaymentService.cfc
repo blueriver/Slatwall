@@ -42,13 +42,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="sessionService" type="any";
 	property name="settingService" type="any";
 	
-	public array function getCreditCardProcessTransactionTypeOptions() {
-		return [
-			{name='chargePreAuthorization', value='chargePreAuthorization'},
-			{name='credit', value='credit'}
-		];
-	}
-	
 	public boolean function processPayment(required any orderPayment, required string transactionType, required numeric transactionAmount, string providerTransactionID="") {
 		// Lock down this determination so that the values getting called and set don't overlap
 		lock scope="Session" timeout="45" {
@@ -58,9 +51,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var providerService = getIntegrationService().getPaymentIntegrationCFC(paymentMethod.getIntegration());
 			
 			if(arguments.orderPayment.getPaymentMethodType() eq "creditCard") {
-				// Setup the actuall processing information
-				
-				
 				// Chech if it's a duplicate transaction. Determination is made based on matching
 				// transactionType and transactionAmount for this payment in last 60 sec.
 				var isDuplicateTransaction = getDAO().isDuplicateCreditCardTransaction(orderPaymentID=arguments.orderPayment.getOrderPaymentID(),transactionType=arguments.transactionType,transactionAmount=arguments.transactionAmount);

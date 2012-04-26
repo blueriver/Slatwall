@@ -100,105 +100,98 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return getPaymentMethod().getPaymentMethodType();
 	}
 
-	public string function getAuthorizationCodes() {
-		var transactions = getCreditCardTransactions();
-		var authCodes = "";
-		for(var thisTransaction in transactions) {
-			if(!listFind(authCodes,thisTransaction.getAuthorizationCode())) {
-				authCodes = listAppend(authCodes,thisTransaction.getAuthorizationCode());
-			}
-		}
-		return authCodes;
-	}
-	
 	public array function getProcessTransactionTypeOptions() {
 		var options = [];
-		if(getAmountReceived() < getAmountAuthorized()) {
-			arrayAppend(options, {value='chargePreAuthorization', name='Charge Pre-Authroization'});
-		}
-		if(getAmountAuthorized() == 0) {
-			arrayAppend(options, {value='authorizeAndCharge', name='Authorize & Charge'});
-			arrayAppend(options, {value='authorize', name='Authorize'});
-		}
-		if(getAmountReceived() > 0) {
-			arrayAppend(options, {value='credit', name='Credit'});
-		}
-		return options;
-	}
-	
-	public string function getProviderTransactionIDByTransactionType ( required any transactionType ) {
-		var returnID = "";
 		
-		if(arguments.transactionType == "credit") {
-			for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-				if(getCreditCardTransactions()[i].getAmountCharged() > 0) {
-					returnID = getCreditCardTransactions()[i].getProviderTransactionID();
-				}
+		// Charge Payments
+		if( getOrderPaymentType().getSystemCode() == "optCharge" ) {
+			if( getAmountReceived() < getAmountAuthorized() ) {
+				arrayAppend(options, {value='chargePreAuthorization', name='Charge Pre-Authroization'});
+			}
+			if( getAmountReceived() < getAmount() ) {
+				arrayAppend(options, {value='authorizeAndCharge', name='Authorize & Charge'});	
+			}
+			if(getAmountReceived() < getAmount() && getAmountAuthorized() < getAmount()) {
+				arrayAppend(options, {value='authorize', name='Authorize'});	
 			}
 			
-		} else if (arguments.transactionType == "chargePreAuthorization") {
-			for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-				if(getCreditCardTransactions()[i].getAmountAuthorized() > getCreditCardTransactions()[i].getAmountCharged()) {
-					returnID = getCreditCardTransactions()[i].getProviderTransactionID();
-				}
+		// Credit Payments
+		} else {
+			if( getAmountCredited() < getAmount() ) {
+				arrayAppend(options, {value='credit', name='Credit'});
 			}
 		}
 		
-		return returnID;
+		return options;
 	}
-	
+		
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public numeric function getAmountReceived() {
-		if(!structKeyExists(variables, "amountReceived")) {
-			switch(getPaymentMethodType()) {
-				
-				case "creditCard" :
-					variables.amountReceived = getAmountCharged();
-					break;
-				default :
-					variables.amountReceived = getAmount();
-			}
-		}
-		return variables.amountReceived;
-	}
-	
-	public numeric function getAmountAuthorized() {
-		if(!structKeyExists(variables, "amountAuthorized")) {
+		var amountReceived = 0;
+		
+		// We only show 'received' for charged payments
+		if( getOrderPaymentType().getSystemCode() == "optCharge" ) {
 			switch(getPaymentMethodType()) {
 			
 				case "creditCard" :
-					variables.amountAuthorized = 0;
 					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-						variables.amountAuthorized += getCreditCardTransactions()[i].getAmountAuthorized();
+						amountReceived += getCreditCardTransactions()[i].getAmountCharged();
 					}
 					break;
+					
 				default :
-					variables.amountAuthorized = getAmount();
+					amountReceived = getAmount();
+					
 			}
 		}
-		return variables.amountAuthorized;
-	}
-	
-	public numeric function getAmountCharged() {
-		if(!structKeyExists(variables, "amountCharged")) {
-			variables.amountCharged = 0;
-			for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-				variables.amountCharged += getCreditCardTransactions()[i].getAmountCharged();
-			}
-		}
-		return variables.amountCharged;
+				
+		return amountReceived;
 	}
 	
 	public numeric function getAmountCredited() {
-		if(!structKeyExists(variables, "amountCredited")) {
-			variables.amountCredited = 0;
-			for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-				variables.amountCredited += getCreditCardTransactions()[i].getAmountCredited();
+		var amountCredited = 0;
+		
+		// We only show 'credited' for credited payments
+		if( getOrderPaymentType().getSystemCode() == "optCredit" ) {
+			switch(getPaymentMethodType()) {
+				
+				case "creditCard" :
+					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+						amountCredited += getCreditCardTransactions()[i].getAmountCredited();
+					}
+					break;
+					
+				default :
+					amountCredited = getAmount();
 			}
-			return variables.amountCredited;
 		}
+			
+		return amountCredited;
+	}
+	
+	// Credit Card & Check Specific
+	public numeric function getAmountAuthorized() {
+		var amountAuthorized = 0;
+		
+		// We only show 'credited' for credited payments
+		if( getOrderPaymentType().getSystemCode() == "optCredit" ) {
+			
+			switch(getPaymentMethodType()) {
+			
+				case "creditCard" :
+					amountAuthorized = 0;
+					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+						amountAuthorized += getCreditCardTransactions()[i].getAmountAuthorized();
+					}
+					break;
+					
+				default :
+					amountAuthorized = getAmount();
+			}
+		
+		return amountAuthorized;
 	}
 	
 	public string function getExpirationDate() {
@@ -249,7 +242,6 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
-	
 	
 	public void function setCreditCardNumber(required string creditCardNumber) {
 		variables.creditCardNumber = arguments.creditCardNumber;

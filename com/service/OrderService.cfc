@@ -818,7 +818,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				if(order.getTotal() < 0){
 					// Find the orginal orderpayment credit card transaction where charge is gt 0
 					for(var t=1; t<=arrayLen(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()); t++) {
-						if(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getAmountCharged() gt 0) {
+						if(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getAmountReceived() gt 0) {
 							refundRequired = true;
 							
 							// Create a new order Payment based on the original order payment
@@ -1029,11 +1029,75 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	// Process: Order Payment
 	public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
 		
+		// First we verify that the two keys we need are in the data
 		if(structKeyExists(arguments.data, "amount") && structKeyExists(arguments.data, "trasactionType")) {
-			if( !structKeyExists(arguments.data, "providerTransactionID") ) {
-				arguments.orderPayment.getPropperProviderTransactionID( arguments.transactionType );
+			param name="arguments.data.providerTransactionID" default="";
+			
+			var maxAuthroizable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountReceived() - arguments.orderPayment.getAmountAuthroized();
+			var maxChargable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountReceived();
+			var maxCapturable = arguments.orderPayment.getAmountAuthorized() - arguments.orderPayment.getAmountReceived();
+			var maxCreditable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountCredited();
+			
+			// Authorize 
+			if( arguments.transactionType == "authorize" && maxCapturable >= arguments.data.amount && getOrderPaymentType().getSystemCode() == "optCharge") {
+				
+				getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount);
+			
+			// Authorize & Charge 
+			} else if (arguments.transactionType == "authorizeAndCharge" && maxChargable >= arguments.data.amount && getOrderPaymentType().getSystemCode() == "optCharge") {
+			
+				getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount);
+			
+			// Capture Pre-Authorization 
+			} else if (arguments.transactionType == "chargePreAuthorization" && maxCapturable >= arguments.data.amount && getOrderPaymentType().getSystemCode() == "optCharge") {
+				
+				// If not explicitly defined providerTransactionID was passed in, then we can loop over previous transactions for authroization codes to capture the amount we need.
+				if(!structKeyExists(arguments.data, "providerTransactionID")) {
+					var totalCaptured = 0;
+					
+					for(var i=1; i<=arrayLen(arguments.orderPayment.getCreditCardTransactions()); i++) {
+						var originalTransaction = arguments.orderPayment.getCreditCardTransactions()[i];
+						if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
+							var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
+							
+							if(arguments.data.amount - totalCaptured > capturableAmount) {
+								capturableAmount = totalCaptured - arguments.data.amount;
+							}
+							
+							var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, capturableAmount, arguments.data.providerTransactionID);
+							
+							if(paymentOK) {
+								totalCaptured += capturableAmount;
+							}
+							
+							// If some payments failed but the total was finally captured, then we can can remove any processing errors
+							if(totalCaptured == arguments.data.amount) {
+								structDelete(arguments.orderPayment.getErrors(), 'processing');
+								break;
+							}
+						}
+						
+					}
+
+				// If a providerID was passed in, then we can just use it.
+				} else {
+					var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount, arguments.data.providerTransactionID);
+				}
+				
+				
+			// Credit 
+			} else if (arguments.transactionType == "credit" && maxCreditable >= arguments.data.amount && getOrderPaymentType().getSystemCode() == "optCredit") {
+				
+				getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount, arguments.data.providerTransactionID);		
+			
+			// Error 
+			} else {
+				arguments.orderPayment.addError('processing', 'The amount you specified is greater than the amount you can process for this transaction type.');	
 			}
-			getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount);	
+			
+				
+		} else {
+			arguments.orderPayment.addError('processing', 'You attempted to process an order payment be either a transactionType or an amount was not defined.');
 		}
 		
 		return arguments.orderPayment;
