@@ -41,7 +41,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	// Persistent Properties
 	property name="priceGroupRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="globalFlag" ormType="boolean" default="false";
-	property name="amount" ormType="big_decimal";
+	property name="amount" ormType="big_decimal" formatType="custom";
 	property name="amountType" ormType="string" formFieldType="select";
 	property name="percentageOff" ormType="big_decimal"; //to be removed
 	property name="amountOff" ormType="big_decimal"; //to be removed
@@ -261,6 +261,14 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	
 	// ================== START: Overridden Methods ========================
 	
+	public string function getAmountFormatted() {
+		if(getAmountType() == "percentageOff") {
+			return getAmount() & "%";
+		} else {
+			return formatValue(getAmount(),"currency");
+		}
+	}
+
 	public string function getSimpleRepresentationPropertyName() {
 		return "appliesTo";
 	}
