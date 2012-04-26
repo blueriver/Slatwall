@@ -40,7 +40,7 @@
 		<cfscript>
 			var input		= $loadJavaClass('java.io.StringReader').init(arguments.source);
 			var output		= $loadJavaClass('java.io.StringWriter').init();
-			var reporter    = $loadJavaClass('Slatwall.org.cfstatic.SimpleErrorReporter').init();
+			var reporter    = $loadJavaClass('org.cfstatic.SimpleErrorReporter').init();
 			var compressor	= "";
 			var compressed	= "";
 			
