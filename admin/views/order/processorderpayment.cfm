@@ -40,16 +40,30 @@ Notes:
 <cfparam name="rc.processOrderPaymentSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 
+<cfset rc.orderPayment = rc.processOrderPaymentSmartList.getRecords()[1] />
+
+<cfset rc.defaultValue = 0 />
+<cfif rc.orderPayment.getAmountReceived() lt rc.orderPayment.getAmountAuthorized() >
+	<cfset rc.defaultValue = rc.orderPayment.getAmountAuthorized() - rc.orderPayment.getAmountReceived() />
+<cfelseif rc.orderPayment.getAmountReceived() eq rc.orderPayment.getAmountAuthorized()>
+	<cfset rc.defaultValue = rc.orderPayment.getAmount() - rc.orderPayment.getAmountReceived() />
+</cfif>
+
 <cfoutput>
 	<cf_SlatwallProcessForm>
+		
 		<cf_SlatwallActionBar type="process" />
 		
 		<cf_SlatwallProcessOptionBar>
-			
+			<cf_SlatwallProcessOption data="transactionType" fieldType="select" valueOptions="#rc.orderPayment.getProcessTransactionTypeOptions()#" />
 		</cf_SlatwallProcessOptionBar>
 		
 		<cf_SlatwallProcessListing processSmartList="#rc.processOrderPaymentSmartList#">
-			
+			<cf_SlatwallProcessColumn propertyIdentifier="creditCardLastFour" />
+			<cf_SlatwallProcessColumn propertyIdentifier="amount" />
+			<cf_SlatwallProcessColumn propertyIdentifier="amountAuthorized" />
+			<cf_SlatwallProcessColumn propertyIdentifier="amountReceived" />
+			<cf_SlatwallProcessColumn data="amount" fieldType="text" fieldClass="span2 number" value="#rc.defaultValue#" />
 		</cf_SlatwallProcessListing>
 		
 	</cf_SlatwallProcessForm>

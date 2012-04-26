@@ -42,6 +42,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="sessionService" type="any";
 	property name="settingService" type="any";
 	
+	public array function getCreditCardProcessTransactionTypeOptions() {
+		return [
+			{name='chargePreAuthorization', value='chargePreAuthorization'},
+			{name='credit', value='credit'}
+		];
+	}
+	
 	public boolean function processPayment(required any orderPayment, required string transactionType, numeric transactionAmount, string providerTransactionID="") {
 		// Lock down this determination so that the values getting called and set don't overlap
 		lock scope="Session" timeout="45" {
