@@ -36,3 +36,10 @@
 Notes:
 
 --->
+<cfparam name="params.orderFulfillment" type="any" />
+<cfparam name="params.orderFulfillmentIndex" type="string" />
+<cfparam name="params.edit" type="boolean" />
+
+<cfoutput>
+	<input type="hidden" name="orderFulfillments[#params.orderFulfillmentIndex#].orderFulfillmentID" value="#params.orderFulfillment.getOrderFulfillmentID()#" />
+</cfoutput>

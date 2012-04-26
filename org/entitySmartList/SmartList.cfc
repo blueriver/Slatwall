@@ -49,6 +49,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	property name="cacheable" type="boolean";
 	property name="cacheName" type="string";
 	
+	property name="records" type="array";
+	
 	// Delimiter Settings
 	variables.subEntityDelimiters = "._";
 	variables.valueDelimiter = ",";

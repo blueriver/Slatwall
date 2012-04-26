@@ -54,6 +54,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

@@ -67,11 +67,18 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 		return options;
 	}
 	
+	public array function getProviderGatewayOptions() {
+		var optionsSL = getService("integrationService").getIntegrationSmartList();
+		optionsSL.addFilter('paymentActiveFlag', '1');
+		optionsSL.addSelect('integrationName', 'name');
+		optionsSL.addSelect('integrationPackage', 'value');
+		return optionsSL.getRecords();
+	}
+	
 	public any function getIntegration() {
 		return getService("integrationService").getIntegrationByIntegrationPackage(getProviderGateway());
 	}
 	
-	    
 
 	// ============ START: Non-Persistent Property Methods =================
 	

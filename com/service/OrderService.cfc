@@ -387,7 +387,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							// Look for 'auto' order fulfillments
 							for(var i=1; i<=arrayLen(order.getOrderFulfillments()); i++) {
 								if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto") {
-									processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocationID')});
+									processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')});
 								}
 							}
 							
@@ -957,7 +957,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						if(!structKeyExists(arguments.data, "records")) {
 							arguments.data.records = [];
 							for(var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
-								arrayAppend(arguments.data.records, {orderItemID=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID, quantity=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getQuantityUndelivered()});
+								arrayAppend(arguments.data.records, {orderItemID=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID(), quantity=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getQuantityUndelivered()});
 							}
 						}
 						break;
@@ -1026,13 +1026,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				} else {
 					// TODO: add the errors to the fulfillment so that they can be displayed on the front-end
 					arguments.orderFulfillment.addError('orderDelivery', 'There was an unknown error when creating the orderDelivery for this fulfillment');
+					getSlatwallScope().setORMHasErrors( true );
 				}
 				
 			} else {
 				arguments.orderFulfillment.addError('location', 'The Location id that was passed in does not represent a valid location');	
+				getSlatwallScope().setORMHasErrors( true );
 			}
 		} else {
 			arguments.orderFulfillment.addError('location', 'No Location was passed in');
+			getSlatwallScope().setORMHasErrors( true );
 		}
 		
 		return arguments.orderFulfillment;
@@ -1047,7 +1050,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(!listFindNoCase("ostNotPlaced,ostOnHold,ostClosed,ostCanceled", arguments.order.getOrderStatusType().getSystemCode())) {
 			
 			// We can check to see if all the items have been delivered and the payments have all been received then we can close this order
-			if(arguments.order.getPaymentAmountReceivedTotal() == arguments.order.getTotal() && getQuantityUndelivered() == 0)	{
+			if(arguments.order.getPaymentAmountReceivedTotal() == arguments.order.getTotal() && arguments.order.getQuantityUndelivered() == 0)	{
 				arguments.order.setOrderStatusType(  getTypeService().getTypeBySystemCode("ostClosed") );
 				
 			// The default case is just to set it to processing

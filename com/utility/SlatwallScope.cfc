@@ -107,9 +107,9 @@ component accessors="true" output="false" extends="BaseObject" {
 			variables.currentProductSmartList.addFilter('activeFlag', 1);
 			variables.currentProductSmartList.addFilter('publishedFlag', 1);
 			if(isBoolean(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) && getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
-				variables.currentProductSmartList.addLikeFilter('listingPages.cmsContentIDPath', getCurrentContent().getCMSContentID());	
+				variables.currentProductSmartList.addLikeFilter('listingPages.cmsContentIDPath', '%#getCurrentContent().getCMSContentID()#%');	
 			} else {
-				variables.currentProductSmartList.addLikeFilter('listingPages.cmsContentID', getCurrentContent().getCMSContentID());
+				variables.currentProductSmartList.addFilter('listingPages.cmsContentID', getCurrentContent().getCMSContentID());
 			}
 		}
 		return variables.currentProductSmartList;

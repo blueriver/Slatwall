@@ -303,12 +303,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getQuantityDelivered() {
-		if(!structKeyExists(variables,"quantityDelivered")) {
-			var orderItems = getOrderItems();
-			var variables.quantityDelivered = 0;
-			for(var i=1; i<=arrayLen(orderitems); i++) {
-				variables.quantityDelivered += orderItems[i].getQuantityDelivered();
-			}
+		var orderItems = getOrderItems();
+		var variables.quantityDelivered = 0;
+		for(var i=1; i<=arrayLen(orderitems); i++) {
+			variables.quantityDelivered += orderItems[i].getQuantityDelivered();
 		}
 		return variables.quantityDelivered;
 	}
