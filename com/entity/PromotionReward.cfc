@@ -40,7 +40,7 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="amount" ormType="big_decimal";
+	property name="amount" ormType="big_decimal" formatType="custom";
 	property name="amountType" ormType="string" formFieldType="select";
 	property name="amountOff" ormType="big_decimal";
 	property name="percentageOff" ormType="big_decimal";
@@ -146,6 +146,14 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	// ================== START: Overridden Methods ========================
 	
+	public string function getAmountFormatted() {
+		if(getAmountType() == "percentageOff") {
+			return getAmount() & "%";
+		} else {
+			return formatValue(getAmount(),"currency");
+		}
+	}
+
 	public string function getSimpleRepresentationPropertyName() {
 		return "rewards";
 	}

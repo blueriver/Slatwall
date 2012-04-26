@@ -49,4 +49,15 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 	public string function getDisplayName() {
 		return "SagePay";
 	}
+
+	public struct function getSettings() {
+		var settings = {
+			vendorID = {fieldType="text", displayName="Vendor ID"},
+			currency = {fieldType="text", displayName="Currency"},
+			simulatorMode = {fieldType="yesno", displayName="Simulator Mode?", settingDefault="1"},
+			testMode = {fieldType="yesno", displayName="Test Mode?", settingDefault="1"}
+		};
+		
+		return settings;
+	}
 }
