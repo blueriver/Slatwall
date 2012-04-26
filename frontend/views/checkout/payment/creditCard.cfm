@@ -40,6 +40,8 @@ Notes:
 <cfparam name="params.orderPayment" type="any" />
 <cfparam name="params.orderPaymentIndex" type="string" />
 <cfparam name="params.paymentMethod" type="any" />
+<cfparam name="rc['orderPayments[#params.orderPaymentIndex#].expirationMonth']" default="" />
+<cfparam name="rc['orderPayments[#params.orderPaymentIndex#].expirationYear']" default="" />
 
 <cfset local.sameAsShipping = false>
 
@@ -82,12 +84,14 @@ Notes:
 				<dd id="spdcreditcardexpirationdate">
 					<select name="orderPayments[#params.orderPaymentIndex#].expirationMonth" tabIndex="#rc.tabIndex++#">
 						<cfloop from="1" to="12" index="i">
-							<option value="#numberFormat(i,'00')#">#numberFormat(i,'00')#</option>
+							<cfset local.thisMonth = numberFormat(i,'00') />
+							<option value="#local.thisMonth#" <cfif rc["orderPayments[#params.orderPaymentIndex#].expirationMonth"] EQ local.thisMonth>selected</cfif>>#local.thisMonth#</option>
 						</cfloop>
 					</select> / 
 					<select name="orderPayments[#params.orderPaymentIndex#].expirationYear" tabIndex="#rc.tabIndex++#">
 						<cfloop from="0" to="10" index="i">
-							<option value="#right(year(now()),2)+i#">20#right(year(now()),2)+i#</option>
+							<cfset local.thisYear = right(year(now()),2) + i />
+							<option value="#local.thisYear#" <cfif rc["orderPayments[#params.orderPaymentIndex#].expirationYear"] EQ local.thisYear>selected</cfif>>20#local.thisYear#</option>
 						</cfloop>
 					</select>
 				</dd>
