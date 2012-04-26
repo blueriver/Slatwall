@@ -38,8 +38,17 @@ Notes:
 --->
 <cfparam name="rc.edit" type="string" default="" />
 <cfparam name="rc.orderRequirementsList" type="string" default="" />
+<cfparam name="rc.showFulfillment" type="string" default="false" />
 
-<cfoutput>
+<!--- if the only fulfillment is auto, don't display anything --->
+<cfloop array="#request.slatwallScope.cart().getOrderFulfillments()#" index="local.fulfillment">
+	<cfif local.fulfillment.getFulfillmentMEthodType() NEQ "auto">
+		<cfset rc.showFulfillment = true />
+		<cfbreak />
+	</cfif>
+</cfloop>
+<cfif rc.showFulfillment>
+	<cfoutput>
 	<div class="svocheckoutfulfillment">
 		<h3 id="checkoutFulfillmentTitle" class="titleBlick">Delivery<cfif not listFind(rc.orderRequirementsList, 'fulfillment')> <a href="?edit=fulfillment">Edit</a></cfif></h3>
 		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" or rc.edit eq "fulfillment")>
@@ -83,4 +92,5 @@ Notes:
 			</div>
 		</cfif>
 	</div>
-</cfoutput>
+	</cfoutput>
+</cfif>
