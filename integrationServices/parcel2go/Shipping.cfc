@@ -39,19 +39,10 @@ Notes:
 
 component accessors="true" output="false" displayname="parcel2go" implements="Slatwall.integrationServices.ShippingInterface" extends="Slatwall.integrationServices.BaseShipping" {
 
-	// Custom Properties that need to be set by the end user
-	property name="apiKey" validateRequired displayname="API Key" type="string";
-	property name="shipFromCountryCode" displayname="Shippers Country Code" type="string";
-	property name="shipFromPostalCode" displayname="Shippers Postal Code" type="string";
-	
 	variables.liveRateURL = "https://v3.api.parcel2go.com/ParcelService.asmx";
 	
 	public any function init() {
-		variables.shippingMethods=[] ;
-		
-		setAPIKey("");
-		setShipFromCountryCode("");
-		setShipFromPostalCode("");
+		variables.shippingMethods=[];
 		
 		return this;
 	}

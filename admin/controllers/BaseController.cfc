@@ -51,6 +51,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	
 	public void function subSystemBefore(required struct rc) {
 		param name="rc.modal" default="false";
+		param name="rc.edit" default="false";
 		
 		// Check to see if any message keys were passed via the URL
 		if(structKeyExists(rc, "messageKeys")) {

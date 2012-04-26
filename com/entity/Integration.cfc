@@ -61,6 +61,15 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 		if(isNull(variables.installedFlag)) {
 			variables.installedFlag = 0;
 		}
+		if(isNull(variables.customReadyFlag)) {
+			variables.customReadyFlag = 0;
+		}
+		if(isNull(variables.paymentReadyFlag)) {
+			variables.paymentReadyFlag = 0;
+		}
+		if(isNull(variables.shippingReadyFlag)) {
+			variables.shippingReadyFlag = 0;
+		}
 		
 		return super.init();
 	}

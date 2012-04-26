@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,25 +36,24 @@
 Notes:
 
 */
-component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Task Schedule" entityname="SlatwallTaskSchedule" table="SlatwallTaskSchedule" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="taskID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="activeFlag" ormtype="boolean" formatType="yesno";
-	property name="taskName" ormtype="string";
-	property name="taskMethod" ormtype="string";
-	property name="taskUrl" ormtype="string";
-	property name="runningFlag" ormtype="boolean" formatType="yesno";
-	property name="timeout" ormtype="int" ;
+	property name="taskScheduleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="startDateTime" ormtype="timestamp";
+	property name="endDateTime" ormtype="timestamp";
+	property name="nextRunDateTime" ormtype="timestamp";
+	property name="failureEmailList" ormtype="string";
+	property name="successEmailList" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	
+	property name="schedule" cfc="Schedule" fieldtype="many-to-one" fkcolumn="scheduleID";
 	
 	// Related Object Properties (one-to-many)
-	property name="taskHistory" cfc="TaskHistory" type="array" fieldtype="one-to-many" fkcolumn="taskID" cascade="all-delete-orphan" inverse="true";
-	property name="taskSchedules" singularname="taskSchedule" cfc="TaskSchedule" type="array" fieldtype="one-to-many" fkcolumn="taskID" cascade="all-delete-orphan" inverse="true";
 	
-	// Related Object Properties (many-to-many)
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -67,23 +66,24 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	
 	// Non-Persistent Properties
 
+
+
 	
 	// ============ START: Non-Persistent Property Methods =================
-	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Task history (one-to-many)    
-	public void function addTaskHistory(required any taskHistory) {    
-		arguments.taskHistory.settaskHistoryID( this );    
-	}    
-	public void function removeTaskHistory(required any taskHistory) {    
-		arguments.taskHistory.removetaskHistoryID( this );    
-	}
-    	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
 	

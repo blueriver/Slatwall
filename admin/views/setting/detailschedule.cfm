@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.schedule#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.schedule#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.schedule#" edit="#rc.edit#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>

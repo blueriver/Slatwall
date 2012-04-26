@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 
-	<cf_slatwallactionbar type="listing" object="#rc.scheduleSmartList#" createmodal="false"/>
+	<cf_slatwallactionbar type="listing" object="#rc.scheduleSmartList#" />
 
 	<cf_slatwalllistingdisplay smartlist="#rc.scheduleSmartList#" 
 	                           recordeditaction="admin:setting.editschedule" 

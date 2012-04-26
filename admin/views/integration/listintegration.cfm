@@ -44,8 +44,8 @@ Notes:
 	
 	<cf_SlatwallListingDisplay smartList="#rc.integrationSmartList#" recordEditAction="admin:integration.editintegration">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="integrationName" />
-		<cf_SlatwallListingColumn propertyIdentifier="paymentActiveFlag" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="shippingActiveFlag" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="paymentActiveFlag" />
+		<cf_SlatwallListingColumn propertyIdentifier="shippingActiveFlag" />
 	</cf_SlatwallListingDisplay>
 
 </cfoutput>

@@ -47,6 +47,7 @@ component displayname="Task History" entityname="SlatwallTaskHistory" table="Sla
 	
 	// Related Object Properties (many-to-one)
 	property name="task" cfc="Task" fieldtype="many-to-one" fkcolumn="taskID";
+	property name="taskSchedule" cfc="TaskSchedule" fieldtype="many-to-one" fkcolumn="taskScheduleID";
 	
 	// Related Object Properties (one-to-many)
 	
