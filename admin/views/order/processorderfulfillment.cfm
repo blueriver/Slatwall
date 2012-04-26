@@ -61,7 +61,7 @@ Notes:
 			<cf_SlatwallProcessColumn propertyIdentifier="quantity" title="Quantity Ordered" />
 			<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" title="Quantity Delivered" />
 			<cf_SlatwallProcessColumn propertyIdentifier="quantityUndelivered" title="Quantity Undelivered" />
-			<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1" />
+			<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
 		</cf_SlatwallProcessListing>
 		
 	</cf_SlatwallProcessForm>

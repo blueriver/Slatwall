@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -33,26 +33,34 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
-
-*/
-component displayname="Order Item Status Action" entityname="SlatwallOrderItemStatusAction" table="SlatwallOrderItemStatusAction" persistent="true" output="false" accessors="true" extends="OrderItemStatusActionAbstract" discriminatorvalue="global" {
-
-	    
-
-	// ============ START: Non-Persistent Property Methods =================
+	Notes:
 	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-	
-	// ================== START: Overridden Methods ========================
-	
-	// ==================  END:  Overridden Methods ========================
-	
-	// =================== START: ORM Event Hooks  =========================
-	
-	// ===================  END:  ORM Event Hooks  =========================
-}
+--->
+<cfoutput>
+	<?xml version="1.0" encoding="utf-8"?>
+	<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	  <soap:Body>
+	    <GetQuotes xmlns="https://v3.api.parcel2go.com/">
+	      <shipment>
+	        <CollectionAddress>
+	          <CountryCode>#variables.shipFromCountryCode#</CountryCode>
+	          <PostalCode>#variables.shipFromPostalCode#</PostalCode>
+	        </CollectionAddress>
+	        <DeliveryAddress>
+	          <CountryCode>#arguments.requestBean.getShipToCountryCode()#</CountryCode>
+	          <PostalCode>#arguments.requestBean.getShipToPostalCode()#</PostalCode>
+	        </DeliveryAddress>
+	        <Parcels>
+	          <Parcel>
+	            <Weight>#totalItemsWeight#</Weight>
+	            <Length>1</Length>
+	            <Width>1</Width>
+	            <Height>1</Height>
+	          </Parcel>
+	        </Parcels>
+	      </shipment>
+	      <apiKey>variables.apikey</apiKey>
+	    </GetQuotes>
+	  </soap:Body>
+	</soap:Envelope>
+</cfoutput>

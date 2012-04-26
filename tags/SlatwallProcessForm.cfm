@@ -57,7 +57,7 @@ Notes:
 				<div class="modal-footer">
 					<div class="btn-group">
 						<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.cancel')#</a>
-						<button type="submit" class="btn btn-success"><i class="icon-cog icon-white"></i> #request.slatwallScope.rbKey('define.process')#</button>
+						<button type="submit" class="btn btn-primary"><i class="icon-cog icon-white"></i> #request.slatwallScope.rbKey('define.process')#</button>
 					</div>
 				</div>
 			</cfif>

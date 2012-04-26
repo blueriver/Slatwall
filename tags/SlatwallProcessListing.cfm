@@ -49,8 +49,10 @@ Notes:
 			<thead>
 				<cfloop array="#thistag.columns#" index="column">
 					<cfif !len(column.title)>
-						<cfif len(column.propertyIdentifier)>
+						<cfif len(column.propertyIdentifier) && len(attributes.processRecordsProperty)>
 							<cfset column.title = attributes.processSmartList.getRecords()[1].invokeMethod("get#attributes.processRecordsProperty#").getTitleByPropertyIdentifier(column.propertyIdentifier) />
+						<cfelseif len(column.propertyIdentifier)>
+							<cfset column.title = attributes.processSmartList.getRecords()[1].getTitleByPropertyIdentifier(column.propertyIdentifier) />
 						<cfelseif len(column.data)>
 							<cfset column.title = request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#column.data#" ) />
 						</cfif>
@@ -61,28 +63,56 @@ Notes:
 			<tbody>
 				<cfset hi = 0 />
 				<cfset ri = 0 />
+				
 				<cfloop array="#attributes.processSmartList.getRecords()#" index="parentRecord">
 					<cfset hi++ />
-					<cfif attributes.processSmartList.getRecordsCount() gt 1>
-						<tr>
-							<td class="highlight-ltblue" colspan="#arrayLen(thistag.columns) + 1#">#parentRecord.stringReplace( attributes.processHeaderString )#</td>
+					
+					<!--- Process Records are of a sub-property --->
+					<cfif len(attributes.processRecordsProperty)>
+						
+						<cfif attributes.processSmartList.getRecordsCount() gt 1>
+							<!--- Header for each group if there are more than 1 --->
+							<tr><td class="highlight-ltblue" colspan="#arrayLen(thistag.columns)#">#parentRecord.stringReplace( attributes.processHeaderString )#
+						<cfelse>
+							<!--- Hidden Header because there is only 1 --->
+							<tr style="display:none;"><td>
+						</cfif>
+								<input type="hidden" name="processRecords[#hi#].#parentRecord.getPrimaryIDPropertyName()#" value="#parentRecord.getPrimaryIDValue()#" />
+							</td>
 						</tr>
+						
+						<!--- Get the actual records that we want to process --->
+						<cfset processRecords = parentRecord.invokeMethod("get#attributes.processRecordsProperty#") />
+						
+						<cfloop array="#processRecords#" index="processRecord">
+							<cfset ri++ />
+							<tr><input type="hidden" name="processRecords[#hi#].records[#ri#].#processRecord.getPrimaryIDPropertyName()#" value="#processRecord.getPrimaryIDValue()#" style="width:40px;"/>
+								<cfloop array="#thistag.columns#" index="column">
+									<cfif len(column.propertyIdentifier)>
+										<td class="#column.tdClass#">#processRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+									<cfelseif len(column.data)>
+										<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#"></td>
+									</cfif>
+								</cfloop>
+							</tr>
+						</cfloop>
+						
+					<!--- Process Records are just the parent object --->
 					<cfelse>
-						<tr style="display:none;"><input type="hidden" name="processRecords[#hi#].#parentRecord.getPrimaryIDPropertyName()#" value="#parentRecord.getPrimaryIDValue()#" /></tr>
-					</cfif>
-					<cfset processRecords = parentRecord.invokeMethod("get#attributes.processRecordsProperty#") />
-					<cfloop array="#processRecords#" index="processRecord">
-						<cfset ri++ />
-						<tr><input type="hidden" name="processRecords[#hi#].records[#ri#].#processRecord.getPrimaryIDPropertyName()#" value="#processRecord.getPrimaryIDValue()#" style="width:40px;"/>
+						
+						<tr>
+							<input type="hidden" name="processRecords[#hi#].#parentRecord.getPrimaryIDPropertyName()#" value="#parentRecord.getPrimaryIDValue()#" />
 							<cfloop array="#thistag.columns#" index="column">
 								<cfif len(column.propertyIdentifier)>
-									<td class="#column.tdClass#">#processRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+									<td class="#column.tdClass#">#parentRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 								<cfelseif len(column.data)>
-									<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value=""></td>
+									<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#"></td>
 								</cfif>
 							</cfloop>
 						</tr>
-					</cfloop>
+						
+					</cfif>
+					
 				</cfloop>
 			</tbody>
 		</table>

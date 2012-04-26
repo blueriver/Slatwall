@@ -31,6 +31,7 @@
 	<bean id="taxDAO" class="Slatwall.com.dao.TaxDAO" />
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
 	<bean id="termDAO" class="Slatwall.com.dao.TermDAO" />
+	<bean id="scheduleDAO" class="Slatwall.com.dao.ScheduleDAO" />
     <bean id="subscriptionDAO" class="Slatwall.com.dao.SubscriptionDAO" />
 	<bean id="shippingDAO" class="Slatwall.com.dao.ShippingDAO" />
 	<bean id="stockDAO" class="Slatwall.com.dao.StockDAO" />
@@ -142,6 +143,7 @@
 				<entry key="PromotionRewardProduct"><value>promotionService</value></entry>
 				<entry key="PromotionRewardShipping"><value>promotionService</value></entry>
 				<entry key="RoundingRule"><value>roundingRuleService</value></entry>
+				<entry key="Schedule"><value>scheduleService</value></entry>
 				<entry key="Session"><value>sessionService</value></entry>
 				<entry key="Setting"><value>settingService</value></entry>
 				<entry key="ShippingMethod"><value>shippingService</value></entry>
@@ -167,6 +169,8 @@
 				<entry key="SubscriptionUsage"><value>subscriptionService</value></entry>
 				<entry key="SubscriptionUsageBenefit"><value>subscriptionService</value></entry>
 				<entry key="SubscriptionUsageBenefitAccount"><value>subscriptionService</value></entry>
+				<entry key="Task"><value>scheduleService</value></entry>
+				<entry key="TaskHistory"><value>scheduleService</value></entry>
 				<entry key="TaxApplied"><value>taxService</value></entry>
 				<entry key="TaxCategory"><value>taxService</value></entry>
 				<entry key="TaxCategoryRate"><value>taxService</value></entry>
@@ -304,6 +308,9 @@
 	<bean id="roundingRuleService" class="Slatwall.com.service.RoundingRuleService">
         <property name="DAO"><ref bean="RoundingRuleDAO" /></property>
 	</bean>
+	<bean id="scheduleService" class="Slatwall.com.service.ScheduleService">
+        <property name="DAO"><ref bean="ScheduleDAO" /></property>
+    </bean>
     <bean id="sessionService" class="Slatwall.com.service.SessionService">
         <property name="DAO"><ref bean="SessionDAO" /></property>
 		<property name="accountService"><ref bean="accountService" /></property>

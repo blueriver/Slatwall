@@ -43,53 +43,75 @@ Notes:
 	<!--- ThisTag Variables used just inside --->
 	<cfparam name="thistag.options" type="array" default="#arrayNew(1)#" />
 	
+	<cfsilent>
+		<cfset dataOptions = [] />
+		<cfset printEmailOptions = [] />
+		<cfset sections = 0 />
+		<cfset divclass = "" />
+		<cfloop array="#thistag.options#" index="option">
+			<cfif len(option.data)>
+				<cfset arrayAppend(dataOptions, option) />
+			<cfelseif len(option.print)>
+				<cfset arrayAppend(printEmailOptions, option) />
+			<cfelseif len(option.email)>
+				<cfset arrayAppend(printEmailOptions, option) />
+			</cfif>
+		</cfloop>
+		<cfif len(attributes.dataCollectionPropertyIdentifier)>
+			<cfset sections++ />
+		</cfif>
+		<cfif arrayLen(dataOptions)>
+			<cfset sections++ />
+		</cfif>
+		<cfif arrayLen(printEmailOptions)>
+			<cfset sections++ />
+		</cfif>
+		<cfif sections eq 1>
+			<cfset divclass="span12" />
+		<cfelseif sections eq 2>
+			<cfset divclass="span6" />
+		<cfelseif sections eq 3>
+			<cfset divclass="span4" />
+		</cfif>
+	</cfsilent>
+	
 	<cfoutput>
-		<!--- set the tabindex to 1 so that the first options will start with 2 --->
 		<div class="row-fluid">
-			<cf_SlatwallPropertyList divclass="span6">
-				<h4>Process Options</h4>
-				<br />
-				<cfset hasDataOption = false>
-				<cfloop array="#thistag.options#" index="option">
-					<cfif len(option.data)>
-						<cfset hasDataOption = true />
+			<cfif arrayLen(dataOptions)>
+				<cf_SlatwallPropertyList divclass="#divclass#">
+					<h4>Process Options</h4>
+					<br />
+					<cfloop array="#dataOptions#" index="option">
 						<cfset hint = request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#_hint" ) />
 						<cfif right(hint, 8) eq "_missing">
 							<cfset hint = "" />
 						</cfif>
 						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.#option.data#" fieldtype="#option.fieldtype#" valueOptions="#option.valueOptions#" title="#request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#" )#" hint="#hint#">
-					</cfif>
-				</cfloop>
-				<cfif not hasDataOption>
-					<em>#request.slatwallScope.rbKey('define.none')#</em>
-				</cfif>
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divclass="span6">
-				<h4>Email / Print Options</h4>
-				<br />
-				<cfset hasPrintOrEmailOption = false>
-				<cfloop array="#thistag.options#" index="option">
-					<cfif len(option.print)>
-						<cfset hasPrintOrEmailOption = true>
-						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.print.#option.print#" fieldtype="yesno" title="#request.slatwallScope.rbKey('define.print')# #request.slatwallScope.rbKey('print.#option.print#')#">
-					</cfif>
-					<cfif len(option.email)>
-						<cfset hasPrintOrEmailOption = true>
-						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.email.#option.email#" fieldtype="yesno" title="#request.slatwallScope.rbKey('define.email')# #request.slatwallScope.rbKey('email.#option.email#')#">
-					</cfif>
-				</cfloop>
-				<cfif not hasPrintOrEmailOption>
-					<em>#request.slatwallScope.rbKey('define.none')#</em>
-				</cfif>
-			</cf_SlatwallPropertyList>
-			<!---
-			<cf_SlatwallPropertyList divclass="span4">
-				<h4>Data Collection</h4>
-				<br />
-				<cf_SlatwallFieldDisplay edit="true" fieldname="dataCollector" fieldtype="text" title="Scan" fieldclass="firstfocus">
-				<button class="btn">Upload Data File</button>
-			</cf_SlatwallPropertyList>
-			--->
+					</cfloop>
+				</cf_SlatwallPropertyList>
+			</cfif>
+			<cfif arrayLen(printEmailOptions)>
+				<cf_SlatwallPropertyList divclass="#divclass#">
+					<h4>Email / Print Options</h4>
+					<br />
+					<cfloop array="#printEmailOptions#" index="option">
+						<cfif len(option.print)>
+							<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.print.#option.print#" fieldtype="yesno" title="#request.slatwallScope.rbKey('define.print')# #request.slatwallScope.rbKey('print.#option.print#')#">
+						</cfif>
+						<cfif len(option.email)>
+							<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.email.#option.email#" fieldtype="yesno" title="#request.slatwallScope.rbKey('define.email')# #request.slatwallScope.rbKey('email.#option.email#')#">
+						</cfif>
+					</cfloop>
+				</cf_SlatwallPropertyList>
+			</cfif>
+			<cfif len(attributes.dataCollectionPropertyIdentifier)>
+				<cf_SlatwallPropertyList divclass="#divclass#">
+					<h4>Data Collection</h4>
+					<br />
+					<cf_SlatwallFieldDisplay edit="true" fieldname="dataCollector" fieldtype="text" title="Scan" fieldclass="firstfocus">
+					<button class="btn">Upload Data File</button>
+				</cf_SlatwallPropertyList>
+			</cfif>
 		</div>
 		<hr />
 	</cfoutput>

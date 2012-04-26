@@ -70,7 +70,7 @@ Notes:
 				prSku.amountOff as 'amountOff',
 				prSku.amount as 'amount',
 				prSku.roundingRuleID as 'roundingRuleID',
-				pSku.endDateTime as 'salePriceExpirationDateTime',
+				'1/1/2012 00:00:00' as 'salePriceExpirationDateTime',
 				pSku.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
@@ -84,6 +84,7 @@ Notes:
 				pSku.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
 			  AND
 				pSku.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  
 			  AND
 				pSku.activeFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 			  AND

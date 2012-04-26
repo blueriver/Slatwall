@@ -451,7 +451,7 @@ globalEncryptionKeySize
 			  </cfif>
 		</cfquery> 
 		
-		<cfreturn rs.settingRecordCount />
+		<cfreturn val(rs.settingRecordCount) />
 	</cffunction>
 	
 	<cffunction name="getSettingRecordBySettingRelationships">

@@ -36,24 +36,26 @@
 Notes:
 
 */
-component displayname="Order Item Status Action Product Type" entityname="SlatwallOrderItemStatusActionProductType" table="SlatwallOrderItemStatusAction" persistent="true" output="false" accessors="true" extends="OrderItemStatusActionAbstract" discriminatorvalue="productType" {
-
-	property name="orderItemStatusActionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
-	property name="productType" fieldtype="many-to-one" cfc="ProductType" fkcolumn="productTypeID";
+	public any function init() {
+		return this;
+	}
 	
+	public string function getIntegrationTypes() {
+		return "shipping";
+	}
 	
-	    
-
-	// ============ START: Non-Persistent Property Methods =================
+	public string function getDisplayName() {
+		return "Parcel2Go";
+	}
 	
-	// ============  END:  Non-Persistent Property Methods =================
+	public struct function getSettings() {
+		var settings = {
+			shipperPostalCode = {fieldType="text", displayName="Shipping From Postal Code"},
+			shipperCountryCode = {fieldType="text", displayName="Shipping From Country Code"}
+		};
 		
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-	
-	// =================== START: ORM Event Hooks  =========================
-	
-	// ===================  END:  ORM Event Hooks  =========================
+		return settings;
+	}
 }

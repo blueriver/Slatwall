@@ -111,6 +111,21 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return authCodes;
 	}
 	
+	public array function getProcessTransactionTypeOptions() {
+		var options = [];
+		if(getAmountReceived() < getAmountAuthorized()) {
+			arrayAppend(options, {value='chargePreAuthorization', name='Charge Pre-Authroization'});
+		}
+		if(getAmountAuthorized() == 0) {
+			arrayAppend(options, {value='authorizeAndCharge', name='Authorize & Charge'});
+			arrayAppend(options, {value='authorize', name='Authorize'});
+		}
+		if(getAmountReceived() > 0) {
+			arrayAppend(options, {value='credit', name='Credit'});
+		}
+		return options;
+	}
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

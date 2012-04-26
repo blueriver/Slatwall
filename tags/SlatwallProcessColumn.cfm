@@ -43,7 +43,9 @@ Notes:
 	<cfparam name="attributes.data" type="string" default="" />
 	<cfparam name="attributes.fieldType" type="string" default="" />
 	<cfparam name="attributes.fieldClass" type="string" default="" />
+	<cfparam name="attributes.value" type="any" default="" />
 	<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />
+	<cfparam name="attributes.valueOptionsMethod" type="string" default="" />
 	
 	<cfassociate basetag="cf_SlatwallProcessListing" datacollection="columns">
 </cfif>
