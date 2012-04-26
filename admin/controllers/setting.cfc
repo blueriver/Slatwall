@@ -50,6 +50,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="roundingRuleService" type="any";
 	property name="settingService" type="any";
 	property name="shippingService" type="any";
+	property name="scheduleService" type="any";
 	property name="productCacheService" type="any";
 	property name="taxService" type="any";
 	property name="termService" type="any";
@@ -173,5 +174,12 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	public void function detailviewupdate() {
 		
+	}
+	
+	public void function saveTask(required struct rc){
+		var scheduleid = arguments.rc.schedule.scheduleid;
+		rc.nextRunDateTime = getScheduleService().getSchedule(scheduleID).getNextRunDateTime(); 	
+		
+		super.genericSaveMethod('Task',rc);
 	}
 }
