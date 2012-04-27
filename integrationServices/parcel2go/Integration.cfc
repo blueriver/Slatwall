@@ -53,7 +53,8 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	public struct function getSettings() {
 		var settings = {
 			shipperPostalCode = {fieldType="text", displayName="Shipping From Postal Code"},
-			shipperCountryCode = {fieldType="text", displayName="Shipping From Country Code"}
+			shipperCountryCode = {fieldType="text", displayName="Shipping From Country Code"},
+			apiKey = {fieldType="text", displayName="API Key"}
 		};
 		
 		return settings;
