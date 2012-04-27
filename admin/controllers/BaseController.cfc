@@ -353,6 +353,9 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ]} );
 						entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
 						if( entity.hasErrors() ) {
+							// Add the error message to the top of the page
+							entity.showErrorMessages();
+							
 							arrayAppend(errorEntities, entity);
 							arrayAppend(rc.errorData, rc.processRecords[i]);
 						}

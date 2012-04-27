@@ -36,22 +36,26 @@
 Notes:
 
 */
-component displayname="Account Payment Method" entityname="SlatwallAccountPaymentMethod" table="SlatwallAccountPaymentMethod" persistent="true" accessors="true" extends="BaseEntity" discriminatorcolumn="paymentMethodType"  {
+component displayname="Account Payment Method" entityname="SlatwallAccountPaymentMethod" table="SlatwallAccountPaymentMethod" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="accountPaymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="accountPaymentMethodName" ormType="string";
+	property name="nameOnCreditCard" ormType="string";
+	property name="creditCardNumberEncrypted" ormType="string";
+	property name="creditCardLastFour" ormType="string";
+	property name="creditCardType" ormType="string";
+	property name="expirationMonth" ormType="string";
+	property name="expirationYear" ormType="string";
 	
 	// Related Object Properties (Many-to-One)
-	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
 	
 	// Related Object Properties (One-to-Many)
 	
 	// Related Object Properties (Many-to-Many)
-	
-	// Special Related Discriminator Property
-	property name="paymentMethodType" length="255" insert="false" update="false";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -63,10 +67,12 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="creditCardNumber" persistent="false";
 
-
-
-	
+	public any function init() {
+		super.init();
+	}
+		
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -94,6 +100,24 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================
+	
+	public any function getBillingAddress() {
+		if(isNull(variables.billingAddress)) {
+			return getService("addressService").newAddress();
+		} else {
+			return variables.billingAddress;
+		}
+	}
+	
+	public void function setCreditCardNumber(required string creditCardNumber) {
+		variables.creditCardNumber = arguments.creditCardNumber;
+		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
+		setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+	}
+	
+	public string function getCreditCardNumber() {
+		return decryptValue(getCreditCardNumberEncrypted());
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

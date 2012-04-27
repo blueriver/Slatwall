@@ -72,7 +72,9 @@ Notes:
 						
 						<cfif attributes.processSmartList.getRecordsCount() gt 1>
 							<!--- Header for each group if there are more than 1 --->
-							<tr><td class="highlight-ltblue" colspan="#arrayLen(thistag.columns)#">#parentRecord.stringReplace( attributes.processHeaderString )#
+							<tr>
+								<td class="highlight-ltblue" colspan="#arrayLen(thistag.columns)#">
+									#parentRecord.stringReplace( attributes.processHeaderString )#
 						<cfelse>
 							<!--- Hidden Header because there is only 1 --->
 							<tr style="display:none;"><td>
