@@ -136,6 +136,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					for(var b=1; b <= listLen(arguments.data.subscriptionBenefits); b++) {
 						thisSku.addSubscriptionBenefit( getSubscriptionService().getSubscriptionBenefit( listGetAt(arguments.data.subscriptionBenefits, b) ) );
 					}
+					for(var b=1; b <= listLen(arguments.data.renewalSubscriptionBenefits); b++) {
+						thisSku.addRenewalSubscriptionBenefit( getSubscriptionService().getSubscriptionBenefit( listGetAt(arguments.data.renewalSubscriptionBenefits, b) ) );
+					}
 					if(i==1) {
 						arguments.product.setDefaultSku( thisSku );	
 					}

@@ -73,6 +73,12 @@ Notes:
 					<cf_SlatwallListingDisplay smartList="SubscriptionBenefit" multiselectFieldName="subscriptionBenefits" edit="true">
 						<cf_SlatwallListingColumn propertyIdentifier="subscriptionBenefitName" tdclass="primary" />
 					</cf_SlatwallListingDisplay>
+					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectrenewalsubscriptionbenifits')#</h5>
+					<br />
+					<cf_SlatwallErrorDisplay object="#rc.product#" errorName="renewalsubscriptionBenefits" />
+					<cf_SlatwallListingDisplay smartList="SubscriptionBenefit" multiselectFieldName="renewalSubscriptionBenefits" edit="true">
+						<cf_SlatwallListingColumn propertyIdentifier="subscriptionBenefitName" tdclass="primary" />
+					</cf_SlatwallListingDisplay>
 				</div>
 				<div class="span6">
 					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectsubscriptionterms')#</h5>
