@@ -36,20 +36,25 @@
 Notes:
 
 --->
-<cfparam name="rc.taskSmartList" type="any"/>
+<cfparam name="rc.taskschedule" type="any">
+<cfparam name="rc.task" type="any" default="">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-
-	<cf_slatwallactionbar type="listing" object="#rc.taskSmartList#" createmodal="false"/>
-
-	<cf_slatwalllistingdisplay smartlist="#rc.taskSmartList#" 
-	                           recordeditaction="admin:setting.edittask" 
-	                           recordeditquerystring="returnAction=admin:setting.listtask" 
-	                           recordeditmodal="false" recorddeleteaction="admin:setting.deletetask">
+	<cf_SlatwallDetailForm object="#rc.taskschedule#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.taskschedule#" />
+		<input type="hidden" name="task.taskID" value="#rc.task.getTaskID()#"/>
+		<input type="hidden" name="returnAction" value="admin:setting.edittask&taskID=#rc.task.getTaskID()###tabtaskschedule" />
 		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="schedule" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="startDateTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="endDateTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="successEmailList" edit="#rc.edit#" fieldtype="textarea" >
+				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="failureEmailList" edit="#rc.edit#" fieldtype="textarea" >
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
 		
-		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="taskName"/>
-		<cf_slatwalllistingcolumn propertyidentifier="runningFlag"/>
-	</cf_slatwalllistingdisplay>
-
+	</cf_SlatwallDetailForm>
 </cfoutput>

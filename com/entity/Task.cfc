@@ -46,6 +46,7 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	property name="taskUrl" ormtype="string";
 	property name="runningFlag" ormtype="boolean" formatType="yesno";
 	property name="timeout" ormtype="int" ;
+
 	
 	// Related Object Properties (many-to-one)
 	

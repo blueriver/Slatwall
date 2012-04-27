@@ -43,8 +43,8 @@ component displayname="Task Schedule" entityname="SlatwallTaskSchedule" table="S
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
 	property name="nextRunDateTime" ormtype="timestamp";
-	property name="failureEmailList" ormtype="string";
-	property name="successEmailList" ormtype="string";
+	property name="failureEmailList" ormtype="string" ;
+	property name="successEmailList" ormtype="string" ;
 	
 	// Related Object Properties (many-to-one)
 	property name="schedule" cfc="Schedule" fieldtype="many-to-one" fkcolumn="scheduleID";

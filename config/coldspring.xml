@@ -171,6 +171,7 @@
 				<entry key="SubscriptionUsageBenefitAccount"><value>subscriptionService</value></entry>
 				<entry key="Task"><value>scheduleService</value></entry>
 				<entry key="TaskHistory"><value>scheduleService</value></entry>
+				<entry key="TaskSchedule"><value>scheduleService</value></entry>
 				<entry key="TaxApplied"><value>taxService</value></entry>
 				<entry key="TaxCategory"><value>taxService</value></entry>
 				<entry key="TaxCategoryRate"><value>taxService</value></entry>

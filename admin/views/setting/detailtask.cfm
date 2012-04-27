@@ -46,17 +46,15 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskMethod" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskUrl" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.task#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="startDateTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="endDateTime" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.task#" property="timeout" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="notificationEmails" edit="#rc.edit#" fieldtype="textarea" >
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="schedule" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.task#">
+			<cf_SlatwallTab view="admin:setting/tasktabs/taskschedule" />
 			<cf_SlatwallTab view="admin:setting/tasktabs/taskhistory" />
 		</cf_SlatwallTabGroup>
 		

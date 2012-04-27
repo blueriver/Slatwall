@@ -36,20 +36,18 @@
 Notes:
 
 --->
-<cfparam name="rc.taskSmartList" type="any"/>
+<cfparam name="rc.task" type="any"/>
 
-<cfoutput>
+<cf_slatwalllistingdisplay smartlist="#rc.task.getTaskSchedulesSmartList()#" 
+                        recordeditaction="admin:setting.editTaskSchedule" recordeditmodal="true" 
+                        recordeditquerystring="taskID=#rc.task.getTaskID()#" 
+                        recorddeleteaction="admin:setting.deleteTaskSchedule"
+						recorddeletequerystring="returnAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule">
+	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="startDateTime"/>
+	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="endDateTime"/>
+	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="schedule.schedulename"/>
+	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
+</cf_slatwalllistingdisplay>
 
-	<cf_slatwallactionbar type="listing" object="#rc.taskSmartList#" createmodal="false"/>
-
-	<cf_slatwalllistingdisplay smartlist="#rc.taskSmartList#" 
-	                           recordeditaction="admin:setting.edittask" 
-	                           recordeditquerystring="returnAction=admin:setting.listtask" 
-	                           recordeditmodal="false" recorddeleteaction="admin:setting.deletetask">
-		
-		
-		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="taskName"/>
-		<cf_slatwalllistingcolumn propertyidentifier="runningFlag"/>
-	</cf_slatwalllistingdisplay>
-
-</cfoutput>
+<cf_slatwallactioncaller action="admin:setting.createTaskSchedule" class="btn btn-primary" 
+                      querystring="taskID=#rc.task.getTaskID()#" modal=true/>
