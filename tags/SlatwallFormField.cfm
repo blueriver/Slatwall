@@ -123,7 +123,9 @@ Notes:
 		</cfcase>
 		<cfcase value="radiogroup">
 			<cfoutput>
-				<!--- <input type="hidden" name="#attributes.fieldName#" value="" /> --->
+				<cfif !len(attributes.value)>
+					<cfset attributes.value = attributes.valueOptions[1]['value'] />
+				</cfif>
 				<cfloop array="#attributes.valueOptions#" index="option">
 					<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
 					<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
@@ -134,9 +136,6 @@ Notes:
 		</cfcase>
 		<cfcase value="select">
 			<cfoutput>
-				<cfif !len(attributes.value)>
-					<cfset attributes.value = attributes.valueOptions[1]['value'] />
-				</cfif>
 				<select tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass#">
 					<cfloop array="#attributes.valueOptions#" index="option">
 						<cfset thisOptionValue = isSimpleValue(option) ? option : structFind(option, 'value') />
