@@ -82,18 +82,8 @@ Notes:
 					<label for="experationMonth">Expires</label>
 				</dt>
 				<dd id="spdcreditcardexpirationdate">
-					<select name="orderPayments[#params.orderPaymentIndex#].expirationMonth" tabIndex="#rc.tabIndex++#">
-						<cfloop from="1" to="12" index="i">
-							<cfset local.thisMonth = numberFormat(i,'00') />
-							<option value="#local.thisMonth#" <cfif rc["orderPayments[#params.orderPaymentIndex#].expirationMonth"] EQ local.thisMonth>selected</cfif>>#local.thisMonth#</option>
-						</cfloop>
-					</select> / 
-					<select name="orderPayments[#params.orderPaymentIndex#].expirationYear" tabIndex="#rc.tabIndex++#">
-						<cfloop from="0" to="10" index="i">
-							<cfset local.thisYear = right(year(now()),2) + i />
-							<option value="#local.thisYear#" <cfif rc["orderPayments[#params.orderPaymentIndex#].expirationYear"] EQ local.thisYear>selected</cfif>>20#local.thisYear#</option>
-						</cfloop>
-					</select>
+					<cf_SlatwallPropertyDisplay displaytype="plain" object="#params.orderPayment#" fieldName="orderPayments[#params.orderPaymentIndex#].expirationMonth" property="expirationMonth" noValue="true" edit="#params.edit#" /> /
+					<cf_SlatwallPropertyDisplay displaytype="plain" object="#params.orderPayment#" fieldName="orderPayments[#params.orderPaymentIndex#].expirationYear" property="expirationYear" noValue="true" edit="#params.edit#" />
 				</dd>
 			</dl>
 		</div>
