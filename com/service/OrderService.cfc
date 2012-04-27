@@ -199,6 +199,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 				// Actually Remove that Item
 				arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
+				break;
 			}
 		}
 	}

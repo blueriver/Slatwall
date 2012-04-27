@@ -222,7 +222,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 			// Loop over all of the options now in the fulfillment, and do the final clean up
-			for(var c=1; c<=arrayLen(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()); c++) {
+			for(var c=arrayLen(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()); c >= 1 ; c--) {
 				// If the shippingMethod was not part of the new methods, then remove it
 				if(!listFindNoCase(shippingMethodIDOptionsList, arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[c].getShippingMethodRate().getShippingMethod().getShippingMethodID())) {
 					arguments.orderFulfillment.removeFulfillmentShippingMethodOption( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[r] );
