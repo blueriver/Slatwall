@@ -40,13 +40,13 @@
 	<ns:RateRequest xmlns:ns="http://fedex.com/ws/rate/v7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	    <ns:WebAuthenticationDetail>
 	        <ns:UserCredential>
-	            <ns:Key>#variables.transactionKey#</ns:Key>
-	            <ns:Password>#variables.password#</ns:Password>
+	            <ns:Key>#setting('transactionKey')#</ns:Key>
+	            <ns:Password>#setting('password')#</ns:Password>
 	        </ns:UserCredential>
 	    </ns:WebAuthenticationDetail>
 	    <ns:ClientDetail>
-	        <ns:AccountNumber>#variables.accountNo#</ns:AccountNumber>
-	        <ns:MeterNumber>#variables.meterNo#</ns:MeterNumber>
+	        <ns:AccountNumber>#setting('accountNo')#</ns:AccountNumber>
+	        <ns:MeterNumber>#setting('meterNo')#</ns:MeterNumber>
 	    </ns:ClientDetail>
 	    <ns:Version>
 	        <ns:ServiceId>crs</ns:ServiceId>
@@ -68,11 +68,11 @@
 	        </ns:TotalInsuredValue>
 	        <ns:Shipper>
 	            <ns:Address>
-	            	<ns:StreetLines>#variables.shipperStreet#</ns:StreetLines>
-	                <ns:City>#variables.shipperCity#</ns:City>
-	                <ns:StateOrProvinceCode>#variables.shipperStateCode#</ns:StateOrProvinceCode>
-	                <ns:PostalCode>#variables.shipperPostalCode#</ns:PostalCode>
-	                <ns:CountryCode>#variables.shipperCountryCode#</ns:CountryCode>
+	            	<ns:StreetLines>#setting('shipperStreet')#</ns:StreetLines>
+	                <ns:City>#setting('shipperCity')#</ns:City>
+	                <ns:StateOrProvinceCode>#setting('shipperStateCode')#</ns:StateOrProvinceCode>
+	                <ns:PostalCode>#setting('shipperPostalCode')#</ns:PostalCode>
+	                <ns:CountryCode>#setting('shipperCountryCode')#</ns:CountryCode>
 	            </ns:Address>
 	        </ns:Shipper>
 	        <ns:Recipient>

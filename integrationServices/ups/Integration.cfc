@@ -49,4 +49,22 @@ component accessors="true" output="false" displayname="UPS" extends="Slatwall.in
 	public string function getDisplayName() {
 		return "UPS";
 	}
+
+	public struct function getSettings() {
+		var settings = {
+			apiKey = {fieldType="text", displayName="API Key"},
+			username = {fieldType="text", displayName="UPS Username"},
+			password = {fieldType="password", displayName="UPS Password", encryptValue=true},
+			testingFlag = {fieldType="yesno", displayName="Test Mode", settingDefault="1"},
+			shipperNumber = {fieldType="text", displayName="Shipper Number"},
+			shipFromCity = {fieldType="text", displayName="Shipping From City"},
+			shipFromStateCode = {fieldType="text", displayName="Shipping From State Code"},
+			shipFromPostalCode = {fieldType="text", displayName="Shipping From Postal Code"},
+			shipFromCountryCode = {fieldType="text", displayName="Shipping From Country Code"},
+			pickupTypeCode = {fieldType="text", displayName="Pickup Type Code (advanced optional)", settingDefault="03"},
+			customerClassificationCode = {fieldType="text", displayName="Customer Classification Code (advanced optional)", settingDefault="04"}
+		};
+		
+		return settings;
+	}
 }

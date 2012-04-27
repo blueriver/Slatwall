@@ -39,30 +39,12 @@ Notes:
 
 component accessors="true" output="false" displayname="VirtualMerchant" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
-	// Custom Properties that need to be set by the end user
-	property name="merchantID" displayname="VirtualMerchant ID (6 Digit)" type="string";
-	property name="userID" displayname="Virtual Merchant User ID" type="string";
-	property name="pin" displayname="Virtual Merchant PIN" type="string";
-	property name="testMerchantID" displayname="Test VirtualMerchant ID (6 Diget)" type="string";
-	property name="testUserID" displayname="Test User ID" type="string";
-	property name="testPin" displayname="Test PIN" type="string";
-	property name="testAccountFlag" displayname="Use Test Account (This is used for seperate test accounts that can be setup)" type="boolean";
-	
 	//Global variables
 	variables.liveGatewayAddress = "https://www.myvirtualmerchant.com/VirtualMerchant/process.do";
 	variables.testGatewayAddress = "https://demo.myvirtualmerchant.com/VirtualMerchantDemo/process.do";
 	variables.transactionCodes = {};
 
 	public any function init(){
-		// Set Defaults
-		setMerchantID("");
-		setUserID("");
-		setPin("");
-		setTestMerchantID("");
-		setTestUserID("");
-		setTestPin("");
-		setTestAccountFlag(false);
-		
 		variables.transactionCodes = {
 			authorize="ccauthonly",
 			authorizeAndCharge="ccsale",
@@ -106,14 +88,14 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		
 		var loginData = [];
 		
-		if(getTestAccountFlag()){
-			arrayAppend(loginData,"ssl_merchant_id=#getTestMerchantID()#");
-			arrayAppend(loginData,"ssl_user_id=#getTestUserID()#");
-			arrayAppend(loginData,"ssl_pin=#getTestPin()#");
+		if(setting('testAccountFlag')){
+			arrayAppend(loginData,"ssl_merchant_id=#setting('testMerchantID')#");
+			arrayAppend(loginData,"ssl_user_id=#setting('testUserID')#");
+			arrayAppend(loginData,"ssl_pin=#setting('testPin')#");
 		} else {
-			arrayAppend(loginData,"ssl_merchant_id=#getMerchantID()#");
-			arrayAppend(loginData,"ssl_user_id=#getUserID()#");
-			arrayAppend(loginData,"ssl_pin=#getPin()#");
+			arrayAppend(loginData,"ssl_merchant_id=#setting('merchantID')#");
+			arrayAppend(loginData,"ssl_user_id=#setting('userID')#");
+			arrayAppend(loginData,"ssl_pin=#setting('pin')#");
 		}
 		
 		return arrayToList(loginData,"&");
@@ -152,7 +134,7 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 	}
 	
 	private string function getGatewayAddress(){
-		if(getTestAccountFlag()){
+		if(setting('testAccountFlag')){
 			return variables.testGatewayAddress;
 		} else {
 			return variables.liveGatewayAddress;

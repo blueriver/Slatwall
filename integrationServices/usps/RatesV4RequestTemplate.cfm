@@ -48,11 +48,11 @@
 	</cfif>
 </cfsilent>
 <cfoutput>
-<RateV4Request USERID="#variables.userID#">
+<RateV4Request USERID="#setting('userID')#">
 	<Revision>2</Revision>
 	<Package ID="1">
 		<Service>ALL</Service>
-		<ZipOrigination>#variables.shipFromPostalCode#</ZipOrigination>
+		<ZipOrigination>#setting('shipFromPostalCode')#</ZipOrigination>
 		<ZipDestination>#arguments.requestBean.getShipToPostalCode()#</ZipDestination>
 		<Pounds>#local.pounds#</Pounds>
 		<Ounces>#local.ounces#</Ounces>

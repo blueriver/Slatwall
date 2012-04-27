@@ -39,27 +39,27 @@
 <cfoutput>
 	<?xml version="1.0"?>
 	<AccessRequest>
-		<AccessLicenseNumber>#variables.apiKey#</AccessLicenseNumber>
-		<UserId>#variables.username#</UserId>
-		<Password>#variables.password#</Password>
+		<AccessLicenseNumber>#setting('apiKey')#</AccessLicenseNumber>
+		<UserId>#setting('username')#</UserId>
+		<Password>#setting('password')#</Password>
 	</AccessRequest>
 	<RatingServiceSelectionRequest xml:lang="en-US">
 		<Request>
 			<RequestOption>Shop</RequestOption>
 		</Request>
 		<PickupType>
-			<Code>#variables.pickupTypeCode#</Code>
+			<Code>#setting('pickupTypeCode')#</Code>
 		</PickupType>
 		<CustomerClassification>
-			<Code>#variables.customerClassificationCode#</Code>
+			<Code>#setting('customerClassificationCode')#</Code>
 		</CustomerClassification>
 		<Shipment>
 			<Shipper>
 				<Address>
-					<City>#variables.shipFromCity#</City>
-					<StateProvinceCode>#variables.shipFromStateCode#</StateProvinceCode>
-					<PostalCode>#variables.shipFromPostalCode#</PostalCode>
-					<CountryCode>#variables.shipFromCountryCode#</CountryCode>
+					<City>#setting('shipFromCity')#</City>
+					<StateProvinceCode>#setting('shipFromStateCode')#</StateProvinceCode>
+					<PostalCode>#setting('shipFromPostalCode')#</PostalCode>
+					<CountryCode>#setting('shipFromCountryCode')#</CountryCode>
 				</Address>
 			</Shipper>
 			<ShipTo>
@@ -73,10 +73,10 @@
 			</ShipTo>
 			<ShipFrom>
 				<Address>
-					<City>#variables.shipFromCity#</City>
-					<StateProvinceCode>#variables.shipFromStateCode#</StateProvinceCode>
-					<PostalCode>#variables.shipFromPostalCode#</PostalCode>
-					<CountryCode>#variables.shipFromCountryCode#</CountryCode>
+					<City>#setting('shipFromCity')#</City>
+					<StateProvinceCode>#setting('shipFromStateCode')#</StateProvinceCode>
+					<PostalCode>#setting('shipFromPostalCode')#</PostalCode>
+					<CountryCode>#setting('shipFromCountryCode')#</CountryCode>
 				</Address>
 			</ShipFrom>
 			<ShipmentWeight>

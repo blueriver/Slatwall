@@ -39,12 +39,6 @@ Notes:
 */
 component accessors="true" output="false" displayname="SagePay" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 
-	// Custom Properties that need to be set by the end user
-	property name="vendorID" validateRequired="true" displayname="Vendor ID" type="string";
-	property name="simulatorMode" displayname="Simulator Mode?" type="boolean" default="true";
-	property name="testMode" displayname="Test Mode?" type="boolean" default="false";
-	property name="currency" displayname="Currency" type="string" default="GBP";
-
 	//Global variables
 	variables.vspProtocol="2.23";
 	variables.txType="PAYMENT";
@@ -68,11 +62,11 @@ component accessors="true" output="false" displayname="SagePay" implements="Slat
 	private struct function getRequestData(required any requestBean) {
 		var requestData={};
 		requestData["txType"]=variables.txType;
-		requestData["vendor"]=getVendorID();
+		requestData["vendor"]=setting('vendorID');
 		requestData["vendorTxCode"]=arguments.requestBean.getTransactionID();
 		requestData["VPSProtocol"]=variables.vspProtocol;
 		requestData["referrerID"]="";
-		requestData["currency"]=getCurrency();
+		requestData["currency"]=setting('currency');
 		requestData["giftAidPayment"]="0";
 		requestData["description"]="Payment From " & #arguments.requestBean.getNameOnCreditCard()#;
 		requestData["amount"]=arguments.requestBean.getTransactionAmount();
@@ -121,14 +115,14 @@ component accessors="true" output="false" displayname="SagePay" implements="Slat
 	private struct function getGatewayURL() {
 	
 		var gatewaySettings=StructNew();
-		if(getSimulatorMode()) {
+		if(setting('simulatorMode')) {
 			StructInsert(gatewaySettings,"Verify","false");
 			StructInsert(gatewaySettings,"PurchaseURL","https://test.sagepay.com/Simulator/VSPDirectGateway.asp");
 			StructInsert(gatewaySettings,"RefundURL","https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorRefundTx");
 			StructInsert(gatewaySettings,"ReleaseURL","https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorReleaseTx");
 			StructInsert(gatewaySettings,"RepeatURL","https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorRepeatTx");
 			StructInsert(gatewaySettings,"callbackURL","https://test.sagepay.com/Simulator/VSPDirectCallback.asp");
-		} else if(getTestMode()) {
+		} else if(setting('testMode')) {
 			StructInsert(gatewaySettings,"Verify","false");
 			StructInsert(gatewaySettings,"PurchaseURL","https://test.sagepay.com/gateway/service/vspdirect-register.vsp");
 			StructInsert(gatewaySettings,"RefundURL","https://test.sagepay.com/gateway/service/refund.vsp");
