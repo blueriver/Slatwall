@@ -36,20 +36,23 @@
 Notes:
 
 */
-component extends="BaseService" output="false" {
-
+component extends="BaseService" output="false" accessors="true"{
+	property name="taskService" type="any";
+	
 	public array function getDueTasks(numeric maxCount = 5){
 		return getDAO().getDueTasks(maxCount);
 	}
 	
-	public array function excecuteScheduledTasks() {
-		
+	public void function executeScheduledTasks() {
 		// Get the scheduled Tasks
-		
+		var tasks = getDueTasks();
 		// Loop over all secheduled Tasks
-		
+		for(i=1; i <= arrayLen(tasks); i++){
 			// Call Execute Task on Task Service
-		
+			
+			getTaskService().executeTask(tasks[i].getTask(),tasks[i]);
+			
+		}
 	}
 	
 		

@@ -40,8 +40,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	property name="scheduleService";
 	
-	public void function executeScheduledTask() {
-		getScheduleService().executeScheduledTask( );
+	public void function executeScheduledTasks() {
+		getScheduleService().executeScheduledTasks( );
+		abort;
 	}
 	
 	

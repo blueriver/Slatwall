@@ -42,7 +42,7 @@ Notes:
 	<cf_slatwalllistingdisplay smartlist="#rc.task.gettaskhistorySmartList()#">
 		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="createdDateTime"/>
 		<cf_slatwalllistingcolumn propertyidentifier="successFlag"/>
-		<cf_slatwalllistingcolumn propertyidentifier="message"/>
+		<cf_slatwalllistingcolumn propertyidentifier="response"/>
 		<cf_slatwalllistingcolumn propertyidentifier="startTime"/>
 		<cf_slatwalllistingcolumn propertyidentifier="endTime"/>
 	</cf_slatwalllistingdisplay>
