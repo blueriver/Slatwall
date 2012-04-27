@@ -211,7 +211,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			// Clear all previously applied promotions for order items
 			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
-				for(var pa=arrayLen(arguments.order.getOrderItems()[oi].getAppliedPromotions()); pa>=1; pa--) {
+				for(var pa=arrayLen(arguments.order.getOrderItems()[oi].getAppliedPromotions()); pa >= 1; pa--) {
 					arguments.order.getOrderItems()[oi].getAppliedPromotions()[pa].removeOrderItem();
 				}
 			}
