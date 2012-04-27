@@ -104,90 +104,143 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 		return options;
 	}
 
-	public string function getNextRunDateTime(){
+	public string function getNextRunDateTime(startDateTime, endDateTime){
 		var nextRun='';
-		switch(getrecuringType()){
-			case 'Daily':
-				//task is daily
-				
-				//is the next time today?
-				if(isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
-					//currently in the run period. work out next interval
-					nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
-				}else{
-					//next time is tomorrow and start time
-					tomorrow = dateadd("d",1,now());
-					nextRun= createDateTime(year(tomorrow),month(tomorrow),day(tomorrow),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
-				}
-				
-			break;
-			
-			case 'Weekly':
-				var todayNumber = dayofweek(now());
-				
-				//is the next time today?
-				if(listfind(getdaysOfWeekToRun(),dayofweek(now())) && isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
-					//it runs today. are we in the window?
-					//currently in the run period. work out next interval
-					nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
-				}else{
-					//next time is next schedule day and start time
-					var nextDay='';
+		
+		if(endDateTime > now()){
+			switch(getrecuringType()){
+				case 'Daily':
+					//task is daily
 					
-					for(i=1; i <= listLen(getDaysOfWeekToRun()); i++){
-						if(listgetAt(getDaysOfWeekToRun(),i) > todayNumber){
-							nextDay=listGetAt(getDaysOfWeekToRun(),i);
-						}
-					}
-					
-					if(nextDay ==''){
-						nextDay=listgetAt(getDaysOfWeekToRun(),1);
-					}
-					
-					if(nextDay < todayNumber){
-						nextRunDay = (7-dayofweek(now())) + nextDay;
+					//is the start time in the future?
+					if(startDateTime > now()){
+						nextRun= createDateTime(year(startDate),month(startDate),day(startDate),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+					}else if(isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
+					//is the next time today?
+						//currently in the run period. work out next interval
+						nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
 					}else{
-						nextRunDay = nextDay - todayNumber;
+						//next time is tomorrow and start time
+						tomorrow = dateadd("d",1,now());
+						nextRun= createDateTime(year(tomorrow),month(tomorrow),day(tomorrow),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
 					}
 					
-					nextDay = dateadd("d",nextRunDay,now());
-					nextRun= createDateTime(year(nextDay),month(nextDay),day(nextDay),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
-				}
+				break;
 				
-			break;
-			
-			case 'Monthly':
-				//is the next time today?
-				if(listfind(getDaysOfMonthToRun(),day(now())) && isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
-					//it runs today. are we in the window?
-					//currently in the run period. work out next interval
-					nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
-				}else{
-					//next time is next schedule day and start time
+				case 'Weekly':
+					var todayNumber = dayofweek(now());
 					
-					nextDay='';
-					
-					for(i=1; i <= listLen(getDaysOfMonthToRun()); i++){
-						if(listgetAt(getDaysOfMonthToRun(),i) > day(now)){
-							nextDay=listGetAt(getDaysOfMonthToRun(),i);
-						}
-					}
-					
-					if(nextDay==''){
-						//remember to account for new years!
+					if(startDateTime > now()){
+						var futureDayNumber=dayofweek(startDateTime);
 						
-						nextDay = listGetAt(getDaysOfMonthToRun,1);
-						nextRun= createDateTime(year(now()),month(now()),nextDay,hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
-						nextRun = dateAdd("m",1,nextRun);
-					}else{
-						nextRun= createDateTime(year(now()),month(now()),nextDay,hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
-					}
-				}	
+						var nextDay='';
+						
+						for(i=1; i <= listLen(getDaysOfWeekToRun()); i++){
+							if(listgetAt(getDaysOfWeekToRun(),i) > todayNumber){
+								nextDay=listGetAt(getDaysOfWeekToRun(),i);
+							}
+						}
+						
+						if(nextDay ==''){
+							nextDay=listgetAt(getDaysOfWeekToRun(),1);
+						}
+						
+						if(nextDay < todayNumber){
+							nextRunDay = (7-dayofweek(now())) + nextDay;
+						}else{
+							nextRunDay = nextDay - todayNumber;
+						}
+						
+						nextDay = dateadd("d",nextRunDay,startDateTime);
+						nextRun= createDateTime(year(nextDay),month(nextDay),day(nextDay),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+						
+					} else if(listfind(getdaysOfWeekToRun(),dayofweek(now())) && isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
+					//is the next time today?
 					
-			break;
-			
+						//it runs today. are we in the window?
+						//currently in the run period. work out next interval
+						nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
+					}else{
+						//next time is next schedule day and start time
+						var nextDay='';
+						
+						for(i=1; i <= listLen(getDaysOfWeekToRun()); i++){
+							if(listgetAt(getDaysOfWeekToRun(),i) > todayNumber){
+								nextDay=listGetAt(getDaysOfWeekToRun(),i);
+							}
+						}
+						
+						if(nextDay ==''){
+							nextDay=listgetAt(getDaysOfWeekToRun(),1);
+						}
+						
+						if(nextDay < todayNumber){
+							nextRunDay = (7-dayofweek(now())) + nextDay;
+						}else{
+							nextRunDay = nextDay - todayNumber;
+						}
+						
+						nextDay = dateadd("d",nextRunDay,now());
+						nextRun= createDateTime(year(nextDay),month(nextDay),day(nextDay),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+					}
+					
+				break;
+				
+				case 'Monthly':
+					
+					if(startDateTime > now()){
+						for(i=1; i <= listLen(getDaysOfMonthToRun()); i++){
+							if(listgetAt(getDaysOfMonthToRun(),i) > day(startDateTime)){
+								nextDay=listGetAt(getDaysOfMonthToRun(),i);
+							}
+						}
+						
+						if(nextDay==''){
+							//remember to account for new years!
+							
+							nextDay = listGetAt(getDaysOfMonthToRun,1);
+							nextRun= createDateTime(year(startDateTime),month(startDateTime),nextDay,hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+							nextRun = dateAdd("m",1,nextRun);
+						}else{
+							nextRun= createDateTime(year(startDateTime),month(startDateTime),nextDay,hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+						}
+												
+						//is the next time today?
+					}else if(listfind(getDaysOfMonthToRun(),day(now())) && isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
+						//it runs today. are we in the window?
+						//currently in the run period. work out next interval
+						nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
+					}else{
+						//next time is next schedule day and start time
+						
+						nextDay='';
+						
+						for(i=1; i <= listLen(getDaysOfMonthToRun()); i++){
+							if(listgetAt(getDaysOfMonthToRun(),i) > day(now)){
+								nextDay=listGetAt(getDaysOfMonthToRun(),i);
+							}
+						}
+						
+						if(nextDay==''){
+							//remember to account for new years!
+							
+							nextDay = listGetAt(getDaysOfMonthToRun,1);
+							nextRun= createDateTime(year(now()),month(now()),nextDay,hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+							nextRun = dateAdd("m",1,nextRun);
+						}else{
+							nextRun= createDateTime(year(now()),month(now()),nextDay,hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+						}
+					}	
+						
+				break;
+				
+			}
 		}
 		
+		//if next run is after the end time then it will not be run again
+		if(nextRun > endDateTime){
+			nextRun='';
+		}
 		return nextRun;
 	}
 	
