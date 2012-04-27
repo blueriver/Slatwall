@@ -134,6 +134,9 @@ Notes:
 		</cfcase>
 		<cfcase value="select">
 			<cfoutput>
+				<cfif !len(attributes.value)>
+					<cfset attributes.value = attributes.valueOptions[1]['value'] />
+				</cfif>
 				<select tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass#">
 					<cfloop array="#attributes.valueOptions#" index="option">
 						<cfset thisOptionValue = isSimpleValue(option) ? option : structFind(option, 'value') />
