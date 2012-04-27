@@ -123,7 +123,7 @@ Notes:
 		</cfcase>
 		<cfcase value="radiogroup">
 			<cfoutput>
-				<input type="hidden" name="#attributes.fieldName#" value="" />
+				<!--- <input type="hidden" name="#attributes.fieldName#" value="" /> --->
 				<cfloop array="#attributes.valueOptions#" index="option">
 					<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
 					<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
