@@ -302,7 +302,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			var transactionType = order.getOrderPayments()[i].getPaymentMethod().setting('paymentMethodCheckoutTransactionType');
 			
 			if(transactionType != 'none') {
-				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, getOrderPayments()[i].getAmount());
+				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount());
 				if(!paymentOK) {
 					order.getOrderPayments()[i].setAmount(0);
 					allPaymentsProcessed = false;
