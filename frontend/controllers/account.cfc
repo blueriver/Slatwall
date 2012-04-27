@@ -170,7 +170,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.accountPaymentMethodID = "";
 		rc.account = rc.$.slatwall.getCurrentAccount();
 		rc.paymentMethod = getPaymentService().getPaymentMethod(rc.$.event("paymentMethodID"));
-		rc.accountPaymentMethod = getAccountService().new("SlatwallAccountPaymentMethod#rc.paymentMethod.getPaymentMethodType()#");
+		rc.accountPaymentMethod = getAccountService().newAccountPaymentMethod();
 		rc.accountPaymentMethod.setPaymentMethod(rc.paymentMethod);
 		getFW().setView("frontend:account.editpaymentmethod");
 	}
@@ -178,11 +178,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function savePaymentMethod(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
 		var paymentMethod = getPaymentService().getPaymentMethod(rc.$.event("paymentMethod.paymentMethodID"));
-		rc.accountPaymentMethod = getAccountService().invokeMethod( "getAccountPaymentMethod#paymentMethod.getPaymentMethodType()#",{1=rc.accountPaymentMethodID,2=true});
+		rc.accountPaymentMethod = getAccountService().getAccountPaymentMethod(rc.accountPaymentMethodID, true);
 		// make sure PaymentMethod belongs to this account
 		if(rc.account.hasAccountPaymentMethod(rc.accountPaymentMethod) || rc.accountPaymentMethod.isNew()){
 			rc.accountPaymentMethod.setAccount(rc.account);
-			rc.accountPaymentMethod = getAccountService().invokeMethod("saveAccountPaymentMethod#paymentMethod.getPaymentMethodType()#",{1=rc.accountPaymentMethod, 2=rc});
+			rc.accountPaymentMethod = getAccountService().saveAccountPaymentMethod(rc.accountPaymentMethod, rc);
 			if(rc.accountPaymentMethod.hasErrors()) {
 				getFW().setView("frontend:account.editpaymentmethod");
 			} else {
@@ -197,7 +197,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(view == ""){
 			getFW().redirectExact("/my-account");
 		} else {
-			getFW().redirectExact("/my-account/?showitem=listpaymentmethod");
+			getFW().redirectExact("/my-account/?showitem=#arguments.view#");
 		}
 	}
 	

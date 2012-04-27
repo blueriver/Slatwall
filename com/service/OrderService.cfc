@@ -1030,26 +1030,26 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
 		
 		// First we verify that the two keys we need are in the data
-		if(structKeyExists(arguments.data, "amount") && structKeyExists(arguments.data, "trasactionType")) {
+		if(structKeyExists(arguments.data, "amount") && structKeyExists(arguments.data, "transactionType")) {
 			param name="arguments.data.providerTransactionID" default="";
 			
-			var maxAuthroizable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountReceived() - arguments.orderPayment.getAmountAuthroized();
+			var maxAuthroizable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountReceived() - arguments.orderPayment.getAmountAuthorized();
 			var maxChargable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountReceived();
 			var maxCapturable = arguments.orderPayment.getAmountAuthorized() - arguments.orderPayment.getAmountReceived();
 			var maxCreditable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountCredited();
 			
 			// Authorize 
-			if( arguments.transactionType == "authorize" && maxCapturable >= arguments.data.amount && getOrderPaymentType().getSystemCode() == "optCharge") {
+			if( arguments.data.transactionType == "authorize" && maxCapturable >= arguments.data.amount && arguments.orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
 				
 				getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount);
 			
 			// Authorize & Charge 
-			} else if (arguments.transactionType == "authorizeAndCharge" && maxChargable >= arguments.data.amount && getOrderPaymentType().getSystemCode() == "optCharge") {
+			} else if (arguments.data.transactionType == "authorizeAndCharge" && maxChargable >= arguments.data.amount && arguments.orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
 			
 				getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount);
 			
 			// Capture Pre-Authorization 
-			} else if (arguments.transactionType == "chargePreAuthorization" && maxCapturable >= arguments.data.amount && getOrderPaymentType().getSystemCode() == "optCharge") {
+			} else if (arguments.data.transactionType == "chargePreAuthorization" && maxCapturable >= arguments.data.amount && arguments.orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
 				
 				// If not explicitly defined providerTransactionID was passed in, then we can loop over previous transactions for authroization codes to capture the amount we need.
 				if(!structKeyExists(arguments.data, "providerTransactionID")) {
@@ -1086,7 +1086,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				
 			// Credit 
-			} else if (arguments.transactionType == "credit" && maxCreditable >= arguments.data.amount && getOrderPaymentType().getSystemCode() == "optCredit") {
+			} else if (arguments.data.transactionType == "credit" && maxCreditable >= arguments.data.amount && arguments.orderPayment.getOrderPaymentType().getSystemCode() == "optCredit") {
 				
 				getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount, arguments.data.providerTransactionID);		
 			
@@ -1097,7 +1097,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 				
 		} else {
-			arguments.orderPayment.addError('processing', 'You attempted to process an order payment be either a transactionType or an amount was not defined.');
+			arguments.orderPayment.addError('processing', 'You attempted to process an order payment but either a transactionType or an amount was not defined.');
 		}
 		
 		return arguments.orderPayment;

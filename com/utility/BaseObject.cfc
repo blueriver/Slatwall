@@ -899,6 +899,14 @@ component displayname="Base Object" accessors="true" output="false" {
 		return decryptedValue;
 	}
 	
+	public void function showErrorMessages() {
+		for(var errorName in getErrors()) {
+			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
+				showMessage(getErrors()[errorName][i], "error");
+			}
+		}
+	}
+	
 	public void function showMessageKey(required any messageKey) {
 		var messageType = listLast(messageKey, "_");
 		var message = rbKey(arguments.messageKey);
