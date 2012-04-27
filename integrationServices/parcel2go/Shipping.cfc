@@ -42,7 +42,30 @@ component accessors="true" output="false" displayname="parcel2go" implements="Sl
 	variables.liveRateURL = "https://v3.api.parcel2go.com/ParcelService.asmx";
 	
 	public any function init() {
-		variables.shippingMethods=[];
+		variables.shippingMethods = {
+			97 = "City Link Next Day",
+			215 = "City Link Standard",
+			208 = "Hermes UK Economy",
+			159 = "Parcel2Go UK Express",
+			220 = "Parcel2Go UK Standard",
+			113 = "Parcelforce Express AM",
+			162 = "Parcelforce Multi 12 Noon",
+			114 = "Parcelforce Express 24",
+			115 = "Parcelforce Express 48",
+			169 = "Palletforce Delivery - Next Day",
+			118 = "Palletforce Delivery - 48 Hours",
+			207 = "TNT UK Express Service",
+			205 = "TNT UK Saturday Express",
+			212 = "TNT UK 09:00 Express",
+			211 = "TNT UK 10:00 Express",
+			206 = "TNT UK 12:00 Express",
+			3 = "Yodel Northern Ireland",
+			90 = "Yodel Highland and Islands",
+			213 = "Yodel Standard Formerly DHL",
+			102 = "Yodel UK Delivery by 10 am",
+			217 = "Yodel 48 Formerly DHL",
+			219 = "Yodel UK Multi Formerly DHL"
+		};
 		
 		return this;
 	}

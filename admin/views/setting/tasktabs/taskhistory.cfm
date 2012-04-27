@@ -38,6 +38,10 @@ Notes:
 --->
 <cfparam name="rc.task" type="any"/>
 
+<cfif !arrayLen(rc.task.gettaskhistorySmartList().getOrders())>
+	<cfset rc.task.gettaskhistorySmartList().addOrder("createdDateTime|DESC") />
+</cfif>	
+
 <cfoutput>
 	<cf_slatwalllistingdisplay smartlist="#rc.task.gettaskhistorySmartList()#">
 		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="createdDateTime"/>

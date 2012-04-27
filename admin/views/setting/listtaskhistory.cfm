@@ -36,11 +36,16 @@
 Notes:
 
 --->
+
 <cfparam name="rc.taskHistorySmartList" type="any"/>
+
+<cfif !arrayLen(rc.taskHistorySmartList.getOrders())>
+	<cfset rc.taskHistorySmartList.addOrder("createdDateTime|DESC") />
+</cfif>	
 
 <cfoutput>
 
-	<cf_slatwalllistingdisplay smartlist="#rc.taskHistorySmartList#">
+	<cf_slatwalllistingdisplay smartlist="#rc.taskHistorySmartList#" >
 		<cf_slatwalllistingcolumn propertyidentifier="startTime"/>
 		<cf_slatwalllistingcolumn propertyidentifier="endTime"/>
 		<cf_slatwalllistingcolumn propertyidentifier="task.taskName"/>

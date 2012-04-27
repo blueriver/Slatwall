@@ -189,15 +189,6 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		endSlatwallAdminRequest($);
 	}
 	
-	public void function onAfterPortalSave(required any $) {
-		onAfterContentSave($);
-	}
-	
-	public void function onAfterPortalDelete(required any $) {
-		onAfterContentDelete($);
-	}
-	
-
 	
 	// ========================== Private Helper Methods ==============================
 	
@@ -273,11 +264,16 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 			if(arguments.settingData[settingName] != "") {
 				var setting = $.slatwall.getService("settingService").getSettingBySettingNameANDcmsContentID([settingName,arguments.slatwallContent.getCmsContentID()],true);
 				setting.setSettingName(settingName);
-				// setting value coming in with comma, temporary fix is list last
-				setting.setSettingValue(listLast(arguments.settingData[settingName]));
+				setting.setSettingValue(arguments.settingData[settingName]);
 				//setting.setContent(arguments.slatwallContent);
 				setting.setcmsContentID(arguments.slatwallContent.getCmsContentID());
 				$.slatwall.getService("settingService").saveSetting(setting);
+			} else {
+				// if nothing is selected the delete the setting so it can use inherited
+				var setting = $.slatwall.getService("settingService").getSettingBySettingNameANDcmsContentID([settingName,arguments.slatwallContent.getCmsContentID()],true);
+				if(!setting.isNew()) {
+					$.slatwall.getService("settingService").deleteSetting(setting);
+				}
 			}
 		}
 	}
@@ -292,7 +288,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		var contentRestrictAccessFlag = slatwallContent.getSettingDetails('contentRestrictAccessFlag');
 		var contentProductListingFlag = slatwallContent.getSettingDetails('contentProductListingFlag');
 		// check if content needs to be saved
-		if(slatwallData.templateFlag || slatwallData.setting.contentProductListingFlag != "" || contentProductListingFlag.settingValueFormatted || slatwallData.setting.contentRestrictAccessFlag != "" || contentRestrictAccessFlag.settingValueFormatted) {
+		if(slatwallData.templateFlag || slatwallData.setting.contentProductListingFlag != "" || contentProductListingFlag.settingValueFormatted || slatwallData.setting.contentRestrictAccessFlag != "" || contentRestrictAccessFlag.settingValueFormatted || slatwallData.setting.contentRestrictedContentDisplayTemplate != "") {
 			// set the parent content
 			var parentContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("parentID"));
 			if(!isNull(parentContent)) {

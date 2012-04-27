@@ -38,36 +38,54 @@ Notes:
 */
 component extends="BaseService" output="false" accessors="true"{
 
-	public void function executeTask( required any task, required any TaskSchedule) {
-		var taskResponse = "";
-		var taskHistory = new('TaskHistory');
-		task.setRunningFlag(true);
-		taskHistory.setStartTime(now());
+	public void function executeTask( required any taskID, required any TaskScheduleID) {
+		//Pass in id's and not complex objects like entities. thread doesnt like that
+		thread
+			action="run"
+			name="myThread"
+			taskID="#arguments.taskID#"
+			taskScheduleID="#arguments.TaskScheduleID#"
+			{
+				var taskResponse = "";
+				var taskHistory = new('TaskHistory');
+				var task = get('Task',attributes.taskID);
+				
+				
+				
+				task.setRunningFlag(true);
+				taskHistory.setStartTime(now());
+				
+				ormFlush();
 		
-		ormFlush();
-
-		try{
-			if( arguments.task.getTaskMethod() == "url") {
-				taskResponse = url( arguments.task.getTaskURL() );
-			} else {
-				taskResponse = this.invokeMethod( arguments.task.getTaskMethod() );
-			}
-			taskHistory.setsuccessFlag(true);
-			taskHistory.setResponse(taskResponse);
+				try{
+					if( task.getTaskMethod() == "url") {
+						taskResponse = url( task.getTaskURL() );
+					} else {
+						taskResponse = this.invokeMethod( task.getTaskMethod() );
+					}
+					taskHistory.setsuccessFlag(true);
+					taskHistory.setResponse(taskResponse);
+					
+				} catch(any e){
+					taskHistory.setsuccessFlag(false);
+					taskHistory.setResponse(e.Message);
+				}
+				
+				task.setRunningFlag(false);
+				taskHistory.setEndTime(now());
+				taskHistory.setTask(task);
+				
+				if(val(attributes.taskScheduleID)){
+					var taskSchedule = get('TaskSchedule',attributes.taskScheduleID);
+					schedule = taskSchedule.getSchedule();
+					TaskSchedule.setNextRunDateTime(schedule.getNextRunDateTime(TaskSchedule.getStartDateTime(),TaskSchedule.getEndDateTime()));
+				}
+				
+				save(taskHistory);
+				ormFlush();
+			}	
 			
-		} catch(any e){
-			taskHistory.setsuccessFlag(false);
-			taskHistory.setResponse(e.Message);
-		}
-		
-		task.setRunningFlag(false);
-		taskHistory.setEndTime(now());
-		taskHistory.setTask(task);
-		schedule = taskSchedule.getSchedule();
-		TaskSchedule.setNextRunDateTime(schedule.getNextRunDateTime(TaskSchedule.getStartDateTime(),TaskSchedule.getEndDateTime()));
-		save(taskHistory);
-		ormFlush();
-	}
+        } 
 	
 	
 	
@@ -82,7 +100,7 @@ component extends="BaseService" output="false" accessors="true"{
 	}
 	
 	public any function renewSubscriptionOrders() {
-		var response = new Slatwall.com.utility.TaskResponseBean();
+		var response = '';
 		// Do Logic
 		
 		return response;
