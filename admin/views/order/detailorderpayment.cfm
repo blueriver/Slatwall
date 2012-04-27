@@ -41,12 +41,21 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:order.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#"></cf_SlatwallActionBar>
+		<cf_SlatwallActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:order.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
+			<cf_SlatwallActionCaller type="list" action="admin:order.processorderpayment" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" modal="true" />
+		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" >
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountReceived" >
+			<cf_SlatwallPropertyList divClass="span6">
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="creditCardType" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
+			</cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divClass="span6">
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountReceived" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountCredited" />
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

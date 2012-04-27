@@ -47,8 +47,8 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
-	property name="expirationMonth" ormType="string";
-	property name="expirationYear" ormType="string";
+	property name="expirationMonth" ormType="string" formfieldType="select";
+	property name="expirationYear" ormType="string" formfieldType="select";
 	
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -98,6 +98,42 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	public string function getPaymentMethodType() {
 		return getPaymentMethod().getPaymentMethodType();
+	}
+
+	public array function getExpirationMonthOptions() {
+		return [
+			'01',
+			'02',
+			'03',
+			'04',
+			'05',
+			'06',
+			'07',
+			'08',
+			'09',
+			'10',
+			'11',
+			'12'
+		];
+	}
+	
+	public array function getExpirationYearOptions() {
+		return [
+			{name='2012', value='12'},
+			{name='2013', value='13'},
+			{name='2014', value='14'},
+			{name='2015', value='15'},
+			{name='2016', value='16'},
+			{name='2017', value='17'},
+			{name='2018', value='18'},
+			{name='2019', value='19'},
+			{name='2020', value='20'},
+			{name='2021', value='21'},
+			{name='2022', value='22'},
+			{name='2023', value='23'},
+			{name='2024', value='24'},
+			{name='2025', value='25'}
+		];
 	}
 
 	public array function getProcessTransactionTypeOptions() {

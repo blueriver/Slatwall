@@ -42,6 +42,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderPaymentsSmartList()#" 
 			recordDetailAction="admin:order.detailorderpayment"
+			recordEditAction="admin:order.editorderpayment"
 			recordProcessAction="admin:order.processorderpayment"
 			recordProcessModal="true">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />

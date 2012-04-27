@@ -8,9 +8,5 @@
 			<rule type="required" contexts="saveCreditCard" />
 			<rule type="numeric" contexts="saveCreditCard" />
 		</property>
-		<property name="securityCode">
-			<rule type="required" contexts="saveCreditCard" />
-			<rule type="numeric" contexts="saveCreditCard" />
-		</property>
 	</objectProperties>
 </validateThis>

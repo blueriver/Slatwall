@@ -96,6 +96,10 @@ component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTr
 	
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentationPropertyName() {
+		return "providerTransactionID";
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================

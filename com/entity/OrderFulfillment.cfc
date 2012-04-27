@@ -174,9 +174,21 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	    	var items = getOrderFulfillmentItems();
 	    	for( var i=1; i<=arrayLen(items); i++ ) {
 	    		variables.subtotal += items[i].getExtendedPrice();
-	    	}			
+	    	}
   		}
     	return variables.subtotal;
+    }
+    
+    public numeric function getSubtotalAfterDiscounts() {
+    	return getSubtotal() - getItemDiscountAmountTotal();
+    }
+    
+    public numeric function getSubtotalAfterDiscountsWithTax() {
+    	return getSubtotal() - getItemDiscountAmountTotal() + getTaxAmount();
+    }
+    
+    public numeric function getFulfillmentTotal() {
+    	return getSubtotalAfterDiscountsWithTax() + getChargeAfterDiscount();
     }
     
     public numeric function getTaxAmount() {
@@ -189,8 +201,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	}
     	return variables.taxAmount;
     }
-    
-    
+        
    	public numeric function getItemDiscountAmountTotal() {
    		if(!structKeyExists(variables, "itemDiscountAmountTotal")) {
    			variables.itemDiscountAmountTotal = 0;
@@ -201,15 +212,24 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		return variables.itemDiscountAmountTotal;
 	}
     
-    public numeric function getQuantityUndelivered() {
-    	if(!structKeyExists(variables,"quantityUndelivered")) {
-    		variables.quantityUndelivered = 0;
-    		var items = getOrderFulfillmentItems();
-    		for(var i=1; i<=arrayLen(items);i++) {
-    			variables.quantityUndelivered += items[i].getQuantityUndelivered();
-    		}
-    	}
-    	return variables.quantityUndelivered;
+	public numeric function getQuantityUndelivered() {
+    	var quantityUndelivered = 0;
+		
+		for(var i=1; i<=arrayLen(getOrderFulfillmentItems());i++) {
+			quantityUndelivered += getOrderFulfillmentItems()[i].getQuantityUndelivered();
+		}
+    	
+    	return quantityUndelivered;
+    }
+    
+    public numeric function getQuantityDelivered() {
+    	var quantityDelivered = 0;
+		
+		for(var i=1; i<=arrayLen(getOrderFulfillmentItems());i++) {
+			quantityDelivered += getOrderFulfillmentItems()[i].getQuantityDelivered();
+		}
+    	
+    	return quantityDelivered;
     }
     
     public any function getShippingMethodOptions() {
