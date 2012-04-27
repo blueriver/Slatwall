@@ -45,12 +45,16 @@ Notes:
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="createdDateTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="createdDateTime">
+				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="fulfillmentMethod">
+				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="trackingNumber">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallListingDisplay smartList="#rc.orderDelivery.getOrderDeliveryItemsSmartList()#">
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.title" />
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.skuCode" />
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="quantity" />
 		</cf_SlatwallListingDisplay>
 		
 	</cf_SlatwallDetailForm>

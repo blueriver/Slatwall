@@ -302,6 +302,37 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return totalPaymentsReceived;
 	}
 	
+	public numeric function getDeliveredItemsPaymentAmountUnreceived() {
+		var received = getPaymentAmountReceivedTotal();
+		var amountDelivered = 0;
+		
+		for(var f=1; f<=arrayLen(getOrderFulfillments()); f++) {
+			// If this fulfillment is fully delivered, then just add the entire amount
+			if(getOrderFulfillments()[f].getQuantityUndelivered() == 0) {
+				amountDelivered += getFulfillmentTotal();
+				
+			// If this fulfillment has at least one item delivered
+			} else if(getOrderFulfillments()[f].getQuantityDelivered() > 0) {
+				
+				// Add the fulfillmentCharge
+				amountDelivered += getOrderFulfillments()[f].getChargeAfterDiscount();
+				
+				// Loop over the fulfillmentItems and add each of the amounts to the total amount delivered
+				for(var i=1; i<=arrayLen(getOrderFulfillments()[f].getOrderFulfillmentItems()); i++) {
+					var item = getOrderFulfillments()[f].getOrderFulfillmentItems()[i];
+					
+					if(item.getQuantityUndelivered() == 0) {
+						amountDelivered += (item.getItemTotal());
+					} else if (item.getQuantityDelivered() > 0) {
+						amountDelivered += (item.getItemTotal() * (item.getQuantityDelivered() / item.getQuantity()));
+					}
+				}
+			}
+		}
+		
+		return amountDelivered - getPaymentAmountReceivedTotal();
+	}
+	
 	public numeric function getQuantityDelivered() {
 		var orderItems = getOrderItems();
 		var variables.quantityDelivered = 0;
@@ -367,6 +398,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		return variables.totalQuantity;
 	}
+	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	

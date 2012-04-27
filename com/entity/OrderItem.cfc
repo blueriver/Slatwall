@@ -80,7 +80,8 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="extendedPriceAfterDiscount" persistent="false" formatType="currency" ; 
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
-	property name="taxAmount" persistent="false" formatType="currency" ; 
+	property name="taxAmount" persistent="false" formatType="currency" ;
+	property name="itemTotal" persistent="false" formatType="currency" ; 
 
 	public any function init() {
 		
@@ -186,10 +187,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     }
     
     public struct function getQuantityPriceAlreadyReturned() {
-    	
-    	
-    	
-    	
     	return getService("OrderService").getQuantityPriceSkuAlreadyReturned(getOrder().getOrderID(), getSku().getSkuID());
     }
     
@@ -197,13 +194,13 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public numeric function getDiscountAmount() {
-		if(!structKeyExists(variables,"discountAmount")) {
-			variables.discountAmount = 0;
-			for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
-				variables.discountAmount += getAppliedPromotions()[i].getDiscountAmount();
-			}
+		var discountAmount = 0;
+		
+		for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
+			discountAmount += getAppliedPromotions()[i].getDiscountAmount();
 		}
-		return variables.discountAmount;
+		
+		return discountAmount;
 	}
 	
 	public numeric function getExtendedPrice() {
@@ -219,26 +216,31 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	}
 	
 	public numeric function getTaxAmount() {
-		if(!structKeyExists(variables,"taxAmount")) {
-			variables.taxAmount = 0;
-			for(var i=1; i<=arrayLen(getAppliedTaxes()); i++) {
-				variables.taxAmount += getAppliedTaxes()[i].getTaxAmount();
-			}
+		var taxAmount = 0;
+		
+		for(var i=1; i<=arrayLen(getAppliedTaxes()); i++) {
+			taxAmount += getAppliedTaxes()[i].getTaxAmount();
 		}
-		return variables.taxAmount;
+		
+		return taxAmount;
 	}
 	
 	public numeric function getQuantityDelivered() {
-		variables.quantityDelivered = 0;
-		var deliveryItems = getOrderDeliveryItems();
-		for( var thisDeliveryItem in deliveryItems ) {
-			variables.quantityDelivered += thisDeliveryItem.getQuantity();				
-		}			
-		return variables.quantityDelivered;
+		var quantityDelivered = 0;
+		
+		for( var i=1; i<=arrayLen(getOrderDeliveryItems()); i++){
+			quantityDelivered = getOrderDeliveryItems()[i].getQuantity();
+		}
+		
+		return quantityDelivered;
 	}
 	
 	public numeric function getQuantityUndelivered() {
 		return getQuantity() - getQuantityDelivered();
+	}
+	
+	public numeric function getItemTotal() {
+		return getTaxAmount() + getExtendedPriceAfterDiscount();
 	}
 	
 	

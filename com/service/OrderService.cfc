@@ -1,18 +1,18 @@
 /*
-
+	
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
-
+	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
+	
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
+	
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+	
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -32,9 +32,9 @@
     this exception to your version of the library, but you are not
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
-
+	
 Notes:
-
+	
 */
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 
@@ -962,6 +962,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					}
 				}
 				
+				// Setup a total item value delivered so we can charge the proper amount for the payment later
+				var totalItemValueDelivered = 0;
+				
 				// Loop over the records in the data to set the quantity for the delivery
 				if(structKeyExists(arguments.data, "records")) {
 					for(var i=1; i<=arrayLen(arguments.data.records); i++) {
@@ -985,6 +988,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 									orderDeliveryItem.setStock( stock );
 									orderDeliveryItem.setQuantity( arguments.data.records[i].quantity );
 									
+									// Add the value of this item to the total charge
+									totalItemValueDelivered += (orderItem.getExtendedPriceAfterDiscount() + orderItem.getTaxAmount()) * ( arguments.data.records[i].quantity / orderItem.getQuantity() );
+									
 									// setup subscription data if this was subscriptionOrder item
 									setupSubscriptionOrderItem( orderItem );
 								
@@ -992,17 +998,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 									setupOrderItemContentAccess( orderItem );
 								
 								} else {
-									arguments.orderFulfillment.addError('orderFulfillmentItem', 'You are trying to fulfill a quantity of #arguments.data.records[i].quantity# for #orderItem.getSku().getProduct().getProductTitle()# - #orderItem.getSku().displayOptions()# and that item only has an undelivered quantity of #orderItem.getQuantityUndelivered()#');
+									arguments.orderFulfillment.addError('orderFulfillmentItem', 'You are trying to fulfill a quantity of #arguments.data.records[i].quantity# for #orderItem.getSku().getProduct().getTitle()# - #orderItem.getSku().displayOptions()# and that item only has an undelivered quantity of #orderItem.getQuantityUndelivered()#');
 									
 								}
 								
 							} else {
 								arguments.orderFulfillment.addError('orderFulfillmentItem', 'An orderItem with the ID: #arguments.data.records[i].orderItemID# was trying to be processed with this fulfillment, but that orderItem does not exist');
 							}
-
 						}
-						
-					}	
+					}
 				}
 				
 				// Validate the orderDelivery
@@ -1016,18 +1020,84 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					// Update the Order Status
 					updateOrderStatus( arguments.orderFulfillment.getOrder(), true );
 					
+					// Look to charge orderPayments
+					if(structKeyExists(arguments.data, "processCreditCard") && arguments.data.processCreditCard) {
+						
+						var totalAmountToCharge = arguments.orderFulfillment.getOrder().getDeliveredItemsPaymentAmountUnreceived();
+						var totalAmountCharged = 0;
+						
+						for(var p=1; p<=arrayLen(arguments.orderFulfillment.getOrder().getOrderPayments()); p++) {
+							
+							var orderPayment = arguments.orderFulfillment.getOrder().getOrderPayments()[p];
+							
+							// Make sure that this is a credit card, and that it is a charge type of payment
+							if(orderPayment.getPaymentMethodType() == "creditCard" && orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
+								
+								// Check to make sure this payment hasn't been fully received
+								if(orderPayment.getAmount() > orderPayment.getAmountReceived()) {
+									
+									var thisAmountToCharge = 0;
+									
+									// Attempt to capture preAuthorizations first
+									if(orderPayment.getAmountAuthorized() > orderPayment.getAmountReceived()) {
+										var thisAmountToCharge = orderPayment.getAmountAuthorized() - orderPayment.getAmountReceived();
+										if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
+											thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
+										}
+										orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="chargePreAuthorization"});
+										if(!orderPayment.hasErrors()) {
+											totalAmountCharged += thisAmountToCharge;
+										} else {
+											structDelete(orderPayment.getErrors(), "processing");
+										}
+									}
+									
+									// Attempt to authorizeAndCharge now
+									if(orderPayment.getAmountReceived() < orderPayment.getAmount() && totalAmountToCharge > totalAmountCharged) {
+										var thisAmountToCharge = orderPayment.getAmount() - orderPayment.getAmountReceived();
+										if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
+											thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
+										}
+										orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="authorizeAndCharge"});
+										if(!orderPayment.hasErrors()) {
+											totalAmountCharged += thisAmountToCharge;
+										} else {
+											structDelete(orderPayment.getErrors(), "processing");
+										}
+									}
+									
+									// Stop trying to charge payments, if we have charged everything we need to
+									if(totalAmountToCharge == totalAmountCharged) {
+										break;
+									}
+								}
+								
+							}
+						}
+						
+					}
+					
 				} else {
 					
 					getSlatwallScope().setORMHasErrors( true );
+					
+					arguments.orderFulfillment.addError('location', 'The delivery that would have been created had errors');
 				}
 				
 			} else {
 				arguments.orderFulfillment.addError('location', 'The Location id that was passed in does not represent a valid location');	
-				getSlatwallScope().setORMHasErrors( true );
+				
 			}
 		} else {
 			arguments.orderFulfillment.addError('location', 'No Location was passed in');
+			
+		}
+		
+		// if this fulfillment had error then we don't want to persist anything
+		if(arguments.orderFulfillment.hasErrors()) {
+			
 			getSlatwallScope().setORMHasErrors( true );
+			
 		}
 		
 		return arguments.orderFulfillment;
@@ -1105,6 +1175,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 		} else {
 			arguments.orderPayment.addError('processing', 'You attempted to process an order payment but either a transactionType or an amount was not defined.');
+		}
+		
+		if(!arguments.orderPayment.hasErrors()) {
+			
+			// Update the Order Status
+			updateOrderStatus( arguments.orderPayment.getOrder() );
+			
 		}
 		
 		return arguments.orderPayment;
