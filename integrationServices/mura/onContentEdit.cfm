@@ -48,11 +48,6 @@ Notes:
 <cfset contentRequirePurchaseFlag = slatwallContent.getSettingDetails('contentRequirePurchaseFlag') />
 <cfset contentRequireSubscriptionFlag = slatwallContent.getSettingDetails('contentRequireSubscriptionFlag') />
 <cfoutput>
-	<cfif contentRestrictAccessFlag.settingValueFormatted>
-		<input type="hidden" name="slatwallData.templateFlag" value="0" />
-		<!---<input type="hidden" name="slatwallData.productListingFlag" value="0" />
-		<input type="hidden" name="slatwallData.restrictAccessFlag" value="1" />--->
-	</cfif>
 	<dl class="oneColumn">
 		<cf_SlatwallFieldDisplay title="#request.slatwallScope.rbKey("entity.content.templateFlag_hint")#" fieldName="slatwallData.templateFlag" fieldType="yesno" value="#slatwallContent.getTemplateFlag()#" edit="true">
 		<cf_SlatwallSetting settingName="contentProductListingFlag" settingObject="#slatwallContent#" />

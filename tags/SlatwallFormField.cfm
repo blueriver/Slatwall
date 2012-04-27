@@ -123,7 +123,8 @@ Notes:
 		</cfcase>
 		<cfcase value="radiogroup">
 			<cfoutput>
-				<cfif !len(attributes.value)>
+				<!--- if attributes.value is "" and "" is not a valid option default to first one --->
+				<cfif !len(attributes.value) AND arrayFind(attributes.valueOptions,"")>
 					<cfset attributes.value = attributes.valueOptions[1]['value'] />
 				</cfif>
 				<cfloop array="#attributes.valueOptions#" index="option">

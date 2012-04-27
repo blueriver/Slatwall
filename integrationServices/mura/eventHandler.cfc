@@ -268,6 +268,12 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 				//setting.setContent(arguments.slatwallContent);
 				setting.setcmsContentID(arguments.slatwallContent.getCmsContentID());
 				$.slatwall.getService("settingService").saveSetting(setting);
+			} else {
+				// if nothing is selected the delete the setting so it can use inherited
+				var setting = $.slatwall.getService("settingService").getSettingBySettingNameANDcmsContentID([settingName,arguments.slatwallContent.getCmsContentID()],true);
+				if(!setting.isNew()) {
+					$.slatwall.getService("settingService").deleteSetting(setting);
+				}
 			}
 		}
 	}
