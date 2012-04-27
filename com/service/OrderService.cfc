@@ -972,21 +972,29 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							var orderItem = this.getOrderItem(arguments.data.records[i].orderItemID);
 							if(!isNull(orderItem)) {
 								
-								// Grab the stock that matches the item and the location from which we are delivering
-								var stock = getStockService().getStockBySkuAndLocation(orderItem.getSku(), orderDelivery.getLocation());
+								// Make sure that we aren't trying to deliver more than was ordered
+								if(orderItem.getQuantityUndelivered() >= arguments.data.records[i].quantity) {
+									
+									// Grab the stock that matches the item and the location from which we are delivering
+									var stock = getStockService().getStockBySkuAndLocation(orderItem.getSku(), orderDelivery.getLocation());
+									
+									// Create and Populate a new delivery item
+									var orderDeliveryItem = this.newOrderDeliveryItem();
+									orderDeliveryItem.setOrderDelivery( orderDelivery );
+									orderDeliveryItem.setOrderItem( orderItem );
+									orderDeliveryItem.setStock( stock );
+									orderDeliveryItem.setQuantity( arguments.data.records[i].quantity );
+									
+									// setup subscription data if this was subscriptionOrder item
+									setupSubscriptionOrderItem( orderItem );
 								
-								// Create and Populate a new delivery item
-								var orderDeliveryItem = this.newOrderDeliveryItem();
-								orderDeliveryItem.setOrderDelivery( orderDelivery );
-								orderDeliveryItem.setOrderItem( orderItem );
-								orderDeliveryItem.setStock( stock );
-								orderDeliveryItem.setQuantity( arguments.data.records[i].quantity );
+									// setup content access if this was content purchase
+									setupOrderItemContentAccess( orderItem );
 								
-								// setup subscription data if this was subscriptionOrder item
-								setupSubscriptionOrderItem( orderItem );
-							
-								// setup content access if this was content purchase
-								setupOrderItemContentAccess( orderItem );
+								} else {
+									arguments.orderFulfillment.addError('orderFulfillmentItem', 'You are trying to fulfill a quantity of #arguments.data.records[i].quantity# for #orderItem.getSku().getProduct().getProductTitle()# - #orderItem.getSku().displayOptions()# and that item only has an undelivered quantity of #orderItem.getQuantityUndelivered()#');
+									
+								}
 								
 							} else {
 								arguments.orderFulfillment.addError('orderFulfillmentItem', 'An orderItem with the ID: #arguments.data.records[i].orderItemID# was trying to be processed with this fulfillment, but that orderItem does not exist');
@@ -1009,8 +1017,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					updateOrderStatus( arguments.orderFulfillment.getOrder(), true );
 					
 				} else {
-					// TODO: add the errors to the fulfillment so that they can be displayed on the front-end
-					arguments.orderFulfillment.addError('orderDelivery', 'There was an unknown error when creating the orderDelivery for this fulfillment');
+					
 					getSlatwallScope().setORMHasErrors( true );
 				}
 				
