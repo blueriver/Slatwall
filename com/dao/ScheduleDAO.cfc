@@ -37,40 +37,25 @@ Notes:
 
 --->
 <cfcomponent extends="BaseDAO">
-	<cffunction name="getDueTasks" access="public" returntype="Array" >
+	<cffunction name="getDueTasks" access="public" returntype="Query" >
 		<cfargument name="maxCount" required="true" type="numeric" >
 		
-		<!--- 
-			needs switching to hql but couldnt get it working yet
-		--->
-		<!---<cfset hql = "from SlatwallTask inner join SlatwallTask.SlatwallTaskSchedule" />--->
-		
-		<!---
-			 inner join SlatwallTaskSchedule ON SlatwallTaskSchedule.taskID = SlatwallTask.taskid where runningflag=false and activeflag= true and slatwallTaskSchedule.nextRunDateTime<=:dt 
-		--->
-		<!---<cfreturn ormExecuteQuery(hql) />--->
-		<!--- <cfreturn ormExecuteQuery(hql, {dt=now()}, true,{maxRows=arguments.maxCount}) /> --->
-		
-		<cfset aTasks = [] />
 		<cfquery name="tasks">
 			SELECT
+				SlatwallTask.taskID,
 				SlatwallTaskSchedule.taskScheduleID
 			FROM
 				SlatwallTaskSchedule
 			INNER JOIN 
 				SlatwallTask ON SlatwallTask.taskID = SlatwallTaskSchedule.taskid 
-			<!---WHERE 
+			WHERE 
 				SlatwallTask.runningflag=false  
 			AND	
 				SlatwallTask.activeflag= true 
 			AND 
-				slatwallTaskSchedule.nextRunDateTime <=	<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" > --->
+				slatwallTaskSchedule.nextRunDateTime <=	<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" >
 		</cfquery>	
 		
-		<cfloop query="tasks">
-			<cfset arrayAppend(aTasks,get('TaskSchedule',taskScheduleID)) />
-		</cfloop>	
-		
-		<cfreturn aTasks/>
+		<cfreturn tasks/>
 	</cffunction>	
 </cfcomponent>
