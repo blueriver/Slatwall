@@ -39,7 +39,7 @@ Notes:
 component extends="BaseService" output="false" accessors="true"{
 	property name="taskService" type="any";
 	
-	public array function getDueTasks(numeric maxCount = 5){
+	public query function getDueTasks(numeric maxCount = 5){
 		return getDAO().getDueTasks(maxCount);
 	}
 	
@@ -47,10 +47,10 @@ component extends="BaseService" output="false" accessors="true"{
 		// Get the scheduled Tasks
 		var tasks = getDueTasks();
 		// Loop over all secheduled Tasks
-		for(i=1; i <= arrayLen(tasks); i++){
+		for(i=1; i <= tasks.recordcount; i++){
 			// Call Execute Task on Task Service
 			
-			getTaskService().executeTask(tasks[i].getTask(),tasks[i]);
+			getTaskService().executeTask(tasks.taskID[i],tasks.taskScheduleID[i]);
 			
 		}
 	}

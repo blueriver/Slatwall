@@ -176,6 +176,13 @@ component extends="BaseController" output="false" accessors="true" {
 		
 	}
 	
+	public void function saveTask(required struct rc){
+		
+		rc.runningFlag=false;
+		
+		super.genericSaveMethod('Task',rc);
+	}
+	
 	public void function saveTaskSchedule(required struct rc){
 		
 		rc.nextRunDateTime = getScheduleService().getSchedule(rc.schedule.scheduleid).getNextRunDateTime(rc.startDateTime,rc.endDateTime); 	
