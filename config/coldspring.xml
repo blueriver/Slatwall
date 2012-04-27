@@ -28,6 +28,7 @@
 	<bean id="settingDAO" class="Slatwall.com.dao.SettingDAO" />
 	<bean id="skuDAO" class="Slatwall.com.dao.SkuDAO" />
 	<bean id="optionDAO" class="Slatwall.com.dao.OptionDAO" />
+	<bean id="taskDAO" class="Slatwall.com.dao.TaskDAO" />
 	<bean id="taxDAO" class="Slatwall.com.dao.TaxDAO" />
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
 	<bean id="termDAO" class="Slatwall.com.dao.TermDAO" />
@@ -311,6 +312,7 @@
 	</bean>
 	<bean id="scheduleService" class="Slatwall.com.service.ScheduleService">
         <property name="DAO"><ref bean="ScheduleDAO" /></property>
+		<property name="taskService"><ref bean="taskService" /></property>
     </bean>
     <bean id="sessionService" class="Slatwall.com.service.SessionService">
         <property name="DAO"><ref bean="SessionDAO" /></property>
@@ -344,6 +346,9 @@
     </bean>
     <bean id="subscriptionService" class="Slatwall.com.service.SubscriptionService">
         <property name="DAO"><ref bean="SubscriptionDAO" /></property>
+    </bean>
+	<bean id="taskService" class="Slatwall.com.service.TaskService">
+        <property name="DAO"><ref bean="taskDAO" /></property>
     </bean>
 	<bean id="taxService" class="Slatwall.com.service.TaxService">
         <property name="DAO"><ref bean="taxDAO" /></property>

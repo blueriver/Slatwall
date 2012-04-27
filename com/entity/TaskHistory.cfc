@@ -41,7 +41,7 @@ component displayname="Task History" entityname="SlatwallTaskHistory" table="Sla
 	// Persistent Properties
 	property name="taskHistoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="successFlag" ormtype="boolean";
-	property name="message" ormtype="string";
+	property name="response" ormtype="string";
 	property name="startTime" ormtype="timestamp";
 	property name="endTime" ormtype="timestamp";
 	

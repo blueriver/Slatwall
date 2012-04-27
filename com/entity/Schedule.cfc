@@ -74,7 +74,7 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 		
 	}
 	
-	public array function getRecursIntervalOptions() {
+	public array function geRecuringTypeOptions() {
 		var options = [
 			{name="Daily", value="daily"},
 			{name="Weekly", value="weekly"},

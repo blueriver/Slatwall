@@ -42,7 +42,7 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	property name="taskID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" formatType="yesno";
 	property name="taskName" ormtype="string";
-	property name="taskMethod" ormtype="string";
+	property name="taskMethod" ormtype="string" formatType="select";
 	property name="taskUrl" ormtype="string";
 	property name="runningFlag" ormtype="boolean" formatType="yesno";
 	property name="timeout" ormtype="int" ;
@@ -68,7 +68,13 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	
 	// Non-Persistent Properties
 
-	
+	public array function getTaskMethodOptions() {
+		var options = [
+			{name="url", value="url"},
+			{name="renewSubscriptionOrders", value="renewSubscriptionOrders"}
+		];
+		return options;
+	}
 	// ============ START: Non-Persistent Property Methods =================
 	
 	

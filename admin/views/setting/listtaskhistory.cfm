@@ -40,16 +40,12 @@ Notes:
 
 <cfoutput>
 
-	<cf_slatwalllistingdisplay smartlist="#rc.taskHistorySmartList#" 
-	                           recordeditaction="admin:setting.detailtaskhistory" 
-	                           recordeditquerystring="returnAction=admin:setting.listtaskhistory" 
-	                           recordeditmodal="true" recorddeleteaction="admin:setting.deletetaskhistory">
-		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="createdDateTime"/>
+	<cf_slatwalllistingdisplay smartlist="#rc.taskHistorySmartList#">
 		<cf_slatwalllistingcolumn propertyidentifier="startTime"/>
 		<cf_slatwalllistingcolumn propertyidentifier="endTime"/>
-		<cf_slatwalllistingcolumn propertyidentifier="task"/>
+		<cf_slatwalllistingcolumn propertyidentifier="task.taskName"/>
 		<cf_slatwalllistingcolumn propertyidentifier="successFlag"/>
-		<cf_slatwalllistingcolumn propertyidentifier="message"/>
+		<cf_slatwalllistingcolumn propertyidentifier="response"/>
 	</cf_slatwalllistingdisplay>
 
 </cfoutput>

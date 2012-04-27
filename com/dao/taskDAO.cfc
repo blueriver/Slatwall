@@ -1,4 +1,4 @@
-/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,57 +35,7 @@
 
 Notes:
 
-*/
-component extends="BaseService" output="false" accessors="true"{
-
-	public void function executeTask( required any task, required any TaskSchedule) {
-		var taskResponse = "";
-		var taskHistory = new('TaskHistory');
-		task.setRunningFlag(true);
-		taskHistory.setStartTime(now());
-		
-		ormFlush();
-
-		try{
-			if( arguments.task.getTaskMethod() == "url") {
-				taskResponse = url( arguments.task.getTaskURL() );
-			} else {
-				taskResponse = this.invokeMethod( arguments.task.getTaskMethod() );
-			}
-			taskHistory.setsuccessFlag(true);
-			taskHistory.setResponse(taskResponse);
-			
-		} catch(any e){
-			taskHistory.setsuccessFlag(false);
-			taskHistory.setResponse(e.Message);
-		}
-		
-		task.setRunningFlag(false);
-		taskHistory.setEndTime(now());
-		taskHistory.setTask(task);
-		schedule = taskSchedule.getSchedule();
-		TaskSchedule.setNextRunDateTime(schedule.getNextRunDateTime(TaskSchedule.getStartDateTime(),TaskSchedule.getEndDateTime()));
-		save(taskHistory);
-		ormFlush();
-	}
+--->
+<cfcomponent extends="BaseDAO">
 	
-	
-	
-	
-	// ================== Start: Task Methods ============================
-	
-	public any function url( required string url ) {
-		var response = {};
-		// Call CFHTTP for a URL
-		
-		return response;
-	}
-	
-	public any function renewSubscriptionOrders() {
-		var response = new Slatwall.com.utility.TaskResponseBean();
-		// Do Logic
-		
-		return response;
-	}
-	
-}
+</cfcomponent>
