@@ -123,8 +123,16 @@ Notes:
 		</cfcase>
 		<cfcase value="radiogroup">
 			<cfoutput>
-				<!--- if attributes.value is "" and "" is not a valid option default to first one --->
-				<cfif !len(attributes.value) AND arrayFind(attributes.valueOptions,"")>
+				<!--- if attributes.value is not a valid option default to first one, Array find can't find empty value so we need to loop through --->
+				<cfset valueExists = false />
+				<cfloop array="#attributes.valueOptions#" index="option">
+					<cfset thisOptionValue = isSimpleValue(option)?option:option['value'] />
+					<cfif thisOptionValue EQ attributes.value>
+						<cfset valueExists = true />
+						<cfbreak />
+					</cfif>
+				</cfloop>
+				<cfif !valueExists>
 					<cfset attributes.value = attributes.valueOptions[1]['value'] />
 				</cfif>
 				<cfloop array="#attributes.valueOptions#" index="option">
