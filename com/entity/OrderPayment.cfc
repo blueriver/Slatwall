@@ -154,11 +154,11 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	public void function copyFromAccountPaymentMethod(required any accountPaymentMethod) {
 		setNameOnCreditCard( accountPaymentMethod.getNameOnCreditCard() );
+		setPaymentMethod( accountPaymentMethod.getPaymentMethod() );
 		setCreditCardNumber( accountPaymentMethod.getCreditCardNumber() );
 		setExpirationMonth( accountPaymentMethod.getExpirationMonth() );
 		setExpirationYear( accountPaymentMethod.getExpirationYear() );
 		setBillingAddress( accountPaymentMethod.getBillingAddress().copyAddress( true ) );
-		setPaymentMethod( accountPaymentMethod.getPaymentMethod() );
 	}	
 	
 	// ============ START: Non-Persistent Property Methods =================
