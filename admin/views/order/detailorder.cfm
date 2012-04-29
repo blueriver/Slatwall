@@ -43,6 +43,9 @@ Notes:
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
 			<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
+			<cfif rc.order.getQuantityDelivered()>
+				<cf_SlatwallActionCaller action="admin:order.createreturnorder" queryString="originalOrderID=#rc.order.getOrderID()#" type="list" modal=true />
+			</cfif>
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>

@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,22 +35,16 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.originalOrder" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="orderService" type="any";
-	property name="paymentService" type="any";
-	property name="LocationService" type="any";
-	
-	public void function default(required struct rc) {
-		getFW().redirect("admin:order.listorder");
-	}
-	
-	public any function createreturnorder( required struct rc ) {
-		param name="rc.originalorderid" type="string" default="";
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.originalOrder#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.originalOrder#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
-		rc.originalOrder = getOrderService().getOrder(rc.originalOrderID);
-	}
-	
-}
+		<input name="originalOrder.originialOrderID" value="#rc.originalOrder.getOrderID()#" />
+		
+		
+	</cf_SlatwallDetailForm>
+</cfoutput>
