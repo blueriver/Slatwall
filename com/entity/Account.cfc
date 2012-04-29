@@ -110,6 +110,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(isNull(variables.priceGroups)) {
 			variables.priceGroups = [];
 		}
+		if(isNull(variables.accountPaymentMethods)) {
+			variables.accountPaymentMethods = [];
+		}
 		if(isNull(variables.subscriptionUsageBenefitAccounts)) {
 			variables.subscriptionUsageBenefitAccounts = [];
 		}
