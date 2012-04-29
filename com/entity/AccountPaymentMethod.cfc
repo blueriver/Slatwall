@@ -152,7 +152,10 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	public void function setCreditCardNumber(required string creditCardNumber) {
 		variables.creditCardNumber = arguments.creditCardNumber;
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
-		setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
+		if(getCreditCardType() != "Invalid") {
+			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+		}
 	}
 	
 	public string function getCreditCardNumber() {
