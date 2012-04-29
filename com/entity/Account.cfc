@@ -323,6 +323,16 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
+	public any function getPrimaryAccountPaymentMethod() {
+		if(!isNull(variables.primaryAccountPaymentMethod)) {
+			return variables.primaryAccountPaymentMethod;
+		} else if (arrayLen(getAccountPaymentMethods())) {
+			return getAccountPaymentMethods()[1];
+		} else {
+			return getService("accountService").newAccountPaymentMethod();
+		}
+	}
+	
 	
 	// ==================  END:  Overridden Methods ========================
 	
