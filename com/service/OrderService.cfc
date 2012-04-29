@@ -53,6 +53,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="utilityService";
 	property name="utilityEmailService";
 	property name="stockService";
+	property name="subscriptionService";
 	property name="typeService";
 	
 	public any function getOrderSmartList(struct data={}) {
@@ -260,13 +261,24 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public boolean function updateAndVerifyOrderPayments(required any order, required struct data) {
 		var paymentsOK = true;
+		var requirePayment = false;
 		
+		// check if payment method is required for subscription order, even if the amount is 0
+		if(!arrayLen(order.getOrderPayments())) {
+			for(var orderItem in arguments.order.getOrderItems()) {
+				if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
+					requirePayment = true;
+					break;
+				}
+			}
+		}
+	
 		if(structKeyExists(data, "orderPayments")) {
 			var paymentsDataArray = data.orderPayments;
 			for(var i = 1; i <= arrayLen(paymentsDataArray); i++) {
 				var payment = this.getOrderPayment(paymentsDataArray[i].orderPaymentID, true);
 				
-				if((payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
+				if(requirePayment || (payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
 					if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i],"amount"))	{
 						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
 					} else if(!payment.isNew() && (isNull(payment.getAmountAuthorized()) || payment.getAmountAuthorized() == 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
@@ -289,6 +301,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 		// Verify that there are enough payments applied to the order to proceed
 		if(order.getPaymentAmountTotal() < order.getTotal()) {
+			paymentsOK = false;
+		}
+	
+		// Verify that payment method is provided for subscription order, even if the amount is 0
+		if(!arrayLen(order.getOrderPayments()) && requirePayment) {
 			paymentsOK = false;
 		}
 	
@@ -368,6 +385,25 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								getUtilityEmailService().sendOrderConfirmationEmail(order=order);
 							}
 							
+							// save account payment if needed
+							if(isNull(order.getAccountPaymentMethod())) {
+								// if there is any subscription item, save the account payment for use in renewal
+								for(var orderItem in order.getOrderItems()) {
+									if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
+										// TODO: change to find the appripriate order payment
+										var accountPaymentMethod = getAccountService().getAccountPaymentMethodByCreditCardNumberEncrypted(order.getOrderPayments()[1].getCreditCardNumberEncrypted(),true);
+										if(accountPaymentMethod.isNew()) {
+											accountPaymentMethod.setAccount(order.getAccount());
+											accountPaymentMethod.copyFromOrderPayment(order.getOrderPayments()[1]);
+											accountPaymentMethod.setAccountPaymentMethodName(accountPaymentMethod.getNameOnCreditCard() & " " & accountPaymentMethod.getCreditCardType());
+											getAccountService().saveAccountPaymentMethod(accountPaymentMethod);
+										}
+										order.setAccountPaymentMethod(accountPaymentMethod);
+										break;
+									}
+								}
+							}
+							
 							// Look for 'auto' order fulfillments
 							for(var i=1; i<=arrayLen(order.getOrderFulfillments()); i++) {
 								if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto") {
@@ -384,74 +420,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return processOK;
 	}
 	
-	public void function setupSubscriptionOrderItem(required any orderItem, string subscriptionOrderItemType="soitInitial") {
-		if(!isNull(arguments.orderItem.getSku().getSubscriptionTerm())) {
-			// create subscription orderItem
-			var subscriptionOrderItem = getService("subscriptionService").getSubscriptionOrderItemByOrderItem(arguments.orderItem,true);
-			subscriptionOrderItem.setOrderItem(arguments.orderItem);
-			subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode(arguments.subscriptionOrderItemType));
-			var subscriptionUsage = subscriptionOrderItem.getSubscriptionUsage();
-			if(isNull(subscriptionUsage)) {
-				var subscriptionUsage = getService("subscriptionService").newSubscriptionUsage();
-			}
-			subscriptionUsage.setActiveFlag(1);
-			subscriptionUsage.setnextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getDueDate());
-			subscriptionOrderItem.setSubscriptionUsage(subscriptionUsage);
-			// call save on this entity to make it persistent so we can use it for further lookup
-			getService("subscriptionService").saveSubscriptionUsage(subscriptionUsage);
-			// copy all the subscription benefits
-			for(var subscriptionBenefit in arguments.orderItem.getSku().getSubscriptionBenefits()) {
-				var subscriptionUsageBenefit = getService("subscriptionService").getSubscriptionUsageBenefitBySubscriptionBenefitANDSubscriptionUsage([subscriptionBenefit,subscriptionUsage],true);
-				subscriptionUsageBenefit.copyFromSubscriptionBenefit(subscriptionBenefit);
-				subscriptionUsage.addSubscriptionUsageBenefit(subscriptionUsageBenefit);
-				// call save on this entity to make it persistent so we can use it for further lookup
-				getService("subscriptionService").saveSubscriptionUsageBenefit(subscriptionUsageBenefit);
-				// create subscriptionUsageBenefitAccount for this account
-				var subscriptionUsageBenefitAccount = getService("subscriptionService").getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
-				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
-				subscriptionUsageBenefitAccount.setAccount(arguments.orderItem.getOrder().getAccount());
-				getService("subscriptionService").saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-				// add this benefit to access
-				if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerSubscription") {
-					var accessSmartList = getService("accessService").getAccessSmartList();
-					accessSmartList.addFilter(propertyIdentifier="subscriptionUsage_subscriptionUsageID", value=subscriptionUsageBenefit.getSubscriptionUsage().getSubscriptionUsageID());
-					if(!accessSmartList.getRecordsCount()) {
-						var access = getService("accessService").getAccessBySubscriptionUsage(subscriptionUsage,true);
-						access.setSubscriptionUsage(subscriptionUsage);
-						getService("accessService").saveAccess(access);
-					}
-				} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerBenefit") {
-					var access = getService("accessService").getAccessBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
-					access.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
-					getService("accessService").saveAccess(access);
-				} else if(subscriptionBenefit.getAccessType().getSystemCode() EQ "satPerAccount") {
-					// TODO: this should get moved to DAO because adding large number of records like this could timeout
-					// check how many access records already exists and create new ones
-					var subscriptionUsageBenefitAccountSmartList = getService("subscriptionService").getSubscriptionUsageBenefitAccountSmartList();
-					subscriptionUsageBenefitAccountSmartList.addFilter(propertyIdentifier="subscriptionUsageBenefit_subscriptionUsageBenefitID", value=subscriptionUsageBenefit.getSubscriptionUsageBenefitID());
-					var recordCountForCreation = subscriptionBenefit.getTotalQuantity() - subscriptionUsageBenefitAccountSmartList.getRecordCount();
-					for(var i = 0; i < recordCountForCreation; i++) {
-						var subscriptionUsageBenefitAccount = getService("subscriptionService").newSubscriptionUsageBenefitAccount();
-						subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
-						getService("subscriptionService").saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-						var access = getService("accessService").newAccess();
-						access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-						getService("accessService").saveAccess(access);
-					}
-				}
-			}
-			getService("subscriptionService").saveSubscriptionOrderItem(subscriptionOrderItem);
-		}
-		
-	}
-	
 	public void function setupOrderItemContentAccess(required any orderItem) {
 		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
-			var accountContentAccess = getService("AccountService").newAccountContentAccess();
+			var accountContentAccess = getAccountService().newAccountContentAccess();
 			accountContentAccess.setAccount(getSlatwallScope().getCurrentAccount());
 			accountContentAccess.setOrderItem(arguments.orderItem);
 			accountContentAccess.addAccessContent(accessContent);
-			getService("AccountService").saveAccountContentAccess(accountContentAccess);
+			getAccountService().saveAccountContentAccess(accountContentAccess);
 		}
 	}
 	
@@ -993,7 +968,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 									totalItemValueDelivered += (orderItem.getExtendedPriceAfterDiscount() + orderItem.getTaxAmount()) * ( arguments.data.records[i].quantity / orderItem.getQuantity() );
 									
 									// setup subscription data if this was subscriptionOrder item
-									setupSubscriptionOrderItem( orderItem );
+									getSubscriptionService().setupSubscriptionOrderItem( orderItem );
 								
 									// setup content access if this was content purchase
 									setupOrderItemContentAccess( orderItem );

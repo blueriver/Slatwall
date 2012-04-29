@@ -45,8 +45,8 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
-	property name="expirationMonth" ormType="string";
-	property name="expirationYear" ormType="string";
+	property name="expirationMonth" ormType="string" formfieldType="select";
+	property name="expirationYear" ormType="string" formfieldType="select";
 	
 	// Related Object Properties (Many-to-One)
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
@@ -72,7 +72,47 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	public any function init() {
 		super.init();
 	}
+	
+	public string function getPaymentMethodType() {
+		return getPaymentMethod().getPaymentMethodType();
+	}
 		
+	public array function getExpirationMonthOptions() {
+		return [
+			'01',
+			'02',
+			'03',
+			'04',
+			'05',
+			'06',
+			'07',
+			'08',
+			'09',
+			'10',
+			'11',
+			'12'
+		];
+	}
+	
+	public array function getExpirationYearOptions() {
+		var yearOptions = [];
+		var currentYear = year(now());
+		for(var i = 0; i < 10; i++) {
+			var thisYear = currentYear + i;
+			arrayAppend(yearOptions,{name=thisYear, value=right(thisYear,2)});
+		}
+		return yearOptions;
+	}
+
+	public void function copyFromOrderPayment(required any orderPayment) {
+		setNameOnCreditCard( orderPayment.getNameOnCreditCard() );
+		setCreditCardNumber( orderPayment.getCreditCardNumber() );
+		setExpirationMonth( orderPayment.getExpirationMonth() );
+		setExpirationYear( orderPayment.getExpirationYear() );
+		setBillingAddress( orderPayment.getBillingAddress().copyAddress( true ) );
+		setPaymentMethod( orderPayment.getPaymentMethod() );
+	}	
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

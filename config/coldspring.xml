@@ -61,7 +61,6 @@
 				<entry key="AccountCustomizedAttributeSet"><value>attributeService</value></entry>
 				<entry key="AccountEmailAddress"><value>accountService</value></entry>
 				<entry key="AccountPaymentMethod"><value>accountService</value></entry>
-				<entry key="AccountPaymentMethodCreditCard"><value>accountService</value></entry>
 				<entry key="AccountPhoneNumber"><value>accountService</value></entry>
 				<entry key="Address"><value>addressService</value></entry>
 				<entry key="AddressZone"><value>addressService</value></entry>
@@ -166,6 +165,7 @@
 				<entry key="StockReceiverVendorOrder"><value>stockService</value></entry>
 				<entry key="SubscriptionBenefit"><value>subscriptionService</value></entry>
 				<entry key="SubscriptionOrderItem"><value>subscriptionService</value></entry>
+				<entry key="SubscriptionStatus"><value>subscriptionService</value></entry>
 				<entry key="SubscriptionTerm"><value>subscriptionService</value></entry>
 				<entry key="SubscriptionUsage"><value>subscriptionService</value></entry>
 				<entry key="SubscriptionUsageBenefit"><value>subscriptionService</value></entry>
@@ -265,6 +265,7 @@
 		<property name="utilityFormService"><ref bean="utilityFormService" /></property>
 		<property name="utilityTagService"><ref bean="utilityTagService" /></property>
 		<property name="stockService"><ref bean="stockService" /></property>
+		<property name="subscriptionService"><ref bean="subscriptionService" /></property>
 		<property name="typeService"><ref bean="typeService" /></property>
     </bean>
 	<bean id="paymentService" class="Slatwall.com.service.PaymentService">
@@ -346,6 +347,9 @@
     </bean>
     <bean id="subscriptionService" class="Slatwall.com.service.SubscriptionService">
         <property name="DAO"><ref bean="SubscriptionDAO" /></property>
+		<property name="accessService"><ref bean="accessService" /></property>
+		<property name="orderService"><ref bean="orderService" /></property>
+		<property name="paymentService"><ref bean="paymentService" /></property>
     </bean>
 	<bean id="taskService" class="Slatwall.com.service.TaskService">
         <property name="DAO"><ref bean="taskDAO" /></property>

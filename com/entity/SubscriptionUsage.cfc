@@ -40,7 +40,6 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	
 	// Persistent Properties
 	property name="subscriptionUsageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="activeFlag" ormtype="boolean" formatType="yesno";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency";
 	property name="nextBillDate" ormtype="timestamp";
@@ -49,10 +48,14 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";
 	property name="renewalTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="renewalTermID";
 	property name="gracePeriodTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
 	
 	// Related Object Properties (one-to-many)
 	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan";
 	property name="subscriptionOrderItems" singularname="subscriptionOrderItem" cfc="SubscriptionOrderItem" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
+	property name="subscriptionStatus" cfc="SubscriptionStatus" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true" orderby="subscriptionStatusChangeDateTime DESC" fetch="join" lazy="false";
+	property name="renewalSubscriptionUsageBenefits" singularname="renewalSubscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="renewalSubscriptionUsageID" cascade="all-delete-orphan";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -66,7 +69,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
+	property name="currentStatus" persistent="false";
 
 	public any function init() {
 		if(isNull(variables.subscriptionUsageBenefits)) {
@@ -75,10 +78,20 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		if(isNull(variables.subscriptionOrderItems)) {
 			variables.subscriptionOrderItems = [];
 		}
+		if(isNull(variables.subscriptionStatus)) {
+			variables.subscriptionStatus = [];
+		}
 		return super.init();
 	}
 	
-
+	public boolean function isActive() {
+		if(!isNull(getCurrentStatus())) {
+			return getCurrentStatus().getSubscriptionStatusType().getSystemCode() == 'sstActive';
+		} else {
+			return false;
+		}
+	}
+	
 	public void function copyOrderItemInfo(required any orderItem) {
 		setRenewalPrice(arguments.orderItem.getSku().getRenewalPrice());
 		//copy all the info from subscription term
@@ -90,6 +103,17 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getCurrentStatus() {
+		// Subscription status sorted by date desc, return first one as current
+		if(arrayLen(getSubscriptionStatus())) {
+			return getSubscriptionStatus()[1];
+		}
+	}
+	
+	public any function getCurrentStatusCode() {
+		return getCurrentStatus().getSubscriptionStausType().getSystemCode();
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
@@ -103,6 +127,14 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		arguments.subscriptionUsageBenefit.removeSubscriptionUsage( this );    
 	}
 	
+	// Renewal Subscription Usage Benefit (one-to-many)    
+	public void function addRenewalSubscriptionUsageBenefit(required any renewalSubscriptionUsageBenefit) {    
+		arguments.renewalSubscriptionUsageBenefit.setRenewalSubscriptionUsage( this );    
+	}    
+	public void function removeRenewalSubscriptionUsageBenefit(required any renewalSubscriptionUsageBenefit) {    
+		arguments.renewalSubscriptionUsageBenefit.removeRenewalSubscriptionUsage( this );    
+	}
+	
 	// Subscription Order Items (one-to-many)    
 	public void function addSubscriptionOrderItem(required any subscriptionOrderItem) {    
 		arguments.subscriptionOrderItem.setSubscriptionUsage( this );    
@@ -111,6 +143,13 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		arguments.subscriptionOrderItem.removeSubscriptionUsage( this );    
 	}
 	
+	// Subscription Status (one-to-many)    
+	public void function addSubscriptionStatus(required any subscriptionStatus) {    
+		arguments.subscriptionStatus.setSubscriptionUsage( this );    
+	}    
+	public void function removeSubscriptionStatus(required any subscriptionStatus) {    
+		arguments.subscriptionStatus.removeSubscriptionUsage( this );    
+	}
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================

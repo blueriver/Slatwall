@@ -45,6 +45,7 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	// Related Object Properties (many-to-one)
 	property name="subscriptionBenefit" cfc="SubscriptionBenefit" fieldtype="many-to-one" fkcolumn="subscriptionBenefitID";
 	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" inverse="true";
+	property name="renewalSubscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="renewalSubscriptionUsageID" inverse="true";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -131,6 +132,24 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 			arrayDeleteAt(arguments.subscriptionUsage.getSubscriptionUsageBenefits(), index);    
 		}    
 		structDelete(variables, "subscriptionUsage");    
+	}
+	
+	// renewalSubscriptionUsage (many-to-one)    
+	public void function setRenewalSubscriptionUsage(required any renewalSubscriptionUsage) {    
+		variables.renewalSubscriptionUsage = arguments.renewalSubscriptionUsage;    
+		if(isNew() or !arguments.renewalSubscriptionUsage.hasRenewalSubscriptionUsageBenefit( this )) {    
+			arrayAppend(arguments.renewalSubscriptionUsage.getRenewalSubscriptionUsageBenefits(), this);    
+		}    
+	}    
+	public void function removeRenewalSubscriptionUsage(any renewalSubscriptionUsage) {    
+		if(!structKeyExists(arguments, "renewalSubscriptionUsage")) {    
+			arguments.renewalSubscriptionUsage = variables.renewalSubscriptionUsage;    
+		}    
+		var index = arrayFind(arguments.renewalSubscriptionUsage.getRenewalSubscriptionUsageBenefits(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.renewalSubscriptionUsage.getRenewalSubscriptionUsageBenefits(), index);    
+		}    
+		structDelete(variables, "renewalSubscriptionUsage");    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

@@ -118,22 +118,13 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	}
 	
 	public array function getExpirationYearOptions() {
-		return [
-			{name='2012', value='12'},
-			{name='2013', value='13'},
-			{name='2014', value='14'},
-			{name='2015', value='15'},
-			{name='2016', value='16'},
-			{name='2017', value='17'},
-			{name='2018', value='18'},
-			{name='2019', value='19'},
-			{name='2020', value='20'},
-			{name='2021', value='21'},
-			{name='2022', value='22'},
-			{name='2023', value='23'},
-			{name='2024', value='24'},
-			{name='2025', value='25'}
-		];
+		var yearOptions = [];
+		var currentYear = year(now());
+		for(var i = 0; i < 10; i++) {
+			var thisYear = currentYear + i;
+			arrayAppend(yearOptions,{name=thisYear, value=right(thisYear,2)});
+		}
+		return yearOptions;
 	}
 
 	public array function getProcessTransactionTypeOptions() {
@@ -160,7 +151,15 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		
 		return options;
 	}
-		
+	
+	public void function copyFromAccountPaymentMethod(required any accountPaymentMethod) {
+		setNameOnCreditCard( accountPaymentMethod.getNameOnCreditCard() );
+		setCreditCardNumber( accountPaymentMethod.getCreditCardNumber() );
+		setExpirationMonth( accountPaymentMethod.getExpirationMonth() );
+		setExpirationYear( accountPaymentMethod.getExpirationYear() );
+		setBillingAddress( accountPaymentMethod.getBillingAddress().copyAddress( true ) );
+		setPaymentMethod( accountPaymentMethod.getPaymentMethod() );
+	}	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

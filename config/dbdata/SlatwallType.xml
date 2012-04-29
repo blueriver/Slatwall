@@ -116,19 +116,21 @@
 		<Record typeID="444df311d7615e7cf56b836f515aebd4" parentTypeID="444df3100babdbe1086cf951809a60ca" type="Initial" systemCode="soitInitial" />
 		<Record typeID="444df312935fa6b9866a813b3f4793a2" parentTypeID="444df3100babdbe1086cf951809a60ca" type="Renewal" systemCode="soitRenewal" />
 
+		<Record typeID="444df31eb4026852a7adabb6413778e4" parentTypeID="NULL" type="Subscription Status Types" systemCode="subscriptionStatusType" />
+		<Record typeID="444df31fa8adde8d71c5ca279e42a00d" parentTypeID="444df31eb4026852a7adabb6413778e4" type="Active" systemCode="sstActive" />
+		<Record typeID="444df320e882d5db8c461f3d840c31a7" parentTypeID="444df31eb4026852a7adabb6413778e4" type="Cancelled" systemCode="sstCancelled" />
+		<Record typeID="444df321eb57a31846c4fdda918f55ec" parentTypeID="444df31eb4026852a7adabb6413778e4" type="Suspended" systemCode="sstSuspended" />
+
+		<Record typeID="444df32200452ec23641f213a07c1dda" parentTypeID="NULL" type="Subscription Status Change Reason Type" systemCode="subscriptionStatusChangeReasonType" />
+		<Record typeID="444df323c807edf43d3105d43f9f4eef" parentTypeID="444df32200452ec23641f213a07c1dda" type="Payment Failed" systemCode="sscrtPaymentFailed" />
+		<Record typeID="444df324fc56d5fbf8908ba071bc52ca" parentTypeID="444df32200452ec23641f213a07c1dda" type="User Initiated" systemCode="sscrtUserInitiated" />
+
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
 
 
-444df31eb4026852a7adabb6413778e4
-444df31fa8adde8d71c5ca279e42a00d
-444df320e882d5db8c461f3d840c31a7
-444df321eb57a31846c4fdda918f55ec
-444df32200452ec23641f213a07c1dda
-444df323c807edf43d3105d43f9f4eef
-444df324fc56d5fbf8908ba071bc52ca
 444df325adea07a73014e74b449eb315
 444df326c87e098e420297b5a1691e69
 444df327c72a5bd51bb2f691aac17008

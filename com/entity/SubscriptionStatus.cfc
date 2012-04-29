@@ -36,16 +36,17 @@
 Notes:
 
 */
-component displayname="Subscription Order Item" entityname="SlatwallSubscriptionOrderItem" table="SlatwallSubscriptionOrderItem" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Subscription Status" entityname="SlatwallSubscriptionStatus" table="SlatwallSubscriptionStatus" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="subscriptionOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	
-	// Related Object Properties (many-to-one)
-	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" lazy="false" fetch="join";
-	property name="subscriptionOrderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionOrderItemTypeID";
-	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" cascade="all";
+	property name="subscriptionStatusID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="subscriptionStatusChangeDateTime" ormtype="timestamp";
 
+	// Related Object Properties (many-to-one)
+	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";
+	property name="subscriptionStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionStatusTypeID";
+	property name="subscriptionStatusChangeReasonType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionStatusChangeReasonTypeID";
+	
 	// Related Object Properties (one-to-many)
 	
 	// Related Object Properties (many-to-many)
@@ -62,13 +63,7 @@ component displayname="Subscription Order Item" entityname="SlatwallSubscription
 	// Non-Persistent Properties
 
 
-	public void function setOrderItem(required any orderItem) {
-		variables.orderItem = arguments.orderItem;
-		//copy all the info from order items to subscription usage
-		if(!isNull(variables.subscriptionUsage)) {
-			variables.subscriptionUsage.copyOrderItemInfo(arguments.orderItem);
-		}
-	}
+
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -76,22 +71,22 @@ component displayname="Subscription Order Item" entityname="SlatwallSubscription
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Sunscription Usage (many-to-one)
-	public void function setSubscriptionUsage(required any subscriptionUsage) {
-		variables.subscriptionUsage = arguments.subscriptionUsage;
-		if(isNew() or !arguments.subscriptionUsage.hasSubscriptionOrderItem( this )) {
-			arrayAppend(arguments.subscriptionUsage.getSubscriptionOrderItems(), this);
-		}
-	}
-	public void function removeSubscriptionUsage(any subscriptionUsage) {
-		if(!structKeyExists(arguments, "subscriptionUsage")) {
-			arguments.subscriptionUsage = variables.subscriptionUsage;
-		}
-		var index = arrayFind(arguments.subscriptionUsage.getSubscriptionOrderItems(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.subscriptionUsage.getSubscriptionOrderItems(), index);
-		}
-		structDelete(variables, "subscriptionUsage");
+	// Subscription Usage (many-to-one)    
+	public void function setSubscriptionUsage(required any subscriptionUsage) {    
+		variables.subscriptionUsage = arguments.subscriptionUsage;    
+		if(isNew() or !arguments.subscriptionUsage.hasSubscriptionStatus( this )) {    
+			arrayAppend(arguments.subscriptionUsage.getSubscriptionStatus(), this);    
+		}    
+	}    
+	public void function removeSubscriptionUsage(any subscriptionUsage) {    
+		if(!structKeyExists(arguments, "subscriptionUsage")) {    
+			arguments.subscriptionUsage = variables.subscriptionUsage;    
+		}    
+		var index = arrayFind(arguments.subscriptionUsage.getSubscriptionStatus(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.subscriptionUsage.getSubscriptionStatus(), index);    
+		}    
+		structDelete(variables, "subscriptionUsage");    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

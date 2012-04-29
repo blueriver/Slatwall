@@ -59,14 +59,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
-	public any function getPurchaseRequiredContentByPath(required any cmsContentIDPath) {
-		return getDAO().getPurchaseRequiredContentByPath(arguments.cmsContentIDPath);
-	}
-	
-	public any function getSubscriptionRequiredContentByPath(required any cmsContentIDPath) {
-		return getDAO().getSubscriptionRequiredContentByPath(arguments.cmsContentIDPath);
-	}
-	
 	public any function getCategoriesByCmsCategoryIDs(required any cmsCategoryIDs) {
 		return getDAO().getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
 	}
