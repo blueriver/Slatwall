@@ -43,8 +43,15 @@ Notes:
 	<cf_SlatwallDetailForm object="#rc.originalOrder#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.originalOrder#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
-		<input name="originalOrder.originialOrderID" value="#rc.originalOrder.getOrderID()#" />
+		<input type="hidden" name="originalOrder.originialOrderID" value="#rc.originalOrder.getOrderID()#" />
 		
+		<cf_SlatwallProcessListing processSmartList="#rc.originalOrder.getOrderItemsSmartList()#">
+			<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" title="Product" />
+			<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" title="Sku Code" />
+			<cf_SlatwallProcessColumn propertyIdentifier="sku.displayOptions" title="Sku Options" />
+			<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" title="Quantity Delivered" />
+			<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
+		</cf_SlatwallProcessListing>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>
