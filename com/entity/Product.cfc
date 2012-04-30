@@ -155,6 +155,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.productTypeOptions;
 	}
     
+    public any function getListingPagesOptionsSmartList() {
+		if(!structKeyExists(variables, "listingPagesOptionsSmartList")) {
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallContent");
+			smartList.addWhereCondition("exists (FROM SlatwallSetting ss WHERE ss.settingName='contentProductListingFlag' AND ss.settingValue=1 AND ss.cmsContentID = aslatwallcontent.cmsContentID)");
+			smartList.addOrder("title|ASC");
+			variables.listingPagesOptionsSmartList = smartList;
+		}
+		return variables.listingPagesOptionsSmartList;
+    }
+    
 	public array function getSkus(boolean sorted=false, boolean fetchOptions=false) {
         if(!arguments.sorted && !arguments.fetchOptions) {
         	return variables.skus;
