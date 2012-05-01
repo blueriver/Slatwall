@@ -53,6 +53,7 @@ component displayname="Data Service" extends="BaseService" {
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				if(listLast(dirList[i],".") == "xml"){
 					var xmlRaw = FileRead(dirList[i]);
+					
 					try{
 						loadDataFromXMLRaw(xmlRaw);
 					} catch (any e) {
@@ -64,7 +65,7 @@ component displayname="Data Service" extends="BaseService" {
 							throw(e);
 						}
 					}
-					
+										
 				}
 			}	
 		} while (runPopulation);
@@ -74,87 +75,47 @@ component displayname="Data Service" extends="BaseService" {
 	
 	public void function loadDataFromXMLRaw(required string xmlRaw) {
 		var xmlData = xmlParse(xmlRaw);
-		var columns = structNew();
-		var idColumn = "";
+		var columns = {};
+		var idColumns = "";
 		
 		// Loop over each column to parse xml
 		for(var ii=1; ii<= arrayLen(xmlData.Table.Columns.xmlChildren); ii++) {
-			var Attributes = structNew();
-			Attributes = duplicate(xmlData.Table.Columns.xmlChildren[ii].xmlAttributes);
-			columns[ "#xmlData.Table.Columns.xmlChildren[ii].xmlAttributes.name#" ] = Attributes;
-			if(isDefined("Attributes.fieldtype") && Attributes.fieldtype == "id") {
-				idColumn = xmlData.Table.Columns.xmlChildren[ii].xmlAttributes.name;
+			columns[  xmlData.Table.Columns.xmlChildren[ii].xmlAttributes.name ] = xmlData.Table.Columns.xmlChildren[ii].xmlAttributes;
+			if(structKeyExists(xmlData.Table.Columns.xmlChildren[ii].xmlAttributes, "fieldType") && xmlData.Table.Columns.xmlChildren[ii].xmlAttributes.fieldtype == "id") {
+				idColumns = listAppend(idColumns, xmlData.Table.Columns.xmlChildren[ii].xmlAttributes.name);
 			}
 		}
 
 		// Loop over each record to insert or update
 		for(var r=1; r <= arrayLen(xmlData.Table.Records.xmlChildren); r++) {
 			
-			var idColumnValue = "";
-
-			var updateColumns = [];
-			var updateValues = [];
-			var updateColumnDataTypes = [];
-			
-			var insertColumns = [];
-			var insertValues = [];
-			var insertColumnDataTypes = [];
+			var updateData = {};
+			var insertData = {};
 			
 			for(var rp = 1; rp <= listLen(structKeyList(xmlData.Table.Records.xmlChildren[r].xmlAttributes)); rp ++) {
 				
-				var thisColumn = listGetAt(structKeyList(xmlData.Table.Records.xmlChildren[r].xmlAttributes), rp);
-				var columnAttributes = columns[thisColumn];
-				var value = xmlData.Table.Records.xmlChildren[r].xmlAttributes[thisColumn];
+				var thisColumnName = listGetAt(structKeyList(xmlData.Table.Records.xmlChildren[r].xmlAttributes), rp);
 				
-				if(idColumn == thisColumn){
-					idColumnValue = value;
+				// Create the column data details
+				var columnRecord = {
+					value = xmlData.Table.Records.xmlChildren[r].xmlAttributes[ thisColumnName ],
+					dataType = 'varchar'
+				};
+				
+				// Check for a custom dataType for this column
+				if(structKeyExists(columns[ thisColumnName ], 'dataType')) {
+					columnRecord.dataType = columns[ thisColumnName ].dataType;
 				}
 				
-				arrayAppend(insertColumns, thisColumn);
-				arrayAppend(insertValues, value);
+				// Add this column record to the insert
+				insertData[ thisColumnName ] = columnRecord;
 				
-				if(isDefined("columnAttributes.dataType")) {
-					arrayAppend(insertColumnDataTypes, columnAttributes.dataType);
-				} else {
-					arrayAppend(insertColumnDataTypes, "varchar");
+				// Check to see if this column either has no update attribute, or it is set to true
+				if(!structKeyExists(columns[ thisColumnName ], 'update') || columns[ thisColumnName ].update == true) {
+					updateData[ thisColumnName ] = columnRecord;
 				}
-					
-				if(!isDefined("columnAttributes.update") || columnAttributes.update == true) {
-					arrayAppend(updateColumns, thisColumn);
-					arrayAppend(updateValues, value);
-					
-					if(isDefined("columnAttributes.dataType")) {
-						arrayAppend(updateColumnDataTypes, columnAttributes.dataType);
-					} else {
-						arrayAppend(updateColumnDataTypes, "varchar");
-					}
-				}
-				
 			}
-			
-			if( getDAO().recordExists(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue) ) {
-					getDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue, updateColumns, updateValues, updateColumnDataTypes);
-			} else {
-				getDAO().recordInsert(xmlData.table.xmlAttributes.tableName, insertColumns, insertValues, insertColumnDataTypes);
-			}
-		}
-	}
-	
-	public void function deleteAllOrders() {
-		getDAO().deleteAllOrders();
-	}
-	
-	public void function deleteAllProducts(struct data={}) {
-		getDAO().deleteAllOrders();
-		getDAO().deleteAllProducts();
-		if(structKeyExists(arguments.data, "deleteBrands") && arguments.data.deleteBrands) {
-			getDAO().deleteAllBrands();
-		}
-		if(structKeyExists(arguments.data, "deleteProductTypes") && arguments.data.deleteProductTypes) {
-			getDAO().deleteAllProductTypes();
-		}
-		if(structKeyExists(arguments.data, "deleteOptions") && arguments.data.deleteOptions) {
-			getDAO().deleteAllOptions();
+			getDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumns, updateData, insertData);
 		}
 	}
 	

@@ -67,70 +67,60 @@ Notes:
 		
 	</cffunction>
 	
-	<cffunction name="recordExists" returntype="boolean">
-		<cfargument name="tableName" />
-		<cfargument name="idColumn" />
-		<cfargument name="idValue" />
-		
-		<cfset var sqlResult = "" />
-		
-		<cfquery datasource="#application.configBean.getDataSource()#" name="sqlResult"> 
-			SELECT * FROM #arguments.tableName# WHERE #arguments.idColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.idValue#">
-		</cfquery>
-		
-		<cfif sqlResult.recordCount>
-			<cfreturn true />
-		</cfif>
-		
-		<cfreturn false />
-	</cffunction>
-	
 	<cffunction name="recordUpdate" returntype="void">
-		<cfargument name="tableName" />
-		<cfargument name="idColumn" />
-		<cfargument name="idValue" />
-		<cfargument name="updateColumns" />
-		<cfargument name="updateValues" />
-		<cfargument name="columnDataTypes" />
+		<cfargument name="tableName" required="true" type="string" />
+		<cfargument name="idColumns" required="true" type="string" />
+		<cfargument name="updateData" required="true" type="struct" />
+		<cfargument name="insertData" required="true" type="struct" />
 		
-		<cfset var i = 1 />
+		<cfset var keyList = structKeyList(arguments.updateData) />
+		<cfset var rs = "" />
+		<cfset var sqlResult = "" />
+		<cfset var i = 0 />
 		
-		<cfquery datasource="#application.configBean.getDataSource()#" name="sqlResult">
+		<cfquery datasource="#application.configBean.getDataSource()#" name="rs" result="sqlResult">
 			UPDATE
 				#arguments.tableName#
 			SET
-				<cfloop from="1" to="#arrayLen(updateColumns)#" index="i">
-					<cfif updateValues[i] eq "NULL">
-						#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="" null="yes">
+				<cfloop from="1" to="#listLen(keyList)#" index="i">
+					<cfif arguments.updateData[ listGetAt(keyList, i) ].value eq "NULL">
+						#listGetAt(keyList, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(keyList, i) ].dataType#" value="" null="yes">
 					<cfelse>
-						#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="#updateValues[i]#">
+						#listGetAt(keyList, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(keyList, i) ].dataType#" value="#arguments.updateData[ listGetAt(keyList, i) ].value#">
 					</cfif>
-					<cfif arrayLen(updateColumns) gt i>,</cfif> 
+					<cfif listLen(keyList) gt i>, </cfif>
 				</cfloop>
 			WHERE
-				#arguments.idColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.idValue#"> 
+				<cfloop from="1" to="#listLen(arguments.idColumns)#" index="i">
+					#listGetAt(arguments.idColumns, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(arguments.idColumns, i) ].datatype#" value="#arguments.updateData[ listGetAt(arguments.idColumns, i) ].value#">
+					<cfif listLen(arguments.idColumns) gt i>AND </cfif>
+				</cfloop>
 		</cfquery>
+		<cfif !sqlResult.recordCount>
+			<cfset recordInsert(tableName=arguments.tableName, insertData=arguments.insertData) />
+		</cfif>
 	</cffunction>
 	
 	<cffunction name="recordInsert" returntype="void">
-		<cfargument name="tableName" />
-		<cfargument name="insertColumns" />
-		<cfargument name="insertValues" />
-		<cfargument name="columnDataTypes" />
+		<cfargument name="tableName" required="true" type="string" />
+		<cfargument name="insertData" required="true" type="struct" />
 		
-		<cfset var i = 1 />
+		<cfset var keyList = structKeyList(arguments.insertData) />
+		<cfset var rs = "" />
+		<cfset var sqlResult = "" />
+		<cfset var i = 0 />
 		
-		<cfquery datasource="#application.configBean.getDataSource()#" name="sqlResult"> 
+		<cfquery datasource="#application.configBean.getDataSource()#" name="rs" result="sqlResult"> 
 			INSERT INTO	#arguments.tableName# (
-				#arrayToList(insertColumns, ",")#
+				#keyList#
 			) VALUES (
-				<cfloop from="1" to="#arrayLen(insertValues)#" index="i">
-					<cfif insertValues[i] eq "NULL">
-						<cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="" null="yes">
+				<cfloop from="1" to="#listLen(keyList)#" index="i">
+					<cfif arguments.insertData[ listGetAt(keyList, i) ].value eq "NULL">
+						<cfqueryparam cfsqltype="cf_sql_#arguments.insertData[ listGetAt(keyList, i) ].dataType#" value="" null="yes">
 					<cfelse>
-						<cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="#insertValues[i]#">
+						<cfqueryparam cfsqltype="cf_sql_#arguments.insertData[ listGetAt(keyList, i) ].dataType#" value="#arguments.insertData[ listGetAt(keyList, i) ].value#">
 					</cfif>
-					<cfif arrayLen(insertValues) gt i>,</cfif>
+					<cfif listLen(keyList) gt i>,</cfif>
 				</cfloop>
 			)
 		</cfquery>

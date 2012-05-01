@@ -2,7 +2,7 @@
 	<Columns>
 		<column name="stateCode" fieldtype="id" />
 		<column name="stateName" update="false" />
-		<column name="countryCode" />
+		<column name="countryCode" fieldtype="id" />
 	</Columns>
 	<Records>
 		<Record stateCode="AK" stateName="Alaska" countryCode="US" />

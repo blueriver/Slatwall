@@ -46,7 +46,7 @@ component displayname="Promotion Period Promotion Code" entityname="SlatwallProm
 	property name="maximumAccountUseCount" ormtype="integer" default="0" dbdefault="0";
 	
 	// Related Object Properties (many-to-one)
-	property name="promotionPeriod" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
+	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
 	property name="promotionCode" cfc="PromotionCode" fieldtype="many-to-one" fkcolumn="promotionCodeID";
 	
 	// Audit properties
