@@ -42,8 +42,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormType="big_decimal" formatType="custom";
 	property name="amountType" ormType="string" formFieldType="select";
-	property name="amountOff" ormType="big_decimal";
-	property name="percentageOff" ormType="big_decimal";
 	
 	// Related Object Properties (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
