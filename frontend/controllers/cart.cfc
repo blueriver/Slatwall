@@ -60,7 +60,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		redirectSetting(settingName='');
 		*/
 		
-		settingRedirect( 'gloablShoppingCartURL' );
+		//redirectSetting( 'gloablShoppingCartURL' );
 		
 		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
 	}
@@ -120,9 +120,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				
 				// Add to the cart() order the new sku with quantity and shipping id
 				if(!isNull(stock)) {
-					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, stock=stock, quantity=rc.quantity, customizatonData=cusomtizationData);	
+					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, stock=stock, quantity=rc.quantity, customizatonData=cusomtizationData, data=rc);	
 				} else {
-					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizatonData=cusomtizationData);
+					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizatonData=cusomtizationData, data=rc);
 				}
 			}
 		}
