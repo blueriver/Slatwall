@@ -58,8 +58,8 @@ Notes:
 				prSku.amountType as 'salePriceDiscountType',
 				CASE prSku.amountType
 					WHEN 'amount' THEN prSku.amount
-					WHEN 'amountOff' THEN SlatwallSku.price - prSku.amountOff
-					WHEN 'percentageOff' THEN SlatwallSku.price - (SlatwallSku.price * (prSku.percentageOff / 100))
+					WHEN 'amountOff' THEN SlatwallSku.price - prSku.amount
+					WHEN 'percentageOff' THEN SlatwallSku.price - (SlatwallSku.price * (prSku.amount / 100))
 				END as 'salePrice',
 				prSku.roundingRuleID as 'roundingRuleID',
 				ppSku.endDateTime as 'salePriceExpirationDateTime',
