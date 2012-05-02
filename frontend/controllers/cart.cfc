@@ -60,7 +60,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		redirectSetting(settingName='');
 		*/
 		
-		settingRedirect( 'gloablShoppingCartURL' );
+		//redirectSetting( 'gloablShoppingCartURL' );
 		
 		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
 	}
