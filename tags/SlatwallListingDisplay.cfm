@@ -53,7 +53,7 @@ Notes:
 	<cfparam name="attributes.recordProcessAction" type="string" default="" />
 	<cfparam name="attributes.recordProcessQueryString" type="string" default="" />
 	<cfparam name="attributes.recordProcessModal" type="boolean" default="false" />
-		
+
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
 	<cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />  
@@ -72,6 +72,7 @@ Notes:
 	<!--- Helper / Additional / Custom --->
 	<cfparam name="attributes.tableattributes" type="string" default="" />  <!--- Pass in additional html attributes for the table --->
 	<cfparam name="attributes.tableclass" type="string" default="" />  <!--- Pass in additional classes for the table --->	
+	<cfparam name="attributes.adminattributes" type="string" default="" />
 	
 	<!--- ThisTag Variables used just inside --->
 	<cfparam name="thistag.columns" type="array" default="#arrayNew(1)#" />
@@ -111,7 +112,6 @@ Notes:
 			<cfset thistag.multiselectable = true />
 			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-multiselect', ' ') />
-			<!---<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-condensed', ' ') />--->
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
@@ -123,9 +123,8 @@ Notes:
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-expandaction="#attributes.expandAction#"', " ") />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-propertyIdentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#"', " ") />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-parentidproperty="#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
+			
 		</cfif>
 		
 		<!--- Setup Sortability --->
@@ -134,26 +133,47 @@ Notes:
 				<cfset thistag.sortable = true />
 				
 				<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
-				<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-tablename="#attributes.smartList.getBaseEntityName()#"', " ") />
-				<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
 				
 				<cfset attributes.smartList.addOrder("#attributes.sortProperty#|ASC") />
 			</cfif>
 		</cfif>
 		
-		<!--- Setup the count for the number of admin icons --->
+		<!--- Setup the admin meta info --->
 		<cfset attributes.administativeCount = 0 />
-		<cfif len(attributes.recordEditAction)>
-			<cfset attributes.administativeCount++ />
-		</cfif>
+		
+		<!--- Detail --->
 		<cfif len(attributes.recordDetailAction)>
 			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-detailaction="#attributes.recordDetailAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-detailquerystring="#attributes.recordDetailQueryString#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-detailmodal="#attributes.recordDetailModal#"', " ") />
 		</cfif>
+		
+		<!--- Edit --->
+		<cfif len(attributes.recordEditAction)>
+			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-editaction="#attributes.recordEditAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-editquerystring="#attributes.recordEditQueryString#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-editmodal="#attributes.recordEditModal#"', " ") />
+		</cfif>
+		
+		<!--- Delete --->
 		<cfif len(attributes.recordDeleteAction)>
 			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-deleteaction="#attributes.recordDeleteAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-deletequerystring="#attributes.recordDeleteQueryString#"', " ") />
 		</cfif>
+		
+		<!--- Process --->
 		<cfif len(attributes.recordProcessAction)>
 			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processaction="#attributes.recordProcessAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processquerystring="#attributes.recordProcessQueryString#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processmodal="#attributes.recordProcessModal#"', " ") />
 		</cfif>
 		
 		<!--- Setup the primary representation column if no columns were passed in --->
@@ -175,20 +195,20 @@ Notes:
 			<cfif thistag.multiselectable>
 				<input type="hidden" name="#attributes.multiselectFieldName#" value="#attributes.multiselectValues#" />
 			</cfif>
-			<table class="#attributes.tableclass#" #attributes.tableattributes#>
+			<table id="#attributes.smartList.getSavedStateID()#" class="#attributes.tableclass#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
 				<thead>
 					<tr>
 						<!--- Selectable --->
 						<cfif thistag.selectable>
-							<td>&nbsp;</td>
+							<th class="select">&nbsp;</th>
 						</cfif>
 						<!--- Multiselectable --->
 						<cfif thistag.multiselectable>
-							<td>&nbsp;</td>
+							<th class="multiselect">&nbsp;</th>
 						</cfif>
 						<!--- Sortable --->
 						<cfif thistag.sortable>
-							<td>&nbsp;</td>
+							<th class="sort">&nbsp;</th>
 						</cfif>
 						<cfloop array="#thistag.columns#" index="column">
 							<cfsilent>
@@ -196,7 +216,7 @@ Notes:
 									<cfset column.title = attributes.smartList.getPageRecords()[1].getTitleByPropertyIdentifier(column.propertyIdentifier) />
 								</cfif>
 							</cfsilent>
-							<th>
+							<th class="data" data-propertyIdentifier="#column.propertyIdentifier#">
 								<div class="dropdown">
 									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
 									<ul class="dropdown-menu nav">
@@ -216,7 +236,7 @@ Notes:
 							</th>
 						</cfloop>
 						<cfif attributes.administativeCount>
-							<th class="admin#attributes.administativeCount#">&nbsp;</th>
+							<th class="admin admin#attributes.administativeCount#" #attributes.adminattributes#>&nbsp;</th>
 						</cfif>
 					</tr>
 				</thead>
@@ -235,19 +255,13 @@ Notes:
 							<cfif thistag.sortable>
 								<td><a href="##" class="table-action-sort" data-idvalue="#record.getPrimaryIDValue()#" data-sortPropertyValue="#record.getValueByPropertyIdentifier( attributes.sortProperty )#"><i class="icon-move"></i></a></td>
 							</cfif>
-							<cfset firstColumn = true>
-							<cfset firstColumnIcon = "" />
 							<cfloop array="#thistag.columns#" index="column">
-								<cfsilent>
-									<!--- Expandable --->
-									<cfif firstColumn>
-										<cfif thistag.expandable>
-											<cfset firstColumnIcon='<a href="##" class="table-action-expand depth0" data-depth="0"  data-parentid="#record.getPrimaryIDValue()#"><i class="icon-plus"></i></a> ' />
-										</cfif>
-										<cfset firstColumn = false />
-									</cfif>
-								</cfsilent>
-								<td class="#column.tdclass# #replace(column.propertyIdentifier, '.', '-', 'all')#">#firstColumnIcon##record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<!--- Expandable Check --->
+								<cfif column.tdclass eq "primary" and thistag.expandable>
+									<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"  data-parentid="#record.getPrimaryIDValue()#"><i class="icon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<cfelse>
+									<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								</cfif>
 							</cfloop>
 							<cfif attributes.administativeCount>
 								<td class="admin admin#attributes.administativeCount#">

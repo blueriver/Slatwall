@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,21 +35,15 @@
 
 Notes:
 
---->
-<cfparam name="rc.promotion" type="any">
-<cfparam name="rc.edit" type="boolean">
-
-<cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.promotion.getPromotionPeriodsSmartList()#"
-							   recordEditAction="admin:pricing.editPromotionperiod"
-							   recorddetailaction="admin:pricing.detailpromotionperiod"
-							   recordDeleteAction="admin:pricing.deletepromotionperiod"
-							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
-		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" />
-		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
-		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" />
-		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" />
-	</cf_SlatwallListingDisplay>
+*/
+component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
-	<cf_SlatwallActionCaller action="admin:pricing.createpromotionperiod" class="btn btn-primary" queryString="promotionID=#rc.promotion.getPromotionID()#" />
-</cfoutput>
+	public void function default(required struct rc) {
+		getFW().redirect(action="admin:account.listaccount");
+	}
+	
+	public void function updateListingDisplay(required struct rc) {
+		
+	}
+	
+}

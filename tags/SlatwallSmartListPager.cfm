@@ -66,7 +66,7 @@ Notes:
 	</cfsilent>
 	
 	<cfoutput>
-		<div class="pagination">
+		<div class="pagination" data-tableid="#attributes.smartList.getSavedStateID()#">
 			<cfif attributes.smartList.getTotalPages() gt 1>
 				<ul>
 					<cfif attributes.smartList.getCurrentPage() gt 1>

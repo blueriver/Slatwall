@@ -95,7 +95,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	
 	public array function getImageTypeOptions() {
 		if(!structKeyExists(variables, "imageTypeOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
 			smartList.addSelect(propertyIdentifier="typeID", alias="value");
 			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="itProduct");

@@ -11,25 +11,11 @@ var ajaxlock = 0;
 
 jQuery(document).ready(function() {
 	
+	// Looks for a tab to show
 	if( window.location.hash ) {
 		var hash = window.location.hash.substring(1);
 		jQuery('a[href=#' + hash + ']').tab('show');
 	}
-	
-	jQuery('a[data-toggle="tab"]').on('shown', function (e) {
-		window.location.hash = jQuery(this).attr('href');
-	})
-	
-	jQuery('.modalload').click(function(e){
-		jQuery('#adminModal').html('');
-		var modalLink = jQuery(this).attr( 'href' );
-		if( modalLink.indexOf("?") != -1) {
-			modalLink = modalLink + '&modal=1&tabIndex=' + slatwall.tabIndex;
-		} else {
-			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
-		}
-		jQuery('#adminModal').load( modalLink, function(){bindFormValidation();bindTableClasses();bindUIElements();} );
-	});
 	
 	// Focus on the first tab index
 	if(jQuery('.firstfocus').length) {
@@ -39,23 +25,13 @@ jQuery(document).ready(function() {
 	}
 	
 	bindUIElements();
-	bindAlerts();
-	bindFormValidation();
-	bindTableClasses();
-	bindTooltips();
 });
 
-function bindTooltips(){
-	jQuery('.hint').tooltip();
-	jQuery('.hint').click(function(e){
-		e.preventDefault();
-	});
-}
-
 function bindUIElements() {
+	// Datetime Picker
 	jQuery('.datetimepicker').datepicker({
 		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
-		duration: '',  
+		duration: '',
         showTime: true,  
         constrainInput: false,
         stepMinutes: 1, 
@@ -64,16 +40,24 @@ function bindUIElements() {
         time24h: false
 	});
 	
+	// Date Picker
 	jQuery('.datepicker').datepicker();
-}
-
-function bindFormValidation() {
-	jQuery.each(jQuery('form'), function(index, value) {
-		jQuery(value).validate();
+	
+	// Time Picker
+	//jQuery('.timepicker').timepicker();
+	
+	// Tooltips
+	jQuery('.hint').tooltip();
+	jQuery('.hint').click(function(e){
+		e.preventDefault();
 	});
-}
-
-function bindAlerts() {
+	
+	// Tab Selecting
+	jQuery('a[data-toggle="tab"]').on('shown', function (e) {
+		window.location.hash = jQuery(this).attr('href');
+	})
+	
+	// Alerts
 	jQuery('.alert-confirm').click(function(e){
 		e.preventDefault();
 		jQuery('#adminConfirm > .modal-body').html( jQuery(this).data('confirm') );
@@ -85,23 +69,107 @@ function bindAlerts() {
 		jQuery('#adminDisabled > .modal-body').html( jQuery(this).data('disabled') );
 		jQuery('#adminDisabled').modal();
 	});
+	
+	// Modal Loading
+	jQuery('.modalload').click(function(e){
+		jQuery('#adminModal').html('');
+		var modalLink = jQuery(this).attr( 'href' );
+		if( modalLink.indexOf("?") != -1) {
+			modalLink = modalLink + '&modal=1&tabIndex=' + slatwall.tabIndex;
+		} else {
+			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
+		}
+		jQuery('#adminModal').load( modalLink, function(){bindUIElements();} );
+	});
+	
+	// Validation
+	jQuery.each(jQuery('form'), function(index, value) {
+		jQuery(value).validate();
+	});
+	
+	// Listing Displays
+	bindListingDisplayPaging();
+	bindListingDisplaySorting();
+	bindListingDisplayFiltering();
+	bindListingDisplaySearching();
+	bindListingDisplayExpandability();
+	bindListingDisplaySortability();
+	bindListingDisplaySelectability();
+	bindListingDisplayMultiselectability();
 }
 
-function bindTableClasses() {
+function bindListingDisplayPaging() {
+	jQuery('.listing-pager').click(function(e){
+		e.preventDefault();
+		
+		var data = {};
+		data[ 'savedStateID' ] = jQuery(this).closest('.pagination').data('tableid');
+		data[ 'P:Current' ] = jQuery(this).closest('.pagination').data('tableid');
+		
+		listingDisplayUpdate( data );
+	});
+}
+function bindListingDisplaySorting() {
+	
+}
+function bindListingDisplayFiltering() {
+	
+}
+function bindListingDisplaySearching() {
+	
+}
+function bindListingDisplayExpandability() {
 	jQuery('.table-action-expand').click(function(e){
 		e.preventDefault();
 		tableExpandClick( this );
 	});
-	jQuery('.table-action-multiselect').click(function(e){
-		e.preventDefault();
-		tableMultiselectClick( this );
-	});
+}
+function bindListingDisplaySortability() {
 	jQuery('.table-action-sort').click(function(e){
 		e.preventDefault();
 	});
 	jQuery('.table-sortable .sortable').sortable({
 		update: function(event, ui) {
 			tableApplySort(event, ui);
+		}
+	});
+}
+function bindListingDisplaySelectability() {
+	
+}
+function bindListingDisplayMultiselectability() {
+	jQuery('.table-action-multiselect').click(function(e){
+		e.preventDefault();
+		tableMultiselectClick( this );
+	});
+}
+
+function listingDisplayUpdate( data ) {
+	
+	data[ 'slatAction' ] = 'admin:ajax.updateListingDisplay';
+	
+	console.log(data);
+	abort;
+	
+	var data = {
+		slatAction : 'admin:main.updateSortOrder',
+		recordIDColumn : idProperty,
+		recordID : recordID,
+		tableName : tableName,
+		newSortOrder : newSortOrder
+	};
+
+	jQuery.ajax({
+		url: '/plugins/Slatwall/',
+		async: false,
+		data: data,
+		dataType: 'json',
+		contentType: 'application/json',
+		success: function(r) {
+			
+		},
+		error: function(r) {
+			alert('Error Loading');
 		}
 	});
 }
@@ -263,16 +331,13 @@ function tableExpandClick( toggleLink ) {
 	}
 }
 
-function showOnPropertyValue(value,targetValue,targetElement) {
-	if( value == targetValue ) {
-		targetElement.show();
-	} else {
-		targetElement.hide().find('input').val('');
-	}
-}
+
+// ========================= START: HELPER METHODS ================================
 
 function convertCFMLDateFormat( dateFormat ) {
 	dateFormat = dateFormat.replace('mmm', 'M');
 	dateFormat = dateFormat.replace('yyyy', 'yy');
 	return dateFormat;
 }
+
+// =========================  END: HELPER METHODS =================================
