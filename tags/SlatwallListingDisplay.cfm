@@ -94,8 +94,6 @@ Notes:
 		<!--- Setup the default table class --->
 		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-striped table-bordered table-condensed', ' ') />
 		
-		
-		
 		<!--- Setup Select --->
 		<cfif len(attributes.selectFieldName)>
 			<cfset thistag.selectable = true />
@@ -179,8 +177,9 @@ Notes:
 				propertyIdentifier = thistag.exampleentity.getSimpleRepresentationPropertyName(),
 				title = "",
 				tdClass="primary",
-				filter = false,
-				sort = false
+				search = true,
+				sort = true,
+				filter = false
 			}) />
 		</cfif>
 		
@@ -219,22 +218,46 @@ Notes:
 								</cfif>
 							</cfsilent>
 							<th class="data #column.tdClass#" data-propertyIdentifier="#column.propertyIdentifier#">
-								<div class="dropdown">
-									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
-									<ul class="dropdown-menu nav">
-										<li class="nav-header">Sort</li>
-										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|ASC')#"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
-										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|DESC')#"><i class="icon-arrow-up"></i> Sort Decending</a></li>
-										<li class="divider"></li>
-										<cfif column.filter>
-											<li class="nav-header">Filter</li>
-											<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
-											<cfloop array="#filterOptions#" index="filter">
-												<li><a href="#attributes.smartList.buildURL( 'F:#column.propertyIdentifier#=#filter["value"]#' )#">#filter['value']#</a></li>
-											</cfloop>
-										</cfif>
-									</ul>
-								</div>
+								<cfif not column.search and not column.sort and not column.filter and not column.range>
+									#column.title#
+								<cfelse>
+									<div class="dropdown">
+										<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
+										<ul class="dropdown-menu nav">
+											<cfif column.search>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.search')#</li>
+												<li><input type="text" class="listing-search" value="" /> <i class="icon-search"></i></li>
+												<li class="divider"></li>	
+											</cfif>
+											<cfif column.sort>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.sort')#</li>
+												<li><a href="##" class="listing-sort" data-sortdirection="ASC"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
+												<li><a href="##" class="listing-sort" data-sortdirection="DESC"><i class="icon-arrow-up"></i> Sort Decending</a></li>
+												<li class="divider"></li>
+											</cfif>
+											<cfif column.range>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.range')#</li>
+												<!---
+												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
+												<div class="filter-scroll">
+													<cfloop array="#filterOptions#" index="filter">
+														<li><a href="#attributes.smartList.buildURL( 'F:#column.propertyIdentifier#=#filter["value"]#' )#">#filter['value']#</a></li>
+													</cfloop>
+												</div>
+												--->
+											</cfif>
+											<cfif column.filter>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.filter')#</li>
+												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
+												<div class="filter-scroll">
+													<cfloop array="#filterOptions#" index="filter">
+														<li><a href="#attributes.smartList.buildURL( 'F:#column.propertyIdentifier#=#filter["value"]#' )#">#filter['value']#</a></li>
+													</cfloop>
+												</div>
+											</cfif>
+										</ul>
+									</div>
+								</cfif>
 							</th>
 						</cfloop>
 						<cfif attributes.administativeCount>
