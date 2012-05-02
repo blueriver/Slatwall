@@ -43,7 +43,37 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function updateListingDisplay(required struct rc) {
-		
+		try {
+			
+			var entityService = getUtilityORMService().getServiceByEntityName( entityName=rc.entityName );
+			var smartList = entityService.invokeMethod( "get#rc.entityName#SmartList", {1=rc} );
+			
+			var smartListPageRecords = smartList.getPageRecords();
+			var piArray = listToArray(rc.propertyIdentifiers);
+
+			rc[ "recordsCount" ] = smartList.getRecordsCount();
+			rc[ "pageRecords" ] = [];
+			rc[ "pageRecordsCount" ] = arrayLen(smartList.getPageRecords());
+			rc[ "pageRecordsShow"] = smartList.getPageRecordsShow();
+			rc[ "pageRecordsStart" ] = smartList.getPageRecordsStart();
+			rc[ "currentPage" ] = smartList.getCurrentPage();
+			rc[ "totalPages" ] = smartList.getTotalPages();
+
+			for(var i=1; i<=arrayLen(smartListPageRecords); i++) {
+				var thisRecord = {};
+				for(var p=1; p<=arrayLen(piArray); p++) {
+					thisRecord[ piArray[p] ] = smartListPageRecords[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );	
+				}
+				arrayAppend(rc[ "pageRecords" ], thisRecord);
+			}
+			
+		} catch(any e) {
+			
+			writeOutput( serializeJSON(e) );
+			abort;
+			
+		}
+			
 	}
 	
 }

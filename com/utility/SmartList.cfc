@@ -50,6 +50,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	property name="cacheName" type="string";
 	
 	property name="records" type="array";
+	property name="savedStateID" type="string";
 	
 	// Delimiter Settings
 	variables.subEntityDelimiters = "._";
@@ -59,6 +60,10 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	variables.dataKeyDelimiter = ":";
 	
 	public any function init(required string entityName, struct data, numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL="") {
+		// Make sure that the containers for smart list saved states are in place
+		param name="session.entitySmartList" type="struct" default="#structNew()#";
+		param name="session.entitySmartList.savedStates" type="array" default="#arrayNew(1)#";
+		
 		// Set defaults for the main properties
 		setEntities({});
 		setEntityJoinOrder([]);
@@ -775,22 +780,20 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		arrayDeleteAt(session.entitySmartList.savedStates, arrayFind(session.entitySmartList.savedStates, arguments.savedStateID));
 	}
 	
-	public string function getSavedStateID() {
-		var savedStateID = createUUID();
-		
-		if(!structKeyExists(session, "entitySmartList")) {
-			session.entitySmartList = structNew();
-			session.entitySmartList.savedStates = [];
+	public string function getSavedStateID( boolean new=false ) {
+		if(!structKeyExists(variables, "savedStateID") || arguments.new) {
+			variables.savedStateID = createUUID();
+			
+			arrayPrepend(session.entitySmartList.savedStates, variables.savedStateID);
+			session.entitySmartList[ savedStateID ] = getStateStruct();
+			
+			for(var s=arrayLen(session.entitySmartList.savedStates); s>=10; s--) {
+				removeSavedState(session.entitySmartList.savedStates[s]);
+			}
+			
 		}
 		
-		arrayPrepend(session.entitySmartList.savedStates, savedStateID);
-		
-		session.entitySmartList[ savedStateID ] = getStateStruct();
-		for(var s=arrayLen(session.entitySmartList.savedStates); s>=3; s--) {
-			removeSavedState(session.entitySmartList.savedStates[s]);
-		}
-		
-		return savedStateID;
+		return variables.savedStateID;
 	}
 	
 	public struct function getStateStruct() {

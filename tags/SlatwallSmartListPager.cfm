@@ -40,46 +40,38 @@ Notes:
 	<cfparam name="attributes.smartList" type="any" />
 	
 	<cfsilent>
-		<cfset local.showPreviousDots = false />
-		<cfset local.showNextDots = false />
 		<cfset local.pageStart = 1 />
-		<cfset local.pageCount = 2 />
+		<cfset local.pageCount = 4 />
 		
-		<!--- If there are less than 5 pages, then we just show everything --->
-		<cfif attributes.smartList.getTotalPages() lte 5>
-			<cfset local.pageCount = attributes.smartList.getTotalPages() />
+		<cfif attributes.smartList.getTotalPages() gt 6>
+			<cfif attributes.smartList.getCurrentPage() gt 3 and attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages() - 3>
+				<cfset local.pageStart = attributes.smartList.getCurrentPage()-1 />
+				<cfset local.pageCount = 3 />
+			<cfelseif attributes.smartList.getCurrentPage() gt attributes.smartList.getTotalPages() - 3>
+				<cfset local.pageStart = attributes.smartList.getTotalPages()-3 />
+			</cfif>
 		<cfelse>
-			<cfif attributes.smartList.getTotalPages() - 1 gt attributes.smartList.getCurrentPage()>
-				<cfset local.showNextDots = true />
-			</cfif>
-			<cfif attributes.smartList.getCurrentPage() gt 2>
-				<cfset local.showPreviousDots = true />
-				<cfif attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages()>
-					<cfset local.pageStart = attributes.smartList.getCurrentPage() - 1 />
-				<cfelse>
-					<cfset local.pageStart = attributes.smartList.getTotalPages() - 2 />
-				</cfif>
-			</cfif>
+			<cfset local.pageCount = attributes.smartList.getTotalPages() />
 		</cfif>
 		
 		<cfset local.pageEnd = local.pageStart + local.pageCount />
 	</cfsilent>
 	
 	<cfoutput>
-		<div class="pagination" data-tableid="#attributes.smartList.getSavedStateID()#">
+		<div class="pagination" data-tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#">
 			<cfif attributes.smartList.getTotalPages() gt 1>
 				<ul>
 					<cfif attributes.smartList.getCurrentPage() gt 1>
 						<li><a href="#attributes.smartList.buildURL('P:Current=#attributes.smartList.getCurrentPage() - 1#')#" class="listing-pager" data-page="#attributes.smartList.getCurrentPage() - 1#">Prev</a></li>
 					</cfif>
-					<cfif local.showPreviousDots>
+					<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() gt 3>
 						<li><a href="#attributes.smartList.buildURL('P:Current=1')#" class="listing-pager" data-page="1">1</a></li>
 						<li class="disabled"><a href="##">...</a></li>
 					</cfif>
 					<cfloop from="#local.pageStart#" to="#local.pageEnd#" index="i" step="1">
 						<li <cfif attributes.smartList.getCurrentPage() eq i>class="active"</cfif>><a href="#attributes.smartList.buildURL('P:Current=#i#')#" class="listing-pager" data-page="#i#">#i#</a></li>
 					</cfloop>
-					<cfif local.showNextDots>
+					<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages() - 3>
 						<li class="disabled"><a href="##">...</a></li>
 						<li><a href="#attributes.smartList.buildURL('P:Current=#attributes.smartList.getTotalPages()#')#" class="listing-pager" data-page="#attributes.smartList.getTotalPages()#">#attributes.smartList.getTotalPages()#</a></li>
 					</cfif>

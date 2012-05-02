@@ -103,10 +103,9 @@ function bindListingDisplayPaging() {
 		e.preventDefault();
 		
 		var data = {};
-		data[ 'savedStateID' ] = jQuery(this).closest('.pagination').data('tableid');
-		data[ 'P:Current' ] = jQuery(this).closest('.pagination').data('tableid');
+		data[ 'P:Current' ] = jQuery(this).data('page');
 		
-		listingDisplayUpdate( data );
+		listingDisplayUpdate( jQuery(this).closest('.pagination').data('tableid'), data );
 	});
 }
 function bindListingDisplaySorting() {
@@ -144,34 +143,148 @@ function bindListingDisplayMultiselectability() {
 	});
 }
 
-function listingDisplayUpdate( data ) {
+function listingDisplayUpdate( tableID, data ) {
 	
 	data[ 'slatAction' ] = 'admin:ajax.updateListingDisplay';
+	data[ 'propertyIdentifiers' ] = jQuery('#' + tableID).data('propertyidentifiers');
+	data[ 'savedStateID' ] = jQuery('#' + tableID).data('savedstateid');
+	data[ 'entityName' ] = jQuery('#' + tableID).data('entityname');
 	
-	console.log(data);
-	abort;
+	var idProperty = jQuery('#' + tableID).data('idproperty');
 	
-	var data = {
-		slatAction : 'admin:main.updateSortOrder',
-		recordIDColumn : idProperty,
-		recordID : recordID,
-		tableName : tableName,
-		newSortOrder : newSortOrder
-	};
-
 	jQuery.ajax({
 		url: '/plugins/Slatwall/',
-		async: false,
+		method: 'post',
 		data: data,
 		dataType: 'json',
 		contentType: 'application/json',
-		success: function(r) {
-			
-		},
-		error: function(r) {
+		error: function(result) {
+			console.log(r);
 			alert('Error Loading');
+		},
+		success: function(r) {
+			console.log(r);
+		
+			// Setup Selectors
+			var tableBodySelector = '#' + tableID + ' tbody';
+			var tableHeadRowSelector = '#' + tableID + ' thead tr';
+			
+			// Clear out the old Body
+			jQuery(tableBodySelector).html('');
+			
+			// Loop over each of the records in the response
+			jQuery.each( r["pageRecords"], function(ri, rv){
+			
+				// Create a new row
+				jQuery(tableBodySelector).append('<tr id="' + rv[ idProperty ] + '">');
+				
+				// Loop over each column of the header to pull the data out of the response and populate new td's
+				jQuery.each(jQuery(tableHeadRowSelector).children(), function(ci, cv){
+					var newtd = '';
+					var link = '';
+					
+					if( jQuery(cv).hasClass('data') ) {
+						
+						newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+							
+					} else if ( jQuery(cv).hasClass('admin') ){
+						
+						newtd += '<td>';
+						
+						if( jQuery(cv).data('editaction') != undefined ) {
+							link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
+							if( jQuery(cv).data('editactionquerystring') != 'undefined' ) {
+								link += '&' + jQuery(cv).data('editactionquerystring');
+							}
+							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';
+						}
+						
+						if( jQuery(cv).data('detailaction') != undefined ) {
+							console.log(jQuery(cv).data('detailaction'));	
+							link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + rv[ idProperty ];
+							if( jQuery(cv).data('detailactionquerystring') != 'undefined' ) {
+								link += '&' + jQuery(cv).data('detailactionquerystring');
+							}
+							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-eye-open"></i></a> ';
+						}
+						
+						if( jQuery(cv).data('deleteaction') != undefined ) {
+							console.log(jQuery(cv).data('deleteaction'));	
+							link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + rv[ idProperty ];
+							if( jQuery(cv).data('deleteactionquerystring') != 'undefined' ) {
+								link += '&' + jQuery(cv).data('deleteactionquerystring');
+							}
+							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-eye-open"></i></a> ';
+						}
+						
+						newtd += '</td>';
+						
+					}
+					
+					jQuery(tableBodySelector).append(newtd);
+				});
+				
+				jQuery(tableBodySelector).append('</tr>');
+			});
+			
+			// Update the paging nav
+			jQuery('div[class="pagination"][data-tableid="' + tableID + '"]').html(buildPagingNav(r["currentPage"], r["totalPages"]));
+			bindListingDisplayPaging();
 		}
+		
 	});
+}
+
+function buildPagingNav(currentPage, totalPages) {
+	var nav = '<ul>';
+	
+	var pageStart = 1;
+	var pageCount = 4;
+	
+	if(totalPages > 6) {
+		if (currentPage > 3 && currentPage < totalPages - 3) {
+			pageStart = currentPage - 1;
+			pageCount = 3;
+		} else if (currentPage >= totalPages - 3) {
+			pageStart = totalPages - 3;
+		}
+	} else {
+		pageCount = totalPages;
+	}
+	
+	if(currentPage > 1) {
+		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage - 1) + '">Prev</a></li>';
+	}
+	
+	if(currentPage > 3 && totalPages > 6) {
+		nav += '<li><a href="#" class="listing-pager" data-page="1">1</a></li>';
+		nav += '<li class="disabled"><a href="#">...</a></li>';
+	}
+
+	for(var i=pageStart; i<pageStart + pageCount; i++){
+		
+		if(currentPage == i) {
+			nav += '<li class="active"><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+		} else {
+			nav += '<li><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+		}
+	}
+	
+	if(currentPage < totalPages - 3 && totalPages > 6) {
+		nav += '<li class="disabled"><a href="#">...</a></li>';
+		nav += '<li><a href="#" class="listing-pager" data-page="' + totalPages + '">' + totalPages + '</a></li>';
+	}
+	
+	if(currentPage < totalPages) {
+		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage + 1) + '">Next</a></li>';
+	}
+	
+	
+	nav += '</ul>';
+	
+	console.log(nav);
+	
+	return nav;
 }
 
 function tableApplySort(event, ui) {

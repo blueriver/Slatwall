@@ -195,7 +195,7 @@ Notes:
 			<cfif thistag.multiselectable>
 				<input type="hidden" name="#attributes.multiselectFieldName#" value="#attributes.multiselectValues#" />
 			</cfif>
-			<table id="#attributes.smartList.getSavedStateID()#" class="#attributes.tableclass#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
+			<table id="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" class="#attributes.tableclass#" data-savedstateid="#attributes.smartList.getSavedStateID()#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
 				<thead>
 					<tr>
 						<!--- Selectable --->
@@ -216,7 +216,7 @@ Notes:
 									<cfset column.title = attributes.smartList.getPageRecords()[1].getTitleByPropertyIdentifier(column.propertyIdentifier) />
 								</cfif>
 							</cfsilent>
-							<th class="data" data-propertyIdentifier="#column.propertyIdentifier#">
+							<th class="data #column.tdClass#" data-propertyIdentifier="#column.propertyIdentifier#">
 								<div class="dropdown">
 									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
 									<ul class="dropdown-menu nav">
