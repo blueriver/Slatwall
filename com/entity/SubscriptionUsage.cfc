@@ -76,6 +76,9 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		if(isNull(variables.subscriptionUsageBenefits)) {
 			variables.subscriptionUsageBenefits = [];
 		}
+		if(isNull(variables.renewalSubscriptionUsageBenefits)) {
+			variables.renewalSubscriptionUsageBenefits = [];
+		}
 		if(isNull(variables.subscriptionOrderItems)) {
 			variables.subscriptionOrderItems = [];
 		}
