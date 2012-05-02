@@ -137,6 +137,18 @@ function bindListingDisplaySelectability() {
 	
 }
 function bindListingDisplayMultiselectability() {
+	// Loop over any multiselect tables to set the checkboxs based on the corisponding hidden field
+	jQuery.each(jQuery('.table-multiselect'), function(ti, tv){
+		var inputValue = jQuery('input[name=' + jQuery(tv).data('multiselectfield') + ']').val();
+		if(inputValue != "") {
+			jQuery.each(inputValue.split(','), function(vi, vv){
+				jQuery(jQuery(tv).find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
+			});
+		}
+		
+	});
+	
+	// Setup the Click function on the checkbox
 	jQuery('.table-action-multiselect').click(function(e){
 		e.preventDefault();
 		tableMultiselectClick( this );
@@ -163,8 +175,6 @@ function listingDisplayUpdate( tableID, data ) {
 			alert('Error Loading');
 		},
 		success: function(r) {
-			console.log(r);
-		
 			// Setup Selectors
 			var tableBodySelector = '#' + tableID + ' tbody';
 			var tableHeadRowSelector = '#' + tableID + ' thead tr';
@@ -175,8 +185,11 @@ function listingDisplayUpdate( tableID, data ) {
 			// Loop over each of the records in the response
 			jQuery.each( r["pageRecords"], function(ri, rv){
 			
+				var rowSelector = jQuery('<tr></tr>');
+				jQuery(rowSelector).attr('id', rv[ idProperty ]);
+				
 				// Create a new row
-				jQuery(tableBodySelector).append('<tr id="' + rv[ idProperty ] + '">');
+				//jQuery(tableBodySelector).append('<tr id="' + rv[ idProperty ] + '">');
 				
 				// Loop over each column of the header to pull the data out of the response and populate new td's
 				jQuery.each(jQuery(tableHeadRowSelector).children(), function(ci, cv){
@@ -186,6 +199,10 @@ function listingDisplayUpdate( tableID, data ) {
 					if( jQuery(cv).hasClass('data') ) {
 						
 						newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+					
+					} else if( jQuery(cv).hasClass('multiselect') ) {
+						
+						newtd += '<td><a href="#" class="table-action-multiselect" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a>';
 							
 					} else if ( jQuery(cv).hasClass('admin') ){
 						
@@ -193,43 +210,64 @@ function listingDisplayUpdate( tableID, data ) {
 						
 						if( jQuery(cv).data('editaction') != undefined ) {
 							link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
-							if( jQuery(cv).data('editactionquerystring') != 'undefined' ) {
-								link += '&' + jQuery(cv).data('editactionquerystring');
+							if( jQuery(cv).data('editquerystring') != undefined ) {
+								link += '&' + jQuery(cv).data('editquerystring');
 							}
-							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';
+							if( jQuery(cv).data('editmodal') ) {
+								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
+							} else {
+								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
+							}
 						}
 						
 						if( jQuery(cv).data('detailaction') != undefined ) {
-							console.log(jQuery(cv).data('detailaction'));	
 							link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + rv[ idProperty ];
-							if( jQuery(cv).data('detailactionquerystring') != 'undefined' ) {
-								link += '&' + jQuery(cv).data('detailactionquerystring');
+							if( jQuery(cv).data('detailquerystring') != undefined ) {
+								link += '&' + jQuery(cv).data('detailquerystring');
 							}
-							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-eye-open"></i></a> ';
+							if( jQuery(cv).data('detailmodal') ) {
+								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
+							} else {
+								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
+							}
 						}
 						
 						if( jQuery(cv).data('deleteaction') != undefined ) {
-							console.log(jQuery(cv).data('deleteaction'));	
 							link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + rv[ idProperty ];
-							if( jQuery(cv).data('deleteactionquerystring') != 'undefined' ) {
-								link += '&' + jQuery(cv).data('deleteactionquerystring');
+							if( jQuery(cv).data('deletequerystring') != undefined ) {
+								link += '&' + jQuery(cv).data('deletequerystring');
 							}
-							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-eye-open"></i></a> ';
+							newtd += '<a class="btn btn-mini" href="' + link + '"';
+							newtd += '><i class="icon-eye-open"></i></a> ';
+						}
+						
+						if( jQuery(cv).data('processaction') != undefined ) {
+							link = '?slatAction=' + jQuery(cv).data('processaction') + '&' + idProperty + '=' + rv[ idProperty ];
+							if( jQuery(cv).data('processquerystring') != undefined ) {
+								link += '&' + jQuery(cv).data('processquerystring');
+							}
+							if( jQuery(cv).data('processmodal') ) {
+								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
+							} else {
+								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
+							}
 						}
 						
 						newtd += '</td>';
 						
 					}
 					
-					jQuery(tableBodySelector).append(newtd);
+					jQuery(rowSelector).append(newtd);
 				});
 				
-				jQuery(tableBodySelector).append('</tr>');
+				jQuery(tableBodySelector).append(jQuery(rowSelector));
 			});
 			
 			// Update the paging nav
 			jQuery('div[class="pagination"][data-tableid="' + tableID + '"]').html(buildPagingNav(r["currentPage"], r["totalPages"]));
-			bindListingDisplayPaging();
+			
+			// Re-Bind UI Elements
+			bindUIElements();
 		}
 		
 	});
@@ -281,8 +319,6 @@ function buildPagingNav(currentPage, totalPages) {
 	
 	
 	nav += '</ul>';
-	
-	console.log(nav);
 	
 	return nav;
 }
@@ -385,7 +421,6 @@ function tableExpandClick( toggleLink ) {
 			data[ 'slatAction' ] = expandAction;
 			data[ 'F:' + parentIDProperty ] = parentID;
 			data[ 'propertyIdentifiers' ] = propertyIdentifiers;
-			
 			
 			jQuery.ajax({
 				url: '/plugins/Slatwall/',

@@ -94,10 +94,7 @@ Notes:
 		<!--- Setup the default table class --->
 		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-striped table-bordered table-condensed', ' ') />
 		
-		<!--- Setup the list of all property identifiers to be used later --->
-		<cfloop array="#thistag.columns#" index="column">
-			<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
-		</cfloop>
+		
 		
 		<!--- Setup Select --->
 		<cfif len(attributes.selectFieldName)>
@@ -186,6 +183,11 @@ Notes:
 				sort = false
 			}) />
 		</cfif>
+		
+		<!--- Setup the list of all property identifiers to be used later --->
+		<cfloop array="#thistag.columns#" index="column">
+			<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
+		</cfloop>
 	</cfsilent>
 	<cfoutput>
 		<cfif arrayLen(attributes.smartList.getPageRecords())>
@@ -245,11 +247,11 @@ Notes:
 						<tr id="#record.getPrimaryIDValue()#">
 							<!--- Selectable --->
 							<cfif thistag.selectable>
-								<td><a href="##" class="table-action-select" data-idvalue="#record.getPrimaryIDValue()#"><cfif record.getPrimaryIDValue() eq attributes.selectValue><i class="slatwall-ui-raido-checked"></i><cfelse><i class="slatwall-ui-raido"></i></cfif></a></td>
+								<td><a href="##" class="table-action-select" data-idvalue="#record.getPrimaryIDValue()#"><i class="slatwall-ui-raido"></i></a></td>
 							</cfif>
 							<!--- Multiselectable --->
 							<cfif thistag.multiselectable>
-								<td><a href="##" class="table-action-multiselect" data-idvalue="#record.getPrimaryIDValue()#"><cfif listFindNoCase(attributes.multiselectValues, record.getPrimaryIDValue())><i class="slatwall-ui-checkbox-checked"></i><cfelse><i class="slatwall-ui-checkbox"></i></cfif></a></td>
+								<td><a href="##" class="table-action-multiselect" data-idvalue="#record.getPrimaryIDValue()#"><i class="slatwall-ui-checkbox"></i></a></td>
 							</cfif>
 							<!--- Sortable --->
 							<cfif thistag.sortable>

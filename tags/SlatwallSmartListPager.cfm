@@ -51,7 +51,7 @@ Notes:
 				<cfset local.pageStart = attributes.smartList.getTotalPages()-3 />
 			</cfif>
 		<cfelse>
-			<cfset local.pageCount = attributes.smartList.getTotalPages() />
+			<cfset local.pageCount = attributes.smartList.getTotalPages() - 1 />
 		</cfif>
 		
 		<cfset local.pageEnd = local.pageStart + local.pageCount />
