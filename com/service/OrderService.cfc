@@ -264,9 +264,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var requirePayment = false;
 		
 		// check if payment method is required for subscription order, even if the amount is 0
+		// require payment if renewal price is not 0 and autoRenewFlag is true
 		if(!arrayLen(order.getOrderPayments())) {
 			for(var orderItem in arguments.order.getOrderItems()) {
-				if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
+				if(!isNull(orderItem.getSku().getSubscriptionTerm()) && orderItem.getSku().getRenewalPrice() != 0 && !isNull(orderItem.getSku().getSubscriptionTerm().getAutoRenewFlag()) && orderItem.getSku().getSubscriptionTerm().getAutoRenewFlag()) {
 					requirePayment = true;
 					break;
 				}
