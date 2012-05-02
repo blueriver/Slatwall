@@ -84,13 +84,32 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return arguments.order;
 	}
 	
-	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData)	{
+	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData, struct data = {})	{
 	
 		// Check to see if the order has already been closed or canceled
 		if(arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
 			throw("You cannot add an item to an order that has been closed or canceled");
 		}
-	
+		
+		// save order so it's added to the hibernate scope
+		save( arguments.order );
+		
+		// if a filfillmentMethodID is passed in the data, set orderfulfillment to that
+		if(structKeyExists(arguments.data, "fulfillmentMethodID")) {
+			// make sure this is eligible fulfillment method
+			if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), arguments.data.fulfillmentMethodID)) {
+				var fulfillmentMethod = this.getFulfillmentService().getFulfillmentMethod(arguments.data.fulfillmentMethodID);
+				arguments.orderFulfillment = this.getOrderFulfillment({order=arguments.order,fulfillmentMethod=fulfillmentMethod},true);
+				if(arguments.orderFulfillment.isNew()) {
+					arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
+					arguments.orderFulfillment.setOrder( arguments.order );
+					// Push the fulfillment into the hibernate scope
+					getDAO().save(arguments.orderFulfillment);
+				}
+			}
+			
+		}
+		
 		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
 		if(!structKeyExists(arguments, "orderFulfillment"))	{
 			
@@ -186,8 +205,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 		// Recalculate the order amounts for tax and promotions and priceGroups
 		recalculateOrderAmounts( arguments.order );
-	
-		save( arguments.order );
 	}
 	
 	public void function removeOrderItem(required any order, required string orderItemID) {
