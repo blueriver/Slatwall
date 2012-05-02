@@ -237,8 +237,7 @@ function listingDisplayUpdate( tableID, data ) {
 							if( jQuery(cv).data('deletequerystring') != undefined ) {
 								link += '&' + jQuery(cv).data('deletequerystring');
 							}
-							newtd += '<a class="btn btn-mini" href="' + link + '"';
-							newtd += '><i class="icon-eye-open"></i></a> ';
+							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-trash"></i></a> ';
 						}
 						
 						if( jQuery(cv).data('processaction') != undefined ) {
@@ -247,9 +246,9 @@ function listingDisplayUpdate( tableID, data ) {
 								link += '&' + jQuery(cv).data('processquerystring');
 							}
 							if( jQuery(cv).data('processmodal') ) {
-								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
+								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-cog"></i> Process</a> ';
 							} else {
-								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
+								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-cog"></i> Process</a> ';	
 							}
 						}
 						
