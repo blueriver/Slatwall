@@ -290,7 +290,7 @@ function buildPagingNav(currentPage, totalPages) {
 	}
 	
 	if(currentPage > 1) {
-		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage - 1) + '">Prev</a></li>';
+		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
 	}
 	
 	if(currentPage > 3 && totalPages > 6) {
@@ -313,7 +313,7 @@ function buildPagingNav(currentPage, totalPages) {
 	}
 	
 	if(currentPage < totalPages) {
-		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage + 1) + '">Next</a></li>';
+		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
 	}
 	
 	
