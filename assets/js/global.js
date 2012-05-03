@@ -115,7 +115,14 @@ function bindListingDisplayFiltering() {
 	
 }
 function bindListingDisplaySearching() {
-	
+	jQuery('.dropdown input').on('click', function(e){
+		e.stopPropagation();
+	});
+	jQuery('.listing-search').on('keyup', function(e){
+		var data = {};
+		data[ jQuery(this).attr('name') ] = jQuery(this).val();
+		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+	});
 }
 function bindListingDisplayExpandability() {
 	jQuery('.table-action-expand').click(function(e){
