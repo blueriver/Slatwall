@@ -122,6 +122,33 @@ function setupEventHandlers() {
 	});
 	
 	// Listing Display - Filtering
+	jQuery('body').on('click', '.listing-filter', function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		
+		var value = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val();
+		var valueArray = [];
+		if(value != '') {
+			valueArray = value.split(',');
+		}
+		var i = jQuery.inArray(jQuery(this).data('filtervalue'), valueArray);
+		if( i > -1 ) {
+			valueArray.splice(i, 1);
+			jQuery(this).children('.slatwall-ui-checkbox-checked').addClass('slatwall-ui-checkbox').removeClass('slatwall-ui-checkbox-checked');
+		} else {
+			valueArray.push(jQuery(this).data('filtervalue'));
+			jQuery(this).children('.slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked').removeClass('slatwall-ui-checkbox');
+		}
+		jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val(valueArray.join(","));
+		
+		var data = {};
+		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() != '') {
+			data[ 'F:' + jQuery(this).closest('th').data('propertyidentifier') ] = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val();
+		} else {
+			data[ 'FR:' + jQuery(this).closest('th').data('propertyidentifier') ] = 1;	
+		}
+		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+	});
 	
 	// Listing Display - Searching
 	jQuery('body').on('click', '.dropdown input', function(e){
@@ -288,51 +315,58 @@ function listingDisplayUpdate( tableID, data ) {
 }
 
 function buildPagingNav(currentPage, totalPages) {
-	var nav = '<ul>';
+	var nav = '';
 	
-	var pageStart = 1;
-	var pageCount = 4;
+	if(totalPages > 1){
+		nav = '<ul>';
 	
-	if(totalPages > 6) {
-		if (currentPage > 3 && currentPage < totalPages - 3) {
-			pageStart = currentPage - 1;
-			pageCount = 3;
-		} else if (currentPage >= totalPages - 3) {
-			pageStart = totalPages - 3;
-		}
-	} else {
-		pageCount = totalPages;
-	}
-	
-	if(currentPage > 1) {
-		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
-	}
-	
-	if(currentPage > 3 && totalPages > 6) {
-		nav += '<li><a href="#" class="listing-pager" data-page="1">1</a></li>';
-		nav += '<li class="disabled"><a href="#">...</a></li>';
-	}
-
-	for(var i=pageStart; i<pageStart + pageCount; i++){
+		var pageStart = 1;
+		var pageCount = 5;
 		
-		if(currentPage == i) {
-			nav += '<li class="active"><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+		if(totalPages > 6) {
+			if (currentPage > 3 && currentPage < totalPages - 3) {
+				pageStart = currentPage - 1;
+				pageCount = 3;
+			} else if (currentPage >= totalPages - 4) {
+				pageStart = totalPages - 4;
+			}
 		} else {
-			nav += '<li><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+			pageCount = totalPages;
 		}
+		
+		if(currentPage > 1) {
+			nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
+		} else {
+			nav += '<li class="disabled"><a href="#">&laquo;</a></li>';
+		}
+		
+		if(currentPage > 3 && totalPages > 6) {
+			nav += '<li><a href="#" class="listing-pager" data-page="1">1</a></li>';
+			nav += '<li class="disabled"><a href="#">...</a></li>';
+		}
+	
+		for(var i=pageStart; i<pageStart + pageCount; i++){
+			
+			if(currentPage == i) {
+				nav += '<li class="active"><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+			} else {
+				nav += '<li><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+			}
+		}
+		
+		if(currentPage < totalPages - 3 && totalPages > 6) {
+			nav += '<li class="disabled"><a href="#">...</a></li>';
+			nav += '<li><a href="#" class="listing-pager" data-page="' + totalPages + '">' + totalPages + '</a></li>';
+		}
+		
+		if(currentPage < totalPages) {
+			nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
+		} else {
+			nav += '<li class="disabled"><a href="#">&raquo;</a></li>';
+		}
+		
+		nav += '</ul>';
 	}
-	
-	if(currentPage < totalPages - 3 && totalPages > 6) {
-		nav += '<li class="disabled"><a href="#">...</a></li>';
-		nav += '<li><a href="#" class="listing-pager" data-page="' + totalPages + '">' + totalPages + '</a></li>';
-	}
-	
-	if(currentPage < totalPages) {
-		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
-	}
-	
-	
-	nav += '</ul>';
 	
 	return nav;
 }
@@ -385,7 +419,7 @@ function tableMultiselectClick( toggleLink ) {
 	
 	var blankIndex = currentValues.indexOf('');
 	if(blankIndex > -1) {
-		currentValues.splice(blankIndex, 1);	
+		currentValues.splice(blankIndex, 1);
 	}
 	
 	if( jQuery(toggleLink).children('.slatwall-ui-checkbox-checked').length ) {

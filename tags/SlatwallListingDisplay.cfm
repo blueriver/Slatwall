@@ -250,10 +250,10 @@ Notes:
 											<cfif column.filter>
 												<li class="nav-header">#request.slatwallScope.rbKey('define.filter')#</li>
 												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
-												<input type="hidden" name="F:#column.propertyIdentifier#" value="" />
 												<div class="filter-scroll">
+													<input type="hidden" name="F:#column.propertyIdentifier#" value="" />
 													<cfloop array="#filterOptions#" index="filter">
-														<li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#">#filter['name']#</a></li>
+														<li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#"><i class="slatwall-ui-checkbox"></i> #filter['name']#</a></li>
 													</cfloop>
 												</div>
 											</cfif>

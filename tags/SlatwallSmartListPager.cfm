@@ -45,12 +45,12 @@ Notes:
 		
 		<cfif attributes.smartList.getTotalPages() gt 6>
 			<cfif attributes.smartList.getCurrentPage() lte 3>
-				<cfset local.pageCount = 3 />
+				<cfset local.pageCount = 4 />
 			<cfelseif attributes.smartList.getCurrentPage() gt 3 and attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages() - 3>
 				<cfset local.pageStart = attributes.smartList.getCurrentPage()-1 />
 			<cfelseif attributes.smartList.getCurrentPage() gte attributes.smartList.getTotalPages() - 3>
 				<cfset local.pageStart = attributes.smartList.getTotalPages()-3 />
-				<cfset local.pageCount = 3 />
+				<cfset local.pageCount = 4 />
 			</cfif>
 		<cfelse>
 			<cfset local.pageCount = attributes.smartList.getTotalPages() - 1 />
@@ -65,6 +65,8 @@ Notes:
 				<ul>
 					<cfif attributes.smartList.getCurrentPage() gt 1>
 						<li><a href="##" class="listing-pager" data-page="#attributes.smartList.getCurrentPage() - 1#">&laquo;</a></li>
+					<cfelse>
+						<li class="disabled"><a href="##">&laquo;</a></li>
 					</cfif>
 					<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() gt 3>
 						<li><a href="##" class="listing-pager" data-page="1">1</a></li>
@@ -79,6 +81,8 @@ Notes:
 					</cfif>
 					<cfif attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages()>
 						<li><a href="##" class="listing-pager" data-page="#attributes.smartList.getCurrentPage() + 1#">&raquo;</a></li>
+					<cfelse>
+						<li class="disabled"><a href="##">&raquo;</a></li>
 					</cfif>
 				</ul>
 			</cfif>

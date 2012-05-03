@@ -109,6 +109,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 					addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
 				} else if(left(i,3) == "FK#variables.dataKeyDelimiter#") {
 					addLikeFilter(propertyIdentifier=right(i, len(i)-3), value="%#arguments.data[i]#%");
+				} else if(left(i,3) == "FR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
+					removeFilter(propertyIdentifier=right(i, len(i)-3));
 				} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
 					addRange(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
 				} else if(i == "OrderBy") {
@@ -256,6 +258,14 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	public void function addSelect(required string propertyIdentifier, required string alias) {
 		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier,fetch=false)] = arguments.alias;
+	}
+	
+	public void function removeFilter(required string propertyIdentifier, whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		if(structKeyExists(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty)){
+			structDelete(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty);
+		};
 	}
 	
 	public void function addFilter(required string propertyIdentifier, required string value, numeric whereGroup=1, boolean fetch) {
