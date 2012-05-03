@@ -227,8 +227,8 @@ Notes:
 										<ul class="dropdown-menu nav">
 											<cfif column.search>
 												<li class="nav-header">#request.slatwallScope.rbKey('define.search')#</li>
-												<li><input type="text" class="listing-search" value="" /> <i class="icon-search"></i></li>
-												<li class="divider"></li>	
+												<li><input type="text" class="listing-search" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
+												<li class="divider"></li>
 											</cfif>
 											<cfif column.sort>
 												<li class="nav-header">#request.slatwallScope.rbKey('define.sort')#</li>

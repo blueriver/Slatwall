@@ -19,38 +19,27 @@
 component displayname="Smart List" accessors="true" persistent="false" output="false" {
 	
 	property name="baseEntityName" type="string";
+	property name="cacheable" type="boolean";
+	property name="cacheName" type="string";
+	property name="savedStateID" type="string";
 	
 	property name="entities" type="struct";
 	property name="entityJoinOrder" type="array";
-	
 	property name="selects" type="struct" hint="This struct holds any selects that are to be used in creating the records array";
-	
 	property name="whereGroups" type="array" hint="this holds all filters and ranges";
-	
 	property name="orders" type="array" hint="This struct holds the display order specification based on property";
-	
 	property name="whereConditions" type="array";
-	
 	property name="keywordProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
 	property name="searchScoreProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
-	
 	property name="keywords" type="array" hint="This array holds all of the keywords that were searched for";
-
 	property name="hqlParams" type="struct";
-	
 	property name="pageRecordsStart" type="numeric" hint="This represents the first record to display and it is used in paging.";
 	property name="pageRecordsShow" type="numeric" hint="This is the total number of entities to display";
-	
 	property name="currentURL" type="string";
 	property name="currentPageDeclaration" type="string";
 	
-	property name="searchTime" type="numeric";
-	
-	property name="cacheable" type="boolean";
-	property name="cacheName" type="string";
-	
 	property name="records" type="array";
-	property name="savedStateID" type="string";
+	property name="pageRecords" type="array";
 	
 	// Delimiter Settings
 	variables.subEntityDelimiters = "._";
@@ -67,32 +56,26 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		// Set defaults for the main properties
 		setEntities({});
 		setEntityJoinOrder([]);
-		
 		setSelects({});
 		setWhereGroups([]);
 		setWhereConditions([]);
 		setOrders([]);
 		setKeywordProperties({});
 		setKeywords([]);
-		
-		setSearchTime(0);
-		
 		setHQLParams({});
 		setCurrentURL("");
 		setCurrentPageDeclaration(1);
-		
 		setCacheable(false);
 		setCacheName("");
 		
 		// Set currentURL from the arguments
-		variables.currentURL = arguments.currentURL;
+		setCurrentURL(arguments.currentURL);
 		
 		// Set paging defaults
 		setPageRecordsStart(arguments.pageRecordsStart);
 		setPageRecordsShow(arguments.pageRecordsShow);
 		
 		// Temporary Slatwall Specific Bug Fix For Railo
-		
 		var baseEntity = entityNew(arguments.entityName);
 		var baseEntityMeta = getMetaData(baseEntity);
 		
@@ -109,10 +92,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			applyData(data=arguments.data);	
 		}
 		
-		if(!structKeyExists(application, "entitySmartList")) {
-			application.entitySmartList = structNew();
-		}
-		
 		return this;
 	}
 	
@@ -127,6 +106,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			if(isSimpleValue(arguments.data[i])) {
 				if(left(i,2) == "F#variables.dataKeyDelimiter#") {
 					addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
+				} else if(left(i,3) == "FK#variables.dataKeyDelimiter#") {
+					addLikeFilter(propertyIdentifier=right(i, len(i)-3), value="%#arguments.data[i]#%");
 				} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
 					addRange(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
 				} else if(i == "OrderBy") {
@@ -284,13 +265,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		}
 		
-		/*
-		if(structKeyExists(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty)) {
-			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] &= variables.valueDelimiter & arguments.value;
-		} else {
-			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = arguments.value;
-		}
-		*/
 		variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = arguments.value;
 	}
 	
@@ -302,13 +276,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		
-		/*
-		if(structKeyExists(variables.whereGroups[arguments.whereGroup].likeFilters, aliasedProperty)) {
-			variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] &= variables.valueDelimiter & arguments.value;
-		} else {
-			variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] = arguments.value;
-		}
-		*/
 		variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] = arguments.value;
 	}
 	
