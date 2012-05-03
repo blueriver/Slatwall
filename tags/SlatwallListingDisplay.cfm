@@ -179,7 +179,8 @@ Notes:
 				tdClass="primary",
 				search = true,
 				sort = true,
-				filter = false
+				filter = false,
+				range = false
 			}) />
 		</cfif>
 		
