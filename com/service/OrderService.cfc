@@ -337,7 +337,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
 			var transactionType = order.getOrderPayments()[i].getPaymentMethod().setting('paymentMethodCheckoutTransactionType');
 			
-			if(transactionType != 'none') {
+			if(transactionType != 'none' && order.getOrderPayments()[i].getAmount() > 0) {
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount());
 				if(!paymentOK) {
 					order.getOrderPayments()[i].setAmount(0);
@@ -409,7 +409,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								for(var orderItem in order.getOrderItems()) {
 									if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
 										// TODO: change to find the appripriate order payment
-										var accountPaymentMethod = getAccountService().getAccountPaymentMethodByCreditCardNumberEncrypted(order.getOrderPayments()[1].getCreditCardNumberEncrypted(),true);
+										var accountPaymentMethod = getAccountService().getAccountPaymentMethod({creditCardNumberEncrypted=order.getOrderPayments()[1].getCreditCardNumberEncrypted(),account=order.getAccount()},true);
 										if(accountPaymentMethod.isNew()) {
 											accountPaymentMethod.setAccount(order.getAccount());
 											accountPaymentMethod.copyFromOrderPayment(order.getOrderPayments()[1]);
