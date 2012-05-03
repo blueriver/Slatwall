@@ -114,6 +114,12 @@ function setupEventHandlers() {
 	});
 	
 	// Listing Display - Sorting
+	jQuery('body').on('click', '.listing-sort', function(e){
+		e.preventDefault();
+		var data = {};
+		data[ 'OrderBy' ] = jQuery(this).closest('th').data('propertyidentifier') + '|' + jQuery(this).data('sortdirection');
+		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+	});
 	
 	// Listing Display - Filtering
 	
@@ -151,11 +157,13 @@ function setupEventHandlers() {
 }
 
 function updateMultiselectTableUI( tableSelector ) {
-	var inputValue = jQuery('input[name=' + jQuery(tableSelector).data('multiselectfield') + ']').val();
-	if(inputValue != "") {
-		jQuery.each(inputValue.split(','), function(vi, vv){
-			jQuery(jQuery(tableSelector).find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
-		});
+	if(jQuery(tableSelector).hasClass('table-multiselect')) {
+		var inputValue = jQuery('input[name=' + jQuery(tableSelector).data('multiselectfield') + ']').val();
+		if(inputValue != "") {
+			jQuery.each(inputValue.split(','), function(vi, vv){
+				jQuery(jQuery(tableSelector).find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
+			});
+		}	
 	}
 }
 
@@ -165,8 +173,6 @@ function listingDisplayUpdate( tableID, data ) {
 	data[ 'propertyIdentifiers' ] = jQuery('#' + tableID).data('propertyidentifiers');
 	data[ 'savedStateID' ] = jQuery('#' + tableID).data('savedstateid');
 	data[ 'entityName' ] = jQuery('#' + tableID).data('entityname');
-	
-	console.log(data);
 	
 	var idProperty = jQuery('#' + tableID).data('idproperty');
 	
