@@ -159,7 +159,13 @@ function setupEventHandlers() {
 	});
 	jQuery('body').on('keyup', '.listing-search', function(e){
 		var data = {};
-		data[ jQuery(this).attr('name') ] = jQuery(this).val();
+		
+		if(jQuery(this).val() != '') {
+			data[ jQuery(this).attr('name') ] = jQuery(this).val();	
+		} else {
+			data[ 'FKR:' + jQuery(this).attr('name').split(':')[1] ] = 1;
+		}
+		console.log(data);
 		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
 	});
 	

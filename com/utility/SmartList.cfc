@@ -107,10 +107,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			if(isSimpleValue(arguments.data[i])) {
 				if(left(i,2) == "F#variables.dataKeyDelimiter#") {
 					addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
-				} else if(left(i,3) == "FK#variables.dataKeyDelimiter#") {
-					addLikeFilter(propertyIdentifier=right(i, len(i)-3), value="%#arguments.data[i]#%");
 				} else if(left(i,3) == "FR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
 					removeFilter(propertyIdentifier=right(i, len(i)-3));
+				} else if(left(i,3) == "FK#variables.dataKeyDelimiter#") {
+					addLikeFilter(propertyIdentifier=right(i, len(i)-3), value="%#arguments.data[i]#%");
+				} else if(left(i,4) == "FKR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
+					removeLikeFilter(propertyIdentifier=right(i, len(i)-4));
 				} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
 					addRange(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
 				} else if(i == "OrderBy") {
@@ -142,7 +144,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 		
 	}
-
 
 	private void function confirmWhereGroup(required numeric whereGroup) {
 		for(var i=1; i<=arguments.whereGroup; i++) {
@@ -260,12 +261,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier,fetch=false)] = arguments.alias;
 	}
 	
-	public void function removeFilter(required string propertyIdentifier, whereGroup=1) {
-		confirmWhereGroup(arguments.whereGroup);
-		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
-		if(structKeyExists(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty)){
-			structDelete(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty);
-		};
+	public void function addWhereCondition(required string condition, struct conditionParams={}) {
+		arrayAppend(variables.whereConditions, arguments);
 	}
 	
 	public void function addFilter(required string propertyIdentifier, required string value, numeric whereGroup=1, boolean fetch) {
@@ -279,8 +276,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = arguments.value;
 	}
 	
-	public void function addWhereCondition(required string condition, struct conditionParams={}) {
-		arrayAppend(variables.whereConditions, arguments);
+	public void function removeFilter(required string propertyIdentifier, whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		if(structKeyExists(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty)){
+			structDelete(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty);
+		};
 	}
 	
 	public void function addLikeFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
@@ -288,6 +289,13 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		
 		variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] = arguments.value;
+	}
+	public void function removeLikeFilter(required string propertyIdentifier, whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		if(structKeyExists(variables.whereGroups[arguments.whereGroup].likeFilters, aliasedProperty)){
+			structDelete(variables.whereGroups[arguments.whereGroup].likeFilters, aliasedProperty);
+		};
 	}
 	
 	public void function addInFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
