@@ -45,11 +45,13 @@ Notes:
 			<cf_SlatwallActionCaller action="admin:order.processorderfulfillment" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" icon="cog">
 		</cf_SlatwallActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cfif !isNull(rc.orderFulfillment.getAddress())>
+			<cf_SlatwallDetailHeader>
+				<cf_SlatwallPropertyList>
+					<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" edit="#rc.edit#">
+				</cf_SlatwallPropertyList>
+			</cf_SlatwallDetailHeader>
+		</cfif>
 		
 		<cf_SlatwallTabGroup object="#rc.orderFulfillment#">
 			<cf_SlatwallTab view="admin:order/orderfulfillmenttabs/orderfulfillmentitems">
