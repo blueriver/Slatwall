@@ -146,7 +146,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	//get attribute value
 	public any function getAttributeValue(required string attribute, returnEntity=false){
-		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAccountAttributeValue");
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAccountAttributeValue");
 		
 		smartList.addFilter("account_accountID",getAccountID(),1);
 		smartList.addFilter("attribute_attributeID",attribute,1);

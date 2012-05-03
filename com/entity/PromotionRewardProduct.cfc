@@ -226,7 +226,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 
 	public any function getProductsOptions() {
 		if(!structKeyExists(variables, "productsOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallProduct");
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProduct");
 			smartList.addSelect(propertyIdentifier="productName", alias="name");
 			smartList.addSelect(propertyIdentifier="productID", alias="value");
 			smartList.addFilter(propertyIdentifier="activeFlag", value=1);

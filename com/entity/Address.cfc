@@ -103,7 +103,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	
 	public array function getCountryCodeOptions() {
 		if(!structKeyExists(variables, "countryCodeOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallCountry");
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallCountry");
 			smartList.addFilter(propertyIdentifier="activeFlag", value=1);
 			smartList.addSelect(propertyIdentifier="countryName", alias="name");
 			smartList.addSelect(propertyIdentifier="countryCode", alias="value");
@@ -115,7 +115,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	
 	public array function getStateCodeOptions() {
 		if(!structKeyExists(variables, "stateCodeOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallState");
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallState");
 			smartList.addSelect(propertyIdentifier="stateName", alias="name");
 			smartList.addSelect(propertyIdentifier="stateCode", alias="value");
 			smartList.addFilter("countryCode", getCountryCode()); 
