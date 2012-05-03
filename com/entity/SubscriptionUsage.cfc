@@ -71,6 +71,8 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	
 	// Non-Persistent Properties
 	property name="currentStatus" persistent="false";
+	property name="currentStatusType" persistent="false";
+	property name="subscriptionOrderItemName" persistent="false";
 
 	public any function init() {
 		if(isNull(variables.subscriptionUsageBenefits)) {
@@ -117,12 +119,38 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	}
 	
 	public any function getCurrentStatusCode() {
-		return getCurrentStatus().getSubscriptionStausType().getSystemCode();
+		return getCurrentStatus().getSubscriptionStatusType().getSystemCode();
+	}
+	
+	public any function getCurrentStatusType() {
+		return getCurrentStatus().getSubscriptionStatusType().getType();
+	}
+	
+	public any function getSubscriptionOrderItemName() {
+		return getSubscriptionOrderItems()[1].getOrderItem().getSku().getProduct().getProductName();
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account (many-to-one)    
+	public void function setAccount(required any account) {    
+		variables.account = arguments.account;    
+		if(isNew() or !arguments.account.hasSubscriptionUsage( this )) {    
+			arrayAppend(arguments.account.getSubscriptionUsages(), this);    
+		}    
+	}    
+	public void function removeAccount(any account) {    
+		if(!structKeyExists(arguments, "account")) {    
+			arguments.account = variables.account;    
+		}    
+		var index = arrayFind(arguments.account.getSubscriptionUsages(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getSubscriptionUsages(), index);    
+		}    
+		structDelete(variables, "account");    
+	}
 	
 	// subscriptionUsageBenefits (one-to-many)    
 	public void function addSubscriptionUsageBenefit(required any subscriptionUsageBenefit) {    
