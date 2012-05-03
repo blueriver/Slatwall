@@ -99,6 +99,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var currentPage = 1;
 		
 		if(structKeyExists(arguments.data, "savedStateID")) {
+			setSavedStateID(arguments.data.savedStateID);
 			loadSavedState(arguments.data.savedStateID);
 		}
 		
@@ -524,6 +525,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "pageRecords")) {
+			saveState();
 			variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
 		}
 		return variables.pageRecords;
@@ -596,7 +598,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			for(var i=1; i<=listLen(listLast(arguments.currentURL, "?"), "&"); i++) {
 				var keyValuePair = listGetAt(listLast(arguments.currentURL, "?"), i, "&");
 				oldQueryKeys[listFirst(keyValuePair,"=")] = listLast(keyValuePair,"=");
-			}	
+			}
 		}
 		
 		// Turn the added query string to a struct
@@ -747,17 +749,20 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		arrayDeleteAt(session.entitySmartList.savedStates, arrayFind(session.entitySmartList.savedStates, arguments.savedStateID));
 	}
 	
-	public string function getSavedStateID( boolean new=false ) {
-		if(!structKeyExists(variables, "savedStateID") || arguments.new) {
-			variables.savedStateID = createUUID();
-			
+	private void function saveState() {
+		if(!arrayFind(session.entitySmartList.savedStates, getSavedStateID())) {
 			arrayPrepend(session.entitySmartList.savedStates, variables.savedStateID);
-			session.entitySmartList[ savedStateID ] = getStateStruct();
-			
-			for(var s=arrayLen(session.entitySmartList.savedStates); s>=10; s--) {
+			for(var s=arrayLen(session.entitySmartList.savedStates); s>=100; s--) {
 				removeSavedState(session.entitySmartList.savedStates[s]);
 			}
-			
+		}
+		
+		session.entitySmartList[ savedStateID ] = getStateStruct();
+	}
+	
+	public string function getSavedStateID() {
+		if(!structKeyExists(variables, "savedStateID")) {
+			variables.savedStateID = createUUID();
 		}
 		
 		return variables.savedStateID;
@@ -772,9 +777,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		stateStruct.whereConditions = duplicate(variables.whereConditions);
 		stateStruct.orders = duplicate(variables.orders);
 		stateStruct.keywords = duplicate(variables.keywords);
-		stateStruct.pageRecordsStart = duplicate(variables.pageRecordsStart);
 		stateStruct.pageRecordsShow = duplicate(variables.pageRecordsShow);
-		stateStruct.currentPageDeclaration = duplicate(variables.currentPageDeclaration);
 		stateStruct.entityJoinOrder = duplicate(variables.entityJoinOrder);
 		
 		return stateStruct;
