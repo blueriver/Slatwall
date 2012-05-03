@@ -236,23 +236,26 @@ Notes:
 												<li><a href="##" class="listing-sort" data-sortdirection="DESC"><i class="icon-arrow-up"></i> Sort Decending</a></li>
 												<li class="divider"></li>
 											</cfif>
+											<!---
 											<cfif column.range>
 												<li class="nav-header">#request.slatwallScope.rbKey('define.range')#</li>
-												<!---
+												
 												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
 												<div class="filter-scroll">
 													<cfloop array="#filterOptions#" index="filter">
 														<li><a href="#attributes.smartList.buildURL( 'F:#column.propertyIdentifier#=#filter["value"]#' )#">#filter['value']#</a></li>
 													</cfloop>
 												</div>
-												--->
+												
 											</cfif>
+											--->
 											<cfif column.filter>
 												<li class="nav-header">#request.slatwallScope.rbKey('define.filter')#</li>
 												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
 												<div class="filter-scroll">
+													<input type="hidden" name="F:#column.propertyIdentifier#" value="" />
 													<cfloop array="#filterOptions#" index="filter">
-														<li><a href="#attributes.smartList.buildURL( 'F:#column.propertyIdentifier#=#filter["value"]#' )#">#filter['value']#</a></li>
+														<li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#"><i class="slatwall-ui-checkbox"></i> #filter['name']#</a></li>
 													</cfloop>
 												</div>
 											</cfif>

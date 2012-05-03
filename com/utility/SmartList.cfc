@@ -99,6 +99,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var currentPage = 1;
 		
 		if(structKeyExists(arguments.data, "savedStateID")) {
+			setSavedStateID(arguments.data.savedStateID);
 			loadSavedState(arguments.data.savedStateID);
 		}
 		
@@ -106,8 +107,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			if(isSimpleValue(arguments.data[i])) {
 				if(left(i,2) == "F#variables.dataKeyDelimiter#") {
 					addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
+				} else if(left(i,3) == "FR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
+					removeFilter(propertyIdentifier=right(i, len(i)-3));
 				} else if(left(i,3) == "FK#variables.dataKeyDelimiter#") {
 					addLikeFilter(propertyIdentifier=right(i, len(i)-3), value="%#arguments.data[i]#%");
+				} else if(left(i,4) == "FKR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
+					removeLikeFilter(propertyIdentifier=right(i, len(i)-4));
 				} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
 					addRange(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
 				} else if(i == "OrderBy") {
@@ -139,7 +144,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 		
 	}
-
 
 	private void function confirmWhereGroup(required numeric whereGroup) {
 		for(var i=1; i<=arguments.whereGroup; i++) {
@@ -257,6 +261,10 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier,fetch=false)] = arguments.alias;
 	}
 	
+	public void function addWhereCondition(required string condition, struct conditionParams={}) {
+		arrayAppend(variables.whereConditions, arguments);
+	}
+	
 	public void function addFilter(required string propertyIdentifier, required string value, numeric whereGroup=1, boolean fetch) {
 		confirmWhereGroup(arguments.whereGroup);
 		if(structKeyExists(arguments,"fetch")){
@@ -268,8 +276,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = arguments.value;
 	}
 	
-	public void function addWhereCondition(required string condition, struct conditionParams={}) {
-		arrayAppend(variables.whereConditions, arguments);
+	public void function removeFilter(required string propertyIdentifier, whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		if(structKeyExists(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty)){
+			structDelete(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty);
+		};
 	}
 	
 	public void function addLikeFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
@@ -277,6 +289,13 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		
 		variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] = arguments.value;
+	}
+	public void function removeLikeFilter(required string propertyIdentifier, whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		if(structKeyExists(variables.whereGroups[arguments.whereGroup].likeFilters, aliasedProperty)){
+			structDelete(variables.whereGroups[arguments.whereGroup].likeFilters, aliasedProperty);
+		};
 	}
 	
 	public void function addInFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
@@ -524,6 +543,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "pageRecords")) {
+			saveState();
 			variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
 		}
 		return variables.pageRecords;
@@ -596,7 +616,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			for(var i=1; i<=listLen(listLast(arguments.currentURL, "?"), "&"); i++) {
 				var keyValuePair = listGetAt(listLast(arguments.currentURL, "?"), i, "&");
 				oldQueryKeys[listFirst(keyValuePair,"=")] = listLast(keyValuePair,"=");
-			}	
+			}
 		}
 		
 		// Turn the added query string to a struct
@@ -747,17 +767,20 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		arrayDeleteAt(session.entitySmartList.savedStates, arrayFind(session.entitySmartList.savedStates, arguments.savedStateID));
 	}
 	
-	public string function getSavedStateID( boolean new=false ) {
-		if(!structKeyExists(variables, "savedStateID") || arguments.new) {
-			variables.savedStateID = createUUID();
-			
+	private void function saveState() {
+		if(!arrayFind(session.entitySmartList.savedStates, getSavedStateID())) {
 			arrayPrepend(session.entitySmartList.savedStates, variables.savedStateID);
-			session.entitySmartList[ savedStateID ] = getStateStruct();
-			
-			for(var s=arrayLen(session.entitySmartList.savedStates); s>=10; s--) {
+			for(var s=arrayLen(session.entitySmartList.savedStates); s>=100; s--) {
 				removeSavedState(session.entitySmartList.savedStates[s]);
 			}
-			
+		}
+		
+		session.entitySmartList[ savedStateID ] = getStateStruct();
+	}
+	
+	public string function getSavedStateID() {
+		if(!structKeyExists(variables, "savedStateID")) {
+			variables.savedStateID = createUUID();
 		}
 		
 		return variables.savedStateID;
@@ -772,9 +795,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		stateStruct.whereConditions = duplicate(variables.whereConditions);
 		stateStruct.orders = duplicate(variables.orders);
 		stateStruct.keywords = duplicate(variables.keywords);
-		stateStruct.pageRecordsStart = duplicate(variables.pageRecordsStart);
 		stateStruct.pageRecordsShow = duplicate(variables.pageRecordsShow);
-		stateStruct.currentPageDeclaration = duplicate(variables.currentPageDeclaration);
 		stateStruct.entityJoinOrder = duplicate(variables.entityJoinOrder);
 		
 		return stateStruct;

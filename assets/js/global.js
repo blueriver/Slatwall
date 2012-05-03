@@ -24,15 +24,16 @@ jQuery(document).ready(function() {
 		jQuery('input[tabindex=1]').focus();
 	}
 	
-	bindUIElements();
+	initUIElements( 'body' );
+	setupEventHandlers();
 });
 
-function bindUIElements() {
+function initUIElements( scopeSelector ) {
 	// Datetime Picker
-	jQuery('.datetimepicker').datepicker({
+	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datepicker({
 		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
 		duration: '',
-        showTime: true,  
+        showTime: true,
         constrainInput: false,
         stepMinutes: 1, 
         stepHours: 1,
@@ -41,37 +42,57 @@ function bindUIElements() {
 	});
 	
 	// Date Picker
-	jQuery('.datepicker').datepicker();
+	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker();
 	
 	// Time Picker
-	//jQuery('.timepicker').timepicker();
+	//jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker();
 	
 	// Tooltips
-	jQuery('.hint').tooltip();
-	jQuery('.hint').click(function(e){
+	jQuery( scopeSelector ).find(jQuery('.hint')).tooltip();
+	
+	// Validation
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value) {
+		jQuery(value).validate();
+	});
+	
+	// Table Sortable
+	jQuery( scopeSelector ).find(jQuery('.table-sortable .sortable')).sortable({
+		update: function(event, ui) {
+			tableApplySort(event, ui);
+		}
+	});
+	
+	// Table Multiselect
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('.table-multiselect')), function(ti, tv){
+		updateMultiselectTableUI( '#' + jQuery(tv).attr('id') );
+	});
+}
+
+function setupEventHandlers() {
+	jQuery('body').on('click', '.hint', function(e){
 		e.preventDefault();
 	});
 	
 	// Tab Selecting
-	jQuery('a[data-toggle="tab"]').on('shown', function (e) {
+	jQuery('body').on('shown', 'a[data-toggle="tab"]', function (e) {
 		window.location.hash = jQuery(this).attr('href');
 	})
 	
 	// Alerts
-	jQuery('.alert-confirm').click(function(e){
+	jQuery('body').on('click', '.alert-confirm', function(e){
 		e.preventDefault();
 		jQuery('#adminConfirm > .modal-body').html( jQuery(this).data('confirm') );
 		jQuery('#adminConfirm .btn-primary').attr( 'href', jQuery(this).attr('href') );
 		jQuery('#adminConfirm').modal();
 	});
-	jQuery('.alert-disabled').click(function(e){
+	jQuery('body').on('click', '.alert-disabled', function(e){
 		e.preventDefault();
 		jQuery('#adminDisabled > .modal-body').html( jQuery(this).data('disabled') );
 		jQuery('#adminDisabled').modal();
 	});
 	
 	// Modal Loading
-	jQuery('.modalload').click(function(e){
+	jQuery('body').on('click', '.modalload', function(e){
 		jQuery('#adminModal').html('');
 		var modalLink = jQuery(this).attr( 'href' );
 		if( modalLink.indexOf("?") != -1) {
@@ -79,27 +100,11 @@ function bindUIElements() {
 		} else {
 			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
 		}
-		jQuery('#adminModal').load( modalLink, function(){bindUIElements();} );
+		jQuery('#adminModal').load( modalLink, function(){ initUIElements('#adminModal'); } );
 	});
 	
-	// Validation
-	jQuery.each(jQuery('form'), function(index, value) {
-		jQuery(value).validate();
-	});
-	
-	// Listing Displays
-	bindListingDisplayPaging();
-	bindListingDisplaySorting();
-	bindListingDisplayFiltering();
-	bindListingDisplaySearching();
-	bindListingDisplayExpandability();
-	bindListingDisplaySortability();
-	bindListingDisplaySelectability();
-	bindListingDisplayMultiselectability();
-}
-
-function bindListingDisplayPaging() {
-	jQuery('.listing-pager').click(function(e){
+	// Listing Display - Paging
+	jQuery('body').on('click', '.listing-pager', function(e){
 		e.preventDefault();
 		
 		var data = {};
@@ -107,59 +112,92 @@ function bindListingDisplayPaging() {
 		
 		listingDisplayUpdate( jQuery(this).closest('.pagination').data('tableid'), data );
 	});
-}
-function bindListingDisplaySorting() {
 	
-}
-function bindListingDisplayFiltering() {
-	
-}
-function bindListingDisplaySearching() {
-	jQuery('.dropdown input').on('click', function(e){
-		e.stopPropagation();
-	});
-	jQuery('.listing-search').on('keyup', function(e){
+	// Listing Display - Sorting
+	jQuery('body').on('click', '.listing-sort', function(e){
+		e.preventDefault();
 		var data = {};
-		data[ jQuery(this).attr('name') ] = jQuery(this).val();
+		data[ 'OrderBy' ] = jQuery(this).closest('th').data('propertyidentifier') + '|' + jQuery(this).data('sortdirection');
 		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
 	});
-}
-function bindListingDisplayExpandability() {
-	jQuery('.table-action-expand').click(function(e){
+	
+	// Listing Display - Filtering
+	jQuery('body').on('click', '.listing-filter', function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		
+		var value = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val();
+		var valueArray = [];
+		if(value != '') {
+			valueArray = value.split(',');
+		}
+		var i = jQuery.inArray(jQuery(this).data('filtervalue'), valueArray);
+		if( i > -1 ) {
+			valueArray.splice(i, 1);
+			jQuery(this).children('.slatwall-ui-checkbox-checked').addClass('slatwall-ui-checkbox').removeClass('slatwall-ui-checkbox-checked');
+		} else {
+			valueArray.push(jQuery(this).data('filtervalue'));
+			jQuery(this).children('.slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked').removeClass('slatwall-ui-checkbox');
+		}
+		jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val(valueArray.join(","));
+		
+		var data = {};
+		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() != '') {
+			data[ 'F:' + jQuery(this).closest('th').data('propertyidentifier') ] = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val();
+		} else {
+			data[ 'FR:' + jQuery(this).closest('th').data('propertyidentifier') ] = 1;	
+		}
+		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+	});
+	
+	// Listing Display - Searching
+	jQuery('body').on('click', '.dropdown input', function(e){
+		e.stopPropagation();
+	});
+	jQuery('body').on('click', 'table .dropdown-toggle', function(e){
+		jQuery(this).parent().find('.listing-search').focus();
+	});
+	jQuery('body').on('keyup', '.listing-search', function(e){
+		var data = {};
+		
+		if(jQuery(this).val() != '') {
+			data[ jQuery(this).attr('name') ] = jQuery(this).val();	
+		} else {
+			data[ 'FKR:' + jQuery(this).attr('name').split(':')[1] ] = 1;
+		}
+		console.log(data);
+		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+	});
+	
+	// Listing Display - Expanding
+	jQuery('body').on('click', '.table-action-expand', function(e){
 		e.preventDefault();
 		tableExpandClick( this );
 	});
-}
-function bindListingDisplaySortability() {
-	jQuery('.table-action-sort').click(function(e){
+	
+	// Listing Display - Sort Applying
+	jQuery('body').on('click', '.table-action-sort', function(e){
 		e.preventDefault();
 	});
-	jQuery('.table-sortable .sortable').sortable({
-		update: function(event, ui) {
-			tableApplySort(event, ui);
-		}
-	});
-}
-function bindListingDisplaySelectability() {
 	
-}
-function bindListingDisplayMultiselectability() {
-	// Loop over any multiselect tables to set the checkboxs based on the corisponding hidden field
-	jQuery.each(jQuery('.table-multiselect'), function(ti, tv){
-		var inputValue = jQuery('input[name=' + jQuery(tv).data('multiselectfield') + ']').val();
-		if(inputValue != "") {
-			jQuery.each(inputValue.split(','), function(vi, vv){
-				jQuery(jQuery(tv).find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
-			});
-		}
-		
-	});
+	// Listing Display - Select
 	
-	// Setup the Click function on the checkbox
-	jQuery('.table-action-multiselect').click(function(e){
+	// Listing Display - Multiselect
+	jQuery('body').on('click', '.table-action-multiselect', function(e){
 		e.preventDefault();
 		tableMultiselectClick( this );
 	});
+}
+
+function updateMultiselectTableUI( tableSelector ) {
+	if(jQuery(tableSelector).hasClass('table-multiselect')) {
+		var inputValue = jQuery('input[name=' + jQuery(tableSelector).data('multiselectfield') + ']').val();
+		if(inputValue != "") {
+			jQuery.each(inputValue.split(','), function(vi, vv){
+				jQuery(jQuery(tableSelector).find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
+			});
+		}	
+	}
 }
 
 function listingDisplayUpdate( tableID, data ) {
@@ -272,59 +310,69 @@ function listingDisplayUpdate( tableID, data ) {
 			// Update the paging nav
 			jQuery('div[class="pagination"][data-tableid="' + tableID + '"]').html(buildPagingNav(r["currentPage"], r["totalPages"]));
 			
-			// Re-Bind UI Elements
-			bindUIElements();
+			// Update the saved state ID of the table
+			jQuery('#' + tableID).data('savedstateid', r["savedStateID"]);
+			jQuery('#' + tableID).attr('data-savedstateid', r["savedStateID"]);
+			
+			updateMultiselectTableUI( '#' + tableID );
 		}
 		
 	});
 }
 
 function buildPagingNav(currentPage, totalPages) {
-	var nav = '<ul>';
+	var nav = '';
 	
-	var pageStart = 1;
-	var pageCount = 4;
+	if(totalPages > 1){
+		nav = '<ul>';
 	
-	if(totalPages > 6) {
-		if (currentPage > 3 && currentPage < totalPages - 3) {
-			pageStart = currentPage - 1;
-			pageCount = 3;
-		} else if (currentPage >= totalPages - 3) {
-			pageStart = totalPages - 3;
-		}
-	} else {
-		pageCount = totalPages;
-	}
-	
-	if(currentPage > 1) {
-		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
-	}
-	
-	if(currentPage > 3 && totalPages > 6) {
-		nav += '<li><a href="#" class="listing-pager" data-page="1">1</a></li>';
-		nav += '<li class="disabled"><a href="#">...</a></li>';
-	}
-
-	for(var i=pageStart; i<pageStart + pageCount; i++){
+		var pageStart = 1;
+		var pageCount = 5;
 		
-		if(currentPage == i) {
-			nav += '<li class="active"><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+		if(totalPages > 6) {
+			if (currentPage > 3 && currentPage < totalPages - 3) {
+				pageStart = currentPage - 1;
+				pageCount = 3;
+			} else if (currentPage >= totalPages - 4) {
+				pageStart = totalPages - 4;
+			}
 		} else {
-			nav += '<li><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+			pageCount = totalPages;
 		}
+		
+		if(currentPage > 1) {
+			nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
+		} else {
+			nav += '<li class="disabled"><a href="#">&laquo;</a></li>';
+		}
+		
+		if(currentPage > 3 && totalPages > 6) {
+			nav += '<li><a href="#" class="listing-pager" data-page="1">1</a></li>';
+			nav += '<li class="disabled"><a href="#">...</a></li>';
+		}
+	
+		for(var i=pageStart; i<pageStart + pageCount; i++){
+			
+			if(currentPage == i) {
+				nav += '<li class="active"><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+			} else {
+				nav += '<li><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+			}
+		}
+		
+		if(currentPage < totalPages - 3 && totalPages > 6) {
+			nav += '<li class="disabled"><a href="#">...</a></li>';
+			nav += '<li><a href="#" class="listing-pager" data-page="' + totalPages + '">' + totalPages + '</a></li>';
+		}
+		
+		if(currentPage < totalPages) {
+			nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
+		} else {
+			nav += '<li class="disabled"><a href="#">&raquo;</a></li>';
+		}
+		
+		nav += '</ul>';
 	}
-	
-	if(currentPage < totalPages - 3 && totalPages > 6) {
-		nav += '<li class="disabled"><a href="#">...</a></li>';
-		nav += '<li><a href="#" class="listing-pager" data-page="' + totalPages + '">' + totalPages + '</a></li>';
-	}
-	
-	if(currentPage < totalPages) {
-		nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
-	}
-	
-	
-	nav += '</ul>';
 	
 	return nav;
 }
@@ -377,7 +425,7 @@ function tableMultiselectClick( toggleLink ) {
 	
 	var blankIndex = currentValues.indexOf('');
 	if(blankIndex > -1) {
-		currentValues.splice(blankIndex, 1);	
+		currentValues.splice(blankIndex, 1);
 	}
 	
 	if( jQuery(toggleLink).children('.slatwall-ui-checkbox-checked').length ) {
