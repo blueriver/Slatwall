@@ -38,13 +38,10 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getOrdersSmartList()#"
-		recordDetailAction="admin:order.detailorder"
-		recordDetailQueryString="accountID=#rc.account.getAccountID()#">
+<cf_SlatwallListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#">
 
-	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range="true" />
-	<cf_SlatwallListingColumn tdclass="primary"  propertyIdentifier="account.fullName" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="total" range="true" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="renewalPrice" />
+	<cf_SlatwallListingColumn propertyIdentifier="nextBillDate" />
 </cf_SlatwallListingDisplay>
