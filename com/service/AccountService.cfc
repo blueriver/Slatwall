@@ -416,4 +416,15 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		return structKeyList(stResponse);
 	}
+	
+	public function setupDefaultPermissions(){
+		var accounts = getDAO().getMissingUserAccounts();
+		var permissionGroup = get('PermissionGroup',{permissionGroupID='4028808a37037dbf01370ed2001f0074'});
+		
+		for(i=1; i <= accounts.recordcount; i++){
+			account = get('Account',{accountID=accounts.accountID[i]});
+			account.addPermissionGroup(permissionGroup);
+		}
+		ormflush();
+	}
 }

@@ -181,6 +181,9 @@ component extends="org.fw1.framework" output="false" {
 					// Set initialized to true
 					request.slatwallScope.setApplicationValue("initialized", true);
 					
+					//make sure super user has super user permissions
+					getBeanFactory().getBean("accountService").setupDefaultPermissions();
+					
 					// Log that the application is finished setting up
 					writeLog(file="Slatwall", text="Application Setup Complete");
 				}
