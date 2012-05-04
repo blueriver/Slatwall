@@ -456,28 +456,36 @@ component displayname="Base Object" accessors="true" output="false" {
 		var pa = listToArray(arguments.propertyIdentifier, "._");
 		
 		for(var i=1; i<=arrayLen(pa); i++) {
-			try {
+			if(isNull(value)) {
+				value = evaluate("this.get#pa[i]#()");
 				if(isNull(value)) {
-					value = evaluate("this.get#pa[i]#()");
-					if((isNull(value) || isSimpleValue(value)) && arguments.formatValue) {
-						value = getFormattedValue(pa[i]);
+					if(arguments.formatValue) {
+						return getFormattedValue(pa[i]);
 					}
-				} else if(isArray(value)) {
-					for(var ii=1; ii<=arrayLen(value); ii++) {
-						arrayAppend(arrayValue, value[ii].getValueByPropertyIdentifier(pa[i], arguments.formatValue));
+					return "";
+				}
+				if(isSimpleValue(value) && arguments.formatValue) {
+					value = getFormattedValue(pa[i]);
+				}
+			} else if(isArray(value)) {
+				for(var ii=1; ii<=arrayLen(value); ii++) {
+					arrayAppend(arrayValue, value[ii].getValueByPropertyIdentifier(pa[i], arguments.formatValue));
+				}
+				return arrayValue;
+			} else {
+				newValue = evaluate("value.get#pa[i]#()");
+				if(isNull(newValue)) {
+					if(arguments.formatValue) {
+						return value.getFormattedValue(pa[i]);
 					}
-					return arrayValue;
+					return "";
+				}
+				if(isSimpleValue(newValue) && arguments.formatValue) {
+					value = value.getFormattedValue(pa[i]);
 				} else {
-					newValue = evaluate("value.get#pa[i]#()");
-					if(isSimpleValue(newValue) && arguments.formatValue) {
-						value = value.getFormattedValue(pa[i]);
-					} else {
-						value = newValue;
-					}
-				}	
-			} catch (any e) {
-				return "";
-			}
+					value = newValue;
+				}
+			}	
 		}
 		if(isNull(value)) {
 			return "";

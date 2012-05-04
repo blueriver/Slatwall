@@ -42,6 +42,36 @@ Notes:
 	<cffunction name="getAccountSubscriptionPriceGroups">
 		<cfargument name="accountID" type="string">
 		
-		<cfreturn ormExecuteQuery("SELECT DISTINCT pg FROM SlatwallSubscriptionUsageBenefitAccount suba INNER JOIN suba.subscriptionUsageBenefit sub INNER JOIN sub.subscriptionBenefit sb INNER JOIN sb.priceGroups pg WHERE suba.activeFlag = ? AND suba.endDateTime > ? AND suba.account.accountID = ?", [1, now(), arguments.accountID]) />
+		<cfset var getpg = "" />
+		<!--- can't figure out top 1 hql so, doing query: Sumit --->
+		<cfquery name="getpg">
+			SELECT DISTINCT subpg.priceGroupID
+			FROM SlatwallSubscriptionUsageBenefitAccount suba
+			INNER JOIN SlatwallSubscriptionUsageBenefit sub ON suba.subscriptionUsageBenefitID = sub.subscriptionUsageBenefitID
+			INNER JOIN SlatwallSubscriptionUsageBenefitPriceGroup subpg ON sub.subscriptionUsageBenefitID = subpg.subscriptionUsageBenefitID
+			INNER JOIN SlatwallSubscriptionUsage su ON sub.subscriptionUsageID = su.subscriptionUsageID
+			WHERE (suba.endDateTime IS NULL
+					OR suba.endDateTime > <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />)
+				AND suba.accountID = <cfqueryparam value="#arguments.accountID#" cfsqltype="cf_sql_varchar" />
+				AND 'sstActive' = (SELECT TOP 1 systemCode FROM SlatwallSubscriptionStatus 
+							INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
+							WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
+							ORDER BY subscriptionStatusChangeDateTime DESC)
+		</cfquery>
+		
+		<cfif getpg.recordCount>
+			<cfset var hql = "FROM SlatwallPriceGroup WHERE priceGroupID IN (:priceGroupIDs)" />
+			<cfif structKeyExists(server, "railo")>
+				<cfset var returnQuery = ormExecuteQuery(hql, {priceGroupIDs=valueList(getpg.priceGroupID)}) />
+			<cfelse>
+				<cfset var returnQuery = ormExecuteQuery(hql, {priceGroupIDs=listToArray(valueList(getpg.priceGroupID))}) />		
+			</cfif>
+			<cfreturn returnQuery />
+		</cfif>
+		
+		<cfreturn [] />
+		
 	</cffunction>
 </cfcomponent>
+
+

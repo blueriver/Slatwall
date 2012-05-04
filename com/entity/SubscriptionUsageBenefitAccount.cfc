@@ -40,7 +40,6 @@ component displayname="Subscription Usage Benefit Account" entityname="SlatwallS
 	
 	// Persistent Properties
 	property name="subscriptionUsageBenefitAccountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="activeFlag" ormtype="boolean" formatType="yesno";
 	property name="endDateTime" ormtype="timestamp";
 		
 	// Related Object Properties (many-to-one)
