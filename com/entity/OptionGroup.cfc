@@ -80,25 +80,6 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 		}
 	}
     
-   /******* Association management methods for bidirectional relationships **************/
-    
-    // Option (one-to-many)
-    
-    public void function addOption(required Option Option) {
-       arguments.Option.setOptionGroup(this);
-    }
-    
-    public void function removeOption(required Option Option) {
-       arguments.Option.removeOptionGroup(this);
-    }
-
-    /************   END Association Management Methods   *******************/
-	
-	
-	public numeric function getOptionsCount() {
-		return arrayLen(this.getOptions());
-	}
-	
 	// Image Management methods
 	public string function getImage(numeric width=0, numeric height=0, string alt="", string class="") {
 		if( this.hasImage() ) {
@@ -136,11 +117,23 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
         return getImageDirectory() & getOptionGroupImage();
     }
     
+    public any function getOptionsSmartList() {
+    	return getPropertySmartList(propertyName="options");
+    }
+    
     // ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Options (one-to-many)    
+	public void function addOption(required any option) {    
+		arguments.option.setOptionGroup( this );    
+	}    
+	public void function removeOption(required any option) {    
+		arguments.option.removeOptionGroup( this );    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
