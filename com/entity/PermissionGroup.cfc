@@ -44,7 +44,7 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	property name="permissions" ormtype="string";
 	
 	// Related Object Properties (many-to-many)
-	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="accountID";
+	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="permissionGroupID" inversejoincolumn="accountID";
 
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
