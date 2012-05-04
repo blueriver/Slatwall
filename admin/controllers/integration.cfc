@@ -40,6 +40,9 @@ component extends="BaseController" output=false accessors=true {
 
 	property name="integrationService";
 
+	this.publicMethods='';
+	this.secureMethods='listintegration,detailintegration,editintegration,createintegration,saveintegration';
+	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:integration.listintegration");
 	}

@@ -66,6 +66,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Related Object Properties (many-to-many)
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
+	property name="permissionGroups" singularname="permissionGroup" cfc="PermissionGroup" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="accountID" inversejoincolumn="permissionGroupID";
 
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -111,6 +112,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(isNull(variables.priceGroups)) {
 			variables.priceGroups = [];
 		}
+		if(isNull(variables.permissionGroups)) {
+			variables.permissionGroups = [];
+		}
 		if(isNull(variables.accountPaymentMethods)) {
 			variables.accountPaymentMethods = [];
 		}
@@ -137,6 +141,21 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		} else {
 			return "http://www.gravatar.com/avatar/#lcase(hash(lcase(getEmailAddress()), "MD5" ))#?s=#arguments.size#";	
 		}
+	}
+	
+	public string function getAllPermissions(){
+		var stPermissions = {};
+		var permissionGroups = getPermissionGroups();
+		
+		for(i=1; i <= arrayLen(permissionGroups); i++){
+			permissions = permissionGroups[i].getPermissions();
+			
+			for(j=1; j<= listlen(permissions); j++){
+				stPermissions[listGetAt(permissions,j)]='';
+			}
+		}		
+		
+		return structKeyList(stPermissions);
 	}
 		
 	// get all the assigned attribute sets

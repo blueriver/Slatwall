@@ -117,6 +117,7 @@
 				<entry key="OrderShippingMethodOption"><value>orderService</value></entry>
 				<entry key="OrderStatusAction"><value>orderService</value></entry>
 				<entry key="PaymentMethod"><value>paymentService</value></entry>
+				<entry key="PermissionGroup"><value>accountService</value></entry>
 				<entry key="PostalCode"><value>addressService</value></entry>
 				<entry key="PriceGroup"><value>priceGroupService</value></entry>
 				<entry key="PriceGroupRate"><value>priceGroupService</value></entry>

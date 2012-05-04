@@ -43,6 +43,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="promotionService" type="any";
 	property name="productService" type="any";
 	
+	this.publicMethods='';
+	this.secureMethods='listPromotion,editPromotion,detailPromotion,deletePromotion,savePromotion,listPricegroup,editPriceGroup,detailPriceGroup,deletePricegroup,savePricegroup';
+	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:pricing.listpromotion");
 	}

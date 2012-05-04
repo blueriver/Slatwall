@@ -81,7 +81,7 @@ Notes:
 				<cfloop array="#attributes.valueOptions#" index="option">
 					<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
 					<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
-					<input tabindex="#request.context.tabindex#" type="checkbox" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, thisOptionValue)> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#thisOptionName#</span>
+					<input tabindex="#request.context.tabindex#" type="checkbox" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, thisOptionValue)> checked="checked"</cfif> /> <span class="#attributes.fieldClass#">#thisOptionName#</span> <br />
 					<cfset request.context.tabindex++ />
 				</cfloop>
 			</cfoutput>

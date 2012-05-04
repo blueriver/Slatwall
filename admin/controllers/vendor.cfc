@@ -48,6 +48,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="vendorService";
 	property name="vendorOrderService" type="any";
 	
+	this.publicMethods='';
+	this.secureMethods='createVendor,listVendor,editVendor,detailVendor,deleteVendor,saveVendor,createVendorOrder,listVendorOrder,editVendorOrder,detailVendorOrder,deleteVendorOrder,saveVendorOrder';
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:vendor.listvendor");

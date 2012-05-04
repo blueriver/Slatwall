@@ -58,6 +58,10 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="utilityFormService" type="any";
 	property name="utilityFileService" type="any";
 	
+	this.publicMethods='';
+	this.secureMethods='listsetting,detailsetting,editsetting,listfulfillmentmethod,editfulfillmentmethod,detailfulfillmentmethod,deletefulfillmentmethod,createfulfillmentmethod,listmeasurementunit,editmeasurementunit,detailmeasurementunit,createmeasurementunit,deletemeasurementunit,listorderorigin,createorderorigin,deleteorderorigin,editorderorigin,detailorderorigin,listpaymentmethod,editpaymentmethod,detailpaymentmethod,createpaymentmethod,deletepaymentmethod,listroundingrule,editroundingrule,detailroundingrule,createroundingrule,deleteroundingrule,listtaxcategory,edittaxcategory,detailtaxcategory,createtaxcategory,deletetaxcategory,listterm,detailterm,editterm,createterm,deleteterm,listType,editType,detailType,createType,deleteType,listLocation,editlocation,detaillocation,createlocation,deletelocation,listaddresszone,editaddresszone,detailaddresszone,createaddresszone,deleteaddresszone,listcountry,editcountry,detailcountry,createcountry,deletecountry,listattributeset,editattributeset,detailattributeset,createattributeset,deleteattributeset,createcategory,detailcategory,editcategory,deletecategory,listcategory,editcontent,detailcontent,createcontent,deletecontent,listschedule,editschedule,detailschedule,createschedule,deleteschedule,listtask,edittask,detailtask,createtask,deletetask,listtaskhistory,saveaddresszone,saveattributeset,savecategory,savecountry,savefulfillmentmethod,saveLocation,saveorderorigin,savepaymentmethod,saveroundingrule,saveschedule,savesetting,savetask,savetaskhistory,savetaxcategory,saveterm,saveType,savemeasurementunit';
+	
+	
 	public void function default() {
 		getFW().redirect(action="admin:setting.listsetting");
 	}

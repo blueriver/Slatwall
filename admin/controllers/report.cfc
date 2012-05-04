@@ -40,6 +40,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	property name="reportService";
 
+	this.publicMethods='';
+	this.secureMethods='order';
+	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:report.order");
 	}

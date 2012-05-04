@@ -49,6 +49,7 @@ component extends="BaseService" accessors="true" output="false" {
 	public any function init() {
 		setUserManager( getCMSBean("userManager") );
 		setUserUtility( getCMSBean("userUtility") );
+		variables.permissions = '';
 		
 		return super.init();
 	}
@@ -359,4 +360,60 @@ component extends="BaseService" accessors="true" output="false" {
 		return true;
 	}
 	
+	public struct function getPermissions(){
+		var stPermissions={};
+		var i = 1;
+		var dirList = directoryList( expandPath("/plugins/Slatwall/admin/controllers") );
+
+		if(!isStruct(variables.permissions)){		
+			for(i=1; i <= arrayLen(dirList); i++){
+				obj = createObject('component',replace(replace(replace(replace(dirList[i],getSlatwallRootDirectory(),''),'/','.','all' ),'.cfc',''),'.',''));
+				
+				if(StructKeyExists(obj,'secureMethods')){
+					
+					methods=obj.secureMethods;
+					
+					for(j=1; j <= listLen(methods); j++){
+						section = replace(listgetat(dirList[i],listLen(dirList[i],'/'),'/'),'.cfc','');
+						
+						if(!StructKeyExists(stPermissions,section)){
+							stPermissions[section] = [];
+						}
+						
+						arrayAppend(stPermissions[section],rbKey('permission.' & section & '.' & listgetat(methods,j)));
+					}	
+					
+					ArraySort(stPermissions[section],"textnocase" );	
+				}
+			}
+			
+			variables.permissions = stPermissions;
+		}
+		return variables.permissions;
+	}
+	
+	public function getPublicMethods(required string controller){
+		var obj = createObject('component','admin.controllers.' & arguments.controller);
+		var stResponse = {};
+		
+		if(structKeyExists(obj,'publicMethods')){
+			for(i=1; i <= listLen(obj.publicMethods); i++){
+				stResponse[listgetat(obj.publicMethods,i)]='';
+			}
+		}
+		
+		return structKeyList(stResponse);
+	}
+	
+	public function getSecureMethods(required string controller){
+		var obj = createObject('component','admin.controllers.' & arguments.controller);
+		var stResponse = {};
+		
+		if(structKeyExists(obj,'secureMethods')){
+			for(i=1; i <= arrayLen(obj.secureMethods); i++){
+				stResponse[obj.secureMethods[i]]='';
+			}
+		}
+		return structKeyList(stResponse);
+	}
 }

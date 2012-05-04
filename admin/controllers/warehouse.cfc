@@ -46,6 +46,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="typeService" type="any";
 	property name="vendorOrderService" type="any";
 	
+	this.publicMethods='';
+	this.secureMethods='liststockreceiver,editstockreceiver,detailstockreceiver,savestockreceiver,createstockreceiver,deletestockreceiver,liststockadjustment,detailstockadjustment,editstockadjustment,createstockadjustment,deletestockadjustment,createstockadjustment';
+	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:warehouse.liststockreceiver");
 	}

@@ -1,4 +1,4 @@
-/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,22 +35,15 @@
 
 Notes:
 
-*/
-component extends="BaseController" output=false accessors=true {
+--->
+<cfparam name="rc.permissionGroupSmartList" type="any" />
+
+<cfoutput>
 	
-	// fw1 Auto-Injected Service Properties
-	property name="productService" type="Slatwall.com.service.ProductService";
-	property name="brandService" type="Slatwall.com.service.BrandService";
-	
-	this.publicMethods='';
-	this.secureMethods='about';
-	
-	public void function default(required struct rc) {
-		getFW().redirect(action="admin:help.about");
-	}
-	
-	public void function about(required struct rc) {
-		rc.section = "About Slatwall";
-		
-	}
-}
+<cf_SlatwallActionBar type="listing" object="#rc.permissionGroupSmartList#" />
+
+<cf_SlatwallListingDisplay smartList="#rc.permissionGroupSmartList#" recordEditAction="admin:account.editpermissiongroup">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="permissionGroupName" />
+</cf_SlatwallListingDisplay>
+
+</cfoutput>

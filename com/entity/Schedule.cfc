@@ -74,7 +74,7 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 		
 	}
 	
-	public array function geRecuringTypeOptions() {
+	public array function getRecuringTypeOptions() {
 		var options = [
 			{name="Daily", value="daily"},
 			{name="Weekly", value="weekly"},
