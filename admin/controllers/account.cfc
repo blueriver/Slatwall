@@ -53,5 +53,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		super.genericEditMethod('PermissionGroup',rc);
 	}
 	
+	public void function createPermissionGroup(required struct rc){
+		rc.permissions = getAccountService().getPermissions();
+		
+		super.genericCreateMethod('PermissionGroup',rc);
+	}
+	
+	public void function detailPermissionGroup(required struct rc){
+		rc.permissions = getAccountService().getPermissions();
+		
+		super.genericDetailMethod('PermissionGroup',rc);
+	}
+	
 	
 }
