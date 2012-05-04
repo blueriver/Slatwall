@@ -49,22 +49,45 @@ Notes:
 			
 			<h3>Permissions</h3>
 			<cfoutput>
-				<cfloop collection="#rc.permissions#" item="permissionName">
+				<cfif rc.edit>
+					<cfloop collection="#rc.permissions#" item="permissionName">
+						<div class="control-group">
+							<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.' & permissionName)#</label></dt>
+							<div class="controls">
+								<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions"  value="#rc.permissionGroup.getPermissions()#" valueOptions="#rc.permissions[permissionName]#" />
+							</div>
+						</div>
+								
+					</cfloop>
+					
 					<div class="control-group">
-						<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.' & permissionName)#</label></dt>
+						<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.superuser')#</label></dt>
 						<div class="controls">
-							<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions"  value="#rc.permissionGroup.getPermissions()#" valueOptions="#rc.permissions[permissionName]#" />
+							<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions"  value="#rc.permissionGroup.getPermissions()#" valueOptions="#['*']#" />
 						</div>
 					</div>
-							
-				</cfloop>
-				
-				<div class="control-group">
-					<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.superuser')#</label></dt>
-					<div class="controls">
-						<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions"  value="#rc.permissionGroup.getPermissions()#" valueOptions="#['*']#" />
-					</div>
-				</div>
+				<cfelse>
+					<cfloop collection="#rc.permissions#" item="permissionName">
+						<cfset output = false />
+						<div class="control-group">
+							<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.' & permissionName)#</label></dt>
+							<div class="controls">
+								<cfloop array="#rc.permissions[permissionName]#" Index="permission">
+									<cfif listFind(rc.permissionGroup.getPermissions(),permission)>#permission#<br /> <cfset output=true/></cfif>
+								</cfloop>	
+								<cfif !output>
+									None
+								</cfif>	
+							</div>
+						</div>
+					</cfloop>	
+						<div class="control-group">
+							<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.superuser')#</label></dt>
+							<div class="controls">
+								<cfif listFind(rc.permissionGroup.getPermissions(),'*')>*</cfif>
+							</div>
+						</div>		
+				</cfif>
 			</cfoutput>
 		</cf_SlatwallPropertyList>
 		

@@ -81,10 +81,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				&&
 				!listFindNocase(getSlatwallScope().getCurrentAccount().getAllPermissions(), sectionName & '.' & itemName)
 				){
-					//location('/plugins/Slatwall/?slataction=main.noaccess',false);
-					writeDump('You do not have access');
-					abort;
-					
+					getFW().setView('main.noaccess');
 			}
 		}
 		
