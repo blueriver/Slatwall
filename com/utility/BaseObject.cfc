@@ -474,6 +474,12 @@ component displayname="Base Object" accessors="true" output="false" {
 				return arrayValue;
 			} else {
 				newValue = evaluate("value.get#pa[i]#()");
+				if(isNull(newValue)) {
+					if(arguments.formatValue) {
+						return value.getFormattedValue(pa[i]);
+					}
+					return "";
+				}
 				if(isSimpleValue(newValue) && arguments.formatValue) {
 					value = value.getFormattedValue(pa[i]);
 				} else {
