@@ -43,6 +43,8 @@ Notes:
 		<cfargument name="recordID" />
 		<cfargument name="tableName" />
 		<cfargument name="newSortOrder" />
+		<cfargument name="contextIDColumn" />
+		<cfargument name="contextIDValue" />
 		
 		<cfset var rs = "" />
 		

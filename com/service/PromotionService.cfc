@@ -41,164 +41,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="roundingRuleService" type="any";
 	property name="utilityService" type="any";
 
-	
-	/*public any function savePromotion(required any promotion, struct data={}) {
-		// Turn off sub-property populating because it will be managed manually in this method.
-		arguments.data.populateSubProperties = false;
-		
-		// Populate the promotion
-		arguments.promotion.populate(arguments.data);
-		
-		// Populate the promotion codes
-		if(structKeyExists(arguments.data, "promotionCodes") && isArray(arguments.data.promotionCodes)) {
-			for(var i=1; i<=arrayLen(arguments.data.promotionCodes); i++) {
-				// Get the promotion code
-				var promotionCode = this.getPromotionCode(arguments.data.promotionCodes[i].promotionCodeID, true);
-				
-				// Populate it with the new data
-				promotionCode.populate(arguments.data.promotionCodes[i]);
-				
-				// Set it in promotion
-				arguments.promotion.addPromotionCode(promotionCode);
-				
-				// Add to the populated sub properties
-				if(!arrayFind(arguments.promotion.getPopulatedSubProperties(), "promotionCodes")) {
-					arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionCodes");
-				}
-			}
-		}
-		
-		// update/add promotion reward / qualifier / exclusion
-		updatePromotionReward( arguments.promotion,arguments.data );
-		updatePromotionQualifier( arguments.promotion,arguments.data );
-		updatePromotionRewardExclusion( arguments.promotion,arguments.data );
-		updatePromotionQualifierExclusion( arguments.promotion,arguments.data );
-		
-
-		// Validate the promotion, this will also check any sub-entities that got populated 
-		arguments.promotion.validate();		
-		
-		// If the object passed validation then call save in the DAO, otherwise set the errors flag
-		if(!arguments.promotion.hasErrors()) {
-			//writeDump( var=arguments.promotion, top=3, abort=true );
-			arguments.promotion = getDAO().save(target=arguments.promotion);
-		} else {
-			getService("requestCacheService").setValue("ormHasErrors", true);
-        }
-		
-		return arguments.promotion;
-	}
-	
-	public void function updatePromotionReward( required any promotion,required struct data ) {
-		// Check to see if we are going to update or editing any rewards (TPC) 
-		if(structKeyExists(arguments.data, "savePromotionRewardProduct") && arguments.data.savePromotionRewardProduct) {
-			// Get product reward, and return a new one if not found
-			var prProduct = this.getPromotionRewardProduct(arguments.data.promotionRewards[1].promotionRewardID, true);
-			
-			// Populate that product reward
-			prProduct.populate(arguments.data.promotionRewards[1]);
-			
-			// assign any product pages/categories to reward
-			assignProductContent( prProduct,arguments.data.promotionRewards[1].productContent, "PromotionRewardProductProductContent" );						
-			assignProductCategories( prProduct,arguments.data.promotionRewards[1].productCategories, "PromotionRewardProductProductCategory" );
-			
-			// Validate the product reward
-			prProduct.validate();
-			
-			// Add the promotion reward to the promotion
-			arguments.promotion.addPromotionReward(prProduct);
-			
-			// add to the sub items populated so that we can validate on parent
-			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
-			
-		} else if (structKeyExists(arguments.data, "savePromotionRewardShipping") && arguments.data.savePromotionRewardShipping) {
-			// Get shipping reward, and return a new one if not found
-			var prShipping = this.getPromotionRewardShipping(arguments.data.promotionRewards[1].promotionRewardID, true);
-			
-			// Get shipping reward, and return a new one if not found
-			prShipping.populate(arguments.data.promotionRewards[1]);
-			
-			// Validate the shipping reward
-			prShipping.validate();
-			
-			// Add the promotion reward to the promotion
-			arguments.promotion.addPromotionReward(prShipping);
-			
-			// add to the sub items populated so that the parent validate method checks for errors in the children
-			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
-		} else if (structKeyExists(arguments.data, "savePromotionRewardOrder") && arguments.data.savePromotionRewardOrder) {
-			// Get order reward, and return a new one if not found
-			var prOrder = this.getPromotionRewardOrder(arguments.data.promotionRewards[1].promotionRewardID, true);
-			
-			// Get shipping reward, and return a new one if not found
-			prOrder.populate(arguments.data.promotionRewards[1]);
-			
-			// Validate the shipping reward
-			prOrder.validate();
-			
-			// Add the promotion reward to the promotion
-			arguments.promotion.addPromotionReward(prOrder);
-			
-			// add to the sub items populated so that the parent validate method checks for errors in the children
-			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
-		}
-	}
-	
-	public void function updatePromotionQualifier( required any promotion,required struct data ) {
-		// Check to see if we are going to update or editing any qualifier (TPC) 
-		if(structKeyExists(arguments.data, "savePromotionQualifierProduct") && arguments.data.savePromotionQualifierProduct) {
-			// Get product qualifier, and return a new one if not found
-			var pqProduct = this.getPromotionQualifierProduct(arguments.data.promotionQualifiers[1].promotionQualifierID, true);
-			
-			// Populate that product qualifier
-			pqProduct.populate(arguments.data.promotionQualifiers[1]);
-			
-			// assign any product pages/categories to qualifier
-			assignProductContent( pqProduct,arguments.data.promotionQualifiers[1].productContent,"PromotionQualifierProductProductContent" );						
-			assignProductCategories( pqProduct,arguments.data.promotionQualifiers[1].productCategories,"PromotionQualifierProductProductCategory" );
-			
-			// Validate the product qualifier
-			pqProduct.validate();
-			
-			// Add the promotion reward to the promotion
-			arguments.promotion.addPromotionQualifier(pqProduct);
-			
-			// add to the sub items populated so that we can validate on parent
-			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
-			
-		} else if (structKeyExists(arguments.data, "savePromotionQualifierFulfillment") && arguments.data.savePromotionQualifierFulfillment) {
-			// Get fulfillment qualifier, and return a new one if not found
-			var pqFulfillment = this.getPromotionQualifierFulfillment(arguments.data.promotionQualifiers[1].promotionQualifierID, true);
-			
-			// Get fulfillment qualifier, and return a new one if not found
-			pqFulfillment.populate(arguments.data.promotionQualifiers[1]);
-			
-			// Validate the fulfillment qualifier
-			pqFulfillment.validate();
-			
-			// Add the promotion qualifier to the promotion
-			arguments.promotion.addPromotionQualifier(pqFulfillment);
-			
-			// add to the sub items populated so that the parent validate method checks for errors in the children
-			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
-		} else if (structKeyExists(arguments.data, "savePromotionQualifierOrder") && arguments.data.savePromotionQualifierOrder) {
-			// Get order qualifier, and return a new one if not found
-			var pqOrder = this.getPromotionQualifierOrder(arguments.data.promotionQualifiers[1].promotionQualifierID, true);
-			
-			// Get shipping qualifier, and return a new one if not found
-			pqOrder.populate(arguments.data.promotionQualifiers[1]);
-			
-			// Validate the shipping qualifier
-			pqOrder.validate();
-			
-			// Add the promotion qualifier to the promotion
-			arguments.promotion.addPromotionQualifier(pqOrder);
-			
-			// add to the sub items populated so that the parent validate method checks for errors in the children
-			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
-		}
-	}*/
-
 		
 	// ----------------- START: Apply Promotion Logic ------------------------- 
 	public void function updateOrderAmountsWithPromotions(required any order) {
@@ -331,16 +173,20 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var discountAmount = 0;
 		var roundedFinalAmount = 0;
 		
-		if(!isNull(reward.getAmount())) {
-			discountAmountPreRounding = arguments.originalAmount - reward.getAmount();
-		} else if( !isNull(reward.getAmountOff()) ) {
-			discountAmountPreRounding = reward.getAmountOff();
-		} else if( !isNull(reward.getPercentageOff()) ) {
-			discountAmountPreRounding = arguments.originalAmount * (reward.getPercentageOff()/100);
+		switch(reward.getAmountType()) {
+			case "percentageOff" :
+				discountAmountPreRounding = arguments.originalAmount * (reward.getPercentageOff()/100);
+				break;
+			case "amountOff" :
+				discountAmountPreRounding = reward.getAmount();
+				break;
+			case "amount" :
+				discountAmountPreRounding = arguments.originalAmount - reward.getAmount();
+				break;
 		}
 		
 		if(!isNull(reward.getRoundingRule())) {
-			roundedFinalAmount = getRoundingRuleService().roundValueByRoundingRule(value=arguments.originalAmount-discountAmountPreRounding, roundingRule=reward.getRoundingRule());
+			roundedFinalAmount = getRoundingRuleService().roundValueByRoundingRule(value=arguments.originalAmount - discountAmountPreRounding, roundingRule=reward.getRoundingRule());
 			discountAmount = arguments.originalAmount - roundedFinalAmount;
 		} else {
 			discountAmount = discountAmountPreRounding;
