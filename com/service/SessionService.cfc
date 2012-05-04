@@ -86,7 +86,7 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 		// Save the session
-		this.saveSession(entity=currentSession);
+		getDAO().save(session=currentSession);
 		
 		// Save session ID in the session Scope & cookie scope for next request
 		session.slatwall.sessionID = currentSession.getSessionID();

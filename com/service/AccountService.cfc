@@ -66,7 +66,7 @@ component extends="BaseService" accessors="true" output="false" {
 	public any function saveAccountByCmsUser(required any cmsUser) {
 		
 		// Load Account based upon the logged in cmsAccountID
-		var account = getDAO().readByCmsAccountID(cmsAccountID = arguments.cmsUser.getUserID());
+		var account = this.getAccountByCMSAccountID(arguments.cmsUser.getUserID());
 		
 		if( isnull(account) ) {
 			// TODO: Check to see if the e-mail exists and is assigned to an account.   If it does we should update that account with this cms user id.
