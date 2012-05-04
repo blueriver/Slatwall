@@ -36,17 +36,9 @@
 Notes:
 
 --->
-<cfparam name="rc.accountSmartList" type="any" />
+<cfparam name="rc.sku" type="any" />
 
-<cfoutput>
-	
-<cf_SlatwallActionBar type="listing" object="#rc.accountSmartList#" />
-
-<cf_SlatwallListingDisplay smartList="#rc.accountSmartList#" recordEditAction="admin:account.editaccount">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="firstName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="lastName" />
-	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" />
-	<cf_SlatwallListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" />
+<cf_SlatwallListingDisplay smartList="#rc.sku.getAccessContentsSmartList()#">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
 </cf_SlatwallListingDisplay>
-
-</cfoutput>
+			

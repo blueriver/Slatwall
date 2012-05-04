@@ -38,13 +38,19 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getOrdersSmartList()#"
-		recordDetailAction="admin:order.detailorder"
-		recordDetailQueryString="accountID=#rc.account.getAccountID()#">
-
-	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range="true" />
-	<cf_SlatwallListingColumn tdclass="primary"  propertyIdentifier="account.fullName" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="total" range="true" />
+<cf_SlatwallListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
+		recordEditAction="admin:account.editaccountpaymentmethod"
+		recordEditQueryString="accountID=#rc.account.getAccountID()#"
+		recordEditModal=true
+		recordDeleteAction="admin:account.deleteaccountpaymentmethod"
+		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:account.detailaccount">
+			
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
+	<cf_SlatwallListingColumn propertyIdentifier="creditCardType" />
+	<cf_SlatwallListingColumn propertyIdentifier="creditCardLastFour" />
+	<cf_SlatwallListingColumn propertyIdentifier="expirationMonth" />
+	<cf_SlatwallListingColumn propertyIdentifier="expirationYear" />
 </cf_SlatwallListingDisplay>
+
+<cf_SlatwallActionCaller action="admin:account.createaccountpaymentmethod" class="btn btn-primary" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+

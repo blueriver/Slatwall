@@ -322,11 +322,21 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// Create a new array, and add the skus price as the first entry
 		var prices = [sku.getPrice()];
 		
+		var priceGroups = account.getPriceGroups();
+		var accountSubscriptionPriceGroups = getDAO().getAccountSubscriptionPriceGroups(arguments.account.getAccountID());
+		
+		// Add any price groups that this person is just subscribed to
+		for(var i=1; i<=arrayLen(accountSubscriptionPriceGroups); i++) {
+			if(!arrayFind(priceGroups, accountSubscriptionPriceGroups[i])) {
+				arrayAppend(priceGroups, accountSubscriptionPriceGroups[i]);
+			}
+		}
+		
 		// Loop over each of the price groups of this account, and get the price based on that pricegroup
-		for(var i=1; i<=arrayLen(account.getPriceGroups()); i++) {
+		for(var i=1; i<=arrayLen(priceGroups); i++) {
 			
 			// Add this price groups price to the prices array
-			arrayAppend(prices, calculateSkuPriceBasedOnPriceGroup(sku=arguments.sku, priceGroup=account.getPriceGroups()[i]));	
+			arrayAppend(prices, calculateSkuPriceBasedOnPriceGroup(sku=arguments.sku, priceGroup=priceGroups[i]));	
 		}
 		
 		// Sort the array by lowest price
@@ -358,18 +368,21 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// setup the new price as the old price in the event of a passthrough
 		var newPrice = arguments.sku.getPrice();
 
-		// calculate the new price bassed on whatever was set up.
-		if(!isNull(arguments.priceGroupRate.getPercentageOff())) {
-			var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getPercentageOff() / 100));
+		switch(arguments.priceGroupRate.getAmountType()) {
+			case "percentageOff" :
+				var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getAmount() / 100));
 			
-			// If a rounding rule is in place for this rate, take this newly formated price and apply the rounding rule to it
-			if(!isNull(arguments.priceGroupRate.getRoundingRule())) {
-				newPrice = arguments.priceGroupRate.getRoundingRule().roundValue(newPrice);
-			}
-		} else if (!isNull(arguments.priceGroupRate.getAmountOff())) {
-			var newPrice = arguments.sku.getPrice() - arguments.priceGroupRate.getAmountOff();
-		} else if (!isNull(arguments.priceGroupRate.getAmount())) {
-			var newPrice = arguments.priceGroupRate.getAmount();
+				// If a rounding rule is in place for this rate, take this newly formated price and apply the rounding rule to it
+				if(!isNull(arguments.priceGroupRate.getRoundingRule())) {
+					newPrice = arguments.priceGroupRate.getRoundingRule().roundValue(newPrice);
+				}
+				break;
+			case "amountOff" :
+				var newPrice = arguments.sku.getPrice() - arguments.priceGroupRate.getAmount();
+				break;
+			case "amount" :
+				var newPrice = arguments.priceGroupRate.getAmount();
+				break;
 		}
 		
 		//return the newPrice and make sure that it is just a two decimal number

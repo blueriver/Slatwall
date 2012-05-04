@@ -36,17 +36,34 @@
 Notes:
 
 --->
-<cfparam name="rc.accountSmartList" type="any" />
+<cfparam name="rc.account" type="any">
+<cfparam name="rc.accountPaymentMethod" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	
-<cf_SlatwallActionBar type="listing" object="#rc.accountSmartList#" />
-
-<cf_SlatwallListingDisplay smartList="#rc.accountSmartList#" recordEditAction="admin:account.editaccount">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="firstName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="lastName" />
-	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" />
-	<cf_SlatwallListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" />
-</cf_SlatwallListingDisplay>
-
+	<cf_SlatwallDetailForm object="#rc.account#" saveAction="admin:account.saveaccount" edit="#rc.edit#">
+		<input type="hidden" name="accountPaymentMethodes[1].accountPaymentMethodID" value="#rc.accountPaymentMethod.getAccountPaymentMethodID()#" />
+		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].accountPaymentMethodName" property="accountPaymentMethodName" edit="#rc.edit#">
+		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].nameOnCreditCard" property="nameOnCreditCard" edit="#rc.edit#" />
+		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].creditCardNumber" property="creditCardNumber" edit="#rc.edit#" />
+		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].expirationMonth" property="expirationMonth" edit="#rc.edit#" />
+		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].expirationYear" property="expirationYear" edit="#rc.edit#" />
+		<cf_SlatwallAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="accountPaymentMethodes[1].billingaddress." edit="#rc.edit#">
+		
+	</cf_SlatwallDetailForm>
 </cfoutput>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

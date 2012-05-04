@@ -40,14 +40,23 @@ Notes:
 <cfparam name="attributes.edit" type="boolean" default="true" />
 <cfparam name="attributes.fieldNamePrefix" type="string" default="" />
 <cfparam name="attributes.showName" type="boolean" default="true" />
+<cfparam name="attributes.requireName" type="boolean" default="false" />
 <cfparam name="attributes.showCompany" type="boolean" default="true" />
+<cfparam name="attributes.requireCompany" type="boolean" default="false" />
 <cfparam name="attributes.showStreetAddress" type="boolean" default="true" />
+<cfparam name="attributes.requireStreetAddress" type="boolean" default="false" />
 <cfparam name="attributes.showStreet2Address" type="boolean" default="true" />
+<cfparam name="attributes.requireStreet2Address" type="boolean" default="false" />
 <cfparam name="attributes.showLocality" type="boolean" default="true" />
+<cfparam name="attributes.requireLocality" type="boolean" default="false" />
 <cfparam name="attributes.showCity" type="boolean" default="true" />
+<cfparam name="attributes.requireCity" type="boolean" default="false" />
 <cfparam name="attributes.showState" type="boolean" default="true" />
+<cfparam name="attributes.requireState" type="boolean" default="false" />
 <cfparam name="attributes.showPostalCode" type="boolean" default="true" />
+<cfparam name="attributes.requirePostalCode" type="boolean" default="false" />
 <cfparam name="attributes.showCountry" type="boolean" default="true" />
+<cfparam name="attributes.requireCountry" type="boolean" default="false" />
 
 <cfset thisAddressID = createUUID() />
 
