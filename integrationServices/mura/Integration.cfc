@@ -207,7 +207,6 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 				if(category.isNew()){
 					category.setCmsSiteID(categoryQuery.siteID[j]);
 					category.setCmsCategoryID(categoryQuery.categoryID[j]);
-					category.setCmsCategoryIDPath(categoryQuery.path[j]);
 					category.setCategoryName(categoryQuery.name[j]);
 					category = getService("contentService").saveCategory(category);
 				}
