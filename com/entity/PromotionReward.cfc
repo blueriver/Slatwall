@@ -64,6 +64,14 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		
 
 	// ============ START: Non-Persistent Property Methods =================
+
+	public array function getRewardTypeOptions() {
+		return [
+			{name=rbKey("entity.promotionReward.rewardType.product"), value="product"},
+			{name=rbKey("entity.promotionReward.rewardType.order"), value="order"},
+			{name=rbKey("entity.promotionReward.rewardType.shipping"), value="shipping"}
+		];
+	}
 	
 	public array function getAmountTypeOptions() {
 		if(getRewardType() EQ "order") {
