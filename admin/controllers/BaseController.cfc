@@ -42,6 +42,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	property name="integrationService" type="any";
 	property name="sessionService" type="any";
 	property name="utilityORMService" type="any";
+	property name="accountService" type="any";
 	
 	public any function init(required any fw) {
 		setFW(arguments.fw);
@@ -61,7 +62,31 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			}
 		}
 		
+		var sectionName = getFW().getSection( rc.slatAction );
 		var itemName = getFW().getItem( rc.slatAction );
+		
+		//check if the page is public, if public no need to worry about security
+		if(!listFindNocase(accountService.getPublicMethods(sectionName),rc.slatAction)){
+		
+			//check if the user is logged in
+			if(!val(getSlatwallScope().getCurrentAccount().getAccountID())){
+				writedump('You must login!');
+				abort;
+			}
+			
+			//check if the user has access to everything, i.e. * permissions
+			//check if they have access to that private page	
+			if(
+				getSlatwallScope().getCurrentAccount().getAllPermissions() neq '*' 
+				&&
+				!listFindNocase(getSlatwallScope().getCurrentAccount().getAllPermissions(), sectionName & '.' & itemName)
+				){
+					//location('/plugins/Slatwall/?slataction=main.noaccess',false);
+					writeDump('You do not have access');
+					abort;
+					
+			}
+		}
 		
 		rc.itemEntityName = "";
 		rc.listAction = rc.slatAction;
