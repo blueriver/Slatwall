@@ -38,7 +38,10 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getOrdersSmartList()#">
+<cf_SlatwallListingDisplay smartList="#rc.account.getOrdersSmartList()#"
+		recordDetailAction="admin:order.detailorder"
+		recordDetailQueryString="accountID=#rc.account.getAccountID()#">
+
 	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range="true" />
 	<cf_SlatwallListingColumn tdclass="primary"  propertyIdentifier="account.fullName" />

@@ -36,26 +36,9 @@
 Notes:
 
 --->
-<cfparam name="rc.orderFulfillment" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.sku" type="any" />
 
-<cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderFulfillment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderFulfillment#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:order.processorderfulfillment" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" icon="cog">
-		</cf_SlatwallActionBar>
-		
-		<cfif !isNull(rc.orderFulfillment.getAddress())>
-			<cf_SlatwallDetailHeader>
-				<cf_SlatwallPropertyList>
-					<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" edit="#rc.edit#">
-				</cf_SlatwallPropertyList>
-			</cf_SlatwallDetailHeader>
-		</cfif>
-		
-		<cf_SlatwallTabGroup object="#rc.orderFulfillment#">
-			<cf_SlatwallTab view="admin:order/orderfulfillmenttabs/orderfulfillmentitems">
-		</cf_SlatwallTabGroup>
-		
-	</cf_SlatwallDetailForm>
-</cfoutput>
+<cf_SlatwallListingDisplay smartList="#rc.sku.getAccessContentsSmartList()#">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
+</cf_SlatwallListingDisplay>
+			

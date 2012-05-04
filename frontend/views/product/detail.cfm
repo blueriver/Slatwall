@@ -50,6 +50,7 @@ Notes:
 		<form action="?nocache=1" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
 			<input type="hidden" name="slatAction" value="frontend:cart.addItem" />
+			<cfset local.fulfillmentMethodSkus = {} />
 			<!--- Product Options --->
 			<cfif arrayLen($.slatwall.product().getSkus(true)) eq 1>
 				<input type="hidden" name="skuID" value="#$.slatwall.Product().getSkus()[1].getSkuID()#" />
@@ -61,13 +62,40 @@ Notes:
 							<cfset local.skus = $.slatwall.product().getSkus(sorted=true, fetchOptions=true) />
 							<cfloop array="#local.skus#" index="local.sku">
 								<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
+								<cfloop list="#local.sku.setting('skuEligibleFulfillmentMethods')#" index="local.fulfillmentMethodID">
+									<cfif structKeyExists(fulfillmentMethodSkus,local.fulfillmentMethodID)>
+										<cfset fulfillmentMethodSkus[local.fulfillmentMethodID] = listAppend(fulfillmentMethodSkus[local.fulfillmentMethodID],local.sku.getSkuID()) />
+									<cfelse>
+										<cfset fulfillmentMethodSkus[local.fulfillmentMethodID] = local.sku.getSkuID() />
+									</cfif>
+								</cfloop>
 							</cfloop>
 						</select>
 					</dd>
 				</dl>
 			</cfif>
 			<!--- END: Product Options --->
-				
+			
+			<!--- Fulfillment Options --->
+			<cfif len(structKeyList(local.fulfillmentMethodSkus)) GT 1>
+				<cfset local.fulfillmentMethodSmartList = $.slatwall.getService("fulfillmentService").getFulfillmentMethodSmartList() />
+				<cfset local.fulfillmentMethodSmartList.addInFilter('fulfillmentMethodID', structKeyList(local.fulfillmentMethodSkus)) />
+				<cfset local.fulfillmentMethodSmartList.addOrder('sortOrder|ASC') />
+				<cfset local.fulfillmentMethods = local.fulfillmentMethodSmartList.getRecords() />
+				<dl>
+					<dt>Select Fulfillment Option</dt>
+					<dd>
+						<select name="fulfillmentMethodID">
+							<cfloop array="#local.fulfillmentMethods#" index="local.fulfillmentMethod">
+								<option value="#local.fulfillmentMethod.getFulfillmentMethodID()#" skuIDs="#local.fulfillmentMethodSkus[local.fulfillmentMethod.getFulfillmentMethodID()]#">#local.fulfillmentMethod.getFulfillmentMethodName()#</option>
+							</cfloop>
+						</select>
+					</dd>
+				</dl>
+			</cfif>	
+			
+			<!--- END: Fulfillment Options --->
+			
 			<!--- Product Customizations --->
 			<cfloop array="#$.slatwall.product().getAttributeSets(['astProductCustomization'])#" index="local.customizationAttributeSet">
 				<div class="productCustomizationSet #lcase(replace(local.customizationAttributeSet.getAttributeSetName(), ' ', '', 'all'))#">

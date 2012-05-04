@@ -93,7 +93,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 
     public array function getAttributeSetTypeOptions() {
 		if(!structKeyExists(variables, "attributeSetTypeOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
 			smartList.addSelect(propertyIdentifier="typeID", alias="value");
 			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="attributeSetType");

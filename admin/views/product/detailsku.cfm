@@ -50,7 +50,7 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="price" edit="#rc.edit#">
-				<cfif rc.sku.getBaseProductType() EQ "subscription">
+				<cfif rc.product.getBaseProductType() EQ "subscription">
 					<cf_SlatwallPropertyDisplay object="#rc.sku#" property="renewalPrice" edit="#rc.edit#">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="skuCode" edit="#rc.edit#">
@@ -58,8 +58,10 @@ Notes:
 		</cf_SlatwallDetailHeader>
 
 		<cf_SlatwallTabGroup object="#rc.sku#">
-			<cfif rc.sku.getBaseProductType() EQ "subscription">
+			<cfif rc.product.getBaseProductType() EQ "subscription">
 				<cf_SlatwallTab view="admin:product/skutabs/subscription" />
+			<cfelseif rc.product.getBaseProductType() EQ "contentaccess">
+				<cf_SlatwallTab view="admin:product/skutabs/accesscontents" />
 			</cfif>
 			<cf_SlatwallTab view="admin:product/skutabs/alternateskucodes" />
 			<cf_SlatwallTab view="admin:product/skutabs/skusettings" />

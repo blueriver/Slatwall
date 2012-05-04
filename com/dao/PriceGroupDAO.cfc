@@ -38,4 +38,10 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	
+	<cffunction name="getAccountSubscriptionPriceGroups">
+		<cfargument name="accountID" type="string">
+		
+		<cfreturn ormExecuteQuery("SELECT DISTINCT pg FROM SlatwallSubscriptionUsageBenefitAccount suba INNER JOIN suba.subscriptionUsageBenefit sub INNER JOIN sub.subscriptionBenefit sb INNER JOIN sb.priceGroups pg WHERE suba.activeFlag = ? AND suba.endDateTime > ? AND suba.account.accountID = ?", [1, now(), arguments.accountID]) />
+	</cffunction>
 </cfcomponent>

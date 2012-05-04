@@ -39,12 +39,8 @@ Notes:
 <cfparam name="rc.promotion" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<cfset local.ppSmartList= new Slatwall.org.entitySmartList.SmartList("SlatwallPromotionPeriod")  />
-<cfset local.ppSmartList.addFilter( "promotion.promotionID",rc.promotion.getPromotionID() ) />
-
 <cfoutput>
-
-	<cf_SlatwallListingDisplay smartList="#local.ppSmartList#"
+	<cf_SlatwallListingDisplay smartList="#rc.promotion.getPromotionPeriodsSmartList()#"
 							   recordEditAction="admin:pricing.editPromotionperiod"
 							   recorddetailaction="admin:pricing.detailpromotionperiod"
 							   recordDeleteAction="admin:pricing.deletepromotionperiod"

@@ -42,6 +42,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="subscriptionUsageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency";
+	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
 	property name="nextBillDate" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
@@ -70,10 +71,15 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	
 	// Non-Persistent Properties
 	property name="currentStatus" persistent="false";
+	property name="currentStatusType" persistent="false";
+	property name="subscriptionOrderItemName" persistent="false";
 
 	public any function init() {
 		if(isNull(variables.subscriptionUsageBenefits)) {
 			variables.subscriptionUsageBenefits = [];
+		}
+		if(isNull(variables.renewalSubscriptionUsageBenefits)) {
+			variables.renewalSubscriptionUsageBenefits = [];
 		}
 		if(isNull(variables.subscriptionOrderItems)) {
 			variables.subscriptionOrderItems = [];
@@ -100,6 +106,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		setRenewalTerm(subscriptionTerm.getRenewalTerm());
 		setGracePeriodTerm(subscriptionTerm.getGracePeriodTerm());
 		setAllowProrateFlag(subscriptionTerm.getAllowProrateFlag());
+		setAutoRenewFlag(subscriptionTerm.getAutoRenewFlag());
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -112,12 +119,38 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	}
 	
 	public any function getCurrentStatusCode() {
-		return getCurrentStatus().getSubscriptionStausType().getSystemCode();
+		return getCurrentStatus().getSubscriptionStatusType().getSystemCode();
+	}
+	
+	public any function getCurrentStatusType() {
+		return getCurrentStatus().getSubscriptionStatusType().getType();
+	}
+	
+	public any function getSubscriptionOrderItemName() {
+		return getSubscriptionOrderItems()[1].getOrderItem().getSku().getProduct().getProductName();
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account (many-to-one)    
+	public void function setAccount(required any account) {    
+		variables.account = arguments.account;    
+		if(isNew() or !arguments.account.hasSubscriptionUsage( this )) {    
+			arrayAppend(arguments.account.getSubscriptionUsages(), this);    
+		}    
+	}    
+	public void function removeAccount(any account) {    
+		if(!structKeyExists(arguments, "account")) {    
+			arguments.account = variables.account;    
+		}    
+		var index = arrayFind(arguments.account.getSubscriptionUsages(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getSubscriptionUsages(), index);    
+		}    
+		structDelete(variables, "account");    
+	}
 	
 	// subscriptionUsageBenefits (one-to-many)    
 	public void function addSubscriptionUsageBenefit(required any subscriptionUsageBenefit) {    

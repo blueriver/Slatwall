@@ -53,7 +53,7 @@ Notes:
 	<cfparam name="attributes.recordProcessAction" type="string" default="" />
 	<cfparam name="attributes.recordProcessQueryString" type="string" default="" />
 	<cfparam name="attributes.recordProcessModal" type="boolean" default="false" />
-		
+
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
 	<cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />  
@@ -72,6 +72,7 @@ Notes:
 	<!--- Helper / Additional / Custom --->
 	<cfparam name="attributes.tableattributes" type="string" default="" />  <!--- Pass in additional html attributes for the table --->
 	<cfparam name="attributes.tableclass" type="string" default="" />  <!--- Pass in additional classes for the table --->	
+	<cfparam name="attributes.adminattributes" type="string" default="" />
 	
 	<!--- ThisTag Variables used just inside --->
 	<cfparam name="thistag.columns" type="array" default="#arrayNew(1)#" />
@@ -93,11 +94,6 @@ Notes:
 		<!--- Setup the default table class --->
 		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-striped table-bordered table-condensed', ' ') />
 		
-		<!--- Setup the list of all property identifiers to be used later --->
-		<cfloop array="#thistag.columns#" index="column">
-			<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
-		</cfloop>
-		
 		<!--- Setup Select --->
 		<cfif len(attributes.selectFieldName)>
 			<cfset thistag.selectable = true />
@@ -111,7 +107,6 @@ Notes:
 			<cfset thistag.multiselectable = true />
 			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-multiselect', ' ') />
-			<!---<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-condensed', ' ') />--->
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
@@ -123,9 +118,8 @@ Notes:
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-expandaction="#attributes.expandAction#"', " ") />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-propertyIdentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#"', " ") />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-parentidproperty="#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
+			
 		</cfif>
 		
 		<!--- Setup Sortability --->
@@ -134,26 +128,47 @@ Notes:
 				<cfset thistag.sortable = true />
 				
 				<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
-				<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-tablename="#attributes.smartList.getBaseEntityName()#"', " ") />
-				<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
 				
 				<cfset attributes.smartList.addOrder("#attributes.sortProperty#|ASC") />
 			</cfif>
 		</cfif>
 		
-		<!--- Setup the count for the number of admin icons --->
+		<!--- Setup the admin meta info --->
 		<cfset attributes.administativeCount = 0 />
-		<cfif len(attributes.recordEditAction)>
-			<cfset attributes.administativeCount++ />
-		</cfif>
+		
+		<!--- Detail --->
 		<cfif len(attributes.recordDetailAction)>
 			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-detailaction="#attributes.recordDetailAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-detailquerystring="#attributes.recordDetailQueryString#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-detailmodal="#attributes.recordDetailModal#"', " ") />
 		</cfif>
+		
+		<!--- Edit --->
+		<cfif len(attributes.recordEditAction)>
+			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-editaction="#attributes.recordEditAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-editquerystring="#attributes.recordEditQueryString#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-editmodal="#attributes.recordEditModal#"', " ") />
+		</cfif>
+		
+		<!--- Delete --->
 		<cfif len(attributes.recordDeleteAction)>
 			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-deleteaction="#attributes.recordDeleteAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-deletequerystring="#attributes.recordDeleteQueryString#"', " ") />
 		</cfif>
+		
+		<!--- Process --->
 		<cfif len(attributes.recordProcessAction)>
 			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processaction="#attributes.recordProcessAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processquerystring="#attributes.recordProcessQueryString#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processmodal="#attributes.recordProcessModal#"', " ") />
 		</cfif>
 		
 		<!--- Setup the primary representation column if no columns were passed in --->
@@ -162,10 +177,17 @@ Notes:
 				propertyIdentifier = thistag.exampleentity.getSimpleRepresentationPropertyName(),
 				title = "",
 				tdClass="primary",
+				search = true,
+				sort = true,
 				filter = false,
-				sort = false
+				range = false
 			}) />
 		</cfif>
+		
+		<!--- Setup the list of all property identifiers to be used later --->
+		<cfloop array="#thistag.columns#" index="column">
+			<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
+		</cfloop>
 	</cfsilent>
 	<cfoutput>
 		<cfif arrayLen(attributes.smartList.getPageRecords())>
@@ -175,20 +197,20 @@ Notes:
 			<cfif thistag.multiselectable>
 				<input type="hidden" name="#attributes.multiselectFieldName#" value="#attributes.multiselectValues#" />
 			</cfif>
-			<table class="#attributes.tableclass#" #attributes.tableattributes#>
+			<table id="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" class="#attributes.tableclass#" data-savedstateid="#attributes.smartList.getSavedStateID()#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
 				<thead>
 					<tr>
 						<!--- Selectable --->
 						<cfif thistag.selectable>
-							<td>&nbsp;</td>
+							<th class="select">&nbsp;</th>
 						</cfif>
 						<!--- Multiselectable --->
 						<cfif thistag.multiselectable>
-							<td>&nbsp;</td>
+							<th class="multiselect">&nbsp;</th>
 						</cfif>
 						<!--- Sortable --->
 						<cfif thistag.sortable>
-							<td>&nbsp;</td>
+							<th class="sort">&nbsp;</th>
 						</cfif>
 						<cfloop array="#thistag.columns#" index="column">
 							<cfsilent>
@@ -196,27 +218,54 @@ Notes:
 									<cfset column.title = attributes.smartList.getPageRecords()[1].getTitleByPropertyIdentifier(column.propertyIdentifier) />
 								</cfif>
 							</cfsilent>
-							<th>
-								<div class="dropdown">
-									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
-									<ul class="dropdown-menu nav">
-										<li class="nav-header">Sort</li>
-										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|ASC')#"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
-										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|DESC')#"><i class="icon-arrow-up"></i> Sort Decending</a></li>
-										<li class="divider"></li>
-										<cfif column.filter>
-											<li class="nav-header">Filter</li>
-											<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
-											<cfloop array="#filterOptions#" index="filter">
-												<li><a href="#attributes.smartList.buildURL( 'F:#column.propertyIdentifier#=#filter["value"]#' )#">#filter['value']#</a></li>
-											</cfloop>
-										</cfif>
-									</ul>
-								</div>
+							<th class="data #column.tdClass#" data-propertyIdentifier="#column.propertyIdentifier#">
+								<cfif not column.search and not column.sort and not column.filter and not column.range>
+									#column.title#
+								<cfelse>
+									<div class="dropdown">
+										<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
+										<ul class="dropdown-menu nav">
+											<cfif column.search>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.search')#</li>
+												<li><input type="text" class="listing-search" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
+												<li class="divider"></li>
+											</cfif>
+											<cfif column.sort>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.sort')#</li>
+												<li><a href="##" class="listing-sort" data-sortdirection="ASC"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
+												<li><a href="##" class="listing-sort" data-sortdirection="DESC"><i class="icon-arrow-up"></i> Sort Decending</a></li>
+												<li class="divider"></li>
+											</cfif>
+											<!---
+											<cfif column.range>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.range')#</li>
+												
+												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
+												<div class="filter-scroll">
+													<cfloop array="#filterOptions#" index="filter">
+														<li><a href="#attributes.smartList.buildURL( 'F:#column.propertyIdentifier#=#filter["value"]#' )#">#filter['value']#</a></li>
+													</cfloop>
+												</div>
+												
+											</cfif>
+											--->
+											<cfif column.filter>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.filter')#</li>
+												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
+												<div class="filter-scroll">
+													<input type="hidden" name="F:#column.propertyIdentifier#" value="" />
+													<cfloop array="#filterOptions#" index="filter">
+														<li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#"><i class="slatwall-ui-checkbox"></i> #filter['name']#</a></li>
+													</cfloop>
+												</div>
+											</cfif>
+										</ul>
+									</div>
+								</cfif>
 							</th>
 						</cfloop>
 						<cfif attributes.administativeCount>
-							<th class="admin#attributes.administativeCount#">&nbsp;</th>
+							<th class="admin admin#attributes.administativeCount#" #attributes.adminattributes#>&nbsp;</th>
 						</cfif>
 					</tr>
 				</thead>
@@ -225,29 +274,23 @@ Notes:
 						<tr id="#record.getPrimaryIDValue()#">
 							<!--- Selectable --->
 							<cfif thistag.selectable>
-								<td><a href="##" class="table-action-select" data-idvalue="#record.getPrimaryIDValue()#"><cfif record.getPrimaryIDValue() eq attributes.selectValue><i class="slatwall-ui-raido-checked"></i><cfelse><i class="slatwall-ui-raido"></i></cfif></a></td>
+								<td><a href="##" class="table-action-select" data-idvalue="#record.getPrimaryIDValue()#"><i class="slatwall-ui-raido"></i></a></td>
 							</cfif>
 							<!--- Multiselectable --->
 							<cfif thistag.multiselectable>
-								<td><a href="##" class="table-action-multiselect" data-idvalue="#record.getPrimaryIDValue()#"><cfif listFindNoCase(attributes.multiselectValues, record.getPrimaryIDValue())><i class="slatwall-ui-checkbox-checked"></i><cfelse><i class="slatwall-ui-checkbox"></i></cfif></a></td>
+								<td><a href="##" class="table-action-multiselect" data-idvalue="#record.getPrimaryIDValue()#"><i class="slatwall-ui-checkbox"></i></a></td>
 							</cfif>
 							<!--- Sortable --->
 							<cfif thistag.sortable>
 								<td><a href="##" class="table-action-sort" data-idvalue="#record.getPrimaryIDValue()#" data-sortPropertyValue="#record.getValueByPropertyIdentifier( attributes.sortProperty )#"><i class="icon-move"></i></a></td>
 							</cfif>
-							<cfset firstColumn = true>
-							<cfset firstColumnIcon = "" />
 							<cfloop array="#thistag.columns#" index="column">
-								<cfsilent>
-									<!--- Expandable --->
-									<cfif firstColumn>
-										<cfif thistag.expandable>
-											<cfset firstColumnIcon='<a href="##" class="table-action-expand depth0" data-depth="0"  data-parentid="#record.getPrimaryIDValue()#"><i class="icon-plus"></i></a> ' />
-										</cfif>
-										<cfset firstColumn = false />
-									</cfif>
-								</cfsilent>
-								<td class="#column.tdclass# #replace(column.propertyIdentifier, '.', '-', 'all')#">#firstColumnIcon##record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<!--- Expandable Check --->
+								<cfif column.tdclass eq "primary" and thistag.expandable>
+									<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"  data-parentid="#record.getPrimaryIDValue()#"><i class="icon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<cfelse>
+									<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								</cfif>
 							</cfloop>
 							<cfif attributes.administativeCount>
 								<td class="admin admin#attributes.administativeCount#">

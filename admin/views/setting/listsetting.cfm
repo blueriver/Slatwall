@@ -42,6 +42,7 @@ Notes:
 	<cf_SlatwallTabGroup>
 		<cf_SlatwallTab view="admin:setting/listsettingtabs/global" />
 		<cf_SlatwallTab view="admin:setting/listsettingtabs/globaladvanced" />
+		<cf_SlatwallTab view="admin:setting/listsettingtabs/globalpage" />
 		<cf_SlatwallTab view="admin:setting/listsettingtabs/brand" />
 		<cf_SlatwallTab view="admin:setting/listsettingtabs/producttype" />
 		<cf_SlatwallTab view="admin:setting/listsettingtabs/product" />

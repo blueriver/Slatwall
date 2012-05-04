@@ -44,13 +44,12 @@ Notes:
 	<cf_SlatwallListingDisplay smartList="#rc.productSmartList#"
 			recordEditAction="admin:product.editproduct"
 			recorddetailaction="admin:product.detailproduct">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
-		<cf_SlatwallListingColumn propertyIdentifier="productCode" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" search=true  />
+		<cf_SlatwallListingColumn propertyIdentifier="productCode" search=true />
 		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="defaultSku.price" range=true />
 	</cf_SlatwallListingDisplay>
-
 </cfoutput>

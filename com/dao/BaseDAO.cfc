@@ -120,8 +120,8 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 			arguments.entityName = "Slatwall#arguments.entityName#";
 		}
 		
-		var smartList = new Slatwall.org.entitySmartList.SmartList(argumentCollection=arguments);
-	
+		var smartList = new Slatwall.com.utility.SmartList(argumentCollection=arguments);
+
 		return smartList;
 	}
 	

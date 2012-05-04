@@ -55,13 +55,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
 	property name="accountContentAccesses" singularname="accountContentAccess" cfc="AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
-	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan" orderby="paymentMethodType" ;
+	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="AccountAttributeValue" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
 	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
 	property name="subscriptionUsageBenefitAccounts" singularname="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
+	property name="subscriptionUsages" singularname="subscriptionUsage" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
@@ -120,6 +121,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(isNull(variables.subscriptionUsageBenefitAccounts)) {
 			variables.subscriptionUsageBenefitAccounts = [];
 		}
+		if(isNull(variables.subscriptionUsages)) {
+			variables.subscriptionUsages = [];
+		}
 		return super.init();
 	}
 	
@@ -165,7 +169,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	//get attribute value
 	public any function getAttributeValue(required string attribute, returnEntity=false){
-		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAccountAttributeValue");
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAccountAttributeValue");
 		
 		smartList.addFilter("account_accountID",getAccountID(),1);
 		smartList.addFilter("attribute_attributeID",attribute,1);
@@ -302,6 +306,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}    
 	public void function removeSubscriptionUsageBenefitAccount(required any subscriptionUsageBenefitAccount) {    
 		arguments.subscriptionUsageBenefitAccount.removeAccount( this );    
+	}
+	
+	// Subscription Usage (one-to-many)    
+	public void function addSubscriptionUsage(required any subscriptionUsage) {    
+		arguments.subscriptionUsage.setAccount( this );    
+	}    
+	public void function removeSubscriptionUsage(required any subscriptionUsage) {    
+		arguments.subscriptionUsage.removeAccount( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

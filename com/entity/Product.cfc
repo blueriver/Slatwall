@@ -157,7 +157,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     
     public any function getListingPagesOptionsSmartList() {
 		if(!structKeyExists(variables, "listingPagesOptionsSmartList")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallContent");
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallContent");
 			smartList.addWhereCondition("exists (FROM SlatwallSetting ss WHERE ss.settingName='contentProductListingFlag' AND ss.settingValue=1 AND ss.cmsContentID = aslatwallcontent.cmsContentID)");
 			smartList.addOrder("title|ASC");
 			variables.listingPagesOptionsSmartList = smartList;
@@ -392,7 +392,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	//get attribute value
 	public any function getAttributeValueOld(required string attribute, returnEntity=false){
-		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallProductAttributeValue");
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProductAttributeValue");
 		
 		smartList.addFilter("product_productID",getProductID(),1);
 		smartList.addFilter("attribute_attributeID",attribute,1);

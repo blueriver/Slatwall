@@ -36,14 +36,21 @@
 Notes:
 
 --->
-<cfif thisTag.executionMode is "start">
-	<cfparam name="attributes.propertyIdentifier" type="string" />
-	<cfparam name="attributes.title" type="string" default="" />
-	<cfparam name="attributes.tdclass" type="string" default="" />
-	<cfparam name="attributes.search" type="boolean" default="false" />
-	<cfparam name="attributes.sort" type="boolean" default="true" />
-	<cfparam name="attributes.filter" type="boolean" default="false" />
-	<cfparam name="attributes.range" type="boolean" default="false" />
-	
-	<cfassociate basetag="cf_SlatwallListingDisplay" datacollection="columns">
-</cfif>
+<cfparam name="rc.account" type="any" />
+
+<cf_SlatwallListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
+		recordEditAction="admin:account.editaccountpaymentmethod"
+		recordEditQueryString="accountID=#rc.account.getAccountID()#"
+		recordEditModal=true
+		recordDeleteAction="admin:account.deleteaccountpaymentmethod"
+		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:account.detailaccount">
+			
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
+	<cf_SlatwallListingColumn propertyIdentifier="creditCardType" />
+	<cf_SlatwallListingColumn propertyIdentifier="creditCardLastFour" />
+	<cf_SlatwallListingColumn propertyIdentifier="expirationMonth" />
+	<cf_SlatwallListingColumn propertyIdentifier="expirationYear" />
+</cf_SlatwallListingDisplay>
+
+<cf_SlatwallActionCaller action="admin:account.createaccountpaymentmethod" class="btn btn-primary" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+

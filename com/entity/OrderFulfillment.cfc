@@ -250,7 +250,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     
     public any function getAccountAddressOptions() {
     	if( !structKeyExists(variables, "accountAddressOptions")) {
-    		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAccountAddress");
+    		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAccountAddress");
 			smartList.addSelect(propertyIdentifier="accountAddressName", alias="name");
 			smartList.addSelect(propertyIdentifier="accountAddressID", alias="value"); 
 			smartList.addFilter(propertyIdentifier="account_accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");

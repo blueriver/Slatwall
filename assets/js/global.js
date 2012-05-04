@@ -11,25 +11,11 @@ var ajaxlock = 0;
 
 jQuery(document).ready(function() {
 	
+	// Looks for a tab to show
 	if( window.location.hash ) {
 		var hash = window.location.hash.substring(1);
 		jQuery('a[href=#' + hash + ']').tab('show');
 	}
-	
-	jQuery('a[data-toggle="tab"]').on('shown', function (e) {
-		window.location.hash = jQuery(this).attr('href');
-	})
-	
-	jQuery('.modalload').click(function(e){
-		jQuery('#adminModal').html('');
-		var modalLink = jQuery(this).attr( 'href' );
-		if( modalLink.indexOf("?") != -1) {
-			modalLink = modalLink + '&modal=1&tabIndex=' + slatwall.tabIndex;
-		} else {
-			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
-		}
-		jQuery('#adminModal').load( modalLink, function(){bindFormValidation();bindTableClasses();bindUIElements();} );
-	});
 	
 	// Focus on the first tab index
 	if(jQuery('.firstfocus').length) {
@@ -38,25 +24,16 @@ jQuery(document).ready(function() {
 		jQuery('input[tabindex=1]').focus();
 	}
 	
-	bindUIElements();
-	bindAlerts();
-	bindFormValidation();
-	bindTableClasses();
-	bindTooltips();
+	initUIElements( 'body' );
+	setupEventHandlers();
 });
 
-function bindTooltips(){
-	jQuery('.hint').tooltip();
-	jQuery('.hint').click(function(e){
-		e.preventDefault();
-	});
-}
-
-function bindUIElements() {
-	jQuery('.datetimepicker').datepicker({
+function initUIElements( scopeSelector ) {
+	// Datetime Picker
+	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datepicker({
 		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
-		duration: '',  
-        showTime: true,  
+		duration: '',
+        showTime: true,
         constrainInput: false,
         stepMinutes: 1, 
         stepHours: 1,
@@ -64,46 +41,340 @@ function bindUIElements() {
         time24h: false
 	});
 	
-	jQuery('.datepicker').datepicker();
-}
-
-function bindFormValidation() {
-	jQuery.each(jQuery('form'), function(index, value) {
+	// Date Picker
+	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker();
+	
+	// Time Picker
+	//jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker();
+	
+	// Tooltips
+	jQuery( scopeSelector ).find(jQuery('.hint')).tooltip();
+	
+	// Validation
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value) {
 		jQuery(value).validate();
+	});
+	
+	// Table Sortable
+	jQuery( scopeSelector ).find(jQuery('.table-sortable .sortable')).sortable({
+		update: function(event, ui) {
+			tableApplySort(event, ui);
+		}
+	});
+	
+	// Table Multiselect
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('.table-multiselect')), function(ti, tv){
+		updateMultiselectTableUI( '#' + jQuery(tv).attr('id') );
 	});
 }
 
-function bindAlerts() {
-	jQuery('.alert-confirm').click(function(e){
+function setupEventHandlers() {
+	jQuery('body').on('click', '.hint', function(e){
+		e.preventDefault();
+	});
+	
+	// Tab Selecting
+	jQuery('body').on('shown', 'a[data-toggle="tab"]', function (e) {
+		window.location.hash = jQuery(this).attr('href');
+	})
+	
+	// Alerts
+	jQuery('body').on('click', '.alert-confirm', function(e){
 		e.preventDefault();
 		jQuery('#adminConfirm > .modal-body').html( jQuery(this).data('confirm') );
 		jQuery('#adminConfirm .btn-primary').attr( 'href', jQuery(this).attr('href') );
 		jQuery('#adminConfirm').modal();
 	});
-	jQuery('.alert-disabled').click(function(e){
+	jQuery('body').on('click', '.alert-disabled', function(e){
 		e.preventDefault();
 		jQuery('#adminDisabled > .modal-body').html( jQuery(this).data('disabled') );
 		jQuery('#adminDisabled').modal();
 	});
-}
-
-function bindTableClasses() {
-	jQuery('.table-action-expand').click(function(e){
+	
+	// Modal Loading
+	jQuery('body').on('click', '.modalload', function(e){
+		jQuery('#adminModal').html('');
+		var modalLink = jQuery(this).attr( 'href' );
+		if( modalLink.indexOf("?") != -1) {
+			modalLink = modalLink + '&modal=1&tabIndex=' + slatwall.tabIndex;
+		} else {
+			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
+		}
+		jQuery('#adminModal').load( modalLink, function(){ initUIElements('#adminModal'); } );
+	});
+	
+	// Listing Display - Paging
+	jQuery('body').on('click', '.listing-pager', function(e){
+		e.preventDefault();
+		
+		var data = {};
+		data[ 'P:Current' ] = jQuery(this).data('page');
+		
+		listingDisplayUpdate( jQuery(this).closest('.pagination').data('tableid'), data );
+	});
+	
+	// Listing Display - Sorting
+	jQuery('body').on('click', '.listing-sort', function(e){
+		e.preventDefault();
+		var data = {};
+		data[ 'OrderBy' ] = jQuery(this).closest('th').data('propertyidentifier') + '|' + jQuery(this).data('sortdirection');
+		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+	});
+	
+	// Listing Display - Filtering
+	jQuery('body').on('click', '.listing-filter', function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		
+		var value = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val();
+		var valueArray = [];
+		if(value != '') {
+			valueArray = value.split(',');
+		}
+		var i = jQuery.inArray(jQuery(this).data('filtervalue'), valueArray);
+		if( i > -1 ) {
+			valueArray.splice(i, 1);
+			jQuery(this).children('.slatwall-ui-checkbox-checked').addClass('slatwall-ui-checkbox').removeClass('slatwall-ui-checkbox-checked');
+		} else {
+			valueArray.push(jQuery(this).data('filtervalue'));
+			jQuery(this).children('.slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked').removeClass('slatwall-ui-checkbox');
+		}
+		jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val(valueArray.join(","));
+		
+		var data = {};
+		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() != '') {
+			data[ 'F:' + jQuery(this).closest('th').data('propertyidentifier') ] = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val();
+		} else {
+			data[ 'FR:' + jQuery(this).closest('th').data('propertyidentifier') ] = 1;	
+		}
+		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+	});
+	
+	// Listing Display - Searching
+	jQuery('body').on('click', '.dropdown input', function(e){
+		e.stopPropagation();
+	});
+	jQuery('body').on('click', 'table .dropdown-toggle', function(e){
+		jQuery(this).parent().find('.listing-search').focus();
+	});
+	jQuery('body').on('keyup', '.listing-search', function(e){
+		var data = {};
+		
+		if(jQuery(this).val() != '') {
+			data[ jQuery(this).attr('name') ] = jQuery(this).val();	
+		} else {
+			data[ 'FKR:' + jQuery(this).attr('name').split(':')[1] ] = 1;
+		}
+		console.log(data);
+		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+	});
+	
+	// Listing Display - Expanding
+	jQuery('body').on('click', '.table-action-expand', function(e){
 		e.preventDefault();
 		tableExpandClick( this );
 	});
-	jQuery('.table-action-multiselect').click(function(e){
+	
+	// Listing Display - Sort Applying
+	jQuery('body').on('click', '.table-action-sort', function(e){
+		e.preventDefault();
+	});
+	
+	// Listing Display - Select
+	
+	// Listing Display - Multiselect
+	jQuery('body').on('click', '.table-action-multiselect', function(e){
 		e.preventDefault();
 		tableMultiselectClick( this );
 	});
-	jQuery('.table-action-sort').click(function(e){
-		e.preventDefault();
-	});
-	jQuery('.table-sortable .sortable').sortable({
-		update: function(event, ui) {
-			tableApplySort(event, ui);
+}
+
+function updateMultiselectTableUI( tableSelector ) {
+	if(jQuery(tableSelector).hasClass('table-multiselect')) {
+		var inputValue = jQuery('input[name=' + jQuery(tableSelector).data('multiselectfield') + ']').val();
+		if(inputValue != "") {
+			jQuery.each(inputValue.split(','), function(vi, vv){
+				jQuery(jQuery(tableSelector).find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
+			});
+		}	
+	}
+}
+
+function listingDisplayUpdate( tableID, data ) {
+	
+	data[ 'slatAction' ] = 'admin:ajax.updateListingDisplay';
+	data[ 'propertyIdentifiers' ] = jQuery('#' + tableID).data('propertyidentifiers');
+	data[ 'savedStateID' ] = jQuery('#' + tableID).data('savedstateid');
+	data[ 'entityName' ] = jQuery('#' + tableID).data('entityname');
+	
+	var idProperty = jQuery('#' + tableID).data('idproperty');
+	
+	jQuery.ajax({
+		url: '/plugins/Slatwall/',
+		method: 'post',
+		data: data,
+		dataType: 'json',
+		contentType: 'application/json',
+		error: function(result) {
+			console.log(r);
+			alert('Error Loading');
+		},
+		success: function(r) {
+			// Setup Selectors
+			var tableBodySelector = '#' + tableID + ' tbody';
+			var tableHeadRowSelector = '#' + tableID + ' thead tr';
+			
+			// Clear out the old Body
+			jQuery(tableBodySelector).html('');
+			
+			// Loop over each of the records in the response
+			jQuery.each( r["pageRecords"], function(ri, rv){
+			
+				var rowSelector = jQuery('<tr></tr>');
+				jQuery(rowSelector).attr('id', rv[ idProperty ]);
+				
+				// Create a new row
+				//jQuery(tableBodySelector).append('<tr id="' + rv[ idProperty ] + '">');
+				
+				// Loop over each column of the header to pull the data out of the response and populate new td's
+				jQuery.each(jQuery(tableHeadRowSelector).children(), function(ci, cv){
+					var newtd = '';
+					var link = '';
+					
+					if( jQuery(cv).hasClass('data') ) {
+						
+						newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+					
+					} else if( jQuery(cv).hasClass('multiselect') ) {
+						
+						newtd += '<td><a href="#" class="table-action-multiselect" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a>';
+							
+					} else if ( jQuery(cv).hasClass('admin') ){
+						
+						newtd += '<td>';
+						
+						if( jQuery(cv).data('editaction') != undefined ) {
+							link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
+							if( jQuery(cv).data('editquerystring') != undefined ) {
+								link += '&' + jQuery(cv).data('editquerystring');
+							}
+							if( jQuery(cv).data('editmodal') ) {
+								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
+							} else {
+								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
+							}
+						}
+						
+						if( jQuery(cv).data('detailaction') != undefined ) {
+							link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + rv[ idProperty ];
+							if( jQuery(cv).data('detailquerystring') != undefined ) {
+								link += '&' + jQuery(cv).data('detailquerystring');
+							}
+							if( jQuery(cv).data('detailmodal') ) {
+								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-open-eye"></i></a> ';
+							} else {
+								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
+							}
+						}
+						
+						if( jQuery(cv).data('deleteaction') != undefined ) {
+							link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + rv[ idProperty ];
+							if( jQuery(cv).data('deletequerystring') != undefined ) {
+								link += '&' + jQuery(cv).data('deletequerystring');
+							}
+							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-trash"></i></a> ';
+						}
+						
+						if( jQuery(cv).data('processaction') != undefined ) {
+							link = '?slatAction=' + jQuery(cv).data('processaction') + '&' + idProperty + '=' + rv[ idProperty ];
+							if( jQuery(cv).data('processquerystring') != undefined ) {
+								link += '&' + jQuery(cv).data('processquerystring');
+							}
+							if( jQuery(cv).data('processmodal') ) {
+								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-cog"></i> Process</a> ';
+							} else {
+								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-cog"></i> Process</a> ';	
+							}
+						}
+						
+						newtd += '</td>';
+						
+					}
+					
+					jQuery(rowSelector).append(newtd);
+				});
+				
+				jQuery(tableBodySelector).append(jQuery(rowSelector));
+			});
+			
+			// Update the paging nav
+			jQuery('div[class="pagination"][data-tableid="' + tableID + '"]').html(buildPagingNav(r["currentPage"], r["totalPages"]));
+			
+			// Update the saved state ID of the table
+			jQuery('#' + tableID).data('savedstateid', r["savedStateID"]);
+			jQuery('#' + tableID).attr('data-savedstateid', r["savedStateID"]);
+			
+			updateMultiselectTableUI( '#' + tableID );
 		}
+		
 	});
+}
+
+function buildPagingNav(currentPage, totalPages) {
+	var nav = '';
+	
+	if(totalPages > 1){
+		nav = '<ul>';
+	
+		var pageStart = 1;
+		var pageCount = 5;
+		
+		if(totalPages > 6) {
+			if (currentPage > 3 && currentPage < totalPages - 3) {
+				pageStart = currentPage - 1;
+				pageCount = 3;
+			} else if (currentPage >= totalPages - 4) {
+				pageStart = totalPages - 4;
+			}
+		} else {
+			pageCount = totalPages;
+		}
+		
+		if(currentPage > 1) {
+			nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
+		} else {
+			nav += '<li class="disabled"><a href="#">&laquo;</a></li>';
+		}
+		
+		if(currentPage > 3 && totalPages > 6) {
+			nav += '<li><a href="#" class="listing-pager" data-page="1">1</a></li>';
+			nav += '<li class="disabled"><a href="#">...</a></li>';
+		}
+	
+		for(var i=pageStart; i<pageStart + pageCount; i++){
+			
+			if(currentPage == i) {
+				nav += '<li class="active"><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+			} else {
+				nav += '<li><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+			}
+		}
+		
+		if(currentPage < totalPages - 3 && totalPages > 6) {
+			nav += '<li class="disabled"><a href="#">...</a></li>';
+			nav += '<li><a href="#" class="listing-pager" data-page="' + totalPages + '">' + totalPages + '</a></li>';
+		}
+		
+		if(currentPage < totalPages) {
+			nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
+		} else {
+			nav += '<li class="disabled"><a href="#">&raquo;</a></li>';
+		}
+		
+		nav += '</ul>';
+	}
+	
+	return nav;
 }
 
 function tableApplySort(event, ui) {
@@ -154,7 +425,7 @@ function tableMultiselectClick( toggleLink ) {
 	
 	var blankIndex = currentValues.indexOf('');
 	if(blankIndex > -1) {
-		currentValues.splice(blankIndex, 1);	
+		currentValues.splice(blankIndex, 1);
 	}
 	
 	if( jQuery(toggleLink).children('.slatwall-ui-checkbox-checked').length ) {
@@ -204,7 +475,6 @@ function tableExpandClick( toggleLink ) {
 			data[ 'slatAction' ] = expandAction;
 			data[ 'F:' + parentIDProperty ] = parentID;
 			data[ 'propertyIdentifiers' ] = propertyIdentifiers;
-			
 			
 			jQuery.ajax({
 				url: '/plugins/Slatwall/',
@@ -263,16 +533,13 @@ function tableExpandClick( toggleLink ) {
 	}
 }
 
-function showOnPropertyValue(value,targetValue,targetElement) {
-	if( value == targetValue ) {
-		targetElement.show();
-	} else {
-		targetElement.hide().find('input').val('');
-	}
-}
+
+// ========================= START: HELPER METHODS ================================
 
 function convertCFMLDateFormat( dateFormat ) {
 	dateFormat = dateFormat.replace('mmm', 'M');
 	dateFormat = dateFormat.replace('yyyy', 'yy');
 	return dateFormat;
 }
+
+// =========================  END: HELPER METHODS =================================
