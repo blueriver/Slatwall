@@ -1,4 +1,4 @@
-/*
+﻿/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,21 +36,32 @@
 Notes:
 
 */
-component extends="BaseController" output=false accessors=true {
+component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" table="SlatwallPermissionGroup" persistent="true" extends="BaseEntity" {
 	
-	// fw1 Auto-Injected Service Properties
-	property name="productService" type="Slatwall.com.service.ProductService";
-	property name="brandService" type="Slatwall.com.service.BrandService";
+	// Persistent Properties
+	property name="permissionGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="permissionGroupName" ormtype="string";
+	property name="permissions" ormtype="string";
 	
-	this.publicMethods='';
-	this.secureMethods='about';
+	// Related Object Properties (many-to-many)
+	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="accountID";
+
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public void function default(required struct rc) {
-		getFW().redirect(action="admin:help.about");
-	}
+
+	// ============ START: Non-Persistent Property Methods =================
 	
-	public void function about(required struct rc) {
-		rc.section = "About Slatwall";
+	// ============  END:  Non-Persistent Property Methods =================
 		
-	}
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

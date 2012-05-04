@@ -41,6 +41,9 @@ component extends="BaseController" output=false accessors=true {
 	// fw1 Auto-Injected Service Properties
 	property name="productService" type="any";
 	
+	this.publicMethods='';
+	this.secureMethods='listproduct,editproduct,detailproduct,deleteProduct,saveproduct,listProductType,editProductType,detailProductType,deleteProductType,saveProductType,listOptionGroup,editOptionGroup,detailOptionGroup,deleteOptionGroup,saveOptionGroup,listBrand,editBrand,detailBrand,deleteBrand,saveBrand,listSubscriptionTerm,editSubscriptionTerm,detailSubscriptionTerm,deleteSubscriptionTerm,saveSubscriptionTerm,listSubscriptionBenefit,editSubscriptionBenefit,detailSubscriptionBenefit,deleteSubscriptionBenefit,saveSubscriptionBenefit,listProductReview,editProductReview,detailProductReview,deleteProductReview,saveProductReview';
+	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:product.listproduct");
 	}

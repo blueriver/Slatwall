@@ -43,6 +43,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="paymentService" type="any";
 	property name="LocationService" type="any";
 	
+	this.publicMethods='';
+	this.secureMethods='listOrder,detailOrder,editOrder,deleteOrder,saveOrder,listOrderFullfillment,editOrderFullfillment,detailOrderFullfillment,deleteOrderFullfillment,saveOrderFullfillment';
+	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:order.listorder");
 	}

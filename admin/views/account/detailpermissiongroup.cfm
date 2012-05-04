@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,31 +36,54 @@
 Notes:
 
 --->
-<cfparam name="rc.account" type="any" />
+<cfparam name="rc.permissionGroup" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_SlatwallDetailForm object="#rc.account#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:account.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
+<cf_SlatwallDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
+	<cf_SlatwallActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#">
 	</cf_SlatwallActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">			
+			<cf_SlatwallPropertyDisplay object="#rc.permissionGroup#" property="permissionGroupName" edit="#rc.edit#">
+			
+			<h3>Permissions</h3>
+			<cfoutput>
+				<cfloop collection="#rc.permissions#" item="permissionName">
+					<div class="control-group">
+						<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.' & permissionName)#</label></dt>
+						<div class="controls">
+							<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions"  value="#rc.permissionGroup.getPermissions()#" valueOptions="#rc.permissions[permissionName]#" />
+						</div>
+					</div>
+							
+				</cfloop>
+				
+				<div class="control-group">
+					<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.superuser')#</label></dt>
+					<div class="controls">
+						<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions"  value="#rc.permissionGroup.getPermissions()#" valueOptions="#['*']#" />
+					</div>
+				</div>
+			</cfoutput>
 		</cf_SlatwallPropertyList>
+		
+		<!---<cfoutput>
+			
+			<cfif rc.edit>
+				<cfloop collection="#rc.permissions#" item="permissionName">
+					#$.slatwall.rbKey('permission.' & permissionName)#<br />
+					<cfloop array="#rc.permissions[permissionName]#" index="permission">
+						<input type="checkbox" name="permissions" value="#permissionName#.#permission#" <cfif listfind(rc.permissiongroup.getPermissions(),permissionName & '.' & permission)>checked</cfif>/>#permission# <br />
+					</cfloop>	
+				</cfloop>
+				<br />
+				<input type="checkbox" name="permissions" value="*" <cfif listfind(rc.permissiongroup.getPermissions(),'*')>checked</cfif>/>Everything<br />
+			<cfelse>
+				#rc.permissiongroup.getPermissions()#
+			</cfif>	
+		</cfoutput>--->
 	</cf_SlatwallDetailHeader>
 	
-	<cf_SlatwallTabGroup object="#rc.account#">
-		<cf_SlatwallTab view="admin:account/accounttabs/addresses" />
-		<cf_SlatwallTab view="admin:account/accounttabs/orders" />
-		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />
-		<cf_SlatwallTab view="admin:account/accounttabs/productreviews" />
-		<cf_SlatwallTab view="admin:account/accounttabs/customattributes" />
-		<cf_SlatwallTab view="admin:account/accounttabs/permissions" />
-	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>

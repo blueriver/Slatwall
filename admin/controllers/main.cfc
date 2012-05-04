@@ -37,12 +37,14 @@ Notes:
 
 */
 component extends="BaseController" output=false accessors=true {
-
 	// fw1 Auto-Injected Service Properties
 	property name="productService" type="any";
 	property name="orderService" type="any";
 	property name="vendorService" type="any";
 	property name="dataService" type="any";
+	
+	this.publicMethods='';
+	this.secureMethods='default';
 	
 	public void function default(required struct rc) {
 		

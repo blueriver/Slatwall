@@ -1,0 +1,10 @@
+<Table tableName="SlatwallPermissionGroup">
+	<Columns>
+		<column name="permissionGroupID" fieldtype="id" />
+		<column name="permissionGroupName" />
+		<column name="permissions" />
+	</Columns>
+	<Records>
+		<Record permissionGroupID="444df314ed64ab2d517e159fa4e6dc88" permissionGroupName="Super User" permissions="*" />
+	</Records>
+</Table>

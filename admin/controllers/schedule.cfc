@@ -40,6 +40,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	property name="scheduleService";
 	
+	this.publicMethods='';
+	this.secureMethods='';
+	
 	public void function executeScheduledTasks() {
 		getScheduleService().executeScheduledTasks( );
 		abort;

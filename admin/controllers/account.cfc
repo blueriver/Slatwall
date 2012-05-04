@@ -38,8 +38,20 @@ Notes:
 */
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
+	property name="AccountService";
+	
+	this.publicMethods='';
+	this.secureMethods='listPermissionGroup,editPermissionGroup,detailPermissionGroup,deletePermissionGroup,savePermissionGroup,listAccount,detailAccount,editAccount,deleteAccount,saveAccount';
+	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.listaccount");
 	}
+	
+	public void function editPermissionGroup(required struct rc){
+		rc.permissions = getAccountService().getPermissions();
+		
+		super.genericEditMethod('PermissionGroup',rc);
+	}
+	
 	
 }

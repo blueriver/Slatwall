@@ -42,4 +42,5 @@ component extends="BaseService" output="false" {
 	public boolean function secureDisplay(required string action) {
 		return true;
 	}
+	
 }

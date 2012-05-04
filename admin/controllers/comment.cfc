@@ -42,6 +42,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="commentService" type="any";
 	property name="orderService" type="any";
 	
+	this.publicMethods='';
+	this.secureMethods='';
+	
     public void function link(required struct rc) {
     	param name="rc.entity";
     	param name="rc.property";
