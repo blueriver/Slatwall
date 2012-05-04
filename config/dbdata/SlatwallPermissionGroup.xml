@@ -5,6 +5,6 @@
 		<column name="permissions" />
 	</Columns>
 	<Records>
-		<Record permissionGroupID="444df314ed64ab2d517e159fa4e6dc88" permissionGroupName="Super User" permissions="*" />
+		<Record permissionGroupID="4028808a37037dbf01370ed2001f0074" permissionGroupName="Super User" permissions="*" />
 	</Records>
 </Table>
