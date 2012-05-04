@@ -207,7 +207,6 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 				if(category.isNew()){
 					category.setCmsSiteID(categoryQuery.siteID[j]);
 					category.setCmsCategoryID(categoryQuery.categoryID[j]);
-					category.setCmsCategoryIDPath(categoryQuery.path[j]);
 					category.setCategoryName(categoryQuery.name[j]);
 					category = getService("contentService").saveCategory(category);
 				}
@@ -218,7 +217,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 
 	public any function getPluginConfig() {
 		if(!structKeyExists(variables, "pluginConfig")) {
-			variables.pluginConfig = application.pluginManager.getConfig("Slatwall", application.configBean.getFileDelim());
+			variables.pluginConfig = application.pluginManager.getConfig("Slatwall");
 		}
 		return variables.pluginConfig;
 	}

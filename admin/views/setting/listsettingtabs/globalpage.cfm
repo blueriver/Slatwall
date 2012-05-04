@@ -37,18 +37,12 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallActionBar type="static"></cf_SlatwallActionBar>
-	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/globalpage" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/sku" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/shippingmethod" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/shippingmethodrate" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/fulfillmentmethod" />
-	</cf_SlatwallTabGroup>
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="globalPageShoppingCart" />
+		<cf_SlatwallSetting settingName="globalPageOrderStatus" />
+		<cf_SlatwallSetting settingName="globalPageOrderConfirmation" />
+		<cf_SlatwallSetting settingName="globalPageMyAccount" />
+		<cf_SlatwallSetting settingName="globalPageCreateAccount" />
+		<cf_SlatwallSetting settingName="globalPageCheckout" />
+	</cf_SlatwallSettingTable>
 </cfoutput>
