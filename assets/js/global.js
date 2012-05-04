@@ -271,7 +271,7 @@ function listingDisplayUpdate( tableID, data ) {
 								link += '&' + jQuery(cv).data('detailquerystring');
 							}
 							if( jQuery(cv).data('detailmodal') ) {
-								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
+								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-open-eye"></i></a> ';
 							} else {
 								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
 							}
