@@ -60,6 +60,8 @@ Notes:
 		<cf_SlatwallTabGroup object="#rc.sku#">
 			<cfif rc.product.getBaseProductType() EQ "subscription">
 				<cf_SlatwallTab view="admin:product/skutabs/subscription" />
+			<cfelseif rc.product.getBaseProductType() EQ "contentaccess">
+				<cf_SlatwallTab view="admin:product/skutabs/accesscontents" />
 			</cfif>
 			<cf_SlatwallTab view="admin:product/skutabs/alternateskucodes" />
 			<cf_SlatwallTab view="admin:product/skutabs/skusettings" />
