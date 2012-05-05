@@ -58,7 +58,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 			testMerchantID = {fieldType="text", displayName="Test VirtualMerchant ID (6 Digit)"},
 			testUserID = {fieldType="text", displayName="Test Virtual Merchant User ID"},
 			testPin = {fieldType="text", displayName="Test Virtual Merchant PIN"},
-			testAccountFlag = {fieldType="yesno", displayName="Test Mode", settingDefault="1"}
+			testAccountFlag = {fieldType="yesno", displayName="Test Mode", defaultValue="1"}
 		};
 		
 		return settings;

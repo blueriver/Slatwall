@@ -54,7 +54,7 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 		var settings = {
 			loginID = {fieldType="text", displayName="Login ID"},
 			transKey = {fieldType="text", displayName="Transaction Key"},
-			testModeFlag = {fieldType="yesno", displayName="Test Mode", settingDefault="1"}
+			testModeFlag = {fieldType="yesno", displayName="Test Mode", defaultValue="1"}
 		};
 		
 		return settings;
