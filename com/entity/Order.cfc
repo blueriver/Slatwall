@@ -115,7 +115,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.promotionCodes = [];
 		}
 		
-		// Set the default order status type as not placed
+		// Set the default order status typwe as not placed
 		if(isNull(getOrderStatusType())) {
 			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');
 		}
@@ -235,9 +235,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		var discountTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
 			if( getOrderItems()[i].getTypeCode() == "oitSale" ) {
-				discountTotal += getOrderItems()[i].getDiscountAmount();
+				discountTotal = precisionEvaluate(discountTotal + getOrderItems()[i].getDiscountAmount());
 			} else if ( getOrderItems()[i].getTypeCode() == "oitReturn" ) {
-				discountTotal -= getOrderItems()[i].getDiscountAmount();
+				discountTotal = precisionEvaluate(discountTotal - getOrderItems()[i].getDiscountAmount());
 			} else {
 				throw("there was an issue calculating the itemDiscountAmountTotal because of a orderItemType associated with one of the items");
 			}
@@ -252,7 +252,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getFulfillmentTotal() {
 		var fulfillmentTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
-			fulfillmentTotal += getOrderFulfillments()[i].getFulfillmentCharge();
+			fulfillmentTotal = precisionEvaluate(fulfillmentTotal + getOrderFulfillments()[i].getFulfillmentCharge());
 		}
 		return fulfillmentTotal;
 	}
@@ -260,7 +260,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getFulfillmentRefundTotal() {
 		var fulfillmentRefundTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderReturns()); i++) {
-			fulfillmentRefundTotal += getOrderReturns()[i].getFulfillmentRefundAmount();
+			fulfillmentRefundTotal = precisionEvaluate(fulfillmentRefundTotal + getOrderReturns()[i].getFulfillmentRefundAmount());
 		}
 		
 		return fulfillmentRefundTotal;
@@ -273,9 +273,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountTotal() {
 		var totalPayments = 0;
 		
-		var orderPayments = getOrderPayments();
-		for(var i=1; i<=arrayLen(orderPayments); i++) {
-			totalPayments += orderPayments[i].getAmount();
+		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
+			totalPayments = precisionEvaluate(totalPayments + getOrderPayments()[i].getAmount());
 		}
 		
 		return totalPayments;
@@ -284,9 +283,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountAuthorizedTotal() {
 		var totalPaymentsAuthorized = 0;
 		
-		var orderPayments = getOrderPayments();
-		for(var i=1; i<=arrayLen(orderPayments); i++) {
-			totalPaymentsAuthorized += orderPayments[i].getAmountAuthorized();
+		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
+			totalPaymentsAuthorized = precisionEvaluate(totalPaymentsAuthorized + getOrderPayments()[i].getAmountAuthorized());
 		}
 		
 		return totalPaymentsAuthorized;
@@ -295,9 +293,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountReceivedTotal() {
 		var totalPaymentsReceived = 0;
 		
-		var orderPayments = getOrderPayments();
-		for(var i=1; i<=arrayLen(orderPayments); i++) {
-			totalPaymentsReceived += orderPayments[i].getAmountReceived();
+		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
+			totalPaymentsReceived = precisionEvaluate(totalPaymentsReceived + getOrderPayments()[i].getAmountReceived());
 		}
 		
 		return totalPaymentsReceived;
@@ -310,28 +307,28 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		for(var f=1; f<=arrayLen(getOrderFulfillments()); f++) {
 			// If this fulfillment is fully delivered, then just add the entire amount
 			if(getOrderFulfillments()[f].getQuantityUndelivered() == 0) {
-				amountDelivered += getFulfillmentTotal();
+				amountDelivered = precisionEvaluate(amountDelivered + getFulfillmentTotal());
 				
 			// If this fulfillment has at least one item delivered
 			} else if(getOrderFulfillments()[f].getQuantityDelivered() > 0) {
 				
 				// Add the fulfillmentCharge
-				amountDelivered += getOrderFulfillments()[f].getChargeAfterDiscount();
+				amountDelivered = precisionEvaluate(amountDelivered + getOrderFulfillments()[f].getChargeAfterDiscount());
 				
 				// Loop over the fulfillmentItems and add each of the amounts to the total amount delivered
 				for(var i=1; i<=arrayLen(getOrderFulfillments()[f].getOrderFulfillmentItems()); i++) {
 					var item = getOrderFulfillments()[f].getOrderFulfillmentItems()[i];
 					
 					if(item.getQuantityUndelivered() == 0) {
-						amountDelivered += (item.getItemTotal());
+						amountDelivered = precisionEvaluate(amountDelivered + item.getItemTotal());
 					} else if (item.getQuantityDelivered() > 0) {
-						amountDelivered += (item.getItemTotal() * (item.getQuantityDelivered() / item.getQuantity()));
+						amountDelivered = precisionEvaluate(amountDelivered + (item.getItemTotal() * (item.getQuantityDelivered() / item.getQuantity())) );
 					}
 				}
 			}
 		}
 		
-		return amountDelivered - getPaymentAmountReceivedTotal();
+		return precisionEvaluate(amountDelivered - getPaymentAmountReceivedTotal());
 	}
 	
 	public numeric function getQuantityDelivered() {
@@ -351,12 +348,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		var subtotal = 0;
 		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
 			if( getOrderItems()[i].getTypeCode() == "oitSale" ) {
-				subtotal += getOrderItems()[i].getExtendedPrice();	
+				subtotal = precisionEvaluate(subtotal + getOrderItems()[i].getExtendedPrice());	
 			} else if ( getOrderItems()[i].getTypeCode() == "oitReturn" ) {
-				subtotal -= getOrderItems()[i].getExtendedPrice();
+				subtotal = precisionEvaluate(subtotal - getOrderItems()[i].getExtendedPrice());
 			} else {
-				writeDump(getOrderItems()[i].getTypeCode());
-				abort;
 				throw("there was an issue calculating the subtotal because of a orderItemType associated with one of the items");
 			}
 		}
@@ -364,16 +359,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getSubtotalAfterItemDiscounts() {
-		return getSubtotal() - getItemDiscountAmountTotal();
+		return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal());
 	}
 	
 	public numeric function getTaxTotal() {
 		var taxTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
 			if( getOrderItems()[i].getTypeCode() == "oitSale" ) {
-				taxTotal += getOrderItems()[i].getTaxAmount();	
+				taxTotal = precisionEvaluate(taxTotal + getOrderItems()[i].getTaxAmount());	
 			} else if ( getOrderItems()[i].getTypeCode() == "oitReturn" ) {
-				taxTotal -= getOrderItems()[i].getTaxAmount();
+				taxTotal = precisionEvaluate(taxTotal - getOrderItems()[i].getTaxAmount());
 			} else {
 				throw("there was an issue calculating the subtotal because of a orderItemType associated with one of the items");
 			}
@@ -382,7 +377,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getTotal() {
-		return getSubtotal() + getTaxTotal() + getFulfillmentTotal() - getFulfillmentRefundTotal() - getDiscountTotal();
+		return precisionEvaluate(getSubtotal() + getTaxTotal() + getFulfillmentTotal() - getFulfillmentRefundTotal() - getDiscountTotal());
 	}
 	
 	public numeric function getTotalItems() {
@@ -391,15 +386,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	public numeric function getTotalQuantity() {
 		if(!structKeyExists(variables,"totalQuantity")) {
-			var orderItems = getOrderItems();
 			variables.totalQuantity = 0;
-			for(var i=1; i<=arrayLen(orderItems); i++) {
-				variables.totalQuantity += orderItems[i].getQuantity(); 
-			}			
+			for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+				variables.totalQuantity += getOrderItems()[i].getQuantity(); 
+			}
 		}
 		return variables.totalQuantity;
 	}
-	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	

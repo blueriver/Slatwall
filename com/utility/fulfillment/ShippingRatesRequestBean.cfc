@@ -146,7 +146,7 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		var totalWeight = 0;
 		for(var i=1; i<=arrayLen(getShippingItemRequestBeans()); i++) {
 			if(isNumeric(getShippingItemRequestBeans()[i].getWeight())) {
-				totalWeight +=	(getShippingItemRequestBeans()[i].getWeight() * getShippingItemRequestBeans()[i].getQuantity());
+				totalWeight = precisionEvaluate(totalWeight + (getShippingItemRequestBeans()[i].getWeight() * getShippingItemRequestBeans()[i].getQuantity()));
 			}
 		}
 		return totalWeight;
@@ -156,7 +156,7 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		var totalValue = 0;
 		for(var i=1; i<=arrayLen(getShippingItemRequestBeans()); i++) {
 			if(isNumeric(getShippingItemRequestBeans()[i].getValue())) {
-				totalValue +=	(getShippingItemRequestBeans()[i].getValue() * getShippingItemRequestBeans()[i].getValue());
+				totalValue = precisionEvaluate(totalValue + (getShippingItemRequestBeans()[i].getValue() * getShippingItemRequestBeans()[i].getValue()));
 			}
 		}
 		return totalValue;
