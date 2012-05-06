@@ -159,6 +159,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		setExpirationMonth( accountPaymentMethod.getExpirationMonth() );
 		setExpirationYear( accountPaymentMethod.getExpirationYear() );
 		setBillingAddress( accountPaymentMethod.getBillingAddress().copyAddress( true ) );
+		getOrder().setAccountPaymentMethod( arguments.accountPaymentMethod );
 	}	
 	
 	// ============ START: Non-Persistent Property Methods =================

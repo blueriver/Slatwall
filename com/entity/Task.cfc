@@ -42,7 +42,7 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	property name="taskID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" formatType="yesno";
 	property name="taskName" ormtype="string";
-	property name="taskMethod" ormtype="string" formatType="select";
+	property name="taskMethod" ormtype="string" formFieldType="select";
 	property name="taskUrl" ormtype="string";
 	property name="runningFlag" ormtype="boolean" formatType="yesno";
 	property name="timeout" ormtype="int" ;
@@ -67,6 +67,7 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="taskMethodOptions" persistent="false";
 
 	public array function getTaskMethodOptions() {
 		var options = [

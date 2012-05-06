@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,28 +36,23 @@
 Notes:
 
 --->
-<cfparam name="rc.schedule" type="any">
+<cfparam name="rc.subscriptionUsage" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.schedule#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.schedule#" edit="#rc.edit#" />
+	<cf_SlatwallDetailForm object="#rc.subscriptionUsage#" edit="#rc.edit#" saveActionQueryString="returnAction=admin:account.detailaccount&accountID=#rc.subscriptionUsage.getAccount().getAccountID()###tabsubscriptions">
+		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionUsage#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="scheduleName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="recuringType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfWeekToRun" edit="#rc.edit#" displayVisible="recuringType:weekly">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfMonthToRun" edit="#rc.edit#" displayVisible="recuringType:monthly">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyInterval" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyStartTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyEndTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="autoRenewFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="renewalPrice" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="nextBillDate" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="accountPaymentMethod" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.schedule#">
-			
-		</cf_SlatwallTabGroup>
-		
+
 	</cf_SlatwallDetailForm>
 </cfoutput>
+
+

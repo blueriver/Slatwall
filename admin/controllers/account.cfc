@@ -39,6 +39,7 @@ Notes:
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
 	property name="AccountService";
+	property name="SubscriptionService";
 	
 	this.publicMethods='';
 	this.secureMethods='listPermissionGroup,editPermissionGroup,detailPermissionGroup,deletePermissionGroup,savePermissionGroup,listAccount,detailAccount,editAccount,deleteAccount,saveAccount';
@@ -65,5 +66,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		super.genericDetailMethod('PermissionGroup',rc);
 	}
 	
-	
+	public void function renewSubscription(required struct rc){
+		var subscriptionUsage = getSubscriptionService().getSubscriptionUsage(rc.subscriptionUsageID);
+		var renewalOK = getSubscriptionService().renewSubscription(subscriptionUsage);
+		if(renewalOK) {
+			rc.messageKeys = "admin.account.subscriptionUsage.renewal_success";
+		} else {
+			rc.messageKeys = "admin.account.subscriptionUsage.renewal_error";
+		}
+		redirectToReturnAction(additionalQueryString="messageKeys=#rc.messageKeys#");
+	}
 }
