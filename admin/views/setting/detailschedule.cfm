@@ -47,8 +47,8 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="scheduleName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="recuringType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfWeekToRun" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfMonthToRun" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfWeekToRun" edit="#rc.edit#" displayVisible="recuringType:weekly">
+				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfMonthToRun" edit="#rc.edit#" displayVisible="recuringType:monthly">
 				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyInterval" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyStartTime" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyEndTime" edit="#rc.edit#">

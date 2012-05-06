@@ -42,7 +42,7 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	property name="scheduleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="scheduleName" ormtype="string";
 	
-	property name="recuringType" ormtype="string";										// Daily, Weekly, Monthly										Daily	
+	property name="recuringType" ormtype="string" formFieldType="select";				// Daily, Weekly, Monthly										Daily	
 	property name="daysOfWeekToRun" ormtype="string" formfieldType="checkboxgroup";		// 1, 2, 3, 4, 5, 6, 7											NULL	(required if recuringType is weekly)
 	property name="daysOfMonthToRun" ormtype="string" formfieldType="checkboxgroup";	// 1 - 31			[1,10,20]									NULL	(required if recuringType is monthly)
 	
@@ -68,7 +68,9 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	
+	property name="recuringTypeOptions" persistent="false";
+	property name="daysOfWeekToRunOptions" persistent="false";
+	property name="daysOfMonthToRunOptions" persistent="false";
 	
 	public any function init() {
 		
