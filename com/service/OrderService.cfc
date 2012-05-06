@@ -403,7 +403,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								getUtilityEmailService().sendOrderConfirmationEmail(order=order);
 							}
 							
-							// save account payment if needed
+							// save account payment if needed, should probably be with orderpayment not order...
 							if(isNull(order.getAccountPaymentMethod())) {
 								// if there is any subscription item, save the account payment for use in renewal
 								for(var orderItem in order.getOrderItems()) {

@@ -110,6 +110,23 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 		}
 	}
 	
+	public void function copyFromSubscriptionUsageBenefit(required any subscriptionUsageBenefit) {
+		setSubscriptionBenefit(arguments.subscriptionUsageBenefit.getSubscriptionBenefit());
+		setMaxUseCount(arguments.subscriptionUsageBenefit.getMaxUseCount());
+		for(var priceGroup in arguments.subscriptionUsageBenefit.getPriceGroups()) {
+			addPriceGroup(priceGroup);
+		}
+		for(var promotion in arguments.subscriptionUsageBenefit.getPromotions()) {
+			addPromotion(promotion);
+		}
+		for(var category in arguments.subscriptionUsageBenefit.getCategories()) {
+			addCategory(category);
+		}
+		for(var content in arguments.subscriptionUsageBenefit.getContents()) {
+			addContent(content);
+		}
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

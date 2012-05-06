@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,45 +35,24 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
-	
-	property name="AccountService";
-	property name="SubscriptionService";
-	
-	this.publicMethods='';
-	this.secureMethods='listPermissionGroup,editPermissionGroup,detailPermissionGroup,deletePermissionGroup,savePermissionGroup,listAccount,detailAccount,editAccount,deleteAccount,saveAccount';
-	
-	public void function default(required struct rc) {
-		getFW().redirect(action="admin:account.listaccount");
-	}
-	
-	public void function editPermissionGroup(required struct rc){
-		rc.permissions = getAccountService().getPermissions();
+--->
+<cfparam name="rc.subscriptionUsage" type="any">
+<cfparam name="rc.edit" type="boolean">
+
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.subscriptionUsage#" edit="#rc.edit#" saveActionQueryString="returnAction=admin:account.detailaccount&accountID=#rc.subscriptionUsage.getAccount().getAccountID()###tabsubscriptions">
+		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionUsage#" />
 		
-		super.genericEditMethod('PermissionGroup',rc);
-	}
-	
-	public void function createPermissionGroup(required struct rc){
-		rc.permissions = getAccountService().getPermissions();
-		
-		super.genericCreateMethod('PermissionGroup',rc);
-	}
-	
-	public void function detailPermissionGroup(required struct rc){
-		rc.permissions = getAccountService().getPermissions();
-		
-		super.genericDetailMethod('PermissionGroup',rc);
-	}
-	
-	public void function renewSubscription(required struct rc){
-		var subscriptionUsage = getSubscriptionService().getSubscriptionUsage(rc.subscriptionUsageID);
-		var renewalOK = getSubscriptionService().renewSubscription(subscriptionUsage);
-		if(renewalOK) {
-			rc.messageKeys = "admin.account.subscriptionUsage.renewal_success";
-		} else {
-			rc.messageKeys = "admin.account.subscriptionUsage.renewal_error";
-		}
-		redirectToReturnAction(additionalQueryString="messageKeys=#rc.messageKeys#");
-	}
-}
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="autoRenewFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="renewalPrice" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="nextBillDate" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="accountPaymentMethod" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+
+	</cf_SlatwallDetailForm>
+</cfoutput>
+
+
