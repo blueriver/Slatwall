@@ -255,7 +255,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	// renew a subscription usage
-	public boolean function renewSubscription(required any subscriptionUsage, struct data) {
+	public boolean function renewSubscription(required any subscriptionUsage, struct data={}) {
 		// first check if it's time for renewal
 		if(arguments.subscriptionUsage.getNextBillDate() > now() || arguments.subscriptionUsage.getCurrentStatusCode() == 'sstCancelled') {
 			return true;
