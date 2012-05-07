@@ -36,18 +36,39 @@
 Notes:
 
 */
-component displayname="Promotion Reward" entityname="SlatwallPromotionReward" table="SlatwallPromotionReward" persistent="true" extends="BaseEntity" discriminatorColumn="rewardType" {
+component displayname="Promotion Reward" entityname="SlatwallPromotionReward" table="SlatwallPromotionReward" persistent="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormType="big_decimal" formatType="custom";
 	property name="amountType" ormType="string" formFieldType="select";
+	property name="rewardType" ormType="string" formFieldType="select";
 	
+	property name="itemRewardQuantity" ormType="integer" hint="the quantity of items this reward applies to per instance of qualifier satisfied";
+	property name="maximumOrderRewardQuantity" ormtype="integer" hint="the maximum quantity of items this reward can apply to per order";
+	property name="rewardCanApplyToQualifierFlag" ormtype="boolean" default="0" dbdefault="0" hint="when true, qualifier is not excluded from reward (if qualifier and reward can be the same item)";
+
+
 	// Related Object Properties (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
+	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID";
+
 	
-	// Special Related Discriminator Property
-	property name="rewardType" length="255" insert="false" update="false";
+	// Related Object Properties (many-to-many - owner)
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionRewardOption" fkcolumn="promotionRewardID" inversejoincolumn="optionID";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID";
+	
+	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID";
+	
+	
+	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID";
+	property name="excludedOptions" singularname="excludedOption" cfc="Option" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedOption" fkcolumn="promotionRewardID" inversejoincolumn="optionID";
+	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID";
+	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -61,8 +82,46 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	// Non-persistent entities
 	property name="amountTypeOptions" persistent="false";
 	property name="rewards" type="string" persistent="false";
-		
 
+
+	public any function init() {
+		if(isNull(variables.brands)) {
+			variables.brands = [];
+		}
+		if(isNull(variables.options)) {
+			variables.options = [];
+		}
+		if(isNull(variables.skus)) {
+			variables.skus = [];
+		}
+		if(isNull(variables.products)) {
+			variables.products = [];
+		}	   
+		if(isNull(variables.productTypes)) {
+			variables.productTypes = [];
+		}
+		if(isNull(variables.shippingMethods)) {
+			variables.shippingMethods = [];
+		}
+		
+		if(isNull(variables.excludedBrands)) {
+			variables.excludedBrands = [];
+		}
+		if(isNull(variables.excludedOptions)) {
+			variables.excludedOptions = [];
+		}
+		if(isNull(variables.excludedProducts)) {
+			variables.excludedProducts = [];
+		}	   
+		if(isNull(variables.excludedProductTypes)) {
+			variables.excludedProductTypes = [];
+		}
+		if(isNull(variables.excludedSkus)) {
+			variables.excludedSkus = [];
+		}
+		return super.init();
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 
 	public array function getRewardTypeOptions() {
@@ -146,7 +205,186 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
        }
        structDelete(variables,"promotionPeriod");
     }
-    
+
+	// Brands (many-to-many - owner)
+	public void function addBrand(required any brand) {
+		if(arguments.brand.isNew() or !hasBrand(arguments.brand)) {
+			arrayAppend(variables.brands, arguments.brand);
+		}
+		if(isNew() or !arguments.brand.hasPromotionReward( this )) {
+			arrayAppend(arguments.brand.getPromotionRewards(), this);
+		}
+	}
+	public void function removeBrand(required any brand) {
+		var thisIndex = arrayFind(variables.brands, arguments.brand);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.brands, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.brand.getPromotionRewards(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.brand.getPromotionRewards(), thatIndex);
+		}
+	}
+
+	// Options (many-to-many - owner)
+	public void function addOption(required any option) {
+		if(arguments.option.isNew() or !hasOption(arguments.option)) {
+			arrayAppend(variables.options, arguments.option);
+		}
+		if(isNew() or !arguments.option.hasPromotionReward( this )) {
+			arrayAppend(arguments.option.getPromotionRewards(), this);
+		}
+	}
+	public void function removeOption(required any option) {
+		var thisIndex = arrayFind(variables.options, arguments.option);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.options, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.option.getPromotionRewards(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.option.getPromotionRewards(), thatIndex);
+		}
+	}
+	
+	// Skus (many-to-many - owner)    
+	public void function addSku(required any sku) {    
+		if(arguments.sku.isNew() or !hasSku(arguments.sku)) {    
+			arrayAppend(variables.skus, arguments.sku);    
+		}    
+		if(isNew() or !arguments.sku.hasPromotionReward( this )) {    
+			arrayAppend(arguments.sku.getPromotionRewards(), this);    
+		}    
+	}    
+	public void function removeSku(required any sku) {    
+		var thisIndex = arrayFind(variables.skus, arguments.sku);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.skus, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.sku.getPromotionRewards(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.sku.getPromotionRewards(), thatIndex);    
+		}    
+	}
+
+	// Products (many-to-many - owner)
+	public void function addProduct(required any product) {
+		if(arguments.product.isNew() or !hasProduct(arguments.product)) {
+			arrayAppend(variables.products, arguments.product);
+		}
+		if(isNew() or !arguments.product.hasPromotionReward( this )) {
+			arrayAppend(arguments.product.getPromotionRewards(), this);
+		}
+	}
+	public void function removeProduct(required any product) {
+		var thisIndex = arrayFind(variables.products, arguments.product);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.products, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.product.getPromotionRewards(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.product.getPromotionRewards(), thatIndex);
+		}
+	}
+	
+	// Product Types (many-to-many - owner)
+	public void function addProductType(required any productType) {
+		if(arguments.productType.isNew() or !hasProductType(arguments.productType)) {
+			arrayAppend(variables.productTypes, arguments.productType);
+		}
+		if(isNew() or !arguments.productType.hasPromotionReward( this )) {
+			arrayAppend(arguments.productType.getPromotionRewards(), this);
+		}
+	}
+	public void function removeProductType(required any productType) {
+		var thisIndex = arrayFind(variables.productTypes, arguments.productType);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.productTypes, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.productType.getPromotionRewards(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.productType.getPromotionRewards(), thatIndex);
+		}
+	}
+	
+	// Shipping Methods (many-to-many - owner)    
+	public void function addShippingMethod(required any shippingMethod) {    
+		if(arguments.shippingMethod.isNew() or !hasShippingMethod(arguments.shippingMethod)) {    
+			arrayAppend(variables.shippingMethods, arguments.shippingMethod);    
+		}    
+		if(isNew() or !arguments.shippingMethod.hasPromotionReward( this )) {    
+			arrayAppend(arguments.shippingMethod.getPromotionRewards(), this);    
+		}    
+	}    
+	public void function removeShippingMethod(required any shippingMethod) {    
+		var thisIndex = arrayFind(variables.shippingMethods, arguments.shippingMethod);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.shippingMethods, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.shippingMethod.getPromotionRewards(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.shippingMethod.getPromotionRewards(), thatIndex);    
+		}    
+	}
+	
+	// Excluded Product Types (many-to-many - owner)
+	public void function addExcludedProductType(required any excludedProductType) {
+		if(arguments.excludedProductType.isNew() or !hasExcludedProductType(arguments.excludedProductType)) {
+			arrayAppend(variables.excludedProductTypes, arguments.excludedProductType);
+		}
+		if(isNew() or !arguments.excludedProductType.hasPromotionReward( this )) {
+			arrayAppend(arguments.excludedProductType.getPromotionRewards(), this);
+		}
+	}
+	public void function removeExcludedProductType(required any excludedProductType) {
+		var thisIndex = arrayFind(variables.excludedProductTypes, arguments.excludedProductType);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.excludedProductTypes, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.excludedProductType.getPromotionRewards(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.excludedProductType.getPromotionRewards(), thatIndex);
+		}
+	}
+	
+	// Excluded Products (many-to-many - owner)
+	public void function addExcludedProduct(required any excludedProduct) {
+		if(arguments.excludedProduct.isNew() or !hasExcludedProduct(arguments.excludedProduct)) {
+			arrayAppend(variables.excludedProducts, arguments.excludedProduct);
+		}
+		if(isNew() or !arguments.excludedProduct.hasPromotionReward( this )) {
+			arrayAppend(arguments.excludedProduct.getPromotionRewards(), this);
+		}
+	}
+	public void function removeExcludedProduct(required any excludedProduct) {
+		var thisIndex = arrayFind(variables.excludedProducts, arguments.excludedProduct);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.excludedProducts, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.excludedProduct.getPromotionRewards(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.excludedProduct.getPromotionRewards(), thatIndex);
+		}
+	}
+	
+	// Excluded Skus (many-to-many - owner)
+	public void function addExcludedSku(required any excludedSku) {
+		if(arguments.excludedSku.isNew() or !hasExcludedSku(arguments.excludedSku)) {
+			arrayAppend(variables.excludedSkus, arguments.excludedSku);
+		}
+		if(isNew() or !arguments.excludedSku.hasPromotionReward( this )) {
+			arrayAppend(arguments.excludedSku.getPromotionRewards(), this);
+		}
+	}
+	public void function removeExcludedSku(required any excludedSku) {
+		var thisIndex = arrayFind(variables.excludedSkus, arguments.excludedSku);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.excludedSkus, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.excludedSku.getPromotionRewards(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.excludedSku.getPromotionRewards(), thatIndex);
+		}
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
@@ -154,18 +392,28 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	
 	public string function getAmountFormatted() {
 		if(getAmountType() == "percentageOff") {
-			return getAmount() & "%";
-		} else {
-			return formatValue(getAmount(),"currency");
+			return formatValue(getAmount(), "percentage");
 		}
+		
+		return formatValue(getAmount(), "currency");
 	}
 
 	public string function getSimpleRepresentationPropertyName() {
-		return "rewards";
+		return "rewardType";
 	}
 
 	public boolean function isDeletable() {
 		return !getPromotionPeriod().isExpired() && getPromotionPeriod().getPromotion().isDeletable();
+	}
+	
+	public void function preInsert(){
+		super.preInsert();
+		getService("productCacheService").updateFromPromotionRewardProduct( this );
+	}
+	
+	public void function preUpdate(struct oldData){
+		super.preUpdate(argumentcollection=arguments);
+		getService("productCacheService").updateFromPromotionRewardProduct( this );
 	}
 		
 	// ==================  END:  Overridden Methods ========================

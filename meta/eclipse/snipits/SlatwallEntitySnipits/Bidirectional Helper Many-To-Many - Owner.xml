@@ -4,10 +4,10 @@
 <help></help>
 <starttext><![CDATA[// $${Comment Name} (many-to-many - owner)
 	public void function add$${SingularPropertyMethod}(required any $${singularPropertyName}) {
-		if(isNew() or !has$${SingularPropertyMethod}(arguments.$${singularPropertyName})) {
+		if(arguments.$${singularPropertyName}.isNew() or !has$${SingularPropertyMethod}(arguments.$${singularPropertyName})) {
 			arrayAppend(variables.$${propertyName}, arguments.$${singularPropertyName});
 		}
-		if(arguments.$${singularPropertyName}.isNew() or !arguments.$${singularPropertyName}.has$${ForiegnSingularMethod}( this )) {
+		if(isNew() or !arguments.$${singularPropertyName}.has$${ForiegnSingularMethod}( this )) {
 			arrayAppend(arguments.$${singularPropertyName}.get$${ForiegnMethod}(), this);
 		}
 	}
