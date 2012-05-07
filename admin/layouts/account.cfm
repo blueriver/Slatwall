@@ -45,6 +45,7 @@ Notes:
 			<ul class="nav nav-list">
 				<li class="nav-header">#request.slatwallScope.rbKey('admin.account')#</li>
 				<cf_SlatwallActionCaller action="admin:account.listaccount" type="list">
+				<cf_SlatwallActionCaller action="admin:account.listsubscriptionusage" type="list">
 				<cf_SlatwallActionCaller action="admin:account.listpermissiongroup" type="list">
 			</ul>
 		</div>

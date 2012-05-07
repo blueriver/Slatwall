@@ -40,7 +40,7 @@ Notes:
 
 <cf_SlatwallListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#"
 						   recordEditAction="admin:account.editsubscriptionUsage"
-						   recordEditQueryString="accountID=#rc.account.getAccountID()#"
+						   recordEditQueryString="returnAction=admin:account.detailaccount&accountID=#rc.account.getAccountID()###tabsubscriptions"
 						   recordEditModal=true
 						   recordprocessaction="admin:account.renewSubscription"
 						   recordProcessQueryString="returnaction=admin:account.detailaccount&accountID=#rc.account.getAccountID()###tabsubscriptions">

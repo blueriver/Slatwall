@@ -118,16 +118,25 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		}
 	}
 	
-	public any function getCurrentStatusCode() {
-		return getCurrentStatus().getSubscriptionStatusType().getSystemCode();
+	public string function getCurrentStatusCode() {
+		if(!isNull(getCurrentStatus())) {
+			return getCurrentStatus().getSubscriptionStatusType().getSystemCode();
+		}
+		return "";
 	}
 	
-	public any function getCurrentStatusType() {
-		return getCurrentStatus().getSubscriptionStatusType().getType();
+	public string function getCurrentStatusType() {
+		if(!isNull(getCurrentStatus())) {
+			return getCurrentStatus().getSubscriptionStatusType().getType();
+		}
+		return "";
 	}
 	
 	public any function getSubscriptionOrderItemName() {
-		return getSubscriptionOrderItems()[1].getOrderItem().getSku().getProduct().getProductName();
+		if(arrayLen(getSubscriptionOrderItems())) {
+			return getSubscriptionOrderItems()[1].getOrderItem().getSku().getProduct().getProductName();
+		}
+		return "";
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -187,6 +196,10 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentation() {
+		return getSubscriptionOrderItemName();
+	}
+
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
