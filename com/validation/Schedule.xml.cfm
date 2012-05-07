@@ -7,13 +7,7 @@
 		<property name="recuringType">
 			<rule type="required" contexts="save" />
 		</property>
-		<property name="frequencyInterval">
-			<rule type="required" contexts="save" />
-		</property>
 		<property name="frequencyStartTime">
-			<rule type="required" contexts="save" />
-		</property>
-		<property name="frequencyEndTime">
 			<rule type="required" contexts="save" />
 		</property>
 	</objectProperties>

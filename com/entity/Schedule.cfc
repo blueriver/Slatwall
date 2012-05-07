@@ -42,7 +42,7 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	property name="scheduleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="scheduleName" ormtype="string";
 	
-	property name="recuringType" ormtype="string" formFieldType="select";				// Daily, Weekly, Monthly										Daily	
+	property name="recuringType" ormtype="string" formFieldtype="select";										// Daily, Weekly, Monthly										Daily	
 	property name="daysOfWeekToRun" ormtype="string" formfieldType="checkboxgroup";		// 1, 2, 3, 4, 5, 6, 7											NULL	(required if recuringType is weekly)
 	property name="daysOfMonthToRun" ormtype="string" formfieldType="checkboxgroup";	// 1 - 31			[1,10,20]									NULL	(required if recuringType is monthly)
 	
@@ -68,9 +68,7 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="recuringTypeOptions" persistent="false";
-	property name="daysOfWeekToRunOptions" persistent="false";
-	property name="daysOfMonthToRunOptions" persistent="false";
+	
 	
 	public any function init() {
 		
@@ -114,9 +112,19 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 				case 'Daily':
 					//task is daily
 					
-					//is the start time in the future?
 					if(startDateTime > now()){
-						nextRun= createDateTime(year(startDate),month(startDate),day(startDate),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+						//is the start time in the future?
+						nextRun= createDateTime(year(startDateTime),month(startDateTime),day(startDateTime),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+					}else if(!len(getfrequencyEndTime())){
+						var updatedStart = createDateTime(year(now()),month(now()),day(now()),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+						if(updatedStart > now()){
+							//hasn't run today
+							nextRun=updatedStart;
+						}else{
+							//has already run for today
+							tomorrow = dateadd("d",1,now());
+							nextRun= createDateTime(year(tomorrow),month(tomorrow),day(tomorrow),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+						}
 					}else if(isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
 					//is the next time today?
 						//currently in the run period. work out next interval
@@ -156,7 +164,35 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 						nextDay = dateadd("d",nextRunDay,startDateTime);
 						nextRun= createDateTime(year(nextDay),month(nextDay),day(nextDay),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
 						
-					} else if(listfind(getdaysOfWeekToRun(),dayofweek(now())) && isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){
+					} else if(listfind(getdaysOfWeekToRun(),dayofweek(now())) && !len(getFrequencyEndTime())){
+						//only runs once 
+						
+						var updatedStart = createDateTime(year(now()),month(now()),day(now()),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+						if(updatedStart > now()){
+							nextRun=getNextTimeSlot(getFrequencyStartTime(),getFrequencyInterval(),now());
+						}else{
+							var nextDay='';
+						
+						for(i=1; i <= listLen(getDaysOfWeekToRun()); i++){
+							if(listgetAt(getDaysOfWeekToRun(),i) > todayNumber){
+								nextDay=listGetAt(getDaysOfWeekToRun(),i);
+							}
+						}
+						
+						if(nextDay ==''){
+							nextDay=listgetAt(getDaysOfWeekToRun(),1);
+						}
+						
+						if(nextDay < todayNumber){
+							nextRunDay = (7-dayofweek(now())) + nextDay;
+						}else{
+							nextRunDay = nextDay - todayNumber;
+						}
+						
+						nextDay = dateadd("d",nextRunDay,now());
+						nextRun= createDateTime(year(nextDay),month(nextDay),day(nextDay),hour(getFrequencyStartTime()),minute(getFrequencyStartTime()),second(getFrequencyStartTime()));
+						}	
+					}else if(listfind(getdaysOfWeekToRun(),dayofweek(now())) && isBetweenHours(getFrequencyStartTime(),getFrequencyEndTime(),now())){	
 					//is the next time today?
 					
 						//it runs today. are we in the window?
