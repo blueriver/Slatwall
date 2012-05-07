@@ -64,7 +64,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var salePriceDetails = orderItem.getSku().getSalePriceDetails();
 				
 				if(structKeyExists(salePriceDetails, "salePrice") && salePriceDetails.salePrice < orderItem.getSku().getPrice()) {
-					var discountAmount = (orderItem.getSku().getPrice() * orderItem.getQuantity()) - (salePriceDetails.salePrice * orderItem.getQuantity());
+					var discountAmount = precisionEvaluate((orderItem.getSku().getPrice() * orderItem.getQuantity()) - (salePriceDetails.salePrice * orderItem.getQuantity()));
 					
 					var newAppliedPromotion = this.newOrderItemAppliedPromotion();
 					newAppliedPromotion.setPromotion( this.getPromotion(salePriceDetails.promotionID) );
@@ -115,7 +115,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 										var originalDiscountAmount = getDiscountAmount(reward, orderItem.getExtendedSkuPrice());
 										
 										// Take the original discount they were going to get without a priceGroup and subtract the difference of the discount that they are already receiving
-										discountAmount = originalDiscountAmount - (orderItem.getExtendedSkuPrice() - orderItem.getExtendedPrice());
+										discountAmount = precisionEvaluate(originalDiscountAmount - (orderItem.getExtendedSkuPrice() - orderItem.getExtendedPrice()));
 									}
 									
 									
@@ -175,19 +175,19 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		switch(reward.getAmountType()) {
 			case "percentageOff" :
-				discountAmountPreRounding = arguments.originalAmount * (reward.getPercentageOff()/100);
+				discountAmountPreRounding = precisionEvaluate(arguments.originalAmount * (reward.getPercentageOff()/100));
 				break;
 			case "amountOff" :
 				discountAmountPreRounding = reward.getAmount();
 				break;
 			case "amount" :
-				discountAmountPreRounding = arguments.originalAmount - reward.getAmount();
+				discountAmountPreRounding = precisionEvaluate(arguments.originalAmount - reward.getAmount());
 				break;
 		}
 		
 		if(!isNull(reward.getRoundingRule())) {
-			roundedFinalAmount = getRoundingRuleService().roundValueByRoundingRule(value=arguments.originalAmount - discountAmountPreRounding, roundingRule=reward.getRoundingRule());
-			discountAmount = arguments.originalAmount - roundedFinalAmount;
+			roundedFinalAmount = getRoundingRuleService().roundValueByRoundingRule(value=precisionEvaluate(arguments.originalAmount - discountAmountPreRounding), roundingRule=reward.getRoundingRule());
+			discountAmount = precisionEvaluate(arguments.originalAmount - roundedFinalAmount);
 		} else {
 			discountAmount = discountAmountPreRounding;
 		}
