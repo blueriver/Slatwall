@@ -107,7 +107,7 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 		httpRequest.setPort("443");
 		httpRequest.setTimeout(45);
 		
-		if(variables.testingFlag) {
+		if(setting('testingFlag')) {
 			httpRequest.setUrl(variables.testRateURL);
 		} else {
 			httpRequest.setUrl(variables.liveRateURL);

@@ -169,18 +169,12 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}		
 		return customizations;
 	}
-	
-	public any function getActionOptions() {
-		var smartList = getService("orderService").getOrderItemStatusActionSmartList();
-		smartList.addFilter("orderItemStatusType_typeID", getOrderItemStatusType().getTypeID());
-		return smartList.getRecords();
-	}
  
     // This method returns a single percentage rate for all taxes. So an item with tax 5% and 8% would return 13.
     public numeric function getCombinedTaxRate() {
     	var taxRate = 0;
     	for(var i=1; i <= ArrayLen(getAppliedTaxes()); i++) {
-    		taxRate += getAppliedTaxes()[i].getTaxRate();
+    		taxRate = precisionEvaluate(taxRate + getAppliedTaxes()[i].getTaxRate());
     	}
     	
     	return taxRate;
@@ -197,29 +191,29 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		var discountAmount = 0;
 		
 		for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
-			discountAmount += getAppliedPromotions()[i].getDiscountAmount();
+			discountAmount = precisionEvaluate(discountAmount + getAppliedPromotions()[i].getDiscountAmount());
 		}
 		
 		return discountAmount;
 	}
 	
 	public numeric function getExtendedPrice() {
-		return getPrice() * getQuantity();
+		return precisionEvaluate(getPrice() * getQuantity());
 	}
 	
 	public numeric function getExtendedSkuPrice() {
-		return getSkuPrice() * getQuantity();
+		return precisionEvaluate(getSkuPrice() * getQuantity());
 	}
 	
 	public numeric function getExtendedPriceAfterDiscount() {
-		return getExtendedPrice() - getDiscountAmount();
+		return precisionEvaluate(getExtendedPrice() - getDiscountAmount());
 	}
 	
 	public numeric function getTaxAmount() {
 		var taxAmount = 0;
 		
 		for(var i=1; i<=arrayLen(getAppliedTaxes()); i++) {
-			taxAmount += getAppliedTaxes()[i].getTaxAmount();
+			taxAmount = precisionEvaluate(taxAmount + getAppliedTaxes()[i].getTaxAmount());
 		}
 		
 		return taxAmount;
@@ -229,7 +223,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		var quantityDelivered = 0;
 		
 		for( var i=1; i<=arrayLen(getOrderDeliveryItems()); i++){
-			quantityDelivered = getOrderDeliveryItems()[i].getQuantity();
+			quantityDelivered += getOrderDeliveryItems()[i].getQuantity();
 		}
 		
 		return quantityDelivered;
@@ -240,7 +234,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	}
 	
 	public numeric function getItemTotal() {
-		return getTaxAmount() + getExtendedPriceAfterDiscount();
+		return precisionEvaluate(getTaxAmount() + getExtendedPriceAfterDiscount());
 	}
 	
 	

@@ -54,7 +54,7 @@ component accessors="true" output="false" displayname="USA epay" extends="Slatwa
 		var settings = {
 			key = {fieldType="text", displayName="Source Key"},
 			pin = {fieldType="password", displayName="Pin Number", encryptValue=true},
-			testingFlag = {fieldType="yesno", displayName="Test Mode", settingDefault="1"}
+			testingFlag = {fieldType="yesno", displayName="Test Mode", defaultValue="1"}
 		};
 		
 		return settings;

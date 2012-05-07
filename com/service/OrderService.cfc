@@ -983,7 +983,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 									orderDeliveryItem.setQuantity( arguments.data.records[i].quantity );
 									
 									// Add the value of this item to the total charge
-									totalItemValueDelivered += (orderItem.getExtendedPriceAfterDiscount() + orderItem.getTaxAmount()) * ( arguments.data.records[i].quantity / orderItem.getQuantity() );
+									totalItemValueDelivered = precisionEvaluate(totalItemValueDelivered + (orderItem.getExtendedPriceAfterDiscount() + orderItem.getTaxAmount()) * ( arguments.data.records[i].quantity / orderItem.getQuantity() ) );
 									
 									// setup subscription data if this was subscriptionOrder item
 									getSubscriptionService().setupSubscriptionOrderItem( orderItem );
@@ -1040,7 +1040,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 										}
 										orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="chargePreAuthorization"});
 										if(!orderPayment.hasErrors()) {
-											totalAmountCharged += thisAmountToCharge;
+											totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
 										} else {
 											structDelete(orderPayment.getErrors(), "processing");
 										}
@@ -1054,7 +1054,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 										}
 										orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="authorizeAndCharge"});
 										if(!orderPayment.hasErrors()) {
-											totalAmountCharged += thisAmountToCharge;
+											totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
 										} else {
 											structDelete(orderPayment.getErrors(), "processing");
 										}
@@ -1065,10 +1065,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 										break;
 									}
 								}
-								
 							}
 						}
-						
 					}
 					
 				} else {
@@ -1138,7 +1136,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, capturableAmount, arguments.data.providerTransactionID);
 							
 							if(paymentOK) {
-								totalCaptured += capturableAmount;
+								totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
 							}
 							
 							// If some payments failed but the total was finally captured, then we can can remove any processing errors

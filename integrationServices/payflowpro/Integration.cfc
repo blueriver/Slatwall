@@ -56,7 +56,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 			partnerID = {fieldType="text", displayName="Partner ID"},
 			username = {fieldType="text", displayName="User Name"},
 			password = {fieldType="password", displayName="Password", encryptValue=true},
-			liveModeFlag = {fieldType="yesno", displayName="Live Mode", settingDefault="0"}
+			liveModeFlag = {fieldType="yesno", displayName="Live Mode", defaultValue="0"}
 		};
 		
 		return settings;
