@@ -130,13 +130,12 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 	
 	public numeric function getDiscountTotal() {
-		return getDiscountAmount() + getItemDiscountAmountTotal();
+		return precisionEvaluate(getDiscountAmount() + getItemDiscountAmountTotal());
 	}
     
 	public numeric function getShippingCharge() {
 		return getFulfillmentCharge();
 	}
-	
 	
 	// Helper method to return either the shippingAddress or accountAddress to be used
     public any function getAddress(){
@@ -155,7 +154,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		if( !structKeyExists(variables, "discountAmount") ) {
 			variables.discountAmount = 0;
 			for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
-				variables.discountAmount += getAppliedPromotions()[i].getDiscountAmount();
+				variables.discountAmount = precisionEvaluate(variables.discountAmount + getAppliedPromotions()[i].getDiscountAmount());
 			}
 		}
 		return variables.discountAmount;
@@ -163,7 +162,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	public numeric function getChargeAfterDiscount() {
 		if( !structKeyExists(variables, "chargeAfterDiscount") ) {
-			variables.chargeAfterDiscount = getFulfillmentCharge() - getDiscountAmount();
+			variables.chargeAfterDiscount = precisionEvaluate(getFulfillmentCharge() - getDiscountAmount());
 		}
 		return variables.chargeAfterDiscount;
 	}
@@ -171,32 +170,30 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	public numeric function getSubtotal() {
   		if( !structKeyExists(variables,"subtotal") ) {
 	    	variables.subtotal = 0;
-	    	var items = getOrderFulfillmentItems();
-	    	for( var i=1; i<=arrayLen(items); i++ ) {
-	    		variables.subtotal += items[i].getExtendedPrice();
+	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
+	    		variables.subtotal = precisionEvaluate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());
 	    	}
   		}
     	return variables.subtotal;
     }
     
     public numeric function getSubtotalAfterDiscounts() {
-    	return getSubtotal() - getItemDiscountAmountTotal();
+    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal());
     }
     
     public numeric function getSubtotalAfterDiscountsWithTax() {
-    	return getSubtotal() - getItemDiscountAmountTotal() + getTaxAmount();
+    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal() + getTaxAmount());
     }
     
     public numeric function getFulfillmentTotal() {
-    	return getSubtotalAfterDiscountsWithTax() + getChargeAfterDiscount();
+    	return precisionEvaluate(getSubtotalAfterDiscountsWithTax() + getChargeAfterDiscount());
     }
     
     public numeric function getTaxAmount() {
     	if( !structkeyExists(variables, "taxAmount") ) {
     		variables.taxAmount = 0;
-	    	var items = getOrderFulfillmentItems();
-	    	for( var i=1; i<=arrayLen(items); i++ ) {
-	    		variables.taxAmount += items[i].getTaxAmount();
+	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
+	    		variables.taxAmount = precisionEvaluate(variables.taxAmount + getOrderFulfillmentItems()[i].getTaxAmount());
 	    	}
     	}
     	return variables.taxAmount;
@@ -206,7 +203,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
    		if(!structKeyExists(variables, "itemDiscountAmountTotal")) {
    			variables.itemDiscountAmountTotal = 0;
    			for(var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++) {
-				variables.itemDiscountAmountTotal += getOrderFulfillmentItems()[i].getDiscountAmount();
+				variables.itemDiscountAmountTotal = precisionEvaluate(variables.itemDiscountAmountTotal + getOrderFulfillmentItems()[i].getDiscountAmount());
 			}
    		}
 		return variables.itemDiscountAmountTotal;
@@ -263,10 +260,9 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	public numeric function getTotalShippingWeight() {
     	if( !structKeyExists(variables, "totalShippingWeight") ) {
 	    	variables.totalShippingWeight = 0;
-	    	var items = getOrderFulfillmentItems();
-	    	for( var i=1; i<=arrayLen(items); i++ ) {
-	    		var convertedWeight = getService("measurementUnitService").convertWeightToGlobalWeightUnit(items[i].getSku().setting('skuShippingWeight'), items[i].getSku().setting('skuShippingWeightUnitCode'));
-	    		variables.totalShippingWeight += (convertedWeight * items[i].getQuantity());
+	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
+	    		var convertedWeight = getService("measurementUnitService").convertWeightToGlobalWeightUnit(getOrderFulfillmentItems()[i].getSku().setting('skuShippingWeight'), getOrderFulfillmentItems()[i].getSku().setting('skuShippingWeightUnitCode'));
+	    		variables.totalShippingWeight = precisionEvaluate(variables.totalShippingWeight + (convertedWeight * items[i].getQuantity()) );
 	    	}			
   		}
     	return variables.totalShippingWeight;

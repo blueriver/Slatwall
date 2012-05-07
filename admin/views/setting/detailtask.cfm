@@ -47,7 +47,7 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskMethod" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskUrl" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskUrl" edit="#rc.edit#" displayVisible="taskMethod:url">
 				<cf_SlatwallPropertyDisplay object="#rc.task#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.task#" property="timeout" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>

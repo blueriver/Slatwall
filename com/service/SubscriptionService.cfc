@@ -96,21 +96,23 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
-	public void function setupSubscriptionOrderItem(required any orderItem) {
+	public void function setupSubscriptionOrderItem(required any orderItem, any subscriptionUsage) {
 		if(!isNull(arguments.orderItem.getSku().getSubscriptionTerm())) {
-			// find the existing subscription usage for this sku
-			var subscriptionUsage = getDAO().getSubscriptionUsageBySku(arguments.orderItem.getSku().getSkuID(),arguments.orderItem.getOrder().getAccount().getAccountID());
-			
-			if(isNull(subscriptionUsage)) {
+			if(!structKeyExists(arguments, "subscriptionUsage")) {
+				// find the existing subscription usage for this sku
+				arguments.subscriptionUsage = getDAO().getSubscriptionUsageBySku(arguments.orderItem.getSku().getSkuID(),arguments.orderItem.getOrder().getAccount().getAccountID());
+			}
+			// if no subscriptionUsage found or passed setup a new one else setup renewal
+			if(isNull(arguments.subscriptionUsage)) {
 				setupInitialSubscriptionOrderItem(arguments.orderItem);
 			} else {
-				setupRenewalSubscriptionOrderItem(arguments.orderItem, subscriptionUsage);
+				setupRenewalSubscriptionOrderItem(arguments.orderItem, arguments.subscriptionUsage);
 			}
 		}
 	}
 	
 	// setup Initial SubscriptionOrderItem
-	public void function setupInitialSubscriptionOrderItem(required any orderItem) {
+	private void function setupInitialSubscriptionOrderItem(required any orderItem) {
 		var subscriptionOrderItemType = "soitInitial";
 		var subscriptionUsage = this.newSubscriptionUsage();
 		
@@ -168,24 +170,53 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	// setup renewal SubsriptionOrderItem
-	public void function setupRenewalSubscriptionOrderItem(required any orderItem, required any subscriptionUsage) {
+	private void function setupRenewalSubscriptionOrderItem(required any orderItem, required any subscriptionUsage) {
 		var subscriptionOrderItemType = "soitRenewal";
 		
-		// set next bill date
-		subscriptionUsage.setNextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getDueDate());
+		// set next bill date, calculated from the last bill date
+		arguments.subscriptionUsage.setNextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getDueDate(arguments.subscriptionUsage.getNextBillDate()));
 		
 		// create new subscription orderItem
 		var subscriptionOrderItem = this.newSubscriptionOrderItem();
 		subscriptionOrderItem.setOrderItem(arguments.orderItem);
 		subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode(subscriptionOrderItemType));
-		subscriptionOrderItem.setSubscriptionUsage(subscriptionUsage);
+		subscriptionOrderItem.setSubscriptionUsage(arguments.subscriptionUsage);
+		this.saveSubscriptionOrderItem(subscriptionOrderItem);
 		
 		// call save on this entity to make it persistent so we can use it for further lookup
-		this.saveSubscriptionUsage(subscriptionUsage);
+		this.saveSubscriptionUsage(arguments.subscriptionUsage);
 		
-		//TODO: setup renewal benefits
+		//setup renewal benefits, if first renewal and renewal benefit exists
+		if(arrayLen(arguments.subscriptionUsage.getSubscriptionOrderItems()) == 2 && arrayLen(arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits())) {
+			// remove all existing benefits
+			while(arrayLen(arguments.subscriptionUsage.getSubscriptionUsageBenefits())) {
+				var subscriptionUsageBenefit = arguments.subscriptionUsage.getSubscriptionUsageBenefits()[1];
+				// delete old subscriptionUsageBenefitAccount
+				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit);
+				this.deleteSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+				arguments.subscriptionUsage.removeSubscriptionUsageBenefit(subscriptionUsageBenefit);
+			}
+			
+			// copy all the renewal subscription benefits
+			for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits()) {
+				var subscriptionUsageBenefit = this.newSubscriptionUsageBenefit();
+				subscriptionUsageBenefit.copyFromSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				subscriptionUsage.addSubscriptionUsageBenefit(subscriptionUsageBenefit);
+	
+				// call save on this entity to make it persistent so we can use it for further lookup
+				this.saveSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				
+				// create subscriptionUsageBenefitAccount for this account
+				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
+				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				subscriptionUsageBenefitAccount.setAccount(arguments.subscriptionUsage.getAccount());
+				this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+	
+				// setup benefits access
+				setupSubscriptionBenefitAccess(subscriptionUsageBenefit);
+			}
 		
-		this.saveSubscriptionOrderItem(subscriptionOrderItem);
+		}
 	}
 	
 	// setup subscription benefits for use by accounts
@@ -224,17 +255,25 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	// renew a subscription usage
-	public void function renewSubscription(required any subscriptionUsage) {
-		// first check if it time for renewal
+	public boolean function renewSubscription(required any subscriptionUsage, struct data={}) {
+		// first check if it's time for renewal
 		if(arguments.subscriptionUsage.getNextBillDate() > now() || arguments.subscriptionUsage.getCurrentStatusCode() == 'sstCancelled') {
-			return;
+			return true;
 		}
+		// if this is called from autorenewal task and auto renewal is false, then suspend the subscription
+		if(!arguments.subscriptionUsage.getAutoRenewFlag() && structKeyExists(data, 'isAutoRenewalTask')) {
+			// add active status to subscription usage
+			setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
+			return true;
+		}
+		
+		var renewalOk = false;
 		// create a new order
 		var order = getOrderService().newOrder();
 		// set the account for order
 		order.setAccount(arguments.subscriptionUsage.getAccount());
 		// add order item to order
-		getOrderService().addOrderItem(order,arguments.subscriptionUsage.subscriptionOrderItems()[1].getOrderItem().getSku());
+		getOrderService().addOrderItem(order,arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku());
 		// add order payment to order
 		if(order.getTotal() > 0) {
 			var orderPayment = getPaymentService().newOrderPayment();
@@ -251,9 +290,33 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var orderData = {};
 		orderData.orderID = order.getOrderID();
 		orderData.doNotSendOrderConfirmationEmail = 1;
-		getOrderService().processOrder(orderData);	
+		var processOK = getOrderService().processOrder(orderData);	
+		if(processOK) {
+			// setup subscription orde item
+			setupSubscriptionOrderItem(arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem(), arguments.subscriptionUsage);
+			renewalOk = true;
+		} else {
+			// check if payment failed
+			if(orderPayment.hasErrors()) {
+				setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended', 'sscrtPaymentFailed');
+			}
+			// some other error, suspend the account
+			setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
+		}
 		// persist order changes to DB 
 		getDAO().flushORMSession();
+		return renewalOk;
 	}
+	
+	private void function setSubscriptionStatus(required any subscriptionUsage, required string subscriptionStatusTypeCode, any subscriptionStatusChangeReasonTypeCode) {
+		var subscriptionStatus = this.newSubscriptionStatus();
+		subscriptionStatus.setSubscriptionStatusType(this.getTypeBySystemCode(arguments.subscriptionStatusTypeCode));
+		if(structKeyExists(arguments, "subscriptionStatusChangeReasonTypeCode")) {
+			subscriptionStatus.setSubscriptionStatusChangeReasonTypeCode(this.getTypeBySystemCode(arguments.subscriptionStatusChangeReasonTypeCode));
+		}
+		subscriptionStatus.setSubscriptionStatusChangeDateTime(now());
+		arguments.subscriptionUsage.addSubscriptionStatus(subscriptionStatus);
+		this.saveSubscriptionUsage(arguments.subscriptionUsage);
+	} 
 	
 }

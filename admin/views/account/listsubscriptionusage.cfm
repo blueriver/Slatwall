@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,28 +36,23 @@
 Notes:
 
 --->
-<cfparam name="rc.schedule" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.subscriptionUsageSmartList" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.schedule#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.schedule#" edit="#rc.edit#" />
-		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="scheduleName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="recuringType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfWeekToRun" edit="#rc.edit#" displayVisible="recuringType:weekly">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfMonthToRun" edit="#rc.edit#" displayVisible="recuringType:monthly">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyInterval" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyStartTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyEndTime" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.schedule#">
-			
-		</cf_SlatwallTabGroup>
-		
-	</cf_SlatwallDetailForm>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.subscriptionUsageSmartList#" />
+
+<cf_SlatwallListingDisplay smartList="#rc.subscriptionUsageSmartList#"
+						   recordEditAction="admin:account.editsubscriptionUsage"
+						   recordEditModal=true
+						   recordprocessaction="admin:account.renewSubscription">
+
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="account.firstName" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="account.lastName" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="renewalPrice" />
+	<cf_SlatwallListingColumn propertyIdentifier="nextBillDate" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>

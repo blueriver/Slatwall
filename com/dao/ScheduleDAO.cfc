@@ -49,11 +49,14 @@ Notes:
 			INNER JOIN 
 				SlatwallTask ON SlatwallTask.taskID = SlatwallTaskSchedule.taskid 
 			WHERE 
-				SlatwallTask.runningflag=false  
+				SlatwallTask.runningflag=0  
 			AND	
-				SlatwallTask.activeflag= true 
+				SlatwallTask.activeflag= 1 
 			AND 
-				slatwallTaskSchedule.nextRunDateTime <=	<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" >
+				(
+				slatwallTaskSchedule.nextRunDateTime IS NULL
+					OR slatwallTaskSchedule.nextRunDateTime <=	<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" >
+				)
 		</cfquery>	
 		
 		<cfreturn tasks/>

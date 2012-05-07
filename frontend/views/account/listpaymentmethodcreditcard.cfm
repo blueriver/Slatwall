@@ -47,10 +47,10 @@ Notes:
 		<cfif arrayLen(local.accountPaymentMethods)>
 			<table>
 				<tr>
-					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.nameOnCreditCard")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.creditCardType")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.creditCardLastFour")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.expirationMonth")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethod.nameOnCreditCard")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethod.creditCardType")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethod.creditCardLastFour")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethod.expirationMonth")#</th>
 					<th>&nbsp</th>
 				</tr>
 				<cfloop array="#local.accountPaymentMethods#" index="local.accountPaymentMethod">

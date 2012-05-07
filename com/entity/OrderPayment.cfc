@@ -159,6 +159,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		setExpirationMonth( accountPaymentMethod.getExpirationMonth() );
 		setExpirationYear( accountPaymentMethod.getExpirationYear() );
 		setBillingAddress( accountPaymentMethod.getBillingAddress().copyAddress( true ) );
+		getOrder().setAccountPaymentMethod( arguments.accountPaymentMethod );
 	}	
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -172,7 +173,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 			
 				case "creditCard" :
 					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-						amountReceived += getCreditCardTransactions()[i].getAmountCharged();
+						amountReceived = precisionEvaluate(amountReceived + getCreditCardTransactions()[i].getAmountCharged());
 					}
 					break;
 					
@@ -194,7 +195,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 				
 				case "creditCard" :
 					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-						amountCredited += getCreditCardTransactions()[i].getAmountCredited();
+						amountCredited = precisionEvaluate(amountCredited + getCreditCardTransactions()[i].getAmountCredited());
 					}
 					break;
 					
@@ -218,7 +219,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 				case "creditCard" :
 					amountAuthorized = 0;
 					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-						amountAuthorized += getCreditCardTransactions()[i].getAmountAuthorized();
+						amountAuthorized = precisionEvaluate(amountAuthorized + getCreditCardTransactions()[i].getAmountAuthorized());
 					}
 					break;
 					

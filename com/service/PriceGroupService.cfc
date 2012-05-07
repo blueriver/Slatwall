@@ -370,7 +370,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 
 		switch(arguments.priceGroupRate.getAmountType()) {
 			case "percentageOff" :
-				var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getAmount() / 100));
+				var newPrice = precisionEvaluate(arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getAmount() / 100)));
 			
 				// If a rounding rule is in place for this rate, take this newly formated price and apply the rounding rule to it
 				if(!isNull(arguments.priceGroupRate.getRoundingRule())) {
@@ -378,7 +378,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 				break;
 			case "amountOff" :
-				var newPrice = arguments.sku.getPrice() - arguments.priceGroupRate.getAmount();
+				var newPrice = precisionEvaluate(arguments.sku.getPrice() - arguments.priceGroupRate.getAmount());
 				break;
 			case "amount" :
 				var newPrice = arguments.priceGroupRate.getAmount();

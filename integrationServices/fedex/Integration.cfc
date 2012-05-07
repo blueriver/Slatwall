@@ -56,7 +56,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 			password = {fieldType="password", displayName="FedEx Password", encryptValue=true},
 			transactionKey = {fieldType="text", displayName="FedEx Transaction Key"},
 			meterNo = {fieldType="text", displayName="Meter Number"},
-			testingFlag = {fieldType="yesno", displayName="Test Mode", settingDefault="1"},
+			testingFlag = {fieldType="yesno", displayName="Test Mode", defaultValue="1"},
 			shipperStreet = {fieldType="text", displayName="Shipping From Street Address"},
 			shipperCity = {fieldType="text", displayName="Shipping From City"},
 			shipperStateCode = {fieldType="text", displayName="Shipping From State Code"},

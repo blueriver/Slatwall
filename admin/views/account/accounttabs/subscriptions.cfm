@@ -38,7 +38,12 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#">
+<cf_SlatwallListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#"
+						   recordEditAction="admin:account.editsubscriptionUsage"
+						   recordEditQueryString="returnAction=admin:account.detailaccount&accountID=#rc.account.getAccountID()###tabsubscriptions"
+						   recordEditModal=true
+						   recordprocessaction="admin:account.renewSubscription"
+						   recordProcessQueryString="returnaction=admin:account.detailaccount&accountID=#rc.account.getAccountID()###tabsubscriptions">
 
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />

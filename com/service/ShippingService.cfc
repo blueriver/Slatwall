@@ -310,16 +310,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentAmount') gt 0) {
 			switch(arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentType')) {
 				case "increasePercentage":
-					returnAmount = arguments.originalAmount + (arguments.originalAmount * arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentAmount'));
+					returnAmount = precisionEvaluate(arguments.originalAmount + (arguments.originalAmount * arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentAmount')));
 					break;
 				case "decreasePercentage":
-					returnAmount = arguments.originalAmount - (arguments.originalAmount * arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentAmount'));
+					returnAmount = precisionEvaluate(arguments.originalAmount - (arguments.originalAmount * arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentAmount')));
 					break;
 				case "increaseAmount":
-					returnAmount = arguments.originalAmount + arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentAmount');
+					returnAmount = precisionEvaluate(arguments.originalAmount + arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentAmount'));
 					break;
 				case "decreaseAmount":
-					returnAmount = arguments.originalAmount - arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentAmount');
+					returnAmount = precisionEvaluate(arguments.originalAmount - arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentAmount'));
 					break;
 			}
 		}
