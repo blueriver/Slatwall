@@ -36,23 +36,23 @@
 Notes:
 
 --->
-<cfparam name="rc.subscriptionUsage" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.subscriptionUsageSmartList" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.subscriptionUsage#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionUsage#" />
-		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="autoRenewFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="renewalPrice" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="nextBillDate" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="accountPaymentMethod" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.subscriptionUsageSmartList#" />
 
-	</cf_SlatwallDetailForm>
+<cf_SlatwallListingDisplay smartList="#rc.subscriptionUsageSmartList#"
+						   recordEditAction="admin:account.editsubscriptionUsage"
+						   recordEditModal=true
+						   recordprocessaction="admin:account.renewSubscription">
+
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="account.firstName" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="account.lastName" filter="false" search="false" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="renewalPrice" />
+	<cf_SlatwallListingColumn propertyIdentifier="nextBillDate" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>
-
-
