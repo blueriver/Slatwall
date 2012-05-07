@@ -98,11 +98,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public void function setupSubscriptionOrderItem(required any orderItem, any subscriptionUsage) {
 		if(!isNull(arguments.orderItem.getSku().getSubscriptionTerm())) {
-			if(!structKeyExists(arguments, "subscriptionUsage")) {
-				// find the existing subscription usage for this sku
-				arguments.subscriptionUsage = getDAO().getSubscriptionUsageBySku(arguments.orderItem.getSku().getSkuID(),arguments.orderItem.getOrder().getAccount().getAccountID());
-			}
-			// if no subscriptionUsage found or passed setup a new one else setup renewal
+			// if no subscriptionUsage passed setup a new one else setup renewal
 			if(isNull(arguments.subscriptionUsage)) {
 				setupInitialSubscriptionOrderItem(arguments.orderItem);
 			} else {
@@ -118,8 +114,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		//copy all the info from order items to subscription usage if it's initial order item
 		subscriptionUsage.copyOrderItemInfo(arguments.orderItem);
+		
+		// set account
 		subscriptionUsage.setAccount(arguments.orderItem.getOrder().getAccount());
-		subscriptionUsage.setAccountPaymentMethod(arguments.orderItem.getOrder().getAccountPaymentMethod());
+		
+		// set payment method is there was only 1 payment method for the order
+		// if there are multiple orderPayment, logic needs to get added for user to defined the paymentMethod for renewals
+		if(arrayLen(arguments.orderItem.getOrder().getOrderPayments()) == 1) {
+			subscriptionUsage.setAccountPaymentMethod(arguments.orderItem.getOrder().getOrderPayments()[1].getAccountPaymentMethod());
+		}
 		
 		// add active status to subscription usage
 		var subscriptionStatus = this.newSubscriptionStatus();

@@ -43,6 +43,7 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	property name="subscriptionTermName" ormtype="string";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
+	property name="autoPayFlag" ormtype="boolean" formatType="yesno";
 	property name="autoRetryPaymentDays" ormtype="string";
 	
 	// Related Object Properties (many-to-one)

@@ -50,7 +50,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="orderType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderTypeID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
 	property name="orderOrigin" cfc="OrderOrigin" fieldtype="many-to-one" fkcolumn="orderOriginID";
-	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
 	
 	// Related Object Properties (One-To-Many)
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";

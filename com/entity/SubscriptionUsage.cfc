@@ -43,6 +43,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency";
 	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
+	property name="autoPayFlag" ormtype="boolean" formatType="yesno";
 	property name="nextBillDate" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
@@ -107,6 +108,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		setGracePeriodTerm(subscriptionTerm.getGracePeriodTerm());
 		setAllowProrateFlag(subscriptionTerm.getAllowProrateFlag());
 		setAutoRenewFlag(subscriptionTerm.getAutoRenewFlag());
+		setAutoPayFlag(subscriptionTerm.getAutoPayFlag());
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
