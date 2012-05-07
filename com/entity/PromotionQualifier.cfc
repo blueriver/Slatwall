@@ -36,19 +36,39 @@
 Notes:
 
 */
-component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifier" table="SlatwallPromotionQualifier" persistent="true" extends="BaseEntity" discriminatorColumn="qualifierType" {
+component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifier" table="SlatwallPromotionQualifier" persistent="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="qualifierType" ormtype="string" formfieldtype="select";
+	
 	property name="minimumQuantity" ormtype="integer" hint="can apply to product, order,or shipping qualifiers";
 	property name="minimumPrice" ormtype="big_decimal";
-	property name="maximumPrice" ormtype="big_decimal"; 
+	property name="maximumPrice" ormtype="big_decimal";
+	property name="maximumFulfillmentWeight" ormtype="float";
 	
-	// Related Entities
+	
+	// Related Entities (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
 	
-	// Special Related Discriminator Property
-	property name="qualifierType" length="255" insert="false" update="false";
+	// Related Entities (one-to-many)
+	
+	// Related Entities (many-to-many - owner)
+	property name="fulfillmentMethods" singularname="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierFulfillmentMethod" fkcolumn="promotionQualifierID" inversejoincolumn="fulfillmentMethodID";
+	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierShippingMethod" fkcolumn="promotionQualifierID" inversejoincolumn="shippingMethodID";
+	property name="shippingAddressZones" singularname="shippingAddressZone" cfc="AddressZone" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierShippingAddressZone" fkcolumn="promotionQualifierID" inversejoincolumn="addressZoneID";
+	
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierBrand" fkcolumn="promotionQualifierID" inversejoincolumn="brandID";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierOption" fkcolumn="promotionQualifierID" inversejoincolumn="optionID";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierSku" fkcolumn="promotionQualifierID" inversejoincolumn="skuID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProduct" fkcolumn="promotionQualifierID" inversejoincolumn="productID";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductType" fkcolumn="promotionQualifierID" inversejoincolumn="productTypeID";
+	
+	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedBrand" fkcolumn="promotionQualifierID" inversejoincolumn="brandID";
+	property name="excludedOptions" singularname="excludedOption" cfc="Option" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedOption" fkcolumn="promotionQualifierID" inversejoincolumn="optionID";
+	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedSku" fkcolumn="promotionQualifierID" inversejoincolumn="skuID";
+	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProduct" fkcolumn="promotionQualifierID" inversejoincolumn="productID";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProductType" fkcolumn="promotionQualifierID" inversejoincolumn="productTypeID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -63,6 +83,21 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="discountType" persistent="false";
 	property name="qualifierTypeDisplay" type="string" persistent="false";
 	property name="qualifiers" type="string" persistent="false";
+	
+	
+	public any function init() {
+		if(isNull(variables.fulfillmentMethods)) {
+			variables.fulfillmentMethods = [];
+		}
+		if(isNull(variables.shippingMethods)) {
+			variables.shippingMethods = [];
+		}
+		if(isNull(variables.addressZones)) {
+			variables.shippingAddressZones = [];
+		}
+		
+		return super.init();
+	}
 	
 	// ============ Association management methods for bidirectional relationships =================
 	
@@ -89,7 +124,7 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
     // ============   END Association Management Methods   =================
 
 	public string function getSimpleRepresentationPropertyName() {
-		return "qualifiers";
+		return "qualifierType";
 	}
 
 	// ============ START: Non-Persistent Property Methods =================
@@ -97,50 +132,6 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	
 	public string function getQualifierTypeDisplay() {
 		return rbKey( "entity.promotionQualifier.qualifierType." & getQualifierType() );
-	}
-	
-	public string function getQualifiers() {
-		if( !structKeyExists( variables,"qualifierItems" ) ) {
-			variables.qualifiers = "";
-			if( getQualifierType() eq "product" ) {
-				var items = "";
-				if( arrayLen(getSkus()) ) {
-					items = listAppend( items,rbKey('entity.promotionQualifierProduct.skus') & ": " & displaySkuCodes() );
-				}
-				if( arrayLen(getProducts()) ) {
-					items = listAppend( items,rbKey('entity.promotionQualifierProduct.products') & ": " & displayProductNames() );
-				}
-				if( arrayLen(getProductTypes()) ) {
-					items = listAppend( items,rbKey('entity.promotionQualifierProduct.productTypes') & ": " & displayProductTypeNames() );
-				}
-				if( arrayLen(getBrands()) ) {
-					items = listAppend( items,rbKey('entity.promotionQualifierProduct.brands') & ": " & displayBrandNames() );
-				}
-				if( arrayLen(getOptions()) ) {
-					items = listAppend( items,rbKey('entity.promotionQualifierProduct.options') & ": " & displayOptionNames() );
-				}
-				if( len(items) == 0 ) {
-					items = rbKey("define.all");
-				}
-			} else if( getQualifierType() == "fulfillment" ) {
-				if( arrayLen(getFulfillmentMethods()) ) {
-					items = listAppend( items,rbKey('entity.promotionQualifierFulfillment.fulfillmentMethods') & ": " & displayFulfillmentMethodNames() );
-				}
-				if( arrayLen(getShippingMethods()) ) {
-					items = listAppend( items,rbKey('entity.promotionQualifierFulfillment.shippingMethods') & ": " & displayShippingMethodNames() );
-				}
-				if( arrayLen(getAddressZones()) ) {
-					items = listAppend( items,rbKey('entity.promotionQualifierFulfillment.addressZones') & ": " & displayAddressZoneNames() );
-				}
-				if( len(items) == 0 ) {
-					items &= rbKey("define.all");
-				}			
-			} else if( getQualifierType() == "order" ) {
-				items = rbKey("define.na");
-			}
-			variables.qualifiers = items;	
-		}
-		return variables.qualifiers;
 	}
 		
 	// ============  END:  Non-Persistent Property Methods =================
