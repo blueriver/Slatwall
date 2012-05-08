@@ -162,6 +162,13 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 		return decryptValue(getCreditCardNumberEncrypted());
 	}
 	
+	public string function getSimpleRepresentation() {
+		if(getPaymentMethodType() == "creditCard") {
+			return getAccountPaymentMethodName() & " - " & " - " & getCreditCardType() & " - ***" & getCreditCardLastFour();
+		}
+		return getAccountPaymentMethodName();
+	}
+
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

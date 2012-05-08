@@ -56,7 +56,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	// Related Object Properties (one-to-many)
 	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan";
 	property name="subscriptionOrderItems" singularname="subscriptionOrderItem" cfc="SubscriptionOrderItem" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
-	property name="subscriptionStatus" cfc="SubscriptionStatus" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true" orderby="subscriptionStatusChangeDateTime DESC" fetch="join" lazy="false";
+	property name="subscriptionStatus" cfc="SubscriptionStatus" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
 	property name="renewalSubscriptionUsageBenefits" singularname="renewalSubscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="renewalSubscriptionUsageID" cascade="all-delete-orphan";
 	
 	// Related Object Properties (many-to-many)
@@ -114,10 +114,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public any function getCurrentStatus() {
-		// Subscription status sorted by date desc, return first one as current
-		if(arrayLen(getSubscriptionStatus())) {
-			return getSubscriptionStatus()[1];
-		}
+		return getService("subscriptionService").getDAO().getSubscriptionCurrentStatus( variables.subscriptionUsageID );
 	}
 	
 	public string function getCurrentStatusCode() {

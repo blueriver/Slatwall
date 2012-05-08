@@ -38,4 +38,16 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cffunction name="getSubscriptionCurrentStatus">
+		<cfargument name="subscriptionUsageID" type="any" required="true" />
+		
+		<cfset var hql = "FROM SlatwallSubscriptionStatus ss
+							WHERE ss.subscriptionUsage.subscriptionUsageID = :subscriptionUsageID
+							AND ss.effectiveDateTime <= :now 
+							ORDER BY ss.effectiveDateTime DESC " />
+		
+		
+		<cfreturn ormExecuteQuery(hql, {subscriptionUsageID=arguments.subscriptionUsageID, now=now()}, true, {maxresults=1}) /> 
+	</cffunction>
+	 
 </cfcomponent>
