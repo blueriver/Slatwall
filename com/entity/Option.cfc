@@ -60,9 +60,8 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="optionID" inversejoincolumn="skuID" inverse="true"; 
-
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductOption" fkcolumn="optionID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierOption" fkcolumn="optionID" inversejoincolumn="promotionQualifierID" inverse="true";
 	
 	public Option function init(){
 		// set default collections for association management methods
@@ -82,56 +81,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
     	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }
     
-    /******* Association management methods for bidirectional relationships **************/
-    
-    // OptionGroup (many-to-one)
-    
-    public void function setOptionGroup(required OptionGroup OptionGroup) {
-       variables.OptionGroup = arguments.OptionGroup;
-       if(isNew() or !arguments.OptionGroup.hasOption(this)) {
-           arrayAppend(arguments.OptionGroup.getOptions(),this);
-       }
-    }
-
-    public void function removeOptionGroup(required OptionGroup OptionGroup) {
-       var index = arrayFind(arguments.OptionGroup.getOptions(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.OptionGroup.getOptions(),index);
-       }     
-       structDelete(variables,"OptionGroup");
-    }
-    
-    // Sku (many-to-many) delegates both sides of the relationship to the other side
-    
-    public void function addSku(required Sku Sku) {
-       arguments.Sku.addOption(this);
-    }
-    
-    public void function removeSku(required Sku Sku) {
-       arguments.Sku.removeOption(this);
-    }
-    
-	// promotionRewards (many-to-many)
-	public void function addPromotionReward(required any promotionReward) {
-	   arguments.promotionReward.addOption(this);
-	}
-	
-	public void function removePromotionReward(required any promotionReward) {
-	   arguments.promotionReward.removeOption(this);
-	}
-	
-	// promotionQualifiers (many-to-many)
-	public void function addPromotionQualifier(required any promotionQualifier) {
-	   arguments.promotionQualifier.addOption(this);
-	}
-	
-	public void function removePromotionQualifier(required any promotionQualifier) {
-	   arguments.promotionQualifier.removeOption(this);
-	}
-	
-    /************   END Association Management Methods   *******************/
-	
-	// Image Management methods
+    // Image Management methods
 	
 	public string function getImage(numeric width=0, numeric height=0, string alt="", string class="") {
 		if( this.hasImage() ) {
@@ -181,6 +131,48 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Option Group (many-to-one)
+	public void function setOptionGroup(required any optionGroup) {
+		variables.optionGroup = arguments.optionGroup;
+		if(isNew() or !arguments.optionGroup.hasOption( this )) {
+			arrayAppend(arguments.optionGroup.getOptions(), this);
+		}
+	}
+	public void function removeOptionGroup(any optionGroup) {
+		if(!structKeyExists(arguments, "optionGroup")) {
+			arguments.optionGroup = variables.optionGroup;
+		}
+		var index = arrayFind(arguments.optionGroup.getOptions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.optionGroup.getOptions(), index);
+		}
+		structDelete(variables, "optionGroup");
+	}
+	
+	// Skus (many-to-many - inverse)
+	public void function addSku(required any sku) {
+		arguments.sku.addOption( this );
+	}
+	public void function removeSku(required any sku) {
+		arguments.sku.removeOption( this );
+	}
+	
+	// Promotion Rewards (many-to-many - inverse)
+	public void function addPromotionReward(required any promotionReward) {
+		arguments.promotionReward.addOption( this );
+	}
+	public void function removePromotionReward(required any promotionReward) {
+		arguments.promotionReward.removeOption( this );
+	}
+	
+	// Promotion Qualifiers (many-to-many - inverse)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.addOption( this );
+	}
+	public void function removePromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.removeOption( this );
+	}	
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
