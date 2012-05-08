@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.sku#" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.sku#" edit="#rc.edit#" enctype="multipart/form-data">
 		<cf_SlatwallActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:product.detailproduct" backQueryString="productID=#rc.product.getProductID()#" />
 		
 		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
@@ -54,6 +54,22 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.sku#" property="renewalPrice" edit="#rc.edit#">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="skuCode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="imageFile" edit="#rc.edit#" fieldtype="file">
+
+				<cfif len(trim(rc.sku.getImageFile()))>
+					<cfif rc.edit>
+						<div class="control-group">
+							<label class="control-label">&nbsp;</label>
+							<div class="controls">
+								<img src="#rc.sku.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /><br />
+								<input type="checkbox" name="deleteImage" value="1" /> Delete
+							</div>
+						</div>
+					<cfelse>
+						<dt class="title">&nbsp;</dt>
+						<dd class="value"><img src="#rc.sku.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /></dd>
+					</cfif>	
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
