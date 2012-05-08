@@ -37,18 +37,31 @@ Notes:
 
 --->
 <cfparam name="rc.productImage" type="any" />
+<cfparam name="rc.product" type="any" default="#rc.productImage.getProduct()#"/>
 <cfparam name="rc.edit" type="boolean" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.productImage#" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.productImage#" edit="#rc.edit#" enctype="multipart/form-data">
 		<cf_SlatwallActionBar type="detail" object="#rc.productImage#" edit="#rc.edit#">
 		</cf_SlatwallActionBar>
-		
+		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
+		<input type="hidden" name="returnAction" value="admin:product.editProduct&productID=#rc.product.getProductID()###tabalternateimages" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageDescription" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageType" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageFile" edit="#rc.edit#" fieldtype="file">
+				
+				<div class="control-group">
+					<label class="control-label">&nbsp;</label>
+					<div class="controls">
+						<cfif len(trim(rc.productImage.getImageFile()))>
+							<img src="#rc.productImage.getResizedImagePath(width="200",height="200")#" border="0" /><br />
+							<input type="checkbox" name="deleteImage" value="1" /> Delete
+						</cfif>	
+					</div>
+				</div>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
