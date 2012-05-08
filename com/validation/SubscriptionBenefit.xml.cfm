@@ -7,5 +7,9 @@
 		<property name="accessType">
 			<rule type="required" contexts="save" />
 		</property>
+		<property name="maxUseCount">
+			<rule type="required" contexts="save" />
+			<rule type="numeric" contexts="save" />
+		</property>
 	</objectProperties>
 </validateThis>

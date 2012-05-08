@@ -96,13 +96,21 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
-	public void function setupSubscriptionOrderItem(required any orderItem, any subscriptionUsage) {
+	public void function setupSubscriptionOrderItem(required any orderItem) {
 		if(!isNull(arguments.orderItem.getSku().getSubscriptionTerm())) {
-			// if no subscriptionUsage passed setup a new one else setup renewal
-			if(isNull(arguments.subscriptionUsage)) {
+			// check if orderItem is assigned to a subscriptionOrderItem
+			var subscriptionOrderItem = this.getSubscriptionOrderItem({orderItem=arguments.orderItem});
+			if(isNull(arguments.subscriptionOrderItem)) {
+				// new orderItem, setup subscription
 				setupInitialSubscriptionOrderItem(arguments.orderItem);
 			} else {
-				setupRenewalSubscriptionOrderItem(arguments.orderItem, arguments.subscriptionUsage);
+				// orderItem already exists in subscription, just setup access
+				// if current status is not active, set active status to subscription usage
+				if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
+					setSubscriptionStatus(subscriptionOrderItem.getSubscriptionUsage(), 'sstActive');
+				}
+				// set renewal benefit if needed
+				setupRenewalSubscriptionBenefitAccess(subscriptionOrderItem.getSubscriptionUsage());
 			}
 		}
 	}
@@ -169,62 +177,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		this.saveSubscriptionOrderItem(subscriptionOrderItem);
 	}
 	
-	// setup renewal SubsriptionOrderItem
-	private void function setupRenewalSubscriptionOrderItem(required any orderItem, required any subscriptionUsage) {
-		var subscriptionOrderItemType = "soitRenewal";
-		
-		// set next bill date, calculated from the last bill date
-		// need setting to decide what start date to use for next bill date calculation
-		arguments.subscriptionUsage.setNextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getDueDate(arguments.subscriptionUsage.getNextBillDate()));
-		
-		// if current status is not active, set active status to subscription usage
-		if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
-			setSubscriptionStatus(arguments.subscriptionUsage, 'sstActive');
-		}
-		
-		// create new subscription orderItem
-		var subscriptionOrderItem = this.newSubscriptionOrderItem();
-		subscriptionOrderItem.setOrderItem(arguments.orderItem);
-		subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode(subscriptionOrderItemType));
-		subscriptionOrderItem.setSubscriptionUsage(arguments.subscriptionUsage);
-		this.saveSubscriptionOrderItem(subscriptionOrderItem);
-		
-		// call save on this entity to make it persistent so we can use it for further lookup
-		this.saveSubscriptionUsage(arguments.subscriptionUsage);
-		
-		//setup renewal benefits, if first renewal and renewal benefit exists
-		if(arrayLen(arguments.subscriptionUsage.getSubscriptionOrderItems()) == 2 && arrayLen(arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits())) {
-			// remove all existing benefits
-			while(arrayLen(arguments.subscriptionUsage.getSubscriptionUsageBenefits())) {
-				var subscriptionUsageBenefit = arguments.subscriptionUsage.getSubscriptionUsageBenefits()[1];
-				// delete old subscriptionUsageBenefitAccount
-				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit);
-				this.deleteSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-				arguments.subscriptionUsage.removeSubscriptionUsageBenefit(subscriptionUsageBenefit);
-			}
-			
-			// copy all the renewal subscription benefits
-			for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits()) {
-				var subscriptionUsageBenefit = this.newSubscriptionUsageBenefit();
-				subscriptionUsageBenefit.copyFromSubscriptionUsageBenefit(subscriptionUsageBenefit);
-				subscriptionUsage.addSubscriptionUsageBenefit(subscriptionUsageBenefit);
-	
-				// call save on this entity to make it persistent so we can use it for further lookup
-				this.saveSubscriptionUsageBenefit(subscriptionUsageBenefit);
-				
-				// create subscriptionUsageBenefitAccount for this account
-				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
-				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
-				subscriptionUsageBenefitAccount.setAccount(arguments.subscriptionUsage.getAccount());
-				this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-	
-				// setup benefits access
-				setupSubscriptionBenefitAccess(subscriptionUsageBenefit);
-			}
-		
-		}
-	}
-	
 	// setup subscription benefits for use by accounts
 	public void function setupSubscriptionBenefitAccess(required any subscriptionUsageBenefit) {
 		// add this benefit to access
@@ -259,7 +211,41 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 	}
+
+	// setup renewal subscription benefits for use by accounts
+	public void function setupRenewalSubscriptionBenefitAccess(required any subscriptionUsage) {
+		//setup renewal benefits, if first renewal and renewal benefit exists
+		if(arrayLen(arguments.subscriptionUsage.getSubscriptionOrderItems()) == 2 && arrayLen(arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits())) {
+			// remove all existing benefits
+			while(arrayLen(arguments.subscriptionUsage.getSubscriptionUsageBenefits())) {
+				var subscriptionUsageBenefit = arguments.subscriptionUsage.getSubscriptionUsageBenefits()[1];
+				// delete old subscriptionUsageBenefitAccount
+				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit);
+				this.deleteSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+				arguments.subscriptionUsage.removeSubscriptionUsageBenefit(subscriptionUsageBenefit);
+			}
+			
+			// copy all the renewal subscription benefits
+			for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits()) {
+				var subscriptionUsageBenefit = this.newSubscriptionUsageBenefit();
+				subscriptionUsageBenefit.copyFromSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				subscriptionUsage.addSubscriptionUsageBenefit(subscriptionUsageBenefit);
 	
+				// call save on this entity to make it persistent so we can use it for further lookup
+				this.saveSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				
+				// create subscriptionUsageBenefitAccount for this account
+				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit,true);
+				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				subscriptionUsageBenefitAccount.setAccount(arguments.subscriptionUsage.getAccount());
+				this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+	
+				// setup benefits access
+				setupSubscriptionBenefitAccess(subscriptionUsageBenefit);
+			}
+		}
+	}
+
 	// process a subscription usage
 	public boolean function processSubscriptionUsage(required any subscriptionUsageID, required any context, struct data={}) {
 		var subscriptionUsage = this.getSubscriptionUsage(arguments.subscriptionUsageID); 
@@ -285,12 +271,34 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		var renewalOk = false;
-		// create a new order
-		var order = getOrderService().newOrder();
-		// set the account for order
-		order.setAccount(arguments.subscriptionUsage.getAccount());
-		// add order item to order
-		getOrderService().addOrderItem(order,arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku());
+		
+		// if order was passed use it, else create a new one
+		if(structKeyExists(data, "orderID")) {
+			var order = getOrderService().getOrder(data.orderID); 
+		} else {
+			// create a new order
+			var order = getOrderService().newOrder();
+			
+			// set the account for order
+			order.setAccount(arguments.subscriptionUsage.getAccount());
+
+			// add order item to order
+			getOrderService().addOrderItem(order,arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku());
+
+			// set the orderitem price to renewal price
+			order.getOrderItems()[1].setPrice(arguments.subscriptionUsage.getRenewalPrice());
+	
+			// create new subscription orderItem
+			var subscriptionOrderItem = this.newSubscriptionOrderItem();
+			subscriptionOrderItem.setOrderItem(order.getOrderItems()[1]);
+			subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode('soitRenewal'));
+			subscriptionOrderItem.setSubscriptionUsage(arguments.subscriptionUsage);
+			this.saveSubscriptionOrderItem(subscriptionOrderItem);
+		}
+		
+		// save order for processing
+		getOrderService().saveOrder(order);
+
 		// add order payment to order if amount > 0
 		if(order.getTotal() > 0) { 
 			// if autoPayFlag true then apply payment else suspend
@@ -305,17 +313,29 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
 			}
 		}
-		// save order for processing
-		getOrderService().saveOrder(order);
+
+		// set next bill date, calculated from the last bill date
+		// need setting to decide what start date to use for next bill date calculation
+		arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getDueDate(arguments.subscriptionUsage.getNextBillDate()));
+		
+		this.saveSubscriptionUsage(arguments.subscriptionUsage);
+		
+		// flush session to make sure order is persisted to DB
 		getDAO().flushORMSession();
+		
 		// process order 
 		var orderData = {};
 		orderData.orderID = order.getOrderID();
 		orderData.doNotSendOrderConfirmationEmail = 1;
 		var processOK = getOrderService().processOrder(orderData);	
 		if(processOK) {
-			// setup subscription order item, set active status and reset benefits
-			setupSubscriptionOrderItem(arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem(), arguments.subscriptionUsage);
+			// if current status is not active, set active status to subscription usage
+			if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
+				setSubscriptionStatus(arguments.subscriptionUsage, 'sstActive');
+			}
+			// set renewal benefit if needed
+			setupRenewalSubscriptionBenefitAccess(arguments.subscriptionUsage);
+			
 			renewalOk = true;
 		} else {
 			// suspend the account if payment failed

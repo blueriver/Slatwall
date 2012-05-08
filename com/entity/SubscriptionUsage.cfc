@@ -195,6 +195,19 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 
 	// ================== START: Overridden Methods ========================
 	
+    public any function getAccountPaymentMethodOptions() {
+		if(!structKeyExists(variables, "accountPaymentMethodOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAccountPaymentMethod");
+			smartList.addSelect(propertyIdentifier="accountPaymentMethodName", alias="name");
+			smartList.addSelect(propertyIdentifier="accountPaymentMethodID", alias="value");
+			smartList.addFilter(propertyIdentifier="account_accountID", value="#getAccount().getAccountID()#");
+			smartList.addOrder("accountPaymentMethodName|ASC");
+			variables.accountPaymentMethodOptions = smartList.getRecords();
+			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.select"),value=""});
+		}
+		return variables.accountPaymentMethodOptions;
+    }
+    
 	public string function getSimpleRepresentation() {
 		return getSubscriptionOrderItemName();
 	}
