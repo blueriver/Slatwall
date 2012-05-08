@@ -158,7 +158,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	//@hint Generates the image path based upon product code, and image options for this sku
-	public string function generateImageFileName() {
+	/*public string function generateImageFileName() {
 		var optionString = "";
 		for(var option in getOptions()){
 			if(option.getOptionGroup().getImageGroupFlag()){
@@ -166,7 +166,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			}
 		}
 		return "#getProduct().getProductCode()##optionString#.#setting('globalImageExtension')#";
-	}
+	}*/
 	
 	//@hint this method generated sku code based on assigned options
 	public any function generateSkuCode () {
@@ -481,9 +481,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	if(isNull(getSkuCode()) || getSkuCode() == "") {
     		setSkuCode(generateSkuCode());
     	}
-    	if(isNull(getImageFile()) || getImageFile() == "") {
+    /*	if(isNull(getImageFile()) || getImageFile() == "") {
     		setImageFile(generateImageFileName());
-    	}
+    	}*/
 		super.preInsert();
 		getService("productCacheService").updateFromProduct( this );
     }
