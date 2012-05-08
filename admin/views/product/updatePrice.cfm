@@ -38,6 +38,7 @@ Notes:
 --->
 
 <cfoutput>
+	<!--- novalidate="novalidate" --->
 	<form method="post" action="?s=1" class="form-horizontal">
 		<input type="hidden" name="slatAction" value="product.saveUpdatePrice" />
 		<input type="hidden" name="returnAction" value="admin:product.editproduct&productID=#rc.productID#" />
@@ -54,7 +55,7 @@ Notes:
 					<div class="control-group">
 						<label for="priceUpdate" class="control-label">Price</label></dt>
 						<div class="controls">
-							<input tabindex="1" type="text" name="price" value="" class="" />
+							<input tabindex="1" type="text" name="price" value="" class="required number valid" />
 						</div>
 					</div>
 					
