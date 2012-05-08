@@ -40,6 +40,7 @@ component extends="BaseController" output=false accessors=true {
 
 	// fw1 Auto-Injected Service Properties
 	property name="productService" type="any";
+	property name="SkuService" type="any";
 	property name="UtilityORMService" type="any";
 	
 	this.publicMethods='';
@@ -125,13 +126,12 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function saveSku(required struct rc){
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName='Sku' );
-		var sku = entityService.getSku(rc.skuID,true);
+		var sku = getSkuService().getSku(rc.skuID,true);
 		
 		if(rc.imageFile != ''){
 			var documentData = fileUpload(getTempDirectory(),'imageFile','','makeUnique');
 			
-			if(len(sku.getImageFile())){
+			if(len(sku.getImageFile()) && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
 				fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
 			}
 			
@@ -139,11 +139,11 @@ component extends="BaseController" output=false accessors=true {
 			if(documentData.contentType eq 'image'){
 				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(sku.getImageDirectory()) & documentData.serverFile);
 				rc.imageFile = documentData.serverfile;
-			}else{
+			}else if(fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
 				fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
 			}
 			
-		}else if(structKeyExists(rc,'deleteImage')){
+		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
 			fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
 			rc.imageFile='';
 		}else{
@@ -160,7 +160,7 @@ component extends="BaseController" output=false accessors=true {
 		if(rc.imageFile != ''){
 			var documentData = fileUpload(getTempDirectory(),'imageFile','','makeUnique');
 			
-			if(len(productImage.getImageFile())){
+			if(len(productImage.getImageFile()) && fileExists(expandpath(productImage.getImageDirectory()) & productImage.getImageFile())){
 				fileDelete(expandpath(productImage.getImageDirectory()) & productImage.getImageFile());	
 			}
 			
@@ -168,11 +168,11 @@ component extends="BaseController" output=false accessors=true {
 			if(documentData.contentType eq 'image'){
 				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(productImage.getImageDirectory()) & documentData.serverFile);
 				rc.imageFile = documentData.serverfile;
-			}else{
+			}else if (fileExists(expandpath(productImage.getImageDirectory()) & productImage.getImageFile())){
 				fileDelete(expandpath(productImage.getImageDirectory()) & productImage.getImageFile());	
 			}
 			
-		}else if(structKeyExists(rc,'deleteImage')){
+		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(productImage.getImageDirectory()) & productImage.getImageFile())){
 			fileDelete(expandpath(productImage.getImageDirectory()) & productImage.getImageFile());	
 			rc.imageFile='';
 		}else{
