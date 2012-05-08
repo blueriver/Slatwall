@@ -41,7 +41,9 @@ Notes:
 			recordDetailAction="admin:product.detailsku"
 			recordDetailQueryString="productID=#rc.product.getProductID()#"
 			recordEditAction="admin:product.editsku"
-			recordEditQueryString="productID=#rc.product.getProductID()#">
+			recordEditQueryString="productID=#rc.product.getProductID()#"
+			recorddeleteaction="admin:product.deletesku"
+			recorddeletequerystring="returnaction=product.editproduct&productID=#rc.product.getProductID()#">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="skuCode" />
 		
 		<cfif rc.product.getProductType().getBaseProductType() eq "merchandise" && rc.product.getSkusSmartList().getRecordsCount() gt 1>
