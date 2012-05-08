@@ -182,29 +182,4 @@ component extends="BaseController" output=false accessors=true {
 		
 		super.genericSaveMethod('ProductImage',rc);
 	}
-	
-	public void function saveUpdatePrice(required struct rc){
-		
-		rc.product = getProductService().getProduct(rc.productID);
-		
-		var skus = rc.product.getSkus();
-		
-		for(i=1; i <= arrayLen(skus);i++){
-			skus[i].setPrice(rc.price);
-		}
-		
-		ORMFlush();
-		
-		rc.pageTitle = replace(rbKey('admin.define.edit'), '${itemEntityName}', rbKey('entity.product')); 
-	/*	rc.listAction = "admin:product.listproduct"; 
-		rc.saveAction = "admin:product.saveproduct";
-		rc.cancelAction = "admin:product.listproduct";
-		
-		rc.edit=true;
-	*/	
-		//getFW().setView("admin:product.detailproduct");
-		
-		getFW().redirect(action='product.editproduct', querystring="productID=#rc.productID#&messagekeys=#replace('admin:product.saveUpdatePrice', ':', '.', 'all')#_success");
-	}
-	
 }
