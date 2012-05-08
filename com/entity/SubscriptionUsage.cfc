@@ -42,7 +42,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="subscriptionUsageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency";
-	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
+	property name="autoBillFlag" ormtype="boolean" formatType="yesno";
 	property name="autoPayFlag" ormtype="boolean" formatType="yesno";
 	property name="nextBillDate" ormtype="timestamp";
 	
@@ -107,7 +107,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		setRenewalTerm(subscriptionTerm.getRenewalTerm());
 		setGracePeriodTerm(subscriptionTerm.getGracePeriodTerm());
 		setAllowProrateFlag(subscriptionTerm.getAllowProrateFlag());
-		setAutoRenewFlag(subscriptionTerm.getAutoRenewFlag());
+		setAutoBillFlag(subscriptionTerm.getAutoBillFlag());
 		setAutoPayFlag(subscriptionTerm.getAutoPayFlag());
 	}
 	
@@ -211,7 +211,14 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	public string function getSimpleRepresentation() {
 		return getSubscriptionOrderItemName();
 	}
-
+	
+	public boolean function isProcessable() {
+		if(getNextBillDate() > now() || getCurrentStatusCode() == 'sstCancelled') {
+			return false;
+		}
+		return true;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

@@ -225,6 +225,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				arguments.subscriptionUsage.removeSubscriptionUsageBenefit(subscriptionUsageBenefit);
 			}
 			
+			this.saveSubscriptionUsage(arguments.subscriptionUsage);
+			
 			// copy all the renewal subscription benefits
 			for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits()) {
 				var subscriptionUsageBenefit = this.newSubscriptionUsageBenefit();
@@ -262,15 +264,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(arguments.subscriptionUsage.getNextBillDate() > now() || arguments.subscriptionUsage.getCurrentStatusCode() == 'sstCancelled') {
 			return true;
 		}
-		// if this is called from autorenewal task and auto renewal is false, then suspend the subscription
+		// if this is called from autorenewal task and auto bill is false, then suspend the subscription
 		// should we suspend or cancel???
-		if(!arguments.subscriptionUsage.getAutoRenewFlag() && structKeyExists(data, 'isAutoRenewalTask')) {
+		if(!arguments.subscriptionUsage.getAutoBillFlag() && structKeyExists(data, 'isAutoRenewalTask')) {
 			// add active status to subscription usage
 			setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
-			return true;
+			return false;
 		}
 		
-		var renewalOk = false;
+		var renewalOk = true;
 		
 		// if order was passed use it, else create a new one
 		if(structKeyExists(data, "orderID")) {
@@ -309,44 +311,62 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				orderPayment.copyFromAccountPaymentMethod(subscriptionUsage.getAccountPaymentMethod());
 				orderPayment.setOrderPaymentType(this.getTypeBySystemCode("optCharge"));
 				getPaymentService().saveOrderPayment(orderPayment);
+				// if payment has errors suspend
+				if(orderPayment.hasErrors()) {
+					setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended', now(), 'sscrtPaymentFailed');
+					renewalOk = false;
+				}
 			} else {
+				setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
+				renewalOk = false;
+			}
+		}
+		
+		if(renewalOk) {
+			// set next bill date, calculated from the last bill date
+			// need setting to decide what start date to use for next bill date calculation
+			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getDueDate(arguments.subscriptionUsage.getNextBillDate()));
+			
+			this.saveSubscriptionUsage(arguments.subscriptionUsage);
+			
+			// flush session to make sure order is persisted to DB
+			getDAO().flushORMSession();
+			
+			// try to process order, if any error suspend account
+			try {
+				var orderData = {};
+				orderData.orderID = order.getOrderID();
+				orderData.doNotSendOrderConfirmationEmail = 1;
+				var processOK = getOrderService().processOrder(orderData);	
+				if(processOK) {
+					// if current status is not active, set active status to subscription usage
+					if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
+						setSubscriptionStatus(arguments.subscriptionUsage, 'sstActive');
+					}
+					// set renewal benefit if needed
+					setupRenewalSubscriptionBenefitAccess(arguments.subscriptionUsage);
+				} else {
+					renewalOk = false;
+					// suspend the account if payment failed
+					if(orderPayment.hasErrors()) {
+						setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended', now(), 'sscrtPaymentFailed');
+					}
+					// some other error, suspend the account
+					setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
+				}
+				// persist order changes to DB 
+				getDAO().flushORMSession();
+			} catch (any e) {
+				renewalOk = false;
+				// if there was any system error suspend the account
 				setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
 			}
 		}
-
-		// set next bill date, calculated from the last bill date
-		// need setting to decide what start date to use for next bill date calculation
-		arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getDueDate(arguments.subscriptionUsage.getNextBillDate()));
-		
-		this.saveSubscriptionUsage(arguments.subscriptionUsage);
-		
-		// flush session to make sure order is persisted to DB
-		getDAO().flushORMSession();
-		
-		// process order 
-		var orderData = {};
-		orderData.orderID = order.getOrderID();
-		orderData.doNotSendOrderConfirmationEmail = 1;
-		var processOK = getOrderService().processOrder(orderData);	
-		if(processOK) {
-			// if current status is not active, set active status to subscription usage
-			if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
-				setSubscriptionStatus(arguments.subscriptionUsage, 'sstActive');
-			}
-			// set renewal benefit if needed
-			setupRenewalSubscriptionBenefitAccess(arguments.subscriptionUsage);
-			
-			renewalOk = true;
-		} else {
-			// suspend the account if payment failed
-			if(orderPayment.hasErrors()) {
-				setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended', now(), 'sscrtPaymentFailed');
-			}
-			// some other error, suspend the account
-			setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
+		if(!renewalOK) {
+			// change the status and save the order so it can be processed later
+			order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+			getOrderService().getDAO().save(order);
 		}
-		// persist order changes to DB 
-		getDAO().flushORMSession();
 		return renewalOk;
 	}
 	
@@ -370,7 +390,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var subscriptionStatus = this.newSubscriptionStatus();
 		subscriptionStatus.setSubscriptionStatusType(this.getTypeBySystemCode(arguments.subscriptionStatusTypeCode));
 		if(structKeyExists(arguments, "subscriptionStatusChangeReasonTypeCode") && arguments.subscriptionStatusChangeReasonTypeCode != "") {
-			subscriptionStatus.setSubscriptionStatusChangeReasonTypeCode(this.getTypeBySystemCode(arguments.subscriptionStatusChangeReasonTypeCode));
+			subscriptionStatus.setSubscriptionStatusChangeReasonType(this.getTypeBySystemCode(arguments.subscriptionStatusChangeReasonTypeCode));
 		}
 		subscriptionStatus.setEffectiveDateTime(arguments.effectiveDate);
 		subscriptionStatus.setChangeDateTime(now());
