@@ -42,11 +42,16 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="qualifierType" ormtype="string" formfieldtype="select";
 	
-	property name="minimumQuantity" ormtype="integer" hint="can apply to product, order,or shipping qualifiers";
-	property name="minimumPrice" ormtype="big_decimal";
-	property name="maximumPrice" ormtype="big_decimal";
-	property name="maximumFulfillmentWeight" ormtype="float";
-	
+	property name="minimumOrderQuantity" ormtype="integer";
+	property name="maximumOrderQuantity" ormtype="integer";
+	property name="minimumOrderSubtotal" ormtype="big_decimal";
+	property name="maximumOrderSubtotal" ormtype="big_decimal";
+	property name="minimumItemQuantity" ormtype="integer";
+	property name="maximumItemQuantity" ormtype="integer";
+	property name="minimumItemPrice" ormtype="big_decimal";
+	property name="maximumItemPrice" ormtype="big_decimal";
+	property name="minimumFulfillmentWeight" ormtype="big_decimal";
+	property name="maximumFulfillmentWeight" ormtype="big_decimal";
 	
 	// Related Entities (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
@@ -80,9 +85,6 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 
 	// Non-persistent entities
-	property name="discountType" persistent="false";
-	property name="qualifierTypeDisplay" type="string" persistent="false";
-	property name="qualifiers" type="string" persistent="false";
 	
 	
 	public any function init() {
