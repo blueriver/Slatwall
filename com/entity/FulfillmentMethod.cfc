@@ -53,6 +53,7 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	// Related Object Properties (many-to-many - owner)
 
 	// Related Object Properties (many-to-many - inverse)
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierFulfillmentMethod" fkcolumn="fulfillmentMethodID" inversejoincolumn="promotionQualifierID" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -87,6 +88,14 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	}    
 	public void function removeShippingMethod(required any shippingMethod) {    
 		arguments.shippingMethod.removeFulfillmentMethod( this );    
+	}
+	
+	// Promotion Qualifiers (many-to-many - inverse)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.addFulfillmentMethods( this );
+	}
+	public void function removePromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.removeFulfillmentMethods( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
