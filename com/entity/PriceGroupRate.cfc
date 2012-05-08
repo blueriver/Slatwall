@@ -70,6 +70,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	// Non-persistent entities
 	property name="amountTypeOptions" persistent="false";
 	property name="appliesTo" type="string" persistent="false";
+	property name="displayName" type="string" persistent="false";
 	
 	public PriceGroupRate function init() {
 	   // set default collections for association management methods
@@ -256,6 +257,30 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	       }
 	   }
     }
+    
+    public void function addSku(required any sku) {
+		if(arguments.sku.isNew() || !hasSku(arguments.sku)) {
+			// first add sku to this priceGroup
+			arrayAppend(this.getSkus(),arguments.sku);
+			//add this priceGroupRate to the sku
+			arrayAppend(arguments.sku.getPriceGroupRates(),this);
+		}
+	}
+    
+    public void function removeSku(required any sku) {
+       // first remove the product from this priceGroupRate
+       if(this.hasSku(arguments.sku)) {
+	       var index = arrayFind(this.getSkus(),arguments.sku);
+	       if(index>0) {
+	           arrayDeleteAt(this.getSkus(),index);
+	       }
+	      // then remove this priceGroupRate from the product
+	       var index = arrayFind(arguments.sku.getPriceGroups(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.sku.getPriceGroups(),index);
+	       }
+	   }
+    }
 	
     // =============  END:  Bidirectional Helper Methods ===================
 	
@@ -270,7 +295,11 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	}
 
 	public string function getSimpleRepresentationPropertyName() {
-		return "appliesTo";
+		return "DisplayName";
+	}
+	
+	public string function getDisplayName(){
+		return getPriceGroup().getPriceGroupName() & " - " & getAmount() & " - " & getAmountType();
 	}
 
 	// ==================  END:  Overridden Methods ========================
