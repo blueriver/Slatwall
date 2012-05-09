@@ -262,7 +262,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	    	variables.totalShippingWeight = 0;
 	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
 	    		var convertedWeight = getService("measurementUnitService").convertWeightToGlobalWeightUnit(getOrderFulfillmentItems()[i].getSku().setting('skuShippingWeight'), getOrderFulfillmentItems()[i].getSku().setting('skuShippingWeightUnitCode'));
-	    		variables.totalShippingWeight = precisionEvaluate(variables.totalShippingWeight + (convertedWeight * items[i].getQuantity()) );
+	    		variables.totalShippingWeight = precisionEvaluate(variables.totalShippingWeight + (convertedWeight * getOrderFulfillmentItems()[i].getQuantity()) );
 	    	}			
   		}
     	return variables.totalShippingWeight;
