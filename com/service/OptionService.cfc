@@ -148,4 +148,14 @@ component extends="BaseService" accessors="true" {
 	public array function getMaximumOptionSortOrders() {
 		return getDAO().getMaximumOptionSortOrders();
 	}
+	
+	public array function getOptionsForSelect(required any options){
+		var sortedOptions = [];
+		
+		for(i=1; i <= arrayLen(arguments.options); i++){
+			arrayAppend(sortedOptions,{name=arguments.options[i].getOptionName(),value=arguments.options[i].getOptionID()});
+		}
+		
+		return sortedOptions;
+	}
 }

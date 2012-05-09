@@ -37,36 +37,16 @@ Notes:
 
 --->
 
+<cfparam name="rc.sku" type="any" />
+<cfset skuOptions = rc.$.slatwall.getService('productService').getFormattedOptionGroups(rc.product)/>
+<cfset skuValues = rc.sku.getOptionsValueStruct() />
+
 <cfoutput>
-	<!--- novalidate="novalidate" --->
-	<form method="post" action="?s=1" class="form-horizontal">
-		<input type="hidden" name="slatAction" value="product.saveUpdatePrice" />
-		<input type="hidden" name="returnAction" value="admin:product.editproduct&productID=#rc.productID#" />
-		
-		<input type="hidden" name="productID" value="#rc.productID#" />
-		<div class="modal-header">
-			<a class="close" data-dismiss="modal">&times;</a>
-			<h3>Update Prices</h3>
-		</div>
-		<div class="modal-body">
-			<div class="row-fluid">
-				
-				<fieldset class="dl-horizontal">
-					<div class="control-group">
-						<label for="priceUpdate" class="control-label">Price</label></dt>
-						<div class="controls">
-							<input tabindex="1" type="text" name="price" value="" class="required number valid" />
-						</div>
-					</div>
-					
-				</fieldset>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<div class="btn-group">
-				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.cancel')#</a>
-				<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.save')#</button>
-			</div>
-		</div>
-	</form>
+	<cf_slatwallPropertyList>
+		<cfset count=1/>
+		<cfloop collection="#skuOptions#" item="option" >
+			<cf_SlatwallFieldDisplay fieldName="options" title="#option#" value="#skuValues[option]#" valueoptions="#skuOptions[option]#" fieldtype="select" edit="#rc.edit#">
+			<cfset count++ />
+		</cfloop>
+	</cf_slatwallPropertyList>
 </cfoutput>

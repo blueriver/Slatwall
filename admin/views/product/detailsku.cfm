@@ -80,6 +80,7 @@ Notes:
 				<cf_SlatwallTab view="admin:product/skutabs/accesscontents" />
 			</cfif>
 			<cf_SlatwallTab view="admin:product/skutabs/alternateskucodes" />
+			<cf_SlatwallTab view="admin:product/skutabs/options" />
 			<cf_SlatwallTab view="admin:product/skutabs/priceGroups" />
 			<cf_SlatwallTab view="admin:product/skutabs/skusettings" />
 		</cf_SlatwallTabGroup>

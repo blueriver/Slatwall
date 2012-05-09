@@ -46,6 +46,7 @@ component extends="BaseService" accessors="true" {
 	property name="skuService" type="any";
 	property name="utilityFileService" type="any";
 	property name="utilityTagService" type="any";
+	property name="optionService" type="any";
 	
 	public any function getProductSmartList(struct data={}, currentURL="") {
 		arguments.entityName = "SlatwallProduct";
@@ -237,5 +238,25 @@ component extends="BaseService" accessors="true" {
 		for(i=1; i <= arrayLen(skus); i++){
 			skus[i].setPrice(arguments.data.skuPrice);
 		}
+	}
+	
+	public any function processOptionGroup(required any product, struct data={}, string processContext="process") {
+		
+	}
+	
+	public any function processOption(required any product, struct data={}, string processContext="process") {
+		
+	}
+	
+	public any function getFormattedOptionGroups(required any product){
+		var AvailableOptions={};
+		 
+		productObjectGroups = arguments.product.getOptionGroups() ;
+		
+		for(i=1; i <= arrayLen(productObjectGroups); i++){
+			AvailableOptions[productObjectGroups[i].getOptionGroupName()] = getOptionService().getOptionsForSelect(arguments.product.getOptionsByOptionGroup(productObjectGroups[i].getOptionGroupID()));
+		}
+		
+		return AvailableOptions;
 	}
 }

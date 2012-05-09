@@ -190,6 +190,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return dspOptions;
     }
     
+     public struct function getOptionsValueStruct() {
+	    	var options = {};
+	    	for(var i=1;i<=arrayLen(getOptions());i++) {
+	    		options[getOptions()[i].getOptionGroup().getOptionGroupName()] = getOptions()[i].getOptionID();
+	    	}
+		return options;
+    }
+    
     public string function displayOptions(delimiter=" ") {
     	var dspOptions = "";
     	for(var i=1;i<=arrayLen(getOptions());i++) {
