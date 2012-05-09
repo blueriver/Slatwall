@@ -322,6 +322,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 		
+		// var paymentsProcessed = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount());
+		// processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')});
+		
+		
+		/*
 		if(renewalOk) {
 			// set next bill date, calculated from the last bill date
 			// need setting to decide what start date to use for next bill date calculation
@@ -368,6 +373,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			getOrderService().getDAO().save(order);
 		}
 		return renewalOk;
+		*/
+	}
+	
+	private void function updateSubscriptionUsageStatus(required any subscriptionUsage) {
+		// Is the next bill date + grace period in past || the next bill date is in the future, but the last order for this subscription usage hasn't been paid (+ grace period from that orders date)
+			// Suspend
 	}
 	
 	private boolean function cancelSubscriptionUsage(required any subscriptionUsage, struct data={}) {
