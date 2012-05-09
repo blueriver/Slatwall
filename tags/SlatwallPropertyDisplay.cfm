@@ -131,12 +131,7 @@ Notes:
 				<cfset attributes.value = trim(thisValueList) />
 			<cfelse>
 				<cfif not attributes.edit or attributes.object.getPropertyFormatType( attributes.property ) eq "datetime">
-					<!--- Set up the value formatType --->
-					<cfif attributes.valueFormatType eq "">
-						<cfset attributes.valueFormatType = attributes.object.getPropertyFormatType( attributes.property ) />
-					</cfif>
-					
-					<cfset attributes.value = attributes.object.formatValue(attributes.value, attributes.valueFormatType) />
+					<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
 				</cfif>
 			</cfif>
 			

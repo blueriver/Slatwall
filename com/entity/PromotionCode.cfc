@@ -41,8 +41,8 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	// Persistent Properties
 	property name="promotionCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="promotionCode" ormtype="string";
-	property name="startDateTime" ormtype="timestamp";
-	property name="endDateTime" ormtype="timestamp";
+	property name="startDateTime" ormtype="timestamp" formatType="custom";
+	property name="endDateTime" ormtype="timestamp" formatType="custom";
 	property name="maximumUseCount" ormtype="integer" notnull="false" formatType="custom";
 	property name="maximumAccountUseCount" ormtype="integer" notnull="false" formatType="custom";
 	
@@ -58,7 +58,20 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	// Related Object Properties (Many-To-Many)
 	property name="orders" singularname="order" cfc="Order" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID";
 	
-
+	public any function getStartDateTimeFormatted() {
+		if(isNull(getStartDateTime())) {
+			return rbKey('define.any');
+		}
+		return formatValue(getStartDateTime(), "datetime");
+	}
+	
+	public any function getEndDateTimeFormatted() {
+		if(isNull(getEndDateTime())) {
+			return rbKey('define.any');
+		}
+		return formatValue(getEndDateTime(), "datetime");
+	}
+	
 	public any function getMaximumUseCountFormatted() {
 		if(isNull(getMaximumUseCount()) || !isNumeric(getMaximumUseCount()) || getMaximumUseCount() == 0) {
 			return rbKey('define.unlimited');

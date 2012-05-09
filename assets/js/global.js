@@ -1,7 +1,7 @@
 /**
  * @depends /jquery-1.7.1.min.js
- * @depends /jquery-ui-1.8.16.custom.min.js
- * @depends /jquery-ui-timepicker-0.2.1.js
+ * @depends /jquery-ui-1.8.20.custom.min.js
+ * @depends /jquery-ui-timepicker-addon-0.9.9.js
  * @depends /jquery-validate-1.9.0.min.js
  * @depends /bootstrap.min.js
  * 
@@ -31,23 +31,21 @@ jQuery(document).ready(function() {
 });
 
 function initUIElements( scopeSelector ) {
+	
 	// Datetime Picker
-	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datepicker({
-		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
-		duration: '',
-        showTime: true,
-        constrainInput: false,
-        stepMinutes: 1, 
-        stepHours: 1,
-        altTimeField: '',  
-        time24h: false
+	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datetimepicker({
+		dateFormat: convertCFMLDateFormat( slatwall.dateFormat )
 	});
 	
 	// Date Picker
-	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker();
+	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker({
+		dateFormat: convertCFMLDateFormat( slatwall.dateFormat )
+	});
 	
 	// Time Picker
-	//jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker();
+	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({
+		
+	});
 	
 	// Tooltips
 	jQuery( scopeSelector ).find(jQuery('.hint')).tooltip();
