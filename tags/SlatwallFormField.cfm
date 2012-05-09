@@ -65,6 +65,15 @@ Notes:
 		
 	--->
 	
+	<cfsilent>
+		<cfset local.fieldAttributes = "" />
+		<cfloop collection="#attributes#" item="key">
+			<cfif left(key,5) eq "data-">
+				<cfset local.fieldAttributes = listAppend(local.fieldAttributes, "#key#=#attributes[key]#", " ") />
+			</cfif>
+		</cfloop>
+	</cfsilent>
+	
 	<cfparam name="request.context.tabindex" default="0" >
 	<cfset request.context.tabindex++ />
 	
@@ -156,7 +165,7 @@ Notes:
 		</cfcase>
 		<cfcase value="text">
 			<cfoutput>
-				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass#" />
+				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass#" #local.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="textarea">

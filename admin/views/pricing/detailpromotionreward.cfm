@@ -46,6 +46,9 @@ Notes:
 	<cfset rc.edit = false />
 	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionreward.edit_disabled'),messageType="info"}) />
 </cfif>
+<cfif rc.edit>
+	<cfset rc.promotionReward.setRewardType(rc.rewardType) />
+</cfif>
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
@@ -59,18 +62,16 @@ Notes:
 				<input type="hidden" name="rewardType" value="#rc.rewardType#" />
 				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 				<input type="hidden" name="returnAction" value="admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" />
-				
-				
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amountType" fieldType="select" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="roundingRule" edit="#rc.edit#" />
 				<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.rewardType)>
+					<cfif rc.rewardType eq "subscription">
+						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="applicableTerm" edit="#rc.edit#" />
+					</cfif>
 					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerOrder" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
 					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerItem" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
 					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerQualification" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
-					<cfif rc.rewardType eq "subscription">
-						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="applicableSubscriptionTerm" edit="#rc.edit#" />
-					</cfif>
 					<div class="row-fluid">
 						<div class="span6">
 							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="productTypes" edit="#rc.edit#" />

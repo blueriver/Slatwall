@@ -41,9 +41,9 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormType="big_decimal" formatType="custom";
-	property name="amountType" ormType="string" formFieldType="select";
-	property name="rewardType" ormType="string" formFieldType="select";
-	property name="applicableTerm" ormType="string";
+	property name="amountType" ormType="string" formFieldType="select" formatType="custom";
+	property name="rewardType" ormType="string" formFieldType="select" formatType="custom";
+	property name="applicableTerm" ormType="string" formFieldType="select" formatType="custom";
 	property name="maximumUsePerOrder" ormType="integer";
 	property name="maximumUsePerItem" ormtype="integer";
 	property name="maximumUsePerQualification" ormtype="integer";
@@ -121,13 +121,33 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		return super.init();
 	}
 	
+	public string function getAmountFormatted() {
+		if(getAmountType() == "percentageOff") {
+			return formatValue(getAmount(), "percentage");
+		}
+		
+		return formatValue(getAmount(), "currency");
+	}
+	
+	public string function getAmountTypeFormatted() {
+		return rbKey('define.#getAmountType()#');
+	}
+	
+	public string function getRewardTypeFormatted() {
+		return rbKey('define.#getRewardType()#');
+	}
+	
+	public string function getApplicableTermFormatted() {
+		return rbKey('define.#getApplicableTerm()#');
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 
 	public array function getApplicableTermOptions() {
 		return [
-			{name=rbKey("entity.promotionReward.applicableTerm.both"), value="both"},
-			{name=rbKey("entity.promotionReward.applicableTerm.initial"), value="initial"},
-			{name=rbKey("entity.promotionReward.applicableTerm.renewal"), value="renewal"}
+			{name=rbKey("define.both"), value="both"},
+			{name=rbKey("define.initial"), value="initial"},
+			{name=rbKey("define.renewal"), value="renewal"}
 		];
 	}
 	
@@ -144,43 +164,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 				{name=rbKey("define.fixedAmount"), value="amount"}
 			];
 		}
-	}
-
-	public string function getRewards() {
-		if( !structKeyExists( variables,"rewards" ) ) {
-			variables.rewards = "";
-			if( getRewardType() eq "product" ) {
-				var items = "";
-				if( arrayLen(getSkus()) ) {
-					items = listAppend(items,rbKey('entity.promotionRewardProduct.skus') & ": " & displaySkuCodes());
-				}
-				if( arrayLen(getProducts()) ) {
-					items = listAppend(items,rbKey('entity.promotionRewardProduct.products') & ": " & displayProductNames());
-				}
-				if( arrayLen(getProductTypes()) ) {
-					items = listAppend(items,rbKey('entity.promotionRewardProduct.productTypes') & ": " & displayProductTypeNames());
-				}
-				if( arrayLen(getBrands()) ) {
-					items = listAppend(items,rbKey('entity.promotionRewardProduct.brands') & ": " & displayBrandNames());
-				}
-				if( arrayLen(getOptions()) ) {
-					items = listAppend(items,rbKey('entity.promotionRewardProduct.options') & ": " & displayOptionNames());
-				}
-				if( len(items) == 0 ) {
-					items = rbKey("define.all");
-				}
-			} else if( getRewardType() == "shipping" ) {
-				if( arrayLen(getShippingMethods()) ) {
-					items = displayShippingMethodNames();
-				} else {
-					items = rbKey("define.all");
-				}
-			} else if( getRewardType() == "order" ) {
-				items = rbKey("define.na");
-			}
-			variables.rewards = items;	
-		}
-		return variables.rewards;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -389,14 +372,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	// ================== START: Overridden Methods ========================
 	
-	public string function getAmountFormatted() {
-		if(getAmountType() == "percentageOff") {
-			return formatValue(getAmount(), "percentage");
-		}
-		
-		return formatValue(getAmount(), "currency");
-	}
-
 	public string function getSimpleRepresentationPropertyName() {
 		return "rewardType";
 	}
