@@ -45,7 +45,7 @@ Notes:
 <cf_SlatwallListingDisplay smartList="#rc.subscriptionUsageSmartList#"
 						   recordEditAction="admin:account.editsubscriptionUsage"
 						   recordEditModal=true
-						   recordProcessAction="admin:account.processSubscription&context=renew"
+						   recordProcessAction="admin:account.processSubscriptionUsage&processContext=autoRenew"
 						   recordProcessQueryString="returnaction=admin:account.listsubscriptionusage">
 
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
