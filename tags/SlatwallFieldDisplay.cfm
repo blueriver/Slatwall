@@ -71,7 +71,7 @@ Notes:
 					<div class="control-group">
 						<label for="#attributes.fieldName#" class="control-label">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></dt>
 						<div class="controls">
-							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
+							<cf_SlatwallFormField attributecollection="#attributes#" />
 							<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 						</div>
 					</div>
@@ -94,7 +94,7 @@ Notes:
 					<tr>
 						<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></td>
 						<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
-							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
+							<cf_SlatwallFormField attributecollection="#attributes#" />
 							<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 						</td>
 					</tr>
@@ -118,7 +118,7 @@ Notes:
 				<cfoutput>
 					<span class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></span>
 					<span class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
-						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
+						<cf_SlatwallFormField attributecollection="#attributes#" />
 						<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 					</span>
 				</cfoutput>

@@ -11,6 +11,10 @@ var ajaxlock = 0;
 
 jQuery(document).ready(function() {
 	
+	setupEventHandlers();
+	
+	initUIElements( 'body' );
+
 	// Looks for a tab to show
 	if( window.location.hash ) {
 		var hash = window.location.hash.substring(1);
@@ -24,8 +28,6 @@ jQuery(document).ready(function() {
 		jQuery('input[tabindex=1]').focus();
 	}
 	
-	initUIElements( 'body' );
-	setupEventHandlers();
 });
 
 function initUIElements( scopeSelector ) {
@@ -49,6 +51,11 @@ function initUIElements( scopeSelector ) {
 	
 	// Tooltips
 	jQuery( scopeSelector ).find(jQuery('.hint')).tooltip();
+	
+	// Empty Values
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('input[data-emptyvalue]')), function(index, value) {
+		jQuery(this).blur();
+	});
 	
 	// Validation
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value) {
@@ -76,7 +83,28 @@ function setupEventHandlers() {
 	// Tab Selecting
 	jQuery('body').on('shown', 'a[data-toggle="tab"]', function (e) {
 		window.location.hash = jQuery(this).attr('href');
+	});
+	
+	// Empty Value
+	jQuery('body').on('focus', 'input[data-emptyvalue]', function (e) {
+		jQuery(this).removeClass('emptyvalue');
+		if(jQuery(this).val() == jQuery(this).data('emptyvalue')) {
+			jQuery(this).val('');
+		}
 	})
+	jQuery('body').on('blur', 'input[data-emptyvalue]', function (e) {
+		if(jQuery(this).val() == '') {
+			jQuery(this).val(jQuery(this).data('emptyvalue'));
+			jQuery(this).addClass('emptyvalue');
+		}
+	})
+	jQuery('body').on('submit', 'form', function (e) {
+		jQuery.each(jQuery('a[data-emptyvalue]'), function(i,v) {
+			if(jQuery(this).val() == jQuery(this).attr('data-emptyvalue')) {
+				jQuery(this).val('');
+			}
+		});
+	});
 	
 	// Alerts
 	jQuery('body').on('click', '.alert-confirm', function(e){
