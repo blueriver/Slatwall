@@ -48,8 +48,19 @@ Notes:
 		
 		<cf_SlatwallProcessListing processSmartList="#rc.processProductSmartList#">
 			<cf_SlatwallProcessColumn propertyIdentifier="productName" />
-			<cf_SlatwallProcessColumn data="skuPrice" fieldType="text" fieldClass="span2 number" value="" />
+			<cfswitch expression="#rc.processcontext#" >
+				<cfcase value="bulkupdate">
+					<cf_SlatwallProcessColumn data="skuPrice" fieldType="text" fieldClass="span2 number" value="" />
+				</cfcase> 
+				<cfcase value="addOptionGroup">
+					<cf_SlatwallProcessColumn data="optionGroup" fieldType="select" valueOptions="#rc.$.slatwall.getService('OptionService').getUnusedProductOptionGroups(rc.productID)#" fieldClass="span2"/>
+				</cfcase> 
+				<cfcase value="addOption">
+					<cf_SlatwallProcessColumn data="option" fieldType="select" valueOptions="#rc.$.slatwall.getService('OptionService').getUnusedProductOptions(rc.productID)#" fieldClass="span2" value="" />
+				</cfcase> 
+			</cfswitch>	
+			
 		</cf_SlatwallProcessListing>
-		
+		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
 	</cf_SlatwallProcessForm>
 </cfoutput>
