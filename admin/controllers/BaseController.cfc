@@ -282,10 +282,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
 		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=entity, 2=rc} );
-	
-		
+			
 		if(!rc[ arguments.entityName ].hasErrors()) {
-			logSlatwall('5',true);
 			if(structKeyExists(rc, "returnAction")) {
 				redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
 			} else {

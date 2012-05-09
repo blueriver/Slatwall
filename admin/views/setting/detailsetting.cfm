@@ -68,7 +68,11 @@ Notes:
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
+				<cfif not rc.setting.isNew() and structKeyExists(rc.setting.getSettingMetaData(), "encryptValue")>
+					<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" data-emptyvalue="********">
+				<cfelse>
+					<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
+				</cfif>
 			</cf_SlatwallPropertyList>
 			<cfif !rc.setting.isNew() and local.hasRelationshipKey>
 				<cf_SlatwallActionCaller action="admin:setting.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&returnAction=#request.context.returnAction#&#local.returnActionQueryString#" class="btn btn-danger" />

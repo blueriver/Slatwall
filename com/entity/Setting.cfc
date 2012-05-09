@@ -62,6 +62,9 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 
+	public struct function getSettingMetaData() {
+		return getService("settingService").getSettingMetaData(settingName=getSettingName());
+	}
 
 	// ============ START: Non-Persistent Property Methods =================
 	

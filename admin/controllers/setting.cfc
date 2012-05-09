@@ -193,4 +193,11 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		super.genericSaveMethod('TaskSchedule',rc);
 	}
+	
+	public void function editSetting(required struct rc) {
+		rc.setting = getSettingService().getSetting(rc.settingID, true);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailsetting");
+	}
+	
 }

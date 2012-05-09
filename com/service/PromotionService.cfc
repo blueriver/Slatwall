@@ -256,6 +256,34 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return priceDetails;
 	}
 	
+	public struct function getShippingMethodOptionsDiscountAmountDetails(required any shippingMethodOption) {
+		var details = {
+			promotionID="",
+			discountAmount=0
+		};
+		
+		var promotionRewards = getDAO().getActivePromotionRewards( rewardType="fulfillment", promotionCodeList=arguments.shippingMethodOption.getOrderFulfillment().getOrder().getPromotionCodeList() );
+		
+		writeDump(var=promotionRewards, top=2);
+		abort;
+		
+		// Loop over the Promotion Rewards to look for the best discount
+		for(var i=1; i<=arrayLen(promotionRewards); i++) {
+			var qc = 1;
+			
+			// Check to see if this requires any promotion codes
+			if(arrayLen(promotionRewards[i].getPromotionPeriod().getPromotion().getPromotionCodes())) {
+				// set the qc to 0 so that we can then 
+				qc = 0;
+				
+				// loop over the promotion codes looking for 
+			}
+		}
+		
+		
+		return details;
+	}
+	
 	// ----------------- END: Apply Promotion Logic -------------------------
 		 
 	/*

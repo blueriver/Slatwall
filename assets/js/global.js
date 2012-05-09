@@ -43,9 +43,7 @@ function initUIElements( scopeSelector ) {
 	});
 	
 	// Time Picker
-	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({
-		
-	});
+	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({});
 	
 	// Tooltips
 	jQuery( scopeSelector ).find(jQuery('.hint')).tooltip();
@@ -55,9 +53,24 @@ function initUIElements( scopeSelector ) {
 		jQuery(this).blur();
 	});
 	
+	// Form Empty value clear (IMPORTANT!!! KEEP THIS ABOVE THE VALIDATION ASIGNMENT)
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value) {
+		jQuery(value).on('submit', function(e){
+			jQuery.each(jQuery( this ).find(jQuery('input[data-emptyvalue]')), function(i, v) {
+				if(jQuery(v).val() == jQuery(v).data('emptyvalue')) {
+					jQuery(v).val('');
+				}
+			});
+		});
+	});
+	
 	// Validation
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value) {
-		jQuery(value).validate();
+		jQuery(value).validate({
+			invalidHandler: function() {
+				console.log(jQuery(value).find('input[data-emptyvalue]').blur());
+			}
+		});
 	});
 	
 	// Table Sortable
@@ -89,19 +102,12 @@ function setupEventHandlers() {
 		if(jQuery(this).val() == jQuery(this).data('emptyvalue')) {
 			jQuery(this).val('');
 		}
-	})
+	});
 	jQuery('body').on('blur', 'input[data-emptyvalue]', function (e) {
 		if(jQuery(this).val() == '') {
 			jQuery(this).val(jQuery(this).data('emptyvalue'));
 			jQuery(this).addClass('emptyvalue');
 		}
-	})
-	jQuery('body').on('submit', 'form', function (e) {
-		jQuery.each(jQuery('a[data-emptyvalue]'), function(i,v) {
-			if(jQuery(this).val() == jQuery(this).attr('data-emptyvalue')) {
-				jQuery(this).val('');
-			}
-		});
 	});
 	
 	// Alerts
