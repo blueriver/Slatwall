@@ -473,9 +473,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return productCrumbData;
 	}
 	
-	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup ) {
+	/*public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup ) {
 		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
-	}
+	}*/
 	
 	// Start: Quantity Methods
 	
@@ -611,6 +611,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			}
 		}
 		return variables.salePriceExpirationDateTime;
+	}
+	
+	public array function getProductOptionsByGroup(){
+		return getProductService().getProductOptionsByGroup(this);
 	}
 
 	// ============  END:  Non-Persistent Property Methods =================

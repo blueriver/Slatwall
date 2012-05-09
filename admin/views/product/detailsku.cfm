@@ -43,7 +43,9 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.sku#" edit="#rc.edit#" enctype="multipart/form-data">
 		<cf_SlatwallActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:product.detailproduct" backQueryString="productID=#rc.product.getProductID()#" />
+		<input type="hidden" name="returnAction" value="admin:product.detailproduct&productID=#rc.product.getProductID()#" />
 		
+		<input type="hidden" name="productID" value="#rc.product.getProductID()#" />
 		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
 
 		<cf_SlatwallDetailHeader>
@@ -80,6 +82,8 @@ Notes:
 				<cf_SlatwallTab view="admin:product/skutabs/accesscontents" />
 			</cfif>
 			<cf_SlatwallTab view="admin:product/skutabs/alternateskucodes" />
+			<cf_SlatwallTab view="admin:product/skutabs/options" />
+			<cf_SlatwallTab view="admin:product/skutabs/priceGroups" />
 			<cf_SlatwallTab view="admin:product/skutabs/skusettings" />
 		</cf_SlatwallTabGroup>
 

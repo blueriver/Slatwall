@@ -145,7 +145,7 @@ component extends="BaseController" output=false accessors=true {
 			}
 			
 		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
-			fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
+			fileDelete(expandPath(sku.getImageDirectory()) & sku.getImageFile());	
 			rc.imageFile='';
 		}else{
 			rc.imageFile = sku.getImageFile();

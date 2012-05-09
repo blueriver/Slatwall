@@ -57,6 +57,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="roundingRule" edit="#rc.edit#" displayVisible="amountType:percentageOff" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="productTypes" edit="#rc.edit#" displayVisible="globalFlag:0" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="products" edit="#rc.edit#" displayVisible="globalFlag:0" />
+				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="skus" edit="#rc.edit#" displayVisible="globalFlag:0" />
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

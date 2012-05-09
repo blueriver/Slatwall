@@ -36,37 +36,26 @@
 Notes:
 
 --->
+<cfparam name="rc.sku" type="any" />
 
+
+
+<cf_slatwallPropertyList>
+	<cf_SlatwallPropertyDisplay object="#rc.sku#" property="priceGroupRates" edit="#rc.edit#" displayVisible="globalFlag:0" />
+	<!---<cf_SlatwallPropertyDisplay object="#rc.sku#" property="priceGroupRates" edit="#rc.edit#"  fieldType="multiselect"  />--->
+</cf_slatwallPropertyList>
+
+<!---
 <cfoutput>
-	<!--- novalidate="novalidate" --->
-	<form method="post" action="?s=1" class="form-horizontal">
-		<input type="hidden" name="slatAction" value="product.saveUpdatePrice" />
-		<input type="hidden" name="returnAction" value="admin:product.editproduct&productID=#rc.productID#" />
+	<cf_SlatwallListingDisplay smartList="#rc.sku.getPriceGroupRatesSmartList()#"
+			recordEditAction="admin:product.editPricegroupRate&skuID=#rc.sku.getSkuID()#"
+			recordeditmodal="true" >
+			
+		<cf_SlatwallListingColumn  propertyIdentifier="amount" />
+		<cf_SlatwallListingColumn  propertyIdentifier="amountType" />
+		<cf_SlatwallListingColumn  propertyIdentifier="priceGroup.priceGroupName" />
 		
-		<input type="hidden" name="productID" value="#rc.productID#" />
-		<div class="modal-header">
-			<a class="close" data-dismiss="modal">&times;</a>
-			<h3>Update Prices</h3>
-		</div>
-		<div class="modal-body">
-			<div class="row-fluid">
-				
-				<fieldset class="dl-horizontal">
-					<div class="control-group">
-						<label for="priceUpdate" class="control-label">Price</label></dt>
-						<div class="controls">
-							<input tabindex="1" type="text" name="price" value="" class="required number valid" />
-						</div>
-					</div>
-					
-				</fieldset>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<div class="btn-group">
-				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.cancel')#</a>
-				<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.save')#</button>
-			</div>
-		</div>
-	</form>
-</cfoutput>
+	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:product.createPricegroupRate" class="btn btn-primary" queryString="SkuID=#rc.sku.getSkuID()#" modal="true" />
+</cfoutput>--->
