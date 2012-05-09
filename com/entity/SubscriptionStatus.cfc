@@ -40,7 +40,8 @@ component displayname="Subscription Status" entityname="SlatwallSubscriptionStat
 	
 	// Persistent Properties
 	property name="subscriptionStatusID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="subscriptionStatusChangeDateTime" ormtype="timestamp";
+	property name="changeDateTime" ormtype="timestamp";
+	property name="effectiveDateTime" ormtype="timestamp";
 
 	// Related Object Properties (many-to-one)
 	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";

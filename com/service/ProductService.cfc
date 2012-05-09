@@ -230,4 +230,12 @@ component extends="BaseService" accessors="true" {
 		return getDAO().getProductIsOnTransaction(product=arguments.product);
 	}
 	
+	public any function processProduct(required any product, struct data={}, string processContext="process") {
+		
+		var skus = 	arguments.product.getSkus();
+		
+		for(i=1; i <= arrayLen(skus); i++){
+			skus[i].setPrice(arguments.data.skuPrice);
+		}
+	}
 }

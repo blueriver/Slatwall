@@ -43,4 +43,72 @@ component extends="BaseService" output="false" {
 		return true;
 	}
 	
+	public struct function getPermissions(){
+		var stPermissions={};
+		var i = 1;
+		var dirList = directoryList( expandPath("/plugins/Slatwall/admin/controllers") );
+
+		if(!isStruct(variables.permissions)){		
+			for(i=1; i <= arrayLen(dirList); i++){
+				obj = createObject('component',replace(replace(replace(replace(dirList[i],getSlatwallRootDirectory(),''),'/','.','all' ),'.cfc',''),'.',''));
+				
+				if(StructKeyExists(obj,'secureMethods')){
+					
+					methods=obj.secureMethods;
+					
+					for(j=1; j <= listLen(methods); j++){
+						section = replace(listgetat(dirList[i],listLen(dirList[i],'/'),'/'),'.cfc','');
+						
+						if(!StructKeyExists(stPermissions,section)){
+							stPermissions[section] = [];
+						}
+						
+						arrayAppend(stPermissions[section],rbKey('permission.' & section & '.' & listgetat(methods,j)));
+					}	
+					
+					ArraySort(stPermissions[section],"textnocase" );	
+				}
+			}
+			
+			variables.permissions = stPermissions;
+		}
+		return variables.permissions;
+	}
+	
+	public function getPublicMethods(required string controller){
+		var obj = createObject('component','admin.controllers.' & arguments.controller);
+		var stResponse = {};
+		
+		if(structKeyExists(obj,'publicMethods')){
+			for(i=1; i <= listLen(obj.publicMethods); i++){
+				stResponse[listgetat(obj.publicMethods,i)]='';
+			}
+		}
+		
+		return structKeyList(stResponse);
+	}
+	
+	public function getSecureMethods(required string controller){
+		var obj = createObject('component','admin.controllers.' & arguments.controller);
+		var stResponse = {};
+		
+		if(structKeyExists(obj,'secureMethods')){
+			for(i=1; i <= arrayLen(obj.secureMethods); i++){
+				stResponse[obj.secureMethods[i]]='';
+			}
+		}
+		return structKeyList(stResponse);
+	}
+	
+	public function setupDefaultPermissions(){
+		var accounts = getDAO().getMissingUserAccounts();
+		var permissionGroup = get('PermissionGroup',{permissionGroupID='4028808a37037dbf01370ed2001f0074'});
+		
+		for(i=1; i <= accounts.recordcount; i++){
+			account = get('Account',{accountID=accounts.accountID[i]});
+			account.addPermissionGroup(permissionGroup);
+		}
+		getDAO().FlushORMSession();
+	}
+	
 }

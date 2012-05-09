@@ -281,10 +281,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var requirePayment = false;
 		
 		// check if payment method is required for subscription order, even if the amount is 0
-		// require payment if renewal price is not 0 and autoRenewFlag is true
+		// require payment if renewal price is not 0 and autoPayFlag is true
 		if(!arrayLen(order.getOrderPayments())) {
 			for(var orderItem in arguments.order.getOrderItems()) {
-				if(!isNull(orderItem.getSku().getSubscriptionTerm()) && orderItem.getSku().getRenewalPrice() != 0 && !isNull(orderItem.getSku().getSubscriptionTerm().getAutoRenewFlag()) && orderItem.getSku().getSubscriptionTerm().getAutoRenewFlag()) {
+				if(!isNull(orderItem.getSku().getSubscriptionTerm()) && orderItem.getSku().getRenewalPrice() != 0 && !isNull(orderItem.getSku().getSubscriptionTerm().getAutoPayFlag()) && orderItem.getSku().getSubscriptionTerm().getAutoPayFlag()) {
 					requirePayment = true;
 					break;
 				}
@@ -403,8 +403,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								getUtilityEmailService().sendOrderConfirmationEmail(order=order);
 							}
 							
-							// save account payment if needed, should probably be with orderpayment not order...
-							if(isNull(order.getAccountPaymentMethod())) {
+							// save account payment if needed (for renewal), do this only 1 orderpayment exists
+							// if there are multiple orderPayment, logic needs to get added for user to defined the paymentMethod for renewals
+							if(arrayLen(order.getOrderPayments()) == 1 && isNull(order.getOrderPayments()[1].getAccountPaymentMethod())) {
 								// if there is any subscription item, save the account payment for use in renewal
 								for(var orderItem in order.getOrderItems()) {
 									if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
@@ -416,7 +417,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 											accountPaymentMethod.setAccountPaymentMethodName(accountPaymentMethod.getNameOnCreditCard() & " " & accountPaymentMethod.getCreditCardType());
 											getAccountService().saveAccountPaymentMethod(accountPaymentMethod);
 										}
-										order.setAccountPaymentMethod(accountPaymentMethod);
+										order.getOrderPayments()[1].setAccountPaymentMethod(accountPaymentMethod);
 										break;
 									}
 								}

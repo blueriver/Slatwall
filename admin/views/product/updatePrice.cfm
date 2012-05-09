@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
-	
+ 
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -36,30 +36,37 @@
 Notes:
 
 --->
+
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#" 
-			recordDetailAction="admin:product.detailsku"
-			recordDetailQueryString="productID=#rc.product.getProductID()#"
-			recordEditAction="admin:product.editsku"
-			recordEditQueryString="productID=#rc.product.getProductID()#"
-			recorddeleteaction="admin:product.deletesku"
-			recorddeletequerystring="returnaction=product.editproduct&productID=#rc.product.getProductID()#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="skuCode" />
+	<!--- novalidate="novalidate" --->
+	<form method="post" action="?s=1" class="form-horizontal">
+		<input type="hidden" name="slatAction" value="product.saveUpdatePrice" />
+		<input type="hidden" name="returnAction" value="admin:product.editproduct&productID=#rc.productID#" />
 		
-		<cfif rc.product.getProductType().getBaseProductType() eq "merchandise" && rc.product.getSkusSmartList().getRecordsCount() gt 1>
-			<cf_SlatwallListingColumn propertyIdentifier="optionsDisplay" />
-		<cfelseif  rc.product.getProductType().getBaseProductType() eq "subscription">
-			<cf_SlatwallListingColumn propertyIdentifier="subscriptionTerm.subscriptionTermName" />
-		<cfelseif rc.product.getProductType().getBaseProductType() eq "contentAccess">
-			<!--- Sumit says nothing is ok --->
-		</cfif>
-		
-		<cf_SlatwallListingColumn propertyIdentifier="defaultFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="imageFile" />
-		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="salePriceExpirationDateTime" range="true" />
-	</cf_SlatwallListingDisplay>
-	
-	<cf_SlatwallActionCaller action="admin:product.createsku" class="btn btn-primary" queryString="productID=#rc.product.getProductID()#" modal=true />
+		<input type="hidden" name="productID" value="#rc.productID#" />
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">&times;</a>
+			<h3>Update Prices</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row-fluid">
+				
+				<fieldset class="dl-horizontal">
+					<div class="control-group">
+						<label for="priceUpdate" class="control-label">Price</label></dt>
+						<div class="controls">
+							<input tabindex="1" type="text" name="price" value="" class="required number valid" />
+						</div>
+					</div>
+					
+				</fieldset>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="btn-group">
+				<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.cancel')#</a>
+				<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.save')#</button>
+			</div>
+		</div>
+	</form>
 </cfoutput>

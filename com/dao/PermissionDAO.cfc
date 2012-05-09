@@ -37,5 +37,25 @@ Notes:
 
 --->
 <cfcomponent extends="BaseDAO">
-	
+		<cffunction name="getMissingUserAccounts" returntype="any" access="public">
+		
+		<cfquery name="accounts">
+			SELECT
+				accountID
+			FROM	
+				slatwallAccount
+			INNER JOIN
+				tUsers on slatwallAccount.cmsAccountID = tUsers.userID
+			WHERE
+				tUsers.s2 = 1
+			AND
+				accountID NOT IN (
+					SELECT
+						accountID
+					FROM
+						SlatwallAccountPermissionGroup
+				)
+		</cfquery>	
+		<cfreturn accounts />
+	</cffunction>
 </cfcomponent>

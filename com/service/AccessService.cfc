@@ -50,10 +50,26 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 		// get the purchase required content
 		var purchaseRequiredContentSetting = restrictedContent.getSettingDetails('contentRequirePurchaseFlag');
-		var purchaseRequiredContentID = purchaseRequiredContentSetting.settingValue;
+		if(purchaseRequiredContentSetting.settingValueFormatted) {
+			if(structKeyExists(purchaseRequiredContentSetting, "settingRelationShips")) {
+				var purchaseRequiredCmsContentID = purchaseRequiredContentSetting.settingRelationShips.cmsContentID;
+			} else {
+				var purchaseRequiredCmsContentID = restrictedContent.getCmsContentID();
+			}
+		} else {
+			var purchaseRequiredCmsContentID = "";
+		}
 		// get the subscription required content
 		var subscriptionRequiredContentSetting = restrictedContent.getSettingDetails('contentRequireSubscriptionFlag');
-		var subscriptionRequiredContentID = subscriptionRequiredContentSetting.settingValue;
+		if(subscriptionRequiredContentSetting.settingValueFormatted) {
+			if(structKeyExists(subscriptionRequiredContentSetting, "settingRelationShips")) {
+				var subscriptionRequiredCmsContentID = subscriptionRequiredContentSetting.settingRelationShips.cmsContentID;
+			} else {
+				var subscriptionRequiredCmsContentID = restrictedContent.getCmsContentID();
+			}
+		} else {
+			var subscriptionRequiredCmsContentID = "";
+		}
 		var purchasedAccess = false;
 		var subcriptionAccess = false;
 		
@@ -70,13 +86,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				purchasedAccess = true;
 			}
 			// check if the content is not allowed for purchase but requires purchase of parent
-		} else if((isNull(restrictedContent.getAllowPurchaseFlag()) || !restrictedContent.getAllowPurchaseFlag()) && purchaseRequiredContentID != "") {
+		} else if((isNull(restrictedContent.getAllowPurchaseFlag()) || !restrictedContent.getAllowPurchaseFlag()) && purchaseRequiredCmsContentID != "") {
 			// check if any parent content was purchased
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
 			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=getSlatwallScope().getCurrentAccount().getAccountID());
-			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=purchaseRequiredContentID);
+			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_cmsContentID", value=purchaseRequiredCmsContentID);
 			// check if the content requires subcription in addition to purchase
-			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredContentID == "") {
+			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredCmsContentID == "") {
 				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
@@ -84,7 +100,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		// check if restricted content is part of subscription access and doesn't require purchase or it does require purchased and was purchased
-		if(purchaseRequiredContentID == "" || purchasedAccess) {
+		if(purchaseRequiredCmsContentID == "" || purchasedAccess) {
 			// check if content is part of subscription access
 			for(var subscriptionUsageBenefitAccount in getSlatwallScope().getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
 				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive() && subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(restrictedContent)) {

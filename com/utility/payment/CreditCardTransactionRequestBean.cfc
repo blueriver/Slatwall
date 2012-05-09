@@ -62,15 +62,15 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="accountPrimaryEmailAddress" type="string";
 	
 	// Billing Address Info
-	property name="billingName" type="string";
-	property name="billingCompany" type="string";
-	property name="billingStreetAddress" type="string";  
-	property name="billingStreet2Address" type="string";
-	property name="billingLocality" type="string";
-	property name="billingCity" type="string";   
-	property name="billingStateCode" type="string";   
-	property name="billingPostalCode" type="string";   
-	property name="billingCountryCode" type="string";   
+	property name="billingName" type="string" default="";
+	property name="billingCompany" type="string" default="";
+	property name="billingStreetAddress" type="string" default="";  
+	property name="billingStreet2Address" type="string" default="";
+	property name="billingLocality" type="string" default="";
+	property name="billingCity" type="string" default="";   
+	property name="billingStateCode" type="string" default="";   
+	property name="billingPostalCode" type="string" default="";   
+	property name="billingCountryCode" type="string" default="";   
 	
 	// Pertinent Reference Information
 	property name="orderPaymentID" type="string" ;

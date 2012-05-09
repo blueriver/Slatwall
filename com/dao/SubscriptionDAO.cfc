@@ -38,19 +38,16 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
-	<cffunction name="getSubscriptionUsageBySku" access="public">
-		<cfargument name="skuID" type="any" required="true" />
-		<cfargument name="accountID" type="any" required="true" />
-			
-		<cfset var hql = "SELECT ssoi.subscriptionUsage FROM SlatwallSubscriptionOrderItem ssoi
-							WHERE ssoi.subscriptionUsage.account.accountID = :accountID
-							AND ssoi.orderItem.sku.skuID = :skuID
-							AND ssoi.subscriptionOrderItemType.systemCode = 'soitInitial' " />
-			
-		<cfset var returnQuery = ormExecuteQuery(hql, {accountID=arguments.accountID,skuID=arguments.skuID}) />		
-		<cfif arrayLen(returnQuery)>
-			<cfreturn returnQuery[1] />
-		</cfif>
+	<cffunction name="getSubscriptionCurrentStatus">
+		<cfargument name="subscriptionUsageID" type="any" required="true" />
+		
+		<cfset var hql = "FROM SlatwallSubscriptionStatus ss
+							WHERE ss.subscriptionUsage.subscriptionUsageID = :subscriptionUsageID
+							AND ss.effectiveDateTime <= :now 
+							ORDER BY ss.effectiveDateTime DESC " />
+		
+		
+		<cfreturn ormExecuteQuery(hql, {subscriptionUsageID=arguments.subscriptionUsageID, now=now()}, true, {maxresults=1}) /> 
 	</cffunction>
-	
+	 
 </cfcomponent>

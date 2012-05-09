@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
-	
+ 
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -36,30 +36,20 @@
 Notes:
 
 --->
+
+<cfparam name="rc.returnAction" type="string" default="admin:product.editproduct&productID=#rc.productID#" />
+<cfparam name="rc.processProductSmartList" type="any" />
+<cfparam name="rc.multiProcess" type="boolean" />
+
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#" 
-			recordDetailAction="admin:product.detailsku"
-			recordDetailQueryString="productID=#rc.product.getProductID()#"
-			recordEditAction="admin:product.editsku"
-			recordEditQueryString="productID=#rc.product.getProductID()#"
-			recorddeleteaction="admin:product.deletesku"
-			recorddeletequerystring="returnaction=product.editproduct&productID=#rc.product.getProductID()#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="skuCode" />
+	<cf_SlatwallProcessForm>
 		
-		<cfif rc.product.getProductType().getBaseProductType() eq "merchandise" && rc.product.getSkusSmartList().getRecordsCount() gt 1>
-			<cf_SlatwallListingColumn propertyIdentifier="optionsDisplay" />
-		<cfelseif  rc.product.getProductType().getBaseProductType() eq "subscription">
-			<cf_SlatwallListingColumn propertyIdentifier="subscriptionTerm.subscriptionTermName" />
-		<cfelseif rc.product.getProductType().getBaseProductType() eq "contentAccess">
-			<!--- Sumit says nothing is ok --->
-		</cfif>
+		<cf_SlatwallActionBar type="process" />
 		
-		<cf_SlatwallListingColumn propertyIdentifier="defaultFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="imageFile" />
-		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="salePriceExpirationDateTime" range="true" />
-	</cf_SlatwallListingDisplay>
-	
-	<cf_SlatwallActionCaller action="admin:product.createsku" class="btn btn-primary" queryString="productID=#rc.product.getProductID()#" modal=true />
+		<cf_SlatwallProcessListing processSmartList="#rc.processProductSmartList#">
+			<cf_SlatwallProcessColumn propertyIdentifier="productName" />
+			<cf_SlatwallProcessColumn data="skuPrice" fieldType="text" fieldClass="span2 number" value="" />
+		</cf_SlatwallProcessListing>
+		
+	</cf_SlatwallProcessForm>
 </cfoutput>

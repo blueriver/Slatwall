@@ -43,6 +43,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	property name="sessionService" type="any";
 	property name="utilityORMService" type="any";
 	property name="accountService" type="any";
+	property name="permissionService" type="any";
 	
 	public any function init(required any fw) {
 		setFW(arguments.fw);
@@ -66,7 +67,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var itemName = getFW().getItem( rc.slatAction );
 		
 		//check if the page is public, if public no need to worry about security
-		if(!listFindNocase(accountService.getPublicMethods(sectionName),rc.slatAction)){
+		if(!listFindNocase(permissionService.getPublicMethods(sectionName),rc.slatAction)){
 		
 			//check if the user is logged in
 			if(!val(getSlatwallScope().getCurrentAccount().getAccountID())){
@@ -325,6 +326,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		param name="rc.edit" default="false";
 		param name="rc.processContext" default="process";
 		param name="rc.multiProcess" default="false";
+		param name="rc.processOptions" default="#{}#";
 		
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
@@ -338,11 +340,12 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			
 			if(structKeyExists(rc, "processRecords") && isArray(rc.processRecords)) {
 				for(var i=1; i<=arrayLen(rc.processRecords); i++) {
+					
 					if(structKeyExists(rc.processRecords[i], entityPrimaryID)) {
 						structAppend(rc.processRecords[i], rc.processOptions, false);
 						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ]} );
 						entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
-						if( entity.hasErrors() ) {
+						if( !isNUll(entity) && entity.hasErrors() ) {
 							// Add the error message to the top of the page
 							entity.showErrorMessages();
 							
