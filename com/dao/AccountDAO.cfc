@@ -50,25 +50,4 @@ Notes:
 		<cfreturn ormExecuteQuery("SELECT account FROM SlatwallAccountEmailAddress aSlatwallAccountEmail where aSlatwallAccountEmail.email=:email", {email=arguments.email}, true) />
 	</cffunction>
 	
-	<cffunction name="getMissingUserAccounts" returntype="any" access="public">
-		
-		<cfquery name="accounts">
-			SELECT
-				accountID
-			FROM	
-				slatwallAccount
-			INNER JOIN
-				tUsers on slatwallAccount.cmsAccountID = tUsers.userID
-			WHERE
-				tUsers.s2 = 1
-			AND
-				accountID NOT IN (
-					SELECT
-						accountID
-					FROM
-						SlatwallAccountPermissionGroup
-				)
-		</cfquery>	
-		<cfreturn accounts />
-	</cffunction>
 </cfcomponent>

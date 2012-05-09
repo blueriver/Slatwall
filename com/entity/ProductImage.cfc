@@ -43,7 +43,6 @@ component displayname="Product Image" entityname="SlatwallProductImage" table="S
 	
 	public any function init() {
 		setDirectory("product");
-		
 		return super.init();
 	}
 	
@@ -84,6 +83,10 @@ component displayname="Product Image" entityname="SlatwallProductImage" table="S
 		}
 		arguments.imagePath = getImagePath();
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
+	}
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "imageName";
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

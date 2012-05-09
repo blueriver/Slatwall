@@ -76,7 +76,6 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Promotion (many-to-one)    
-	
 	public void function setPromotion(required any promotion) {    
 		variables.promotion = arguments.promotion;    
 		if(isNew() or !arguments.promotion.hasPromotionPeriod( this )) {    
@@ -94,7 +93,7 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 		structDelete(variables, "promotion");    
 	}
 	
-	// promotionRewards (one-to-many)
+	// Promotion Rewards (one-to-many)
 	public void function addPromotionReward(required any promotionReward) {
 	   arguments.promotionReward.setPromotion(this);
 	}
@@ -103,7 +102,7 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 		arguments.promotionReward.removePromotion(this);
 	}
 	
-	// promotionQualifiers (one-to-many)    
+	// Promotion Qualifiers (one-to-many)    
 	public void function addPromotionQualifier(required any promotionQualifier) {    
 		arguments.promotionQualifier.setPromotion( this );    
 	}    

@@ -40,6 +40,9 @@ component extends="BaseController" output=false accessors=true {
 
 	// fw1 Auto-Injected Service Properties
 	property name="productService" type="any";
+	property name="SkuService" type="any";
+	property name="OptionService" type="any";
+	property name="UtilityORMService" type="any";
 	
 	this.publicMethods='';
 	this.secureMethods='listproduct,editproduct,detailproduct,deleteProduct,saveproduct,listProductType,editProductType,detailProductType,deleteProductType,saveProductType,listOptionGroup,editOptionGroup,detailOptionGroup,deleteOptionGroup,saveOptionGroup,listBrand,editBrand,detailBrand,deleteBrand,saveBrand,listSubscriptionTerm,editSubscriptionTerm,detailSubscriptionTerm,deleteSubscriptionTerm,saveSubscriptionTerm,listSubscriptionBenefit,editSubscriptionBenefit,detailSubscriptionBenefit,deleteSubscriptionBenefit,saveSubscriptionBenefit,listProductReview,editProductReview,detailProductReview,deleteProductReview,saveProductReview';
@@ -122,5 +125,61 @@ component extends="BaseController" output=false accessors=true {
 		rc.edit = true;
 		getFW().setView("admin:product.detailproducttype");
 	}
-
+	
+	public void function saveSku(required struct rc){
+		var sku = getSkuService().getSku(rc.skuID,true);
+		
+		if(rc.imageFile != ''){
+			var documentData = fileUpload(getTempDirectory(),'imageFile','','makeUnique');
+			
+			if(len(sku.getImageFile()) && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
+				fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
+			}
+			
+			//need to handle validation at some point
+			if(documentData.contentType eq 'image'){
+				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(sku.getImageDirectory()) & documentData.serverFile);
+				rc.imageFile = documentData.serverfile;
+			}else if(fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
+				fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
+			}
+			
+		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
+			fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
+			rc.imageFile='';
+		}else{
+			rc.imageFile = sku.getImageFile();
+		}
+		
+		super.genericSaveMethod('Sku',rc);
+	}
+	
+	public void function saveProductImage(required struct rc){
+		var entityService = getUtilityORMService().getServiceByEntityName( entityName='ProductImage' );
+		var productImage = entityService.getProductImage(rc.ImageID,true);
+		
+		if(rc.imageFile != ''){
+			var documentData = fileUpload(getTempDirectory(),'imageFile','','makeUnique');
+			
+			if(len(productImage.getImageFile()) && fileExists(expandpath(productImage.getImageDirectory()) & productImage.getImageFile())){
+				fileDelete(expandpath(productImage.getImageDirectory()) & productImage.getImageFile());	
+			}
+			
+			//need to handle validation at some point
+			if(documentData.contentType eq 'image'){
+				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(productImage.getImageDirectory()) & documentData.serverFile);
+				rc.imageFile = documentData.serverfile;
+			}else if (fileExists(expandpath(productImage.getImageDirectory()) & productImage.getImageFile())){
+				fileDelete(expandpath(productImage.getImageDirectory()) & productImage.getImageFile());	
+			}
+			
+		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(productImage.getImageDirectory()) & productImage.getImageFile())){
+			fileDelete(expandpath(productImage.getImageDirectory()) & productImage.getImageFile());	
+			rc.imageFile='';
+		}else{
+			rc.imageFile = productImage.getImageFile();
+		}
+		
+		super.genericSaveMethod('ProductImage',rc);
+	}
 }

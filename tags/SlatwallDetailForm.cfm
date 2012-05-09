@@ -41,13 +41,14 @@ Notes:
 	<cfparam name="attributes.saveaction" type="string" default="#request.context.saveaction#" />
 	<cfparam name="attributes.saveActionQueryString" type="string" default="" />
 	<cfparam name="attributes.edit" type="boolean" default="false" />
+	<cfparam name="attributes.enctype" type="string" default="application/x-www-form-urlencoded">
 	
 	<cfoutput>
 		<cfif attributes.edit>
 			<cfif len(attributes.saveActionQueryString)>
-				<form method="post" action="?s=1&#attributes.saveActionQueryString#" class="form-horizontal">
+				<form method="post" action="?s=1&#attributes.saveActionQueryString#" class="form-horizontal" enctype="#attributes.enctype#">
 			<cfelse>
-				<form method="post" action="?s=1" class="form-horizontal">
+				<form method="post" action="?s=1" class="form-horizontal" enctype="#attributes.enctype#">
 			</cfif>
 			<cfif structKeyExists(request.context, "returnAction")>
 				<input type="hidden" name="returnAction" value="#request.context.returnAction#" />

@@ -852,6 +852,9 @@ component displayname="Base Object" accessors="true" output="false" {
 			case "pixels": {
 				return arguments.value & "px";
 			}
+			case "percentage" : {
+				return arguments.value & "%";
+			}
 			case "url": {
 				return '<a href="#arguments.value#" target="_blank">' & arguments.value & '</a>';
 			}
