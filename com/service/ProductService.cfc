@@ -233,20 +233,46 @@ component extends="BaseService" accessors="true" {
 	
 	public any function processProduct(required any product, struct data={}, string processContext="process") {
 		
-		var skus = 	arguments.product.getSkus();
-		
-		for(i=1; i <= arrayLen(skus); i++){
-			skus[i].setPrice(arguments.data.skuPrice);
+		switch(arguments.processContext){
+			case 'bulkupdate':
+				getOptionService().updateAllSKUPricesForProduct(arguments.product.getProductID(),arguments.data.skuPrice);
+			break;
+			
+			case 'addOptionGroup':
+				var skus = 	arguments.product.getSkus();
+				var options = getOptionService().getOptionGroup(arguments.data.optionGroup).getOptions();
+				
+				if(arrayLen(options)){
+					for(i=1; i <= arrayLen(skus); i++){
+						skus[i].addOption(options[1]);
+					}
+				}
+			break;
+			
+			case 'addOption':
+				var option = getOptionService().getOption(arguments.data.option);
+				var optionGroups = getFormattedOptionGroups(arguments.product);
+				
+				StructDelete(optionGroups,option.getOptionGroup().getOptionGroupName());
+				
+				var keys = structKeyList(optionGroups);
+				var skuData=buildSkuCombinations([],1,optionGroups,'');
+				
+				for(i=1; i<= arrayLen(skuData); i++){
+					sku = getSkuService().newSku();
+					sku.addOption(option);
+					
+					for(j=1; j <= listLen(skuData[i],'|'); j++){
+						sku.addOption(getOptionService().getOption(listGetAt(skuData[i],j,'|')));
+					}
+					
+					product.addSku(sku);
+				}
+			break;
 		}
-	}
-	
-	public any function processOptionGroup(required any product, struct data={}, string processContext="process") {
 		
 	}
 	
-	public any function processOption(required any product, struct data={}, string processContext="process") {
-		
-	}
 	
 	public any function getFormattedOptionGroups(required any product){
 		var AvailableOptions={};
@@ -259,4 +285,21 @@ component extends="BaseService" accessors="true" {
 		
 		return AvailableOptions;
 	}
+	
+	private any function buildSkuCombinations(Array storage, numeric position, any data, String currentOption){
+		var keys = StructKeyList(arguments.data);
+		var i = 1;
+				
+		for(i=1; i<= arrayLen(arguments.data[listGetAt(keys,position)]); i++){
+			if(arguments.position eq listlen(keys)){
+				arrayAppend(arguments.storage,arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value) ;
+			}else{
+				arguments.storage = buildSkuCombinations(arguments.storage,arguments.position + 1, arguments.data, arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value);
+			}
+		}
+		
+		return arguments.storage;
+	}
+	
+	
 }

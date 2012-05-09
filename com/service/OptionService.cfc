@@ -37,7 +37,8 @@ Notes:
 
 */
 component extends="BaseService" accessors="true" {
-
+	property name="productService" type="any";
+	
 	public any function getOptionSmartList(struct data={}){;
 		arguments.entityName = "SlatwallOption";
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
@@ -157,5 +158,13 @@ component extends="BaseService" accessors="true" {
 		}
 		
 		return sortedOptions;
+	}
+	
+	public array function getUnusedProductOptionGroups(required string productID){
+		return getDAO().getUnusedProductOptionGroups(arguments.productID);
+	}
+	
+	public array function getUnusedProductOptions(required string productID){
+		return getDAO().getUnusedProductOptions(arguments.productID);
 	}
 }

@@ -46,4 +46,81 @@ component extends="BaseDAO" {
 	public array function getMaximumOptionSortOrders() {
 		return ormExecuteQuery("Select max(o.sortOrder), max(og.sortOrder) from SlatwallOption o inner join o.optionGroup og")[1];
 	}
+	
+	public any function getUnusedProductOptions(required string productID){
+		var q = new Query();
+		var sql = "SELECT 
+				DISTINCT slatwallOption.optionID,slatwallOption.optionName, slatwallOptionGroup.optionGroupName
+				FROM
+					slatwallOption
+				INNER JOIN slatwallOptionGroup on slatwallOptionGroup.optionGroupID = slatwallOption.optionGroupID
+				WHERE
+					slatwallOption.optionID NOT IN (		
+							SELECT slatwallOption.optionID FROM slatwallSku
+								INNER JOIN slatwallSkuOption on slatwallSku.skuID = slatwallSkuOption.skuID
+								INNER JOIN slatwallOption on slatwallSkuOption.optionID = slatwallOption.optionID
+							WHERE
+								slatwallSku.productID=:productID	
+				)
+				AND
+					slatwallOption.optionGroupID IN (
+						SELECT slatwallOptionGroup.optionGroupID  FROM slatwallSku
+								INNER JOIN slatwallSkuOption on slatwallSku.skuID = slatwallSkuOption.skuID
+								INNER JOIN slatwallOption on slatwallSkuOption.optionID = slatwallOption.optionID
+								INNER JOIN slatwallOptionGroup on slatwallOption.optionGroupID = slatwallOptionGroup.optionGroupID
+							WHERE
+								slatwallSku.productID=:productID	
+					)
+				ORDER BY 
+					slatwallOptionGroup.optionGroupName, slatwallOption.optionName
+				";
+		q.addParam(name="productID",value="#arguments.productID#",cfsqltype="cf_sql_varchar");		
+		q.setSQL(sql);
+		
+		var records = q.execute().getResult();
+		var result = [];
+
+		for(var i=1;i<=records.recordCount;i++) {
+			arrayAppend(result, {
+				"name" = records.optionGroupName[i] & ' - ' & records.optionName[i],
+				"value" = records.optionID[i]
+			});
+		}
+		return result;		
+	}
+
+	public any function getUnusedProductOptionGroups(required string productID){
+		var q = new Query();
+		var sql = "SELECT 
+				DISTINCT slatwallOptionGroup.optionGroupID, slatwallOptionGroup.optionGroupName
+				FROM
+					slatwallOptionGroup
+				WHERE
+					slatwallOptionGroup.optionGroupID NOT IN (		
+							SELECT slatwallOptionGroup.optionGroupID  FROM slatwallSku
+								INNER JOIN slatwallSkuOption on slatwallSku.skuID = slatwallSkuOption.skuID
+								INNER JOIN slatwallOption on slatwallSkuOption.optionID = slatwallOption.optionID
+								INNER JOIN slatwallOptionGroup on slatwallOption.optionGroupID = slatwallOptionGroup.optionGroupID
+							WHERE
+								slatwallSku.productID=:productID	
+				)	
+				ORDER BY 
+					slatwallOptionGroup.optionGroupName
+				";
+		q.addParam(name="productID",value="#arguments.productID#",cfsqltype="cf_sql_varchar");		
+		q.setSQL(sql);
+		
+		var records = q.execute().getResult();
+		var result = [];
+
+		for(var i=1;i<=records.recordCount;i++) {
+			arrayAppend(result, {
+				"name" = records.optionGroupName[i],
+				"value" = records.optionGroupID[i]
+			});
+		}
+		return result;		
+	}
+	
+		
 }
