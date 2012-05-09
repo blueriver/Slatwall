@@ -40,6 +40,13 @@ Notes:
 <cfparam name="rc.product" type="any" default="#rc.sku.getProduct()#">
 <cfparam name="rc.edit" type="boolean">
 
+<cftry>
+	<cfset tmp = rc.product.getProductID() />
+	<cfcatch type="any" >
+		<cfset rc.product = rc.sku.GetProduct() />
+	</cfcatch>	
+</cftry>	
+
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.sku#" edit="#rc.edit#" enctype="multipart/form-data">
 		<cf_SlatwallActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:product.detailproduct" backQueryString="productID=#rc.product.getProductID()#" />
