@@ -230,38 +230,26 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function genericEditMethod(required string entityName, required struct rc) {
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
-		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
-		
-		rc[ "#arguments.entityName#" ] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
 		
 		loadEntitiesFromRCIDs( rc );
+		
+		if(!structKeyExists(rc,arguments.entityName) || !isObject(rc[arguments.entityName])){
+			getFW().redirect(rc.listAction);
+		}
 		
 		rc.edit = true;
 		getFW().setView(rc.detailAction);
 	}
 	
 	public void function genericDetailMethod(required string entityName, required struct rc) {
-		param name="rc.edit" default="false";
-		
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
-		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
-		
-		// If no ID was passed in, redirect to list
-		if(!structKeyExists(rc, entityPrimaryID)) {
-			getFW().redirect(action=rc.listaction);
-		}
-		
-		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
-		
-		// If ID was passed but there is no entity for that id, redirect to list
-		if(isNull(entity)) {
-			getFW().redirect(action=rc.listaction);
-		}
-		
-		rc["#arguments.entityName#"] = entity;
 		
 		loadEntitiesFromRCIDs( rc );
+		
+		if(!structKeyExists(rc,arguments.entityName) || !isObject(rc[arguments.entityName])){
+			getFW().redirect(rc.listAction);
+		}
+		
+		rc.edit = false;
 	}
 	
 	public void function genericDeleteMethod(required string entityName, required struct rc) {
@@ -294,8 +282,10 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
 		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=entity, 2=rc} );
-
+	
+		
 		if(!rc[ arguments.entityName ].hasErrors()) {
+			logSlatwall('5',true);
 			if(structKeyExists(rc, "returnAction")) {
 				redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
 			} else {
@@ -319,6 +309,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
 			}
 			rc.edit = true;
+			loadEntitiesFromRCIDs( rc );
 		}
 	}
 	
@@ -385,15 +376,19 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	private void function loadEntitiesFromRCIDs(required struct rc) {
-		for(var key in rc) {
-			if(right(key, 2) == "ID" && len(rc[key]) == "32" && !structKeyExists(rc, left(key, len(key)-2))) {
-				var entityName = left(key, len(key)-2);
-				var entityService = getUtilityORMService().getServiceByEntityName( entityName=entityName );
-				var entity = entityService.invokeMethod("get#entityName#", {1=rc[key]});
-				if(!isNull(entity)) {
-					rc[ entityName ] = entity;
+		try{
+			for(var key in rc) {
+				if(!find('.',key) && right(key, 2) == "ID" && len(rc[key]) == "32") {
+					var entityName = left(key, len(key)-2);
+					var entityService = getUtilityORMService().getServiceByEntityName( entityName=entityName );
+					var entity = entityService.invokeMethod("get#entityName#", {1=rc[key]});
+					if(!isNull(entity)) {
+						rc[ entityName ] = entity;
+					}
 				}
 			}
+		}catch(any e){
+			writedump(e);abort;
 		}
 	}
 	
