@@ -424,6 +424,7 @@ component extends="BaseService" accessors="true" output="false" {
 		for(i=1; i <= accounts.recordcount; i++){
 			account = get('Account',{accountID=accounts.accountID[i]});
 			account.addPermissionGroup(permissionGroup);
+			
 		}
 		ormflush();
 	}

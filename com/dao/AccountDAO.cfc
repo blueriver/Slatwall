@@ -56,9 +56,9 @@ Notes:
 			SELECT
 				accountID
 			FROM	
-				slatwallAccount
+				SlatwallAccount
 			INNER JOIN
-				tUsers on slatwallAccount.cmsAccountID = tUsers.userID
+				tUsers on SlatwallAccount.cmsAccountID = tUsers.userID
 			WHERE
 				tUsers.s2 = 1
 			AND
@@ -68,7 +68,8 @@ Notes:
 					FROM
 						SlatwallAccountPermissionGroup
 				)
-		</cfquery>	
+		</cfquery>
+		
 		<cfreturn accounts />
 	</cffunction>
 </cfcomponent>
