@@ -43,18 +43,18 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="amount" ormType="big_decimal" formatType="custom";
 	property name="amountType" ormType="string" formFieldType="select";
 	property name="rewardType" ormType="string" formFieldType="select";
-	
-	property name="itemRewardQuantity" ormType="integer" hint="the quantity of items this reward applies to per instance of qualifier satisfied";
-	property name="maximumOrderRewardQuantity" ormtype="integer" hint="the maximum quantity of items this reward can apply to per order";
-	property name="rewardCanApplyToQualifierFlag" ormtype="boolean" default="0" dbdefault="0" hint="when true, qualifier is not excluded from reward (if qualifier and reward can be the same item)";
-
+	property name="applicableTerm" ormType="string";
+	property name="maximumUsePerOrder" ormType="integer";
+	property name="maximumUsePerItem" ormtype="integer";
+	property name="maximumUsePerQualification" ormtype="integer";
 
 	// Related Object Properties (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
 	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID";
-
 	
 	// Related Object Properties (many-to-many - owner)
+	property name="fulfillmentMethods" singularname="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardFulfillmentMethod" fkcolumn="promotionRewardID" inversejoincolumn="fulfillmentMethodID";
+	property name="shippingAddressZones" singularname="shippingAddressZone" cfc="AddressZone" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingAddressZone" fkcolumn="promotionRewardID" inversejoincolumn="addressZoneID";
 	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID";
 	
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID";
@@ -80,6 +80,7 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	// Non-persistent entities
 	property name="amountTypeOptions" persistent="false";
+	property name="applicableTermOptions" persistent="false";
 	property name="rewards" type="string" persistent="false";
 
 
@@ -102,7 +103,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		if(isNull(variables.shippingMethods)) {
 			variables.shippingMethods = [];
 		}
-		
 		if(isNull(variables.excludedBrands)) {
 			variables.excludedBrands = [];
 		}
@@ -123,11 +123,11 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	
 	// ============ START: Non-Persistent Property Methods =================
 
-	public array function getRewardTypeOptions() {
+	public array function getApplicableTermOptions() {
 		return [
-			{name=rbKey("entity.promotionReward.rewardType.product"), value="product"},
-			{name=rbKey("entity.promotionReward.rewardType.order"), value="order"},
-			{name=rbKey("entity.promotionReward.rewardType.shipping"), value="shipping"}
+			{name=rbKey("entity.promotionReward.applicableTerm.both"), value="both"},
+			{name=rbKey("entity.promotionReward.applicableTerm.initial"), value="initial"},
+			{name=rbKey("entity.promotionReward.applicableTerm.renewal"), value="renewal"}
 		];
 	}
 	
