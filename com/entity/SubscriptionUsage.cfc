@@ -42,7 +42,8 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="subscriptionUsageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency";
-	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
+	property name="autoBillFlag" ormtype="boolean" formatType="yesno";
+	property name="autoPayFlag" ormtype="boolean" formatType="yesno";
 	property name="nextBillDate" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
@@ -55,7 +56,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	// Related Object Properties (one-to-many)
 	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan";
 	property name="subscriptionOrderItems" singularname="subscriptionOrderItem" cfc="SubscriptionOrderItem" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
-	property name="subscriptionStatus" cfc="SubscriptionStatus" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true" orderby="subscriptionStatusChangeDateTime DESC" fetch="join" lazy="false";
+	property name="subscriptionStatus" cfc="SubscriptionStatus" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
 	property name="renewalSubscriptionUsageBenefits" singularname="renewalSubscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="renewalSubscriptionUsageID" cascade="all-delete-orphan";
 	
 	// Related Object Properties (many-to-many)
@@ -106,16 +107,14 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		setRenewalTerm(subscriptionTerm.getRenewalTerm());
 		setGracePeriodTerm(subscriptionTerm.getGracePeriodTerm());
 		setAllowProrateFlag(subscriptionTerm.getAllowProrateFlag());
-		setAutoRenewFlag(subscriptionTerm.getAutoRenewFlag());
+		setAutoBillFlag(subscriptionTerm.getAutoBillFlag());
+		setAutoPayFlag(subscriptionTerm.getAutoPayFlag());
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public any function getCurrentStatus() {
-		// Subscription status sorted by date desc, return first one as current
-		if(arrayLen(getSubscriptionStatus())) {
-			return getSubscriptionStatus()[1];
-		}
+		return getService("subscriptionService").getDAO().getSubscriptionCurrentStatus( variables.subscriptionUsageID );
 	}
 	
 	public string function getCurrentStatusCode() {
@@ -196,10 +195,30 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 
 	// ================== START: Overridden Methods ========================
 	
+    public any function getAccountPaymentMethodOptions() {
+		if(!structKeyExists(variables, "accountPaymentMethodOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAccountPaymentMethod");
+			smartList.addSelect(propertyIdentifier="accountPaymentMethodName", alias="name");
+			smartList.addSelect(propertyIdentifier="accountPaymentMethodID", alias="value");
+			smartList.addFilter(propertyIdentifier="account_accountID", value="#getAccount().getAccountID()#");
+			smartList.addOrder("accountPaymentMethodName|ASC");
+			variables.accountPaymentMethodOptions = smartList.getRecords();
+			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.select"),value=""});
+		}
+		return variables.accountPaymentMethodOptions;
+    }
+    
 	public string function getSimpleRepresentation() {
 		return getSubscriptionOrderItemName();
 	}
-
+	
+	public boolean function isProcessable() {
+		if(getNextBillDate() > now() || getCurrentStatusCode() == 'sstCancelled') {
+			return false;
+		}
+		return true;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

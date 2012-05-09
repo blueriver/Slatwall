@@ -53,7 +53,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="amountCredited">
 				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="avsCode">
 				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="statusCode">
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="message">
+				<!---<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="message">--->
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

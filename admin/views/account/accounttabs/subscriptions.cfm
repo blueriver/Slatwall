@@ -42,7 +42,7 @@ Notes:
 						   recordEditAction="admin:account.editsubscriptionUsage"
 						   recordEditQueryString="returnAction=admin:account.detailaccount&accountID=#rc.account.getAccountID()###tabsubscriptions"
 						   recordEditModal=true
-						   recordprocessaction="admin:account.renewSubscription"
+						   recordprocessaction="admin:account.processSubscription&context=renew"
 						   recordProcessQueryString="returnaction=admin:account.detailaccount&accountID=#rc.account.getAccountID()###tabsubscriptions">
 
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />

@@ -42,7 +42,8 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	property name="subscriptionTermID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="subscriptionTermName" ormtype="string";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
-	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
+	property name="autoBillFlag" ormtype="boolean" formatType="yesno";
+	property name="autoPayFlag" ormtype="boolean" formatType="yesno";
 	property name="autoRetryPaymentDays" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
