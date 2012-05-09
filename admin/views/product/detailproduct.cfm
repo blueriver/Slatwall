@@ -45,6 +45,8 @@ Notes:
 			<cf_SlatwallActionCaller action="admin:product.createsku" queryString="productID=#rc.product.getProductID()#" type="list" modal=true />
 			<cf_SlatwallActionCaller action="admin:product.createproductimage" queryString="productID=#rc.product.getProductID()#" type="list" modal=true />
 			<cf_SlatwallActionCaller action="admin:product.processproduct" queryString="productID=#rc.product.getProductID()#&processcontext=bulkupdate" type="list" modal=true />
+			<cf_SlatwallActionCaller action="admin:product.processproduct" queryString="productID=#rc.product.getProductID()#&processcontext=addOptionGroup" type="list" modal=true text="#$.slatwall.rbKey('admin.product.processoptiongroup_nav')#"/>
+			<cf_SlatwallActionCaller action="admin:product.processproduct" queryString="productID=#rc.product.getProductID()#&processcontext=addOption" type="list" modal=true  text="#$.slatwall.rbKey('admin.product.processoption_nav')#"/>
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>

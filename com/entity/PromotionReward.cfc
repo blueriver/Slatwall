@@ -100,6 +100,12 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		if(isNull(variables.productTypes)) {
 			variables.productTypes = [];
 		}
+		if(isNull(variables.fulfillmentMethods)) {
+			variables.fulfillmentMethods = [];
+		}
+		if(isNull(variables.shippingAddressZones)) {
+			variables.shippingAddressZones = [];
+		}
 		if(isNull(variables.shippingMethods)) {
 			variables.shippingMethods = [];
 		}
@@ -152,15 +158,15 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	}
 	
 	public array function getAmountTypeOptions() {
-		if(getRewardType() EQ "order") {
+		if(getRewardType() == "order") {
 			return [
-				{name=rbKey("define.amountOff"), value="amountOff"},
-				{name=rbKey("define.percentageOff"), value="percentageOff"}
+				{name=rbKey("define.percentageOff"), value="percentageOff"},
+				{name=rbKey("define.amountOff"), value="amountOff"}
 			];
 		} else {
 			return [
-				{name=rbKey("define.amountOff"), value="amountOff"},
 				{name=rbKey("define.percentageOff"), value="percentageOff"},
+				{name=rbKey("define.amountOff"), value="amountOff"},
 				{name=rbKey("define.fixedAmount"), value="amount"}
 			];
 		}

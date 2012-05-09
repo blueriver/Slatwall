@@ -36,14 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.optionGroup" type="any" />
+<cfparam name="rc.optionGroup" type="any"/>
 
 <cfoutput>
 
-	<cf_SlatwallListingDisplay smartList="#rc.optionGroup.getOptionsSmartList()#" recordEditAction="admin:product.editoption" recordEditModal=true recordDeleteAction="admin:product.deleteoption">
-		<cf_SlatwallListingColumn propertyIdentifier="optionName" tdclass="primary" />
-		<cf_SlatwallListingColumn propertyIdentifier="optionCode" />
-	</cf_SlatwallListingDisplay>
-	
-	<cf_SlatwallActionCaller action="admin:product.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" class="btn btn-primary" modal=true />
+	<cf_slatwalllistingdisplay smartlist="#rc.optionGroup.getOptionsSmartList()#" 
+	                           recordeditaction="admin:product.editoption" 
+							   recordeditmodal=true 
+	                           recorddeleteaction="admin:product.deleteoption"
+							   recorddeletequerystring="returnaction=admin:product.detailoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#">
+		<cf_slatwalllistingcolumn propertyidentifier="optionName" tdclass="primary"/>
+		<cf_slatwalllistingcolumn propertyidentifier="optionCode"/>
+	</cf_slatwalllistingdisplay>
+
+	<cf_slatwallactioncaller action="admin:product.createoption" 
+	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" 
+	                         class="btn btn-primary" modal=true/>
 </cfoutput>

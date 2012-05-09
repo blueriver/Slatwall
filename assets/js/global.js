@@ -1,7 +1,7 @@
 /**
  * @depends /jquery-1.7.1.min.js
- * @depends /jquery-ui-1.8.16.custom.min.js
- * @depends /jquery-ui-timepicker-0.2.1.js
+ * @depends /jquery-ui-1.8.20.custom.min.js
+ * @depends /jquery-ui-timepicker-addon-0.9.9.js
  * @depends /jquery-validate-1.9.0.min.js
  * @depends /bootstrap.min.js
  * 
@@ -11,6 +11,10 @@ var ajaxlock = 0;
 
 jQuery(document).ready(function() {
 	
+	setupEventHandlers();
+	
+	initUIElements( 'body' );
+
 	// Looks for a tab to show
 	if( window.location.hash ) {
 		var hash = window.location.hash.substring(1);
@@ -24,31 +28,32 @@ jQuery(document).ready(function() {
 		jQuery('input[tabindex=1]').focus();
 	}
 	
-	initUIElements( 'body' );
-	setupEventHandlers();
 });
 
 function initUIElements( scopeSelector ) {
+	
 	// Datetime Picker
-	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datepicker({
-		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
-		duration: '',
-        showTime: true,
-        constrainInput: false,
-        stepMinutes: 1, 
-        stepHours: 1,
-        altTimeField: '',  
-        time24h: false
+	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datetimepicker({
+		dateFormat: convertCFMLDateFormat( slatwall.dateFormat )
 	});
 	
 	// Date Picker
-	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker();
+	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker({
+		dateFormat: convertCFMLDateFormat( slatwall.dateFormat )
+	});
 	
 	// Time Picker
-	//jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker();
+	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({
+		
+	});
 	
 	// Tooltips
 	jQuery( scopeSelector ).find(jQuery('.hint')).tooltip();
+	
+	// Empty Values
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('input[data-emptyvalue]')), function(index, value) {
+		jQuery(this).blur();
+	});
 	
 	// Validation
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value) {
@@ -76,7 +81,28 @@ function setupEventHandlers() {
 	// Tab Selecting
 	jQuery('body').on('shown', 'a[data-toggle="tab"]', function (e) {
 		window.location.hash = jQuery(this).attr('href');
+	});
+	
+	// Empty Value
+	jQuery('body').on('focus', 'input[data-emptyvalue]', function (e) {
+		jQuery(this).removeClass('emptyvalue');
+		if(jQuery(this).val() == jQuery(this).data('emptyvalue')) {
+			jQuery(this).val('');
+		}
 	})
+	jQuery('body').on('blur', 'input[data-emptyvalue]', function (e) {
+		if(jQuery(this).val() == '') {
+			jQuery(this).val(jQuery(this).data('emptyvalue'));
+			jQuery(this).addClass('emptyvalue');
+		}
+	})
+	jQuery('body').on('submit', 'form', function (e) {
+		jQuery.each(jQuery('a[data-emptyvalue]'), function(i,v) {
+			if(jQuery(this).val() == jQuery(this).attr('data-emptyvalue')) {
+				jQuery(this).val('');
+			}
+		});
+	});
 	
 	// Alerts
 	jQuery('body').on('click', '.alert-confirm', function(e){

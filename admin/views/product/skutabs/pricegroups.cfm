@@ -39,23 +39,7 @@ Notes:
 <cfparam name="rc.sku" type="any" />
 
 
-
 <cf_slatwallPropertyList>
 	<cf_SlatwallPropertyDisplay object="#rc.sku#" property="priceGroupRates" edit="#rc.edit#" displayVisible="globalFlag:0" />
-	<!---<cf_SlatwallPropertyDisplay object="#rc.sku#" property="priceGroupRates" edit="#rc.edit#"  fieldType="multiselect"  />--->
 </cf_slatwallPropertyList>
 
-<!---
-<cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.sku.getPriceGroupRatesSmartList()#"
-			recordEditAction="admin:product.editPricegroupRate&skuID=#rc.sku.getSkuID()#"
-			recordeditmodal="true" >
-			
-		<cf_SlatwallListingColumn  propertyIdentifier="amount" />
-		<cf_SlatwallListingColumn  propertyIdentifier="amountType" />
-		<cf_SlatwallListingColumn  propertyIdentifier="priceGroup.priceGroupName" />
-		
-	</cf_SlatwallListingDisplay>
-	
-	<cf_SlatwallActionCaller action="admin:product.createPricegroupRate" class="btn btn-primary" queryString="SkuID=#rc.sku.getSkuID()#" modal="true" />
-</cfoutput>--->

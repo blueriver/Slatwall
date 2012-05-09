@@ -55,8 +55,8 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="startdatetime" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="enddatetime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumusecount" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumaccountusecount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumusecount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumaccountusecount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
