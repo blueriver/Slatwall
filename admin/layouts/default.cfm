@@ -142,38 +142,53 @@ Notes:
 		<div id="search-results" class="search-results">
 			<div class="container-fluid">
 				<div class="row-fluid">
+					<div class="span3 result-bucket">
+						<h4>#$.slatwall.rbKey('entity.product_plural')#</h4>
+						<ul class="nav" id="golbalsr-product">
+							<li><a href="##">Test Product</a></li>
+						</ul>
+					</div>
+					<div class="span3 result-bucket">
+						<h4>#$.slatwall.rbKey('entity.productType_plural')#</h4>
+						<ul class="nav" id="golbalsr-productType">
+						</ul>
+					</div>
+					<div class="span3  result-bucket">
+						<h4>#$.slatwall.rbKey('entity.brand_plural')#</h4>
+						<ul class="nav" id="golbalsr-brand">
+						</ul>
+					</div>
+					<div class="span3 result-bucket">
+						<h4>#$.slatwall.rbKey('entity.promotion_plural')#</h4>
+						<ul class="nav" id="golbalsr-promotion">
+						</ul>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span3 result-bucket">
+						<h4>#$.slatwall.rbKey('entity.order_plural')#</h4>
+						<ul class="nav" id="golbalsr-order">
+						</ul>
+					</div>
+					<div class="span3 result-bucket">
+						<h4>#$.slatwall.rbKey('entity.account_plural')#</h4>
+						<ul class="nav" id="golbalsr-account">
+						</ul>
+					</div>
+					<div class="span3 result-bucket">
+						<h4>#$.slatwall.rbKey('entity.vendorOrder_plural')#</h4>
+						<ul class="nav" id="golbalsr-vendorOrder">
+						</ul>
+					</div>
+					<div class="span3 result-bucket">
+						<h4>#$.slatwall.rbKey('entity.vendor_plural')#</h4>
+						<ul class="nav" id="golbalsr-vendor">
+						</ul>
+					</div>
+				</div>
+				<div class="row-fluid">
 					<div class="span12">
 						<a class="close search-close"><span class="text">Close</span> &times;</a>
-					</div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3">
-						<h4>Products</h4>
-					</div>
-					<div class="span3 account-search">
-						<h4>Product Types</h4>
-					</div>
-					<div class="span3 order-search">
-						<h4>Brands</h4>
-					</div>
-					<div class="span3 brand-search">
-						<h4>Promotions</h4>
-					</div>
-				</div>
-				<br />
-				<br />
-				<div class="row-fluid">
-					<div class="span3">
-						<h4>Orders</h4>
-					</div>
-					<div class="span3 account-search">
-						<h4>Account</h4>
-					</div>
-					<div class="span3 order-search">
-						<h4>Vendor Orders</h4>
-					</div>
-					<div class="span3 brand-search">
-						<h4>Vendors</h4>
 					</div>
 				</div>
 			</div>
