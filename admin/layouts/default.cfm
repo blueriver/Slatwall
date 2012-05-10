@@ -145,7 +145,6 @@ Notes:
 					<div class="span3 result-bucket">
 						<h4>#$.slatwall.rbKey('entity.product_plural')#</h4>
 						<ul class="nav" id="golbalsr-product">
-							<li><a href="##">Test Product</a></li>
 						</ul>
 					</div>
 					<div class="span3 result-bucket">

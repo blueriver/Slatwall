@@ -385,6 +385,9 @@ function listingDisplayUpdate( tableID, data ) {
 function buildPagingNav(currentPage, totalPages) {
 	var nav = '';
 	
+	currentPage = parseInt(currentPage);
+	totalPages = parseInt(totalPages);
+	
 	if(totalPages > 1){
 		nav = '<ul>';
 	
@@ -630,7 +633,7 @@ function updateGlobalSearchResults() {
 			    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
 			    }
 			    if(result[key]['recordCount'] > 10) {
-			    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['detailAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
+			    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
 			    } else if (result[key]['recordCount'] == 0) {
 			    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
 			    }
