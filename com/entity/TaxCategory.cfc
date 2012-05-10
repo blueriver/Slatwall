@@ -55,13 +55,7 @@ component displayname="Tax Category" entityname="SlatwallTaxCategory" table="Sla
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public any function init() {
-		if(isNull(getTaxCategoryRates())) {
-			setTaxCategoryRates(arrayNew(1));
-		}
-		
-		return super.init();
-	}
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

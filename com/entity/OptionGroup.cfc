@@ -59,15 +59,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	// Related Object Properties
 	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
 
-	public OptionGroup function init(){
-       // set default collections for association management methods
-	   if(isNull(variables.Options)) {
-           variables.Options = [];
-       }
-       
-       return Super.init();
-    }
-    
+	   
     public string function getImageDirectory() {
     	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }

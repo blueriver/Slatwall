@@ -43,7 +43,7 @@ component displayname="Product Attribute Value" entityname="SlatwallProductAttri
 	
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	
-	/******* Association management methods for bidirectional relationships **************/
+	
 	// Product (many-to-one)
 	
 	public void function setProduct(required Product product) {
@@ -61,7 +61,7 @@ component displayname="Product Attribute Value" entityname="SlatwallProductAttri
 		structDelete(variables,"product");
     }
     
-	/************   END Association Management Methods   *******************/
+	
 
 
 	// ============ START: Non-Persistent Property Methods =================

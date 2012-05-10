@@ -66,29 +66,8 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public any function init() {
-		if(isNull(variables.activeFlag)) {
-			variables.activeFlag = 1;
-		}
-		if(isNull(variables.shippingMethodRates)) {
-			variables.shippingMethodRates = [];
-		}
-		if(isNull(variables.orderFulfillments)) {
-			variables.orderFulfillments = [];
-		}
-		if(isNull(variables.promotionRewards)) {
-			variables.promotionRewards = [];
-		}
-		if(isNull(variables.promotionQualifiers)) {
-			variables.promotionQualifiers = [];
-		}
-		if(isNull(variables.useRateTableFlag)) {
-			variables.useRateTableFlag = false;
-		}
-		
-		return super.init();
-	}
-	
+
+
 	public array function getShippingMethodRateIntegrationOptions() {
 		var optionsSL = getService("integrationService").getIntegrationSmartList();
 		optionsSL.addFilter('shippingActiveFlag', '1');

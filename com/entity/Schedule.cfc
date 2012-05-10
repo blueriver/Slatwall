@@ -70,9 +70,6 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	// Non-Persistent Properties
 	
 	
-	public any function init() {
-		
-	}
 	
 	public array function getRecuringTypeOptions() {
 		var options = [

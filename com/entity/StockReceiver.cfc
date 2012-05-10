@@ -56,15 +56,8 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 		
-	public any function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.stockReceiverItems)) {
-	       variables.stockReceiverItems = [];
-	   }    
-
-	   return Super.init();
-	}
 	
+
 	// Not actually required for TPC implemention. Just providing type tracking for new entities.
 	public void function setReceiverType(required string type) {
 		var listAllowableTypes = "vendorOrder,order,stockAdjustment";

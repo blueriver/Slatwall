@@ -60,25 +60,6 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public PriceGroup function init(){
-		// set default collections for association management methods
-		if(isNull(variables.pricingGroupRates)) {
-			variables.priceGroupRates = [];
-		}
-		
-		if(isNull(variables.Products)) {
-		   variables.Products = [];
-		}
-	   
-		if(isNull(variables.activeFlag)) {
-			variables.activeFlag = true;
-		}
-
-		return super.init();
-	}
- 
-	/******* Association management methods for bidirectional relationships **************/
-	
 	// Pricing Group Rates (one-to-many)
 	
 	public void function addPriceGroupRate(required any priceGroupRate) {
@@ -125,8 +106,6 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 		}
     }
 	
-	
-    /************   END Association Management Methods   *******************/
     
     // Loop over all Price Group Rates and pull the one that is global
     public any function getGlobalPriceGroupRate() {

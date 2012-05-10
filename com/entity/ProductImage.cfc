@@ -46,11 +46,7 @@ component displayname="Product Image" entityname="SlatwallProductImage" table="S
 		return super.init();
 	}
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
 	// Product (many-to-one)
-	
-	
 	public void function setProduct(required product) {
 		variables.product = arguments.product;
 		if(isNew() or !arguments.product.hasProductImage(this)) {
@@ -66,8 +62,6 @@ component displayname="Product Image" entityname="SlatwallProductImage" table="S
 		structDelete(variables, "product");
 	}
     
-	/************   END Association Management Methods   *******************/
-
 	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		if(structKeyExists(arguments, "size")) {
 			arguments.size = lcase(arguments.size);

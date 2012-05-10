@@ -76,17 +76,6 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="discountAmount" type="numeric" persistent="false" formatType="currency";
 	property name="chargeAfterDiscount" type="numeric" persistent="false" formatType="currency";
 	
-	public any function init() {
-		if(isNull(variables.orderFulfillmentItems)) {
-			variables.orderFulfillmentItems = [];
-		}
-		if(isNull(variables.fulfillmentShippingMethodOptions)) {
-			variables.fulfillmentShippingMethodOptions = [];
-		}
-		
-		return super.init();
-	}
-	
 	public any function getFulfillmentMethodType() {
 		return getFulfillmentMethod().getFulfillmentMethodType();
 	}

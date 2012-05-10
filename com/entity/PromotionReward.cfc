@@ -84,49 +84,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="rewards" type="string" persistent="false";
 
 
-	public any function init() {
-		if(isNull(variables.brands)) {
-			variables.brands = [];
-		}
-		if(isNull(variables.options)) {
-			variables.options = [];
-		}
-		if(isNull(variables.skus)) {
-			variables.skus = [];
-		}
-		if(isNull(variables.products)) {
-			variables.products = [];
-		}	   
-		if(isNull(variables.productTypes)) {
-			variables.productTypes = [];
-		}
-		if(isNull(variables.fulfillmentMethods)) {
-			variables.fulfillmentMethods = [];
-		}
-		if(isNull(variables.shippingAddressZones)) {
-			variables.shippingAddressZones = [];
-		}
-		if(isNull(variables.shippingMethods)) {
-			variables.shippingMethods = [];
-		}
-		if(isNull(variables.excludedBrands)) {
-			variables.excludedBrands = [];
-		}
-		if(isNull(variables.excludedOptions)) {
-			variables.excludedOptions = [];
-		}
-		if(isNull(variables.excludedProducts)) {
-			variables.excludedProducts = [];
-		}	   
-		if(isNull(variables.excludedProductTypes)) {
-			variables.excludedProductTypes = [];
-		}
-		if(isNull(variables.excludedSkus)) {
-			variables.excludedSkus = [];
-		}
-		return super.init();
-	}
-	
 	public string function getAmountFormatted() {
 		if(getAmountType() == "percentageOff") {
 			return formatValue(getAmount(), "percentage");

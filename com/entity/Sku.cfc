@@ -87,33 +87,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
 	property name="defaultFlag" type="boolean" persistent="false";
 	
-	public Sku function init() {
-       // set default collections for association management methods
-       if(isNull(variables.Options)) {
-       	    variables.options=[];
-       }
- 	   if(isNull(variables.promotionRewards)) {
-	       variables.promotionRewards = [];
-	   }
- 	   if(isNull(variables.promotionQualifiers)) {
-	       variables.promotionQualifiers = [];
-	   }
-	   if(isNull(variables.priceGroupRates)) {
-	   	   variables.priceGroupRates = [];
-	   }
- 	   if(isNull(variables.accessContents)) {
-	       variables.accessContents = [];
-	   }
- 	   if(isNull(variables.subscriptionBenefits)) {
-	       variables.subscriptionBenefits = [];
-	   }
- 	   if(isNull(variables.renewalSubscriptionBenefits)) {
-	       variables.renewalSubscriptionBenefits = [];
-	   }
+	
 
-       return super.init();
-    }
-    
     public boolean function getDefaultFlag() {
     	if(getProduct().getDefaultSku().getSkuID() == getSkuID()) {
     		return true;

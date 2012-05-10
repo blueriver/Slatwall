@@ -65,18 +65,7 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	// Non-persistent properties
 	property name="currentFlag" type="boolean" persistent="false"; 
 	
-	public Promotion function init(){
-		// set default collections for association management methods
-		if(isNull(variables.promotionCodes)){
-		   variables.promotionCodes = [];
-		}
-		
-		if(isNull(variables.promotionPeriods)) {
-			variables.promotionPeriods = [];
-		}
-		return super.init();
-	}
-
+	
 	// @hint this method validates that promotion codes are unique
 	public any function hasUniquePromotionCodes() {
 		var promotionCodeList = "";

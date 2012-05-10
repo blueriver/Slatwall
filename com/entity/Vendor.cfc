@@ -66,30 +66,6 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	
 	property name="numberBrands";
 	
-	public Vendor function init(){
-		// set default collections for association management methods
-		if(isNull(variables.vendorOrders)) {
-		   variables.vendorOrders = [];
-		}
-	   
-		if(isNull(variables.vendorAddresses)) {
-			variables.vendorAddresses = [];
-		}
-		
-		if(isNull(variables.vendorPhoneNumbers)) {
-			variables.vendorPhoneNumbers = [];
-		}
-		
-		if(isNull(variables.vendorEmailAddresses)) {
-			variables.vendorEmailAddresses = [];
-		}
-		
-		if(isNull(variables.brands)) {
-			variables.brands = [];
-		}
-
-		return super.init();
-	}
 	
 	public string function getEmailAddress() {
 		return getPrimaryEmailAddress().getEmailAddress();

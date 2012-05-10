@@ -45,36 +45,29 @@ component displayname="Order Item Applied Tax" entityname="SlatwallOrderItemAppl
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// ============ START: Non-Persistent Property Methods =================
 	
-	// Order (many-to-one)
-	public void function setOrderItem(required OrderItem orderItem) {
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Order Item (many-to-one)
+	public void function setOrderItem(required any orderItem) {
 		variables.orderItem = arguments.orderItem;
-		if(isNew() || !arguments.orderItem.hasAppliedTaxes(this)) {
+		if(isNew() or !arguments.orderItem.hasAppliedTax( this )) {
 			arrayAppend(arguments.orderItem.getAppliedTaxes(), this);
 		}
 	}
-	
-	public void function removeOrderItem(OrderItem orderItem) {
+	public void function removeOrderItem(any orderItem) {
 		if(!structKeyExists(arguments, "orderItem")) {
 			arguments.orderItem = variables.orderItem;
 		}
 		var index = arrayFind(arguments.orderItem.getAppliedTaxes(), this);
 		if(index > 0) {
 			arrayDeleteAt(arguments.orderItem.getAppliedTaxes(), index);
-		}    
-		structDelete(variables,"orderItem");
-    }
-    
-	/************   END Association Management Methods   *******************/
-
-    
-
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
+		}
+		structDelete(variables, "orderItem");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

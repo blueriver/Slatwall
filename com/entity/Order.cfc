@@ -93,31 +93,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="totalQuantity" persistent="false";
 	
 	public any function init() {
-		if(isNull(variables.orderItems)) {
-			variables.orderItems = [];
-		}
-		if(isNull(variables.orderDeliveries)) {
-			variables.orderDeliveries = [];
-		}
-		if(isNull(variables.orderFulfillments)) {
-			variables.orderFulfillments = [];
-		}
-		if(isNull(variables.orderPayments)) {
-			variables.orderPayments = [];
-		}
-		if(isNull(variables.orderReturns)) {
-			variables.orderReturns = [];
-		}
-		if(isNull(variables.referencingOrders)) {
-			variables.referencingOrders = [];
-		}
-		if(isNull(variables.appliedPromotions)) {
-			variables.appliedPromotions = [];
-		}
-		if(isNull(variables.promotionCodes)) {
-			variables.promotionCodes = [];
-		}
-		
 		// Set the default order status type as not placed
 		if(isNull(getOrderStatusType())) {
 			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');

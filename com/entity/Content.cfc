@@ -81,14 +81,7 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	// Non-Persistent Properties
 
 
-	public any function init() {
-       // set default collections for association management methods
- 	   if(isNull(variables.skus)) {
-	       variables.skus = [];
-	   }
 
-       return super.init();
-    }
     
 	
 	// ============ START: Non-Persistent Property Methods =================

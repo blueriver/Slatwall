@@ -90,9 +90,6 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		if(isNull(variables.amount)) {
 			variables.amount = 0;
 		}
-		if(isNull(variables.creditCardTransactions)) {
-			variables.creditCardTransactions = [];
-		}
 		
 		return super.init();
 	}

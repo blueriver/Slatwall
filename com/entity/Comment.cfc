@@ -61,13 +61,7 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	property name="primaryRelationship" persistent="false";
 	property name="commentWithLinks" persistent="false";
 	
-	public any function init() {
-		if(isNull(variables.commentRelationships)) {
-			variables.commentRelationships = [];
-		}
-		
-		return super.init();
-	}
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

@@ -73,32 +73,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
 
-	public ProductType function init(){
-		// set default collections for association management methods
-		if(isNull(variables.childProductTypes)){
-			variables.childProductTypes = [];
-		}
-		if(isNull(variables.products)){
-			variables.products = [];
-		}
-		if(isNull(variables.attributeSetAssignments)){
-			variables.attributeSetAssignments = [];
-		}
-		if(isNull(variables.promotionRewards)) {
-			variables.promotionRewards = [];
-		}
-		if(isNull(variables.promotionQualifiers)) {
-			variables.promotionQualifiers = [];
-		}
-		if(isNull(variables.priceGroupRates)) {
-			variables.priceGroupRates = [];
-		}
-		if(isNull(variables.eligibleFulfillmentMethods)) {
-			variables.eligibleFulfillmentMethods = [];
-		}
-		
-		return super.init();
-	}
 	
 	// Overrides the implicet getter to make sure that a value exists
 	public string function getProductTypeIDPath() {

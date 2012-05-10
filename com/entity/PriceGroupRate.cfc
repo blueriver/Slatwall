@@ -72,31 +72,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="appliesTo" type="string" persistent="false";
 	property name="displayName" type="string" persistent="false";
 	
-	public PriceGroupRate function init() {
-	   // set default collections for association management methods
-	   if(isNull(variables.productTypes)) {
-	   	   variables.productTypes = [];
-	   }
-	   if(isNull(variables.products)) {
-	   	   variables.products = [];
-	   }
-	   if(isNull(variables.Skus)) {
-	   	   variables.Skus = [];
-	   }
-	   if(isNull(variables.excludedProductTypes)) {
-	   	   variables.excludedProductTypes = [];
-	   }
-	   if(isNull(variables.excludedProducts)) {
-	   	   variables.excludedProducts = [];
-	   }
-	   if(isNull(variables.excludedSkus)) {
-	   	   variables.excludedSkus = [];
-	   }
-	   
-	   return super.init();
-	}
- 
-
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public array function getAmountTypeOptions() {

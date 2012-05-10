@@ -66,13 +66,6 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	
 	public any function init() {
-		if(isNull(variables.vendorOrderItems)) {
-			variables.vendorOrderItems = [];
-		}
-		
-		if(isNull(variables.vendorOrderDeliveries)) {
-			variables.vendorOrderDeliveries = [];
-		}
 		
 		// Set the default order type as purchase order
 		if(isNull(variables.vendorOrderType)) {

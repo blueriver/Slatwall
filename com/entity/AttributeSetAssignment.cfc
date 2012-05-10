@@ -48,32 +48,29 @@ component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSe
 	property name="attributeSetAssignmentType" insert="false" update="false";
 	property name="productTypeID" length="32" insert="false" update="false";
 
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Attribute Set (many-to-one)
-	
-	public void function setAttributeSet(required AttributeSet attributeSet) {
-		variables.attributeSet = arguments.attributeSet;
-		if(!arguments.attributeSet.hasAttributeSetAssignment(this)) {
-		   arrayAppend(arguments.attributeSet.getAttributeSetAssignments(),this);
-		}
-	}
-	
-	public void function removeAttributeSet(required AttributeSet attributeSet) {
-		var index = arrayFind(arguments.attributeSet.getAttributeSetAssignments(),this);
-		if(index > 0) {
-		   arrayDeleteAt(arguments.attributeSet.getAttributeSetAssignments(),index);
-		}    
-		structDelete(variables,"attributeSet");
-    }
-    
-	/************   END Association Management Methods   *******************/
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Attribute Set (many-to-one)
+	public void function setAttributeSet(required any attributeSet) {
+		variables.attributeSet = arguments.attributeSet;
+		if(isNew() or !arguments.attributeSet.hasAttributeSetAssignment( this )) {
+			arrayAppend(arguments.attributeSet.getAttributeSetAssignments(), this);
+		}
+	}
+	public void function removeAttributeSet(any attributeSet) {
+		if(!structKeyExists(arguments, "attributeSet")) {
+			arguments.attributeSet = variables.attributeSet;
+		}
+		var index = arrayFind(arguments.attributeSet.getAttributeSetAssignments(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.attributeSet.getAttributeSetAssignments(), index);
+		}
+		structDelete(variables, "attributeSet");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

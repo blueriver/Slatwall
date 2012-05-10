@@ -64,14 +64,6 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	// Non-Persistent Properties
 	property name="totalQuantityDelivered" persistent="false" type="numeric" formatType="numeric";
 	
-	public OrderDelivery function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.orderDeliveryItems)) {
-	       variables.orderDeliveryItems = [];
-	   }    
-	   return Super.init();
-	}
-	
 	public any function getTotalQuantityDelivered() {
 		var totalDelivered = 0;
 		for(var i=1; i<=arrayLen(getOrderDeliveryItems()); i++) {

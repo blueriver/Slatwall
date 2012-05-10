@@ -43,36 +43,31 @@ component displayname="Order Item Attribute Value" entityname="SlatwallOrderItem
 	
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 		
-	/******* Association management methods for bidirectional relationships **************/
-	// Order Item (many-to-one)
 	
-	public void function setOrderItem(required OrderItem orderItem) {
-		variables.orderItem = arguments.orderItem;
-		if(isNew() || !arguments.orderItem.hasAttributeValue(this)) {
-		   arrayAppend(arguments.orderItem.getAttributeValues(),this);
-		}
-	}
-	
-	public void function removeOrderItem(OrderItem orderItem) {
-		if(!structKeyExists(arguments,"orderItem")) {
-			arguments.orderItem = variables.orderItem;
-		}
-		var index = arrayFind(arguments.orderItem.getAttributeValues(),this);
-		if(index > 0) {
-		   arrayDeleteAt(arguments.orderItem.getAttributeValues(),index);
-		}    
-		structDelete(variables,"orderItem");
-    }
-    
-	/************   END Association Management Methods   *******************/
-	
-    
 
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Order Item (many-to-one)
+	public void function setOrderItem(required any orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() or !arguments.orderItem.hasAttributeValue( this )) {
+			arrayAppend(arguments.orderItem.getAttributeValues(), this);
+		}
+	}
+	public void function removeOrderItem(any orderItem) {
+		if(!structKeyExists(arguments, "orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderItem.getAttributeValues(), index);
+		}
+		structDelete(variables, "orderItem");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

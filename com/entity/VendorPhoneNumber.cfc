@@ -42,44 +42,42 @@ component displayname="Vendor Phone" entityname="SlatwallVendorPhoneNumber" tabl
 	property name="vendorPhoneNumberID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="phoneNumber" ormtype="string";
 	
+	// Related Object Properties (many-to-one)
+	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
+	
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	
 	
-	/******* Association management methods for bidirectional relationships **************/
 	
-	// vendor (many-to-one)
-	public void function setVendor(required any vendor) {
-		variables.vendor = arguments.vendor;
-		if(isNew() or !arguments.vendor.hasVendorPhoneNumber(this)) {
-			arrayAppend(arguments.vendor.getVendorPhoneNumbers(),this);
-		}
-	}
-	
-	public void function removeVendor(any vendor) {
-		if(!structKeyExists(arguments, "vendor")) {
-			arguments.vendor = variables.vendor;
-		}
-		var index = arrayFind(arguments.vendor.getPhoneNumbers(),this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.vendor.getPhoneNumbers(),index);
-		}
-		structDelete(variables,"vendor");
-	}
-	
-	/******* END: Association management methods for bidirectional relationships **************/
-
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Vendor (many-to-one)
+	public void function setVendor(required any vendor) {
+		variables.vendor = arguments.vendor;
+		if(isNew() or !arguments.vendor.hasVendorPhoneNumber( this )) {
+			arrayAppend(arguments.vendor.getVendorPhoneNumbers(), this);
+		}
+	}
+	public void function removeVendor(any vendor) {
+		if(!structKeyExists(arguments, "vendor")) {
+			arguments.vendor = variables.vendor;
+		}
+		var index = arrayFind(arguments.vendor.getVendorPhoneNumbers(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendor.getVendorPhoneNumbers(), index);
+		}
+		structDelete(variables, "vendor");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

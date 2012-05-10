@@ -70,15 +70,6 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="validationTypeOptions" persistent="false";
 	
 	
-	public Attribute function init(){
-		// set default collections for association management methods
-		if(isNull(variables.attributeOptions)) {
-	   	   variables.attributeOptions = [];
-		}
-		
-		return super.init();
-	}
-
 	public array function getAttributeOptions(string orderby, string sortType="text", string direction="asc") {
 		if(!structKeyExists(arguments,"orderby")) {
 			return variables.AttributeOptions;

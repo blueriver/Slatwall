@@ -66,22 +66,6 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	
 	// Non-Persistent Properties
 
-	public any function init(){
-		// set default collections for association management methods
-		if(isNull(variables.priceGroups)){
-		   variables.priceGroups = [];
-		}
-		if(isNull(variables.promotions)){
-		   variables.promotions = [];
-		}
-		if(isNull(variables.categories)){
-		   variables.categories = [];
-		}
-		if(isNull(variables.contents)){
-		   variables.contents = [];
-		}
-		return super.init();
-	}
 	
 	public numeric function getCurrentUseCount() {
 		var subscriptionUsageBenefitAccountSmartList = getService("SubscriptionService").getSubscriptionUsageBenefitAccountSmartList();

@@ -63,20 +63,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierOption" fkcolumn="optionID" inversejoincolumn="promotionQualifierID" inverse="true";
 	
-	public Option function init(){
-		// set default collections for association management methods
-		if(isNull(variables.skus)) {
-			variables.skus = [];
-		}
-		if(isNull(variables.promotionRewards)) {
-			variables.promotionRewards = [];
-		}
-		if(isNull(variables.promotionQualifiers)) {
-			variables.promotionQualifiers = [];
-	    }
-		return Super.init();
-    }
-    
+	   
     public string function getImageDirectory() {
     	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }

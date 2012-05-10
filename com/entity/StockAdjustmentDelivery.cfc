@@ -53,13 +53,6 @@ component displayname="Stock Adjustment Delivery" entityname="SlatwallStockAdjus
 	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
 	property name="stockAdjustmentDeliveryItems" singularname="stockAdjustmentDeliveryItem" cfc="StockAdjustmentDeliveryItem" fieldtype="one-to-many" fkcolumn="stockAdjustmentDeliveryID" cascade="all-delete-orphan" inverse="true";
 	
-	public StockAdjustmentDelivery function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.stockAdjustmentDeliveryItems)) {
-	       variables.stockAdjustmentDeliveryItems = [];
-	   }    
-	   return Super.init();
-	}
 	
 	public any function getTotalQuantityDelivered() {
 		var totalDelivered = 0;
@@ -68,27 +61,6 @@ component displayname="Stock Adjustment Delivery" entityname="SlatwallStockAdjus
 		}
 		return totalDelivered;
 	}
-   
-    /******* Association management methods for bidirectional relationships **************/
-	
-	// StockAdjustment (many-to-one)
-	
-	// I commented these out since StockAdjustments don't have the bidirectional relation
-	/*public void function setStockAdjustment(required StockAdjustment StockAdjustment) {
-	   variables.stockAdjustment = arguments.stockAdjustment;
-	   if(!arguments.stockAdjustment.hasStockAdjustmentDelivery(this)) {
-	       arrayAppend(arguments.stockAdjustment.getStockAdjustmentDeliveries(),this);
-	   }
-	}
-	
-	public void function removeStockAdjustment(required StockAdjustment StockAdjustment) {
-       var index = arrayFind(arguments.stockAdjustment.getStockAdjustmentDeliveries(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.stockAdjustment.getStockAdjustmentDeliveries(),index);
-       }    
-       structDelete(variables,"stockAdjustment");
-    }*/
-    
 	
 	// StockAdjustmentDeliveryItems (one-to-many)
 	
@@ -99,7 +71,7 @@ component displayname="Stock Adjustment Delivery" entityname="SlatwallStockAdjus
 	public void function removeStockAdjustmentDeliveryItem(required StockAdjustmentDeliveryItem StockAdjustmentDeliveryItem) {
 	   arguments.stockAdjustmentDeliveryItem.removeStockAdjustmentDelivery(this);
 	}
-    /************   END Association Management Methods   *******************/
+    
     
     // ============ START: Non-Persistent Property Methods =================
 	

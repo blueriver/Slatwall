@@ -69,9 +69,6 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	// Non-Persistent Properties
 	property name="creditCardNumber" persistent="false";
 
-	public any function init() {
-		super.init();
-	}
 	
 	public string function getPaymentMethodType() {
 		return getPaymentMethod().getPaymentMethodType();

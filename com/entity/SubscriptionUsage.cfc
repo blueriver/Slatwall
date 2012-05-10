@@ -76,21 +76,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="currentStatusType" persistent="false";
 	property name="subscriptionOrderItemName" persistent="false";
 
-	public any function init() {
-		if(isNull(variables.subscriptionUsageBenefits)) {
-			variables.subscriptionUsageBenefits = [];
-		}
-		if(isNull(variables.renewalSubscriptionUsageBenefits)) {
-			variables.renewalSubscriptionUsageBenefits = [];
-		}
-		if(isNull(variables.subscriptionOrderItems)) {
-			variables.subscriptionOrderItems = [];
-		}
-		if(isNull(variables.subscriptionStatus)) {
-			variables.subscriptionStatus = [];
-		}
-		return super.init();
-	}
+	
 	
 	public boolean function isActive() {
 		if(!isNull(getCurrentStatus())) {

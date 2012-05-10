@@ -65,17 +65,6 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	// Non-Persistent Properties
 	property name="attributeSetTypeOptions" persistent="false" type="array"; 
 	
-	public AttributeSet function init(){
-       // set default collections for association management methods
-       if(isNull(variables.attributes)) {
-       	   variables.attributes = [];
-       }
-       if(isNull(variables.attributeSetAssignments)) {
-       	   variables.attributeSetAssignments = [];
-       }
-       return super.init();
-    }
-	
 	public array function getAttributes(orderby, sortType="text", direction="asc") {
 		if(!structKeyExists(arguments, "orderby")) {
 			return variables.Attributes;

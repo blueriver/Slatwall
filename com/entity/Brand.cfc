@@ -65,20 +65,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	// Related Object Properties (many-to-many)
 	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID";
 	
-	public Brand function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.products)) {
-	   	   variables.products = [];
-	   }
- 	   if(isNull(variables.promotionRewards)) {
-	       variables.promotionRewards = [];
-	   }
- 	   if(isNull(variables.promotionQualifiers)) {
-	       variables.promotionQualifiers = [];
-	   }   
-	   return super.init();
-	}
-
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

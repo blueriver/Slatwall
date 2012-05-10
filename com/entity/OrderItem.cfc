@@ -94,23 +94,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 			setOrderItemStatusType( getService("typeService").getTypeBySystemCode("oistNew") );
 		}
 		
-		// set default collections for association management methods
-		if(isNull(variables.orderDeliveryItems)) {
-		   variables.orderDeliveryItems = [];
-		}
-		if(isNull(variables.attributeValues)) {
-		   variables.attributeValues = [];
-		}
-		if(isNull(variables.appliedPromotions)) {
-		   variables.appliedPromotions = [];
-		}
-		if(isNull(variables.appliedTaxes)) {
-		   variables.appliedTaxes = [];
-		}
-		if(isNull(variables.stockReceiverItems)) {
-			variables.stockReceiverItems = [];	
-		}
-		
 		return super.init();
 	}
 

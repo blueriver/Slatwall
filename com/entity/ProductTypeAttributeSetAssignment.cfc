@@ -44,9 +44,8 @@ component displayname="Product Type Attribute Set Assignment" entityname="Slatwa
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID" inverse="true";
 	
 
-	/******* Association management methods for bidirectional relationships **************/
-	// Product Type (many-to-one)
 	
+	// Product Type (many-to-one)
 	public void function setProductType(required ProductType productType) {
 		variables.productType = arguments.productType;
 		if(isNew() || !arguments.productType.hasAttributeSetAssignment(this)) {
@@ -62,7 +61,7 @@ component displayname="Product Type Attribute Set Assignment" entityname="Slatwa
 		structDelete(variables,"productType");
     }
     
-	/************   END Association Management Methods   *******************/
+	
 
 
 	// ============ START: Non-Persistent Property Methods =================

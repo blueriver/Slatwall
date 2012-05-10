@@ -96,45 +96,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePrice" type="numeric" formatType="currency" persistent="false";
 	
-	public Product function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.activeFlag)) {
-	       variables.activeFlag = 1;
-	   }
-	   if(isNull(variables.pages)) {
-	       variables.pages = [];
-	   }
-	   if(isNull(variables.categories)) {
-	       variables.categories = [];
-	   }
-	   if(isNull(variables.Skus)) {
-	       variables.Skus = [];
-	   }
-	   if(isNull(variables.attributeValues)) {
-	       variables.attributeValues = [];
-	   }	   
-	   if(isNull(variables.attributeSetAssignments)) {
-	       variables.attributeSetAssignments = [];
-	   }
-	   if(isNull(variables.promotionRewards)) {
-	       variables.promotionRewards = [];
-	   }
-	   if(isNull(variables.relatedProducts)) {
-	       variables.relatedProducts = [];
-	   }
-	   if(isNull(variables.productReviews)) {
-	       variables.productReviews = [];
-	   }
-	   if(isNull(variables.productImages)) {
-	       variables.productImages = [];
-	   }
-	   if(isNull(variables.eligibleFulfillmentMethods)) {
-	       variables.eligibleFulfillmentMethods = [];
-	   }
-	   return Super.init();
-	}
-	
-    public any function getProductTypeOptions( string baseProductType ) {
+	public any function getProductTypeOptions( string baseProductType ) {
 		if(!structKeyExists(variables, "productTypeOptions")) {
 			if(!structKeyExists(arguments, "baseProductType")) {
 				arguments.baseProductType = getProductType().getBaseProductType();

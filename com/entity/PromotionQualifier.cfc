@@ -87,19 +87,6 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	// Non-persistent entities
 	
 	
-	public any function init() {
-		if(isNull(variables.fulfillmentMethods)) {
-			variables.fulfillmentMethods = [];
-		}
-		if(isNull(variables.shippingMethods)) {
-			variables.shippingMethods = [];
-		}
-		if(isNull(variables.addressZones)) {
-			variables.shippingAddressZones = [];
-		}
-		
-		return super.init();
-	}
 	
 	// ============ Association management methods for bidirectional relationships =================
 	

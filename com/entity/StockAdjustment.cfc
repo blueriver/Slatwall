@@ -59,9 +59,6 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="displayName";
 	
 	public any function init() {
-		if(isNull(variables.stockAdjustmentItems)) {
-			variables.stockAdjustmentItems = [];
-		}
 		
 		// Set the default type
 		if(isNull(variables.stockAdjustmentType)) {
@@ -72,6 +69,7 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 		if(isNull(variables.stockAdjustmentStatusType)) {
 			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode('sastNew');
 		}
+		
 		return super.init();
 	}
 	
