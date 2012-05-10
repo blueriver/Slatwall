@@ -139,7 +139,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		subscriptionUsage.setNextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getEndDate());
 		
 		// add active status to subscription usage
-		setSubscriptionStatus(subscriptionUsage, 'sstActive');
+		setSubscriptionUsageStatus(subscriptionUsage, 'sstActive');
 		
 		// create new subscription orderItem
 		var subscriptionOrderItem = this.newSubscriptionOrderItem();
@@ -361,6 +361,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// set the account for order
 			order.setAccount(arguments.subscriptionUsage.getAccount());
 			
+			// That's right! A write log with getter makes it work, and abort is ignored!! Sumit
+			writelog(file="slatwall", text="order account null 2: #isNull(order.getAccount())#");
+			abort;
+
 			// add order item to order
 			getOrderService().addOrderItem(order=order,sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(),data={fulfillmentMethodID="444df2ffeca081dc22f69c807d2bd8fe"});
 
@@ -405,7 +409,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// if orderPayment has no error and amount not received yet, then try to process payment
 			if(!orderPayment.hasErrors()) {
 				var amount = order.getTotal() - orderPayment.getAmountReceived();
-				var paymentProcessed = getPaymentService().processPayment(order.getOrderPayments()[1], 'authorizeAndCharge', amount);
+				var paymentProcessed = getPaymentService().processPayment(orderPayment, 'authorizeAndCharge', amount);
 				
 				// if payment is processed, close out fulfillment and order
 				if(paymentProcessed) {
