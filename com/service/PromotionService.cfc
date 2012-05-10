@@ -46,10 +46,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public void function updateOrderAmountsWithPromotions(required any order) {
 		
 		if(arguments.order.getOrderType().getSystemCode() == "otSalesOrder") {
-			
-			
 			// TODO: Clear all previously applied promotions from fulfillments, and apply new ones
 			// TODO: Clear all previously applied promotions from order, and apply new ones
+			
 			
 			// Clear all previously applied promotions for order items
 			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
@@ -73,6 +72,24 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 			}
 			
+			// Loop over all Potential Product Discounts for the order Items
+			var orderItemPromotionRewards = getDAO().getActivePromotionRewards(rewardTypeList="merchandise,subscription,contentAccess", promotionCodeList=arguments.order.getPromotionCodeList(), onlyQualifiedPromotions=true);
+			for(var pr=1; pr<=arrayLen(orderItemPromotionRewards); pr++) {
+				
+			}
+			
+			// Get and Fulfillment Discounts
+			var fulfilmentPromotionRewards = getDAO().getActivePromotionRewards(rewardTypeList="fulfillment", promotionCodeList=arguments.order.getPromotionCodeList());
+			
+			// Get any Order Discounts
+			var orderPromotionRewards = getDAO().getActivePromotionRewards(rewardTypeList="order", promotionCodeList=arguments.order.getPromotionCodeList());
+			
+			
+			writeDump(var=orderItemPromotionRewards, top=2);
+			writeDump(var=fulfilmentPromotionRewards, top=2);
+			writeDump(var=orderPromotionRewards, top=2);
+			abort;
+			/*
 			// Loop over the promotionCodes on the order
 			for(var pc=1; pc<=arrayLen(arguments.order.getPromotionCodes()); pc++) {
 				var promotion = arguments.order.getPromotionCodes()[pc].getPromotion();
@@ -161,6 +178,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					}
 				}
 			}
+			*/
+			
 			
 		} else {
 			// DO THE LOGIC HERE FOR RETURNS AND EXCHANGES
@@ -205,7 +224,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var codesOK = false;
 		var accountOK = false;
 		
-		
+		codesOK = true;
+		/*
 		// Verify Promo Code Requirements 
 		if(!arrayLen(arguments.promotion.getPromotionCodes())) {
 			codesOK = true;
@@ -235,6 +255,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 			}
 		}
+		*/
 		
 		// TODO: Verify Promo Account Requirements, for now this is just set to true
 		accountOK = true;

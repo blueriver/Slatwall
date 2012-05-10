@@ -38,19 +38,10 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
-	<cffunction name="getAllActivePromotions" returntype="Array" access="public">
-		<cfreturn ormExecuteQuery(" from SlatwallPromotion sp inner join fetch sp.promotionPeriods where sp.startDateTime < ? and sp.endDateTime > ? and sp.activeFlag = 1", [now(), now()]) />
-	</cffunction>
-	
 	<cffunction name="getActivePromotionRewards" returntype="Array" access="public">
-		<cfargument name="rewardType" required="true" type="string" />
+		<cfargument name="rewardTypeList" required="true" type="string" />
 		<cfargument name="promotionCodeList" required="true" type="string" />
-		
-		<cfset var params = {
-			rewardType = arguments.rewardType,
-			now = now(),
-			activeFlag = 1
-		} />
+		<cfargument name="onlyQualifiedPromotions" type="boolean" default="false" />
 		
 		<cfset var hql = "SELECT spr FROM
 				SlatwallPromotionReward spr
@@ -59,13 +50,32 @@ Notes:
 			  INNER JOIN FETCH
 				spp.promotion sp
 			WHERE
-				spr.rewardType = :rewardType
+				spr.rewardType IN (:rewardTypeList)
 			  and
 				spp.startDateTime < :now
 			  and
 				spp.endDateTime > :now
 			  and
 				sp.activeFlag = :activeFlag" />
+		
+		<cfif arguments.onlyQualifiedPromotions>
+			<cfset hql &=	" and (
+			  	EXISTS ( SELECT promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )
+			  	  or
+			  	EXISTS ( SELECT promotionQualifierID FROM SlatwallPromotionQualifier q WHERE q.promotionPeriod.promotionPeriodID = spp.promotionPeriodID )
+			  )" />
+		</cfif>
+		
+		<cfset var params = {
+			now = now(),
+			activeFlag = 1
+		} />
+		
+		<cfif structKeyExists(server, "railo")>
+			<cfset params.rewardTypeList = arguments.rewardTypeList />
+		<cfelse>
+			<cfset params.rewardTypeList = listToArray(arguments.rewardTypeList) />		
+		</cfif>
 				
 		<cfif len(promotionCodeList)>
 			<cfset hql &=	" and (
