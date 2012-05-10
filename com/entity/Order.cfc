@@ -111,6 +111,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		if(isNull(variables.referencingOrders)) {
 			variables.referencingOrders = [];
 		}
+		if(isNull(variables.appliedPromotions)) {
+			variables.appliedPromotions = [];
+		}
 		if(isNull(variables.promotionCodes)) {
 			variables.promotionCodes = [];
 		}
