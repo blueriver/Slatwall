@@ -38,8 +38,53 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
-	<cffunction name="getAllActivePromotions" returntype="Array" access="public">
-		<cfreturn ormExecuteQuery(" from SlatwallPromotion sp where sp.startDateTime < ? and sp.endDateTime > ? and sp.activeFlag = 1", [now(), now()]) />
+	<cffunction name="getActivePromotionRewards" returntype="Array" access="public">
+		<cfargument name="rewardTypeList" required="true" type="string" />
+		<cfargument name="promotionCodeList" required="true" type="string" />
+		
+		<cfset var hql = "SELECT spr FROM
+				SlatwallPromotionReward spr
+			  INNER JOIN FETCH
+				spr.promotionPeriod spp
+			  INNER JOIN FETCH
+				spp.promotion sp
+			WHERE
+				spr.rewardType IN (:rewardTypeList)
+			  and
+				spp.startDateTime < :now
+			  and
+				spp.endDateTime > :now
+			  and
+				sp.activeFlag = :activeFlag" />
+		
+		<cfset var params = {
+			now = now(),
+			activeFlag = 1
+		} />
+		
+		<cfif structKeyExists(server, "railo")>
+			<cfset params.rewardTypeList = arguments.rewardTypeList />
+		<cfelse>
+			<cfset params.rewardTypeList = listToArray(arguments.rewardTypeList) />		
+		</cfif>
+				
+		<cfif len(promotionCodeList)>
+			<cfset hql &=	" and (
+				  	NOT EXISTS ( SELECT promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )
+				  	  or
+				  	EXISTS ( SELECT promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID AND c.promotionCode IN (:promotionCodeList) AND (c.startDateTime is null or c.startDateTime < :now) AND (c.endDateTime is null or c.endDateTime > :now) )
+				  )" />
+
+			<cfif structKeyExists(server, "railo")>
+				<cfset params.promotionCodeList = arguments.promotionCodeList />
+			<cfelse>
+				<cfset params.promotionCodeList = listToArray(arguments.promotionCodeList) />		
+			</cfif>
+		<cfelse>
+			<cfset hql &=	" and NOT EXISTS ( SELECT promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )" />
+		</cfif>
+		
+		<cfreturn ormExecuteQuery(hql, params) />
 	</cffunction>
 	
 	<cffunction name="getSalePricePromotionRewardsQuery">

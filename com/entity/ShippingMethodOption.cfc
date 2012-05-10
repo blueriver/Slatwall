@@ -63,8 +63,23 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Non-Persistent Properties
+	property name="discountAmountDetials" persistent="false";
+	property name="totalChargeAfterDiscount" persistent="false" formatType="currency";
 	
+	public struct function getDiscountAmountDetails() {
+		if(!structKeyExists(variables, "discountAmountDetials")) {
+			variables.discountAmountDetials = getService("promotionService").getShippingMethodOptionsDiscountAmountDetails(shippingMethodOption=this);
+		}
+		return variables.discountAmountDetials;
+	}
 	
+	public numeric function getDiscountAmount() {
+		return getDiscountAmountDetails().discountAmount;
+	}
+	
+	public numeric function getTotalChargeAfterDiscount() {
+		return precisionEvaluate(getTotalCharge() - getDiscountAmount());
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

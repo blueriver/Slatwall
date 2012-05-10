@@ -61,7 +61,7 @@ Notes:
 					</cfif>
 					<dl>
 						<dt><input type="radio" name="orderFulfillments[#attributes.orderFulfillmentIndex#].fulfillmentShippingMethodOptionID" value="#option.getShippingMethodOptionID()#" <cfif local.optionSelected>checked="checked"</cfif>>#option.getShippingMethodRate().getShippingMethod().getShippingMethodName()#</dt>
-						<dd>#option.getFormattedValue('totalCharge', 'currency')#</dd>
+						<dd>#option.getFormattedValue('totalChargeAfterDiscount', 'currency')#</dd>
 					</dl>
 				</cfloop>
 			<cfelse>

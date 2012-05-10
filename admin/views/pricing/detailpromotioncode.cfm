@@ -43,7 +43,10 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.promotioncode#" saveAction="admin:pricing.savepromotioncode" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+		
+		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
+		
 		<input type="hidden" name="returnAction" value="admin:pricing.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
