@@ -36,14 +36,18 @@
 Notes:
 
 --->
-<cfparam name="rc.vendorOrder" type="any" />
+<cfparam name="rc.vendorOrder" type="any"/>
 
-<cf_SlatwallListingDisplay smartList="#rc.$.slatwall.getService('VendorOrderService').getReceiverSmartList(rc.vendorOrder.getVendorOrderID())#" recordDetailAction="admin:warehouse.detailStockReceiver" recordDetailQueryString="returnaction=admin:vendor.detailvendororder&vendorOrderID=#rc.VendorOrder.getVendorOrderID()#">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
-	<cf_SlatwallListingColumn propertyIdentifier="boxCount" />
-	<cf_SlatwallListingColumn propertyIdentifier="packingSlipNumber" />
-</cf_SlatwallListingDisplay>
+<cf_slatwalllistingdisplay smartlist="#rc.$.slatwall.getService('VendorOrderService').getStockReceiverSmartList(rc.vendorOrder.getVendorOrderID())#" 
+                           recordeditaction="admin:vendor.detailStockReceiver"
+						   recordeditmodal="true" 
+                           recorddetailquerystring="returnaction=admin:vendor.detailvendororder&vendorOrderID=#rc.VendorOrder.getVendorOrderID()#">
+	
+	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="createdDateTime"/>
+	<cf_slatwalllistingcolumn propertyidentifier="boxCount"/>
+	<cf_slatwalllistingcolumn propertyidentifier="packingSlipNumber"/>
+</cf_slatwalllistingdisplay>
 
-<cf_SlatwallActionCaller action="admin:vendor.processVendorOrder" class="btn btn-primary" queryString="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=receiveStock" modal=true />
-
-
+<cf_slatwallactioncaller action="admin:vendor.processVendorOrder" class="btn btn-primary" 
+                         querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=receiveStock" 
+                         modal=true/>
