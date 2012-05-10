@@ -79,7 +79,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
 			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=getSlatwallScope().getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=restrictedContent.getContentID());
-			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredContentID == "") {
+			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredCmsContentID == "") {
 				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
