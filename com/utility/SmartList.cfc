@@ -182,6 +182,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="", boolean fetch) {
 		var parentEntityFullName = variables.entities[ arguments.parentEntityName ].entityFullName;
+		
 		if(listLen(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc,".") < 2) {
 			var newEntityCFC = Replace(parentEntityFullName, listLast(parentEntityFullName,"."), variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc);	
 		} else {
@@ -196,12 +197,25 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			var newEntityName = listLast(newEntityMeta.fullName,".");
 		}
 		
-		var newEntityAlias = "a#lcase(newEntityName)#";
+		//var newEntityAlias = "a#lcase(newEntityName)#";
+		
+		var aliaseOK = false;
+		var aoindex = 1;
+		var aolist = "a,b,c,d,e,f,g,h,i,j,k,l";
+		do {
+			var newEntityAlias = "#listGetAt(aolist,aoindex)##lcase(newEntityName)#";
+			if(aoindex > 0) {
+				newEntityName = "#lcase(newEntityName)#_#UCASE(listGetAt(aolist,aoindex+1))#";
+			}
+			if( (structKeyExists(variables.entities, newEntityName) && variables.entities[newEntityName].entityAlias == newEntityAlias && variables.entities[newEntityName].parentRelatedProperty != relatedProperty) || newEntityAlias == variables.entities[ arguments.parentEntityName ].entityAlias) {
+				aoindex++;
+			} else {
+				aliaseOK = true;
+			}
+		} while(!aliaseOK);
 		
 		// Check to see if this is a Self Join, and setup appropriatly.
 		if(newEntityAlias == variables.entities[ arguments.parentEntityName ].entityAlias) {
-			newEntityAlias = "b#lcase(newEntityName)#";
-			newEntityName = "#lcase(newEntityName)#_B";
 			arguments.fetch = false;
 		}
 		
@@ -708,7 +722,21 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 			}
 		}
-		
+		/*
+		writeDump("SELECT NEW MAP(
+			#nameProperty# as name,
+			#valueProperty# as value,
+			count(#nameProperty#) as count
+			)
+		#getHQLFrom(allowFetch=false)#
+		#getHQLWhere()#
+		GROUP BY
+			#nameProperty#,
+			#valueProperty#
+		ORDER BY
+			#nameProperty# ASC");
+			*/
+			
 		var results = ormExecuteQuery("SELECT NEW MAP(
 			#nameProperty# as name,
 			#valueProperty# as value,
