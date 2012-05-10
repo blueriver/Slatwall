@@ -66,13 +66,4 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		super.genericDetailMethod('PermissionGroup',rc);
 	}
 	
-	public void function processSubscription(required struct rc){
-		var renewalOK = getSubscriptionService().processSubscriptionUsage(rc.subscriptionUsageID, rc.context);
-		if(renewalOK) {
-			rc.messageKeys = "admin.account.subscriptionUsage.process_success";
-		} else {
-			rc.messageKeys = "admin.account.subscriptionUsage.process_error";
-		}
-		redirectToReturnAction(additionalQueryString="messageKeys=#rc.messageKeys#");
-	}
 }

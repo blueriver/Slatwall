@@ -104,11 +104,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// new orderItem, setup subscription
 				setupInitialSubscriptionOrderItem(arguments.orderItem);
 			} else {
-				// orderItem already exists in subscription, just setup access
-				// if current status is not active, set active status to subscription usage
-				if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
-					setSubscriptionStatus(subscriptionOrderItem.getSubscriptionUsage(), 'sstActive');
+				// orderItem already exists in subscription, just setup access and expiration date
+				if(isNull(subscriptionOrderItem.getSubscriptionUsage().getExpirationDate())) {
+					var startDate = now();
+				} else {
+					var startDate = subscriptionOrderItem.getSubscriptionUsage().getExpirationDate();
 				}
+				subscriptionOrderItem.getSubscriptionUsage().setExpirationDate(subscriptionOrderItem.getSubscriptionUsage().getRenewalTerm().getEndDate(startDate));
+				updateSubscriptionUsageStatus(subscriptionOrderItem.getSubscriptionUsage());
 				// set renewal benefit if needed
 				setupRenewalSubscriptionBenefitAccess(subscriptionOrderItem.getSubscriptionUsage());
 			}
@@ -133,7 +136,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		// set next bill date
-		subscriptionUsage.setNextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getDueDate());
+		subscriptionUsage.setNextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getEndDate());
 		
 		// add active status to subscription usage
 		setSubscriptionStatus(subscriptionUsage, 'sstActive');
@@ -249,43 +252,117 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 
 	// process a subscription usage
-	public boolean function processSubscriptionUsage(required any subscriptionUsageID, required any context, struct data={}) {
-		var subscriptionUsage = this.getSubscriptionUsage(arguments.subscriptionUsageID); 
-		if(arguments.context == 'renew') {
-			return renewSubscriptionUsage(subscriptionUsage, arguments.data);
-		} else if(arguments.context == 'cancel') {
-			return cancelSubscriptionUsage(subscriptionUsage, arguments.data);
+	public any function processSubscriptionUsage(required any subscriptionUsage, struct data={}, any processContext="update") {
+		if(arguments.processContext == 'autoRenew') {
+			return autoRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
+		} else if(arguments.processContext == 'manualRenew') {
+			return manualRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
+		} else if(arguments.processContext == 'retry') {
+			return retryRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
+		} else if(arguments.processContext == 'cancel') {
+			return cancelSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
 		}
 	}
 	
-	// renew a subscription usage
-	private boolean function renewSubscriptionUsage(required any subscriptionUsage, struct data={}) {
+	// renew a subscription usage automatically through a task
+	private any function autoRenewSubscriptionUsage(required any subscriptionUsage, struct data={}) {
 		// first check if it's time for renewal
-		if(arguments.subscriptionUsage.getNextBillDate() > now() || arguments.subscriptionUsage.getCurrentStatusCode() == 'sstCancelled') {
-			return true;
-		}
-		// if this is called from autorenewal task and auto bill is false, then suspend the subscription
-		// should we suspend or cancel???
-		if(!arguments.subscriptionUsage.getAutoBillFlag() && structKeyExists(data, 'isAutoRenewalTask')) {
-			// add active status to subscription usage
-			setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
-			return false;
+		if(arguments.subscriptionUsage.getNextBillDate() <= now() && arguments.subscriptionUsage.getCurrentStatusCode() != 'sstCancelled') {
+			
+			// check if autoRenew is true
+			if(arguments.subscriptionUsage.getAutoRenewFlag()) {
+
+				// create a new order
+				var order = getOrderService().newOrder();
+				
+				// set order status to new (aka placed)
+				order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+				
+				// set the account for order
+				order.setAccount(arguments.subscriptionUsage.getAccount());
+	
+				// add order item to order
+				getOrderService().addOrderItem(order=order,sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(),data={fulfillmentMethodID="444df2ffeca081dc22f69c807d2bd8fe"});
+	
+				// set the orderitem price to renewal price
+				order.getOrderItems()[1].setPrice(arguments.subscriptionUsage.getRenewalPrice());
+		
+				// create new subscription orderItem
+				var subscriptionOrderItem = this.newSubscriptionOrderItem();
+				subscriptionOrderItem.setOrderItem(order.getOrderItems()[1]);
+				subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode('soitRenewal'));
+				subscriptionOrderItem.setSubscriptionUsage(arguments.subscriptionUsage);
+				this.saveSubscriptionOrderItem(subscriptionOrderItem);
+
+				// save order for processing
+				getOrderService().saveOrder(order);
+		
+				// set next bill date, calculated from the last bill date
+				// need setting to decide what start date to use for next bill date calculation
+				arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
+					
+				// save subscriptionUsage
+				this.saveSubscriptionUsage(arguments.subscriptionUsage);
+				
+				// flush session to make sure order is persisted to DB
+				getDAO().flushORMSession();
+					
+				// add order payment to order if amount > 0
+				if(order.getTotal() > 0) { 
+					// if autoPayFlag true then apply payment
+					if(arguments.subscriptionUsage.getAutoPayFlag()) {
+						var orderPayment = getPaymentService().newOrderPayment();
+						orderPayment.setOrder(order);
+						orderPayment.setAmount(order.getTotal());
+						orderPayment.copyFromAccountPaymentMethod(subscriptionUsage.getAccountPaymentMethod());
+						orderPayment.setOrderPaymentType(this.getTypeBySystemCode("optCharge"));
+						getPaymentService().saveOrderPayment(orderPayment);
+						// if orderPayment has no error, then try to process payment
+						if(!orderPayment.hasErrors()) {
+							var paymentProcessed = getPaymentService().processPayment(order.getOrderPayments()[1], 'authorizeAndCharge', order.getOrderPayments()[1].getAmount());
+							
+							// if payment is processed, close out fulfillment and order
+							if(paymentProcessed) {
+								getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
+								
+								// persist order changes to DB 
+								getDAO().flushORMSession();
+								
+								//send email confirmation, needs a setting to enable this
+								//getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+							}
+						} 
+					}
+				}
+
+			} 
+			// update the Subscription Status
+			updateSubscriptionUsageStatus(arguments.subscriptionUsage);	
 		}
 		
-		var renewalOk = true;
-		
-		// if order was passed use it, else create a new one
-		if(structKeyExists(data, "orderID")) {
-			var order = getOrderService().getOrder(data.orderID); 
-		} else {
+		return arguments.subscriptionUsage;
+	}
+	
+	// renew a subscription usage manually
+	private any function manualRenewSubscriptionUsage(required any subscriptionUsage, struct data={}) {
+		// first check if there is an open order for renewal, if there is, use it else create a new one
+		for(var subscriptionOrderItem in arguments.subscriptionUsage.getSubscriptionOrderItems()) {
+			if(subscriptionOrderItem.getSubscriptionOrderItemType('soitRenewal') && subscriptionOrderItem.getOrderItem().getOrder().getOrderStatusType() != 'ostClosed') {
+				var order = subscriptionOrderItem.getOrderItem().getOrder();
+			}
+		}	
+		if(isNull(order)) {
 			// create a new order
 			var order = getOrderService().newOrder();
 			
+			// set order status to new (aka placed)
+			order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+
 			// set the account for order
 			order.setAccount(arguments.subscriptionUsage.getAccount());
-
+			
 			// add order item to order
-			getOrderService().addOrderItem(order,arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku());
+			getOrderService().addOrderItem(order=order,sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(),data={fulfillmentMethodID="444df2ffeca081dc22f69c807d2bd8fe"});
 
 			// set the orderitem price to renewal price
 			order.getOrderItems()[1].setPrice(arguments.subscriptionUsage.getRenewalPrice());
@@ -296,108 +373,102 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode('soitRenewal'));
 			subscriptionOrderItem.setSubscriptionUsage(arguments.subscriptionUsage);
 			this.saveSubscriptionOrderItem(subscriptionOrderItem);
-		}
-		
-		// save order for processing
-		getOrderService().saveOrder(order);
 
-		// add order payment to order if amount > 0
-		if(order.getTotal() > 0) { 
-			// if autoPayFlag true then apply payment else suspend
-			if(arguments.subscriptionUsage.getAutoPayFlag()) {
+			// save order for processing
+			getOrderService().saveOrder(order);
+	
+			// set next bill date, calculated from the last bill date
+			// need setting to decide what start date to use for next bill date calculation
+			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getDueDate(arguments.subscriptionUsage.getNextBillDate()));
+				
+			// save subscriptionUsage
+			this.saveSubscriptionUsage(arguments.subscriptionUsage);
+
+			// flush session to make sure order is persisted to DB
+			getDAO().flushORMSession();
+		}	
+					
+		// add order payment to order if amount > 0 
+		if(order.getTotal() > 0) {
+			// check if payment is applied
+			if(!arrayLen(order.getOrderPayments())) {
 				var orderPayment = getPaymentService().newOrderPayment();
 				orderPayment.setOrder(order);
 				orderPayment.setAmount(order.getTotal());
 				orderPayment.copyFromAccountPaymentMethod(subscriptionUsage.getAccountPaymentMethod());
 				orderPayment.setOrderPaymentType(this.getTypeBySystemCode("optCharge"));
 				getPaymentService().saveOrderPayment(orderPayment);
-				// if payment has errors suspend
-				if(orderPayment.hasErrors()) {
-					setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended', now(), 'sscrtPaymentFailed');
-					renewalOk = false;
-				}
 			} else {
-				setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
-				renewalOk = false;
+				var orderPayment = order.getOrderPayments()[1];
 			}
-		}
-		
-		// var paymentsProcessed = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount());
-		// processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')});
-		
-		
-		/*
-		if(renewalOk) {
-			// set next bill date, calculated from the last bill date
-			// need setting to decide what start date to use for next bill date calculation
-			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getDueDate(arguments.subscriptionUsage.getNextBillDate()));
-			
-			this.saveSubscriptionUsage(arguments.subscriptionUsage);
-			
-			// flush session to make sure order is persisted to DB
-			getDAO().flushORMSession();
-			
-			// try to process order, if any error suspend account
-			try {
-				var orderData = {};
-				orderData.orderID = order.getOrderID();
-				orderData.doNotSendOrderConfirmationEmail = 1;
-				var processOK = getOrderService().processOrder(orderData);	
-				if(processOK) {
-					// if current status is not active, set active status to subscription usage
-					if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
-						setSubscriptionStatus(arguments.subscriptionUsage, 'sstActive');
-					}
-					// set renewal benefit if needed
-					setupRenewalSubscriptionBenefitAccess(arguments.subscriptionUsage);
-				} else {
-					renewalOk = false;
-					// suspend the account if payment failed
-					if(orderPayment.hasErrors()) {
-						setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended', now(), 'sscrtPaymentFailed');
-					}
-					// some other error, suspend the account
-					setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
+				
+			// if orderPayment has no error and amount not received yet, then try to process payment
+			if(!orderPayment.hasErrors()) {
+				var amount = order.getTotal() - orderPayment.getAmountReceived();
+				var paymentProcessed = getPaymentService().processPayment(order.getOrderPayments()[1], 'authorizeAndCharge', amount);
+				
+				// if payment is processed, close out fulfillment and order
+				if(paymentProcessed) {
+					getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
+					
+					// persist order changes to DB 
+					getDAO().flushORMSession();
+					
+					//send email confirmation, needs a setting to enable this
+					//getUtilityEmailService().sendOrderConfirmationEmail(order=order);
 				}
-				// persist order changes to DB 
-				getDAO().flushORMSession();
-			} catch (any e) {
-				renewalOk = false;
-				// if there was any system error suspend the account
-				setSubscriptionStatus(arguments.subscriptionUsage, 'sstSuspended');
-			}
+			} 
 		}
-		if(!renewalOK) {
-			// change the status and save the order so it can be processed later
-			order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
-			getOrderService().getDAO().save(order);
-		}
-		return renewalOk;
-		*/
+
+		// update the Subscription Status
+		updateSubscriptionUsageStatus(arguments.subscriptionUsage);	
+		
+		return arguments.subscriptionUsage;
 	}
 	
+	// renew a subscription usage by retrying
+	private any function retryRenewSubscriptionUsage(required any subscriptionUsage, struct data={}) {
+		throw("Implement me!");
+	}
+
 	private void function updateSubscriptionUsageStatus(required any subscriptionUsage) {
 		// Is the next bill date + grace period in past || the next bill date is in the future, but the last order for this subscription usage hasn't been paid (+ grace period from that orders date)
 			// Suspend
+		
+		// get the current status
+		var currentStatus = arguments.subscriptionUsage.getCurrentStatus();
+		
+		// if current status is active and expiration date in past
+		if(currentStatus.getSubscriptionStatusType() == 'sstActive' && arguments.subscriptionUsage.getExpirationDate() <= now()) {
+			// suspend
+			setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstSuspended');
+			// reset expiration date
+			arguments.subscriptionUsage.setExpirationDate(javaCast("null",""));
+		
+		} else if (arguments.subscriptionUsage.getExpirationDate() > now()) {
+			// if current status is not active, set active status to subscription usage
+			if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
+				setSubscriptionStatus(subscriptionOrderItem.getSubscriptionUsage(), 'sstActive');
+			}
+		}
 	}
 	
-	private boolean function cancelSubscriptionUsage(required any subscriptionUsage, struct data={}) {
+	private any function cancelSubscriptionUsage(required any subscriptionUsage, struct data={}) {
 		// first check if it's not alreayd cancelled
-		if(arguments.subscriptionUsage.getCurrentStatusCode() == 'sstCancelled') {
-			return true;
+		if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstCancelled') {
+			if(!structKeyExists(data, effectiveDateTime)) {
+				data.effectiveDate = now();
+			}
+			if(!structKeyExists(data, subscriptionStatusChangeReasonTypeCode)) {
+				data.subscriptionStatusChangeReasonTypeCode = "";
+			}
+			// add cancelled status to subscription usage
+			setSubscriptionStatus(arguments.subscriptionUsage, 'sstCancelled', data.effectiveDate, data.subscriptionStatusChangeReasonTypeCode);
 		}
-		if(!structKeyExists(data, effectiveDateTime)) {
-			data.effectiveDate = now();
-		}
-		if(!structKeyExists(data, subscriptionStatusChangeReasonTypeCode)) {
-			data.subscriptionStatusChangeReasonTypeCode = "";
-		}
-		// add active status to subscription usage
-		setSubscriptionStatus(arguments.subscriptionUsage, 'sstCancelled', data.effectiveDate, data.subscriptionStatusChangeReasonTypeCode);
-		return true;
+		return arguments.subscriptionUsage;
 	}
 	
-	private void function setSubscriptionStatus(required any subscriptionUsage, required string subscriptionStatusTypeCode, any effectiveDate = now(), any subscriptionStatusChangeReasonTypeCode) {
+	private void function setSubscriptionUsageStatus(required any subscriptionUsage, required string subscriptionStatusTypeCode, any effectiveDate = now(), any subscriptionStatusChangeReasonTypeCode) {
 		var subscriptionStatus = this.newSubscriptionStatus();
 		subscriptionStatus.setSubscriptionStatusType(this.getTypeBySystemCode(arguments.subscriptionStatusTypeCode));
 		if(structKeyExists(arguments, "subscriptionStatusChangeReasonTypeCode") && arguments.subscriptionStatusChangeReasonTypeCode != "") {

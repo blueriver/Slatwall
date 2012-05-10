@@ -42,9 +42,10 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="subscriptionUsageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency";
-	property name="autoBillFlag" ormtype="boolean" formatType="yesno";
+	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
 	property name="autoPayFlag" ormtype="boolean" formatType="yesno";
 	property name="nextBillDate" ormtype="timestamp";
+	property name="expirationDate" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
 	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";
@@ -107,7 +108,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		setRenewalTerm(subscriptionTerm.getRenewalTerm());
 		setGracePeriodTerm(subscriptionTerm.getGracePeriodTerm());
 		setAllowProrateFlag(subscriptionTerm.getAllowProrateFlag());
-		setAutoBillFlag(subscriptionTerm.getAutoBillFlag());
+		setAutoRenewFlag(subscriptionTerm.getAutoRenewFlag());
 		setAutoPayFlag(subscriptionTerm.getAutoPayFlag());
 	}
 	
@@ -213,9 +214,9 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	}
 	
 	public boolean function isProcessable() {
-		if(getNextBillDate() > now() || getCurrentStatusCode() == 'sstCancelled') {
+		/*if(getNextBillDate() > now() || getCurrentStatusCode() == 'sstCancelled') {
 			return false;
-		}
+		}*/
 		return true;
 	}
 	

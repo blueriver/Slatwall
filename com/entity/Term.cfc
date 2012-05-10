@@ -63,13 +63,13 @@ component displayname="Term" entityname="SlatwallTerm" table="SlatwallTerm" pers
 	
 	// Non-Persistent Properties
 
-	public any function getDueDate(any startDate = now()) {
-		var dueDate = arguments.startDate;
-		dueDate = dateAdd('yyyy',val(getTermYears()),dueDate);
-		dueDate = dateAdd('m',val(getTermMonths()),dueDate);
-		dueDate = dateAdd('d',val(getTermDays()),dueDate);
-		dueDate = dateAdd('h',val(getTermHours()),dueDate);
-		return dueDate;
+	public any function getEndDate(any startDate = now()) {
+		var endDate = arguments.startDate;
+		endDate = dateAdd('yyyy',val(getTermYears()),endDate);
+		endDate = dateAdd('m',val(getTermMonths()),endDate);
+		endDate = dateAdd('d',val(getTermDays()),endDate);
+		endDate = dateAdd('h',val(getTermHours()),endDate);
+		return endDate;
 	}
 
 	
