@@ -517,6 +517,20 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return "orderNumber";
 	}
 	
+	public string function getSimpleRepresentation() {
+		if(!isNull(getOrderNumber()) && len(getOrderNumber())) {
+			var representation = getOrderNumber();
+		} else {
+			var representation = rbKey('define.cart');
+		}
+		
+		if(!isNull(getAccount())) {
+			representation &= " - #getAccount().getFullname()#";
+		}
+		
+		return representation;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================

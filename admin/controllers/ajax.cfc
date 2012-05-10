@@ -38,7 +38,13 @@ Notes:
 */
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 
-	
+	property name="productService" type="any";
+	property name="brandService" type="any";
+	property name="promotionService" type="any";
+	property name="orderService" type="any";
+	property name="accountService" type="any";
+	property name="vendorService" type="any";
+	property name="vendorOrderService" type="any";
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.listaccount");
@@ -78,8 +84,40 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function updateGlobalSearchResults(required struct rc) {
 		
+		var smartLists = {};
+		smartLists['product'] = getProductService().getProductSmartList();
+		smartLists['productType'] = getProductService().getProductTypeSmartList();
+		smartLists['brand'] = getBrandService().getBrandSmartList();
+		smartLists['promotion'] = getPromotionService().getPromotionSmartList();
+		smartLists['order'] = getOrderService().getOrderSmartList();
+		smartLists['account'] = getAccountService().getAccountSmartList();
+		smartLists['vendorOrder'] = getVendorOrderService().getVendorOrderSmartList();
+		smartLists['vendor'] = getVendorService().getVendorSmartList();
 		
+		for(var key in smartLists) {
+			rc[ key ] = {};
+			rc[ key ][ 'records' ] = [];
+			rc[ key ][ 'recordCount' ] = smartLists[key].getRecordsCount();
+			
+			for(var i=1; i<=arrayLen(smartLists[key].getPageRecords()); i++) {
+				var thisRecord = {};
+				thisRecord['value'] = smartLists[key].getPageRecords()[i].getPrimaryIDValue();
+				thisRecord['name'] = smartLists[key].getPageRecords()[i].getSimpleRepresentation();
 				
+				arrayAppend(rc[ key ][ 'records' ], thisRecord);
+			}
+		}
 	}
 	
 }
+
+
+
+
+
+
+
+
+
+
+

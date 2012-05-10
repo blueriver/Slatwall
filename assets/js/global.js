@@ -102,8 +102,9 @@ function setupEventHandlers() {
 			}
 		} else {
 			jQuery('#search-results').animate({
-				'margin-top': '-410px'
+				'margin-top': '-500px'
 			}, 150);
+			jQuery('#search-results .result-bucket .nav').html('');
 		}
 	});
 	jQuery('body').on('click', '.search-close', function(e){
@@ -591,7 +592,50 @@ function tableExpandClick( toggleLink ) {
 }
 
 function updateGlobalSearchResults() {
-	console.log('got here!');
+	
+	var data = {
+		slatAction: 'admin:ajax.updateGlobalSearchResults',
+		keywords: jQuery('#global-search').val()
+	};
+	
+	jQuery.ajax({
+		url: '/plugins/Slatwall/',
+		method: 'post',
+		data: data,
+		dataType: 'json',
+		contentType: 'application/json',
+		error: function(result) {
+			console.log(r);
+			alert('Error Loading Global Search');
+		},
+		success: function(result) {
+			var buckets = {
+				product: {primaryIDProperty:'productID', listAction:'admin:product.listproduct', detailAction:'admin:product.detailproduct'},
+				productType: {primaryIDProperty:'productTypeID', listAction:'admin:product.listproducttype', detailAction:'admin:product.detailproducttype'},
+				brand: {primaryIDProperty:'brandID', listAction:'admin:product.listbrand', detailAction:'admin:product.detailbrand'},
+				promotion: {primaryIDProperty:'promotionID', listAction:'admin:pricing.listpromotion', detailAction:'admin:pricing.detailpromotion'},
+				order: {primaryIDProperty:'orderID', listAction:'admin:order.listorder', detailAction:'admin:order.detailorder'},
+				account: {primaryIDProperty:'accountID', listAction:'admin:account.listaccount', detailAction:'admin:account.detailaccount'},
+				vendorOrder: {primaryIDProperty:'vendorOrderID', listAction:'admin:order.listvendororder', detailAction:'admin:order.detailvendororder'},
+				vendor: {primaryIDProperty:'vendorID', listAction:'admin:vendor.listvendor', detailAction:'admin:vendor.detailvendor'}
+			};
+			for (var key in buckets) {
+				jQuery('#golbalsr-' + key).html('');
+				var records = result[key]['records'];
+			    for(var r=0; r < records.length; r++) {
+			    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
+			    }
+			    if(result[key]['recordCount'] > 10) {
+			    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['detailAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
+			    } else if (result[key]['recordCount'] == 0) {
+			    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
+			    }
+			}
+		}
+		
+	});
+	
+
 }
 
 
