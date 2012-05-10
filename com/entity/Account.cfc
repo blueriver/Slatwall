@@ -87,46 +87,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="address" persistent="false";
 	property name="password" persistent="false";
 	
-	public any function init() {
-		if(isNull(variables.accountEmailAddresses)) {
-			variables.accountEmailAddresses = [];
-		}
-		if(isNull(variables.accountPhoneNumbers)) {
-			variables.accountPhoneNumbers = [];
-		}
-		if(isNull(variables.orders)) {
-			variables.orders = [];
-		}
-		if(isNull(variables.accountAddresses)) {
-			variables.accountAddresses = [];
-		}
-		if(isNull(variables.productReviews)) {
-			variables.productReviews = [];
-		}
-		if(isNull(variables.attributeSetAssignments)) {
-			variables.attributeSetAssignments = [];
-		}
-		if(isNull(variables.attributeValues)) {
-			variables.attributeValues = [];
-		}
-		if(isNull(variables.priceGroups)) {
-			variables.priceGroups = [];
-		}
-		if(isNull(variables.permissionGroups)) {
-			variables.permissionGroups = [];
-		}
-		if(isNull(variables.accountPaymentMethods)) {
-			variables.accountPaymentMethods = [];
-		}
-		if(isNull(variables.subscriptionUsageBenefitAccounts)) {
-			variables.subscriptionUsageBenefitAccounts = [];
-		}
-		if(isNull(variables.subscriptionUsages)) {
-			variables.subscriptionUsages = [];
-		}
-		return super.init();
-	}
-	
 	public boolean function isGuestAccount() {
 		if(isNull(getCmsAccountID())) {
 			return true;

@@ -707,16 +707,18 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @help public method for getting a recursive list of all the meta data of the properties of an object
-	public array function getProperties(struct metaData=getMetaData(this)) {
-		var properties = arguments.metaData["properties"];
-		var parentProperties = "";
-		// recursively get properties of any super classes
-		if(structKeyExists(arguments.metaData, "extends") && structKeyExists(arguments.metaData.extends,"properties")) {
-			parentProperties = getProperties(arguments.metaData["extends"]);
-			return getService("utilityService").arrayConcat(parentProperties,properties);
-		} else {
-			return properties;
+	public array function getProperties() {
+		if(!structKeyExists(variables, "metaProperties")) {
+			var metaData = getMetaData(this);
+			
+			variables.metaProperties = metaData.properties;
+			
+			// Also add any extended data
+			if(structKeyExists(metaData, "extends") && structKeyExists(metaData.extends, "properties")) {
+				variables.metaProperties = getService("utilityService").arrayConcat(getProperties(metaData.extends.properties), variables.metaProperties);
+			}
 		}
+		return variables.metaProperties;
 	}
 	
 	// @help public method for getting the meta data of a specific property

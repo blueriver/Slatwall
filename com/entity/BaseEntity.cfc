@@ -42,6 +42,14 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
+		for(var i=1; i<=arrayLen(getProperties()); i++) {
+			if(structKeyExists(getProperties()[i], "fieldtype") && listFindNoCase("many-to-many,one-to-many", getProperties()[i].fieldtype) && !structKeyExists(variables, getProperties()[i].name) ) {
+				variables[ getProperties()[i].name ] = [];
+			}
+			if( getProperties()[i].name == "activeFlag" && isNull(variables.activeFlag) ) {
+				variables.activeFlag = 1;
+			}
+		}
 		
 		return super.init();
 	}
