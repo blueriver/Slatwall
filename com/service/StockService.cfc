@@ -41,6 +41,7 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="locationService" type="any";
 	property name="skuService" type="any";
 	property name="typeService" type="any";
+	property name="stockService" type="any";
 	
 	public any function getStockBySkuAndLocation(required any sku, required any location){
 		var stock = getDAO().getStockBySkuAndLocation(argumentCollection=arguments);
@@ -76,7 +77,31 @@ component extends="BaseService" accessors="true" output="false" {
 		return stockAdjustmentItem;
 	}
 	
+	public void function processStockAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
+		if(arguments.processcontext eq 'addItems' && val(arguments.data.quantity)){	
+			var stockAdjustmentItem = new ('stockAdjustmentItem');
+			var sku = getSkuService().getSku(arguments.data.skuID);
+			var fromStock = getStockService().newStock();
+			var toStock = getStockService().newStock();
+			
+			fromStock.setLocation(arguments.stockAdjustment.getFromLocation());
+			fromStock.setSku(sku);
+			
+			toStock.setLocation(arguments.stockAdjustment.getToLocation());
+			toStock.setSku(sku);
+			
+			stockAdjustmentItem.setQuantity(arguments.data.quantity);
+			stockAdjustmentItem.setFromStock(fromStock);
+			stockAdjustmentItem.setToStock(toStock);
+			
+			arguments.stockAdjustment.addStockAdjustmentItem(stockAdjustmentItem);
+		}
+	}
+	
+	/*
 	public void function processStockAdjustment(required any stockAdjustment) {
+		
+		writedump('hi');abort;
 		// Create StockReceivers/StockReceiverItems and StockDelivery
 		
 		// Incoming
@@ -118,6 +143,7 @@ component extends="BaseService" accessors="true" output="false" {
 		// Set the status to closed
 		arguments.stockAdjustment.setStockAdjustmentStatusType(getTypeService().getTypeBySystemCode("sastClosed"));
 	}
+	*/
 	
 	
 }

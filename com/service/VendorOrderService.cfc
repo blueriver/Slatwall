@@ -40,6 +40,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	property name="addressService";
 	property name="taxService";
+	property name="skuService";
+	property name="productService";
 	property name="DAO";
 	
 	public any function getVendorOrderSmartList(struct data={}) {
@@ -111,5 +113,25 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getSkusOrdered(arguments.vendorOrderId);
 	}
 	
-	
+	public any function processVendorOrder(required any vendorOrder, struct data={}, string processContext="process"){
+			
+		if(val(arguments.data.quantity)){	
+			var vendorOrderItem = new('VendorOrderItem');
+			var stock = new('Stock');
+			var sku = getSkuService().getSku(arguments.data.skuid);
+			
+			stock.setLocation(get('Location',arguments.data.locationID));
+			stock.setSku(sku);
+			
+			//getSkuService().saveSku(stock);
+			
+			vendorOrderItem.setQuantity(arguments.data.quantity);
+			vendorOrderItem.setCost(arguments.data.cost);
+			vendorOrderItem.setStock(stock);
+			
+			arguments.vendorOrder.addVendorOrderItem(vendorOrderItem);	
+		}		
+		/*writedump(var="#arguments#" top="2");
+		abort;*/
+	}
 }

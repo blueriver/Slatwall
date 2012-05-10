@@ -56,6 +56,8 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	property name="displayName";
+	
 	public any function init() {
 		if(isNull(variables.stockAdjustmentItems)) {
 			variables.stockAdjustmentItems = [];
@@ -117,6 +119,16 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	public boolean function isNotDeletable() {
 		return getStockAdjustmentStatusType().getSystemCode() == "sastClosed";
 	}
+	
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "displayname";
+	}
+	
+	public string function getDisplayName(){
+		return getFromLocation().getLocationName() & " " & getToLocation().getLocationName()  & " ";
+	}
+	
 	
 	
 	/******* Association management methods for bidirectional relationships **************/

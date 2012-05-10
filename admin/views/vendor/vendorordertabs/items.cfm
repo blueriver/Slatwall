@@ -38,7 +38,10 @@ Notes:
 --->
 <cfparam name="rc.vendorOrder" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.vendorOrder.getVendorOrderItemsSmartList()#">
+<cf_SlatwallListingDisplay smartList="#rc.vendorOrder.getVendorOrderItemsSmartList()#"
+	recordeditaction="admin:vendor.editVendorOrderItem"
+	recordeditmodal="true" >
+		
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.skucode" />
 	<cf_SlatwallListingColumn propertyIdentifier="stock.sku.product.brand.brandName" />
 	<cf_SlatwallListingColumn propertyIdentifier="stock.sku.product.productName" />
@@ -47,4 +50,6 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="cost" />
 	<cf_SlatwallListingColumn propertyIdentifier="extendedCost" />
 </cf_SlatwallListingDisplay>
+
+<cf_SlatwallActionCaller action="admin:vendor.processVendorOrder" class="btn btn-primary" queryString="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=addOrderItems" modal=true />
 

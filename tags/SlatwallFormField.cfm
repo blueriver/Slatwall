@@ -63,7 +63,7 @@ Notes:
 		time				|	This is still just a textbox, but it adds the jQuery time picker
 		wysiwyg				|	Value needs to be a string
 		yesno				|	This is used by booleans and flags to create a radio group of Yes and No
-		
+		hidden				|	This is used mostly for processing
 	--->
 	
 	<cfsilent>
@@ -78,6 +78,11 @@ Notes:
 	<cfset request.context.tabindex++ />
 	
 	<cfswitch expression="#attributes.fieldType#">
+		<cfcase value="hidden">
+			<cfoutput>
+				<input type="hidden" name="#attributes.fieldName#" value="#attributes.value#" />
+			</cfoutput>
+		</cfcase>
 		<cfcase value="checkbox">
 			<cfoutput>
 				<input type="hidden" name="#attributes.fieldName#" value="" />
