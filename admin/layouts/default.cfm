@@ -151,10 +151,26 @@ Notes:
 						<h4>Products</h4>
 					</div>
 					<div class="span3 account-search">
-						<h4>Accounts</h4>
+						<h4>Product Types</h4>
 					</div>
 					<div class="span3 order-search">
+						<h4>Brands</h4>
+					</div>
+					<div class="span3 brand-search">
+						<h4>Promotions</h4>
+					</div>
+				</div>
+				<br />
+				<br />
+				<div class="row-fluid">
+					<div class="span3">
 						<h4>Orders</h4>
+					</div>
+					<div class="span3 account-search">
+						<h4>Account</h4>
+					</div>
+					<div class="span3 order-search">
+						<h4>Vendor Orders</h4>
 					</div>
 					<div class="span3 brand-search">
 						<h4>Vendors</h4>
