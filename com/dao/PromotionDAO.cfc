@@ -41,7 +41,6 @@ Notes:
 	<cffunction name="getActivePromotionRewards" returntype="Array" access="public">
 		<cfargument name="rewardTypeList" required="true" type="string" />
 		<cfargument name="promotionCodeList" required="true" type="string" />
-		<cfargument name="onlyQualifiedPromotions" type="boolean" default="false" />
 		
 		<cfset var hql = "SELECT spr FROM
 				SlatwallPromotionReward spr
@@ -57,14 +56,6 @@ Notes:
 				spp.endDateTime > :now
 			  and
 				sp.activeFlag = :activeFlag" />
-		
-		<cfif arguments.onlyQualifiedPromotions>
-			<cfset hql &=	" and (
-			  	EXISTS ( SELECT promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )
-			  	  or
-			  	EXISTS ( SELECT promotionQualifierID FROM SlatwallPromotionQualifier q WHERE q.promotionPeriod.promotionPeriodID = spp.promotionPeriodID )
-			  )" />
-		</cfif>
 		
 		<cfset var params = {
 			now = now(),

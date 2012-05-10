@@ -51,7 +51,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// Related Object Properties (one-to-many)
 	property name="orderFulfillmentItems" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
-	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderFulfillmentAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
 	property name="fulfillmentShippingMethodOptions" singularname="fulfillmentShippingMethodOption" cfc="ShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
 
 	// Related Object Properties (many-to-many - owner)
@@ -151,20 +151,15 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public numeric function getDiscountAmount() {
-		if( !structKeyExists(variables, "discountAmount") ) {
-			variables.discountAmount = 0;
-			for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
-				variables.discountAmount = precisionEvaluate(variables.discountAmount + getAppliedPromotions()[i].getDiscountAmount());
-			}
+		discountAmount = 0;
+		for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
+			discountAmount = precisionEvaluate(discountAmount + getAppliedPromotions()[i].getDiscountAmount());
 		}
-		return variables.discountAmount;
+		return discountAmount;
 	}
 	
 	public numeric function getChargeAfterDiscount() {
-		if( !structKeyExists(variables, "chargeAfterDiscount") ) {
-			variables.chargeAfterDiscount = precisionEvaluate(getFulfillmentCharge() - getDiscountAmount());
-		}
-		return variables.chargeAfterDiscount;
+		return precisionEvaluate(getFulfillmentCharge() - getDiscountAmount());
 	}
 	
 	public numeric function getSubtotal() {
@@ -296,6 +291,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}    
 	public void function removeFulfillmentShippingMethodOption(required any fulfillmentShippingMethodOption) {    
 		arguments.fulfillmentShippingMethodOption.removeOrderFulfillment( this );    
+	}
+	
+	// Applied Promotions (one-to-many)    
+	public void function addAppliedPromotion(required any appliedPromotion) {    
+		arguments.appliedPromotion.setOrderFulfillment( this );    
+	}    
+	public void function removeAppliedPromotion(required any appliedPromotion) {    
+		arguments.appliedPromotion.removeOrderFulfillment( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

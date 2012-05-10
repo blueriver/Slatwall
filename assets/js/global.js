@@ -34,7 +34,9 @@ function initUIElements( scopeSelector ) {
 	
 	// Datetime Picker
 	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datetimepicker({
-		dateFormat: convertCFMLDateFormat( slatwall.dateFormat )
+		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
+		timeFormat: convertCFMLTimeFormat( slatwall.timeFormat ),
+		ampm: true
 	});
 	
 	// Date Picker
@@ -572,6 +574,11 @@ function convertCFMLDateFormat( dateFormat ) {
 	dateFormat = dateFormat.replace('mmm', 'M');
 	dateFormat = dateFormat.replace('yyyy', 'yy');
 	return dateFormat;
+}
+
+function convertCFMLTimeFormat( timeFormat ) {
+	timeFormat = timeFormat.replace('tt', 'TT');
+	return timeFormat;
 }
 
 // =========================  END: HELPER METHODS =================================

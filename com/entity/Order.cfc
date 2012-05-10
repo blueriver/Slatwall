@@ -58,7 +58,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderReturns" singularname="orderReturn" cfc="OrderReturn" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
-	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
@@ -115,7 +115,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.promotionCodes = [];
 		}
 		
-		// Set the default order status typwe as not placed
+		// Set the default order status type as not placed
 		if(isNull(getOrderStatusType())) {
 			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');
 		}
@@ -228,7 +228,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
     
 	// ============ START: Non-Persistent Property Methods =================
 	public numeric function getDiscountTotal() {
-		return getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal();
+		return precisionEvaluate(getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal());
+		
 	}
 	
 	public numeric function getItemDiscountAmountTotal() {
@@ -246,7 +247,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getFulfillmentDiscountAmountTotal() {
-		return 0;
+		var discountTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
+			discountTotal = precisionEvaluate(discountTotal + getOrderFulfillments()[i].getDiscountAmount());
+		}
+		return discountTotal;
 	}
 
 	public numeric function getFulfillmentTotal() {
@@ -493,6 +498,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		arguments.refrencingOrderItem.removeRefrencedOrder( this );
 	}
 	
+	// Applied Promotions (one-to-many)
+	public void function addAppliedPromotion(required any appliedPromotion) {
+		arguments.appliedPromotion.setOrder( this );
+	}
+	public void function removeAppliedPromotion(required any appliedPromotion) {
+		arguments.appliedPromotion.removeOrder( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
