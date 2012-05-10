@@ -40,7 +40,9 @@ Notes:
 
 <cf_SlatwallListingDisplay smartList="#rc.vendorOrder.getVendorOrderItemsSmartList()#"
 	recordeditaction="admin:vendor.editVendorOrderItem"
-	recordeditmodal="true" >
+	recordeditmodal="true"
+	recorddeleteaction="admin:vendor.deleteVendorOrderItem"
+	recorddeletequerystring="returnaction=admin:vendor.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
 		
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.skucode" />
 	<cf_SlatwallListingColumn propertyIdentifier="stock.sku.product.brand.brandName" />

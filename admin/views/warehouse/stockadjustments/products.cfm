@@ -38,15 +38,19 @@ Notes:
 --->
 <cfparam name="rc.stockAdjustment" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.stockAdjustment.getstockAdjustmentItemsSmartList()#">
+<cf_SlatwallListingDisplay smartList="#rc.stockAdjustment.getstockAdjustmentItemsSmartList()#"
+	recorddeleteaction="admin:warehouse.deleteStockAdjustmentItem"
+	recorddeletequerystring="returnaction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#"
+	recordeditmodal="true"
+	recordeditaction="admin:warehouse.editStockAdjustmentItem"
+	recordeditquerystring="returnaction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#">
 		
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.skucode" />
-	<cf_SlatwallListingColumn propertyIdentifier="stock.sku.product.brand.brandName" />
-	<cf_SlatwallListingColumn propertyIdentifier="stock.sku.product.productName" />
-	<cf_SlatwallListingColumn propertyIdentifier="stock.location.locationName" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fromstock.sku.skucode" />
+	<cf_SlatwallListingColumn propertyIdentifier="fromstock.sku.product.brand.brandName" />
+	<cf_SlatwallListingColumn propertyIdentifier="fromstock.sku.product.productName" />
+	<cf_SlatwallListingColumn propertyIdentifier="fromstock.location.locationName" />
+	<cf_SlatwallListingColumn propertyIdentifier="tostock.location.locationName" />
 	<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-	<cf_SlatwallListingColumn propertyIdentifier="cost" />
-	<cf_SlatwallListingColumn propertyIdentifier="extendedCost" />
 </cf_SlatwallListingDisplay>
 
 <cf_SlatwallActionCaller action="admin:warehouse.processStockAdjustment" class="btn btn-primary" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#&processContext=addItems" modal=true />
