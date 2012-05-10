@@ -102,7 +102,7 @@ Notes:
 		</cfcase>
 		<cfcase value="dateTime">
 			<cfoutput>
-				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# datetimepicker" #attributes.fieldAttributes# />
+				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value=" #attributes.value#" class="#attributes.fieldClass# datetimepicker" #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="file">

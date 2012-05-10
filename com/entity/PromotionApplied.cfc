@@ -36,14 +36,18 @@
 Notes:
 
 */
-component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" table="SlatwallPromotionApplied" persistent="true" extends="BaseEntity" discriminatorColumn="appliedType" {
+component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" table="SlatwallPromotionApplied" persistent="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="promotionAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="discountAmount" ormtype="big_decimal";
+	property name="appliedType" ormtype="string";
 	
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderfulfillmentID";
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -53,18 +57,6 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Special Related Discriminator Property
-	property name="appliedType" length="255" insert="false" update="false";
-	
-	/*
-	List of Discriminator Values and their respective cfc's
-	
-	orderItem 			| OrderItemAppliedPromotion.cfc
-	orderFulfillment 	| OrderFulfillmentAppliedPromotion.cfc
-	order 				| OrderAppliedPromotion.cfc
-	
-	*/
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -88,7 +80,61 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 			arrayDeleteAt(arguments.promotion.getAppliedPromotions(), index);
 		}
 		structDelete(variables, "promotion");
-	}	
+	}
+	
+	// Order Item (many-to-one)
+	public void function setOrderItem(required any orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() or !arguments.orderItem.hasAppliedPromotion( this )) {
+			arrayAppend(arguments.orderItem.getAppliedPromotions(), this);
+		}
+	}
+	public void function removeOrderItem(any orderItem) {
+		if(!structKeyExists(arguments, "orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getAppliedPromotions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderItem.getAppliedPromotions(), index);
+		}
+		structDelete(variables, "orderItem");
+	}
+	
+	// Order Fulfillment (many-to-one)
+	public void function setOrderFulfillment(required any orderFulfillment) {
+		variables.orderFulfillment = arguments.orderFulfillment;
+		if(isNew() or !arguments.orderFulfillment.hasAppliedPromotion( this )) {
+			arrayAppend(arguments.orderFulfillment.getAppliedPromotions(), this);
+		}
+	}
+	public void function removeOrderFulfillment(any orderFulfillment) {
+		if(!structKeyExists(arguments, "orderFulfillment")) {
+			arguments.orderFulfillment = variables.orderFulfillment;
+		}
+		var index = arrayFind(arguments.orderFulfillment.getAppliedPromotions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAppliedPromotions(), index);
+		}
+		structDelete(variables, "orderFulfillment");
+	}
+	
+	// Order (many-to-one)
+	public void function setOrder(required any order) {
+		variables.order = arguments.order;
+		if(isNew() or !arguments.order.hasAppliedPromotion( this )) {
+			arrayAppend(arguments.order.getAppliedPromotions(), this);
+		}
+	}
+	public void function removeOrder(any order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getAppliedPromotions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.order.getAppliedPromotions(), index);
+		}
+		structDelete(variables, "order");
+	}
 
 	// =============  END:  Bidirectional Helper Methods ===================
 	

@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,26 +36,28 @@
 Notes:
 
 --->
-<cfparam name="rc.subscriptionUsageSmartList" type="any" />
+
+<cfparam name="rc.returnAction" type="string" default="admin:account.listsubscriptionusage" />
+<cfparam name="rc.processSubscriptionUsageSmartList" type="any" />
+<cfparam name="rc.multiProcess" type="boolean" />
 
 <cfoutput>
-	
-<cf_SlatwallActionBar type="listing" object="#rc.subscriptionUsageSmartList#" createAction="" />
-
-<cf_SlatwallListingDisplay smartList="#rc.subscriptionUsageSmartList#"
-						   recordEditAction="admin:account.editsubscriptionUsage"
-						   recordEditModal=true
-						   recordProcessAction="admin:account.processSubscriptionUsage&processContext=manualRenew"
-						   recordProcessModal=true
-						   recordProcessQueryString="returnaction=admin:account.listsubscriptionusage">
-
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
-	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
-	<cf_SlatwallListingColumn propertyIdentifier="account.firstName" filter="false" search="false" sort="false" />
-	<cf_SlatwallListingColumn propertyIdentifier="account.lastName" filter="false" search="false" sort="false" />
-	<cf_SlatwallListingColumn propertyIdentifier="renewalPrice" />
-	<cf_SlatwallListingColumn propertyIdentifier="nextBillDate" />
-
-</cf_SlatwallListingDisplay>
-
+	<cf_SlatwallProcessForm>
+		
+		<cf_SlatwallActionBar type="process" />
+		
+		<cf_SlatwallProcessListing processSmartList="#rc.processSubscriptionUsageSmartList#">
+			<cf_SlatwallProcessColumn propertyIdentifier="subscriptionOrderItemName" />
+			<cf_SlatwallProcessColumn propertyIdentifier="renewalPrice" />
+			<cf_SlatwallProcessColumn propertyIdentifier="nextBillDate" />
+			<cf_SlatwallProcessColumn propertyIdentifier="expirationDate" />
+			<cfswitch expression="#rc.processcontext#" >
+				<cfcase value="manualRenew">
+					<!---<cf_SlatwallProcessColumn propertyIdentifier="account.accountPaymentMethods"  />--->
+				</cfcase> 
+			</cfswitch>	
+			
+		</cf_SlatwallProcessListing>
+		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
+	</cf_SlatwallProcessForm>
 </cfoutput>

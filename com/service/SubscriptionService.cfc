@@ -139,7 +139,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		subscriptionUsage.setNextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getEndDate());
 		
 		// add active status to subscription usage
-		setSubscriptionStatus(subscriptionUsage, 'sstActive');
+		setSubscriptionUsageStatus(subscriptionUsage, 'sstActive');
 		
 		// create new subscription orderItem
 		var subscriptionOrderItem = this.newSubscriptionOrderItem();
@@ -347,7 +347,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	private any function manualRenewSubscriptionUsage(required any subscriptionUsage, struct data={}) {
 		// first check if there is an open order for renewal, if there is, use it else create a new one
 		for(var subscriptionOrderItem in arguments.subscriptionUsage.getSubscriptionOrderItems()) {
-			if(subscriptionOrderItem.getSubscriptionOrderItemType('soitRenewal') && subscriptionOrderItem.getOrderItem().getOrder().getOrderStatusType() != 'ostClosed') {
+			if(subscriptionOrderItem.getSubscriptionOrderItemType().getSystemCode() == 'soitRenewal' && subscriptionOrderItem.getOrderItem().getOrder().getOrderStatusType().getSystemCode() != 'ostClosed') {
 				var order = subscriptionOrderItem.getOrderItem().getOrder();
 			}
 		}	
@@ -361,6 +361,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// set the account for order
 			order.setAccount(arguments.subscriptionUsage.getAccount());
 			
+			// That's right! A write log with getter makes it work, and abort is ignored!! Sumit
+			writelog(file="slatwall", text="order account null 2: #isNull(order.getAccount())#");
+			abort;
+
 			// add order item to order
 			getOrderService().addOrderItem(order=order,sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(),data={fulfillmentMethodID="444df2ffeca081dc22f69c807d2bd8fe"});
 
@@ -379,7 +383,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 			// set next bill date, calculated from the last bill date
 			// need setting to decide what start date to use for next bill date calculation
-			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getDueDate(arguments.subscriptionUsage.getNextBillDate()));
+			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
 				
 			// save subscriptionUsage
 			this.saveSubscriptionUsage(arguments.subscriptionUsage);
@@ -405,17 +409,25 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// if orderPayment has no error and amount not received yet, then try to process payment
 			if(!orderPayment.hasErrors()) {
 				var amount = order.getTotal() - orderPayment.getAmountReceived();
-				var paymentProcessed = getPaymentService().processPayment(order.getOrderPayments()[1], 'authorizeAndCharge', amount);
+				var paymentProcessed = getPaymentService().processPayment(orderPayment, 'authorizeAndCharge', amount);
 				
 				// if payment is processed, close out fulfillment and order
 				if(paymentProcessed) {
-					getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
+					var orderFulfillment = getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
 					
-					// persist order changes to DB 
-					getDAO().flushORMSession();
-					
-					//send email confirmation, needs a setting to enable this
-					//getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+					if(!orderFulfillment.hasErrors()) {
+						// persist order changes to DB 
+						getDAO().flushORMSession();
+						
+						//send email confirmation, needs a setting to enable this
+						//getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+					} else {
+						for(var errorName in orderFulfillment.getErrors()) {
+							for(var error in orderFulfillment.getErrors()[errorName]) {
+								arguments.subscriptionUsage.addError("processing", error);
+							}
+						}
+					}
 				}
 			} 
 		}
@@ -439,7 +451,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var currentStatus = arguments.subscriptionUsage.getCurrentStatus();
 		
 		// if current status is active and expiration date in past
-		if(currentStatus.getSubscriptionStatusType() == 'sstActive' && arguments.subscriptionUsage.getExpirationDate() <= now()) {
+		if(currentStatus.getSubscriptionStatusType().getSystemCode() == 'sstActive' && arguments.subscriptionUsage.getExpirationDate() <= now()) {
 			// suspend
 			setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstSuspended');
 			// reset expiration date
