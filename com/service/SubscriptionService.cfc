@@ -45,7 +45,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var subscriptionUsageBenefitAccountCreated = false;
 		if(!isNull(arguments.access.getSubscriptionUsageBenefitAccount()) && isNull(arguments.access.getSubscriptionUsageBenefitAccount().getAccount())) {
 			arguments.access.getSubscriptionUsageBenefitAccount().setAccount(arguments.account);
-			arguments.access.getSubscriptionUsageBenefitAccount().setActiveFlag(1);
 			subscriptionUsageBenefitAccountCreated = true;
 		} else if(!isNull(arguments.access.getSubscriptionUsageBenefit())) {
 			var subscriptionUsageBenefitAccount = createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(arguments.access.getSubscriptionUsageBenefit(), arguments.account);
@@ -86,7 +85,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// if account is passed then set the account to this benefit else create an access record to be used for account creation
 			if(structKeyExists(arguments,"account")) {
 				subscriptionUsageBenefitAccount.setAccount(arguments.account);
-				subscriptionUsageBenefitAccount.setActiveFlag(1);
 			} else {
 				var access = getAccessService().newAccess();
 				access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);

@@ -86,7 +86,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			prepareEditData(rc);
 			getFW().setView(currentAction);
 		} else {
-			getFW().setView("frontend:account.detail");
+			redirectToView();
 		}
 	}
 	
