@@ -385,6 +385,9 @@ function listingDisplayUpdate( tableID, data ) {
 function buildPagingNav(currentPage, totalPages) {
 	var nav = '';
 	
+	currentPage = parseInt(currentPage);
+	totalPages = parseInt(totalPages);
+	
 	if(totalPages > 1){
 		nav = '<ul>';
 	

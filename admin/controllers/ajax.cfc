@@ -84,6 +84,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function updateGlobalSearchResults(required struct rc) {
 		
+		rc['P:Show'] = 10;
+		
 		var smartLists = {};
 		smartLists['product'] = getProductService().getProductSmartList(data=rc);
 		smartLists['productType'] = getProductService().getProductTypeSmartList(data=rc);
@@ -110,14 +112,3 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
