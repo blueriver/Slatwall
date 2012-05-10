@@ -65,7 +65,17 @@ Notes:
 					</cf_SlatwallProcessListing>
 					
 				</cfcase> 
+				
+				<cfcase value="processStockAdjustment">
+					<p>
+						Are you sure that you want to process this stock adjustment? It will no longer be editable.
+					</p>	
+					<cf_SlatwallProcessListing processSmartList="#rc.processstockadjustmentsmartlist#">
+						<cf_SlatwallProcessColumn data="locationID" fieldType="hidden" value="#rc.stockAdjustmentID#" />
+					</cf_SlatwallProcessListing>
+				</cfcase>	
 			</cfswitch>	
 		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
+		<input type="hidden" name="returnAction" value="admin:warehouse.liststockadjustment" />
 	</cf_SlatwallProcessForm>
 </cfoutput>

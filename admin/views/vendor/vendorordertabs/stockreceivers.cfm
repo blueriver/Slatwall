@@ -39,8 +39,8 @@ Notes:
 <cfparam name="rc.vendorOrder" type="any"/>
 
 <cf_slatwalllistingdisplay smartlist="#rc.$.slatwall.getService('VendorOrderService').getStockReceiverSmartList(rc.vendorOrder.getVendorOrderID())#" 
-                           recordeditaction="admin:vendor.detailStockReceiver"
-						   recordeditmodal="true" 
+                           recorddetailaction="admin:vendor.detailStockReceiver"
+						   recorddetailmodal="true" 
                            recorddetailquerystring="returnaction=admin:vendor.detailvendororder&vendorOrderID=#rc.VendorOrder.getVendorOrderID()#">
 	
 	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="createdDateTime"/>
