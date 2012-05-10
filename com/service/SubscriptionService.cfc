@@ -79,16 +79,23 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function createSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(required any subscriptionUsageBenefit, any account) {
 		if(arguments.subscriptionUsageBenefit.getAvailableUseCount() GT 0) {
-			var subscriptionUsageBenefitAccount = this.newSubscriptionUsageBenefitAccount();
-			subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
-			this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-			// if account is passed then set the account to this benefit else create an access record to be used for account creation
+			// if account is passed then get this benefit account else create a new benefit account
 			if(structKeyExists(arguments,"account")) {
-				subscriptionUsageBenefitAccount.setAccount(arguments.account);
+				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccount({subscriptionUsageBenefit=arguments.subscriptionUsageBenefit,account=arguments.account},true);
 			} else {
-				var access = getAccessService().newAccess();
-				access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-				getAccessService().saveAccess(access);
+				var subscriptionUsageBenefitAccount = this.newSubscriptionUsageBenefitAccount();
+			}
+			if(subscriptionUsageBenefitAccount.isNew()) {
+				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
+				this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+				// if account is passed then set the account to this benefit else create an access record to be used for account creation
+				if(structKeyExists(arguments,"account")) {
+					subscriptionUsageBenefitAccount.setAccount(arguments.account);
+				} else {
+					var access = getAccessService().newAccess();
+					access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+					getAccessService().saveAccess(access);
+				}
 			}
 			return subscriptionUsageBenefitAccount;
 		}
