@@ -28,6 +28,10 @@ jQuery(document).ready(function() {
 		jQuery('input[tabindex=1]').focus();
 	}
 	
+	if(jQuery('#global-search').val() != '') {
+		jQuery('#global-search').keyup(); 
+	}
+	
 });
 
 function initUIElements( scopeSelector ) {
