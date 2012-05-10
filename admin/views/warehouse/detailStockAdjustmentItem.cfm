@@ -37,22 +37,21 @@ Notes:
 
 --->
 
-<cfparam name="rc.vendorOrderItem" type="any" />
-<cfparam name="rc.vendorOrder" type="any" default="#rc.vendorOrderItem.getVendorOrder()#" />
-<cfparam name="rc.edit" type="boolean" />
-<cfoutput>
-	
-	
-	<cf_SlatwallDetailForm object="#rc.vendorOrderItem#" edit="#rc.edit#">
-		<input type="hidden" name="vendorOrder.vendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
-		<input type="hidden" name="returnAction" value="admin:vendor.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" />
 
+
+<cfparam name="rc.stockAdjustmentItem" type="any">
+<cfparam name="rc.edit" type="boolean">
+
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#">
+		<input type="hidden" name="returnaction" value="admin:warehouse.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentItem.getStockAdjustment().getStockAdjustmentID()#"	 />
+		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrderItem#" property="quantity" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrderItem#" property="cost" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustmentItem#" property="quantity" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>
+

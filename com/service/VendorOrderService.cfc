@@ -41,6 +41,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="addressService";
 	property name="taxService";
 	property name="skuService";
+	property name="stockService";
+	property name="locationService";
 	property name="productService";
 	property name="DAO";
 	
@@ -117,21 +119,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 		if(val(arguments.data.quantity)){	
 			var vendorOrderItem = new('VendorOrderItem');
-			var stock = new('Stock');
 			var sku = getSkuService().getSku(arguments.data.skuid);
-			
-			stock.setLocation(get('Location',arguments.data.locationID));
-			stock.setSku(sku);
-			
-			//getSkuService().saveSku(stock);
+			var location = getLocationService().getLocation(arguments.data.locationID);
+			var stock = getStockService().getStockBySkuAndLocation(sku,location);
 			
 			vendorOrderItem.setQuantity(arguments.data.quantity);
 			vendorOrderItem.setCost(arguments.data.cost);
 			vendorOrderItem.setStock(stock);
-			
-			arguments.vendorOrder.addVendorOrderItem(vendorOrderItem);	
+			vendorOrderItem.setVendorOrder(arguments.vendorOrder);
 		}		
-		/*writedump(var="#arguments#" top="2");
-		abort;*/
 	}
 }
