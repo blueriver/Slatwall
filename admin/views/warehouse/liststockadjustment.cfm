@@ -42,7 +42,9 @@ Notes:
 	<cf_slatwallactionbar type="listing" object="#rc.stockAdjustmentSmartList#"/>
 
 	<cf_slatwalllistingdisplay smartlist="#rc.stockAdjustmentSmartList#" 
-	                           recordeditaction="admin:warehouse.editstockadjustment">
+	                          recordeditaction="admin:warehouse.editstockadjustment"
+							  recorddeleteaction="admin:warehouse.deletestockadjustment"
+							  recorddetailaction="admin:warehouse.detailstockadjustment">
 		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stockAdjustmentType.type"/>
 		<cf_slatwalllistingcolumn propertyidentifier="stockAdjustmentStatusType.type" filter=true/>
 		<cf_slatwalllistingcolumn propertyidentifier="fromLocation.locationName" filter=true/>
