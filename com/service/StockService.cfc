@@ -81,20 +81,14 @@ component extends="BaseService" accessors="true" output="false" {
 		if(arguments.processcontext eq 'addItems' && val(arguments.data.quantity)){	
 			var stockAdjustmentItem = new ('stockAdjustmentItem');
 			var sku = getSkuService().getSku(arguments.data.skuID);
-			var fromStock = getStockService().newStock();
-			var toStock = getStockService().newStock();
 			
-			fromStock.setLocation(arguments.stockAdjustment.getFromLocation());
-			fromStock.setSku(sku);
-			
-			toStock.setLocation(arguments.stockAdjustment.getToLocation());
-			toStock.setSku(sku);
+			var fromStock = getStockBySkuAndLocation(sku,arguments.stockAdjustment.getFromLocation());
+			var toStock = getStockBySkuAndLocation(sku,arguments.stockAdjustment.getToLocation());
 			
 			stockAdjustmentItem.setQuantity(arguments.data.quantity);
 			stockAdjustmentItem.setFromStock(fromStock);
 			stockAdjustmentItem.setToStock(toStock);
-			
-			arguments.stockAdjustment.addStockAdjustmentItem(stockAdjustmentItem);
+			stockAdjustmentItem.setStockAdjustment(arguments.stockAdjustment);
 		}
 	}
 	
