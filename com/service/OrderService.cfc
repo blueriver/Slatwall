@@ -670,7 +670,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var currentSession = getSlatwallScope().getCurrentSession();
 		var cart = currentSession.getOrder();
 		
-		if(!cart.isNew()) {
+		if(!isNull(cart) && !cart.isNew()) {
 			currentSession.removeOrder();
 		
 			getDAO().delete(cart.getOrderItems());
