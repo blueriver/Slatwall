@@ -53,5 +53,5 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="extendedCost" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:vendor.processVendorOrder" class="btn btn-primary" queryString="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=addOrderItems" modal=true />
+<cf_SlatwallActionCaller action="admin:vendor.processVendorOrder" class="btn btn-primary" queryString="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=addOrderItems" modal=true text="#rc.$.Slatwall.rbKey("admin.vendor.addItems")#"/>
 
