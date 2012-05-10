@@ -47,7 +47,7 @@ Notes:
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderType.type" filter=true />
-	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" filter=true />
+	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" filter=true />
 	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range=true />
 	<cf_SlatwallListingColumn propertyIdentifier="total" />
 </cf_SlatwallListingDisplay>
