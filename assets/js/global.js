@@ -89,6 +89,29 @@ function initUIElements( scopeSelector ) {
 }
 
 function setupEventHandlers() {
+	
+	// Global Search
+	jQuery('body').on('keyup', '#global-search', function(e){
+		if(jQuery(this).val() != "") {
+			if(jQuery("body").scrollTop() > 0) {
+				jQuery("body").animate({scrollTop:0}, 300, function(){
+					jQuery('#search-results').animate({'margin-top': '0px'}, 150, function(){updateGlobalSearchResults();});
+				});
+			} else {
+				jQuery('#search-results').animate({'margin-top': '0px'}, 150, function(){updateGlobalSearchResults();});
+			}
+		} else {
+			jQuery('#search-results').animate({
+				'margin-top': '-410px'
+			}, 150);
+		}
+	});
+	jQuery('body').on('click', '.search-close', function(e){
+		jQuery('#global-search').val('');
+		jQuery('#global-search').keyup();
+	});
+	
+	// Hints
 	jQuery('body').on('click', '.hint', function(e){
 		e.preventDefault();
 	});
@@ -565,6 +588,10 @@ function tableExpandClick( toggleLink ) {
 			});
 		}
 	}
+}
+
+function updateGlobalSearchResults() {
+	console.log('got here!');
 }
 
 

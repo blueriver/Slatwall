@@ -133,14 +133,37 @@ Notes:
 							<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.detailviewupdate" />Update Front-end Views</a></li>
 						</cf_SlatwallActionCallerDropdown>
 					</ul>
-					<form class="navbar-search pull-right" action="">
-						<input type="text" class="search-query span2" placeholder="Search">
+					<form name="search" class="navbar-search pull-right" action="/">
+						<input id="global-search" type="text" name="serach" class="search-query span2" placeholder="Search">
 					</form>
 				</div>
 			</div>
 		</div>
+		<div id="search-results" class="search-results">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<div class="span12">
+						<a class="close search-close"><span class="text">Close</span> &times;</a>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span3">
+						<h4>Products</h4>
+					</div>
+					<div class="span3 account-search">
+						<h4>Accounts</h4>
+					</div>
+					<div class="span3 order-search">
+						<h4>Orders</h4>
+					</div>
+					<div class="span3 brand-search">
+						<h4>Vendors</h4>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="container-fluid">
-			<div class="row-fluid" style="margin-top:60px;">
+			<div class="row-fluid">
 				<div class="span12">
 					#body#
 				</div>

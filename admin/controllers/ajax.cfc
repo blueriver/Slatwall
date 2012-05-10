@@ -37,6 +37,8 @@ Notes:
 
 */
 component extends="BaseController" persistent="false" accessors="true" output="false" {
+
+	
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.listaccount");
@@ -69,12 +71,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 			
 		} catch(any e) {
-			
 			writeOutput( serializeJSON(e) );
 			abort;
-			
 		}
-			
+	}
+	
+	public void function updateGlobalSearchResults(required struct rc) {
+		
+		
+				
 	}
 	
 }
