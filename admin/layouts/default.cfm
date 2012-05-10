@@ -63,46 +63,86 @@ Notes:
 				<div class="container-fluid">
 					<ul class="nav">
 						<a href="#buildURL(action='admin:main.default')#" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
-						<li class="dropdown">
-							<a href="##" class="dropdown-toggle" data-toggle="dropdown">Developer Tool<b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?reload=true" />Reload Slatwall</a></li>
-								<li><a href="/admin/index.cfm?appreload&reload=appreload" />Reload Mura</a></li>
-								<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.updateSkuCache" />Update Sku Cache</a></li>
-								<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.detailslatwallupdate" />Update Slatwall</a></li>
-								<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.detailviewupdate" />Update Front-end Views</a></li>
-							</ul>
-						</li>
+						<li class="divider-vertical"></li>
+						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.product_nav')#" icon="tags icon-white" type="nav">
+							<cf_SlatwallActionCaller action="admin:product.listproduct" type="list">
+							<cf_SlatwallActionCaller action="admin:product.listproducttype" type="list">
+							<cf_SlatwallActionCaller action="admin:product.listoptiongroup" type="list">
+							<cf_SlatwallActionCaller action="admin:product.listbrand" type="list">
+							<cf_SlatwallActionCaller action="admin:product.listsubscriptionterm" type="list">
+							<cf_SlatwallActionCaller action="admin:product.listsubscriptionbenefit" type="list">
+							<cf_SlatwallActionCaller action="admin:product.listproductreview" type="list">
+							<cf_SlatwallActionCaller action="admin:pricing.listpromotion" type="list">
+							<cf_SlatwallActionCaller action="admin:pricing.listpricegroup" type="list">
+						</cf_SlatwallActionCallerDropdown>
+						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.order_nav')#" icon="inbox icon-white" type="nav">
+							<cf_SlatwallActionCaller action="admin:order.listorder" type="list">
+							<cf_SlatwallActionCaller action="admin:order.listorderfulfillment" type="list">
+							<cf_SlatwallActionCaller action="admin:vendor.listvendororder" type="list">
+						</cf_SlatwallActionCallerDropdown>
+						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.account_nav')#" icon="user icon-white" type="nav">
+							<cf_SlatwallActionCaller action="admin:account.listaccount" type="list">
+							<cf_SlatwallActionCaller action="admin:vendor.listvendor" type="list">
+							<cf_SlatwallActionCaller action="admin:account.listsubscriptionusage" type="list">
+							<cf_SlatwallActionCaller action="admin:account.listpermissiongroup" type="list">
+						</cf_SlatwallActionCallerDropdown>
+						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.warehouse_nav')#" icon="barcode icon-white" type="nav">
+							<cf_SlatwallActionCaller action="admin:warehouse.liststockreceiver" type="list">
+							<cf_SlatwallActionCaller action="admin:warehouse.liststockadjustment" type="list">
+						</cf_SlatwallActionCallerDropdown>
+						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.integration_nav')#" icon="random icon-white" type="nav">
+							<cf_SlatwallActionCaller action="admin:integration.listintegration" type="list">
+							<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
+							<cfloop array="#local.integrationSubsystems#" index="local.intsys">
+								<li>
+									<a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a>
+								</li>
+							</cfloop>
+						</cf_SlatwallActionCallerDropdown>
+						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.setting_nav')#" icon="cog icon-white" type="nav">
+							<cf_SlatwallActionCaller action="admin:setting.listsetting" type="list">
+							<li class="divider"></li>
+							<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listmeasurementunit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listorderorigin" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listpaymentmethod" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtaxcategory" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
+							<li class="divider"></li>
+							<cf_SlatwallActionCaller action="admin:setting.listlocation" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listaddresszone" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listcountry" type="list">
+							<li class="divider"></li>
+							<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list">
+							<li class="divider"></li>
+							<cf_SlatwallActionCaller action="admin:setting.listcategory" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listcontent" type="list">
+							<li class="divider"></li>
+							<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
+						</cf_SlatwallActionCallerDropdown>
+						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.help_nav')#" icon="question-sign icon-white" type="nav">
+							<cf_SlatwallActionCaller action="admin:help" type="list">
+							<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?reload=true" />Reload Slatwall</a></li>
+							<li><a href="/admin/index.cfm?appreload&reload=appreload" />Reload Mura</a></li>
+							<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.updateSkuCache" />Update Sku Cache</a></li>
+							<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.detailslatwallupdate" />Update Slatwall</a></li>
+							<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.detailviewupdate" />Update Front-end Views</a></li>
+						</cf_SlatwallActionCallerDropdown>
 					</ul>
+					<form class="navbar-search pull-right" action="">
+						<input type="text" class="search-query span2" placeholder="Search">
+					</form>
 				</div>
 			</div>
 		</div>
 		<div class="container-fluid">
 			<div class="row-fluid" style="margin-top:60px;">
-				#body#
-			</div>
-		</div>
-		<div class="navbar navbar-fixed-bottom">
-			<div class="navbar-inner">
-				<div class="container-fluid">
-					<ul class="nav">
-						<cf_SlatwallActionCaller action="admin:main" type="list" icon="home icon-white" iconOnly=true>
-						<!---
-						<form class="navbar-form pull-left">
-  							<input type="text" class="span2">
-						</form>
-						--->
-						<cf_SlatwallActionCaller action="admin:product" type="list" icon="pencil icon-white">
-						<cf_SlatwallActionCaller action="admin:pricing" type="list" icon="tags icon-white">
-						<cf_SlatwallActionCaller action="admin:order" type="list" icon="inbox icon-white">
-						<cf_SlatwallActionCaller action="admin:account" type="list" icon="user icon-white">
-						<cf_SlatwallActionCaller action="admin:vendor" type="list" icon="list-alt icon-white">
-						<cf_SlatwallActionCaller action="admin:warehouse" type="list" icon="barcode icon-white">
-						<cf_SlatwallActionCaller action="admin:integration" type="list" icon="random icon-white">
-						<cf_SlatwallActionCaller action="admin:report" type="list" icon="th-list icon-white">
-						<cf_SlatwallActionCaller action="admin:setting" type="list" icon="cog icon-white">
-						<cf_SlatwallActionCaller action="admin:help" type="list" icon="question-sign icon-white">
-					</ul>
+				<div class="span12">
+					#body#
 				</div>
 			</div>
 		</div>
