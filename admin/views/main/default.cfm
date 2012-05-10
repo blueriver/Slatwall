@@ -44,7 +44,7 @@ Notes:
 <cfoutput>
 <div class="row-fluid">
 	<div class="span6">
-		<h3>#request.slatwallScope.rbKey("admin.main.dashboard.neworders")# <cf_SlatwallActionCaller action="admin:order.listorder" class="btn btn-mini" /></h3>
+		<h4>#request.slatwallScope.rbKey("admin.main.dashboard.neworders")#</h4>
 		<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
 				recordDetailAction="admin:order.detailorder">
 			<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
@@ -53,7 +53,7 @@ Notes:
 		</cf_SlatwallListingDisplay>
 	</div>
 	<div class="span6">
-		<h3>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductupdates")# <cf_SlatwallActionCaller action="admin:product.listproduct" class="btn btn-mini" /></h3>
+		<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductupdates")#</h4>
 		<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" 
 				recordDetailAction="admin:product.detailproduct">
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
@@ -64,7 +64,7 @@ Notes:
 </div>
 <div class="row-fluid">
 	<div class="span6">
-		<h3>#request.slatwallScope.rbKey("admin.main.dashboard.recentvendororderupdates")# <cf_SlatwallActionCaller action="admin:vendor.listvendororder" class="btn btn-mini" /></h3>
+		<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentvendororderupdates")#</h4>
 		<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#" 
 				recordDetailAction="admin:vendor.detailvendororder">
 			<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" />
@@ -74,7 +74,7 @@ Notes:
 		</cf_SlatwallListingDisplay>
 	</div>
 	<div class="span6">
-		<h3>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductreviews")# <cf_SlatwallActionCaller action="admin:product.listproductreview" class="btn btn-mini" /></h3>
+		<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductreviews")#</h4>
 		<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#" 
 				recordDetailAction="admin:product.detailproductreview">
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="product.title" />

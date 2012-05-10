@@ -162,7 +162,15 @@ function setupEventHandlers() {
 		} else {
 			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
 		}
-		jQuery('#adminModal').load( modalLink, function(){ initUIElements('#adminModal'); } );
+		jQuery('#adminModal').load( modalLink, function(){
+			initUIElements('#adminModal');
+			jQuery('#adminModal').css({
+				width: 'auto',
+		        'margin-left': function () {
+		            return -(jQuery('#adminModal').width() / 2);
+		        }
+			});
+		});
 	});
 	
 	// Listing Display - Paging
