@@ -58,7 +58,7 @@ Notes:
 		<cf_SlatwallTabGroup object="#rc.vendorOrder#">
 			<cf_SlatwallTab view="admin:vendor/vendorordertabs/items" />
 			<cf_SlatwallTab view="admin:vendor/vendorordertabs/stockreceivers" />
-			<cf_SlatwallTab view="admin:vendor/vendorordertabs/products" />
+			<!---<cf_SlatwallTab view="admin:vendor/vendorordertabs/products" />--->
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

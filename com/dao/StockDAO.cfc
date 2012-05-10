@@ -52,6 +52,10 @@ component extends="BaseDAO" {
 	
 		return ormExecuteQuery(hql, params, true);
 		*/	
+	}
+	
+	public any function getStockReceiverByPackingSlipNumber(required any packingSlipNumber) {
+		return entityLoad("SlatwallStockReceiver", {packingSlipNumber=arguments.packingSlipNumber}, true);
 	}	
 	
 	public any function getStockAdjustmentItemForSku(required any sku, required any stockAdjustment) {

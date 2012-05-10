@@ -38,9 +38,12 @@ Notes:
 --->
 <cfparam name="rc.vendorOrder" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.stockReceiverVendorOrderSmartList#" recordDetailAction="admin:warehouse.detailStockReceiver" recordDetailQueryString="returnaction=admin:vendor.detailvendororder&vendorOrderID=#rc.VendorOrder.getVendorOrderID()#">
+<cf_SlatwallListingDisplay smartList="#rc.$.slatwall.getService('VendorOrderService').getReceiverSmartList(rc.vendorOrder.getVendorOrderID())#" recordDetailAction="admin:warehouse.detailStockReceiver" recordDetailQueryString="returnaction=admin:vendor.detailvendororder&vendorOrderID=#rc.VendorOrder.getVendorOrderID()#">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
 	<cf_SlatwallListingColumn propertyIdentifier="boxCount" />
 	<cf_SlatwallListingColumn propertyIdentifier="packingSlipNumber" />
 </cf_SlatwallListingDisplay>
+
+<cf_SlatwallActionCaller action="admin:vendor.processVendorOrder" class="btn btn-primary" queryString="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=receiveStock" modal=true />
+
 

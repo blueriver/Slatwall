@@ -316,12 +316,12 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		param name="rc.processContext" default="process";
 		param name="rc.multiProcess" default="false";
 		param name="rc.processOptions" default="#{}#";
+		param name="rc.additionalData" default="#{}#";
 		
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
 		getFW().setLayout( "admin:process.default" );
-		
 		// If we are actually posting the process form, then this logic gets calls the process method for each record
 		if(structKeyExists(rc, "process") && rc.process) {
 			rc.errorData = [];
@@ -333,7 +333,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 					if(structKeyExists(rc.processRecords[i], entityPrimaryID)) {
 						structAppend(rc.processRecords[i], rc.processOptions, false);
 						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ]} );
-						entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
+						entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext, 4=rc.additionaldata} );
 						if( !isNUll(entity) && entity.hasErrors() ) {
 							// Add the error message to the top of the page
 							entity.showErrorMessages();

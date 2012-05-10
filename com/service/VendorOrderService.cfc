@@ -62,6 +62,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return smartList;
 	}
 	
+	public any function getReceiverSmartList(string vendorOrderID) {
+		var smartList = getStockService().getStockReceiverSmartlist();	
+		smartList.addFilter("stockReceiverItems_vendorOrderItem_vendorOrder_vendorOrderID",arguments.vendorOrderID);
+		return smartList;
+	}
+	
 	public any function searchVendorOrders(struct data={}) {
 		//set keyword and vendorOrderby
 		var params = {
@@ -115,18 +121,41 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getSkusOrdered(arguments.vendorOrderId);
 	}
 	
-	public any function processVendorOrder(required any vendorOrder, struct data={}, string processContext="process"){
+	public any function processVendorOrder(required any vendorOrder, struct data={}, string processContext="process", struct additionalData={}){
+		
+		switch(arguments.processcontext){
+			case 'addOrderItems':
+				if(val(arguments.data.quantity)){	
+					var vendorOrderItem = new('VendorOrderItem');
+					var sku = getSkuService().getSku(arguments.data.skuid);
+					var location = getLocationService().getLocation(arguments.data.locationID);
+					var stock = getStockService().getStockBySkuAndLocation(sku,location);
+					
+					vendorOrderItem.setQuantity(arguments.data.quantity);
+					vendorOrderItem.setCost(arguments.data.cost);
+					vendorOrderItem.setStock(stock);
+					vendorOrderItem.setVendorOrder(arguments.vendorOrder);
+				}
+			break;
 			
-		if(val(arguments.data.quantity)){	
-			var vendorOrderItem = new('VendorOrderItem');
-			var sku = getSkuService().getSku(arguments.data.skuid);
-			var location = getLocationService().getLocation(arguments.data.locationID);
-			var stock = getStockService().getStockBySkuAndLocation(sku,location);
-			
-			vendorOrderItem.setQuantity(arguments.data.quantity);
-			vendorOrderItem.setCost(arguments.data.cost);
-			vendorOrderItem.setStock(stock);
-			vendorOrderItem.setVendorOrder(arguments.vendorOrder);
-		}		
+			case 'receiveStock':
+				if(val(arguments.data.quantity)){
+					var stockReceiver = getStockService().getStockReceiverByPackingSlipNumber(arguments.additionaldata.packingSlipNumber);
+					var stockreceiverItem = new('StockReceiverItem');
+					var vendorOrderItem = get('VendorOrderItem',arguments.data.vendorOrderItemID);
+					var location = getLocationService().getLocation(arguments.additionaldata.locationID);
+					var stock = vendorOrderItem.getStock();
+					
+					stockReceiver.setReceiverType('vendorOrder');
+					stockReceiver.setBoxCount(arguments.additionaldata.boxcount);
+					
+					stockreceiverItem.setQuantity(arguments.data.quantity);
+					stockReceiverItem.setStock(stock);
+					stockReceiverItem.setVendorOrderItem(vendorOrderItem);
+					stockReceiverItem.setStockReceiver(stockReceiver);
+				}
+			break;
+		}	
+				
 	}
 }

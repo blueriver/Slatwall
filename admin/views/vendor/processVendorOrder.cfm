@@ -68,6 +68,31 @@ Notes:
 					</cf_SlatwallProcessListing>
 					
 				</cfcase> 
+				
+				<cfcase value="receiveStock">
+					<cfset vendorOrder = rc.$.slatwall.getService('VendorOrderService').getVendorOrder(rc.vendorOrderID) />
+					<cfset locations = rc.$.slatwall.getService('LocationService').getLocationOptions() /> 
+					
+					<cf_SlatwallFieldDisplay title="Box Count" fieldtype="text" fieldname="additionalData.boxcount" edit="true">
+					<cf_SlatwallFieldDisplay title="Packing Slip Number" fieldtype="text" fieldname="additionalData.packingslipnumber" edit="true">
+					<cf_SlatwallFieldDisplay title="Location" fieldname="additionalData.locationID" fieldType="select" valueOptions="#locations#" edit="true">
+					
+					<cf_SlatwallProcessListing processSmartList="#vendorOrder.getVendorOrderItemsSmartList()#">
+						<cf_SlatwallProcessColumn propertyIdentifier="stock.sku.skucode" />
+						<cf_SlatwallProcessColumn propertyIdentifier="quantity"/>
+						<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span2 number" value="" />
+						<cf_SlatwallProcessColumn data="vendorOrderID" fieldType="hidden" value="#rc.vendorOrderID#" />
+						<!--- This section needs removing--->
+						<!---<cfif arrayLen(locations) gt 1>
+							<cf_SlatwallProcessColumn data="locationID" fieldType="select" valueOptions="#locations#" fieldClass="span2" value="" />
+						<cfelse>
+							<cf_SlatwallProcessColumn data="locationID" fieldType="hidden" value="#locations[1]['value']#" />
+						</cfif>
+						<cf_SlatwallProcessColumn data="boxcount" fieldType="text" fieldClass="span2 number" value="" />
+						<cf_SlatwallProcessColumn data="packingslipnumber" fieldType="text" fieldClass="span2" value="" />
+						--->
+					</cf_SlatwallProcessListing>
+				</cfcase>	
 			</cfswitch>	
 		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
 	</cf_SlatwallProcessForm>

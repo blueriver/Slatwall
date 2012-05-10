@@ -67,6 +67,28 @@ component extends="BaseService" accessors="true" output="false" {
 		return stock;
 	}
 	
+	public any function getStockReceiverByPackingSlipNumber(required any packingSlipNumber){
+		var stockReceiver = getDAO().getStockReceiverByPackingSlipNumber(argumentCollection=arguments);
+		
+		if(isNull(stockReceiver)) {
+			
+			if(getSlatwallScope().hasValue("stockReceiver_#arguments.packingSlipNumber#")) {
+				// Set the stock receiver in the requestCache so that duplicates for this stock don't get created.
+				stockReceiver = getSlatwallScope().getValue("stockReceiver_#arguments.packingSlipNumber#");
+				
+			} else {
+				stockReceiver = this.newStockReceiver();
+				stockReceiver.setPackingSlipNumber(arguments.packingSlipNumber);
+				getDAO().save(stockReceiver);
+				
+				// Set the stock in the requestCache so that duplicates for this stock don't get created.
+				getSlatwallScope().setValue("stockReceiver_#arguments.packingSlipNumber#", stockReceiver);
+			}
+		}
+		
+		return stockReceiver;
+	}
+	
 	public any function getStockAdjustmentItemForSku(required any sku, required any stockAdjustment){
 		var stockAdjustmentItem = getDAO().getStockAdjustmentItemForSku(arguments.sku, arguments.stockAdjustment);
 		
