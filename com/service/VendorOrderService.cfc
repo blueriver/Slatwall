@@ -62,9 +62,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return smartList;
 	}
 	
-	public any function getReceiverSmartList(string vendorOrderID) {
+	public any function getStockReceiverSmartList(string vendorOrderID) {
 		var smartList = getStockService().getStockReceiverSmartlist();	
 		smartList.addFilter("stockReceiverItems_vendorOrderItem_vendorOrder_vendorOrderID",arguments.vendorOrderID);
+		return smartList;
+	}
+	
+	public any function getStockReceiverItemSmartList(any stockReceiver) {
+		var smartList = getStockService().getStockReceiverItemSmartlist();	
+		smartList.addFilter("stockReceiver.stockReceiverID",arguments.stockReceiver.getStockReceiverID());
 		return smartList;
 	}
 	

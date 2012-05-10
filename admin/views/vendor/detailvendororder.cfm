@@ -47,10 +47,12 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cfif rc.vendorOrder.isNew()>
 					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="true">
+					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="true">
 				<cfelse>
 					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="false">
+					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="false">
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="#rc.edit#">
+				
 				
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
