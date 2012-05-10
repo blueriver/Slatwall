@@ -47,7 +47,6 @@ Notes:
 		<cf_SlatwallActionBar type="process" />
 		
 		<cf_SlatwallProcessListing processSmartList="#rc.processProductSmartList#">
-			<cf_SlatwallProcessColumn propertyIdentifier="productName" />
 			<cfswitch expression="#rc.processcontext#" >
 				<cfcase value="bulkupdate">
 					<cf_SlatwallProcessColumn data="skuPrice" fieldType="text" fieldClass="span2 number" value="" />

@@ -36,22 +36,24 @@
 Notes:
 
 --->
-<cfparam name="rc.vendorOrder" type="any" />
+<cfparam name="rc.vendorOrder" type="any"/>
 
-<cf_SlatwallListingDisplay smartList="#rc.vendorOrder.getVendorOrderItemsSmartList()#"
-	recordeditaction="admin:vendor.editVendorOrderItem"
-	recordeditmodal="true"
-	recorddeleteaction="admin:vendor.deleteVendorOrderItem"
-	recorddeletequerystring="returnaction=admin:vendor.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
-		
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.skucode" />
-	<cf_SlatwallListingColumn propertyIdentifier="stock.sku.product.brand.brandName" />
-	<cf_SlatwallListingColumn propertyIdentifier="stock.sku.product.productName" />
-	<cf_SlatwallListingColumn propertyIdentifier="stock.location.locationName" />
-	<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-	<cf_SlatwallListingColumn propertyIdentifier="cost" />
-	<cf_SlatwallListingColumn propertyIdentifier="extendedCost" />
-</cf_SlatwallListingDisplay>
+<cf_slatwalllistingdisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#" 
+                           recordeditaction="admin:vendor.editVendorOrderItem" 
+                           recordeditmodal="true" 
+                           recorddeleteaction="admin:vendor.deleteVendorOrderItem" 
+                           recorddeletequerystring="returnaction=admin:vendor.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
 
-<cf_SlatwallActionCaller action="admin:vendor.processVendorOrder" class="btn btn-primary" queryString="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=addOrderItems" modal=true text="#rc.$.Slatwall.rbKey("admin.vendor.addItems")#"/>
+	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stock.sku.skucode"/>
+	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.product.brand.brandName"/>
+	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.product.productName"/>
+	<cf_slatwalllistingcolumn propertyidentifier="stock.location.locationName"/>
+	<cf_slatwalllistingcolumn propertyidentifier="quantity"/>
+	<cf_slatwalllistingcolumn propertyidentifier="cost"/>
+	<cf_slatwalllistingcolumn propertyidentifier="extendedCost"/>
+</cf_slatwalllistingdisplay>
 
+<cf_slatwallactioncaller action="admin:vendor.processVendorOrder" 
+						class="btn btn-primary" 
+                         querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=addOrderItems" 
+                         modal=true text="#rc.$.Slatwall.rbKey("admin.vendor.addItems")#"/>
