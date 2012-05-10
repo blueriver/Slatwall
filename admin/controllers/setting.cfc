@@ -41,22 +41,12 @@ component extends="BaseController" output="false" accessors="true" {
 	// Slatwall Service Injection		
 	property name="addressService" type="any";
 	property name="attributeService" type="any";
-	property name="dataService" type="any";
-	property name="fulfillmentService" type="any";
-	property name="integrationService" type="any";
-	property name="locationService" type="any";
-	property name="productService" type="any";
-	property name="paymentService" type="any";
-	property name="roundingRuleService" type="any";
 	property name="settingService" type="any";
-	property name="shippingService" type="any";
 	property name="scheduleService" type="any";
 	property name="productCacheService" type="any";
-	property name="taxService" type="any";
-	property name="termService" type="any";
 	property name="updateService" type="any";
-	property name="utilityFormService" type="any";
 	property name="utilityFileService" type="any";
+	property name="measurementUnitService" type="any";
 	
 	this.publicMethods='';
 	this.secureMethods='listsetting,detailsetting,editsetting,listfulfillmentmethod,editfulfillmentmethod,detailfulfillmentmethod,deletefulfillmentmethod,createfulfillmentmethod,listmeasurementunit,editmeasurementunit,detailmeasurementunit,createmeasurementunit,deletemeasurementunit,listorderorigin,createorderorigin,deleteorderorigin,editorderorigin,detailorderorigin,listpaymentmethod,editpaymentmethod,detailpaymentmethod,createpaymentmethod,deletepaymentmethod,listroundingrule,editroundingrule,detailroundingrule,createroundingrule,deleteroundingrule,listtaxcategory,edittaxcategory,detailtaxcategory,createtaxcategory,deletetaxcategory,listterm,detailterm,editterm,createterm,deleteterm,listType,editType,detailType,createType,deleteType,listLocation,editlocation,detaillocation,createlocation,deletelocation,listaddresszone,editaddresszone,detailaddresszone,createaddresszone,deleteaddresszone,listcountry,editcountry,detailcountry,createcountry,deletecountry,listattributeset,editattributeset,detailattributeset,createattributeset,deleteattributeset,createcategory,detailcategory,editcategory,deletecategory,listcategory,editcontent,detailcontent,createcontent,deletecontent,listschedule,editschedule,detailschedule,createschedule,deleteschedule,listtask,edittask,detailtask,createtask,deletetask,listtaskhistory,saveaddresszone,saveattributeset,savecategory,savecountry,savefulfillmentmethod,saveLocation,saveorderorigin,savepaymentmethod,saveroundingrule,saveschedule,savesetting,savetask,savetaskhistory,savetaxcategory,saveterm,saveType,savemeasurementunit';
@@ -198,6 +188,18 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.setting = getSettingService().getSetting(rc.settingID, true);
 		rc.edit = true;
 		getFW().setView("admin:setting.detailsetting");
+	}
+	
+	public void function editMeasurementUnit(required struct rc) {
+		rc.measurementUnit = getMeasurementUnitService().getMeasurementUnit(rc.unitCode);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailmeasurementunit");
+	}
+	
+	public void function editCountry(required struct rc) {
+		rc.country = getAddressService().getCountry(rc.countryCode);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailcountry");
 	}
 	
 }
