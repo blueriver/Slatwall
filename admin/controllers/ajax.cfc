@@ -85,14 +85,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function updateGlobalSearchResults(required struct rc) {
 		
 		var smartLists = {};
-		smartLists['product'] = getProductService().getProductSmartList();
-		smartLists['productType'] = getProductService().getProductTypeSmartList();
-		smartLists['brand'] = getBrandService().getBrandSmartList();
-		smartLists['promotion'] = getPromotionService().getPromotionSmartList();
-		smartLists['order'] = getOrderService().getOrderSmartList();
-		smartLists['account'] = getAccountService().getAccountSmartList();
-		smartLists['vendorOrder'] = getVendorOrderService().getVendorOrderSmartList();
-		smartLists['vendor'] = getVendorService().getVendorSmartList();
+		smartLists['product'] = getProductService().getProductSmartList(data=rc);
+		smartLists['productType'] = getProductService().getProductTypeSmartList(data=rc);
+		smartLists['brand'] = getBrandService().getBrandSmartList(data=rc);
+		smartLists['promotion'] = getPromotionService().getPromotionSmartList(data=rc);
+		smartLists['order'] = getOrderService().getOrderSmartList(data=rc);
+		smartLists['account'] = getAccountService().getAccountSmartList(data=rc);
+		smartLists['vendorOrder'] = getVendorOrderService().getVendorOrderSmartList(data=rc);
+		smartLists['vendor'] = getVendorService().getVendorSmartList(data=rc);
 		
 		for(var key in smartLists) {
 			rc[ key ] = {};
