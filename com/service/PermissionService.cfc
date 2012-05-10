@@ -38,6 +38,12 @@ Notes:
 */
 component extends="BaseService" output="false" {
 
+	public any function init() {
+		variables.permissions = '';
+		
+		return super.init();
+	}
+	
 	// Uses the current mura user to check security against a given action
 	public boolean function secureDisplay(required string action) {
 		return true;
