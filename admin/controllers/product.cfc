@@ -182,4 +182,32 @@ component extends="BaseController" output=false accessors=true {
 		
 		super.genericSaveMethod('ProductImage',rc);
 	}
+	
+	public void function saveOption(required struct rc){
+		var option = getOptionService().getOption(rc.optionID,true);
+		
+		if(rc.optionImage != ''){
+			var documentData = fileUpload(getTempDirectory(),'optionImage','','makeUnique');
+			
+			if(len(option.getOptionImage()) && fileExists(expandpath(option.getImageDirectory()) & option.getOptionImage())){
+				fileDelete(expandpath(option.getImageDirectory()) & option.getOptionImage());	
+			}
+			
+			//need to handle validation at some point
+			if(documentData.contentType eq 'image'){
+				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(option.getImageDirectory()) & documentData.serverFile);
+				rc.optionImage = documentData.serverfile;
+			}else if (fileExists(expandpath(option.getImageDirectory()) & option.getOptionImage())){
+				fileDelete(expandpath(option.getImageDirectory()) & option.getOptionImage());	
+			}
+			
+		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(option.getImageDirectory()) & option.getOptionImage())){
+			fileDelete(expandpath(option.getImageDirectory()) & option.getOptionImage());	
+			rc.optionImage='';
+		}else{
+			rc.optionImage = option.getOptionImage();
+		}
+		
+		super.genericSaveMethod('Option',rc);
+	}
 }
