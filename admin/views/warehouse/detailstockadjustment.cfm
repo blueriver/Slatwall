@@ -37,8 +37,39 @@ Notes:
 
 --->
 
-<!--- Generic properties for all stockAdjustments --->
-<cfparam name="rc.stockAdjustment">
+
+
+<cfparam name="rc.stockAdjustment" type="any">
+<cfparam name="rc.edit" type="boolean">
+
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.stockAdjustment#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.stockAdjustment#" edit="#rc.edit#">
+			<cf_SlatwallActionCaller action="admin:warehouse.processStockAdjustment" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#&processContext=processStockAdjustment" type="list" modal=true />
+		</cf_SlatwallActionBar>
+			
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="stockAdjustmentType" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="fromLocation" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="toLocation" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.stockAdjustment#">
+			<cf_SlatwallTab view="admin:warehouse/stockadjustments/products" />
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
+</cfoutput>
+
+
+
+
+
+
+
+<!---<cfparam name="rc.stockAdjustment">
 <cfparam name="rc.locationSmartList">
 <cfparam name="rc.stockAdjustmentTypeSmartList">
 
@@ -134,4 +165,4 @@ Notes:
 
 	<div id="addEditStockAdjustmentItems" class="ui-helper-hidden"></div>
 	
-</cfoutput>
+</cfoutput>--->

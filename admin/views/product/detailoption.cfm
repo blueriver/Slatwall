@@ -41,17 +41,33 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.optiongroup#" edit="#rc.edit#" saveAction="admin:product.saveoptiongroup">
-		<cf_SlatwallActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#" />
-		
-		<input type="hidden" name="options[1].optionID" value="#rc.option.getOptionID()#" />
+	<cf_SlatwallDetailForm object="#rc.option#" edit="#rc.edit#" enctype="multipart/form-data">
+		<cf_SlatwallActionBar type="detail" object="#rc.option#" edit="#rc.edit#" />
+		<input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
+		<input type="hidden" name="returnAction" value="admin:product.editoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.option#" fieldName="options[1].optionName" property="optionName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.option#" fieldName="options[1].optionCode" property="optionCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.option#" fieldName="options[1].optionImage" property="optionImage" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.option#" fieldName="options[1].optionDescription" property="optionDescription" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionCode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionDescription" edit="#rc.edit#">
+			
+				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionImage" edit="#rc.edit#" fieldtype="file">
+
+				<cfif len(trim(rc.option.getOptionImage()))>
+					<cfif rc.edit>
+						<div class="control-group">
+							<label class="control-label">&nbsp;</label>
+							<div class="controls">
+								<img src="#rc.option.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /><br />
+								<input type="checkbox" name="deleteImage" value="1" /> Delete
+							</div>
+						</div>
+					<cfelse>
+						<dt class="title">&nbsp;</dt>
+						<dd class="value"><img src="#rc.option.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /></dd>
+					</cfif>	
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

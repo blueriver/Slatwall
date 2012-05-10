@@ -64,6 +64,8 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	// Related Object Properties (many-to-many)
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID";
 	
+	property name="numberBrands";
+	
 	public Vendor function init(){
 		// set default collections for association management methods
 		if(isNull(variables.vendorOrders)) {
@@ -102,6 +104,9 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	public numeric function getNumberBrands(){
+		return arrayLen(getBrands());
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

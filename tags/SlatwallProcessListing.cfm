@@ -57,7 +57,9 @@ Notes:
 							<cfset column.title = request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#column.data#" ) />
 						</cfif>
 					</cfif>
-					<th>#column.title#</th>
+					<cfif column.fieldType neq "hidden">
+						<th>#column.title#</th>
+					</cfif>
 				</cfloop>
 			</thead>
 			<tbody>
@@ -93,7 +95,11 @@ Notes:
 									<cfif len(column.propertyIdentifier)>
 										<td class="#column.tdClass#">#processRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 									<cfelseif len(column.data)>
-										<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#"></td>
+										<cfif column.fieldType neq "hidden">
+											<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#"></td>
+										<cfelse>
+											<cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#">
+										</cfif>	
 									</cfif>
 								</cfloop>
 							</tr>
@@ -108,7 +114,11 @@ Notes:
 								<cfif len(column.propertyIdentifier)>
 									<td class="#column.tdClass#">#parentRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 								<cfelseif len(column.data)>
-									<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#"></td>
+									<cfif column.fieldType neq "hidden">
+										<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#"></td>
+									<cfelse>
+										<cf_SlatwallFormField fieldname="processRecords[#hi#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#">
+									</cfif>	
 								</cfif>
 							</cfloop>
 						</tr>
