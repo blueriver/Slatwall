@@ -102,10 +102,10 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		requestData["x_cust_id"] = requestBean.getAccountID(); 
 		requestData["x_first_name"] = requestBean.getAccountFirstName(); 
 		requestData["x_last_name"] = requestBean.getAccountLastName(); 
-		requestData["x_address"] = requestBean.getBillingStreetAddress(); 
-		requestData["x_city"] = requestBean.getBillingCity(); 
-		requestData["x_state"] = requestBean.getBillingStateCode(); 
-		requestData["x_zip"] = requestBean.getBillingPostalCode();
+		requestData["x_address"] = isNull(requestBean.getBillingStreetAddress()) ? "":requestBean.getBillingStreetAddress(); 
+		requestData["x_city"] = isNull(requestBean.getBillingCity()) ? "":requestBean.getBillingCity(); 
+		requestData["x_state"] = isNull(requestBean.getBillingStateCode()) ? "xx":requestBean.getBillingStateCode(); 
+		requestData["x_zip"] = isNull(requestBean.getBillingPostalCode()) ? "":requestBean.getBillingPostalCode();
 		
 		if(!isNull(requestBean.getAccountPrimaryPhoneNumber())) {
 			requestData["x_phone"] = requestBean.getAccountPrimaryPhoneNumber();	
