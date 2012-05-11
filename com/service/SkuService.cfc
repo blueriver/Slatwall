@@ -196,7 +196,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public array function getProductSkus(required any product, required boolean sorted, boolean fetchOptions=false) {
 		var skus = getDAO().getProductSkus(product=arguments.product, fetchOptions=arguments.fetchOptions);
 		
-		if(arguments.sorted && arrayLen(skus) gt 1) {
+		if(arguments.sorted && arrayLen(skus) gt 1 && arrayLen(skus[1].getOptions())) {
 			var sortedSkuIDQuery = getDAO().getSortedProductSkusID( productID = arguments.product.getProductID() );
 			var sortedArray = arrayNew(1);
 			var sortedArrayReturn = arrayNew(1);

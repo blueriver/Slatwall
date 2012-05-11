@@ -76,6 +76,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		requestData = listAppend(requestData,getLoginNVP(),"&");
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
 		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
+		
 		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
 			requestData = listAppend(requestData,"ORIGID=#requestBean.getProviderTransactionID()#","&");
 		}

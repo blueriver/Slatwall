@@ -205,25 +205,21 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return amountCredited;
 	}
 	
-	// Credit Card & Check Specific
+
 	public numeric function getAmountAuthorized() {
 		var amountAuthorized = 0;
+			
+		switch(getPaymentMethodType()) {
 		
-		// We only show 'credited' for credited payments
-		if( getOrderPaymentType().getSystemCode() == "optCredit" ) {
-			
-			switch(getPaymentMethodType()) {
-			
-				case "creditCard" :
-					amountAuthorized = 0;
-					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-						amountAuthorized = precisionEvaluate(amountAuthorized + getCreditCardTransactions()[i].getAmountAuthorized());
-					}
-					break;
-					
-				default :
-					amountAuthorized = getAmount();
-			}
+			case "creditCard" :
+				amountAuthorized = 0;
+				for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+					amountAuthorized = precisionEvaluate(amountAuthorized + getCreditCardTransactions()[i].getAmountAuthorized());
+				}
+				break;
+				
+			default :
+				amountAuthorized = getAmount();
 		}
 		
 		return amountAuthorized;
