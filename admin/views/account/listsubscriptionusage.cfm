@@ -55,6 +55,8 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="account.lastName" filter="false" search="false" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="renewalPrice" />
 	<cf_SlatwallListingColumn propertyIdentifier="nextBillDate" />
+	<cf_SlatwallListingColumn propertyIdentifier="expirationDate" />
+	<cf_SlatwallListingColumn propertyIdentifier="autoPayFlag" />
 
 </cf_SlatwallListingDisplay>
 

@@ -226,7 +226,13 @@ component extends="BaseService" accessors="true" {
 		
 		switch(arguments.processContext){
 			case 'bulkupdate':
-				getOptionService().updateAllSKUPricesForProduct(arguments.product.getProductID(),arguments.data.skuPrice);
+				var skus = 	arguments.product.getSkus();
+				if(arrayLen(skus)){
+					for(i=1; i <= arrayLen(skus); i++){
+						skus[i].setPrice(arguments.data.skuPrice);
+					}
+				}
+				//getOptionService().updateAllSKUPricesForProduct(arguments.product.getProductID(),arguments.data.skuPrice);
 			break;
 			
 			case 'addOptionGroup':
@@ -257,6 +263,7 @@ component extends="BaseService" accessors="true" {
 						sku.addOption(getOptionService().getOption(listGetAt(skuData[i],j,'|')));
 					}
 					
+					sku.setPrice(product.getPrice());
 					product.addSku(sku);
 				}
 			break;

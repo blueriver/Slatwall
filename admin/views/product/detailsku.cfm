@@ -59,28 +59,40 @@ Notes:
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="skuCode" edit="#rc.edit#">
 				
-				<cfset skuOptions = rc.$.slatwall.getService('productService').getFormattedOptionGroups(rc.product)/>
-				<cfset count=1/>
-				<cfloop collection="#skuOptions#" item="option" >
-					<cf_SlatwallFieldDisplay fieldName="options" title="#option#" value="" valueoptions="#skuOptions[option]#" fieldtype="select" edit="#rc.edit#">
-					<cfset count++ />
-				</cfloop>
+				<cfif rc.sku.isNew()>
+					<cfset skuOptions = rc.$.slatwall.getService('productService').getFormattedOptionGroups(rc.product)/>
+					<cfset count=1/>
+					<cfloop collection="#skuOptions#" item="option" >
+						<cf_SlatwallFieldDisplay fieldName="options" title="#option#" value="" valueoptions="#skuOptions[option]#" fieldtype="select" edit="#rc.edit#">
+						<cfset count++ />
+					</cfloop>
+				</cfif>
 				
-				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="imageFile" edit="#rc.edit#" fieldtype="file">
-
-				<cfif len(trim(rc.sku.getImageFile()))>
+				<cfif !rc.sku.isNew()>
+					<cf_SlatwallPropertyDisplay object="#rc.sku#" property="imageFile" edit="#rc.edit#" fieldtype="file">
 					<cfif rc.edit>
 						<div class="control-group">
 							<label class="control-label">&nbsp;</label>
 							<div class="controls">
-								<img src="#rc.sku.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /><br />
-								<input type="checkbox" name="deleteImage" value="1" /> Delete
+								<input type="checkbox" name="imageExclusive" value="1" checked/> 
+								#rc.$.Slatwall.rbKey("entity.Sku.exclusive")#<br />
 							</div>
-						</div>
-					<cfelse>
-						<dt class="title">&nbsp;</dt>
-						<dd class="value"><img src="#rc.sku.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /></dd>
+						</div>	
 					</cfif>	
+					<cfif len(trim(rc.sku.getImageFile()))>
+						<cfif rc.edit>
+							<div class="control-group">
+								<label class="control-label">&nbsp;</label>
+								<div class="controls">
+									<img src="#rc.sku.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /><br />
+									<input type="checkbox" name="deleteImage" value="1" /> Delete<br />
+								</div>
+							</div>
+						<cfelse>
+							<dt class="title">&nbsp;</dt>
+							<dd class="value"><img src="#rc.sku.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /></dd>
+						</cfif>	
+					</cfif>
 				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>

@@ -40,14 +40,16 @@ Notes:
 
 <cf_SlatwallListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#"
 						   recordEditAction="admin:account.editsubscriptionUsage"
-						   recordEditQueryString="returnAction=admin:account.detailaccount&accountID=#rc.account.getAccountID()###tabsubscriptions"
+						   recordEditQueryString="returnAction=admin:account.detailaccount&accountID=#rc.account.getAccountID()#"
 						   recordEditModal=true
 						   recordProcessAction="admin:account.processSubscriptionUsage&processContext=manualRenew"
 						   recordProcessModal=true
-						   recordProcessQueryString="returnaction=admin:account.detailaccount&accountID=#rc.account.getAccountID()###tabsubscriptions">
+						   recordProcessQueryString="returnaction=admin:account.detailaccount&accountID=#rc.account.getAccountID()#">
 
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="renewalPrice" />
 	<cf_SlatwallListingColumn propertyIdentifier="nextBillDate" />
+	<cf_SlatwallListingColumn propertyIdentifier="expirationDate" />
+	<cf_SlatwallListingColumn propertyIdentifier="autoPayFlag" />
 </cf_SlatwallListingDisplay>

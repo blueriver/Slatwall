@@ -74,9 +74,9 @@ Notes:
 					<cfset locations = rc.$.slatwall.getService('LocationService').getLocationOptions() /> 
 					
 					<cfif arrayLen(vendorOrder.getVendorOrderItemsSmartList().getRecords())>
-						<cf_SlatwallFieldDisplay title="Box Count" fieldtype="text" fieldname="additionalData.boxcount" edit="true">
-						<cf_SlatwallFieldDisplay title="Packing Slip Number" fieldtype="text" fieldname="additionalData.packingslipnumber" edit="true">
-						<cf_SlatwallFieldDisplay title="Location" fieldname="additionalData.locationID" fieldType="select" valueOptions="#locations#" edit="true">
+						<cf_SlatwallFieldDisplay title="Box Count" fieldtype="text" fieldname="processOptions.boxcount" edit="true">
+						<cf_SlatwallFieldDisplay title="Packing Slip Number" fieldtype="text" fieldname="processOptions.packingslipnumber" edit="true">
+						<cf_SlatwallFieldDisplay title="Location" fieldname="processOptions.locationID" fieldType="select" valueOptions="#locations#" edit="true">
 					
 						<cf_SlatwallProcessListing processSmartList="#vendorOrder.getVendorOrderItemsSmartList()#">
 							<cf_SlatwallProcessColumn propertyIdentifier="stock.sku.skucode" />
