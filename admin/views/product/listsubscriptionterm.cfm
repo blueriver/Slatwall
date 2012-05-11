@@ -42,7 +42,9 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.subscriptionTermSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.subscriptionTermSmartList#" recordEditAction="admin:product.editsubscriptionterm">
+<cf_SlatwallListingDisplay smartList="#rc.subscriptionTermSmartList#"
+						recordDetailAction="admin:product.detailsubscriptionterm"
+						recordEditAction="admin:product.editsubscriptionterm">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionTermName" />
 </cf_SlatwallListingDisplay>
 

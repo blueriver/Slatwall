@@ -42,7 +42,9 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.subscriptionBenefitSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.subscriptionBenefitSmartList#" recordEditAction="admin:product.editsubscriptionbenefit">
+<cf_SlatwallListingDisplay smartList="#rc.subscriptionBenefitSmartList#" 
+							recordDetailAction="admin:product.detailsubscriptionbenefit"
+						   	recordEditAction="admin:product.editsubscriptionbenefit">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionBenefitName" />
 </cf_SlatwallListingDisplay>
 
