@@ -46,6 +46,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="price" ormtype="big_decimal" formatType="currency" default="0";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency" default="0";
 	property name="imageFile" ormtype="string" length="50";
+	property name="userDefinedPriceFlag" ormtype="boolean" default="0";
+	
 	
 	// Related Object Properties (many-to-one)
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
@@ -88,7 +90,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="defaultFlag" type="boolean" persistent="false";
 	
 	
-
     public boolean function getDefaultFlag() {
     	if(getProduct().getDefaultSku().getSkuID() == getSkuID()) {
     		return true;

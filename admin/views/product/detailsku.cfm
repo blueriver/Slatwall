@@ -51,11 +51,21 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="activeFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="userDefinedPriceFlag" edit="#rc.edit#">
+				
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="price" edit="#rc.edit#">
 				<cfif rc.product.getBaseProductType() EQ "subscription">
 					<cf_SlatwallPropertyDisplay object="#rc.sku#" property="renewalPrice" edit="#rc.edit#">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="skuCode" edit="#rc.edit#">
+				
+				<cfset skuOptions = rc.$.slatwall.getService('productService').getFormattedOptionGroups(rc.product)/>
+				<cfset count=1/>
+				<cfloop collection="#skuOptions#" item="option" >
+					<cf_SlatwallFieldDisplay fieldName="options" title="#option#" value="" valueoptions="#skuOptions[option]#" fieldtype="select" edit="#rc.edit#">
+					<cfset count++ />
+				</cfloop>
+				
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="imageFile" edit="#rc.edit#" fieldtype="file">
 
 				<cfif len(trim(rc.sku.getImageFile()))>
