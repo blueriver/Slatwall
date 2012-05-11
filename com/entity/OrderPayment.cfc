@@ -83,10 +83,6 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="securityCode" persistent="false";
 		
 	public any function init() {
-		// set the payment type to charge by default
-		if( !structKeyExists(variables,"orderPaymentType") ) {
-			setOrderPaymentType( getService("typeService").getTypeBySystemCode("optCharge") );
-		}
 		if(isNull(variables.amount)) {
 			variables.amount = 0;
 		}
@@ -271,6 +267,17 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	// =============== START: Custom Formatting Methods ====================
 	
 	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+
+	public void function getOrderPaymentType() {
+		if( !structKeyExists(variables, "orderPaymentType") ) {
+			variables.orderPaymentType = getService("typeService").getTypeBySystemCode("optCharge");
+		}
+		return variables.orderPaymentType;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
 	
@@ -311,6 +318,13 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		
+		// Verify Defaults are Set
+		getOrderPaymentType();
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

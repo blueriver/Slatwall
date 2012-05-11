@@ -83,19 +83,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="taxAmount" persistent="false" formatType="currency" ;
 	property name="itemTotal" persistent="false" formatType="currency" ; 
 
-	public any function init() {
-		
-		// set the type to sale by default
-		if( !structKeyExists(variables,"orderItemType") ) {
-			setOrderItemType( getService("typeService").getTypeBySystemCode("oitSale") );
-		}
-		// set status to new by default
-		if( !structKeyExists(variables,"orderItemStatusType") ) {
-			setOrderItemStatusType( getService("typeService").getTypeBySystemCode("oistNew") );
-		}
-		
-		return super.init();
-	}
 
 	public numeric function getMaximumOrderQuantity() {
 		var maxQTY = getSku().setting('skuOrderMaximumQuantity');
@@ -375,6 +362,24 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public void function getOrderItemType() {
+		if( !structKeyExists(variables, "orderItemType") ) {
+			variables.orderItemType = getService("typeService").getTypeBySystemCode("oitSale");
+		}
+		return variables.orderItemType;
+	}
+	
+	public void function getOrderItemStatusType() {
+		if( !structKeyExists(variables, "orderItemStatusType") ) {
+			variables.orderItemStatusType = getService("typeService").getTypeBySystemCode("oistNew");
+		}
+		return variables.orderItemStatusType;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+	
 	// ================== START: Overridden Methods ========================
 
 	public string function getSimpleRepresentation() {
@@ -384,6 +389,15 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		
+		// Verify Defaults are Set
+		getOrderItemType();
+		getOrderItemStatusType();
+		
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

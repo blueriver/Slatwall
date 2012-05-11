@@ -58,21 +58,6 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	
 	property name="displayName";
 	
-	public any function init() {
-		
-		// Set the default type
-		if(isNull(variables.stockAdjustmentType)) {
-			variables.stockAdjustmentType = getService("typeService").getTypeBySystemCode('satLocationTransfer');
-		}
-		
-		// Set the default status type
-		if(isNull(variables.stockAdjustmentStatusType)) {
-			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode('sastNew');
-		}
-		
-		return super.init();
-	}
-	
 	// For use with Adjustment Items interface, get one location that we will use for stock lookup. 
 	public any function getOneLocation() {
 		if(getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || getStockAdjustmentType().getSystemCode() == "satManualIn") {
@@ -129,7 +114,7 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	
 	
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// ============ START: Non-Persistent Property Methods =================
 	
 	// Stock Adjustment Items (one-to-many)
 	public void function addStockAdjustmentItem(required any stockAdjustmentItem) {
@@ -140,18 +125,39 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	   arguments.stockAdjustmentItem.removeStockAdjustment( this );
 	}
 	
-	/************   END Association Management Methods   *******************/
-	
-	// ============ START: Non-Persistent Property Methods =================
-	
-	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ============== START: Overridden Implicet Getters ===================
+
+	public void function getStockAdjustmentType() {
+		if( !structKeyExists(variables, "stockAdjustmentType") ) {
+			variables.stockAdjustmentType = getService("typeService").getTypeBySystemCode("satLocationTransfer");
+		}
+		return variables.stockAdjustmentType;
+	}
+	
+	public void function getStockAdjustmentStatusType() {
+		if( !structKeyExists(variables, "stockAdjustmentStatusType") ) {
+			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode("sastNew");
+		}
+		return variables.stockAdjustmentStatusType;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		
+		// Verify Defaults are Set
+		getStockAdjustmentType();
+		getStockAdjustmentStatusType();
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

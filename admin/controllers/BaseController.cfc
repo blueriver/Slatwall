@@ -70,10 +70,12 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		if(!listFindNocase(permissionService.getPublicMethods(sectionName),rc.slatAction)){
 		
 			//check if the user is logged in
+			/*
 			if(!val(getSlatwallScope().getCurrentAccount().getAccountID())){
 				writedump('You must login!');
 				abort;
 			}
+			*/
 			
 			//check if the user has access to everything, i.e. * permissions
 			//check if they have access to that private page	

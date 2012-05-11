@@ -92,19 +92,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="totalItems" persistent="false";
 	property name="totalQuantity" persistent="false";
 	
-	public any function init() {
-		// Set the default order status type as not placed
-		if(isNull(getOrderStatusType())) {
-			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');
-		}
-		
-		// Set the default type to purchase order
-		if(isNull(getOrderType())) {
-			variables.orderType = getService("typeService").getTypeBySystemCode('otSalesOrder');
-		}
-
-		return super.init();
-	}
 	
 	public string function getStatus() {
 		return getOrderStatusType().getType();
@@ -486,6 +473,24 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public any function getOrderStatusType() {
+		if(isNull(variables.orderStatusType)) {
+			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');
+		}
+		return variables.orderStatusType;
+	}
+	
+	public any function getOrderType() {
+		if(isNull(variables.orderType)) {
+			variables.orderType = getService("typeService").getTypeBySystemCode('otSalesOrder');
+		}
+		return variables.orderType;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+	
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentationPropertyName() {
@@ -512,6 +517,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	public void function preInsert(){
 		super.preInsert();
+		
+		// Verify Defaults are Set
+		getOrderType();
+		getOrderStatusType();
+		
 		confirmOrderNumberOpenDateCloseDate();
 		getService("productCacheService").updateFromOrder( this );
 	}
