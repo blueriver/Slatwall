@@ -264,10 +264,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			discountAmount=0
 		};
 		
-		var promotionRewards = getDAO().getActivePromotionRewards( rewardType="fulfillment", promotionCodeList=arguments.shippingMethodOption.getOrderFulfillment().getOrder().getPromotionCodeList() );
-		
-		writeDump(var=promotionRewards, top=2);
-		abort;
+		var promotionRewards = getDAO().getActivePromotionRewards( rewardTypeList="fulfillment", promotionCodeList=arguments.shippingMethodOption.getOrderFulfillment().getOrder().getPromotionCodeList() );
 		
 		// Loop over the Promotion Rewards to look for the best discount
 		for(var i=1; i<=arrayLen(promotionRewards); i++) {

@@ -57,6 +57,7 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="defaultFlag" />
 		<cf_SlatwallListingColumn propertyIdentifier="imageFile" />
 		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="userDefinedPriceFlag" />
 		<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="salePriceExpirationDateTime" range="true" />
 	</cf_SlatwallListingDisplay>
