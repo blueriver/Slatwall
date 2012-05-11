@@ -41,7 +41,9 @@ Notes:
 <cfoutput>
 	<cf_SlatwallActionBar type="listing" object="#rc.productReviewSmartList#" createAction="" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#" recordEditAction="admin:product.editproductreview">
+	<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#"
+								recordDetailAction="admin:product.detailproductreview"
+								recordEditAction="admin:product.editproductreview">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="reviewTitle" />
 		<cf_SlatwallListingColumn propertyIdentifier="reviewerName" />
 		<cf_SlatwallListingColumn propertyIdentifier="rating" />

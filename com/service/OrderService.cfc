@@ -1122,7 +1122,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			} else if (arguments.data.transactionType == "chargePreAuthorization" && maxCapturable >= arguments.data.amount && arguments.orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
 				
 				// If not explicitly defined providerTransactionID was passed in, then we can loop over previous transactions for authroization codes to capture the amount we need.
-				if(!structKeyExists(arguments.data, "providerTransactionID")) {
+				if(!len(arguments.data.providerTransactionID)) {
 					var totalCaptured = 0;
 					
 					for(var i=1; i<=arrayLen(arguments.orderPayment.getCreditCardTransactions()); i++) {
@@ -1133,6 +1133,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							if(arguments.data.amount - totalCaptured > capturableAmount) {
 								capturableAmount = totalCaptured - arguments.data.amount;
 							}
+							
+							arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
 							
 							var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, capturableAmount, arguments.data.providerTransactionID);
 							

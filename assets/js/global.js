@@ -255,7 +255,9 @@ function setupEventHandlers() {
 	// Listing Display - Multiselect
 	jQuery('body').on('click', '.table-action-multiselect', function(e){
 		e.preventDefault();
-		tableMultiselectClick( this );
+		if(!jQuery(this).hasClass('disabled')){
+			tableMultiselectClick( this );
+		}
 	});
 }
 

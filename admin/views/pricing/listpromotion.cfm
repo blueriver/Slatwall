@@ -42,7 +42,9 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.promotionSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.promotionSmartList#" recordEditAction="admin:pricing.editpromotion">
+<cf_SlatwallListingDisplay smartList="#rc.promotionSmartList#"
+						   recorddetailaction="admin:pricing.detailpromotion"
+						   recordEditAction="admin:pricing.editpromotion">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionName" />
 	<cf_SlatwallListingColumn propertyIdentifier="currentFlag" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />

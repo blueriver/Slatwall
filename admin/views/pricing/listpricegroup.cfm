@@ -42,7 +42,9 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.priceGroupSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.priceGroupSmartList#" recordEditAction="admin:pricing.editpricegroup">
+<cf_SlatwallListingDisplay smartList="#rc.priceGroupSmartList#" 
+							recordDetailAction="admin:pricing.detailpricegroup"
+							recordEditAction="admin:pricing.editpricegroup">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
 	<cf_SlatwallListingColumn propertyIdentifier="priceGroupCode" />
 	<!---<cf_SlatwallListingColumn propertyIdentifier="inheritsFrom" />--->

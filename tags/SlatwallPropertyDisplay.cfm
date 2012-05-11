@@ -99,6 +99,12 @@ Notes:
 	--->
 	
 	<cfsilent>
+		
+		<!--- Set Up whatever fieldtype this should be --->
+		<cfif attributes.fieldType eq "">
+			<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
+		</cfif>
+		
 		<!--- Set Up The Value --->
 		<cfif attributes.value eq "">
 
@@ -121,7 +127,7 @@ Notes:
 				<cfset thisValueList = "" />
 				<cfloop array="#attributes.value#" index="thisValue">
 					<cfif isObject(thisValue) && thisValue.isPersistent()>
-						<cfif attributes.edit>
+						<cfif attributes.edit or attributes.fieldType eq "listingMultiselect">
 							<cfset thisValueList = listAppend(thisValueList, thisValue.getIdentifierValue()) />
 						<cfelse>
 							<cfset thisValueList = listAppend(thisValueList, " #thisValue.getSimpleRepresentation()#") />
@@ -155,13 +161,10 @@ Notes:
 		</cfif>
 		
 		<!--- If this is in edit mode then get the pertinent field info --->
-		<cfif attributes.edit>
+		<cfif attributes.edit or attributes.fieldType eq "listingMultiselect">
 			<cfset attributes.fieldClass = listAppend(attributes.fieldClass, attributes.object.getPropertyValidationClass( attributes.property ), " ") />
 			<cfif attributes.fieldName eq "">
 				<cfset attributes.fieldName = attributes.object.getPropertyFieldName( attributes.property ) />
-			</cfif>
-			<cfif attributes.fieldType eq "">
-				<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
 			</cfif>
 			<cfif listFindNoCase("checkboxgroup,radiogroup,select,multiselect", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
 				<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
@@ -169,7 +172,7 @@ Notes:
 				<cfset attributes.valueOptionsSmartList = attributes.object.invokeMethod( "get#attributes.property#OptionsSmartList" ) />
 			</cfif>
 		</cfif>
-		
+			
 		<!--- Add the error class to the form field if it didn't pass validation --->
 		<cfif attributes.object.hasError(attributes.property)>
 			<cfset attributes.fieldClass = attributes.fieldClass & " error" />

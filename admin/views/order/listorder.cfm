@@ -43,7 +43,9 @@ Notes:
 
 <cf_SlatwallActionBar type="listing" object="#rc.orderSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" recordDetailAction="admin:order.detailorder">
+<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
+							recordDetailAction="admin:order.detailorder"
+							recordEditAction="admin:order.editorder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderType.type" filter=true />

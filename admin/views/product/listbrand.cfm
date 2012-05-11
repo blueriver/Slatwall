@@ -42,7 +42,9 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.brandSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.brandSmartList#" recordEditAction="admin:product.editbrand">
+<cf_SlatwallListingDisplay smartList="#rc.brandSmartList#"
+						recordDetailAction="admin:product.detailbrand"
+						recordEditAction="admin:product.editbrand">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="brandName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="brandWebsite" sort="false" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />

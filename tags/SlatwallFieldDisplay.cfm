@@ -145,7 +145,11 @@ Notes:
 					<cfif attributes.valueLink neq "">
 						<a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a>
 					<cfelse>
-						#attributes.value#	
+						<cfif attributes.fieldType eq "listingMultiselect">
+							<cf_SlatwallListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectFieldClass="#attributes.fieldClass#" multiselectvalues="#attributes.value#" edit="false"></cf_SlatwallListingDisplay>
+						<cfelse>
+							#attributes.value#
+						</cfif>
 					</cfif>
 				</cfoutput>
 			</cfif>
