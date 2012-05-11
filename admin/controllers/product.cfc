@@ -128,20 +128,35 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function saveSku(required struct rc){
 		var sku = getSkuService().getSku(rc.skuID,true);
+		var imageNameToUse='';
 		
-		if(rc.imageFile != ''){
+		if(StructKeyExists(rc,'imageFile') && rc.imageFile != ''){
 			var documentData = fileUpload(getTempDirectory(),'imageFile','','makeUnique');
 			
+			//if overwriting old image, delete image			
 			if(len(sku.getImageFile()) && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
 				fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
 			}
 			
+			
+			//set up image name
+			if(structKeyExists(rc,'imageExclusive') && rc.imageExclusive){
+				imageNameToUse = rc.skucode & '.jpg';
+			}else{
+				imageNameToUse=sku.generateImageFileName();
+			}
+			
 			//need to handle validation at some point
 			if(documentData.contentType eq 'image'){
-				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(sku.getImageDirectory()) & documentData.serverFile);
-				rc.imageFile = documentData.serverfile;
-			}else if(fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
-				fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
+				if(fileExists(expandpath(sku.getImageDirectory()) & imageNameToUse)){
+					fileDelete(expandpath(sku.getImageDirectory()) & imageNameToUse);
+				}
+				
+				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(sku.getImageDirectory()) & imageNameToUse);
+				rc.imageFile = imageNameToUse;
+				
+			}else{
+				fileDelete(documentData.serverDirectory & '/' & documentData.serverFile);	
 			}
 			
 		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
