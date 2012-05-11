@@ -58,7 +58,7 @@ Notes:
 		<cf_SlatwallTab view="admin:account/accounttabs/addresses" />
 		<cf_SlatwallTab view="admin:account/accounttabs/orders" />
 		<cf_SlatwallTab view="admin:account/accounttabs/paymentmethods" />
-		<cf_SlatwallTab view="admin:account/accounttabs/subscriptions" />
+		<cf_SlatwallTab view="admin:account/accounttabs/subscriptionusage" />
 		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />
 		<cf_SlatwallTab view="admin:account/accounttabs/productreviews" />
 		<cf_SlatwallTab view="admin:account/accounttabs/customattributes" />

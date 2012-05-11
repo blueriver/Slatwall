@@ -105,7 +105,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(!isNull(arguments.orderItem.getSku().getSubscriptionTerm())) {
 			// check if orderItem is assigned to a subscriptionOrderItem
 			var subscriptionOrderItem = this.getSubscriptionOrderItem({orderItem=arguments.orderItem});
-			if(isNull(arguments.subscriptionOrderItem)) {
+			if(isNull(subscriptionOrderItem)) {
 				// new orderItem, setup subscription
 				setupInitialSubscriptionOrderItem(arguments.orderItem);
 			} else {
@@ -142,6 +142,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// set next bill date
 		subscriptionUsage.setNextBillDate(arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getEndDate());
+		subscriptionUsage.setExpirationDate(subscriptionUsage.getNextBillDate());
 		
 		// add active status to subscription usage
 		setSubscriptionUsageStatus(subscriptionUsage, 'sstActive');
@@ -286,8 +287,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// set the account for order
 				order.setAccount(arguments.subscriptionUsage.getAccount());
 	
-				// add order item to order
-				getOrderService().addOrderItem(order=order,sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(),data={fulfillmentMethodID="444df2ffeca081dc22f69c807d2bd8fe"});
+				// add order item to order, set the fulfillment methodID to auto
+				var itemData = {fulfillmentMethodID="444df2ffeca081dc22f69c807d2bd8fe"};
+				getOrderService().addOrderItem(order=order,sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(),data=itemData);
 	
 				// set the orderitem price to renewal price
 				order.getOrderItems()[1].setPrice(arguments.subscriptionUsage.getRenewalPrice());
@@ -300,15 +302,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				this.saveSubscriptionOrderItem(subscriptionOrderItem);
 
 				// save order for processing
-				getOrderService().saveOrder(order);
+				getOrderService().getDAO().save(order);
 		
 				// set next bill date, calculated from the last bill date
 				// need setting to decide what start date to use for next bill date calculation
 				arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
 					
-				// save subscriptionUsage
-				this.saveSubscriptionUsage(arguments.subscriptionUsage);
-				
 				// flush session to make sure order is persisted to DB
 				getDAO().flushORMSession();
 					
@@ -366,12 +365,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// set the account for order
 			order.setAccount(arguments.subscriptionUsage.getAccount());
 			
-			// That's right! A write log with getter makes it work, and abort is ignored!! Sumit
-			writelog(file="slatwall", text="order account null 2: #isNull(order.getAccount())#");
-			abort;
-
-			// add order item to order
-			getOrderService().addOrderItem(order=order,sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(),data={fulfillmentMethodID="444df2ffeca081dc22f69c807d2bd8fe"});
+			// add order item to order, set the fulfillment methodID to auto
+			var itemData = {fulfillmentMethodID="444df2ffeca081dc22f69c807d2bd8fe"};
+			getOrderService().addOrderItem(order=order,sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(),data=itemData);
 
 			// set the orderitem price to renewal price
 			order.getOrderItems()[1].setPrice(arguments.subscriptionUsage.getRenewalPrice());
@@ -384,15 +380,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			this.saveSubscriptionOrderItem(subscriptionOrderItem);
 
 			// save order for processing
-			getOrderService().saveOrder(order);
+			getOrderService().getDAO().save(order);
 	
 			// set next bill date, calculated from the last bill date
 			// need setting to decide what start date to use for next bill date calculation
 			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
 				
-			// save subscriptionUsage
-			this.saveSubscriptionUsage(arguments.subscriptionUsage);
-
 			// flush session to make sure order is persisted to DB
 			getDAO().flushORMSession();
 		}	
