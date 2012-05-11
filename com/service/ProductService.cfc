@@ -51,30 +51,21 @@ component extends="BaseService" accessors="true" {
 	public any function getProductSmartList(struct data={}, currentURL="") {
 		arguments.entityName = "SlatwallProduct";
 		
-		// Set the defaul showing to 25
-		if(!structKeyExists(arguments.data, "P:Show")) {
-			arguments.data["P:Show"] = 25;
-		}
-		
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
 		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
 		
-		smartList.joinRelatedProperty("SlatwallProduct","productType");
-		smartList.joinRelatedProperty("SlatwallProduct","defaultSku");
+		smartList.joinRelatedProperty("SlatwallProduct", "productType");
+		smartList.joinRelatedProperty("SlatwallProduct", "defaultSku");
+		smartList.joinRelatedProperty("SlatwallProduct", "brand", "left");
 		
 		return smartList;
 	}
 	
 	public any function getProductTypeSmartList(struct data={}, currentURL="") {
 		arguments.entityName = "SlatwallProductType";
-		
-		// Set the defaul showing to 25
-		if(!structKeyExists(arguments.data, "P:Show")) {
-			arguments.data["P:Show"] = 25;
-		}
 		
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
@@ -303,5 +294,8 @@ component extends="BaseService" accessors="true" {
 		return arguments.storage;
 	}
 	
+	// =================== START: SMART LIST OVERRIDES ========================
+	
+	// ===================  END: SMART LIST OVERRIDES =========================
 	
 }

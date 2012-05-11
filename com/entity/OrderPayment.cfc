@@ -270,7 +270,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	// ============== START: Overridden Implicet Getters ===================
 
-	public void function getOrderPaymentType() {
+	public any function getOrderPaymentType() {
 		if( !structKeyExists(variables, "orderPaymentType") ) {
 			variables.orderPaymentType = getService("typeService").getTypeBySystemCode("optCharge");
 		}

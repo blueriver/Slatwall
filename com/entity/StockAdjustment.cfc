@@ -133,14 +133,14 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	
 	// ============== START: Overridden Implicet Getters ===================
 
-	public void function getStockAdjustmentType() {
+	public any function getStockAdjustmentType() {
 		if( !structKeyExists(variables, "stockAdjustmentType") ) {
 			variables.stockAdjustmentType = getService("typeService").getTypeBySystemCode("satLocationTransfer");
 		}
 		return variables.stockAdjustmentType;
 	}
 	
-	public void function getStockAdjustmentStatusType() {
+	public any function getStockAdjustmentStatusType() {
 		if( !structKeyExists(variables, "stockAdjustmentStatusType") ) {
 			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode("sastNew");
 		}
