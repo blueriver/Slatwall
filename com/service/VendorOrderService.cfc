@@ -127,7 +127,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getSkusOrdered(arguments.vendorOrderId);
 	}
 	
-	public any function processVendorOrder(required any vendorOrder, struct data={}, string processContext="process", struct additionalData={}){
+	public any function processVendorOrder(required any vendorOrder, struct data={}, string processContext="process"){
 		
 		switch(arguments.processcontext){
 			case 'addOrderItems':
@@ -146,14 +146,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			case 'receiveStock':
 				if(val(arguments.data.quantity)){
-					var stockReceiver = getStockService().getStockReceiverByPackingSlipNumber(arguments.additionaldata.packingSlipNumber);
+						
+					var stockReceiver = getStockService().getStockReceiverByPackingSlipNumber(arguments.data.packingSlipNumber);
 					var stockreceiverItem = new('StockReceiverItem');
 					var vendorOrderItem = get('VendorOrderItem',arguments.data.vendorOrderItemID);
-					var location = getLocationService().getLocation(arguments.additionaldata.locationID);
+					var location = getLocationService().getLocation(arguments.data.locationID);
 					var stock = vendorOrderItem.getStock();
 					
 					stockReceiver.setReceiverType('vendorOrder');
-					stockReceiver.setBoxCount(arguments.additionaldata.boxcount);
+					stockReceiver.setBoxCount(arguments.data.boxcount);
 					
 					stockreceiverItem.setQuantity(arguments.data.quantity);
 					stockReceiverItem.setStock(stock);
