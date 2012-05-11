@@ -49,6 +49,7 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="optionGroupName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="optionGroupCode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="imageGroupFlag" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
