@@ -289,12 +289,14 @@ component extends="BaseService" accessors="true" {
 	private any function buildSkuCombinations(Array storage, numeric position, any data, String currentOption){
 		var keys = StructKeyList(arguments.data);
 		var i = 1;
-				
-		for(i=1; i<= arrayLen(arguments.data[listGetAt(keys,position)]); i++){
-			if(arguments.position eq listlen(keys)){
-				arrayAppend(arguments.storage,arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value) ;
-			}else{
-				arguments.storage = buildSkuCombinations(arguments.storage,arguments.position + 1, arguments.data, arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value);
+		
+		if(listlen(keys)){		
+			for(i=1; i<= arrayLen(arguments.data[listGetAt(keys,position)]); i++){
+				if(arguments.position eq listlen(keys)){
+					arrayAppend(arguments.storage,arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value) ;
+				}else{
+					arguments.storage = buildSkuCombinations(arguments.storage,arguments.position + 1, arguments.data, arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value);
+				}
 			}
 		}
 		
