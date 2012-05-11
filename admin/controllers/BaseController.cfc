@@ -413,3 +413,4 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		return queryString;
 	}
 }
+

@@ -258,13 +258,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	// process a subscription usage
 	public any function processSubscriptionUsage(required any subscriptionUsage, struct data={}, any processContext="update") {
+		logSlatwall("PS 1", true);
 		if(arguments.processContext == 'autoRenew') {
+			logSlatwall("PS 2", true);
 			return autoRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
 		} else if(arguments.processContext == 'manualRenew') {
+			logSlatwall("PS 3", true);
 			return manualRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
 		} else if(arguments.processContext == 'retry') {
+			logSlatwall("PS 4", true);
 			return retryRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
 		} else if(arguments.processContext == 'cancel') {
+			logSlatwall("PS 5", true);
 			return cancelSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
 		}
 	}
@@ -350,9 +355,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	// renew a subscription usage manually
 	private any function manualRenewSubscriptionUsage(required any subscriptionUsage, struct data={}) {
+		logSlatwall("MR Start", true);
 		// first check if there is an open order for renewal, if there is, use it else create a new one
 		for(var subscriptionOrderItem in arguments.subscriptionUsage.getSubscriptionOrderItems()) {
+			logSlatwall("F 1", true);
 			if(subscriptionOrderItem.getSubscriptionOrderItemType().getSystemCode() == 'soitRenewal' && subscriptionOrderItem.getOrderItem().getOrder().getOrderStatusType().getSystemCode() != 'ostClosed') {
+				logSlatwall("F 2", true);
 				var order = subscriptionOrderItem.getOrderItem().getOrder();
 			}
 		}	
@@ -362,62 +370,67 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// set order status to new (aka placed)
 			order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
-
+			
 			// set the account for order
 			order.setAccount(arguments.subscriptionUsage.getAccount());
 			
-			// That's right! A write log with getter makes it work, and abort is ignored!! Sumit
-			writelog(file="slatwall", text="order account null 2: #isNull(order.getAccount())#");
-			abort;
-
+			var newdata = {};
+			newdata.fulfillmentMethodID = "444df2ffeca081dc22f69c807d2bd8fe";
+			
 			// add order item to order
-			getOrderService().addOrderItem(order=order,sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(),data={fulfillmentMethodID="444df2ffeca081dc22f69c807d2bd8fe"});
-
+			getOrderService().addOrderItem(order=order, sku=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku(), data=newdata);
+			
 			// set the orderitem price to renewal price
 			order.getOrderItems()[1].setPrice(arguments.subscriptionUsage.getRenewalPrice());
-	
+			
 			// create new subscription orderItem
 			var subscriptionOrderItem = this.newSubscriptionOrderItem();
 			subscriptionOrderItem.setOrderItem(order.getOrderItems()[1]);
 			subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode('soitRenewal'));
 			subscriptionOrderItem.setSubscriptionUsage(arguments.subscriptionUsage);
 			this.saveSubscriptionOrderItem(subscriptionOrderItem);
-
+			
 			// save order for processing
 			getOrderService().saveOrder(order);
-	
+			
 			// set next bill date, calculated from the last bill date
 			// need setting to decide what start date to use for next bill date calculation
 			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
 				
 			// save subscriptionUsage
 			this.saveSubscriptionUsage(arguments.subscriptionUsage);
-
+			
 			// flush session to make sure order is persisted to DB
 			getDAO().flushORMSession();
 		}	
 					
 		// add order payment to order if amount > 0 
 		if(order.getTotal() > 0) {
+			logSlatwall("T 1", true);
 			// check if payment is applied
 			if(!arrayLen(order.getOrderPayments())) {
+				logSlatwall("T 2", true);
 				var orderPayment = getPaymentService().newOrderPayment();
 				orderPayment.setOrder(order);
 				orderPayment.setAmount(order.getTotal());
 				orderPayment.copyFromAccountPaymentMethod(subscriptionUsage.getAccountPaymentMethod());
 				orderPayment.setOrderPaymentType(this.getTypeBySystemCode("optCharge"));
 				getPaymentService().saveOrderPayment(orderPayment);
+				logSlatwall("T 3", true);
 			} else {
+				logSlatwall("T 4", true);
 				var orderPayment = order.getOrderPayments()[1];
 			}
-				
+			logSlatwall("T 5", true);
 			// if orderPayment has no error and amount not received yet, then try to process payment
 			if(!orderPayment.hasErrors()) {
+				logSlatwall("T 6", true);
 				var amount = order.getTotal() - orderPayment.getAmountReceived();
 				var paymentProcessed = getPaymentService().processPayment(orderPayment, 'authorizeAndCharge', amount);
-				
+				logSlatwall("T 7", true);
 				// if payment is processed, close out fulfillment and order
 				if(paymentProcessed) {
+					logSlatwall("T 8", true);
 					var orderFulfillment = getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
 					
 					if(!orderFulfillment.hasErrors()) {
@@ -433,13 +446,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							}
 						}
 					}
+					logSlatwall("T 9", true);
 				}
 			} 
 		}
-
+		logSlatwall("T 10", true);
 		// update the Subscription Status
 		updateSubscriptionUsageStatus(arguments.subscriptionUsage);	
-		
+		logSlatwall("T 11", true);
 		return arguments.subscriptionUsage;
 	}
 	
