@@ -40,36 +40,45 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 
 	property name="persistableErrors" type="array";
 	
-	public any function updateCalculatedProperties() {
-			// This loops over any calculatedXXX properties and calls the non-persistent version (XXX)
-				// This does the calculated in itself
-		
-		
-		
-		
-			// Loop over proerties that have preSaveCalculate=true and call updateCalculatedProperties() on them
-				// This calls parents to do the same
-			
-			
-			//getOrderItem().updateCalculatedProperties(  );		
-		
-		
-		
-	}
-	
-	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
+		// Loop over all properties
 		for(var i=1; i<=arrayLen(getProperties()); i++) {
+			// Set any one-to-many or many-to-many properties with a blank array as the default value
 			if(structKeyExists(getProperties()[i], "fieldtype") && listFindNoCase("many-to-many,one-to-many", getProperties()[i].fieldtype) && !structKeyExists(variables, getProperties()[i].name) ) {
 				variables[ getProperties()[i].name ] = [];
 			}
+			// set any activeFlag's to true by default 
 			if( getProperties()[i].name == "activeFlag" && isNull(variables.activeFlag) ) {
 				variables.activeFlag = 1;
 			}
 		}
 		
 		return super.init();
+	}
+	
+	public any function updateCalculatedProperties() {
+		if(!structKeyExists(variables, "calculated")) {
+			// Set calculated to true so that this only runs 1 time per request
+			variables.calculated = true;
+			
+			// Loop over all properties
+			for(var i=1; i<=arrayLen(getProperties()); i++) {
+			
+				// Look for any that start with the calculatedXXX naming convention
+				if(left(getProperties()[i].name, 10) == "calculated") {
+					
+					variables[ getProperties()[i].name ] = this.invokeMethod("get#right(getProperties()[i].name, len(getProperties()[i].name)-10)#");
+					
+				// Then also look for any that have the cascadeCalculate set to true and call updateCalculatedProperties() on that object
+				} else if (structKeyExists(getProperties()[i], "cascadeCalculate") && getProperties()[i].cascadeCalculate) {
+				
+					if( structKeyExists(variables, getProperties()[i].name) && isObject( variables[ getProperties()[i].name ] ) ) {
+						variables[ getProperties()[i].name ].updateCalculatedProperties();
+					}
+				}
+			}
+		}
 	}
 	
 	// @hint Returns an array of comments related to this entity
@@ -292,12 +301,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// @hint returns a smart list of the current values for a given one-to-many or many-to-many property
 	public any function getPropertySmartList( required string propertyName ) {
 		var cacheKey = "#arguments.propertyName#SmartList";
-		//writeDump(var=arguments.propertyName,abort=true);
+		
 		if(!structKeyExists(variables, cacheKey)) {
 			
 			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
 			var smartList = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
-			//writeDump(var=smartlist,abort=true,top="3");
+			
 			// Create an example entity so that we can read the meta data
 			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
 			
@@ -405,11 +414,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
-		//updateCalculatedProperties();
-		
 		if(!this.isPersistable()) {
 			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors");
 		}
+		
+		updateCalculatedProperties();
 		
 		var timestamp = now();
 		
@@ -434,12 +443,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	public void function preUpdate(struct oldData){
-		
-		updateCalculatedProperties();
-		
 		if(!this.isPersistable()) {
 			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors");
 		}
+		
+		updateCalculatedProperties();
 		
 		var timestamp = now();
 		
@@ -454,6 +462,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	public void function preDelete(any entity){
+		
 
 	}
 	

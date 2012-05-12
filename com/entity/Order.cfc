@@ -40,9 +40,12 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Persistent Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="orderNumber" ormtype="string"; 
+	property name="orderNumber" ormtype="string";
 	property name="orderOpenDateTime" ormtype="timestamp";
 	property name="orderCloseDateTime" ormtype="timestamp";
+	
+	// Calculated Properties
+	property name="calculatedTotal" ormtype="big_decimal";
 	
 	// Related Object Properties (Many-To-One)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";

@@ -41,6 +41,8 @@ Notes:
 
 <cfoutput>
 
+<cfset rc.orderSmartList.addOrder("orderOpenDateTime|DESC") />
+
 <cf_SlatwallActionBar type="listing" object="#rc.orderSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
@@ -51,6 +53,7 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="orderType.type" filter=true />
 	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" filter=true />
 	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range=true />
+	<cf_SlatwallListingColumn propertyIdentifier="calculatedTotal" range=true />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>

@@ -55,6 +55,7 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		}
 		
 		if ( !isNull( entity ) ) {
+			entity.updateCalculatedProperties();
 			return entity;
 		}
 
@@ -111,7 +112,13 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
     }
     
     public void function flushORMSession() {
-    	ormFlush();
+    	transaction {
+    		ormFlush();	
+    	}
+    }
+    
+    public void function clearORMSession() {
+    	ormClearSession();
     }
     
     public any function getSmartList(required string entityName, struct data={}){
