@@ -173,6 +173,17 @@ function setupEventHandlers() {
 		});
 	});
 	
+	// Listing Page - Searching
+	jQuery('body').on('submit', '.action-bar-search', function(e){
+		e.preventDefault();
+	});
+	jQuery('body').on('keyup', '.action-bar-search input', function(e){
+		var data = {};
+		data[ 'keywords' ] = jQuery(this).val();
+		
+		listingDisplayUpdate( jQuery(this).data('tableid'), data );
+	});
+	
 	// Listing Display - Paging
 	jQuery('body').on('click', '.listing-pager', function(e){
 		e.preventDefault();
@@ -235,7 +246,6 @@ function setupEventHandlers() {
 		} else {
 			data[ 'FKR:' + jQuery(this).attr('name').split(':')[1] ] = 1;
 		}
-		console.log(data);
 		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
 	});
 	
@@ -626,6 +636,7 @@ function updateGlobalSearchResults() {
 			alert('Error Loading Global Search');
 		},
 		success: function(result) {
+			
 			var buckets = {
 				product: {primaryIDProperty:'productID', listAction:'admin:product.listproduct', detailAction:'admin:product.detailproduct'},
 				productType: {primaryIDProperty:'productTypeID', listAction:'admin:product.listproducttype', detailAction:'admin:product.detailproducttype'},

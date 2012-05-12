@@ -156,14 +156,14 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 
 	// ============== START: Overridden Implicet Getters ===================
 
-	public void function getVendorOrderType() {
+	public any function getVendorOrderType() {
 		if( !structKeyExists(variables, "vendorOrderType") ) {
 			variables.vendorOrderType = getService("typeService").getTypeBySystemCode("votPurchaseOrder");
 		}
 		return variables.vendorOrderType;
 	}
 	
-	public void function getVendorOrderStatusType() {
+	public any function getVendorOrderStatusType() {
 		if( !structKeyExists(variables, "vendorOrderStatusType") ) {
 			variables.vendorOrderStatusType = getService("typeService").getTypeBySystemCode("vostNew");
 		}

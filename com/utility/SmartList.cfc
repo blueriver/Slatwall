@@ -140,6 +140,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		// Setup the keyword phrases
 		if(structKeyExists(arguments.data, "keywords")){
+			
 			// Parse the list of Keywords in the string
 			var keywordList = Replace(arguments.data.Keywords," ",",","all");
 			keywordList = Replace(KeywordList,"%20",",","all");
@@ -387,7 +388,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			} else {
 				hqlSelect &= "SELECT DISTINCT #variables.entities[getBaseEntityName()].entityAlias#";
 				
-				if(arrayLen(variables.Keywords)) {
+				if(arrayLen(variables.Keywords) && structCount(variables.keywordProperties)) {
 					var first = true;
 					variables.selectKeywordColumns = 0;
 					for(var ii=1; ii<=arrayLen(variables.Keywords); ii++) {
@@ -577,25 +578,25 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	public string function getHQLOrder(boolean supressOrderBy=false) {
 		var hqlOrder = "";
-		if(arrayLen(variables.orders) || arrayLen(variables.keywords)){
+		if(arrayLen(variables.orders) || (arrayLen(variables.keywords) && structCount(variables.keywordProperties))){
 			
 			if(!arguments.supressOrderBy) {
 				hqlOrder &= " ORDER BY";
 			}
 			
-			if(arrayLen(variables.Keywords)) {
+			if(arrayLen(variables.Keywords) && structCount(variables.keywordProperties)) {
 				
 				hqlOrder &= " ( ";
 				
 				var first = true;
-				for(var i=1; i<=variables.selectKeywordColumns; i++) {
+				for(var i=1; i<=structCount(variables.keywordProperties) * arrayLen(variables.keywords); i++) {
 					if(!first) {
 						hqlOrder &= " + ";	
 					}
 					first=false;
 					hqlOrder &= "col_#i#_0_";
 				}
-				hqlOrder &= " ) ASC  ";
+				hqlOrder &= " ) DESC  ";
 			}
 			
 			for(var i=1; i<=arrayLen(variables.orders); i++) {
@@ -626,7 +627,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			
 			saveState();
 			var results = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
-			if(arrayLen(variables.keywords)) {
+			
+			if(arrayLen(variables.keywords) && structCount(variables.keywordProperties)) {
 				for(var i = 1; i<=arrayLen(results); i++) {
 					arrayAppend(variables.pageRecords, results[i][1]);
 				}	
@@ -886,6 +888,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		stateStruct.whereConditions = duplicate(variables.whereConditions);
 		stateStruct.orders = duplicate(variables.orders);
 		stateStruct.keywords = duplicate(variables.keywords);
+		stateStruct.keywordProperties = duplicate(variables.keywordProperties);
 		stateStruct.pageRecordsShow = duplicate(variables.pageRecordsShow);
 		stateStruct.entityJoinOrder = duplicate(variables.entityJoinOrder);
 		

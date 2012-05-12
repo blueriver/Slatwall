@@ -71,9 +71,10 @@ Notes:
 						<div class="btn-toolbar">
 							<!--- Listing --->
 							<cfif attributes.type eq "listing" >
-								<form name="search" class="listing-search btn-group" action="/plugins/Slatwall/" method="get">
+								<cfparam name="request.context.keywords" default="" />
+								<form name="search" class="action-bar-search btn-group" action="/plugins/Slatwall/" method="get">
 									<input type="hidden" name="slatAction" value="#request.context.slatAction#" />
-									<input type="text" name="keywords" placeholder="#request.slatwallScope.rbKey('define.search')# #attributes.pageTitle#">
+									<input type="text" name="keywords" value="#request.context.keywords#" placeholder="#request.slatwallScope.rbKey('define.search')# #attributes.pageTitle#" data-tableid="LD#replace(attributes.object.getSavedStateID(),'-','','all')#">
 								</form>
 								<cfif attributes.object.getRecordsCount() gt 10>
 									<div class="btn-group">
