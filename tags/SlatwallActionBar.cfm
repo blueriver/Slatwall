@@ -71,6 +71,10 @@ Notes:
 						<div class="btn-toolbar">
 							<!--- Listing --->
 							<cfif attributes.type eq "listing" >
+								<form name="search" class="listing-search btn-group" action="/plugins/Slatwall/" method="get">
+									<input type="hidden" name="slatAction" value="#request.context.slatAction#" />
+									<input type="text" name="keywords" placeholder="#request.slatwallScope.rbKey('define.search')# #attributes.pageTitle#">
+								</form>
 								<cfif attributes.object.getRecordsCount() gt 10>
 									<div class="btn-group">
 										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-align-justify"></i> #request.slatwallScope.rbKey('define.show')# <span class="caret"></span></button>

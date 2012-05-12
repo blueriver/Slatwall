@@ -54,8 +54,11 @@ component extends="BaseService" accessors="true" {
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
-		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="productName", weight=5);
 		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="brand.brandName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="productType.productTypeName", weight=3);		
+
 		
 		smartList.joinRelatedProperty("SlatwallProduct", "productType");
 		smartList.joinRelatedProperty("SlatwallProduct", "defaultSku");
