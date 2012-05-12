@@ -65,21 +65,6 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="orderAmountTotal" persistent="false" formatType="currency"; 
 	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	
-	public any function init() {
-		
-		// Set the default order type as purchase order
-		if(isNull(variables.vendorOrderType)) {
-			variables.vendorOrderType = getService("typeService").getTypeBySystemCode('votPurchaseOrder');
-		}
-		
-		// Set the default status type as open
-		if(isNull(variables.vendorOrderStatusType)) {
-			variables.vendorOrderStatusType = getService("typeService").getTypeBySystemCode('vostNew');
-		}
-		
-		return super.init();
-	}
-	
 	public numeric function getSubtotal() {
 		var subtotal = 0;
 		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
@@ -168,6 +153,24 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ============== START: Overridden Implicet Getters ===================
+
+	public void function getVendorOrderType() {
+		if( !structKeyExists(variables, "vendorOrderType") ) {
+			variables.vendorOrderType = getService("typeService").getTypeBySystemCode("votPurchaseOrder");
+		}
+		return variables.vendorOrderType;
+	}
+	
+	public void function getVendorOrderStatusType() {
+		if( !structKeyExists(variables, "vendorOrderStatusType") ) {
+			variables.vendorOrderStatusType = getService("typeService").getTypeBySystemCode("vostNew");
+		}
+		return variables.vendorOrderStatusType;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
 	
 	// ================== START: Overridden Methods ========================
 	
@@ -178,6 +181,14 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		
+		// Verify Defaults are Set
+		getVendorOrderType();
+		getVendorOrderStatusType();
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

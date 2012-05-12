@@ -40,4 +40,7 @@ Notes:
 
 <cf_SlatwallSettingTable>
 	<cf_SlatwallSetting settingName="brandDisplayTemplate" settingObject="#rc.brand#" />
+	<cf_SlatwallSetting settingName="brandHTMLTitleString" settingObject="#rc.brand#" />
+	<cf_SlatwallSetting settingName="brandMetaDescriptionString" settingObject="#rc.brand#" />
+	<cf_SlatwallSetting settingName="brandMetaKeywordsString" settingObject="#rc.brand#" />
 </cf_SlatwallSettingTable>

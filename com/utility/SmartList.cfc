@@ -722,20 +722,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 			}
 		}
-		/*
-		writeDump("SELECT NEW MAP(
-			#nameProperty# as name,
-			#valueProperty# as value,
-			count(#nameProperty#) as count
-			)
-		#getHQLFrom(allowFetch=false)#
-		#getHQLWhere()#
-		GROUP BY
-			#nameProperty#,
-			#valueProperty#
-		ORDER BY
-			#nameProperty# ASC");
-			*/
 			
 		var results = ormExecuteQuery("SELECT NEW MAP(
 			#nameProperty# as name,
@@ -743,7 +729,10 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			count(#nameProperty#) as count
 			)
 		#getHQLFrom(allowFetch=false)#
-		#getHQLWhere()#
+		#getHQLWhere()# #IIF(len(getHQLWhere()), DE('AND'), DE('WHERE'))#
+				#nameProperty# IS NOT NULL
+			AND
+				#valueProperty# IS NOT NULL
 		GROUP BY
 			#nameProperty#,
 			#valueProperty#

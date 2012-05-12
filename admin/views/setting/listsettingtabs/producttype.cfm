@@ -39,5 +39,8 @@ Notes:
 <cfoutput>
 	<cf_SlatwallSettingTable>
 		<cf_SlatwallSetting settingName="productTypeDisplayTemplate" />
+		<cf_SlatwallSetting settingName="productTypeHTMLTitleString" />
+		<cf_SlatwallSetting settingName="productTypeMetaDescriptionString" />
+		<cf_SlatwallSetting settingName="productTypeMetaKeywordsString" />
 	</cf_SlatwallSettingTable>
 </cfoutput>

@@ -49,9 +49,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="appliedPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="appliedPriceGroupID";
 	property name="orderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemTypeID";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID" cascadeCalculate="true";
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID" cascadeCalculate="true";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="orderReturn" cfc="OrderReturn" fieldtype="many-to-one" fkcolumn="orderReturnID";
 	property name="referencedOrderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID"; // Used For Returns. This is set when this order is a return.
@@ -83,19 +83,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="taxAmount" persistent="false" formatType="currency" ;
 	property name="itemTotal" persistent="false" formatType="currency" ; 
 
-	public any function init() {
-		
-		// set the type to sale by default
-		if( !structKeyExists(variables,"orderItemType") ) {
-			setOrderItemType( getService("typeService").getTypeBySystemCode("oitSale") );
-		}
-		// set status to new by default
-		if( !structKeyExists(variables,"orderItemStatusType") ) {
-			setOrderItemStatusType( getService("typeService").getTypeBySystemCode("oistNew") );
-		}
-		
-		return super.init();
-	}
 
 	public numeric function getMaximumOrderQuantity() {
 		var maxQTY = getSku().setting('skuOrderMaximumQuantity');
@@ -375,6 +362,24 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public any function getOrderItemType() {
+		if( !structKeyExists(variables, "orderItemType") ) {
+			variables.orderItemType = getService("typeService").getTypeBySystemCode("oitSale");
+		}
+		return variables.orderItemType;
+	}
+	
+	public any function getOrderItemStatusType() {
+		if( !structKeyExists(variables, "orderItemStatusType") ) {
+			variables.orderItemStatusType = getService("typeService").getTypeBySystemCode("oistNew");
+		}
+		return variables.orderItemStatusType;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+	
 	// ================== START: Overridden Methods ========================
 
 	public string function getSimpleRepresentation() {
@@ -384,6 +389,15 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		
+		// Verify Defaults are Set
+		getOrderItemType();
+		getOrderItemStatusType();
+		
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

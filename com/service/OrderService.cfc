@@ -61,6 +61,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
+		smartList.joinRelatedProperty("SlatwallOrder", "account", "left", true);
+		smartList.joinRelatedProperty("SlatwallOrder", "orderType", "left", true);
+		smartList.joinRelatedProperty("SlatwallOrder", "orderStatusType", "left", true);
+		
 		return smartList;
 	}
 	
