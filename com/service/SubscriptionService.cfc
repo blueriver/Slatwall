@@ -267,6 +267,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			return retryRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
 		} else if(arguments.processContext == 'cancel') {
 			return cancelSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
+		} else if(arguments.processContext == 'update') {
+			return updateSubscriptionUsageStatus(arguments.subscriptionUsage);
 		}
 	}
 	
@@ -458,7 +460,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		} else if (arguments.subscriptionUsage.getExpirationDate() > now()) {
 			// if current status is not active, set active status to subscription usage
 			if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
-				setSubscriptionStatus(subscriptionOrderItem.getSubscriptionUsage(), 'sstActive');
+				setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstActive');
 			}
 		}
 	}
@@ -466,14 +468,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	private any function cancelSubscriptionUsage(required any subscriptionUsage, struct data={}) {
 		// first check if it's not alreayd cancelled
 		if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstCancelled') {
-			if(!structKeyExists(data, effectiveDateTime)) {
+			if(!structKeyExists(data, "effectiveDateTime")) {
 				data.effectiveDate = now();
 			}
-			if(!structKeyExists(data, subscriptionStatusChangeReasonTypeCode)) {
+			if(!structKeyExists(data, "subscriptionStatusChangeReasonTypeCode")) {
 				data.subscriptionStatusChangeReasonTypeCode = "";
 			}
 			// add cancelled status to subscription usage
-			setSubscriptionStatus(arguments.subscriptionUsage, 'sstCancelled', data.effectiveDate, data.subscriptionStatusChangeReasonTypeCode);
+			setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstCancelled', data.effectiveDate, data.subscriptionStatusChangeReasonTypeCode);
 		}
 		return arguments.subscriptionUsage;
 	}

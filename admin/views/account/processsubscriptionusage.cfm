@@ -40,24 +40,26 @@ Notes:
 <cfparam name="rc.returnAction" type="string" default="admin:account.listsubscriptionusage" />
 <cfparam name="rc.processSubscriptionUsageSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
+<cfset rc.processContextOptions = [
+	{name="#rc.$.slatwall.rbkey('define.select')#", value=""},
+	{name="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processOption.renewSubscription')#", value="manualRenew"},
+	{name="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processOption.cancelSubscription')#", value="cancel"},
+	{name="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processOption.updateSubscription')#", value="update"}
+] />
 
 <cfoutput>
 	<cf_SlatwallProcessForm>
 		
 		<cf_SlatwallActionBar type="process" />
 		
+		<cf_SlatwallFieldDisplay fieldName="processcontext" title="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processContext')#" fieldType="select" valueOptions="#rc.processContextOptions#" value="#rc.processcontext#" edit="true" />
+		
 		<cf_SlatwallProcessListing processSmartList="#rc.processSubscriptionUsageSmartList#">
 			<cf_SlatwallProcessColumn propertyIdentifier="subscriptionOrderItemName" />
 			<cf_SlatwallProcessColumn propertyIdentifier="renewalPrice" />
 			<cf_SlatwallProcessColumn propertyIdentifier="nextBillDate" />
 			<cf_SlatwallProcessColumn propertyIdentifier="expirationDate" />
-			<cfswitch expression="#rc.processcontext#" >
-				<cfcase value="manualRenew">
-					<!---<cf_SlatwallProcessColumn propertyIdentifier="account.accountPaymentMethods"  />--->
-				</cfcase> 
-			</cfswitch>	
-			
 		</cf_SlatwallProcessListing>
-		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
+		
 	</cf_SlatwallProcessForm>
 </cfoutput>
