@@ -40,6 +40,24 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 
 	property name="persistableErrors" type="array";
 	
+	public any function updateCalculatedProperties() {
+			// This loops over any calculatedXXX properties and calls the non-persistent version (XXX)
+				// This does the calculated in itself
+		
+		
+		
+		
+			// Loop over proerties that have preSaveCalculate=true and call updateCalculatedProperties() on them
+				// This calls parents to do the same
+			
+			
+			//getOrderItem().updateCalculatedProperties(  );		
+		
+		
+		
+	}
+	
+	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
 		for(var i=1; i<=arrayLen(getProperties()); i++) {
@@ -387,6 +405,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
+		//updateCalculatedProperties();
+		
 		if(!this.isPersistable()) {
 			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors");
 		}
@@ -414,6 +434,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	public void function preUpdate(struct oldData){
+		
+		updateCalculatedProperties();
+		
 		if(!this.isPersistable()) {
 			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors");
 		}

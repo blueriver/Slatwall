@@ -46,5 +46,8 @@ Notes:
 		<cf_SlatwallSetting settingName="productImageLargeWidth" />
 		<cf_SlatwallSetting settingName="productImageLargeHeight" />
 		<cf_SlatwallSetting settingName="productTitleString" />
+		<cf_SlatwallSetting settingName="productHTMLTitleString" />
+		<cf_SlatwallSetting settingName="productMetaDescriptionString" />
+		<cf_SlatwallSetting settingName="productMetaKeywordsString" />
 	</cf_SlatwallSettingTable>
 </cfoutput>
