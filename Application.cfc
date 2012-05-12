@@ -278,9 +278,9 @@ component extends="org.fw1.framework" output="false" {
 	// This handels all of the ORM persistece.
 	public void function endSlatwallLifecycle() {
 		if(request.slatwallScope.getORMHasErrors()) {
-			ormClearSession();
+			getBeanFactory().getBean("dataDAO").clearORMSession();
 		} else {
-			ormFlush();
+			getBeanFactory().getBean("dataDAO").flushORMSession();
 		}
 	}
 	

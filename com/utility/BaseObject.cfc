@@ -715,7 +715,7 @@ component displayname="Base Object" accessors="true" output="false" {
 			
 			// Also add any extended data
 			if(structKeyExists(metaData, "extends") && structKeyExists(metaData.extends, "properties")) {
-				variables.metaProperties = getService("utilityService").arrayConcat(getProperties(metaData.extends.properties), variables.metaProperties);
+				variables.metaProperties = getService("utilityService").arrayConcat(metaData.extends.properties, variables.metaProperties);
 			}
 		}
 		return variables.metaProperties;

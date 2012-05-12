@@ -42,7 +42,7 @@ component displayname="Order Item Applied Tax" entityname="SlatwallOrderItemAppl
 	property name="taxAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Entities
-	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cascadeCalculated="true";
 	
 	
 	// ============ START: Non-Persistent Property Methods =================

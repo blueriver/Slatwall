@@ -48,6 +48,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
 	property name="sortOrder" ormtype="integer";
 	
+	// Calculated Properties
+	property name="calculatedSalePrice" ormtype="string";
+	property name="calculatedQATS" ormtype="string";
+	property name="calculatedAllowBackorderFlag" ormtype="boolean";
+	property name="calculatedTitle" ormtype="string";
+	
 	// Related Object Properties (one-to-one)
 	property name="productCache" fieldType="one-to-one" cfc="ProductCache" cascade="delete";
 	
@@ -89,12 +95,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="brandOptions" type="array" persistent="false";
 	property name="salePriceDetailsForSkus" type="struct" persistent="false";
 	property name="title" type="string" persistent="false";
+	property name="qats" type="numeric" persistent="false";
+	property name="allowBackorderFlag" type="boolean" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePrice" type="numeric" formatType="currency" persistent="false";
+	
 	
 	public any function getProductTypeOptions( string baseProductType ) {
 		if(!structKeyExists(variables, "productTypeOptions")) {
@@ -379,7 +388,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	//get attribute value2
+	// get attribute value2
 	
 	public any function getAttributeValue(required string attribute, returnEntity=false){
 		
@@ -513,6 +522,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.title;
 	}
 	
+	public numeric function getQATS() {
+		return getQuantity("QATS");
+	}
+	
+	public numeric function getAllowBackorderFlag() {
+		logSlatwall(setting("skuAllowBackorderFlag"));
+		return setting("skuAllowBackorderFlag");
+	}
 	
 	public numeric function getPrice() {
 		if(!structKeyExists(variables, "price")) {

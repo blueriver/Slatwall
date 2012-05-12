@@ -48,7 +48,7 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Related Object Properties (many-to-one)
-	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
+	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock" cascadeCalculate="true";
 	property name="stockReceiver" fieldtype="many-to-one" fkcolumn="stockReceiverID" cfc="StockReceiver";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="vendorOrderItem" cfc="VendorOrderItem" fieldtype="many-to-one" fkcolumn="vendorOrderItemID";

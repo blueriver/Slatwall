@@ -85,6 +85,9 @@ globalEncryptionKeySize
 		variables.settingMetaData = {
 			// Brand
 			brandDisplayTemplate = {fieldType="select"},
+			brandHTMLTitleString = {fieldType="text"},
+			brandMetaDescriptionString = {fieldType="textarea"},
+			brandMetaKeywordsString = {fieldType="textarea"},
 			
 			// Content
 			contentRestrictAccessFlag = {fieldType="yesno"},
@@ -94,6 +97,10 @@ globalEncryptionKeySize
 			contentDefaultProductsPerPage = {fieldType="text"},
 			contentIncludeChildContentProductsFlag = {fieldType="yesno"},
 			contentRestrictedContentDisplayTemplate = {fieldType="select"},
+			contentHTMLTitleString = {fieldType="text"},
+			contentMetaDescriptionString = {fieldType="textarea"},
+			contentMetaKeywordsString = {fieldType="textarea"},
+			
 	
 			// Fulfillment Method
 			fulfillmentMethodEmailFrom = {fieldType="text"},
@@ -148,9 +155,15 @@ globalEncryptionKeySize
 			productImageLargeWidth = {fieldType="text", formatType="pixels"},
 			productImageLargeHeight = {fieldType="text", formatType="pixels"},
 			productTitleString = {fieldType="text"},
+			productHTMLTitleString = {fieldType="text"},
+			productMetaDescriptionString = {fieldType="textarea"},
+			productMetaKeywordsString = {fieldType="textarea"},
 			
 			// Product Type
 			productTypeDisplayTemplate = {fieldType="select"},
+			productTypeHTMLTitleString = {fieldType="text"},
+			productTypeMetaDescriptionString = {fieldType="textarea"},
+			productTypeMetaKeywordsString = {fieldType="textarea"},
 			
 			// Sku
 			skuAllowBackorderFlag = {fieldType="yesno"},
