@@ -447,7 +447,7 @@ globalEncryptionKeySize
 		
 	</cfscript>
 	
-	<cffunction name="getSettingRecordCount">
+	<cffunction name="getSettingRecordCount" output="false">
 		<cfargument name="settingName" />
 		<cfargument name="settingValue" />
 		
@@ -470,7 +470,7 @@ globalEncryptionKeySize
 		<cfreturn val(rs.settingRecordCount) />
 	</cffunction>
 	
-	<cffunction name="getSettingRecordBySettingRelationships">
+	<cffunction name="getSettingRecordBySettingRelationships" output="false">
 		<cfargument name="settingName" type="string" required="true" />
 		<cfargument name="settingRelationships" type="struct" default="#structNew()#" />
 		
