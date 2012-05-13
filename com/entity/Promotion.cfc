@@ -126,21 +126,15 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
+	// ================== START: Overridden Methods ========================
+	
 	public boolean function isDeletable() {
 		return arrayLen( getAppliedPromotions() ) == 0;
 	}
 	
+	// ==================  END:  Overridden Methods ========================
+	
 	// =================== START: ORM Event Hooks  =========================
-	
-	public void function preInsert(){
-		super.preInsert();
-		getService("productCacheService").updateFromPromotion( this );
-	}
-	
-	public void function preUpdate(struct oldData){
-		super.preUpdate(argumentcollection=arguments);
-		getService("productCacheService").updateFromPromotion( this );
-	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 	

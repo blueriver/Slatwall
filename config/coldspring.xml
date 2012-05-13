@@ -20,7 +20,6 @@
 	<bean id="measurementUnitDAO" class="Slatwall.com.dao.MeasurementUnitDAO" />
 	<bean id="permissionDAO" class="Slatwall.com.dao.PermissionDAO" />
 	<bean id="productDAO" class="Slatwall.com.dao.ProductDAO" />
-	<bean id="productCacheDAO" class="Slatwall.com.dao.ProductCacheDAO" />
 	<bean id="productTypeDAO" class="Slatwall.com.dao.ProductTypeDAO" />
 	<bean id="reportDAO" class="Slatwall.com.dao.ReportDAO" />
 	<bean id="sessionDAO" class="Slatwall.com.dao.SessionDAO" />
@@ -287,13 +286,6 @@
 		<property name="skuService"><ref bean="skuService" /></property>
 		<property name="utilityFileService"><ref bean="utilityFileService" /></property>  
         <property name="utilityTagService"><ref bean="utilityTagService" /></property>
-    </bean>
-	<bean id="productCacheService" class="Slatwall.com.service.ProductCacheService">
-        <property name="DAO"><ref bean="productCacheDAO" /></property>
-		<property name="inventoryService"><ref bean="inventoryService" /></property>
-		<property name="promotionService"><ref bean="promotionService" /></property>
-		<property name="skuService"><ref bean="skuService" /></property>
-		<property name="utilityTagService"><ref bean="utilityTagService" /></property>
     </bean>
 	<bean id="priceGroupService" class="Slatwall.com.service.PriceGroupService">
         <property name="DAO"><ref bean="PriceGroupDAO" /></property>

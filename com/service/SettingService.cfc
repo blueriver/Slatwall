@@ -129,7 +129,6 @@ globalEncryptionKeySize
 			globalRemoteIDShowFlag = {fieldType="yesno"},
 			globalRemoteIDEditFlag = {fieldType="yesno"},
 			globalTimeFormat = {fieldType="text"},
-			globalUseProductCacheFlag = {fieldType="yesno"},
 			globalURLKeyBrand = {fieldType="text"},
 			globalURLKeyProduct = {fieldType="text"},
 			globalURLKeyProductType = {fieldType="text"},

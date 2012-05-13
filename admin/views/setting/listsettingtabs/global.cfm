@@ -50,7 +50,6 @@ Notes:
 		<cf_SlatwallSetting settingName="globalOrderPlacedEmailBCC" />
 		<cf_SlatwallSetting settingName="globalOrderPlacedEmailSubjectString" />
 		<cf_SlatwallSetting settingName="globalOrderNumberGeneration" />
-		<cf_SlatwallSetting settingName="globalUseProductCacheFlag" />
 		<cf_SlatwallSetting settingName="globalURLKeyBrand" />
 		<cf_SlatwallSetting settingName="globalURLKeyProduct" />
 		<cf_SlatwallSetting settingName="globalURLKeyProductType" />

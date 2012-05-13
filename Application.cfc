@@ -198,9 +198,6 @@ component extends="org.fw1.framework" output="false" {
 		// Verify that the application is setup
 		verifyApplicationSetup();
 		
-		// Run Sku Cache & Product Cache Update Threads if needed
-		getBeanFactory().getBean("productCacheService").executeProductCacheUpdates();
-		
 		// Confirm Session Setup
 		getBeanFactory().getBean("sessionService").setPropperSession();
 	}

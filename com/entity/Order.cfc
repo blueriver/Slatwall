@@ -526,13 +526,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		getOrderStatusType();
 		
 		confirmOrderNumberOpenDateCloseDate();
-		getService("productCacheService").updateFromOrder( this );
 	}
 	
 	public void function preUpdate(Struct oldData){
 		super.preUpdate();
 		confirmOrderNumberOpenDateCloseDate();
-		getService("productCacheService").updateFromOrder( this );
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
