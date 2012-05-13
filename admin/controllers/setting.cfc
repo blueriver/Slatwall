@@ -68,7 +68,7 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.addressZone = getAddressService().getAddressZone( rc.addressZoneID );
 		rc.edit=true;
 		
-		getFW().setView("admin:setting.detailAddressZoneLocation");
+		getFW().setView("admin:setting.detailaddresszoneLocation");
 	}
 	
 	public void function deleteAddressZoneLocation(required struct rc) {
