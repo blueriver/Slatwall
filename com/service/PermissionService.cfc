@@ -82,7 +82,12 @@ component extends="BaseService" output="false" {
 	}
 	
 	public function getPublicMethods(required string subsystem, required string controller){
-		var obj = createObject('component', arguments.subsystem & '.controllers.' & arguments.controller);
+		if(arguments.subsystem == "admin" || arguments.subsystem == "frontend") {
+			var obj = createObject('component', 'Slatwall.' & arguments.subsystem & '.controllers.' & arguments.controller);
+		} else {
+			var obj = createObject('component', 'Slatwall.integrationServices.' & arguments.subsystem & '.controllers.' & arguments.controller);	
+		}
+		
 		var stResponse = {};
 		
 		if(structKeyExists(obj,'publicMethods')){
