@@ -39,18 +39,6 @@ Notes:
 component extends="BaseService" accessors="true" {
 	property name="productService" type="any";
 	
-	public any function getOptionSmartList(struct data={}){;
-		arguments.entityName = "SlatwallOption";
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		
-		smartList.addKeywordProperty(propertyIdentifier="optionCode", weight=9);
-		smartList.addKeywordProperty(propertyIdentifier="optionName", weight=3);
-		smartList.addKeywordProperty(propertyIdentifier="optionGroup_optionGroupName", weight="4");
-		smartList.addKeywordProperty(propertyIdentifier="optionDescription", weight=1);
-		
-		return smartList;
-	}
-	
 	public any function saveOption(required any entity, required struct data) {
 		
 		super.save(argumentcollection=arguments);

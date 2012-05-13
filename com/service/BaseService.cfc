@@ -62,7 +62,14 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 
 	public any function getSmartList(string entityName, struct data={}){
-		return getDAO().getSmartList(argumentcollection=arguments);
+		var smartList = getDAO().getSmartList(argumentcollection=arguments);
+		
+		if(structKeyExists(arguments, "keyword") || structKeyExists(arguments, "keywords")) {
+			var example = this.new(arguments.entityName);
+			smartList.addKeywordProperty(propertyIdentifier=example.getSimpleRepresentationPropertyName(), weight=1);	
+		}
+		
+		return smartList;
 	}
 	
 	public boolean function delete(required any entity){

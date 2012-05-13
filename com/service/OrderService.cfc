@@ -65,6 +65,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		smartList.joinRelatedProperty("SlatwallOrder", "orderType", "left", true);
 		smartList.joinRelatedProperty("SlatwallOrder", "orderStatusType", "left", true);
 		
+		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="account.firstName", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="account.lastName", weight=1);
+		
 		return smartList;
 	}
 	

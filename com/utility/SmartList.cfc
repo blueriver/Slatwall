@@ -25,13 +25,17 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	property name="entities" type="struct";
 	property name="entityJoinOrder" type="array";
+	
 	property name="selects" type="struct" hint="This struct holds any selects that are to be used in creating the records array";
+	
 	property name="whereGroups" type="array" hint="this holds all filters and ranges";
-	property name="orders" type="array" hint="This struct holds the display order specification based on property";
 	property name="whereConditions" type="array";
-	property name="keywordProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
-	property name="searchScoreProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
+	property name="orders" type="array" hint="This struct holds the display order specification based on property";
+	
 	property name="keywords" type="array" hint="This array holds all of the keywords that were searched for";
+	property name="keywordPhrases" type="array";
+	property name="keywordProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
+	
 	property name="hqlParams" type="struct";
 	property name="pageRecordsStart" type="numeric" hint="This represents the first record to display and it is used in paging.";
 	property name="pageRecordsShow" type="numeric" hint="This is the total number of entities to display";
@@ -62,6 +66,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		setOrders([]);
 		setKeywordProperties({});
 		setKeywords([]);
+		setKeywordPhrases([]);
 		setHQLParams({});
 		setCurrentURL("");
 		setCurrentPageDeclaration(1);
@@ -158,7 +163,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 						for(var p=i; p<=ps+i; p++){
 							phrase = listAppend(phrase, keywordArray[p], " ");
 						}
-						arrayPrepend(variables.keywords, phrase);
+						arrayPrepend(variables.keywordPhrases, phrase);
 					}
 				}
 			}
@@ -216,8 +221,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		} else {
 			var newEntityName = listLast(newEntityMeta.fullName,".");
 		}
-		
-		//var newEntityAlias = "a#lcase(newEntityName)#";
 		
 		var aliaseOK = false;
 		var aoindex = 1;
@@ -361,7 +364,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 
 	public void function addKeywordProperty(required string propertyIdentifier, required numeric weight) {
 		variables.keywordProperties[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier)] = arguments.weight;
-		variables.searchScoreProperties[arguments.propertyIdentifier] = arguments.weight;
 	}
 	
 	public void function addHQLParam(required string paramName, required any paramValue) {
@@ -391,17 +393,14 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return hqlSelect;
 	}
 	
-	public string function getHQLFrom(boolean supressFrom=false, boolean allowFetch=true, searchOrder=false) {
+	public string function getHQLFrom(boolean supressFrom=false, boolean allowFetch=true) {
 		var hqlFrom = "";
 		if(!arguments.supressFrom) {
 			hqlFrom &= " FROM";	
 		}
 		
-		if(arguments.searchOrder) {
-			hqlFrom &= " #getBaseEntityName()# as s#variables.entities[getBaseEntityName()].entityAlias#";
-		} else {
-			hqlFrom &= " #getBaseEntityName()# as #variables.entities[getBaseEntityName()].entityAlias#";
-		}
+		hqlFrom &= " #getBaseEntityName()# as #variables.entities[getBaseEntityName()].entityAlias#";
+		
 
 		for(var i in variables.entityJoinOrder) {
 			if(i != getBaseEntityName()) {
@@ -415,11 +414,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				if(variables.entities[i].fetch && arguments.allowFetch && !structCount(variables.selects)) {
 					fetch = "fetch";
 				}
-				if(arguments.searchOrder) {
-					hqlFrom &= " #joinType# join s#variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as s#variables.entities[i].entityAlias#";
-				} else {
-					hqlFrom &= " #joinType# join #fetch# #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";	
-				}
+				
+				hqlFrom &= " #joinType# join #fetch# #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";	
+				
 			}
 		}
 		return hqlFrom;
@@ -804,6 +801,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		return results;
 	}
+	
+	
+	// =============== Saved State Logic ===========================
 	
 	public void function loadSavedState(required string savedStateID) {
 		if( structKeyExists(session.entitySmartList, savedStateID) ) {

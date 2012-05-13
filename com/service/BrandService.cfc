@@ -38,13 +38,6 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
-	public any function getBrandSmartList(struct data={}){
-		arguments.entityName = "SlatwallBrand";
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 	
-		smartList.addKeywordProperty(propertyIdentifier="brandName", weight=1);
-	
-		return smartList;
-	}
 	
 }
