@@ -524,16 +524,19 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			} else {
 				hqlWhere &= " AND";
 			}
-			hqlWhere &= " (";
+			
 			for(var ii=1; ii<=arrayLen(variables.Keywords); ii++) {
 				var paramID = "keyword#ii#";
 				addHQLParam(paramID, "%#variables.Keywords[ii]#%");
+				hqlWhere &= " (";
 				for(var keywordProperty in variables.keywordProperties) {
 					
 					hqlWhere &= " #keywordProperty# LIKE :#paramID# OR";
 				}
+				hqlWhere = left(hqlWhere, len(hqlWhere)-3 );
+				hqlWhere &= " ) AND";
 			}
-			hqlWhere = left(hqlWhere, len(hqlWhere)-3 ) & ")";
+			hqlWhere = left(hqlWhere, len(hqlWhere)-4 );
 		}
 		
 		// Add Where Conditions
