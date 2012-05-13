@@ -57,6 +57,7 @@ Notes:
 						AND 'sstActive' = (SELECT systemCode FROM SlatwallSubscriptionStatus 
 									INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
 									WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
+									AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
 									ORDER BY subscriptionStatusChangeDateTime DESC LIMIT 1)
 				</cfquery>
 		<cfelse>
@@ -72,6 +73,7 @@ Notes:
 						AND 'sstActive' = (SELECT TOP 1 systemCode FROM SlatwallSubscriptionStatus 
 									INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
 									WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
+									AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
 									ORDER BY subscriptionStatusChangeDateTime DESC)
 				</cfquery>
 		</cfif>

@@ -99,9 +99,13 @@ component extends="BaseService" output="false" accessors="true"{
 		return response;
 	}
 	
-	public any function renewSubscriptionOrders() {
+	public any function renewSubscriptionUsage() {
 		var response = '';
 		// Do Logic
+		var subscriptionUsages = getService("subscriptionService").getDAO().getSubscriptionUsageForRenewal();
+		for(var subscriptionUsage in subscriptionUsages) {
+			getService("subscriptionService").processSubscriptionUsage(subscriptionUsage, {}, 'autoRenew');
+		}
 		
 		return response;
 	}

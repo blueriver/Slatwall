@@ -36,8 +36,9 @@
 Notes:
 
 */
-component displayname="Image Service" persistent="false" extends="BaseService" output="false" {
-	
+component displayname="Image Service" persistent="false" extends="BaseService" output="false" accessors="true"{
+	property name="utilityTagService" type="any";
+		
 	// Image File Methods
 	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100) {
 		var resizedImagePath = "";
@@ -188,6 +189,24 @@ component displayname="Image Service" persistent="false" extends="BaseService" o
 			}
 		}
 		return true;
+	}
+	
+	public void function clearImageCache(string directoryPath, string imageName){
+		var cacheFolder = expandpath(arguments.directoryPath & "/cache/");
+		writedump(cacheFolder);
+
+		var files = getUtilityTagService().cfdirectory(action="list",directory=cacheFolder);
+		
+		cachedFiles = new Query();
+	    cachedFiles.setDBType('query');
+	    cachedFiles.setAttributes(rs=files); 
+	    cachedFiles.addParam(name='filename', value='#listgetat(arguments.imageName,1,'.')#%', cfsqltype='cf_sql_varchar');
+	    cachedFiles.setSQL('SELECT * FROM rs where NAME like :filename');
+	    cachedFiles = cachedFiles.execute().getResult();
+	    
+		for(i=1; i <= cachedFiles.recordcount; i++){
+			fileDelete(cachedFiles.directory[i] & '/' & cachedFiles.name);
+		}
 	}
 		
 	/*

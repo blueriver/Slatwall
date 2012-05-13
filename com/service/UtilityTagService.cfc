@@ -133,6 +133,18 @@ Notes:
 		<cfreturn result />
 	</cffunction>
 	
+	<cffunction name="cfdirectory" output="false">
+		<cfargument name="action" type="string" />
+		
+		<cfset var result = "" />
+		<cfset var attributes = duplicate(arguments) />
+		<cfset structDelete(attributes, "action") />
+		
+		<cfdirectory attributecollection="#attributes#" action="#arguments.action#" name="result" >
+		
+		<cfreturn result />
+	</cffunction>
+	
 	<cffunction name="cfcontent" output="false">
 		<cfargument name="type" type="string" />
 		<cfargument name="file" type="string" />

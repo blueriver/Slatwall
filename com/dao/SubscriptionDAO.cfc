@@ -50,4 +50,45 @@ Notes:
 		<cfreturn ormExecuteQuery(hql, {subscriptionUsageID=arguments.subscriptionUsageID, now=now()}, true, {maxresults=1}) /> 
 	</cffunction>
 	 
+	<cffunction name="getSubscriptionUsageForRenewal">
+
+		<cfset var getsu = "" />
+		<!--- can't figure out top 1 hql so, doing query: Sumit --->
+		<cfif getDBType() eq "mySql">
+			<cfquery name="getsu">
+				SELECT DISTINCT su.subscriptionUsageID
+				FROM SlatwallSubscriptionUsage su
+				WHERE (su.nextBillDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
+					AND 'sstActive' = (SELECT systemCode FROM SlatwallSubscriptionStatus 
+								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
+								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
+								AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
+								ORDER BY subscriptionStatusChangeDateTime DESC LIMIT 1)
+			</cfquery>
+		<cfelse>
+			<cfquery name="getsu">
+				SELECT DISTINCT su.subscriptionUsageID
+				FROM SlatwallSubscriptionUsage su
+				WHERE (su.nextBillDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
+					AND 'sstActive' = (SELECT TOP 1 systemCode FROM SlatwallSubscriptionStatus 
+								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
+								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
+								AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
+								ORDER BY subscriptionStatusChangeDateTime DESC)
+			</cfquery>
+		</cfif>
+		
+		<cfif getsu.recordCount>
+			<cfset var hql = "FROM SlatwallSubscriptionUsage WHERE subscriptionUsageID IN (:subscriptionUsageIDs)" />
+			<cfif structKeyExists(server, "railo")>
+				<cfset var returnQuery = ormExecuteQuery(hql, {subscriptionUsageIDs=valueList(getsu.subscriptionUsageID)}) />
+			<cfelse>
+				<cfset var returnQuery = ormExecuteQuery(hql, {subscriptionUsageIDs=listToArray(valueList(getsu.subscriptionUsageID))}) />		
+			</cfif>
+			<cfreturn returnQuery />
+		</cfif>
+		<cfreturn [] />
+		 
+	</cffunction>
+	 
 </cfcomponent>

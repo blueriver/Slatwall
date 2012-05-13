@@ -42,7 +42,7 @@ Notes:
 						   recordEditAction="admin:account.editsubscriptionUsage"
 						   recordEditQueryString="returnAction=admin:account.detailaccount&accountID=#rc.account.getAccountID()#"
 						   recordEditModal=true
-						   recordProcessAction="admin:account.processSubscriptionUsage&processContext=manualRenew"
+						   recordProcessAction="admin:account.processSubscriptionUsage"
 						   recordProcessModal=true
 						   recordProcessQueryString="returnaction=admin:account.detailaccount&accountID=#rc.account.getAccountID()#">
 

@@ -43,6 +43,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="SkuService" type="any";
 	property name="OptionService" type="any";
 	property name="UtilityORMService" type="any";
+	property name="ImageService" type="any";
 	
 	this.publicMethods='';
 	this.secureMethods='listproduct,editproduct,detailproduct,deleteProduct,saveproduct,listProductType,editProductType,detailProductType,deleteProductType,saveProductType,listOptionGroup,editOptionGroup,detailOptionGroup,deleteOptionGroup,saveOptionGroup,listBrand,editBrand,detailBrand,deleteBrand,saveBrand,listSubscriptionTerm,editSubscriptionTerm,detailSubscriptionTerm,deleteSubscriptionTerm,saveSubscriptionTerm,listSubscriptionBenefit,editSubscriptionBenefit,detailSubscriptionBenefit,deleteSubscriptionBenefit,saveSubscriptionBenefit,listProductReview,editProductReview,detailProductReview,deleteProductReview,saveProductReview';
@@ -158,6 +159,8 @@ component extends="BaseController" output=false accessors=true {
 			}else{
 				fileDelete(documentData.serverDirectory & '/' & documentData.serverFile);	
 			}
+			
+			getImageService().clearImageCache(sku.getImageDirectory(),sku.getImageFile());
 			
 		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
 			fileDelete(expandPath(sku.getImageDirectory()) & sku.getImageFile());	
