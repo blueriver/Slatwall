@@ -208,9 +208,13 @@ globalEncryptionKeySize
 				case "globalEncryptionEncoding":
 					return ['Base64','Hex','UU'];
 				case "globalEncryptionService":
-					return [{name='Internal', value='internal'}];
+					var options = getCustomIntegrationOptions();
+					arrayPrepend(options, {name='Internal', value='internal'});
+					return options;
 				case "globalOrderNumberGeneration":
-					return [{name='Internal', value='internal'}];
+					var options = getCustomIntegrationOptions();
+					arrayPrepend(options, {name='Internal', value='internal'});
+					return options;
 				case "globalWeightUnitCode": case "skuShippingWeightUnitCode":
 					var optionSL = this.getMeasurementUnitSmartList();
 					optionSL.addFilter('measurementType', 'weight');
@@ -227,6 +231,18 @@ globalEncryptionKeySize
 					return getLocationService().getLocationOptions();
 			}
 			throw("You have asked for a select list of a setting named '#arguments.settingName#' and the options for that setting have not been setup yet.  Open the SettingService, and configure options for this setting.")
+		}
+		
+		public array function getCustomIntegrationOptions() {
+			var options = [];
+			
+			var integrations = getIntegrationService().listIntegration({customReadyFlag=1});
+			
+			for(var i=1; i<=arrayLen(integrations); i++) {
+				arrayAppend(options, {name=integrations[i].getIntegrationName(), value=integrations[i].getIntegrationPackage()});
+			}
+			
+			return options;
 		}
 		
 		public any function getSettingOptionsSmartList(required string settingName) {
