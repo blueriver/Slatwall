@@ -220,7 +220,7 @@ component extends="org.fw1.framework" output="false" {
 		request.context.$.slatwall = request.slatwallScope;
 		
 		// Run subsytem specific logic.
-		if(getSubsystem(request.context.slatAction) == "admin") {
+		if(getSubsystem(request.context.slatAction) != "frontend") {
 			controller("admin:BaseController.subSystemBefore");
 		} else {
 			request.context.sectionTitle = getSubsystem(request.context.slatAction);
