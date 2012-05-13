@@ -252,8 +252,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			} else {
 				arguments.size = "small";
 			}
-			arguments.width = setting("productImage#arguments.size#Width");
-			arguments.height = setting("productImage#arguments.size#Height");
+			arguments.width = getProduct().setting("productImage#arguments.size#Width");
+			arguments.height = getProduct().setting("productImage#arguments.size#Height");
 		}
 		arguments.imagePath=getImagePath();
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
