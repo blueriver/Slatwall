@@ -158,12 +158,11 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 						for(var p=i; p<=ps+i; p++){
 							phrase = listAppend(phrase, keywordArray[p], " ");
 						}
-						arrayAppend(variables.keywords, phrase);
+						arrayPrepend(variables.keywords, phrase);
 					}
 				}
 			}
 		}
-		
 	}
 
 	private void function confirmWhereGroup(required numeric whereGroup) {
@@ -387,20 +386,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
 			} else {
 				hqlSelect &= "SELECT DISTINCT #variables.entities[getBaseEntityName()].entityAlias#";
-				
-				if(arrayLen(variables.Keywords) && structCount(variables.keywordProperties)) {
-					var first = true;
-					variables.selectKeywordColumns = 0;
-					for(var ii=1; ii<=arrayLen(variables.Keywords); ii++) {
-						var paramID = "keyword#ii#";
-						for(var keywordProperty in variables.keywordProperties) {
-							variables.selectKeywordColumns++;
-							var scoreMultiplier = variables.keywordProperties[ keywordProperty ] * listLen(keywordProperty, " ");
-							hqlSelect &= ", (SELECT count(s#getBaseEntityPrimaryAliase()#) * #scoreMultiplier# #getHQLFrom(searchOrder=true)# WHERE s#keywordProperty# LIKE :#paramID# AND #getBaseEntityPrimaryAliase()# = s#getBaseEntityPrimaryAliase()#)";
-						}
-					}
-					
-				}
 			}
 		}
 		return hqlSelect;
@@ -578,25 +563,10 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	public string function getHQLOrder(boolean supressOrderBy=false) {
 		var hqlOrder = "";
-		if(arrayLen(variables.orders) || (arrayLen(variables.keywords) && structCount(variables.keywordProperties))){
+		if(arrayLen(variables.orders)){
 			
 			if(!arguments.supressOrderBy) {
 				hqlOrder &= " ORDER BY";
-			}
-			
-			if(arrayLen(variables.Keywords) && structCount(variables.keywordProperties)) {
-				
-				hqlOrder &= " ( ";
-				
-				var first = true;
-				for(var i=1; i<=structCount(variables.keywordProperties) * arrayLen(variables.keywords); i++) {
-					if(!first) {
-						hqlOrder &= " + ";	
-					}
-					first=false;
-					hqlOrder &= "col_#i#_0_";
-				}
-				hqlOrder &= " ) DESC  ";
 			}
 			
 			for(var i=1; i<=arrayLen(variables.orders); i++) {
@@ -623,18 +593,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "pageRecords")) {
-			variables.pageRecords = [];
-			
 			saveState();
-			var results = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
-			
-			if(arrayLen(variables.keywords) && structCount(variables.keywordProperties)) {
-				for(var i = 1; i<=arrayLen(results); i++) {
-					arrayAppend(variables.pageRecords, results[i][1]);
-				}	
-			} else {
-				variables.pageRecords = results;
-			}
+			variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
 		}
 		return variables.pageRecords;
 	}
