@@ -45,6 +45,7 @@ Notes:
 			sortproperty="sortOrder">
 			
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="shippingMethodName" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="activeFlag" filter="true" />
 		
 	</cf_SlatwallListingDisplay>
 	
