@@ -53,6 +53,7 @@ Notes:
 	<cf_SlatwallSetting settingName="skuQATSIncludesQNROROFlag" settingObject="#rc.product#" />
 	<cf_SlatwallSetting settingName="skuQATSIncludesQNROVOFlag" settingObject="#rc.product#" />
 	<cf_SlatwallSetting settingName="skuQATSIncludesQNROSAFlag" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="skuTaxCategory" settingObject="#rc.product#" />
 	<cfif rc.product.getProductType().getBaseProductType() eq "merchandise">
 		<!--- Wrap this arround settings if you want to disable them for certain product types --->
 	</cfif>

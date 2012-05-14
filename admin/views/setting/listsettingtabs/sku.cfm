@@ -52,5 +52,6 @@ Notes:
 		<cf_SlatwallSetting settingName="skuQATSIncludesQNROROFlag" />
 		<cf_SlatwallSetting settingName="skuQATSIncludesQNROVOFlag" />
 		<cf_SlatwallSetting settingName="skuQATSIncludesQNROSAFlag" />
+		<cf_SlatwallSetting settingName="skuTaxCategory" />
 	</cf_SlatwallSettingTable>
 </cfoutput>

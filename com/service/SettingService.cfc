@@ -45,6 +45,8 @@ globalEncryptionKeySize
 	<!--- Injected from Coldspring --->
 	<cfproperty name="contentService" type="any" />
 	<cfproperty name="integrationService" type="any" />
+	<cfproperty name="measurementUnitService" type="any" />
+	<cfproperty name="taxService" type="any" />
 	<cfproperty name="utilityORMService" type="any" />
 	<cfproperty name="locationService" type="any" />
 	
@@ -101,7 +103,6 @@ globalEncryptionKeySize
 			contentMetaDescriptionString = {fieldType="textarea"},
 			contentMetaKeywordsString = {fieldType="textarea"},
 			
-	
 			// Fulfillment Method
 			fulfillmentMethodEmailFrom = {fieldType="text"},
 			fulfillmentMethodEmailCC = {fieldType="text"},
@@ -178,6 +179,7 @@ globalEncryptionKeySize
 			skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
 			skuShippingWeight = {fieldType="text", formatType="weight"},
 			skuShippingWeightUnitCode = {fieldType="select"},
+			skuTaxCategory = {fieldType="select"},
 			skuTrackInventoryFlag = {fieldType="yesno"},
 			
 			// Shipping Method
@@ -216,7 +218,7 @@ globalEncryptionKeySize
 					arrayPrepend(options, {name='Internal', value='internal'});
 					return options;
 				case "globalWeightUnitCode": case "skuShippingWeightUnitCode":
-					var optionSL = this.getMeasurementUnitSmartList();
+					var optionSL = getMeasurementUnitService().getMeasurementUnitSmartList();
 					optionSL.addFilter('measurementType', 'weight');
 					optionSL.addSelect('unitName', 'name');
 					optionSL.addSelect('unitCode', 'value');
@@ -225,6 +227,11 @@ globalEncryptionKeySize
 					return [{name='Sort Order', value='sortOrder'}, {name='Lowest Rate', value='lowest'}, {name='Highest Rate', value='highest'}];
 				case "shippingMethodRateAdjustmentType" :
 					return [{name='Increase Percentage', value='increasePercentage'}, {name='Decrease Percentage', value='decreasePercentage'}, {name='Increase Amount', value='increaseAmount'}, {name='Decrease Amount', value='decreaseAmount'}];
+				case "skuTaxCategory":
+					var optionSL = getTaxService().getTaxCategorySmartList();
+					optionSL.addSelect('taxCategoryName', 'name');
+					optionSL.addSelect('taxCategoryID', 'value');
+					return optionSL.getRecords();
 				case "paymentMethodCheckoutTransactionType" :
 					return [{name='None', value='none'}, {name='Authorize Only', value='authorize'}, {name='Authorize And Charge', value='authorizeAndCharge'}];
 				case "fulfillmentMethodAutoLocation" :

@@ -53,6 +53,7 @@
 		<Record settingID="dbb327cacd75d5fd4e66557a8ee06c62" settingName="skuQATSIncludesQNROSAFlag" settingValue="0" />
 		<Record settingID="dbb327b6a5a78a0eae4baf0b0c3382b1" settingName="skuShippingWeight" settingValue="1" />
 		<Record settingID="dbb327b8fb8c0843e5cb7cd6525e2f6a" settingName="skuShippingWeightUnitCode" settingValue="lb" />
+		<Record settingID="dbb327e4f28cd7cb53868c55e0cfcd55" settingName="skuTaxCategory" settingValue="444df2c8cce9f1417627bd164a65f133" />
 		<Record settingID="dbb327c6d74a8e837f0cfa41aab9cd94" settingName="skuTrackInventoryFlag" settingValue="0" />
 		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="skuTrackInventoryFlag" settingValue="1" productTypeID="444df2f7ea9c87e60051f3cd87b435a1" />
 		
@@ -76,7 +77,7 @@
 Below Are UUID's to use... delete after using
 	
 	
-	dbb327e4f28cd7cb53868c55e0cfcd55
+	
 	dbb327e506090fde08cc4855fa14448d
 	dbb327e694534908c60ea354766bf0a8
 	dbb327e796334dee73fb9d8fd801df91

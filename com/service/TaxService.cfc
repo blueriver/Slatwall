@@ -57,19 +57,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// If the method is shipping then apply taxes
 				if(fulfillment.getFulfillmentMethodType() == "shipping") {
 					
-					// TODO: This is a hack because we only have one tax category for products right now
-					var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
+					var taxCategory = this.getTaxCategory(orderItem.getSku().setting('skuTaxCategory'));
 					var address = fulfillment.getAddress();
 					
-					if(!isNull(address)) {
-						for(var r=1; r<= arrayLen(taxCategory.getTaxCategoryRates()); r++) {
-							if(isNull(taxCategory.getTaxCategoryRates()[r].getAddressZone()) || getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[r].getAddressZone())) {
-								var newAppliedTax = this.newOrderItemAppliedTax();
-								newAppliedTax.setTaxAmount(round(orderItem.getExtendedPriceAfterDiscount() * taxCategory.getTaxCategoryRates()[r].getTaxRate()) / 100);
-								newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[r].getTaxRate());
-								newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[r]);
-								newAppliedTax.setOrderItem(orderItem);
-							}
+					for(var r=1; r<= arrayLen(taxCategory.getTaxCategoryRates()); r++) {
+						if(isNull(taxCategory.getTaxCategoryRates()[r].getAddressZone()) || (!isNull(address) && getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[r].getAddressZone()))) {
+							var newAppliedTax = this.newOrderItemAppliedTax();
+							newAppliedTax.setTaxAmount(round(orderItem.getExtendedPriceAfterDiscount() * taxCategory.getTaxCategoryRates()[r].getTaxRate()) / 100);
+							newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[r].getTaxRate());
+							newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[r]);
+							newAppliedTax.setOrderItem(orderItem);
 						}
 					}
 				}

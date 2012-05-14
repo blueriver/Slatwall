@@ -319,6 +319,8 @@
 		<property name="contentService"><ref bean="contentService" /></property>
 		<property name="utilityORMService"><ref bean="utilityORMService" /></property>
 		<property name="locationService"><ref bean="locationService" /></property>
+		<property name="measurementUnitService"><ref bean="measurementUnitService" /></property>
+		<property name="taxService"><ref bean="taxService" /></property>
     </bean>
 	<bean id="shippingService" class="Slatwall.com.service.ShippingService">
         <property name="DAO"><ref bean="shippingDAO" /></property>
