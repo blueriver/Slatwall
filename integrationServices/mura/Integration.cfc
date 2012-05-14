@@ -130,20 +130,23 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 					var slatwallContent = createSlatwallContent(muraPage,page);
 					// set this as default template
 					if(page.fileName == "default-template") {
-						var productDisplayTemplateSetting = getService("settingService").getSettingBySettingName("productDisplayTemplate",true);
-						if(productDisplayTemplateSetting.isNew()) {
+						var productDisplayTemplateSettings = getService("settingService").listSetting({settingName="productDisplayTemplate"});
+						if(!arrayLen(productDisplayTemplateSettings)) {
+							var productDisplayTemplateSetting = getService("settingService").newSetting();
 							productDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
 							productDisplayTemplateSetting.setSettingName("productDisplayTemplate");
 							getService("settingService").saveSetting(productDisplayTemplateSetting);
 						}
-						var productTypeDisplayTemplateSetting = getService("settingService").getSettingBySettingName("productTypeDisplayTemplate",true);
-						if(productTypeDisplayTemplateSetting.isNew()) {
+						var productTypeDisplayTemplateSettings = getService("settingService").listSetting({settingName="productTypeDisplayTemplate"});
+						if(!arrayLen(productTypeDisplayTemplateSettings)) {
+							var productTypeDisplayTemplateSetting = getService("settingService").newSetting();
 							productTypeDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
 							productTypeDisplayTemplateSetting.setSettingName("productTypeDisplayTemplate");
 							getService("settingService").saveSetting(productTypeDisplayTemplateSetting);
 						}
-						var brandDisplayTemplateSetting = getService("settingService").getSettingBySettingName("brandDisplayTemplate",true);
-						if(brandDisplayTemplateSetting.isNew()) {
+						var brandDisplayTemplateSettings = getService("settingService").listSetting({settingName="brandDisplayTemplate"});
+						if(!arrayLen(brandDisplayTemplateSettings)) {
+							var brandDisplayTemplateSetting = getService("settingService").newSetting();
 							brandDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
 							brandDisplayTemplateSetting.setSettingName("brandDisplayTemplate");
 							getService("settingService").saveSetting(brandDisplayTemplateSetting);
