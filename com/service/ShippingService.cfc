@@ -210,6 +210,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						newOption.setShippingMethodRate( rateToUse.shippingMethodRate );
 						
 						arguments.orderFulfillment.addFulfillmentShippingMethodOption( newOption );
+						
+						getDAO().save(newOption);
 					}
 
 				}
