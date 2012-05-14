@@ -43,6 +43,8 @@ component displayname="Account Attribute Value" entityname="SlatwallAccountAttri
 	
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true" cascade="all";
 	
+	
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -68,6 +70,18 @@ component displayname="Account Attribute Value" entityname="SlatwallAccountAttri
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+			
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public any function getAttributeValue() {
+		if(!structKeyExists(variables, "attributeValue")) {
+			variables.attributeValue = "";
+		}
+		
+		return variables.attributeValue;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
 	
 	// ================== START: Overridden Methods ========================
 	

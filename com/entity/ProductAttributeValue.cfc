@@ -67,7 +67,19 @@ component displayname="Product Attribute Value" entityname="SlatwallProductAttri
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
+			
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public any function getAttributeValue() {
+		if(!structKeyExists(variables, "attributeValue")) {
+			variables.attributeValue = "";
+		}
 		
+		return variables.attributeValue;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+	
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================

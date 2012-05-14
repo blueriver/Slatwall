@@ -70,6 +70,18 @@ component displayname="Order Item Attribute Value" entityname="SlatwallOrderItem
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+			
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public any function getAttributeValue() {
+		if(!structKeyExists(variables, "attributeValue")) {
+			variables.attributeValue = "";
+		}
+		
+		return variables.attributeValue;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
 	
 	// ================== START: Overridden Methods ========================
 	
