@@ -99,15 +99,5 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	
 	// =================== START: ORM Event Hooks  =========================
 	
-	public void function preInsert(){
-		super.preInsert();
-		getService("productCacheService").updateFromVendorOrderItem( this );
-	}
-	
-	public void function preUpdate(struct oldData){
-		super.preUpdate(argumentcollection=arguments);
-		getService("productCacheService").updateFromVendorOrderItem( this );
-	}
-	
 	// ===================  END:  ORM Event Hooks  =========================
 }

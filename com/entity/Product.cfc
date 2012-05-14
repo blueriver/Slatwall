@@ -54,9 +54,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="calculatedAllowBackorderFlag" ormtype="boolean";
 	property name="calculatedTitle" ormtype="string";
 	
-	// Related Object Properties (one-to-one)
-	property name="productCache" fieldType="one-to-one" cfc="ProductCache" cascade="delete";
-	
 	// Related Object Properties (many-to-one)
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
@@ -758,16 +755,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
-	
-	public void function postInsert() {
-		super.postInsert();
-		getService("productCacheService").updateFromProduct( this );
-	}
-	
-	public void function postUpdate() {
-		super.postUpdate(argumentcollection=arguments);
-		getService("productCacheService").updateFromProduct( this );
-	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

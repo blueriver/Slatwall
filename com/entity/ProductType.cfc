@@ -222,13 +222,11 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public void function preInsert(){
 		super.preInsert();
 		setProductTypeIDPath( buildIDPathList( "parentProductType" ) );
-		getService("productCacheService").updateFromProductType( this );
 	}
 	
 	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
-		setProductTypeIDPath( buildIDPathList( "parentProductType" ) );
-		getService("productCacheService").updateFromProductType( this );
+		setProductTypeIDPath( buildIDPathList( "parentProductType" ) );;
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

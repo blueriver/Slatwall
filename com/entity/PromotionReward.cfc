@@ -343,16 +343,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		return !getPromotionPeriod().isExpired() && getPromotionPeriod().getPromotion().isDeletable();
 	}
 	
-	public void function preInsert(){
-		super.preInsert();
-		getService("productCacheService").updateFromPromotionRewardProduct( this );
-	}
-	
-	public void function preUpdate(struct oldData){
-		super.preUpdate(argumentcollection=arguments);
-		getService("productCacheService").updateFromPromotionRewardProduct( this );
-	}
-		
 	// ==================  END:  Overridden Methods ========================
 
 	// =================== START: ORM Event Hooks  =========================

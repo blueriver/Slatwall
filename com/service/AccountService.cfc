@@ -318,17 +318,10 @@ component extends="BaseService" accessors="true" output="false" {
 	public any function getAccountSmartList(struct data={}, currentURL="") {
 		arguments.entityName = "SlatwallAccount";
 		
-		// Set the defaul showing to 25
-		if(!structKeyExists(arguments.data, "P:Show")) {
-			arguments.data["P:Show"] = 25;
-		}
-		
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
 		smartList.addKeywordProperty(propertyIdentifier="firstName", weight=3);
 		smartList.addKeywordProperty(propertyIdentifier="lastName", weight=3);
-		smartList.addKeywordProperty(propertyIdentifier="company", weight=1);
-		/*smartList.addKeywordProperty(propertyIdentifier="primaryEmailAddress_emailAddress", weight=3);*/
 		
 		return smartList;
 	}

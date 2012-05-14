@@ -49,15 +49,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function getVendorOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallVendorOrder";
 		
-		// Set the defaul showing to 25
-		if(!structKeyExists(arguments.data, "P:Show")) {
-			arguments.data["P:Show"] = 25;
-		}
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);	
-		smartList.addKeywordProperty(propertyIdentifier="vendorOrderNumber", weight=9);
-		smartList.addKeywordProperty(propertyIdentifier="vendor_vendorName", weight=4);	
 		smartList.joinRelatedProperty("SlatwallVendorOrder","vendor");
+			
+		smartList.addKeywordProperty(propertyIdentifier="vendorOrderNumber", weight=9);
+		smartList.addKeywordProperty(propertyIdentifier="vendor.vendorName", weight=4);	
 		
 		return smartList;
 	}

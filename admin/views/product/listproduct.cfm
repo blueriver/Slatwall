@@ -52,4 +52,5 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="defaultSku.price" range=true />
 	</cf_SlatwallListingDisplay>
+	
 </cfoutput>

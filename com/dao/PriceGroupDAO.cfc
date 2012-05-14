@@ -58,7 +58,7 @@ Notes:
 									INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
 									WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
 									AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
-									ORDER BY subscriptionStatusChangeDateTime DESC LIMIT 1)
+									ORDER BY changeDateTime DESC LIMIT 1)
 				</cfquery>
 		<cfelse>
 				<cfquery name="getpg">
@@ -74,7 +74,7 @@ Notes:
 									INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
 									WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
 									AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
-									ORDER BY subscriptionStatusChangeDateTime DESC)
+									ORDER BY changeDateTime DESC)
 				</cfquery>
 		</cfif>
 		

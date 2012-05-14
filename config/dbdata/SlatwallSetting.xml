@@ -24,7 +24,6 @@
 		<Record settingID="dbb327ada425f5cd38dfecb702a7e24e" settingName="globalRemoteIDShowFlag" settingValue="0" />
 		<Record settingID="dbb327bfb08b7eaaff39fca1d317a60e" settingName="globalRemoteIDEditFlag" settingValue="0" />
 		<Record settingID="dbb327ac9f8ef0c160cd8b5c4f07ddfa" settingName="globalTimeFormat" settingValue="hh:mm tt" />
-		<Record settingID="dbb327bba727c794a7661ef523b17973" settingName="globalUseProductCacheFlag" settingValue="0" />
 		<Record settingID="dbb327c1b246cefc0a4d6146458c61d6" settingName="globalURLKeyBrand" settingValue="sb" />
 		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="globalURLKeyProduct" settingValue="sp" />
 		<Record settingID="dbb327c2f0ece6ff03d81c53d840d8bc" settingName="globalURLKeyProductType" settingValue="spt" />

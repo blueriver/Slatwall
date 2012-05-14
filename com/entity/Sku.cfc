@@ -227,7 +227,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		
 		// Setup Alt & Class for the image
 		if(arguments.alt == "") {
-			arguments.alt = "#getProduct().getTitle()#";
+			arguments.alt = "#getProduct().getCalculatedTitle()#";
 		}
 		if(arguments.class == "") {
 			arguments.class = "skuImage";	
@@ -252,8 +252,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			} else {
 				arguments.size = "small";
 			}
-			arguments.width = setting("productImage#arguments.size#Width");
-			arguments.height = setting("productImage#arguments.size#Height");
+			arguments.width = getProduct().setting("productImage#arguments.size#Width");
+			arguments.height = getProduct().setting("productImage#arguments.size#Height");
 		}
 		arguments.imagePath=getImagePath();
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
@@ -468,13 +468,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     		setImageFile(generateImageFileName());
     	}
 		super.preInsert();
-		getService("productCacheService").updateFromProduct( this );
     }
-    
-	public void function preUpdate(struct oldData){
-		super.preUpdate(argumentcollection=arguments);
-		getService("productCacheService").updateFromProduct( this );
-	}
     
 	// ===================  END:  ORM Event Hooks  =========================
 }

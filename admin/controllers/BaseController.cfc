@@ -63,20 +63,13 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			}
 		}
 		
+		var subsystemName = getFW().getSubsystem( rc.slatAction );
 		var sectionName = getFW().getSection( rc.slatAction );
 		var itemName = getFW().getItem( rc.slatAction );
 		
 		//check if the page is public, if public no need to worry about security
-		if(!listFindNocase(permissionService.getPublicMethods(sectionName),rc.slatAction)){
+		if(!listFindNocase(permissionService.getPublicMethods(subsystemName, sectionName), rc.slatAction)){
 		
-			//check if the user is logged in
-			/*
-			if(!val(getSlatwallScope().getCurrentAccount().getAccountID())){
-				writedump('You must login!');
-				abort;
-			}
-			*/
-			
 			//check if the user has access to everything, i.e. * permissions
 			//check if they have access to that private page	
 			if(

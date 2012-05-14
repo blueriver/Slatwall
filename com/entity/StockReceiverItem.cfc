@@ -156,7 +156,6 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 		}
 		super.preInsert();
 		getService("inventoryService").createInventory( this );
-		getService("productCacheService").updateFromStockReceiverItem( this );
 	}
 	
 	public void function preUpdate(Struct oldData){

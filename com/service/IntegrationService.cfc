@@ -195,7 +195,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			var newFactory = createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
 			newFactory.loadBeansFromXmlObj( arguments.originalXML );
-			newFactory.setParent( application.serviceFactory );
 			
 			return newFactory;
 		}
