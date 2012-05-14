@@ -36,6 +36,7 @@
 Notes:
 
 --->
+<cfset request.slatwallScope.getService("settingService").clearAllSettingsQuery() />
 <cfset slatwallContent = request.slatwallScope.getService("contentService").getContentByCmsContentID($.content("contentID"), true) />
 
 <cfset slatwallProductSmartList = request.slatwallScope.getService("productService").getSmartList(entityName="SlatwallProduct") />
