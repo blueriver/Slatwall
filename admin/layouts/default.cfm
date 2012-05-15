@@ -126,11 +126,9 @@ Notes:
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.help_nav')#" icon="question-sign icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:help" type="list">
-							<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?reload=true" />Reload Slatwall</a></li>
-							<li><a href="/admin/index.cfm?appreload&reload=appreload" />Reload Mura</a></li>
-							<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.updateSkuCache" />Update Sku Cache</a></li>
-							<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.detailslatwallupdate" />Update Slatwall</a></li>
-							<li><a href="#request.slatwallScope.getSlatwallRootPath()#/?slatAction=admin:setting.detailviewupdate" />Update Front-end Views</a></li>
+							<cf_SlatwallActionCaller action="admin:main.default" queryString="reload=true" text="Reload Slatwall" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailviewupdate" type="list">
 						</cf_SlatwallActionCallerDropdown>
 					</ul>
 					<form name="search" class="navbar-search pull-right" action="/">

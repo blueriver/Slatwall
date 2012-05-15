@@ -49,8 +49,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="measurementUnitService" type="any";
 	
 	this.publicMethods='';
-	this.secureMethods='listsetting,detailsetting,editsetting,listfulfillmentmethod,editfulfillmentmethod,detailfulfillmentmethod,deletefulfillmentmethod,createfulfillmentmethod,listmeasurementunit,editmeasurementunit,detailmeasurementunit,createmeasurementunit,deletemeasurementunit,listorderorigin,createorderorigin,deleteorderorigin,editorderorigin,detailorderorigin,listpaymentmethod,editpaymentmethod,detailpaymentmethod,createpaymentmethod,deletepaymentmethod,listroundingrule,editroundingrule,detailroundingrule,createroundingrule,deleteroundingrule,listtaxcategory,edittaxcategory,detailtaxcategory,createtaxcategory,deletetaxcategory,listterm,detailterm,editterm,createterm,deleteterm,listType,editType,detailType,createType,deleteType,listLocation,editlocation,detaillocation,createlocation,deletelocation,listaddresszone,editaddresszone,detailaddresszone,createaddresszone,deleteaddresszone,listcountry,editcountry,detailcountry,createcountry,deletecountry,listattributeset,editattributeset,detailattributeset,createattributeset,deleteattributeset,createcategory,detailcategory,editcategory,deletecategory,listcategory,editcontent,detailcontent,createcontent,deletecontent,listschedule,editschedule,detailschedule,createschedule,deleteschedule,listtask,edittask,detailtask,createtask,deletetask,listtaskhistory,saveaddresszone,saveattributeset,savecategory,savecountry,savefulfillmentmethod,saveLocation,saveorderorigin,savepaymentmethod,saveroundingrule,saveschedule,savesetting,savetask,savetaskhistory,savetaxcategory,saveterm,saveType,savemeasurementunit';
-	
+	this.secureMethods = 'listsetting,detailsetting,editsetting,listfulfillmentmethod,editfulfillmentmethod,detailfulfillmentmethod,deletefulfillmentmethod,createfulfillmentmethod,listmeasurementunit,editmeasurementunit,detailmeasurementunit,createmeasurementunit,deletemeasurementunit,listorderorigin,createorderorigin,deleteorderorigin,editorderorigin,detailorderorigin,listpaymentmethod,editpaymentmethod,detailpaymentmethod,createpaymentmethod,deletepaymentmethod,listroundingrule,editroundingrule,detailroundingrule,createroundingrule,deleteroundingrule,listtaxcategory,edittaxcategory,detailtaxcategory,createtaxcategory,deletetaxcategory,listterm,detailterm,editterm,createterm,deleteterm,listType,editType,detailType,createType,deleteType,listLocation,editlocation,detaillocation,createlocation,deletelocation,listaddresszone,editaddresszone,detailaddresszone,createaddresszone,deleteaddresszone,listcountry,editcountry,detailcountry,createcountry,deletecountry,listattributeset,editattributeset,detailattributeset,createattributeset,deleteattributeset,createcategory,detailcategory,editcategory,deletecategory,listcategory,editcontent,detailcontent,createcontent,deletecontent,listschedule,editschedule,detailschedule,createschedule,deleteschedule,listtask,edittask,detailtask,createtask,deletetask,listtaskhistory,saveaddresszone,saveattributeset,savecategory,savecountry,savefulfillmentmethod,saveLocation,saveorderorigin,savepaymentmethod,saveroundingrule,saveschedule,savesetting,savetask,savetaskhistory,savetaxcategory,saveterm,saveType,savemeasurementunit';
 	
 	public void function default() {
 		getFW().redirect(action="admin:setting.listsetting");
@@ -150,24 +149,11 @@ component extends="BaseController" output="false" accessors="true" {
 
 	public void function updateSlatwall(required struct rc) {
 		getUpdateService().update(branch=rc.updateBranch);
-		rc.message = rbKey("admin.setting.updateslatwall_success");
-		getFW().redirect(action="admin:setting.detailslatwallupdate?reload=true", preserve="message");	
+		getFW().redirect(action="admin:setting.detailslatwallupdate", queryString="reload=1&messageKeys=admin.setting.updateslatwall_success");	
 	}
 
-	public void function updateSkuCache(required struct rc) {
-		getproductCacheService().updateAllSkus();
-		rc.message = rbKey("admin.setting.updateSkuCache_success");
-		getFW().redirect(action="admin:main.default", preserve="message");	
-	}
-
-	public void function updateProductCache(required struct rc) {
-		getproductCacheService().updateAllProducts();
-		rc.message = rbKey("admin.setting.updateProductCache_success");
-		getFW().redirect(action="admin:main.default", preserve="message");	
-	}
-	
-	public void function detailviewupdate() {
-		
+	public void function detailViewUpdate() {
+		// Do Nothing
 	}
 	
 	public void function saveTask(required struct rc){
