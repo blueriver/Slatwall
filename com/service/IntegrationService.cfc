@@ -43,29 +43,31 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	// Place holder properties that get populated lazily
 	property name="settings" type="any";
 	
-	variables.allSettings = {};
-	variables.activeFW1Subsystems = [];	
 	variables.integrationCFCs = {};
 	variables.paymentIntegrationCFCs = {};
 	variables.shippingIntegrationCFCs = {};
 	
+	public any function saveIntegration() {
+		if( structKeyExists(variables, "activeFW1Subsystems") ) {
+			structDelete(variables, "activeFW1Subsystems");
+		}
+		return super.save(argumentCollection=arguments);
+	}
+	
 	public array function getActiveFW1Subsystems() {
 		if( !structKeyExists(variables, "activeFW1Subsystems") ) {
 			variables.activeFW1Subsystems = [];
-			var isl = this.getIntegrationSmartList();
-			isl.addFilter('installedFlag', 1);
-			var integrations = isl.getRecords();
+			
+			var integrations = this.listIntegration({fw1ActiveFlag=1, installedFlag=1});
 			for(var i=1; i<=arrayLen(integrations); i++) {
-				if(getIntegrationCFC(integrations[i]).isFW1Subsystem()) {
-					arrayAppend(variables.activeFW1Subsystems, {subsystem=integrations[i].getIntegrationPackage(), name=integrations[i].getIntegrationName()});
-				}
+				arrayAppend(variables.activeFW1Subsystems, {subsystem=integrations[i].getIntegrationPackage(), name=integrations[i].getIntegrationName()});
 			}
 		}
 		return variables.activeFW1Subsystems;
 	}
 	
 	public any function getAllSettings() {
-		
+		if( !structKeyExists(variables, "allSettings") ) {
 			variables.allSettings = {};
 			var isl = this.getIntegrationSmartList();
 			isl.addFilter('installedFlag', 1);
@@ -75,6 +77,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					variables.allSettings['integration#integrations[i].getIntegrationPackage()##settingName#'] = integrations[i].getSettings()[ settingName ];
 				}
 			}
+		}
 		
 		return variables.allSettings;
 	}
@@ -105,7 +108,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function updateIntegrationsFromDirectory() {
-		
+		logSlatwall("Update Integrations Started");
 		var dirList = directoryList( expandPath("/plugins/Slatwall/integrationServices") );
 		var integrationList = this.listIntegration();
 		var installedIntegrationList = "";
@@ -113,14 +116,25 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Turn off the installed and ready flags on any previously setup integration entities
 		for(var i=1; i<=arrayLen(integrationList); i++) {
 			integrationList[i].setInstalledFlag(0);
+			
+			integrationList[i].setFW1ReadyFlag(0);
 			integrationList[i].setPaymentReadyFlag(0);
 			integrationList[i].setShippingReadyFlag(0);
 			integrationList[i].setCustomReadyFlag(0);
-		}
-		
-		// Remove the activeFW1Subsystems setting so that it gets reloaded
-		if(structKeyExists(variables, "activeFW1Subsystems")) {
-			structDelete(variables, "activeFW1Subsystems");
+			
+			if(isNull(integrationList[i].getFW1ActiveFlag())) {
+				integrationList[i].setFW1ActiveFlag(0);
+			}
+			if(isNull(integrationList[i].getPaymentActiveFlag())) {
+				integrationList[i].setPaymentActiveFlag(0);
+			}
+			if(isNull(integrationList[i].getShippingActiveFlag())) {
+				integrationList[i].setShippingActiveFlag(0);
+			}
+			if(isNull(integrationList[i].getCustomActiveFlag())) {
+				integrationList[i].setCustomActiveFlag(0);
+			}
+			
 		}
 		
 		// Loop over each integration in the integration directory
@@ -153,6 +167,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								integration.setCustomReadyFlag(1);
 								break;
 							}
+							case "fw1": {
+								integration.setFW1ReadyFlag(1);
+								break;
+							}
 							case "payment": {
 								var paymentCFC = createObject("component", "Slatwall.integrationServices.#integrationPackage#.Payment").init();
 								var paymentMeta = getMetaData(paymentCFC);
@@ -175,6 +193,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					// Call Entity Save so that any new integrations get persisted
 					getDAO().save(integration);
 					
+					logSlatwall("The following integration has been register: #integrationPackage#");
 				}
 			}
 		}

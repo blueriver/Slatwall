@@ -325,7 +325,14 @@ function listingDisplayUpdate( tableID, data ) {
 					
 					if( jQuery(cv).hasClass('data') ) {
 						
-						newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+						if( rv[jQuery(cv).data('propertyidentifier')] == true) {
+							newtd += '<td class="' + jQuery(cv).attr('class') + '">Yes</td>';
+						} else if ( rv[jQuery(cv).data('propertyidentifier')] == false ) {
+							newtd += '<td class="' + jQuery(cv).attr('class') + '">No</td>';
+						} else {
+							newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+						}
+						
 					
 					} else if( jQuery(cv).hasClass('multiselect') ) {
 						

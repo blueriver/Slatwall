@@ -54,7 +54,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	}
 	
 	public string function getIntegrationTypes() {
-		return "cms";
+		return "cms,fw1";
 	}
 	
 	public string function getDisplayName() {

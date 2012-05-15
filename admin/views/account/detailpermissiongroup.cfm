@@ -57,7 +57,6 @@ Notes:
 								<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions"  value="#rc.permissionGroup.getPermissions()#" valueOptions="#rc.permissions[permissionName]#" />
 							</div>
 						</div>
-								
 					</cfloop>
 					
 					<div class="control-group">
@@ -90,22 +89,6 @@ Notes:
 				</cfif>
 			</cfoutput>
 		</cf_SlatwallPropertyList>
-		
-		<!---<cfoutput>
-			
-			<cfif rc.edit>
-				<cfloop collection="#rc.permissions#" item="permissionName">
-					#$.slatwall.rbKey('permission.' & permissionName)#<br />
-					<cfloop array="#rc.permissions[permissionName]#" index="permission">
-						<input type="checkbox" name="permissions" value="#permissionName#.#permission#" <cfif listfind(rc.permissiongroup.getPermissions(),permissionName & '.' & permission)>checked</cfif>/>#permission# <br />
-					</cfloop>	
-				</cfloop>
-				<br />
-				<input type="checkbox" name="permissions" value="*" <cfif listfind(rc.permissiongroup.getPermissions(),'*')>checked</cfif>/>Everything<br />
-			<cfelse>
-				#rc.permissiongroup.getPermissions()#
-			</cfif>	
-		</cfoutput>--->
 	</cf_SlatwallDetailHeader>
 	
 	

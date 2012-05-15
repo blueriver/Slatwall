@@ -101,17 +101,11 @@ Notes:
 			</cfoutput>
 		</cfcase>
 		<cfcase value="date">
-			<cfif len(attributes.value)>
-				<cfset attributes.value = " #attributes.value#" />
-			</cfif>
 			<cfoutput>
 				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# datepicker" #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="dateTime">
-			<cfif len(attributes.value)>
-				<cfset attributes.value = " #attributes.value#" />
-			</cfif>
 			<cfoutput>
 				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# datetimepicker" #attributes.fieldAttributes# />
 			</cfoutput>
