@@ -46,7 +46,7 @@ Notes:
 Operating System:	#server.os.name#
 CFML Server:		#server.coldfusion.productName#: <cfif structKeyExists(server,"railo")>#server.railo.version#<cfelse>#server.coldfusion.productVersion#</cfif>
 DB Dialect: 		#application.configBean.getDBType()#
-Slatwall Version:	#getPluginConfig().getApplication().getValue('SlatwallVersion')#
+Slatwall Version:	#rc.$.slatwall.getApplicationValue('version')#
 	</textarea>
 </div>
 </cfoutput>

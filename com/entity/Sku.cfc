@@ -226,7 +226,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}
 		
 		// Setup Alt & Class for the image
-		if(arguments.alt == "") {
+		if(arguments.alt == "" && !isNull(getProduct().getCalculatedTitle())) {
 			arguments.alt = "#getProduct().getCalculatedTitle()#";
 		}
 		if(arguments.class == "") {
