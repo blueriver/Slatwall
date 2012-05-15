@@ -1,0 +1,5 @@
+component {
+
+	this.secureMethods="default";
+	
+}

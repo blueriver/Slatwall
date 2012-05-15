@@ -43,7 +43,7 @@ component accessors="true" output="false" displayname="USA epay" extends="Slatwa
 	}
 	
 	public string function getIntegrationTypes() {
-		return "custom";
+		return "fw1";
 	}
 		
 	public string function getDisplayName() {
