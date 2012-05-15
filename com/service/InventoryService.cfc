@@ -148,7 +148,23 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public numeric function getQATS(required any entity) {
-		return arguments.entity.getQuantity('QNC') + arguments.entity.getQuantity('QE') - arguments.entity.setting("skuHoldBackQuantity");
+		var ats = arguments.entity.getQuantity('QNC');
+		
+		if(arguments.entity.setting("skuQATSIncludesQNROROFlag")) {
+			ats += arguments.entity.getQuantity('QNRORO');
+		}
+		if(arguments.entity.setting("skuQATSIncludesQNROVOFlag")) {
+			ats += arguments.entity.getQuantity('QNROVO');
+		}
+		if(arguments.entity.setting("skuQATSIncludesQNROSAFlag")) {
+			ats += arguments.entity.getQuantity('QNROSA');
+		}
+		
+		if(isNumeric(arguments.entity.setting("skuHoldBackQuantity"))) {
+			ats -= arguments.entity.setting("skuHoldBackQuantity");
+		}
+		
+		return ats;
 	}
 	
 	public numeric function getQIATS(required any entity) {
