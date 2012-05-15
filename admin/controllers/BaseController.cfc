@@ -68,7 +68,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var itemName = getFW().getItem( rc.slatAction );
 		
 		//check if the page is public, if public no need to worry about security
-		if(!listFindNocase(permissionService.getPublicMethods(subsystemName, sectionName), rc.slatAction)){
+		if(!listFindNocase(permissionService.getPublicMethods(subsystemName, sectionName), itemName)){
 		
 			//check if the user has access to everything, i.e. * permissions
 			//check if they have access to that private page	
