@@ -155,7 +155,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
  	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
-	private void function confirmOrderNumberOpenDateCloseDate() {
+	public void function confirmOrderNumberOpenDateCloseDate() {
 		if((isNull(variables.orderNumber) || variables.orderNumber == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
 			if(setting('globalOrderNumberGeneration') == "Internal" || setting('globalOrderNumberGeneration') == "") {
 				var maxOrderNumber = getService("orderService").getMaxOrderNumber();

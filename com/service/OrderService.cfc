@@ -397,6 +397,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						
 							// Update the order status
 							order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+							order.confirmOrderNumberOpenDateCloseDate();
 						
 							// Save the order to the database
 							getDAO().save(order);
