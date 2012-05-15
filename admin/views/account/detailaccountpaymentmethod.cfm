@@ -36,34 +36,25 @@
 Notes:
 
 --->
-<cfparam name="rc.account" type="any">
 <cfparam name="rc.accountPaymentMethod" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.account#" saveAction="admin:account.saveaccount" edit="#rc.edit#">
-		<input type="hidden" name="accountPaymentMethodes[1].accountPaymentMethodID" value="#rc.accountPaymentMethod.getAccountPaymentMethodID()#" />
-		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].accountPaymentMethodName" property="accountPaymentMethodName" edit="#rc.edit#">
-		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].nameOnCreditCard" property="nameOnCreditCard" edit="#rc.edit#" />
-		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].creditCardNumber" property="creditCardNumber" edit="#rc.edit#" />
-		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].expirationMonth" property="expirationMonth" edit="#rc.edit#" />
-		<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="accountPaymentMethodes[1].expirationYear" property="expirationYear" edit="#rc.edit#" />
-		<cf_SlatwallAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="accountPaymentMethodes[1].billingaddress." edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.accountPaymentMethod#" backaction="admin:account.detailaccount" backquerystring="accountID=#rc.accountPaymentMethod.getAccount().getAccountID()#" />
 		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" property="accountPaymentMethodName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" property="nameOnCreditCard" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" property="creditCardNumber" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationMonth" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationYear" edit="#rc.edit#" />
+				<cf_SlatwallAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="billingaddress." edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+
 	</cf_SlatwallDetailForm>
 </cfoutput>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

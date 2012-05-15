@@ -104,6 +104,19 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		return variables.validationTypeOptions;
     }
 	
+	public array function getAttributeOptionsOptions() {
+		if(!structKeyExists(variables, "attributeOptionsOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAttributeOption");
+			smartList.addSelect(propertyIdentifier="attributeOptionLabel", alias="name");
+			smartList.addSelect(propertyIdentifier="attributeOptionValue", alias="value");
+			smartList.addFilter(propertyIdentifier="attribute_attributeID", value="#variables.attributeID#"); 
+			smartList.addOrder("sortOrder|ASC");
+			variables.attributeOptionsOptions = smartList.getRecords();
+			arrayPrepend(variables.attributeOptionsOptions, {value="", name=rbKey('define.select')});
+		}
+		return variables.attributeOptionsOptions;
+    }
+   
 	// ============  END:  Non-Persistent Property Methods =================
 	
     // ============= START: Bidirectional Helper Methods ===================
