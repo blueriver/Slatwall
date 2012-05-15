@@ -93,6 +93,7 @@ Notes:
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.integration_nav')#" icon="random icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:integration.listintegration" type="list">
 							<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
+							
 							<cfloop array="#local.integrationSubsystems#" index="local.intsys">
 								<li>
 									<a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a>

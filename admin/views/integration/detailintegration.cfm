@@ -46,6 +46,9 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.integration#" property="integrationPackage" edit="false">
+				<cfif rc.integration.getFW1ReadyFlag()>
+					<cf_SlatwallPropertyDisplay object="#rc.integration#" property="fw1ActiveFlag" edit="#rc.edit#" />
+				</cfif>
 				<cfif rc.integration.getShippingReadyFlag()>
 					<cf_SlatwallPropertyDisplay object="#rc.integration#" property="shippingActiveFlag" edit="#rc.edit#" />
 				</cfif>

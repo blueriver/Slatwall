@@ -46,6 +46,8 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	
 	property name="customReadyFlag" ormtype="boolean";
 	property name="customActiveFlag" ormtype="boolean";
+	property name="fw1ReadyFlag" ormtype="boolean";
+	property name="fw1ActiveFlag" ormtype="boolean";
 	property name="paymentReadyFlag" ormtype="boolean";
 	property name="paymentActiveFlag" ormtype="boolean";
 	property name="shippingReadyFlag" ormtype="boolean";
@@ -57,22 +59,6 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public any function init() {
-		if(isNull(variables.installedFlag)) {
-			variables.installedFlag = 0;
-		}
-		if(isNull(variables.customReadyFlag)) {
-			variables.customReadyFlag = 0;
-		}
-		if(isNull(variables.paymentReadyFlag)) {
-			variables.paymentReadyFlag = 0;
-		}
-		if(isNull(variables.shippingReadyFlag)) {
-			variables.shippingReadyFlag = 0;
-		}
-		
-		return super.init();
-	}
 	
 	public array function getShippingMethodOptions( ) {
 		if(!structKeyExists(variables, "shippingMethodOptions")) {
