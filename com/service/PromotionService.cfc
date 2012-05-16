@@ -64,8 +64,23 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.order.getAppliedPromotions()[pa].removeOrder();
 			}
 			
-			// Loop over all Potential Product Discounts for the order Items
-			var promotionRewards = getDAO().getActivePromotionRewards(rewardTypeList="merchandise,subscription,contentAccess,order,fulfillment", promotionCodeList=arguments.order.getPromotionCodeList());
+			// Loop over orderItems and apply Sale Prices
+			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
+				var orderItem = arguments.order.getOrderItems()[oi];
+				var salePriceDetails = orderItem.getSku().getSalePriceDetails();
+
+				if(structKeyExists(salePriceDetails, "salePrice") && salePriceDetails.salePrice < orderItem.getSku().getPrice()) {
+					var discountAmount = precisionEvaluate((orderItem.getSku().getPrice() * orderItem.getQuantity()) - (salePriceDetails.salePrice * orderItem.getQuantity()));
+
+					var newAppliedPromotion = this.newOrderItemAppliedPromotion();
+					newAppliedPromotion.setPromotion( this.getPromotion(salePriceDetails.promotionID) );
+					newAppliedPromotion.setOrderItem( orderItem );
+					newAppliedPromotion.setDiscountAmount( discountAmount );
+				}
+			}
+			
+			// Loop over all Potential Discounts that require qualifications
+			var promotionRewards = getDAO().getActiveQualificationRequiredPromotionRewards(rewardTypeList="merchandise,subscription,contentAccess,order,fulfillment", promotionCodeList=arguments.order.getPromotionCodeList());
 			for(var pr=1; pr<=arrayLen(promotionRewards); pr++) {
 				
 				var reward = promotionRewards[pr];

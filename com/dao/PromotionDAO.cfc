@@ -38,7 +38,7 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
-	<cffunction name="getActivePromotionRewards" returntype="Array" access="public">
+	<cffunction name="getActiveQualificationRequiredPromotionRewards" returntype="Array" access="public">
 		<cfargument name="rewardTypeList" required="true" type="string" />
 		<cfargument name="promotionCodeList" required="true" type="string" />
 		
@@ -55,7 +55,9 @@ Notes:
 			  and
 				spp.endDateTime > :now
 			  and
-				sp.activeFlag = :activeFlag" />
+				sp.activeFlag = :activeFlag
+			  and
+			  	EXISTS( SELECT pq.promotionQualifierID FROM SlatwallPromotionQualifier pq WHERE pq.promotionPeriod.promotionPeriodID = spp.promotionPeriodID ) " />
 		
 		<cfset var params = {
 			now = now(),
