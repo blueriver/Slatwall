@@ -972,8 +972,13 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getService("roundingRuleService").roundValue(argumentcollection=arguments);
 	}
 	
-	// @hint  helper function absolute url path from site root
+	// @hint  helper function absolute url path from site root /* deprecated */
 	public string function getSlatwallRootPath() {
+		return "#application.configBean.getContext()#/plugins/Slatwall";
+	}
+	
+	// @hint  helper function absolute url path from site root
+	public string function getSlatwallRootURL() {
 		return "#application.configBean.getContext()#/plugins/Slatwall";
 	}
 	

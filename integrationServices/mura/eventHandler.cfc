@@ -123,6 +123,15 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 			}
 		}
 		
+		// Set up frontend tools
+		var fetools = "";
+		savecontent variable="fetools" {
+			include "/Slatwall/assets/fetools/fetools.cfm";
+		};
+		
+		writeDump(fetools);
+		abort;
+		arguments.$.addToHTMLHeadQueue( fetools );
 	}
 	
 	// on category save, create/update the category in slatwall
