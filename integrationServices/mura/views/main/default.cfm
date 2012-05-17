@@ -1,0 +1,1 @@
+<a href="?slatAction=mura:main.updateviews">Update Frontend Views</a>
