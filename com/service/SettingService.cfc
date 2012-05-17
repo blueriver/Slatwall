@@ -76,9 +76,9 @@ globalEncryptionKeySize
 		];
 		
 		variables.settingLookupOrder = {
-			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath", "sku.product.productType.productTypeIDPath"],
-			sku = ["product.productID", "product.productType.productTypeIDPath", "product.productType.productTypeIDPath"],
-			product = ["productType.productTypeIDPath", "productType.productTypeIDPath"],
+			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath&sku.product.brand.brandID", "sku.product.productType.productTypeIDPath"],
+			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
+			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"]
@@ -363,7 +363,7 @@ globalEncryptionKeySize
 						
 						do {
 							// If there was an & in the lookupKey then we should split into multiple relationships
-							allRelationships = listToArray(settingLookupArray[nextLookupOrderIndex], "&");
+							var allRelationships = listToArray(settingLookupArray[nextLookupOrderIndex], "&");
 							
 							for(var r=1; r<=arrayLen(allRelationships); r++) {
 								// If this relationship is a path, then we need to attemptThis multiple times
