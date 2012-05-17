@@ -43,9 +43,9 @@ Notes:
 <cf_SlatwallActionBar type="listing" object="#rc.measurementUnitSmartList#" createModal="true" />
 
 <cf_SlatwallListingDisplay smartList="#rc.measurementUnitSmartList#" recordEditAction="admin:setting.editmeasurementunit" recordEditQueryString="returnAction=admin:setting.listmeasurementunit" recordEditModal="true">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="unitName" />
-	<cf_SlatwallListingColumn propertyIdentifier="unitCode" />
-	<cf_SlatwallListingColumn propertyIdentifier="measurementType" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="unitName" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="unitCode" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="measurementType" filter="true" />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>

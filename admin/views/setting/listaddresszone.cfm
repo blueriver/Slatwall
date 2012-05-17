@@ -41,5 +41,5 @@ Notes:
 <cf_SlatwallActionBar type="listing" object="#rc.addresszoneSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.addresszoneSmartList#" recordEditAction="admin:setting.editaddresszone">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="addresszoneName" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="addresszoneName" search="true" />
 </cf_SlatwallListingDisplay>

@@ -48,8 +48,8 @@ Notes:
 	                           recordeditmodal="false" recorddeleteaction="admin:setting.deletetask">
 		
 		
-		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="taskName"/>
-		<cf_slatwalllistingcolumn propertyidentifier="runningFlag"/>
+		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="taskName" search="true" />
+		<cf_slatwalllistingcolumn propertyidentifier="runningFlag" filter="true" />
 	</cf_slatwalllistingdisplay>
 
 </cfoutput>

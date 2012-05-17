@@ -41,9 +41,9 @@ Notes:
 <cf_SlatwallActionBar type="listing" object="#rc.vendorOrderSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#" recordDetailAction="admin:vendor.detailvendororder">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" />
-	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
-	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" />
-	<cf_SlatwallListingColumn propertyIdentifier="total" />
+	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="total" search="false" />
 </cf_SlatwallListingDisplay>

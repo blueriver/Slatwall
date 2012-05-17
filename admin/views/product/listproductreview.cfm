@@ -44,10 +44,10 @@ Notes:
 	<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#"
 								recordDetailAction="admin:product.detailproductreview"
 								recordEditAction="admin:product.editproductreview">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="reviewTitle" />
-		<cf_SlatwallListingColumn propertyIdentifier="reviewerName" />
-		<cf_SlatwallListingColumn propertyIdentifier="rating" />
-		<cf_SlatwallListingColumn propertyIdentifier="product.productName" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="reviewTitle" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="reviewerName" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="rating" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="product.productName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
 	</cf_SlatwallListingDisplay>

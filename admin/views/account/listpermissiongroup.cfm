@@ -43,7 +43,7 @@ Notes:
 <cf_SlatwallActionBar type="listing" object="#rc.permissionGroupSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.permissionGroupSmartList#" recordEditAction="admin:account.editpermissiongroup">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="permissionGroupName" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="permissionGroupName" search="true" />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>

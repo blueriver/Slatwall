@@ -41,5 +41,5 @@ Notes:
 <cf_SlatwallActionBar type="listing" object="#rc.countrySmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.countrySmartList#" recordEditAction="admin:setting.editcountry">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryName" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryName" search="true" />
 </cf_SlatwallListingDisplay>

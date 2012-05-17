@@ -50,8 +50,10 @@ Notes:
 				<cf_SlatwallProcessOption data="trackingNumber" fieldType="text" />
 			</cfif>
 			<cf_SlatwallProcessOption data="processCreditCard" fieldType="yesno" />
+			<!---
 			<cf_SlatwallProcessOption print="packingSlip" />
 			<cf_SlatwallProcessOption email="deliveryConfirmation" />
+			--->
 		</cf_SlatwallProcessOptionBar>
 		
 		<cf_SlatwallProcessListing processSmartList="#rc.processOrderFulfillmentSmartList#" processRecordsProperty="orderFulfillmentItems" processHeaderString="Order: ${order.orderNumber}, Order Fulfillment - ${fulfillmentMethod.fulfillmentMethodName}">

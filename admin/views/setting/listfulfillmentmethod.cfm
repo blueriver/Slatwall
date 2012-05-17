@@ -44,7 +44,7 @@ Notes:
 		recordEditAction="admin:setting.editfulfillmentmethod"
 		recordDetailAction="admin:setting.detailfulfillmentmethod"
 		sortProperty="sortOrder">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" />
-	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethodType" />
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethodType" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_SlatwallListingDisplay>

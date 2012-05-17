@@ -47,7 +47,7 @@ Notes:
 		recorddetailaction="admin:order.detailorderfulfillment"
 		recordprocessaction="admin:order.processorderfulfillment">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
-	<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" />
+	<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
 </cf_SlatwallListingDisplay>
 

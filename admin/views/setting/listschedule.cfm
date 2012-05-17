@@ -46,7 +46,7 @@ Notes:
 	                           recordeditaction="admin:setting.editschedule" 
 	                           recordeditquerystring="returnAction=admin:setting.listschedule" 
 	                           recordeditmodal="false" recorddeleteaction="admin:setting.deleteschedule">
-		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="scheduleName"/>
+		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="scheduleName" search="true" />
 	</cf_slatwalllistingdisplay>
 
 </cfoutput>

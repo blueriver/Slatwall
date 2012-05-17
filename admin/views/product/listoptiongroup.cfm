@@ -46,8 +46,8 @@ Notes:
 							   recordDetailAction="admin:product.detailoptiongroup"
 							   recordEditAction="admin:product.editoptiongroup"
 							   sortProperty="sortOrder">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="optionGroupName" />
-		<cf_SlatwallListingColumn propertyIdentifier="optionGroupCode" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="optionGroupName" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="optionGroupCode" search="true" />
 	</cf_SlatwallListingDisplay>
 	
 </cfoutput>

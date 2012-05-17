@@ -41,7 +41,7 @@ Notes:
 <cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createAction="admin:setting.createaccountattributeset,admin:setting.createproductattributeset,admin:setting.createproductcustomizationattributeset" />
 
 <cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#" recordEditAction="admin:setting.editattributeset" sortProperty="sortOrder">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeSetName" />
-	<cf_SlatwallListingColumn propertyIdentifier="attributeSetType.type" />
-	<cf_SlatwallListingColumn propertyIdentifier="globalFlag" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeSetName" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="attributeSetType.type" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="globalFlag" filter="true" />
 </cf_SlatwallListingDisplay>

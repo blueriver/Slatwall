@@ -47,9 +47,9 @@ Notes:
 		recordEditQueryString="returnAction=admin:setting.listorderorigin"
 		recordDeleteAction="admin:setting.deleteorderorigin"
 		recordEditModal="true">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderOriginName" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderOriginType" />
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderOriginName" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="orderOriginType" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>

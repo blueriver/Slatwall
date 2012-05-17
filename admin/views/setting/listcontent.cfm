@@ -43,9 +43,9 @@ Notes:
 <cf_SlatwallActionBar type="listing" object="#rc.contentSmartList#" createAction="" />
 
 <cf_SlatwallListingDisplay smartList="#rc.contentSmartList#" recordEditAction="admin:setting.editcontent" recordEditQueryString="returnAction=admin:setting.listcontent">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
-	<cf_SlatwallListingColumn propertyIdentifier="templateFlag" />
-	<cf_SlatwallListingColumn propertyIdentifier="allowPurchaseFlag" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="templateFlag" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="allowPurchaseFlag" filter="true" />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>
