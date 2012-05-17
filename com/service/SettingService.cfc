@@ -76,9 +76,9 @@ globalEncryptionKeySize
 		];
 		
 		variables.settingLookupOrder = {
-			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath&sku.product.brand.brandID", "sku.product.productType.productTypeIDPath"],
-			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
-			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
+			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath", "sku.product.productType.productTypeIDPath"],
+			sku = ["product.productID", "product.productType.productTypeIDPath", "product.productType.productTypeIDPath"],
+			product = ["productType.productTypeIDPath", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"]
