@@ -61,8 +61,6 @@ Notes:
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionperiods" />
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotioncodes" />
 			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotiondescription" />
-<!---			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionrewards" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionqualifiers" />--->
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
