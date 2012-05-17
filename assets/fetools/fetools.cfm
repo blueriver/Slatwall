@@ -33,7 +33,7 @@
 			<li>
 				<a href="##" class="sw-submenu-toggle"><i class="icon icon-user"></i> #request.slatwallScope.rbKey('admin.account_nav')#</a>
 				<ul>
-					<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:account.listaccountv">#request.slatwallScope.rbKey('entity.account_plural')#</a></li>
+					<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:account.listaccount">#request.slatwallScope.rbKey('entity.account_plural')#</a></li>
 					<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:vendor.listvendor">#request.slatwallScope.rbKey('entity.vendor_plural')#</a></li>
 					<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:account.listsubscriptionusage">#request.slatwallScope.rbKey('entity.subscriptionusage_plural')#</a></li>
 					<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:account.listpermissiongroup">#request.slatwallScope.rbKey('entity.permissiongroup_plural')#</a></li>

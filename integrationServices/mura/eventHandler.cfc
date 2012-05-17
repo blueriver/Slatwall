@@ -122,16 +122,20 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 				$.content('body', $.content('body') & doAction('frontend:checkout.detail'));
 			}
 		}
+	}
+	
+	public void function onRenderEnd(required any $) {
+		 
+		if(len($.slatwall.getCurrentAccount().getAllPermissions())) {
+			// Set up frontend tools
+			var fetools = "";
+			savecontent variable="fetools" {
+				include "/Slatwall/assets/fetools/fetools.cfm";
+			};
+			
+			$.event('__muraresponse__', replace($.event('__muraresponse__'), '</body>', '#fetools#</body>'));
+		}
 		
-		// Set up frontend tools
-		var fetools = "";
-		savecontent variable="fetools" {
-			include "/Slatwall/assets/fetools/fetools.cfm";
-		};
-		
-		writeDump(fetools);
-		abort;
-		arguments.$.addToHTMLHeadQueue( fetools );
 	}
 	
 	// on category save, create/update the category in slatwall
