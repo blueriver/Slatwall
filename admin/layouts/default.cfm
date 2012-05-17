@@ -93,7 +93,6 @@ Notes:
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.integration_nav')#" icon="random icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:integration.listintegration" type="list">
 							<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
-							
 							<cfloop array="#local.integrationSubsystems#" index="local.intsys">
 								<li>
 									<a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a>
@@ -129,7 +128,6 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:help" type="list">
 							<cf_SlatwallActionCaller action="admin:main.default" queryString="reload=true" text="Reload Slatwall" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.detailviewupdate" type="list">
 						</cf_SlatwallActionCallerDropdown>
 					</ul>
 					<form name="search" class="navbar-search pull-right" action="/">

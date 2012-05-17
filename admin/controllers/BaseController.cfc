@@ -200,8 +200,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		var savedStateKey = lcase( rc.slatAction );
 
 		/*
-		Commented out until I can figure out all the listing display stuff -Greg
-		
+		Commenting back out because this now works, but we need to have display in the admin to show that filter(s) have been applied
 		if(getSessionService().hasValue( savedStateKey )) {
 			rc.savedStateID = getSessionService().getValue( savedStateKey );
 		}
