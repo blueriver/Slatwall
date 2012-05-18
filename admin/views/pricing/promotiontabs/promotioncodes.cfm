@@ -54,5 +54,5 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:pricing.createpromotioncode" class="btn btn-primary" queryString="promotionID=#rc.promotion.getPromotionID()#" modal="true" />
+	<cf_SlatwallActionCaller action="admin:pricing.createpromotioncode" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" modal="true" />
 </cfoutput>

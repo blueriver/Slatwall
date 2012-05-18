@@ -51,5 +51,5 @@ Notes:
 
 	<cf_slatwallactioncaller action="admin:product.createoption" 
 	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" 
-	                         class="btn btn-primary" modal=true/>
+	                         class="btn btn-inverse" icon="plus icon-white" modal=true/>
 </cfoutput>

@@ -54,6 +54,6 @@ Notes:
 </cf_slatwalllistingdisplay>
 
 <cf_slatwallactioncaller action="admin:vendor.processVendorOrder" 
-						class="btn btn-primary" 
+						 class="btn btn-inverse" icon="plus icon-white" 
                          querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=addOrderItems" 
                          modal=true text="#rc.$.Slatwall.rbKey("admin.vendor.addItems")#"/>

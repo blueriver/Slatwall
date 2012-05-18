@@ -46,5 +46,5 @@ Notes:
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="appliesTo" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate" class="btn btn-primary" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
+<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate" class="btn btn-inverse" icon="plus icon-white" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
 	

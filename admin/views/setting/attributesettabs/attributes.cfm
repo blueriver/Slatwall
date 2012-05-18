@@ -52,6 +52,6 @@ Notes:
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeType.type" /> 
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:setting.createattribute" class="btn btn-primary" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
+	<cf_SlatwallActionCaller action="admin:setting.createattribute" class="btn btn-inverse" icon="plus icon-white" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
 	
 </cfoutput>

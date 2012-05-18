@@ -49,5 +49,5 @@ Notes:
 		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" class="btn btn-primary" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
+	<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" class="btn btn-inverse" icon="plus icon-white" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
 </cfoutput>
