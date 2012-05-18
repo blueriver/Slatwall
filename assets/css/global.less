@@ -28,6 +28,7 @@ body {
 		padding:0px;
 		margin:0px 0px 3px 10px;
 		line-height:1em;
+		font-weight:normal;
 	}
 	.btn-toolbar {
 		margin: 5px 5px 5px 0px;
@@ -300,10 +301,6 @@ label.error {
 	background-color:#408140 \9;
 }
 
-.navbar .nav .active > a, .navbar .nav .active > a:hover {background-color:#ffffff; color:#333333;}
-
-.navbar .dropdown-menu li > a:hover, .navbar .dropdown-menu .active > a, .navbar .dropdown-menu .active > a:hover {background-color:#f78f1e;}
-
 .dropdown .dropdown-toggle {
 	text-shadow: #444444;
 }
@@ -315,10 +312,15 @@ label.error {
 
 .icon-red{background-image:url("../img/glyphicons-halflings-red.png");}
 	
-	
-	
-	
-	
-	
+.dropdown-menu li a:hover {
+	background-color:#efefef;
+	color:#333333;
+} 
 
+.navbar .open a.dropdown-toggle {color:#ffffff !important;}
+.navbar .dropdown-menu li.active > a:hover, .navbar .dropdown-menu li > a:hover {background-color:#f78f1e; color:#ffffff;}	
+.navbar .dropdown-menu li.active > a {background-color:#ffffff; color:#333333;}
 
+.pagination .next, .pagination .prev {
+	font-size: 18px;
+}
