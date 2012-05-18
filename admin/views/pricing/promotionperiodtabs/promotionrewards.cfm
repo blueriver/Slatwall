@@ -53,7 +53,7 @@ Notes:
 	</cf_SlatwallListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>
-		<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.create')#">
+		<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" buttonClass="btn-inverse">
 			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardmerchandise')#" action="admin:pricing.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=merchandise" />
 			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardsubscription')#" action="admin:pricing.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=subscription" />
 			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardcontentaccess')#" action="admin:pricing.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=contentAccess" />

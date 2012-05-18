@@ -45,7 +45,6 @@ Notes:
 <cf_SlatwallListingDisplay smartList="#rc.stockReceiverSmartList#" recordEditAction="admin:account.editaccount">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="packingSlipNumber" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="boxCount" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="receiverType" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
 </cf_SlatwallListingDisplay>
 
