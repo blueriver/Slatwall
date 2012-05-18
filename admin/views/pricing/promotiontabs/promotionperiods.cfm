@@ -45,7 +45,7 @@ Notes:
 							   recorddetailaction="admin:pricing.detailpromotionperiod"
 							   recordDeleteAction="admin:pricing.deletepromotionperiod"
 							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
-		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" />
+		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
 		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
 		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" />
 		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" />

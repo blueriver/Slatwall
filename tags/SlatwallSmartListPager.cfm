@@ -60,8 +60,8 @@ Notes:
 	</cfsilent>
 	
 	<cfoutput>
-		<div class="pagination" data-tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#">
-			<cfif attributes.smartList.getTotalPages() gt 1>
+		<cfif attributes.smartList.getTotalPages() gt 1>
+			<div class="pagination" data-tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#">
 				<ul>
 					<cfif attributes.smartList.getCurrentPage() gt 1>
 						<li><a href="##" class="listing-pager" data-page="#attributes.smartList.getCurrentPage() - 1#">&laquo;</a></li>
@@ -85,7 +85,7 @@ Notes:
 						<li class="disabled"><a href="##">&raquo;</a></li>
 					</cfif>
 				</ul>
-			</cfif>
-		</div>
+			</div>
+		</cfif>
 	</cfoutput>
 </cfif>

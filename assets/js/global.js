@@ -25,7 +25,9 @@ jQuery(document).ready(function() {
 	if(jQuery('.firstfocus').length) {
 		jQuery('.firstfocus').focus();	
 	} else {
-		jQuery('input[tabindex=1]').focus();
+		if(!jQuery('input[tabindex=1]').hasClass('noautofocus')) {
+			jQuery('input[tabindex=1]').focus();
+		}
 	}
 	
 	if(jQuery('#global-search').val() != '') {
@@ -50,6 +52,9 @@ function initUIElements( scopeSelector ) {
 	
 	// Time Picker
 	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({});
+	
+	// Wysiwyg
+	jQuery( '.wysiwyg' ).ckeditor({});
 	
 	// Tooltips
 	jQuery( scopeSelector ).find(jQuery('.hint')).tooltip();

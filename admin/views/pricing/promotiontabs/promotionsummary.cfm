@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
-	
+ 
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -36,31 +36,7 @@
 Notes:
 
 --->
-<cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#" 
-			recordDetailAction="admin:product.detailsku"
-			recordDetailQueryString="productID=#rc.product.getProductID()#"
-			recordEditAction="admin:product.editsku"
-			recordEditQueryString="productID=#rc.product.getProductID()#"
-			recorddeleteaction="admin:product.deletesku"
-			recorddeletequerystring="returnaction=product.editproduct&productID=#rc.product.getProductID()#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="skuCode" />
-		
-		<cfif rc.product.getProductType().getBaseProductType() eq "merchandise" && rc.product.getSkusSmartList().getRecordsCount() gt 1>
-			<cf_SlatwallListingColumn propertyIdentifier="optionsDisplay" />
-		<cfelseif  rc.product.getProductType().getBaseProductType() eq "subscription">
-			<cf_SlatwallListingColumn propertyIdentifier="subscriptionTerm.subscriptionTermName" />
-		<cfelseif rc.product.getProductType().getBaseProductType() eq "contentAccess">
-			<!--- Sumit says nothing is ok --->
-		</cfif>
-		
-		<cf_SlatwallListingColumn propertyIdentifier="defaultFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="imageFile" />
-		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="userDefinedPriceFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="salePriceExpirationDateTime" range="true" />
-	</cf_SlatwallListingDisplay>
-	
-	<cf_SlatwallActionCaller action="admin:product.createsku" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#" modal=true />
-</cfoutput>
+
+<cf_SlatwallPropertyList>
+	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg" displaytype="plain">
+</cf_SlatwallPropertyList>

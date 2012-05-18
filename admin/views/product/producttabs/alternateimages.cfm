@@ -52,5 +52,5 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="imageType.type" />
 	</cf_SlatwallListingDisplay>
 	
-		<cf_SlatwallActionCaller action="admin:product.createproductimage" class="btn btn-primary" queryString="productID=#rc.product.getProductID()#" modal=true />
+		<cf_SlatwallActionCaller action="admin:product.createproductimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#" modal=true />
 </cfoutput>
