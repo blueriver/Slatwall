@@ -3,6 +3,7 @@
  * @depends /jquery-ui-1.8.20.custom.min.js
  * @depends /jquery-ui-timepicker-addon-0.9.9.js
  * @depends /jquery-validate-1.9.0.min.js
+ * @depends /jquery-typewatch-2.0.js
  * @depends /bootstrap.min.js
  * 
  */
@@ -33,6 +34,13 @@ jQuery(document).ready(function() {
 	if(jQuery('#global-search').val() != '') {
 		jQuery('#global-search').keyup(); 
 	}
+	
+	jQuery("#global-search").typeWatch( {
+	    callback:function(){ updateGlobalSearchResults(); },
+	    wait:450,
+	    highlight: false,
+	    captureLength:2
+	} );
 	
 });
 
@@ -104,10 +112,10 @@ function setupEventHandlers() {
 		if(jQuery(this).val() != "") {
 			if(jQuery("body").scrollTop() > 0) {
 				jQuery("body").animate({scrollTop:0}, 300, function(){
-					jQuery('#search-results').animate({'margin-top': '0px'}, 150, function(){updateGlobalSearchResults();});
+					jQuery('#search-results').animate({'margin-top': '0px'}, 150);
 				});
 			} else {
-				jQuery('#search-results').animate({'margin-top': '0px'}, 150, function(){updateGlobalSearchResults();});
+				jQuery('#search-results').animate({'margin-top': '0px'}, 150);
 			}
 		} else {
 			jQuery('#search-results').animate({

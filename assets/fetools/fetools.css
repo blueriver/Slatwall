@@ -41,13 +41,19 @@ div#sw-fetools ul.sw-menu li {
 	margin:0px;
 }
 div#sw-fetools ul.sw-menu li.divider {
-	height:1px;margin:1px 8px;overflow:hidden;background-color:#232323;border-bottom:1px solid #000000;*width:100%;*margin:-5px 0 5px;
+	height:1px;
+	margin:1px 8px;
+	overflow:hidden;
+	background-color:#232323;
+	border-bottom:1px solid #000000;
+	*width:100%;
+	*margin:-5px 0 5px;
 }
 div#sw-fetools ul.sw-menu li a {
 	display: block;
 	padding: 5px 15px;
 	color: #cccccc;
-	font-size:14px;
+	font-size:12px;
 }
 div#sw-fetools ul.sw-menu li a.active {
 	color:#ffffff;
@@ -70,7 +76,7 @@ div#sw-fetools ul.sw-menu li ul li a {
 	padding: 3px 15px;
 	color:#0088cc;
 	text-decoration:none;
-	font-size:13px;
+	font-size:11px;
 }
 div#sw-fetools ul.sw-menu li ul li a:hover {
 	color:#005580;
