@@ -112,9 +112,9 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
     }
     
     public void function flushORMSession() {
-    	transaction {
-    		ormFlush();	
-    	}
+		ormFlush();	
+		// flush again to persist any changes done during ORM Event handler
+		ormFlush();	
     }
     
     public void function clearORMSession() {

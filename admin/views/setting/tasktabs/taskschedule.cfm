@@ -49,5 +49,5 @@ Notes:
 	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
 </cf_slatwalllistingdisplay>
 
-<cf_slatwallactioncaller action="admin:setting.createTaskSchedule" class="btn btn-primary" 
+<cf_slatwallactioncaller action="admin:setting.createTaskSchedule" class="btn btn-inverse" icon="plus icon-white" 
                       querystring="taskID=#rc.task.getTaskID()#" modal=true/>

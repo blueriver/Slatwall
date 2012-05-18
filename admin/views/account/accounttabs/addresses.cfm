@@ -54,5 +54,5 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="address.postalCode" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:account.createaccountaddress" class="btn btn-primary" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+<cf_SlatwallActionCaller action="admin:account.createaccountaddress" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getAccountID()#" modal=true />
 
