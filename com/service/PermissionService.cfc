@@ -36,79 +36,121 @@
 Notes:
 
 */
-component extends="BaseService" output="false" {
+component extends="BaseService" accessors="true" output="false" {
 
-	public any function init() {
-		variables.permissions = '';
-		
-		return super.init();
-	}
+	// Injected via Coldspring
+	property name="integrationService" type="any";
+
+	// Properties used for Caching values in the application scope
+	property name="permissions" type="struct";
 	
 	// Uses the current mura user to check security against a given action
-	public boolean function secureDisplay(required string action) {
-		return true;
+	public boolean function secureDisplay(required string action, any account) {
+		//return true;
+		
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = getSlatwallScope().getCurrentAccount();
+		}
+		
+		var subsystemName = listFirst( arguments.action, ":" );
+		var sectionName = listFirst( listLast(arguments.action, ":"), "." );
+		var itemName = listLast( arguments.action, "." );
+		
+		// Check if the user is a super admin, if true no need to worry about security
+		if( arguments.account.getAllPermissions() eq '*' ) {
+			return true;
+		}
+		
+		//check if the page is public, if public no need to worry about security
+		if(listFindNocase(getPermissions()[ subsystem ][ section ].publicMethods, itemName)){
+			return true;
+		}
+		
+		// Check if the acount has access to a secure method
+		if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(arguments.action, ".", "", "all"), ":", "", "all")) ) {
+			return true;	
+		}
+		
+		return false;
 	}
 	
 	public struct function getPermissions(){
-		var stPermissions={};
-		var i = 1;
-		var dirList = directoryList( expandPath("/plugins/Slatwall/admin/controllers") );
-
-		if(!isStruct(variables.permissions)){		
-			for(i=1; i <= arrayLen(dirList); i++){
-				obj = createObject('component',replace(replace(replace(replace(dirList[i],getSlatwallRootDirectory(),''),'/','.','all' ),'.cfc',''),'.',''));
+		if(!structKeyExists(variables, "permissions")){
+			var allPermissions={
+				admin={}
+			};
+			
+			// Setup Admin Permissions
+			var adminDirectoryList = directoryList( expandPath("/Slatwall/admin/controllers") );
+			for(var i=1; i <= arrayLen(adminDirectoryList); i++){
 				
-				if(StructKeyExists(obj,'secureMethods')){
-					
-					methods=obj.secureMethods;
-					
-					for(j=1; j <= listLen(methods); j++){
-						section = replace(listgetat(dirList[i],listLen(dirList[i],'/'),'/'),'.cfc','');
+				var section = listFirst(listLast(adminDirectoryList[i],"/\"),".");
+				var obj = createObject('component','Slatwall.admin.controllers.' & section);
+				
+				allPermissions.admin[ section ] = {
+					publicMethods = "",
+					secureMethods = "",
+					securePermissionOptions = []
+				};
+				
+				if(structKeyExists(obj, 'publicMethods')){
+					allPermissions.admin[ section ].publicMethods = obj.publicMethods;
+				}
+				if(structKeyExists(obj, 'secureMethods')){	
+					allPermissions.admin[ section ].secureMethods = obj.secureMethods;
+				
+					for(j=1; j <= listLen(allPermissions.admin[ section ].secureMethods); j++){
 						
-						if(!StructKeyExists(stPermissions,section)){
-							stPermissions[section] = [];
-						}
+						var item = listGetAt(allPermissions.admin[ section ].secureMethods, j);
 						
-						arrayAppend(stPermissions[section],rbKey('permission.' & section & '.' & listgetat(methods,j)));
-					}	
-					
-					ArraySort(stPermissions[section],"textnocase" );	
+						arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {
+							name=rbKey( 'permission.#section#.#item#' ),
+							value="admin#section##item#"
+						});
+					}
 				}
 			}
 			
-			variables.permissions = stPermissions;
+			// Setup Integration Permissions
+			var activeFW1Integrations = getIntegrationService().getActiveFW1Subsystems();
+			for(var i=1; i <= arrayLen(activeFW1Integrations); i++){
+				
+				var integrationDirectoryList = directoryList( expandPath("/Slatwall/integrationServices/#activeFW1Integrations[1].subsystem#/controllers") );
+				for(var i=1; i <= arrayLen(integrationDirectoryList); i++){
+					
+					allPermissions[ activeFW1Integrations[1].subsystem ] = {};
+					
+					var section = listFirst(listLast(integrationDirectoryList[i],"/\"),".");
+					var obj = createObject('component','Slatwall.integrationServices.#activeFW1Integrations[1].subsystem#.controllers.#section#');
+					
+					allPermissions[ activeFW1Integrations[1].subsystem ][ section ] = {
+						publicMethods = "",
+						secureMethods = "",
+						securePermissionOptions = []
+					};
+					
+					if(structKeyExists(obj, 'publicMethods')){
+						allPermissions[ activeFW1Integrations[1].subsystem ][ section ].publicMethods = obj.publicMethods;
+					}
+					if(structKeyExists(obj, 'secureMethods')){	
+						allPermissions[ activeFW1Integrations[1].subsystem ][ section ].secureMethods = obj.secureMethods;
+					
+						for(j=1; j <= listLen(allPermissions[ activeFW1Integrations[1].subsystem ][ section ].secureMethods); j++){
+							
+							var item = listGetAt(allPermissions[ activeFW1Integrations[1].subsystem ][ section ].secureMethods, j);
+							
+							arrayAppend(allPermissions[ activeFW1Integrations[1].subsystem ][ section ].securePermissionOptions, {
+								name="#activeFW1Integrations[1].subsystem#:#section#.#item#",
+								value="#activeFW1Integrations[1].subsystem#:#section#.#item#"
+							});
+						}
+					}
+				}
+			}
+			
+			variables.permissions = allPermissions;
 		}
 		return variables.permissions;
-	}
-	
-	public function getPublicMethods(required string subsystem, required string controller){
-		if(arguments.subsystem == "admin" || arguments.subsystem == "frontend") {
-			var obj = createObject('component', 'Slatwall.' & arguments.subsystem & '.controllers.' & arguments.controller);
-		} else {
-			var obj = createObject('component', 'Slatwall.integrationServices.' & arguments.subsystem & '.controllers.' & arguments.controller);	
-		}
-		
-		var stResponse = {};
-		
-		if(structKeyExists(obj,'publicMethods')){
-			for(i=1; i <= listLen(obj.publicMethods); i++){
-				stResponse[listgetat(obj.publicMethods,i)]='';
-			}
-		}
-		
-		return structKeyList(stResponse);
-	}
-	
-	public function getSecureMethods(required string subsystem, required string controller){
-		var obj = createObject('component', arguments.subsystem & '.controllers.' & arguments.controller);
-		var stResponse = {};
-		
-		if(structKeyExists(obj,'secureMethods')){
-			for(i=1; i <= arrayLen(obj.secureMethods); i++){
-				stResponse[obj.secureMethods[i]]='';
-			}
-		}
-		return structKeyList(stResponse);
 	}
 	
 	public function setupDefaultPermissions(){

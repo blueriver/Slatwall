@@ -38,10 +38,9 @@ Notes:
 --->
 <cfparam name="rc.permissionGroup" type="any" />
 <cfparam name="rc.edit" type="boolean" />
-
+<cfdump var="#rc.permissions#" />
 <cf_SlatwallDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#">
-	</cf_SlatwallActionBar>
+	<cf_SlatwallActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#"></cf_SlatwallActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList>
@@ -85,7 +84,7 @@ Notes:
 							<div class="controls">
 								<cfif listFind(rc.permissionGroup.getPermissions(),'*')>*</cfif>
 							</div>
-						</div>		
+						</div>
 				</cfif>
 			</cfoutput>
 		</cf_SlatwallPropertyList>

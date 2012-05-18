@@ -63,23 +63,14 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			}
 		}
 		
-		var subsystemName = getFW().getSubsystem( rc.slatAction );
-		var sectionName = getFW().getSection( rc.slatAction );
-		var itemName = getFW().getItem( rc.slatAction );
-		
-		//check if the page is public, if public no need to worry about security
-		if(!listFindNocase(permissionService.getPublicMethods(subsystemName, sectionName), itemName)){
-		
-			//check if the user has access to everything, i.e. * permissions
-			//check if they have access to that private page	
-			if(
-				getSlatwallScope().getCurrentAccount().getAllPermissions() neq '*' 
-				&&
-				!listFindNocase(getSlatwallScope().getCurrentAccount().getAllPermissions(), sectionName & '.' & itemName)
-				){
-					getFW().setView('main.noaccess');
-			}
+		// Make sure the current user has access to this action
+		if(!secureDisplay(rc.slatAction, getSlatwallScope().getCurrentAccount())) {
+			getFW().redirect('main.noaccess');
 		}
+		
+		var subsystemName = getFW().getSubsystem(rc.slatAction);
+		var sectionName = getFW().getSection(rc.slatAction);
+		var itemName = getFW().getItem(rc.slatAction);
 		
 		rc.itemEntityName = "";
 		rc.listAction = rc.slatAction;
