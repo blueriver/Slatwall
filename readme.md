@@ -2,7 +2,7 @@
 Introduction
 ------------
 
-Slatwall is an Open Source e-commerce plugin for Mura CMS. It is made possible by 
+Slatwall is an Open Source e-commerce platform. It is made possible by 
 the support of fellow developers. 
 To find out more about the brains behind Slatwall read here:
 http://www.getslatwall.com/contributors
@@ -17,7 +17,7 @@ Requirements
 
 Mura Version 5.4 or Newer
 Coldfusion 9.0.1
-Railo 3.3.0.022 (Not offically supported yet)
+Railo 3.3.0.022 (Not officially supported yet)
 
 
 Installation

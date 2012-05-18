@@ -1,6 +1,6 @@
 ﻿/*
 
-    Slatwall - An e-commerce plugin for Mura CMS
+    Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
