@@ -114,9 +114,9 @@ Notes:
 			FROM
 				SlatwallSku
 			  INNER JOIN
-			  	SlatwallPromotionRewardProductSku on SlatwallPromotionRewardProductSku.skuID = SlatwallSku.skuID
+			  	SlatwallPromotionRewardSku on SlatwallPromotionRewardSku.skuID = SlatwallSku.skuID
 			  INNER JOIN
-			  	SlatwallPromotionReward prSku on prSku.promotionRewardID = SlatwallPromotionRewardProductSku.promotionRewardID
+			  	SlatwallPromotionReward prSku on prSku.promotionRewardID = SlatwallPromotionRewardSku.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppSku on ppSku.promotionPeriodID = prSku.promotionPeriodID
 			  INNER JOIN
@@ -152,9 +152,9 @@ Notes:
 			FROM
 				SlatwallSku
 			  INNER JOIN
-			  	SlatwallPromotionRewardProductProduct on SlatwallPromotionRewardProductProduct.productID = SlatwallSku.productID
+			  	SlatwallPromotionRewardProduct on SlatwallPromotionRewardProduct.productID = SlatwallSku.productID
 			  INNER JOIN
-			  	SlatwallPromotionReward prProduct on prProduct.promotionRewardID = SlatwallPromotionRewardProductProduct.promotionRewardID
+			  	SlatwallPromotionReward prProduct on prProduct.promotionRewardID = SlatwallPromotionRewardProduct.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppProduct on ppProduct.promotionPeriodID = prProduct.promotionPeriodID
 			  INNER JOIN
@@ -192,9 +192,9 @@ Notes:
 			  INNER JOIN
 			  	SlatwallProduct on SlatwallProduct.productID = SlatwallSku.productID
 			  INNER JOIN
-			  	SlatwallPromotionRewardProductBrand on SlatwallPromotionRewardProductBrand.brandID = SlatwallProduct.brandID
+			  	SlatwallPromotionRewardBrand on SlatwallPromotionRewardBrand.brandID = SlatwallProduct.brandID
 			  INNER JOIN
-			  	SlatwallPromotionReward prBrand on prBrand.promotionRewardID = SlatwallPromotionRewardProductBrand.promotionRewardID
+			  	SlatwallPromotionReward prBrand on prBrand.promotionRewardID = SlatwallPromotionRewardBrand.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppBrand on ppBrand.promotionPeriodID = prBrand.promotionPeriodID
 			  INNER JOIN
@@ -232,9 +232,9 @@ Notes:
 			  INNER JOIN
 			  	SlatwallSkuOption on SlatwallSkuOption.skuID = SlatwallSku.skuID
 			  INNER JOIN
-			  	SlatwallPromotionRewardProductOption on SlatwallPromotionRewardProductOption.optionID = SlatwallSkuOption.optionID
+			  	SlatwallPromotionRewardOption on SlatwallPromotionRewardOption.optionID = SlatwallSkuOption.optionID
 			  INNER JOIN
-			  	SlatwallPromotionReward prOption on prOption.promotionRewardID = SlatwallPromotionRewardProductOption.promotionRewardID
+			  	SlatwallPromotionReward prOption on prOption.promotionRewardID = SlatwallPromotionRewardOption.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppOption on ppOption.promotionPeriodID = prOption.promotionPeriodID
 			  INNER JOIN
@@ -278,12 +278,12 @@ Notes:
 			  	SlatwallProductType on SlatwallProduct.productTypeID = SlatwallProductType.productTypeID
 			  INNER JOIN
 			  <cfif getDBType() eq "MySQL">
-			  	SlatwallPromotionRewardProductProductType on SlatwallProductType.productTypeIDPath LIKE concat('%', SlatwallPromotionRewardProductProductType.productTypeID, '%')
+			  	SlatwallPromotionRewardProductType on SlatwallProductType.productTypeIDPath LIKE concat('%', SlatwallPromotionRewardProductType.productTypeID, '%')
 			  <cfelse>
-			  	SlatwallPromotionRewardProductProductType on SlatwallProductType.productTypeIDPath LIKE ('%' + SlatwallPromotionRewardProductProductType.productTypeID + '%')
+			  	SlatwallPromotionRewardProductType on SlatwallProductType.productTypeIDPath LIKE ('%' + SlatwallPromotionRewardProductType.productTypeID + '%')
 			  </cfif>
 			  INNER JOIN
-			  	SlatwallPromotionReward prProductType on prProductType.promotionRewardID = SlatwallPromotionRewardProductProductType.promotionRewardID
+			  	SlatwallPromotionReward prProductType on prProductType.promotionRewardID = SlatwallPromotionRewardProductType.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppProductType on ppProductType.promotionPeriodID = prProductType.promotionPeriodID
 			  INNER JOIN
