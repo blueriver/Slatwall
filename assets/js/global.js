@@ -438,9 +438,9 @@ function buildPagingNav(currentPage, totalPages) {
 		}
 		
 		if(currentPage > 1) {
-			nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
+			nav += '<li><a href="#" class="listing-pager prev" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
 		} else {
-			nav += '<li class="disabled"><a href="#">&laquo;</a></li>';
+			nav += '<li class="disabled prev"><a href="#">&laquo;</a></li>';
 		}
 		
 		if(currentPage > 3 && totalPages > 6) {
@@ -463,9 +463,9 @@ function buildPagingNav(currentPage, totalPages) {
 		}
 		
 		if(currentPage < totalPages) {
-			nav += '<li><a href="#" class="listing-pager" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
+			nav += '<li><a href="#" class="listing-pager next" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
 		} else {
-			nav += '<li class="disabled"><a href="#">&raquo;</a></li>';
+			nav += '<li class="disabled next"><a href="#">&raquo;</a></li>';
 		}
 		
 		nav += '</ul>';

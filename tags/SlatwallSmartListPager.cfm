@@ -64,9 +64,9 @@ Notes:
 			<div class="pagination" data-tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#">
 				<ul>
 					<cfif attributes.smartList.getCurrentPage() gt 1>
-						<li><a href="##" class="listing-pager" data-page="#attributes.smartList.getCurrentPage() - 1#">&laquo;</a></li>
+						<li><a href="##" class="listing-pager prev" data-page="#attributes.smartList.getCurrentPage() - 1#">&laquo;</a></li>
 					<cfelse>
-						<li class="disabled"><a href="##">&laquo;</a></li>
+						<li class="disabled"><a href="##" class="prev">&laquo;</a></li>
 					</cfif>
 					<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() gt 3>
 						<li><a href="##" class="listing-pager" data-page="1">1</a></li>
@@ -80,9 +80,9 @@ Notes:
 						<li><a href="##" class="listing-pager" data-page="#attributes.smartList.getTotalPages()#">#attributes.smartList.getTotalPages()#</a></li>
 					</cfif>
 					<cfif attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages()>
-						<li><a href="##" class="listing-pager" data-page="#attributes.smartList.getCurrentPage() + 1#">&raquo;</a></li>
+						<li><a href="##" class="listing-pager next" data-page="#attributes.smartList.getCurrentPage() + 1#">&raquo;</a></li>
 					<cfelse>
-						<li class="disabled"><a href="##">&raquo;</a></li>
+						<li class="disabled"><a href="##" class="next">&raquo;</a></li>
 					</cfif>
 				</ul>
 			</div>
