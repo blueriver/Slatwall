@@ -80,7 +80,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 			
 			// Loop over all Potential Discounts that require qualifications
-			var promotionRewards = getDAO().getActiveQualificationRequiredPromotionRewards(rewardTypeList="merchandise,subscription,contentAccess,order,fulfillment", promotionCodeList=arguments.order.getPromotionCodeList());
+			var promotionRewards = getDAO().getActivePromotionRewards(rewardTypeList="merchandise,subscription,contentAccess,order,fulfillment", promotionCodeList=arguments.order.getPromotionCodeList(), qualificationRequired=true);
 			for(var pr=1; pr<=arrayLen(promotionRewards); pr++) {
 				
 				var reward = promotionRewards[pr];
