@@ -62,13 +62,13 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 		//check if the page is public, if public no need to worry about security
-		if(listFindNocase(getPermissions()[ subsystem ][ section ].publicMethods, itemName)){
+		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].publicMethods, itemName)){
 			return true;
 		}
 		
 		// Check if the acount has access to a secure method
 		if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(arguments.action, ".", "", "all"), ":", "", "all")) ) {
-			return true;	
+			return true;
 		}
 		
 		return false;
