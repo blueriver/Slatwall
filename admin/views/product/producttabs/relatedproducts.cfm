@@ -38,5 +38,5 @@ Notes:
 --->
 
 <cf_slatwallpropertylist>	
-	<cf_SlatwallPropertyDisplay object="#rc.product#" property="relatedProducts" edit="#rc.edit#" />
+	<cf_SlatwallPropertyDisplay object="#rc.product#" displayType="plain" property="relatedProducts" edit="#rc.edit#" />
 </cf_slatwallpropertylist>

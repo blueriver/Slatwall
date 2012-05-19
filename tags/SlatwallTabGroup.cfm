@@ -45,17 +45,17 @@ Notes:
 	<cfif thisTag.executionMode is "end">
 		
 			<cfparam name="thistag.tabs" default="#arrayNew(1)#" />
-			<cfparam name="activeTab" default="system" />
+			<cfparam name="activeTab" default="tabSystem" />
 			
 			<cfif arrayLen(thistag.tabs)>
-				<cfset activeTab = thistag.tabs[1].view />
+				<cfset activeTab = thistag.tabs[1].tabid />
 			</cfif>
 			
 			<div class="tabbable tabs-left row-fluid">
 				<div class="tabsLeft">
 					<ul class="nav nav-tabs">
 						<cfloop array="#thistag.tabs#" index="tab">
-							<cfoutput><li <cfif activeTab eq tab.view>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#</a></li></cfoutput>
+							<cfoutput><li <cfif activeTab eq tab.tabid>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#</a></li></cfoutput>
 						</cfloop>
 						<cfif isObject(attributes.object) && attributes.allowComments>
 							<cfoutput><li><a href="##tabComments" data-toggle="tab">#request.slatwallScope.rbKey('entity.comment_plural')# <cfif arrayLen(attributes.object.getComments())><span class="badge">#arrayLen(attributes.object.getComments())#</span></cfif></a></li></cfoutput>
@@ -69,7 +69,7 @@ Notes:
 					<div class="tab-content">
 						<cfloop array="#thistag.tabs#" index="tab">
 							<cfoutput>
-								<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="#tab.tabid#">
+								<div <cfif activeTab eq tab.tabid>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="#tab.tabid#">
 									<div class="row-fluid">
 										#variables.fw.view(tab.view, {rc=request.context, params=tab.params})#
 									</div>

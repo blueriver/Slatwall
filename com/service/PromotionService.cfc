@@ -72,7 +72,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				if(structKeyExists(salePriceDetails, "salePrice") && salePriceDetails.salePrice < orderItem.getSku().getPrice()) {
 					var discountAmount = precisionEvaluate((orderItem.getSku().getPrice() * orderItem.getQuantity()) - (salePriceDetails.salePrice * orderItem.getQuantity()));
 
-					var newAppliedPromotion = this.newOrderItemAppliedPromotion();
+					var newAppliedPromotion = this.newPromotionApplied();
+					newAppliedPromotion.setAppliedType('orderItem');
 					newAppliedPromotion.setPromotion( this.getPromotion(salePriceDetails.promotionID) );
 					newAppliedPromotion.setOrderItem( orderItem );
 					newAppliedPromotion.setDiscountAmount( discountAmount );
