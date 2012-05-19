@@ -126,6 +126,7 @@ Notes:
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.help_nav')#" icon="question-sign icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:help" type="list">
+							<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
 							<cf_SlatwallActionCaller action="admin:main.default" queryString="reload=true" text="Reload Slatwall" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
 						</cf_SlatwallActionCallerDropdown>
@@ -215,6 +216,7 @@ Notes:
 		#request.slatwallScope.getCFStatic().renderIncludes("js")#
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckfinder/ckfinder.js"></script>
 	</body>
 </html>
 </cfoutput>
