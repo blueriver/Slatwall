@@ -43,34 +43,38 @@ Notes:
 
 <cfif (not isObject(attributes.object) || not attributes.object.isNew()) and (not structKeyExists(request.context, "modal") or not request.context.modal)>
 	<cfif thisTag.executionMode is "end">
-		<cfoutput>
+		
 			<cfparam name="thistag.tabs" default="#arrayNew(1)#" />
 			<cfparam name="activeTab" default="system" />
+			
 			<cfif arrayLen(thistag.tabs)>
 				<cfset activeTab = thistag.tabs[1].view />
 			</cfif>
+			
 			<div class="tabbable tabs-left row-fluid">
 				<div class="tabsLeft">
 					<ul class="nav nav-tabs">
 						<cfloop array="#thistag.tabs#" index="tab">
-							<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.slatwallScope.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
+							<cfoutput><li <cfif activeTab eq tab.view>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#</a></li></cfoutput>
 						</cfloop>
 						<cfif isObject(attributes.object) && attributes.allowComments>
-							<li><a href="##tabComments" data-toggle="tab">#request.slatwallScope.rbKey('entity.comment_plural')# <cfif arrayLen(attributes.object.getComments())><span class="badge">#arrayLen(attributes.object.getComments())#</span></cfif></a></li>
+							<cfoutput><li><a href="##tabComments" data-toggle="tab">#request.slatwallScope.rbKey('entity.comment_plural')# <cfif arrayLen(attributes.object.getComments())><span class="badge">#arrayLen(attributes.object.getComments())#</span></cfif></a></li></cfoutput>
 						</cfif>
 						<cfif isObject(attributes.object)>
-							<li><a href="##tabSystem" data-toggle="tab">#request.slatwallScope.rbKey('define.system')#</a></li>
+							<cfoutput><li><a href="##tabSystem" data-toggle="tab">#request.slatwallScope.rbKey('define.system')#</a></li></cfoutput>
 						</cfif>
 					</ul>
 				</div>
 				<div class="tabsRight">
 					<div class="tab-content">
 						<cfloop array="#thistag.tabs#" index="tab">
-							<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="tab#listLast(tab.view, '/')#">
-								<div class="row-fluid">
-									#variables.fw.view(tab.view, {rc=request.context})#
+							<cfoutput>
+								<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="#tab.tabid#">
+									<div class="row-fluid">
+										#variables.fw.view(tab.view, {rc=request.context, params=tab.params})#
+									</div>
 								</div>
-							</div>
+							</cfoutput>
 						</cfloop>
 						<cfif isObject(attributes.object) && attributes.allowComments>
 							<div class="tab-pane" id="tabComments">
@@ -96,6 +100,5 @@ Notes:
 					</div>
 				</div>
 			</div>
-		</cfoutput>
 	</cfif>
 </cfif>

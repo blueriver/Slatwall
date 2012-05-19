@@ -38,6 +38,17 @@ Notes:
 --->
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.view" type="string" />
+	<cfparam name="attributes.tabid" type="string" default="" />
+	<cfparam name="attributes.text" type="string" default="" />
+	<cfparam name="attributes.params" type="struct" default="#structNew()#" />
+	
+	<cfif not len(attributes.tabid)>
+		<cfset attributes.tabid = "tab" & listLast(attributes.view, '/') />
+	</cfif>
+	
+	<cfif not len(attributes.text)>
+		<cfset attributes.text = request.slatwallScope.rbKey( replace( replace(attributes.view, '/', '.', 'all') ,':','.','all' ) ) />
+	</cfif>
 	
 	<cfassociate basetag="cf_SlatwallTabGroup" datacollection="tabs">
 </cfif>

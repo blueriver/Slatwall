@@ -38,22 +38,39 @@ Notes:
 --->
 <cfparam name="rc.permissionGroup" type="any" />
 <cfparam name="rc.edit" type="boolean" />
-<cfdump var="#rc.permissions#" />
+
 <cf_SlatwallDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
 	<cf_SlatwallActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#"></cf_SlatwallActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyDisplay object="#rc.permissionGroup#" property="permissionGroupName" edit="#rc.edit#">
-			
-			<h3>Permissions</h3>
+		</cf_SlatwallPropertyList>
+	</cf_SlatwallDetailHeader>
+	
+	<cf_SlatwallTabGroup object="#rc.permissionGroup#">
+		<cfloop collection="#rc.permissions.admin#" item="section">
+			<cfif len(rc.permissions.admin[ section ].secureMethods)>
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.#section#')#" tabid="tabadmin#section#" params="#rc.permissions.admin[section]#">
+			</cfif>
+		</cfloop>
+	</cf_SlatwallTabGroup>
+	
+</cf_SlatwallDetailForm>
+
+
+
+
+<!--- 
+
+<h3>Permissions</h3>
 			<cfoutput>
 				<cfif rc.edit>
 					<cfloop collection="#rc.permissions#" item="permissionName">
 						<div class="control-group">
 							<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.' & permissionName)#</label></dt>
 							<div class="controls">
-								<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions"  value="#rc.permissionGroup.getPermissions()#" valueOptions="#rc.permissions[permissionName]#" />
+								<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions" value="#rc.permissionGroup.getPermissions()#" valueOptions="#rc.permissions[permissionName]#" />
 							</div>
 						</div>
 					</cfloop>
@@ -87,8 +104,5 @@ Notes:
 						</div>
 				</cfif>
 			</cfoutput>
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
-	
-	
-</cf_SlatwallDetailForm>
+
+--->
