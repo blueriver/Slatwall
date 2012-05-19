@@ -52,7 +52,7 @@ Notes:
 	<version><cfoutput>#local.version#</cfoutput></version>
 	<providerURL>http://www.getslatwall.com/</providerURL>
 	<category>Application</category>
-	<ormcfclocation>com/entity</ormcfclocation>
+	<ormcfclocation>/com/entity/,/integrationServices/</ormcfclocation>
 	<customtagpaths>tags</customtagpaths>
 	<mappings>
 		<mapping name="ValidateThis" directory="org/ValidateThis"/>
