@@ -139,8 +139,12 @@ Notes:
 	<cfset attributes.class &= " modalload" />
 </cfif>
 
+<cfif not request.slatwallScope.secureDisplay(action=attributes.action)>
+	<cfset attributes.class &= " disabled" />
+</cfif>
+
 <cfif thisTag.executionMode is "start">
-	<cfif request.slatwallScope.secureDisplay(action=attributes.action)>
+	<cfif request.slatwallScope.secureDisplay(action=attributes.action) || (attributes.type eq "link" && attributes.iconOnly)>
 		<cfif attributes.type eq "link">
 			<cfoutput><a title="#attributes.title#" class="#attributes.class#" href="#request.context.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
 		<cfelseif attributes.type eq "list">

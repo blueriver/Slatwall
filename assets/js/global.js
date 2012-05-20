@@ -169,6 +169,12 @@ function setupEventHandlers() {
 		jQuery('#adminDisabled').modal();
 	});
 	
+	// Disabled Secure Display Buttons
+	jQuery('body').on('click', '.disabled', function(e){
+		e.preventDefault();
+	});
+	
+	
 	// Modal Loading
 	jQuery('body').on('click', '.modalload', function(e){
 		jQuery('#adminModal').html('');

@@ -66,6 +66,11 @@ component extends="BaseService" accessors="true" output="false" {
 			return true;
 		}
 		
+		// Look for the anyAdmin methods next to see if this is an anyAdmin method, and this user is some type of admin
+		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].anyAdminMethods, itemName) && len(arguments.account.getAllPermissions())) {
+			return true;
+		}
+		
 		// Check if the acount has access to a secure method
 		if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(arguments.action, ".", "", "all"), ":", "", "all")) ) {
 			return true;
@@ -89,12 +94,16 @@ component extends="BaseService" accessors="true" output="false" {
 				
 				allPermissions.admin[ section ] = {
 					publicMethods = "",
+					anyAdminMethods = "",
 					secureMethods = "",
 					securePermissionOptions = []
 				};
 				
 				if(structKeyExists(obj, 'publicMethods')){
 					allPermissions.admin[ section ].publicMethods = obj.publicMethods;
+				}
+				if(structKeyExists(obj, 'anyAdminMethods')){
+					allPermissions.admin[ section ].anyAdminMethods = obj.anyAdminMethods;
 				}
 				if(structKeyExists(obj, 'secureMethods')){	
 					allPermissions.admin[ section ].secureMethods = obj.secureMethods;

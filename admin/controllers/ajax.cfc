@@ -46,6 +46,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="vendorService" type="any";
 	property name="vendorOrderService" type="any";
 	
+	this.publicMethods="";
+	this.anyAdminMethods="updateListingDisplay,updateGlobalSearchResults";
+	this.secureMethods="";
+	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.listaccount");
 	}
