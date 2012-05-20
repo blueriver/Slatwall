@@ -126,24 +126,18 @@ Notes:
 								#local.settingGroupTwo#
 								<li class="divider"></li>
 							</cfif>
-							<cfsavecontent variable="local.settingGroupThree">
-								<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listmeasurementunit" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
-							</cfsavecontent>
-							<cfif len(local.settingGroupThree)>
-								#local.settingGroupThree#
-								<li class="divider"></li>
-							</cfif>
+							<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listmeasurementunit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
 						</cf_SlatwallActionCallerDropdown>
-						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.help_nav')#" icon="question-sign icon-white" type="nav">
-							<cf_SlatwallActionCaller action="admin:help" type="list">
+						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.tools_nav')#" icon="magnet icon-white" type="nav">
+							<cf_SlatwallActionCaller action="admin:main.about" type="list">
 							<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
 							<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
-							<cfif $.slatwall.getCurrentAccount().getPermissions() eq "*">
+							<cfif findNoCase("*", $.slatwall.getCurrentAccount().getAllPermissions())>
 								<cf_SlatwallActionCaller action="admin:main.default" queryString="reload=true" text="Reload Slatwall" type="list">
 							</cfif>
 						</cf_SlatwallActionCallerDropdown>

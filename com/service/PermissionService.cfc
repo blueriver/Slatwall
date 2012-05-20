@@ -57,7 +57,7 @@ component extends="BaseService" accessors="true" output="false" {
 		var itemName = listLast( arguments.action, "." );
 		
 		// Check if the user is a super admin, if true no need to worry about security
-		if( arguments.account.getAllPermissions() eq '*' ) {
+		if( findNoCase("*", arguments.account.getAllPermissions()) ) {
 			return true;
 		}
 		
@@ -86,7 +86,7 @@ component extends="BaseService" accessors="true" output="false" {
 			};
 			
 			// Setup Admin Permissions
-			var adminDirectoryList = directoryList( expandPath("/Slatwall/admin/controllers") );
+			var adminDirectoryList = directoryList( expandPath("/Slatwall/admin/controllers"), false, "path", "*.cfc" );
 			for(var i=1; i <= arrayLen(adminDirectoryList); i++){
 				
 				var section = listFirst(listLast(adminDirectoryList[i],"/\"),".");
@@ -126,7 +126,7 @@ component extends="BaseService" accessors="true" output="false" {
 				
 				allPermissions[ activeFW1Integrations[i].subsystem ] = {};
 				
-				var integrationDirectoryList = directoryList( expandPath("/Slatwall/integrationServices/#activeFW1Integrations[i].subsystem#/controllers") );
+				var integrationDirectoryList = directoryList( expandPath("/Slatwall/integrationServices/#activeFW1Integrations[i].subsystem#/controllers"), false, "path", "*.cfc" );
 				for(var j=1; j <= arrayLen(integrationDirectoryList); j++){
 					
 					var section = listFirst(listLast(integrationDirectoryList[j],"/\"),".");
