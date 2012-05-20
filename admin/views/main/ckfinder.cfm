@@ -46,8 +46,8 @@ Notes:
 			ckfinder = createObject( "component", "Slatwall.org.ckfinder.ckfinder" ) ;
 			ckfinder.BasePath = "/plugins/Slatwall/org/ckfinder" ;
 			ckfinder.SelectFunction = 'ShowFileInfo' ;
-			// The default height is 400.
 			ckfinder.Height = 460;
+			ckfinder.Width = 900;
 			ckfinder.Create() ;
 		</cfscript>
 	</div>

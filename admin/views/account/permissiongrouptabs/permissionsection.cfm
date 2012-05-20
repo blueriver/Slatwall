@@ -43,7 +43,21 @@ Notes:
 <cfparam name="params.securePermissionOptions" type="array" />
 
 <cfoutput>
-	<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions" value="#rc.permissionGroup.getPermissions()#" valueOptions="#params.securePermissionOptions#" />
-	<!---<cf_SlatwallFieldDisplay fieldtype="chekboxgroup" fieldname="" edit="#rc.edit#">--->
+	<table class="table table-striped table-bordered table-condensed table-multiselect" data-multiselectfield="permissions">
+		<thead>
+			<tr>
+				<th class="multiselect">&nbsp;</th>
+				<th class="data primary" data-propertyidentifier="permission">#$.slatwall.rbKey('define.permissions')#</th>
+			</tr>
+		</thead>
+		<tbody>
+			<cfloop array="#params.securePermissionOptions#" index="local.permission">
+				<tr id="#local.permission.value#">
+					<td><a href="##" class="table-action-multiselect<cfif !rc.edit> disabled</cfif>" data-idvalue="#local.permission.value#"><i class="slatwall-ui-checkbox"></i></a></td>
+					<td class="primary">#local.permission.name#</td>
+				</tr>
+			</cfloop>
+		</tbody>
+	</table>
 </cfoutput>
 

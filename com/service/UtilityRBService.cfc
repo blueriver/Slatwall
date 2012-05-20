@@ -38,5 +38,8 @@ Notes:
 */
 component extends="BaseService" accessors="true" {
 	
+	public any function getRBKey(required any key, string local="US") {
+		
+	}
 	
 }

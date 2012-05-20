@@ -62,7 +62,10 @@ function initUIElements( scopeSelector ) {
 	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({});
 	
 	// Wysiwyg
-	jQuery( '.wysiwyg' ).ckeditor({});
+	jQuery.each(jQuery( '.wysiwyg' ), function(i, v){
+		var editor = CKEDITOR.replace( v );
+		CKFinder.setupCKEditor( editor, 'org/ckfinder/' ) ;
+	});
 	
 	// Tooltips
 	jQuery( scopeSelector ).find(jQuery('.hint')).tooltip();
@@ -101,7 +104,7 @@ function initUIElements( scopeSelector ) {
 	
 	// Table Multiselect
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('.table-multiselect')), function(ti, tv){
-		updateMultiselectTableUI( '#' + jQuery(tv).attr('id') );
+		updateMultiselectTableUI( jQuery(tv).data('multiselectfield') );
 	});
 }
 
@@ -284,14 +287,13 @@ function setupEventHandlers() {
 	});
 }
 
-function updateMultiselectTableUI( tableSelector ) {
-	if(jQuery(tableSelector).hasClass('table-multiselect')) {
-		var inputValue = jQuery('input[name=' + jQuery(tableSelector).data('multiselectfield') + ']').val();
-		if(inputValue != "") {
-			jQuery.each(inputValue.split(','), function(vi, vv){
-				jQuery(jQuery(tableSelector).find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
-			});
-		}	
+function updateMultiselectTableUI( multiselectField ) {
+	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
+	
+	if(inputValue != "") {
+		jQuery.each(inputValue.split(','), function(vi, vv){
+			jQuery(jQuery('table[data-multiselectfield=' + multiselectField  + ']').find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
+		});
 	}
 }
 

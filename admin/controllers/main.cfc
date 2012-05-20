@@ -43,8 +43,8 @@ component extends="BaseController" output=false accessors=true {
 	property name="vendorService" type="any";
 	property name="dataService" type="any";
 	
-	this.publicMethods='noaccess';
-	this.secureMethods='default';
+	this.publicMethods='noaccess,error';
+	this.secureMethods='default,ckfinder';
 	
 	public void function default(required struct rc) {
 		

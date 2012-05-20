@@ -39,70 +39,42 @@ Notes:
 <cfparam name="rc.permissionGroup" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_SlatwallDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#"></cf_SlatwallActionBar>
-	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.permissionGroup#" property="permissionGroupName" edit="#rc.edit#">
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
-	
-	<cf_SlatwallTabGroup object="#rc.permissionGroup#">
-		<cfloop collection="#rc.permissions.admin#" item="section">
-			<cfif len(rc.permissions.admin[ section ].secureMethods)>
-				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.#section#')#" tabid="tabadmin#section#" params="#rc.permissions.admin[section]#">
-			</cfif>
-		</cfloop>
-	</cf_SlatwallTabGroup>
-	
-</cf_SlatwallDetailForm>
+<cfif rc.permissionGroup.getPermissions() eq "*">
+	<cfset $.slatwall.showMessageKey('admin.account.detailpermissiongroup.superuser_info') />
+</cfif>
 
-
-
-
-<!--- 
-
-<h3>Permissions</h3>
-			<cfoutput>
-				<cfif rc.edit>
-					<cfloop collection="#rc.permissions#" item="permissionName">
-						<div class="control-group">
-							<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.' & permissionName)#</label></dt>
-							<div class="controls">
-								<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions" value="#rc.permissionGroup.getPermissions()#" valueOptions="#rc.permissions[permissionName]#" />
-							</div>
-						</div>
-					</cfloop>
-					
-					<div class="control-group">
-						<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.superuser')#</label></dt>
-						<div class="controls">
-							<cf_SlatwallFormField fieldType="checkboxgroup" fieldName="permissions"  value="#rc.permissionGroup.getPermissions()#" valueOptions="#['*']#" />
-						</div>
-					</div>
-				<cfelse>
-					<cfloop collection="#rc.permissions#" item="permissionName">
-						<cfset output = false />
-						<div class="control-group">
-							<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.' & permissionName)#</label></dt>
-							<div class="controls">
-								<cfloop array="#rc.permissions[permissionName]#" Index="permission">
-									<cfif listFind(rc.permissionGroup.getPermissions(),permission)>#permission#<br /> <cfset output=true/></cfif>
-								</cfloop>	
-								<cfif !output>
-									None
-								</cfif>	
-							</div>
-						</div>
-					</cfloop>	
-						<div class="control-group">
-							<label for="permissions" class="control-label">#$.slatwall.rbKey('permission.superuser')#</label></dt>
-							<div class="controls">
-								<cfif listFind(rc.permissionGroup.getPermissions(),'*')>*</cfif>
-							</div>
-						</div>
-				</cfif>
-			</cfoutput>
-
---->
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#"></cf_SlatwallActionBar>
+		
+		<input type="hidden" name="permissions" value="#rc.permissionGroup.getPermissions()#">
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.permissionGroup#" property="permissionGroupName" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cfif rc.permissionGroup.getPermissions() neq "*">
+			<cf_SlatwallTabGroup object="#rc.permissionGroup#">
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.main')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminmain" params="#rc.permissions.admin.main#">
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.product')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminproduct" params="#rc.permissions.admin.product#">
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.pricing')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminpricing" params="#rc.permissions.admin.pricing#">
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.account')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminaccount" params="#rc.permissions.admin.account#">
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.vendor')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminvendor" params="#rc.permissions.admin.vendor#">
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.order')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminorder" params="#rc.permissions.admin.order#">
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.warehouse')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminwarehouse" params="#rc.permissions.admin.warehouse#">
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.integration')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminintegration" params="#rc.permissions.admin.integration#">
+				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.setting')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminsetting" params="#rc.permissions.admin.setting#">
+				<cfloop collection="#rc.permissions#" item="local.subsystem">
+					<cfif subsystem neq "admin">
+						<cfloop collection="#rc.permissions[local.subsystem]#" item="local.section">
+							<cfset local.integration = $.slatwall.getService("integrationService").getIntegrationByIntegrationPackage(local.subsystem)>
+							<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#local.integration.getIntegrationName()#" tabid="tabadmin#local.subsystem#" params="#rc.permissions[local.subsystem][local.section]#">	
+						</cfloop>
+					</cfif>
+				</cfloop>
+			</cf_SlatwallTabGroup>
+		</cfif>
+	</cf_SlatwallDetailForm>
+</cfoutput>

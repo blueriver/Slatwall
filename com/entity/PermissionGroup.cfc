@@ -41,7 +41,7 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	// Persistent Properties
 	property name="permissionGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="permissionGroupName" ormtype="string";
-	property name="permissions" ormtype="string";
+	property name="permissions" ormtype="string" length="4000";
 	
 	// Related Object Properties (many-to-many)
 	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="permissionGroupID" inversejoincolumn="accountID";
@@ -52,7 +52,9 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-
+	
+	
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -60,8 +62,32 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
+	// ================== START: Overridden Methods ========================
+	
+	public any function isDeletable() {
+		if(!isNull(getPermissions()) && getPermissions() eq "*") {
+			return false;
+		}
+		return super.isDeletable();
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
 }
