@@ -64,7 +64,7 @@ component extends="BaseService" accessors="true" output="false" {
 		//check if the page is public, if public no need to worry about security
 		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].publicMethods, itemName)){
 			return true;
-		}
+		}	
 		
 		// Look for the anyAdmin methods next to see if this is an anyAdmin method, and this user is some type of admin
 		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].anyAdminMethods, itemName) && len(arguments.account.getAllPermissions())) {
@@ -124,36 +124,41 @@ component extends="BaseService" accessors="true" output="false" {
 			var activeFW1Integrations = getIntegrationService().getActiveFW1Subsystems();
 			for(var i=1; i <= arrayLen(activeFW1Integrations); i++){
 				
-				var integrationDirectoryList = directoryList( expandPath("/Slatwall/integrationServices/#activeFW1Integrations[1].subsystem#/controllers") );
-				for(var i=1; i <= arrayLen(integrationDirectoryList); i++){
+				allPermissions[ activeFW1Integrations[i].subsystem ] = {};
+				
+				var integrationDirectoryList = directoryList( expandPath("/Slatwall/integrationServices/#activeFW1Integrations[i].subsystem#/controllers") );
+				for(var j=1; j <= arrayLen(integrationDirectoryList); j++){
 					
-					allPermissions[ activeFW1Integrations[1].subsystem ] = {};
+					var section = listFirst(listLast(integrationDirectoryList[j],"/\"),".");
+					var obj = createObject('component','Slatwall.integrationServices.#activeFW1Integrations[i].subsystem#.controllers.#section#');
 					
-					var section = listFirst(listLast(integrationDirectoryList[i],"/\"),".");
-					var obj = createObject('component','Slatwall.integrationServices.#activeFW1Integrations[1].subsystem#.controllers.#section#');
-					
-					allPermissions[ activeFW1Integrations[1].subsystem ][ section ] = {
+					allPermissions[ activeFW1Integrations[i].subsystem ][ section ] = {
 						publicMethods = "",
 						secureMethods = "",
+						anyAdminMethods = "",
 						securePermissionOptions = []
 					};
 					
 					if(structKeyExists(obj, 'publicMethods')){
-						allPermissions[ activeFW1Integrations[1].subsystem ][ section ].publicMethods = obj.publicMethods;
+						allPermissions[ activeFW1Integrations[i].subsystem ][ section ].publicMethods = obj.publicMethods;
+					}
+					if(structKeyExists(obj, 'anyAdminMethods')){
+						allPermissions[ activeFW1Integrations[i].subsystem ][ section ].anyAdminMethods = obj.anyAdminMethods;
 					}
 					if(structKeyExists(obj, 'secureMethods')){	
-						allPermissions[ activeFW1Integrations[1].subsystem ][ section ].secureMethods = obj.secureMethods;
+						allPermissions[ activeFW1Integrations[i].subsystem ][ section ].secureMethods = obj.secureMethods;
 					
-						for(j=1; j <= listLen(allPermissions[ activeFW1Integrations[1].subsystem ][ section ].secureMethods); j++){
+						for(k=1; k <= listLen(allPermissions[ activeFW1Integrations[i].subsystem ][ section ].secureMethods); k++){
 							
-							var item = listGetAt(allPermissions[ activeFW1Integrations[1].subsystem ][ section ].secureMethods, j);
+							var item = listGetAt(allPermissions[ activeFW1Integrations[i].subsystem ][ section ].secureMethods, k);
 							
-							arrayAppend(allPermissions[ activeFW1Integrations[1].subsystem ][ section ].securePermissionOptions, {
-								name="#activeFW1Integrations[1].subsystem#:#section#.#item#",
-								value="#activeFW1Integrations[1].subsystem#:#section#.#item#"
+							arrayAppend(allPermissions[ activeFW1Integrations[i].subsystem ][ section ].securePermissionOptions, {
+								name="#activeFW1Integrations[i].subsystem#:#section#.#item#",
+								value="#activeFW1Integrations[i].subsystem#:#section#.#item#"
 							});
 						}
 					}
+					
 				}
 			}
 			
