@@ -49,7 +49,7 @@ Notes:
 		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
 
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divclass="span6">
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="userDefinedPriceFlag" edit="#rc.edit#">
 				
@@ -58,7 +58,8 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.sku#" property="renewalPrice" edit="#rc.edit#">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="skuCode" edit="#rc.edit#">
-				<!---
+				
+				<!--- If Sku is new show the option choices --->
 				<cfif rc.sku.isNew()>
 					<cfset skuOptions = rc.$.slatwall.getService('productService').getFormattedOptionGroups(rc.product)/>
 					<cfset count=1/>
@@ -67,35 +68,25 @@ Notes:
 						<cfset count++ />
 					</cfloop>
 				</cfif>
-				
-				<cfif !rc.sku.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.sku#" property="imageFile" edit="#rc.edit#" fieldtype="file">
-					<cfif rc.edit>
-						<div class="control-group">
-							<label class="control-label">&nbsp;</label>
-							<div class="controls">
-								<input type="checkbox" name="imageExclusive" value="1" checked/> 
-								#rc.$.Slatwall.rbKey("entity.Sku.exclusive")#<br />
-							</div>
-						</div>	
-					</cfif>	
-					<cfif len(trim(rc.sku.getImageFile()))>
-						<cfif rc.edit>
-							<div class="control-group">
-								<label class="control-label">&nbsp;</label>
-								<div class="controls">
-									<img src="#rc.sku.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /><br />
-									<input type="checkbox" name="deleteImage" value="1" /> Delete<br />
-								</div>
-							</div>
-						<cfelse>
-							<dt class="title">&nbsp;</dt>
-							<dd class="value"><img src="#rc.sku.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /></dd>
-						</cfif>	
-					</cfif>
-				</cfif>
-				--->
 			</cf_SlatwallPropertyList>
+			<cfif !rc.sku.isNew()>
+				<cf_SlatwallPropertyList divclass="span6">
+					<cfif rc.edit>
+						<div class="image pull-right">
+							<img src="#rc.sku.getResizedImagePath(width="150", height="150")#" border="0" width="150px" height="150px" /><br />
+							<cfif rc.sku.imageExists()>
+								<cf_SlatwallFieldDisplay fieldType="yesno" title="Delete Current Image" fieldname="deleteImage" edit="true" />
+							</cfif>
+							<cf_SlatwallFieldDisplay fieldType="file" title="Upload New Image" fieldname="imageFileUpload" edit="true" />
+							<cf_SlatwallFieldDisplay fieldType="radiogroup" title="Image Name" fieldname="imageExclusive" edit="true" valueOptions="#[{name=" Default Naming Convention<br />", value=0},{name=" Make Image Unique to Sku", value=1}]#" />
+						</div>
+					<cfelse>
+						<div class="image pull-right">
+							<img src="#rc.sku.getResizedImagePath(width="150", height="150")#" border="0" width="150px" height="150px" /><br />
+						</div>
+					</cfif>
+				</cf_SlatwallPropertyList>
+			</cfif>
 		</cf_SlatwallDetailHeader>
 
 		<cf_SlatwallTabGroup object="#rc.sku#">

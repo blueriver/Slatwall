@@ -881,7 +881,7 @@
         </tag>
 		<tag endtagrequired="true" name="cf_SlatwallPropertyList" single="false"
              xmlstyle="true">
-            <parameter name="spanClass" required="false" type="String">
+            <parameter name="divClass" required="false" type="String">
                 <values/>
             </parameter>
 			<parameter name="edit" required="false" type="Boolean">

@@ -131,8 +131,8 @@ component extends="BaseController" output=false accessors=true {
 		var sku = getSkuService().getSku(rc.skuID,true);
 		var imageNameToUse='';
 		
-		if(StructKeyExists(rc,'imageFile') && rc.imageFile != ''){
-			var documentData = fileUpload(getTempDirectory(),'imageFile','','makeUnique');
+		if(structKeyExists(rc,'imageFileUpload') && rc.imageFileUpload != ''){
+			var documentData = fileUpload(getTempDirectory(),'imageFileUpload','','makeUnique');
 			
 			//if overwriting old image, delete image			
 			if(len(sku.getImageFile()) && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
@@ -153,7 +153,12 @@ component extends="BaseController" output=false accessors=true {
 					fileDelete(expandpath(sku.getImageDirectory()) & imageNameToUse);
 				}
 				
-				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(sku.getImageDirectory()) & imageNameToUse);
+				if( !directoryExists( replaceNoCase(expandPath(sku.getImageDirectory()), 'index.cfm/', '', 'all') )) {
+					directoryCreate( replaceNoCase(expandPath(sku.getImageDirectory()), 'index.cfm/', '', 'all') );
+				}
+				
+				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, replaceNoCase(expandPath(sku.getImageDirectory()), 'index.cfm/', '', 'all') & imageNameToUse);
+				
 				rc.imageFile = imageNameToUse;
 				
 			}else{
@@ -162,14 +167,21 @@ component extends="BaseController" output=false accessors=true {
 			
 			getImageService().clearImageCache(sku.getImageDirectory(),sku.getImageFile());
 			
-		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
-			fileDelete(expandPath(sku.getImageDirectory()) & sku.getImageFile());	
-			rc.imageFile='';
+		}else if(structKeyExists(rc,'deleteImage') && rc.deleteImage && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
+			// Clear the cache
+			getImageService().clearImageCache(sku.getImageDirectory(),sku.getImageFile());
+			
+			// Delete the file
+			fileDelete( expandPath(sku.getImageDirectory()) & sku.getImageFile());
+			
+			// Set the imageName back to whatever automatically gets generated
+			rc.imageFile=sku.generateImageFileName();
 		}else{
+			
 			rc.imageFile = sku.getImageFile();
 		}
 		
-		super.genericSaveMethod('Sku',rc);
+		super.genericSaveMethod('Sku', rc);
 	}
 	
 	public void function saveProductImage(required struct rc){
