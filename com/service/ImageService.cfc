@@ -193,7 +193,6 @@ component displayname="Image Service" persistent="false" extends="BaseService" o
 	
 	public void function clearImageCache(string directoryPath, string imageName){
 		var cacheFolder = expandpath(arguments.directoryPath & "/cache/");
-		writedump(cacheFolder);
 
 		var files = getUtilityTagService().cfdirectory(action="list",directory=cacheFolder);
 		
@@ -205,7 +204,9 @@ component displayname="Image Service" persistent="false" extends="BaseService" o
 	    cachedFiles = cachedFiles.execute().getResult();
 	    
 		for(i=1; i <= cachedFiles.recordcount; i++){
-			fileDelete(cachedFiles.directory[i] & '/' & cachedFiles.name);
+			if(fileExists(cachedFiles.directory[i] & '/' & cachedFiles.name)) {
+				fileDelete(cachedFiles.directory[i] & '/' & cachedFiles.name);	
+			}
 		}
 	}
 		
