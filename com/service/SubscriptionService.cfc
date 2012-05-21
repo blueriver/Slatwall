@@ -40,6 +40,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="accessService" type="any";
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
+	property name="utilityEmailService" type="any";
 	
 	public boolean function createSubscriptionUsageBenefitAccountByAccess(required any access, required any account) {
 		var subscriptionUsageBenefitAccountCreated = false;
@@ -335,7 +336,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								getDAO().flushORMSession();
 								
 								//send email confirmation, needs a setting to enable this
-								//getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+								getUtilityEmailService().sendOrderConfirmationEmail(order=order);
 							}
 						} 
 					}
@@ -420,7 +421,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						getDAO().flushORMSession();
 						
 						//send email confirmation, needs a setting to enable this
-						//getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+						getUtilityEmailService().sendOrderConfirmationEmail(order=order);
 					} else {
 						for(var errorName in orderFulfillment.getErrors()) {
 							for(var error in orderFulfillment.getErrors()[errorName]) {
