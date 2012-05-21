@@ -127,19 +127,13 @@
 					<li class="divider"></li>
 				</cfif>
 				<cfif len(local.integrationSub)>
-				<li>
-					<a href="##" class="sw-submenu-toggle"><i class="icon icon-random"></i> #request.slatwallScope.rbKey('admin.integration_nav')#</a>
-					<ul>
-						<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:warehouse.listintegration">#request.slatwallScope.rbKey('entity.integration_plural')#</a></li>
-						<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
-						<cfloop array="#local.integrationSubsystems#" index="local.intsys">
-							<li>
-								<a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=#local.intsys.subsystem#:main.default">#local.intsys.name#</a>
-							</li>
-						</cfloop>
-					</ul>
-				</li>
-				<li class="divider"></li>
+					<li>
+						<a href="##" class="sw-submenu-toggle"><i class="icon icon-random"></i> #request.slatwallScope.rbKey('admin.integration_nav')#</a>
+						<ul>
+							#local.integrationSub#
+						</ul>
+					</li>
+					<li class="divider"></li>
 				</cfif>
 				<cfif len(local.pageSub)>
 					<li>

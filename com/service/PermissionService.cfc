@@ -154,7 +154,7 @@ component extends="BaseService" accessors="true" output="false" {
 							
 							arrayAppend(allPermissions[ activeFW1Integrations[i].subsystem ][ section ].securePermissionOptions, {
 								name="#activeFW1Integrations[i].subsystem#:#section#.#item#",
-								value="#activeFW1Integrations[i].subsystem#:#section#.#item#"
+								value="#activeFW1Integrations[i].subsystem##section##item#"
 							});
 						}
 					}

@@ -66,11 +66,14 @@ Notes:
 				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.warehouse')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminwarehouse" params="#rc.permissions.admin.warehouse#">
 				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.integration')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminintegration" params="#rc.permissions.admin.integration#">
 				<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.setting')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminsetting" params="#rc.permissions.admin.setting#">
+				
 				<cfloop collection="#rc.permissions#" item="local.subsystem">
 					<cfif subsystem neq "admin">
+						<cfset local.integration = $.slatwall.getService("integrationService").getIntegrationByIntegrationPackage(local.subsystem)>
 						<cfloop collection="#rc.permissions[local.subsystem]#" item="local.section">
-							<cfset local.integration = $.slatwall.getService("integrationService").getIntegrationByIntegrationPackage(local.subsystem)>
-							<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#local.integration.getIntegrationName()#" tabid="tabadmin#local.subsystem#" params="#rc.permissions[local.subsystem][local.section]#">	
+							<cfif len(rc.permissions[local.subsystem][local.section].secureMethods)>
+								<cf_SlatwallTab view="admin:account/permissiongrouptabs/permissionsection" text="#local.integration.getIntegrationName()# - #local.section#" tabid="tabadmin#local.subsystem#" params="#rc.permissions[local.subsystem][local.section]#">
+							</cfif>	
 						</cfloop>
 					</cfif>
 				</cfloop>
