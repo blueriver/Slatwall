@@ -31,8 +31,8 @@ function CheckAuthentication()
 	return false;
 }
 
-config.licenseName = '';
-config.licenseKey = '';
+config.licenseName = 'Slatwall eCommerce';
+config.licenseKey = 'ESB4-VJNP-SPDK-NEJG-X44A-XK1B-S8BC';
 
 /* To make it easy to configure CKFinder, the config.baseUrl and config.baseDir can be used.
  * Those are helper variables used later in this config file.
