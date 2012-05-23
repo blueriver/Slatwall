@@ -46,7 +46,6 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#$.slatwall.Product()#" property="livePrice">
 			<cf_SlatwallPropertyDisplay object="#$.slatwall.Product()#" property="productDescription">
 		</dl>
-		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
 		<form action="?nocache=1" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
 			<input type="hidden" name="slatAction" value="frontend:cart.addItem" />

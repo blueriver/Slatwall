@@ -93,8 +93,8 @@ Notes:
 			<cfoutput>
 				<input type="hidden" name="#attributes.fieldName#" value="" />
 				<cfloop array="#attributes.valueOptions#" index="option">
-					<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
-					<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
+					<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
+					<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
 					<input tabindex="#request.context.tabindex#" type="checkbox" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, thisOptionValue)> checked="checked"</cfif> #attributes.fieldAttributes# /> <span class="#attributes.fieldClass#">#thisOptionName#</span> <br />
 					<cfset request.context.tabindex++ />
 				</cfloop>
@@ -123,8 +123,8 @@ Notes:
 				<input name="#attributes.fieldName#" type="hidden" value="" />
 				<select tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass# multiselect" multiple="multiple" #attributes.fieldAttributes#>
 					<cfloop array="#attributes.valueOptions#" index="option">
-						<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
-						<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
+						<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
+						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
 						<option value="#thisOptionValue#" <cfif listFindNoCase(attributes.value, thisOptionValue)> selected="selected"</cfif>>#thisOptionName#</option>
 					</cfloop>
 				</select>
@@ -150,8 +150,8 @@ Notes:
 					<cfset attributes.value = attributes.valueOptions[1]['value'] />
 				</cfif>
 				<cfloop array="#attributes.valueOptions#" index="option">
-					<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
-					<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
+						<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
+						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
 					<input tabindex="#request.context.tabindex#" type="radio" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif attributes.value EQ thisOptionValue> checked="checked"</cfif> #attributes.fieldAttributes# /><span class="#attributes.fieldClass#">#thisOptionName#</span>
 					<cfset request.context.tabindex++ />
 				</cfloop>
@@ -161,7 +161,7 @@ Notes:
 			<cfoutput>
 				<select tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes#>
 					<cfloop array="#attributes.valueOptions#" index="option">
-						<cfset thisOptionValue = isSimpleValue(option) ? option : structFind(option, 'value') />
+						<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
 						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
 						<option value="#thisOptionValue#" <cfif attributes.value EQ thisOptionValue> selected="selected"</cfif>>#thisOptionName#</option>
 					</cfloop>
