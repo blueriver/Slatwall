@@ -46,7 +46,7 @@ config.licenseKey = 'ESB4-VJNP-SPDK-NEJG-X44A-XK1B-S8BC';
  */
 
 //ATTENTION: The trailing slash is required.
-config.baseUrl = "/plugins/Slatwall/org/ckfinder/userfiles/";
+config.baseUrl = "/default/assets/";
 
 /*
  * config.baseDir : the path to the local directory (in the server) which points to the
@@ -172,25 +172,25 @@ config.defaultResourceTypes = '';
 config.resourceType = arrayNew(1);
 
 config.resourceType[1] = structNew();
-config.resourceType[1].name = 'Files';
-config.resourceType[1].url = config.baseUrl & 'files';
-config.resourceType[1].directory = config.baseDir & 'files';
+config.resourceType[1].name = 'File';
+config.resourceType[1].url = config.baseUrl & 'File';
+config.resourceType[1].directory = config.baseDir & 'File';
 config.resourceType[1].maxSize = 0;
 config.resourceType[1].allowedExtensions = '7z,aiff,asf,avi,bmp,csv,doc,docx,fla,flv,gif,gz,gzip,jpeg,jpg,mid,mov,mp3,mp4,mpc,mpeg,mpg,ods,odt,pdf,png,ppt,pptx,pxd,qt,ram,rar,rm,rmi,rmvb,rtf,sdc,sitd,swf,sxc,sxw,tar,tgz,tif,tiff,txt,vsd,wav,wma,wmv,xls,xlsx,zip';
 config.resourceType[1].deniedExtensions = '';
 
 config.resourceType[2] = structNew();
-config.resourceType[2].name = 'Images';
-config.resourceType[2].url = config.baseUrl & 'images';
-config.resourceType[2].directory = config.baseDir & 'images';
+config.resourceType[2].name = 'Image';
+config.resourceType[2].url = config.baseUrl & 'Image';
+config.resourceType[2].directory = config.baseDir & 'Image';
 config.resourceType[2].maxSize = 0;
 config.resourceType[2].allowedExtensions = 'bmp,gif,jpeg,jpg,png';
 config.resourceType[2].deniedExtensions = '';
 
 config.resourceType[3] = structNew();
 config.resourceType[3].name = 'Flash';
-config.resourceType[3].url = config.baseUrl & 'flash';
-config.resourceType[3].directory = config.baseDir & 'flash';
+config.resourceType[3].url = config.baseUrl & 'Flash';
+config.resourceType[3].directory = config.baseDir & 'Flash';
 config.resourceType[3].maxSize = 0;
 config.resourceType[3].allowedExtensions = 'swf,flv';
 config.resourceType[3].deniedExtensions = '';
