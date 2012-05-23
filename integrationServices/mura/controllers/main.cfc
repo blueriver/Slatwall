@@ -1,4 +1,6 @@
-component extends="Slatwall.admin.controllers.BaseController" {
+component extends="Slatwall.admin.controllers.BaseController" output="false" accessors="true"  {
+
+	property name="utilityFileService" type="any";
 
 	this.secureMethods="default,updateviews";
 	
