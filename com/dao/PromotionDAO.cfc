@@ -59,7 +59,29 @@ Notes:
 				sp.activeFlag = :activeFlag" />
 		
 		<cfif arguments.qualificationRequired>
-			<cfset hql &= " and EXISTS( SELECT pq.promotionQualifierID FROM SlatwallPromotionQualifier pq WHERE pq.promotionPeriod.promotionPeriodID = spp.promotionPeriodID ) " />
+			<cfif len(promotionCodeList)>
+				<cfset hql &= " and ( 
+						EXISTS( SELECT pq.promotionQualifierID FROM SlatwallPromotionQualifier pq WHERE pq.promotionPeriod.promotionPeriodID = spp.promotionPeriodID ) 
+							OR
+						EXISTS( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID AND c.promotionCode IN (:promotionCodeList) AND (c.startDateTime is null or c.startDateTime < :now) AND (c.endDateTime is null or c.endDateTime > :now) )
+					)" />
+			<cfelse>
+				<cfset hql &= " and ( 
+					EXISTS( SELECT pq.promotionQualifierID FROM SlatwallPromotionQualifier pq WHERE pq.promotionPeriod.promotionPeriodID = spp.promotionPeriodID ) 
+						AND
+					NOT EXISTS( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )
+				)" />
+			</cfif>
+		<cfelse>
+			<cfif len(promotionCodeList)>
+				<cfset hql &=	" and (
+					  	NOT EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )
+					  	  or
+					  	EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID AND c.promotionCode IN (:promotionCodeList) AND (c.startDateTime is null or c.startDateTime < :now) AND (c.endDateTime is null or c.endDateTime > :now) )
+					  )" />
+			<cfelse>
+				<cfset hql &=	" and NOT EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )" />
+			</cfif>	
 		</cfif>
 		
 		<cfset var params = {
@@ -67,26 +89,18 @@ Notes:
 			activeFlag = 1
 		} />
 		
-		<cfif structKeyExists(server, "railo")>
-			<cfset params.rewardTypeList = arguments.rewardTypeList />
-		<cfelse>
-			<cfset params.rewardTypeList = listToArray(arguments.rewardTypeList) />		
-		</cfif>
-				
 		<cfif len(promotionCodeList)>
-			<cfset hql &=	" and (
-				  	NOT EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )
-				  	  or
-				  	EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID AND c.promotionCode IN (:promotionCodeList) AND (c.startDateTime is null or c.startDateTime < :now) AND (c.endDateTime is null or c.endDateTime > :now) )
-				  )" />
-
 			<cfif structKeyExists(server, "railo")>
 				<cfset params.promotionCodeList = arguments.promotionCodeList />
 			<cfelse>
 				<cfset params.promotionCodeList = listToArray(arguments.promotionCodeList) />		
 			</cfif>
+		</cfif>
+		
+		<cfif structKeyExists(server, "railo")>
+			<cfset params.rewardTypeList = arguments.rewardTypeList />
 		<cfelse>
-			<cfset hql &=	" and NOT EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )" />
+			<cfset params.rewardTypeList = listToArray(arguments.rewardTypeList) />		
 		</cfif>
 		
 		<cfreturn ormExecuteQuery(hql, params) />
