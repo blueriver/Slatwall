@@ -43,11 +43,11 @@ Notes:
 			SELECT
 				accountID
 			FROM	
-				slatwallAccount
+				SlatwallAccount
 			INNER JOIN
-				tUsers on slatwallAccount.cmsAccountID = tUsers.userID
+				tusers on SlatwallAccount.cmsAccountID = tusers.userID
 			WHERE
-				tUsers.s2 = 1
+				tusers.s2 = 1
 			AND
 				accountID NOT IN (
 					SELECT

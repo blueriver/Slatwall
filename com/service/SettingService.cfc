@@ -570,4 +570,6 @@ globalEncryptionKeySize
 		<cfreturn rs />		
 	</cffunction>
 	
+
+
 </cfcomponent>

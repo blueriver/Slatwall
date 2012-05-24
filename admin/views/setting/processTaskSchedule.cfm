@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -36,20 +36,24 @@
 Notes:
 
 --->
-<cfparam name="rc.task" type="any"/>
 
-<cf_slatwalllistingdisplay smartlist="#rc.task.getTaskSchedulesSmartList()#" 
-                        recordeditaction="admin:setting.editTaskSchedule" recordeditmodal="true" 
-                        recordeditquerystring="taskID=#rc.task.getTaskID()#" 
-                        recorddeleteaction="admin:setting.deleteTaskSchedule"
-						recorddeletequerystring="returnAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule"
-                        recordprocessaction="admin:setting.processtaskschedule"
-                        recordprocessmodal="true">
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="startDateTime"/>
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="endDateTime"/>
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="schedule.schedulename"/>
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
-</cf_slatwalllistingdisplay>
 
-<cf_slatwallactioncaller action="admin:setting.createTaskSchedule" class="btn btn-inverse" icon="plus icon-white" 
-                      querystring="taskID=#rc.task.getTaskID()#" modal=true/>
+<cfparam name="rc.returnAction" type="string" default="admin:setting.edittask&taskScheduleID=#rc.taskScheduleID#" />
+<cfparam name="rc.processTaskScheduleSmartList" type="any" />
+
+<cfoutput>
+	<cf_SlatwallProcessForm>
+		
+		<cf_SlatwallActionBar type="process" />
+		
+		<p>
+			Are you sure you wish to run this task?
+		</p>	
+		
+        <cf_SlatwallProcessListing processSmartList="#rc.processTaskScheduleSmartList#"></cf_SlatwallProcessListing>
+		
+		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
+		<input type="hidden" name="returnAction" value="admin:setting.edittask&taskScheduleID=#rc.taskScheduleID#" />
+	</cf_SlatwallProcessForm>
+		
+</cfoutput>

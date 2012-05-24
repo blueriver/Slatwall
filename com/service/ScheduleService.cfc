@@ -54,6 +54,14 @@ component extends="BaseService" output="false" accessors="true"{
 			
 		}
 	}
+
+    public any function processtaskschedule(required any taskSchedule, struct data={}, string processContext="process"){
+        getTaskService().executeTask(arguments.taskSchedule.getTask().getTaskID(),arguments.taskSchedule.getTaskScheduleID());
+    } 
+
+     public any function processtask(required any task, struct data={}, string processContext="process"){
+        getTaskService().executeTask(arguments.task.getTaskID(),arguments.data.taskScheduleID);
+    }    
 	
 		
 }
