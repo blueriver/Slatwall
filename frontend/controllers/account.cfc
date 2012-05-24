@@ -85,6 +85,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(rc.account.hasErrors()) {
 			prepareEditData(rc);
 			getFW().setView(currentAction);
+		} else if ( structKeyExists(rc,"returnURL") && len(rc.returnURL) > 3) {
+			getFW().redirectExact(rc.returnURL);
 		} else {
 			redirectToView();
 		}
