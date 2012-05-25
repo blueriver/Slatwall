@@ -61,7 +61,7 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divclass="span4">
 				<cfif !isNull(rc.order.getAccount())>
-					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="fullName" valuelink="?slatAction=admin:account.detail&accountID=#rc.order.getAccount().getAccountID()#">
+					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="fullName" valuelink="?slatAction=admin:account.detailaccount&accountID=#rc.order.getAccount().getAccountID()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress" valuelink="mailto:#rc.order.getAccount().getEmailAddress()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="phoneNumber">
 				</cfif>
