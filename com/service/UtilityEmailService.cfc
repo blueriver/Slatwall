@@ -44,6 +44,11 @@ Notes:
 		<cfargument name="order" type="any">
 		
 		<cfset var $ = request.context.$ />
+		<cfif structKeyExists($,"event")>
+			<cfset var siteID = $.event('siteid') />
+		<cfelse>
+			<cfset var siteID = session.siteid />
+		</cfif>
 		
 		<cfmail to="#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()# <#arguments.order.getAccount().getEmailAddress()#>"
 				from="#setting('globalOrderPlacedEmailFrom')#"
@@ -51,10 +56,10 @@ Notes:
 				bcc="#setting('globalOrderPlacedEmailBCC')#"
 				cc="#setting('globalOrderPlacedEmailCC')#" >
 			<cfmailpart type="text/plain">
-				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderplacedtext.cfm" />
+				<cfinclude template="#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/orderplacedtext.cfm" />
 			</cfmailpart>
 			<cfmailpart type="text/html">
-				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderplaced.cfm" />	
+				<cfinclude template="#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/orderplaced.cfm" />	
 			</cfmailpart>
 		</cfmail>
 		
