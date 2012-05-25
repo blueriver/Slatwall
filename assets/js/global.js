@@ -4,6 +4,7 @@
  * @depends /jquery-ui-timepicker-addon-0.9.9.js
  * @depends /jquery-validate-1.9.0.min.js
  * @depends /jquery-typewatch-2.0.js
+ * @depends /jquery-hashchange-1.3.min.js
  * @depends /bootstrap.min.js
  * 
  */
@@ -17,10 +18,13 @@ jQuery(document).ready(function() {
 	initUIElements( 'body' );
 
 	// Looks for a tab to show
+	$(window).hashchange();
+	/*
 	if( window.location.hash ) {
 		var hash = window.location.hash.substring(1);
 		jQuery('a[href=#' + hash + ']').tab('show');
 	}
+	*/
 	
 	// Focus on the first tab index
 	if(jQuery('.firstfocus').length) {
@@ -130,6 +134,11 @@ function setupEventHandlers() {
 	jQuery('body').on('click', '.search-close', function(e){
 		jQuery('#global-search').val('');
 		jQuery('#global-search').keyup();
+	});
+	
+	// Bind Hash Change Event
+	jQuery(window).hashchange( function(){
+		jQuery('a[href=' + location.hash + ']').tab('show');
 	});
 	
 	// Hints
