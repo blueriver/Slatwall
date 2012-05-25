@@ -40,7 +40,8 @@ component extends="BaseService" output="false" accessors="true"{
 
 	public void function executeTask( required any taskID, required any TaskScheduleID) {
 		//Pass in id's and not complex objects like entities. thread doesnt like that
-		thread
+
+		 thread
 			action="run"
 			name="myThread"
 			taskID="#arguments.taskID#"
@@ -49,8 +50,7 @@ component extends="BaseService" output="false" accessors="true"{
 				var taskResponse = "";
 				var taskHistory = new('TaskHistory');
 				var task = get('Task',attributes.taskID);
-				
-				
+				var taskSchedule = get('TaskSchedule',attributes.taskScheduleID);
 				
 				task.setRunningFlag(true);
 				taskHistory.setStartTime(now());
@@ -65,10 +65,12 @@ component extends="BaseService" output="false" accessors="true"{
 					}
 					taskHistory.setsuccessFlag(true);
 					taskHistory.setResponse(taskResponse);
+					sendNotificationEmail(taskSchedule,'Success');
 					
 				} catch(any e){
 					taskHistory.setsuccessFlag(false);
 					taskHistory.setResponse(e.Message);
+					sendNotificationEmail(taskSchedule,'Failed',e);
 				}
 				
 				task.setRunningFlag(false);
@@ -87,7 +89,29 @@ component extends="BaseService" output="false" accessors="true"{
 			
         } 
 	
-	
+	public void function sendNotificationEmail(required any taskSchedule, required string status, any error){
+		
+		var mail=new mail();
+		mail.setSubject(arguments.status & ': ' & arguments.taskSchedule.getTask().getTaskName());
+
+		mail.setFrom(setting('globalOrderPlacedEmailFrom'));
+		mail.setType('HTML');
+
+		if(arguments.status eq "Failed"){
+			savecontent variable="errorString" { writedump(var="#arguments.error#" top="2"); };
+		
+			mail.setTo(arguments.taskSchedule.getFailureEmailList());
+			mail.addPart( type="html", charset="utf-8", body="<p>The #arguments.taskSchedule.getTask().getTaskName()# task failed on <i>#dateformat(now(),"mm/dd/yyyy")# #timeformat(now(),"medium")#</i></p><h2>Error Details</h2>#arguments.error.cause.message#" & errorString );
+			mail.setBody( "<p>The #arguments.taskSchedule.getTask().getTaskName()# task failed on <i>#dateformat(now(),"mm/dd/yyyy")# #timeformat(now(),"medium")#</i></p><h2>Error Details</h2>#arguments.error.cause.message#" & errorString );
+		}else{
+			mail.setTo(arguments.taskSchedule.getSuccessEmailList());
+			mail.addPart( type="html", charset="utf-8", body="<p>The #arguments.taskSchedule.getTask().getTaskName()# task completed successfully on <i>#dateformat(now(),"mm/dd/yyyy")# #timeformat(now(),"medium")#</i></p>" );
+			mail.setBody( "<p>The #arguments.taskSchedule.getTask().getTaskName()# task completed successfully on <i>#dateformat(now(),"mm/dd/yyyy")# #timeformat(now(),"medium")#</i></p>" );
+		}
+		
+		mail.send();
+
+	}
 	
 	
 	// ================== Start: Task Methods ============================

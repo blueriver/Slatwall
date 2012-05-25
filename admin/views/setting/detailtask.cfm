@@ -41,7 +41,9 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.task#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.task#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.task#">
+                <cf_SlatwallActionCaller action="admin:setting.processtask" querystring="taskID=#rc.task.getTaskID()#" type="list" icon="cog" modal="true" >
+        </cf_SlatwallActionBar>    
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
