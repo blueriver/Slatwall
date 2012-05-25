@@ -126,8 +126,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		getOrderService().updateAndVerifyOrderAccount(order=$.slatwall.cart(), data=rc);
 		
-		logSlatwall(logSlatwall(structKeyList($.slatwall.cart().getAccount().getErrors())));
-		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
 	}

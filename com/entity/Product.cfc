@@ -524,7 +524,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public numeric function getAllowBackorderFlag() {
-		logSlatwall(setting("skuAllowBackorderFlag"));
 		return setting("skuAllowBackorderFlag");
 	}
 	

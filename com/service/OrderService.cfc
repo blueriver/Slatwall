@@ -241,6 +241,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(!isNull(arguments.order.getAccount()) && arguments.order.getAccount().getAccountID() != account.getAccountID()) {
 				arguments.order = duplicateOrderWithNewAccount( arguments.order, account );
 				getSlatwallScope().getCurrentSession().setOrder( arguments.order );
+				getSlatwallScope().setCurrentCart( arguments.order );
 			} else {
 				arguments.order.setAccount(account);
 			}
@@ -250,7 +251,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
 			accountOK = false;
 		}
-	
+		
 		return accountOK;
 	}
 	
