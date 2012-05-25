@@ -271,13 +271,33 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
 		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=entity, 2=rc} );
+		
+		// If OK, then check for processOptions
+		if(!rc[ arguments.entityName ].hasErrors() && structKeyExists(rc, "process") && isBoolean(rc.process) && rc.process) {
+			param name="rc.processOptions" default="#structNew()#";
+			param name="rc.processContext" default="process";
 			
+			processData = rc;
+			structAppend(processData, rc.processOptions, false);
+			
+			rc[ arguments.entityName ] = entityService.invokeMethod( "process#arguments.entityName#", {1=rc[ arguments.entityName ], 2=processData, 3=rc.processContext} );
+			
+			if(rc[ arguments.entityName ].hasErrors()) {
+				// Add the error message to the top of the page
+				entity.showErrorMessages();	
+			}
+		}
+		
+		// If still OK then check what to do next
 		if(!rc[ arguments.entityName ].hasErrors()) {
+			
 			if(structKeyExists(rc, "returnAction")) {
 				redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
 			} else {
 				getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
 			}
+			
+		// If Errors
 		} else {
 			rc.edit = true;
 			getFW().setView(action=rc.detailAction);
@@ -323,7 +343,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 						structAppend(rc.processRecords[i], rc.processOptions, false);
 						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ]} );
 						entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
-						if( !isNUll(entity) && entity.hasErrors() ) {
+						if( !isNull(entity) && entity.hasErrors() ) {
 							// Add the error message to the top of the page
 							entity.showErrorMessages();
 							

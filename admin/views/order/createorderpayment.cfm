@@ -47,16 +47,26 @@ Notes:
 		
 		<input type="hidden" name="order.orderID" value="#rc.order.getOrderID()#" />
 		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
+		<input type="hidden" name="process" value="1" />
 		
+		<cf_SlatwallProcessOptionBar>
+			<cf_SlatwallProcessOption data="transactionType" fieldType="select" valueOptions="#[{value='authorizeAndCharge', name='Authorize & Charge'}, {value='authorize', name='Authorize'}]#" />
+		</cf_SlatwallProcessOptionBar>	
+			
 		<cf_SlatwallDetailHeader>
-			<cfif rc.paymentMethod.getPaymentMethodType() eq "creditCard">
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="creditCardNumber" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="securityCode" edit="#rc.edit#" />
-			</cfif>
-			<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#rc.order.getTotal() - rc.order.getPaymentAmountTotal()#" />
+			<cf_SlatwallPropertyList divClass="span6">
+				<cf_SlatwallAddressDisplay address="#$.slatwall.getService("addressService").newAddress()#" fieldnameprefix="billingAddress." edit="#rc.edit#" />
+			</cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divClass="span6">
+				<cfif rc.paymentMethod.getPaymentMethodType() eq "creditCard">
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="creditCardNumber" edit="#rc.edit#" />
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="securityCode" edit="#rc.edit#" />
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#rc.order.getTotal() - rc.order.getPaymentAmountTotal()#" />	
+				</cfif>
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 	</cf_SlatwallDetailForm>
 </cfoutput>
