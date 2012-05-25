@@ -62,10 +62,7 @@ Notes:
 			<div class="actionnav well well-small">
 				<div class="row-fluid">
 					<div class="span4">
-						<h1 <cfif !len(attributes.pageSubTitle)>class="noSub"</cfif>>#attributes.pageTitle#</h1>
-						<cfif len(attributes.pageSubTitle)>
-							<h2>#attributes.pageSubTitle#</h2>
-						</cfif>
+						<h1>#attributes.pageTitle#</h1>
 					</div>
 					<div class="span8">
 						<div class="btn-toolbar">

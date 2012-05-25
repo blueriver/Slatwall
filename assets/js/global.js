@@ -19,12 +19,6 @@ jQuery(document).ready(function() {
 
 	// Looks for a tab to show
 	$(window).hashchange();
-	/*
-	if( window.location.hash ) {
-		var hash = window.location.hash.substring(1);
-		jQuery('a[href=#' + hash + ']').tab('show');
-	}
-	*/
 	
 	// Focus on the first tab index
 	if(jQuery('.firstfocus').length) {
@@ -75,14 +69,14 @@ function initUIElements( scopeSelector ) {
 	jQuery( scopeSelector ).find(jQuery('.hint')).tooltip();
 	
 	// Empty Values
-	jQuery.each(jQuery( scopeSelector ).find(jQuery('input[data-emptyvalue]')), function(index, value) {
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('input[data-emptyvalue]')), function(index, value){
 		jQuery(this).blur();
 	});
 	
 	// Form Empty value clear (IMPORTANT!!! KEEP THIS ABOVE THE VALIDATION ASIGNMENT)
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value) {
 		jQuery(value).on('submit', function(e){
-			jQuery.each(jQuery( this ).find(jQuery('input[data-emptyvalue]')), function(i, v) {
+			jQuery.each(jQuery( this ).find(jQuery('input[data-emptyvalue]')), function(i, v){
 				if(jQuery(v).val() == jQuery(v).data('emptyvalue')) {
 					jQuery(v).val('');
 				}
@@ -91,7 +85,7 @@ function initUIElements( scopeSelector ) {
 	});
 	
 	// Validation
-	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value) {
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value){
 		jQuery(value).validate({
 			invalidHandler: function() {
 				console.log(jQuery(value).find('input[data-emptyvalue]').blur());
@@ -137,7 +131,7 @@ function setupEventHandlers() {
 	});
 	
 	// Bind Hash Change Event
-	jQuery(window).hashchange( function(){
+	jQuery(window).hashchange( function(e){
 		jQuery('a[href=' + location.hash + ']').tab('show');
 	});
 	
@@ -147,18 +141,18 @@ function setupEventHandlers() {
 	});
 	
 	// Tab Selecting
-	jQuery('body').on('shown', 'a[data-toggle="tab"]', function (e) {
+	jQuery('body').on('shown', 'a[data-toggle="tab"]', function(e){
 		window.location.hash = jQuery(this).attr('href');
 	});
 	
 	// Empty Value
-	jQuery('body').on('focus', 'input[data-emptyvalue]', function (e) {
+	jQuery('body').on('focus', 'input[data-emptyvalue]', function(e){
 		jQuery(this).removeClass('emptyvalue');
 		if(jQuery(this).val() == jQuery(this).data('emptyvalue')) {
 			jQuery(this).val('');
 		}
 	});
-	jQuery('body').on('blur', 'input[data-emptyvalue]', function (e) {
+	jQuery('body').on('blur', 'input[data-emptyvalue]', function(e){
 		if(jQuery(this).val() == '') {
 			jQuery(this).val(jQuery(this).data('emptyvalue'));
 			jQuery(this).addClass('emptyvalue');
@@ -216,7 +210,7 @@ function setupEventHandlers() {
 	});
 	
 	// Listing Display - Paging
-	jQuery('body').on('click', '.listing-pager', function(e){
+	jQuery('body').on('click', '.listing-pager', function(e) {
 		e.preventDefault();
 		
 		var data = {};
@@ -226,7 +220,7 @@ function setupEventHandlers() {
 	});
 	
 	// Listing Display - Sorting
-	jQuery('body').on('click', '.listing-sort', function(e){
+	jQuery('body').on('click', '.listing-sort', function(e) {
 		e.preventDefault();
 		var data = {};
 		data[ 'OrderBy' ] = jQuery(this).closest('th').data('propertyidentifier') + '|' + jQuery(this).data('sortdirection');
@@ -234,7 +228,7 @@ function setupEventHandlers() {
 	});
 	
 	// Listing Display - Filtering
-	jQuery('body').on('click', '.listing-filter', function(e){
+	jQuery('body').on('click', '.listing-filter', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		
@@ -263,13 +257,13 @@ function setupEventHandlers() {
 	});
 	
 	// Listing Display - Searching
-	jQuery('body').on('click', '.dropdown input', function(e){
+	jQuery('body').on('click', '.dropdown input', function(e) {
 		e.stopPropagation();
 	});
-	jQuery('body').on('click', 'table .dropdown-toggle', function(e){
+	jQuery('body').on('click', 'table .dropdown-toggle', function(e) {
 		jQuery(this).parent().find('.listing-search').focus();
 	});
-	jQuery('body').on('keyup', '.listing-search', function(e){
+	jQuery('body').on('keyup', '.listing-search', function(e) {
 		var data = {};
 		
 		if(jQuery(this).val() != '') {
@@ -281,20 +275,20 @@ function setupEventHandlers() {
 	});
 	
 	// Listing Display - Expanding
-	jQuery('body').on('click', '.table-action-expand', function(e){
+	jQuery('body').on('click', '.table-action-expand', function(e) {
 		e.preventDefault();
 		tableExpandClick( this );
 	});
 	
 	// Listing Display - Sort Applying
-	jQuery('body').on('click', '.table-action-sort', function(e){
+	jQuery('body').on('click', '.table-action-sort', function(e) {
 		e.preventDefault();
 	});
 	
 	// Listing Display - Select
 	
 	// Listing Display - Multiselect
-	jQuery('body').on('click', '.table-action-multiselect', function(e){
+	jQuery('body').on('click', '.table-action-multiselect', function(e) {
 		e.preventDefault();
 		if(!jQuery(this).hasClass('disabled')){
 			tableMultiselectClick( this );
@@ -306,7 +300,7 @@ function updateMultiselectTableUI( multiselectField ) {
 	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
 	
 	if(inputValue != "") {
-		jQuery.each(inputValue.split(','), function(vi, vv){
+		jQuery.each(inputValue.split(','), function(vi, vv) {
 			jQuery(jQuery('table[data-multiselectfield=' + multiselectField  + ']').find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
 		});
 	}
@@ -340,7 +334,7 @@ function listingDisplayUpdate( tableID, data ) {
 			jQuery(tableBodySelector).html('');
 			
 			// Loop over each of the records in the response
-			jQuery.each( r["pageRecords"], function(ri, rv){
+			jQuery.each( r["pageRecords"], function(ri, rv) {
 			
 				var rowSelector = jQuery('<tr></tr>');
 				jQuery(rowSelector).attr('id', rv[ idProperty ]);

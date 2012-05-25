@@ -85,6 +85,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="paymentAmountTotal" persistent="false" formatType="currency";
 	property name="paymentAuthorizedTotal" persistent="false" formatType="currency";
 	property name="paymentAmountReceivedTotal" persistent="false" formatType="currency";
+	property name="paymentMethodOptionsSmartList" persistent="false";
 	property name="promotionCodeList" persistent="false";
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
@@ -271,6 +272,14 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		
 		return totalPaymentsReceived;
+	}
+	
+	public any function getPaymentMethodOptionsSmartList() {
+		if(!structKeyExists(variables, "paymentMethodOptionsSmartList")) {
+			variables.paymentMethodOptionsSmartList = getService("paymentService").getPaymentMethodSmartList();
+			variables.paymentMethodOptionsSmartList.addFilter("activeFlag", 1);
+		}
+		return variables.paymentMethodOptionsSmartList;
 	}
 	
 	public string function getpromotionCodeList() {

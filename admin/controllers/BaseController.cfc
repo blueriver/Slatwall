@@ -222,6 +222,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			getFW().redirect(rc.listAction);
 		}
 		
+		rc.pageTitle = rc[arguments.entityName].getSimpleRepresentation();
+		
 		rc.edit = true;
 		getFW().setView(rc.detailAction);
 	}
@@ -233,6 +235,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		if(!structKeyExists(rc,arguments.entityName) || !isObject(rc[arguments.entityName])){
 			getFW().redirect(rc.listAction);
 		}
+		
+		rc.pageTitle = rc[arguments.entityName].getSimpleRepresentation();
 		
 		rc.edit = false;
 	}

@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,37 +35,14 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
-
-	// fw1 Auto-Injected Service Properties
-	property name="orderService" type="any";
-	property name="paymentService" type="any";
-	property name="LocationService" type="any";
+--->
+<cfif thisTag.executionMode is "end">
+	<cfparam name="attributes.changefield" type="string" />
+	<cfparam name="attributes.showvalues" type="string" />
 	
-	this.publicMethods='';
-	this.secureMethods='listOrder,detailOrder,editOrder,deleteOrder,saveOrder,listOrderFullfillment,editOrderFullfillment,detailOrderFullfillment,deleteOrderFullfillment,saveOrderFullfillment';
-	
-	public void function default(required struct rc) {
-		getFW().redirect("admin:order.listorder");
-	}
-	
-	public any function createreturnorder( required struct rc ) {
-		param name="rc.originalorderid" type="string" default="";
-		
-		rc.originalOrder = getOrderService().getOrder(rc.originalOrderID);
-	}
-	
-	public any function createorderpayment( required struct rc ) {
-		param name="rc.orderID" type="string" default="";
-		param name="rc.paymentMethodID" type="string" default="";
-		
-		rc.orderPayment = getOrderService().newOrderPayment();
-		rc.order = getOrderService().getOrder(rc.orderID);
-		rc.paymentMethod = getPaymentService().getPaymentMethod(rc.paymentMethodID);
-		
-		rc.edit = true;
-		
-	}
-	
-}
+	<cfoutput>
+		<div class="change-toggle" data-changefield="#attributes.changefield#" data-showvalues="#attributes.showvalues#">
+			#thisTag.generatedContent#
+		</div>
+	</cfoutput>
+</cfif>

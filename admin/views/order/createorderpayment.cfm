@@ -36,36 +36,27 @@
 Notes:
 
 --->
+
 <cfparam name="rc.orderPayment" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.order" type="any" />
+<cfparam name="rc.paymentMethod" type="any" />
+<cfparam name="rc.edit" type="boolean" default="tr" />
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:order.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
-			<cf_SlatwallActionCaller type="list" action="admin:order.processorderpayment" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" modal="true" />
-		</cf_SlatwallActionBar>
+		
+		<input type="hidden" name="order.orderID" value="#rc.order.getOrderID()#" />
+		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divClass="span6">
-				<cfif rc.orderPayment.getPaymentMethodType() eq "creditCard">
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="creditCardType" />
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
-				</cfif>
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divClass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountReceived" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountCredited" />
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.orderPayment#">
-			<cfif rc.orderPayment.getPaymentMethodType() eq "creditCard">
-				<cf_SlatwallTab view="admin:order/orderpaymenttabs/creditcardtransactions" />
+			<cfif rc.paymentMethod.getPaymentMethodType() eq "creditCard">
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="creditCardNumber" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="securityCode" edit="#rc.edit#" />
 			</cfif>
-		</cf_SlatwallTabGroup>
-		
+			<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#rc.order.getTotal() - rc.order.getPaymentAmountTotal()#" />
+		</cf_SlatwallDetailHeader>
 	</cf_SlatwallDetailForm>
 </cfoutput>

@@ -42,10 +42,19 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
-			<cf_SlatwallActionCaller action="admin:order.createorderpayment" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
+			<cfif rc.order.getOrderStatusType().getSystemCode() neq "ostClosed">
+				<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
+			</cfif>
 			<cfif rc.order.getQuantityDelivered()>
 				<cf_SlatwallActionCaller action="admin:order.createreturnorder" queryString="originalOrderID=#rc.order.getOrderID()#" type="list" modal=true />
+			</cfif>
+			<cfif rc.order.getOrderStatusType().getSystemCode() neq "ostClosed">
+				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()>
+					<li class="divider"></li>
+					<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
+						<cf_SlatwallActionCaller type="list" text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.payment')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#" modal=true />
+					</cfloop>
+				</cfif>
 			</cfif>
 		</cf_SlatwallActionBar>
 		

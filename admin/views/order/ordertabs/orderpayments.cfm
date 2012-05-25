@@ -50,5 +50,12 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:order.createorderpayment" class="btn btn-inverse" icon="plus icon-white" queryString="orderID=#rc.order.getOrderID()#" modal=true />
+	<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()>
+		<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
+			<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
+				<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.payment')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#" modal=true />
+			</cfloop>
+		</cf_SlatwallActionCallerDropdown>
+	</cfif>
+	
 </cfoutput>
