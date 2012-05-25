@@ -232,8 +232,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
 		var accountOK = true;
-		
-		if(structKeyExists(data, "account")) {
+		if(structKeyExists(data, "account")) {	
 			var accountData = data.account;
 			var account = getAccountService().getAccount(accountData.accountID, true);
 			account = getAccountService().saveAccount(account, accountData, data.siteID);
@@ -245,6 +244,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			} else {
 				arguments.order.setAccount(account);
 			}
+			
 		}
 	
 		if(isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
@@ -908,6 +908,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		newOrder.setAccount( arguments.newAccount );
+		
+		// Update any errors from the previous account to the new account
+		newOrder.getAccount().getErrorBean( originalOrder.getAccount().getErrorBean() );
+		newOrder.getAccount().getVTResult( originalOrder.getAccount().getVTResult() );
 		
 		this.saveOrder( newOrder );
 		
