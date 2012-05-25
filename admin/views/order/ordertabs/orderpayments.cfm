@@ -49,4 +49,6 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="amount" />
 		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
 	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:order.createorderpayment" class="btn btn-inverse" icon="plus icon-white" queryString="orderID=#rc.order.getOrderID()#" modal=true />
 </cfoutput>

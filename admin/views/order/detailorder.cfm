@@ -43,6 +43,7 @@ Notes:
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
 			<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
+			<cf_SlatwallActionCaller action="admin:order.createorderpayment" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
 			<cfif rc.order.getQuantityDelivered()>
 				<cf_SlatwallActionCaller action="admin:order.createreturnorder" queryString="originalOrderID=#rc.order.getOrderID()#" type="list" modal=true />
 			</cfif>
@@ -50,14 +51,21 @@ Notes:
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divclass="span4">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
-				<cfif !isNull(rc.order.getOrderClosedDateTime)>
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
+				<cfif !isNull(rc.order.getAccount())>
+					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="fullName" valuelink="?slatAction=admin:account.detail&accountID=#rc.order.getAccount().getAccountID()#">
+					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress" valuelink="mailto:#rc.order.getAccount().getEmailAddress()#">
+					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="phoneNumber">
 				</cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyList divclass="span4">
+					<cfif !isNull(rc.order.getOrderOpenDateTime())>
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
+					</cfif>
+					<cfif !isNull(rc.order.getOrderCloseDateTime())>
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
+					</cfif>
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAuthorizedTotal">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">

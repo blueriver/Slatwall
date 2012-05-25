@@ -53,4 +53,6 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
 		<cf_SlatwallListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
 	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:order.createorderitem" class="btn btn-inverse" icon="plus icon-white" queryString="orderID=#rc.order.getOrderID()#" modal=true />
 </cfoutput>
