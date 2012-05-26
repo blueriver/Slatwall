@@ -51,8 +51,8 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="schedule" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="startDateTime" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="endDateTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="successEmailList" edit="#rc.edit#" fieldtype="textarea" >
-				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="failureEmailList" edit="#rc.edit#" fieldtype="textarea" >
+				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="successEmailList" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="failureEmailList" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

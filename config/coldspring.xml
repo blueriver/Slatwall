@@ -350,6 +350,7 @@
     </bean>
 	<bean id="taskService" class="Slatwall.com.service.TaskService">
         <property name="DAO"><ref bean="taskDAO" /></property>
+		<property name="utilityTagService"><ref bean="utilityTagService" /></property>
     </bean>
 	<bean id="taxService" class="Slatwall.com.service.TaxService">
         <property name="DAO"><ref bean="taxDAO" /></property>

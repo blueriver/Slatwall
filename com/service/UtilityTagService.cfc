@@ -83,12 +83,6 @@ Notes:
 		<cfargument name="body" default="" />
 		<cfargument name="type" default="html" />
 		
-		<!--- apply email settings defined in Mura if applicable --->
-		<cfset var mailServerSettings = getService("settingService").getMailServerSettings() />
-		<cfif !structIsEmpty(mailServerSettings)> 
-			<cfset structAppend(arguments,mailServerSettings) />
-		</cfif>
-
 		<cftry>
 			<cfmail attributeCollection="#arguments#">
 				#arguments.body#

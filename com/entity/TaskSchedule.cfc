@@ -88,6 +88,10 @@ component displayname="Task Schedule" entityname="SlatwallTaskSchedule" table="S
 
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentation() {
+		return getTask().getTaskName() & " " & getSchedule().getScheduleName();
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
