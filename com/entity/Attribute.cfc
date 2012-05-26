@@ -112,7 +112,9 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 			smartList.addFilter(propertyIdentifier="attribute_attributeID", value="#variables.attributeID#"); 
 			smartList.addOrder("sortOrder|ASC");
 			variables.attributeOptionsOptions = smartList.getRecords();
-			arrayPrepend(variables.attributeOptionsOptions, {value="", name=rbKey('define.select')});
+			if(variables.attributeType.getSystemCode() == "atSelect") {
+				arrayPrepend(variables.attributeOptionsOptions, {value="", name=rbKey('define.select')});
+			}
 		}
 		return variables.attributeOptionsOptions;
     }
