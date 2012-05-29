@@ -46,8 +46,10 @@ Notes:
 		<cfset var $ = request.context.$ />
 		<cfif structKeyExists($,"event")>
 			<cfset var siteID = $.event('siteid') />
-		<cfelse>
+		<cfelseif structKeyExists(session,"site")>
 			<cfset var siteID = session.siteid />
+		<cfelse>
+			<cfset var siteID = "default" />
 		</cfif>
 		
 		<cfmail to="#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()# <#arguments.order.getAccount().getEmailAddress()#>"
