@@ -72,75 +72,16 @@ Notes:
 																								
 																		[/ DEVELOPER NOTES ]--->
 <cfoutput>
-	<div class="svcontentlistproduct">
+	<div class="sv-content-listproduct">
 		
 		<!--- Top Pager --->
 		<cf_swListingPager smartList="#$.slatwall.getCurrentProductList()#" hiddenPageSymbol="..." previousPageSymbol="&laquo;" nextPageSymbol="&raquo;" />
-			
+
 		<div class="products">
 			
-			<!--- Loop of all the products in this list --->
+			<!--- Main Loop of all the products in this list --->
 			<cfloop array="#$.slatwall.getCurrentProductList().getPageRecords()#" index="local.product">
-<!---[ DEVELOPER NOTES ]																		
-																								
-	Inside of the main loop of a productList() you can use any of the following properties		
-	that will be be avaliable as part of the primary query.  If you ask for any additional		
-	properties, you will run the Risk of N+1 SQL Statements where each record will make			
-	1 or more additional database calls	and directly impact performance.  This is why we make	
-	use of the 'calculated' fields so that processing necessary is done ahead of time. All of	
-	the following values are safe to use in this listing without concern of lazy loading		
-																								
-	local.product.getProductID()																
-	local.product.getActiveFlag()																
-	local.product.getURLTitle()																	
-	local.product.getProductName()																
-	local.product.getProductCode()																
-	local.product.getProductDescription()														
-	local.product.getPublishedFlag()															
-	local.product.getSortOrder()																
-	local.product.getCalculatedSalePrice()														
-	local.product.getCalculatedQATS()															
-	local.product.getCalculatedAllowBackorderFlag()												
-	local.product.getCalculatedTitle()															
-	local.product.getCreatedDateTime()															
-	local.product.getModifiedDateTime()															
-	local.product.getRemoteID()																	
-																								
-	local.product.getDefaultSku().getSkuID()													
-	local.product.getDefaultSku().getActiveFlag()												
-	local.product.getDefaultSku().getSkuCode()													
-	local.product.getDefaultSku().getListPrice()												
-	local.product.getDefaultSku().getPrice()													
-	local.product.getDefaultSku().getRenewalPrice()												
-	local.product.getDefaultSku().getImageFile()												
-	local.product.getDefaultSku().getUserDefinedPriceFlag()										
-	local.product.getDefaultSku().getCreatedDateTime()											
-	local.product.getDefaultSku().getModifiedDateTime()											
-	local.product.getDefaultSku().getRemoteID()													
-																								
-	local.product.getBrand().getBrandID()														
-	local.product.getBrand().getActiveFlag()													
-	local.product.getBrand().getPublishedFlag()													
-	local.product.getBrand().getURLTitle()														
-	local.product.getBrand().getBrandName()														
-	local.product.getBrand().getBrandWebsite()													
-	local.product.getBrnad().getCreatedDateTime()												
-	local.product.getBrnad().getModifiedDateTime()												
-	local.product.getBrnad().getRemoteID()														
-																								
-	local.product.getProductType().getProductTypeID()											
-	local.product.getProductType().getProductTypeIDPath()										
-	local.product.getProductType().getActiveFlag()												
-	local.product.getProductType().getPublishedFlag()											
-	local.product.getProductType().getURLTitle()												
-	local.product.getProductType().getProductTypeName()											
-	local.product.getProductType().getProductTypeDescription()									
-	local.product.getProductType().getSystemCode()												
-	local.product.getProductType().getCreatedDateTime()											
-	local.product.getProductType().getModifiedDateTime()										
-	local.product.getProductType().getRemoteID()												
-																								
-																		[/ DEVELOPER NOTES ]--->
+
 				<div class="record">
 					<a href="#local.product.getCalculatedTitle()#">
 						<div class="image">#local.product.getImage(size="s")#</div> <!--- For more infomation on the getImage() method take a look at the image manipulation docs here: http://docs.getslatwall.com/reference/product-images-and-cropping/ --->
@@ -153,6 +94,68 @@ Notes:
 						</div>
 					</a>
 				</div>
+				
+				<!---[ DEVELOPER NOTES ]																		
+																												
+					Inside of the main loop of a productList() you can use any of the following properties		
+					that will be be avaliable as part of the primary query.  If you ask for any additional		
+					properties, you will run the Risk of N+1 SQL Statements where each record will make			
+					1 or more additional database calls	and directly impact performance.  This is why we make	
+					use of the 'calculated' fields so that processing necessary is done ahead of time. All of	
+					the following values are safe to use in this listing without concern of lazy loading		
+																												
+					local.product.getProductID()																
+					local.product.getActiveFlag()																
+					local.product.getURLTitle()																	
+					local.product.getProductName()																
+					local.product.getProductCode()																
+					local.product.getProductDescription()														
+					local.product.getPublishedFlag()															
+					local.product.getSortOrder()																
+					local.product.getCalculatedSalePrice()														
+					local.product.getCalculatedQATS()															
+					local.product.getCalculatedAllowBackorderFlag()												
+					local.product.getCalculatedTitle()															
+					local.product.getCreatedDateTime()															
+					local.product.getModifiedDateTime()															
+					local.product.getRemoteID()																	
+																												
+					local.product.getDefaultSku().getSkuID()													
+					local.product.getDefaultSku().getActiveFlag()												
+					local.product.getDefaultSku().getSkuCode()													
+					local.product.getDefaultSku().getListPrice()												
+					local.product.getDefaultSku().getPrice()													
+					local.product.getDefaultSku().getRenewalPrice()												
+					local.product.getDefaultSku().getImageFile()												
+					local.product.getDefaultSku().getUserDefinedPriceFlag()										
+					local.product.getDefaultSku().getCreatedDateTime()											
+					local.product.getDefaultSku().getModifiedDateTime()											
+					local.product.getDefaultSku().getRemoteID()													
+																												
+					local.product.getBrand().getBrandID()														
+					local.product.getBrand().getActiveFlag()													
+					local.product.getBrand().getPublishedFlag()													
+					local.product.getBrand().getURLTitle()														
+					local.product.getBrand().getBrandName()														
+					local.product.getBrand().getBrandWebsite()													
+					local.product.getBrnad().getCreatedDateTime()												
+					local.product.getBrnad().getModifiedDateTime()												
+					local.product.getBrnad().getRemoteID()														
+																												
+					local.product.getProductType().getProductTypeID()											
+					local.product.getProductType().getProductTypeIDPath()										
+					local.product.getProductType().getActiveFlag()												
+					local.product.getProductType().getPublishedFlag()											
+					local.product.getProductType().getURLTitle()												
+					local.product.getProductType().getProductTypeName()											
+					local.product.getProductType().getProductTypeDescription()									
+					local.product.getProductType().getSystemCode()												
+					local.product.getProductType().getCreatedDateTime()											
+					local.product.getProductType().getModifiedDateTime()										
+					local.product.getProductType().getRemoteID()												
+																												
+																						[/ DEVELOPER NOTES ]--->
+																		
 			</cfloop>
 		</div>
 		

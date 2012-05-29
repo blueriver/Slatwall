@@ -100,6 +100,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePrice" type="numeric" formatType="currency" persistent="false";
+	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
 	
 	
 	public any function getProductTypeOptions( string baseProductType ) {
@@ -555,6 +556,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			}
 		}
 		return variables.livePrice;
+	}
+	
+	public numeric function getCurrentAccountPrice() {
+		if(!structKeyExists(variables, "currentAccountPrice")) {
+			variables.currentAccountPrice = 0;
+			if( structKeyExists(variables,"defaultSku") ) {
+				variables.currentAccountPrice = getDefaultSku().getCurrentAccountPrice();
+			}
+		}
+		return variables.currentAccountPrice;
 	}
 	
 	public numeric function getSalePrice() {

@@ -36,6 +36,7 @@
 Notes:
 --->
 <cfoutput>
-	<div class="svdetailaccount">
+	<div class="sv-account-detailaccount">
+		
 	</div>
 </cfoutput>
