@@ -832,7 +832,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			var hasAtLeastOneItemToReturn = false;
 			for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-				if(isNumeric(arguments.data.records[i].qantity) && arguments.data.records[i].qantity gt 0) {
+				if(isNumeric(arguments.data.records[i].returnQuantity) && arguments.data.records[i].returnQuantity gt 0) {
 					var hasAtLeastOneItemToReturn = true;		
 				}
 			}
@@ -863,7 +863,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// Loop over delivery items in each delivery
 				for(var i = 1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
 					
-					var originalOrderItem = arguments.order.getOrderItems()[i].getOrderItem();
+					var originalOrderItem = arguments.order.getOrderItems()[i];
 					
 					// Look for that orderItem in the data records
 					for(var r=1; r <= arrayLen(arguments.data.records); r++) {
@@ -877,7 +877,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							orderItem.setReferencedOrderItem( originalOrderItem );
 							orderItem.setOrder( returnOrder );
 							orderItem.setPrice( arguments.data.records[r].returnPrice );
-							orderItem.setSkuPrice( originalOrderItem.getSku().getSkuPrice() );
+							orderItem.setSkuPrice( originalOrderItem.getSku().getPrice() );
 							orderItem.setQuantity( arguments.data.records[r].returnQuantity );
 							orderItem.setSku( originalOrderItem.getSku() );
 							
