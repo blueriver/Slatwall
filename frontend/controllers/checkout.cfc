@@ -158,15 +158,20 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart',queryString='slatAction=frontend:cart.forceItemQuantityUpdate'));
 		}
 		
-		// Attemp to process the order 
-		var result = getOrderService().processOrder(data=rc);
+		// Setup the order
+		var order = getOrderService().getOrder(rc.orderID);
 		
-		if(result) {
+		// Attemp to process the order 
+		order = getOrderService().processOrder(entity=order, data=rc, processContext="placeOrder");
+		
+		if(!order.hasErrors()) {
+			
 			// Save the order ID temporarily in the session for the confirmation page.  It will be removed by that controller
 			getSessionService().setValue("orderConfirmationID", rc.orderID);
 			
 			// Redirect to order Confirmation
 			getFW().redirectExact($.createHREF(filename='order-confirmation'), false);
+			
 		}
 			
 		detail(rc);

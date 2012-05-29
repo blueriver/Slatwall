@@ -46,7 +46,7 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
 			</cfif>
 			<cfif rc.order.getQuantityDelivered()>
-				<cf_SlatwallActionCaller action="admin:order.createreturnorder" queryString="originalOrderID=#rc.order.getOrderID()#" type="list" modal=true />
+				<cf_SlatwallActionCaller action="admin:order.processorder" text="#$.slatwall.rbKey('admin.order.processordercreatereturn_nav')#" queryString="processContext=createReturn&orderID=#rc.order.getOrderID()#" type="list" modal=true />
 			</cfif>
 			<cfif rc.order.getOrderStatusType().getSystemCode() neq "ostClosed">
 				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()>

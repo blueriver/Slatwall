@@ -358,97 +358,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return allPaymentsProcessed;
 	}
 	
-	public any function processOrder(struct data={}) {
-		var processOK = false;
-		
-		// Lock down this determination so that the values getting called and set don't overlap
-		lock scope="Session", timeout="60" {
-		
-			var order = this.getOrder(arguments.data.orderID);
-			
-			getDAO().reloadEntity(order);
-		
-			if(order.getOrderStatusType().getSystemCode() != "ostNotPlaced") {
-				processOK = true;
-			} else {
-				// update and validate all aspects of the order
-				var validAccount = updateAndVerifyOrderAccount(order=order, data=arguments.data);
-				var validPayments = updateAndVerifyOrderPayments(order=order, data=arguments.data);
-				var validFulfillments = updateAndVerifyOrderFulfillments(order=order, data=arguments.data);
-				
-				if(validAccount && validPayments && validFulfillments) {
-					// Double check that the order requirements list is blank
-					var orderRequirementsList = getOrderRequirementsList(order);
-					
-					if(!len(orderRequirementsList)) {
-						// prepare order for processing
-						// copy shipping address if needed
-						copyFulfillmentAddress(order=order);
-					
-						// Process all of the order payments
-						var paymentsProcessed = processOrderPayments(order=order);
-						
-						// If processing was successfull then checkout
-						if(paymentsProcessed) {
-						
-							// If this order is the same as the current cart, then set the current cart to a new order
-							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && order.getOrderID() == getSlatwallScope().getCurrentSession().getOrder().getOrderID()) {
-								getSlatwallScope().getCurrentSession().setOrder(JavaCast("null", ""));
-							}
-						
-							// Update the order status
-							order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
-							order.confirmOrderNumberOpenDateCloseDate();
-						
-							// Save the order to the database
-							getDAO().save(order);
-						
-							// Do a flush so that the order is commited to the DB
-							getDAO().flushORMSession();
-						
-							logSlatwall(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
-						
-							// Send out the e-mail
-							if(!structKeyExists(arguments.data,"doNotSendOrderConfirmationEmail") || !arguments.data.doNotSendOrderConfirmationEmail) {
-								getUtilityEmailService().sendOrderConfirmationEmail(order=order);
-							}
-							
-							// save account payment if needed (for renewal), do this only 1 orderpayment exists
-							// if there are multiple orderPayment, logic needs to get added for user to defined the paymentMethod for renewals
-							if(arrayLen(order.getOrderPayments()) == 1 && isNull(order.getOrderPayments()[1].getAccountPaymentMethod())) {
-								// if there is any subscription item, save the account payment for use in renewal
-								for(var orderItem in order.getOrderItems()) {
-									if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
-										// TODO: change to find the appripriate order payment
-										var accountPaymentMethod = getAccountService().getAccountPaymentMethod({creditCardNumberEncrypted=order.getOrderPayments()[1].getCreditCardNumberEncrypted(),account=order.getAccount()},true);
-										if(accountPaymentMethod.isNew()) {
-											accountPaymentMethod.setAccount(order.getAccount());
-											accountPaymentMethod.copyFromOrderPayment(order.getOrderPayments()[1]);
-											accountPaymentMethod.setAccountPaymentMethodName(accountPaymentMethod.getNameOnCreditCard() & " " & accountPaymentMethod.getCreditCardType());
-											getAccountService().saveAccountPaymentMethod(accountPaymentMethod);
-										}
-										order.getOrderPayments()[1].setAccountPaymentMethod(accountPaymentMethod);
-										break;
-									}
-								}
-							}
-							
-							// Look for 'auto' order fulfillments
-							for(var i=1; i<=arrayLen(order.getOrderFulfillments()); i++) {
-								if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto") {
-									processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')});
-								}
-							}
-							
-							processOK = true;
-						}
-					}
-				}
-			}
-		}// END OF LOCK
-		return processOK;
-	}
-	
 	public void function setupOrderItemContentAccess(required any orderItem) {
 		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
 			var accountContentAccess = getAccountService().newAccountContentAccess();
@@ -610,11 +519,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	
 	
-	
-	
-	
 	//================= START: Order Actions ========================
-	
+	/*
 	public any function applyOrderAction(required string orderID, required string orderActionTypeID) {
 		var order = this.getOrder(arguments.orderID);
 		var orderActionType = this.getType(arguments.orderActionTypeID);
@@ -673,7 +579,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var searchQuery = getDAO().getExportQuery(argumentCollection=arguments.data);
 		return getService("utilityService").export(searchQuery);
 	}
-	
+	*/
 	//================= END: Order Actions ========================
 	
 	public void function clearCart() {
@@ -925,6 +831,122 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	// ===================== START: Process Methods ================================
 	
+	// Process: Order
+	public any function processOrder(required any order, struct data={}, string processContext="process") {
+		
+		// CONTEXT: placeOrder
+		if(arguments.processContext == "placeOrder") {
+			
+			// First we need to lock the session so that this order doesn't get placed twice.
+			lock scope="session", timeout="60" {
+			
+				// Make sure that the orderID passed in to the data is what we use because this could be a double click senario so we don't want to rely on the order passed in as the cart
+				arguments.order = this.getOrder(arguments.data.orderID);
+				
+				// Reload the order in case it was already in cache
+				getDAO().reloadEntity(arguments.order);
+			
+				// Make sure that the entity is notPlaced before going any further
+				if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
+					
+					// update and validate all aspects of the order
+					var validAccount = updateAndVerifyOrderAccount(order=arguments.order, data=arguments.data);
+					if(!validAccount) {
+						arguments.order.addError("processing", "The order account was invalid for one reason or another.");
+					}
+					
+					var validPayments = updateAndVerifyOrderPayments(order=arguments.order, data=arguments.data);
+					if(!validPayments) {
+						arguments.order.addError("processing", "One or more of the order payments were invalid for one reason or another.");
+					}
+					
+					var validFulfillments = updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
+					if(!validFulfillments) {
+						arguments.order.addError("processing", "One or more of the order fulfillments were invalid for one reason or another.");
+					}
+					
+					
+					if(!arguments.order.hasErrors()) {
+						
+						// Double check that the order requirements list is blank
+						var orderRequirementsList = getOrderRequirementsList( arguments.order );
+						
+						if(len(orderRequirementsList)) {
+							arguments.order.addError("processing", "More information is required before we can process this order.");
+							
+						} else {
+							// Process all of the order payments
+							var paymentsProcessed = processOrderPayments(order=arguments.order);
+							
+							// If processing was successfull then checkout
+							if(!paymentsProcessed) {
+								arguments.order.addError("processing", "One or more of the payments could not be processed.");	
+							} else {
+								// copy shipping address if needed
+								copyFulfillmentAddress(order=arguments.order);
+							
+								// If this order is the same as the current cart, then set the current cart to a new order
+								if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && order.getOrderID() == getSlatwallScope().getCurrentSession().getOrder().getOrderID()) {
+									getSlatwallScope().getCurrentSession().setOrder(JavaCast("null", ""));
+								}
+							
+								// Update the order status
+								order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+								order.confirmOrderNumberOpenDateCloseDate();
+							
+								// Save the order to the database
+								getDAO().save(order);
+							
+								// Do a flush so that the order is commited to the DB
+								getDAO().flushORMSession();
+							
+								logSlatwall(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
+							
+								// Send out the e-mail
+								if(!structKeyExists(arguments.data,"doNotSendOrderConfirmationEmail") || !arguments.data.doNotSendOrderConfirmationEmail) {
+									getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+								}
+								
+								// save account payment if needed (for renewal), do this only 1 orderpayment exists
+								// if there are multiple orderPayment, logic needs to get added for user to defined the paymentMethod for renewals
+								if(arrayLen(order.getOrderPayments()) == 1 && isNull(order.getOrderPayments()[1].getAccountPaymentMethod())) {
+									// if there is any subscription item, save the account payment for use in renewal
+									for(var orderItem in order.getOrderItems()) {
+										if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
+											// TODO: change to find the appripriate order payment
+											var accountPaymentMethod = getAccountService().getAccountPaymentMethod({creditCardNumberEncrypted=order.getOrderPayments()[1].getCreditCardNumberEncrypted(),account=order.getAccount()},true);
+											if(accountPaymentMethod.isNew()) {
+												accountPaymentMethod.setAccount(order.getAccount());
+												accountPaymentMethod.copyFromOrderPayment(order.getOrderPayments()[1]);
+												accountPaymentMethod.setAccountPaymentMethodName(accountPaymentMethod.getNameOnCreditCard() & " " & accountPaymentMethod.getCreditCardType());
+												getAccountService().saveAccountPaymentMethod(accountPaymentMethod);
+											}
+											order.getOrderPayments()[1].setAccountPaymentMethod(accountPaymentMethod);
+											break;
+										}
+									}
+								}
+								
+								// Look for 'auto' order fulfillments
+								for(var i=1; i<=arrayLen(order.getOrderFulfillments()); i++) {
+									if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto") {
+										processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')});
+									}
+								}
+								
+								processOK = true;
+							}
+						}
+					}
+				}
+			}	// END OF LOCK
+			
+		// CONTEXT: createReturn
+		} else if (arguments.processContext == "createReturn") {
+			
+		}
+		
+	}
 	
 	// Process: Order Fulfillment
 	public any function processOrderFulfillment(required any orderFulfillment, struct data={}, string processContext="process") {

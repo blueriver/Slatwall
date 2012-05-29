@@ -54,6 +54,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.originalorderid" type="string" default="";
 		
 		rc.originalOrder = getOrderService().getOrder(rc.originalOrderID);
+		
+		rc.edit = true;
 	}
 	
 	public any function createorderpayment( required struct rc ) {
@@ -65,6 +67,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.paymentMethod = getPaymentService().getPaymentMethod(rc.paymentMethodID);
 		
 		rc.edit = true;
+		
+	}
+	
+	public any function savereturnorder( required struct rc ) {
+		rc.order = getOrderService().newOrder();
 		
 	}
 	
