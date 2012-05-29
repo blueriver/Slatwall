@@ -78,7 +78,44 @@ Notes:
 						</cfloop>
 						<cfif isObject(attributes.object) && attributes.allowComments>
 							<div class="tab-pane" id="tabComments">
-								<cf_SlatwallCommentDisplay entity="#attributes.object#" />
+								<cfoutput>
+									<cfif arrayLen(attributes.object.getComments()) gt 0>
+										<table class="table table-striped table-bordered table-condensed">
+											<tr>
+												<th class="primary">#request.slatwallScope.rbKey("entity.comment.comment")#</th>
+												<th>#request.slatwallScope.rbKey("entity.comment.publicFlag")#</th>
+												<th>#request.slatwallScope.rbKey("entity.define.createdByAccount")#</th>
+												<th>#request.slatwallScope.rbKey("entity.define.createdDateTime")#</th>
+												<th class="admin1">&nbsp;</th>
+											</tr>
+											<cfloop array="#attributes.object.getComments()#" index="commentRelationship">
+												<tr>
+													<cfif commentRelationship['referencedRelationshipFlag']>
+														<cfset originalEntity = commentRelationship['comment'].getPrimaryRelationship().getRelationshipEntity() />
+														<cfswitch expression="#originalEntity.getClassName()#">
+															<cfcase value="Order">
+																<td class="primary highlight-ltblue" colspan="2">This #attributes.object.getClassName()# was referenced in a comment on <a href="?slatAction=order.detailorder&orderID=#originalEntity.getOrderID()###tabComments">Order Number #originalEntity.getOrderNumber()#</a></td>
+																<td class="highlight-ltblue">#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
+																<td class="highlight-ltblue">#request.slatwallScope.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
+																<td class="admin1 highlight-ltblue">&nbsp;</td>
+															</cfcase>
+															<cfdefaultcase>
+																<td class="primary" colspan="5">??? Programming Issue for #originalEntity.getClassName()# entity comments</td>
+															</cfdefaultcase>
+														</cfswitch>
+													<cfelse>
+														<td class="primary" style="white-space:normal;">#commentRelationship['comment'].getCommentWithLinks()#</td>
+														<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getPublicFlag(), "yesno")#</td>
+														<td>#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
+														<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
+														<td class="admin1"><cf_SlatwallActionCaller action="admin:comment.editcomment" queryString="commentID=#commentRelationship['comment'].getCommentID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-mini" icon="pencil" iconOnly="true" /></td>
+													</cfif>
+												</tr>
+											</cfloop>
+										</table>
+									</cfif>
+									<cf_SlatwallActionCaller action="admin:comment.createcomment" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-inverse" icon="plus icon-white" />
+								</cfoutput>
 							</div>
 						</cfif>
 						<cfif isObject(attributes.object)>

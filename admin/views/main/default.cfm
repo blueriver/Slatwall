@@ -42,45 +42,45 @@ Notes:
 <cfparam name="rc.vendorOrderSmartList" type="any" />
 
 <cfoutput>
-<div class="row-fluid">
-	<div class="span6">
-		<h4>#request.slatwallScope.rbKey("admin.main.dashboard.neworders")#</h4>
-		<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
-				recordDetailAction="admin:order.detailorder">
-			<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
-			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
-			<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" />
-		</cf_SlatwallListingDisplay>
+	<div class="row-fluid">
+		<div class="span6">
+			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.neworders")#</h4>
+			<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
+					recordDetailAction="admin:order.detailorder">
+				<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
+				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
+				<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" />
+			</cf_SlatwallListingDisplay>
+		</div>
+		<div class="span6">
+			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductupdates")#</h4>
+			<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" 
+					recordDetailAction="admin:product.detailproduct">
+				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
+				<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" />
+				<cf_SlatwallListingColumn propertyIdentifier="modifiedByAccount.fullname" />
+			</cf_SlatwallListingDisplay>
+		</div>
 	</div>
-	<div class="span6">
-		<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductupdates")#</h4>
-		<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" 
-				recordDetailAction="admin:product.detailproduct">
-			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
-			<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" />
-			<cf_SlatwallListingColumn propertyIdentifier="modifiedByAccount.fullname" />
-		</cf_SlatwallListingDisplay>
+	<div class="row-fluid">
+		<div class="span6">
+			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentvendororderupdates")#</h4>
+			<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#" 
+					recordDetailAction="admin:vendor.detailvendororder">
+				<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" />
+				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" />
+				<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" />
+				<cf_SlatwallListingColumn propertyIdentifier="modifiedByAccount.fullname" />
+			</cf_SlatwallListingDisplay>
+		</div>
+		<div class="span6">
+			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductreviews")#</h4>
+			<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#" 
+					recordDetailAction="admin:product.detailproductreview">
+				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="product.title" />
+				<cf_SlatwallListingColumn propertyIdentifier="reviewerName" />
+				<cf_SlatwallListingColumn propertyIdentifier="reviewTitle" />
+			</cf_SlatwallListingDisplay>
+		</div>
 	</div>
-</div>
-<div class="row-fluid">
-	<div class="span6">
-		<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentvendororderupdates")#</h4>
-		<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#" 
-				recordDetailAction="admin:vendor.detailvendororder">
-			<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" />
-			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" />
-			<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" />
-			<cf_SlatwallListingColumn propertyIdentifier="modifiedByAccount.fullname" />
-		</cf_SlatwallListingDisplay>
-	</div>
-	<div class="span6">
-		<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductreviews")#</h4>
-		<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#" 
-				recordDetailAction="admin:product.detailproductreview">
-			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="product.title" />
-			<cf_SlatwallListingColumn propertyIdentifier="reviewerName" />
-			<cf_SlatwallListingColumn propertyIdentifier="reviewTitle" />
-		</cf_SlatwallListingDisplay>
-	</div>
-</div>
 </cfoutput>

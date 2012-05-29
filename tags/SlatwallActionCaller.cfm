@@ -36,114 +36,115 @@
 Notes:
 
 --->
-<cfparam name="attributes.action" type="string" />
-<cfparam name="attributes.type" type="string" default="link">
-<cfparam name="attributes.querystring" type="string" default="" />
-<cfparam name="attributes.text" type="string" default="">
-<cfparam name="attributes.title" type="string" default="">
-<cfparam name="attributes.class" type="string" default="">
-<cfparam name="attributes.icon" type="string" default="">
-<cfparam name="attributes.iconOnly" type="boolean" default="false">
-<cfparam name="attributes.submit" type="boolean" default="false">
-<cfparam name="attributes.confirm" type="boolean" default="false" />
-<cfparam name="attributes.disabled" type="boolean" default="false" />
-<cfparam name="attributes.modal" type="boolean" default="false" />
-
-<cfset attributes.class = Replace(Replace(attributes.action, ":", "", "all"), ".", "", "all") & " " & attributes.class />
-
-<cfif request.context.slatAction eq attributes.action>
-	<cfset attributes.class = "#attributes.class# active" />
-</cfif>
-
-<cfif attributes.icon neq "">
-	<cfset attributes.icon = '<i class="icon-#attributes.icon#"></i> ' />
-</cfif>
-
-<cfif attributes.text eq "" and not attributes.iconOnly>
-	<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_nav") />
-	
-	<cfif right(attributes.text, 8) eq "_missing" >
-		
-		<cfset actionItem = listLast(attributes.action, ".") />
-		
-		<cfif left(actionItem, 4) eq "list" and len(actionItem) gt 4>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.list_nav'), "${itemEntityNamePlural}", request.slatwallScope.rbKey('entity.#actionItemEntityName#_plural'), "all") />
-		<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.edit_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		<cfelseif left(actionItem, 4) eq "save" and len(actionItem) gt 4>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.save_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.create_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.detail_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.delete_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		</cfif>
-		
-	</cfif>
-</cfif>
-
-<cfif attributes.title eq "">
-	<cfset attributes.title = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
-	<cfif right(attributes.title, 8) eq "_missing" >
-		
-		<cfset actionItem = listLast(attributes.action, ".") />
-		
-		<cfif left(actionItem, 4) eq "list" and len(actionItem) gt 4>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.list_title'), "${itemEntityNamePlural}", request.slatwallScope.rbKey('entity.#actionItemEntityName#_plural'), "all") />
-		<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.edit_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		<cfelseif left(actionItem, 4) eq "save" and len(actionItem) gt 4>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
-			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.save_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.create_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.detail_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
-			<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
-			<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.delete_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
-		</cfif>
-		
-	</cfif>
-</cfif>
-
-<cfif attributes.disabled>
-    <cfset attributes.disabledtext = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
-	<cfif right(attributes.disabledtext, "8") eq "_missing">
-		<cfset attributes.disabledtext = replace(request.slatwallScope.rbKey("admin.define.delete_disabled"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
-	</cfif>
-	<cfset attributes.class &= " disabled alert-disabled" />
-	<cfset attributes.confirm = false />
-<cfelse>
-	<cfif attributes.confirm>
-	    <cfset attributes.confirmtext = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
-		<cfif right(attributes.confirmtext, "8") eq "_missing">
-			<cfset attributes.confirmtext = replace(request.slatwallScope.rbKey("admin.define.delete_confirm"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
-		</cfif>
-		<cfset attributes.class &= " alert-confirm" />
-	</cfif>
-</cfif>
-
-<cfif attributes.modal>
-	<cfset attributes.class &= " modalload" />
-</cfif>
-
-<cfif not request.slatwallScope.secureDisplay(action=attributes.action)>
-	<cfset attributes.class &= " disabled" />
-</cfif>
-
 <cfif thisTag.executionMode is "start">
+	<cfparam name="attributes.action" type="string" />
+	<cfparam name="attributes.type" type="string" default="link">
+	<cfparam name="attributes.querystring" type="string" default="" />
+	<cfparam name="attributes.text" type="string" default="">
+	<cfparam name="attributes.title" type="string" default="">
+	<cfparam name="attributes.class" type="string" default="">
+	<cfparam name="attributes.icon" type="string" default="">
+	<cfparam name="attributes.iconOnly" type="boolean" default="false">
+	<cfparam name="attributes.submit" type="boolean" default="false">
+	<cfparam name="attributes.confirm" type="boolean" default="false" />
+	<cfparam name="attributes.disabled" type="boolean" default="false" />
+	<cfparam name="attributes.modal" type="boolean" default="false" />
+	
+	<cfset attributes.class = Replace(Replace(attributes.action, ":", "", "all"), ".", "", "all") & " " & attributes.class />
+	
+	<cfif request.context.slatAction eq attributes.action>
+		<cfset attributes.class = "#attributes.class# active" />
+	</cfif>
+	
+	<cfif attributes.icon neq "">
+		<cfset attributes.icon = '<i class="icon-#attributes.icon#"></i> ' />
+	</cfif>
+	
+	<cfif attributes.text eq "" and not attributes.iconOnly>
+		<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_nav") />
+		
+		<cfif right(attributes.text, 8) eq "_missing" >
+			
+			<cfset actionItem = listLast(attributes.action, ".") />
+			
+			<cfif left(actionItem, 4) eq "list" and len(actionItem) gt 4>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+				<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.list_nav'), "${itemEntityNamePlural}", request.slatwallScope.rbKey('entity.#actionItemEntityName#_plural'), "all") />
+			<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+				<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.edit_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfelseif left(actionItem, 4) eq "save" and len(actionItem) gt 4>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+				<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.save_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+				<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.create_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+				<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.detail_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+				<cfset attributes.text = replace(request.slatwallScope.rbKey('admin.define.delete_nav'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			</cfif>
+			
+		</cfif>
+	</cfif>
+	
+	<cfif attributes.title eq "">
+		<cfset attributes.title = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
+		<cfif right(attributes.title, 8) eq "_missing" >
+			
+			<cfset actionItem = listLast(attributes.action, ".") />
+			
+			<cfif left(actionItem, 4) eq "list" and len(actionItem) gt 4>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+				<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.list_title'), "${itemEntityNamePlural}", request.slatwallScope.rbKey('entity.#actionItemEntityName#_plural'), "all") />
+			<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+				<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.edit_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfelseif left(actionItem, 4) eq "save" and len(actionItem) gt 4>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-4) />
+				<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.save_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+				<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.create_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+				<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.detail_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
+				<cfset actionItemEntityName = right( actionItem, len(actionItem)-6) />
+				<cfset attributes.title = replace(request.slatwallScope.rbKey('admin.define.delete_title'), "${itemEntityName}", request.slatwallScope.rbKey('entity.#actionItemEntityName#'), "all") />
+			</cfif>
+			
+		</cfif>
+	</cfif>
+	
+	<cfif attributes.disabled>
+	    <cfset attributes.disabledtext = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
+		<cfif right(attributes.disabledtext, "8") eq "_missing">
+			<cfset attributes.disabledtext = replace(request.slatwallScope.rbKey("admin.define.delete_disabled"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
+		</cfif>
+		<cfset attributes.class &= " disabled alert-disabled" />
+		<cfset attributes.confirm = false />
+	<cfelse>
+		<cfif attributes.confirm>
+		    <cfset attributes.confirmtext = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
+			<cfif right(attributes.confirmtext, "8") eq "_missing">
+				<cfset attributes.confirmtext = replace(request.slatwallScope.rbKey("admin.define.delete_confirm"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
+			</cfif>
+			<cfset attributes.class &= " alert-confirm" />
+		</cfif>
+	</cfif>
+	
+	<cfif attributes.modal>
+		<cfset attributes.class &= " modalload" />
+	</cfif>
+	
+	<cfif not request.slatwallScope.secureDisplay(action=attributes.action)>
+		<cfset attributes.class &= " disabled" />
+	</cfif>
+
+
 	<cfif request.slatwallScope.secureDisplay(action=attributes.action) || (attributes.type eq "link" && attributes.iconOnly)>
 		<cfif attributes.type eq "link">
 			<cfoutput><a title="#attributes.title#" class="#attributes.class#" href="#request.context.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
