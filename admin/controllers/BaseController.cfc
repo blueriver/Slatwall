@@ -333,8 +333,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		getFW().setLayout( "admin:process.default" );
 		
 		if(len(rc.processContext) && rc.processContext != "process") {
-			rc.pageTitle = rbKey( "admin.getFW().getSection(rc.slatAction).process#arguments.entityName##rc.processContext#" );
-			getFW().setView( "admin:#getFW().getSection(rc.slatAction)#.process#arguments.entityName##rc.processContext#" );	
+			rc.pageTitle = rbKey( "admin.#getFW().getSection(rc.slatAction)#.process#arguments.entityName#.#rc.processContext#" );
 		}
 		
 		// If we are actually posting the process form, then this logic gets calls the process method for each record

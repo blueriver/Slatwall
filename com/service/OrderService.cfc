@@ -655,117 +655,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
 	}
 	
-	public any function createOrderReturn(required struct data) {
-		var originalOrder = this.getOrder(data.orderID);
-		
-		// Create a new order
-		var order = this.newOrder();
-		order.setAccount(originalOrder.getAccount());
-		order.setOrderType(getTypeService().getTypeBySystemCode("otReturnOrder"));
-		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostNew"));
-		order.setReferencedOrder(originalOrder);
-		
-		// Create OrderReturn entity (to save the fulfillment amount)
-		var orderReturn = this.newOrderReturn();
-		var location = getLocationService().getLocation(data.returnToLocationID);
-		orderReturn.setOrder(order);
-		orderReturn.setFulfillmentRefundAmount(val(data.refundShippingAmount));
-		orderReturn.setReturnLocation(location);
-		
-		// Load order with order items. Loop over all deliveries, then delivered items
-		for(var j = 1; j <= ArrayLen(originalOrder.getOrderDeliveries()); j++) {
-			var orderDelivery = originalOrder.getOrderDeliveries()[j];
-			for(var i = 1; i <= ArrayLen(orderDelivery.getOrderDeliveryItems()); i++) {
-				var originalOrderItem = orderDelivery.getOrderDeliveryItems()[i].getOrderItem();
-				var quantityReturning = data["quantity_orderItemId(#originalOrderItem.getOrderItemID()#)_orderDeliveryId(#orderDelivery.getOrderDeliveryID()#)"];
-				var priceReturning = data["price_orderItemId(#originalOrderItem.getOrderItemID()#)_orderDeliveryId(#orderDelivery.getOrderDeliveryID()#)"];
-			
-				if(quantityReturning GT 0) {
-					// Create a new orderItem and populate it's basic properties from the original order item, and from the user submitted input.
-					var orderItem = this.newOrderItem();
-					orderItem.setReferencedOrderItem(originalOrderItem);
-					orderItem.setReferencedOrderDeliveryItem(orderDelivery.getOrderDeliveryItems()[i]);
-					orderItem.setOrder(order);
-					orderItem.setPrice(priceReturning);
-					orderItem.setQuantity(quantityReturning);
-					orderItem.setSku(originalOrderItem.getSku());
-					orderItem.setOrderItemStatusType(getTypeService().getTypeBySystemCode('oistReturned'));
-					orderItem.setOrderItemType(getTypeService().getTypeBySystemCode('oitReturn'));
-				
-					// Add this order item to the OrderReturns entity
-					orderItem.setOrderReturn(orderReturn);
-				
-				}
-			}
-		}
-
-		this.saveOrder(order=order,context="saveReturnOrder");
-		
-		if(!order.hasErrors()) {
-			// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
-			// further populated with StockRecieverItems, one for each item being returned.
-			var stockReceiver = getStockService().newStockReceiverOrder();
-			
-			stockReceiver.setOrder(order);
-			
-			// Loop over all of the orderItems and create stockReceiverItmes
-			for(var i=1; i<=arrayLen(order.getOrderItems()); i++) {
-				var stock = getStockService().getStockBySkuAndLocation(order.getOrderItems()[i].getSku(), order.getOrderItems()[i].getOrderReturn().getReturnLocation());
-				var stockReceiverItem = getStockService().newStockReceiverItem();
-				stockReceiverItem.setStockReceiver( stockReceiver );
-				stockReceiverItem.setOrderItem( order.getOrderItems()[i] );
-				stockReceiverItem.setQuantity( order.getOrderItems()[i].getQuantity() );
-				stockReceiverItem.setStock( stock );
-			}
-			
-			getStockService().saveStockReceiver( stockReceiver );
-			
-			if(!stockReceiver.hasErrors()) {
-				
-				// Create and credit a refund order payment
-				
-				var refundRequired = false;
-				var refundOK = false;
-				if(order.getTotal() < 0){
-					// Find the orginal orderpayment credit card transaction where charge is gt 0
-					for(var t=1; t<=arrayLen(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()); t++) {
-						if(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getAmountReceived() gt 0) {
-							refundRequired = true;
-							
-							// Create a new order Payment based on the original order payment
-							var newOrderPayment = this.newOrderPaymentCreditCard();
-							newOrderPayment.setNameOnCreditCard(order.getReferencedOrder().getOrderPayments()[1].getNameOnCreditCard());
-							newOrderPayment.setCreditCardLastFour(order.getReferencedOrder().getOrderPayments()[1].getCreditCardLastFour());
-							newOrderPayment.setCreditCardType(order.getReferencedOrder().getOrderPayments()[1].getCreditCardType());
-							newOrderPayment.setExpirationMonth(order.getReferencedOrder().getOrderPayments()[1].getExpirationMonth());
-							newOrderPayment.setExpirationYear(order.getReferencedOrder().getOrderPayments()[1].getExpirationYear());
-							newOrderPayment.setBillingAddress(order.getReferencedOrder().getOrderPayments()[1].getBillingAddress());
-							newOrderPayment.setOrderPaymentType( getService("typeService").getTypeBySystemCode("optCredit") );
-							newOrderPayment.setAmount( order.getTotal()*-1 );
-							newOrderPayment.setOrder( order );
-							newOrderPayment.setPaymentMethod( order.getReferencedOrder().getOrderPayments()[1].getPaymentMethod() );
-							
-							// Pass this new order payment along with the original transaction ID to the process() method. 
-							var refundOK = getPaymentService().processPayment(newOrderPayment, "credit", order.getTotal(), order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getProviderTransactionID());
-							// refund is required for this order but didn't go through. Don't persist anything.
-							if(!refundOK){
-								getSlatwallScope().setORMHasErrors( true );
-							}
-							// Once a transaction with a charge is found no need to loop any further
-							break;
-						}
-					}
-				}
-				// If refund is not required or refund is OK close the order
-				if(!refundRequired || refundOK) {
-					order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));			
-				}
-			}
-		}
-
-		return order;
-	}
-	
 	public any function forceItemQuantityUpdate(required any order, required any messageBean) {
 		// Loop over each order Item
 		for(var i = arrayLen(arguments.order.getOrderItems()); i >= 1; i--)	{
@@ -854,17 +743,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					if(!validAccount) {
 						arguments.order.addError("processing", "The order account was invalid for one reason or another.");
 					}
-					
 					var validPayments = updateAndVerifyOrderPayments(order=arguments.order, data=arguments.data);
 					if(!validPayments) {
 						arguments.order.addError("processing", "One or more of the order payments were invalid for one reason or another.");
 					}
-					
 					var validFulfillments = updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
 					if(!validFulfillments) {
 						arguments.order.addError("processing", "One or more of the order fulfillments were invalid for one reason or another.");
 					}
-					
 					
 					if(!arguments.order.hasErrors()) {
 						
@@ -944,8 +830,150 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// CONTEXT: createReturn
 		} else if (arguments.processContext == "createReturn") {
 			
+			var hasAtLeastOneItemToReturn = false;
+			for(var i=1; i<=arrayLen(arguments.data.records); i++) {
+				if(isNumeric(arguments.data.records[i].qantity) && arguments.data.records[i].qantity gt 0) {
+					var hasAtLeastOneItemToReturn = true;		
+				}
+			}
+			
+			if(!hasAtLeastOneItemToReturn) {
+				arguments.order.addError('processing', 'You need to specify at least 1 item to be returned');
+			} else {
+				
+				// Create a new return order
+				var returnOrder = this.newOrder();
+				returnOrder.setAccount( arguments.order.getAccount() );
+				returnOrder.setOrderType( getTypeService().getTypeBySystemCode("otReturnOrder") );
+				returnOrder.setOrderStatusType( getTypeService().getTypeBySystemCode("ostNew") );
+				returnOrder.setReferencedOrder( arguments.order );
+				
+				var returnLocation = getLocationService().getLocation( arguments.data.returnLocationID );
+				
+				// Create OrderReturn entity (to save the fulfillment amount)
+				var orderReturn = this.newOrderReturn();
+				orderReturn.setOrder( returnOrder );
+				if(isNumeric(arguments.data.fulfillmentChargeRefundAmount) && arguments.data.fulfillmentChargeRefundAmount gt 0) {
+					orderReturn.setFulfillmentRefundAmount( arguments.data.fulfillmentChargeRefundAmount );	
+				} else {
+					orderReturn.setFulfillmentRefundAmount( 0 );
+				}
+				orderReturn.setReturnLocation( returnLocation );
+				
+				// Loop over delivery items in each delivery
+				for(var i = 1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
+					
+					var originalOrderItem = arguments.order.getOrderItems()[i].getOrderItem();
+					
+					// Look for that orderItem in the data records
+					for(var r=1; r <= arrayLen(arguments.data.records); r++) {
+						if(originalOrderItem.getOrderItemID() == arguments.data.records[r].orderItemID && isNumeric(arguments.data.records[r].returnQuantity) && arguments.data.records[r].returnQuantity > 0 && isNumeric(arguments.data.records[r].returnPrice) && arguments.data.records[r].returnPrice >= 0) {
+							
+							// Create a new return orderItem
+							var orderItem = this.newOrderItem();
+							orderItem.setOrderItemType( getTypeService().getTypeBySystemCode('oitReturn') );
+							orderItem.setOrderItemStatusType( getTypeService().getTypeBySystemCode('oistNew') );
+							
+							orderItem.setReferencedOrderItem( originalOrderItem );
+							orderItem.setOrder( returnOrder );
+							orderItem.setPrice( arguments.data.records[r].returnPrice );
+							orderItem.setSkuPrice( originalOrderItem.getSku().getSkuPrice() );
+							orderItem.setQuantity( arguments.data.records[r].returnQuantity );
+							orderItem.setSku( originalOrderItem.getSku() );
+							
+							// Add this order item to the OrderReturns entity
+							orderItem.setOrderReturn( orderReturn );
+							
+						}
+					}
+				}
+				
+				getDAO().save( returnOrder );
+				
+				// If the end-user has choosen to auto-receive the return order, then we can create a stock receiver
+				if(arguments.data.autoReceiveItemsFlag) {
+					
+					/*
+					// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
+					// further populated with StockRecieverItems, one for each item being returned.
+					var stockReceiver = getStockService().newStockReceiverOrder();
+					
+					stockReceiver.setOrder( returnOrder );
+					stockReceiver.setPackingSlipNumber( 'auto' );
+					stockReceiver.setPackingBoxCount( 1 );
+					
+					getStockService().processStockReceiver(stockReceiver, receiverData, "orderReturn");
+					
+					// Loop over all of the orderItems and create stockReceiverItmes
+					for(var i=1; i<=arrayLen(returnOrder.getOrderItems()); i++) {
+						
+						var stock = getStockService().getStockBySkuAndLocation(returnOrder.getOrderItems()[i].getSku(), returnOrder.getOrderItems()[i].getOrderReturn().getReturnLocation());
+						
+						var stockReceiverItem = getStockService().newStockReceiverItem();
+						stockReceiverItem.setStockReceiver( stockReceiver );
+						stockReceiverItem.setOrderItem( order.getOrderItems()[i] );
+						stockReceiverItem.setQuantity( order.getOrderItems()[i].getQuantity() );
+						stockReceiverItem.setStock( stock );
+					}
+					
+					getStockService().saveStockReceiver( stockReceiver );
+					
+					if(!stockReceiver.hasErrors()) {
+						
+						// Create and credit a refund order payment
+						
+						var refundRequired = false;
+						var refundOK = false;
+						if(order.getTotal() < 0){
+							// Find the orginal orderpayment credit card transaction where charge is gt 0
+							for(var t=1; t<=arrayLen(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()); t++) {
+								if(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getAmountReceived() gt 0) {
+									refundRequired = true;
+									
+									// Create a new order Payment based on the original order payment
+									var newOrderPayment = this.newOrderPaymentCreditCard();
+									newOrderPayment.setNameOnCreditCard(order.getReferencedOrder().getOrderPayments()[1].getNameOnCreditCard());
+									newOrderPayment.setCreditCardLastFour(order.getReferencedOrder().getOrderPayments()[1].getCreditCardLastFour());
+									newOrderPayment.setCreditCardType(order.getReferencedOrder().getOrderPayments()[1].getCreditCardType());
+									newOrderPayment.setExpirationMonth(order.getReferencedOrder().getOrderPayments()[1].getExpirationMonth());
+									newOrderPayment.setExpirationYear(order.getReferencedOrder().getOrderPayments()[1].getExpirationYear());
+									newOrderPayment.setBillingAddress(order.getReferencedOrder().getOrderPayments()[1].getBillingAddress());
+									newOrderPayment.setOrderPaymentType( getService("typeService").getTypeBySystemCode("optCredit") );
+									newOrderPayment.setAmount( order.getTotal()*-1 );
+									newOrderPayment.setOrder( order );
+									newOrderPayment.setPaymentMethod( order.getReferencedOrder().getOrderPayments()[1].getPaymentMethod() );
+									
+									// Pass this new order payment along with the original transaction ID to the process() method. 
+									var refundOK = getPaymentService().processPayment(newOrderPayment, "credit", order.getTotal(), order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getProviderTransactionID());
+									// refund is required for this order but didn't go through. Don't persist anything.
+									if(!refundOK){
+										getSlatwallScope().setORMHasErrors( true );
+									}
+									// Once a transaction with a charge is found no need to loop any further
+									break;
+								}
+							}
+						}
+						// If refund is not required or refund is OK close the order
+						if(!refundRequired || refundOK) {
+							order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));			
+						}
+					}
+					
+					
+					*/
+					
+				}
+
+			}
+			
+		// CONTEXT: Not Defined
+		} else {
+			
+			// Do Notion
 		}
 		
+		return arguments.order;
 	}
 	
 	// Process: Order Fulfillment

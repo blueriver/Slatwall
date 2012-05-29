@@ -36,24 +36,35 @@
 Notes:
 
 --->
-<cfparam name="rc.originalOrder" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.returnAction" type="string" default="admin:order.listorder" />
+<cfparam name="rc.processOrderSmartList" type="any" />
+<cfparam name="rc.multiProcess" type="boolean" />
+<cfparam name="rc.processContext" type="string" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.originalOrder#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.originalOrder#" edit="#rc.edit#"></cf_SlatwallActionBar>
+	<cf_SlatwallProcessForm>
+		<cf_SlatwallActionBar type="process" />
 		
-		<input type="hidden" name="originalOrder.originialOrderID" value="#rc.originalOrder.getOrderID()#" />
-		
-		<cf_SlatwallProcessListing processSmartList="#rc.originalOrder.getOrderItemsSmartList()#">
+		<!--- Create Return --->
+		<cfif rc.processContext eq "createReturn" && !rc.multiProcess>
+			<cf_SlatwallProcessOptionBar>
+				<cf_SlatwallProcessOption data="returnLocationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
+				<cf_SlatwallProcessOption data="autoReceiveItemsFlag" fieldType="yesno" />
+				<cf_SlatwallProcessOption data="fulfillmentChargeRefundAmount" fieldType="text" fieldClass="number" value="0" />
+			</cf_SlatwallProcessOptionBar>
 			
-			<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" title="Product" />
-			
-			<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" title="Sku Code" />
-			<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" title="Sku Options" />
-			<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" title="Quantity Delivered" />
-			<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
-		</cf_SlatwallProcessListing>
+			<div style="width:700px;">
+				<cf_SlatwallProcessListing processSmartList="#rc.processOrderSmartList#" processRecordsProperty="orderItems" processHeaderString="Order: ${order.orderNumber}">
+					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" title="Product" />
+					<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" title="Sku Code" />
+					<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" title="Sku Options" />
+					<cf_SlatwallProcessColumn propertyIdentifier="price" title="Price" />
+					<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" title="Quantity Delivered" />
+					<cf_SlatwallProcessColumn data="returnPrice" fieldType="text" value="${price}" fieldClass="span1 number" />
+					<cf_SlatwallProcessColumn data="returnQuantity" fieldType="text" value="0" fieldClass="span1 number" />
+				</cf_SlatwallProcessListing>
+			</div>
+		</cfif>
 		
-	</cf_SlatwallDetailForm>
+	</cf_SlatwallProcessForm>
 </cfoutput>

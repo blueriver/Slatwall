@@ -95,6 +95,9 @@ Notes:
 									<cfif len(column.propertyIdentifier)>
 										<td class="#column.tdClass#">#processRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 									<cfelseif len(column.data)>
+										<cfif left(column.value, "2") eq "${">
+											<cfset column.value = processRecord.getValueByPropertyIdentifier( replace(replace(column.value, '${', '', 'all'),'}','','all') ) />
+										</cfif>
 										<cfif column.fieldType neq "hidden">
 											<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#"></td>
 										<cfelse>

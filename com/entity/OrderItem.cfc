@@ -55,7 +55,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="orderReturn" cfc="OrderReturn" fieldtype="many-to-one" fkcolumn="orderReturnID";
 	property name="referencedOrderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID"; // Used For Returns. This is set when this order is a return.
-	property name="referencedOrderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="many-to-one" fkcolumn="referencedOrderDeliveryItemID"; // Used For Returns. This is set when this order is a return.
 	
 	// Related Object Properties (one-to-many)
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
@@ -292,24 +291,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 			arrayDeleteAt(arguments.refrencedOrderItem.getRefrencingOrderItem(), index);
 		}
 		structDelete(variables, "refrencedOrderItem");
-	}
-	
-	// Referenced Order Delivery Item (many-to-one)
-	public void function setReferencedOrderDeliveryItem(required any referencedOrderDeliveryItem) {
-		variables.referencedOrderDeliveryItem = arguments.referencedOrderDeliveryItem;
-		if(isNew() or !arguments.referencedOrderDeliveryItem.hasReferencingOrderItem( this )) {
-			arrayAppend(arguments.referencedOrderDeliveryItem.getReferencingOrderItems(), this);
-		}
-	}
-	public void function removeReferencedOrderDeliveryItem(any referencedOrderDeliveryItem) {
-		if(!structKeyExists(arguments, "referencedOrderDeliveryItem")) {
-			arguments.referencedOrderDeliveryItem = variables.referencedOrderDeliveryItem;
-		}
-		var index = arrayFind(arguments.referencedOrderDeliveryItem.getReferencingOrderItems(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.referencedOrderDeliveryItem.getReferencingOrderItems(), index);
-		}
-		structDelete(variables, "referencedOrderDeliveryItem");
 	}
 	
 	// Applied Promotions (one-to-many)

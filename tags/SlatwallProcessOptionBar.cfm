@@ -86,7 +86,7 @@ Notes:
 						<cfif right(hint, 8) eq "_missing">
 							<cfset hint = "" />
 						</cfif>
-						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.#option.data#" fieldtype="#option.fieldtype#" valueOptions="#option.valueOptions#" title="#request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#" )#" hint="#hint#">
+						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.#option.data#" fieldtype="#option.fieldtype#" value="#option.value#" valueOptions="#option.valueOptions#" title="#request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#" )#" hint="#hint#">
 					</cfloop>
 				</cf_SlatwallPropertyList>
 			</cfif>
