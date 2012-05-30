@@ -346,7 +346,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 					
 					if(structKeyExists(rc.processRecords[i], entityPrimaryID)) {
 						structAppend(rc.processRecords[i], rc.processOptions, false);
-						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ]} );
+						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ], 2=true} );
 						entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
 						if( !isNull(entity) && entity.hasErrors() ) {
 							// Add the error message to the top of the page
@@ -370,13 +370,17 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		// IF we are just doing the process setup page, run this logic
 		} else {
-			// If no ID was passed in, redirect to list
-			if(!structKeyExists(rc, entityPrimaryID)) {
-				getFW().redirect(action=rc.listaction);
-			}
 			
+			// Go get the correct type of SmartList
 			rc[ "process#arguments.entityName#SmartList" ] = entityService.invokeMethod( "get#arguments.entityName#SmartList" );
-			rc[ "process#arguments.entityName#SmartList" ].addInFilter(entityPrimaryID, rc[entityPrimaryID]);
+			
+			// If no ID was passed in create a smartList with only 1 new entity in it
+			if(!structKeyExists(rc, entityPrimaryID) || rc[entityPrimaryID] == "") {
+				var newEntity = entityService.invokeMethod( "new#arguments.entityName#" );
+				rc[ "process#arguments.entityName#SmartList" ].setRecords([newEntity]);
+			} else {
+				rc[ "process#arguments.entityName#SmartList" ].addInFilter(entityPrimaryID, rc[entityPrimaryID]);	
+			}
 			
 			// If there are no records then redirect to the list action
 			if(!rc[ "process#arguments.entityName#SmartList" ].getRecordsCount()) {

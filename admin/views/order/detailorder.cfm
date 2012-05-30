@@ -91,9 +91,16 @@ Notes:
 		
 		<cf_SlatwallTabGroup object="#rc.order#" allowComments=true>
 			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" />
-			<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
 			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" />
-			<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" />
+			
+			<cfif rc.order.getOrderType().getSystemCode() eq "otSalesOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
+				<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
+				<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" />
+			</cfif>
+			<cfif rc.order.getOrderType().getSystemCode() eq "otReturnOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
+				<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" />
+				<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" />
+			</cfif>
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
