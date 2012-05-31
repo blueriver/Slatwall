@@ -48,17 +48,19 @@ Notes:
 			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
 			<cf_SlatwallProcessOption data="boxCount" fieldType="text" />
 			<cf_SlatwallProcessOption data="packingSlipNumber" fieldType="text" />
-			<cf_SlatwallProcessOption data="processCreditCard" fieldType="yesno" />
+			<cf_SlatwallProcessOption data="autoProcessReturnPaymentFlag" fieldType="yesno" value=1 />
 		</cf_SlatwallProcessOptionBar>
 		
-		<cf_SlatwallProcessListing processSmartList="#rc.processOrderReturnSmartList#" processRecordsProperty="orderReturnItems" processHeaderString="Order: ${order.orderNumber}, Order Return - ${returnLocation.locationName}">
-			<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" />
-			<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" />
-			<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
-			<cf_SlatwallProcessColumn propertyIdentifier="quantity" />
-			<cf_SlatwallProcessColumn propertyIdentifier="quantityUnreceived" />
-			<cf_SlatwallProcessColumn data="quantityReceived" fieldType="text" fieldClass="span1 number" />
-		</cf_SlatwallProcessListing>
+		<div style="width:700px;">
+			<cf_SlatwallProcessListing processSmartList="#rc.processOrderReturnSmartList#" processRecordsProperty="orderReturnItems" processHeaderString="Order: ${order.orderNumber}, Order Return - ${returnLocation.locationName}">
+				<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" />
+				<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" />
+				<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
+				<cf_SlatwallProcessColumn propertyIdentifier="quantity" />
+				<cf_SlatwallProcessColumn propertyIdentifier="quantityUnreceived" />
+				<cf_SlatwallProcessColumn data="quantityReceived" fieldType="text" fieldClass="span1 number" />
+			</cf_SlatwallProcessListing>
+		</div>
 		
 	</cf_SlatwallProcessForm>
 </cfoutput>

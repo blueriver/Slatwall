@@ -36,28 +36,29 @@
 Notes:
 
 */
-component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table="SlatwallStockReceiver" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="receiverType"  {
+component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table="SlatwallStockReceiver" persistent=true accessors=true output=false extends="BaseEntity" {
 	
 	
 	// Persistent Properties
 	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="packingSlipNumber" ormtype="string";
 	property name="boxCount" ormtype="integer";
+	property name="receiverType" ormtype="string";
+	
+	// Related Object Properties (many-to-one)
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
+	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	
 	// Related Object Properties (one-to-many)
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" fieldtype="one-to-many" fkcolumn="stockReceiverID" cascade="all-delete-orphan" inverse="true";
-		
-	// Discriminator (values: vendorOrder, order, stockAdjustment)
-	property name="receiverType" insert="false" update="false";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-		
 	
-
 	// Not actually required for TPC implemention. Just providing type tracking for new entities.
 	public void function setReceiverType(required string type) {
 		var listAllowableTypes = "vendorOrder,order,stockAdjustment";

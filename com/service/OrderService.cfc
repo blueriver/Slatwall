@@ -891,81 +891,35 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				getDAO().save( returnOrder );
 				
-				// If the end-user has choosen to auto-receive the return order, then we can create a stock receiver
-				if(arguments.data.autoReceiveItemsFlag) {
+				// If the end-user has choosen to auto-receive the return order && to auto process the credit
+				if(arguments.data.autoProcessReceiveReturnFlag && arguments.data.autoProcessReturnPaymentFlag) {
 					
-					/*
-					// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
-					// further populated with StockRecieverItems, one for each item being returned.
-					var stockReceiver = getStockService().newStockReceiverOrder();
+					var autoProcessReceiveReturnData = {
+						locationID = arguments.data.returnLocationID,
+						boxCount = 1,
+						packingSlipNumber = 'auto',
+						autoProcessReturnPayment = 1
+					};
+					processOrderReturn(orderReturn, autoProcessReceiveReturnFlag, "receiveReturn");
 					
-					stockReceiver.setOrder( returnOrder );
-					stockReceiver.setPackingSlipNumber( 'auto' );
-					stockReceiver.setPackingBoxCount( 1 );
+				// If we are only auto-receiving but not processing payment
+				} else if (arguments.data.autoProcessReceiveReturnFlag) {
+				
+					var autoProcessReceiveReturnData = {
+						locationID = arguments.data.returnLocationID,
+						boxCount = 1,
+						packingSlipNumber = 'auto',
+						autoProcessReturnPayment = 0
+					};
+					processOrderReturn(orderReturn, autoProcessReceiveReturnFlag, "receiveReturn");
+				
+				// If we are only auto processing the return payment
+				} else if (arguments.data.autoProcessReturnPaymentFlag) {
 					
-					getStockService().processStockReceiver(stockReceiver, receiverData, "orderReturn");
-					
-					// Loop over all of the orderItems and create stockReceiverItmes
-					for(var i=1; i<=arrayLen(returnOrder.getOrderItems()); i++) {
-						
-						var stock = getStockService().getStockBySkuAndLocation(returnOrder.getOrderItems()[i].getSku(), returnOrder.getOrderItems()[i].getOrderReturn().getReturnLocation());
-						
-						var stockReceiverItem = getStockService().newStockReceiverItem();
-						stockReceiverItem.setStockReceiver( stockReceiver );
-						stockReceiverItem.setOrderItem( order.getOrderItems()[i] );
-						stockReceiverItem.setQuantity( order.getOrderItems()[i].getQuantity() );
-						stockReceiverItem.setStock( stock );
-					}
-					
-					getStockService().saveStockReceiver( stockReceiver );
-					
-					if(!stockReceiver.hasErrors()) {
-						
-						// Create and credit a refund order payment
-						
-						var refundRequired = false;
-						var refundOK = false;
-						if(order.getTotal() < 0){
-							// Find the orginal orderpayment credit card transaction where charge is gt 0
-							for(var t=1; t<=arrayLen(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()); t++) {
-								if(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getAmountReceived() gt 0) {
-									refundRequired = true;
-									
-									// Create a new order Payment based on the original order payment
-									var newOrderPayment = this.newOrderPaymentCreditCard();
-									newOrderPayment.setNameOnCreditCard(order.getReferencedOrder().getOrderPayments()[1].getNameOnCreditCard());
-									newOrderPayment.setCreditCardLastFour(order.getReferencedOrder().getOrderPayments()[1].getCreditCardLastFour());
-									newOrderPayment.setCreditCardType(order.getReferencedOrder().getOrderPayments()[1].getCreditCardType());
-									newOrderPayment.setExpirationMonth(order.getReferencedOrder().getOrderPayments()[1].getExpirationMonth());
-									newOrderPayment.setExpirationYear(order.getReferencedOrder().getOrderPayments()[1].getExpirationYear());
-									newOrderPayment.setBillingAddress(order.getReferencedOrder().getOrderPayments()[1].getBillingAddress());
-									newOrderPayment.setOrderPaymentType( getService("typeService").getTypeBySystemCode("optCredit") );
-									newOrderPayment.setAmount( order.getTotal()*-1 );
-									newOrderPayment.setOrder( order );
-									newOrderPayment.setPaymentMethod( order.getReferencedOrder().getOrderPayments()[1].getPaymentMethod() );
-									
-									// Pass this new order payment along with the original transaction ID to the process() method. 
-									var refundOK = getPaymentService().processPayment(newOrderPayment, "credit", order.getTotal(), order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getProviderTransactionID());
-									// refund is required for this order but didn't go through. Don't persist anything.
-									if(!refundOK){
-										getSlatwallScope().setORMHasErrors( true );
-									}
-									// Once a transaction with a charge is found no need to loop any further
-									break;
-								}
-							}
-						}
-						// If refund is not required or refund is OK close the order
-						if(!refundRequired || refundOK) {
-							order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));			
-						}
-					}
-					
-					
-					*/
+					// Process Payment here
 					
 				}
-
+				
 			}
 			
 		// CONTEXT: Not Defined
@@ -1166,7 +1120,48 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function processOrderReturn(required any orderReturn, struct data={}, string processContext="process") {
 		if(arguments.processContext eq "receiveReturn") {
 			
+			var hasAtLeastOneItemToReturn = false;
+			for(var i=1; i<=arrayLen(arguments.data.records); i++) {
+				if(isNumeric(arguments.data.records[i].quantityReceived) && arguments.data.records[i].quantityReceived gt 0) {
+					var hasAtLeastOneItemToReturn = true;		
+				}
+			}
+			
+			if(!hasAtLeastOneItemToReturn) {
+				arguments.orderReturn.addError('processing', 'You need to specify at least 1 item to be returned');
+			} else {
+				
+				// Setup the received location
+				var receivedLocation = getLocationService().getLocation(arguments.data.locationID);
+				
+				// Create a new Stock Receiver
+				var newStockReceiver = getStockService().newStockReceiver();
+				newStockReceiver.setReceiverType( 'order' );
+				newStockReceiver.setOrder( arguments.orderReturn.getOrder() );
+				newStockReceiver.setBoxCount( arguments.data.boxcount );
+				newStockReceiver.setPackingSlipNumber( arguments.data.packingSlipNumber );
+				
+				for(var i=1; i<=arrayLen(arguments.data.records); i++) {
+					if(isNumeric(arguments.data.records[i].quantityReceived) && arguments.data.records[i].quantityReceived gt 0) {
+						
+						var orderItemReceived = this.getOrderItem( arguments.data.records[i].orderItemID );
+						var stockReceived = getStockService().getStockBySkuAndLocation(orderItemReceived.getSku(), receivedLocation);
+						
+						var newStockReceiverItem = getStockService().newStockReceiverItem();
+						newStockReceiverItem.setStockReceiver( newStockReceiver );
+						newStockReceiverItem.setOrderItem( orderItemReceived );
+						newStockReceiverItem.setStock( stockReceived );
+						newStockReceiverItem.setQuantity( arguments.data.records[i].quantityReceived );
+						newStockReceiverItem.setCost( 0 );
+						
+					}
+				}
+				
+				getStockService().saveStockReceiver( newStockReceiver );
+			}
 		}
+		
+		return arguments.orderReturn;
 	}
 	
 	// Process: Order Payment

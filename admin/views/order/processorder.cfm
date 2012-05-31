@@ -49,17 +49,19 @@ Notes:
 		<cfif rc.processContext eq "createReturn" && !rc.multiProcess>
 			<cf_SlatwallProcessOptionBar>
 				<cf_SlatwallProcessOption data="returnLocationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
-				<cf_SlatwallProcessOption data="autoReceiveItemsFlag" fieldType="yesno" />
 				<cf_SlatwallProcessOption data="fulfillmentChargeRefundAmount" fieldType="text" fieldClass="number" value="0" />
+				<!--- TODO: Need to figure out which payment method to refund to --->
+				<cf_SlatwallProcessOption data="autoProcessReceiveReturnFlag" fieldType="yesno" value="0" />
+				<cf_SlatwallProcessOption data="autoProcessReturnPaymentFlag" fieldType="yesno" value="0" />
 			</cf_SlatwallProcessOptionBar>
 			
 			<div style="width:700px;">
 				<cf_SlatwallProcessListing processSmartList="#rc.processOrderSmartList#" processRecordsProperty="orderItems" processHeaderString="Order: ${order.orderNumber}">
-					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" title="Product" />
-					<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" title="Sku Code" />
-					<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" title="Sku Options" />
-					<cf_SlatwallProcessColumn propertyIdentifier="price" title="Price" />
-					<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" title="Quantity Delivered" />
+					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" />
+					<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" />
+					<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
+					<cf_SlatwallProcessColumn propertyIdentifier="price" />
+					<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" />
 					<cf_SlatwallProcessColumn data="returnPrice" fieldType="text" value="${price}" fieldClass="span1 number" />
 					<cf_SlatwallProcessColumn data="returnQuantity" fieldType="text" value="0" fieldClass="span1 number" />
 				</cf_SlatwallProcessListing>
