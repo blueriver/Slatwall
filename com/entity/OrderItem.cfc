@@ -79,6 +79,8 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="extendedPriceAfterDiscount" persistent="false" formatType="currency" ; 
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
+	property name="quantityReceived" persistent="false";
+	property name="quantityUnreceived" persistent="false";
 	property name="taxAmount" persistent="false" formatType="currency" ;
 	property name="itemTotal" persistent="false" formatType="currency" ; 
 
@@ -196,6 +198,20 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}
 		
 		return quantityDelivered;
+	}
+	
+	public numeric function getQuantityReceived() {
+		var quantityReceived = 0;
+		
+		for( var i=1; i<=arrayLen(getStockReceiverItems()); i++){
+			quantityReceived += getStockReceiverItems()[i].getQuantity();
+		}
+		
+		return quantityReceived;
+	}
+	
+	public numeric function getQuantityUnreceived() {
+		return getQuantity() - getQuantityReceived();
 	}
 	
 	public numeric function getQuantityUndelivered() {

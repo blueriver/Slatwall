@@ -50,7 +50,7 @@ Notes:
 				<cfloop array="#thistag.columns#" index="column">
 					<cfif !len(column.title)>
 						<cfif len(column.propertyIdentifier) && len(attributes.processRecordsProperty)>
-							<cfset column.title = attributes.processSmartList.getRecords()[1].invokeMethod("get#attributes.processRecordsProperty#").getTitleByPropertyIdentifier(column.propertyIdentifier) />
+							<cfset column.title = attributes.processSmartList.getRecords()[1].invokeMethod("get#attributes.processRecordsProperty#")[1].getTitleByPropertyIdentifier(column.propertyIdentifier) />
 						<cfelseif len(column.propertyIdentifier)>
 							<cfset column.title = attributes.processSmartList.getRecords()[1].getTitleByPropertyIdentifier(column.propertyIdentifier) />
 						<cfelseif len(column.data)>

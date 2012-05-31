@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.returnAction" type="string" default="admin:order.listorderfulfillment" />
-<cfparam name="rc.processOrderFulfillmentSmartList" type="any" />
+<cfparam name="rc.processOrderReturnSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 
 <cfoutput>
@@ -46,24 +46,18 @@ Notes:
 		
 		<cf_SlatwallProcessOptionBar>
 			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
-			<cfif !rc.multiProcess>
-				<cf_SlatwallProcessOption data="trackingNumber" fieldType="text" />
-			</cfif>
+			<cf_SlatwallProcessOption data="boxCount" fieldType="text" />
+			<cf_SlatwallProcessOption data="packingSlipNumber" fieldType="text" />
 			<cf_SlatwallProcessOption data="processCreditCard" fieldType="yesno" />
-			<!---
-			<cf_SlatwallProcessOption print="packingSlip" />
-			<cf_SlatwallProcessOption email="deliveryConfirmation" />
-			--->
 		</cf_SlatwallProcessOptionBar>
 		
-		<cf_SlatwallProcessListing processSmartList="#rc.processOrderFulfillmentSmartList#" processRecordsProperty="orderFulfillmentItems" processHeaderString="Order: ${order.orderNumber}, Order Fulfillment - ${fulfillmentMethod.fulfillmentMethodName}">
-			<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" title="Product" />
+		<cf_SlatwallProcessListing processSmartList="#rc.processOrderReturnSmartList#" processRecordsProperty="orderReturnItems" processHeaderString="Order: ${order.orderNumber}, Order Return - ${returnLocation.locationName}">
+			<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" />
 			<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" />
 			<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
 			<cf_SlatwallProcessColumn propertyIdentifier="quantity" />
-			<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" />
-			<cf_SlatwallProcessColumn propertyIdentifier="quantityUndelivered" />
-			<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
+			<cf_SlatwallProcessColumn propertyIdentifier="quantityUnreceived" />
+			<cf_SlatwallProcessColumn data="quantityReceived" fieldType="text" fieldClass="span1 number" />
 		</cf_SlatwallProcessListing>
 		
 	</cf_SlatwallProcessForm>

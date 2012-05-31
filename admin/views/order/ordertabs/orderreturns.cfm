@@ -42,7 +42,8 @@ Notes:
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderReturnsSmartList()#" 
 			recordDetailAction="admin:order.detailorderreturn"
-			recordProcessAction="admin:order.processorderreturn">
+			recordProcessAction="admin:order.processorderreturn"
+			recordProcessModal="true">
 		<cf_SlatwallListingColumn tdClass="primary" propertyIdentifier="returnLocation.locationName" filter=true />
 		<!---
 		<cf_SlatwallListingColumn propertyIdentifier="fulfillmentCharge" />
