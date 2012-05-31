@@ -448,15 +448,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 				// If there was previously a shipping Address we need to remove it and recalculate
 				if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
-					arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
 					arguments.orderFulfillment.removeShippingAddress();
+					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+					
 				}
 
 				// If there was previously an account address and we switch it, then we need to recalculate
 				if(!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
-					arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
 					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
 				}
 
 				// Set the new account address in the order
@@ -465,9 +466,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 				// If there was previously an account address we need to remove and recalculate
 				if(!isNull(arguments.orderFulfillment.getAccountAddress())) {
-					arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
 					arguments.orderFulfillment.removeAccountAddress();
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
 				}
 				
 				// Set the address in the order Fulfillment as shipping address

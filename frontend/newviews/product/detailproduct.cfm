@@ -120,12 +120,12 @@ Notes:
 																						
 				<cfloop array="#local.galleryDetails#" index="local.image">
 					
-<!---[ DEVELOPER NOTES ]																		
-																								
-	Now that we are inside of the loop of images being returned, you have access to the			
-	following detials insilde of the local.image struct that came back in the array				
-																								
-																		[/ DEVELOPER NOTES ]--->
+					<!---[ DEVELOPER NOTES ]																		
+																													
+						Now that we are inside of the loop of images being returned, you have access to the			
+						following detials insilde of the local.image struct that came back in the array				
+																													
+																							[/ DEVELOPER NOTES ]--->
 				</cfloop>
 
 
