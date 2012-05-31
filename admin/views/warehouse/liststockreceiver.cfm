@@ -42,9 +42,12 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.stockReceiverSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.stockReceiverSmartList#" recordEditAction="admin:account.editaccount">
+<cf_SlatwallListingDisplay smartList="#rc.stockReceiverSmartList#"
+						   recordDetailAction="admin:warehouse.detailstockreceiver"
+						   recordEditAction="admin:warehouse.editstockreceiver">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="packingSlipNumber" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="boxCount" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="receiverType" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
 </cf_SlatwallListingDisplay>
 
