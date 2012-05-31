@@ -58,7 +58,7 @@ Notes:
 				<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
 				<cf_SlatwallProcessColumn propertyIdentifier="quantity" />
 				<cf_SlatwallProcessColumn propertyIdentifier="quantityUnreceived" />
-				<cf_SlatwallProcessColumn data="quantityReceived" fieldType="text" fieldClass="span1 number" />
+				<cf_SlatwallProcessColumn data="receiveQuantity" fieldType="text" fieldClass="span1 number" />
 			</cf_SlatwallProcessListing>
 		</div>
 		

@@ -64,9 +64,13 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="fullName" valuelink="?slatAction=admin:account.detailaccount&accountID=#rc.order.getAccount().getAccountID()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress" valuelink="mailto:#rc.order.getAccount().getEmailAddress()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="phoneNumber">
+					<hr />
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType" edit="#rc.edit#">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
+					<cfif !isNull(rc.order.getReferencedOrder())>
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencedOrder" edit="#rc.edit#" valuelink="?slatAction=admin:order.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
+					</cfif>
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyList divclass="span4">
 					<cfif !isNull(rc.order.getOrderOpenDateTime())>
@@ -78,6 +82,7 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAuthorizedTotal">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountCreditedTotal">
 			</cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyList divclass="span4">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="subtotal">
@@ -92,7 +97,6 @@ Notes:
 		<cf_SlatwallTabGroup object="#rc.order#" allowComments=true>
 			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" />
 			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" />
-			
 			<cfif rc.order.getOrderType().getSystemCode() eq "otSalesOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
 				<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
 				<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" />
@@ -101,6 +105,7 @@ Notes:
 				<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" />
 				<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" />
 			</cfif>
+			<cf_SlatwallTab view="admin:order/ordertabs/referencingOrders" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

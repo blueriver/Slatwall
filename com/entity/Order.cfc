@@ -87,6 +87,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="paymentAmountTotal" persistent="false" formatType="currency";
 	property name="paymentAuthorizedTotal" persistent="false" formatType="currency";
 	property name="paymentAmountReceivedTotal" persistent="false" formatType="currency";
+	property name="paymentAmountCreditedTotal" persistent="false" formatType="currency";
 	property name="paymentMethodOptionsSmartList" persistent="false";
 	property name="promotionCodeList" persistent="false";
 	property name="quantityDelivered" persistent="false";
@@ -278,6 +279,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		
 		return totalPaymentsReceived;
+	}
+	
+	public numeric function getPaymentAmountCreditedTotal() {
+		var totalPaymentsCredited = 0;
+		
+		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
+			totalPaymentsCredited = precisionEvaluate(totalPaymentsCredited + getOrderPayments()[i].getAmountCredited());
+		}
+		
+		return totalPaymentsCredited;
 	}
 	
 	public any function getPaymentMethodOptionsSmartList() {
@@ -535,6 +546,14 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		
 		return representation;
+	}
+	
+	public any function getReferencingOrdersSmartList() {
+		if(!structKeyExists(variables, "referencingOrdersSmartList")) {
+			variables.referencingOrdersSmartList = getService("orderService").getOrderSmartList();
+			variables.referencingOrdersSmartList.addFilter('referencedOrder.orderID', getOrderID());
+		}
+		return variables.referencingOrdersSmartList;
 	}
 	
 	// ==================  END:  Overridden Methods ========================

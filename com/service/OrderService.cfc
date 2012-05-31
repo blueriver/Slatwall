@@ -889,31 +889,29 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					}
 				}
 				
+				// We need to create a return payment here
+				
+				
 				getDAO().save( returnOrder );
 				
 				// If the end-user has choosen to auto-receive the return order && to auto process the credit
-				if(arguments.data.autoProcessReceiveReturnFlag && arguments.data.autoProcessReturnPaymentFlag) {
+				if(arguments.data.autoProcessReceiveReturnFlag) {
 					
 					var autoProcessReceiveReturnData = {
 						locationID = arguments.data.returnLocationID,
 						boxCount = 1,
 						packingSlipNumber = 'auto',
-						autoProcessReturnPayment = 1
+						autoProcessReturnPayment = arguments.data.autoProcessReturnPaymentFlag,
+						records = arguments.data.records
 					};
-					processOrderReturn(orderReturn, autoProcessReceiveReturnFlag, "receiveReturn");
 					
-				// If we are only auto-receiving but not processing payment
-				} else if (arguments.data.autoProcessReceiveReturnFlag) {
-				
-					var autoProcessReceiveReturnData = {
-						locationID = arguments.data.returnLocationID,
-						boxCount = 1,
-						packingSlipNumber = 'auto',
-						autoProcessReturnPayment = 0
-					};
-					processOrderReturn(orderReturn, autoProcessReceiveReturnFlag, "receiveReturn");
-				
-				// If we are only auto processing the return payment
+					for(var r=1; r <= arrayLen(autoProcessReceiveReturnData.records); r++) {
+						autoProcessReceiveReturnData.records[r].receiveQuantity = autoProcessReceiveReturnData.records[r].returnQuantity; 
+					}
+					
+					processOrderReturn(orderReturn, autoProcessReceiveReturnData, "receiveReturn");
+					
+				// If we are only auto-processing the payment, but not receiving
 				} else if (arguments.data.autoProcessReturnPaymentFlag) {
 					
 					// Process Payment here
@@ -1122,7 +1120,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			var hasAtLeastOneItemToReturn = false;
 			for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-				if(isNumeric(arguments.data.records[i].quantityReceived) && arguments.data.records[i].quantityReceived gt 0) {
+				if(isNumeric(arguments.data.records[i].receiveQuantity) && arguments.data.records[i].receiveQuantity gt 0) {
 					var hasAtLeastOneItemToReturn = true;		
 				}
 			}
@@ -1142,7 +1140,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				newStockReceiver.setPackingSlipNumber( arguments.data.packingSlipNumber );
 				
 				for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-					if(isNumeric(arguments.data.records[i].quantityReceived) && arguments.data.records[i].quantityReceived gt 0) {
+					if(isNumeric(arguments.data.records[i].receiveQuantity) && arguments.data.records[i].receiveQuantity gt 0) {
 						
 						var orderItemReceived = this.getOrderItem( arguments.data.records[i].orderItemID );
 						var stockReceived = getStockService().getStockBySkuAndLocation(orderItemReceived.getSku(), receivedLocation);
@@ -1151,7 +1149,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						newStockReceiverItem.setStockReceiver( newStockReceiver );
 						newStockReceiverItem.setOrderItem( orderItemReceived );
 						newStockReceiverItem.setStock( stockReceived );
-						newStockReceiverItem.setQuantity( arguments.data.records[i].quantityReceived );
+						newStockReceiverItem.setQuantity( arguments.data.records[i].receiveQuantity );
 						newStockReceiverItem.setCost( 0 );
 						
 					}

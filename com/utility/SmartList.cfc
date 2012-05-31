@@ -225,8 +225,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var aliaseOK = false;
 		var aoindex = 1;
 		var aolist = "a,b,c,d,e,f,g,h,i,j,k,l";
+		var baseAliase = newEntityName;
 		do {
-			var newEntityAlias = "#listGetAt(aolist,aoindex)##lcase(newEntityName)#";
+			var newEntityAlias = "#listGetAt(aolist,aoindex)##lcase(baseAliase)#";
 			if(aoindex > 0) {
 				newEntityName = "#lcase(newEntityName)#_#UCASE(listGetAt(aolist,aoindex+1))#";
 			}
