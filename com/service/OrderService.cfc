@@ -518,71 +518,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
-	
-	
-	//================= START: Order Actions ========================
-	/*
-	public any function applyOrderAction(required string orderID, required string orderActionTypeID) {
-		var order = this.getOrder(arguments.orderID);
-		var orderActionType = this.getType(arguments.orderActionTypeID);
-		
-		switch(orderActionType.getSystemCode())	{
-			case "oatCancel": {
-				return cancelOrder(order);
-				break;
-			}
-			case "oatRefund": {
-				return refundOrder(order);
-				break;
-			}
-		}
-		
-	}
-	
-	public any function cancelOrder(required any order) {
-		// see if this action is allowed for this status
-		var response = checkStatusAction(arguments.order, "cancel");
-		if(!response.hasErrors()) {
-			var statusType = this.getTypeBySystemCode("ostCanceled");
-			arguments.order.setOrderStatusType(statusType);
-		}
-		return response;
-	}
-	
-	public any function refundOrder(required any order) {
-		// see if this action is allowed for this status
-		var response = checkStatusAction(arguments.order, "refund");
-		if(!response.hasErrors()) {
-			//TODO: logic for refunding order
-		}
-		return response;
-	}
-	
-	public any function checkStatusAction(required any order, required string action) {
-		var response = new com.utility.ResponseBean();
-		var actionOptions = arguments.order.getActionOptions();
-		var isValid = false;
-		for(var i = 1; i <= arrayLen(actionOptions); i++) {
-			if(actionOptions[i].getOrderActionType().getSystemCode() == "oat" & arguments.action) {
-				isValid = true;
-				break;
-			}
-		}
-		if(!isValid) {
-			var message = rbKey("entity.order.#arguments.action#_validatestatus");
-			var message = replaceNocase(rc.message, "{statusValue}", arguments.order.getStatus());
-			response.addError(arguments.action, message);
-		}
-		return response;
-	}
-	
-	public any function exportOrders(required struct data) {
-		var searchQuery = getDAO().getExportQuery(argumentCollection=arguments.data);
-		return getService("utilityService").export(searchQuery);
-	}
-	*/
-	//================= END: Order Actions ========================
-	
 	public void function clearCart() {
 		var currentSession = getSlatwallScope().getCurrentSession();
 		var cart = currentSession.getOrder();
@@ -892,6 +827,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// We need to create a return payment here
 				
 				
+				// Persit the new order
 				getDAO().save( returnOrder );
 				
 				// If the end-user has choosen to auto-receive the return order && to auto process the credit
