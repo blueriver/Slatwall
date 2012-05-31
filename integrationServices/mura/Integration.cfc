@@ -107,13 +107,15 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		logSlatwall("Setting Service - verifyMuraRequiredPages - Started", true);
 		
 		var requiredMuraPages = [
-			{settingName="globalPageShoppingCart",title="Shopping Cart",fileName="shopping-cart",isNav="1",isLocked="1"},
-			{settingName="globalPageOrderStatus",title="Order Status",fileName="order-status",isNav="1",isLocked="1"},
-			{settingName="globalPageOrderConfirmation",title="Order Confirmation",fileName="order-confirmation",isNav="0",isLocked="1"},
-			{settingName="globalPageMyAccount",title="My Account",fileName="my-account",isNav="1",isLocked="1"},
-			{settingName="globalPageCreateAccount",title="Create Account",fileName="create-account",isNav="1",isLocked="1"},
-			{settingName="globalPageCheckout",title="Checkout",fileName="checkout",isNav="1",isLocked="1"},
-			{title="Default Template",fileName="default-template",isNav="0",isLocked="0",templateFlag="1"}
+			{settingName="globalPageShoppingCart",settingValue="shopping-cart",title="Shopping Cart",fileName="shopping-cart",isNav="1",isLocked="1"},
+			{settingName="globalPageOrderStatus",settingValue="order-status",title="Order Status",fileName="order-status",isNav="1",isLocked="1"},
+			{settingName="globalPageOrderConfirmation",settingValue="order-confirmation",title="Order Confirmation",fileName="order-confirmation",isNav="0",isLocked="1"},
+			{settingName="globalPageMyAccount",settingValue="my-account",title="My Account",fileName="my-account",isNav="1",isLocked="1"},
+			{settingName="globalPageCreateAccount",settingValue="create-account",title="Create Account",fileName="create-account",isNav="1",isLocked="1"},
+			{settingName="globalPageCheckout",settingValue="checkout",title="Checkout",fileName="checkout",isNav="1",isLocked="1"},
+			{settingName="productDisplayTemplate",settingValue="",title="Default Template",fileName="default-template",isNav="0",isLocked="0",templateFlag="1",slatwallContentFlag="1"},
+			{settingName="productTypeDisplayTemplate",settingValue="",title="Default Template",fileName="default-template",isNav="0",isLocked="0",templateFlag="1",slatwallContentFlag="1"},
+			{settingName="brandDisplayTemplate",settingValue="",title="Default Template",fileName="default-template",isNav="0",isLocked="0",templateFlag="1",slatwallContentFlag="1"}
 		];
 		
 		var assignedSites = getPluginConfig().getAssignedSites();
@@ -122,46 +124,21 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 			var thisSiteID = assignedSites["siteID"][i];
 			
 			for(var page in requiredMuraPages) {
-				if(structKeyExists(page,"settingName")) {
-					createMuraPageAndSetting(page,thisSiteID);
-				} else {
-					var muraPage = createMuraPage(page,thisSiteID);
+				var muraPage = createMuraPage(page,thisSiteID);
+				if(structKeyExists(page,"slatwallContentFlag")) {
 					var slatwallContent = createSlatwallContent(muraPage,page);
-					// set this as default template
-					if(page.fileName == "default-template") {
-						var productDisplayTemplateSettings = getService("settingService").listSetting({settingName="productDisplayTemplate"});
-						if(!arrayLen(productDisplayTemplateSettings)) {
-							var productDisplayTemplateSetting = getService("settingService").newSetting();
-							productDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
-							productDisplayTemplateSetting.setSettingName("productDisplayTemplate");
-							getService("settingService").saveSetting(productDisplayTemplateSetting);
-						}
-						var productTypeDisplayTemplateSettings = getService("settingService").listSetting({settingName="productTypeDisplayTemplate"});
-						if(!arrayLen(productTypeDisplayTemplateSettings)) {
-							var productTypeDisplayTemplateSetting = getService("settingService").newSetting();
-							productTypeDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
-							productTypeDisplayTemplateSetting.setSettingName("productTypeDisplayTemplate");
-							getService("settingService").saveSetting(productTypeDisplayTemplateSetting);
-						}
-						var brandDisplayTemplateSettings = getService("settingService").listSetting({settingName="brandDisplayTemplate"});
-						if(!arrayLen(brandDisplayTemplateSettings)) {
-							var brandDisplayTemplateSetting = getService("settingService").newSetting();
-							brandDisplayTemplateSetting.setSettingValue(slatwallContent.getContentID());
-							brandDisplayTemplateSetting.setSettingName("brandDisplayTemplate");
-							getService("settingService").saveSetting(brandDisplayTemplateSetting);
-						}
-					}
+					page.settingValue = slatwallContent.getContentID();
 				}
+				createSetting(page,thisSiteID);
 			}
 		}
 		logSlatwall("Setting Service - verifyMuraRequiredPages - Finished", true);
 	}
 	
-	private void function createMuraPageAndSetting(required struct page,required any siteID) {
+	private void function createSetting(required struct page,required any siteID) {
 		var setting = getService("settingService").getSettingBySettingName(arguments.page.settingName,true);
 		if(setting.isNew() || setting.getSettingValue() == ""){
-			var muraPage = createMuraPage(arguments.page,arguments.siteID);
-			setting.setSettingValue(arguments.page.fileName);
+			setting.setSettingValue(arguments.page.settingValue);
 			setting.setSettingName(arguments.page.settingName);
 			getService("settingService").saveSetting(setting);
 		}
