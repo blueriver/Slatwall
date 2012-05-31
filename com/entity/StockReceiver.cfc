@@ -43,7 +43,7 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="packingSlipNumber" ormtype="string";
 	property name="boxCount" ormtype="integer";
-	property name="receiverType" ormtype="string";
+	property name="receiverType" ormtype="string" formatType="rbKey";
 	
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -69,7 +69,6 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 			variables.receiverType = arguments.type;
 		}
 	}
-	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

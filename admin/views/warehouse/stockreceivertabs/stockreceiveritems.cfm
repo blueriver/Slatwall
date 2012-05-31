@@ -42,6 +42,8 @@ Notes:
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.stockReceiver.getStockReceiverItemsSmartList()#">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.calculatedTitle" />
+		<cf_SlatwallListingColumn propertyIdentifier="stock.sku.optionsDisplay" sort="false" />
+		<cf_SlatwallListingColumn propertyIdentifier="stock.sku.skuCode" />
 		<cf_SlatwallListingColumn propertyIdentifier="stock.location.locationName" />
 		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
 	</cf_SlatwallListingDisplay>

@@ -46,14 +46,20 @@ Notes:
 			recordProcessAction="admin:order.processorderpayment"
 			recordProcessModal="true">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
 		<cf_SlatwallListingColumn propertyIdentifier="amount" />
 		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
 	</cf_SlatwallListingDisplay>
 	
-	<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()>
+	<cfif rc.order.getPaymentAmountTotal() neq rc.order.getTotal()>
 		<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
 			<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-				<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.payment')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#" modal=true />
+				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()> 
+					<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCharge" modal=true />
+				<cfelse>
+					<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.refund')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCredit" modal=true />
+				</cfif>
 			</cfloop>
 		</cf_SlatwallActionCallerDropdown>
 	</cfif>

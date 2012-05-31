@@ -250,7 +250,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		var totalPayments = 0;
 		
 		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			totalPayments = precisionEvaluate(totalPayments + getOrderPayments()[i].getAmount());
+			if(getOrderPayments()[i].getOrderPaymentType().getSystemCode() == "optCharge") {
+				totalPayments = precisionEvaluate(totalPayments + getOrderPayments()[i].getAmount());
+			} else {
+				totalPayments = precisionEvaluate(totalPayments - getOrderPayments()[i].getAmount());	
+			}
 		}
 		
 		return totalPayments;
