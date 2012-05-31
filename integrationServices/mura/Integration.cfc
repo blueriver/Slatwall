@@ -111,7 +111,6 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 			{settingName="globalPageOrderStatus",title="Order Status",fileName="order-status",isNav="1",isLocked="1"},
 			{settingName="globalPageOrderConfirmation",title="Order Confirmation",fileName="order-confirmation",isNav="0",isLocked="1"},
 			{settingName="globalPageMyAccount",title="My Account",fileName="my-account",isNav="1",isLocked="1"},
-			{settingName="globalPageEditAccount",title="Edit Account",fileName="edit-account",isNav="1",isLocked="1"},
 			{settingName="globalPageCreateAccount",title="Create Account",fileName="create-account",isNav="1",isLocked="1"},
 			{settingName="globalPageCheckout",title="Checkout",fileName="checkout",isNav="1",isLocked="1"},
 			{title="Default Template",fileName="default-template",isNav="0",isLocked="0",templateFlag="1"}
