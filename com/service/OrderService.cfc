@@ -1161,6 +1161,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return arguments.orderFulfillment;
 	}
 	
+	
+	// Process: Order Return
+	public any function processOrderReturn(required any orderReturn, struct data={}, string processContext="process") {
+		if(arguments.processContext eq "receiveReturn") {
+			
+		}
+	}
+	
 	// Process: Order Payment
 	public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
 		
