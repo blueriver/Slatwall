@@ -190,7 +190,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	// setup subscription benefits for use by accounts
 	public void function setupSubscriptionBenefitAccess(required any subscriptionUsageBenefit) {
 		// add this benefit to access
-		if(arguments.subscriptionUsageBenefit.getSubscriptionBenefit().getAccessType().getSystemCode() == "satPerSubscription") {
+		if(arguments.subscriptionUsageBenefit.getAccessType().getSystemCode() == "satPerSubscription") {
 			var accessSmartList = getAccessService().getAccessSmartList();
 			accessSmartList.addFilter(propertyIdentifier="subscriptionUsage_subscriptionUsageID", value=arguments.subscriptionUsageBenefit.getSubscriptionUsage().getSubscriptionUsageID());
 			if(!accessSmartList.getRecordsCount()) {
@@ -199,12 +199,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				getAccessService().saveAccess(access);
 			}
 
-		} else if(arguments.subscriptionUsageBenefit.getSubscriptionBenefit().getAccessType().getSystemCode() == "satPerBenefit") {
+		} else if(arguments.subscriptionUsageBenefit.getAccessType().getSystemCode() == "satPerBenefit") {
 			var access = getAccessService().getAccessBySubscriptionUsageBenefit(arguments.subscriptionUsageBenefit,true);
 			access.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
 			getAccessService().saveAccess(access);
 
-		} else if(arguments.subscriptionUsageBenefit.getSubscriptionBenefit().getAccessType().getSystemCode() == "satPerAccount") {
+		} else if(arguments.subscriptionUsageBenefit.getAccessType().getSystemCode() == "satPerAccount") {
 			// TODO: this should get moved to DAO because adding large number of records like this could timeout
 			// check how many access records already exists and create new ones
 			var subscriptionUsageBenefitAccountSmartList = getSubscriptionUsageBenefitAccountSmartList();

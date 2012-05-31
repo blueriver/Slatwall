@@ -46,6 +46,7 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	property name="subscriptionBenefit" cfc="SubscriptionBenefit" fieldtype="many-to-one" fkcolumn="subscriptionBenefitID";
 	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" inverse="true";
 	property name="renewalSubscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="renewalSubscriptionUsageID" inverse="true";
+	property name="accessType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessTypeID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -80,6 +81,7 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	public void function copyFromSubscriptionBenefit(required any subscriptionBenefit) {
 		setSubscriptionBenefit(arguments.subscriptionBenefit);
 		setMaxUseCount(arguments.subscriptionBenefit.getMaxUseCount());
+		setAccessType(arguments.subscriptionBenefit.getAccessType());
 		for(var priceGroup in arguments.subscriptionBenefit.getPriceGroups()) {
 			addPriceGroup(priceGroup);
 		}
@@ -97,6 +99,7 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	public void function copyFromSubscriptionUsageBenefit(required any subscriptionUsageBenefit) {
 		setSubscriptionBenefit(arguments.subscriptionUsageBenefit.getSubscriptionBenefit());
 		setMaxUseCount(arguments.subscriptionUsageBenefit.getMaxUseCount());
+		setAccessType(arguments.subscriptionUsageBenefit.getAccessType());
 		for(var priceGroup in arguments.subscriptionUsageBenefit.getPriceGroups()) {
 			addPriceGroup(priceGroup);
 		}
