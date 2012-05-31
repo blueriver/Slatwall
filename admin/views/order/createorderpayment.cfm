@@ -40,6 +40,7 @@ Notes:
 <cfparam name="rc.orderPayment" type="any" />
 <cfparam name="rc.order" type="any" />
 <cfparam name="rc.paymentMethod" type="any" />
+<cfparam name="rc.orderPaymentTypeSystemCode" type="string" />
 <cfparam name="rc.edit" type="boolean" default="tr" />
 
 <cfoutput>
@@ -49,10 +50,25 @@ Notes:
 		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
 		<input type="hidden" name="process" value="1" />
 		
+		<cfif rc.orderPaymentTypeSystemCode eq "optCharge">
+			<input type="hidden" name="orderPaymentType.typeID" value="444df2f0fed139ff94191de8fcd1f61b" />
+		<cfelse>
+			<input type="hidden" name="orderPaymentType.typeID" value="444df2f1cc40d0ea8a2de6f542ab4f1d" />
+		</cfif>
+		
+		<cfset local.amount = rc.order.getTotal() - rc.order.getPaymentAmountTotal() />
+		<cfif local.amount lt 0>
+			<cfset local.amount = local.amount * -1 /> 
+		</cfif>
+		
 		<cf_SlatwallProcessOptionBar>
-			<cf_SlatwallProcessOption data="transactionType" fieldType="select" valueOptions="#[{value='authorizeAndCharge', name='Authorize & Charge'}, {value='authorize', name='Authorize'}]#" />
-		</cf_SlatwallProcessOptionBar>	
-			
+			<cfif rc.orderPaymentTypeSystemCode eq "optCharge">	
+				<cf_SlatwallProcessOption data="transactionType" fieldType="select" valueOptions="#[{value='authorizeAndCharge', name='Authorize & Charge'}, {value='authorize', name='Authorize'}]#" />
+			<cfelse>
+				<cf_SlatwallProcessOption data="transactionType" fieldType="select" valueOptions="#[{value='credit', name='Credit'}]#" />
+			</cfif>
+		</cf_SlatwallProcessOptionBar>
+
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divClass="span6">
 				<cf_SlatwallAddressDisplay address="#$.slatwall.getService("addressService").newAddress()#" fieldnameprefix="billingAddress." edit="#rc.edit#" />
@@ -64,7 +80,7 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="securityCode" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#rc.order.getTotal() - rc.order.getPaymentAmountTotal()#" />	
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />	
 				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>

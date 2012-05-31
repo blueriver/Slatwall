@@ -37,55 +37,23 @@ Notes:
 
 --->
 
-<!--- Generic properties for all StockReceivers --->
-<cfparam name="rc.stockReceiver">
-<cfparam name="rc.backQueryString">
-<cfparam name="rc.backAction">
-<cfparam name="rc.locationSmartList">
-
+<cfparam name="rc.stockReceiver" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<ul id="navTask">
-		<cf_SlatwallActionCaller action="#rc.backAction#" queryString="#rc.backQueryString#" type="list">
-	</ul>
-	
-	<!--- For now, there is no basic order info, but in future, we might want to make this section dynamic like the bellow table, based on the type provided --->
-
-	<cfif rc.edit>
-		<form name="detailStockReceiver" id="detailStockReceiver" action="#BuildURL(rc.action)#" method="post">
-	</cfif>
-
-		<div class="clear">
-			<!--- These are common fields to all StockReceivers --->
-			<dl class="twoColumn">
-				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockReceiver.boxCount")#" object="#rc.StockReceiver#" property="boxCount" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockReceiver.packingSlipNumber")#" object="#rc.StockReceiver#" property="packingSlipNumber" edit="#rc.edit#">
-				
-				<cfif rc.edit>
-					<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.receiveForLocation")#</strong></label></dt> 
-					<dd class="value">
-						<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#rc.locationSmartList.getRecords()#" fieldClass="receiveForLocationID">
-					</dd>
-				</cfif>
-			</dl>
-	
-			<cfif rc.edit>
-				<!--- The receiver table bellow is chosen dynamically based on the type of stock receiver --->
-				#view("stockreceiver/receivertypes/#rc.stockReceiver.getReceiverType()#")# 
-			<cfelse>
-				#view("stockreceiver/viewstockreceiver")# 
-			</cfif>
+	<cf_SlatwallDetailForm object="#rc.stockReceiver#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.stockReceiver#" edit="#rc.edit#">
+		</cf_SlatwallActionBar>
 			
-			
-			<!---<cf_SlatwallActionCaller action="" type="link" class="cancel button" queryString="#rc.backQueryString#" text="#rc.$.Slatwall.rbKey('admin.nav.back')#">--->
-			
-			<cf_SlatwallActionCaller action="#rc.backAction#" type="link" class="cancel button" queryString="#rc.backQueryString#" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			
-			<cfif rc.edit>
-				<cf_SlatwallActionCaller action="#rc.action#" type="submit" class="button">
-			</cfif>
-		</div>
-	<cfif rc.edit>
-		</form>
-	</cfif>
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.stockReceiver#" property="packingSlipNumber" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.stockReceiver#" property="boxCount" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.stockReceiver#">
+			<cf_SlatwallTab view="admin:warehouse/stockreceivertabs/stockreceiveritems" />
+		</cf_SlatwallTabGroup>
+	</cf_SlatwallDetailForm>
 </cfoutput>

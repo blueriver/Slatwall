@@ -56,12 +56,14 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Related Object Properties (One-To-Many)
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
 	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderReturns" singularname="orderReturn" cfc="OrderReturn" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
-	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
@@ -248,7 +250,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		var totalPayments = 0;
 		
 		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			totalPayments = precisionEvaluate(totalPayments + getOrderPayments()[i].getAmount());
+			if(getOrderPayments()[i].getOrderPaymentType().getSystemCode() == "optCharge") {
+				totalPayments = precisionEvaluate(totalPayments + getOrderPayments()[i].getAmount());
+			} else {
+				totalPayments = precisionEvaluate(totalPayments - getOrderPayments()[i].getAmount());	
+			}
 		}
 		
 		return totalPayments;
@@ -465,6 +471,14 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	public void function removeOrderReturn(required any orderReturn) {
 		arguments.orderReturn.removeOrder( this );
+	}
+	
+	// Stock Receivers (one-to-many)    
+	public void function addStockReceiver(required any stockReceiver) {    
+		arguments.stockReceiver.setOrder( this );    
+	}    
+	public void function removeStockReceiver(required any stockReceiver) {    
+		arguments.stockReceiver.removeOrder( this );    
 	}
 	
 	// Refrencing Order Items (one-to-many)

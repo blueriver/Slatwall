@@ -44,13 +44,16 @@ Notes:
 			recordEditAction="admin:order.editorderitem"
 			recordEditQueryString="orderID=#rc.order.getOrderID()#"
 			recordEditModal="true">
+		<cf_SlatwallListingColumn propertyIdentifier="orderItemType.type" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
 		<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" />
+		<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
+		<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="price" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
 		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityReceived" />
 		<cf_SlatwallListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
 	</cf_SlatwallListingDisplay>
 	

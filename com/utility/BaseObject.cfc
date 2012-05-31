@@ -511,6 +511,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		// If the formatType is custom then deligate back to the property specific getXXXFormatted() method.
 		if(arguments.formatType eq "custom") {
 			return this.invokeMethod("get#arguments.propertyName#Formatted");	
+		} else if(arguments.formatType eq "rbKey") {
+			return rbKey('entity.#replace(getEntityName(),"Slatwall","")#.#arguments.propertyName#.#arguments.value#');
 		}
 		
 		// This is the null format option

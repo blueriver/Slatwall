@@ -43,7 +43,7 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="packingSlipNumber" ormtype="string";
 	property name="boxCount" ormtype="integer";
-	property name="receiverType" ormtype="string";
+	property name="receiverType" ormtype="string" formatType="rbKey";
 	
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -70,12 +70,29 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 		}
 	}
 	
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Order (many-to-one)
+	public void function setOrder(required any order) {
+		variables.order = arguments.order;
+		if(isNew() or !arguments.order.hasStockReceiver( this )) {
+			arrayAppend(arguments.order.getStockReceivers(), this);
+		}
+	}
+	public void function removeOrder(any order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getStockReceivers(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.order.getStockReceivers(), index);
+		}
+		structDelete(variables, "order");
+	}
 	
 	// Stock Receiver Items (one-to-many)
 	public void function addStockReceiverItem(required any stockReceiverItem) {
@@ -86,6 +103,18 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "packingSlipNumber";
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	

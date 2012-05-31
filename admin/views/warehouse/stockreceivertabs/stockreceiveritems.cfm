@@ -36,14 +36,15 @@
 Notes:
 
 --->
-<cfparam name="rc.order" type="any" />
+<cfparam name="rc.stockReceiver" type="any" />
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getStockReceiversSmartList()#" 
-			recordDetailAction="admin:warehouse.detailstockreceiver">
-		<cf_SlatwallListingColumn tdClass="primary" propertyIdentifier="packingSlipNumber" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="boxCount" />
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
+	<cf_SlatwallListingDisplay smartList="#rc.stockReceiver.getStockReceiverItemsSmartList()#">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.calculatedTitle" />
+		<cf_SlatwallListingColumn propertyIdentifier="stock.sku.optionsDisplay" sort="false" />
+		<cf_SlatwallListingColumn propertyIdentifier="stock.sku.skuCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="stock.location.locationName" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
 	</cf_SlatwallListingDisplay>
 </cfoutput>
