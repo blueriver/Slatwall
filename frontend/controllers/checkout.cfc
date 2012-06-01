@@ -162,7 +162,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var order = getOrderService().getOrder(rc.orderID);
 		
 		// Attemp to process the order 
-		order = getOrderService().processOrder(entity=order, data=rc, processContext="placeOrder");
+		order = getOrderService().processOrder(order, rc, "placeOrder");
 		
 		if(!order.hasErrors()) {
 			

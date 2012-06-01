@@ -82,7 +82,7 @@
 			<cfif local.permissionService.secureDisplay('admin:product.detailproducttype')>
 				<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:product.detailproducttype&productTypeID=#request.slatwallScope.getCurrentProduct().getProductType().getProductTypeID()#">Product Type Admin</a></li>
 			</cfif>
-			<cfif local.permissionService.secureDisplay('admin:product.detailbrand')>
+			<cfif local.permissionService.secureDisplay('admin:product.detailbrand') && !isNull(request.slatwallScope.getCurrentProduct().getBrand())>
 				<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:product.detailbrand&brandID=#request.slatwallScope.getCurrentProduct().getBrand().getBrandID#">Brand Admin</a></li>
 			</cfif>
 		</cfif>
