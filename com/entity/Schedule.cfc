@@ -48,8 +48,8 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	
 	// During an individual Day
 	property name="frequencyInterval" ormtype="integer";								// 1 - x (minutes)
-	property name="frequencyStartTime" ormtype="timestamp" formfieldType="time";		// 4 PM	
-	property name="frequencyEndTime" ormtype="timestamp" formfieldType="time";			// 12 PM	
+	property name="frequencyStartTime" ormtype="timestamp" formfieldType="time" formatType="time";		// 4 PM	
+	property name="frequencyEndTime" ormtype="timestamp" formfieldType="time" formatType="time";			// 12 PM	
 	
 	
 	// Related Object Properties (many-to-one)

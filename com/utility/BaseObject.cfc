@@ -165,6 +165,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getMessageBean().getMessages();
 	}
 	
+	/*
 	// @hint Returns the error message of a given error name
 	public struct function getMessage( required string messageName ) {
 		
@@ -176,6 +177,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		// Default behavior if the error isn't found is to return an empty array
 		return [];
 	}
+	*/
 	
 	// @hint Returns true if there are any messages
 	public boolean function hasMessages( ) {

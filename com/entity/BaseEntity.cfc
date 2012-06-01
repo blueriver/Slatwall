@@ -89,6 +89,20 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return variables.comments;
 	}
 	
+	public any function duplicate() {
+		var newEntity = getService("utilityORMService").getServiceByEntityName(getEntityName()).invokeMethod("new#replace(getEntityName(),'Slatwall','')#");
+		var properties = getProperties();
+		for(var p=1; p<=arrayLen(properties); p++) {
+			if( properties[p].name != getPrimaryIDPropertyName() && (!structKeyExists(properties[p], "fieldType") || ( properties[p].fieldType != "one-to-many" && properties[p].fieldType != "many-to-many")) ) {
+				var value = invokeMethod('get#properties[p].name#');
+				if(!isNull(value)) {
+					newEntity.invokeMethod("set#properties[p].name#", {1=value});
+				}
+			}
+		}
+		return newEntity;
+	}
+	
 	// @hint Returns the persistableErrors array, if one hasn't been setup yet it returns a new one
 	public array function getPersistableErrors() {
 		if(!structKeyExists(variables, "persistableErrors")) {
@@ -159,9 +173,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		}
 		return true;
 	}
-	
-	
-	
 	
 	// @hint public method that returns the value from the primary ID of this entity
 	public string function getPrimaryIDValue() {

@@ -654,6 +654,32 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getMaxOrderNumber();
 	}
 	
+	private string function getOriginalChargeProviderTransactionIDForOrderPayment(required any orderPayment) {
+		var providerTransactionID = "";
+		
+		// Check through the old transactions for this orderPayment
+		var originalTransactions = arguments.orderPayment.getCreditCardTransactions();
+		for(var i=1; i<=arrayLen(originalTransactions); i++) {
+			if(originalTransactions[i].getAmountCharged() > 0) {
+				providerTransactionID = originalTransactions[i].getProviderTransactionID();
+			}
+		}
+		
+		// If we didn't find an original providerID, then lets look to a potential referenced order payment
+		if(len(providerTransactionID)) {
+			if( !isNull( arguments.orderPayment.getReferencedOrderPayment() ) ) {
+				originalTransactions = arguments.orderPayment.getReferencedOrderPayment().getCreditCardTransactions();
+				for(var i=1; i<=arrayLen(originalTransactions); i++) {
+					if(originalTransactions[i].getAmountCharged() > 0) {
+						providerTransactionID = originalTransactions[i].getProviderTransactionID();
+					}
+				}
+			}
+		}
+		
+		return providerTransactionID;
+	}
+	
 	// ===================== START: Process Methods ================================
 	
 	// Process: Order
@@ -824,8 +850,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					}
 				}
 				
-				// We need to create a return payment here
-				
+				// Setup a payment to refund
+				var referencedOrderPayment = this.getOrderPayment(arguments.data.referencedOrderPaymentID);
+				if(!isNull(referencedOrderPayment)) {
+					var newOrderPayment = referencedOrderPayment.duplicate();
+					newOrderPayment.setOrderPaymentType( getTypeService().getTypeBySystemCode('optCredit') );
+					newOrderPayment.setReferencedOrderPayment( referencedOrderPayment );
+					newOrderPayment.setAmount( returnOrder.getTotal()*-1 );
+					newOrderPayment.setOrder( returnOrder );
+				}
 				
 				// Persit the new order
 				getDAO().save( returnOrder );
@@ -837,7 +870,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						locationID = arguments.data.returnLocationID,
 						boxCount = 1,
 						packingSlipNumber = 'auto',
-						autoProcessReturnPayment = arguments.data.autoProcessReturnPaymentFlag,
+						autoProcessReturnPaymentFlag = arguments.data.autoProcessReturnPaymentFlag,
 						records = arguments.data.records
 					};
 					
@@ -847,11 +880,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					
 					processOrderReturn(orderReturn, autoProcessReceiveReturnData, "receiveReturn");
 					
-				// If we are only auto-processing the payment, but not receiving
-				} else if (arguments.data.autoProcessReturnPaymentFlag) {
+				// If we are only auto-processing the payment, but not receiving then we need to call the processPayment from here
+				} else if (arguments.data.autoProcessReturnPaymentFlag && arrayLen(returnOrder.getOrderPayments())) {
 					
-					// Process Payment here
+					// Setup basic processing data
+					var processData = {
+						amount = returnOrder.getOrderPayments()[1].getAmount(),
+						transactionType = 'credit',
+						providerTransactionID = getOriginalChargeProviderTransactionIDForOrderPayment(returnOrder.getOrderPayments()[1])
+					};
 					
+					processOrderPayment(returnOrder.getOrderPayments()[1], processData);
+				
 				}
 				
 			}
@@ -1064,6 +1104,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(!hasAtLeastOneItemToReturn) {
 				arguments.orderReturn.addError('processing', 'You need to specify at least 1 item to be returned');
 			} else {
+				// Set this up to calculate how much credit to process if that flag is set later
+				var totalAmountToCredit = 0;
+				
+				// If this is the first Stock Receiver, then we should add the fulfillmentRefund to the total received amount
+				if(!arrayLen(arguments.orderReturn.getOrder().getStockReceivers()) && !isNull(arguments.orderReturn.getFulfillmentRefundAmount()) && arguments.orderReturn.getFulfillmentRefundAmount() > 0) {
+					totalAmountReceived = arguments.orderReturn.getFulfillmentRefundAmount();
+				}
 				
 				// Setup the received location
 				var receivedLocation = getLocationService().getLocation(arguments.data.locationID);
@@ -1081,6 +1128,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						var orderItemReceived = this.getOrderItem( arguments.data.records[i].orderItemID );
 						var stockReceived = getStockService().getStockBySkuAndLocation(orderItemReceived.getSku(), receivedLocation);
 						
+						totalAmountToCredit = precisionEvaluate(totalAmountToCredit + (orderItemReceived.getExtendedPriceAfterDiscount() + orderItemReceived.getTaxAmount()) * ( arguments.data.records[i].receiveQuantity / orderItemReceived.getQuantity() ) );
+						
 						var newStockReceiverItem = getStockService().newStockReceiverItem();
 						newStockReceiverItem.setStockReceiver( newStockReceiver );
 						newStockReceiverItem.setOrderItem( orderItemReceived );
@@ -1088,10 +1137,59 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						newStockReceiverItem.setQuantity( arguments.data.records[i].receiveQuantity );
 						newStockReceiverItem.setCost( 0 );
 						
+						// Cancel a subscription if returned item has a subscriptionUsage
+						if(!isNull(orderItemReceived.getReferencedOrderItem())) {
+							var subscriptionOrderItem = getSubscriptionService().getSubscriptionOrderItem({orderItem=orderItemReceived.getReferencedOrderItem()});
+							if(!isNull(subscriptionOrderItem)) {
+								getSubscriptionService().processSubscriptionUsage(subscriptionUsage=subscriptionOrderItem.getSubscriptionUsage(), processContext="cancel");		
+							}
+						}
+						
+						// TODO: Cancel Content Access
+						
 					}
 				}
 				
 				getStockService().saveStockReceiver( newStockReceiver );
+			
+				// Look to credit any order payments
+				if(arguments.data.autoProcessReturnPaymentFlag) {
+					
+					var totalAmountCredited = 0;
+					
+					for(var p=1; p<=arrayLen(arguments.orderReturn.getOrder().getOrderPayments()); p++) {
+						
+						var orderPayment = arguments.orderReturn.getOrder().getOrderPayments()[p];
+						
+						// Make sure that this is a credit card, and that it is a charge type of payment
+						if(orderPayment.getPaymentMethodType() == "creditCard" && orderPayment.getOrderPaymentType().getSystemCode() == "optCredit") {
+							
+							// Check to make sure this payment hasn't been fully received
+							if(orderPayment.getAmount() > orderPayment.getAmountCredited()) {
+								
+								var potentialCredit = precisionEvaluate(orderPayment.getAmount() - orderPayment.getAmount());
+								if(potentialCredit > precisionEvaluate(totalAmountToCredit - totalAmountCredited)) {
+									var thisAmountToCredit = precisionEvaluate(totalAmountToCredit - totalAmountCredited);
+								} else {
+									var thisAmountToCredit = potentialCredit;
+								}
+								
+								orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCredit, transactionType="credit", providerTransactionID=getOriginalChargeProviderTransactionIDForOrderPayment(orderPayment) });
+								if(!orderPayment.hasErrors()) {
+									totalAmountCredited = precisionEvaluate(totalAmountCredited + thisAmountToCredit);
+								} else {
+									structDelete(orderPayment.getErrors(), "processing");
+								}
+								
+								// Stop trying to charge payments, if we have charged everything we need to
+								if(totalAmountToCredit == totalAmountCredited) {
+									break;
+								}
+							}
+						}
+					}
+				}
+				
 			}
 		}
 		

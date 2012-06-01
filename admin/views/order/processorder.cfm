@@ -47,10 +47,11 @@ Notes:
 		
 		<!--- Create Return --->
 		<cfif rc.processContext eq "createReturn" && !rc.multiProcess>
+			
 			<cf_SlatwallProcessOptionBar>
 				<cf_SlatwallProcessOption data="returnLocationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
 				<cf_SlatwallProcessOption data="fulfillmentChargeRefundAmount" fieldType="text" fieldClass="number" value="0" />
-				<!--- TODO: Need to figure out which payment method to refund to --->
+				<cf_SlatwallProcessOption data="referencedOrderPaymentID" fieldType="select" value="rc.processOrderSmartList.getRecords()[1].getOrderPaymentRefundOptions()[1]['value']" valueOptions="#rc.processOrderSmartList.getRecords()[1].getOrderPaymentRefundOptions()#" />
 				<cf_SlatwallProcessOption data="autoProcessReceiveReturnFlag" fieldType="yesno" value="0" />
 				<cf_SlatwallProcessOption data="autoProcessReturnPaymentFlag" fieldType="yesno" value="0" />
 			</cf_SlatwallProcessOptionBar>

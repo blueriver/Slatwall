@@ -89,6 +89,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="paymentAmountReceivedTotal" persistent="false" formatType="currency";
 	property name="paymentAmountCreditedTotal" persistent="false" formatType="currency";
 	property name="paymentMethodOptionsSmartList" persistent="false";
+	property name="orderPaymentRefundOptions" persistent="false";
 	property name="promotionCodeList" persistent="false";
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
@@ -297,6 +298,17 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.paymentMethodOptionsSmartList.addFilter("activeFlag", 1);
 		}
 		return variables.paymentMethodOptionsSmartList;
+	}
+	
+	public array function getOrderPaymentRefundOptions() {
+		if(!structKeyExists(variables, "orderPaymentRefundOptions")) {
+			variables.orderPaymentRefundOptions = [];
+			for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
+				arrayAppend(variables.orderPaymentRefundOptions, {name=getOrderPayments()[i].getSimpleRepresentation(), value=getOrderPayments()[i].getOrderPaymentID()});
+			}
+			arrayAppend(variables.orderPaymentRefundOptions, {name=rbKey('define.none'), value=''});
+		}
+		return variables.orderPaymentRefundOptions;
 	}
 	
 	public string function getpromotionCodeList() {
