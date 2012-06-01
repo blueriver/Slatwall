@@ -875,6 +875,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					};
 					
 					for(var r=1; r <= arrayLen(autoProcessReceiveReturnData.records); r++) {
+						for(var n=1; n<=arrayLen(returnOrder.getOrderItems()); n++) {
+							if(autoProcessReceiveReturnData.records[r].orderItemID == returnOrder.getOrderItems()[n].getReferencedOrderItem().getOrderItemID()) {
+								autoProcessReceiveReturnData.records[r].orderItemID = returnOrder.getOrderItems()[n].getOrderItemID();
+							}
+						}
 						autoProcessReceiveReturnData.records[r].receiveQuantity = autoProcessReceiveReturnData.records[r].returnQuantity; 
 					}
 					
