@@ -46,7 +46,7 @@ Notes:
 		
 		<cf_SlatwallProcessOptionBar>
 			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
-			<cf_SlatwallProcessOption data="boxCount" fieldType="text" />
+			<cf_SlatwallProcessOption data="boxCount" fieldType="text" fieldClass="number" value=0 />
 			<cf_SlatwallProcessOption data="packingSlipNumber" fieldType="text" />
 			<cf_SlatwallProcessOption data="autoProcessReturnPaymentFlag" fieldType="yesno" value=1 />
 		</cf_SlatwallProcessOptionBar>

@@ -80,7 +80,6 @@ Notes:
 						<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
 					</cfif>
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAuthorizedTotal">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountCreditedTotal">
 			</cf_SlatwallPropertyList>
@@ -97,10 +96,14 @@ Notes:
 		<cf_SlatwallTabGroup object="#rc.order#" allowComments=true>
 			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" />
 			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" />
-			<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
-			<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" />
-			<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" />
-			<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" />
+			<cfif rc.order.getOrderType().getSystemCode() eq "otSalesOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
+				<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
+				<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" />
+			</cfif>
+			<cfif rc.order.getOrderType().getSystemCode() eq "otReturnOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
+				<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" />
+				<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" />
+			</cfif>
 			<cf_SlatwallTab view="admin:order/ordertabs/referencingOrders" />
 		</cf_SlatwallTabGroup>
 		
