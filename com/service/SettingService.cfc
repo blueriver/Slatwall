@@ -70,8 +70,9 @@ globalEncryptionKeySize
 			"productType",
 			"product",
 			"content",
-			"stock",
 			"brand",
+			"email",
+			"stock",
 			"sku"
 		];
 		
@@ -81,6 +82,7 @@ globalEncryptionKeySize
 			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
+			email = ["emailTemplate.emailTemplateID"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"]
 		};
 		
