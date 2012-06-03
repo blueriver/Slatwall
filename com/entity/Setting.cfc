@@ -55,6 +55,8 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	property name="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="many-to-one" fkcolumn="shippingMethodRateID";
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
+	property name="email" cfc="Email" fieldtype="many-to-one" fkcolumn="emailID";
+	property name="emailTemplate" cfc="EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

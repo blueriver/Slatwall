@@ -132,6 +132,8 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listemailtemplate" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listemail" type="list">
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.tools_nav')#" icon="magnet icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:main.about" type="list">

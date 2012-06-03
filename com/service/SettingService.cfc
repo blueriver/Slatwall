@@ -191,7 +191,14 @@ globalEncryptionKeySize
 			shippingMethodRateAdjustmentType = {fieldType="select"},
 			shippingMethodRateAdjustmentAmount = {fieldType="text"},
 			shippingMethodRateMinimumAmount = {fieldType="text"},
-			shippingMethodRateMaximumAmount = {fieldType="text"}
+			shippingMethodRateMaximumAmount = {fieldType="text"},
+			
+			// Email
+			emailFromAddress = {fieldType="text"},
+			emailToAddress = {fieldType="text"},
+			emailCCAddress = {fieldType="text"},
+			emailBCCAddress = {fieldType="text"},
+			emailSubject = {fieldType="text"}
 			
 		};
 		

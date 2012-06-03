@@ -12,6 +12,7 @@
 	<bean id="commentDAO" class="Slatwall.com.dao.CommentDAO" />
 	<bean id="contentDAO" class="Slatwall.com.dao.ContentDAO" />
 	<bean id="dataDAO" class="Slatwall.com.dao.DataDAO" />
+	<bean id="emailDAO" class="Slatwall.com.dao.EmailDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
 	<bean id="integrationDAO" class="Slatwall.com.dao.IntegrationDAO" />
 	<bean id="imageDAO" class="Slatwall.com.dao.ImageDAO" />
@@ -79,7 +80,9 @@
 				<entry key="ContentAccess"><value>accessService</value></entry>
 				<entry key="Country"><value>addressService</value></entry>
 				<entry key="CreditCardTransaction"><value>paymentService</value></entry>
+				<entry key="Email"><value>emailService</value></entry>
 				<entry key="EmailAddress"><value>accountService</value></entry>
+				<entry key="EmailTemplate"><value>emailService</value></entry>
 				<entry key="FulfillmentMethod"><value>fulfillmentService</value></entry>
 				<entry key="Image"><value>imageService</value></entry>
 				<entry key="Integration"><value>integrationService</value></entry>
@@ -225,6 +228,9 @@
 	</bean>
 	<bean id="dataService" class="Slatwall.com.service.DataService">
         <property name="DAO"><ref bean="dataDAO" /></property>
+	</bean>
+	<bean id="emailService" class="Slatwall.com.service.EmailService">
+        <property name="DAO"><ref bean="emailDAO" /></property>
 	</bean>
 	<bean id="encryptionService" class="Slatwall.com.service.EncryptionService" />
 	<bean id="fulfillmentService" class="Slatwall.com.service.FulfillmentService">
