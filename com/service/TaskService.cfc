@@ -131,4 +131,15 @@ component extends="BaseService" output="false" accessors="true"{
 		return response;
 	}
 	
+	public any function subscriptionUsageRenewalReminder() {
+		var response = '';
+		// Do Logic
+		var subscriptionUsages = getService("subscriptionService").getDAO().getSubscriptionUsageForRenewalReminder();
+		for(var subscriptionUsage in subscriptionUsages) {
+			getService("subscriptionService").processSubscriptionUsageRenewalReminder(subscriptionUsage, {}, 'auto');
+		}
+		
+		return response;
+	}
+	
 }

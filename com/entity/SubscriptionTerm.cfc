@@ -45,6 +45,7 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
 	property name="autoPayFlag" ormtype="boolean" formatType="yesno";
 	property name="autoRetryPaymentDays" ormtype="string";
+	property name="renewalReminderDays" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";

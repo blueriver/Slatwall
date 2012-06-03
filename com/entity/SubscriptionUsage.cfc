@@ -45,6 +45,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
 	property name="autoPayFlag" ormtype="boolean" formatType="yesno";
 	property name="nextBillDate" ormtype="timestamp";
+	property name="nextReminderEmailDate" ormtype="timestamp";
 	property name="expirationDate" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)

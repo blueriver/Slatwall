@@ -2,10 +2,11 @@
 	<Columns>
 		<column name="emailID" fieldtype="id" />
 		<column name="emailName" update="false" />
+		<column name="eventName" />
 		<column name="emailTemplateID" update="false" />
 	</Columns>
 	<Records>
-		<Record emailID="dbb327eeb3259c3f6b7c444aac996503" emailName="Order Confirmation Email" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
+		<Record emailID="dbb327eeb3259c3f6b7c444aac996503" emailName="Order Confirmation Email" eventName="orderplaced" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
 	</Records>
 </Table>
 

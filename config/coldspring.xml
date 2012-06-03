@@ -352,6 +352,7 @@
 		<property name="accessService"><ref bean="accessService" /></property>
 		<property name="orderService"><ref bean="orderService" /></property>
 		<property name="paymentService"><ref bean="paymentService" /></property>
+		<property name="emailService"><ref bean="emailService" /></property>
 		<property name="utilityEmailService"><ref bean="utilityEmailService" /></property>
     </bean>
 	<bean id="taskService" class="Slatwall.com.service.TaskService">

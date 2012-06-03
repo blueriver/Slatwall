@@ -72,7 +72,8 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	public array function getTaskMethodOptions() {
 		var options = [
 			{name="url", value="url"},
-			{name="Renew Subscription Usage", value="renewSubscriptionUsage"}
+			{name="Renew Subscription Usage", value="renewSubscriptionUsage"},
+			{name="Subscription Renewal Reminder", value="subscriptionUsageRenewalReminder"}
 		];
 		return options;
 	}

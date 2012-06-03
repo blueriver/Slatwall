@@ -41,6 +41,7 @@ component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" p
 	// Persistent Properties
 	property name="emailID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="emailName" ormtype="string";
+	property name="eventName" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	property name="emailTemplate" cfc="EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";

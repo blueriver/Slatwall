@@ -38,6 +38,8 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
-	
+	public void function sendEmail(required any email, struct data = {}) {
+		
+	}
 	
 }
