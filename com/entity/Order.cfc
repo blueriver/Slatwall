@@ -93,6 +93,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="promotionCodeList" persistent="false";
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
+	property name="quantityReceived" persistent="false";
+	property name="quantityUnreceived" persistent="false";
 	property name="subTotal" persistent="false" formatType="currency";
 	property name="subTotalAfterItemDiscounts" persistent="false" formatType="currency";
 	property name="taxTotal" persistent="false" formatType="currency";
@@ -363,6 +365,19 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	public numeric function getQuantityUndelivered() {
 		return this.getTotalQuantity() - this.getQuantityDelivered();
+	}
+	
+	public numeric function getQuantityReceived() {
+		var orderItems = getOrderItems();
+		var variables.quantityReceived = 0;
+		for(var i=1; i<=arrayLen(orderitems); i++) {
+			variables.quantityReceived += orderItems[i].getQuantityReceived();
+		}
+		return variables.quantityReceived;
+	}
+	
+	public numeric function getQuantityUnreceived() {
+		return this.getTotalQuantity() - this.getQuantityReceived();
 	}
 	
 	public numeric function getSubtotal() {
