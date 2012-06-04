@@ -851,7 +851,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 				
 				// Recalculate the order amounts for tax and promotions
-				recalculateOrderAmounts(arguments.order);
+				recalculateOrderAmounts( returnOrder );
 				
 				// Setup a payment to refund
 				var referencedOrderPayment = this.getOrderPayment(arguments.data.referencedOrderPaymentID);
