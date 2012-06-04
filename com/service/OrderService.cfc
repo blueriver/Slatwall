@@ -1156,6 +1156,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 				
 				getStockService().saveStockReceiver( newStockReceiver );
+				
+				// Update the Order Status
+				updateOrderStatus( arguments.orderReturn.getOrder(), true );
 			
 				// Look to credit any order payments
 				if(arguments.data.autoProcessReturnPaymentFlag) {
@@ -1297,7 +1300,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(!listFindNoCase("ostNotPlaced,ostOnHold,ostClosed,ostCanceled", arguments.order.getOrderStatusType().getSystemCode())) {
 			
 			// We can check to see if all the items have been delivered and the payments have all been received then we can close this order
-			if(arguments.order.getPaymentAmountReceivedTotal() == arguments.order.getTotal() && arguments.order.getQuantityUndelivered() == 0)	{
+			if(arguments.order.getPaymentAmountReceivedTotal() == arguments.order.getTotal() && arguments.order.getQuantityUndelivered() == 0 && arguments.order.getQuantityUnreceived() == 0)	{
 				arguments.order.setOrderStatusType(  getTypeService().getTypeBySystemCode("ostClosed") );
 				
 			// The default case is just to set it to processing
