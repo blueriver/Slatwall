@@ -38,7 +38,5 @@ Notes:
 --->
 <cfparam name="rc.emailTemplate" type="any" />
 
-<cf_SlatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.emailTemplate#" property="emailBodyHTML" edit="#rc.edit#" fieldtype="wysiwyg">
-	<cf_SlatwallPropertyDisplay object="#rc.emailTemplate#" property="emailBodyText" edit="#rc.edit#" fieldtype="textarea">
-</cf_SlatwallPropertyList>
+
+<cf_SlatwallPropertyDisplay object="#rc.emailTemplate#" property="emailBodyText" edit="#rc.edit#" fieldtype="textarea" displaytype="plain">

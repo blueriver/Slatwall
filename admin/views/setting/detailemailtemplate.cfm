@@ -50,7 +50,8 @@ Notes:
 		</cf_SlatwallDetailHeader>
 
 		<cf_SlatwallTabGroup object="#rc.emailTemplate#">
-			<cf_SlatwallTab view="admin:setting/emailtemplatetabs/body">
+			<cf_SlatwallTab view="admin:setting/emailtemplatetabs/htmlbody">
+			<cf_SlatwallTab view="admin:setting/emailtemplatetabs/textbody">
 			<cf_SlatwallTab view="admin:setting/emailtemplatetabs/settings">
 		</cf_SlatwallTabGroup>
 
