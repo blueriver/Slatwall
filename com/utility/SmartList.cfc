@@ -314,12 +314,24 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = arguments.value;
 	}
 	
-	public void function removeFilter(required string propertyIdentifier, whereGroup=1) {
+	public void function removeFilter(required string propertyIdentifier, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		if(structKeyExists(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty)){
 			structDelete(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty);
 		};
+	}
+	
+	public any function getFilters(string propertyIdentifier, numeric whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		if( structKeyExists(arguments, "propertyIdentifier") ) {
+			var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+			if(structKeyExists(variables.whereGroups[ arguments.whereGroup ].filters, aliasedProperty)){
+				return variables.whereGroups[ arguments.whereGroup ].filters[aliasedProperty];
+			}
+			return "";
+		}
+		return variables.whereGroups[ arguments.whereGroup ].filters; 
 	}
 	
 	public void function addLikeFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {

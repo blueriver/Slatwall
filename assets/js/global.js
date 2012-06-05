@@ -104,6 +104,16 @@ function initUIElements( scopeSelector ) {
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('.table-multiselect')), function(ti, tv){
 		updateMultiselectTableUI( jQuery(tv).data('multiselectfield') );
 	});
+	
+	// Table Filters
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('.listing-filter')), function(i, v){
+		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() != undefined) {
+			var hvArr = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val().split(',');
+			if(hvArr.indexOf(jQuery(v).data('filtervalue')) != -1) {
+				jQuery(v).children('.slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked').removeClass('slatwall-ui-checkbox');
+			}
+		}
+	});
 }
 
 function setupEventHandlers() {
@@ -299,7 +309,7 @@ function setupEventHandlers() {
 function updateMultiselectTableUI( multiselectField ) {
 	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
 	
-	if(inputValue != "") {
+	if(inputValue != undefined) {
 		jQuery.each(inputValue.split(','), function(vi, vv) {
 			jQuery(jQuery('table[data-multiselectfield=' + multiselectField  + ']').find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
 		});

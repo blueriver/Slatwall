@@ -43,8 +43,18 @@ Notes:
 
 <cfset rc.orderSmartList.addOrder("orderOpenDateTime|DESC") />
 
-<cf_SlatwallActionBar type="listing" object="#rc.orderSmartList#" />
+<cfif not len(rc.orderSmartList.getFilters("orderStatusType.type")) >
+	<cfset local.defaultStatusFilter = $.slatwall.getService('typeService').getTypeBySystemCode("ostNew").getType() />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostNew").getType()) />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostProcessing").getType()) />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostOnHold").getType()) />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostClosed").getType()) />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostCanceled").getType()) />
+	<cfset rc.orderSmartList.addFilter('orderStatusType.type', local.defaultStatusFilter) />
+</cfif>
 
+<cf_SlatwallActionBar type="listing" object="#rc.orderSmartList#" />
+	
 <cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
 							recordDetailAction="admin:order.detailorder"
 							recordEditAction="admin:order.editorder">

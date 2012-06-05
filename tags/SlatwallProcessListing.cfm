@@ -95,13 +95,14 @@ Notes:
 									<cfif len(column.propertyIdentifier)>
 										<td class="#column.tdClass#">#processRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 									<cfelseif len(column.data)>
+										<cfset local.thisValue = column.value />
 										<cfif left(column.value, "2") eq "${">
-											<cfset column.value = processRecord.getValueByPropertyIdentifier( replace(replace(column.value, '${', '', 'all'),'}','','all') ) />
+											<cfset local.thisValue = processRecord.getValueByPropertyIdentifier( replace(replace(column.value, '${', '', 'all'),'}','','all') ) />
 										</cfif>
 										<cfif column.fieldType neq "hidden">
-											<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#"></td>
+											<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#local.thisValue#"></td>
 										<cfelse>
-											<cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#">
+											<cf_SlatwallFormField fieldname="processRecords[#hi#].records[#ri#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#local.thisValue#">
 										</cfif>	
 									</cfif>
 								</cfloop>
@@ -117,13 +118,14 @@ Notes:
 								<cfif len(column.propertyIdentifier)>
 									<td class="#column.tdClass#">#parentRecord.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 								<cfelseif len(column.data)>
+									<cfset local.thisValue = column.value />
 									<cfif left(column.value, "2") eq "${">
-										<cfset column.value = parentRecord.getValueByPropertyIdentifier( replace(replace(column.value, '${', '', 'all'),'}','','all') ) />
+										<cfset local.thisValue = parentRecord.getValueByPropertyIdentifier( replace(replace(column.value, '${', '', 'all'),'}','','all') ) />
 									</cfif>
 									<cfif column.fieldType neq "hidden">
-										<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#"></td>
+										<td class="#column.tdClass#"><cf_SlatwallFormField fieldname="processRecords[#hi#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#local.thisValue#"></td>
 									<cfelse>
-										<cf_SlatwallFormField fieldname="processRecords[#hi#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#column.value#">
+										<cf_SlatwallFormField fieldname="processRecords[#hi#].#column.data#" fieldtype="#column.fieldType#" fieldclass="#column.fieldClass#" valueOptions="#column.valueOptions#" value="#local.thisValue#">
 									</cfif>	
 								</cfif>
 							</cfloop>
