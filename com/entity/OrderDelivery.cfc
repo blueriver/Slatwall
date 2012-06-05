@@ -108,6 +108,10 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentation() {
+		return "Delivery for - " & getOrder().getOrderNumber();
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================
