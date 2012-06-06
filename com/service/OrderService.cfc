@@ -40,6 +40,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	property name="accountService";
 	property name="addressService";
+	property name="emailService";
 	property name="locationService";
 	property name="fulfillmentService";
 	property name="paymentService";
@@ -752,7 +753,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							
 								// Send out the e-mail
 								if(!structKeyExists(arguments.data,"doNotSendOrderConfirmationEmail") || !arguments.data.doNotSendOrderConfirmationEmail) {
-									getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+									//getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+									getEmailService().sendEmailByEvent("orderPlaced", order);
 								}
 								
 								// save account payment if needed (for renewal), do this only 1 orderpayment exists

@@ -37,6 +37,19 @@ Notes:
 
 --->
 <cfcomponent extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false">
+	
+	<cffunction name="sendEmailByEvent">
+		<cfargument name="eventName" type="string" required="true" />
+		<cfargument name="entity" type="any" required="true" />
+		 
+		<cfset emailsToSend = this.listEmail({eventName=arguments.eventName}) />
+		
+		<cfset var email = "" />
+		
+		<cfloop array="#emailsToSend#" index="email">
+			<cfset sendEmail(email, arguments.entity) />
+		</cfloop>
+	</cffunction>
 
 	<cffunction name="sendEmail" access="public" returntype="void" output="false">
 		<cfargument name="email" type="any" required="true" />

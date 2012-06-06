@@ -259,6 +259,7 @@
         <property name="DAO"><ref bean="orderDAO" /></property>
 		<property name="accountService"><ref bean="accountService" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
+		<property name="emailService"><ref bean="emailService" /></property>
 		<property name="fulfillmentService"><ref bean="fulfillmentService" /></property>
 		<property name="locationService"><ref bean="locationService" /></property>
 		<property name="paymentService"><ref bean="paymentService" /></property>
@@ -267,7 +268,6 @@
 		<property name="shippingService"><ref bean="shippingService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
 		<property name="taxService"><ref bean="taxService" /></property>
-		<property name="utilityEmailService"><ref bean="utilityEmailService" /></property>
 		<property name="utilityFormService"><ref bean="utilityFormService" /></property>
 		<property name="utilityTagService"><ref bean="utilityTagService" /></property>
 		<property name="stockService"><ref bean="stockService" /></property>
