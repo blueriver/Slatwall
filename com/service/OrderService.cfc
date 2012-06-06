@@ -753,7 +753,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							
 								// Send out the e-mail
 								if(!structKeyExists(arguments.data,"doNotSendOrderConfirmationEmail") || !arguments.data.doNotSendOrderConfirmationEmail) {
-									//getUtilityEmailService().sendOrderConfirmationEmail(order=order);
 									getEmailService().sendEmailByEvent("orderPlaced", order);
 								}
 								

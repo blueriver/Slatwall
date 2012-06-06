@@ -38,6 +38,7 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 	
+	property name="emailService" type="any";
 	property name="sessionService" type="any";
 	property name="priceGroupService" type="any";
 	property name="validationService" type="any";
@@ -199,6 +200,9 @@ component extends="BaseService" accessors="true" output="false" {
 						// Set the account in the session scope
 						getSlatwallScope().getCurrentSession().setAccount(arguments.account);
 					}
+					
+					// Anounce that a new user account was created to the email service
+					getEmailService().sendEmailByEvent("accountCreated", arguments.account);
 				} else {
 					getSlatwallScope().setORMHasErrors( true );
 					// add all the cms errors
