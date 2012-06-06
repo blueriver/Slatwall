@@ -47,6 +47,7 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.email#" property="emailName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.email#" property="emailTemplate" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.email#" property="eventName" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
