@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,11 +35,74 @@
 
 Notes:
 
-*/
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+--->
+<cfcomponent extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false">
 
-	public void function sendEmail(required any email, struct data = {}) {
+	<cffunction name="sendEmail" access="public" returntype="void" output="false">
+		<cfargument name="email" type="any" required="true" />
+		<cfargument name="entity" type="any" required="true" />
 		
-	}
+		<!--- Setup Scope so that it can be used by includes --->
+		<cfset var $ = request.context.$ />
+		
+		<!--- Figure out the siteID: This needs to get changed --->
+		<cfif structKeyExists($,"event")>
+			<cfset var siteID = $.event('siteid') />
+		<cfelseif structKeyExists(session,"site")>
+			<cfset var siteID = session.siteid />
+		<cfelse>
+			<cfset var siteID = "default" />
+		</cfif>
+		
+		<!--- Setup the object in a local variable --->
+		<cfset local[ replace(arguments.entity.getEntityName(),"Slatwall","") ] = arguments.entity />
+		
+		<!--- Setup the HTML body --->
+		<cfset var htmlBody = arguments.email.getEmailTemplate().getEmailBodyHTML() />
+		<cfset var includesToReplace = reMatch("\$\{include:email.[a-z|A-Z|0-9]*\}", htmlBody) />
+		<cfset var inc = "" />
+		
+		<cfloop array="#includesToReplace#" index="inc">
+			<cfset var fileName = mid(inc, 17, len(inc) - 17) />
+			<cfset var fileInclude = "#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/#fileName#.cfm" />
+			<cfset var includeContent = "" />
+			<cfif fileExists( expandPath(fileInclude) )>
+				<cfsavecontent variable="includeContent">
+					<cfinclude template="#fileInclude#" />
+				</cfsavecontent>
+			</cfif>
+			<cfset htmlBody = replaceNoCase(htmlBody, inc, includeContent) />
+		</cfloop>
+		
+		<!--- Setup the Text Body --->
+		<cfset var textBody = arguments.email.getEmailTemplate().getEmailBodyText() />
+		<cfset var includesToReplace = reMatch("\$\{include:email.[a-z|A-Z|0-9|\_]*\}", textBody) />
+		<cfset var inc = "" />
+		<cfloop array="#includesToReplace#" index="inc">
+			<cfset var fileName = mid(inc, 17, len(inc) - 17) />
+			<cfset var fileInclude = "#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/#fileName#.cfm" />
+			<cfset var includeContent = "" />
+			<cfif fileExists( expandPath(fileInclude) )>
+				<cfsavecontent variable="includeContent">
+					<cfinclude template="#fileInclude#" />
+				</cfsavecontent>
+			</cfif>
+			<cfset textBody = replaceNoCase(textBody, inc, includeContent) />
+		</cfloop>
+		
+		<!--- Send the actual E-mail --->
+		<cfmail to="#arguments.entity.stringReplace(email.setting('emailToAddress'))#"
+				from="#arguments.entity.stringReplace(email.setting('emailFromAddress'))#"
+				subject="#arguments.entity.stringReplace(email.setting('emailSubject'))#"
+				cc="#arguments.entity.stringReplace(email.setting('emailCCAddress'))#"
+				bcc="#arguments.entity.stringReplace(email.setting('emailBCCAddress'))#">
+			<cfmailpart type="text/plain">
+				#arguments.entity.stringReplace(textBody)#
+			</cfmailpart>
+			<cfmailpart type="text/html">
+				#arguments.entity.stringReplace(htmlBody)#
+			</cfmailpart>
+		</cfmail>
+	</cffunction>
 	
-}
+</cfcomponent>

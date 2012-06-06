@@ -412,7 +412,13 @@ Notes:
 		for(var i=1; i<=arrayLen(templateKeys); i++) {
 			var replaceDetails = {};
 			replaceDetails.key = templateKeys[i];
-			replaceDetails.value = arguments.object.getValueByPropertyIdentifier(replace(replace(templateKeys[i], "${", ""),"}",""));
+			try {
+				replaceDetails.value = arguments.object.getValueByPropertyIdentifier(replace(replace(templateKeys[i], "${", ""),"}",""));	
+			} catch(any e) {
+				writeDump(templateKeys[i]);
+				abort;
+			}
+			
 			arrayAppend(replacementArray, replaceDetails);
 		}
 		
