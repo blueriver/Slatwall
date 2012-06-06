@@ -340,7 +340,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								getDAO().flushORMSession();
 								
 								//send email confirmation, needs a setting to enable this
-								getUtilityEmailService().sendOrderConfirmationEmail(order=order);
+								getEmailService().sendEmailByEvent("autoSubscriptionUsageRenewalOrderPlaced", order);
 							}
 						} 
 					}
@@ -425,7 +425,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						getDAO().flushORMSession();
 						
 						//send email confirmation, needs a setting to enable this
-						getEmailService().sendEmailByEvent("orderPlaced", order);
+						getEmailService().sendEmailByEvent("manualSubscriptionUsageRenewalOrderPlaced", order);
 					} else {
 						for(var errorName in orderFulfillment.getErrors()) {
 							for(var error in orderFulfillment.getErrors()[errorName]) {
