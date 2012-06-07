@@ -60,11 +60,11 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="order.account.firstName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="order.account.lastName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="order.orderStatusType.type" search="true" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="order.orderOpenDateTime" search="true" range="true" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
-		<cf_SlatwallListingColumn propertyIdentifier="price" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-		<cf_SlatwallListingColumn propertyIdentifier="extendedPrice" />
+		<cf_SlatwallListingColumn propertyIdentifier="order.orderStatusType.type" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="order.orderOpenDateTime" range="true" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.calculatedTitle" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantity" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="extendedPrice" range="true" />
 	</cf_SlatwallListingDisplay>
 </cfoutput>
