@@ -786,6 +786,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								processOK = true;
 							}
 						}
+					} else {
+						getSlatwallScope().setORMHasErrors( true );
 					}
 				}
 			}	// END OF LOCK
