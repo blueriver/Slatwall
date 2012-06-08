@@ -507,11 +507,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	private void function manualRenewalReminderSubscriptionUsage(required any subscriptionUsage, struct data={}) {
-		var emails = getEmailService().listEmail({eventName='subscriptionUsageRenewalReminder'});
-		if(arrayLen(emails)) {
-			var reminderEmail = emails[1];
-			getEmailService().sendEmail(reminderEmail,{subscriptionUsages=arguments.subscriptionUsage});
-		}
+		getEmailService().sendEmailByEvent("subscriptionUsageRenewalReminder", arguments.subscriptionUsage);
 	}
 	
 	private void function autoRenewalReminderSubscriptionUsage(required any subscriptionUsage, struct data={}) {
@@ -528,13 +524,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					var reminderDate = dateAdd('d',renewalReminderDays[i],arguments.subscriptionUsage.getExpirationDate());
 					if(dateCompare(reminderDate,now()) == -1) {
 						// check if nextReminderDate is in past
-						if(!isNull(arguments.subscriptionUsage.getNextReminderEmailDate()) && dateCompare(arguments.subscriptionUsage.getNextReminderEmailDate(),now()) == -1) {
+						if(!isNull(arguments.subscriptionUsage.getNextReminderEmailDate()) && arguments.subscriptionUsage.getNextReminderEmailDate() NEQ "" && dateCompare(arguments.subscriptionUsage.getNextReminderEmailDate(),now()) == -1) {
 							if(i < arrayLen(renewalReminderDays)){
 								arguments.subscriptionUsage.setNextReminderEmailDate(dateAdd('d',renewalReminderDays[i+1],arguments.subscriptionUsage.getExpirationDate()));
 							} else {
 								arguments.subscriptionUsage.setNextReminderEmailDate(javaCast("null",""));
 							}
-							getEmailService().sendEmail(reminderEmail,{subscriptionUsages=arguments.subscriptionUsage});
+							getEmailService().sendEmailByEvent("subscriptionUsageRenewalReminder", arguments.subscriptionUsage);
 							getDAO().flushORMSession();
 							break;
 						}
