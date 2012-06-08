@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,31 +36,15 @@
 Notes:
 
 --->
-<cfparam name="rc.subscriptionUsage" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.subscriptionUsage" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.subscriptionUsage#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionUsage#" />
+	<cf_SlatwallListingDisplay smartList="#rc.subscriptionUsage.getRenewalSubscriptionUsageBenefitsSmartList()#"
+			recordEditAction="admin:account.editrenewalsubscriptionusagebenefits">
+			
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionUsageBenefitID" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="autoRenewFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="autoPayFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="renewalPrice" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="nextBillDate" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="expirationDate" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="accountPaymentMethod" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.subscriptionUsage#">
-			<cf_SlatwallTab view="admin:account/subscriptionusagetabs/usagebenifits">
-			<cf_SlatwallTab view="admin:account/subscriptionusagetabs/renewalusagebenefits">
-			<cf_SlatwallTab view="admin:account/subscriptionusagetabs/orderitems">
-		</cf_SlatwallTabGroup>
-
-	</cf_SlatwallDetailForm>
+	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:account.createrenewalsubscriptionusagebenefits" class="btn btn-primary" queryString="SubscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" />
 </cfoutput>
-
-

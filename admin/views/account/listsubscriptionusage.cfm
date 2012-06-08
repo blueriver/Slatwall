@@ -43,8 +43,8 @@ Notes:
 <cf_SlatwallActionBar type="listing" object="#rc.subscriptionUsageSmartList#" createAction="" />
 
 <cf_SlatwallListingDisplay smartList="#rc.subscriptionUsageSmartList#"
+						   recordDetailAction="admin:account.detailsubscriptionUsage"
 						   recordEditAction="admin:account.editsubscriptionUsage"
-						   recordEditModal=true
 						   recordProcessAction="admin:account.processSubscriptionUsage"
 						   recordProcessModal=true
 						   recordProcessQueryString="returnaction=admin:account.listsubscriptionusage">
