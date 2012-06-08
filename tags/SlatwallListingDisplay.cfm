@@ -226,29 +226,22 @@ Notes:
 									<div class="dropdown">
 										<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
 										<ul class="dropdown-menu nav">
-											<cfif column.search>
-												<li class="nav-header">#request.slatwallScope.rbKey('define.search')#</li>
-												<li class="search-filter"><input type="text" class="listing-search span2" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
-												<li class="divider"></li>
-											</cfif>
 											<cfif column.sort>
 												<li class="nav-header">#request.slatwallScope.rbKey('define.sort')#</li>
 												<li><a href="##" class="listing-sort" data-sortdirection="ASC"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
 												<li><a href="##" class="listing-sort" data-sortdirection="DESC"><i class="icon-arrow-up"></i> Sort Decending</a></li>
 											</cfif>
-											<!---
-											<cfif column.range>
-												<li class="nav-header">#request.slatwallScope.rbKey('define.range')#</li>
-												
-												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
-												<div class="filter-scroll">
-													<cfloop array="#filterOptions#" index="filter">
-														<li><a href="#attributes.smartList.buildURL( 'F:#column.propertyIdentifier#=#filter["value"]#' )#">#filter['value']#</a></li>
-													</cfloop>
-												</div>
-												
+											<cfif column.search>
+												<li class="divider"></li>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.search')#</li>
+												<li class="search-filter"><input type="text" class="listing-search span2" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
 											</cfif>
-											--->
+											<cfif column.range>
+												<li class="divider"></li>
+												<li class="nav-header">#request.slatwallScope.rbKey('define.range')#</li>
+												<li class="range-filter"><label for="">From</label><input type="text" class="datetimepicker span2" name="R:#column.propertyIdentifier#" value="" /></li>
+												<li class="range-filter"><label for="">To</label><input type="text" class="datetimepicker span2" name="R:#column.propertyIdentifier#" value="" /></li>
+											</cfif>
 											<cfif column.filter>
 												<li class="divider"></li>
 												<li class="nav-header">#request.slatwallScope.rbKey('define.filter')#</li>

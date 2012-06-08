@@ -50,6 +50,10 @@ function initUIElements( scopeSelector ) {
 		timeFormat: convertCFMLTimeFormat( slatwall.timeFormat ),
 		ampm: true
 	});
+	// Setup datepicker to stop propigation so that id doesn't close dropdowns
+	jQuery( scopeSelector ).find(jQuery('#ui-datepicker-div')).click(function(e){
+		e.stopPropagation();
+	});
 	
 	// Date Picker
 	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker({
@@ -117,6 +121,12 @@ function initUIElements( scopeSelector ) {
 }
 
 function setupEventHandlers() {
+	
+	jQuery('#ui-datepicker-div').click(function(e){
+		
+		e.stopPropagation();
+		console.log('yest');
+	});
 	
 	// Global Search
 	jQuery('body').on('keyup', '#global-search', function(e){
@@ -235,6 +245,12 @@ function setupEventHandlers() {
 		var data = {};
 		data[ 'OrderBy' ] = jQuery(this).closest('th').data('propertyidentifier') + '|' + jQuery(this).data('sortdirection');
 		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+	});
+	
+	// Listing Display - Range
+	jQuery('body').on('click', '.ui-datepicker', function(e) {
+		//console.log('yep');
+		//e.stopPropagation();
 	});
 	
 	// Listing Display - Filtering
