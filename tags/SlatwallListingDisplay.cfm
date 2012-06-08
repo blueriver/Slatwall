@@ -239,8 +239,8 @@ Notes:
 											<cfif column.range>
 												<li class="divider"></li>
 												<li class="nav-header">#request.slatwallScope.rbKey('define.range')#</li>
-												<li class="range-filter"><label for="">From</label><input type="text" class="datetimepicker span2" name="R:#column.propertyIdentifier#" value="" /></li>
-												<li class="range-filter"><label for="">To</label><input type="text" class="datetimepicker span2" name="R:#column.propertyIdentifier#" value="" /></li>
+												<li class="range-filter"><label for="">From</label><input type="text" class="datetimepicker range-filter-lower span2" name="R:#column.propertyIdentifier#" value="" /></li>
+												<li class="range-filter"><label for="">To</label><input type="text" class="datetimepicker range-filter-upper span2" name="R:#column.propertyIdentifier#" value="" /></li>
 											</cfif>
 											<cfif column.filter>
 												<li class="divider"></li>

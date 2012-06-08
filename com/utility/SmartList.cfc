@@ -50,6 +50,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	variables.valueDelimiter = ",";
 	variables.orderDirectionDelimiter = "|";
 	variables.orderPropertyDelimiter = ",";
+	variables.rangeDelimiter = "^";
 	variables.dataKeyDelimiter = ":";
 	
 	public any function init(required string entityName, struct data, numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL="") {
@@ -511,12 +512,35 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				
 				// Add Where Group Ranges
 				for(var range in variables.whereGroups[i].ranges) {
-					var paramIDupper = "R#replace(range, ".", "", "all")##i#upper";
-					var paramIDlower = "R#replace(range, ".", "", "all")##i#lower";
-					addHQLParam(paramIDlower, listGetAt(variables.whereGroups[i].ranges[range], 1, variables.valueDelimiter));
-					addHQLParam(paramIDupper, listGetAt(variables.whereGroups[i].ranges[range], 2, variables.valueDelimiter));
 					
-					hqlWhere &= " #range# >= :#paramIDlower# AND #range# <= :#paramIDupper# AND";
+					if(len(variables.whereGroups[i].ranges[range]) gt 1) {
+						
+						// Only A Higher
+						if(left(variables.whereGroups[i].ranges[range],1) == variables.rangeDelimiter) {
+							
+							var paramIDupper = "R#replace(range, ".", "", "all")##i#upper";
+							addHQLParam(paramIDupper, listLast(variables.whereGroups[i].ranges[range], variables.rangeDelimiter));
+							hqlWhere &= " #range# <= :#paramIDupper# AND";
+							
+						// Only A Lower
+						} else if (right(variables.whereGroups[i].ranges[range],1) == variables.rangeDelimiter) {
+						
+							var paramIDlower = "R#replace(range, ".", "", "all")##i#lower";
+							addHQLParam(paramIDlower, listFirst(variables.whereGroups[i].ranges[range], variables.rangeDelimiter));
+							hqlWhere &= " #range# >= :#paramIDlower# AND";
+						
+						// Both
+						} else {
+						
+							var paramIDupper = "R#replace(range, ".", "", "all")##i#upper";
+							var paramIDlower = "R#replace(range, ".", "", "all")##i#lower";
+							addHQLParam(paramIDlower, listFirst(variables.whereGroups[i].ranges[range], variables.rangeDelimiter));
+							addHQLParam(paramIDupper, listLast(variables.whereGroups[i].ranges[range], variables.rangeDelimiter));
+							hqlWhere &= " #range# >= :#paramIDlower# AND #range# <= :#paramIDupper# AND";	
+							
+						}
+						
+					}
 					
 				}
 				

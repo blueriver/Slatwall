@@ -48,9 +48,30 @@ function initUIElements( scopeSelector ) {
 	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datetimepicker({
 		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
 		timeFormat: convertCFMLTimeFormat( slatwall.timeFormat ),
-		ampm: true
+		ampm: true,
+		onSelect: function(dateText, inst) {
+			
+			// Listing Display Updates
+			if(jQuery(inst.input).hasClass('range-filter-lower')) {
+				
+				var data = {};
+				data[ jQuery(inst.input).attr('name') ] = jQuery(inst.input).val() + '^' + jQuery(inst.input).closest('ul').find('.range-filter-upper').val();
+				//console.log( data );
+				
+				listingDisplayUpdate( jQuery(inst.input).closest('.table').attr('id'), data);
+
+			} else if (jQuery(inst.input).hasClass('range-filter-upper')) {
+				var data = {};
+				data[ jQuery(inst.input).attr('name') ] = jQuery(inst.input).closest('ul').find('.range-filter-lower').val() + '^' + jQuery(inst.input).val();
+				//console.log( data );
+				
+				listingDisplayUpdate( jQuery(inst.input).closest('.table').attr('id'), data);
+				
+			}
+			
+		}
 	});
-	// Setup datepicker to stop propigation so that id doesn't close dropdowns
+	// Setup datetimepicker to stop propigation so that id doesn't close dropdowns
 	jQuery( scopeSelector ).find(jQuery('#ui-datepicker-div')).click(function(e){
 		e.stopPropagation();
 	});
@@ -121,12 +142,6 @@ function initUIElements( scopeSelector ) {
 }
 
 function setupEventHandlers() {
-	
-	jQuery('#ui-datepicker-div').click(function(e){
-		
-		e.stopPropagation();
-		console.log('yest');
-	});
 	
 	// Global Search
 	jQuery('body').on('keyup', '#global-search', function(e){
@@ -247,12 +262,6 @@ function setupEventHandlers() {
 		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
 	});
 	
-	// Listing Display - Range
-	jQuery('body').on('click', '.ui-datepicker', function(e) {
-		//console.log('yep');
-		//e.stopPropagation();
-	});
-	
 	// Listing Display - Filtering
 	jQuery('body').on('click', '.listing-filter', function(e) {
 		e.preventDefault();
@@ -361,7 +370,7 @@ function listingDisplayUpdate( tableID, data ) {
 			
 			// Loop over each of the records in the response
 			jQuery.each( r["pageRecords"], function(ri, rv) {
-			
+				console.log(rv);
 				var rowSelector = jQuery('<tr></tr>');
 				jQuery(rowSelector).attr('id', rv[ idProperty ]);
 				
@@ -375,9 +384,9 @@ function listingDisplayUpdate( tableID, data ) {
 					
 					if( jQuery(cv).hasClass('data') ) {
 						
-						if( rv[jQuery(cv).data('propertyidentifier')] == true) {
+						if( rv[jQuery(cv).data('propertyidentifier')] == 'true') {
 							newtd += '<td class="' + jQuery(cv).attr('class') + '">Yes</td>';
-						} else if ( rv[jQuery(cv).data('propertyidentifier')] == false ) {
+						} else if ( !rv[jQuery(cv).data('propertyidentifier')] == 'false' ) {
 							newtd += '<td class="' + jQuery(cv).attr('class') + '">No</td>';
 						} else {
 							newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
@@ -599,8 +608,6 @@ function tableExpandClick( toggleLink ) {
 		ajaxlock = 1;
 		
 		if( jQuery(toggleLink).hasClass('open') ) {
-			
-			//jQuery(toggleLink).removeClass('open');
 			ajaxlock = 0;
 		} else {
 			
