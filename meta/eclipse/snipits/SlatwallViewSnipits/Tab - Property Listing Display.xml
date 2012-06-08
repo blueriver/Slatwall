@@ -50,7 +50,7 @@ Notes:
 		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:$${section}.create$${propertyentityname}" class="btn btn-primary" queryString="$${EntityPrimaryIDProperty}=#rc.$${entityName}.get$${EntityPrimaryIDProperty}()#" />
+	<cf_SlatwallActionCaller action="admin:$${section}.create$${propertyentityname}" class="btn btn-inverse" icon="plus icon-white" queryString="$${EntityPrimaryIDProperty}=#rc.$${entityName}.get$${EntityPrimaryIDProperty}()#" />
 </cfoutput>]]></starttext>
 <endtext><![CDATA[]]></endtext>
 </snippet>

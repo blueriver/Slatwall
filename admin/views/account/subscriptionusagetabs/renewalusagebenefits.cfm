@@ -46,5 +46,5 @@ Notes:
 		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:account.createrenewalsubscriptionusagebenefits" class="btn btn-primary" queryString="SubscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" />
+	<cf_SlatwallActionCaller action="admin:account.createrenewalsubscriptionusagebenefits" class="btn btn-inverse" icon="plus icon-white" queryString="SubscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" />
 </cfoutput>
