@@ -136,7 +136,9 @@ component extends="BaseService" output="false" accessors="true"{
 		// Do Logic
 		var subscriptionUsages = getService("subscriptionService").getDAO().getSubscriptionUsageForRenewalReminder();
 		for(var subscriptionUsage in subscriptionUsages) {
-			getService("subscriptionService").processSubscriptionUsageRenewalReminder(subscriptionUsage, {}, 'auto');
+			if(!isNull(subscriptionUsage.getAutoPayFlag()) && subscriptionUsage.getAutoPayFlag()) {
+				getService("subscriptionService").processSubscriptionUsageRenewalReminder(subscriptionUsage, {}, 'auto');
+			}
 		}
 		
 		return response;
