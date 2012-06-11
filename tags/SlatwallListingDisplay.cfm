@@ -60,7 +60,9 @@ Notes:
 	<cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />  
 	
 	<!--- Sorting --->
-	<cfparam name="attributes.sortProperty" type="string" default="" />  <!--- Setting this value will turn on Sorting --->
+	<cfparam name="attributes.sortProperty" type="string" default="" />  			<!--- Setting this value will turn on Sorting --->
+	<cfparam name="attributes.sortContextColumn" type="string" default="" />  		
+	<cfparam name="attributes.sortContextID" type="string" default="" />  					
 	
 	<!--- Single Select --->
 	<cfparam name="attributes.selectFieldName" type="string" default="" />			<!--- Setting this value will turn on single Select --->
@@ -131,6 +133,11 @@ Notes:
 				<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
 				
 				<cfset attributes.smartList.addOrder("#attributes.sortProperty#|ASC") />
+				
+				<cfif len(attributes.sortContextID) and len(attributes.sortContextIDValue)>
+					<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-sortcontextidcolumn="#attributes.sortContextID#"', " ") />
+					<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-sortcontextidvalue="#attributes.sortContextIDValue#"', " ") />
+				</cfif>
 			</cfif>
 		</cfif>
 		

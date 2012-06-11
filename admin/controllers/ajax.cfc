@@ -38,16 +38,17 @@ Notes:
 */
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 
-	property name="productService" type="any";
-	property name="brandService" type="any";
-	property name="promotionService" type="any";
-	property name="orderService" type="any";
 	property name="accountService" type="any";
+	property name="brandService" type="any";
+	property name="dataService" type="any";
+	property name="orderService" type="any";
+	property name="productService" type="any";
+	property name="promotionService" type="any";
 	property name="vendorService" type="any";
 	property name="vendorOrderService" type="any";
 	
 	this.publicMethods="";
-	this.anyAdminMethods="updateListingDisplay,updateGlobalSearchResults";
+	this.anyAdminMethods="updateListingDisplay,updateGlobalSearchResults,updateSortOrder";
 	this.secureMethods="";
 	
 	public void function default(required struct rc) {
@@ -113,6 +114,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				arrayAppend(rc[ key ][ 'records' ], thisRecord);
 			}
 		}
+	}
+	
+	public function updateSortOrder(required struct rc) {
+		getDataService().updateRecordSortOrder(argumentCollection=rc);
+		setView("admin:main.default");
 	}
 	
 }

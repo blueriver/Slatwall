@@ -68,25 +68,71 @@ Notes:
 		<cfargument name="contextIDValue" />
 		
 		<cfset var rs = "" />
+		<cfset var topSortOrder = getTableTopSortOrder(argumentcollection=arguments) />
 		
-		<cflock timeout="60" name="updateSortOrder#arguments.tableName#">
-			<cftransaction>
-				<!--- Move everything after the record's old sortOrder down 1 --->
-				<cfquery name="rs">
-					UPDATE #tableName# SET sortOrder = sortOrder - 1 WHERE sortOrder > (SELECT sortOrder FROM #arguments.tableName# WHERE #recordIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.recordID#" /> )
-				</cfquery>
-				
-				<!--- Move everything including the existing record in the spot of the new sortOrder up 1 --->
-				<cfquery name="rs">
-					UPDATE #tableName# SET sortOrder = sortOrder + 1 WHERE sortOrder >= <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" />
-				</cfquery>
-				
-				<!--- Update the record with it's new sort order --->
-				<cfquery name="rs">
-					UPDATE #tableName# SET sortOrder = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" /> WHERE #recordIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.recordID#" />
-				</cfquery>
-			</cftransaction>
-		</cflock>
+		<cftry>
+			<cflock timeout="60" name="updateSortOrder#arguments.tableName#">
+				<cftransaction>
+					<!--- Get the records original sort order --->
+					<cfquery name="rs">
+						SELECT COALESCE(sortOrder,0) as sortOrder FROM #arguments.tableName# WHERE #recordIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.recordID#" />
+					</cfquery>
+					
+					<!--- If the original sort order doesn't exist, then set it as the max + 1 --->
+					<cfif rs.sortOrder eq 0>
+						<cfset rs.sortOrder = 1000000 />
+					</cfif>
+					
+					<cfif rs.sortOrder eq 1000000 and arguments.newSortOrder gt topSortOrder>
+						<cfset arguments.newSortOrder = topSortOrder + 1 />
+					<cfelseif arguments.newSortOrder gt topSortOrder>
+						<cfset arguments.newSortOrder = topSortOrder />
+					</cfif>
+					
+					<!--- Move everything after the record's old sortOrder down 1 --->
+					<cfquery name="rs">
+						UPDATE
+							#arguments.tableName#
+						SET
+							sortOrder = sortOrder - 1
+						WHERE
+							sortOrder > <cfqueryparam cfsqltype="cf_sql_integer" value="#rs.sortOrder#" />
+							<cfif structKeyExists(arguments, "contextIDColumn") and len(arguments.contextIDColumn)>
+							  and
+								#arguments.contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contextIDValue#" />
+							</cfif>
+					</cfquery>
+					
+					
+					<!--- Move everything including the existing record in the spot of the new sortOrder up 1 --->
+					<cfquery name="rs">
+						UPDATE
+							#arguments.tableName#
+						SET
+							sortOrder = sortOrder + 1
+						WHERE
+							sortOrder >= <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" />
+							<cfif structKeyExists(arguments, "contextIDColumn") and len(arguments.contextIDColumn)>
+							  and
+								#arguments.contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contextIDValue#" />
+							</cfif>
+					</cfquery>
+					
+					<!--- Update the record with it's new sort order --->
+					<cfquery name="rs">
+						UPDATE
+							#arguments.tableName#
+						SET
+							sortOrder = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" />
+						WHERE
+							#recordIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.recordID#" />
+					</cfquery>
+				</cftransaction>
+			</cflock>
+			<cfcatch>
+				<cfset getService("UtilityLogService").logException(cfcatch) />
+			</cfcatch>
+		</cftry>
 		
 	</cffunction>
 	

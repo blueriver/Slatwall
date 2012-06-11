@@ -45,7 +45,9 @@ Notes:
 							   recordEditQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
 							   recordDeleteAction="admin:setting.deleteattribute"
 							   recordDeleteQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#&returnAction=admin:setting.detailAttributeSet"
-							   sortProperty="sortOrder">
+							   sortProperty="sortOrder"
+							   sortContextID="attributeSetID"
+							   sortContextIDValue="#rc.attributeSet.getAttributeSetID()#">
 							      
 		<cf_SlatwallListingColumn propertyIdentifier="attributeCode" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeName" /> 

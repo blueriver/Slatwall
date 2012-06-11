@@ -44,7 +44,10 @@ Notes:
 	                           recordeditaction="admin:product.editoption" 
 							   recordeditmodal=true 
 	                           recorddeleteaction="admin:product.deleteoption"
-							   recorddeletequerystring="returnaction=admin:product.detailoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#">
+							   recorddeletequerystring="returnaction=admin:product.detailoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#"
+							   sortproperty="sortOrder"
+							   sortContextIDColumn="optionGroupID"
+							   sortContextIDValue="#rc.optionGroup.getOptionGroupID()#">
 		<cf_slatwalllistingcolumn propertyidentifier="optionName" tdclass="primary"/>
 		<cf_slatwalllistingcolumn propertyidentifier="optionCode"/>
 	</cf_slatwalllistingdisplay>

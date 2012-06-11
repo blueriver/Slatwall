@@ -534,43 +534,39 @@ function buildPagingNav(currentPage, totalPages) {
 
 function tableApplySort(event, ui) {
 	
-	var recordID = jQuery(ui.item).attr('ID');
-	var tableName = jQuery(ui.item).closest('table').data('tablename');
-	var idProperty = jQuery(ui.item).closest('table').data('idproperty');
-	var newSortOrder = 0;
-	
+	var data = {
+		slatAction : 'admin:ajax.updateSortOrder',
+		recordID : jQuery(ui.item).attr('ID'),
+		recordIDColumn : jQuery(ui.item).closest('table').data('idproperty'), 
+		tableName : jQuery(ui.item).closest('table').data('entityname'),
+		contextIDColumn : jQuery(ui.item).closest('table').data('sortcontextidcolumn'),
+		contextIDValue : jQuery(ui.item).closest('table').data('sortcontextidvalue'),
+		newSortOrder : 0
+	};
+	 
 	var allOriginalSortOrders = jQuery(ui.item).parent().find('.table-action-sort').map( function(){ return jQuery(this).data("sortpropertyvalue");}).get();
 	var minSortOrder = Math.min.apply( Math, allOriginalSortOrders );
 	
 	jQuery.each(jQuery(ui.item).parent().children(), function(index, value) {
 		jQuery(value).find('.table-action-sort').data('sortpropertyvalue', index + minSortOrder);
 		jQuery(value).find('.table-action-sort').attr('data-sortpropertyvalue', index + minSortOrder);
-		if(jQuery(value).attr('ID') == recordID) {
-			newSortOrder = index + minSortOrder;
+		if(jQuery(value).attr('ID') == data.recordID) {
+			data.newSortOrder = index + minSortOrder;
 		}
 	});
 	
-	var data = {
-		slatAction : 'admin:main.updateSortOrder',
-		recordIDColumn : idProperty,
-		recordID : recordID,
-		tableName : tableName,
-		newSortOrder : newSortOrder
-	};
-		
 	jQuery.ajax({
 		url: '/plugins/Slatwall/',
 		async: false,
 		data: data,
 		dataType: 'json',
 		contentType: 'application/json',
-		success: function(r) {
-			
-		},
 		error: function(r) {
+			console.log(r);
 			alert('Error Loading');
 		}
 	});
+
 }
 
 function tableMultiselectClick( toggleLink ) {

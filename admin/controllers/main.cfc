@@ -66,9 +66,5 @@ component extends="BaseController" output=false accessors=true {
 		rc.vendorOrderSmartList.setPageRecordsShow(10);
 		
 	}
-	
-	public function updateSortOrder(required struct rc) {
-		getDataService().updateRecordSortOrder(argumentCollection=rc);
-		setView("admin:main.default");
-	}
+
 }
