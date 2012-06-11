@@ -397,9 +397,13 @@ function listingDisplayUpdate( tableID, data ) {
 						}
 						
 					
+					} else if( jQuery(cv).hasClass('sort') ) {
+						
+						newtd += '<td><a href="#" class="table-action-sort" data-idvalue="' + rv[ idProperty ] + '" data-sortpropertyvalue="' + rv.sortOrder + '"><i class="icon-move"></i></a></td>';
+					
 					} else if( jQuery(cv).hasClass('multiselect') ) {
 						
-						newtd += '<td><a href="#" class="table-action-multiselect" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a>';
+						newtd += '<td><a href="#" class="table-action-multiselect" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a></td>';
 							
 					} else if ( jQuery(cv).hasClass('admin') ){
 						

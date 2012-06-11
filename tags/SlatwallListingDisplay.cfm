@@ -131,8 +131,8 @@ Notes:
 				<cfset thistag.sortable = true />
 				
 				<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
-				
 				<cfset attributes.smartList.addOrder("#attributes.sortProperty#|ASC") />
+				<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, "#attributes.sortProperty#") />
 				
 				<cfif len(attributes.sortContextID) and len(attributes.sortContextIDValue)>
 					<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-sortcontextidcolumn="#attributes.sortContextID#"', " ") />
