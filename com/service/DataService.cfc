@@ -136,6 +136,6 @@ component displayname="Data Service" extends="BaseService" {
 	}
 	
 	public any function getTableTopSortOrder(required string tableName, string contextIDColumn, string contextIDValue) {
-		getDAO().getTableTopSortOrder(argumentcollection=arguments);
+		return getDAO().getTableTopSortOrder(argumentcollection=arguments);
 	}
 }

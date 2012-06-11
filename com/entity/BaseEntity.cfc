@@ -458,10 +458,10 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(structKeyExists(this,"setSortOrder")) {
 			var metaData = getPropertyMetaData("sortOrder");
 			var topSortOrder = 0;
-			if(structKeyExists(metaData, "sortContext")) {
-				//topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).tableName );
+			if(structKeyExists(metaData, "sortContext") && structKeyExists(variables, metaData.sortContext)) {
+				topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).table, contextIDColumn=variables[ metaData.sortContext ].getPrimaryIDPropertyName(), contextIDValue=variables[ metaData.sortContext ].getPrimaryIDValue() );
 			} else {
-				topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).tableName );
+				topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).table );
 			}
 			setSortOrder( topSortOrder + 1 );
 		}

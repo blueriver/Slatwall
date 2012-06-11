@@ -52,7 +52,7 @@ Notes:
 				#tableName#
 			<cfif structKeyExists(arguments, "contextIDColumn") && structKeyExists(arguments, "contextIDValue")>
 				WHERE
-					#contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.recordID#" />		
+					#contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contextIDValue#" />		
 			</cfif>
 		</cfquery>
 		
