@@ -47,6 +47,7 @@ Notes:
 		<cfparam name="attributes.pageSubTitle" type="string" default="" />
 		<cfparam name="attributes.createAction" type="string" default="#request.context.createAction#" />
 		<cfparam name="attributes.createModal" type="boolean" default="false" />
+		<cfparam name="attributes.createReturnAction" type="string" default="#request.context.slatAction#" />
 		<cfparam name="attributes.backAction" type="string" default="#request.context.listAction#" />
 		<cfparam name="attributes.backQueryString" type="string" default="" />
 		<cfparam name="attributes.cancelAction" type="string" default="#request.context.cancelAction#" />
@@ -99,7 +100,7 @@ Notes:
 									<div class="btn-group">
 										<cfif listLen(attributes.createAction) eq 1>
 											<cfif attributes.createModal>
-												<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white" modal="true" queryString="returnAction=#request.context.slatAction#">
+												<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white" modal="true" queryString="returnAction=#attributes.createReturnAction#">
 											<cfelse>
 												<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white">
 											</cfif>

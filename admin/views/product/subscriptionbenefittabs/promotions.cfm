@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -40,24 +40,5 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.subscriptionBenefit#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionBenefit#" edit="#rc.edit#" />
-		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="subscriptionBenefitName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="accessType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="maxUseCount" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.subscriptionBenefit#">
-			<cf_SlatwallTab view="admin:product/subscriptionbenefittabs/categories" />
-			<cf_SlatwallTab view="admin:product/subscriptionbenefittabs/contents" />
-			<cf_SlatwallTab view="admin:product/subscriptionbenefittabs/pricegroups" />
-		</cf_SlatwallTabGroup>
-
-		
-	</cf_SlatwallDetailForm>
+	<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="promotions" edit="#rc.edit#" displaytype="plain" />
 </cfoutput>
-

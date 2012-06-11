@@ -50,7 +50,7 @@ Notes:
 			<cfelse>
 				<form method="post" action="?s=1" class="form-horizontal" enctype="#attributes.enctype#">
 			</cfif>
-			<cfif structKeyExists(request.context, "returnAction")>
+			<cfif structKeyExists(request.context, "returnAction") and len(request.context.returnAction)>
 				<input type="hidden" name="returnAction" value="#request.context.returnAction#" />
 			</cfif>
 			<input type="hidden" name="slatAction" value="#attributes.saveaction#" />

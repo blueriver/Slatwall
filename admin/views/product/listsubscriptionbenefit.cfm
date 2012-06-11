@@ -40,11 +40,11 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.subscriptionBenefitSmartList#" />
+<cf_SlatwallActionBar type="listing" object="#rc.subscriptionBenefitSmartList#" createAction="admin:product.createSubscriptionBenefit" createReturnAction="admin:product.editsubscriptionbenefit" createModal="true" />
 
-<cf_SlatwallListingDisplay smartList="#rc.subscriptionBenefitSmartList#" 
-							recordDetailAction="admin:product.detailsubscriptionbenefit"
-						   	recordEditAction="admin:product.editsubscriptionbenefit">
+<cf_SlatwallListingDisplay smartList="#rc.subscriptionBenefitSmartList#"
+						   recordDetailAction="admin:product.detailsubscriptionbenefit"
+						   recordEditAction="admin:product.editsubscriptionbenefit">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionBenefitName" search="true" />
 </cf_SlatwallListingDisplay>
 

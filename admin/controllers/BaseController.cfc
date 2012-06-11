@@ -292,7 +292,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		if(!rc[ arguments.entityName ].hasErrors()) {
 			
 			if(structKeyExists(rc, "returnAction")) {
-				redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
+				redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success&#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#" );
 			} else {
 				getFW().redirect(action=rc.detailAction, querystring="#entityPrimaryID#=#rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");	
 			}

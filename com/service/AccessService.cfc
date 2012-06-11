@@ -103,7 +103,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(purchaseRequiredCmsContentID == "" || purchasedAccess) {
 			// check if content is part of subscription access
 			for(var subscriptionUsageBenefitAccount in getSlatwallScope().getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
-				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive() && subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(restrictedContent)) {
+				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive()
+					&& subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(restrictedContent)
+					&& !subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasExcludedContent(restrictedContent)) {
 					logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
 					return true;
 				}
@@ -116,7 +118,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var categories = getService("contentService").getCategoriesByCmsCategoryIDs(cmsCategoryIDs);
 				for(var subscriptionUsageBenefitAccount in getSlatwallScope().getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
 					for(var category in categories) {
-						if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive() && subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
+						if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive()
+							&& subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)
+							&& !subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasExcludedCategory(category)) {
 							logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
 							return true;
 						}
