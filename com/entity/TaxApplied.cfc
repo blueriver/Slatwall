@@ -49,7 +49,7 @@ component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="Slatw
 	property name="taxRate" ormtype="big_decimal";
 	
 	// Related Properties
-	property name="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="many-to-one" fkcolumn="taxCategoryRate";
+	property name="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="many-to-one" fkcolumn="taxCategoryRateID";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
