@@ -169,6 +169,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						// do not increment quantity for content access product
 						if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
 							orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+							orderItems[i].setPrice( arguments.sku.getPrice() );
+							orderItems[i].setSkuPrice( arguments.sku.getPrice() );
 						}
 						break;
 						
