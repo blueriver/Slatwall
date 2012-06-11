@@ -42,7 +42,7 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	property name="attributeOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeOptionValue" ormtype="string";
 	property name="attributeOptionLabel" ormtype="string";
-	property name="sortOrder" ormtype="integer";
+	property name="sortOrder" ormtype="integer" sortContext="attribute";
 	
 	// Related Object Properties (Many-To-One)
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";	

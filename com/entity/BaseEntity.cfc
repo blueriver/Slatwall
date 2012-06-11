@@ -429,10 +429,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors");
 		}
 		
-		updateCalculatedProperties();
-		
 		var timestamp = now();
 		
+		// Call the calculatedProperties update
+		updateCalculatedProperties();
+		
+		// Setup The First Created Date Time
 		if(structKeyExists(this,"setCreatedDateTime")){
 			this.setCreatedDateTime(timestamp);
 		}
@@ -442,6 +444,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 		}
 		
+		// Setup The First Modified Date Time
 		if(structKeyExists(this,"setModifiedDateTime")){
 			this.setModifiedDateTime(timestamp);
 		}
@@ -451,6 +454,17 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 		}
 		
+		// Setup the first sortOrder
+		if(structKeyExists(this,"setSortOrder")) {
+			var metaData = getPropertyMetaData("sortOrder");
+			var topSortOrder = 0;
+			if(structKeyExists(metaData, "sortContext")) {
+				//topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).tableName );
+			} else {
+				topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).tableName );
+			}
+			setSortOrder( topSortOrder + 1 );
+		}
 	}
 	
 	public void function preUpdate(struct oldData){
@@ -458,10 +472,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors");
 		}
 		
-		updateCalculatedProperties();
-		
 		var timestamp = now();
 		
+		// Call the calculatedProperties update
+		updateCalculatedProperties();
+		
+		// Update the Modified datetime if one exists
 		if(structKeyExists(this,"setModifiedDateTime")){
 			this.setModifiedDateTime(timestamp);
 		}

@@ -40,7 +40,7 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	
 	// Persistent Properties
 	property name="shippingMethodRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="sortOrder" ormtype="int";
+	property name="sortOrder" ormtype="int" sortContext="shippingMethod";
 	property name="minimumShipmentWeight" ormtype="int";
 	property name="maximumShipmentWeight" ormtype="int";
 	property name="minimumShipmentItemPrice" ormtype="big_decimal";

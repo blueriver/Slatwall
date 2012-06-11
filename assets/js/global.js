@@ -381,9 +381,6 @@ function listingDisplayUpdate( tableID, data ) {
 				var rowSelector = jQuery('<tr></tr>');
 				jQuery(rowSelector).attr('id', rv[ idProperty ]);
 				
-				// Create a new row
-				//jQuery(tableBodySelector).append('<tr id="' + rv[ idProperty ] + '">');
-				
 				// Loop over each column of the header to pull the data out of the response and populate new td's
 				jQuery.each(jQuery(tableHeadRowSelector).children(), function(ci, cv){
 					var newtd = '';

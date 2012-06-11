@@ -42,7 +42,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="shippingMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean";
 	property name="shippingMethodName" ormtype="string";
-	property name="sortOrder" ormtype="integer";
+	property name="sortOrder" ormtype="integer" sortContext="fulfillmentMethod";
 	
 	// Related Object Properties (many-to-one)
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";

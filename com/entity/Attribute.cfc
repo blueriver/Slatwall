@@ -46,7 +46,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="attributeHint" ormtype="string";
 	property name="defaultValue" ormtype="string";
 	property name="requiredFlag" ormtype="boolean" default="false" ;
-	property name="sortOrder" ormtype="integer";
+	property name="sortOrder" ormtype="integer" sortContext="attributeSet";
 	property name="validationMessage" ormtype="string";
 	property name="validationRegex" ormtype="string";
 	property name="activeFlag" ormtype="boolean" default=1;
@@ -57,7 +57,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
 
 	// Related Object Properties (One-To-Many)
-	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all" orderby="sortOrder" ;
+	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all" orderby="sortOrder";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

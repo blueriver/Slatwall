@@ -134,4 +134,8 @@ component displayname="Data Service" extends="BaseService" {
 	public any function updateRecordSortOrder(required string recordIDColumn, required string recordID, required string tableName, required numeric newSortOrder) {
 		getDAO().updateRecordSortOrder(argumentcollection=arguments);
 	}
+	
+	public any function getTableTopSortOrder(required string tableName, string contextIDColumn, string contextIDValue) {
+		getDAO().getTableTopSortOrder(argumentcollection=arguments);
+	}
 }

@@ -38,6 +38,27 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cffunction name="getTableTopSortOrder">
+		<cfargument name="tableName" type="string" required="true" />
+		<cfargument name="contextIDColumn" type="string" />
+		<cfargument name="contextIDValue" type="string" />
+		
+		<cfset var rs = "" />
+		
+		<cfquery name="rs">
+			SELECT
+				COALESCE(max(sortOrder), 0) as topSortOrder
+			FROM
+				#tableName#
+			<cfif structKeyExists(arguments, "contextIDColumn") && structKeyExists(arguments, "contextIDValue")>
+				WHERE
+					#contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.recordID#" />		
+			</cfif>
+		</cfquery>
+		
+		<cfreturn rs.topSortOrder />
+	</cffunction>
+	
 	<cffunction name="updateRecordSortOrder">
 		<cfargument name="recordIDColumn" />
 		<cfargument name="recordID" />
