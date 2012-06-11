@@ -105,6 +105,13 @@ globalEncryptionKeySize
 			contentMetaDescriptionString = {fieldType="textarea"},
 			contentMetaKeywordsString = {fieldType="textarea"},
 			
+			// Email
+			emailFromAddress = {fieldType="text"},
+			emailToAddress = {fieldType="text"},
+			emailCCAddress = {fieldType="text"},
+			emailBCCAddress = {fieldType="text"},
+			emailSubject = {fieldType="text"},
+			
 			// Fulfillment Method
 			fulfillmentMethodEmailFrom = {fieldType="text"},
 			fulfillmentMethodEmailCC = {fieldType="text"},
@@ -191,14 +198,8 @@ globalEncryptionKeySize
 			shippingMethodRateAdjustmentType = {fieldType="select"},
 			shippingMethodRateAdjustmentAmount = {fieldType="text"},
 			shippingMethodRateMinimumAmount = {fieldType="text"},
-			shippingMethodRateMaximumAmount = {fieldType="text"},
+			shippingMethodRateMaximumAmount = {fieldType="text"}
 			
-			// Email
-			emailFromAddress = {fieldType="text"},
-			emailToAddress = {fieldType="text"},
-			emailCCAddress = {fieldType="text"},
-			emailBCCAddress = {fieldType="text"},
-			emailSubject = {fieldType="text"}
 			
 		};
 		
@@ -554,6 +555,18 @@ globalEncryptionKeySize
 						LOWER(allSettings.brandID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.brandID)#" > 
 					<cfelse>
 						allSettings.brandID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "emailID")>
+						LOWER(allSettings.emailID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.emailID)#" > 
+					<cfelse>
+						allSettings.emailID IS NULL
+					</cfif>
+				  AND
+					<cfif structKeyExists(settingRelationships, "emailTemplateID")>
+						LOWER(allSettings.emailTemplateID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.emailTemplateID)#" > 
+					<cfelse>
+						allSettings.emailTemplateID IS NULL
 					</cfif>
 				  AND
 					<cfif structKeyExists(settingRelationships, "shippingMethodID")>
