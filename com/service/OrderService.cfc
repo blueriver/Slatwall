@@ -424,7 +424,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
 			}
 
-			// if address needs to get saved in account
+			// USING ACCOUNT ADDRESS
 			if(data.saveAccountAddress == 1 || data.addressIndex != 0) {
 				// new account address
 				if(data.addressIndex == 0) {
@@ -454,7 +454,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					arguments.orderFulfillment.removeShippingAddress();
 					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
 					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-					
 				}
 
 				// If there was previously an account address and we switch it, then we need to recalculate
@@ -465,6 +464,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 				// Set the new account address in the order
 				arguments.orderFulfillment.setAccountAddress(accountAddress);
+			
+			// USING SHIPPING ADDRESS
 			} else {
 
 				// If there was previously an account address we need to remove and recalculate
@@ -483,7 +484,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 			address = getAddressService().saveAddress(address);
 			
-			// Check for a shipping method option selected
+			// Check for a shippingMethodOptionID selected
 			if(structKeyExists(arguments.data, "fulfillmentShippingMethodOptionID")) {
 				var methodOption = getShippingService().getShippingMethodOption(arguments.data.fulfillmentShippingMethodOptionID);
 				
@@ -493,7 +494,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethodRate().getShippingMethod());
 					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCharge());
 				}
+			
+			// If no shippingMethodOption, then just check for a shippingMethodID that was passed in
+			} else if (structKeyExists(arguments.data, "shippingMethodID")) {
+				var shippingMethod = getShippingService().getShippingMethod(arguments.data.shippingMethodID);
+				
+				// If this is a valid shipping method, then we can loop over all of the shippingMethodOptions and make sure this one exists
+				if(!isNull(shippingMethod)) {
+					for(var i=1; i<=arrayLen(arguments.orderFulfillment.getShippingMethodOptions()); i++) {
+						if(shippingMethod.getShippingMethodID() == arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod().getShippingMethodID()) {
+							arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod() );
+							arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getShippingMethodOptions()[i].getTotalCharge() );
+						}
+					}
+				}	
 			}
+			
 		
 			// Validate the order Fulfillment
 			arguments.orderFulfillment.validate();
