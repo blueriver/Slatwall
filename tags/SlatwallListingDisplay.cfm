@@ -237,10 +237,17 @@ Notes:
 												<li class="search-filter"><input type="text" class="listing-search span2" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
 											</cfif>
 											<cfif column.range>
+												<cfsilent>
+													<cfset local.rangeClass = "text" />
+													<cfset local.fieldType = attributes.smartList.getPageRecords()[1].getFieldTypeByPropertyIdentifier(column.propertyIdentifier) />
+													<cfif local.fieldType eq "dateTime">
+														<cfset local.rangeClass = "datetimepicker" />	
+													</cfif>
+												</cfsilent>
 												<li class="divider"></li>
 												<li class="nav-header">#request.slatwallScope.rbKey('define.range')#</li>
-												<li class="range-filter"><label for="">From</label><input type="text" class="datetimepicker range-filter-lower span2" name="R:#column.propertyIdentifier#" value="" /></li>
-												<li class="range-filter"><label for="">To</label><input type="text" class="datetimepicker range-filter-upper span2" name="R:#column.propertyIdentifier#" value="" /></li>
+												<li class="range-filter"><label for="">From</label><input type="text" class="#local.rangeClass# range-filter-lower span2" name="R:#column.propertyIdentifier#" value="" /></li>
+												<li class="range-filter"><label for="">To</label><input type="text" class="#local.rangeClass# range-filter-upper span2" name="R:#column.propertyIdentifier#" value="" /></li>
 											</cfif>
 											<cfif column.filter>
 												<li class="divider"></li>

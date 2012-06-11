@@ -631,6 +631,15 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getPropertyTitle( arguments.propertyIdentifier );
 	}
 	
+	// @hint public method to get the rbKey value for a property in a subentity
+	public string function getFieldTypeByPropertyIdentifier( required string propertyIdentifier ) {
+		if(find(".", arguments.propertyIdentifier)) {
+			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc#");
+			return exampleEntity.getFieldTypeByPropertyIdentifier( replace(arguments.propertyIdentifier, "#listFirst(arguments.propertyIdentifier, '.')#.", '') );
+		}
+		return getPropertyFieldType( arguments.propertyIdentifier );
+	}
+	
 	// @hint public method for returning the name of the field for this property, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyFieldName(required string propertyName) {
 		

@@ -53,20 +53,13 @@ function initUIElements( scopeSelector ) {
 			
 			// Listing Display Updates
 			if(jQuery(inst.input).hasClass('range-filter-lower')) {
-				
 				var data = {};
 				data[ jQuery(inst.input).attr('name') ] = jQuery(inst.input).val() + '^' + jQuery(inst.input).closest('ul').find('.range-filter-upper').val();
-				//console.log( data );
-				
 				listingDisplayUpdate( jQuery(inst.input).closest('.table').attr('id'), data);
-
 			} else if (jQuery(inst.input).hasClass('range-filter-upper')) {
 				var data = {};
 				data[ jQuery(inst.input).attr('name') ] = jQuery(inst.input).closest('ul').find('.range-filter-lower').val() + '^' + jQuery(inst.input).val();
-				//console.log( data );
-				
 				listingDisplayUpdate( jQuery(inst.input).closest('.table').attr('id'), data);
-				
 			}
 			
 		}
@@ -291,6 +284,22 @@ function setupEventHandlers() {
 		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
 	});
 	
+	// Listing Display - Range Adjustment
+	jQuery('body').on('change', '.range-filter-upper', function(e){
+		if(!jQuery(this).hasClass('datetimepicker')) {
+			var data = {};
+			data[ jQuery(this).attr('name') ] = jQuery(this).closest('ul').find('.range-filter-lower').val() + '^' + jQuery(this).val();
+			listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);	
+		}
+	});
+	jQuery('body').on('change', '.range-filter-lower', function(e){
+		if(!jQuery(this).hasClass('datetimepicker')) {
+			var data = {};
+			data[ jQuery(this).attr('name') ] = jQuery(this).val() + '^' + jQuery(this).closest('ul').find('.range-filter-upper').val();
+			listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+		}
+	});
+	
 	// Listing Display - Searching
 	jQuery('body').on('click', '.dropdown input', function(e) {
 		e.stopPropagation();
@@ -319,8 +328,6 @@ function setupEventHandlers() {
 	jQuery('body').on('click', '.table-action-sort', function(e) {
 		e.preventDefault();
 	});
-	
-	// Listing Display - Select
 	
 	// Listing Display - Multiselect
 	jQuery('body').on('click', '.table-action-multiselect', function(e) {
@@ -370,7 +377,7 @@ function listingDisplayUpdate( tableID, data ) {
 			
 			// Loop over each of the records in the response
 			jQuery.each( r["pageRecords"], function(ri, rv) {
-				console.log(rv);
+				
 				var rowSelector = jQuery('<tr></tr>');
 				jQuery(rowSelector).attr('id', rv[ idProperty ]);
 				
