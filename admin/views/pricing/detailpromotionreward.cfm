@@ -44,7 +44,7 @@ Notes:
 <!--- prevent editing promotion reward if its promotion period has expired --->
 <cfif rc.edit and rc.promotionperiod.isExpired()>
 	<cfset rc.edit = false />
-	<cfset arrayAppend(rc.messages,{message=rc.$.slatwall.rbKey('admin.pricing.promotionreward.edit_disabled'),messageType="info"}) />
+	<cfset rc.$.slatwall.showMessageKey('admin.pricing.promotionperiod.editdisabled_info') />
 </cfif>
 <cfif rc.edit>
 	<cfset rc.promotionReward.setRewardType(rc.rewardType) />
@@ -61,7 +61,7 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<input type="hidden" name="rewardType" value="#rc.rewardType#" />
 				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
-				<input type="hidden" name="returnAction" value="admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" />
+				
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amountType" fieldType="select" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="roundingRule" edit="#rc.edit#" />
@@ -72,56 +72,23 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerOrder" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
 					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerItem" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
 					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerQualification" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
-					<div class="row-fluid">
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="productTypes" edit="#rc.edit#" />
-						</div>
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedProductTypes" edit="#rc.edit#" />	
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="products" edit="#rc.edit#" />
-						</div>
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedProducts" edit="#rc.edit#" />	
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="skus" edit="#rc.edit#" />
-						</div>
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedSkus" edit="#rc.edit#" />
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="brands" edit="#rc.edit#" />
-						</div>
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedBrands" edit="#rc.edit#" />
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="options" edit="#rc.edit#" />
-						</div>
-						<div class="span6">
-							<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedOptions" edit="#rc.edit#" />		
-						</div>
-					</div>
-				<cfelseif rc.rewardType eq "fulfillment">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionReward#" property="fulfillmentMethods" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionReward#" property="shippingMethods" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionReward#" property="shippingAddressZones" edit="#rc.edit#" />
 				</cfif>
-				
 			</cf_SlatwallPropertyList>
-			
 		</cf_SlatwallDetailHeader>
 		
-		
+		<cf_SlatwallTabGroup object="#rc.promotionreward#">
+			<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.rewardType)>
+				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/producttypes" />
+				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/products" />
+				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/skus" />
+				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/brands" />
+				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/options" />
+			<cfelseif rc.rewardType eq "fulfillment">
+				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/fulfillmentMethods" />
+				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/shippingMethods" />
+				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/shippingAddressZones" />
+			</cfif>
+		</cf_SlatwallTabGroup>
+
 	</cf_SlatwallDetailForm>
 </cfoutput>

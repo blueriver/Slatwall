@@ -36,13 +36,18 @@
 Notes:
 
 --->
-<cfset selectedPriceGroups = rc.account.getPriceGroups() />
-<cfset selectedPriceGroupIDs = "" />
-<cfloop array="#selectedPriceGroups#" index="pg">
-	<cfset selectedPriceGroupIDs = listAppend(selectedPriceGroupIDs, pg.getPrimaryIDValue()) />
-</cfloop>
+<cfparam name="rc.promotionreward" type="any">
+<cfparam name="rc.promotionperiod" type="any" default="#rc.promotionreward.getPromotionPeriod()#" />
+<cfparam name="rc.rewardType" type="string" default="#rc.promotionReward.getRewardType()#">
+<cfparam name="rc.edit" type="boolean">
 
-
-<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsOptionsSmartList()#" multiselectFieldName="priceGroups" multiselectValues="#selectedPriceGroupIDs#" edit="#rc.edit#">
-	<cf_SlatwallListingColumn propertyIdentifier="priceGroupName" tdclass="primary" />
-</cf_SlatwallListingDisplay>
+<cfoutput>
+	<div class="span6">
+		<h4>#$.slatwall.rbKey('entity.promotionreward.brands')#</h4>
+		<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="brands" edit="#rc.edit#" displaytype="plain" />
+	</div>
+	<div class="span6">
+		<h4>#$.slatwall.rbKey('entity.promotionreward.excludedbrands')#</h4>
+		<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedBrands" edit="#rc.edit#" displaytype="plain" />
+	</div>
+</cfoutput>

@@ -36,13 +36,11 @@
 Notes:
 
 --->
-<cfset selectedPriceGroups = rc.account.getPriceGroups() />
-<cfset selectedPriceGroupIDs = "" />
-<cfloop array="#selectedPriceGroups#" index="pg">
-	<cfset selectedPriceGroupIDs = listAppend(selectedPriceGroupIDs, pg.getPrimaryIDValue()) />
-</cfloop>
+<cfparam name="rc.promotionreward" type="any">
+<cfparam name="rc.promotionperiod" type="any" default="#rc.promotionreward.getPromotionPeriod()#" />
+<cfparam name="rc.rewardType" type="string" default="#rc.promotionReward.getRewardType()#">
+<cfparam name="rc.edit" type="boolean">
 
-
-<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsOptionsSmartList()#" multiselectFieldName="priceGroups" multiselectValues="#selectedPriceGroupIDs#" edit="#rc.edit#">
-	<cf_SlatwallListingColumn propertyIdentifier="priceGroupName" tdclass="primary" />
-</cf_SlatwallListingDisplay>
+<cfoutput>
+	<cf_SlatwallPropertyDisplay object="#rc.promotionReward#" property="shippingAddressZones" edit="#rc.edit#" displaytype="plain" />
+</cfoutput>
