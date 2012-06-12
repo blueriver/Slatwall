@@ -39,6 +39,7 @@ Notes:
 component persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" {
 	
 	property name="fw" type="any";
+	property name="emailService" type="any";
 	property name="integrationService" type="any";
 	property name="sessionService" type="any";
 	property name="utilityORMService" type="any";
@@ -348,12 +349,22 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 						structAppend(rc.processRecords[i], rc.processOptions, false);
 						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ], 2=true} );
 						entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
+						
+						// If there were errors, then add to the errored entities
 						if( !isNull(entity) && entity.hasErrors() ) {
 							// Add the error message to the top of the page
 							entity.showErrorMessages();
 							
 							arrayAppend(errorEntities, entity);
 							arrayAppend(rc.errorData, rc.processRecords[i]);
+							
+						// If there were not error messages then que and process emails & print options
+						} else if (!isNull(entity)) {
+							if(structKeyExists(rc.processOptions, "email")) {
+								for(var emailEvent in rc.processOptions.email) {
+									getEmailService().sendEmailByEvent(eventName="process#arguments.entityName#:#emailEvent#", entity=entity);
+								}
+							}
 						}
 					}
 				}

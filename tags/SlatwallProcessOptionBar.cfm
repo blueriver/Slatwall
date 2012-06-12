@@ -96,10 +96,10 @@ Notes:
 					<br />
 					<cfloop array="#printEmailOptions#" index="option">
 						<cfif len(option.print)>
-							<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.print.#option.print#" fieldtype="yesno" title="#request.slatwallScope.rbKey('define.print')# #request.slatwallScope.rbKey('print.#option.print#')#">
+							<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.print.#option.print#" fieldtype="yesno" value="#option.value#" title="#request.slatwallScope.rbKey('define.print')# #request.slatwallScope.rbKey('print.#option.print#')#">
 						</cfif>
 						<cfif len(option.email)>
-							<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.email.#option.email#" fieldtype="yesno" title="#request.slatwallScope.rbKey('define.email')# #request.slatwallScope.rbKey('email.#option.email#')#">
+							<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.email.#option.email#" fieldtype="yesno" value="#option.value#" title="#request.slatwallScope.rbKey('define.email')# #request.slatwallScope.rbKey('email.#option.email#')#">
 						</cfif>
 					</cfloop>
 				</cf_SlatwallPropertyList>

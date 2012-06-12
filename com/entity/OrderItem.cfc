@@ -86,14 +86,18 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 
 
 	public numeric function getMaximumOrderQuantity() {
-		var maxQTY = getSku().setting('skuOrderMaximumQuantity');
+		var maxQTY = 0;
 		
-		if(getSku().setting('skuTrackInventoryFlag') && !getSku().setting('skuAllowBackorderFlag')) {
-			if( !isNull(getStock()) && getStock().getQuantity('QATS') < maxQTY ) {
-				maxQTY = getStock().getQuantity('QATS');
-			} else if(getSKU().getQuantity('QATS') < maxQTY) {
-				maxQTY = getSku().getQuantity('QATS');
-			}
+		if(getSku().getActiveFlag() && getSku().getProduct().getActiveFlag()) {
+			maxQTY = getSku().setting('skuOrderMaximumQuantity');
+			
+			if(getSku().setting('skuTrackInventoryFlag') && !getSku().setting('skuAllowBackorderFlag')) {
+				if( !isNull(getStock()) && getStock().getQuantity('QATS') < maxQTY ) {
+					maxQTY = getStock().getQuantity('QATS');
+				} else if(getSKU().getQuantity('QATS') < maxQTY) {
+					maxQTY = getSku().getQuantity('QATS');
+				}
+			}	
 		}
 		
 		return maxQTY;
