@@ -107,7 +107,7 @@ Notes:
 										<cfelse>
 											<cf_SlatwallActionCallerDropdown title="#request.slatwallScope.rbKey('define.add')#" icon="plus" dropdownClass="dropdown-menu-right">
 												<cfloop list="#attributes.createAction#" index="action">
-													<cf_SlatwallActionCaller action="#action#" type="list" queryString="returnAction=#request.context.slatAction#" modal="#attributes.createModal#" /> 
+													<cf_SlatwallActionCaller action="#action#" type="list" queryString="returnAction=#attributes.createReturnAction#" modal="#attributes.createModal#" /> 
 												</cfloop>
 											</cf_SlatwallActionCallerDropdown>
 										</cfif>

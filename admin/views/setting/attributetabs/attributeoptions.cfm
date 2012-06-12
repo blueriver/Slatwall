@@ -37,28 +37,30 @@ Notes:
 
 --->
 <cfparam name="rc.attribute" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-<cfif rc.attribute.getAttributeType().getSystemCode() eq "atText">
-	<cf_SlatwallPropertyList>
-		<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationMessage" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationRegex" edit="true">
-	</cf_SlatwallPropertyList>
-<cfelseif listFindNoCase( "atCheckBoxGroup,atMultiSelect,atRadioGroup,atSelect",rc.attribute.getAttributeType().getSystemCode() )>
-	<cf_SlatwallListingDisplay smartList="#rc.attribute.getAttributeOptionsSmartList()#"
-							   recordEditAction="admin:setting.editattributeoption" 
-							   recordEditQueryString="attributeID=#rc.attribute.getAttributeID()#"
-							   recordEditModal="true"
-							   recordDeleteAction="admin:setting.deleteattributeoption"
-							   recordDeleteQueryString="attributeID=#rc.attribute.getAttributeID()#&returnAction=admin:setting.detailAttribute"
-							   sortProperty="sortOrder"
-							   sortContextIDColumn="attributeID"
-							   sortContextIDValue="#rc.attribute.getAttributeID()#">
-		<cf_SlatwallListingColumn propertyIdentifier="attributeOptionValue" /> 
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeOptionLabel" /> 
-	</cf_SlatwallListingDisplay>
-	
-	<cf_SlatwallActionCaller action="admin:setting.createattributeoption" class="btn btn-inverse" icon="plus icon-white" queryString="attributeid=#rc.attribute.getAttributeID()#" modal=true />
-</cfif>
+	<cfif rc.attribute.getAttributeType().getSystemCode() eq "atText">
+		<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationMessage" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationRegex" edit="#rc.edit#">	
+		</cf_SlatwallPropertyList>
+	<cfelseif listFindNoCase( "atCheckBoxGroup,atMultiSelect,atRadioGroup,atSelect",rc.attribute.getAttributeType().getSystemCode() )>
+		
+		<cf_SlatwallListingDisplay smartList="#rc.attribute.getAttributeOptionsSmartList()#"
+								   recordEditAction="admin:setting.editattributeoption" 
+								   recordEditQueryString="attributeID=#rc.attribute.getAttributeID()#"
+								   recordEditModal="true"
+								   recordDeleteAction="admin:setting.deleteattributeoption"
+								   recordDeleteQueryString="attributeID=#rc.attribute.getAttributeID()#&returnAction=admin:setting.detailAttribute"
+								   sortProperty="sortOrder"
+								   sortContextIDColumn="attributeID"
+								   sortContextIDValue="#rc.attribute.getAttributeID()#">
+			<cf_SlatwallListingColumn propertyIdentifier="attributeOptionValue" /> 
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeOptionLabel" /> 
+		</cf_SlatwallListingDisplay>
+		
+		<cf_SlatwallActionCaller action="admin:setting.createattributeoption" class="btn btn-inverse" icon="plus icon-white" queryString="attributeid=#rc.attribute.getAttributeID()#" modal=true />
+	</cfif>
 	
 </cfoutput>

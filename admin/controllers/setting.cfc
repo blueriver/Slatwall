@@ -112,7 +112,7 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.attributeSetID" default="";
 		
 		rc.attributeSet = getAttributeService().getAttributeSet( rc.attributeSetID, true );
-		var asType = getService("typeService").getTypeBySystemCode( "astProductCustomization" );
+		var asType = getService("typeService").getTypeBySystemCode( "astOrderItem" );
 		rc.attributeSet.setAttributeSetType( asType );
 		rc.edit = true;
 		rc.listAction = "admin:setting.listattributeset"; 

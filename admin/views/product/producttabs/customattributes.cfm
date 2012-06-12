@@ -35,38 +35,11 @@
 
 Notes:
 
-All the field names are set in the format attribute.[attributeID].[attributeValueID]
-AttributeValueID in the name is used to lookup the saved value and update. For new record
-it is set to 0
-
 --->
-
-<cfset rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]) />
+<cfparam name="rc.product" type="any" />
+<cfparam name="rc.edit" type="boolean" />
+<cfparam name="params.attributeSet" type="any" />
 
 <cfoutput>
-	<cfset attributeValueIndex = 0 />
-	<cfloop array="#rc.attributeSets#" index="local.attributeSet">
-		<div id="tabCustomAttributes_#local.attributeSet.getAttributeSetID()#">
-		<dl class="twoColumn">
-		<cfloop array="#local.attributeSet.getAttributes()#" index="local.attribute">
-			<cfset attributeValueIndex ++ />
-			<cfif local.attribute.getActiveFlag()>
-				<cfset local.attributeValue = rc.Product.getAttributeValue(local.attribute.getAttributeID(), true) />
-				<dt>
-					<label for="attribute.#local.attribute.getAttributeID()#">#local.attribute.getAttributeName()#<cfif local.attribute.getRequiredFlag() EQ 1> *</cfif></label>
-				</dt>
-				<dd>
-					<cfif rc.edit>
-						<input type="hidden" name="attributeValues[#attributeValueIndex#].attributeValueID" value="#local.attributeValue.getAttributeValueID()#" />
-						<input type="hidden" name="attributeValues[#attributeValueIndex#].attribute.attributeID" value="#local.attribute.getAttributeID()#" />
-						<cf_SlatwallFormField fieldName="attributeValues[#attributeValueIndex#].attributeValue" fieldType="#replace(local.attribute.getAttributeType().getSystemCode(), 'at', '', 'all')#" value="#local.attributeValue.getAttributeValue()#" valueOptions="#local.attribute.getAttributeOptionsOptions()#" />
-					<cfelse>
-						#local.attributeValue.getAttributeValue()#
-					</cfif>
-				</dd>
-			</cfif>
-		</cfloop>
-		</dl>
-		</div>
-	</cfloop> 
+	<cf_SlatwallAttributeSetDisplay entity="#rc.product#" attributeSet="#params.attributeSet#" edit="#rc.edit#" />
 </cfoutput>

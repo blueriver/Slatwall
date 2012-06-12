@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.attributeSetSmartList" type="any" />
 	
-<cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createAction="admin:setting.createaccountattributeset,admin:setting.createproductattributeset,admin:setting.createproductcustomizationattributeset" />
+<cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createReturnAction="admin:setting.editattributeset" createAction="admin:setting.createaccountattributeset,admin:setting.createproductattributeset,admin:setting.createproductcustomizationattributeset" />
 
 <cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#"
 						   recordDetailAction="admin:setting.detailattributeset"

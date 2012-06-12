@@ -68,7 +68,11 @@ Notes:
 			<cf_SlatwallTab view="admin:product/producttabs/productcategories" />
 			<cf_SlatwallTab view="admin:product/producttabs/alternateimages" />
 			<cf_SlatwallTab view="admin:product/producttabs/productreviews" />
-			<cf_SlatwallTab view="admin:product/producttabs/customattributes" />
+			
+			<cfloop array="#rc.product.getAssignedAttributeSetSmartList().getRecords()#" index="local.attributeSet">
+				<cf_SlatwallTab view="admin:product/producttabs/customattributes" tabid="tab#lcase(local.attributeSet.getAttributeSetCode())#" text="#local.attributeSet.getAttributeSetName()#" params="#{attributeSet=local.attributeSet}#" />
+			</cfloop>
+			
 			<cf_SlatwallTab view="admin:product/producttabs/relatedproducts" />
 			<cf_SlatwallTab view="admin:product/producttabs/productsettings" />
 			<cf_SlatwallTab view="admin:product/producttabs/skusettings" />

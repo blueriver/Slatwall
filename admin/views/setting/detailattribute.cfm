@@ -61,7 +61,9 @@ Notes:
 		</cf_SlatwallDetailHeader>
 
 		<cf_SlatwallTabGroup object="#rc.attribute#">
-			<cf_SlatwallTab view="admin:setting/attributetabs/attributeoptions" />
+			<cfif not rc.attribute.isNew() and listFindNoCase( "atText,atCheckBoxGroup,atMultiSelect,atRadioGroup,atSelect",rc.attribute.getAttributeType().getSystemCode() )>
+				<cf_SlatwallTab view="admin:setting/attributetabs/attributeoptions" />
+			</cfif>
 			<cf_SlatwallTab view="admin:setting/attributetabs/description" />
 		</cf_SlatwallTabGroup>
 

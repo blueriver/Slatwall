@@ -77,6 +77,9 @@ function initUIElements( scopeSelector ) {
 	// Time Picker
 	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({});
 	
+	// Dragable
+	jQuery( scopeSelector ).find(jQuery('.draggable')).draggable();
+	
 	// Wysiwyg
 	jQuery.each(jQuery( '.wysiwyg' ), function(i, v){
 		var editor = CKEDITOR.replace( v );
@@ -132,6 +135,9 @@ function initUIElements( scopeSelector ) {
 			}
 		}
 	});
+	
+	
+	
 }
 
 function setupEventHandlers() {

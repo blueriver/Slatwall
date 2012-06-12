@@ -36,7 +36,26 @@
 Notes:
 
 --->
-<cfparam name="rc.attribute" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+<cfparam name="attributes.attributeSet" type="any" />
+<cfparam name="attributes.entity" type="any" />
+<cfparam name="attributes.edit" type="boolean" default="false" />
 
-<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeDescription" fieldtype="wysiwyg" edit="#rc.edit#" displayType="plain">
+<cfparam name="request.context.attributeValueIndex" default="0" >
+
+<cfif thisTag.executionMode is "start">
+	<cfsilent>
+		<cfset local.attributeSmartList = attributes.attributeSet.getAttributesSmartList() />
+		<cfset local.attributeSmartList.addFilter('activeFlag', 1) />
+	</cfsilent>
+	<cfoutput>
+		<cf_SlatwallPropertyList>
+			<cfloop array="#local.attributeSmartList.getRecords()#" index="attribute">
+				<cfset request.context.attributeValueIndex++ />
+				<input type="hidden" name="attributeValues[#request.context.attributeValueIndex#].attributeValueType" value="#attributes.entity.getAttributeValue(attribute.getAttributeID(), true).getAttributeValueType()#" />
+				<input type="hidden" name="attributeValues[#request.context.attributeValueIndex#].attributeValueID" value="#attributes.entity.getAttributeValue(attribute.getAttributeID(), true).getAttributeValueID()#" />
+				<input type="hidden" name="attributeValues[#request.context.attributeValueIndex#].attribute.attributeID" value="#attribute.getAttributeID()#" />
+				<cf_SlatwallFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="attributeValues[#request.context.attributeValueIndex#].attributeValue" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#attributes.entity.getAttributeValue(attribute.getAttributeID())#" valueOptions="#attribute.getAttributeOptionsOptions()#" />
+			</cfloop>
+		</cf_SlatwallPropertyList>
+	</cfoutput>
+</cfif>

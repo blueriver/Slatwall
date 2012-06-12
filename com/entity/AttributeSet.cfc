@@ -40,14 +40,15 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	
 	// Persistent Properties
 	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="activeFlag" ormtype="boolean";
 	property name="attributeSetName" ormtype="string";
 	property name="attributeSetCode" ormtype="string";
 	property name="attributeSetDescription" ormtype="string" length="2000" ;
-	property name="globalFlag" ormtype="boolean" default="1" ;
-	property name="sortOrder" ormtype="integer";
+	property name="globalFlag" ormtype="boolean" default="1";
 	property name="requiredFlag" ormtype="boolean";
 	property name="accountSaveFlag" ormtype="boolean";
 	property name="additionalCharge" ormtype="big_decimal";
+	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
 	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" systemCode="attributeSetType" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
