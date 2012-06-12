@@ -35,12 +35,18 @@
 
 Notes:
 
+	Valid Attribute Value Types
+	
+	product
+	orderItem
+	account
 */
 component displayname="Attribute Value" entityname="SlatwallAttributeValue" table="SlatwallAttributeValue" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValue" ormtype="string" length="4000";
+	property name="attributeValueType" ormType="string" formFieldType="select" formatType="custom";
 	
 	// Related Object Properties (many-to-one)
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" lazy="false" fetch="join";  // Lazy is turned off because any time we get an attributeValue we also want the attribute
@@ -53,7 +59,6 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
-	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

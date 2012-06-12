@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,28 +35,10 @@
 
 Notes:
 
-*/
-component displayname="Product Customization" entityname="SlatwallProductCustomization" table="SlatwallProductCustomization" persistent="true" output="false" accessors="true" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="foreign" params="{property='attributeSet'}" missingrowignored="true";
-	property name="requiredFlag" ormtype="boolean" ;
-	property name="accountSaveFlag" ormtype="boolean" ;
-	property name="additionalCharge" ormtype="big_decimal";
-	
-	// Related Object Properties
-	property name="attributeSet" cfc="AttributeSet" fieldtype="one-to-one" constrained="true";
+--->
+<cfparam name="rc.attributeSet" type="any">
+<cfparam name="rc.edit" type="boolean">
 
-
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-	
-	// =================== START: ORM Event Hooks  =========================
-	
-	// ===================  END:  ORM Event Hooks  =========================
-}
+<cfoutput>
+	<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="productTypes" edit="#rc.edit#" displaytype="plain" />
+</cfoutput>

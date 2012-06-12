@@ -45,24 +45,26 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	property name="attributeSetDescription" ormtype="string" length="2000" ;
 	property name="globalFlag" ormtype="boolean" default="1" ;
 	property name="sortOrder" ormtype="integer";
+	property name="requiredFlag" ormtype="boolean";
+	property name="accountSaveFlag" ormtype="boolean";
+	property name="additionalCharge" ormtype="big_decimal";
 	
-	// Related Onject Properties (One-To-One)
-	property name="productCustomization" fieldtype="one-to-one" cfc="ProductCustomization" cascade="all";
+	// Related Object Properties (many-to-one)
+	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" systemCode="attributeSetType" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
 	
-	// Related Object Properties (Many-To-One)
-	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
-	
-	// Related Object Properties (One-To-Many)
+	// Related Object Properties (one-to-many)
 	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
+	
+	// Related Object Properties (many-to-many - owner)
+	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProductType" fkcolumn="attributeSetID" inversejoincolumn="productTypeID";
+
+	// Related Object Properties (many-to-many - inverse)
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Non-Persistent Properties
-	property name="attributeSetTypeOptions" persistent="false" type="array"; 
 	
 	public array function getAttributes(orderby, sortType="text", direction="asc") {
 		if(!structKeyExists(arguments, "orderby")) {
@@ -78,18 +80,6 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	}
 
 	// ============ START: Non-Persistent Property Methods =================
-
-    public array function getAttributeSetTypeOptions() {
-		if(!structKeyExists(variables, "attributeSetTypeOptions")) {
-			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
-			smartList.addSelect(propertyIdentifier="type", alias="name");
-			smartList.addSelect(propertyIdentifier="typeID", alias="value");
-			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="attributeSetType");
-			smartList.addOrder("type|ASC");
-			variables.attributeSetTypeOptions = smartList.getRecords();
-		}
-		return variables.attributeSetTypeOptions;
-    }
     
 	// ============  END:  Non-Persistent Property Methods =================
 	
@@ -103,12 +93,24 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 		arguments.attribute.removeAttributeSet( this );
 	}
 	
-	// Attribute Set Assignments (one-to-many)
-	public void function addAttributeSetAssignment(required any attributeSetAssignment) {
-		arguments.attributeSetAssignment.setAttributeSet( this );
+	// Product Types (many-to-many - owner)
+	public void function addProductType(required any productType) {    
+		if(arguments.productType.isNew() or !hasProductType(arguments.productType)) {    
+			arrayAppend(variables.productTypes, arguments.productType);    
+		}
+		if(isNew() or !arguments.productType.hasAttributeSet( this )) {    
+			arrayAppend(arguments.productType.getAttributeSets(), this);    
+		}    
 	}
-	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
-		arguments.attributeSetAssignment.removeAttributeSet( this );
+	public void function removeProductType(required any productType) {    
+		var thisIndex = arrayFind(variables.productTypes, arguments.productType);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.productTypes, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.productType.getAttributeSets(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.productType.getAttributeSets(), thatIndex);    
+		}
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

@@ -52,6 +52,9 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetCode" edit="#rc.edit#">
 			<cfif listFind( "astProduct,astProductCustomization",rc.attributeSet.getAttributeSetType().getSystemCode() )>
 				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#rc.edit#">
+				<cfif rc.attributeSet.getAttributeSetType().getSystemCode() eq "astProductCustomization">
+					<!--- Product Customization Settings Here --->
+				</cfif>
 			</cfif>
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
@@ -59,6 +62,9 @@ Notes:
 	<cf_SlatwallTabGroup object="#rc.attributeSet#">
 		<cf_SlatwallTab view="admin:setting/attributesettabs/attributes" />
 		<cf_SlatwallTab view="admin:setting/attributesettabs/description" />
+		<cfif listFind( "astProduct,astProductCustomization", rc.attributeSet.getAttributeSetType().getSystemCode() )>
+			<cf_SlatwallTab view="admin:setting/attributesettabs/producttypes" />
+		</cfif>
 	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>

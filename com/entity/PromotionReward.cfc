@@ -35,6 +35,14 @@
 
 Notes:
 
+	Valid Reward Types
+	
+	merchandise
+	subscription
+	contentAccess
+	fulfillment
+	order
+
 */
 component displayname="Promotion Reward" entityname="SlatwallPromotionReward" table="SlatwallPromotionReward" persistent="true" extends="BaseEntity" {
 	

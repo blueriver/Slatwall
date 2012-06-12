@@ -68,6 +68,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
+	property name="attributeSets" singularname="attributeSet" cfc="AttributeSet" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProductType" fkcolumn="productTypeID" inversejoincolumn="attributeSetID" inverse="true";
 
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
@@ -171,7 +172,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		arguments.product.removeProductType( this );
 	}
 	
-	// Promotion Rewards (many-to-many)
+	// Promotion Rewards (many-to-many - inverse)
 	public void function addPromotionReward(required any promotionReward) {
 		arguments.promotionReward.addProductType( this );
 	}
@@ -179,7 +180,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		arguments.promotionReward.removeProductType( this );
 	}
 	
-	// Promotion Qualifiers (many-to-many)
+	// Promotion Qualifiers (many-to-many - inverse)
 	public void function addPromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.addProductType( this );
 	}
@@ -187,12 +188,20 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		arguments.promotionQualifier.removeProductType( this );
 	}
 	
-	// priceGroupRates (many-to-many)
+	// Price Group Rates (many-to-many - inverse)
 	public void function addPriceGroupRate(required any priceGroupRate) {
 		arguments.priceGroupRate.addProductType( this );
 	}
 	public void function removePriceGroupRate(required any priceGroupRate) {
 		arguments.priceGroupRate.removeProductType( this );
+	}
+	
+	// Attribute Sets (many-to-many - inverse)
+	public void function addAttributeSet(required any attributeSet) {
+		arguments.attributeSet.addProductType( this );
+	}
+	public void function removeAttributeSet(required any attributeSet) {
+		arguments.attributeSet.removeProductType( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
