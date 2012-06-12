@@ -56,6 +56,9 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID" cascade="all";
 	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID" cascade="all";
 	
+	property name="excludedCategories" singularname="excludedCategory" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID" cascade="all";
+	property name="excludedContents" singularname="excludedContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID" cascade="all";
+	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
@@ -94,6 +97,12 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 		for(var content in arguments.subscriptionBenefit.getContents()) {
 			addContent(content);
 		}
+		for(var excludedCategory in arguments.subscriptionBenefit.getExcludedCategories()) {
+			addExcludedCategory(excludedCategory);
+		}
+		for(var excludedContent in arguments.subscriptionBenefit.getExcludedContents()) {
+			addExcludedContent(excludedContent);
+		}
 	}
 	
 	public void function copyFromSubscriptionUsageBenefit(required any subscriptionUsageBenefit) {
@@ -111,6 +120,12 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 		}
 		for(var content in arguments.subscriptionUsageBenefit.getContents()) {
 			addContent(content);
+		}
+		for(var excludedCategory in arguments.subscriptionUsageBenefit.getExcludedCategories()) {
+			addExcludedCategory(excludedCategory);
+		}
+		for(var excludedContent in arguments.subscriptionUsageBenefit.getExcludedContents()) {
+			addExcludedContent(excludedContent);
 		}
 	}
 	
