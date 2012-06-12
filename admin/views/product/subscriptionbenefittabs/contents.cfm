@@ -40,5 +40,12 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contents" edit="#rc.edit#" displaytype="plain" />
+	<div class="span6">
+		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.contents')#</h4>
+		<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contents" edit="#rc.edit#" displaytype="plain" />
+	</div>
+	<div class="span6">
+		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.excludedcontents')#</h4>
+		<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="excludedcontents" edit="#rc.edit#" displaytype="plain" />	
+	</div>
 </cfoutput>
