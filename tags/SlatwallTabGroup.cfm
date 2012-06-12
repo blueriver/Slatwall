@@ -37,7 +37,8 @@ Notes:
 
 --->
 <cfparam name="attributes.object" type="any" default="" />
-<cfparam name="attributes.allowComments" type="boolean" default="false"> 
+<cfparam name="attributes.allowComments" type="boolean" default="false">
+<cfparam name="attributes.allowCustomAttributes" type="boolean" default="false">
 
 <cfset variables.fw = caller.this />
 
@@ -57,6 +58,11 @@ Notes:
 						<cfloop array="#thistag.tabs#" index="tab">
 							<cfoutput><li <cfif activeTab eq tab.tabid>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#</a></li></cfoutput>
 						</cfloop>
+						<cfif isObject(attributes.object) && attributes.allowCustomAttributes>
+							<cfloop array="#attributes.object.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+								<cfoutput><li><a href="##tab#lcase(attributeSet.getAttributeSetCode())#" data-toggle="tab">#attributeSet.getAttributeSetName()#</a></li></cfoutput>
+							</cfloop>
+						</cfif>
 						<cfif isObject(attributes.object) && attributes.allowComments>
 							<cfoutput><li><a href="##tabComments" data-toggle="tab">#request.slatwallScope.rbKey('entity.comment_plural')# <cfif arrayLen(attributes.object.getComments())><span class="badge">#arrayLen(attributes.object.getComments())#</span></cfif></a></li></cfoutput>
 						</cfif>
@@ -76,6 +82,17 @@ Notes:
 								</div>
 							</cfoutput>
 						</cfloop>
+						<cfif isObject(attributes.object) && attributes.allowCustomAttributes>
+							<cfloop array="#attributes.object.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+								<cfoutput>
+									<div class="tab-pane" id="tab#lcase(attributeSet.getAttributeSetCode())#">
+										<div class="row-fluid">
+											<cf_SlatwallAttributeSetDisplay attributeSet="#attributeSet#" entity="#attributes.object#" edit="#request.context.edit#" />
+										</div>
+									</div>
+								</cfoutput>
+							</cfloop>
+						</cfif>
 						<cfif isObject(attributes.object) && attributes.allowComments>
 							<div class="tab-pane" id="tabComments">
 								<cfoutput>

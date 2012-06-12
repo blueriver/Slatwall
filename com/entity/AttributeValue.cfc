@@ -46,6 +46,7 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// Persistent Properties
 	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValue" ormtype="string" length="4000";
+	property name="attributeValueEncrypted" ormtype="string";
 	property name="attributeValueType" ormType="string" formFieldType="select" formatType="custom";
 	
 	// Related Object Properties (many-to-one)
@@ -140,11 +141,37 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public void function setAttributeValue(required any attributeValue) {
+		if(getAttribute().getAttributeType().getSystemCode() == "atPassword") {
+			variables.attributeValueEncrypted = encryptValue(arguments.attributeValue);
+		} else {
+			variables.attributeValue = arguments.attributeValue;
+		}
+	}
+	
+	public any function getAttributeValue() {
+		if(structKeyExists(variables, "attributeValue") && len(variables.attributeValue)) {
+			return variables.attributeValue;
+		}
+		if(structKeyExists(variables, "attributeValueEncrypted") && len(variables.attributeValueEncrypted)) {
+			if(!isNull(getAttribute().getDecryptValueInAdminFlag()) && getAttribute().getDecryptValueInAdminFlag()) {
+				return decryptValue(variables.attributeValueEncrypted);	
+			}
+			return "********";
+		}
+		
+		return "";
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+	
 	// ================== START: Overridden Methods ========================
 	
 	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================
 	
-	// ===================  END:  ORM Event Hooks  ========================= 
+	// ===================  END:  ORM Event Hooks  =========================
 }

@@ -314,7 +314,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return imageGalleryArray;
 	}
 	
-	//get merchandisetype 
+	 
 	public any function getBaseProductType() {
 		return getProductType().getBaseProductType();
 	}
@@ -348,64 +348,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getService("productService").getProductSkusBySelectedOptions(arguments.selectedOptions,this.getProductID());
 	}
 	
-	
-	//get attribute value
-	public any function getAttributeValueOld(required string attribute, returnEntity=false){
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProductAttributeValue");
-		
-		smartList.addFilter("product_productID",getProductID(),1);
-		smartList.addFilter("attribute_attributeID",attribute,1);
-		
-		smartList.addFilter("product_productID",getProductID(),2);
-		smartList.addFilter("attribute_attributeCode",attribute,2);
-		
-		var attributeValue = smartList.getRecords();
-		
-		if(arrayLen(attributeValue)){
-			if(returnEntity) {
-				return attributeValue[1];	
-			} else {
-				return attributeValue[1].getAttributeValue();
-			}
-		}else{
-			if(returnEntity) {
-				return getService("ProductService").newProductAttributeValue();	
-			} else {
-				return "";
-			}
-		}
-	}
-	
-	// get attribute value2
-	
-	public any function getAttributeValue(required string attribute, returnEntity=false){
-		
-		if(len(arguments.attribute) eq 32) {
-			if( structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
-				if(arguments.returnEntity) {
-					return getAttributeValuesByAttributeIDStruct()[arguments.attribute];
-				}
-				return getAttributeValuesByAttributeIDStruct()[arguments.attribute].getAttributeValue();
-			}
-		}
-		
-		if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
-			if(arguments.returnEntity) {
-				return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ];
-			}
-			
-			return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ].getAttributeValue();
-		}
-				
-		if(arguments.returnEntity) {
-			var newAttributeValue = getService("ProductService").newAttributeValue();
-			newAttributeValue.setAttributeValueType("product");
-			return newAttributeValue;
-		}
-		
-		return "";
-	}
-	
 	public struct function getCrumbData(required string path, required string siteID, required array baseCrumbArray) {
 		var productFilename = replace(arguments.path, "/#arguments.siteID#/", "", "all");
 		productFilename = left(productFilename, len(productFilename)-1);
@@ -434,12 +376,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return productCrumbData;
 	}
 	
-	/*public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup ) {
-		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
-	}*/
 	
-	// Start: Quantity Methods
-	
+	// Quantity
 	public numeric function getQuantity(required string quantityType, string skuID, string locationID) {
 		if(structKeyExists(arguments, "skuID")) {
 			return getService("skuService").getSku(arguments.skuID).invokeMethod("getQuantity", arguments);
@@ -456,7 +394,34 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables[quantityType];
 	}
 	
-	// END: Quantity Methods
+	// Attribute Value
+	public any function getAttributeValue(required string attribute, returnEntity=false){
+		
+		if(len(arguments.attribute) eq 32) {
+			if( structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
+				if(arguments.returnEntity) {
+					return getAttributeValuesByAttributeIDStruct()[arguments.attribute];
+				}
+				return getAttributeValuesByAttributeIDStruct()[arguments.attribute].getAttributeValue();
+			}
+		}
+		
+		if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
+			if(arguments.returnEntity) {
+				return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ];
+			}
+			
+			return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ].getAttributeValue();
+		}
+				
+		if(arguments.returnEntity) {
+			var newAttributeValue = getService("ProductService").newAttributeValue();
+			newAttributeValue.setAttributeValueType("product");
+			return newAttributeValue;
+		}
+		
+		return "";
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

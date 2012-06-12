@@ -42,7 +42,9 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.accountSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.accountSmartList#" recordEditAction="admin:account.editaccount">
+<cf_SlatwallListingDisplay smartList="#rc.accountSmartList#"
+						   recordEditAction="admin:account.editaccount"
+						   recordDetailAction="admin:account.detailaccount">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="firstName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="lastName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />

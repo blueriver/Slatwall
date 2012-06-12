@@ -33,7 +33,7 @@
 		<Record typeID="444df2d3c0420d6b13d2baf2a0c7e1f2" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Date" systemCode="atDate" />
 		<Record typeID="444df2d4cad3af5f4465a21f7d1b5f6c" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Date Time" systemCode="atDateTime" />
 		<Record typeID="444df2d5973447a85033d6c6735e002a" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Multiselect" systemCode="atMultiselect" />
-		<Record typeID="444df2d6ff67aedc177f35d1e672dd82" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Password" systemCode="atPassword" />
+		<Record typeID="444df2d6ff67aedc177f35d1e672dd82" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Encrypted Value" systemCode="atPassword" />
 		<Record typeID="444df2a9fe732d3ec9d8b495ab1dddf7" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Radio Group" systemCode="atRadioGroup" />
 		<Record typeID="444df2a8bfb73ecb3a777c8599950d5f" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Select Box" systemCode="atSelect" />
 		<Record typeID="444df2a5a9088e72342c0b5eaf731c64" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Text" systemCode="atText" />

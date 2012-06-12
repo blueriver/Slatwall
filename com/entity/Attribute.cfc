@@ -40,6 +40,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	
 	// Persistent Properties
 	property name="attributeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="activeFlag" ormtype="boolean" default=1;
 	property name="attributeName" ormtype="string";
 	property name="attributeCode" ormtype="string";
 	property name="attributeDescription" ormtype="string" length="4000" ;
@@ -49,8 +50,8 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="sortOrder" ormtype="integer" sortContext="attributeSet";
 	property name="validationMessage" ormtype="string";
 	property name="validationRegex" ormtype="string";
-	property name="activeFlag" ormtype="boolean" default=1;
-
+	property name="decryptValueInAdminFlag" ormtype="boolean";
+	
 	// Related Object Properties (Many-To-One)
 	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
 	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";

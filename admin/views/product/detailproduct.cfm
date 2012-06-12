@@ -61,18 +61,13 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.product#">
+		<cf_SlatwallTabGroup object="#rc.product#" allowCustomAttributes="true">
 			<cf_SlatwallTab view="admin:product/producttabs/skus" />
 			<cf_SlatwallTab view="admin:product/producttabs/productdescription" />
 			<cf_SlatwallTab view="admin:product/producttabs/productpages" />
 			<cf_SlatwallTab view="admin:product/producttabs/productcategories" />
 			<cf_SlatwallTab view="admin:product/producttabs/alternateimages" />
 			<cf_SlatwallTab view="admin:product/producttabs/productreviews" />
-			
-			<cfloop array="#rc.product.getAssignedAttributeSetSmartList().getRecords()#" index="local.attributeSet">
-				<cf_SlatwallTab view="admin:product/producttabs/customattributes" tabid="tab#lcase(local.attributeSet.getAttributeSetCode())#" text="#local.attributeSet.getAttributeSetName()#" params="#{attributeSet=local.attributeSet}#" />
-			</cfloop>
-			
 			<cf_SlatwallTab view="admin:product/producttabs/relatedproducts" />
 			<cf_SlatwallTab view="admin:product/producttabs/productsettings" />
 			<cf_SlatwallTab view="admin:product/producttabs/skusettings" />

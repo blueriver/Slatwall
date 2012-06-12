@@ -45,6 +45,10 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationMessage" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationRegex" edit="#rc.edit#">	
 		</cf_SlatwallPropertyList>
+	<cfelseif rc.attribute.getAttributeType().getSystemCode() eq "atPassword">
+		<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="decryptValueInAdminFlag" edit="#rc.edit#">
+		</cf_SlatwallPropertyList>
 	<cfelseif listFindNoCase( "atCheckBoxGroup,atMultiSelect,atRadioGroup,atSelect",rc.attribute.getAttributeType().getSystemCode() )>
 		
 		<cf_SlatwallListingDisplay smartList="#rc.attribute.getAttributeOptionsSmartList()#"
