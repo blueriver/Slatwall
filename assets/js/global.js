@@ -339,6 +339,7 @@ function setupEventHandlers() {
 }
 
 function updateMultiselectTableUI( multiselectField ) {
+	
 	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
 	
 	if(inputValue != undefined) {
@@ -470,9 +471,10 @@ function listingDisplayUpdate( tableID, data ) {
 			jQuery('#' + tableID).data('savedstateid', r["savedStateID"]);
 			jQuery('#' + tableID).attr('data-savedstateid', r["savedStateID"]);
 			
-			updateMultiselectTableUI( '#' + tableID );
+			if(jQuery('#' + tableID).data('multiselectfield')) {
+				updateMultiselectTableUI( jQuery('#' + tableID).data('multiselectfield') );
+			}
 		}
-		
 	});
 }
 
