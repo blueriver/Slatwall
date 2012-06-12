@@ -57,7 +57,8 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
 
 	// Related Object Properties (One-To-Many)
-	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all" orderby="sortOrder";
+	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all-delete-orphan";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -147,6 +148,14 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	}    
 	public void function removeAttributeOption(required any attributeOption) {    
 		arguments.attributeOption.removeAttribute( this );    
+	}
+	
+	// Attribute Values (one-to-many)
+	public void function addAttributeValue(required any attributeValue) {
+		arguments.attributeValue.setAttribute( this );
+	}
+	public void function removeAttributeValue(required any attributeValue) {
+		arguments.attributeValue.removeAttribute( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

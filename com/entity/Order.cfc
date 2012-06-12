@@ -354,30 +354,57 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return precisionEvaluate(amountDelivered - getPaymentAmountReceivedTotal());
 	}
 	
-	public numeric function getQuantityDelivered() {
-		var orderItems = getOrderItems();
-		var variables.quantityDelivered = 0;
-		for(var i=1; i<=arrayLen(orderitems); i++) {
-			variables.quantityDelivered += orderItems[i].getQuantityDelivered();
+	public numeric function getTotalQuantity() {
+		var totalQuantity = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			totalQuantity += getOrderItems()[i].getQuantity(); 
 		}
-		return variables.quantityDelivered;
+		
+		return totalQuantity;
+	}
+	
+	public numeric function getTotalSaleQuantity() {
+		var saleQuantity = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			if(getOrderItems()[1].getOrderItemType().getSystemCode() eq "oitSale") {
+				saleQuantity += getOrderItems()[i].getQuantity();	
+			}
+		}
+		return saleQuantity;
+	}
+	
+	public numeric function getTotalReturnQuantity() {
+		var returnQuantity = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			if(getOrderItems()[1].getOrderItemType().getSystemCode() eq "oitReturn") {
+				returnQuantity += getOrderItems()[i].getQuantity();	
+			}
+		}
+		return returnQuantity;
+	}
+	
+	public numeric function getQuantityDelivered() {
+		var quantityDelivered = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			quantityDelivered += getOrderItems()[i].getQuantityDelivered();
+		}
+		return quantityDelivered;
 	}
 	
 	public numeric function getQuantityUndelivered() {
-		return this.getTotalQuantity() - this.getQuantityDelivered();
+		return this.getTotalSaleQuantity() - this.getQuantityDelivered();
 	}
 	
 	public numeric function getQuantityReceived() {
-		var orderItems = getOrderItems();
-		var variables.quantityReceived = 0;
-		for(var i=1; i<=arrayLen(orderitems); i++) {
-			variables.quantityReceived += orderItems[i].getQuantityReceived();
+		var quantityReceived = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			quantityReceived += getOrderItems()[i].getQuantityReceived();
 		}
-		return variables.quantityReceived;
+		return quantityReceived;
 	}
 	
 	public numeric function getQuantityUnreceived() {
-		return this.getTotalQuantity() - this.getQuantityReceived();
+		return this.getTotalReturnQuantity() - this.getQuantityReceived();
 	}
 	
 	public numeric function getSubtotal() {
@@ -420,15 +447,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return arrayLen(getOrderItems());
 	}
 	
-	public numeric function getTotalQuantity() {
-		if(!structKeyExists(variables,"totalQuantity")) {
-			variables.totalQuantity = 0;
-			for(var i=1; i<=arrayLen(getOrderItems()); i++) {
-				variables.totalQuantity += getOrderItems()[i].getQuantity(); 
-			}
-		}
-		return variables.totalQuantity;
-	}
+	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	

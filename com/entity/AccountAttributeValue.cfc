@@ -41,7 +41,7 @@ component displayname="Account Attribute Value" entityname="SlatwallAccountAttri
 	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValueType" length="255" insert="false" update="false";
 	
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true" cascade="all";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	
 	

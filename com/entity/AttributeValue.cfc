@@ -58,6 +58,24 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Attribute (many-to-one)
+	public void function setAttribute(required any attribute) {
+		variables.attribute = arguments.attribute;
+		if(isNew() or !arguments.attribute.hasAttributeValue( this )) {
+			arrayAppend(arguments.attribute.getAttributeValues(), this);
+		}
+	}
+	public void function removeAttribute(any attribute) {
+		if(!structKeyExists(arguments, "attribute")) {
+			arguments.attribute = variables.attribute;
+		}
+		var index = arrayFind(arguments.attribute.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.attribute.getAttributeValues(), index);
+		}
+		structDelete(variables, "attribute");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================

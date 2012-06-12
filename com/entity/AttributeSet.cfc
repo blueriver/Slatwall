@@ -43,7 +43,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	property name="attributeSetName" ormtype="string";
 	property name="attributeSetCode" ormtype="string";
 	property name="attributeSetDescription" ormtype="string" length="2000" ;
-	property name="globalFlag" ormtype="boolean" default="0" ;
+	property name="globalFlag" ormtype="boolean" default="1" ;
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Onject Properties (One-To-One)

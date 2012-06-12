@@ -42,8 +42,6 @@ component displayname="Order Item Attribute Value" entityname="SlatwallOrderItem
 	property name="attributeValueType" length="255" insert="false" update="false";
 	
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
-		
-	
 
 	// ============ START: Non-Persistent Property Methods =================
 	
