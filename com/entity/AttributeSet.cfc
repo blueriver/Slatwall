@@ -54,7 +54,6 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	
 	// Related Object Properties (One-To-Many)
 	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
