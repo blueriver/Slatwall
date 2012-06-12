@@ -36,11 +36,9 @@
 Notes:
 
 --->
+<cfparam name="rc.productType" type="any" />
+<cfparam name="rc.edit" default="false" >
 
-<!---<cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createAction="admin:setting.createaccountattributeset,admin:setting.createproductattributeset,admin:setting.createproductcustomizationattributeset" />
-
-<cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#" recordEditAction="admin:setting.editattributeset">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeSetName" />
-	<cf_SlatwallListingColumn propertyIdentifier="attributeSetType.type" />
-	<cf_SlatwallListingColumn propertyIdentifier="globalFlag" />
-</cf_SlatwallListingDisplay>--->
+<cfoutput>
+	<cf_SlatwallPropertyDisplay object="#rc.productType#" property="assignedAttributeSets" />
+</cfoutput>

@@ -63,7 +63,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Related Object Properties (One-To-Many)
 	property name="childProductTypes" singularname="childProductType" cfc="ProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all-delete-orphan";
+	
+	
 	
 	// Related Object Properties (Many-To-Many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";

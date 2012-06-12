@@ -36,17 +36,21 @@
 Notes:
 
 */
-component displayname="Attribute Value" entityname="SlatwallAttributeValue" table="SlatwallAttributeValue" persistent="true" output="false" accessors="true" discriminatorcolumn="attributeValueType" extends="BaseEntity" {
+component displayname="Attribute Value" entityname="SlatwallAttributeValue" table="SlatwallAttributeValue" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValue" ormtype="string" length="4000";
 	
-	// Related Object Properties
+	// Related Object Properties (many-to-one)
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" lazy="false" fetch="join";  // Lazy is turned off because any time we get an attributeValue we also want the attribute
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	
 	// Quick Lookup Properties
 	property name="attributeID" length="32" insert="false" update="false";
+	
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -75,6 +79,8 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 		}
 		structDelete(variables, "attribute");
 	}
+	
+
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
