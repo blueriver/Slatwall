@@ -962,8 +962,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		arrayAppend(request.context.messages, arguments);
 	}
 	
-	public string function stringReplace( required string templateString ) {
-		return getService("utilityService").replaceStringTemplate(arguments.templateString, this);
+	public string function stringReplace( required string templateString, boolean formatValues=false ) {
+		return getService("utilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues);
 	}
 	
 	// ===========================  END:  UTILITY METHODS ===========================================

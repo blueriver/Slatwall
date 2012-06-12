@@ -110,10 +110,10 @@ Notes:
 				cc="#arguments.entity.stringReplace(email.setting('emailCCAddress'))#"
 				bcc="#arguments.entity.stringReplace(email.setting('emailBCCAddress'))#">
 			<cfmailpart type="text/plain">
-				#arguments.entity.stringReplace(textBody)#
+				#arguments.entity.stringReplace(textBody, true)#
 			</cfmailpart>
 			<cfmailpart type="text/html">
-				#arguments.entity.stringReplace(htmlBody)#
+				#arguments.entity.stringReplace(htmlBody, true)#
 			</cfmailpart>
 		</cfmail>
 	</cffunction>

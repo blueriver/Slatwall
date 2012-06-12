@@ -404,7 +404,7 @@ Notes:
 		}
 	}
 	
-	public string function replaceStringTemplate(required string template, required any object) {
+	public string function replaceStringTemplate(required string template, required any object, boolean formatValues=false) {
 		var templateKeys = reMatchNoCase("\${[^}]+}",arguments.template);
 		var replacementArray = [];
 		var returnString = arguments.template;
@@ -413,7 +413,7 @@ Notes:
 			var replaceDetails = {};
 			replaceDetails.key = templateKeys[i];
 			try {
-				replaceDetails.value = arguments.object.getValueByPropertyIdentifier(replace(replace(templateKeys[i], "${", ""),"}",""));	
+				replaceDetails.value = arguments.object.getValueByPropertyIdentifier(replace(replace(templateKeys[i], "${", ""),"}",""), arguments.formatValues);	
 			} catch(any e) {
 				writeDump(templateKeys[i]);
 				abort;
