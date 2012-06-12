@@ -43,8 +43,6 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="globalFlag" ormType="boolean" default="false";
 	property name="amount" ormType="big_decimal" formatType="custom";
 	property name="amountType" ormType="string" formFieldType="select";
-	property name="percentageOff" ormType="big_decimal"; //to be removed
-	property name="amountOff" ormType="big_decimal"; //to be removed
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
