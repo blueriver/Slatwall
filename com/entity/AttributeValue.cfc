@@ -51,7 +51,6 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// Quick Lookup Properties
 	property name="attributeID" length="32" insert="false" update="false";
 	
-	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
@@ -80,7 +79,59 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 		structDelete(variables, "attribute");
 	}
 	
-
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+		variables.account = arguments.account;
+		if(isNew() or !arguments.account.hasAttributeValue( this )) {
+			arrayAppend(arguments.account.getAttributeValues(), this);
+		}
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAttributeValues(), index);
+		}
+		structDelete(variables, "account");
+	}
+	
+	// Order Item (many-to-one)
+	public void function setOrderItem(required any orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() or !arguments.orderItem.hasAttributeValue( this )) {
+			arrayAppend(arguments.orderItem.getAttributeValues(), this);
+		}
+	}
+	public void function removeOrderItem(any orderItem) {
+		if(!structKeyExists(arguments, "orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderItem.getAttributeValues(), index);
+		}
+		structDelete(variables, "orderItem");
+	}
+	
+	// Product (many-to-one)
+	public void function setProduct(required any product) {
+		variables.product = arguments.product;
+		if(isNew() or !arguments.product.hasAttributeValue( this )) {
+			arrayAppend(arguments.product.getAttributeValues(), this);
+		}
+	}
+	public void function removeProduct(any product) {
+		if(!structKeyExists(arguments, "product")) {
+			arguments.product = variables.product;
+		}
+		var index = arrayFind(arguments.product.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.product.getAttributeValues(), index);
+		}
+		structDelete(variables, "product");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

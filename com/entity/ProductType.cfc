@@ -64,8 +64,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="childProductTypes" singularname="childProductType" cfc="ProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
 	
-	
-	
 	// Related Object Properties (Many-To-Many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
@@ -173,14 +171,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		arguments.product.removeProductType( this );
 	}
 	
-	// Attribute Set Assignments (one-to-many)
-	public void function addAttributeSetAssignment(required any attributeSetAssignment) {
-		arguments.attributeSetAssignment.setProductType( this );
-	}
-	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
-		arguments.attributeSetAssignment.removeProductType( this );
-	}
-
 	// Promotion Rewards (many-to-many)
 	public void function addPromotionReward(required any promotionReward) {
 		arguments.promotionReward.addProductType( this );

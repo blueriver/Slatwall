@@ -62,8 +62,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Related Object Properties (one-to-many)
 	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productImages" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
@@ -642,14 +641,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 		structDelete(variables, "brand");
 	}
-		
-	// Attribute Set Assignments (one-to-many)
-	public void function addAttributeSetAssignment(required any attributeSetAssignment) {
-		arguments.attributeSetAssignment.setProduct( this );
-	}
-	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
-		arguments.attributeSetAssignment.removeProduct( this );
-	}
+	
 	// Attribute Values (one-to-many)
 	public void function addAttributeValue(required any attributeValue) {
 		arguments.attributeValue.setProduct( this );
