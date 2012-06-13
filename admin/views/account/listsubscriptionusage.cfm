@@ -52,7 +52,7 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="nextBillDate" />
 	<cf_SlatwallListingColumn propertyIdentifier="expirationDate" />
-	<cf_SlatwallListingColumn propertyIdentifier="gracePeriodTerm" />
+	<cf_SlatwallListingColumn propertyIdentifier="gracePeriodTerm.termName" />
 	<cf_SlatwallListingColumn propertyIdentifier="renewalPrice" />
 	<cf_SlatwallListingColumn propertyIdentifier="autoPayFlag" filter="true" />
 
