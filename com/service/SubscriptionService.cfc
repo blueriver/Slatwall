@@ -320,6 +320,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					
 				// add order payment to order if amount > 0
 				if(order.getTotal() > 0) { 
+					var paymentProcessed = false;
 					// if autoPayFlag true then apply payment
 					if(arguments.subscriptionUsage.getAutoPayFlag()) {
 						var orderPayment = getPaymentService().newOrderPayment();
@@ -331,19 +332,21 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						// if orderPayment has no error, then try to process payment
 						if(!orderPayment.hasErrors()) {
 							var paymentProcessed = getPaymentService().processPayment(order.getOrderPayments()[1], 'authorizeAndCharge', order.getOrderPayments()[1].getAmount());
-							
-							// if payment is processed, close out fulfillment and order
-							if(paymentProcessed) {
-								getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
-								
-								// persist order changes to DB 
-								getDAO().flushORMSession();
-								
-								//send email confirmation, needs a setting to enable this
-								getEmailService().sendEmailByEvent("autoSubscriptionUsageRenewalOrderPlaced", order);
-							}
 						} 
 					}
+				} else {
+					var paymentProcessed = true;
+				}
+				
+				// if payment is processed, close out fulfillment and order
+				if(paymentProcessed) {
+					getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
+					
+					// persist order changes to DB 
+					getDAO().flushORMSession();
+					
+					//send email confirmation, needs a setting to enable this
+					getEmailService().sendEmailByEvent("autoSubscriptionUsageRenewalOrderPlaced", order);
 				}
 
 			} 
@@ -399,6 +402,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					
 		// add order payment to order if amount > 0 
 		if(order.getTotal() > 0) {
+			var paymentProcessed = false;
 			// check if payment is applied
 			if(!arrayLen(order.getOrderPayments())) {
 				var orderPayment = getPaymentService().newOrderPayment();
@@ -415,26 +419,28 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(!orderPayment.hasErrors()) {
 				var amount = order.getTotal() - orderPayment.getAmountReceived();
 				var paymentProcessed = getPaymentService().processPayment(orderPayment, 'authorizeAndCharge', amount);
+			} 
+		} else {
+			var paymentProcessed = true;
+		}
+
+		// if payment is processed, close out fulfillment and order
+		if(paymentProcessed) {
+			var orderFulfillment = getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
+			
+			if(!orderFulfillment.hasErrors()) {
+				// persist order changes to DB 
+				getDAO().flushORMSession();
 				
-				// if payment is processed, close out fulfillment and order
-				if(paymentProcessed) {
-					var orderFulfillment = getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
-					
-					if(!orderFulfillment.hasErrors()) {
-						// persist order changes to DB 
-						getDAO().flushORMSession();
-						
-						//send email confirmation, needs a setting to enable this
-						getEmailService().sendEmailByEvent("manualSubscriptionUsageRenewalOrderPlaced", order);
-					} else {
-						for(var errorName in orderFulfillment.getErrors()) {
-							for(var error in orderFulfillment.getErrors()[errorName]) {
-								arguments.subscriptionUsage.addError("processing", error);
-							}
-						}
+				//send email confirmation, needs a setting to enable this
+				getEmailService().sendEmailByEvent("manualSubscriptionUsageRenewalOrderPlaced", order);
+			} else {
+				for(var errorName in orderFulfillment.getErrors()) {
+					for(var error in orderFulfillment.getErrors()[errorName]) {
+						arguments.subscriptionUsage.addError("processing", error);
 					}
 				}
-			} 
+			}
 		}
 
 		// update the Subscription Status
