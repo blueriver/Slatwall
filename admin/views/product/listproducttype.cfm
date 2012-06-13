@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.productTypeSmartList" type="any" />
 
 <cfset rc.productTypeSmartList.joinRelatedProperty( rc.productTypeSmartList.getBaseEntityName() , "parentProductType", "LEFT") />
-<cfset rc.productTypeSmartList.addFilter("parentProductType", "NULL") />
+<cfset rc.productTypeSmartList.addFilter("parentProductType.productTypeID", "NULL") />
 
 <cfoutput>
 	

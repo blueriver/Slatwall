@@ -324,12 +324,6 @@ function setupEventHandlers() {
 		listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
 	});
 	
-	// Listing Display - Expanding
-	jQuery('body').on('click', '.table-action-expand', function(e) {
-		e.preventDefault();
-		tableExpandClick( this );
-	});
-	
 	// Listing Display - Sort Applying
 	jQuery('body').on('click', '.table-action-sort', function(e) {
 		e.preventDefault();
@@ -342,10 +336,39 @@ function setupEventHandlers() {
 			tableMultiselectClick( this );
 		}
 	});
+	
+	// Listing Display - Expanding
+	jQuery('body').on('click', '.table-action-expand', function(e) {
+		e.preventDefault();
+		
+		// If this is an expand Icon
+		if(jQuery(this).children('i').hasClass('icon-plus')) {
+			
+			jQuery(this).children('i').removeClass('icon-plus').addClass('icon-minus');
+			
+			var previouslyLoadedRows = jQuery(this).closest('tbody').find('tr[data-parentid="' + jQuery(this).closest('tr').attr('id') + '"]');
+			if(previouslyLoadedRows.length) {
+				jQuery(previouslyLoadedRows).show();
+			} else {
+				var data = {};
+				data[ 'F:' + jQuery(this).closest('table').data('parentidproperty') ] = jQuery(this).closest('tr').attr('id');
+				
+				listingDisplayUpdate( jQuery(this).closest('table').attr('id'), data, jQuery(this).closest('tr').attr('id') );
+			}
+		
+		// If this is a colapse icon
+		} else if (jQuery(this).children('i').hasClass('icon-minus')) {
+			
+			jQuery(this).children('i').removeClass('icon-minus').addClass('icon-plus');
+			
+			jQuery(this).closest('tbody').find('tr[data-parentid="' + jQuery(this).closest('tr').attr('id') + '"]').hide();
+			
+		}
+		
+	});
 }
 
 function updateMultiselectTableUI( multiselectField ) {
-	
 	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
 	
 	if(inputValue != undefined) {
@@ -355,7 +378,7 @@ function updateMultiselectTableUI( multiselectField ) {
 	}
 }
 
-function listingDisplayUpdate( tableID, data ) {
+function listingDisplayUpdate( tableID, data, afterRowID ) {
 	
 	data[ 'slatAction' ] = 'admin:ajax.updateListingDisplay';
 	data[ 'propertyIdentifiers' ] = jQuery('#' + tableID).data('propertyidentifiers');
@@ -363,6 +386,12 @@ function listingDisplayUpdate( tableID, data ) {
 	data[ 'entityName' ] = jQuery('#' + tableID).data('entityname');
 	
 	var idProperty = jQuery('#' + tableID).data('idproperty');
+	var nextRowDepth = 0;
+	
+	if(afterRowID) {
+		nextRowDepth = jQuery('#' + afterRowID).find('[data-depth]').attr('data-depth');
+		nextRowDepth++;
+	}
 	
 	jQuery.ajax({
 		url: '/plugins/Slatwall/',
@@ -375,18 +404,26 @@ function listingDisplayUpdate( tableID, data ) {
 			alert('Error Loading');
 		},
 		success: function(r) {
+			
 			// Setup Selectors
 			var tableBodySelector = '#' + tableID + ' tbody';
 			var tableHeadRowSelector = '#' + tableID + ' thead tr';
 			
-			// Clear out the old Body
-			jQuery(tableBodySelector).html('');
+			// Clear out the old Body, if there is no afterRowID
+			if(!afterRowID) {
+				jQuery(tableBodySelector).html('');
+			}
 			
 			// Loop over each of the records in the response
 			jQuery.each( r["pageRecords"], function(ri, rv) {
 				
 				var rowSelector = jQuery('<tr></tr>');
 				jQuery(rowSelector).attr('id', rv[ idProperty ]);
+				
+				if(afterRowID) {
+					jQuery(rowSelector).attr('data-parentid', afterRowID);
+					jQuery(rowSelector).data('parentid', afterRowID);
+				}
 				
 				// Loop over each column of the header to pull the data out of the response and populate new td's
 				jQuery.each(jQuery(tableHeadRowSelector).children(), function(ci, cv){
@@ -395,15 +432,18 @@ function listingDisplayUpdate( tableID, data ) {
 					
 					if( jQuery(cv).hasClass('data') ) {
 						
-						if( rv[jQuery(cv).data('propertyidentifier')] == 'true') {
+						if( typeof rv[jQuery(cv).data('propertyidentifier')] === 'boolean' && rv[jQuery(cv).data('propertyidentifier')] ) {
 							newtd += '<td class="' + jQuery(cv).attr('class') + '">Yes</td>';
-						} else if ( !rv[jQuery(cv).data('propertyidentifier')] == 'false' ) {
+						} else if ( typeof rv[jQuery(cv).data('propertyidentifier')] === 'boolean' && !rv[jQuery(cv).data('propertyidentifier')] ) {
 							newtd += '<td class="' + jQuery(cv).attr('class') + '">No</td>';
 						} else {
-							newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+							if(jQuery(cv).hasClass('primary') && afterRowID) {
+								newtd += '<td class="' + jQuery(cv).attr('class') + '"><a href="#" class="table-action-expand depth' + nextRowDepth + '" data-depth="' + nextRowDepth + '"><i class="icon-plus"></i></a> ' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+							} else {
+								newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+							}
 						}
 						
-					
 					} else if( jQuery(cv).hasClass('sort') ) {
 						
 						newtd += '<td><a href="#" class="table-action-sort" data-idvalue="' + rv[ idProperty ] + '" data-sortpropertyvalue="' + rv.sortOrder + '"><i class="icon-move"></i></a></td>';
@@ -416,18 +456,7 @@ function listingDisplayUpdate( tableID, data ) {
 						
 						newtd += '<td>';
 						
-						if( jQuery(cv).data('editaction') != undefined ) {
-							link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
-							if( jQuery(cv).data('editquerystring') != undefined ) {
-								link += '&' + jQuery(cv).data('editquerystring');
-							}
-							if( jQuery(cv).data('editmodal') ) {
-								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
-							} else {
-								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
-							}
-						}
-						
+
 						if( jQuery(cv).data('detailaction') != undefined ) {
 							link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + rv[ idProperty ];
 							if( jQuery(cv).data('detailquerystring') != undefined ) {
@@ -437,6 +466,18 @@ function listingDisplayUpdate( tableID, data ) {
 								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-eye-open"></i></a> ';
 							} else {
 								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-eye-open"></i></a> ';	
+							}
+						}
+						
+						if( jQuery(cv).data('editaction') != undefined ) {
+							link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
+							if( jQuery(cv).data('editquerystring') != undefined ) {
+								link += '&' + jQuery(cv).data('editquerystring');
+							}
+							if( jQuery(cv).data('editmodal') ) {
+								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
+							} else {
+								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
 							}
 						}
 						
@@ -467,7 +508,11 @@ function listingDisplayUpdate( tableID, data ) {
 					jQuery(rowSelector).append(newtd);
 				});
 				
-				jQuery(tableBodySelector).append(jQuery(rowSelector));
+				if(!afterRowID) {
+					jQuery(tableBodySelector).append(jQuery(rowSelector));
+				} else {
+					jQuery('#' + afterRowID).after(jQuery(rowSelector));
+				}
 			});
 			
 			// Update the paging nav
@@ -482,6 +527,87 @@ function listingDisplayUpdate( tableID, data ) {
 			}
 		}
 	});
+}
+
+
+
+function tableExpandClick( toggleLink ) {
+	if(ajaxlock == 0) {
+		ajaxlock = 1;
+		
+		if( jQuery(toggleLink).hasClass('open') ) {
+			ajaxlock = 0;
+		} else {
+			
+			var idProperty = jQuery(toggleLink).closest('table').data('idproperty');
+			var parentIDProperty = jQuery(toggleLink).closest('table').data('parentidproperty');
+			var propertyIdentifiers = jQuery(toggleLink).closest('table').data('propertyidentifiers');
+			var expandAction = jQuery(toggleLink).closest('table').data('expandaction');
+			
+			var parentID = jQuery(toggleLink).data('parentid');
+			var depth = jQuery(toggleLink).data('depth');
+			var icon = jQuery(toggleLink).children('.icon-plus');
+			
+			var data = {};
+			data[ 'slatAction' ] = expandAction;
+			data[ 'F:' + parentIDProperty ] = parentID;
+			data[ 'propertyIdentifiers' ] = propertyIdentifiers;
+			
+			jQuery.ajax({
+				url: '/plugins/Slatwall/',
+				data: data,
+				dataType: 'json',
+				contentType: 'application/json',
+				success: function(r) {
+					jQuery.each(r["RECORDS"], function(r, rv){
+						
+						var newRow = jQuery('#' + parentID ).clone( true );
+						jQuery(newRow).attr('ID', rv[ idProperty ])
+						
+						jQuery.each(rv, function(p, pv) {
+							
+							if(jQuery(newRow).children('.' + p).children('.table-action-expand').length) {
+								
+								var newIcon = jQuery(newRow).children('.' + p).children('.table-action-expand').clone( true );
+								
+								jQuery(newIcon).data('depth', depth + 1);
+								jQuery(newIcon).data('parentid', rv[ idProperty ]);
+								
+								jQuery(newIcon).removeClass('depth' + depth);
+								jQuery(newIcon).addClass('depth' + (depth + 1));
+								
+								jQuery(newRow).children('.' + p).html( newIcon );
+								jQuery(newRow).children('.' + p).append( ' ' + pv );
+							} else {
+								
+								jQuery(newRow).children('.' + p).html(pv);	
+							}
+						});
+						
+						jQuery.each(jQuery(newRow).children('.admin').children('a'), function(i, v) {
+							jQuery(v).attr('href', jQuery(v).attr('href').replace(parentID, rv[idProperty]));
+						});
+						
+						jQuery('#' + parentID ).after(newRow);
+					});
+					
+					jQuery(toggleLink).addClass('open');
+					
+					jQuery(icon).removeClass('icon-plus');
+					jQuery(icon).addClass('icon-minus');
+					
+					ajaxlock = 0;
+				},
+				error: function(r) {
+					console.log(r);
+					
+					alert('Error Loading, check console for results.');
+					
+					ajaxlock = 0;
+				}
+			});
+		}
+	}
 }
 
 function buildPagingNav(currentPage, totalPages) {
@@ -615,84 +741,7 @@ function tableMultiselectClick( toggleLink ) {
 	jQuery(field).val(currentValues.join(','));
 }
 
-function tableExpandClick( toggleLink ) {
-	if(ajaxlock == 0) {
-		ajaxlock = 1;
-		
-		if( jQuery(toggleLink).hasClass('open') ) {
-			ajaxlock = 0;
-		} else {
-			
-			var idProperty = jQuery(toggleLink).closest('table').data('idproperty');
-			var parentIDProperty = jQuery(toggleLink).closest('table').data('parentidproperty');
-			var propertyIdentifiers = jQuery(toggleLink).closest('table').data('propertyidentifiers');
-			var expandAction = jQuery(toggleLink).closest('table').data('expandaction');
-			
-			var parentID = jQuery(toggleLink).data('parentid');
-			var depth = jQuery(toggleLink).data('depth');
-			var icon = jQuery(toggleLink).children('.icon-plus');
-			
-			var data = {};
-			data[ 'slatAction' ] = expandAction;
-			data[ 'F:' + parentIDProperty ] = parentID;
-			data[ 'propertyIdentifiers' ] = propertyIdentifiers;
-			
-			jQuery.ajax({
-				url: '/plugins/Slatwall/',
-				data: data,
-				dataType: 'json',
-				contentType: 'application/json',
-				success: function(r) {
-					jQuery.each(r["RECORDS"], function(r, rv){
-						
-						var newRow = jQuery('#' + parentID ).clone( true );
-						jQuery(newRow).attr('ID', rv[ idProperty ])
-						
-						jQuery.each(rv, function(p, pv) {
-							
-							if(jQuery(newRow).children('.' + p).children('.table-action-expand').length) {
-								
-								var newIcon = jQuery(newRow).children('.' + p).children('.table-action-expand').clone( true );
-								
-								jQuery(newIcon).data('depth', depth + 1);
-								jQuery(newIcon).data('parentid', rv[ idProperty ]);
-								
-								jQuery(newIcon).removeClass('depth' + depth);
-								jQuery(newIcon).addClass('depth' + (depth + 1));
-								
-								jQuery(newRow).children('.' + p).html( newIcon );
-								jQuery(newRow).children('.' + p).append( ' ' + pv );
-							} else {
-								
-								jQuery(newRow).children('.' + p).html(pv);	
-							}
-						});
-						
-						jQuery.each(jQuery(newRow).children('.admin').children('a'), function(i, v) {
-							jQuery(v).attr('href', jQuery(v).attr('href').replace(parentID, rv[idProperty]));
-						});
-						
-						jQuery('#' + parentID ).after(newRow);
-					});
-					
-					jQuery(toggleLink).addClass('open');
-					
-					jQuery(icon).removeClass('icon-plus');
-					jQuery(icon).addClass('icon-minus');
-					
-					ajaxlock = 0;
-				},
-				error: function(r) {
-					console.log(r);
-					
-					alert('Error Loading, check console for results.');
-					
-					ajaxlock = 0;
-				}
-			});
-		}
-	}
-}
+
 
 function updateGlobalSearchResults() {
 	
