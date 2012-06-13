@@ -57,7 +57,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.stockAdjustment#">
+		<cf_SlatwallTabGroup object="#rc.stockAdjustment#" allowComments="true">
 			<cf_SlatwallTab view="admin:warehouse/stockadjustments/products" />
 		</cf_SlatwallTabGroup>
 		
