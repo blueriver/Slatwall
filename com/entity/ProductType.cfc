@@ -112,9 +112,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
     
     // ============ START: Non-Persistent Property Methods =================
-	public any function getParentProductTypeOptions( string baseProductType ) {
+	public any function getParentProductTypeOptions( string baseProductType="" ) {
 		if(!structKeyExists(variables, "parentProductTypeOptions")) {
-			if(!structKeyExists(arguments, "baseProductType")) {
+			if( !len(arguments.baseProductType) ) {
 				arguments.baseProductType = getBaseProductType();
 			}
 			

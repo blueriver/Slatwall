@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.productType" type="any" />
+<cfparam name="rc.baseProductType" type="string" default="" />
 <cfparam name="rc.edit" default="false" >
 
 <cfoutput>
@@ -46,8 +47,8 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="activeFlag" edit="#rc.edit#">
-				<cfif !isNull(rc.productType.getParentProductType())>
-					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" edit="#rc.edit#">
+				<cfif isNull(rc.productType.getSystemCode()) or !len(rc.productType.getSystemCode())>
+					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" edit="#rc.edit#" valueOptions="#rc.productType.getParentProductTypeOptions(rc.baseProductType)#">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>

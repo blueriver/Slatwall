@@ -87,7 +87,7 @@ Notes:
 			</cfif>	
 			<!--- Create Return Order --->
 			<cfif rc.order.getQuantityDelivered()>
-				<cf_SlatwallActionCaller action="admin:order.processorder" text="#$.slatwall.rbKey('admin.order.processorder.createreturn_nav')#" queryString="processContext=createReturn&orderID=#rc.order.getOrderID()#" type="list" modal=true />
+				<cf_SlatwallActionCaller action="admin:order.processorder" text="#$.slatwall.rbKey('admin.order.processorder.createreturn_nav')#" queryString="processContext=createReturn&orderID=#rc.order.getOrderID()#&process=1" type="list" modal=true />
 			</cfif>
 		</cf_SlatwallActionBar>
 		

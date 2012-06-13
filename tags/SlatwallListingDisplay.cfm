@@ -120,9 +120,8 @@ Notes:
 			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
 			
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-expandaction="#attributes.expandAction#"', " ") />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-parentidproperty="#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
-			
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-childidproperty="#attributes.childPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
 		</cfif>
 		
 		<!--- Setup Sortability --->
@@ -223,7 +222,7 @@ Notes:
 						<cfloop array="#thistag.columns#" index="column">
 							<cfsilent>
 								<cfif not len(column.title)>
-									<cfset column.title = attributes.smartList.getPageRecords()[1].getTitleByPropertyIdentifier(column.propertyIdentifier) />
+									<cfset column.title = thistag.exampleEntity.getTitleByPropertyIdentifier(column.propertyIdentifier) />
 								</cfif>
 							</cfsilent>
 							<th class="data #column.tdClass#" data-propertyIdentifier="#column.propertyIdentifier#">
@@ -246,7 +245,7 @@ Notes:
 											<cfif column.range>
 												<cfsilent>
 													<cfset local.rangeClass = "text" />
-													<cfset local.fieldType = attributes.smartList.getPageRecords()[1].getFieldTypeByPropertyIdentifier(column.propertyIdentifier) />
+													<cfset local.fieldType = thistag.exampleEntity.getFieldTypeByPropertyIdentifier(column.propertyIdentifier) />
 													<cfif local.fieldType eq "dateTime">
 														<cfset local.rangeClass = "datetimepicker" />	
 													</cfif>
@@ -295,7 +294,7 @@ Notes:
 							<cfloop array="#thistag.columns#" index="column">
 								<!--- Expandable Check --->
 								<cfif column.tdclass eq "primary" and thistag.expandable>
-									<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"  data-parentid="#record.getPrimaryIDValue()#"><i class="icon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+									<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"><i class="icon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 								<cfelse>
 									<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 								</cfif>
