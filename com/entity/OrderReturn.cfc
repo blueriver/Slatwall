@@ -84,6 +84,14 @@ component displayname="Order Return" entityname="SlatwallOrderReturn" table="Sla
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentation() {
+		return getOrder().getOrderNumber() & " - " & getReturnLocation().getLocationName();
+	}
+	
+	// ==================  END:  Overridden Methods ========================
+	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
