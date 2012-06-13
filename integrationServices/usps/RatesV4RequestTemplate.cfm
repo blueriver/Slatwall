@@ -53,7 +53,7 @@
 	<Package ID="1">
 		<Service>ALL</Service>
 		<ZipOrigination>#setting('shipFromPostalCode')#</ZipOrigination>
-		<ZipDestination>#arguments.requestBean.getShipToPostalCode()#</ZipDestination>
+		<ZipDestination>#left(arguments.requestBean.getShipToPostalCode(),5)#</ZipDestination>
 		<Pounds>#local.pounds#</Pounds>
 		<Ounces>#local.ounces#</Ounces>
 		<Container/>
