@@ -57,12 +57,14 @@ Notes:
 	<cfparam name="attributes.valueClass" default="" />									<!--- hint: Adds class to whatever markup wraps the value element --->
 	<cfparam name="attributes.fieldClass" default="" />									<!--- hint: Adds class to the actual field element --->
 	<cfparam name="attributes.valueLinkClass" default="" />								<!--- hint: Adds class to whatever markup wraps the value link element --->
+		
+	<cfparam name="attributes.parentPropertyName" default="" />
 	
 	<cfparam name="attributes.toggle" type="string" default="no" />						<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
 	<cfparam name="attributes.displayType" default="dl" />								<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 	
 	<cfparam name="attributes.errors" type="array" default="#arrayNew(1)#" />			<!--- hint: This holds any errors for the current field if needed --->
-	
+		
 	<cfswitch expression="#attributes.displaytype#">
 		<!--- DL Case --->
 		<cfcase value="dl">
@@ -137,7 +139,7 @@ Notes:
 		<cfcase value="plain">
 			<cfif attributes.edit>
 				<cfoutput>
-					<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
+					<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" parentpropertyname="#attributes.parentPropertyName#" />
 					<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 				</cfoutput>
 			<cfelse>
@@ -146,7 +148,7 @@ Notes:
 						<a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a>
 					<cfelse>
 						<cfif attributes.fieldType eq "listingMultiselect">
-							<cf_SlatwallListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectFieldClass="#attributes.fieldClass#" multiselectvalues="#attributes.value#" edit="false"></cf_SlatwallListingDisplay>
+							<cf_SlatwallListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectFieldClass="#attributes.fieldClass#" multiselectvalues="#attributes.value#" parentpropertyname="#attributes.parentPropertyName#" edit="false"></cf_SlatwallListingDisplay>
 						<cfelse>
 							#attributes.value#
 						</cfif>

@@ -57,7 +57,6 @@ Notes:
 
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
-	<cfparam name="attributes.expandAction" type="string" default="#request.context.slatAction#" />  
 	
 	<!--- Sorting --->
 	<cfparam name="attributes.sortProperty" type="string" default="" />  			<!--- Setting this value will turn on Sorting --->
@@ -124,7 +123,6 @@ Notes:
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-parentidproperty="#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
-			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-childidproperty="#attributes.childPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
 		</cfif>
 		
 		<!--- Setup Sortability --->
