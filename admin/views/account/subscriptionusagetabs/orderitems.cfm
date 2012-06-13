@@ -41,7 +41,8 @@ Notes:
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.subscriptionUsage.getSubscriptionOrderItemsSmartList()#">
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderItem.order.orderNumber" />
+		<cf_SlatwallListingColumn propertyIdentifier="orderItem.order.orderNumber" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderItem.sku.product.productName" />
 		
 	</cf_SlatwallListingDisplay>
 </cfoutput>
