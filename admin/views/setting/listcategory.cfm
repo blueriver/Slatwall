@@ -42,7 +42,14 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.categorySmartList#" createAction="" />
 
-<cf_SlatwallListingDisplay smartList="#rc.categorySmartList#" recordEditAction="admin:setting.editcategory" recordEditQueryString="returnAction=admin:setting.listcategory"  recordEditModal="true">
+<cf_SlatwallListingDisplay smartList="#rc.categorySmartList#"
+						   recordDetailAction="admin:setting.detailcategory"
+						   recordDetailModal="true"
+						   recordEditAction="admin:setting.editcategory"
+						   recordEditQueryString="returnAction=admin:setting.listcategory"
+						   recordEditModal="true"
+						   parentpropertyname="parentCategory"
+						   childpropertyname="childCategories">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="categoryName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="restrictAccessFlag" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="allowProductAssignmentFlag" filter="true" />
