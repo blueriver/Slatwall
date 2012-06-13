@@ -52,6 +52,8 @@ Notes:
 		<cfparam name="attributes.backQueryString" type="string" default="" />
 		<cfparam name="attributes.cancelAction" type="string" default="#request.context.cancelAction#" />
 		<cfparam name="attributes.cancelQueryString" type="string" default="" />
+		<cfparam name="attributes.showedit" type="boolean" default="true" />
+		<cfparam name="attributes.showdelete" type="boolean" default="true" />
 		<cfsilent>
 			<cfif attributes.type eq "detail" and not attributes.object.isNew() and attributes.pageSubTitle eq "">
 				<cfset attributes.pageSubTitle = attributes.object.getSimpleRepresentation() />
@@ -134,8 +136,8 @@ Notes:
 										<cf_SlatwallActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#request.slatwallScope.rbKey('define.cancel')#" class="btn btn-inverse" icon="remove icon-white">
 										<cf_SlatwallActionCaller action="#request.context.saveAction#" text="#request.slatwallScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
 									<cfelse>
-										<cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">
-										<cf_SlatwallActionCaller action="#request.context.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true">
+										<cfif attributes.showdelete><cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
+										<cfif attributes.showedit><cf_SlatwallActionCaller action="#request.context.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true"></cfif>
 									</cfif>
 								</div>
 							<!--- Process --->

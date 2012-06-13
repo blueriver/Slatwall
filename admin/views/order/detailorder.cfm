@@ -34,27 +34,60 @@
     exception statement from your version.
 
 Notes:
-
+								
+	Order Status Types			
+	__________________			
+	ostNotPlaced				
+	ostNew						
+	ostProcessing				
+	ostOnHold					
+	ostClosed					
+	ostCanceled					
+								
+								
 --->
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
-			<cfif rc.order.getOrderStatusType().getSystemCode() neq "ostClosed">
+		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#" showedit="false" showdelete="false">
+			<!--- Place Order --->
+			<cfif listFind("ostNotPlaced", rc.order.getOrderStatusType().getSystemCode()) >
+				
+			</cfif>
+			<!--- Add Order Item --->
+			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
 				<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
 			</cfif>
-			<cfif rc.order.getQuantityDelivered()>
-				<cf_SlatwallActionCaller action="admin:order.processorder" text="#$.slatwall.rbKey('admin.order.processorder.createreturn_nav')#" queryString="processContext=createReturn&orderID=#rc.order.getOrderID()#" type="list" modal=true />
-			</cfif>
-			<cfif rc.order.getOrderStatusType().getSystemCode() neq "ostClosed">
+			<!--- Add Order Payment --->
+			<cfif listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
 				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()>
 					<li class="divider"></li>
 					<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
 						<cf_SlatwallActionCaller type="list" text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.payment')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#" modal=true />
 					</cfloop>
 				</cfif>
+			</cfif>
+			<!--- Place On Hold --->
+			<cfif listFind("ostNew,ostProcessing", rc.order.getOrderStatusType().getSystemCode()) >
+				
+			</cfif>
+			<!--- Take Off Hold --->
+			<cfif listFind("ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
+				
+			</cfif>
+			<!--- Cancel --->
+			<cfif listFind("ostNew,ostProcessing", rc.order.getOrderStatusType().getSystemCode())>
+				
+			</cfif>
+			<!--- Close --->
+			<cfif listFind("ostNew,ostProcessing", rc.order.getOrderStatusType().getSystemCode())>
+				
+			</cfif>	
+			<!--- Create Return Order --->
+			<cfif rc.order.getQuantityDelivered()>
+				<cf_SlatwallActionCaller action="admin:order.processorder" text="#$.slatwall.rbKey('admin.order.processorder.createreturn_nav')#" queryString="processContext=createReturn&orderID=#rc.order.getOrderID()#" type="list" modal=true />
 			</cfif>
 		</cf_SlatwallActionBar>
 		
@@ -65,10 +98,10 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress" valuelink="mailto:#rc.order.getAccount().getEmailAddress()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="phoneNumber">
 					<hr />
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType" edit="#rc.edit#">
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin">
 					<cfif !isNull(rc.order.getReferencedOrder())>
-						<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencedOrder" edit="#rc.edit#" valuelink="?slatAction=admin:order.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencedOrder" valuelink="?slatAction=admin:order.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
 					</cfif>
 				</cfif>
 			</cf_SlatwallPropertyList>
