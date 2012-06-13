@@ -342,42 +342,47 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			rc.errorData = [];
 			var errorEntities = [];
 			
-			if(structKeyExists(rc, "processRecords") && isArray(rc.processRecords)) {
-				for(var i=1; i<=arrayLen(rc.processRecords); i++) {
+			// If there weren't any process records passed in, then we will make a sinlge processrecord with the entire rc
+			if(!structKeyExists(rc, "processRecords") || !isArray(rc.processRecords)) {
+				rc.processRecords = [rc];	
+			}
+			
+			for(var i=1; i<=arrayLen(rc.processRecords); i++) {
+				
+				if(structKeyExists(rc.processRecords[i], entityPrimaryID)) {
+					structAppend(rc.processRecords[i], rc.processOptions, false);
+					var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ], 2=true} );
+					entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
 					
-					if(structKeyExists(rc.processRecords[i], entityPrimaryID)) {
-						structAppend(rc.processRecords[i], rc.processOptions, false);
-						var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ], 2=true} );
-						entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
+					// If there were errors, then add to the errored entities
+					if( !isNull(entity) && entity.hasErrors() ) {
+						// Add the error message to the top of the page
+						entity.showErrorMessages();
 						
-						// If there were errors, then add to the errored entities
-						if( !isNull(entity) && entity.hasErrors() ) {
-							// Add the error message to the top of the page
-							entity.showErrorMessages();
-							
-							arrayAppend(errorEntities, entity);
-							arrayAppend(rc.errorData, rc.processRecords[i]);
-							
-						// If there were not error messages then que and process emails & print options
-						} else if (!isNull(entity)) {
-							if(structKeyExists(rc.processOptions, "email")) {
-								for(var emailEvent in rc.processOptions.email) {
-									getEmailService().sendEmailByEvent(eventName="process#arguments.entityName#:#emailEvent#", entity=entity);
-								}
+						arrayAppend(errorEntities, entity);
+						arrayAppend(rc.errorData, rc.processRecords[i]);
+						
+					// If there were not error messages then que and process emails & print options
+					} else if (!isNull(entity)) {
+						if(structKeyExists(rc.processOptions, "email")) {
+							for(var emailEvent in rc.processOptions.email) {
+								getEmailService().sendEmailByEvent(eventName="process#arguments.entityName#:#emailEvent#", entity=entity);
 							}
 						}
 					}
 				}
-				if(arrayLen(errorEntities)) {
-					rc[ "process#arguments.entityName#SmartList" ] = entityService.invokeMethod( "get#arguments.entityName#SmartList" );
-					rc[ "process#arguments.entityName#SmartList" ].setRecords(errorEntities);
-					if(arrayLen(errorEntities) gt 1) {
-						rc.multiProcess = true;
-					}
-				} else {
-					redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
-				}
 			}
+			
+			if(arrayLen(errorEntities)) {
+				rc[ "process#arguments.entityName#SmartList" ] = entityService.invokeMethod( "get#arguments.entityName#SmartList" );
+				rc[ "process#arguments.entityName#SmartList" ].setRecords(errorEntities);
+				if(arrayLen(errorEntities) gt 1) {
+					rc.multiProcess = true;
+				}
+			} else {
+				redirectToReturnAction( "messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success" );
+			}
+			
 		
 		// IF we are just doing the process setup page, run this logic
 		} else {
