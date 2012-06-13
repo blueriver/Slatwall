@@ -117,12 +117,25 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			if(cmsCategoryIDs != "") {
 				var categories = getService("contentService").getCategoriesByCmsCategoryIDs(cmsCategoryIDs);
 				for(var subscriptionUsageBenefitAccount in getSlatwallScope().getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
-					for(var category in categories) {
-						if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive()
-							&& subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)
-							&& !subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasExcludedCategory(category)) {
-							logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
-							return true;
+					// check if subscription is active and the benefit account is not expired
+					if((isNull(subscriptionUsageBenefitAccount.getEndDateTime()) || dateCompare(now(),subscriptionUsageBenefitAccount.getEndDateTime()) == -1)
+						&& subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive()) {
+						// check if there is any exclusion
+						var hasExcludedCategory = false;
+						for(var category in categories) {
+							if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasExcludedCategory(category)) {
+								hasExcludedCategory = true;
+							}
+						}
+						
+						// if no excluded category found, check if user has access to this category
+						if(!hasExcludedCategory) {
+							for(var category in categories) {
+								if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
+									logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
+									return true;
+								}
+							}
 						}
 					}
 				}

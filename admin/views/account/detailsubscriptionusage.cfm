@@ -41,10 +41,15 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.subscriptionUsage#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionUsage#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionUsage#" showdelete="false">
+			<cf_SlatwallActionCaller action="admin:account.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.renewSubscription_nav')#" queryString="process=1&processContext=manualRenew&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" type="list" />
+			<cf_SlatwallActionCaller action="admin:account.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.cancelSubscription_nav')#" queryString="process=1&processContext=cancel&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" type="list" />
+			<cf_SlatwallActionCaller action="admin:account.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.updateSubscription_nav')#" queryString="process=1&processContext=update&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" type="list" />
+		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="currentStatusType" edit="false">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="autoRenewFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="autoPayFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.subscriptionUsage#" property="renewalPrice" edit="#rc.edit#">
@@ -56,8 +61,8 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.subscriptionUsage#">
-			<cf_SlatwallTab view="admin:account/subscriptionusagetabs/usagebenifits">
-			<cf_SlatwallTab view="admin:account/subscriptionusagetabs/renewalusagebenefits">
+			<!---<cf_SlatwallTab view="admin:account/subscriptionusagetabs/usagebenifits">
+			<cf_SlatwallTab view="admin:account/subscriptionusagetabs/renewalusagebenefits">--->
 			<cf_SlatwallTab view="admin:account/subscriptionusagetabs/orderitems">
 		</cf_SlatwallTabGroup>
 
