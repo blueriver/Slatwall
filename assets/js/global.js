@@ -468,7 +468,11 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 					
 					} else if( jQuery(cv).hasClass('multiselect') ) {
 						
-						newtd += '<td><a href="#" class="table-action-multiselect" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a></td>';
+						newtd += '<td><a href="#" class="table-action-multiselect';
+						if(jQuery(cv).hasClass('disabled')) {
+							newtd += ' disabled';
+						}
+						newtd += '" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a></td>';
 							
 					} else if ( jQuery(cv).hasClass('admin') ){
 						

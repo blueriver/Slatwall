@@ -113,6 +113,14 @@ Notes:
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
 		
+		<!--- Look for Hierarchy in example entity --->
+		<cfif not len(attributes.parentPropertyName)>
+			<cfset thistag.entityMetaData = getMetaData(thisTag.exampleEntity) />
+			<cfif structKeyExists(thisTag.entityMetaData, "parentPropertyName")>
+				<cfset attributes.parentPropertyName = thisTag.entityMetaData.parentPropertyName />
+			</cfif>
+		</cfif>
+		
 		<!--- Setup Hierarchy Expandable --->
 		<cfif len(attributes.parentPropertyName)>
 			<cfset thistag.expandable = true />
@@ -215,11 +223,19 @@ Notes:
 					<tr>
 						<!--- Selectable --->
 						<cfif thistag.selectable>
-							<th class="select">&nbsp;</th>
+							<cfset class="select">
+							<cfif not attributes.edit>
+								<cfset class &= " disabled" />
+							</cfif>
+							<th class="#class#">&nbsp;</th>
 						</cfif>
 						<!--- Multiselectable --->
 						<cfif thistag.multiselectable>
-							<th class="multiselect">&nbsp;</th>
+							<cfset class="multiselect">
+							<cfif not attributes.edit>
+								<cfset class &= " disabled" />
+							</cfif>
+							<th class="#class#">&nbsp;</th>
 						</cfif>
 						<!--- Sortable --->
 						<cfif thistag.sortable>

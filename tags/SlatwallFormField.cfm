@@ -45,7 +45,6 @@ Notes:
 	<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />
 	<cfparam name="attributes.valueOptionsSmartList" type="any" default="" />
 	<cfparam name="attributes.fieldAttributes" type="string" default="" />
-	<cfparam name="attributes.parentPropertyName" type="string" default="" />
 	
 	<!---
 		attributes.fieldType have the following options:
@@ -117,7 +116,7 @@ Notes:
 			</cfoutput>
 		</cfcase>
 		<cfcase value="listingMultiselect">
-			<cf_SlatwallListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectFieldClass="#attributes.fieldClass#" multiselectvalues="#attributes.value#" parentPropertyName="#attributes.parentPropertyName#" edit="true"></cf_SlatwallListingDisplay>
+			<cf_SlatwallListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectFieldClass="#attributes.fieldClass#" multiselectvalues="#attributes.value#" edit="true"></cf_SlatwallListingDisplay>
 		</cfcase>
 		<cfcase value="multiselect">
 			<cfoutput>

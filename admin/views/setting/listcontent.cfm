@@ -44,9 +44,7 @@ Notes:
 
 <cf_SlatwallListingDisplay smartList="#rc.contentSmartList#"
 						   recordDetailAction="admin:setting.detailcontent"
-						   recordEditAction="admin:setting.editcontent"
-						   parentpropertyname="parentContent"
-						   childpropertyname="childContents">
+						   recordEditAction="admin:setting.editcontent">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="templateFlag" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="allowPurchaseFlag" filter="true" />

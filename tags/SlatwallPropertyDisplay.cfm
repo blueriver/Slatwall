@@ -170,10 +170,12 @@ Notes:
 				<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
 			<cfelseif listFindNoCase("listingMultiselect", attributes.fieldType)>
 				<cfset attributes.valueOptionsSmartList = attributes.object.invokeMethod( "get#attributes.property#OptionsSmartList" ) />
+				<!---
 				<cfset thistag.propertyMetaData = attributes.object.getPropertyMetaData( attributes.property ) />
 				<cfif structKeyExists(thistag.propertyMetaData, "parentPropertyName")>
 					<cfset attributes.parentPropertyName = thistag.propertyMetaData.parentPropertyName />
 				</cfif>
+				--->
 			</cfif>
 		</cfif>
 			

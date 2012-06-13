@@ -44,9 +44,7 @@ Notes:
 	
 	<cf_SlatwallListingDisplay smartList="#rc.productTypeSmartList#" 
 								recordEditAction="admin:product.editproducttype"
-								recordDetailAction="admin:product.detailproducttype"
-								parentPropertyName="parentProductType"
-								childPropertyName="childProductTypes">
+								recordDetailAction="admin:product.detailproducttype">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productTypeName" />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" sort="false" />
 	</cf_SlatwallListingDisplay>

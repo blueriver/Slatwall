@@ -47,9 +47,7 @@ Notes:
 						   recordDetailModal="true"
 						   recordEditAction="admin:setting.editcategory"
 						   recordEditQueryString="returnAction=admin:setting.listcategory"
-						   recordEditModal="true"
-						   parentpropertyname="parentCategory"
-						   childpropertyname="childCategories">
+						   recordEditModal="true">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="categoryName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="restrictAccessFlag" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="allowProductAssignmentFlag" filter="true" />
