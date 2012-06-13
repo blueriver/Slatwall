@@ -137,7 +137,7 @@ Notes:
 		<cfcase value="plain">
 			<cfif attributes.edit>
 				<cfoutput>
-					<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" parentpropertyname="#attributes.parentPropertyName#" />
+					<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" valueOptionsSmartList="#attributes.valueOptionsSmartList#" />
 					<cf_SlatwallErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 				</cfoutput>
 			<cfelse>
