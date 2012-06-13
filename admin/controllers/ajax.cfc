@@ -69,6 +69,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc[ "pageRecordsCount" ] = arrayLen(smartList.getPageRecords());
 			rc[ "pageRecordsShow"] = smartList.getPageRecordsShow();
 			rc[ "pageRecordsStart" ] = smartList.getPageRecordsStart();
+			rc[ "pageRecordsEnd" ] = smartList.getPageRecordsEnd();
 			rc[ "currentPage" ] = smartList.getCurrentPage();
 			rc[ "totalPages" ] = smartList.getTotalPages();
 			rc[ "savedStateID" ] = smartList.getSavedStateID();

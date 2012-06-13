@@ -251,6 +251,22 @@ function setupEventHandlers() {
 		data[ 'P:Current' ] = jQuery(this).data('page');
 		
 		listingDisplayUpdate( jQuery(this).closest('.pagination').data('tableid'), data );
+		
+	});
+	// Listing Display - Paging Show Toggle
+	jQuery('body').on('click', '.paging-show-toggle', function(e) {
+		e.preventDefault();
+		jQuery(this).closest('ul').find('.show-option').toggle();
+		jQuery(this).closest('ul').find('.page-option').toggle();
+	});
+	// Listing Display - Paging Show Select
+	jQuery('body').on('click', '.show-option', function(e) {
+		e.preventDefault();
+		
+		var data = {};
+		data[ 'P:Show' ] = jQuery(this).data('show');
+		
+		listingDisplayUpdate( jQuery(this).closest('.pagination').data('tableid'), data );
 	});
 	
 	// Listing Display - Sorting
@@ -516,7 +532,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 			});
 			
 			// Update the paging nav
-			jQuery('div[class="pagination"][data-tableid="' + tableID + '"]').html(buildPagingNav(r["currentPage"], r["totalPages"]));
+			jQuery('div[class="pagination"][data-tableid="' + tableID + '"]').html(buildPagingNav(r["currentPage"], r["totalPages"], r["pageRecordsStart"], r["pageRecordsEnd"], r["recordsCount"]));
 			
 			// Update the saved state ID of the table
 			jQuery('#' + tableID).data('savedstateid', r["savedStateID"]);
@@ -530,87 +546,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 }
 
 
-
-function tableExpandClick( toggleLink ) {
-	if(ajaxlock == 0) {
-		ajaxlock = 1;
-		
-		if( jQuery(toggleLink).hasClass('open') ) {
-			ajaxlock = 0;
-		} else {
-			
-			var idProperty = jQuery(toggleLink).closest('table').data('idproperty');
-			var parentIDProperty = jQuery(toggleLink).closest('table').data('parentidproperty');
-			var propertyIdentifiers = jQuery(toggleLink).closest('table').data('propertyidentifiers');
-			var expandAction = jQuery(toggleLink).closest('table').data('expandaction');
-			
-			var parentID = jQuery(toggleLink).data('parentid');
-			var depth = jQuery(toggleLink).data('depth');
-			var icon = jQuery(toggleLink).children('.icon-plus');
-			
-			var data = {};
-			data[ 'slatAction' ] = expandAction;
-			data[ 'F:' + parentIDProperty ] = parentID;
-			data[ 'propertyIdentifiers' ] = propertyIdentifiers;
-			
-			jQuery.ajax({
-				url: '/plugins/Slatwall/',
-				data: data,
-				dataType: 'json',
-				contentType: 'application/json',
-				success: function(r) {
-					jQuery.each(r["RECORDS"], function(r, rv){
-						
-						var newRow = jQuery('#' + parentID ).clone( true );
-						jQuery(newRow).attr('ID', rv[ idProperty ])
-						
-						jQuery.each(rv, function(p, pv) {
-							
-							if(jQuery(newRow).children('.' + p).children('.table-action-expand').length) {
-								
-								var newIcon = jQuery(newRow).children('.' + p).children('.table-action-expand').clone( true );
-								
-								jQuery(newIcon).data('depth', depth + 1);
-								jQuery(newIcon).data('parentid', rv[ idProperty ]);
-								
-								jQuery(newIcon).removeClass('depth' + depth);
-								jQuery(newIcon).addClass('depth' + (depth + 1));
-								
-								jQuery(newRow).children('.' + p).html( newIcon );
-								jQuery(newRow).children('.' + p).append( ' ' + pv );
-							} else {
-								
-								jQuery(newRow).children('.' + p).html(pv);	
-							}
-						});
-						
-						jQuery.each(jQuery(newRow).children('.admin').children('a'), function(i, v) {
-							jQuery(v).attr('href', jQuery(v).attr('href').replace(parentID, rv[idProperty]));
-						});
-						
-						jQuery('#' + parentID ).after(newRow);
-					});
-					
-					jQuery(toggleLink).addClass('open');
-					
-					jQuery(icon).removeClass('icon-plus');
-					jQuery(icon).addClass('icon-minus');
-					
-					ajaxlock = 0;
-				},
-				error: function(r) {
-					console.log(r);
-					
-					alert('Error Loading, check console for results.');
-					
-					ajaxlock = 0;
-				}
-			});
-		}
-	}
-}
-
-function buildPagingNav(currentPage, totalPages) {
+function buildPagingNav(currentPage, totalPages, pageRecordStart, pageRecordEnd, recordsCount) {
 	var nav = '';
 	
 	currentPage = parseInt(currentPage);
@@ -633,35 +569,45 @@ function buildPagingNav(currentPage, totalPages) {
 			pageCount = totalPages;
 		}
 		
+		
+		nav += '<li><a href="##" class="paging-show-toggle">Show <span class="details">(' + pageRecordStart + ' - ' + pageRecordEnd + ' of ' + recordsCount + ')</a></li>';
+		nav += '<li><a href="##" class="show-option" data-show="10">10</a></li>';
+		nav += '<li><a href="##" class="show-option" data-show="25">25</a></li>';
+		nav += '<li><a href="##" class="show-option" data-show="50">50</a></li>';
+		nav += '<li><a href="##" class="show-option" data-show="100">100</a></li>';
+		nav += '<li><a href="##" class="show-option" data-show="500">500</a></li>';
+		nav += '<li><a href="##" class="show-option" data-show="ALL">ALL</a></li>';
+		
+		
 		if(currentPage > 1) {
-			nav += '<li><a href="#" class="listing-pager prev" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
+			nav += '<li><a href="#" class="listing-pager page-option prev" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
 		} else {
-			nav += '<li class="disabled prev"><a href="#">&laquo;</a></li>';
+			nav += '<li class="disabled prev"><a href="#" class="page-option">&laquo;</a></li>';
 		}
 		
 		if(currentPage > 3 && totalPages > 6) {
-			nav += '<li><a href="#" class="listing-pager" data-page="1">1</a></li>';
-			nav += '<li class="disabled"><a href="#">...</a></li>';
+			nav += '<li><a href="#" class="listing-pager page-option" data-page="1">1</a></li>';
+			nav += '<li class="disabled"><a href="#" class="page-option">...</a></li>';
 		}
 	
 		for(var i=pageStart; i<pageStart + pageCount; i++){
 			
 			if(currentPage == i) {
-				nav += '<li class="active"><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+				nav += '<li class="active"><a href="#" class="listing-pager page-option" data-page="' + i + '">' + i + '</a></li>';
 			} else {
-				nav += '<li><a href="#" class="listing-pager" data-page="' + i + '">' + i + '</a></li>';
+				nav += '<li><a href="#" class="listing-pager page-option" data-page="' + i + '">' + i + '</a></li>';
 			}
 		}
 		
 		if(currentPage < totalPages - 3 && totalPages > 6) {
-			nav += '<li class="disabled"><a href="#">...</a></li>';
-			nav += '<li><a href="#" class="listing-pager" data-page="' + totalPages + '">' + totalPages + '</a></li>';
+			nav += '<li class="disabled"><a href="#" class="page-option">...</a></li>';
+			nav += '<li><a href="#" class="listing-pager page-option" data-page="' + totalPages + '">' + totalPages + '</a></li>';
 		}
 		
 		if(currentPage < totalPages) {
-			nav += '<li><a href="#" class="listing-pager next" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
+			nav += '<li><a href="#" class="listing-pager page-option next" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
 		} else {
-			nav += '<li class="disabled next"><a href="#">&raquo;</a></li>';
+			nav += '<li class="disabled next"><a href="#" class="page-option">&raquo;</a></li>';
 		}
 		
 		nav += '</ul>';

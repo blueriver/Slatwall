@@ -76,19 +76,7 @@ Notes:
 									<input type="hidden" name="slatAction" value="#request.context.slatAction#" />
 									<input type="text" name="keywords" value="#request.context.keywords#" placeholder="#request.slatwallScope.rbKey('define.search')# #attributes.pageTitle#" data-tableid="LD#replace(attributes.object.getSavedStateID(),'-','','all')#">
 								</form>
-								<cfif attributes.object.getRecordsCount() gt 10>
-									<div class="btn-group">
-										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-align-justify"></i> #request.slatwallScope.rbKey('define.show')# <span class="caret"></span></button>
-										<ul class="dropdown-menu">
-											<li><a href="#attributes.object.buildURL('P:Show=10')#">10<cfif attributes.object.getPageRecordsShow() eq 10> <i class="icon-ok"></i></cfif></a></li>
-											<li><a href="#attributes.object.buildURL('P:Show=25')#">25<cfif attributes.object.getPageRecordsShow() eq 25> <i class="icon-ok"></i></cfif></a></li>
-											<li><a href="#attributes.object.buildURL('P:Show=50')#">50<cfif attributes.object.getPageRecordsShow() eq 50> <i class="icon-ok"></i></cfif></a></li>
-											<li><a href="#attributes.object.buildURL('P:Show=100')#">100<cfif attributes.object.getPageRecordsShow() eq 100> <i class="icon-ok"></i></cfif></a></li>
-											<li><a href="#attributes.object.buildURL('P:Show=500')#">500<cfif attributes.object.getPageRecordsShow() eq 500> <i class="icon-ok"></i></cfif></a></li>
-											<li><a href="#attributes.object.buildURL('P:Show=all')#">ALL<cfif attributes.object.getPageRecordsShow() gt 500> <i class="icon-ok"></i></cfif></a></li>
-										</ul>
-									</div>
-								</cfif>
+								
 								<!---
 								<div class="btn-group">
 									<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #request.slatwallScope.rbKey('define.actions')# <span class="caret"></span></button>

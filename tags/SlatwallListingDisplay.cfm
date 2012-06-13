@@ -118,6 +118,9 @@ Notes:
 		<cfif len(attributes.parentPropertyName)>
 			<cfset thistag.expandable = true />
 			
+			<cfset attributes.smartList.joinRelatedProperty( attributes.smartList.getBaseEntityName() , attributes.parentPropertyName, "LEFT") />
+			<cfset attributes.smartList.addFilter("#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#", "NULL") />
+			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-parentidproperty="#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
@@ -350,26 +353,33 @@ Notes:
 			<cfif attributes.smartList.getTotalPages() gt 1>
 				<div class="pagination" data-tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#">
 					<ul>
+						<li><a href="##" class="paging-show-toggle">#request.slatwallScope.rbKey('define.show')# <span class="details">(#attributes.smartList.getPageRecordsStart()# - #attributes.smartList.getPageRecordsEnd()# #lcase(request.slatwallScope.rbKey('define.of'))# #attributes.smartList.getRecordsCount()#)</a></li>
+						<li><a href="##" class="show-option" data-show="10">10</a></li>
+						<li><a href="##" class="show-option" data-show="25">25</a></li>
+						<li><a href="##" class="show-option" data-show="50">50</a></li>
+						<li><a href="##" class="show-option" data-show="100">100</a></li>
+						<li><a href="##" class="show-option" data-show="500">500</a></li>
+						<li><a href="##" class="show-option" data-show="ALL">ALL</a></li>
 						<cfif attributes.smartList.getCurrentPage() gt 1>
-							<li><a href="##" class="listing-pager prev" data-page="#attributes.smartList.getCurrentPage() - 1#">&laquo;</a></li>
+							<li><a href="##" class="listing-pager page-option prev" data-page="#attributes.smartList.getCurrentPage() - 1#">&laquo;</a></li>
 						<cfelse>
-							<li class="disabled"><a href="##" class="prev">&laquo;</a></li>
+							<li class="disabled"><a href="##" class="page-option prev">&laquo;</a></li>
 						</cfif>
 						<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() gt 3>
-							<li><a href="##" class="listing-pager" data-page="1">1</a></li>
-							<li class="disabled"><a href="##">...</a></li>
+							<li><a href="##" class="listing-pager page-option" data-page="1">1</a></li>
+							<li class="disabled"><a href="##" class="page-option">...</a></li>
 						</cfif>
 						<cfloop from="#local.pageStart#" to="#local.pageEnd#" index="i" step="1">
-							<li <cfif attributes.smartList.getCurrentPage() eq i>class="active"</cfif>><a href="##" class="listing-pager" data-page="#i#">#i#</a></li>
+							<li <cfif attributes.smartList.getCurrentPage() eq i>class="active"</cfif>><a href="##" class="listing-pager page-option" data-page="#i#">#i#</a></li>
 						</cfloop>
 						<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages() - 3>
-							<li class="disabled"><a href="##">...</a></li>
-							<li><a href="##" class="listing-pager" data-page="#attributes.smartList.getTotalPages()#">#attributes.smartList.getTotalPages()#</a></li>
+							<li class="disabled"><a href="##" class="page-option">...</a></li>
+							<li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getTotalPages()#">#attributes.smartList.getTotalPages()#</a></li>
 						</cfif>
 						<cfif attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages()>
-							<li><a href="##" class="listing-pager next" data-page="#attributes.smartList.getCurrentPage() + 1#">&raquo;</a></li>
+							<li><a href="##" class="listing-pager page-option next" data-page="#attributes.smartList.getCurrentPage() + 1#">&raquo;</a></li>
 						<cfelse>
-							<li class="disabled"><a href="##" class="next">&raquo;</a></li>
+							<li class="disabled"><a href="##" class="page-option next">&raquo;</a></li>
 						</cfif>
 					</ul>
 				</div>
