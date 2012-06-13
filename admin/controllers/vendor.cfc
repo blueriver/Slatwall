@@ -67,7 +67,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function getVendorOrderDetailData(required struct rc) {
 		// Get Receivers
-		rc.stockReceiverVendorOrderSmartList = getStockService().getStockReceiverVendorOrderSmartList();
+		rc.stockReceiverVendorOrderSmartList = getStockService().getStockReceiverSmartList();
 		rc.stockReceiverVendorOrderSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
 		
 		// Get Vendor's Products
