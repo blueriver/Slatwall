@@ -57,7 +57,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.vendorOrder#">
+		<cf_SlatwallTabGroup object="#rc.vendorOrder#" allowComments="true">
 			<cf_SlatwallTab view="admin:vendor/vendorordertabs/items" />
 			<cf_SlatwallTab view="admin:vendor/vendorordertabs/stockreceivers" />
 			<!---<cf_SlatwallTab view="admin:vendor/vendorordertabs/products" />--->

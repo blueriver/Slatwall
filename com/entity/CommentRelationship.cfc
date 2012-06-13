@@ -52,6 +52,7 @@ component displayname="Comment Relationship" entityname="SlatwallCommentRelation
 	
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
+	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -64,8 +65,10 @@ component displayname="Comment Relationship" entityname="SlatwallCommentRelation
 	// Non-Persistent Properties
 	
 	public any function getRelationshipEntity() {
-		if(!isNull(variables.order)) {
-			return variables.order;
+		if(!isNull(getOrder())) {
+			return getOrder();
+		} else if (!isNull(getStockAdjustment())) {
+			return getStockAdjustment();
 		}
 	}
 	
