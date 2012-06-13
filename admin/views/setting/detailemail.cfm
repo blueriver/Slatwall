@@ -50,6 +50,10 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.email#" property="eventName" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.email#">
+			<cf_SlatwallTab view="admin:setting/emailtabs/emailsettings" />
+		</cf_SlatwallTabGroup>
 
 	</cf_SlatwallDetailForm>
 </cfoutput>

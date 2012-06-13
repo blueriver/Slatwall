@@ -42,10 +42,10 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.emailTemplateSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.emailTemplateSmartList#" 
-			recordEditAction="admin:setting.editemailTemplate" 
-			recordEditQueryString="returnAction=admin:setting.listemailTemplate" 
-			recordDeleteAction="admin:setting.deleteemailTemplate">
+<cf_SlatwallListingDisplay smartList="#rc.emailTemplateSmartList#"
+						   recordDetailAction="admin:setting.detailemailTemplate"
+						   recordEditAction="admin:setting.editemailTemplate"
+						   recordEditQueryString="returnAction=admin:setting.listemailTemplate">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="emailTemplateName" search="true" />
 </cf_SlatwallListingDisplay>
 

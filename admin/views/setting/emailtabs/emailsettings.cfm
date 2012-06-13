@@ -36,17 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.emailSmartList" type="any" />
+<cfparam name="rc.email" type="any" />
 
 <cfoutput>
-	
-<cf_SlatwallActionBar type="listing" object="#rc.emailSmartList#" createModal="true" />
-
-<cf_SlatwallListingDisplay smartList="#rc.emailSmartList#"
-						   recordDetailAction="admin:setting.detailemail"
-						   recordEditAction="admin:setting.editemail"
-						   recordEditQueryString="returnAction=admin:setting.listemail">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="emailName" search="true" />
-</cf_SlatwallListingDisplay>
-
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="emailFromAddress" settingObject="#rc.email#" />
+		<cf_SlatwallSetting settingName="emailToAddress" settingObject="#rc.email#" />
+		<cf_SlatwallSetting settingName="emailCCAddress" settingObject="#rc.email#" />
+		<cf_SlatwallSetting settingName="emailBCCAddress" settingObject="#rc.email#" />
+		<cf_SlatwallSetting settingName="emailSubject" settingObject="#rc.email#" />
+	</cf_SlatwallSettingTable>
 </cfoutput>

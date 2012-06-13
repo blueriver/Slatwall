@@ -4,10 +4,17 @@
 		<column name="settingName" />
 		<column name="settingValue" update="false" />
 		<column name="productTypeID" update="false" />
+		<column name="emailTemplateID" update="false" />
 		<column name="paymentMethodID" update="false" />
 	</Columns>
 	<Records>
+		<Record settingID="dbb327f4e3ad1e47a1a932a8ad2a3ad8" settingName="emailFromAddress" settingValue="info@myslatwallStore.com" />
+		<Record settingID="dbb327f508d234f07c5c50064d14f223" settingName="emailToAddress" settingValue="info@myslatwallStore.com" />
+		<Record settingID="dbb327f6b9e0d4497b3cd2f9c9a6cc7a" settingName="emailSubject" settingValue="Message From MySlatwallStore" />
 		
+		<Record settingID="dbb327f70a6671d22c58b7635e8f4921" settingName="emailToAddress" settingValue="${account.emailAddress}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
+		<Record settingID="dbb327f8d5114720d065a3009a4da731" settingName="emailSubject" settingValue="Order Confirmation - Order Number: ${orderNumber}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
+			
 		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="globalCurrencyLocale" settingValue="English (US)" />
 		<Record settingID="dbb327b0b5496521002aa35ab68ab120" settingName="globalCurrencyType" settingValue="Local" />
 		<Record settingID="dbb327abbbe32d31cc7c2b8e1e4c0c4c" settingName="globalDateFormat" settingValue="mmm dd, yyyy" />
@@ -77,12 +84,6 @@
 Below Are UUID's to use... delete after using
 	
 	
-	
-	dbb327f4e3ad1e47a1a932a8ad2a3ad8
-	dbb327f508d234f07c5c50064d14f223
-	dbb327f6b9e0d4497b3cd2f9c9a6cc7a
-	dbb327f70a6671d22c58b7635e8f4921
-	dbb327f8d5114720d065a3009a4da731
 	dbb327f9dd92fd95a7c6fdf14f1b141c
 	dbb327fafb738698d58c2fa990ae45dd
 	dbb327fbdba2dfd5a9d385ba7fa98ee0
