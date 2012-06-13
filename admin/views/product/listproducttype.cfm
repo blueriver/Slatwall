@@ -48,6 +48,7 @@ Notes:
 								parentPropertyName="parentProductType"
 								childPropertyName="childProductTypes">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productTypeName" />
+		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" sort="false" />
 	</cf_SlatwallListingDisplay>
 
 </cfoutput>
