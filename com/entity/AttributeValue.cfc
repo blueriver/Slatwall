@@ -143,14 +143,6 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	
 	// ============== START: Overridden Implicet Getters ===================
 	
-	public void function setAttributeValue(required any attributeValue) {
-		if(getAttribute().getAttributeType().getSystemCode() == "atPassword") {
-			variables.attributeValueEncrypted = encryptValue(arguments.attributeValue);
-		} else {
-			variables.attributeValue = arguments.attributeValue;
-		}
-	}
-	
 	public any function getAttributeValue() {
 		if(structKeyExists(variables, "attributeValue") && len(variables.attributeValue)) {
 			return variables.attributeValue;
@@ -168,6 +160,24 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// ==============  END: Overridden Implicet Getters ====================
 	
 	// ================== START: Overridden Methods ========================
+	
+	public void function preInsert(){
+		if(getAttribute().getAttributeType().getSystemCode() == "atPassword" && structKeyExists(variables, "attributeValue")) {
+			variables.attributeValueEncrypted = encryptValue(variables.attributeValue);
+			structDelete(variables, "attributeValue");
+		}
+		
+		super.preInsert();
+	}
+	
+	public void function preUpdate(struct oldData){
+		if(getAttribute().getAttributeType().getSystemCode() == "atPassword" && structKeyExists(variables, "attrubuteValue")) {
+			variables.attributeValueEncrypted = encryptValue(variables.attributeValue);
+			structDelete(variables, "attributeValue");
+		}
+		
+		super.preUpdate(argumentcollection=arguments);
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 		
