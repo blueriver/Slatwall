@@ -117,10 +117,13 @@ Notes:
 		<cfif len(attributes.parentPropertyName)>
 			<cfset thistag.expandable = true />
 			
+			
+			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
+			
 			<cfset attributes.smartList.joinRelatedProperty( attributes.smartList.getBaseEntityName() , attributes.parentPropertyName, "LEFT") />
 			<cfset attributes.smartList.addFilter("#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#", "NULL") />
 			
-			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
+			<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, "#thisTag.exampleEntity.getPrimaryIDPropertyName()#Path") />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-parentidproperty="#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
 		</cfif>
@@ -131,7 +134,9 @@ Notes:
 				<cfset thistag.sortable = true />
 				
 				<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-sortable', ' ') />
+				
 				<cfset attributes.smartList.addOrder("#attributes.sortProperty#|ASC") />
+				
 				<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, "#attributes.sortProperty#") />
 				
 				<cfif len(attributes.sortContextID) and len(attributes.sortContextIDValue)>
@@ -279,7 +284,7 @@ Notes:
 				</thead>
 				<tbody <cfif thistag.sortable>class="sortable"</cfif>>
 					<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
-						<tr id="#record.getPrimaryIDValue()#">
+						<tr id="#record.getPrimaryIDValue()#" <cfif thistag.expandable>idPath="#record.getValueByPropertyIdentifier( propertyIdentifier="#thistag.exampleEntity.getPrimaryIDPropertyName()#Path" )#"</cfif>>
 							<!--- Selectable --->
 							<cfif thistag.selectable>
 								<td><a href="##" class="table-action-select" data-idvalue="#record.getPrimaryIDValue()#"><i class="slatwall-ui-raido"></i></a></td>

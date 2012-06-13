@@ -437,6 +437,8 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 				jQuery(rowSelector).attr('id', rv[ idProperty ]);
 				
 				if(afterRowID) {
+					jQuery(rowSelector).attr('data-idpath', rv[ idProperty + 'Path' ]);
+					jQuery(rowSelector).data('idpath', rv[ idProperty + 'Path' ]);
 					jQuery(rowSelector).attr('data-parentid', afterRowID);
 					jQuery(rowSelector).data('parentid', afterRowID);
 				}
