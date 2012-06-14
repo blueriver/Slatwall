@@ -40,15 +40,18 @@ Notes:
 <cfoutput>
 	<cfset local.images = rc.product.getProductImages() />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.product.getProductImagesSmartList()#" 
-			recordEditAction="admin:product.editproductImage"
-			recordEditQueryString="productID=#rc.product.getProductID()#"
-			recordEditModal="true"
-			recordDeleteAction="admin:product.deleteproductImage"
-			recorddeletequerystring="returnAction=product.editproduct&productID=#rc.product.getProductID()###tabalternateimages">
+	<cf_SlatwallListingDisplay smartList="#rc.product.getProductImagesSmartList()#"
+							   recordDetailAction="admin:product.detailProductImage"
+							   recordDetailModal="true"
+							   recordEditAction="admin:product.editproductImage"
+							   recordEditQueryString="productID=#rc.product.getProductID()#"
+							   recordEditModal="true"
+							   recordDeleteAction="admin:product.deleteproductImage"
+							   recorddeletequerystring="returnAction=product.editproduct&productID=#rc.product.getProductID()###tabalternateimages">
 		
 				
-		<cf_SlatwallListingColumn propertyIdentifier="imageName" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="imageName" />
+		<cf_SlatwallListingColumn propertyIdentifier="imageDescription" />
 		<cf_SlatwallListingColumn propertyIdentifier="imageType.type" />
 	</cf_SlatwallListingDisplay>
 	
