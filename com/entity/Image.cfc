@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" persistent="true" extends="BaseEntity" discriminatorColumn="directory" {
+component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" persistent="true" extends="BaseEntity" {
 			
 	// Persistent Properties
 	property name="imageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -44,12 +44,12 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	property name="imageDescription" ormtype="string" length="4000";
 	property name="imageExtension" ormtype="string";
 	property name="imageFile" ormtype="string";
+	property name="directory" ormtype="string";
 	
-	// Related entity properties
-	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID";
-	
-	// Special helper property
-	property name="directory" insert="false" update="false";
+	// Related entity properties (many-to-one)
+	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID" systemCode="itProduct";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -65,8 +65,22 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 		return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/#getDirectory()#/";	
 	}
 	
-	public string function getResizedImagePath(numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		arguments.imagePath = getImagePath();
+		
+		if(structKeyExists(arguments, "size")) {
+			arguments.size = lcase(arguments.size);
+			if(arguments.size eq "l" || arguments.size eq "large") {
+				arguments.size = "large";
+			} else if (arguments.size eq "m" || arguments.size eq "medium") {
+				arguments.size = "medium";
+			} else {
+				arguments.size = "small";
+			}
+			arguments.width = setting("productImage#arguments.size#Width");
+			arguments.height = setting("productImage#arguments.size#Height");
+		}
+		
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
@@ -98,28 +112,55 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 	}
 	
-	public array function getImageTypeOptions() {
-		if(!structKeyExists(variables, "imageTypeOptions")) {
-			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
-			smartList.addSelect(propertyIdentifier="type", alias="name");
-			smartList.addSelect(propertyIdentifier="typeID", alias="value");
-			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="itProduct");
-			smartList.addOrder("type|ASC");
-			
-			variables.imageTypeOptions = smartList.getRecords();
-		}
-		return variables.imageTypeOptions;
-	}
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Product (many-to-one)
+	public void function setProduct(required any product) {
+		variables.product = arguments.product;
+		if(isNew() or !arguments.product.hasProductImage( this )) {
+			arrayAppend(arguments.product.getProductImages(), this);
+		}
+	}
+	public void function removeProduct(any product) {
+		if(!structKeyExists(arguments, "product")) {
+			arguments.product = variables.product;
+		}
+		var index = arrayFind(arguments.product.getProductImages(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.product.getProductImages(), index);
+		}
+		structDelete(variables, "product");
+	}
+	
+	// Promotion (many-to-one)
+	public void function setPromotion(required any promotion) {
+		variables.promotion = arguments.promotion;
+		if(isNew() or !arguments.promotion.hasPromotionImage( this )) {
+			arrayAppend(arguments.promotion.getPromotionImages(), this);
+		}
+	}
+	public void function removePromotion(any promotion) {
+		if(!structKeyExists(arguments, "promotion")) {
+			arguments.promotion = variables.promotion;
+		}
+		var index = arrayFind(arguments.promotion.getPromotionImages(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.promotion.getPromotionImages(), index);
+		}
+		structDelete(variables, "promotion");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "imageName";
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 		
