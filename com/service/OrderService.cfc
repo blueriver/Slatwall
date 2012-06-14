@@ -57,6 +57,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="subscriptionService";
 	property name="typeService";
 	
+	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
 	
@@ -708,7 +709,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(arguments.processContext == "placeOrder") {
 			
 			// First we need to lock the session so that this order doesn't get placed twice.
-			lock scope="session", timeout="60" {
+			lock scope="session" timeout="60" {
 			
 				// Make sure that the orderID passed in to the data is what we use because this could be a double click senario so we don't want to rely on the order passed in as the cart
 				arguments.order = this.getOrder(arguments.data.orderID);
@@ -808,6 +809,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						getSlatwallScope().setORMHasErrors( true );
 					}
 				}
+				
 			}	// END OF LOCK
 			
 		// CONTEXT: createReturn
@@ -924,7 +926,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 				
 			}
-			
+		
 		// CONTEXT: Not Defined
 		} else {
 			
@@ -954,7 +956,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				// Per Fulfillment Method Type set whatever other details need to be set
 				switch(arguments.orderFulfillment.getFulfillmentMethodType()) {
-					case("auto"): {
+					
+					case "auto": {
 						// With an 'auto' type of setup, if no records exist in the data, then we can just create deliveryItems for the unfulfilled quantities of each item
 						if(!structKeyExists(arguments.data, "records")) {
 							arguments.data.records = [];
@@ -964,7 +967,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						}
 						break;
 					}
-					case("shipping"): {
+					case "shipping": {
 						// Set the shippingAddress, shippingMethod & potentially tracking number
 						orderDelivery.setShippingAddress( arguments.orderFulfillment.getShippingAddress().copyAddress( saveNewAddress=true ) );
 						orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
@@ -1364,4 +1367,5 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}	
 
 	// =====================  END: Status Methods ===============================
+	
 }

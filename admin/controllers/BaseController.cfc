@@ -166,21 +166,23 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	// Implicit onMissingMethod() to handle standard CRUD
-	public void function onMissingMethod() {
-		if( left(arguments.missingMethodName, 4) == "list" ) {
-			genericListMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
-		} else if ( left(arguments.missingMethodName, 4) == "edit" ) {
-			genericEditMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
-		} else if ( left(arguments.missingMethodName, 4) == "save" ) {
-			genericSaveMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
-		} else if ( left(arguments.missingMethodName, 6) == "detail" ) {
-			genericDetailMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
-		} else if ( left(arguments.missingMethodName, 6) == "delete" ) {
-			genericDeleteMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
-		} else if ( left(arguments.missingMethodName, 6) == "create" ) {
-			genericCreateMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
-		} else if ( left(arguments.missingMethodName, 7) == "process" ) {
-			genericProcessMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+	public void function onMissingMethod(string missingMethodName, struct missingMethodArguments) {
+		if(structKeyExists(arguments, "missingMethodName")) {
+			if( left(arguments.missingMethodName, 4) == "list" ) {
+				genericListMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			} else if ( left(arguments.missingMethodName, 4) == "edit" ) {
+				genericEditMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			} else if ( left(arguments.missingMethodName, 4) == "save" ) {
+				genericSaveMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			} else if ( left(arguments.missingMethodName, 6) == "detail" ) {
+				genericDetailMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			} else if ( left(arguments.missingMethodName, 6) == "delete" ) {
+				genericDeleteMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			} else if ( left(arguments.missingMethodName, 6) == "create" ) {
+				genericCreateMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			} else if ( left(arguments.missingMethodName, 7) == "process" ) {
+				genericProcessMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			}	
 		}
 	}
 	

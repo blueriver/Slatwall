@@ -175,7 +175,7 @@ component extends="BaseService" accessors="true" output="false" {
 			account = get('Account',{accountID=accounts.accountID[i]});
 			account.addPermissionGroup(permissionGroup);
 		}
-		getDAO().FlushORMSession();
+		//getDAO().FlushORMSession();
 	}
 	
 }
