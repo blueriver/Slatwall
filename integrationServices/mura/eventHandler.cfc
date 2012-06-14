@@ -6,9 +6,6 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		// Set this object as an event handler
 		variables.pluginConfig.addEventHandler(this);
 		
-		// Load the Slatwall Application if Mura Reloads
-		getSlatwallFW1Application().onApplicationStart();
-		
 		// Setup slatwall as not initialized so that it loads on next request
 		application.slatwall.initialized = false;
 		
