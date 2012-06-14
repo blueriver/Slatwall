@@ -72,6 +72,7 @@ component extends="BaseController" output=false accessors=true {
 	public void function saveImage(required struct rc){
 		
 		var image = getImageService().getImage(rc.imageID, true);
+		image.setDirectory(rc.directory);
 		
 		if(rc.imageFile != ''){
 			var documentData = fileUpload(getTempDirectory(),'imageFile','','makeUnique');

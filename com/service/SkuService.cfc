@@ -185,7 +185,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 
 	public any function processImageUpload(required any Sku, required struct imageUploadResult) {
 		var imagePath = arguments.Sku.getImagePath();
-		var imageSaved = getService("imageService").saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath,allowedExtensions="jpg,jpeg,png,gif");
+		var imageSaved = getService("imageService").saveImageFile(uploadResult=arguments.imageUploadResult,filePath=imagePath,allowedExtensions="jpg,jpeg,png,gif");
 		if(imageSaved) {
 			return true;
 		} else {

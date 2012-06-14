@@ -47,10 +47,10 @@ Notes:
 	<cfset rc.directory = rc.image.getDirectory() />
 </cfif>
 <cfif !isNull(rc.image.getProduct())>
-	<cfset rc.productID = rc.image.getProduct() />
+	<cfset rc.productID = rc.image.getProduct().getProductID() />
 </cfif>
 <cfif !isNull(rc.image.getPromotion())>
-	<cfset rc.promotionID = rc.image.getPromotion() />
+	<cfset rc.promotionID = rc.image.getPromotion().getPromotionID() />
 </cfif>	
 
 <cfoutput>
@@ -58,8 +58,8 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.image#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
 		<input type="hidden" name="directory" value="#rc.directory#" />
-		<input type="hidden" name="product.productID" value="#rc.promotionID#" />
-		<input type="hidden" name="promotion.promotionID" value="#rc.productID#" />
+		<input type="hidden" name="product.productID" value="#rc.productID#" />
+		<input type="hidden" name="promotion.promotionID" value="#rc.promotionID#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -67,16 +67,14 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageType" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageFile" edit="#rc.edit#" fieldtype="file">
-				
-				<div class="control-group">
-					<label class="control-label">&nbsp;</label>
-					<div class="controls">
-						<cfif len(trim(rc.image.getImageFile()))>
+				<cfif not rc.image.isNew()>
+					<div class="control-group">
+						<label class="control-label">&nbsp;</label>
+						<div class="controls">
 							<img src="#rc.image.getResizedImagePath(width="200",height="200")#" border="0" /><br />
-							<input type="checkbox" name="deleteImage" value="1" /> Delete
-						</cfif>	
+						</div>
 					</div>
-				</div>
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

@@ -42,12 +42,12 @@ Notes:
 	<cfset local.images = rc.product.getProductImages() />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.product.getProductImagesSmartList()#"
-							   recordDetailAction="admin:product.detailImage"
+							   recordDetailAction="admin:main.detailImage"
 							   recordDetailModal="true"
-							   recordEditAction="admin:product.editImage"
-							   recordEditQueryString="productID=#rc.product.getProductID()#"
+							   recordEditAction="admin:main.editImage"
+							   recordEditQueryString="productID=#rc.product.getProductID()#&returnAction=admin:product.detailproduct"
 							   recordEditModal="true"
-							   recordDeleteAction="admin:product.deleteproductImage"
+							   recordDeleteAction="admin:main.deleteImage"
 							   recorddeletequerystring="returnAction=product.editproduct&productID=#rc.product.getProductID()###tabalternateimages">
 				
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="imageName" />
@@ -55,5 +55,5 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="imageType.type" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:main.createimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#&directory=product" modal=true />
+	<cf_SlatwallActionCaller action="admin:main.createimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:product.detailproduct" modal=true />
 </cfoutput>

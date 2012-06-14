@@ -146,7 +146,7 @@ component displayname="Image Service" persistent="false" extends="BaseService" o
 		return imageDisplay;
 	}
 
-	public boolean function saveImage(required struct uploadResult, required string filePath, string allowedExtensions="", boolean overwrite=true) {
+	public boolean function saveImageFile(required struct uploadResult, required string filePath, string allowedExtensions="", boolean overwrite=true) {
 		var result = arguments.uploadResult;
 		if(result.fileWasSaved){
 			var uploadPath = result.serverDirectory & "/" & result.serverFile;

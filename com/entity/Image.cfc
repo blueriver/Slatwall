@@ -58,7 +58,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public string function getImagePath() {
-		return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/#getDirectory()#/#getImageID()#.#getImageExtension()#";
+		return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/#getDirectory()#/#getImageFile()#";
 	}
 	
 	public string function getImageDirectory(){
