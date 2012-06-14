@@ -211,7 +211,7 @@ Notes:
 				</div>
 			</div>
 		</div>
-		<div id="adminModal" class="modal fade draggable"></div>
+		<div id="adminModal" class="modal fade"></div>
 		<div id="adminDisabled" class="modal">
 			<div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>#request.slatwallScope.rbKey('define.disabled')#</h3></div>
 			<div class="modal-body"></div>

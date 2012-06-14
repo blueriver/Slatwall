@@ -37,13 +37,15 @@ Notes:
 
 */
 component extends="BaseController" output=false accessors=true {
+
 	// fw1 Auto-Injected Service Properties
 	property name="productService" type="any";
 	property name="orderService" type="any";
 	property name="vendorService" type="any";
 	property name="dataService" type="any";
+	property name="imageService" type="any";
 	
-	this.publicMethods='noaccess,error';
+	this.publicMethods='noaccess,error,detailimage,editimage,createimage,deleteimage';
 	this.secureMethods='default,ckfinder';
 	
 	public void function default(required struct rc) {
@@ -66,5 +68,36 @@ component extends="BaseController" output=false accessors=true {
 		rc.vendorOrderSmartList.setPageRecordsShow(10);
 		
 	}
+
+	public void function saveImage(required struct rc){
+		
+		var image = getImageService().getImage(rc.imageID, true);
+		
+		if(rc.imageFile != ''){
+			var documentData = fileUpload(getTempDirectory(),'imageFile','','makeUnique');
+			
+			if(len(image.getImageFile()) && fileExists(expandpath(image.getImageDirectory()) & image.getImageFile())){
+				fileDelete(expandpath(image.getImageDirectory()) & image.getImageFile());	
+			}
+			
+			//need to handle validation at some point
+			if(documentData.contentType eq 'image'){
+				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(image.getImageDirectory()) & documentData.serverFile);
+				rc.imageFile = documentData.serverfile;
+			}else if (fileExists(expandpath(image.getImageDirectory()) & image.getImageFile())){
+				fileDelete(expandpath(image.getImageDirectory()) & image.getImageFile());	
+			}
+			
+		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(image.getImageDirectory()) & image.getImageFile())){
+			fileDelete(expandpath(image.getImageDirectory()) & image.getImageFile());	
+			rc.imageFile='';
+		}else{
+			rc.imageFile = image.getImageFile();
+		}
+		
+		super.genericSaveMethod('Image',rc);
+		
+	}
+	
 
 }

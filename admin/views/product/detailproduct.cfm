@@ -43,7 +43,7 @@ Notes:
 	<cf_SlatwallDetailForm object="#rc.product#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.product#" edit="#rc.edit#">
 			<cf_SlatwallActionCaller action="admin:product.createsku" queryString="productID=#rc.product.getProductID()#" type="list" modal=true />
-			<cf_SlatwallActionCaller action="admin:product.createproductimage" queryString="productID=#rc.product.getProductID()#" type="list" modal=true />
+			<cf_SlatwallActionCaller action="admin:product.createimage" queryString="productID=#rc.product.getProductID()#&directory=product" type="list" modal=true />
 			<cf_SlatwallActionCaller action="admin:product.processproduct" queryString="productID=#rc.product.getProductID()#&processcontext=bulkupdate" type="list" modal=true />
 			<cf_SlatwallActionCaller action="admin:product.processproduct" queryString="productID=#rc.product.getProductID()#&processcontext=addOptionGroup" type="list" modal=true text="#$.slatwall.rbKey('admin.product.processoptiongroup_nav')#"/>
 			<cf_SlatwallActionCaller action="admin:product.processproduct" queryString="productID=#rc.product.getProductID()#&processcontext=addOption" type="list" modal=true  text="#$.slatwall.rbKey('admin.product.processoption_nav')#"/>

@@ -889,7 +889,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// Persit the new order
 				getDAO().save( returnOrder );
 				
-				// If the end-user has choosen to auto-receive the return order && to auto process the credit
+				// If the end-user has choosen to auto-receive the return order && potentially
 				if(arguments.data.autoProcessReceiveReturnFlag) {
 					
 					var autoProcessReceiveReturnData = {
@@ -1202,7 +1202,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							// Check to make sure this payment hasn't been fully received
 							if(orderPayment.getAmount() > orderPayment.getAmountCredited()) {
 								
-								var potentialCredit = precisionEvaluate(orderPayment.getAmount() - orderPayment.getAmount());
+								var potentialCredit = precisionEvaluate(orderPayment.getAmount() - orderPayment.getAmountCredited());
 								if(potentialCredit > precisionEvaluate(totalAmountToCredit - totalAmountCredited)) {
 									var thisAmountToCredit = precisionEvaluate(totalAmountToCredit - totalAmountCredited);
 								} else {

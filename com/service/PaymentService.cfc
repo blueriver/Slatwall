@@ -77,7 +77,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					requestBean.setTransactionType( arguments.transactionType );
 					requestBean.setTransactionAmount( arguments.transactionAmount );
 					requestBean.setProviderTransactionID( arguments.providerTransactionID );
-					
 					requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
 					
 					// Wrap in a try / catch so that the transaction will still get saved to the DB even in error

@@ -184,35 +184,6 @@ component extends="BaseController" output=false accessors=true {
 		super.genericSaveMethod('Sku', rc);
 	}
 	
-	public void function saveProductImage(required struct rc){
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName='ProductImage' );
-		var productImage = entityService.getProductImage(rc.ImageID,true);
-		
-		if(rc.imageFile != ''){
-			var documentData = fileUpload(getTempDirectory(),'imageFile','','makeUnique');
-			
-			if(len(productImage.getImageFile()) && fileExists(expandpath(productImage.getImageDirectory()) & productImage.getImageFile())){
-				fileDelete(expandpath(productImage.getImageDirectory()) & productImage.getImageFile());	
-			}
-			
-			//need to handle validation at some point
-			if(documentData.contentType eq 'image'){
-				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(productImage.getImageDirectory()) & documentData.serverFile);
-				rc.imageFile = documentData.serverfile;
-			}else if (fileExists(expandpath(productImage.getImageDirectory()) & productImage.getImageFile())){
-				fileDelete(expandpath(productImage.getImageDirectory()) & productImage.getImageFile());	
-			}
-			
-		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(productImage.getImageDirectory()) & productImage.getImageFile())){
-			fileDelete(expandpath(productImage.getImageDirectory()) & productImage.getImageFile());	
-			rc.imageFile='';
-		}else{
-			rc.imageFile = productImage.getImageFile();
-		}
-		
-		super.genericSaveMethod('ProductImage',rc);
-	}
-	
 	public void function saveOption(required struct rc){
 		var option = getOptionService().getOption(rc.optionID,true);
 		
