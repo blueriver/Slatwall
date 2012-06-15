@@ -130,6 +130,8 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 					page.settingValue = slatwallContent.getContentID();
 				}
 				createSetting(page,thisSiteID);
+				// persist all changes
+				ormflush();
 			}
 		}
 		logSlatwall("Setting Service - verifyMuraRequiredPages - Finished", true);
