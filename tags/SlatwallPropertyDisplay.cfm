@@ -137,6 +137,9 @@ Notes:
 				<cfset attributes.value = trim(thisValueList) />
 			<cfelse>
 				<cfif not attributes.edit or attributes.object.getPropertyFormatType( attributes.property ) eq "datetime">
+					<cfif isNumeric(attributes.value) and attributes.value lt 0>
+						<cfset attributes.valueClass &= " negative" />
+					</cfif>
 					<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
 				</cfif>
 			</cfif>
