@@ -94,6 +94,10 @@ component displayname="$${Display Name}" entityname="$${EntityName}" table="$${E
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
 }]]></starttext>
 <endtext><![CDATA[]]></endtext>
 </snippet>

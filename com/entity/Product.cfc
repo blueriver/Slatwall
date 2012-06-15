@@ -731,4 +731,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	public array function getAttributeSets(array attributeSetTypeCode=[]){
+		var smartList = getAssignedAttributeSetSmartList();
+		if(arrayFind(arguments.attributeSetTypeCode, "astProductCustomization") || arrayFind(arguments.attributeSetTypeCode, "astOrderItem")) {
+			getAssignedAttributeSetSmartList().addFilter('attributeSetType.systemCode', 'astOrderItem');
+		}
+		return smartList.getRecords();
+	}
+	
+	// ==================  END:  Deprecated Methods ========================
 }

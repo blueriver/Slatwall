@@ -352,5 +352,13 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	public array function getAttributeSets(array attributeSetTypeCode){
+		return getAssignedAttributeSetSmartList().getRecords();
+	}
+	
+	// ==================  END:  Deprecated Methods ========================
 
 }
