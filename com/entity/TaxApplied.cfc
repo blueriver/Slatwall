@@ -35,21 +35,21 @@
 
 Notes:
 	
-	List of Discriminator Values and their respective cfc's
+	List of Appliet Type
 	
-	orderItem 			| OrderItemAppliedTax.cfc
-	orderFulfillment 	| OrderFulfillmentAppliedTax.cfc
-	order 				| OrderAppliedTax.cfc
+	orderItem 
 */
-component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent="true" output="false" accessors="true" extends="BaseEntity" discriminatorcolumn="appliedType" {
+component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="taxAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="taxAmount" ormtype="big_decimal";
 	property name="taxRate" ormtype="big_decimal";
+	property name="appliedType" ormtype="string";
 	
-	// Related Properties
+	// Related Properties (many-to-one)
 	property name="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="many-to-one" fkcolumn="taxCategoryRateID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cascadeCalculated="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -60,9 +60,6 @@ component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="Slatw
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Special Related Discriminator Property
-	property name="appliedType" length="255" insert="false" update="false";
-	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -70,7 +67,29 @@ component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="Slatw
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Order Item (many-to-one)
+	public void function setOrderItem(required any orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() or !arguments.orderItem.hasAppliedTax( this )) {
+			arrayAppend(arguments.orderItem.getAppliedTaxes(), this);
+		}
+	}
+	public void function removeOrderItem(any orderItem) {
+		if(!structKeyExists(arguments, "orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getAppliedTaxes(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderItem.getAppliedTaxes(), index);
+		}
+		structDelete(variables, "orderItem");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
