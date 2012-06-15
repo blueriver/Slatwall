@@ -132,6 +132,10 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	

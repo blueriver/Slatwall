@@ -89,14 +89,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				
 				var reward = promotionRewards[pr];
 				
+				/*
 				// Get the qualificationCountDetails for the promotionPeriod, we cache this value so that we don't have to get it multiple times and so that we can store the use count
 				if(!structKeyExists(promotionPeriodUsablity, reward.getPromotionPeriod().getPromotionPeriodID())) {
 					promotionPeriodUsablity[reward.getPromotionPeriod().getPromotionPeriodID()].usable = reward.getPromotionPeriod().getPromotionPeriodID();
 				}
 				var qualificationDetails = qualificationCounts[reward.getPromotionPeriod().getPromotionPeriodID()];
-				
+				*/
 				// If this order qualifies for the 
-				if(qualificationDetails.usable > qualificationDetails.used) {
+				if(1) {
 					
 					switch(reward.getRewardType()) {
 						// =============== Order Item Reward ==============

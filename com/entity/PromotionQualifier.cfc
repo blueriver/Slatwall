@@ -40,18 +40,18 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	
 	// Persistent Properties
 	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="qualifierType" ormtype="string" formfieldtype="select";
+	property name="qualifierType" ormtype="string" formatType="custom";
 	
-	property name="minimumOrderQuantity" ormtype="integer";
-	property name="maximumOrderQuantity" ormtype="integer";
-	property name="minimumOrderSubtotal" ormtype="big_decimal";
-	property name="maximumOrderSubtotal" ormtype="big_decimal";
-	property name="minimumItemQuantity" ormtype="integer";
-	property name="maximumItemQuantity" ormtype="integer";
-	property name="minimumItemPrice" ormtype="big_decimal";
-	property name="maximumItemPrice" ormtype="big_decimal";
-	property name="minimumFulfillmentWeight" ormtype="big_decimal";
-	property name="maximumFulfillmentWeight" ormtype="big_decimal";
+	property name="minimumOrderQuantity" ormtype="integer" formatType="custom";
+	property name="maximumOrderQuantity" ormtype="integer" formatType="custom";
+	property name="minimumOrderSubtotal" ormtype="big_decimal" formatType="custom";
+	property name="maximumOrderSubtotal" ormtype="big_decimal" formatType="custom";
+	property name="minimumItemQuantity" ormtype="integer" formatType="custom";
+	property name="maximumItemQuantity" ormtype="integer" formatType="custom";
+	property name="minimumItemPrice" ormtype="big_decimal" formatType="custom";
+	property name="maximumItemPrice" ormtype="big_decimal" formatType="custom";
+	property name="minimumFulfillmentWeight" ormtype="big_decimal" formatType="custom";
+	property name="maximumFulfillmentWeight" ormtype="big_decimal" formatType="custom";
 	
 	// Related Entities (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
@@ -85,56 +85,138 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 
 	// Non-persistent entities
+
+
+	// ============ START: Non-Persistent Property Methods =================
 	
-	
-	
-	// ============ Association management methods for bidirectional relationships =================
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Promotion Period (many-to-one)
-	
-	public void function setPromotionPeriod(required PromotionPeriod promotionPeriod) {
+	public void function setPromotionPeriod(required any promotionPeriod) {
 		variables.promotionPeriod = arguments.promotionPeriod;
-		if(isNew() || !arguments.promotionPeriod.hasPromotionQualifier(this)) {
-			arrayAppend(arguments.promotionPeriod.getPromotionQualifiers(),this);
+		if(isNew() or !arguments.promotionPeriod.hasPromotionQualifier( this )) {
+			arrayAppend(arguments.promotionPeriod.getPromotionQualifiers(), this);
 		}
 	}
+	public void function removePromotionPeriod(any promotionPeriod) {
+		if(!structKeyExists(arguments, "promotionPeriod")) {
+			arguments.promotionPeriod = variables.promotionPeriod;
+		}
+		var index = arrayFind(arguments.promotionPeriod.getPromotionQualifiers(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.promotionPeriod.getPromotionQualifiers(), index);
+		}
+		structDelete(variables, "promotionPeriod");
+	}
 	
-	public void function removePromotionPeriod(PromotionPeriod promotionPeriod) {
-	   if(!structKeyExists(arguments,"promotionPeriod")) {
-	   		arguments.promotionPeriod = variables.promotionPeriod;
-	   }
-       var index = arrayFind(arguments.promotionPeriod.getPromotionQualifiers(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.promotionPeriod.getPromotionQualifiers(), index);
-       }
-       structDelete(variables,"promotionPeriod");
-    }
-    
-    // ============   END Association Management Methods   =================
+	// =============  END:  Bidirectional Helper Methods ===================
 
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	public string function getQualifierTypeFormatted() {
+		return rbKey( "entity.promotionQualifier.qualifierType." & getQualifierType() );
+	}
+
+	public any function getMinimumOrderQuantityFormatted() {
+		if(isNull(getMinimumOrderQuantity()) || !isNumeric(getMinimumOrderQuantity()) || getMinimumOrderQuantity() == 0) {
+			return 0;
+		}
+		return getMinimumOrderQuantity();
+	}
+	
+	public any function getMaximumOrderQuantityFormatted() {
+		if(isNull(getMaximumOrderQuantity()) || !isNumeric(getMaximumOrderQuantity()) || getMaximumOrderQuantity() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return getMaximumOrderQuantity();
+	}
+	
+	public any function getMinimumOrderSubtotalFormatted() {
+		if(isNull(getMinimumOrderSubtotal()) || !isNumeric(getMinimumOrderSubtotal()) || getMinimumOrderSubtotal() == 0) {
+			return formatValue(0, "currency");
+		}
+		return formatValue(getMinimumOrderSubtotal(), "currency");
+	}
+	
+	public any function getMaximumOrderSubtotalFormatted() {
+		if(isNull(getMaximumOrderSubtotal()) || !isNumeric(getMaximumOrderSubtotal()) || getMaximumOrderSubtotal() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return formatValue(getMaximumOrderSubtotal(), "currency");
+	}
+
+	public any function getMinimumItemQuantityFormatted() {
+		if(isNull(getMinimumItemQuantity()) || !isNumeric(getMinimumItemQuantity()) || getMinimumItemQuantity() == 0) {
+			return 0;
+		}
+		return getMinimumItemQuantity();
+	}
+	
+	public any function getMaximumItemQuantityFormatted() {
+		if(isNull(getMaximumItemQuantity()) || !isNumeric(getMaximumItemQuantity()) || getMaximumItemQuantity() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return getMaximumItemQuantity();
+	}
+
+	public any function getMinimumItemPriceFormatted() {
+		if(isNull(getMinimumItemPrice()) || !isNumeric(getMinimumItemPrice()) || getMinimumItemPrice() == 0) {
+			return formatValue(0, "currency");
+		}
+		return formatValue(getMinimumItemPrice(), "currency");
+	}
+	
+	public any function getMaximumItemPriceFormatted() {
+		if(isNull(getMinimumItemPrice()) || !isNumeric(getMinimumItemPrice()) || getMinimumItemPrice() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return formatValue(getMinimumItemPrice(), "currency");
+	}
+	
+	public any function getMinimumFulfillmentWeightFormatted() {
+		if(isNull(getMinimumFulfillmentWeight()) || !isNumeric(getMinimumFulfillmentWeight()) || getMinimumFulfillmentWeight() == 0) {
+			return formatValue(0, "weight");
+		}
+		return formatValue(getMinimumFulfillmentWeight(), "weight");
+	}
+	
+	public any function getMaximumFulfillmentWeightFormatted() {
+		if(isNull(getMaximumFulfillmentWeight()) || !isNumeric(getMaximumFulfillmentWeight()) || getMaximumFulfillmentWeight() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return formatValue(getMaximumFulfillmentWeight(), "weight");
+	}
+	
+	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
+	// ================== START: Overridden Methods ========================
+	
 	public string function getSimpleRepresentationPropertyName() {
 		return "qualifierType";
 	}
-
-	// ============ START: Non-Persistent Property Methods =================
-
 	
-	public string function getQualifierTypeDisplay() {
-		return rbKey( "entity.promotionQualifier.qualifierType." & getQualifierType() );
-	}
-		
-	// ============  END:  Non-Persistent Property Methods =================
-
 	public boolean function isDeletable() {
 		return !getPromotionPeriod().isExpired() && getPromotionPeriod().getPromotion().isDeletable();
 	}
-		
 	
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
+	
 }

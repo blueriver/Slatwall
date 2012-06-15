@@ -52,9 +52,9 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="amountType" ormType="string" formFieldType="select" formatType="custom";
 	property name="rewardType" ormType="string" formFieldType="select" formatType="custom";
 	property name="applicableTerm" ormType="string" formFieldType="select" formatType="custom";
-	property name="maximumUsePerOrder" ormType="integer";
-	property name="maximumUsePerItem" ormtype="integer";
-	property name="maximumUsePerQualification" ormtype="integer";
+	property name="maximumUsePerOrder" ormType="integer" formatType="custom";
+	property name="maximumUsePerItem" ormtype="integer" formatType="custom";
+	property name="maximumUsePerQualification" ormtype="integer" formatType="custom";
 
 	// Related Object Properties (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
@@ -92,26 +92,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="rewards" type="string" persistent="false";
 
 
-	public string function getAmountFormatted() {
-		if(getAmountType() == "percentageOff") {
-			return formatValue(getAmount(), "percentage");
-		}
-		
-		return formatValue(getAmount(), "currency");
-	}
-	
-	public string function getAmountTypeFormatted() {
-		return rbKey('define.#getAmountType()#');
-	}
-	
-	public string function getRewardTypeFormatted() {
-		return rbKey('define.#getRewardType()#');
-	}
-	
-	public string function getApplicableTermFormatted() {
-		return rbKey('define.#getApplicableTerm()#');
-	}
-	
 	// ============ START: Non-Persistent Property Methods =================
 
 	public array function getApplicableTermOptions() {
@@ -340,6 +320,51 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	public string function getAmountFormatted() {
+		if(getAmountType() == "percentageOff") {
+			return formatValue(getAmount(), "percentage");
+		}
+		
+		return formatValue(getAmount(), "currency");
+	}
+	
+	public string function getAmountTypeFormatted() {
+		return rbKey('define.#getAmountType()#');
+	}
+	
+	public string function getRewardTypeFormatted() {
+		return rbKey('define.#getRewardType()#');
+	}
+	
+	public string function getApplicableTermFormatted() {
+		return rbKey('define.#getApplicableTerm()#');
+	}
+	
+	public any function getMaximumUsePerOrderFormatted() {
+		if(isNull(getMaximumUsePerOrder()) || !isNumeric(getMaximumUsePerOrder()) || getMaximumUsePerOrder() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return getMaximumUseCount();
+	}
+	
+	public any function getMaximumUsePerItemFormatted() {
+		if(isNull(getMaximumUsePerItem()) || !isNumeric(getMaximumUsePerItem()) || getMaximumUsePerItem() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return getMaximumAccountUseCount();
+	}
+	
+	public any function getMaximumUsePerQualificationFormatted() {
+		if(isNull(getMaximumUsePerQualification()) || !isNumeric(getMaximumUsePerQualification()) || getMaximumUsePerQualification() == 0) {
+			return rbKey('define.unlimited');
+		}
+		return getMaximumUsePerQualification();
+	}
+	
+	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
 	

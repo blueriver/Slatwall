@@ -82,7 +82,9 @@ Notes:
 				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/products" />
 				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/skus" />
 				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/brands" />
-				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/options" />
+				<cfif rc.rewardType eq "merchandise">
+					<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/options" />
+				</cfif>
 			<cfelseif rc.rewardType eq "fulfillment">
 				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/fulfillmentMethods" />
 				<cf_SlatwallTab view="admin:pricing/promotionrewardtabs/shippingMethods" />

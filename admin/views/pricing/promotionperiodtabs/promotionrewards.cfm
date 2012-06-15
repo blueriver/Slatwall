@@ -48,8 +48,11 @@ Notes:
 							   recordDeleteAction="admin:pricing.deletepromotionreward"
 							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
 		<cf_SlatwallListingColumn propertyIdentifier="rewardType" tdclass="primary" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountType" />
-		<cf_SlatwallListingColumn propertyIdentifier="amount" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountType" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="amount" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumUsePerOrder" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumUsePerItem" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumUsePerQualification" filter="true" />
 	</cf_SlatwallListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>

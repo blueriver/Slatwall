@@ -85,7 +85,9 @@ Notes:
 				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/products" />
 				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/skus" />
 				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/brands" />
-				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/options" />
+				<cfif rc.qualifierType eq "merchandise">
+					<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/options" />
+				</cfif>
 			<cfelseif rc.qualifierType eq "fulfillment">
 				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/fulfillmentMethods" />
 				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/shippingMethods" />
