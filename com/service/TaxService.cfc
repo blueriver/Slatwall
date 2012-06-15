@@ -62,7 +62,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					
 					for(var r=1; r<= arrayLen(taxCategory.getTaxCategoryRates()); r++) {
 						if(isNull(taxCategory.getTaxCategoryRates()[r].getAddressZone()) || (!isNull(address) && getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[r].getAddressZone()))) {
-							var newAppliedTax = this.newAppliedTax();
+							var newAppliedTax = this.newTaxApplied();
+							newAppliedTax.setAppliedType("orderItem");
 							newAppliedTax.setTaxAmount(round(orderItem.getExtendedPriceAfterDiscount() * taxCategory.getTaxCategoryRates()[r].getTaxRate()) / 100);
 							newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[r].getTaxRate());
 							newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[r]);
@@ -75,7 +76,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				var originalAppliedTaxes = orderItem.getReferencedOrderItem().getAppliedTaxes();
 				for(var i=1; i<=arrayLen(originalAppliedTaxes); i++) {
-					var newAppliedTax = this.newAppliedTax();
+					var newAppliedTax = this.newTaxApplied();
+					newAppliedTax.setAppliedType("orderItem");
 					newAppliedTax.setTaxAmount(round(orderItem.getExtendedPriceAfterDiscount() * originalAppliedTaxes[i].getTaxRate()) / 100);
 					newAppliedTax.setTaxRate( originalAppliedTaxes[i].getTaxRate() );
 					newAppliedTax.setTaxCategoryRate( originalAppliedTaxes[i].getTaxCategoryRate() );
