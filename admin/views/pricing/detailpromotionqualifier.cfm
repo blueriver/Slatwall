@@ -38,6 +38,7 @@ Notes:
 --->
 <cfparam name="rc.promotionQualifier" type="any">
 <cfparam name="rc.promotionPeriod" type="any" default="#rc.promotionQualifier.getPromotionPeriod()#" />
+<cfparam name="rc.qualifierType" type="string" default="#rc.promotionQualifier.getQualifierType()#" />
 <cfparam name="rc.edit" type="boolean">
 
 <!--- prevent editing promotion qualifier if its promotion period has expired --->
@@ -55,35 +56,42 @@ Notes:
 							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" 
 							  backAction="admin:pricing.detailpromotionperiod" 
 							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" />
+		
+		<input type="hidden" name="qualifierType" value="#rc.qualifierType#" />
+		<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
+		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
-				<input type="hidden" name="returnAction" value="admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumQuantity" edit="#rc.edit#" />
-					<cfif listFindNoCase("product,order",local.qualifierType)>
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumPrice" edit="#rc.edit#" />
-					</cfif>
-					<cfif local.qualifiertype eq "product">
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumPrice" edit="#rc.edit#" />
-					</cfif>
-					<cfif local.qualifiertype eq "fulfillment">
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumFulfillmentWeight" edit="#rc.edit#" />
-					</cfif>
-					<cfif local.qualifierType eq "product">
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="brands" edit="#rc.edit#" />
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="productTypes" edit="#rc.edit#" />
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="products" edit="#rc.edit#" />
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="excludedProductTypes" edit="#rc.edit#" />
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="excludedProducts" edit="#rc.edit#" />
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="excludedSkus" edit="#rc.edit#" />
-					<cfelseif local.qualifierType eq "fulfillment">
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="fulfillmentMethods" edit="#rc.edit#" />
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="shippingMethods" edit="#rc.edit#" />
-						<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="addressZones" edit="#rc.edit#" />						
-					</cfif>
+				<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.qualifierType)>
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumItemQuantity" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumItemQuantity" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumItemPrice" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumItemPrice" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+				<cfelseif rc.qualifierType eq "fulfillment">
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumFulfillmentWeight" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumFulfillmentWeight" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+				<cfelseif rc.qualifierType eq "order">
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumOrderQuantity" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumOrderQuantity" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumOrderSubtotal" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumOrderSubtotal" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
+		<cf_SlatwallTabGroup object="#rc.promotionQualifier#">
+			<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.qualifierType)>
+				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/producttypes" />
+				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/products" />
+				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/skus" />
+				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/brands" />
+				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/options" />
+			<cfelseif rc.qualifierType eq "fulfillment">
+				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/fulfillmentMethods" />
+				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/shippingMethods" />
+				<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/shippingAddressZones" />
+			</cfif>
+		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>

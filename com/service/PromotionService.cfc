@@ -80,15 +80,23 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 			}
 			
+			// Setup a structure to hold the qualificationCount of each promotionPeriod.  This is going to be a promotionPeriodID key'd structure
+			var promotionPeriodUse = {};
+			
 			// Loop over all Potential Discounts that require qualifications
 			var promotionRewards = getDAO().getActivePromotionRewards(rewardTypeList="merchandise,subscription,contentAccess,order,fulfillment", promotionCodeList=arguments.order.getPromotionCodeList(), qualificationRequired=true);
 			for(var pr=1; pr<=arrayLen(promotionRewards); pr++) {
 				
 				var reward = promotionRewards[pr];
-				var qualificationCount = getPromotionRewardQualificationCount(promotionReward=reward, order=arguments.order);
+				
+				// Get the qualificationCountDetails for the promotionPeriod, we cache this value so that we don't have to get it multiple times and so that we can store the use count
+				if(!structKeyExists(promotionPeriodUsablity, reward.getPromotionPeriod().getPromotionPeriodID())) {
+					promotionPeriodUsablity[reward.getPromotionPeriod().getPromotionPeriodID()].usable = reward.getPromotionPeriod().getPromotionPeriodID();
+				}
+				var qualificationDetails = qualificationCounts[reward.getPromotionPeriod().getPromotionPeriodID()];
 				
 				// If this order qualifies for the 
-				if(qualificationCount) {
+				if(qualificationDetails.usable > qualificationDetails.used) {
 					
 					switch(reward.getRewardType()) {
 						// =============== Order Item Reward ==============
@@ -222,7 +230,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// Return & Exchange Orders
 		if( listFindNoCase("otReturnOrder,otExchangeOrder", arguments.order.getOrderType().getSystemCode()) ) {
-			
+			// TODO: In the future allow for return Items to have negative promotions applied.  This isn't import right now because you can determine how much you would like to refund ordersItems
 		}
 		
 	}
@@ -259,7 +267,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return numberFormat(discountAmount, "0.00");
 	}
 	
-	public numeric function getPromotionRewardQualificationCount(required any promotionReward, required any order) {
+	public numeric function getPromotionPeriodQualificationDetails(required any promotionPeriod, required any order) {
+		var qualificationCount = 1000000;
+		var qualificationDetails = {
+			maxTotalUse = 0,
+			maxAccountUse = 0
+		};
+		
+		
 		return 1;
 	}
 	
