@@ -77,7 +77,7 @@ Notes:
 				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="phoneNumber" for="phoneNumber" />
 			</dd>
 			<!--- extended attribute --->
-			<cfset attributeValueIndex = 0 />
+			<!---<cfset attributeValueIndex = 0 />
 			<cfloop array="#rc.attributeSets#" index="local.attributeSet">
 				<cfloop array="#local.attributeSet.getAttributes()#" index="local.attribute">
 					<cfset attributeValueIndex ++ />
@@ -93,7 +93,7 @@ Notes:
 						</dd>
 					</cfif>
 				</cfloop>
-			</cfloop> 
+			</cfloop> --->
 		</dl>
 		<cfif structKeyExists(rc,"accessID")>
 			<input type="hidden" name="access.accessID" value="#rc.accessID#" />
