@@ -56,7 +56,7 @@ Notes:
 				<input type="text" name="phoneNumber" value="#phoneValue#" />
 				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="primaryPhoneNumber" for="phoneNumber" />
 			</dd>
-			<cfset attributeValueIndex = 0 />
+			<!---<cfset attributeValueIndex = 0 />
 			<cfloop array="#rc.attributeSets#" index="local.attributeSet">
 				<cfloop array="#local.attributeSet.getAttributes()#" index="local.attribute">
 					<cfset attributeValueIndex ++ />
@@ -72,7 +72,7 @@ Notes:
 						</dd>
 					</cfif>
 				</cfloop>
-			</cfloop> 
+			</cfloop> --->
 		</dl>
 		<input type="hidden" name="slatAction" value="frontend:account.save" />
 		<button type="submit">Save</button>
