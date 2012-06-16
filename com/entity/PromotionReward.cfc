@@ -349,14 +349,14 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		if(isNull(getMaximumUsePerOrder()) || !isNumeric(getMaximumUsePerOrder()) || getMaximumUsePerOrder() == 0) {
 			return rbKey('define.unlimited');
 		}
-		return getMaximumUseCount();
+		return getMaximumUsePerOrder();
 	}
 	
 	public any function getMaximumUsePerItemFormatted() {
 		if(isNull(getMaximumUsePerItem()) || !isNumeric(getMaximumUsePerItem()) || getMaximumUsePerItem() == 0) {
 			return rbKey('define.unlimited');
 		}
-		return getMaximumAccountUseCount();
+		return getMaximumUsePerItem();
 	}
 	
 	public any function getMaximumUsePerQualificationFormatted() {
