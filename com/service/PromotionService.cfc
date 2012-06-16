@@ -451,7 +451,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				
 				// If this promotion reward was used more than it should have been, then lets start stripping out from the arrays in the correct order
 				if(promotionRewardUsageDetails[ prID ].usedInOrder > promotionRewardUsageDetails[ prID ].maximumUsePerOrder) {
-					var needToRemove = promotionRewardUsageDetails[pru].usedInOrder - promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder;
+					var needToRemove = promotionRewardUsageDetails[ prID ].usedInOrder - promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder;
 					
 					// Loop over the items it was applied to an remove the quantity necessary to meet the total needToRemoveQuantity
 					for(var x=1; x<=arrayLen(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage); x++) {
@@ -462,10 +462,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							
 							// Loop over to find promotionReward
 							for(var y=arrayLen(orderItemQulifiedDiscounts[ orderItemID ]); y>=1; y--) {
-								if(orderItemQulifiedDiscounts[ orderItemID ].promotionRewardID == prID) {
+								if(orderItemQulifiedDiscounts[ orderItemID ][y].promotionRewardID == prID) {
 									
 									// Set the discountAmount as some fraction of the original discountAmount
-									orderItemQulifiedDiscounts[ orderItemID ].discountAmount = precisionEvaluate((orderItemQulifiedDiscounts[ orderItemID ].discountAmount / thisDiscountQuantity) * (thisDiscountQuantity - needToRemove));
+									orderItemQulifiedDiscounts[ orderItemID ][y].discountAmount = precisionEvaluate((orderItemQulifiedDiscounts[ orderItemID ][y].discountAmount / thisDiscountQuantity) * (thisDiscountQuantity - needToRemove));
 									
 									// Update the needToRemove
 									needToRemove = 0;
@@ -478,7 +478,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							
 							// Loop over to find promotionReward
 							for(var y=arrayLen(orderItemQulifiedDiscounts[ orderItemID ]); y>=1; y--) {
-								if(orderItemQulifiedDiscounts[ orderItemID ].promotionRewardID == prID) {
+								if(orderItemQulifiedDiscounts[ orderItemID ][y].promotionRewardID == prID) {
 									
 									// Remove from the array
 									arrayDeleteAt(orderItemQulifiedDiscounts[ orderItemID ], y);
