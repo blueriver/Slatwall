@@ -90,11 +90,18 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	// Non-persistent entities
 	property name="amountTypeOptions" persistent="false";
+	property name="roundingRuleOptions" persistent="false";
 	property name="applicableTermOptions" persistent="false";
 	property name="rewards" type="string" persistent="false";
 
 
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public array function getRoundingRuleOptions() {
+		var options = getPropertyOptions('roundingRule');
+		options[1]["name"] = rbKey('define.none');
+		return options;
+	}
 
 	public array function getApplicableTermOptions() {
 		return [
