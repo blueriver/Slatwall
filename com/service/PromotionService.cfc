@@ -91,11 +91,17 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var promotionPeriodQualifications = {};
 			
 			/*
+			This is the data scru
+			
 			promotionPeriodQualifications = {
 				promotionPeriodID = {
 					promotionPeriodQualifies = true | false,
 					orderQulifies = true | false,
 					qualifiedFulfillmentIDList = "comma seperated list of ID's"
+					orderItems = {
+						orderItemID = x (number of times it qualifies),
+						orderItemID = y (number of times it qualifies)
+					}
 				}
 			};
 			
@@ -178,64 +184,88 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 											// Make sure that this order item is in the acceptable fulfillment list
 											if(listFindNoCase(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList, orderItem.getOrderFulfillment().getOrderFulfillmentID())) {
 											
-												// Check the reward settings to see if this orderItem applies
-												if( ( !arrayLen( reward.getProductTypes() ) || reward.hasProductType( orderItem.getSku().getProduct().getProductType() ) )
-													&&
-													( !arrayLen( reward.getProducts() ) || reward.hasProduct( orderItem.getSku().getProduct() ) )
-													&&
-													( !arrayLen( reward.getSkus() ) || reward.hasSku( orderItem.getSku() ) )
-													&&
-													( !arrayLen( reward.getBrands() ) || reward.hasBrand( orderItem.getSku().getProduct().getBrand() ) )
-													&&
-													( !arrayLen( reward.getOptions() ) || reward.hasAnyOption( orderItem.getSku().getOptions() ) )  	) {
-													
-													/*
-													// If there is not applied Price Group, or if this reward has the applied pricegroup as an eligible one then use priceExtended... otherwise use skuPriceExtended and then adjust the discount.
-													if( isNull(orderItem.getAppliedPriceGroup()) || reward.hasEligiblePriceGroup( orderItem.getAppliedPriceGroup() ) ) {
-														// Calculate based on price, which could be a priceGroup price
-														var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
-													} else {
-														// Calculate based on skuPrice because the price on this item is a priceGroup price and we need to adjust the discount by the difference
-														var originalDiscountAmount = getDiscountAmount(reward, orderItem.getExtendedSkuPrice());
-														// Take the original discount they were going to get without a priceGroup and subtract the difference of the discount that they are already receiving
-														var discountAmount = precisionEvaluate(originalDiscountAmount - (orderItem.getExtendedSkuPrice() - orderItem.getExtendedPrice()));
-													}
-													*/
-													
-													var addNew = false;
-													var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
-													
-													// First we make sure that the discountAmount is > 0 before we check if we should add more discount
-													if(discountAmount > 0) {
-														// If there aren't any promotions applied to this order item yet, then we can add this one
-														if(!arrayLen(orderItem.getAppliedPromotions())) {
-															addNew = true;
-														// If one has already been set then we just need to check if this new discount amount is greater
-														} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
-															
-															// If the promotion is the same, then we just update the amount
-															if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
-																orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
-																
-															// If the promotion is a different then remove the original and set addNew to true
-															} else {
-																orderItem.getAppliedPromotions()[1].removeOrderItem();
-																addNew = true;
-															}
-															
+												// Now that we know the fulfillment is ok, lets check and cache then number of times this orderItem qualifies based on the promotionPeriod
+												if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems, orderItem.getOrderItemID())) {
+													promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ] = getPromotionPeriodOrderItemQualificationCount(promotionPeriod=reward.getPromotionPeriod(), orderItem=orderItem);
+												}
+												
+												// If the qualification count for this order item is > 0 then we can try to apply the reward
+												if(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ]) {
+												
+													// Check the reward settings to see if this orderItem applies
+													if( getOrderItemInReward(reward, orderItem) ) {
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														// If there is not applied Price Group, or if this reward has the applied pricegroup as an eligible one then use priceExtended... otherwise use skuPriceExtended and then adjust the discount.
+														if( isNull(orderItem.getAppliedPriceGroup()) || reward.hasEligiblePriceGroup( orderItem.getAppliedPriceGroup() ) ) {
+															// Calculate based on price, which could be a priceGroup price
+															var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
+														} else {
+															// Calculate based on skuPrice because the price on this item is a priceGroup price and we need to adjust the discount by the difference
+															var originalDiscountAmount = getDiscountAmount(reward, orderItem.getExtendedSkuPrice());
+															// Take the original discount they were going to get without a priceGroup and subtract the difference of the discount that they are already receiving
+															var discountAmount = precisionEvaluate(originalDiscountAmount - (orderItem.getExtendedSkuPrice() - orderItem.getExtendedPrice()));
 														}
-													}
+														
+														var addNew = false;
+														var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
+														
+														// First we make sure that the discountAmount is > 0 before we check if we should add more discount
+														if(discountAmount > 0) {
+															// If there aren't any promotions applied to this order item yet, then we can add this one
+															if(!arrayLen(orderItem.getAppliedPromotions())) {
+																addNew = true;
+															// If one has already been set then we just need to check if this new discount amount is greater
+															} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
+																
+																// If the promotion is the same, then we just update the amount
+																if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
+																	orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
+																	
+																// If the promotion is a different then remove the original and set addNew to true
+																} else {
+																	orderItem.getAppliedPromotions()[1].removeOrderItem();
+																	addNew = true;
+																}
+																
+															}
+														}
+														
+														// Add the new appliedPromotion
+														if(addNew) {
+															var newAppliedPromotion = this.newPromotionApplied();
+															newAppliedPromotion.setAppliedType('orderItem');
+															newAppliedPromotion.setPromotion( reward.getPromotionPeriod().getPromotion() );
+															newAppliedPromotion.setOrderItem( orderItem );
+															newAppliedPromotion.setDiscountAmount( discountAmount );
+														}
+														
+														
+														
+														
+														
+													} // End OrderItem in reward IF
 													
-													// Add the new appliedPromotion
-													if(addNew) {
-														var newAppliedPromotion = this.newPromotionApplied();
-														newAppliedPromotion.setAppliedType('orderItem');
-														newAppliedPromotion.setPromotion( reward.getPromotionPeriod().getPromotion() );
-														newAppliedPromotion.setOrderItem( orderItem );
-														newAppliedPromotion.setDiscountAmount( discountAmount );
-													}
-													
-												} // End OrderItem in reward IF
+												} // End orderItem qualification count > 0
 												
 											} // End orderItem fulfillment in qualifiedFulfillment list
 												
@@ -391,33 +421,120 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	
-	private numeric function getDiscountAmount(required any reward, required any originalAmount) {
+	private numeric function getPromotionPeriodOrderItemQualificationCount(required any promotionPeriod, required any orderItem) {
+		var qualificationCount = orderItem.getQuantity();
+		
+		// Loop over Qualifiers looking for fulfillment qualifiers
+		for(var q=1; q<=arrayLen(arguments.promotionPeriod.getPromotionQualifiers()); q++) {
+			
+			var qualifier = arguments.promotionPeriod.getPromotionQualifiers()[q];
+			
+			// If the orderItem has a qualifier of the same type
+			if(qualifier.getQualifierType() == argument.orderItem.getSku().getProduct().getBaseProductType()) {
+				
+				// First we run an "if" to see if this doesn't qualify to set the count to 0
+				if( ( arrayLen( qualifier.getProductTypes() ) && !qualifier.hasProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
+					||
+					( qualifier.hasExcludedProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
+					||
+					( arrayLen( qualifier.getProducts() ) && !qualifier.hasProduct( arguments.orderItem.getSku().getProduct() ) )
+					||
+					( qualifier.hasExcludedProduct( arguments.orderItem.getSku().getProduct() ) )
+					||
+					( arrayLen( qualifier.getSkus() ) && !qualifier.hasSku( arguments.orderItem.getSku() ) )
+					||
+					( qualifier.hasExcludedSku( arguments.orderItem.getSku() ) )
+					||
+					( arrayLen( qualifier.getBrands() ) && !qualifier.hasBrand( arguments.orderItem.getSku().getProduct().getBrand() ) ) 
+					||
+					( qualifier.hasExcludedBrand( arguments.orderItem.getSku().getProduct().getBrand() ) )
+					||
+					( arrayLen( qualifier.getOptions() ) && !qualifier.hasAnyOption( arguments.orderItem.getSku().getOptions() ) )
+					||
+					( qualifier.hasAnyExcludedOption( arguments.orderItem.getSku().getOptions() ) )
+					||
+					( !isNull(qualifier.getMinimumItemQuantity()) && qualifier.getMinimumItemQuantity() > arguments.orderItem.getQuantity() )
+					||
+					( !isNull(qualifier.getMaximumItemQuantity()) && qualifier.getMaximumItemQuantity() < arguments.orderItem.getQuantity() )
+					||
+					( !isNull(qualifier.getMinimumItemPrice()) && qualifier.getMinimumItemPrice() > arguments.orderItem.getPrice() )
+					||
+					( !isNull(qualifier.getMaximumItemPrice()) && qualifier.getMaximumItemPrice() < arguments.orderItem.getPrice() )
+					) {
+						
+					qualificationCount = 0;
+				
+				// Otherwise we can see based on the Minimum Item Qty how many times it qualifies		
+				} else if(!isNull(qualifier.getMinimumItemQuantity())) {
+					
+					qualificationCount = int(orderItem.getQuantity() / qualifier.getMinimumItemQuantity() );
+					
+				}
+				
+			}	
+		}
+		
+		return qualificationCount;
+	}
+	
+	public boolean function getOrderItemInReward(required any reward, required any orderItem) {
+		
+		// Check the reward settings to see if this orderItem applies
+		if( ( arrayLen(arguments.reward.getProductTypes()) && !arguments.reward.hasProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
+			||
+			( arguments.reward.hasExcludedProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
+			||
+			( arrayLen( arguments.reward.getProducts() ) && !arguments.reward.hasProduct( arguments.orderItem.getSku().getProduct() ) )
+			||
+			( arguments.reward.hasExcludedProduct( arguments.orderItem.getSku().getProduct() ) )
+			||
+			( arrayLen( arguments.reward.getSkus() ) && !arguments.reward.hasSku( arguments.orderItem.getSku() ) )
+			||
+			( arguments.reward.hasExcludedSku( arguments.orderItem.getSku() ) )
+			||
+			( arrayLen( arguments.reward.getBrands() ) && ( !isNull(arguments.orderItem.getSku().getProduct().getBrand()) && !arguments.reward.hasBrand( arguments.orderItem.getSku().getProduct().getBrand() ) ) )
+			||
+			( arrayLen( arguments.reward.getExcludedBrands() ) && ( isNull( arguments.orderItem.getSku().getProduct().getBrand() ) || arguments.reward.hasExcludedBrand( arguments.orderItem.getSku().getProduct().getBrand() ) ) )
+			||
+			( arrayLen( rarguments.reward.getOptions() ) && !arguments.reward.hasAnyOption( arguments.orderItem.getSku().getOptions() ) )  	
+			||
+			( arguments.reward.hasAnyExcludedOption( arguments.orderItem.getSku().getOptions() ) )
+			) {
+				
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private numeric function getDiscountAmount(required any reward, required numeric price, required numeric quantity) {
 		var discountAmountPreRounding = 0;
-		var discountAmount = 0;
 		var roundedFinalAmount = 0;
+		var originalAmout = precisionEvaluate(arguments.price * arguments.quantity);
+		
 		
 		switch(reward.getAmountType()) {
 			case "percentageOff" :
-				discountAmountPreRounding = precisionEvaluate(arguments.originalAmount * (reward.getAmount()/100));
+				discountAmountPreRounding = precisionEvaluate(originalAmount * (reward.getAmount()/100));
 				break;
 			case "amountOff" :
 				discountAmountPreRounding = reward.getAmount();
 				break;
 			case "amount" :
-				discountAmountPreRounding = precisionEvaluate(arguments.originalAmount - reward.getAmount());
+				discountAmountPreRounding = precisionEvaluate(originalAmount - reward.getAmount());
 				break;
 		}
 		
 		if(!isNull(reward.getRoundingRule())) {
-			roundedFinalAmount = getRoundingRuleService().roundValueByRoundingRule(value=precisionEvaluate(arguments.originalAmount - discountAmountPreRounding), roundingRule=reward.getRoundingRule());
-			discountAmount = precisionEvaluate(arguments.originalAmount - roundedFinalAmount);
+			roundedFinalAmount = getRoundingRuleService().roundValueByRoundingRule(value=precisionEvaluate(originalAmount - discountAmountPreRounding), roundingRule=reward.getRoundingRule());
+			discountAmount = precisionEvaluate(originalAmount - roundedFinalAmount);
 		} else {
 			discountAmount = discountAmountPreRounding;
 		}
 		
 		// This makes sure that the discount never exceeds the original amount
-		if(discountAmountPreRounding > arguments.originalAmount) {
-			discountAmount = arguments.originalAmount;
+		if(discountAmountPreRounding > originalAmount) {
+			discountAmount = originalAmount;
 		}
 		
 		return numberFormat(discountAmount, "0.00");
