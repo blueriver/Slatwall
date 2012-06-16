@@ -83,12 +83,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 			}
 			
-			// This is a structure of promotionPeriods that will get checked and cached as to if we are still within the period use count, and period account use count
-			var promotionPeriodOkToApply = {};
+			
 			var rewardUsageDetails = {};
 			var orderItemAppliedRewards = {};
 			
-			var promotionRewardQualifications = {};
+			// This is a structure of promotionPeriods that will get checked and cached as to if we are still within the period use count, and period account use count
+			var promotionPeriodQualifications = {};
 			
 			/*
 			promotionPeriodQualifications = {
@@ -155,8 +155,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					if(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderQulifies) {
 						
 						// Now that we know the order is ok, lets check and cache if at least one of the fulfillment qualifies
-						if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()], "orderQulifies")) {
-							promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList = getPromotionPeriodQualifiedFulfillmentIDs(promotionPeriod=reward.getPromotionPeriod(), order=arguments.order);
+						if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()], "qualifiedFulfillmentIDList")) {
+							promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList = getPromotionPeriodQualifiedFulfillmentIDList(promotionPeriod=reward.getPromotionPeriod(), order=arguments.order);
 						}
 						
 						if(len(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList)) {
@@ -367,7 +367,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return true;
 	}
 	
-	private boolean function getPromotionPeriodQualifiedFulfillmentIDList(required any promotionPeriod, required any order) {
+	private string function getPromotionPeriodQualifiedFulfillmentIDList(required any promotionPeriod, required any order) {
 		var qualifiedFulfillmentIDs = "";
 		
 		// Loop over Qualifiers looking for fulfillment qualifiers

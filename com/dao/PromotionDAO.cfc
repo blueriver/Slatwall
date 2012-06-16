@@ -151,7 +151,7 @@ Notes:
 		<cfreturn results[1] />
 	</cffunction>
 	
-	<cffunction name="getPromotionPeriodUseCount" returntype="numeric" access="public">
+	<cffunction name="getPromotionPeriodAccountUseCount" returntype="numeric" access="public">
 		<cfargument name="promotionPeriod" required="true" type="any" />
 		<cfargument name="account" required="true" type="any" />
 		
