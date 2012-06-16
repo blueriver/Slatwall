@@ -67,22 +67,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.order.getAppliedPromotions()[pa].removeOrder();
 			}
 			
-			// Loop over orderItems and apply Sale Prices
-			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
-				var orderItem = arguments.order.getOrderItems()[oi];
-				var salePriceDetails = orderItem.getSku().getSalePriceDetails();
-
-				if(structKeyExists(salePriceDetails, "salePrice") && salePriceDetails.salePrice < orderItem.getSku().getPrice()) {
-					var discountAmount = precisionEvaluate((orderItem.getSku().getPrice() * orderItem.getQuantity()) - (salePriceDetails.salePrice * orderItem.getQuantity()));
-
-					var newAppliedPromotion = this.newPromotionApplied();
-					newAppliedPromotion.setAppliedType('orderItem');
-					newAppliedPromotion.setPromotion( this.getPromotion(salePriceDetails.promotionID) );
-					newAppliedPromotion.setOrderItem( orderItem );
-					newAppliedPromotion.setDiscountAmount( discountAmount );
-				}
-			}
-			
 			/*
 			This is the data structure for the below structs to keep some information about what has & hasn't been applied as well as what can be applied	
 																																							
@@ -138,7 +122,26 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// This is a structure of orderItems with all of the potential discounts that apply to them
 			var orderItemQulifiedDiscounts = {};
 			
-			
+			// Loop over orderItems and add Sale Prices to the qualified discounts
+			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
+				var orderItem = arguments.order.getOrderItems()[oi];
+				var salePriceDetails = orderItem.getSku().getSalePriceDetails();
+
+				if(structKeyExists(salePriceDetails, "salePrice") && salePriceDetails.salePrice < orderItem.getSku().getPrice()) {
+					
+					var discountAmount = precisionEvaluate((orderItem.getSku().getPrice() * orderItem.getQuantity()) - (salePriceDetails.salePrice * orderItem.getQuantity()));
+					
+					orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ] = [];
+					
+					// Insert this value into the potential discounts array
+					arrayAppend(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ], {
+						promotionRewardID = "",
+						promotion = this.getPromotion(salePriceDetails.promotionID),
+						discountAmount = discountAmount
+					});
+					
+				}
+			}
 			
 			// Loop over all Potential Discounts that require qualifications
 			var promotionRewards = getDAO().getActivePromotionRewards(rewardTypeList="merchandise,subscription,contentAccess,order,fulfillment", promotionCodeList=arguments.order.getPromotionCodeList(), qualificationRequired=true);
@@ -159,10 +162,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				if( !isNull(reward.getMaximumUsePerOrder()) && reward.getMaximumUsePerOrder() > 0) {
 					promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder = reward.getMaximumUsePerOrder();
 				}
-				if( !isNull(reward.getMaximumUsePerItem()) && reward.getMaximumUsePerOrder() > 0 ) {
+				if( !isNull(reward.getMaximumUsePerItem()) && reward.getMaximumUsePerItem() > 0 ) {
 					promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerItem = reward.getMaximumUsePerItem();
 				}
-				if( !isNull(reward.getMaximumUsePerQualification()) && reward.getMaximumUsePerOrder() > 0 ) {
+				if( !isNull(reward.getMaximumUsePerQualification()) && reward.getMaximumUsePerQualification() > 0 ) {
 					promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification = reward.getMaximumUsePerQualification();
 				}
 				
@@ -219,6 +222,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 										// Get The order Item
 										var orderItem = arguments.order.getOrderItems()[i];
 										
+										logSlatwall("order item ID: " & orderItem.getOrderItemID());
+										
 										// Verify that this is an item being sold
 										if(orderItem.getOrderItemType().getSystemCode() == "oitSale") {
 											
@@ -242,19 +247,29 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 													// Check the reward settings to see if this orderItem applies
 													if( getOrderItemInReward(reward, orderItem) ) {
 														
+														logSlatwall("order item applies");
+														
 														// setup the discountQuantity based on the qualification quantity.  If there were no qualification constrints than this will just be the orderItem quantity
 														var qualificationQuantity = promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ];
 														var discountQuantity = qualificationQuantity * promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification;
+														
+														logSlatwall("quanlifiaction count: " & qualificationQuantity);
+														logSlatwall("discount quantity: " & discountQuantity);
+														
 														
 														// If the discountQuantity is > the orderItem quantity then just set it to the orderItem quantity
 														if(discountQuantity > orderItem.getQuantity()) {
 															discountQuantity = orderItem.getQuantity();
 														}
 														
+														logSlatwall("discount quantity 2: " & discountQuantity);
+														
 														// If the discountQuantity is > than maximumUsePerItem then set it to maximumUsePerItem
 														if(discountQuantity > promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerItem) {
 															discountQuantity = promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerItem;
 														}
+														
+														logSlatwall("discount quantity 3: " & discountQuantity);
 														
 														// If there is not applied Price Group, or if this reward has the applied pricegroup as an eligible one then use priceExtended... otherwise use skuPriceExtended and then adjust the discount.
 														if( isNull(orderItem.getAppliedPriceGroup()) || reward.hasEligiblePriceGroup( orderItem.getAppliedPriceGroup() ) ) {
@@ -271,6 +286,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 															var discountAmount = precisionEvaluate(originalDiscountAmount - (orderItem.getExtendedSkuPrice() - orderItem.getExtendedPrice()));
 															
 														}
+														
+														logSlatwall("discount amount: " & discountAmount);
 														
 														// If the discountAmount is gt 0 then we can add the details in order to the potential orderItem discounts
 														if(discountAmount > 0) {
