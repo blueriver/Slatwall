@@ -83,6 +83,51 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 			}
 			
+			/*
+			This is the data structure for the below structs to keep some information about what has & hasn't been applied as well as what can be applied	
+																																							
+			promotionPeriodQualifications = {																												
+				promotionPeriodID = {																														
+					promotionPeriodQualifies = true | false,																								
+					orderQulifies = true | false,																											
+					qualifiedFulfillmentIDList = "comma seperated list of ID's"																				
+					orderItems = {																															
+						orderItemID = x (number of times it qualifies),																						
+						orderItemID = y (number of times it qualifies)																						
+					}																																		
+				}																																			
+			};																																				
+																																							
+			promotionRewardUsageDetails = {																													
+				promotionRewardID1 = {																														
+					usedInOrder = 0,																														
+					maximumUsePerOrder = 1000000,																											
+					maximumUsePerItem = 1000000,																											
+					maximumUsePerQualification = 1000000,																									
+					orderItemsUsage = [   			Array is sorted by discountPerUseValue ASC so that we know what items to strip from if we go over		
+						{																																	
+							orderItemID = x,																												
+							discountQuantity = 0,																											
+							discountPerUseValue = 0,																										
+						}																																	
+					]																																		
+				}																																			
+			};																																				
+																																							
+			orderItemQulifiedDiscounts = {																													
+				orderItemID1 = [									Array is sorted by discountAmount DESC so we know which is best to apply				
+					{																																		
+						promotionRewardID = x,																												
+						promotion = promotionEntity																											
+						discountAmount = 0,																													
+						discountQuantity = 0,																												
+						discountPerUseValue = 0,																											
+					}																																		
+				]													Array is sorted by discountAmount DESC so we know which is best to apply				
+			};																																				
+																																							
+			*/
+			
 			
 			// This is a structure of promotionPeriods that will get checked and cached as to if we are still within the period use count, and period account use count
 			var promotionPeriodQualifications = {};
@@ -90,52 +135,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// This is a structure of promotionRewards that will hold information reguarding maximum usages, and the amount of usages applied
 			var promotionRewardUsageDetails = {};
 			
+			// This is a structure of orderItems with all of the potential discounts that apply to them
 			var orderItemQulifiedDiscounts = {};
 			
-			/*
-			This is the data structure for the above structs to keep some information about what has & hasn't been applied as well as what can be applied
 			
-			promotionPeriodQualifications = {
-				promotionPeriodID = {
-					promotionPeriodQualifies = true | false,
-					orderQulifies = true | false,
-					qualifiedFulfillmentIDList = "comma seperated list of ID's"
-					orderItems = {
-						orderItemID = x (number of times it qualifies),
-						orderItemID = y (number of times it qualifies)
-					}
-				}
-			};
-			
-			promotionRewardUsageDetails = {
-				promotionRewardID1 = {
-					usedInOrder = 0,
-					maximumUsePerOrder = 1000000,
-					maximumUsePerItem = 1000000,
-					maximumUsePerQualification = 1000000,
-					orderItemsUsage = [
-						{
-							orderItemID = x,
-							discountQuantity = 0,
-							discountPerUseValue = 0,
-						}
-					]												Array is sorted by discountPerUseValue ASC so that we know what items to strip from if we go over
-				}
-			};
-			
-			orderItemQulifiedDiscounts = {
-				orderItemID1 = [
-					{
-						promotionRewardID = x,
-						promotion = promotionEntity
-						discountAmount = 0,
-						discountQuantity = 0,
-						discountPerUseValue = 0,
-					}
-				]													Array is sorted by discountAmount DESC so we know which is best to apply
-			};
-			
-			*/
 			
 			// Loop over all Potential Discounts that require qualifications
 			var promotionRewards = getDAO().getActivePromotionRewards(rewardTypeList="merchandise,subscription,contentAccess,order,fulfillment", promotionCodeList=arguments.order.getPromotionCodeList(), qualificationRequired=true);
@@ -143,12 +146,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				
 				var reward = promotionRewards[pr];
 				
+				logSlatwall( "promotionRewardID" & reward.getPromotionRewardID());
+				
 				// Setup the promotionReward usage Details. This will be used for the maxUsePerQualification & and maxUsePerItem up front, and then later to remove discounts that violate max usage
 				promotionRewardUsageDetails[ reward.getPromotionRewardID() ] = {
 					usedInOrder = 0,
 					maximumUsePerOrder = 1000000,
 					maximumUsePerItem = 1000000,
-					maximumUsePerQualification = 1000000
+					maximumUsePerQualification = 1000000,
+					orderItemsUsage = []
 				};
 				if( !isNull(reward.getMaximumUsePerOrder()) && reward.getMaximumUsePerOrder() > 0) {
 					promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder = reward.getMaximumUsePerOrder();
@@ -160,15 +166,23 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification = reward.getMaximumUsePerQualification();
 				}
 				
+				logSlatwall( "maximumUsePerOrder " & promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder );
+				logSlatwall( "maximumUsePerItem " & promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerItem );
+				logSlatwall( "maximumUsePerQualification " & promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification );
+				
 				
 				// Setup the boolean for if the promotionPeriod is okToApply based on general use count
 				if(!structKeyExists(promotionPeriodQualifications, reward.getPromotionPeriod().getPromotionPeriodID())) {
-					promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ] = {};
+					promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ] = {
+						orderItems = {}
+					};
 					promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ].promotionPeriodQualifies = getPromotionPeriodOKToApply(promotionPeriod=reward.getPromotionPeriod(), order=arguments.order);
 				}
 				
 				// If this promotion period is ok to apply based on general useCount
 				if(promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ].promotionPeriodQualifies) {
+					
+					logSlatwall("period ok");
 					
 					// Now that we know the period is ok, lets check and cache if the order qualifiers
 					if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()], "orderQulifies")) {
@@ -178,18 +192,26 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					// If order qualifies for the rewards promotion period
 					if(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderQulifies) {
 						
+						logSlatwall("order qualifies");
+						
 						// Now that we know the order is ok, lets check and cache if at least one of the fulfillment qualifies
 						if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()], "qualifiedFulfillmentIDList")) {
 							promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList = getPromotionPeriodQualifiedFulfillmentIDList(promotionPeriod=reward.getPromotionPeriod(), order=arguments.order);
 						}
 						
+						logSlatwall("fulfillment list: " & promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList);
+						
 						// Check to make sure that at least one of the fulfillents is in the list of qualified fulfillments
 						if(len(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList)) {
+							
+							logSlatwall("fulfillment in list");
 							
 							switch(reward.getRewardType()) {
 								
 								// =============== Order Item Reward ==============
 								case "merchandise": case "subscription": case "contentAccess":
+								
+									logSlatwall("reward is #reward.getRewardType()#");
 								
 									// Loop over all the orderItems
 									for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
@@ -200,8 +222,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 										// Verify that this is an item being sold
 										if(orderItem.getOrderItemType().getSystemCode() == "oitSale") {
 											
+											logSlatwall("order item is sale");
+											
 											// Make sure that this order item is in the acceptable fulfillment list
 											if(listFindNoCase(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList, orderItem.getOrderFulfillment().getOrderFulfillmentID())) {
+												
+												logSlatwall("order item is in qualified fulfillment");
 											
 												// Now that we know the fulfillment is ok, lets check and cache then number of times this orderItem qualifies based on the promotionPeriod
 												if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems, orderItem.getOrderItemID())) {
@@ -210,6 +236,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 												
 												// If the qualification count for this order item is > 0 then we can try to apply the reward
 												if(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ]) {
+													
+													logSlatwall("order item qualification count is > 0");
 												
 													// Check the reward settings to see if this orderItem applies
 													if( getOrderItemInReward(reward, orderItem) ) {
@@ -253,48 +281,72 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 																orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ] = [];
 															}
 															
-															var indexToInsertAt = 1;
+															// If there are already values in the array then figure out where to insert
+															if(arrayLen(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ])) {
+																var indexToInsertAt = 1;
 															
-															// loop over any discounts that might be already in assigned and pick an index where the discount amount is best
-															for(var d=1; d<=arrayLen(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ]) ; d++) {
-																if(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ][d].discountAmount < discountAmount) {
-																	indexToInsertAt = d;
-																	break;
+																// loop over any discounts that might be already in assigned and pick an index where the discount amount is best
+																for(var d=1; d<=arrayLen(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ]) ; d++) {
+																	if(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ][d].discountAmount < discountAmount) {
+																		indexToInsertAt = d;
+																		break;
+																	}
 																}
+																
+																// Insert this value into the potential discounts array
+																arrayInsertAt(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ], indexToInsertAt, {
+																	promotionRewardID = reward.getPromotionRewardID(),
+																	promotion = reward.getPromotionPeriod().getPromotion(),
+																	discountAmount = discountAmount
+																});
+															
+															// Otherwise just add it as the first record
+															} else {
+																
+																// Insert this value into the potential discounts array
+																arrayAppend(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ], {
+																	promotionRewardID = reward.getPromotionRewardID(),
+																	promotion = reward.getPromotionPeriod().getPromotion(),
+																	discountAmount = discountAmount
+																});
 															}
 															
-															// Insert this value into the potential discounts array
-															arrayInsertAt(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ], indexToInsertAt, {
-																promotionRewardID = reward.getPromotionRewardID(),
-																promotion = reward.getPromotionPeriod().getPromotion(),
-																discountAmount = discountAmount
-															});
 															
 															// Increment the number of times this promotion reward has been used
 															promotionRewardUsageDetails[ reward.getPromotionRewardID() ].usedInOrder += discountQuantity;
 															
-															// Next we want to add the orderItem to the promotionRewardUsageDetails if it doesn't already exist in case we need to remove this discount option later
-															if(!structKeyExists(orderItemQulifiedDiscounts, orderItem.getOrderItemID())) {
-																promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage = [];
-															}
-															
-															var indexToInsertAt = 1;
 															var discountPerUseValue = precisionEvaluate(discountAmount / discountQuantity);
 															
-															// loop over any previous orderItemUsage of this reward an place it in ASC order based on discountPerUseValue
-															for(var oiu=1; oiu<=arrayLen(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage) ; oiu++) {
-																if(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage[oiu].discountPerUseValue > discountPerUseValue) {
-																	indexToInsertAt = d;
-																	break;
+															// If there are already values in the array then figure out where to insert
+															if(arrayLen(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage)) {
+																var indexToInsertAt = 1;
+																
+																// loop over any previous orderItemUsage of this reward an place it in ASC order based on discountPerUseValue
+																for(var oiu=1; oiu<=arrayLen(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage) ; oiu++) {
+																	if(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage[oiu].discountPerUseValue > discountPerUseValue) {
+																		indexToInsertAt = d;
+																		break;
+																	}
 																}
+																
+																// Insert this value into the potential discounts array
+																arrayInsertAt(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage, indexToInsertAt, {
+																	orderItemID = orderItem.getOrderItemID(),
+																	discountQuantity = discountQuantity,
+																	discountPerUseValue = discountPerUseValue
+																});
+																
+															// Otherwise just add it as the first record
+															} else {
+																
+																// Insert this value into the potential discounts array
+																arrayAppend(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage, {
+																	orderItemID = orderItem.getOrderItemID(),
+																	discountQuantity = discountQuantity,
+																	discountPerUseValue = discountPerUseValue
+																});
 															}
 															
-															// Insert this value into the potential discounts array
-															arrayInsertAt(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage, indexToInsertAt, {
-																orderItemID = orderItem.getOrderItemID(),
-																discountQuantity = discountQuantity,
-																discountPerUseValue = discountPerUseValue
-															});
 														}
 														
 													} // End OrderItem in reward IF
@@ -443,9 +495,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				if(structKeyExists(orderItemQulifiedDiscounts, orderItem.getOrderItemID()) && arrayLen(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ]) ) {
 					var newAppliedPromotion = this.newPromotionApplied();
 					newAppliedPromotion.setAppliedType('orderItem');
-					newAppliedPromotion.setPromotion( orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ].promotion );
+					newAppliedPromotion.setPromotion( orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ][1].promotion );
 					newAppliedPromotion.setOrderItem( orderItem );
-					newAppliedPromotion.setDiscountAmount( orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ].discountAmount );
+					newAppliedPromotion.setDiscountAmount( orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ][1].discountAmount );
 				}
 				
 			}
@@ -508,6 +560,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	private string function getPromotionPeriodQualifiedFulfillmentIDList(required any promotionPeriod, required any order) {
 		var qualifiedFulfillmentIDs = "";
 		
+		for(var f=1; f<=arrayLen(arguments.order.getOrderFulfillments()); f++) {
+			qualifiedFulfillmentIDs = listAppend(qualifiedFulfillmentIDs, arguments.order.getOrderFulfillments()[f].getOrderFulfillmentID());
+		}
+		
 		// Loop over Qualifiers looking for fulfillment qualifiers
 		for(var q=1; q<=arrayLen(arguments.promotionPeriod.getPromotionQualifiers()); q++) {
 			
@@ -518,8 +574,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				// Loop over fulfillments to see if it qualifies, and if so add to the list
 				for(var f=1; f<=arrayLen(arguments.order.getOrderFulfillments()); f++) {
 					var orderFulfillment = arguments.order.getOrderFulfillments()[f];
-					if( (isNull(qualifier.getMinimumFulfillmentWeight()) || qualifier.getMinimumFulfillmentWeight() < orderFulfillment.getTotalShippingWeight() ) && (isNull(qualifier.getMaximumFulfillmentWeight()) || qualifier.getMaximumFulfillmentWeight() > orderFulfillment.getTotalShippingWeight() )) {
-						qualifiedFulfillmentIDs = listAppend(qualifiedFulfillmentIDs, orderFulfillment.getOrderFulfillmentID());
+					if( (!isNull(qualifier.getMinimumFulfillmentWeight()) && qualifier.getMinimumFulfillmentWeight() > orderFulfillment.getTotalShippingWeight() )
+						||
+						(!isNull(qualifier.getMaximumFulfillmentWeight()) && qualifier.getMaximumFulfillmentWeight() < orderFulfillment.getTotalShippingWeight() )
+						) {
+							
+						qualifiedFulfillmentIDs = ListDeleteAt(qualifiedFulfillmentIDs, listFindNoCase(qualifiedFulfillmentIDs, orderFulfillment.getOrderFulfillmentID()) );
 					}
 				}
 			}	
@@ -538,7 +598,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var qualifier = arguments.promotionPeriod.getPromotionQualifiers()[q];
 			
 			// If the orderItem has a qualifier of the same type
-			if(qualifier.getQualifierType() == argument.orderItem.getSku().getProduct().getBaseProductType()) {
+			if(qualifier.getQualifierType() == arguments.orderItem.getSku().getProduct().getBaseProductType()) {
 				
 				// First we run an "if" to see if this doesn't qualify to set the count to 0
 				if( ( arrayLen( qualifier.getProductTypes() ) && !qualifier.hasProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
@@ -604,7 +664,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			||
 			( arrayLen( arguments.reward.getExcludedBrands() ) && ( isNull( arguments.orderItem.getSku().getProduct().getBrand() ) || arguments.reward.hasExcludedBrand( arguments.orderItem.getSku().getProduct().getBrand() ) ) )
 			||
-			( arrayLen( rarguments.reward.getOptions() ) && !arguments.reward.hasAnyOption( arguments.orderItem.getSku().getOptions() ) )  	
+			( arrayLen( arguments.reward.getOptions() ) && !arguments.reward.hasAnyOption( arguments.orderItem.getSku().getOptions() ) )  	
 			||
 			( arguments.reward.hasAnyExcludedOption( arguments.orderItem.getSku().getOptions() ) )
 			) {
@@ -618,7 +678,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	private numeric function getDiscountAmount(required any reward, required numeric price, required numeric quantity) {
 		var discountAmountPreRounding = 0;
 		var roundedFinalAmount = 0;
-		var originalAmout = precisionEvaluate(arguments.price * arguments.quantity);
+		var originalAmount = precisionEvaluate(arguments.price * arguments.quantity);
 		
 		
 		switch(reward.getAmountType()) {
