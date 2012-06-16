@@ -106,6 +106,108 @@ Notes:
 		<cfreturn ormExecuteQuery(hql, params) />
 	</cffunction>
 	
+	<cffunction name="getPromotionPeriodUseCount" returntype="numeric" access="public">
+		<cfargument name="promotionPeriod" required="true" type="any" />
+		
+		<cfset var results = ormExecuteQuery("SELECT count(pa.promotionAppliedID)
+				FROM
+					SlatwallPromotionApplied pa
+				  LEFT JOIN
+				  	pa.orderItem oi
+				  LEFT JOIN
+				  	oi.order oio
+				  LEFT JOIN
+				  	oio.orderStatusType oioost
+				  	
+				  LEFT JOIN
+				  	pa.order o
+				  LEFT JOIN
+				  	o.orderStatusType oost
+				  	
+				  LEFT JOIN
+				  	pa.orderFulfillment of
+				  LEFT JOIN
+				  	of.order ofo
+				  LEFT JOIN
+				  	ofo.orderStatusType ofoost
+				WHERE
+					oioost.systemCode not in ('ostNotPlaced')
+				  and
+				  	oost.systemCode not in ('ostNotPlaced')
+				  and
+				  	ofoost.systemCode not in ('ostNotPlaced')
+				  and
+					pa.promotion.promotionID = :promotionID
+				  and
+					pa.createdDateTime > :promotionPeriodStartDateTime
+				  and
+				  	pa.createdDateTime < :promotionPeriodEndDateTime)", {
+					  
+				promotionID = arguments.promotionPeriod.getPromotion().getPromotionID(),
+				promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime(),
+				promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime()
+				}) />
+		
+		<cfreturn results[1] />
+	</cffunction>
+	
+	<cffunction name="getPromotionPeriodUseCount" returntype="numeric" access="public">
+		<cfargument name="promotionPeriod" required="true" type="any" />
+		<cfargument name="account" required="true" type="any" />
+		
+		<cfset var results = ormExecuteQuery("SELECT count(pa.promotionAppliedID)
+				FROM
+					SlatwallPromotionApplied pa
+				  LEFT JOIN
+				  	pa.orderItem oi
+				  LEFT JOIN
+				  	oi.order oio
+				  LEFT JOIN
+				  	oio.orderStatusType oioost
+				  LEFT JOIN
+				  	oio.account oioa
+				  	
+				  LEFT JOIN
+				  	pa.order o
+				  LEFT JOIN
+				  	o.orderStatusType oost
+				  LEFT JOIN
+				  	o.account oa
+				  	
+				  LEFT JOIN
+				  	pa.orderFulfillment of
+				  LEFT JOIN
+				  	of.order ofo
+				  LEFT JOIN
+				  	ofo.orderStatusType ofoost
+				  LEFT JOIN
+				  	ofo.account ofoa
+				WHERE
+					(
+						oioa.accountID = :accountID
+					  or
+					  	oa.accountID = :accountID
+					  or
+					  	ofoa.accountID = :accountID
+					)
+				  and
+					oioost.systemCode not in ('ostNotPlaced')
+				  and
+				  	oost.systemCode not in ('ostNotPlaced')
+				  and
+				  	ofoost.systemCode not in ('ostNotPlaced')
+				  and
+					pa.promotion.promotionID = :promotionID
+				  and
+				  	pa.createdDateTime > :promotionPeriodStartDateTime and pa.createdDateTime < :promotionPeriodEndDateTime)", {
+				promotionID = arguments.promotionPeriod.getPromotion().getPromotionID(),
+				promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime(),
+				promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime()
+				}) />
+		
+		<cfreturn results[1] />
+	</cffunction>
+	
 	<cffunction name="getSalePricePromotionRewardsQuery">
 		<cfargument name="productID" type="string">
 		

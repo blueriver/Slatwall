@@ -47,18 +47,21 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// Sale & Exchange Orders
 		if( listFindNoCase("otSalesOrder,otExchangeOrder", arguments.order.getOrderType().getSystemCode()) ) {
+			
 			// Clear all previously applied promotions for order items
 			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
 				for(var pa=arrayLen(arguments.order.getOrderItems()[oi].getAppliedPromotions()); pa >= 1; pa--) {
 					arguments.order.getOrderItems()[oi].getAppliedPromotions()[pa].removeOrderItem();
 				}
 			}
+			
 			// Clear all previously applied promotions for fulfillment
 			for(var of=1; of<=arrayLen(arguments.order.getOrderFulfillments()); of++) {
 				for(var pa=arrayLen(arguments.order.getAppliedPromotions()); pa >= 1; pa--) {
 					arguments.order.getAppliedPromotions()[pa].removeOrderFulfillment();
 				}
 			}
+			
 			// Clear all previously applied promotions for order
 			for(var pa=arrayLen(arguments.order.getAppliedPromotions()); pa >= 1; pa--) {
 				arguments.order.getAppliedPromotions()[pa].removeOrder();
@@ -80,8 +83,53 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 			}
 			
-			// Setup a structure to hold the qualificationCount of each promotionPeriod.  This is going to be a promotionPeriodID key'd structure
-			var promotionPeriodUse = {};
+			// This is a structure of promotionPeriods that will get checked and cached as to if we are still within the period use count, and period account use count
+			var promotionPeriodOkToApply = {};
+			var rewardUsageDetails = {};
+			var orderItemAppliedRewards = {};
+			
+			var promotionRewardQualifications = {};
+			
+			/*
+			promotionPeriodQualifications = {
+				promotionPeriodID = {
+					promotionPeriodQualifies = true | false,
+					orderQulifies = true | false,
+					qualifiedFulfillmentIDList = "comma seperated list of ID's"
+				}
+			};
+			
+			rewardUsageDetails = {
+				promotionRewardID1 = {
+					promotionReward = promotionRewardEntity,
+					totalUseCount = 0,
+					maximumUsePerOrder = 1000000,
+					maximumUsePerItem = 1000000,
+					maximumUsePerQualification = 1000000
+				},
+				promotionRewardID2 = {
+					promotionReward = promotionRewardEntity,
+					totalUseCount = 0,
+					maximumUsePerOrder = 1000000,
+					maximumUsePerItem = 1000000,
+					maximumUsePerQualification = 1000000
+				}
+			};
+			
+			orderItemAppliedRewards = {
+				orderItemID1 = {
+					promotionRewardID = 0,
+					useQuantity = 0,
+					totalDiscountAmount = 0
+				},
+				orderItemID2 = {
+					promotionRewardID = 0,
+					useQuantity = 0,
+					totalDiscountAmount = 0
+				}
+			};
+			
+			*/
 			
 			// Loop over all Potential Discounts that require qualifications
 			var promotionRewards = getDAO().getActivePromotionRewards(rewardTypeList="merchandise,subscription,contentAccess,order,fulfillment", promotionCodeList=arguments.order.getPromotionCodeList(), qualificationRequired=true);
@@ -89,152 +137,259 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				
 				var reward = promotionRewards[pr];
 				
-				/*
-				// Get the qualificationCountDetails for the promotionPeriod, we cache this value so that we don't have to get it multiple times and so that we can store the use count
-				if(!structKeyExists(promotionPeriodUsablity, reward.getPromotionPeriod().getPromotionPeriodID())) {
-					promotionPeriodUsablity[reward.getPromotionPeriod().getPromotionPeriodID()].usable = reward.getPromotionPeriod().getPromotionPeriodID();
+				// Setup the boolean for if the promotionPeriod is okToApply based on general use count
+				if(!structKeyExists(promotionPeriodQualifications, reward.getPromotionPeriod().getPromotionPeriodID())) {
+					promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ] = {};
+					promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ].promotionPeriodQualifies = getPromotionPeriodOKToApply(promotionPeriod=reward.getPromotionPeriod(), order=arguments.order);
 				}
-				var qualificationDetails = qualificationCounts[reward.getPromotionPeriod().getPromotionPeriodID()];
-				*/
-				// If this order qualifies for the 
-				if(1) {
+				
+				// If this promotion period is ok to apply based on general useCount
+				if(promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ].promotionPeriodQualifies) {
 					
-					switch(reward.getRewardType()) {
-						// =============== Order Item Reward ==============
-						case "merchandise": case "subscription": case "contentAccess":
-						
-							// Loop over all the orderItems
-							for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-								
-								// Get The order Item
-								var orderItem = arguments.order.getOrderItems()[i];
-								
-								// Verify that this is an item being sold
-								// TODO: Add check here for the subscriptionTerm
-								if(orderItem.getOrderItemType().getSystemCode() == "oitSale") {
-									
-									// Check the reward settings to see if this orderItem applies
-									if( ( !arrayLen( reward.getProductTypes() ) || reward.hasProductType( orderItem.getSku().getProduct().getProductType() ) )
-										&&
-										( !arrayLen( reward.getProducts() ) || reward.hasProduct( orderItem.getSku().getProduct() ) )
-										&&
-										( !arrayLen( reward.getSkus() ) || reward.hasSku( orderItem.getSku() ) )
-										&&
-										( !arrayLen( reward.getBrands() ) || reward.hasBrand( orderItem.getSku().getProduct().getBrand() ) )
-										&&
-										( !arrayLen( reward.getOptions() ) || reward.hasAnyOption( orderItem.getSku().getOptions() ) )  	) {
-										
-										// If there is not applied Price Group, or if this reward has the applied pricegroup as an eligible one then use priceExtended... otherwise use skuPriceExtended and then adjust the discount.
-										if( isNull(orderItem.getAppliedPriceGroup()) || reward.hasEligiblePriceGroup( orderItem.getAppliedPriceGroup() ) ) {
-											// Calculate based on price, which could be a priceGroup price
-											var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
-										} else {
-											// Calculate based on skuPrice because the price on this item is a priceGroup price and we need to adjust the discount by the difference
-											var originalDiscountAmount = getDiscountAmount(reward, orderItem.getExtendedSkuPrice());
-											// Take the original discount they were going to get without a priceGroup and subtract the difference of the discount that they are already receiving
-											discountAmount = precisionEvaluate(originalDiscountAmount - (orderItem.getExtendedSkuPrice() - orderItem.getExtendedPrice()));
-										}
-										
-										var addNew = false;
-										
-										// First we make sure that the discountAmount is > 0 before we check if we should add more discount
-										if(discountAmount > 0) {
-											// If there aren't any promotions applied to this order item yet, then we can add this one
-											if(!arrayLen(orderItem.getAppliedPromotions())) {
-												addNew = true;
-											// If one has already been set then we just need to check if this new discount amount is greater
-											} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
-												
-												// If the promotion is the same, then we just update the amount
-												if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
-													orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
-													
-												// If the promotion is a different then remove the original and set addNew to true
-												} else {
-													orderItem.getAppliedPromotions()[1].removeOrderItem();
-													addNew = true;
-												}
-												
-											}
-										}
-										
-										// Add the new appliedPromotion
-										if(addNew) {
-											var newAppliedPromotion = this.newPromotionApplied();
-											newAppliedPromotion.setAppliedType('orderItem');
-											newAppliedPromotion.setPromotion( reward.getPromotionPeriod().getPromotion() );
-											newAppliedPromotion.setOrderItem( orderItem );
-											newAppliedPromotion.setDiscountAmount( discountAmount );
-										}
-									}
-								}
-							}			
-							break;
-						// =============== Fulfillment Reward ======================
-						case "fulfillment":
-							// Loop over all the fulfillments
-							for(var of=1; of<=arrayLen(arguments.order.getOrderFulfillments()); of++) {
-								
-								// Get this order Fulfillment
-								var orderFulfillment = arguments.order.getOrderFulfillments()[of];
-								
-								if( ( !arrayLen(reward.getFulfillmentMethods()) || reward.hasFulfillmentMethod(orderFulfillment.getFulfillmentMethod()) ) 
-									&&
-									( !arrayLen(reward.getShippingMethods()) || (!isNull(orderFulfillment.getShippingMethod()) && reward.hasShippingMethod(orderFulfillment.getShippingMethod()) ) ) ) {
-									
-									var discountAmount = getDiscountAmount(reward, orderFulfillment.getFulfillmentCharge());
-									
-									var addNew = false;
-										
-									// First we make sure that the discountAmount is > 0 before we check if we should add more discount
-									if(discountAmount > 0) {
-										
-										// If there aren't any promotions applied to this order fulfillment yet, then we can add this one
-										if(!arrayLen(orderFulfillment.getAppliedPromotions())) {
-											addNew = true;
-											
-										// If one has already been set then we just need to check if this new discount amount is greater
-										} else if ( orderFulfillment.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
-											
-											// If the promotion is the same, then we just update the amount
-											if(orderFulfillment.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
-												orderFulfillment.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
-												
-											// If the promotion is a different then remove the original and set addNew to true
-											} else {
-												orderFulfillment.getAppliedPromotions()[1].removeOrderFulfillment();
-												addNew = true;
-											}
-										}
-									}
-									
-									// Add the new appliedPromotion
-									if(addNew) {
-										var newAppliedPromotion = this.newPromotionApplied();
-										newAppliedPromotion.setAppliedType('orderFulfillment');
-										newAppliedPromotion.setPromotion( reward.getPromotionPeriod().getPromotion() );
-										newAppliedPromotion.setOrderFulfillment( orderFulfillment );
-										newAppliedPromotion.setDiscountAmount( discountAmount );
-									}
-								}
-							}
-							
-							break;
-						// ================== Order Reward =========================
-						case "order":
-						
-							break;
+					// Now that we know the period is ok, lets check and cache if the order qualifiers
+					if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()], "orderQulifies")) {
+						promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderQulifies = getPromotionPeriodOkToApplyByOrderQualifiers(promotionPeriod=reward.getPromotionPeriod(), order=arguments.order);
 					}
-				}
-			}
-		}
+					
+					// If order qualifies for the rewards promotion period
+					if(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderQulifies) {
+						
+						// Now that we know the order is ok, lets check and cache if at least one of the fulfillment qualifies
+						if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()], "orderQulifies")) {
+							promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList = getPromotionPeriodQualifiedFulfillmentIDs(promotionPeriod=reward.getPromotionPeriod(), order=arguments.order);
+						}
+						
+						if(len(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList)) {
+							
+							switch(reward.getRewardType()) {
+								
+								// =============== Order Item Reward ==============
+								case "merchandise": case "subscription": case "contentAccess":
+								
+									// Loop over all the orderItems
+									for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+										
+										// Get The order Item
+										var orderItem = arguments.order.getOrderItems()[i];
+										
+										// Verify that this is an item being sold
+										if(orderItem.getOrderItemType().getSystemCode() == "oitSale") {
+											
+											// Make sure that this order item is in the acceptable fulfillment list
+											if(listFindNoCase(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList, orderItem.getOrderFulfillment().getOrderFulfillmentID())) {
+											
+												// Check the reward settings to see if this orderItem applies
+												if( ( !arrayLen( reward.getProductTypes() ) || reward.hasProductType( orderItem.getSku().getProduct().getProductType() ) )
+													&&
+													( !arrayLen( reward.getProducts() ) || reward.hasProduct( orderItem.getSku().getProduct() ) )
+													&&
+													( !arrayLen( reward.getSkus() ) || reward.hasSku( orderItem.getSku() ) )
+													&&
+													( !arrayLen( reward.getBrands() ) || reward.hasBrand( orderItem.getSku().getProduct().getBrand() ) )
+													&&
+													( !arrayLen( reward.getOptions() ) || reward.hasAnyOption( orderItem.getSku().getOptions() ) )  	) {
+													
+													/*
+													// If there is not applied Price Group, or if this reward has the applied pricegroup as an eligible one then use priceExtended... otherwise use skuPriceExtended and then adjust the discount.
+													if( isNull(orderItem.getAppliedPriceGroup()) || reward.hasEligiblePriceGroup( orderItem.getAppliedPriceGroup() ) ) {
+														// Calculate based on price, which could be a priceGroup price
+														var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
+													} else {
+														// Calculate based on skuPrice because the price on this item is a priceGroup price and we need to adjust the discount by the difference
+														var originalDiscountAmount = getDiscountAmount(reward, orderItem.getExtendedSkuPrice());
+														// Take the original discount they were going to get without a priceGroup and subtract the difference of the discount that they are already receiving
+														var discountAmount = precisionEvaluate(originalDiscountAmount - (orderItem.getExtendedSkuPrice() - orderItem.getExtendedPrice()));
+													}
+													*/
+													
+													var addNew = false;
+													var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
+													
+													// First we make sure that the discountAmount is > 0 before we check if we should add more discount
+													if(discountAmount > 0) {
+														// If there aren't any promotions applied to this order item yet, then we can add this one
+														if(!arrayLen(orderItem.getAppliedPromotions())) {
+															addNew = true;
+														// If one has already been set then we just need to check if this new discount amount is greater
+														} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
+															
+															// If the promotion is the same, then we just update the amount
+															if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
+																orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
+																
+															// If the promotion is a different then remove the original and set addNew to true
+															} else {
+																orderItem.getAppliedPromotions()[1].removeOrderItem();
+																addNew = true;
+															}
+															
+														}
+													}
+													
+													// Add the new appliedPromotion
+													if(addNew) {
+														var newAppliedPromotion = this.newPromotionApplied();
+														newAppliedPromotion.setAppliedType('orderItem');
+														newAppliedPromotion.setPromotion( reward.getPromotionPeriod().getPromotion() );
+														newAppliedPromotion.setOrderItem( orderItem );
+														newAppliedPromotion.setDiscountAmount( discountAmount );
+													}
+													
+												} // End OrderItem in reward IF
+												
+											} // End orderItem fulfillment in qualifiedFulfillment list
+												
+										} // END Sale Item If
+										
+									} // End Order Item For Loop
+												
+									break;
+									
+								// =============== Fulfillment Reward ======================
+								case "fulfillment":
+								
+									// Loop over all the fulfillments
+									for(var of=1; of<=arrayLen(arguments.order.getOrderFulfillments()); of++) {
+										
+										// Get this order Fulfillment
+										var orderFulfillment = arguments.order.getOrderFulfillments()[of];
+										
+										if( ( !arrayLen(reward.getFulfillmentMethods()) || reward.hasFulfillmentMethod(orderFulfillment.getFulfillmentMethod()) ) 
+											&&
+											( !arrayLen(reward.getShippingMethods()) || (!isNull(orderFulfillment.getShippingMethod()) && reward.hasShippingMethod(orderFulfillment.getShippingMethod()) ) ) ) {
+											
+											var discountAmount = getDiscountAmount(reward, orderFulfillment.getFulfillmentCharge());
+											
+											var addNew = false;
+												
+											// First we make sure that the discountAmount is > 0 before we check if we should add more discount
+											if(discountAmount > 0) {
+												
+												// If there aren't any promotions applied to this order fulfillment yet, then we can add this one
+												if(!arrayLen(orderFulfillment.getAppliedPromotions())) {
+													addNew = true;
+													
+												// If one has already been set then we just need to check if this new discount amount is greater
+												} else if ( orderFulfillment.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
+													
+													// If the promotion is the same, then we just update the amount
+													if(orderFulfillment.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
+														orderFulfillment.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
+														
+													// If the promotion is a different then remove the original and set addNew to true
+													} else {
+														orderFulfillment.getAppliedPromotions()[1].removeOrderFulfillment();
+														addNew = true;
+													}
+												}
+											}
+											
+											// Add the new appliedPromotion
+											if(addNew) {
+												var newAppliedPromotion = this.newPromotionApplied();
+												newAppliedPromotion.setAppliedType('orderFulfillment');
+												newAppliedPromotion.setPromotion( reward.getPromotionPeriod().getPromotion() );
+												newAppliedPromotion.setOrderFulfillment( orderFulfillment );
+												newAppliedPromotion.setDiscountAmount( discountAmount );
+											}
+										}
+									}
+									
+									break;
+									
+								// ================== Order Reward =========================
+								case "order": 
+								
+									break;
+							
+							} // End rewardType Switch
+							
+						} // END Len of fulfillmentID list
+					
+					} // END Order Qualifies IF
+				
+				} // END Promotion Period OK IF
+			
+			} // END of PromotionReward Loop
+			
+		} // END of Sale or Exchange Loop
 		
 		// Return & Exchange Orders
 		if( listFindNoCase("otReturnOrder,otExchangeOrder", arguments.order.getOrderType().getSystemCode()) ) {
 			// TODO: In the future allow for return Items to have negative promotions applied.  This isn't import right now because you can determine how much you would like to refund ordersItems
 		}
-		
+
 	}
+	
+	private boolean function getPromotionPeriodOKToApply(required any promotionPeriod, required any order) {
+		if(!isNull(arguments.promotionPeriod.getMaximumUseCount()) && arguments.promotionPeriod.getMaximumUseCount() gt 0) {
+			var periodUseCount = getDAO().getPromotionPeriodUseCount(promotionPeriod = arguments.promotionPeriod);	
+			if(periodUseCount >= arguments.promotionPeriod.getMaximumUseCount()) {
+				return false;
+			} 
+		}
+		if(!isNull(arguments.promotionPeriod.getMaximumAccountUseCount()) && arguments.promotionPeriod.getMaximumAccountUseCount() gt 0) {
+			var periodAccountUseCount = getDAO().getPromotionPeriodAccountUseCount(promotionPeriod = arguments.promotionPeriod, account=arguments.order.getAccount());
+			if(periodAccountUseCount >= arguments.promotionPeriod.getMaximumAccountUseCount()) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean function getPromotionPeriodOkToApplyByOrderQualifiers(required any promotionPeriod, required any order) {
+		// Loop over Qualifiers looking for order qualifiers
+		for(var q=1; q<=arrayLen(arguments.promotionPeriod.getPromotionQualifiers()); q++) {
+			
+			var qualifier = arguments.promotionPeriod.getPromotionQualifiers()[q];
+			
+			if(qualifier.getQualifierType() == "order") {
+				// Minimum Order Quantity
+				if(!isNull(qualifier.getMinimumOrderQuantity()) && qualifier.getMinimumOrderQuantity() > arguments.order.getTotalSaleQuantity()) {
+					return false;
+				}
+				// Maximum Order Quantity
+				if(!isNull(qualifier.getMaximumOrderQuantity()) && qualifier.getMaximumOrderQuantity() < arguments.order.getTotalSaleQuantity()) {
+					return false;
+				}
+				// Minimum Order Subtotal
+				if(!isNull(qualifier.getMinimumOrderSubtotal()) && qualifier.getMinimumOrderSubtotal() > arguments.order.getSubtotal()) {
+					return false;
+				}
+				// Maximum Order Substotal
+				if(!isNull(qualifier.getMaximumOrderSubtotal()) && qualifier.getMaximumOrderSubtotal() < arguments.order.getSubtotal()) {
+					return false;
+				}
+			}	
+		}
+		
+		return true;
+	}
+	
+	private boolean function getPromotionPeriodQualifiedFulfillmentIDList(required any promotionPeriod, required any order) {
+		var qualifiedFulfillmentIDs = "";
+		
+		// Loop over Qualifiers looking for fulfillment qualifiers
+		for(var q=1; q<=arrayLen(arguments.promotionPeriod.getPromotionQualifiers()); q++) {
+			
+			var qualifier = arguments.promotionPeriod.getPromotionQualifiers()[q];
+			
+			if(qualifier.getQualifierType() == "fulfillment") {
+				
+				// Loop over fulfillments to see if it qualifies, and if so add to the list
+				for(var f=1; f<=arrayLen(arguments.order.getOrderFulfillments()); f++) {
+					var orderFulfillment = arguments.order.getOrderFulfillments()[f];
+					if( (isNull(qualifier.getMinimumFulfillmentWeight()) || qualifier.getMinimumFulfillmentWeight() < orderFulfillment.getTotalShippingWeight() ) && (isNull(qualifier.getMaximumFulfillmentWeight()) || qualifier.getMaximumFulfillmentWeight() > orderFulfillment.getTotalShippingWeight() )) {
+						qualifiedFulfillmentIDs = listAppend(qualifiedFulfillmentIDs, orderFulfillment.getOrderFulfillmentID());
+					}
+				}
+			}	
+		}
+		
+		return qualifiedFulfillmentIDs;
+	}
+	
 	
 	private numeric function getDiscountAmount(required any reward, required any originalAmount) {
 		var discountAmountPreRounding = 0;
@@ -268,17 +423,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return numberFormat(discountAmount, "0.00");
 	}
 	
-	public numeric function getPromotionPeriodQualificationDetails(required any promotionPeriod, required any order) {
-		var qualificationCount = 1000000;
-		var qualificationDetails = {
-			maxTotalUse = 0,
-			maxAccountUse = 0
-		};
-		
-		
-		return 1;
-	}
-	
+	// ----------------- END: Apply Promotion Logic -------------------------
 	
 	public struct function getSalePriceDetailsForProductSkus(required string productID) {
 		var priceDetails = getUtilityService().queryToStructOfStructures(getDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID), "skuID");
@@ -315,23 +460,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return details;
 	}
 	
-	// ----------------- END: Apply Promotion Logic -------------------------
-		 
-	/*
-	  I needed a place to write down some notes about how applied promotions will be reset, and this is it.
-	  Promotions applied on orderItem, fulfillment & order are easy because they can be calculated at the time of the order
-	  However we also need to keep a table of promotions applied to products and customers so that on the listing page we can
-	  query a discount amount to order by price
-	  
-	  So now we need a method to reset all of the discount amounts.
-	  
-	  public void function resetPromotionsAppled(string promotionID, string productTypeID, string productID, string skuID, string accountID) {
-	  
-	  		// Whichever of the arguments get passed in, we need to get the promotionID's that are effected by that item, and then re-call this method with that promotions ID
-	  		
-	  		// When this method is called with a promotionID, it will delete everything in the promotionsApplied table that is sku or sku + customer and recalculate the amount
-	  }
-	  
-	*/
+	
 		
 }
