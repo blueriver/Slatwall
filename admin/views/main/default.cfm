@@ -41,7 +41,15 @@ Notes:
 <cfparam name="rc.productReviewSmartList" type="any" />
 <cfparam name="rc.vendorOrderSmartList" type="any" />
 
+<cfsilent>
+	<cfif application.configBean.getTrackSessionInNewThread() && listLast(application.autoUpdater.getCurrentCompleteVersion(), ".") lt 4970>
+		<cfset $.slatwall.showMessageKey('dashboard.tracksessionissue_error') />
+	</cfif>
+</cfsilent>
+
 <cfoutput>
+	<cf_SlatwallMessageDisplay />
+	
 	<div class="row-fluid">
 		<div class="span6">
 			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.neworders")#</h4>
