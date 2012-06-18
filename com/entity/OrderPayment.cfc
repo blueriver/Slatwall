@@ -60,6 +60,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	// Related Object Properties (one-to-many)
 	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
+	property name="referencingOrderPayments" singularname="referencingOrderPayment" cfc="OrderPayment" fieldType="one-to-many" fkcolumn="referencedOrderPaymentID" cascade="all" inverse="true";
 
 	// Related Object Properties (many-to-many - owner)
 
@@ -263,12 +264,38 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		structDelete(variables, "order");
 	}
 	
+	// Referenced Order Payment (many-to-one)    
+	public void function setReferencedOrderPayment(required any referencedOrderPayment) {    
+		variables.referencedOrderPayment = arguments.referencedOrderPayment;    
+		if(isNew() or !arguments.referencedOrderPayment.hasReferencingOrderPayment( this )) {    
+			arrayAppend(arguments.referencedOrderPayment.getReferencingOrderPayments(), this);    
+		}    
+	}    
+	public void function removeReferencedOrderPayment(any referencedOrderPayment) {    
+		if(!structKeyExists(arguments, "referencedOrderPayment")) {    
+			arguments.referencedOrderPayment = variables.referencedOrderPayment;    
+		}    
+		var index = arrayFind(arguments.referencedOrderPayment.getReferencingOrderPayments(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.referencedOrderPayment.getReferencingOrderPayments(), index);    
+		}    
+		structDelete(variables, "referencedOrderPayment");    
+	}
+	
 	// Credit Card Transactions (one-to-many)
 	public void function addCreditCardTransaction(required any creditCardTransaction) {
 		arguments.creditCardTransaction.setOrderPayment( this );
 	}
 	public void function removeCreditCardTransaction(required any creditCardTransaction) {
 		arguments.creditCardTransaction.removeOrderPayment( this );
+	}
+	
+	// Referencing Order Payments (one-to-many)    
+	public void function addReferencingOrderPayment(required any referencingOrderPayment) {    
+		arguments.referencingOrderPayment.setReferencedOrderPayment( this );    
+	}    
+	public void function removeReferencingOrderPayment(required any referencingOrderPayment) {    
+		arguments.referencingOrderPayment.removeReferencedOrderPayment( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

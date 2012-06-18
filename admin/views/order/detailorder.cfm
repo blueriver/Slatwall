@@ -83,27 +83,31 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divclass="span4">
 				<cfif !isNull(rc.order.getAccount())>
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="fullName" valuelink="?slatAction=admin:account.detailaccount&accountID=#rc.order.getAccount().getAccountID()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress" valuelink="mailto:#rc.order.getAccount().getEmailAddress()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="phoneNumber">
-					<hr />
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin">
 					<cfif !isNull(rc.order.getReferencedOrder())>
 						<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencedOrder" valuelink="?slatAction=admin:order.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
 					</cfif>
-				</cfif>
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divclass="span4">
 					<cfif !isNull(rc.order.getOrderOpenDateTime())>
 						<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
 					</cfif>
 					<cfif !isNull(rc.order.getOrderCloseDateTime())>
 						<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
 					</cfif>
+				</cfif>
+			</cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divclass="span4">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
+					<hr />
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountCreditedTotal">
+					<cfif arrayLen(rc.order.getReferencingOrders())>
+						<hr />
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencingPaymentAmountCreditedTotal">
+					</cfif>
 			</cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyList divclass="span4">
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="subtotal">

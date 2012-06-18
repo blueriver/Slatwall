@@ -64,7 +64,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
 	
-	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
 	
@@ -88,6 +87,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="paymentAuthorizedTotal" persistent="false" formatType="currency";
 	property name="paymentAmountReceivedTotal" persistent="false" formatType="currency";
 	property name="paymentAmountCreditedTotal" persistent="false" formatType="currency";
+	property name="referencingPaymentAmountCreditedTotal" persistent="false" formatType="currency";
 	property name="paymentMethodOptionsSmartList" persistent="false";
 	property name="orderPaymentRefundOptions" persistent="false";
 	property name="promotionCodeList" persistent="false";
@@ -292,6 +292,18 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		
 		return totalPaymentsCredited;
+	}
+	
+	public numeric function getReferencingPaymentAmountCreditedTotal() {
+		var totalReferencingPaymentsCredited = 0;
+		
+		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
+			for(var r=1; r<=arrayLen(getOrderPayments()[i].getReferencingOrderPayments()); r++) {
+				totalReferencingPaymentsCredited = precisionEvaluate(totalReferencingPaymentsCredited + getOrderPayments()[i].getReferencingOrderPayments()[r].getAmountCredited());
+			}
+		}
+		
+		return totalReferencingPaymentsCredited;
 	}
 	
 	public any function getPaymentMethodOptionsSmartList() {
