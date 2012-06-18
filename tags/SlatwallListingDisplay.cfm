@@ -45,6 +45,7 @@ Notes:
 	<cfparam name="attributes.recordEditAction" type="string" default="" />
 	<cfparam name="attributes.recordEditQueryString" type="string" default="" />
 	<cfparam name="attributes.recordEditModal" type="boolean" default="false" />
+	<cfparam name="attributes.recordEditDisabled" type="boolean" default="false" />
 	<cfparam name="attributes.recordDetailAction" type="string" default="" />
 	<cfparam name="attributes.recordDetailQueryString" type="string" default="" />
 	<cfparam name="attributes.recordDetailModal" type="boolean" default="false" />
@@ -327,7 +328,7 @@ Notes:
 										<cf_SlatwallActionCaller action="#attributes.recordDetailAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordDetailQueryString#" class="btn btn-mini" icon="eye-open" iconOnly="true" modal="#attributes.recordDetailModal#" />
 									</cfif>
 									<cfif attributes.recordEditAction neq "">
-										<cf_SlatwallActionCaller action="#attributes.recordEditAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordEditQueryString#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="#attributes.recordEditModal#" />
+										<cf_SlatwallActionCaller action="#attributes.recordEditAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordEditQueryString#" class="btn btn-mini" icon="pencil" iconOnly="true" disabled="#record.isNotEditable()#" modal="#attributes.recordEditModal#" />
 									</cfif>
 									<cfif attributes.recordProcessAction neq "">
 										<cfif attributes.recordProcessContext eq "process">

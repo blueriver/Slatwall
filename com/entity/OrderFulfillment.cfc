@@ -304,6 +304,13 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// ================== START: Overridden Methods ========================
 	
+	public boolean function isEditable() {
+		if(listFindNoCase("ostClosed,ostCanceled", getOrder().getStatusCode())) {
+			return false;
+		}
+		return true;
+	} 
+	
 	public string function getSimpleRepresentation() {
 		return getOrder().getOrderNumber() & " - " & getFulfillmentMethodType();
 	}

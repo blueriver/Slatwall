@@ -40,10 +40,12 @@ Notes:
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderItemsSmartList()#" 
-			recordEditAction="admin:order.editorderitem"
-			recordEditQueryString="orderID=#rc.order.getOrderID()#"
-			recordEditModal="true">
+	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderItemsSmartList()#"
+							   recordDetailAction="admin:order.detailorderitem"
+							   recordDetialModal="true"
+							   recordEditAction="admin:order.editorderitem"
+							   recordEditQueryString="orderID=#rc.order.getOrderID()#"
+							   recordEditModal="true">
 		<cf_SlatwallListingColumn propertyIdentifier="orderItemType.type" filter="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />

@@ -382,7 +382,14 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// ==============  END: Overridden Implicet Getters ====================
 	
 	// ================== START: Overridden Methods ========================
-
+	
+	public boolean function isEditable() {
+		if(listFindNoCase("ostClosed,ostCanceled", getOrder().getStatusCode())) {
+			return false;
+		}
+		return true;
+	} 
+	
 	public string function getSimpleRepresentation() {
 		return getSku().getProduct().getTitle() & " - " & getSku().getSimpleRepresentation(); 
 	}

@@ -122,7 +122,11 @@ Notes:
 	<cfif attributes.disabled>
 	    <cfset attributes.disabledtext = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
 		<cfif right(attributes.disabledtext, "8") eq "_missing">
-			<cfset attributes.disabledtext = replace(request.slatwallScope.rbKey("admin.define.delete_disabled"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
+			<cfif left(listLast(attributes.action, "."), 6) eq "delete">
+				<cfset attributes.disabledtext = replace(request.slatwallScope.rbKey("admin.define.delete_disabled"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
+			<cfelseif left(listLast(attributes.action, "."), 4) eq "edit">
+				<cfset attributes.disabledtext = replace(request.slatwallScope.rbKey("admin.define.edit_disabled"),'${itemEntityName}', request.slatwallScope.rbKey('entity.#request.context.itementityname#'), "all") />
+			</cfif>
 		</cfif>
 		<cfset attributes.class &= " disabled alert-disabled" />
 		<cfset attributes.confirm = false />
@@ -136,7 +140,7 @@ Notes:
 		</cfif>
 	</cfif>
 	
-	<cfif attributes.modal>
+	<cfif attributes.modal && not attributes.disabled>
 		<cfset attributes.class &= " modalload" />
 	</cfif>
 	
@@ -147,11 +151,11 @@ Notes:
 
 	<cfif request.slatwallScope.secureDisplay(action=attributes.action) || (attributes.type eq "link" && attributes.iconOnly)>
 		<cfif attributes.type eq "link">
-			<cfoutput><a title="#attributes.title#" class="#attributes.class#" href="#request.context.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
+			<cfoutput><a title="#attributes.title#" class="#attributes.class#" href="#request.context.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal && not attributes.disabled> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
 		<cfelseif attributes.type eq "list">
-			<cfoutput><li class="#attributes.class#"><a title="#attributes.title#" class="#attributes.class#" href="#request.context.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></li></cfoutput> 
+			<cfoutput><li class="#attributes.class#"><a title="#attributes.title#" class="#attributes.class#" href="#request.context.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal && not attributes.disabled> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></li></cfoutput> 
 		<cfelseif attributes.type eq "button">
-			<cfoutput><button class="btn #attributes.class#" title="#attributes.title#"<cfif attributes.modal> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif><cfif attributes.submit>type="submit"</cfif>>#attributes.icon##attributes.text#</button></cfoutput>
+			<cfoutput><button class="btn #attributes.class#" title="#attributes.title#"<cfif attributes.modal && not attributes.disabled> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif><cfif attributes.submit>type="submit"</cfif>>#attributes.icon##attributes.text#</button></cfoutput>
 		<cfelseif attributes.type eq "submit">
 			<cfoutput>This action caller type has been discontinued</cfoutput>
 		</cfif>

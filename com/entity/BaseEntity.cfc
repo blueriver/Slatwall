@@ -141,6 +141,16 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return !isDeletable();
 	}
 	
+	// @hint public method to determine if this entity can be deleted
+	public boolean function isEditable() {
+		return true;
+	}
+	
+	// @hint public helper method that delegates to isDeletable
+	public boolean function isNotEditable() {
+		return !isEditable();
+	}
+	
 	// @hint public method to determine if this entity can be 'processed', by default it returns true by you can override on an entity by entity basis
 	public boolean function isProcessable( string context="process" ) {
 		

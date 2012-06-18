@@ -126,7 +126,7 @@ Notes:
 										<cf_SlatwallActionCaller action="#request.context.saveAction#" text="#request.slatwallScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
 									<cfelse>
 										<cfif attributes.showdelete><cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
-										<cfif attributes.showedit><cf_SlatwallActionCaller action="#request.context.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true"></cfif>
+										<cfif attributes.showedit><cf_SlatwallActionCaller action="#request.context.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true" disabled="#attributes.object.isNotEditable()#"></cfif>
 									</cfif>
 								</div>
 							<!--- Process --->

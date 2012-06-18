@@ -86,6 +86,13 @@ component displayname="Order Return" entityname="SlatwallOrderReturn" table="Sla
 	
 	// ================== START: Overridden Methods ========================
 	
+	public boolean function isEditable() {
+		if(listFindNoCase("ostClosed,ostCanceled", getOrder().getStatusCode())) {
+			return false;
+		}
+		return true;
+	} 
+	
 	public string function getSimpleRepresentation() {
 		return getOrder().getOrderNumber() & " - " & getReturnLocation().getLocationName();
 	}
