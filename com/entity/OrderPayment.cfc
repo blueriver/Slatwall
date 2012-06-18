@@ -96,6 +96,10 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 				return getCreditCardTransactions()[i].getProviderTransactionID();
 			}
 		}
+		// Check referenced payment, and might have a charge.  This works recursivly
+		if(!isNull(getReferencedPayment())) {
+			return getReferencedPayment().getMostRecentChargeProviderTransactionID();
+		}
 		return "";
 	}
 	

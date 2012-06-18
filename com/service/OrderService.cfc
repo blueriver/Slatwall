@@ -674,31 +674,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getMaxOrderNumber();
 	}
 	
-	private string function getOriginalChargeProviderTransactionIDForOrderPayment(required any orderPayment) {
-		var providerTransactionID = "";
-		
-		// Check through the old transactions for this orderPayment
-		var originalTransactions = arguments.orderPayment.getCreditCardTransactions();
-		for(var i=1; i<=arrayLen(originalTransactions); i++) {
-			if(originalTransactions[i].getAmountCharged() > 0) {
-				providerTransactionID = originalTransactions[i].getProviderTransactionID();
-			}
-		}
-		
-		// If we didn't find an original providerID, then lets look to a potential referenced order payment
-		if(len(providerTransactionID)) {
-			if( !isNull( arguments.orderPayment.getReferencedOrderPayment() ) ) {
-				originalTransactions = arguments.orderPayment.getReferencedOrderPayment().getCreditCardTransactions();
-				for(var i=1; i<=arrayLen(originalTransactions); i++) {
-					if(originalTransactions[i].getAmountCharged() > 0) {
-						providerTransactionID = originalTransactions[i].getProviderTransactionID();
-					}
-				}
-			}
-		}
-		
-		return providerTransactionID;
-	}
 	
 	// ===================== START: Process Methods ================================
 	
@@ -918,7 +893,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					var processData = {
 						amount = returnOrder.getOrderPayments()[1].getAmount(),
 						transactionType = 'credit',
-						providerTransactionID = getOriginalChargeProviderTransactionIDForOrderPayment(returnOrder.getOrderPayments()[1])
+						providerTransactionID = returnOrder.getOrderPayments()[1].getMostRecentChargeProviderTransactionID()
 					};
 					
 					processOrderPayment(returnOrder.getOrderPayments()[1], processData);
@@ -1270,7 +1245,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 									var thisAmountToCredit = potentialCredit;
 								}
 								
-								orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCredit, transactionType="credit", providerTransactionID=getOriginalChargeProviderTransactionIDForOrderPayment(orderPayment) });
+								orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCredit, transactionType="credit", providerTransactionID=orderPayment.getMostRecentChargeProviderTransactionID() });
 								if(!orderPayment.hasErrors()) {
 									totalAmountCredited = precisionEvaluate(totalAmountCredited + thisAmountToCredit);
 								} else {
