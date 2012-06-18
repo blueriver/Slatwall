@@ -76,7 +76,6 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	// Non-Persistent Properties
 	property name="amountAuthorized" type="numeric" persistent="false";
-	property name="amountCharged" type="numeric" persistent="false";
 	property name="amountCredited" type="numeric" persistent="false";
 	property name="amountReceived" type="numeric" persistent="false";
 	property name="creditCardNumber" persistent="false";
@@ -89,6 +88,15 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		}
 		
 		return super.init();
+	}
+	
+	public string function getMostRecentChargeProviderTransactionID() {
+		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+			if(!isNull(getCreditCardTransactions()[i].getAmountCharged()) && getCreditCardTransactions()[i].getAmountCharged() > 0 && !isNull(getCreditCardTransactions()[i].getProviderTransactionID()) && len(getCreditCardTransactions()[i].getProviderTransactionID())) {
+				return getCreditCardTransactions()[i].getProviderTransactionID();
+			}
+		}
+		return "";
 	}
 	
 	public string function getPaymentMethodType() {

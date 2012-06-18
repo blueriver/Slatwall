@@ -49,7 +49,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 				variables[ getProperties()[i].name ] = [];
 			}
 			// set any activeFlag's to true by default 
-			if( getProperties()[i].name == "activeFlag" && isNull(variables.activeFlag) ) {
+			if( getProperties()[i].name == "activeFlag" && isNull(getActiveFlag()) ) {
 				variables.activeFlag = 1;
 			}
 		}
@@ -143,6 +143,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint public method to determine if this entity can be 'processed', by default it returns true by you can override on an entity by entity basis
 	public boolean function isProcessable( string context="process" ) {
+		
+		var results = getValidateThis().validate(theObject=this, context="#arguments.context#", injectResultIntoBO="false");
+		
+		if(results.hasErrors()) {
+			return false;	
+		}
 		return true;
 	}
 	

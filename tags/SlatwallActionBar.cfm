@@ -76,8 +76,9 @@ Notes:
 									<input type="hidden" name="slatAction" value="#request.context.slatAction#" />
 									<input type="text" name="keywords" value="#request.context.keywords#" placeholder="#request.slatwallScope.rbKey('define.search')# #attributes.pageTitle#" data-tableid="LD#replace(attributes.object.getSavedStateID(),'-','','all')#">
 								</form>
-								
 								<!---
+									Export
+									
 								<div class="btn-group">
 									<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #request.slatwallScope.rbKey('define.actions')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">
@@ -95,7 +96,7 @@ Notes:
 												<cf_SlatwallActionCaller action="#attributes.createAction#" class="btn btn-primary" icon="plus icon-white">
 											</cfif>
 										<cfelse>
-											<cf_SlatwallActionCallerDropdown title="#request.slatwallScope.rbKey('define.add')#" icon="plus" dropdownClass="dropdown-menu-right">
+											<cf_SlatwallActionCallerDropdown title="#request.slatwallScope.rbKey('define.add')#" icon="plus" dropdownClass="pull-right">
 												<cfloop list="#attributes.createAction#" index="action">
 													<cf_SlatwallActionCaller action="#action#" type="list" queryString="returnAction=#attributes.createReturnAction#" modal="#attributes.createModal#" /> 
 												</cfloop>
@@ -113,7 +114,7 @@ Notes:
 								<cfif !attributes.object.isNew() && len(thistag.generatedcontent)>
 									<div class="btn-group">
 										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #request.slatwallScope.rbKey('define.actions')# <span class="caret"></span></button>
-										<ul class="dropdown-menu">
+										<ul class="dropdown-menu pull-right">
 											#thistag.generatedcontent#	
 										</ul>
 									</div>

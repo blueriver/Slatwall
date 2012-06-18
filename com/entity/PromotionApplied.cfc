@@ -113,7 +113,7 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 		}
 		var index = arrayFind(arguments.orderFulfillment.getAppliedPromotions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getAppliedPromotions(), index);
+			arrayDeleteAt(arguments.orderFulfillment.getAppliedPromotions(), index);
 		}
 		structDelete(variables, "orderFulfillment");
 	}

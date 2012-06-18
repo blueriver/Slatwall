@@ -68,6 +68,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="quantityUndelivered" type="numeric" persistent="false";
+	property name="quantityDelivered" type="numeric" persistent="false";
 	property name="subtotal" type="numeric" persistent="false" formatType="currency";
 	property name="taxAmount" type="numeric" persistent="false" formatType="currency";
 	property name="totalShippingWeight" type="numeric" persistent="false" formatType="weight";

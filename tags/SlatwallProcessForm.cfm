@@ -43,6 +43,7 @@ Notes:
 			<input type="hidden" name="slatAction" value="#request.context.slatAction#" />
 			<input type="hidden" name="process" value="1" />
 			<input type="hidden" name="processContext" value="#request.context.processContext#" />
+			
 			<cfif request.context.modal>
 				<div class="modal-header">
 					<a class="close" data-dismiss="modal">&times;</a>
@@ -50,6 +51,7 @@ Notes:
 				</div>
 				<div class="modal-body">
 			</cfif>
+			
 	</cfoutput>
 <cfelse>
 	<cfoutput>
@@ -62,6 +64,7 @@ Notes:
 					</div>
 				</div>
 			</cfif>
+			
 		</form>
 	</cfoutput>
 </cfif>

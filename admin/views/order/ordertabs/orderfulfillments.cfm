@@ -47,5 +47,7 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="fulfillmentCharge" />
 		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
 		<cf_SlatwallListingColumn propertyIdentifier="chargeAfterDiscount" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityUndelivered" />
 	</cf_SlatwallListingDisplay>
 </cfoutput>

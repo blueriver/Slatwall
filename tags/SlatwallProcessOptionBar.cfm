@@ -38,6 +38,7 @@ Notes:
 --->
 <cfif thisTag.executionMode eq "end">
 	<cfparam name="attributes.smartList" type="any" default="" />
+	<cfparam name="attributes.allowComment" type="boolean" default="false" />
 	<cfparam name="attributes.dataCollectionPropertyIdentifier" type="string" default="" />
 	
 	<!--- ThisTag Variables used just inside --->
@@ -66,12 +67,17 @@ Notes:
 		<cfif arrayLen(printEmailOptions)>
 			<cfset sections++ />
 		</cfif>
+		<cfif attributes.allowComment>
+			<cfset sections++ />
+		</cfif>
 		<cfif sections eq 1>
 			<cfset divclass="span12" />
 		<cfelseif sections eq 2>
 			<cfset divclass="span6" />
 		<cfelseif sections eq 3>
 			<cfset divclass="span4" />
+		<cfelseif sections eq 4>
+			<cfset divclass="span3" />
 		</cfif>
 	</cfsilent>
 	
@@ -110,6 +116,14 @@ Notes:
 					<br />
 					<cf_SlatwallFieldDisplay edit="true" fieldname="dataCollector" fieldtype="text" title="Scan" fieldclass="firstfocus">
 					<button class="btn">Upload Data File</button>
+				</cf_SlatwallPropertyList>
+			</cfif>
+			<cfif attributes.allowComment>
+				<cf_SlatwallPropertyList divclass="#divclass#">
+					<h4>Optional Comment</h4>
+					<br />
+					<cf_SlatwallFieldDisplay edit="true" fieldname="processComment.publicFlag" fieldtype="yesno" value="0" title="#request.slatwallScope.rbKey('entity.comment.publicFlag')#">
+					<cf_SlatwallFieldDisplay edit="true" fieldname="processComment.comment" fieldClass="processComment" fieldtype="textarea" value="" title="#request.slatwallScope.rbKey('entity.comment.comment')#">		
 				</cf_SlatwallPropertyList>
 			</cfif>
 		</div>

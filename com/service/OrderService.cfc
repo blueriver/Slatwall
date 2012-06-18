@@ -926,6 +926,67 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 				
 			}
+			
+		// CONTEXT: createReturn
+		} else if (arguments.processContext == "placeOnHold") {
+		
+			arguments.order.setOrderStatusType( getTypeService().getTypeBySystemCode("ostOnHold") );
+		
+		// CONTEXT: takeOffHold	
+		} else if (arguments.processContext == "takeOffHold") {
+			
+			arguments.order.setOrderStatusType( getTypeService().getTypeBySystemCode("ostProcessing") );
+			updateOrderStatus(arguments.order);
+			
+		// CONTEXT: closeOrder
+		} else if (arguments.processContext == "cancelOrder") {
+			
+			// Loop over all the orderItems and set them to 0
+			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+				arguments.order.getOrderItems()[i].setQuantity(0);
+				
+				// Remove any promotionsApplied
+				for(var p=arrayLen(arguments.order.getOrderItems()[i].getAppliedPromotions()); p>=1; p--) {
+					arguments.order.getOrderItems()[i].getAppliedPromotions()[p].removeOrderItem();
+				}
+				
+				// Remove any taxApplied
+				for(var t=arrayLen(arguments.order.getOrderItems()[i].getAppliedTaxes()); t>=1; t--) {
+					arguments.order.getOrderItems()[i].getAppliedTaxes()[t].removeOrderItem();
+				}
+			}
+			
+			// Loop over all the fulfillments and remove any fulfillmentCharges, and promotions applied
+			for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments()); i++) {
+				arguments.order.getOrderFulfillments()[i].setFulfillmentCharge(0);
+				// Remove over any promotionsApplied
+				for(var p=arrayLen(arguments.order.getOrderFulfillments()[i].getAppliedPromotions()); p>=1; p--) {
+					arguments.order.getOrderFulfillments()[i].getAppliedPromotions()[p].removeOrderFulfillment();
+				}
+			}
+			
+			// Loop over all of the order discounts and remove them
+			for(var p=arrayLen(arguments.order.getAppliedPromotions()); p>=1; p--) {
+				arguments.order.getAppliedPromotions()[p].removeOrder();
+			}
+			
+			// Loop over all the payments and credit for any charges, and set paymentAmount to 0
+			for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
+				var totalReceived = precisionEvaluate(arguments.order.getOrderPayments()[p].getAmountReceived() - arguments.order.getOrderPayments()[p].getAmountCredited());
+				if(totalReceived gt 0) {
+					var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[p], "credit", totalReceived, arguments.order.getOrderPayments()[p].getMostRecentChargeProviderTransactionID());
+				}
+				// Set payment amount to 0
+				arguments.order.getOrderPayments()[p].setAmount(0);
+			}
+			
+			// Set the status code to canceld
+			arguments.order.setOrderStatusType( getTypeService().getTypeBySystemCode("ostCanceled") );
+			
+		// CONTEXT: cancelOrder
+		} else if (arguments.processContext == "closeOrder") {
+			
+			updateOrderStatus(arguments.order);	
 		
 		// CONTEXT: Not Defined
 		} else {

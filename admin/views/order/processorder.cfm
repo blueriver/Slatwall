@@ -42,13 +42,36 @@ Notes:
 <cfparam name="rc.processContext" type="string" />
 
 <cfoutput>
-	<cf_SlatwallProcessForm>
+	<cf_SlatwallProcessForm addcomment="true">
+		
 		<cf_SlatwallActionBar type="process" />
 		
-		<!--- Create Return --->
-		<cfif rc.processContext eq "createReturn" && !rc.multiProcess>
+		<cfif rc.processContext eq "placeOrder">
 			
-			<cf_SlatwallProcessOptionBar>
+			This feature is currently disabled
+			
+		<cfelseif rc.processContext eq "addOrderPayment">
+			
+			This feature is currently disabled
+			
+		<cfelseif listFindNoCase("placeOnHold,takeOffHold,closeOrder", rc.processContext)>
+			
+			<input type="hidden" name="orderID" value="#rc.processOrderSmartList.getRecords()[1].getOrderID()#" />
+			
+			<cf_SlatwallProcessOptionBar allowComment="true">
+			</cf_SlatwallProcessOptionBar>
+			
+			
+		<cfelseif rc.processContext eq "cancelOrder">
+			
+			<input type="hidden" name="orderID" value="#rc.processOrderSmartList.getRecords()[1].getOrderID()#" />
+			
+			<cf_SlatwallProcessOptionBar allowComment="true">
+			</cf_SlatwallProcessOptionBar>
+			
+		<cfelseif rc.processContext eq "createReturn">
+			
+			<cf_SlatwallProcessOptionBar allowComment="true">
 				<cf_SlatwallProcessOption data="returnLocationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
 				<cf_SlatwallProcessOption data="fulfillmentChargeRefundAmount" fieldType="text" fieldClass="number" value="0" />
 				<cf_SlatwallProcessOption data="referencedOrderPaymentID" fieldType="select" value="rc.processOrderSmartList.getRecords()[1].getOrderPaymentRefundOptions()[1]['value']" valueOptions="#rc.processOrderSmartList.getRecords()[1].getOrderPaymentRefundOptions()#" />
@@ -56,17 +79,16 @@ Notes:
 				<cf_SlatwallProcessOption data="autoProcessReturnPaymentFlag" fieldType="yesno" value="0" />
 			</cf_SlatwallProcessOptionBar>
 			
-			<div style="width:700px;">
-				<cf_SlatwallProcessListing processSmartList="#rc.processOrderSmartList#" processRecordsProperty="orderItems" processHeaderString="Order: ${order.orderNumber}">
-					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" />
-					<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" />
-					<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
-					<cf_SlatwallProcessColumn propertyIdentifier="price" />
-					<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" />
-					<cf_SlatwallProcessColumn data="returnPrice" fieldType="text" value="${price}" fieldClass="span1 number" />
-					<cf_SlatwallProcessColumn data="returnQuantity" fieldType="text" value="0" fieldClass="span1 number" />
-				</cf_SlatwallProcessListing>
-			</div>
+			<cf_SlatwallProcessListing processSmartList="#rc.processOrderSmartList#" processRecordsProperty="orderItems" processHeaderString="Order: ${order.orderNumber}">
+				<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" />
+				<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" />
+				<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
+				<cf_SlatwallProcessColumn propertyIdentifier="price" />
+				<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" />
+				<cf_SlatwallProcessColumn data="returnPrice" fieldType="text" value="${price}" fieldClass="span1 number" />
+				<cf_SlatwallProcessColumn data="returnQuantity" fieldType="text" value="0" fieldClass="span1 number" />
+			</cf_SlatwallProcessListing>
+			
 		</cfif>
 		
 	</cf_SlatwallProcessForm>

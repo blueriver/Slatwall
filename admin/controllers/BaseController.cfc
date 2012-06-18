@@ -45,6 +45,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	property name="utilityORMService" type="any";
 	property name="accountService" type="any";
 	property name="permissionService" type="any";
+	property name="commentService" type="any";
 	
 	public any function init(required any fw) {
 		setFW(arguments.fw);
@@ -346,18 +347,23 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			
 			// If there weren't any process records passed in, then we will make a sinlge processrecord with the entire rc
 			if(!structKeyExists(rc, "processRecords") || !isArray(rc.processRecords)) {
-				rc.processRecords = [rc];	
+				rc.processRecords = [rc];
 			}
 			
 			for(var i=1; i<=arrayLen(rc.processRecords); i++) {
 				
 				if(structKeyExists(rc.processRecords[i], entityPrimaryID)) {
+					
 					structAppend(rc.processRecords[i], rc.processOptions, false);
 					var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc.processRecords[i][ entityPrimaryID ], 2=true} );
+					
+					logSlatwall("Process Called: Enity - #arguments.entityName#, EntityID - #rc.processRecords[i][ entityPrimaryID ]#, processContext - #rc.processContext# ");
+					
 					entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=rc.processRecords[i], 3=rc.processContext} );
 					
 					// If there were errors, then add to the errored entities
 					if( !isNull(entity) && entity.hasErrors() ) {
+						
 						// Add the error message to the top of the page
 						entity.showErrorMessages();
 						
@@ -366,10 +372,30 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 						
 					// If there were not error messages then que and process emails & print options
 					} else if (!isNull(entity)) {
+						
+						// Send out E-mails
 						if(structKeyExists(rc.processOptions, "email")) {
 							for(var emailEvent in rc.processOptions.email) {
 								getEmailService().sendEmailByEvent(eventName="process#arguments.entityName#:#emailEvent#", entity=entity);
 							}
+						}
+						
+						// Create any process Comments
+						if(structKeyExists(rc, "processComment") && isStruct(rc.processComment) && len(rc.processComment.comment)) {
+							
+							// Create new Comment
+							var newComment = getCommentService().newComment();
+							
+							// Create Relationship
+							var commentRelationship = {};
+							commentRelationship.commentRelationshipID = "";
+							commentRelationship[ arguments.entityName ] = {};
+							commentRelationship[ arguments.entityName ][ entityPrimaryID ] = entity.getPrimaryIDValue();
+							rc.processComment.commentRelationships = [];
+							arrayAppend(rc.processComment.commentRelationships, commentRelationship);
+							
+							// Save new Comment 
+							getCommentService().saveComment(newComment, rc.processComment);
 						}
 					}
 				}

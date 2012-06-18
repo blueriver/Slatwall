@@ -46,49 +46,38 @@ Notes:
 								
 								
 --->
+
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#" showedit="false" showdelete="false">
-			<!--- Place Order --->
-			<cfif listFind("ostNotPlaced", rc.order.getOrderStatusType().getSystemCode()) >
-				
-			</cfif>
+			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			
+			<!--- This is currently done old school, should be updated --->
+			<!---<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="addOrderItem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />--->
+			<!---<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="addOrderPayment" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />--->
+			
 			<!--- Add Order Item --->
 			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
 				<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
+				
 			</cfif>
 			<!--- Add Order Payment --->
 			<cfif listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
 				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()>
-					<li class="divider"></li>
 					<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
 						<cf_SlatwallActionCaller type="list" text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.payment')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#" modal=true />
 					</cfloop>
 				</cfif>
 			</cfif>
-			<!--- Place On Hold --->
-			<cfif listFind("ostNew,ostProcessing", rc.order.getOrderStatusType().getSystemCode()) >
-				
-			</cfif>
-			<!--- Take Off Hold --->
-			<cfif listFind("ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
-				
-			</cfif>
-			<!--- Cancel --->
-			<cfif listFind("ostNew,ostProcessing", rc.order.getOrderStatusType().getSystemCode())>
-				
-			</cfif>
-			<!--- Close --->
-			<cfif listFind("ostNew,ostProcessing", rc.order.getOrderStatusType().getSystemCode())>
-				
-			</cfif>	
-			<!--- Create Return Order --->
-			<cfif rc.order.getQuantityDelivered()>
-				<cf_SlatwallActionCaller action="admin:order.processorder" text="#$.slatwall.rbKey('admin.order.processorder.createreturn_nav')#" queryString="processContext=createReturn&orderID=#rc.order.getOrderID()#" type="list" modal=true />
-			</cfif>
+			
+			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="closeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
