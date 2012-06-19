@@ -492,7 +492,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	public void function preUpdate(struct oldData){
 		if(!this.isPersistable()) {
 			writeDump(getErrors());
-			abort;
 			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors");
 		}
 		

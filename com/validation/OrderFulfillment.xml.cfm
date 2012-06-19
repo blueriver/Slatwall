@@ -31,10 +31,10 @@
 			</rule>
 		</property>
 		<property name="orderStatusCode">
-			<rule type="inList" context="fulfillItems">
+			<rule type="inList" contexts="fulfillItems">
 				<param name="list" value="ostNew,ostProcessing" />
 			</rule>
-			<rule type="inList" context="edit">
+			<rule type="inList" contexts="edit">
 				<param name="list" value="ostNotPlaced,ostNew,ostProcessing,ostOnHold" />
 			</rule>
 		</property>
