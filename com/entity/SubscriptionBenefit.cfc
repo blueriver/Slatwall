@@ -110,6 +110,26 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Price Groups (many-to-many - owner)
+	public void function addPriceGroup(required any priceGroup) {
+		if(arguments.priceGroup.isNew() or !hasPriceGroup(arguments.priceGroup)) {
+			arrayAppend(variables.priceGroups, arguments.priceGroup);
+		}
+		if(isNew() or !arguments.priceGroup.hasSubscriptionBenefit( this )) {
+			arrayAppend(arguments.priceGroup.getSubscriptionBenefits(), this);
+		}
+	}
+	public void function removePriceGroup(required any priceGroup) {
+		var thisIndex = arrayFind(variables.priceGroups, arguments.priceGroup);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.priceGroups, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.priceGroup.getSubscriptionBenefits(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.priceGroup.getSubscriptionBenefits(), thatIndex);
+		}
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================

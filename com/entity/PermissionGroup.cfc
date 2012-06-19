@@ -43,8 +43,8 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	property name="permissionGroupName" ormtype="string";
 	property name="permissions" ormtype="string" length="4000";
 	
-	// Related Object Properties (many-to-many)
-	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="permissionGroupID" inversejoincolumn="accountID";
+	// Related Object Properties (many-to-many - inverse)
+	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="permissionGroupID" inversejoincolumn="accountID" inverse="true";
 
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -53,13 +53,19 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
-	
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Accounts (many-to-many - inverse)
+	public void function addAccount(required any account) {
+		arguments.account.addPermissionGroup( this );
+	}
+	public void function removeAccount(required any account) {
+		arguments.account.removePermissionGroup( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

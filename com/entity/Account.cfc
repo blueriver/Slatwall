@@ -63,7 +63,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="subscriptionUsageBenefitAccounts" singularname="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="subscriptionUsages" singularname="subscriptionUsage" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	
-	// Related Object Properties (many-to-many)
+	// Related Object Properties (many-to-many - owner)
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
 	property name="permissionGroups" singularname="permissionGroup" cfc="PermissionGroup" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="accountID" inversejoincolumn="permissionGroupID";
 
@@ -296,6 +296,46 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}    
 	public void function removeSubscriptionUsage(required any subscriptionUsage) {    
 		arguments.subscriptionUsage.removeAccount( this );    
+	}
+	
+	// Price Groups (many-to-many - owner)
+	public void function addPriceGroup(required any priceGroup) {
+		if(arguments.priceGroup.isNew() or !hasPriceGroup(arguments.priceGroup)) {
+			arrayAppend(variables.priceGroups, arguments.priceGroup);
+		}
+		if(isNew() or !arguments.priceGroup.hasAccount( this )) {
+			arrayAppend(arguments.priceGroup.getAccounts(), this);
+		}
+	}
+	public void function removePriceGroup(required any priceGroup) {
+		var thisIndex = arrayFind(variables.priceGroups, arguments.priceGroup);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.priceGroups, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.priceGroup.getAccounts(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.priceGroup.getAccounts(), thatIndex);
+		}
+	}
+	
+	// Permission Groups (many-to-many - owner)
+	public void function addPermissionGroup(required any permissionGroup) {
+		if(arguments.permissionGroup.isNew() or !hasPermissionGroup(arguments.permissionGroup)) {
+			arrayAppend(variables.permissionGroups, arguments.permissionGroup);
+		}
+		if(isNew() or !arguments.permissionGroup.hasAccounts( this )) {
+			arrayAppend(arguments.permissionGroup.getAccount(), this);
+		}
+	}
+	public void function removePermissionGroup(required any permissionGroup) {
+		var thisIndex = arrayFind(variables.permissionGroups, arguments.permissionGroup);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.permissionGroups, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.permissionGroup.getAccount(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.permissionGroup.getAccount(), thatIndex);
+		}
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

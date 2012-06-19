@@ -74,13 +74,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="parentProductTypeOptions" type="array" persistent="false";
 
 	
-	// Overrides the implicet getter to make sure that a value exists
-	public string function getProductTypeIDPath() {
-		if(isNull(variables.productTypeIDPath)) {
-			variables.productTypeIDPath = buildIDPathList( "parentProductType" );
-		}
-		return variables.productTypeIDPath;
-	}
+	
 	
 	public array function getInheritedAttributeSetAssignments(){
 		// Todo get by all the parent productTypeIDs
@@ -206,6 +200,17 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public string function getProductTypeIDPath() {
+		if(isNull(variables.productTypeIDPath)) {
+			variables.productTypeIDPath = buildIDPathList( "parentProductType" );
+		}
+		return variables.productTypeIDPath;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+	
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentation() {
@@ -220,13 +225,13 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
-		super.preInsert();
 		setProductTypeIDPath( buildIDPathList( "parentProductType" ) );
+		super.preInsert();
 	}
 	
 	public void function preUpdate(struct oldData){
-		super.preUpdate(argumentcollection=arguments);
 		setProductTypeIDPath( buildIDPathList( "parentProductType" ) );;
+		super.preUpdate(argumentcollection=arguments);
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

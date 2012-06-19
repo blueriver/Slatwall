@@ -303,7 +303,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			
 			// If this is a many-to-one related property, then add a 'select' to the top of the list
 			if(getPropertyMetaData( propertyName ).fieldType == "many-to-one" && getPropertyMetaData( propertyName ).cfc != "Type") {
-				arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});	
+				if( structKeyExists(getPropertyMetaData( propertyName ), "nullRBKey") ) {
+					arrayPrepend(variables[ cacheKey ], {value="", name=rbKey(getPropertyMetaData( propertyName ).nullRBKey)});
+				} else {
+					arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});	
+				}
 			}
 		}
 		

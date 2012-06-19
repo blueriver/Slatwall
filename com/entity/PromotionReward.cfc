@@ -61,7 +61,7 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="eligablePriceGroups" singularname="eligablePriceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardPriceGroup" fkcolumn="promotionRewardID" inversejoincolumn="priceGroupID";
+	property name="eligablePriceGroups" singularname="eligablePriceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardEligablePriceGroup" fkcolumn="promotionRewardID" inversejoincolumn="priceGroupID";
 	
 	property name="fulfillmentMethods" singularname="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardFulfillmentMethod" fkcolumn="promotionRewardID" inversejoincolumn="fulfillmentMethodID";
 	property name="shippingAddressZones" singularname="shippingAddressZone" cfc="AddressZone" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingAddressZone" fkcolumn="promotionRewardID" inversejoincolumn="addressZoneID";
@@ -147,6 +147,26 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
        }
        structDelete(variables,"promotionPeriod");
     }
+
+	// Eligable Price Groups (many-to-many - owner)
+	public void function addEligablePriceGroup(required any eligablePriceGroup) {
+		if(arguments.eligablePriceGroup.isNew() or !hasEligablePriceGroup(arguments.eligablePriceGroup)) {
+			arrayAppend(variables.eligablePriceGroups, arguments.eligablePriceGroup);
+		}
+		if(isNew() or !arguments.eligablePriceGroup.hasPromotionReward( this )) {
+			arrayAppend(arguments.eligablePriceGroup.getPromotionRewards(), this);
+		}
+	}
+	public void function removeEligablePriceGroup(required any eligablePriceGroup) {
+		var thisIndex = arrayFind(variables.eligablePriceGroups, arguments.eligablePriceGroup);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.eligablePriceGroups, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.eligablePriceGroup.getPromotionRewards(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.eligablePriceGroup.getPromotionRewards(), thatIndex);
+		}
+	}
 
 	// Brands (many-to-many - owner)
 	public void function addBrand(required any brand) {
