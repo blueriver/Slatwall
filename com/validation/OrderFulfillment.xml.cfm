@@ -21,11 +21,11 @@
 			</rule>
 		</property>
 		<property name="address">
-			<rule type="required" condition="fulfillmentTypeShipping" />
+			<rule type="required" condition="fulfillmentTypeShipping" contexts="placeOrder" />
 		</property>
 		<property name="shippingMethod">
-			<rule type="required" condition="fulfillmentTypeShipping" />
-			<rule type="custom" condition="fulfillmentTypeShipping">
+			<rule type="required" condition="fulfillmentTypeShipping" contexts="placeOrder" />
+			<rule type="custom" condition="fulfillmentTypeShipping" contexts="placeOrder">
 				<param name="methodName" value="hasValidShippingMethodRate" /> 
 			</rule>
 		</property>

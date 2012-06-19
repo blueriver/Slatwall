@@ -53,7 +53,7 @@ Notes:
 		<cf_SlatwallListingColumn propertyidentifier="defaultAmount" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCallerDropdown title="#request.slatwallScope.rbKey('define.add')# #request.slatwallScope.rbKey('entity.shippingmethodrate')#">
+	<cf_SlatwallActionCallerDropdown title="#request.slatwallScope.rbKey('define.add')# #request.slatwallScope.rbKey('entity.shippingmethodrate')#" icon="plus" buttonClass="btn-inverse">
 		<cfset local.integrationOptions = rc.shippingMethod.getShippingMethodRateIntegrationOptions()>
 		<cfloop array="#local.integrationOptions#" index="local.integration">
 			<cf_SlatwallActionCaller text="#local.integration['name']# #request.slatwallScope.rbKey('define.rate')#" action="admin:setting.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#&integrationID=#local.integration['value']#" modal="true" />
