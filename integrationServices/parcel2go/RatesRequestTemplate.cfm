@@ -43,8 +43,8 @@
 	    <GetQuotes xmlns="https://v3.api.parcel2go.com/">
 	      <shipment>
 	        <CollectionAddress>
-	          <CountryCode>#setting('shipFromCountryCode')#</CountryCode>
-	          <PostalCode>#setting('shipFromPostalCode')#</PostalCode>
+	          <CountryCode>#setting('shipperCountryCode')#</CountryCode>
+	          <PostalCode>#setting('shipperPostalCode')#</PostalCode>
 	        </CollectionAddress>
 	        <DeliveryAddress>
 	          <CountryCode>#arguments.requestBean.getShipToCountryCode()#</CountryCode>

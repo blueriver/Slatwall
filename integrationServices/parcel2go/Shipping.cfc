@@ -114,39 +114,41 @@ component accessors="true" output="false" displayname="parcel2go" implements="Sl
 		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		responseBean.setData(xmlResponse);
 		
-		if(isDefined('xmlResponse.Fault')) {
-			responseBean.addMessage(messageName="communicationError", message="An unexpected communication error occured, please notify system administrator.");
-			// If XML fault then log error
-			responseBean.addError("unknown", "An unexpected communication error occured, please notify system administrator.");
-		} else {
-			// Log all messages from FedEx into the response bean
-			for(var i=1; i<=arrayLen(xmlResponse.RatingServiceSelectionResponse.Response); i++) {
-				responseBean.addMessage(
-					messageName=xmlResponse.RatingServiceSelectionResponse.Response[i].ResponseStatusCode.xmltext,
-					message=xmlResponse.RatingServiceSelectionResponse.Response[i].ResponseStatusDescription.xmltext
-				);
-				if(structKeyExists(xmlResponse.RatingServiceSelectionResponse.Response[i], "Error")) {
-					responseBean.addMessage(
-						messageName=xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorCode.xmltext,
-						message=xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorDescription.xmltext
-					);
-					responseBean.addError(
-						xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorCode.xmltext,
-						xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorDescription.xmltext
-					);
+		if(!isDefined('xmlResponse.Fault')
+			&&
+			structKeyExists(xmlResponse, 'soap:Envelope')
+			&&
+			structKeyExists(xmlResponse['soap:Envelope'], 'soap:Body')
+			&&
+			structKeyExists(xmlResponse['soap:Envelope']['soap:Body'], 'GetQuotesResponse')
+			&&
+			structKeyExists(xmlResponse['soap:Envelope']['soap:Body'].GetQuotesResponse, 'GetQuotesResult')
+		) {
+			
+			var quotesResult = xmlResponse['soap:Envelope']['soap:Body'].GetQuotesResponse.GetQuotesResult;
+			
+			if(quotesResult.Success.xmlText) {
+				if(structKeyExists(quotesResult.Quotes, "Quote")) {
+					for(var i=1; i<=arrayLen(quotesResult.Quotes.Quote); i++) {
+						responseBean.addShippingMethod(
+							shippingProviderMethod=quotesResult.Quotes.Quote[i].ServiceId.xmlText,
+							totalCharge=quotesResult.Quotes.Quote[i].TotalPrice.xmlText
+						);
+					}
 				}
+			} else {
+				responseBean.addError(
+					"requestError",
+					quotesResult.ErrorMessage.xmlText
+				);
 			}
 			
-			if(!responseBean.hasErrors()) {
-				for(var i=1; i<=arrayLen(xmlResponse.RatingServiceSelectionResponse.RatedShipment); i++) {
-					responseBean.addShippingMethod(
-						shippingProviderMethod=xmlResponse.RatingServiceSelectionResponse.RatedShipment[i].Service.code.xmlText,
-						totalCharge=xmlResponse.RatingServiceSelectionResponse.RatedShipment[i].TotalCharges.MonetaryValue.xmlText
-					);
-				}
-			}
+		} else {
+			// If XML fault, or incorrectly formatted response then log error
+			responseBean.addMessage(messageName="communicationError", message="An unexpected communication error occured, please notify system administrator.");
+			responseBean.addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		}
-
+		
 		return responseBean;
 	}
 	
