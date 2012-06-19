@@ -62,14 +62,14 @@ Notes:
 		<cftry>
 			<!--- Setup Scope so that it can be used by includes --->
 			<cfset var $ = request.context.$ />
+			<cfset var siteID = "default" />
+			<cfset var themeName = $.siteConfig('theme') />
 			
 			<!--- Figure out the siteID: This needs to get changed --->
 			<cfif structKeyExists($,"event")>
 				<cfset var siteID = $.event('siteid') />
 			<cfelseif structKeyExists(session,"site")>
 				<cfset var siteID = session.siteid />
-			<cfelse>
-				<cfset var siteID = "default" />
 			</cfif>
 			
 			<!--- Setup the object in a local variable --->
@@ -82,11 +82,16 @@ Notes:
 			
 			<cfloop array="#includesToReplace#" index="inc">
 				<cfset var fileName = mid(inc, 17, len(inc) - 17) />
-				<cfset var fileInclude = "#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/#fileName#.cfm" />
+				<cfset var themeFileInclude = "#application.configBean.getContext()#/#siteID#/includes/themes/#themeName#/display_objects/custom/slatwall/email/#fileName#.cfm" />
+				<cfset var siteFileInclude = "#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/#fileName#.cfm" />
 				<cfset var includeContent = "" />
-				<cfif fileExists( expandPath(fileInclude) )>
+				<cfif fileExists( expandPath(themeFileInclude) )>
 					<cfsavecontent variable="includeContent">
-						<cfinclude template="#fileInclude#" />
+						<cfinclude template="#themeFileInclude#" />
+					</cfsavecontent>
+				<cfelseif fileExists( expandPath(siteFileInclude) )>
+					<cfsavecontent variable="includeContent">
+						<cfinclude template="#siteFileInclude#" />
 					</cfsavecontent>
 				</cfif>
 				<cfset htmlBody = replaceNoCase(htmlBody, inc, includeContent) />
@@ -98,11 +103,16 @@ Notes:
 			<cfset var inc = "" />
 			<cfloop array="#includesToReplace#" index="inc">
 				<cfset var fileName = mid(inc, 17, len(inc) - 17) />
-				<cfset var fileInclude = "#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/#fileName#.cfm" />
+				<cfset var themeFileInclude = "#application.configBean.getContext()#/#siteID#/includes/themes/#themeName#/display_objects/custom/slatwall/email/#fileName#.cfm" />
+				<cfset var siteFileInclude = "#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/#fileName#.cfm" />
 				<cfset var includeContent = "" />
-				<cfif fileExists( expandPath(fileInclude) )>
+				<cfif fileExists( expandPath(themeFileInclude) )>
 					<cfsavecontent variable="includeContent">
-						<cfinclude template="#fileInclude#" />
+						<cfinclude template="#themeFileInclude#" />
+					</cfsavecontent>
+				<cfelseif fileExists( expandPath(siteFileInclude) )>
+					<cfsavecontent variable="includeContent">
+						<cfinclude template="#siteFileInclude#" />
 					</cfsavecontent>
 				</cfif>
 				<cfset textBody = replaceNoCase(textBody, inc, includeContent) />
