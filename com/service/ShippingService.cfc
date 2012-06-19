@@ -225,12 +225,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Loop over all of the options now in the fulfillment, and do the final clean up
 			for(var c=arrayLen(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()); c >= 1 ; c--) {
+				
 				// If the shippingMethod was not part of the new methods, then remove it
 				if(!listFindNoCase(shippingMethodIDOptionsList, arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[c].getShippingMethodRate().getShippingMethod().getShippingMethodID())) {
 					arguments.orderFulfillment.removeFulfillmentShippingMethodOption( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[r] );
+					
 				// Else if this method option is the same shipping method that the user previously selected, then we can just update the fulfillmentCharge
 				} else if (!isNull(arguments.orderFulfillment.getShippingMethod()) && arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[c].getShippingMethodRate().getShippingMethod().getShippingMethodID() == arguments.orderFulfillment.getShippingMethod().getShippingMethodID()) {
 					arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[c].getTotalCharge() );
+					
 				}
 			}
 			
@@ -239,7 +242,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[1].getTotalCharge() );
 				arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[1].getShippingMethodRate().getShippingMethod() );
 			}
+			
 		}
+		
 	}
 	
 	public boolean function verifyOrderFulfillmentShippingMethodRate(required any orderFulfillment) {
@@ -247,7 +252,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(isNull(arguments.orderFulfillment.getShippingMethod())) {
 			return false;
 		} else if (isNull(arguments.orderFulfillment.getAddress())) {
-			
 			return false;
 		} else {
 			

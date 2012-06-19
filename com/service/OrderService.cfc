@@ -511,9 +511,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}	
 			}
 			
-		
 			// Validate the order Fulfillment
 			arguments.orderFulfillment.validate();
+			
+			// Set ORMHasErrors if the orderFulfillment has errors
+			if(arguments.orderFulfillment.hasErrors()) {
+				getSlatwallScope().setORMHasErrors( true );
+			}
 			
 			if(!getSlatwallScope().getORMHasErrors()) {
 				getDAO().flushORMSession();
