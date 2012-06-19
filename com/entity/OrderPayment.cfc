@@ -79,8 +79,16 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="amountAuthorized" type="numeric" persistent="false";
 	property name="amountCredited" type="numeric" persistent="false";
 	property name="amountReceived" type="numeric" persistent="false";
+	property name="amountUnauthorized" persistent="false";	
+	property name="amountUncredited" persistent="false";
+	property name="amountUncaptured" persistent="false";
+	property name="amountUnreceived" persistent="false";
 	property name="creditCardNumber" persistent="false";
 	property name="expirationDate" persistent="false";
+	property name="experationMonthOptions" persistent="false";
+	property name="expirationYearOptions" persistent="false";
+	property name="paymentMethodType" persistent="false";
+	property name="orderStatusCode" type="numeric" persistent="false";
 	property name="securityCode" persistent="false";
 		
 	public any function init() {
@@ -102,62 +110,6 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 			return getReferencedPayment().getMostRecentChargeProviderTransactionID();
 		}
 		return "";
-	}
-	
-	public string function getPaymentMethodType() {
-		return getPaymentMethod().getPaymentMethodType();
-	}
-
-	public array function getExpirationMonthOptions() {
-		return [
-			'01',
-			'02',
-			'03',
-			'04',
-			'05',
-			'06',
-			'07',
-			'08',
-			'09',
-			'10',
-			'11',
-			'12'
-		];
-	}
-	
-	public array function getExpirationYearOptions() {
-		var yearOptions = [];
-		var currentYear = year(now());
-		for(var i = 0; i < 10; i++) {
-			var thisYear = currentYear + i;
-			arrayAppend(yearOptions,{name=thisYear, value=right(thisYear,2)});
-		}
-		return yearOptions;
-	}
-
-	public array function getProcessTransactionTypeOptions() {
-		var options = [];
-		
-		// Charge Payments
-		if( getOrderPaymentType().getSystemCode() == "optCharge" ) {
-			if( getAmountReceived() < getAmountAuthorized() ) {
-				arrayAppend(options, {value='chargePreAuthorization', name='Charge Pre-Authroization'});
-			}
-			if( getAmountReceived() < getAmount() ) {
-				arrayAppend(options, {value='authorizeAndCharge', name='Authorize & Charge'});	
-			}
-			if(getAmountReceived() < getAmount() && getAmountAuthorized() < getAmount()) {
-				arrayAppend(options, {value='authorize', name='Authorize'});	
-			}
-			
-		// Credit Payments
-		} else {
-			if( getAmountCredited() < getAmount() ) {
-				arrayAppend(options, {value='credit', name='Credit'});
-			}
-		}
-		
-		return options;
 	}
 	
 	public void function copyFromAccountPaymentMethod(required any accountPaymentMethod) {
@@ -235,13 +187,110 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return amountAuthorized;
 	}
 	
+	public numeric function getAmountUnauthorized() {
+		var unauthroized = 0;
+		
+		if ( getOrderPaymentType().getSystemCode() == "optCharge" ) {
+			unauthroized = precisionEvaluate(arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountReceived() - arguments.orderPayment.getAmountAuthorized());
+		}
+		
+		return unauthroized;
+	}
+	
+	public numeric function getAmountUncaptured() {
+		var uncaptured = 0;
+		
+		if ( getOrderPaymentType().getSystemCode() == "optCharge" ) {
+			uncaptured = precisionEvaluate(getAmountAuthorized() - getAmountReceived());
+		}
+		
+		return uncaptured;
+	}
+	
+	public numeric function getAmountUnreceived() {
+		var unreceived = 0;
+		
+		if ( getOrderPaymentType().getSystemCode() == "optCharge" ) {
+			unreceived = precisionEvaluate(getAmount() - getAmountReceived());
+		}
+		
+		return unreceived;
+	}
+	
+	public numeric function getAmountUncredited() {
+		var uncredited = 0;
+		
+		if ( getOrderPaymentType().getSystemCode() == "optCredit" ) {
+			uncredited = precisionEvaluate(getAmount() - getAmountCredited());
+		}
+		
+		return uncredited;
+	}
+	
+	
+	public void function setCreditCardNumber(required string creditCardNumber) {
+		variables.creditCardNumber = arguments.creditCardNumber;
+		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
+		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
+		if(getCreditCardType() != "Invalid" && getPaymentMethod().setting("paymentMethodStoreCreditCardNumberWithOrder") == 1) {
+			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+		}
+	}
+	
+	public string function getCreditCardNumber() {
+		if(!structKeyExists(variables,"creditCardNumber")) {
+			if(coalesce(getCreditCardNumberEncrypted(), "") NEQ "") {
+				variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
+			} else {	
+				variables.creditCardNumber = "";
+			}
+		}
+		return variables.creditCardNumber;
+	}
+	
 	public string function getExpirationDate() {
 		if(!structKeyExists(variables,"expirationDate")) {
 			variables.expirationDate = coalesce(getExpirationMonth(),"") & "/" & coalesce(getExpirationYear(), "");
 		}
 		return variables.expirationDate;
 	}
-		
+	
+	public array function getExpirationMonthOptions() {
+		return [
+			'01',
+			'02',
+			'03',
+			'04',
+			'05',
+			'06',
+			'07',
+			'08',
+			'09',
+			'10',
+			'11',
+			'12'
+		];
+	}
+	
+	public array function getExpirationYearOptions() {
+		var yearOptions = [];
+		var currentYear = year(now());
+		for(var i = 0; i < 10; i++) {
+			var thisYear = currentYear + i;
+			arrayAppend(yearOptions,{name=thisYear, value=right(thisYear,2)});
+		}
+		return yearOptions;
+	}
+	
+	public string function getPaymentMethodType() {
+		return getPaymentMethod().getPaymentMethodType();
+	}
+	
+	public any function getOrderStatusCode() {
+		return getOrder().getStatusCode();
+	}
+	
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
@@ -327,33 +376,6 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		}
 		return true;
 	} 
-	
-	public void function setCreditCardNumber(required string creditCardNumber) {
-		variables.creditCardNumber = arguments.creditCardNumber;
-		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
-		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
-		if(getCreditCardType() != "Invalid" && getPaymentMethod().setting("paymentMethodStoreCreditCardNumberWithOrder") == 1) {
-			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
-		}
-	}
-	
-	public string function getCreditCardNumber() {
-		if(!structKeyExists(variables,"creditCardNumber")) {
-			if(coalesce(getCreditCardNumberEncrypted(), "") NEQ "") {
-				variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
-			} else {	
-				variables.creditCardNumber = "";
-			}
-		}
-		return variables.creditCardNumber;
-	}
-	
-	public string function getValidationContext(required string context) {
-		if(arguments.context == "save") {
-			return "save#getPaymentMethodType()#";
-		}
-		return arguments.context;
-	}
 	
 	public any function getSimpleRepresentation() {
 		if(getPaymentMethodType() == "creditCard") {

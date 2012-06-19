@@ -39,32 +39,33 @@ Notes:
 <cfparam name="rc.returnAction" type="string" default="admin:order.listorder" />
 <cfparam name="rc.processOrderPaymentSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
+<cfparam name="rc.processContext" type="string" />
 
-<cfset rc.orderPayment = rc.processOrderPaymentSmartList.getRecords()[1] />
-
-<cfset rc.defaultValue = 0 />
-<cfif rc.orderPayment.getAmountReceived() lt rc.orderPayment.getAmountAuthorized() >
-	<cfset rc.defaultValue = rc.orderPayment.getAmountAuthorized() - rc.orderPayment.getAmountReceived() />
-<cfelseif rc.orderPayment.getAmountReceived() eq rc.orderPayment.getAmountAuthorized()>
-	<cfset rc.defaultValue = rc.orderPayment.getAmount() - rc.orderPayment.getAmountReceived() />
-</cfif>
+<cfsilent>
+	<cfset local.defaultValue = 0 />
+	
+	<cfset local.orderPayment = rc.processOrderPaymentSmartList.getRecords()[1] />
+	
+	<cfif rc.processContext eq "chargePreAuthorization" >
+		<cfset local.defaultValue = local.orderPayment.getAmountUncaptured() />
+	<cfelseif rc.processContext eq "authorizeAndCharge" >
+		<cfset local.defaultValue = local.orderPayment.getAmountUnreceived() />
+	<cfelseif rc.processContext eq "authorize" >
+		<cfset local.defaultValue = local.orderPayment.getAmountUnauthorized() />
+	<cfelseif rc.processContext eq "credit" >
+		<cfset local.defaultValue = local.orderPayment.getAmountUncredited() />
+	</cfif>
+</cfsilent>
 
 <cfoutput>
 	<cf_SlatwallProcessForm>
-		
 		<cf_SlatwallActionBar type="process" />
 		
+		<input type="hidden" name="orderPaymentID" value="#local.orderPayment.getOrderPaymentID()#" />
+			
 		<cf_SlatwallProcessOptionBar>
-			<cf_SlatwallProcessOption data="transactionType" fieldType="select" valueOptions="#rc.orderPayment.getProcessTransactionTypeOptions()#" />
+			<cf_SlatwallProcessOption data="amount" fieldType="text" value="#local.defaultValue#" />
 		</cf_SlatwallProcessOptionBar>
-		
-		<cf_SlatwallProcessListing processSmartList="#rc.processOrderPaymentSmartList#">
-			<cf_SlatwallProcessColumn propertyIdentifier="creditCardLastFour" />
-			<cf_SlatwallProcessColumn propertyIdentifier="amount" />
-			<cf_SlatwallProcessColumn propertyIdentifier="amountAuthorized" />
-			<cf_SlatwallProcessColumn propertyIdentifier="amountReceived" />
-			<cf_SlatwallProcessColumn data="amount" fieldType="text" fieldClass="span2 number" value="#rc.defaultValue#" />
-		</cf_SlatwallProcessListing>
 		
 	</cf_SlatwallProcessForm>
 </cfoutput>

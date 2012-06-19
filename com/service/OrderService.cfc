@@ -892,11 +892,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					// Setup basic processing data
 					var processData = {
 						amount = returnOrder.getOrderPayments()[1].getAmount(),
-						transactionType = 'credit',
 						providerTransactionID = returnOrder.getOrderPayments()[1].getMostRecentChargeProviderTransactionID()
 					};
 					
-					processOrderPayment(returnOrder.getOrderPayments()[1], processData);
+					processOrderPayment(returnOrder.getOrderPayments()[1], processData, 'credit');
 				
 				}
 				
@@ -975,6 +974,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	// Process: Order Fulfillment
 	public any function processOrderFulfillment(required any orderFulfillment, struct data={}, string processContext="process") {
 		
+		// CONTEXT: fulfillItems
 		if(arguments.processContext == "fulfillItems") {
 			// Make sure that a location was passed in
 			if(structKeyExists(arguments.data, "locationID")) {
@@ -1101,7 +1101,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 											if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
 												thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
 											}
-											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="chargePreAuthorization"});
+											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge}, "chargePreAuthorization");
 											if(!orderPayment.hasErrors()) {
 												totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
 											} else {
@@ -1115,7 +1115,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 											if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
 												thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
 											}
-											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="authorizeAndCharge"});
+											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge}, "authorizeAndCharge");
 											if(!orderPayment.hasErrors()) {
 												totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
 											} else {
@@ -1247,7 +1247,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 									var thisAmountToCredit = potentialCredit;
 								}
 								
-								orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCredit, transactionType="credit", providerTransactionID=orderPayment.getMostRecentChargeProviderTransactionID() });
+								orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCredit, providerTransactionID=orderPayment.getMostRecentChargeProviderTransactionID()}, "credit");
 								if(!orderPayment.hasErrors()) {
 									totalAmountCredited = precisionEvaluate(totalAmountCredited + thisAmountToCredit);
 								} else {
@@ -1270,79 +1270,69 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	// Process: Order Payment
+	
 	public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
 		
-		// First we verify that the two keys we need are in the data
-		if(structKeyExists(arguments.data, "amount") && structKeyExists(arguments.data, "transactionType")) {
-			param name="arguments.data.providerTransactionID" default="";
+		param name="arguments.data.amount" default="0";
+		param name="arguments.data.providerTransactionID" default="";
+		
+		// CONTEXT: authorize
+		if(arguments.processContext == "authorize" && arguments.data.amount <= getAmountUnauthorized()) {
 			
-			var maxAuthroizable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountReceived() - arguments.orderPayment.getAmountAuthorized();
-			var maxChargable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountReceived();
-			var maxCapturable = arguments.orderPayment.getAmountAuthorized() - arguments.orderPayment.getAmountReceived();
-			var maxCreditable = arguments.orderPayment.getAmount() - arguments.orderPayment.getAmountCredited();
+			getPaymentService().processPayment(arguments.orderPayment, "authorize", arguments.data.amount);
+		
+		// CONTEXT: authorizeAndCharge
+		} else if (arguments.processContext == "authorizeAndCharge" && arguments.data.amount <= getAmountUnreceived()) {
 			
-			// Authorize 
-			if( arguments.data.transactionType == "authorize" && maxCapturable >= arguments.data.amount && arguments.orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
+			getPaymentService().processPayment(arguments.orderPayment, "authorizeAndCharge", arguments.data.amount);
+		
+		// CONTEXT: chargePreAuthorization
+		} else if (arguments.processContext == "chargePreAuthorization" && arguments.data.amount <= getAmountUncaptured()) {
+			
+			// If not explicitly defined providerTransactionID was passed in, then we can loop over previous transactions for authroization codes to capture the amount we need.
+			if(!len(arguments.data.providerTransactionID)) {
+				var totalCaptured = 0;
 				
-				getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount);
-			
-			// Authorize & Charge 
-			} else if (arguments.data.transactionType == "authorizeAndCharge" && maxChargable >= arguments.data.amount && arguments.orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
-			
-				getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount);
-			
-			// Capture Pre-Authorization 
-			} else if (arguments.data.transactionType == "chargePreAuthorization" && maxCapturable >= arguments.data.amount && arguments.orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
-				
-				// If not explicitly defined providerTransactionID was passed in, then we can loop over previous transactions for authroization codes to capture the amount we need.
-				if(!len(arguments.data.providerTransactionID)) {
-					var totalCaptured = 0;
-					
-					for(var i=1; i<=arrayLen(arguments.orderPayment.getCreditCardTransactions()); i++) {
-						var originalTransaction = arguments.orderPayment.getCreditCardTransactions()[i];
-						if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
-							var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
-							
-							if(arguments.data.amount - totalCaptured > capturableAmount) {
-								capturableAmount = totalCaptured - arguments.data.amount;
-							}
-							
-							arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
-							
-							var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, capturableAmount, arguments.data.providerTransactionID);
-							
-							if(paymentOK) {
-								totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
-							}
-							
-							// If some payments failed but the total was finally captured, then we can can remove any processing errors
-							if(totalCaptured == arguments.data.amount) {
-								structDelete(arguments.orderPayment.getErrors(), 'processing');
-								break;
-							}
+				for(var i=1; i<=arrayLen(arguments.orderPayment.getCreditCardTransactions()); i++) {
+					var originalTransaction = arguments.orderPayment.getCreditCardTransactions()[i];
+					if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
+						var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
+						
+						if(arguments.data.amount - totalCaptured > capturableAmount) {
+							capturableAmount = totalCaptured - arguments.data.amount;
 						}
 						
+						arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
+						
+						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, capturableAmount, arguments.data.providerTransactionID);
+						
+						if(paymentOK) {
+							totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
+						}
+						
+						// If some payments failed but the total was finally captured, then we can can remove any processing errors
+						if(totalCaptured == arguments.data.amount) {
+							structDelete(arguments.orderPayment.getErrors(), 'processing');
+							break;
+						}
 					}
-
-				// If a providerID was passed in, then we can just use it.
-				} else {
-					var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount, arguments.data.providerTransactionID);
+					
 				}
-				
-				
-			// Credit 
-			} else if (arguments.data.transactionType == "credit" && maxCreditable >= arguments.data.amount && arguments.orderPayment.getOrderPaymentType().getSystemCode() == "optCredit") {
-				
-				getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount, arguments.data.providerTransactionID);		
-			
-			// Error 
+
+			// If a providerID was passed in, then we can just use it.
 			} else {
-				arguments.orderPayment.addError('processing', 'The amount you specified is greater than the amount you can process for this transaction type.');	
+				var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount, arguments.data.providerTransactionID);
 			}
+		
+		// CONTEXT: credit
+		} else if (arguments.processContext == "credit" && arguments.data.amount <= getAmountUncredited()) {
 			
-				
+			getPaymentService().processPayment(arguments.orderPayment, "credit", arguments.data.amount, arguments.data.providerTransactionID);
+			
 		} else {
+			
 			arguments.orderPayment.addError('processing', 'You attempted to process an order payment but either a transactionType or an amount was not defined.');
+			
 		}
 		
 		if(!arguments.orderPayment.hasErrors()) {

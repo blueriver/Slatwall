@@ -42,7 +42,10 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:order.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
-			<cf_SlatwallActionCaller type="list" action="admin:order.processorderpayment" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="chargePreAuthorization" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="authorizeAndCharge" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="authorize" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="credit" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
