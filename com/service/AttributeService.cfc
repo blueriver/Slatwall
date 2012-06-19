@@ -39,77 +39,28 @@ Notes:
 
 component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	
-	/*
-	public void function saveAttributeSort(required string attributeIDs) {
-		for(var i=1; i<=listlen(arguments.attributeIDs);i++) {
-			var attributeID = listGetAt(arguments.attributeIDs,i);
-			var thisAttribute = this.getAttribute(attributeID);
-			thisAttribute.setSortOrder(i);
-		}
-	}
+	// ===================== START: Logical Methods ===========================
 	
-	public any function saveAttribute( required any attribute, required struct data ) {
-		// generate the attribute code if not specified
-		if(!structKeyExists(arguments.data,"attributeCode") || trim(arguments.data.attributeCode) == "") {
-			arguments.data.attributeCode = replace(getService("utilityFileService").filterFileName(arguments.data.attributeName),"-","","all");	
-		}
-		arguments.attribute = Super.save(arguments.attribute,arguments.data);
-		
-		// save attribute options if the saved entity was the correct type and there were no errors
-		var optionsAttributeTypeList = "atSelectBox,atCheckBox,atRadioGroup";
-		if( listFind(optionsAttributeTypeList,arguments.attribute.getAttributeType().getSystemCode()) 
-			&& structKeyExists(arguments.data,"optionsArray")
-			&& !arguments.attribute.hasErrors() ) {
-			saveAttributeOptions(arguments.attribute,arguments.data.optionsArray);
-		}
-		return arguments.attribute;
-	}
+	// =====================  END: Logical Methods ============================
 	
-	private void function saveAttributeOptions( required any attribute, required array optionsArray ) {
-		var order=0;
-		// list of option values to keep track of so we don't include any duplicates
-		var optionValueList = "";
-		// set the attribute options into the attribute, if defined.
-		for( var i=1; i<=arrayLen(arguments.optionsArray);i++ ) {
-			// it's possible that array elements are undefined if options were deleted, so check
-			if(arrayIsDefined(arguments.optionsArray,i)) {
-				var thisOptionStruct = arguments.optionsArray[i];
-				// don't do anything unless there is an actual value passed in and it's not a duplicate
-				if( len(trim(thisOptionStruct.value)) && !listFind(optionValueList,trim(thisOptionStruct.value)) ) {
-					order++;
-					if(len(thisOptionStruct.attributeOptionID)) {
-						var thisAttributeOption = this.getAttributeOption(thisOptionStruct.attributeOptionID);
-					} else {
-						var thisAttributeOption = this.newAttributeOption();
-					}
-					thisAttributeOption.setAttributeOptionValue(trim(thisOptionStruct.value));
-					optionValueList = listAppend(optionValueList, thisAttributeOption.getAttributeOptionValue());
-					if(len(thisOptionStruct.label)) {
-						thisAttributeOption.setAttributeOptionLabel(thisOptionStruct.label);
-					}
-					if(len(trim(thisOptionStruct.sortOrder)) && isNumeric(thisOptionStruct.sortOrder)) {
-						thisAttributeOption.setSortOrder(trim(thisOptionStruct.sortOrder));
-					} else {
-						thisAttributeOption.setSortOrder(order);
-					}
-					arguments.attribute.addAttributeOption(thisAttributeOption);
-				}
-			}
-		}		
-	}
-	*/
-		
-	public any function getAttributeSets(array systemCode) {
-		var smartList = this.getAttributeSetSmartList();
-		if(structKeyExists(arguments,"systemCode")){
-			for(var i = 1; i <= arrayLen(systemCode); i++){
-				smartList.addFilter("attributeSetType_systemCode",systemCode[i],i);
-			}
-		}
-		smartList.addOrder("attributeSetType_systemCode|ASC");
-		smartList.addOrder("sortOrder|ASC");
-		return smartList.getRecords();
-	}
+	// ===================== START: DAO Passthrough ===========================
 	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: Process Methods ===========================
+	
+	// =====================  END: Process Methods ============================
+	
+	// ====================== START: Save Overrides ===========================
+	
+	// ======================  END: Save Overrides ============================
+	
+	// ==================== START: Smart List Overrides =======================
+	
+	// ====================  END: Smart List Overrides ========================
+	
+	// ====================== START: Get Overrides ============================
+	
+	// ======================  END: Get Overrides =============================
 	
 }

@@ -94,6 +94,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="title" type="string" persistent="false";
 	property name="qats" type="numeric" persistent="false";
 	property name="allowBackorderFlag" type="boolean" persistent="false";
+	property name="unusedProductOptions" type="array" persistent="false";
+	property name="unusedProductOptionGroups" type="array" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
@@ -101,7 +103,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePrice" type="numeric" formatType="currency" persistent="false";
 	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
-	
 	
 	public any function getProductTypeOptions( string baseProductType ) {
 		if(!structKeyExists(variables, "productTypeOptions")) {
@@ -569,9 +570,22 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public array function getProductOptionsByGroup(){
-		return getProductService().getProductOptionsByGroup(this);
+		return getProductService().getProductOptionsByGroup( this );
 	}
 	
+	public array function getUnusedProductOptions() {
+		if( !structKeyExists(variables, "unusedProductOptions") ) {
+			variables.unusedProductOptions = getService('OptionService').getUnusedProductOptions( getProductID() );
+		}
+		return variables.unusedProductOptions;
+	}
+	
+	public array function getUnusedProductOptionGroups() {
+		if( !structKeyExists(variables, "unusedProductOptionGroups") ) {
+			variables.unusedProductOptionGroups = getService('OptionService').getUnusedProductOptionGroups( getProductID() );
+		}
+		return variables.unusedProductOptionGroups;
+	}
 	
 
 	// ============  END:  Non-Persistent Property Methods =================

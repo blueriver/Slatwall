@@ -54,20 +54,10 @@ Notes:
 			
 			This feature is currently disabled
 			
-		<cfelseif listFindNoCase("placeOnHold,takeOffHold,closeOrder", rc.processContext)>
+		<cfelseif listFindNoCase("placeOnHold,takeOffHold,closeOrder,cancelOrder", rc.processContext)>
 			
 			<input type="hidden" name="orderID" value="#rc.processOrderSmartList.getRecords()[1].getOrderID()#" />
-			
-			<cf_SlatwallProcessOptionBar allowComment="true">
-			</cf_SlatwallProcessOptionBar>
-			
-			
-		<cfelseif rc.processContext eq "cancelOrder">
-			
-			<input type="hidden" name="orderID" value="#rc.processOrderSmartList.getRecords()[1].getOrderID()#" />
-			
-			<cf_SlatwallProcessOptionBar allowComment="true">
-			</cf_SlatwallProcessOptionBar>
+			<cf_SlatwallProcessOptionBar allowComment="true" />
 			
 		<cfelseif rc.processContext eq "createReturn">
 			

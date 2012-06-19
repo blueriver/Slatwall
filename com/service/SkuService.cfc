@@ -265,5 +265,34 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		for(var i=1; i LTE ArrayLen(skus); i++)
 			skus[i].setShippingWeight(weight);
 	}
+	
+
+	// ===================== START: Logical Methods ===========================
+	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: Process Methods ===========================
+	
+	// =====================  END: Process Methods ============================
+	
+	// ====================== START: Status Methods ===========================
+	
+	// ======================  END: Status Methods ============================
+	
+	// ====================== START: Save Overrides ===========================
+	
+	// ======================  END: Save Overrides ============================
+	
+	// ==================== START: Smart List Overrides =======================
+	
+	// ====================  END: Smart List Overrides ========================
+	
+	// ====================== START: Get Overrides ============================
+	
+	// ======================  END: Get Overrides =============================
 
 }

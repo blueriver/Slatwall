@@ -46,20 +46,36 @@ Notes:
 		
 		<cf_SlatwallActionBar type="process" />
 		
-		<cf_SlatwallProcessListing processSmartList="#rc.processProductSmartList#">
-			<cfswitch expression="#rc.processcontext#" >
-				<cfcase value="bulkupdate">
-					<cf_SlatwallProcessColumn data="skuPrice" fieldType="text" fieldClass="span2 number" value="" />
-				</cfcase> 
-				<cfcase value="addOptionGroup">
-					<cf_SlatwallProcessColumn data="optionGroup" fieldType="select" valueOptions="#rc.$.slatwall.getService('OptionService').getUnusedProductOptionGroups(rc.productID)#" fieldClass="span2"/>
-				</cfcase> 
-				<cfcase value="addOption">
-					<cf_SlatwallProcessColumn data="option" fieldType="select" valueOptions="#rc.$.slatwall.getService('OptionService').getUnusedProductOptions(rc.productID)#" fieldClass="span2" value="" />
-				</cfcase> 
-			</cfswitch>	
+		<input type="hidden" name="productID" value="#rc.processProductSmartList.getRecords()[1].getProductID()#" />
+
+		<cfswitch expression="#rc.processcontext#" >
+				
+			<cfcase value="updateSkus">
+				<cf_SlatwallProcessOptionBar>
+					<cf_SlatwallProcessOption data="skuPrice" fieldType="text" fieldClass="span2 number" value="" />
+				</cf_SlatwallProcessOptionBar>
+			</cfcase>
 			
-		</cf_SlatwallProcessListing>
-		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
+			<cfcase value="addSku">
+				<cf_SlatwallProcessOptionBar>
+					
+				</cf_SlatwallProcessOptionBar>
+			</cfcase>
+			 
+			<cfcase value="addOptionGroup">
+				<cf_SlatwallProcessOptionBar>
+					<cf_SlatwallProcessOption data="optionGroup" fieldType="select" valueOptions="#rc.$.slatwall.getService('OptionService').getUnusedProductOptionGroups(rc.productID)#" fieldClass="span2"/>
+				</cf_SlatwallProcessOptionBar>
+			</cfcase>
+			 
+			<cfcase value="addOption">
+				<cf_SlatwallProcessOptionBar>
+					<cf_SlatwallProcessOption data="option" fieldType="select" valueOptions="#rc.$.slatwall.getService('OptionService').getUnusedProductOptions(rc.productID)#" fieldClass="span2" value="" />
+				</cf_SlatwallProcessOptionBar>
+			</cfcase>
+			 
+		</cfswitch>
+
+		
 	</cf_SlatwallProcessForm>
 </cfoutput>

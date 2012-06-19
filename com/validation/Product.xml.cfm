@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <validateThis xsi:noNamespaceSchemaLocation="validateThis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<conditions>
+		<condition name="isMerchandiseProduct" serverTest="getBaseProductType() EQ 'merchandise'" />
+		<condition name="isSubscriptionProduct" serverTest="getBaseProductType() EQ 'subscription'" />
+		<condition name="isContentAccessProduct" serverTest="getBaseProductType() EQ 'contentAccess'" />
+	</conditions>
+	<contexts>
+		<context name="save" />
+		<context name="delete" />
+		<context name="edit" />
+		<context name="updateSkus" />
+		<context name="addOptionGroup" />
+		<context name="addOption" />
+		<context name="addSubscriptionTerm" />
+	</contexts>
 	<objectProperties>
 		<property name="urlTitle">
 			<rule type="required" contexts="save" />
@@ -19,6 +33,24 @@
 		<property name="price">
 			<rule type="required" contexts="save" />
 			<rule type="numeric" contexts="save" />
+		</property>
+		<property name="unusedProductOptions">
+			<rule type="collectionSize" contexts="addOption">
+				<param name="min" value="1" />
+			</rule>
+		</property>
+		<property name="unusedProductOptionGroups">
+			<rule type="collectionSize" contexts="addOptionGroup">
+				<param name="min" value="1" />
+			</rule>
+		</property>
+		<property name="baseProductType">
+			<rule type="inList" contexts="addOptionGroup,addOption">
+				<param name="list" value="merchandise" />
+			</rule>
+			<rule type="inList" contexts="addSubscriptionTerm">
+				<param name="list" value="subscription" />
+			</rule>
 		</property>
 	</objectProperties>
 </validateThis>

@@ -60,6 +60,4 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="userDefinedPriceFlag" />
 		<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
 	</cf_SlatwallListingDisplay>
-	
-	<cf_SlatwallActionCaller action="admin:product.createsku" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#" modal=true />
 </cfoutput>

@@ -4,7 +4,7 @@
 <help></help>
 <starttext><![CDATA[/*
 
-    Slatwall - An e-commerce plugin for Mura CMS
+    Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -40,8 +40,37 @@
 Notes:
 
 */
-component extends="BaseService" output="false" {
 
+component  extends="Slatwall.com.service.BaseService" accessors="true" {
+	
+	// ===================== START: Logical Methods ===========================
+	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: Process Methods ===========================
+	
+	// =====================  END: Process Methods ============================
+	
+	// ====================== START: Status Methods ===========================
+	
+	// ======================  END: Status Methods ============================
+	
+	// ====================== START: Save Overrides ===========================
+	
+	// ======================  END: Save Overrides ============================
+	
+	// ==================== START: Smart List Overrides =======================
+	
+	// ====================  END: Smart List Overrides ========================
+	
+	// ====================== START: Get Overrides ============================
+	
+	// ======================  END: Get Overrides =============================
+	
 }]]></starttext>
 <endtext><![CDATA[]]></endtext>
 </snippet>

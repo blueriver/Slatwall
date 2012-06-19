@@ -38,6 +38,8 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 	
+	// ===================== START: Logical Methods ===========================
+	
 	public boolean function isAddressInZone(required any address, required any addressZone) {
 		var addressInZone = false;
 		
@@ -84,4 +86,26 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		return addressCopy;
 	}
+	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: Process Methods ===========================
+	
+	// =====================  END: Process Methods ============================
+	
+	// ====================== START: Save Overrides ===========================
+	
+	// ======================  END: Save Overrides ============================
+	
+	// ==================== START: Smart List Overrides =======================
+	
+	// ====================  END: Smart List Overrides ========================
+	
+	// ====================== START: Get Overrides ============================
+	
+	// ======================  END: Get Overrides =============================
 }

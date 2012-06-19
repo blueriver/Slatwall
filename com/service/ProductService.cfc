@@ -48,22 +48,6 @@ component extends="BaseService" accessors="true" {
 	property name="utilityTagService" type="any";
 	property name="optionService" type="any";
 	
-	public any function getProductSmartList(struct data={}, currentURL="") {
-		arguments.entityName = "SlatwallProduct";
-		
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		
-		smartList.joinRelatedProperty("SlatwallProduct", "productType");
-		smartList.joinRelatedProperty("SlatwallProduct", "defaultSku");
-		smartList.joinRelatedProperty("SlatwallProduct", "brand", "left");
-		
-		smartList.addKeywordProperty(propertyIdentifier="calculatedTitle", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="brand.brandName", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="productName", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="productType.productTypeName", weight=1);
-		
-		return smartList;
-	}
 	
 	public any function getProductSkusBySelectedOptions(required string selectedOptions, required string productID){
 		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments);
@@ -222,8 +206,8 @@ component extends="BaseService" accessors="true" {
 						skus[i].setPrice(arguments.data.skuPrice);
 					}
 				}
-				//getOptionService().updateAllSKUPricesForProduct(arguments.product.getProductID(),arguments.data.skuPrice);
-			break;
+				
+				break;
 			
 			case 'addOptionGroup':
 				var skus = 	arguments.product.getSkus();
@@ -291,8 +275,46 @@ component extends="BaseService" accessors="true" {
 		return arguments.storage;
 	}
 	
-	// =================== START: SMART LIST OVERRIDES ========================
+	public any function getProductSmartList(struct data={}, currentURL="") {
+		arguments.entityName = "SlatwallProduct";
+		
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.joinRelatedProperty("SlatwallProduct", "productType");
+		smartList.joinRelatedProperty("SlatwallProduct", "defaultSku");
+		smartList.joinRelatedProperty("SlatwallProduct", "brand", "left");
+		
+		smartList.addKeywordProperty(propertyIdentifier="calculatedTitle", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="brand.brandName", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="productName", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="productType.productTypeName", weight=1);
+		
+		return smartList;
+	}
 	
-	// ===================  END: SMART LIST OVERRIDES =========================
+	// ===================== START: Logical Methods ===========================
+	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: Process Methods ===========================
+	
+	// =====================  END: Process Methods ============================
+	
+	// ====================== START: Save Overrides ===========================
+	
+	// ======================  END: Save Overrides ============================
+	
+	// ==================== START: Smart List Overrides =======================
+	
+	// ====================  END: Smart List Overrides ========================
+	
+	// ====================== START: Get Overrides ============================
+	
+	// ======================  END: Get Overrides =============================
+	
 	
 }

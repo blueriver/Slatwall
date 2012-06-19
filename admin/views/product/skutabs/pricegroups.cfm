@@ -37,9 +37,6 @@ Notes:
 
 --->
 <cfparam name="rc.sku" type="any" />
+<cfparam name="rc.edit" type="any" />
 
-
-<cf_slatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.sku#" property="priceGroupRates" edit="#rc.edit#" displayVisible="globalFlag:0" />
-</cf_slatwallPropertyList>
-
+<cf_SlatwallPropertyDisplay object="#rc.sku#" property="priceGroupRates" edit="#rc.edit#" displayType="plain" />
