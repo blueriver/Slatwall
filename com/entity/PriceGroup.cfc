@@ -185,12 +185,12 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	// ================== START: Overridden Methods ========================
 	
 	public void function preInsert(){
-		setProductTypeIDPath( buildIDPathList( "parentPriceGroup" ) );
+		setPriceGroupIDPath( buildIDPathList( "parentPriceGroup" ) );
 		super.preInsert();
 	}
 	
 	public void function preUpdate(struct oldData){
-		setProductTypeIDPath( buildIDPathList( "parentPriceGroup" ) );;
+		setPriceGroupIDPath( buildIDPathList( "parentPriceGroup" ) );;
 		super.preUpdate(argumentcollection=arguments);
 	}
 	

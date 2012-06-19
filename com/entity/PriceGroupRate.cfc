@@ -61,6 +61,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID";
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID";
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID";
+	
 	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID";
 	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID";
 	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID";
@@ -168,93 +169,81 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	
 	// Price Group (many-to-one)
 	public void function setPriceGroup(required any priceGroup) {
-	   variables.priceGroup = arguments.priceGroup;
-	   if(isNew() or !arguments.priceGroup.hasPriceGroupRate(this)) {
-	       arrayAppend(arguments.priceGroup.getPriceGroupRates(),this);
-	   }
+		variables.priceGroup = arguments.priceGroup;
+		if(isNew() or !arguments.priceGroup.hasPriceGroupRate( this )) {
+			arrayAppend(arguments.priceGroup.getPriceGroupRates(), this);
+		}
+	}
+	public void function removePriceGroup(any priceGroup) {
+		if(!structKeyExists(arguments, "priceGroup")) {
+			arguments.priceGroup = variables.priceGroup;
+		}
+		var index = arrayFind(arguments.priceGroup.getPriceGroupRates(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.priceGroup.getPriceGroupRates(), index);
+		}
+		structDelete(variables, "priceGroup");
 	}
 	
-	public void function removePriceGroup() {
-       var index = arrayFind(variables.priceGroup.getPriceGroupRates(),this);
-       if(index > 0) {
-           arrayDeleteAt(variables.priceGroup.getPriceGroupRates(),index);
-       }
-       structDelete(variables,"priceGroup");
-    }
-    
-	// Products (many-to-many)	
-	public void function addProduct(required any product) {
-		if(arguments.product.isNew() || !hasProduct(arguments.product)) {
-			// first add product to this priceGroup
-			arrayAppend(this.getProducts(),arguments.product);
-			//add this priceGroupRate to the product
-			arrayAppend(arguments.product.getPriceGroupRates(),this);
-		}
-	}
-    
-    public void function removeProduct(required any product) {
-       // first remove the product from this priceGroupRate
-       if(this.hasProduct(arguments.product)) {
-	       var index = arrayFind(this.getProducts(),arguments.product);
-	       if(index>0) {
-	           arrayDeleteAt(this.getProducts(),index);
-	       }
-	      // then remove this priceGroupRate from the product
-	       var index = arrayFind(arguments.product.getPriceGroups(),this);
-	       if(index > 0) {
-	           arrayDeleteAt(arguments.product.getPriceGroups(),index);
-	       }
-	   }
-    }
-    
-	// ProductTypes (many-to-many)	
+	// Product Types (many-to-many - owner)
 	public void function addProductType(required any productType) {
-		if(arguments.productType.isNew() || !hasProductType(arguments.productType)) {
-			// first add productType to this priceGroupRate
-			arrayAppend(this.getProductTypes(),arguments.productType);
-			//add this priceGroupRate to the productType
-			arrayAppend(arguments.productType.getPriceGroupRates(),this);
+		if(arguments.productType.isNew() or !hasProductType(arguments.productType)) {
+			arrayAppend(variables.productTypes, arguments.productType);
+		}
+		if(isNew() or !arguments.productType.hasPriceGroupRate( this )) {
+			arrayAppend(arguments.productType.getPriceGroupRates(), this);
 		}
 	}
-    
-    public void function removeProductType(required any productType) {
-       // first remove the productType from this priceGroupRate
-       if(this.hasProductType(arguments.productType)) {
-	       var index = arrayFind(this.getProductTypes(),arguments.productType);
-	       if(index>0) {
-	           arrayDeleteAt(this.getProductTypes(),index);
-	       }
-	      // then remove this priceGroupRate from the ProductType
-	       var index = arrayFind(arguments.productType.getPriceGroups(),this);
-	       if(index > 0) {
-	           arrayDeleteAt(arguments.productType.getPriceGroups(),index);
-	       }
-	   }
-    }
-    
-    public void function addSku(required any sku) {
-		if(arguments.sku.isNew() || !hasSku(arguments.sku)) {
-			// first add sku to this priceGroup
-			arrayAppend(this.getSkus(),arguments.sku);
-			//add this priceGroupRate to the sku
-			arrayAppend(arguments.sku.getPriceGroupRates(),this);
+	public void function removeProductType(required any productType) {
+		var thisIndex = arrayFind(variables.productTypes, arguments.productType);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.productTypes, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.productType.getPriceGroupRates(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.productType.getPriceGroupRates(), thatIndex);
 		}
 	}
-    
-    public void function removeSku(required any sku) {
-       // first remove the product from this priceGroupRate
-       if(this.hasSku(arguments.sku)) {
-	       var index = arrayFind(this.getSkus(),arguments.sku);
-	       if(index>0) {
-	           arrayDeleteAt(this.getSkus(),index);
-	       }
-	      // then remove this priceGroupRate from the product
-	       var index = arrayFind(arguments.sku.getPriceGroups(),this);
-	       if(index > 0) {
-	           arrayDeleteAt(arguments.sku.getPriceGroups(),index);
-	       }
-	   }
-    }
+	
+	// Products (many-to-many - owner)
+	public void function addProduct(required any product) {
+		if(arguments.product.isNew() or !hasProduct(arguments.product)) {
+			arrayAppend(variables.products, arguments.product);
+		}
+		if(isNew() or !arguments.product.hasPriceGroupRate( this )) {
+			arrayAppend(arguments.product.getPriceGroupRates(), this);
+		}
+	}
+	public void function removeProduct(required any product) {
+		var thisIndex = arrayFind(variables.products, arguments.product);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.products, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.product.getPriceGroupRates(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.product.getPriceGroupRates(), thatIndex);
+		}
+	}
+	
+	// Skus (many-to-many - owner)
+	public void function addSku(required any sku) {
+		if(arguments.sku.isNew() or !hasSku(arguments.sku)) {
+			arrayAppend(variables.skus, arguments.sku);
+		}
+		if(isNew() or !arguments.sku.hasPriceGroupRate( this )) {
+			arrayAppend(arguments.sku.getPriceGroupRates(), this);
+		}
+	}
+	public void function removeSku(required any sku) {
+		var thisIndex = arrayFind(variables.skus, arguments.sku);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.skus, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.sku.getPriceGroupRates(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.sku.getPriceGroupRates(), thatIndex);
+		}
+	}
 	
     // =============  END:  Bidirectional Helper Methods ===================
 	
