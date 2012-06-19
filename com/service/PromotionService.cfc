@@ -341,7 +341,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 																// loop over any previous orderItemUsage of this reward an place it in ASC order based on discountPerUseValue
 																for(var oiu=1; oiu<=arrayLen(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage) ; oiu++) {
 																	if(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage[oiu].discountPerUseValue > discountPerUseValue) {
-																		indexToInsertAt = d;
+																		indexToInsertAt = oiu;
 																		break;
 																	}
 																}
