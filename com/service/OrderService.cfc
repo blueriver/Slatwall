@@ -281,7 +281,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 		// Check each of the fulfillment methods to see if they are complete
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderFulfillments()); i++) {
-			if(!arguments.order.getOrderFulfillments()[i].isProcessable()) {
+			if(!arguments.order.getOrderFulfillments()[i].isProcessable( context="placeOrder" )) {
 				fulfillmentsOK = false;
 			}
 		}
@@ -382,7 +382,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 		// Check each of the fulfillment methods to see if they are ready to process
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderFulfillments()); i++) {
-			if(!arguments.order.getOrderFulfillments()[i].isProcessable()) {
+			if(!arguments.order.getOrderFulfillments()[i].isProcessable( context="placeOrder" )) {
 				orderRequirementsList = listAppend(orderRequirementsList, "fulfillment");
 				orderRequirementsList = listAppend(orderRequirementsList, arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID());
 			}

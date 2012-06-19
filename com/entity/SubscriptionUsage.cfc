@@ -200,13 +200,6 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 		return getSubscriptionOrderItemName();
 	}
 	
-	public boolean function isProcessable() {
-		/*if(getNextBillDate() > now() || getCurrentStatusCode() == 'sstCancelled') {
-			return false;
-		}*/
-		return true;
-	}
-	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

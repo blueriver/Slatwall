@@ -90,42 +90,16 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		structDelete(variables, "ShippingAddress");
 	}
 	
-	public boolean function isProcessable() {
-		
-		// Check to make sure that there are more than 0 items in this fulfillment
-		if(!arrayLen(getOrderFulfillmentItems())) {
-			return false;
-		}
-		
-		// If this fulfillmentMethodType is shipping, there are a handful of other things we need to check
-		if(getFulfillmentMethodType() eq "shipping") {
-			if(isNull(getAddress())) {
-				return false;
-			} else {
-				getAddress().validate(context="full");
-				if(getAddress().hasErrors()) {
-					return false;
-				}
-			}
-			
-			if(isNull(getShippingMethod())) {
-				return false;
-			}
-			
-			if(!getService("shippingService").verifyOrderFulfillmentShippingMethodRate( this )) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
 	public numeric function getDiscountTotal() {
 		return precisionEvaluate(getDiscountAmount() + getItemDiscountAmountTotal());
 	}
     
 	public numeric function getShippingCharge() {
 		return getFulfillmentCharge();
+	}
+	
+	public boolean function hasValidShippingMethodRate() {
+		return getService("shippingService").verifyOrderFulfillmentShippingMethodRate( this );
 	}
 	
 	// Helper method to return either the shippingAddress or accountAddress to be used

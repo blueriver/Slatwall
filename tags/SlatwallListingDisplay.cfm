@@ -335,9 +335,8 @@ Notes:
 											<cf_SlatwallActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#request.slatwallScope.rbKey('define.process')#" disabled="#record.isNotProcessable()#" modal="#attributes.recordProcessModal#" />
 										<cfelse>
 											<cfset attributes.recordProcessQueryString = "processContext=#attributes.recordProcessContext#&#attributes.recordProcessQueryString#" />
-											<cf_SlatwallActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#request.slatwallScope.rbKey(replace(attributes.recordProcessAction,':','.') & '.#attributes.recordProcessContext#_nav')#" disabled="#record.isNotProcessable()#" modal="#attributes.recordProcessModal#" />
+											<cf_SlatwallActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#request.slatwallScope.rbKey(replace(attributes.recordProcessAction,':','.') & '.#attributes.recordProcessContext#_nav')#" disabled="#record.isNotProcessable( attributes.recordProcessContext )#" modal="#attributes.recordProcessModal#" />
 										</cfif>
-										
 									</cfif>
 									<cfif attributes.recordDeleteAction neq "">
 										<cf_SlatwallActionCaller action="#attributes.recordDeleteAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordDeleteQueryString#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#record.isNotDeletable()#" confirm="true" />
