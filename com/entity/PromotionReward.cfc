@@ -58,7 +58,7 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	// Related Object Properties (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
-	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID";
+	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID" nullRBKey="define.none";
 	
 	// Related Object Properties (many-to-many - owner)
 	property name="eligablePriceGroups" singularname="eligablePriceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardEligablePriceGroup" fkcolumn="promotionRewardID" inversejoincolumn="priceGroupID";
@@ -97,12 +97,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public array function getRoundingRuleOptions() {
-		var options = getPropertyOptions('roundingRule');
-		options[1]["name"] = rbKey('define.none');
-		return options;
-	}
-
 	public array function getApplicableTermOptions() {
 		return [
 			{name=rbKey("define.both"), value="both"},

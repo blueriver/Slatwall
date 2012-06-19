@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.pricegrouprate" type="any" />
-<cfparam name="rc.pricegroup" type="any" default="#rc.pricegrouprate.getPricegroup()#" />
+<cfparam name="rc.pricegroup" type="any" default="#rc.pricegrouprate.getPriceGroup()#" />
 <cfparam name="rc.edit" type="boolean" default="false" />
 
 <cfoutput>
@@ -48,19 +48,23 @@ Notes:
 							  backAction="admin:pricing.detailpricegroup" 
 							  backQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
 		<cf_SlatwallDetailHeader>
+			
 			<cf_SlatwallPropertyList>
 				<input type="hidden" name="pricegroup.pricegroupID" value="#rc.pricegroup.getPricegroupID()#" />
 				<input type="hidden" name="returnAction" value="admin:pricing.detailpricegroup&pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="globalFlag" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amountType" fieldType="select" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amount" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="roundingRule" edit="#rc.edit#" displayVisible="amountType:percentageOff" />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="productTypes" edit="#rc.edit#" displayVisible="globalFlag:0" />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="products" edit="#rc.edit#" displayVisible="globalFlag:0" />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="skus" edit="#rc.edit#" displayVisible="globalFlag:0" />
+				<!---<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="globalFlag" edit="#rc.edit#" />--->
 			</cf_SlatwallPropertyList>
+			
 		</cf_SlatwallDetailHeader>
 		
+		<cf_SlatwallTabGroup object="#rc.pricegrouprate#">
+			<cf_SlatwallTab view="admin:pricing/pricegroupratetabs/producttypes" />
+			<cf_SlatwallTab view="admin:pricing/pricegroupratetabs/products" />
+			<cf_SlatwallTab view="admin:pricing/pricegroupratetabs/skus" />
+		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>

@@ -39,12 +39,12 @@ Notes:
 <cfparam name="rc.priceGroup" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.priceGroup.getPriceGroupRatesSmartList()#"
-						   recordEditAction="admin:pricing.editpricegrouprate"
-						   recordEditQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#">
+						   recordDetailAction="admin:pricing.detailpricegrouprate"
+						   recordEditAction="admin:pricing.editpricegrouprate">
 	<cf_SlatwallListingColumn propertyIdentifier="amount" />
 	<cf_SlatwallListingColumn propertyIdentifier="amountType" />
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="appliesTo" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate" class="btn btn-inverse" icon="plus icon-white" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
+<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate" class="btn btn-inverse" icon="plus icon-white" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" modal="true" />
 	
