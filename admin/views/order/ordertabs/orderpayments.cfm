@@ -39,18 +39,44 @@ Notes:
 <cfparam name="rc.order" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
+<cfsilent>
+	<cfset local.chargeList = duplicate(rc.order.getOrderPaymentsSmartList()) />
+	<cfset local.chargeList.addFilter('orderPaymentType.systemCode', 'optCharge') />
+	
+	<cfset local.creditList = duplicate(rc.order.getOrderPaymentsSmartList()) />
+	<cfset local.creditList.addFilter('orderPaymentType.systemCode', 'optCredit') />
+</cfsilent>
+
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderPaymentsSmartList()#" 
-			recordDetailAction="admin:order.detailorderpayment"
-			recordEditAction="admin:order.editorderpayment"
-			recordProcessAction="admin:order.processorderpayment"
-			recordProcessModal="true">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
-		<cf_SlatwallListingColumn propertyIdentifier="amount" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
-	</cf_SlatwallListingDisplay>
+	<cfif local.chargeList.getRecordsCount() gt 0>
+		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderpayments.charges')#</h4>
+		<cf_SlatwallListingDisplay smartList="#local.chargeList#" 
+				recordDetailAction="admin:order.detailorderpayment"
+				recordEditAction="admin:order.editorderpayment"
+				recordProcessAction="admin:order.processorderpayment"
+				recordProcessModal="true">
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
+			<cf_SlatwallListingColumn propertyIdentifier="amount" />
+			<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
+			<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
+		</cf_SlatwallListingDisplay>
+	</cfif>
+	
+	<cfif local.creditList.getRecordsCount() gt 0>
+		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderpayments.credits')#</h4>
+		<cf_SlatwallListingDisplay smartList="#local.creditList#" 
+				recordDetailAction="admin:order.detailorderpayment"
+				recordEditAction="admin:order.editorderpayment"
+				recordProcessAction="admin:order.processorderpayment"
+				recordProcessModal="true">
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
+			<cf_SlatwallListingColumn propertyIdentifier="amount" />
+			<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
+			<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
+		</cf_SlatwallListingDisplay>
+	</cfif>
 	
 	<cfif rc.order.getPaymentAmountTotal() neq rc.order.getTotal()>
 		<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">

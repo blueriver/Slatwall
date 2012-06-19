@@ -39,25 +39,53 @@ Notes:
 <cfparam name="rc.order" type="any" />
 <cfparam name="rc.edit" type="boolean" /> 
 
+<cfsilent>
+	<cfset local.saleList = duplicate(rc.order.getOrderItemsSmartList()) />
+	<cfset local.saleList.addFilter('orderItemType.systemCode', 'oitSale') />
+	
+	<cfset local.returnList = duplicate(rc.order.getOrderItemsSmartList()) />
+	<cfset local.returnList.addFilter('orderItemType.systemCode', 'oitReturn') />
+</cfsilent>
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderItemsSmartList()#"
-							   recordDetailAction="admin:order.detailorderitem"
-							   recordDetialModal="true"
-							   recordEditAction="admin:order.editorderitem"
-							   recordEditQueryString="orderID=#rc.order.getOrderID()#"
-							   recordEditModal="true">
-		<cf_SlatwallListingColumn propertyIdentifier="orderItemType.type" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
-		<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
-		<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="price" />
-		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantityReceived" />
-		<cf_SlatwallListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
-	</cf_SlatwallListingDisplay>
+	<cfif local.saleList.getRecordsCount() gt 0>
+		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderitems.saleItems')#</h4>
+		<cf_SlatwallListingDisplay smartList="#local.saleList#"
+								   recordDetailAction="admin:order.detailorderitem"
+								   recordDetailModal="true"
+								   recordEditAction="admin:order.editorderitem"
+								   recordEditQueryString="orderID=#rc.order.getOrderID()#"
+								   recordEditModal="true">
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
+			<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
+			<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
+			<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
+			<cf_SlatwallListingColumn propertyIdentifier="quantity" />
+			<cf_SlatwallListingColumn propertyIdentifier="price" />
+			<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
+			<cf_SlatwallListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
+			<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
+		</cf_SlatwallListingDisplay>
+	</cfif>
+	
+	<cfif local.returnList.getRecordsCount() gt 0>
+		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderitems.returnItems')#</h4>
+		<cf_SlatwallListingDisplay smartList="#local.returnList#"
+								   recordDetailAction="admin:order.detailorderitem"
+								   recordDetailModal="true"
+								   recordEditAction="admin:order.editorderitem"
+								   recordEditQueryString="orderID=#rc.order.getOrderID()#"
+								   recordEditModal="true">
+			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
+			<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
+			<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
+			<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
+			<cf_SlatwallListingColumn propertyIdentifier="quantity" />
+			<cf_SlatwallListingColumn propertyIdentifier="price" />
+			<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
+			<cf_SlatwallListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
+			<cf_SlatwallListingColumn propertyIdentifier="quantityReceived" />
+		</cf_SlatwallListingDisplay>
+	</cfif>
 	
 	<cf_SlatwallActionCaller action="admin:order.createorderitem" class="btn btn-inverse" icon="plus icon-white" queryString="orderID=#rc.order.getOrderID()#" modal=true />
 </cfoutput>

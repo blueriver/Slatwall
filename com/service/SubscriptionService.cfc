@@ -340,7 +340,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				// if payment is processed, close out fulfillment and order
 				if(paymentProcessed) {
-					getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
+					getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')}, "fulfillItems");
 					
 					// persist order changes to DB 
 					getDAO().flushORMSession();
@@ -426,7 +426,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 		// if payment is processed, close out fulfillment and order
 		if(paymentProcessed) {
-			var orderFulfillment = getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')});
+			var orderFulfillment = getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')}, "fulfillItems");
 			
 			if(!orderFulfillment.hasErrors()) {
 				// persist order changes to DB 

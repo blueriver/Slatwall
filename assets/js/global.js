@@ -510,7 +510,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							}
 							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-trash"></i></a> ';
 						}
-						
+						/*
 						if( jQuery(cv).data('processaction') != undefined ) {
 							link = '?slatAction=' + jQuery(cv).data('processaction') + '&' + idProperty + '=' + rv[ idProperty ];
 							if( jQuery(cv).data('processquerystring') != undefined ) {
@@ -522,7 +522,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-cog"></i> Process</a> ';	
 							}
 						}
-						
+						*/
 						newtd += '</td>';
 						
 					}

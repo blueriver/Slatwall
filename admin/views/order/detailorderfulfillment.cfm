@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.orderFulfillment#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.orderFulfillment#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:order.processorderfulfillment" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" icon="cog">
+			<cf_SlatwallProcessCaller entity="#rc.orderFulfillment#" action="admin:order.processorderfulfillment" processContext="fulfillItems" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" />
 		</cf_SlatwallActionBar>
 		
 		<cfif !isNull(rc.orderFulfillment.getAddress())>

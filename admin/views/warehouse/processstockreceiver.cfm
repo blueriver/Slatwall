@@ -49,17 +49,5 @@ Notes:
 			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
 		</cf_SlatwallProcessOptionBar>
 		
-		<!---
-		<cf_SlatwallProcessListing processSmartList="#rc.processOrderFulfillmentSmartList#" processRecordsProperty="orderFulfillmentItems" processHeaderString="Order: ${order.orderNumber}, Order Fulfillment - ${fulfillmentMethod.fulfillmentMethodName}">
-			<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" title="Product" />
-			<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" title="Sku Code" />
-			<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" title="Sku Options" />
-			<cf_SlatwallProcessColumn propertyIdentifier="quantity" title="Quantity Ordered" />
-			<cf_SlatwallProcessColumn propertyIdentifier="quantityDelivered" title="Quantity Delivered" />
-			<cf_SlatwallProcessColumn propertyIdentifier="quantityUndelivered" title="Quantity Undelivered" />
-			<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
-		</cf_SlatwallProcessListing>
-		--->
-		
 	</cf_SlatwallProcessForm>
 </cfoutput>

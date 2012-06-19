@@ -6,17 +6,18 @@
 	<contexts>
 		<context name="save" />
 		<context name="delete" />
+		<context name="edit" />
 		<context name="placeOrder" />
 		<context name="fulfillItems" />
 	</contexts>
 	<objectProperties>
 		<property name="orderFulfillmentItems">
-			<rule type="collectionSize" contexts="save,placeOrder,fufillItems">
+			<rule type="collectionSize" contexts="save,placeOrder,fulfillItems">
 				<param name="min" value="1" />
 			</rule>
 		</property>
 		<property name="quantityUndelivered">
-			<rule type="collectionSize" contexts="fufillItems">
+			<rule type="min" contexts="fulfillItems">
 				<param name="min" value="1" />
 			</rule>
 		</property>
@@ -27,6 +28,14 @@
 			<rule type="required" condition="fulfillmentTypeShipping" contexts="placeOrder" />
 			<rule type="custom" condition="fulfillmentTypeShipping" contexts="placeOrder">
 				<param name="methodName" value="hasValidShippingMethodRate" /> 
+			</rule>
+		</property>
+		<property name="orderStatusCode">
+			<rule type="inList" context="fulfillItems">
+				<param name="list" value="ostNew,ostProcessing" />
+			</rule>
+			<rule type="inList" context="edit">
+				<param name="list" value="ostNotPlaced,ostNew,ostProcessing,ostOnHold" />
 			</rule>
 		</property>
 	</objectProperties>

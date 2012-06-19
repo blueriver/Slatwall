@@ -773,7 +773,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								// Look for 'auto' order fulfillments
 								for(var i=1; i<=arrayLen(order.getOrderFulfillments()); i++) {
 									if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto") {
-										processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')});
+										processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')}, "fulfillItems");
 									}
 								}
 								
@@ -975,183 +975,185 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	// Process: Order Fulfillment
 	public any function processOrderFulfillment(required any orderFulfillment, struct data={}, string processContext="process") {
 		
-		// Make sure that a location was passed in
-		if(structKeyExists(arguments.data, "locationID")) {
-			var location = getLocationService().getLocation(  arguments.data.locationID );
-			
-			// Make sure that the location is not Null
-			if(!isNull(location)) {
+		if(arguments.processContext == "fulfillItems") {
+			// Make sure that a location was passed in
+			if(structKeyExists(arguments.data, "locationID")) {
+				var location = getLocationService().getLocation(  arguments.data.locationID );
 				
-				// Create a new Order Delivery and set the relevent values
-				var orderDelivery = this.newOrderDelivery();
-				orderDelivery.setFulfillmentMethod( arguments.orderFulfillment.getFulfillmentMethod() );
-				orderDelivery.setLocation( location );
-				
-				// Attach this delivery to the order
-				orderDelivery.setOrder( arguments.orderFulfillment.getOrder() );
-				
-				// Per Fulfillment Method Type set whatever other details need to be set
-				switch(arguments.orderFulfillment.getFulfillmentMethodType()) {
+				// Make sure that the location is not Null
+				if(!isNull(location)) {
 					
-					case "auto": {
-						// With an 'auto' type of setup, if no records exist in the data, then we can just create deliveryItems for the unfulfilled quantities of each item
-						if(!structKeyExists(arguments.data, "records")) {
-							arguments.data.records = [];
-							for(var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
-								arrayAppend(arguments.data.records, {orderItemID=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID(), quantity=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getQuantityUndelivered()});
+					// Create a new Order Delivery and set the relevent values
+					var orderDelivery = this.newOrderDelivery();
+					orderDelivery.setFulfillmentMethod( arguments.orderFulfillment.getFulfillmentMethod() );
+					orderDelivery.setLocation( location );
+					
+					// Attach this delivery to the order
+					orderDelivery.setOrder( arguments.orderFulfillment.getOrder() );
+					
+					// Per Fulfillment Method Type set whatever other details need to be set
+					switch(arguments.orderFulfillment.getFulfillmentMethodType()) {
+						
+						case "auto": {
+							// With an 'auto' type of setup, if no records exist in the data, then we can just create deliveryItems for the unfulfilled quantities of each item
+							if(!structKeyExists(arguments.data, "records")) {
+								arguments.data.records = [];
+								for(var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
+									arrayAppend(arguments.data.records, {orderItemID=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID(), quantity=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getQuantityUndelivered()});
+								}
 							}
+							break;
 						}
-						break;
-					}
-					case "shipping": {
-						// Set the shippingAddress, shippingMethod & potentially tracking number
-						orderDelivery.setShippingAddress( arguments.orderFulfillment.getShippingAddress().copyAddress( saveNewAddress=true ) );
-						orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
-						if(structkeyExists(arguments.data, "trackingNumber") && len(arguments.data.trackingNumber)) {
-							orderDelivery.setTrackingNumber(arguments.data.trackingNumber);
+						case "shipping": {
+							// Set the shippingAddress, shippingMethod & potentially tracking number
+							orderDelivery.setShippingAddress( arguments.orderFulfillment.getShippingAddress().copyAddress( saveNewAddress=true ) );
+							orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
+							if(structkeyExists(arguments.data, "trackingNumber") && len(arguments.data.trackingNumber)) {
+								orderDelivery.setTrackingNumber(arguments.data.trackingNumber);
+							}
+							break;
 						}
-						break;
-					}
-					default: {
-						
-						break;
-					}
-				}
-				
-				// Setup a total item value delivered so we can charge the proper amount for the payment later
-				var totalItemValueDelivered = 0;
-				
-				// Loop over the records in the data to set the quantity for the delivery
-				if(structKeyExists(arguments.data, "records")) {
-					for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-						
-						// Only add this orderItem to the delivery if it has an orderItemID, a quantity is defined, and the quantity is numeric and gt 1 
-						if(structKeyExists(arguments.data.records[i], "orderItemID") && isSimpleValue(arguments.data.records[i].orderItemID) && structKeyExists(arguments.data.records[i], "quantity") && isNumeric(arguments.data.records[i].quantity) && arguments.data.records[i].quantity > 0) {
+						default: {
 							
-							var orderItem = this.getOrderItem(arguments.data.records[i].orderItemID);
-							if(!isNull(orderItem)) {
+							break;
+						}
+					}
+					
+					// Setup a total item value delivered so we can charge the proper amount for the payment later
+					var totalItemValueDelivered = 0;
+					
+					// Loop over the records in the data to set the quantity for the delivery
+					if(structKeyExists(arguments.data, "records")) {
+						for(var i=1; i<=arrayLen(arguments.data.records); i++) {
+							
+							// Only add this orderItem to the delivery if it has an orderItemID, a quantity is defined, and the quantity is numeric and gt 1 
+							if(structKeyExists(arguments.data.records[i], "orderItemID") && isSimpleValue(arguments.data.records[i].orderItemID) && structKeyExists(arguments.data.records[i], "quantity") && isNumeric(arguments.data.records[i].quantity) && arguments.data.records[i].quantity > 0) {
 								
-								// Make sure that we aren't trying to deliver more than was ordered
-								if(orderItem.getQuantityUndelivered() >= arguments.data.records[i].quantity) {
+								var orderItem = this.getOrderItem(arguments.data.records[i].orderItemID);
+								if(!isNull(orderItem)) {
 									
-									// Grab the stock that matches the item and the location from which we are delivering
-									var stock = getStockService().getStockBySkuAndLocation(orderItem.getSku(), orderDelivery.getLocation());
+									// Make sure that we aren't trying to deliver more than was ordered
+									if(orderItem.getQuantityUndelivered() >= arguments.data.records[i].quantity) {
+										
+										// Grab the stock that matches the item and the location from which we are delivering
+										var stock = getStockService().getStockBySkuAndLocation(orderItem.getSku(), orderDelivery.getLocation());
+										
+										// Create and Populate a new delivery item
+										var orderDeliveryItem = this.newOrderDeliveryItem();
+										orderDeliveryItem.setOrderDelivery( orderDelivery );
+										orderDeliveryItem.setOrderItem( orderItem );
+										orderDeliveryItem.setStock( stock );
+										orderDeliveryItem.setQuantity( arguments.data.records[i].quantity );
+										
+										// Add the value of this item to the total charge
+										totalItemValueDelivered = precisionEvaluate(totalItemValueDelivered + (orderItem.getExtendedPriceAfterDiscount() + orderItem.getTaxAmount()) * ( arguments.data.records[i].quantity / orderItem.getQuantity() ) );
+										
+										// setup subscription data if this was subscriptionOrder item
+										getSubscriptionService().setupSubscriptionOrderItem( orderItem );
 									
-									// Create and Populate a new delivery item
-									var orderDeliveryItem = this.newOrderDeliveryItem();
-									orderDeliveryItem.setOrderDelivery( orderDelivery );
-									orderDeliveryItem.setOrderItem( orderItem );
-									orderDeliveryItem.setStock( stock );
-									orderDeliveryItem.setQuantity( arguments.data.records[i].quantity );
+										// setup content access if this was content purchase
+										setupOrderItemContentAccess( orderItem );
 									
-									// Add the value of this item to the total charge
-									totalItemValueDelivered = precisionEvaluate(totalItemValueDelivered + (orderItem.getExtendedPriceAfterDiscount() + orderItem.getTaxAmount()) * ( arguments.data.records[i].quantity / orderItem.getQuantity() ) );
+									} else {
+										arguments.orderFulfillment.addError('orderFulfillmentItem', 'You are trying to fulfill a quantity of #arguments.data.records[i].quantity# for #orderItem.getSku().getProduct().getTitle()# - #orderItem.getSku().displayOptions()# and that item only has an undelivered quantity of #orderItem.getQuantityUndelivered()#');
+										
+									}
 									
-									// setup subscription data if this was subscriptionOrder item
-									getSubscriptionService().setupSubscriptionOrderItem( orderItem );
-								
-									// setup content access if this was content purchase
-									setupOrderItemContentAccess( orderItem );
-								
 								} else {
-									arguments.orderFulfillment.addError('orderFulfillmentItem', 'You are trying to fulfill a quantity of #arguments.data.records[i].quantity# for #orderItem.getSku().getProduct().getTitle()# - #orderItem.getSku().displayOptions()# and that item only has an undelivered quantity of #orderItem.getQuantityUndelivered()#');
-									
+									arguments.orderFulfillment.addError('orderFulfillmentItem', 'An orderItem with the ID: #arguments.data.records[i].orderItemID# was trying to be processed with this fulfillment, but that orderItem does not exist');
 								}
-								
-							} else {
-								arguments.orderFulfillment.addError('orderFulfillmentItem', 'An orderItem with the ID: #arguments.data.records[i].orderItemID# was trying to be processed with this fulfillment, but that orderItem does not exist');
 							}
 						}
 					}
-				}
-				
-				// Validate the orderDelivery
-				orderDelivery.validate();
-				
-				if(!orderDelivery.hasErrors()) {
 					
-					// Call save on the orderDelivery so that it is persisted
-					getDAO().save( orderDelivery );
+					// Validate the orderDelivery
+					orderDelivery.validate();
 					
-					// Update the Order Status
-					updateOrderStatus( arguments.orderFulfillment.getOrder(), true );
-					
-					// Look to charge orderPayments
-					if(structKeyExists(arguments.data, "processCreditCard") && arguments.data.processCreditCard) {
+					if(!orderDelivery.hasErrors()) {
 						
-						var totalAmountToCharge = arguments.orderFulfillment.getOrder().getDeliveredItemsPaymentAmountUnreceived();
-						var totalAmountCharged = 0;
+						// Call save on the orderDelivery so that it is persisted
+						getDAO().save( orderDelivery );
 						
-						for(var p=1; p<=arrayLen(arguments.orderFulfillment.getOrder().getOrderPayments()); p++) {
+						// Update the Order Status
+						updateOrderStatus( arguments.orderFulfillment.getOrder(), true );
+						
+						// Look to charge orderPayments
+						if(structKeyExists(arguments.data, "processCreditCard") && arguments.data.processCreditCard) {
 							
-							var orderPayment = arguments.orderFulfillment.getOrder().getOrderPayments()[p];
+							var totalAmountToCharge = arguments.orderFulfillment.getOrder().getDeliveredItemsPaymentAmountUnreceived();
+							var totalAmountCharged = 0;
 							
-							// Make sure that this is a credit card, and that it is a charge type of payment
-							if(orderPayment.getPaymentMethodType() == "creditCard" && orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
+							for(var p=1; p<=arrayLen(arguments.orderFulfillment.getOrder().getOrderPayments()); p++) {
 								
-								// Check to make sure this payment hasn't been fully received
-								if(orderPayment.getAmount() > orderPayment.getAmountReceived()) {
+								var orderPayment = arguments.orderFulfillment.getOrder().getOrderPayments()[p];
+								
+								// Make sure that this is a credit card, and that it is a charge type of payment
+								if(orderPayment.getPaymentMethodType() == "creditCard" && orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
 									
-									var thisAmountToCharge = 0;
-									
-									// Attempt to capture preAuthorizations first
-									if(orderPayment.getAmountAuthorized() > orderPayment.getAmountReceived()) {
-										var thisAmountToCharge = orderPayment.getAmountAuthorized() - orderPayment.getAmountReceived();
-										if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
-											thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
+									// Check to make sure this payment hasn't been fully received
+									if(orderPayment.getAmount() > orderPayment.getAmountReceived()) {
+										
+										var thisAmountToCharge = 0;
+										
+										// Attempt to capture preAuthorizations first
+										if(orderPayment.getAmountAuthorized() > orderPayment.getAmountReceived()) {
+											var thisAmountToCharge = orderPayment.getAmountAuthorized() - orderPayment.getAmountReceived();
+											if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
+												thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
+											}
+											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="chargePreAuthorization"});
+											if(!orderPayment.hasErrors()) {
+												totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
+											} else {
+												structDelete(orderPayment.getErrors(), "processing");
+											}
 										}
-										orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="chargePreAuthorization"});
-										if(!orderPayment.hasErrors()) {
-											totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
-										} else {
-											structDelete(orderPayment.getErrors(), "processing");
+										
+										// Attempt to authorizeAndCharge now
+										if(orderPayment.getAmountReceived() < orderPayment.getAmount() && totalAmountToCharge > totalAmountCharged) {
+											var thisAmountToCharge = orderPayment.getAmount() - orderPayment.getAmountReceived();
+											if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
+												thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
+											}
+											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="authorizeAndCharge"});
+											if(!orderPayment.hasErrors()) {
+												totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
+											} else {
+												structDelete(orderPayment.getErrors(), "processing");
+											}
 										}
-									}
-									
-									// Attempt to authorizeAndCharge now
-									if(orderPayment.getAmountReceived() < orderPayment.getAmount() && totalAmountToCharge > totalAmountCharged) {
-										var thisAmountToCharge = orderPayment.getAmount() - orderPayment.getAmountReceived();
-										if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
-											thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
+										
+										// Stop trying to charge payments, if we have charged everything we need to
+										if(totalAmountToCharge == totalAmountCharged) {
+											break;
 										}
-										orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge, transactionType="authorizeAndCharge"});
-										if(!orderPayment.hasErrors()) {
-											totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
-										} else {
-											structDelete(orderPayment.getErrors(), "processing");
-										}
-									}
-									
-									// Stop trying to charge payments, if we have charged everything we need to
-									if(totalAmountToCharge == totalAmountCharged) {
-										break;
 									}
 								}
 							}
 						}
+						
+					} else {
+						
+						getSlatwallScope().setORMHasErrors( true );
+						
+						arguments.orderFulfillment.addError('location', 'The delivery that would have been created had errors');
 					}
 					
 				} else {
+					arguments.orderFulfillment.addError('location', 'The Location id that was passed in does not represent a valid location');	
 					
-					getSlatwallScope().setORMHasErrors( true );
-					
-					arguments.orderFulfillment.addError('location', 'The delivery that would have been created had errors');
 				}
-				
 			} else {
-				arguments.orderFulfillment.addError('location', 'The Location id that was passed in does not represent a valid location');	
+				arguments.orderFulfillment.addError('location', 'No Location was passed in');
 				
 			}
-		} else {
-			arguments.orderFulfillment.addError('location', 'No Location was passed in');
 			
-		}
-		
-		// if this fulfillment had error then we don't want to persist anything
-		if(arguments.orderFulfillment.hasErrors()) {
-			
-			getSlatwallScope().setORMHasErrors( true );
-			
+			// if this fulfillment had error then we don't want to persist anything
+			if(arguments.orderFulfillment.hasErrors()) {
+				
+				getSlatwallScope().setORMHasErrors( true );
+				
+			}
 		}
 		
 		return arguments.orderFulfillment;

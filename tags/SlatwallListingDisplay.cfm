@@ -183,7 +183,7 @@ Notes:
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-deleteaction="#attributes.recordDeleteAction#"', " ") />
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-deletequerystring="#attributes.recordDeleteQueryString#"', " ") />
 		</cfif>
-		
+		<!---
 		<!--- Process --->
 		<cfif len(attributes.recordProcessAction)>
 			<cfset attributes.administativeCount++ />
@@ -192,6 +192,7 @@ Notes:
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processquerystring="#attributes.recordProcessQueryString#"', " ") />
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processmodal="#attributes.recordProcessModal#"', " ") />
 		</cfif>
+		--->
 		
 		<!--- Setup the primary representation column if no columns were passed in --->
 		<cfif not arrayLen(thistag.columns)>

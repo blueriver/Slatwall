@@ -68,6 +68,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="fulfillmentMethodType" type="numeric" persistent="false";
+	property name="orderStatusCode" type="numeric" persistent="false";
 	property name="quantityUndelivered" type="numeric" persistent="false";
 	property name="quantityDelivered" type="numeric" persistent="false";
 	property name="subtotal" type="numeric" persistent="false" formatType="currency";
@@ -77,10 +79,6 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="accountAddressOptions" type="array" persistent="false";
 	property name="discountAmount" type="numeric" persistent="false" formatType="currency";
 	property name="chargeAfterDiscount" type="numeric" persistent="false" formatType="currency";
-	
-	public any function getFulfillmentMethodType() {
-		return getFulfillmentMethod().getFulfillmentMethodType();
-	}
 	
 	public void function removeAccountAddress() {
 		structDelete(variables, "AccountAddress");
@@ -114,6 +112,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
 
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getFulfillmentMethodType() {
+		return getFulfillmentMethod().getFulfillmentMethodType();
+	}
+	
+	public any function getOrderStatusCode() {
+		return getOrder().getStatusCode();
+	}
 	
 	public numeric function getDiscountAmount() {
 		discountAmount = 0;
@@ -277,13 +283,6 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// ===============  END: Custom Formatting Methods =====================
 	
 	// ================== START: Overridden Methods ========================
-	
-	public boolean function isEditable() {
-		if(listFindNoCase("ostClosed,ostCanceled", getOrder().getStatusCode())) {
-			return false;
-		}
-		return true;
-	} 
 	
 	public string function getSimpleRepresentation() {
 		return getOrder().getOrderNumber() & " - " & getFulfillmentMethodType();

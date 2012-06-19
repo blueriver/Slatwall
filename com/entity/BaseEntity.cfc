@@ -143,6 +143,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint public method to determine if this entity can be deleted
 	public boolean function isEditable() {
+		var results = getValidateThis().validate(theObject=this, context="edit", injectResultIntoBO="false");
+		
+		if(results.hasErrors()) {
+			return false;	
+		}
+		
 		return true;
 	}
 	
