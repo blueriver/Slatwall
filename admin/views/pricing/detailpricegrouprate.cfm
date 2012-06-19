@@ -51,7 +51,6 @@ Notes:
 			
 			<cf_SlatwallPropertyList>
 				<input type="hidden" name="pricegroup.pricegroupID" value="#rc.pricegroup.getPricegroupID()#" />
-				<input type="hidden" name="returnAction" value="admin:pricing.detailpricegroup&pricegroupID=#rc.pricegroup.getpricegroupID()#" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amountType" fieldType="select" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amount" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="roundingRule" edit="#rc.edit#" displayVisible="amountType:percentageOff" />

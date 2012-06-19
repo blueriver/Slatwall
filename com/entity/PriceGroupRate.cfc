@@ -76,8 +76,8 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	
 	public array function getAmountTypeOptions() {
 		return [
-			{name=rbKey("define.amountOff"), value="amountOff"},
 			{name=rbKey("define.percentageOff"), value="percentageOff"},
+			{name=rbKey("define.amountOff"), value="amountOff"},
 			{name=rbKey("define.fixedAmount"), value="amount"}
 		];
 	}
