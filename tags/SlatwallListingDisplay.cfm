@@ -306,7 +306,7 @@ Notes:
 						<tr id="#record.getPrimaryIDValue()#" <cfif thistag.expandable>idPath="#record.getValueByPropertyIdentifier( propertyIdentifier="#thistag.exampleEntity.getPrimaryIDPropertyName()#Path" )#"</cfif>>
 							<!--- Selectable --->
 							<cfif thistag.selectable>
-								<td><a href="##" class="table-action-select" data-idvalue="#record.getPrimaryIDValue()#"><i class="slatwall-ui-raido"></i></a></td>
+								<td><a href="##" class="table-action-select#IIF(attributes.edit, DE(""), DE(" disabled"))#" data-idvalue="#record.getPrimaryIDValue()#"><i class="slatwall-ui-radio"></i></a></td>
 							</cfif>
 							<!--- Multiselectable --->
 							<cfif thistag.multiselectable>

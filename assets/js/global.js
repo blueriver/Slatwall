@@ -126,6 +126,11 @@ function initUIElements( scopeSelector ) {
 		updateMultiselectTableUI( jQuery(tv).data('multiselectfield') );
 	});
 	
+	// Table Select
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('.table-select')), function(ti, tv){
+		updateSelectTableUI( jQuery(tv).data('selectfield') );
+	});
+	
 	// Table Filters
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('.listing-filter')), function(i, v){
 		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() != undefined) {
@@ -353,6 +358,14 @@ function setupEventHandlers() {
 		}
 	});
 	
+	// Listing Display - Select
+	jQuery('body').on('click', '.table-action-select', function(e) {
+		e.preventDefault();
+		if(!jQuery(this).hasClass('disabled')){
+			tableSelectClick( this );
+		}
+	});
+	
 	// Listing Display - Expanding
 	jQuery('body').on('click', '.table-action-expand', function(e) {
 		e.preventDefault();
@@ -382,16 +395,6 @@ function setupEventHandlers() {
 		}
 		
 	});
-}
-
-function updateMultiselectTableUI( multiselectField ) {
-	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
-	
-	if(inputValue != undefined) {
-		jQuery.each(inputValue.split(','), function(vi, vv) {
-			jQuery(jQuery('table[data-multiselectfield=' + multiselectField  + ']').find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
-		});
-	}
 }
 
 function listingDisplayUpdate( tableID, data, afterRowID ) {
@@ -659,9 +662,19 @@ function tableApplySort(event, ui) {
 
 }
 
+function updateMultiselectTableUI( multiselectField ) {
+	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
+	
+	if(inputValue != undefined) {
+		jQuery.each(inputValue.split(','), function(vi, vv) {
+			jQuery(jQuery('table[data-multiselectfield="' + multiselectField  + '"]').find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
+		});
+	}
+}
+
 function tableMultiselectClick( toggleLink ) {
 	
-	var field = jQuery( 'input[name=' + jQuery(toggleLink).closest('table').data('multiselectfield') + ']' );
+	var field = jQuery( 'input[name="' + jQuery(toggleLink).closest('table').data('multiselectfield') + '"]' );
 	var currentValues = jQuery(field).val().split(',');
 	
 	var blankIndex = currentValues.indexOf('');
@@ -693,7 +706,29 @@ function tableMultiselectClick( toggleLink ) {
 	jQuery(field).val(currentValues.join(','));
 }
 
+function updateSelectTableUI( selectField ) {
+	var inputValue = jQuery('input[name="' + selectField + '"]').val();
+	
+	if(inputValue != undefined) {
+		jQuery('table[data-selectfield="' + selectField  + '"]').find('tr[id=' + inputValue + '] .slatwall-ui-radio').addClass('slatwall-ui-radio-checked').removeClass('slatwall-ui-radio');
+	}
+}
 
+function tableSelectClick( toggleLink ) {
+	
+	if( jQuery(toggleLink).children('.slatwall-ui-radio').length ) {
+		
+		// Remove old checked icon
+		jQuery( toggleLink ).closest( 'table' ).find('.slatwall-ui-radio-checked').addClass('slatwall-ui-radio').removeClass('slatwall-ui-radio-checked');
+		
+		// Set new checked icon
+		jQuery( toggleLink ).children('.slatwall-ui-radio').addClass('slatwall-ui-radio-checked').removeClass('slatwall-ui-radio');
+		
+		// Update the value
+		jQuery( 'input[name="' + jQuery( toggleLink ).closest( 'table' ).data('selectfield') + '"]' ).val( jQuery( toggleLink ).data( 'idvalue' ) );
+		
+	}
+}
 
 function updateGlobalSearchResults() {
 	

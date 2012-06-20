@@ -38,6 +38,7 @@ Notes:
 --->
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#"
+							   edit="#rc.edit#"
 							   recordDetailAction="admin:product.detailsku"
 							   recordDetailQueryString="productID=#rc.product.getProductID()#"
 							   recordEditAction="admin:product.editsku"
