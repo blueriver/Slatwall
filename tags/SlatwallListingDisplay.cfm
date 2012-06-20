@@ -67,6 +67,7 @@ Notes:
 	<!--- Single Select --->
 	<cfparam name="attributes.selectFieldName" type="string" default="" />			<!--- Setting this value will turn on single Select --->
 	<cfparam name="attributes.selectValue" type="string" default="" />
+	<cfparam name="attributes.selectTitle" type="string" default="" />
 	
 	<!--- Multiselect --->
 	<cfparam name="attributes.multiselectFieldName" type="string" default="" />		<!--- Setting this value will turn on Multiselect --->
@@ -229,7 +230,7 @@ Notes:
 							<cfif not attributes.edit>
 								<cfset class &= " disabled" />
 							</cfif>
-							<th class="#class#">&nbsp;</th>
+							<th class="#class#">#attributes.selectTitle#</th>
 						</cfif>
 						<!--- Multiselectable --->
 						<cfif thistag.multiselectable>

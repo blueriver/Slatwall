@@ -49,157 +49,62 @@ component extends="BaseService" accessors="true" {
 	property name="optionService" type="any";
 	
 	
-	public any function getProductSkusBySelectedOptions(required string selectedOptions, required string productID){
-		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments);
-	}
-	
-	public void function saveAlternateImages(required any product, required array imagesArray) {
-		for(var i = 1; i <= arrayLen(arguments.imagesArray); i++) {
-			local.thisImageStruct = arguments.imagesArray[i];
-			// check to see if this is a new image
-			if(trim(local.thisImageStruct.imageID) != "") {
-				local.thisImage = this.getProductImage(local.thisImageStruct.imageID);
-				local.thisImage = Super.save(entity=local.thisImage, data=local.thisImageStruct);
-			} else {
-				if(structKeyExists(local.thisImageStruct, "productImageFile") && trim(local.thisImageStruct.productImageFile) != "") {
-					local.thisImageUploadResult = fileUpload(getTempDirectory(),"images[#i#].productImageFile","","makeUnique");
-					local.thisImage = addAlternateImage(local.thisImageUploadResult,arguments.product,local.thisImageStruct);
-				}
-			}
-		}
-	}
-    
-	public any function addAlternateImage(required struct imageUploadResult, required any product, required struct data) {
-		var alternateImage = this.newProductImage();
-		var imageDirectory = arguments.product.getAlternateImageDirectory();
-		var imageExt = lcase(arguments.imageUploadResult.serverFileExt);
-		alternateImage.setImageExtension(imageExt);
-		arguments.product.addProductImage(alternateImage);
-		alternateImage = Super.save(entity=alternateImage, data=arguments.data);
-		if(!alternateImage.hasErrors()) {
-			var imagePath = imageDirectory & alternateImage.getImageID() & "." & imageExt;
-			var imageSaved = getService("imageService").saveImageFile(uploadResult=arguments.imageUploadResult,filePath=imagePath ,allowedExtensions="jpg,jpeg,png,gif");	
-			if(!imageSaved) {
-				// if there was an error with the file upload, we dont want to set an error because we want all valid image uploads and entity saving to proceed
-				// but we remove the image entity that had the file error and set a flag in the request cache service
-				arguments.product.removeProductImage(alternateImage);
-				getDAO().delete(alternateImage);
-				//getService("requestCacheService").setValue("uploadFileError", true);
-			}
-		} else {
-			//delete file in the temp directory
-			var uploadPath = imageUploadResult.serverDirectory & "/" & imageUploadResult.serverFile;
-			fileDelete(uploadPath);
-		}
-		return alternateImage;
-	}
-	
-	public boolean function removeAlternateImage(required any image,required any product) {
-		arguments.product.removeProductImage(arguments.image);
-		return getService("imageService").removeImage(arguments.image.getImagePath());
-	}
-	
-	public any function saveProduct(required any product, required struct data) {
-		
-		// populate bean from values in the data Struct
-		arguments.product.populate(arguments.data);
-		
-		// If this is a new product and it doesn't have any errors... there are a few additional steps we need to take
-		if(arguments.product.isNew() && !arguments.product.hasErrors()) {
-			
-			// Create Skus
-			getSkuService().createSkus(arguments.product, arguments.data);
-			
-			// if urlTitle wasn't set in bean, default it to the product's name.
-			if(arguments.Product.getUrlTitle() == "") {
-				arguments.Product.setUrlTitle(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
-			}
-			
-			// make sure that the UrlTitle doesn't already exist, if it does then just rename with a number until it doesn't
-			var lastAppended = 1;
-			var uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
-			while(!uniqueUrlTitle) {
-				arguments.Product.setUrlTitle(arguments.Product.getUrlTitle() & lastAppended);	
-				uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
-				lastAppended += 1;
-			}
-		}
-		
-		// validate the product
-		arguments.product.validate();
-		
-		// If the product passed validation then call save in the DAO, otherwise set the errors flag
-        if(!arguments.product.hasErrors()) {
-        	arguments.product = getDAO().save(target=arguments.product);
-        } else {
-            getSlatwallScope().setORMHasErrors( true );
-        }
-        
-        // Return the product
-		return arguments.product;
-	}
-	
-	public boolean function deleteProduct(required any product) {
-	
-		// Set the default sku temporarily in this local so we can reset if delete fails
-		var defaultSku = arguments.product.getDefaultSku();
-		
-		// Remove the default sku so that we can delete this entity
-		arguments.product.setDefaultSku(javaCast("null", ""));
-	
-		// Use the base delete method to check validation
-		var deleteOK = super.delete(arguments.product);
-		
-		// If the delete failed, then we just reset the default sku into the product and return false
-		if(!deleteOK) {
-			arguments.product.setDefaultSku(defaultSku);
-		
-			return false;
-		}
-	
-		return true;
-	}
-	
-	//   Product Type Methods
-	public any function saveProductType(required any productType, required struct data) {
-		
-		arguments.productType.populate(data=arguments.data);
-
-		arguments.productType.validate();
-
-		// if this type has a parent, inherit all products that were assigned to that parent
-		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
-			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
-		}
-		
-		if( !arguments.productType.hasErrors() ) {
-			// Call entitySave on the productType 
-			getDAO().save(target=arguments.productType);
-		} else {
-            getSlatwallScope().setORMHasErrors( true );
-        }
-		
-		return arguments.productType;
-	}
-	
-	/* get the attribute sets for a product */
-	public array function getAttributeSets(array attributeSetTypeCode,array productTypeIDs = []){
-		return getDAO().getAttributeSets(arguments.attributeSetTypeCode, arguments.productTypeIDs);
-	}
+	// ===================== START: Logical Methods ===========================
 	
 	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
 		getUtilityTagService().cfSetting(requesttimeout="3600"); 
 		getDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
 	}
 	
+	public any function getFormattedOptionGroups(required any product){
+		var AvailableOptions={};
+		 
+		productObjectGroups = arguments.product.getOptionGroups() ;
+		
+		for(i=1; i <= arrayLen(productObjectGroups); i++){
+			AvailableOptions[productObjectGroups[i].getOptionGroupName()] = getOptionService().getOptionsForSelect(arguments.product.getOptionsByOptionGroup(productObjectGroups[i].getOptionGroupID()));
+		}
+		
+		return AvailableOptions;
+	}
+	
+	private any function buildSkuCombinations(Array storage, numeric position, any data, String currentOption){
+		var keys = StructKeyList(arguments.data);
+		var i = 1;
+		
+		if(listlen(keys)){
+			for(i=1; i<= arrayLen(arguments.data[listGetAt(keys,position)]); i++){
+				if(arguments.position eq listlen(keys)){
+					arrayAppend(arguments.storage,arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value) ;
+				}else{
+					arguments.storage = buildSkuCombinations(arguments.storage,arguments.position + 1, arguments.data, arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value);
+				}
+			}
+		}
+		
+		return arguments.storage;
+	}
+	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
 	public boolean function getProductIsOnTransaction(required any product) {
 		return getDAO().getProductIsOnTransaction(product=arguments.product);
 	}
 	
+	public any function getProductSkusBySelectedOptions(required string selectedOptions, required string productID){
+		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments);
+	}
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: Process Methods ===========================
+	
 	public any function processProduct(required any product, struct data={}, string processContext="process") {
 		
 		switch(arguments.processContext){
-			case 'bulkupdate':
+			case 'updateSkus':
 				var skus = 	arguments.product.getSkus();
 				if(arrayLen(skus)){
 					for(i=1; i <= arrayLen(skus); i++){
@@ -245,36 +150,100 @@ component extends="BaseService" accessors="true" {
 		
 	}
 	
+	// =====================  END: Process Methods ============================
 	
-	public any function getFormattedOptionGroups(required any product){
-		var AvailableOptions={};
-		 
-		productObjectGroups = arguments.product.getOptionGroups() ;
-		
-		for(i=1; i <= arrayLen(productObjectGroups); i++){
-			AvailableOptions[productObjectGroups[i].getOptionGroupName()] = getOptionService().getOptionsForSelect(arguments.product.getOptionsByOptionGroup(productObjectGroups[i].getOptionGroupID()));
-		}
-		
-		return AvailableOptions;
-	}
+	// ====================== START: Save Overrides ===========================
 	
-	private any function buildSkuCombinations(Array storage, numeric position, any data, String currentOption){
-		var keys = StructKeyList(arguments.data);
-		var i = 1;
+	public any function saveProduct(required any product, required struct data) {
 		
-		if(listlen(keys)){		
-			for(i=1; i<= arrayLen(arguments.data[listGetAt(keys,position)]); i++){
-				if(arguments.position eq listlen(keys)){
-					arrayAppend(arguments.storage,arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value) ;
-				}else{
-					arguments.storage = buildSkuCombinations(arguments.storage,arguments.position + 1, arguments.data, arguments.currentOption & '|' & arguments.data[listGetAt(keys,position)][i].value);
-				}
+		// populate bean from values in the data Struct
+		arguments.product.populate(arguments.data);
+		
+		// If this is a new product and it doesn't have any errors... there are a few additional steps we need to take
+		if(arguments.product.isNew() && !arguments.product.hasErrors()) {
+			
+			// Create Skus
+			getSkuService().createSkus(arguments.product, arguments.data);
+			
+			// if urlTitle wasn't set in bean, default it to the product's name.
+			if(arguments.Product.getUrlTitle() == "") {
+				arguments.Product.setUrlTitle(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
+			}
+			
+			// make sure that the UrlTitle doesn't already exist, if it does then just rename with a number until it doesn't
+			var lastAppended = 1;
+			var uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
+			while(!uniqueUrlTitle) {
+				arguments.Product.setUrlTitle(arguments.Product.getUrlTitle() & lastAppended);	
+				uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
+				lastAppended += 1;
 			}
 		}
 		
-		return arguments.storage;
+		// validate the product
+		arguments.product.validate();
+		
+		// If the product passed validation then call save in the DAO, otherwise set the errors flag
+        if(!arguments.product.hasErrors()) {
+        	arguments.product = getDAO().save(target=arguments.product);
+        } else {
+            getSlatwallScope().setORMHasErrors( true );
+        }
+        
+        // Return the product
+		return arguments.product;
 	}
 	
+	public any function saveProductType(required any productType, required struct data) {
+		
+		arguments.productType.populate(data=arguments.data);
+
+		arguments.productType.validate();
+
+		// if this type has a parent, inherit all products that were assigned to that parent
+		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
+			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
+		}
+		
+		if( !arguments.productType.hasErrors() ) {
+			// Call entitySave on the productType 
+			getDAO().save(target=arguments.productType);
+		} else {
+            getSlatwallScope().setORMHasErrors( true );
+        }
+		
+		return arguments.productType;
+	}
+	
+	// ======================  END: Save Overrides ============================
+	
+	// ====================== START: Delete Overrides =========================
+	
+	public boolean function deleteProduct(required any product) {
+	
+		// Set the default sku temporarily in this local so we can reset if delete fails
+		var defaultSku = arguments.product.getDefaultSku();
+		
+		// Remove the default sku so that we can delete this entity
+		arguments.product.setDefaultSku(javaCast("null", ""));
+	
+		// Use the base delete method to check validation
+		var deleteOK = super.delete(arguments.product);
+		
+		// If the delete failed, then we just reset the default sku into the product and return false
+		if(!deleteOK) {
+			arguments.product.setDefaultSku(defaultSku);
+		
+			return false;
+		}
+	
+		return true;
+	}
+	
+	// ======================  END: Delete Overrides ==========================
+	
+	// ==================== START: Smart List Overrides =======================
+
 	public any function getProductSmartList(struct data={}, currentURL="") {
 		arguments.entityName = "SlatwallProduct";
 		
@@ -292,29 +261,10 @@ component extends="BaseService" accessors="true" {
 		return smartList;
 	}
 	
-	// ===================== START: Logical Methods ===========================
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: Process Methods ===========================
-	
-	// =====================  END: Process Methods ============================
-	
-	// ====================== START: Save Overrides ===========================
-	
-	// ======================  END: Save Overrides ============================
-	
-	// ==================== START: Smart List Overrides =======================
-	
 	// ====================  END: Smart List Overrides ========================
 	
 	// ====================== START: Get Overrides ============================
 	
 	// ======================  END: Get Overrides =============================
-	
 	
 }

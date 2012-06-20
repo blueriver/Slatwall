@@ -37,27 +37,30 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#" 
-			recordDetailAction="admin:product.detailsku"
-			recordDetailQueryString="productID=#rc.product.getProductID()#"
-			recordEditAction="admin:product.editsku"
-			recordEditQueryString="productID=#rc.product.getProductID()#"
-			recorddeleteaction="admin:product.deletesku"
-			recorddeletequerystring="returnaction=product.editproduct&productID=#rc.product.getProductID()#">
+	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#"
+							   recordDetailAction="admin:product.detailsku"
+							   recordDetailQueryString="productID=#rc.product.getProductID()#"
+							   recordEditAction="admin:product.editsku"
+							   recordEditQueryString="productID=#rc.product.getProductID()#"
+							   recordDeleteAction="admin:product.deletesku"
+							   recordDeleteQueryString="returnaction=product.editproduct&productID=#rc.product.getProductID()#"
+							   selectFieldName="defaultSku.skuID"
+							   selectValue="#rc.product.getDefaultSku().getSkuID()#"
+							   selectTitle="#$.slatwall.rbKey('define.default')#">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="skuCode" />
-		
-		<cfif rc.product.getProductType().getBaseProductType() eq "merchandise" && rc.product.getSkusSmartList().getRecordsCount() gt 1>
-			<cf_SlatwallListingColumn propertyIdentifier="optionsDisplay" />
+		<cfif rc.product.getBaseProductType() eq "merchandise">
+			<cfloop collection="#rc.product.getOptionGroupsStruct()#" item="local.optionGroup">
+				<cf_SlatwallListingColumn propertyIdentifier="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupID()#" title="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupName()#" sort="false" />
+			</cfloop>
 		<cfelseif  rc.product.getProductType().getBaseProductType() eq "subscription">
 			<cf_SlatwallListingColumn propertyIdentifier="subscriptionTerm.subscriptionTermName" />
 		<cfelseif rc.product.getProductType().getBaseProductType() eq "contentAccess">
 			<!--- Sumit says nothing is ok --->
 		</cfif>
-		
-		<cf_SlatwallListingColumn propertyIdentifier="defaultFlag" />
 		<cf_SlatwallListingColumn propertyIdentifier="imageFile" />
-		<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="userDefinedPriceFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
+		<cfif isNull(rc.product.getDefaultSku().getUserDefinedPriceFlag()) || !rc.product.getDefaultSku().getUserDefinedPriceFlag()>
+			<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
+			<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
+		</cfif>
 	</cf_SlatwallListingDisplay>
 </cfoutput>

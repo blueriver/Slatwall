@@ -199,7 +199,6 @@
 	<bean id="encryptionService" class="Slatwall.com.service.EncryptionService" />
 	<bean id="fulfillmentService" class="Slatwall.com.service.FulfillmentService">
         <property name="DAO"><ref bean="fulfillmentDAO" /></property>
-		<property name="settingService"><ref bean="settingService" /></property>
     </bean>
 	<bean id="integrationService" class="Slatwall.com.service.IntegrationService">
         <property name="DAO"><ref bean="integrationDAO" /></property>

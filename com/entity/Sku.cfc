@@ -200,8 +200,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return optionsStruct[arguments.optionGroupID];
 	}
     
-    // END: Option Helper Methods
-    
     // START: Image Methods
 	public string function getImageDirectory() {
     	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/default/";	
@@ -271,7 +269,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	//get BaseProductType 
 	public any function getBaseProductType() {
-		return this.getProduct().getBaseProductType();
+		return getProduct().getBaseProductType();
 	}
 	
 	// START: Price Methods
@@ -413,7 +411,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public void function addPromotionReward(required any promotionReward) {
 		arguments.promotionReward.addSku( this );
 	}
-	
 	public void function removePromotionReward(required any promotionReward) {
 		arguments.promotionReward.removeSku( this );
 	}
@@ -422,7 +419,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public void function addPromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.addSku( this );
 	}
-	
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeSku( this );
 	}
@@ -454,6 +450,40 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public string function getSimpleRepresentationPropertyName() {
     	return "skuCode";
     }
+    
+    // @help we override this so that the onMM below will work
+	public struct function getPropertyMetaData(string propertyName) {
+		
+		// if the len is 32 them this propertyName is probably an optionGroupID
+		if(len(arguments.propertyName) eq "32") {
+			for(var i=1; i<=arrayLen(getOptions()); i++) {
+				if(getOptions()[i].getOptionGroup().getOptionGroupID() == arguments.propertyName) {
+					return getOptions()[i].getPropertyMetaData('optionName');
+				}
+			}
+		}
+		
+		return super.getPropertyMetaData(argumentCollection=arguments);
+	}
+	
+    
+    // @hint we override the oMM to look for options by optionGroupID
+ 	public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
+ 		
+		// getXXX() 			Where XXX is a optionGroupID
+		if (left(arguments.missingMethodName, 3) == "get") {
+			
+			var potentialOptionGroupID = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
+			
+			for(var i=1; i<=arrayLen(getOptions()); i++) {
+				if(getOptions()[i].getOptionGroup().getOptionGroupID() == potentialOptionGroupID) {
+					return getOptions()[i].getOptionName();
+				}
+			}
+		}
+		
+		return super.onMissingMethod(argumentCollection=arguments);
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	
