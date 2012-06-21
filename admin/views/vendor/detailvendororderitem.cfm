@@ -49,6 +49,7 @@ Notes:
 
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrderItem.getStock().getLocation()#" property="locationName" edit="false">
 				<cf_SlatwallPropertyDisplay object="#rc.vendorOrderItem#" property="quantity" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.vendorOrderItem#" property="cost" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>

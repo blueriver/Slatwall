@@ -141,7 +141,8 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
 							<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
 							<cfif findNoCase("*", $.slatwall.getCurrentAccount().getAllPermissions())>
-								<cf_SlatwallActionCaller action="admin:main.default" queryString="reload=true" text="Reload Slatwall" type="list">
+								<li><a href="?#listAppend(cgi.query_string, 'reload=true&soft=true', '&')#">Reload Slatwall (Soft)</a></li>
+								<li><a href="?#listAppend(cgi.query_string, 'reload=true', '&')#">Reload Slatwall</a></li>
 							</cfif>
 						</cf_SlatwallActionCallerDropdown>
 					</ul>

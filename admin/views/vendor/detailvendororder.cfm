@@ -41,19 +41,14 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#">
+			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" modal="true" />
+		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cfif rc.vendorOrder.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="true">
-					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="true">
-				<cfelse>
-					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="false">
-					<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="false">
-				</cfif>
-				
-				
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="#rc.vendorOrder.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="#rc.vendorOrder.isNew()#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

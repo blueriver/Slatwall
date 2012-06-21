@@ -41,19 +41,18 @@ Notes:
 <cf_slatwalllistingdisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#" 
                            recordeditaction="admin:vendor.editVendorOrderItem" 
                            recordeditmodal="true" 
+						   recorddetailaction="admin:vendor.detailvendororderitem"
+						   recorddetailmodal="true"
                            recorddeleteaction="admin:vendor.deleteVendorOrderItem" 
-                           recorddeletequerystring="returnaction=admin:vendor.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
+                           recorddeletequerystring="returnaction=admin:vendor.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
 
 	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stock.sku.skucode"/>
-	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.product.brand.brandName"/>
-	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.product.productName"/>
-	<cf_slatwalllistingcolumn propertyidentifier="stock.location.locationName"/>
-	<cf_slatwalllistingcolumn propertyidentifier="quantity"/>
-	<cf_slatwalllistingcolumn propertyidentifier="cost"/>
-	<cf_slatwalllistingcolumn propertyidentifier="extendedCost"/>
+	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
+	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.product.productName" filter="true" />
+	<cf_slatwalllistingcolumn propertyidentifier="stock.location.locationName" filter="true" />
+	<cf_slatwalllistingcolumn propertyidentifier="quantity" range="true" />
+	<cf_slatwalllistingcolumn propertyidentifier="cost" range="true" />
+	<cf_slatwalllistingcolumn propertyidentifier="extendedCost" sort="false" />
 </cf_slatwalllistingdisplay>
 
-<cf_slatwallactioncaller action="admin:vendor.processVendorOrder" 
-						 class="btn btn-inverse" icon="plus icon-white" 
-                         querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=addOrderItems" 
-                         modal=true text="#rc.$.Slatwall.rbKey("admin.vendor.addItems")#"/>
+<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />

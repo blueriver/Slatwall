@@ -94,6 +94,24 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 		structDelete(variables, "order");
 	}
 	
+	// Vendor Order (many-to-one)
+	public void function setVendorOrder(required any vendorOrder) {
+		variables.vendorOrder = arguments.vendorOrder;
+		if(isNew() or !arguments.vendorOrder.hasStockReceiver( this )) {
+			arrayAppend(arguments.vendorOrder.getStockReceivers(), this);
+		}
+	}
+	public void function removeVendorOrder(any vendorOrder) {
+		if(!structKeyExists(arguments, "vendorOrder")) {
+			arguments.vendorOrder = variables.vendorOrder;
+		}
+		var index = arrayFind(arguments.vendorOrder.getStockReceivers(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendorOrder.getStockReceivers(), index);
+		}
+		structDelete(variables, "vendorOrder");
+	}
+	
 	// Stock Receiver Items (one-to-many)
 	public void function addStockReceiverItem(required any stockReceiverItem) {
 		arguments.stockReceiverItem.setStockReceiver( this );

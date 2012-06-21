@@ -45,7 +45,7 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	
 	// Related Object Properties (Many-to-One)
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
-	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID" lazy="false" fetch="join";  // We always want stock when we get a vendorOrderItem
 	
 	// Related Object Properties (One-to-Many)
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderItemID" cascade="all-delete-orphan" inverse="true";
@@ -60,32 +60,33 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	property name="extendedCost" persistent="false" formatType="currency";
 	
 	
+	// ============ START: Non-Persistent Property Methods =================
 	
-	// Maintain bidirectional relationships (many-to-one). Notice that the child (VendorOrderItem) is the handler of the relationship, while the parent (VendorOrder), has inverse="true".
-	public void function setVendorOrder(required any vendorOrder) {
-	   variables.vendorOrder = arguments.vendorOrder;
-	   if(isNew() or !arguments.vendorOrder.hasVendorOrderItem(this)) {
-	       arrayAppend(arguments.vendorOrder.getVendorOrderItems(), this);
-	   }
-	}
-	
-	public void function removeVendorOrder() {
-       var index = arrayFind(variables.vendorOrder.getVendorOrderItems(), this);
-       if(index > 0) {
-           arrayDeleteAt(variables.vendorOrder.getVendorOrderItems(), index);
-       }
-       structDelete(variables,"vendorOrder");
-    }
-    
-    public numeric function getExtendedCost() {
+	public numeric function getExtendedCost() {
 		return getCost() * getQuantity();
 	}
-	
-	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Vendor Order (many-to-one)
+	public void function setVendorOrder(required any vendorOrder) {
+		variables.vendorOrder = arguments.vendorOrder;
+		if(isNew() or !arguments.vendorOrder.hasVendorOrderItem( this )) {
+			arrayAppend(arguments.vendorOrder.getVendorOrderItems(), this);
+		}
+	}
+	public void function removeVendorOrder(any vendorOrder) {
+		if(!structKeyExists(arguments, "vendorOrder")) {
+			arguments.vendorOrder = variables.vendorOrder;
+		}
+		var index = arrayFind(arguments.vendorOrder.getVendorOrderItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendorOrder.getVendorOrderItems(), index);
+		}
+		structDelete(variables, "vendorOrder");
+	}
 	
 	// Stock Receiver Items (one-to-many)    
 	public void function addStockReceiverItem(required any stockReceiverItem) {    
@@ -96,8 +97,33 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentation() {
+		return getStock().getSku().getProduct().getCalculatedTitle();
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
+	
 }

@@ -54,14 +54,15 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="vendorOrderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderStatusTypeID";
 	
 	// Related Object Properties (One-To-Many)
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all-delete-orphan";
+	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all";
+	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Non persistent properties
 	property name="total" persistent="false" formatType="currency"; 
 	property name="subTotal" persistent="false" formatType="currency"; 
-	//property name="taxTotal" persistent="false" formatType="currency"; 
-	//property name="itemAmountTotal" persistent="false" formatType="currency" ; 
-	//property name="fulfillmentAmountTotal" persistent="false" formatType="currency" ; 
+	//property name="taxTotal" persistent="false" formatType="currency";
+	//property name="itemAmountTotal" persistent="false" formatType="currency" ;
+	//property name="fulfillmentAmountTotal" persistent="false" formatType="currency"; 
 	property name="orderAmountTotal" persistent="false" formatType="currency"; 
 	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	
@@ -150,6 +151,14 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 			arrayDeleteAt(arguments.vendor.getVendorOrders(), index);
 		}
 		structDelete(variables, "vendor");
+	}
+	
+	// Stock Receivers (one-to-many)
+	public void function addStockReceiver(required any stockReceiver) {
+		arguments.stockReceiver.setVendorOrder( this );
+	}
+	public void function removeStockReceiver(required any stockReceiver) {
+		arguments.stockReceiver.removeVendorOrder( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

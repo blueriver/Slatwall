@@ -65,4 +65,8 @@ Notes:
 			<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
 		</cfif>
 	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="addOptionGroup" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
+	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="addOption" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
+	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="addSubscriptionTerm" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
 </cfoutput>
