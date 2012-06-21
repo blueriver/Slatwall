@@ -45,7 +45,8 @@ Notes:
 						   recordEditAction="admin:vendor.editvendororder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
 	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="total" search="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="estimatedReceivalDateTime" range="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="total" sort="false" />
 </cf_SlatwallListingDisplay>

@@ -53,8 +53,6 @@ Notes:
 			<!--- Add Order Items --->
 			<cfcase value="addOrderItems">
 				
-				<input type="hidden" name="vendorOrderID" value="#local.vendorOrder.getVendorOrderID()#" />
-				
 				<cf_SlatwallProcessOptionBar>
 					<cf_SlatwallProcessOption data="locationID" fieldtype="select" valueOptions="#$.slatwall.getService('LocationService').getLocationOptions()#" />
 				</cf_SlatwallProcessOptionBar>
@@ -64,8 +62,10 @@ Notes:
 					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
 					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
 					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
+					<!---<cf_SlatwallProcessColumn data="estimatedReceivalDateTime" fieldType="datetime" />--->
 					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
 					<cf_SlatwallProcessColumn data="cost" fieldType="text" fieldClass="span1 number" />
+					<cf_SlatwallProcessColumn data="vendorOrderID" fieldType="hidden" value="#local.vendorOrder.getVendorOrderID()#" />
 				</cf_SlatwallProcessListing>
 				
 			</cfcase>
@@ -86,15 +86,6 @@ Notes:
 						<cf_SlatwallProcessColumn propertyIdentifier="quantity"/>
 						<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span2 number" value="" />
 						<cf_SlatwallProcessColumn data="vendorOrderID" fieldType="hidden" value="#rc.vendorOrderID#" />
-						<!--- This section needs removing--->
-						<!---<cfif arrayLen(locations) gt 1>
-							<cf_SlatwallProcessColumn data="locationID" fieldType="select" valueOptions="#locations#" fieldClass="span2" value="" />
-						<cfelse>
-							<cf_SlatwallProcessColumn data="locationID" fieldType="hidden" value="#locations[1]['value']#" />
-						</cfif>
-						<cf_SlatwallProcessColumn data="boxcount" fieldType="text" fieldClass="span2 number" value="" />
-						<cf_SlatwallProcessColumn data="packingslipnumber" fieldType="text" fieldClass="span2" value="" />
-						--->
 					</cf_SlatwallProcessListing>
 				<cfelse>
 					<p>

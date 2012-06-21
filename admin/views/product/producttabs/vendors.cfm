@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,24 +35,10 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
-	
-	
-	property name="addressService";
-	property name="locationService" type="any";
-	property name="productService" type="any";
-	property name="settingService" type="any";
-	property name="skuService" type="any";
-	property name="stockService" type="any";
-	property name="vendorService";
-	property name="vendorOrderService" type="any";
-	
-	this.publicMethods='';
-	this.secureMethods='createVendor,listVendor,editVendor,detailVendor,deleteVendor,saveVendor,createVendorOrder,listVendorOrder,editVendorOrder,detailVendorOrder,deleteVendorOrder,saveVendorOrder';
-	
-	public void function default(required struct rc) {
-		getFW().redirect(action="admin:vendor.listvendor");
-	}
-	
-}
+--->
+<cfparam name="rc.product" type="any" />
+<cfparam name="rc.edit" type="boolean" />
+
+<cfoutput>
+	<cf_SlatwallPropertyDisplay object="#rc.product#" property="vendors" edit="#rc.edit#" displayType="plain">
+</cfoutput>

@@ -41,6 +41,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	// Persistent Properties
 	property name="vendorOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="vendorOrderNumber" ormtype="string";
+	property name="estimatedReceivalDateTime" ormtype="timestamp";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

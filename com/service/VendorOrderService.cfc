@@ -70,44 +70,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		smartList.addFilter("stockReceiver.stockReceiverID",arguments.stockReceiver.getStockReceiverID());
 		return smartList;
 	}
-	
-	public any function searchVendorOrders(struct data={}) {
-		//set keyword and vendorOrderby
-		var params = {
-			keyword = arguments.data.keyword,
-			vendorOrderBy = arguments.data.vendorOrderBy
-		};
-		// pass rc params (for paging) to smartlist
-		structAppend(params,arguments.data);
 		
-		// date range (start or end) have been submitted 
-		if(len(trim(arguments.data.vendorOrderDateStart)) > 0 || len(trim(arguments.data.vendorOrderDateEnd)) > 0) {
-			var dateStart = arguments.data.vendorOrderDateStart;
-			var dateEnd = arguments.data.vendorOrderDateEnd;
-			
-			// if either the start or end date is blank, default them to a long time ago or now(), respectively
- 			if(len(trim(arguments.data.vendorOrderDateStart)) == 0) {
- 				dateStart = createDateTime(30,1,1,0,0,0);
- 			} else if(len(trim(arguments.data.vendorOrderDateEnd)) == 0) {
- 				dateEnd = now();
- 			}
- 			// make sure we have valid datetimes
- 			if(isDate(dateStart) && isDate(dateEnd)) {
- 				// since were comparing to datetime objects, I'll add 85,399 seconds to the end date to make sure we get all vendorOrders on the last day of the range (only if it was entered)
-				if(len(trim(arguments.data.vendorOrderDateEnd)) > 0) {
-					dateEnd = dateAdd('s',85399,dateEnd);	
-				}
-				params['R:createdDateTime'] = "#dateStart#,#dateEnd#";
- 			} else {
- 				arguments.data.message = #request.slatwallScope.rbKey("admin.vendorOrder.search.invaliddates")#;
- 				arguments.data.messagetype = "warning";
- 			}
-		}
-
-		return getVendorOrderSmartList(params);
-	}
-
-	
 	public any function isProductInVendorOrder(required any productID, required any vendorOrderID){
 		return getDAO().isProductInVendorOrder(arguments.productID, arguments.vendorOrderID);
 	}
@@ -124,22 +87,35 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getSkusOrdered(arguments.vendorOrderId);
 	}
 	
+	// ===================== START: Logical Methods ===========================
+	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: Process Methods ===========================
+	
 	public any function processVendorOrder(required any vendorOrder, struct data={}, string processContext="process"){
 		
 		switch(arguments.processcontext){
 			case 'addOrderItems':
-				if(val(arguments.data.quantity)){	
-					var vendorOrderItem = new('VendorOrderItem');
-					var sku = getSkuService().getSku(arguments.data.skuid);
-					var location = getLocationService().getLocation(arguments.data.locationID);
-					var stock = getStockService().getStockBySkuAndLocation(sku,location);
+				
+				if(int(arguments.data.quantity)){
 					
-					vendorOrderItem.setQuantity(arguments.data.quantity);
-					vendorOrderItem.setCost(arguments.data.cost);
-					vendorOrderItem.setStock(stock);
+					var vendorOrderItem = new('VendorOrderItem');
+					
+					vendorOrderItem.populate(arguments.data);
+					
+					var sku = getSkuService().getSku( arguments.data.skuid );
+					var location = getLocationService().getLocation( arguments.data.locationID );
+					var stock = getStockService().getStockBySkuAndLocation( sku, location );
+					
+					vendorOrderItem.setStock( stock );
 					vendorOrderItem.setVendorOrder(arguments.vendorOrder);
 				}
-			break;
+				break;
 			
 			case 'receiveStock':
 				if(val(arguments.data.quantity)){
@@ -158,21 +134,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					stockReceiverItem.setVendorOrderItem(vendorOrderItem);
 					stockReceiverItem.setStockReceiver(stockReceiver);
 				}
-			break;
+				break;
 		}	
 				
 	}
-	
-
-	// ===================== START: Logical Methods ===========================
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: Process Methods ===========================
 	
 	// =====================  END: Process Methods ============================
 	

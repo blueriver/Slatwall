@@ -74,8 +74,8 @@ Notes:
 			<cfcase value="addSubscriptionTerm">
 				<cf_SlatwallProcessOptionBar>
 					<cf_SlatwallProcessOption data="subscriptionTermID" fieldType="select" valueOptions="#rc.processProductSmartList.getRecords()[1].getUnusedProductSubscriptionTerms()#" fieldClass="span2" value="" />
-					<cf_SlatwallProcessOption data="price" fieldType="text" fieldClass="span2 number" value="" />
-					<cf_SlatwallProcessOption data="listPrice" fieldType="text" fieldClass="span2 number" value="" />
+					<cf_SlatwallProcessOption data="price" fieldType="text" fieldClass="span2 number" />
+					<cf_SlatwallProcessOption data="listPrice" fieldType="text" fieldClass="span2 number" />
 				</cf_SlatwallProcessOptionBar>
 			</cfcase>
 			 
