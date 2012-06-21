@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#">
-			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" />
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
@@ -55,7 +55,6 @@ Notes:
 		<cf_SlatwallTabGroup object="#rc.vendorOrder#" allowComments="true">
 			<cf_SlatwallTab view="admin:vendor/vendorordertabs/items" />
 			<cf_SlatwallTab view="admin:vendor/vendorordertabs/stockreceivers" />
-			<!---<cf_SlatwallTab view="admin:vendor/vendorordertabs/products" />--->
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

@@ -339,7 +339,7 @@
     </bean>
     <bean id="vendorService" class="Slatwall.com.service.VendorService">
         <property name="DAO"><ref bean="VendorDAO" /></property>
-		<property name="addressService"><ref bean="addressService" /></property>
+		<property name="skuService"><ref bean="skuService" /></property>
     </bean>
 	<bean id="vendorOrderService" class="Slatwall.com.service.VendorOrderService">
         <property name="DAO"><ref bean="VendorOrderDAO" /></property>

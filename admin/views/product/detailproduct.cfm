@@ -70,6 +70,7 @@ Notes:
 			<cf_SlatwallTab view="admin:product/producttabs/alternateimages" />
 			<cf_SlatwallTab view="admin:product/producttabs/productreviews" />
 			<cf_SlatwallTab view="admin:product/producttabs/relatedproducts" />
+			<cf_SlatwallTab view="admin:product/producttabs/vendors" />
 			<cf_SlatwallTab view="admin:product/producttabs/productsettings" />
 			<cf_SlatwallTab view="admin:product/producttabs/skusettings" />
 		</cf_SlatwallTabGroup>

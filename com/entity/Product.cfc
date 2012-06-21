@@ -74,6 +74,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
+	property name="vendors" singularname="vendor" cfc="Vendor" type="array" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="productID" inversejoincolumn="vendorID" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -710,6 +711,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	public void function removePriceGroupRate(required any priceGroupRate) {
 		arguments.priceGroupRate.removeProduct( this );
+	}
+	
+	// Vendors (many-to-many - inverse)
+	public void function addVendor(required any vendor) {
+		arguments.vendor.addProduct( this );
+	}
+	public void function removeVendor(required any vendor) {
+		arguments.vendor.removeProduct( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

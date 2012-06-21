@@ -36,8 +36,10 @@
 Notes:
 
 --->
+<cfparam name="rc.brand" type="any" />
+<cfparam name="rc.edit" type="boolean" />
+
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#request.context.brand.getVendorsSmartList()#" recordEditAction="admin:vendor.editvendor">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorName" />
-	</cf_SlatwallListingDisplay>
+	<cf_SlatwallPropertyDisplay object="#rc.brand#" property="vendors" edit="#rc.edit#" displayType="plain">
+	
 </cfoutput>

@@ -40,10 +40,11 @@ Notes:
 
 <cf_SlatwallActionBar type="listing" object="#rc.vendorSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.vendorSmartList#" recordEditAction="admin:vendor.editvendor">
+<cf_SlatwallListingDisplay smartList="#rc.vendorSmartList#"
+						   recordEditAction="admin:vendor.editvendor"
+						   recordDetailAction="admin:vendor.detailvendor">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="accountNumber" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="vendorWebsite" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="numberBrands" sort="false" />
 </cf_SlatwallListingDisplay>

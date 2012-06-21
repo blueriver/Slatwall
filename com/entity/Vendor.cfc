@@ -61,10 +61,12 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="vendorPhoneNumbers" singularname="vendorPhoneNumber" type="array" cfc="VendorPhoneNumber" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	property name="vendorEmailAddresses" singularname="vendorEmailAddress" type="array" cfc="VendorEmailAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	
-	// Related Object Properties (many-to-many)
+	// Related Object Properties (many-to-many - owner)
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="vendorID" inversejoincolumn="productID";
 	
-	property name="numberBrands";
+	// Non-Persistent Properties
+	property name="vendorSkusSmartList" persistent="false";
 	
 	
 	public string function getEmailAddress() {
@@ -80,8 +82,12 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
-	public numeric function getNumberBrands(){
-		return arrayLen(getBrands());
+	
+	public any function getVendorSkusSmartList() {
+		if(!structKeyExists(variables, "vendorSkusSmartList")) {
+			variables.vendorSkusSmartList = getService("vendorService").getVendorSkusSmartList(vendorID=getVendorID());
+		}
+		return variables.vendorSkusSmartList;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -119,6 +125,46 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	}
 	public void function removeVendorOrder(required any vendorOrder) {
 		arguments.vendorOrder.removeVendor( this );
+	}
+	
+	// Products (many-to-many - owner)
+	public void function addProduct(required any product) {
+		if(arguments.product.isNew() or !hasProduct(arguments.product)) {
+			arrayAppend(variables.products, arguments.product);
+		}
+		if(isNew() or !arguments.product.hasVendor( this )) {
+			arrayAppend(arguments.product.getVendors(), this);
+		}
+	}
+	public void function removeProduct(required any product) {
+		var thisIndex = arrayFind(variables.products, arguments.product);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.products, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.product.getVendors(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.product.getVendors(), thatIndex);
+		}
+	}
+	
+	// Brands (many-to-many - owner)
+	public void function addBrand(required any brand) {
+		if(arguments.brand.isNew() or !hasBrand(arguments.brand)) {
+			arrayAppend(variables.brands, arguments.brand);
+		}
+		if(isNew() or !arguments.brand.hasVendor( this )) {
+			arrayAppend(arguments.brand.getVendors(), this);
+		}
+	}
+	public void function removeBrand(required any brand) {
+		var thisIndex = arrayFind(variables.brands, arguments.brand);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.brands, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.brand.getVendors(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.brand.getVendors(), thatIndex);
+		}
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

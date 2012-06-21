@@ -229,8 +229,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var baseAliase = newEntityName;
 		do {
 			var newEntityAlias = "#listGetAt(aolist,aoindex)##lcase(baseAliase)#";
-			if(aoindex > 0) {
-				newEntityName = "#lcase(newEntityName)#_#UCASE(listGetAt(aolist,aoindex+1))#";
+			if(aoindex > 1) {
+				newEntityName = "#lcase(newEntityName)#_#UCASE(listGetAt(aolist,aoindex))#";
 			}
 			if( (structKeyExists(variables.entities, newEntityName) && variables.entities[newEntityName].entityAlias == newEntityAlias && variables.entities[newEntityName].parentRelatedProperty != relatedProperty) || newEntityAlias == variables.entities[ arguments.parentEntityName ].entityAlias) {
 				aoindex++;
@@ -439,6 +439,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	public string function getHQLWhere(boolean suppressWhere=false, searchOrder=false) {
 		var hqlWhere = "";
 		variables.hqlParams = {};
+		
 		
 		// Loop over where groups
 		for(var i=1; i<=arrayLen(variables.whereGroups); i++) {

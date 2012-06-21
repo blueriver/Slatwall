@@ -38,20 +38,35 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 	
-	property name="vendorOrderService" type="any";
-	property name="addressService" type="any";
-	property name="vendorDAO" type="any";
-
-	public array function getProductsForVendor(required any vendorID) {
-		return getDAO().getProductsForVendor(arguments.vendorID);
-	}
+	property name="skuService" type="any";
 	
-
+	
 	// ===================== START: Logical Methods ===========================
+	
+	public any function getVendorSkusSmartList( required any vendorID ) {
+		var smartList = getSkuService().getSkuSmartList();
+		
+		smartList.joinRelatedProperty("SlatwallSku", "product");
+		smartList.joinRelatedProperty("SlatwallProduct", "brand", "left");
+		
+		smartList.addFilter('activeFlag', 1);
+		smartList.addFilter('product.activeFlag', 1);
+		
+		smartList.addFilter('activeFlag', 1);
+		smartList.addFilter('product.activeFlag', 1);
+		
+		smartList.addWhereCondition( "( EXISTS( SELECT a.vendorID FROM SlatwallVendor a INNER JOIN a.brands b WHERE b.brandID = aslatwallbrand.brandID AND a.vendorID = '#arguments.vendorID#' ) OR EXISTS( SELECT x.vendorID FROM SlatwallVendor x INNER JOIN x.products y WHERE y.productID = aslatwallproduct.productID AND x.vendorID = '#arguments.vendorID#' ) )" );
+		
+		return smartList;
+	}
 	
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
+	
+	public array function getProductsForVendor(required any vendorID) {
+		return getDAO().getProductsForVendor(arguments.vendorID);
+	}
 	
 	// ===================== START: DAO Passthrough ===========================
 	

@@ -58,12 +58,13 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	// Related Object Properties (one-to-many)
 	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";
 	
+	// Related Object Properties (many-to-many - owner)
+	
 	// Related Object Properties (many-to-many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID" inverse="true";
 	
-	// Related Object Properties (many-to-many)
-	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID";
 	
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -83,7 +84,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	}
 	
 	
-	// promotionRewards (many-to-many)
+	// promotionRewards (many-to-many - inverse)
 	public void function addPromotionReward(required any promotionReward) {
 	   arguments.promotionReward.addBrand(this);
 	}
@@ -92,13 +93,21 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	   arguments.promotionReward.removeBrand(this);
 	}
 	
-	// promotionQualifiers (many-to-many)
+	// promotionQualifiers (many-to-many - inverse)
 	public void function addPromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.addBrand( this );
 	}
 	
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeBrand( this );
+	}
+	
+	// Vendors (many-to-many - inverse)    
+	public void function addVendor(required any vendor) {    
+		arguments.vendor.addBrand( this );    
+	}    
+	public void function removeVendor(required any vendor) {    
+		arguments.vendor.removeBrand( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

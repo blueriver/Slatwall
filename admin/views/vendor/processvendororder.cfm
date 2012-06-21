@@ -49,6 +49,8 @@ Notes:
 		<cf_SlatwallActionBar type="process" />
 		
 		<cfswitch expression="#rc.processcontext#">
+			
+			<!--- Add Order Items --->
 			<cfcase value="addOrderItems">
 				
 				<input type="hidden" name="vendorOrderID" value="#local.vendorOrder.getVendorOrderID()#" />
@@ -57,17 +59,20 @@ Notes:
 					<cf_SlatwallProcessOption data="locationID" fieldtype="select" valueOptions="#$.slatwall.getService('LocationService').getLocationOptions()#" />
 				</cf_SlatwallProcessOptionBar>
 
-				<cf_SlatwallProcessListing processSmartList="#vendorSkuSmartList#">
+				<cf_SlatwallProcessListing processSmartList="#local.vendorOrder.getVendor().getVendorSkusSmartList()#">
 					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
-					<cf_SlatwallProcessColumn propertyIdentifier="product.productName" />
+					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
 					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
 					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
 					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
 					<cf_SlatwallProcessColumn data="cost" fieldType="text" fieldClass="span1 number" />
 				</cf_SlatwallProcessListing>
 				
-			</cfcase> 
+			</cfcase>
+			
+			<!--- Receive Stock --->
 			<cfcase value="receiveStock">
+				
 				<cfset vendorOrder = rc.$.slatwall.getService('VendorOrderService').getVendorOrder(rc.vendorOrderID) />
 				<cfset locations = rc.$.slatwall.getService('LocationService').getLocationOptions() /> 
 				
@@ -95,8 +100,9 @@ Notes:
 					<p>
 						#rc.$.Slatwall.rbKey("admin.vendor.stockreceivers.missingProducts")#
 					</p>	
-				</cfif>	
+				</cfif>
 			</cfcase>
+			
 		</cfswitch>	
 	</cf_SlatwallProcessForm>
 </cfoutput>
