@@ -553,6 +553,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	// ===================== START: DAO Passthrough ===========================
 	
+	public array function getUnusedProductSubscriptionTerms( required string productID ){
+		return getDAO().getUnusedProductSubscriptionTerms( arguments.productID );
+	}
+	
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================

@@ -37,87 +37,11 @@ Notes:
 
 */
 component extends="BaseService" accessors="true" {
+
 	property name="productService" type="any";
+
 	
-	public any function saveOption(required any entity, required struct data) {
-		
-		super.save(argumentcollection=arguments);
-		
-		if(!arguments.entity.hasErrors()) {
-			// remove image if option is checked (unless a new image is set, in which case the old image is removed by processUpload
-			if(structKeyExists(arguments.data,"removeImage") and arguments.entity.hasImage() and !structKeyExists(arguments.data,"imageUploadResult")) {
-				removeImage(arguments.entity);
-			}
-			// process image if one was uploaded
-			if(structKeyExists(arguments.data,"imageUploadResult")) {
-				processImageUpload(arguments.entity,arguments.data.imageUploadResult);
-			} 
-		} else {
-			// delete image if one was uploaded
-			if(structKeyExists(arguments.data,"imageUploadResult")) {
-				var result = arguments.data.imageUploadResult;
-				var uploadPath = result.serverDirectory & "/" & result.serverFile;
-				fileDelete(uploadPath);
-			} 
-		}
-		
-		return arguments.entity;
-	}
-	
-	public any function saveOptionGroup(required any entity, required struct data) {
-		
-		// This also saves options that were passed in the correct format by using base object populate that will automatically call saveOption() in this service
-		super.save(argumentcollection=arguments);
-		
-		// If this is a new option group then we need to set the sort order as the next in line
-		if(isNull(arguments.entity.getSortOrder())) {
-			arguments.entity.setSortOrder( getOptionGroupCount() + 1);
-		}
-		
-		if(!arguments.entity.hasErrors()) {
-			// remove image if option is checked (unless a new image is set, in which case the old image is removed by processUpload
-			if(structKeyExists(arguments.data,"removeImage") and arguments.entity.hasImage() and !structKeyExists(arguments.data,"imageUploadResult")) {
-				removeImage(arguments.entity);
-			}
-			// process image if one was uploaded
-			if(structKeyExists(arguments.data,"imageUploadResult")) {
-				processImageUpload(arguments.entity,arguments.data.imageUploadResult);
-			} 
-		} else {
-			// delete image if one was uploaded
-			if(structKeyExists(arguments.data,"imageUploadResult")) {
-				var result = arguments.data.imageUploadResult;
-				var uploadPath = result.serverDirectory & "/" & result.serverFile;
-				fileDelete(uploadPath);
-			} 
-		}
-		
-		return arguments.entity;
-	}
-	
-	public void function saveOptionSort(required string optionIDs) {
-		for(var i=1; i<=listlen(arguments.optionIDs);i++) {
-			var optionID = listGetAt(arguments.optionIDs,i);
-			var thisOption = this.getOption(optionID);
-			thisOption.setSortOrder(i);
-		}
-		
-	}
-	
-	public void function saveOptionGroupSort(required string optionGroupIDs) {
-		for(var i=1; i<=listlen(arguments.optionGroupIDs);i++) {
-			var optionGroupID = listGetAt(arguments.optionGroupIDs,i);
-			var thisOptionGroup = this.getOptionGroup(optionGroupID);
-			thisOptionGroup.setSortOrder(i);
-		}
-	}
-	
-	public numeric function getOptionGroupCount() {
-		return arrayLen(this.listOptionGroup());
-	}
-		
 	private void function processImageUpload(required any entity, required struct imageUploadResult) {
-		
 		var imageName = createUUID() & "." & arguments.imageUploadResult.serverFileExt;
 		var filePath = arguments.entity.getImageDirectory() & imageName;
 		var imageSaved = getService("imageService").saveImageFile(uploadResult=arguments.imageUploadResult,filePath=filePath);
@@ -148,6 +72,13 @@ component extends="BaseService" accessors="true" {
 		return sortedOptions;
 	}
 	
+	
+	// ===================== START: Logical Methods ===========================
+	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
 	public array function getUnusedProductOptionGroups(required string productID){
 		return getDAO().getUnusedProductOptionGroups(arguments.productID);
 	}
@@ -156,12 +87,6 @@ component extends="BaseService" accessors="true" {
 		return getDAO().getUnusedProductOptions(arguments.productID);
 	}
 	
-	// ===================== START: Logical Methods ===========================
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
@@ -169,6 +94,57 @@ component extends="BaseService" accessors="true" {
 	// =====================  END: Process Methods ============================
 	
 	// ====================== START: Save Overrides ===========================
+	
+	public any function saveOptionGroup(required any entity, required struct data) {
+		
+		// This also saves options that were passed in the correct format by using base object populate that will automatically call saveOption() in this service
+		super.save(argumentcollection=arguments);
+		
+		if(!arguments.entity.hasErrors()) {
+			// remove image if option is checked (unless a new image is set, in which case the old image is removed by processUpload
+			if(structKeyExists(arguments.data,"removeImage") and arguments.entity.hasImage() and !structKeyExists(arguments.data,"imageUploadResult")) {
+				removeImage(arguments.entity);
+			}
+			// process image if one was uploaded
+			if(structKeyExists(arguments.data,"imageUploadResult")) {
+				processImageUpload(arguments.entity,arguments.data.imageUploadResult);
+			} 
+		} else {
+			// delete image if one was uploaded
+			if(structKeyExists(arguments.data,"imageUploadResult")) {
+				var result = arguments.data.imageUploadResult;
+				var uploadPath = result.serverDirectory & "/" & result.serverFile;
+				fileDelete(uploadPath);
+			} 
+		}
+		
+		return arguments.entity;
+	}
+	
+	public any function saveOption(required any entity, required struct data) {
+		
+		super.save(argumentcollection=arguments);
+		
+		if(!arguments.entity.hasErrors()) {
+			// remove image if option is checked (unless a new image is set, in which case the old image is removed by processUpload
+			if(structKeyExists(arguments.data,"removeImage") and arguments.entity.hasImage() and !structKeyExists(arguments.data,"imageUploadResult")) {
+				removeImage(arguments.entity);
+			}
+			// process image if one was uploaded
+			if(structKeyExists(arguments.data,"imageUploadResult")) {
+				processImageUpload(arguments.entity,arguments.data.imageUploadResult);
+			} 
+		} else {
+			// delete image if one was uploaded
+			if(structKeyExists(arguments.data,"imageUploadResult")) {
+				var result = arguments.data.imageUploadResult;
+				var uploadPath = result.serverDirectory & "/" & result.serverFile;
+				fileDelete(uploadPath);
+			} 
+		}
+		
+		return arguments.entity;
+	}
 	
 	// ======================  END: Save Overrides ============================
 	

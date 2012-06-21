@@ -254,6 +254,7 @@
 		<property name="dataService"><ref bean="dataService" /></property>
 		<property name="contentService"><ref bean="contentService" /></property>
 		<property name="skuService"><ref bean="skuService" /></property>
+		<property name="subscriptionService"><ref bean="subscriptionService" /></property>
 		<property name="utilityFileService"><ref bean="utilityFileService" /></property>  
         <property name="utilityTagService"><ref bean="utilityTagService" /></property>
     </bean>

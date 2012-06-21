@@ -44,6 +44,7 @@ component extends="BaseService" accessors="true" {
 	property name="dataService" type="any";  
 	property name="contentService" type="any";
 	property name="skuService" type="any";
+	property name="subscriptionService" type="any";
 	property name="utilityFileService" type="any";
 	property name="utilityTagService" type="any";
 	property name="optionService" type="any";
@@ -85,6 +86,13 @@ component extends="BaseService" accessors="true" {
 		return arguments.storage;
 	}
 	
+	public any function updateImageFileNameForProductSkus( required any product ) {
+		for(var i=1; i<=arrayLen(arguments.product.getSkus()); i++) {
+			arguments.product.getSkus()[i].setImageFile( arguments.product.getSkus()[i].generateImageFileName() );	
+		}
+	}
+	
+	
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
@@ -108,7 +116,14 @@ component extends="BaseService" accessors="true" {
 				var skus = 	arguments.product.getSkus();
 				if(arrayLen(skus)){
 					for(i=1; i <= arrayLen(skus); i++){
-						skus[i].setPrice(arguments.data.skuPrice);
+						// Update Price
+						if(arguments.data.updatePrice) {
+							skus[i].setPrice(arguments.data.price);	
+						}
+						// Update List Price
+						if(arguments.data.updateListPrice) {
+							skus[i].setListPrice(arguments.data.listPrice);	
+						}
 					}
 				}
 				
@@ -123,28 +138,60 @@ component extends="BaseService" accessors="true" {
 						skus[i].addOption(options[1]);
 					}
 				}
-			break;
+				
+				updateImageFileNameForProductSkus( arguments.product );
+				
+				break;
 			
 			case 'addOption':
-				var option = getOptionService().getOption(arguments.data.option);
-				var optionGroups = getFormattedOptionGroups(arguments.product);
-				
-				StructDelete(optionGroups,option.getOptionGroup().getOptionGroupName());
-				
-				var keys = structKeyList(optionGroups);
-				var skuData=buildSkuCombinations([],1,optionGroups,'');
-				
-				for(i=1; i<= arrayLen(skuData); i++){
-					sku = getSkuService().newSku();
-					sku.addOption(option);
-					
-					for(j=1; j <= listLen(skuData[i],'|'); j++){
-						sku.addOption(getOptionService().getOption(listGetAt(skuData[i],j,'|')));
-					}
-					
-					sku.setPrice(product.getPrice());
-					product.addSku(sku);
+			
+				var newOption = getOptionService().getOption(arguments.data.option);
+				var newOptionsData = {
+					options = newOption.getOptionID(),
+					price = arguments.product.getDefaultSku().getPrice()
+				};
+				if(!isNull(arguments.product.getDefaultSku().getListPrice())) {
+					newOptionsData.listPrice = arguments.product.getDefaultSku().getListPrice();
 				}
+				
+				// Loop over each of the existing skus
+				for(var s=1; s<=arrayLen(arguments.product.getSkus()); s++) {
+					// Loop over each of the existing options for those skus
+					for(var o=1; o<=arrayLen(arguments.product.getSkus()[s].getOptions()); o++) {
+						// If this option is not of the same option group, and it isn't already in the list, then we can add it to the list
+						if(arguments.product.getSkus()[s].getOptions()[o].getOptionGroup().getOptionGroupID() != newOption.getOptionGroup().getOptionGroupID() && !listFindNoCase(newOptionsData.options, arguments.product.getSkus()[s].getOptions()[o].getOptionID())) {
+							newOptionsData.options = listAppend(newOptionsData.options, arguments.product.getSkus()[s].getOptions()[o].getOptionID());
+						}
+					}
+				}
+				
+				getSkuService().createSkus(arguments.product, newOptionsData);
+				
+				updateImageFileNameForProductSkus( arguments.product );
+				
+				break;
+			
+			case 'addSubscriptionTerm':
+			
+				var newSubscriptionTerm = getSubscriptionService().getSubscriptionTerm(arguments.data.subscriptionTermID);
+				var newSku = getSkuService().newSku();
+				
+				newSku.setPrice( arguments.data.price );
+				if( arguments.data.listPrice != "" && isNumeric(arguments.data.listPrice)) {
+					newSku.setListPrice( arguments.data.listPrice );	
+				}
+				newSku.setSkuCode( arguments.product.getProductCode() & "-#arrayLen(arguments.product.getSkus()) + 1#");
+				newSku.setSubscriptionTerm( newSubscriptionTerm );
+				for(var b=1; b <= arrayLen( arguments.product.getDefaultSku().getSubscriptionBenefits() ); b++) {
+					newSku.addSubscriptionBenefit( arguments.product.getDefaultSku().getSubscriptionBenefits()[b] );
+				}
+				for(var b=1; b <= arrayLen( arguments.product.getDefaultSku().getRenewalSubscriptionBenefits() ); b++) {
+					newSku.addRenewalSubscriptionBenefit( arguments.product.getDefaultSku().getRenewalSubscriptionBenefits()[b] );
+				}
+				newSku.setProduct( arguments.product );
+				
+				updateImageFileNameForProductSkus( arguments.product );
+				
 			break;
 		}
 		
@@ -179,6 +226,9 @@ component extends="BaseService" accessors="true" {
 				lastAppended += 1;
 			}
 		}
+		
+		// Update the Image FileName for all the skus
+		updateImageFileNameForProductSkus( arguments.product );
 		
 		// validate the product
 		arguments.product.validate();

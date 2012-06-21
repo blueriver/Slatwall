@@ -11,10 +11,6 @@
 				<param name="max" value="0" />
 			</rule>
 		</property>
-		<property name="price">
-			<rule type="required" contexts="save" />
-			<rule type="numeric" contexts="save" />
-		</property>
 		<property name="skuCode">
 			<rule type="custom" contexts="save" failureMessage="Sku Code is Not Unique">
 				<param name="methodName" value="hasUniqueSkuCode" />

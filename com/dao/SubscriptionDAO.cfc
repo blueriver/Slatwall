@@ -131,5 +131,17 @@ Notes:
 		<cfreturn [] />
 		 
 	</cffunction>
+	
+	<cffunction name="getUnusedProductSubscriptionTerms">
+		<cfargument name="productID" required="true" type="string" />
+		
+		<cfset var hql = "SELECT new map(st.subscriptionTermName as name, st.subscriptionTermID as value)
+			FROM
+				SlatwallSubscriptionTerm st
+			WHERE
+				st.subscriptionTermID NOT IN (SELECT skust.subscriptionTermID FROM SlatwallSku sku INNER JOIN sku.subscriptionTerm skust INNER JOIN sku.product skup WHERE skup.productID = :productID)" />
+		
+		<cfreturn ormExecuteQuery(hql, {productID=arguments.productID}) />
+	</cffunction>
 
 </cfcomponent>

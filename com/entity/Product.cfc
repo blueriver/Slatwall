@@ -96,6 +96,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowBackorderFlag" type="boolean" persistent="false";
 	property name="unusedProductOptions" type="array" persistent="false";
 	property name="unusedProductOptionGroups" type="array" persistent="false";
+	property name="unusedProductSubscriptionTerms" type="array" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
@@ -498,54 +499,34 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return setting("skuAllowBackorderFlag");
 	}
 	
-	public numeric function getPrice() {
-		if(!structKeyExists(variables, "price")) {
-			variables.price = 0;
-			if( structKeyExists(variables,"defaultSku") ) {
-				variables.price = getDefaultSku().getPrice();
-			}
+	public any function getPrice() {
+		if( structKeyExists(variables,"defaultSku") ) {
+			return variables.price;
 		}
-		return variables.price;
 	}
 	
-	public numeric function getListPrice() {
-		if(!structKeyExists(variables, "listPrice")) {
-			variables.listPrice = 0;
-			if( structKeyExists(variables,"defaultSku") ) {
-				variables.listPrice = getDefaultSku().getListPrice();
-			}	
+	public any function getListPrice() {
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getListPrice();
 		}
-		return variables.listPrice;
 	}
 	
-	public numeric function getLivePrice() {
-		if(!structKeyExists(variables, "livePrice")) {
-			variables.livePrice = 0;
-			if( structKeyExists(variables,"defaultSku") ) {
-				variables.livePrice = getDefaultSku().getLivePrice();
-			}
+	public any function getLivePrice() {
+		if( structKeyExists(variables,"defaultSku") ) {
+			return variables.livePrice;
 		}
-		return variables.livePrice;
 	}
 	
-	public numeric function getCurrentAccountPrice() {
-		if(!structKeyExists(variables, "currentAccountPrice")) {
-			variables.currentAccountPrice = 0;
-			if( structKeyExists(variables,"defaultSku") ) {
-				variables.currentAccountPrice = getDefaultSku().getCurrentAccountPrice();
-			}
+	public any function getCurrentAccountPrice() {
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getCurrentAccountPrice();
 		}
-		return variables.currentAccountPrice;
 	}
 	
 	public numeric function getSalePrice() {
-		if(!structKeyExists(variables, "salePrice")) {
-			variables.salePrice = 0;
-			if( structKeyExists(variables,"defaultSku") ) {
-				variables.salePrice = getDefaultSku().getSalePrice();
-			}
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getSalePrice();
 		}
-		return variables.salePrice;
 	}
 	
 	
@@ -575,16 +556,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public array function getUnusedProductOptions() {
 		if( !structKeyExists(variables, "unusedProductOptions") ) {
-			variables.unusedProductOptions = getService('OptionService').getUnusedProductOptions( getProductID() );
+			variables.unusedProductOptions = getService('optionService').getUnusedProductOptions( getProductID() );
 		}
 		return variables.unusedProductOptions;
 	}
 	
 	public array function getUnusedProductOptionGroups() {
 		if( !structKeyExists(variables, "unusedProductOptionGroups") ) {
-			variables.unusedProductOptionGroups = getService('OptionService').getUnusedProductOptionGroups( getProductID() );
+			variables.unusedProductOptionGroups = getService('optionService').getUnusedProductOptionGroups( getProductID() );
 		}
 		return variables.unusedProductOptionGroups;
+	}
+	
+	public array function getUnusedProductSubscriptionTerms() {
+		if( !structKeyExists(variables, "unusedProductSubscriptionTerms") ) {
+			variables.unusedProductSubscriptionTerms = getService('subscriptionService').getUnusedProductSubscriptionTerms( getProductID() );
+		}
+		return variables.unusedProductSubscriptionTerms;
 	}
 	
 

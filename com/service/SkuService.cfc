@@ -75,13 +75,22 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 								
 				// Create a sku with 1 option from each group, and then update the indexes properly for the next loop
 				for(var i = 1; i<=totalCombos; i++) {
+					
+					// Setup the New Sku
 					var newSku = this.newSku();
 					newSku.setPrice(arguments.data.price);
-					newSku.setSkuCode(arguments.product.getProductCode() & "-#i#");
+					if(structKeyExists(arguments.data, "listPrice")) {
+						newSku.setListPrice(arguments.data.listPrice);	
+					}
+					newSku.setSkuCode(arguments.product.getProductCode() & "-#arrayLen(arguments.product.getSkus()) + 1#");
+					
+					// Add the Sku to the product, and if the product doesn't have a default, then also set as default
 					arguments.product.addSku(newSku);
-					if(i==1) {
+					if(isNull(arguments.product.getDefaultSku())) {
 						arguments.product.setDefaultSku(newSku);
 					}
+					
+					// Add each of the options
 					for(var key in optionGroups) {
 						newSku.addOption( optionGroups[key][ currentIndexesByKey[key] ]);	
 					}
@@ -132,7 +141,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					thisSku.setPrice(arguments.data.price);
 					thisSku.setRenewalPrice(arguments.data.price);
 					thisSku.setSubscriptionTerm( getSubscriptionService().getSubscriptionTerm(listGetAt(arguments.data.subscriptionTerms, i)) );
-					thisSku.setSkuCode(arguments.product.getProductCode() & "-#i#");
+					thisSku.setSkuCode(arguments.product.getProductCode() & "-#arrayLen(arguments.product.getSkus()) + 1#");
 					for(var b=1; b <= listLen(arguments.data.subscriptionBenefits); b++) {
 						thisSku.addSubscriptionBenefit( getSubscriptionService().getSubscriptionBenefit( listGetAt(arguments.data.subscriptionBenefits, b) ) );
 					}

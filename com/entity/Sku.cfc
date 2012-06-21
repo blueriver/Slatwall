@@ -143,21 +143,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return reReplaceNoCase(getProduct().getProductCode(), "[^a-z0-9\-\_]","","all") & optionString & ".#setting('globalImageExtension')#";
 	}
 	
-	//@hint this method generated sku code based on assigned options
-	public any function generateSkuCode () {
-		var newSkuCode = getProduct().getProductCode();
-		if(arrayLen(getOptions())) {
-			for(var option in getOptions() ) {
-				newSkuCode = listAppend(newSkuCode,option.getOptionCode(),"-");
-			}
-		} else {
-			// if no options then generate code based on count
-			newSkuCode = newSkuCode & "-" & arrayLen(getProduct().getSkus());
-		}
-		return newSkuCode;
-	}
-    
-    public string function getOptionsDisplay(delimiter=" ") {
+	public string function getOptionsDisplay(delimiter=" ") {
     	var dspOptions = "";
     	for(var i=1;i<=arrayLen(getOptions());i++) {
     		dspOptions = listAppend(dspOptions, getOptions()[i].getOptionName(), arguments.delimiter);
@@ -489,16 +475,5 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// =================== START: ORM Event Hooks  =========================
 	
-	public void function preInsert() {
-    	// Set sku code and Image name if they are null or blank
-    	if(isNull(getSkuCode()) || getSkuCode() == "") {
-    		setSkuCode(generateSkuCode());
-    	}
-    	if(isNull(getImageFile()) || getImageFile() == "") {
-    		setImageFile(generateImageFileName());
-    	}
-		super.preInsert();
-    }
-    
 	// ===================  END:  ORM Event Hooks  =========================
 }

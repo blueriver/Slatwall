@@ -49,8 +49,8 @@ Notes:
 			<cf_SlatwallPropertyList divclass="span6">
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="userDefinedPriceFlag" edit="#rc.edit#">
-				
 				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="price" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="listPrice" edit="#rc.edit#">
 				<cfif rc.product.getBaseProductType() EQ "subscription">
 					<cf_SlatwallPropertyDisplay object="#rc.sku#" property="renewalPrice" edit="#rc.edit#">
 				</cfif>

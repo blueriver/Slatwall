@@ -30,10 +30,6 @@
 		<property name="productType">
 			<rule type="required" contexts="save" />
 		</property>
-		<property name="price">
-			<rule type="required" contexts="save" />
-			<rule type="numeric" contexts="save" />
-		</property>
 		<property name="unusedProductOptions">
 			<rule type="collectionSize" contexts="addOption">
 				<param name="min" value="1" />
@@ -41,6 +37,11 @@
 		</property>
 		<property name="unusedProductOptionGroups">
 			<rule type="collectionSize" contexts="addOptionGroup">
+				<param name="min" value="1" />
+			</rule>
+		</property>
+		<property name="unusedProductSubscriptionTerms">
+			<rule type="collectionSize" contexts="addSubscriptionTerm">
 				<param name="min" value="1" />
 			</rule>
 		</property>

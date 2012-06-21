@@ -52,25 +52,30 @@ Notes:
 				
 			<cfcase value="updateSkus">
 				<cf_SlatwallProcessOptionBar>
-					<cf_SlatwallProcessOption data="skuPrice" fieldType="text" fieldClass="span2 number" value="" />
-				</cf_SlatwallProcessOptionBar>
-			</cfcase>
-			
-			<cfcase value="addSku">
-				<cf_SlatwallProcessOptionBar>
-					
+					<cf_SlatwallProcessOption data="updatePrice" fieldType="yesno" value="0" />
+					<cf_SlatwallProcessOption data="price" fieldType="text" fieldClass="span2 number" value="" />
+					<cf_SlatwallProcessOption data="updateListPrice" fieldType="yesno" value="0" />
+					<cf_SlatwallProcessOption data="listPrice" fieldType="text" fieldClass="span2 number" value="" />
 				</cf_SlatwallProcessOptionBar>
 			</cfcase>
 			 
 			<cfcase value="addOptionGroup">
 				<cf_SlatwallProcessOptionBar>
-					<cf_SlatwallProcessOption data="optionGroup" fieldType="select" valueOptions="#rc.$.slatwall.getService('OptionService').getUnusedProductOptionGroups(rc.productID)#" fieldClass="span2"/>
+					<cf_SlatwallProcessOption data="optionGroup" fieldType="select" valueOptions="#rc.processProductSmartList.getRecords()[1].getUnusedProductOptionGroups()#" fieldClass="span2"/>
 				</cf_SlatwallProcessOptionBar>
 			</cfcase>
 			 
 			<cfcase value="addOption">
 				<cf_SlatwallProcessOptionBar>
-					<cf_SlatwallProcessOption data="option" fieldType="select" valueOptions="#rc.$.slatwall.getService('OptionService').getUnusedProductOptions(rc.productID)#" fieldClass="span2" value="" />
+					<cf_SlatwallProcessOption data="option" fieldType="select" valueOptions="#rc.processProductSmartList.getRecords()[1].getUnusedProductOptions()#" fieldClass="span2" value="" />
+				</cf_SlatwallProcessOptionBar>
+			</cfcase>
+			
+			<cfcase value="addSubscriptionTerm">
+				<cf_SlatwallProcessOptionBar>
+					<cf_SlatwallProcessOption data="subscriptionTermID" fieldType="select" valueOptions="#rc.processProductSmartList.getRecords()[1].getUnusedProductSubscriptionTerms()#" fieldClass="span2" value="" />
+					<cf_SlatwallProcessOption data="price" fieldType="text" fieldClass="span2 number" value="" />
+					<cf_SlatwallProcessOption data="listPrice" fieldType="text" fieldClass="span2 number" value="" />
 				</cf_SlatwallProcessOptionBar>
 			</cfcase>
 			 
