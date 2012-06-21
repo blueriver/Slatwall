@@ -219,13 +219,16 @@ function setupEventHandlers() {
 	
 	// Modal Loading
 	jQuery('body').on('click', '.modalload', function(e){
+		
 		jQuery('#adminModal').html('');
 		var modalLink = jQuery(this).attr( 'href' );
+		
 		if( modalLink.indexOf("?") != -1) {
 			modalLink = modalLink + '&modal=1&tabIndex=' + slatwall.tabIndex;
 		} else {
 			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
 		}
+		
 		jQuery('#adminModal').load( modalLink, function(){
 			initUIElements('#adminModal');
 			jQuery('#adminModal').css({
