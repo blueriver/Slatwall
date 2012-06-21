@@ -39,6 +39,9 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
 	public boolean function hasAccess(required any cmsContentID) {
+		// set request scope variable to specify if the access was granted because of subscription or purchase
+		getSlatwallScope().setValue("purchasedAccess","false");
+		getSlatwallScope().setValue("subscriptionAccess","false");
 		// make sure there is restricted content in the system before doing any check
 		if(!getService("contentService").restrictedContentExists()) {
 			return true;
@@ -81,6 +84,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=restrictedContent.getContentID());
 			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredCmsContentID == "") {
 				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
+				getSlatwallScope().setValue("purchasedAccess","true");
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
 				purchasedAccess = true;
@@ -94,6 +98,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// check if the content requires subcription in addition to purchase
 			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredCmsContentID == "") {
 				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
+				getSlatwallScope().setValue("purchasedAccess","true");
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
 				purchasedAccess = true;
@@ -107,6 +112,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					&& subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(restrictedContent)
 					&& !subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasExcludedContent(restrictedContent)) {
 					logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
+					getSlatwallScope().setValue("subscriptionAccess","true");
 					return true;
 				}
 			}
@@ -133,6 +139,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							for(var category in categories) {
 								if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
 									logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
+									getSlatwallScope().setValue("subscriptionAccess","true");
 									return true;
 								}
 							}
