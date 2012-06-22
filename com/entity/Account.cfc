@@ -323,8 +323,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(arguments.permissionGroup.isNew() or !hasPermissionGroup(arguments.permissionGroup)) {
 			arrayAppend(variables.permissionGroups, arguments.permissionGroup);
 		}
-		if(isNew() or !arguments.permissionGroup.hasAccounts( this )) {
-			arrayAppend(arguments.permissionGroup.getAccount(), this);
+		if(isNew() or !arguments.permissionGroup.hasAccount( this )) {
+			arrayAppend(arguments.permissionGroup.getAccounts(), this);
 		}
 	}
 	public void function removePermissionGroup(required any permissionGroup) {
@@ -332,9 +332,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.permissionGroups, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.permissionGroup.getAccount(), this);
+		var thatIndex = arrayFind(arguments.permissionGroup.getAccounts(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.permissionGroup.getAccount(), thatIndex);
+			arrayDeleteAt(arguments.permissionGroup.getAccounts(), thatIndex);
 		}
 	}
 	
