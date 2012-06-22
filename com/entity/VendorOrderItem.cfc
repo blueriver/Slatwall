@@ -64,7 +64,11 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public numeric function getExtendedCost() {
-		return getCost() * getQuantity();
+		if(!isNull(getCost())) {
+			return getCost() * getQuantity();	
+		}
+		return 0;
+		
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

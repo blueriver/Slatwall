@@ -102,18 +102,44 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		switch(arguments.processcontext){
 			case 'addOrderItems':
 				
-				if(int(arguments.data.quantity)){
+				for(var i=1; i<=arrayLen(arguments.data.records); i++) {
 					
-					var vendorOrderItem = new('VendorOrderItem');
+					var thisRecord = arguments.data.records[i];
 					
-					vendorOrderItem.populate(arguments.data);
+					if(val(thisRecord.quantity)) {
+						
+						var foundItem = false;
+						var sku = getSkuService().getSku( thisRecord.skuid );
+						var location = getLocationService().getLocation( arguments.data.locationID );
+						var stock = getStockService().getStockBySkuAndLocation( sku, location );
+						
+						// Look for the orderItem in the vendorOrder
+						for(var oi=1; oi<=arrayLen(arguments.vendorOrder.getVendorOrderItems()); oi++) {
+							
+							// If the location, sku, cost & estimated arrival are already the same as an item on the order then we can merge them.  Otherwise seperate
+							if(arguments.vendorOrder.getVendorOrderItems()[oi].getStock().getLocation().getLocationID() == arguments.data.locationID
+								&&
+								arguments.vendorOrder.getVendorOrderItems()[oi].getStock().getSku().getSkuID() == thisRecord.skuid
+								&&
+								coalesce(arguments.vendorOrder.getVendorOrderItems()[oi].getCost(),"") == thisRecord.cost
+								&&
+								coalesce(arguments.vendorOrder.getVendorOrderItems()[oi].getEstimatedReceivalDateTime(),"") == thisRecord.estimatedReceivalDateTime
+								) {
+									
+								foundItem = true;
+								arguments.vendorOrder.getVendorOrderItems()[oi].setQuantity( arguments.vendorOrder.getVendorOrderItems()[oi].getQuantity() + int(thisRecord.quantity) );
+							}
+						}
+						
+						if(!foundItem) {
+							var vendorOrderItem = new('VendorOrderItem');
 					
-					var sku = getSkuService().getSku( arguments.data.skuid );
-					var location = getLocationService().getLocation( arguments.data.locationID );
-					var stock = getStockService().getStockBySkuAndLocation( sku, location );
-					
-					vendorOrderItem.setStock( stock );
-					vendorOrderItem.setVendorOrder(arguments.vendorOrder);
+							vendorOrderItem.populate( thisRecord );
+							vendorOrderItem.setStock( stock );
+							vendorOrderItem.setVendorOrder( arguments.vendorOrder );	
+						}
+						
+					}
 				}
 				break;
 			

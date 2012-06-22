@@ -48,8 +48,6 @@ Notes:
 		
 		<cf_SlatwallActionBar type="process" />
 		
-		<input type="hidden" name="vendorOrderID" value="#rc.processVendorOrderSmartList.getRecords()[1].getVendorOrderID()#" />
-		
 		<cfswitch expression="#rc.processcontext#">
 			
 			<!--- Add Order Items --->
@@ -59,19 +57,31 @@ Notes:
 					<cf_SlatwallProcessOption data="locationID" fieldtype="select" valueOptions="#$.slatwall.getService('LocationService').getLocationOptions()#" />
 				</cf_SlatwallProcessOptionBar>
 
+				<cf_SlatwallProcessListing processSmartList="#rc.processVendorOrderSmartList#" processRecordsProperty="vendorSkus">
+					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
+					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
+					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
+					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
+					<cf_SlatwallProcessColumn data="estimatedReceivalDateTime" fieldType="datetime" />
+					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
+					<cf_SlatwallProcessColumn data="cost" fieldType="text" fieldClass="span1 number" />
+				</cf_SlatwallProcessListing>
+
+				<!---
 				<cf_SlatwallProcessListing processSmartList="#local.vendorOrder.getVendor().getVendorSkusSmartList()#">
 					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
 					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
 					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
 					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
-					<!---<cf_SlatwallProcessColumn data="estimatedReceivalDateTime" fieldType="datetime" />--->
+					<cf_SlatwallProcessColumn data="estimatedReceivalDateTime" fieldType="datetime" />
 					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
 					<cf_SlatwallProcessColumn data="cost" fieldType="text" fieldClass="span1 number" />
 					<cf_SlatwallProcessColumn data="vendorOrderID" fieldType="hidden" value="#local.vendorOrder.getVendorOrderID()#" />
 				</cf_SlatwallProcessListing>
+				--->
 				
 			</cfcase>
-			<!---
+			
 			<!--- Receive Stock --->
 			<cfcase value="receiveStock">
 				
@@ -91,7 +101,6 @@ Notes:
 					</cf_SlatwallProcessListing>
 			</cfcase>
 			
-			--->
 		</cfswitch>
 		
 	</cf_SlatwallProcessForm>

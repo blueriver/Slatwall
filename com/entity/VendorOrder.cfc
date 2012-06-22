@@ -66,6 +66,16 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	//property name="fulfillmentAmountTotal" persistent="false" formatType="currency"; 
 	property name="orderAmountTotal" persistent="false" formatType="currency"; 
 	property name="fulfillmentTotal" persistent="false" formatType="currency";
+	property name="vendorSkus" persistent="false";
+	property name="vendorSkusSmartList" persistent="false";
+	
+	public any function getVendorSkus() {
+		return getVendorSkusSmartList().getRecords();
+	}
+	
+	public any function getVendorSkusSmartList() {
+		return getVendor().getVendorSkusSmartList();
+	}
 	
 	public numeric function getSubtotal() {
 		var subtotal = 0;
