@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfparam name="rc.returnAction" type="string" default="admin:vendor.editvendororder&vendorOrderID=#rc.vendorOrderID#" />
+<cfparam name="rc.returnAction" type="string" default="admin:vendor.detailvendororder&vendorOrderID=#rc.vendorOrderID#" />
 <cfparam name="rc.processVendorOrderSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 
@@ -47,6 +47,8 @@ Notes:
 	<cf_SlatwallProcessForm>
 		
 		<cf_SlatwallActionBar type="process" />
+		
+		<input type="hidden" name="vendorOrderID" value="#rc.processVendorOrderSmartList.getRecords()[1].getVendorOrderID()#" />
 		
 		<cfswitch expression="#rc.processcontext#">
 			
@@ -69,14 +71,14 @@ Notes:
 				</cf_SlatwallProcessListing>
 				
 			</cfcase>
-			
+			<!---
 			<!--- Receive Stock --->
 			<cfcase value="receiveStock">
 				
 				<cfset vendorOrder = rc.$.slatwall.getService('VendorOrderService').getVendorOrder(rc.vendorOrderID) />
 				<cfset locations = rc.$.slatwall.getService('LocationService').getLocationOptions() /> 
 				
-				<cfif arrayLen(vendorOrder.getVendorOrderItemsSmartList().getRecords())>
+				
 					<cf_SlatwallFieldDisplay title="Box Count" fieldtype="text" fieldname="processOptions.boxcount" edit="true">
 					<cf_SlatwallFieldDisplay title="Packing Slip Number" fieldtype="text" fieldname="processOptions.packingslipnumber" edit="true">
 					<cf_SlatwallFieldDisplay title="Location" fieldname="processOptions.locationID" fieldType="select" valueOptions="#locations#" edit="true">
@@ -87,13 +89,10 @@ Notes:
 						<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span2 number" value="" />
 						<cf_SlatwallProcessColumn data="vendorOrderID" fieldType="hidden" value="#rc.vendorOrderID#" />
 					</cf_SlatwallProcessListing>
-				<cfelse>
-					<p>
-						#rc.$.Slatwall.rbKey("admin.vendor.stockreceivers.missingProducts")#
-					</p>	
-				</cfif>
 			</cfcase>
 			
-		</cfswitch>	
+			--->
+		</cfswitch>
+		
 	</cf_SlatwallProcessForm>
 </cfoutput>

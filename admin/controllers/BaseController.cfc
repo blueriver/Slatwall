@@ -332,6 +332,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		param name="rc.additionalData" default="#{}#";
 		
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
 		getFW().setLayout( "admin:process.default" );

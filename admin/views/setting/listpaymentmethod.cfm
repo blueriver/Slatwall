@@ -40,7 +40,10 @@ Notes:
 
 <cf_SlatwallActionBar type="listing" object="#rc.paymentMethodSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.paymentMethodSmartList#" recordEditAction="admin:setting.editpaymentmethod" sortProperty="sortOrder">
+<cf_SlatwallListingDisplay smartList="#rc.paymentMethodSmartList#"
+						   recordDetailAction="admin:setting.detailpaymentmethod"
+						   recordEditAction="admin:setting.editpaymentmethod"
+						   sortProperty="sortOrder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethodName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="paymentMethodType" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
