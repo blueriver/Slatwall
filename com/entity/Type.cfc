@@ -40,6 +40,7 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 	
 	// Persistent Properties
 	property name="typeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="typeIDPath" ormtype="string";
 	property name="type" ormtype="string";
 	property name="systemCode" ormtype="string";
 	
@@ -77,6 +78,17 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public string function getTypeIDPath() {
+		if(isNull(variables.typeIDPath)) {
+			variables.typeIDPath = buildIDPathList( "parentType" );
+		}
+		return variables.typeIDPath;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+		
 	// ================== START: Overridden Methods ========================
 
 	public string function getSimpleRepresentationPropertyName() {
@@ -86,6 +98,16 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		setTypeIDPath( buildIDPathList( "parentType" ) );
+		super.preInsert();
+	}
+	
+	public void function preUpdate(struct oldData){
+		setTypeIDPath( buildIDPathList( "parentType" ) );;
+		super.preUpdate(argumentcollection=arguments);
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }
