@@ -136,6 +136,8 @@ Notes:
 			<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, "#thisTag.exampleEntity.getPrimaryIDPropertyName()#Path") />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-parentidproperty="#attributes.parentPropertyName#.#thistag.exampleEntity.getPrimaryIDPropertyName()#"', " ") />
+			
+			<cfset attributes.smartList.setPageRecordsShow(1000000) />
 		</cfif>
 		
 		<!--- Setup Sortability --->
