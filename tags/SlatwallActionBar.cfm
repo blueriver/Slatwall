@@ -37,30 +37,31 @@ Notes:
 
 --->
 
-<cfif not structKeyExists(request.context, "modal") or not request.context.modal>
-	<cfif thisTag.executionMode is "start">
+<cfif thisTag.executionMode is "start">
+	
+	<cfparam name="attributes.type" type="string" />
+	<cfparam name="attributes.object" type="any" default="" />
+	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
+	<cfparam name="attributes.pageTitle" type="string" default="#request.context.pageTitle#" />
+	<cfparam name="attributes.pageSubTitle" type="string" default="" />
+	<cfparam name="attributes.createAction" type="string" default="#request.context.createAction#" />
+	<cfparam name="attributes.createModal" type="boolean" default="false" />
+	<cfparam name="attributes.createReturnAction" type="string" default="#request.context.slatAction#" />
+	<cfparam name="attributes.backAction" type="string" default="#request.context.listAction#" />
+	<cfparam name="attributes.backQueryString" type="string" default="" />
+	<cfparam name="attributes.cancelAction" type="string" default="#request.context.cancelAction#" />
+	<cfparam name="attributes.cancelQueryString" type="string" default="" />
+	<cfparam name="attributes.showedit" type="boolean" default="true" />
+	<cfparam name="attributes.showdelete" type="boolean" default="true" />
+	<cfsilent>
+		<cfif attributes.type eq "detail" and not attributes.object.isNew() and attributes.pageSubTitle eq "">
+			<cfset attributes.pageSubTitle = attributes.object.getSimpleRepresentation() />
+		</cfif>
+	</cfsilent>
+	
+<cfelse>
+	<cfif not structKeyExists(request.context, "modal") or not request.context.modal>
 		
-		<cfparam name="attributes.type" type="string" />
-		<cfparam name="attributes.object" type="any" default="" />
-		<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
-		<cfparam name="attributes.pageTitle" type="string" default="#request.context.pageTitle#" />
-		<cfparam name="attributes.pageSubTitle" type="string" default="" />
-		<cfparam name="attributes.createAction" type="string" default="#request.context.createAction#" />
-		<cfparam name="attributes.createModal" type="boolean" default="false" />
-		<cfparam name="attributes.createReturnAction" type="string" default="#request.context.slatAction#" />
-		<cfparam name="attributes.backAction" type="string" default="#request.context.listAction#" />
-		<cfparam name="attributes.backQueryString" type="string" default="" />
-		<cfparam name="attributes.cancelAction" type="string" default="#request.context.cancelAction#" />
-		<cfparam name="attributes.cancelQueryString" type="string" default="" />
-		<cfparam name="attributes.showedit" type="boolean" default="true" />
-		<cfparam name="attributes.showdelete" type="boolean" default="true" />
-		<cfsilent>
-			<cfif attributes.type eq "detail" and not attributes.object.isNew() and attributes.pageSubTitle eq "">
-				<cfset attributes.pageSubTitle = attributes.object.getSimpleRepresentation() />
-			</cfif>
-		</cfsilent>
-		
-	<cfelse>
 		<cfoutput>
 			<div class="actionnav well well-small">
 				<div class="row-fluid">
@@ -115,7 +116,8 @@ Notes:
 									<div class="btn-group">
 										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #request.slatwallScope.rbKey('define.actions')# <span class="caret"></span></button>
 										<ul class="dropdown-menu pull-right">
-											#thistag.generatedcontent#	
+											TESTING
+										#thistag.generatedcontent#	
 										</ul>
 									</div>
 								</cfif>
@@ -143,5 +145,8 @@ Notes:
 		</cfoutput>
 		
 		<cf_SlatwallMessageDisplay />
+	<cfelse>
+		<cfset thistag.generatedcontent = "" />
 	</cfif>
+	
 </cfif>

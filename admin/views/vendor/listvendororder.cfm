@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.vendorOrderSmartList" type="any" />
 
-<cf_SlatwallActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:order.editvendororder" />
+<cf_SlatwallActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:vendor.editvendororder" />
 
 <cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#"
 						   recordDetailAction="admin:vendor.detailvendororder"
