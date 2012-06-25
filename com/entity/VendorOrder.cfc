@@ -69,7 +69,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="vendorSkus" persistent="false";
 	property name="vendorSkusSmartList" persistent="false";
 	
-	public any function getVendorSkus() {
+	public array function getVendorSkus() {
 		return getVendorSkusSmartList().getRecords();
 	}
 	
