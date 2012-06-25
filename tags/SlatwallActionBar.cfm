@@ -116,7 +116,6 @@ Notes:
 									<div class="btn-group">
 										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #request.slatwallScope.rbKey('define.actions')# <span class="caret"></span></button>
 										<ul class="dropdown-menu pull-right">
-											TESTING
 										#thistag.generatedcontent#	
 										</ul>
 									</div>
