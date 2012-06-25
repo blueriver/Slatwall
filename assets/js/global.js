@@ -378,10 +378,7 @@ function setupEventHandlers() {
 			
 			jQuery(this).children('i').removeClass('icon-plus').addClass('icon-minus');
 			
-			var previouslyLoadedRows = jQuery(this).closest('tbody').find('tr[data-parentid="' + jQuery(this).closest('tr').attr('id') + '"]');
-			if(previouslyLoadedRows.length) {
-				jQuery(previouslyLoadedRows).show();
-			} else {
+			if( !showLoadedRows( jQuery(this).closest('table').attr('ID'), jQuery(this).closest('tr').attr('id') ) ) {
 				var data = {};
 				data[ 'F:' + jQuery(this).closest('table').data('parentidproperty') ] = jQuery(this).closest('tr').attr('id');
 				
@@ -393,11 +390,39 @@ function setupEventHandlers() {
 			
 			jQuery(this).children('i').removeClass('icon-minus').addClass('icon-plus');
 			
-			jQuery(this).closest('tbody').find('tr[data-parentid="' + jQuery(this).closest('tr').attr('id') + '"]').hide();
+			//jQuery(this).closest('tbody').find('tr[data-parentid="' + jQuery(this).closest('tr').attr('id') + '"]').hide();
+			hideLoadedRows( jQuery(this).closest('table').attr('ID'), jQuery(this).closest('tr').attr('id') );
 			
 		}
 		
 	});
+}
+
+function hideLoadedRows( tableID, parentID ) {
+	jQuery.each( jQuery( '#' + tableID).find('tr[data-parentid="' + parentID + '"]'), function(i, v) {
+		jQuery(v).hide();
+		
+		hideLoadedRows( tableID, jQuery(v).attr('ID') );
+	});
+}
+
+function showLoadedRows( tableID, parentID ) {
+	var found = false;
+	
+	jQuery.each( jQuery( '#' + tableID).find('tr[data-parentid="' + parentID + '"]'), function(i, v) {
+		
+		found = true;
+		
+		jQuery(v).show();
+		
+		// If this row has a minus indicating that it is supposed to be open, then recusivly re-call this method
+		if( jQuery(v).find('.icon-minus').length ) {
+			showLoadedRows( tableID, jQuery(v).attr('ID') );
+		}
+		
+	});
+	
+	return found;
 }
 
 function listingDisplayUpdate( tableID, data, afterRowID ) {
