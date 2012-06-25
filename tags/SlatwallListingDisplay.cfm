@@ -379,7 +379,7 @@ Notes:
 			<cfif attributes.smartList.getTotalPages() gt 1>
 				<div class="pagination" data-tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#">
 					<ul>
-						<li><a href="##" class="paging-show-toggle">#request.slatwallScope.rbKey('define.show')# <span class="details">(#attributes.smartList.getPageRecordsStart()# - #attributes.smartList.getPageRecordsEnd()# #lcase(request.slatwallScope.rbKey('define.of'))# #attributes.smartList.getRecordsCount()#)</a></li>
+						<li><a href="##" class="paging-show-toggle">#request.slatwallScope.rbKey('define.show')# <span class="details">(#attributes.smartList.getPageRecordsStart()# - #attributes.smartList.getPageRecordsEnd()# #lcase(request.slatwallScope.rbKey('define.of'))# #attributes.smartList.getRecordsCount()#)</span></a></li>
 						<li><a href="##" class="show-option" data-show="10">10</a></li>
 						<li><a href="##" class="show-option" data-show="25">25</a></li>
 						<li><a href="##" class="show-option" data-show="50">50</a></li>
