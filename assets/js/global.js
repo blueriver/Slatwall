@@ -563,6 +563,9 @@ function buildPagingNav(currentPage, totalPages, pageRecordStart, pageRecordEnd,
 	
 	currentPage = parseInt(currentPage);
 	totalPages = parseInt(totalPages);
+	pageRecordStart = parseInt(pageRecordStart);
+	pageRecordEnd = parseInt(pageRecordEnd);
+	recordsCount = parseInt(recordsCount);
 	
 	if(totalPages > 1){
 		nav = '<ul>';
