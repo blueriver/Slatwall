@@ -40,7 +40,7 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	
 	// Persistent Properties
 	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="qualifierType" ormtype="string" formatType="custom";
+	property name="qualifierType" ormtype="string" formatType="rbKey";
 	
 	property name="minimumOrderQuantity" ormtype="integer" formatType="custom";
 	property name="maximumOrderQuantity" ormtype="integer" formatType="custom";
@@ -52,6 +52,7 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="maximumItemPrice" ormtype="big_decimal" formatType="custom";
 	property name="minimumFulfillmentWeight" ormtype="big_decimal" formatType="custom";
 	property name="maximumFulfillmentWeight" ormtype="big_decimal" formatType="custom";
+	property name="rewardMatchingType" ormtype="string" formatType="rbKey" formFieldType="select";
 	
 	// Related Entities (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
@@ -85,9 +86,19 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 
 	// Non-persistent entities
-
-
+	property name="qualifierApplicationTypeOptions" type="array" persistent="false";
+	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public array function getRewardMatchingTypeOptions() {
+		return [
+			{name=rbKey('promotionQualifier.rewardMatchingType.any'), value="any"},
+			{name=rbKey('promotionQualifier.rewardMatchingType.sku'), value="sku"},
+			{name=rbKey('promotionQualifier.rewardMatchingType.product'), value="product"},
+			{name=rbKey('promotionQualifier.rewardMatchingType.productType'), value="productType"},
+			{name=rbKey('promotionQualifier.rewardMatchingType.brand'), value="brand"}
+		];
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
@@ -119,10 +130,6 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	
 	// =============== START: Custom Formatting Methods ====================
 	
-	public string function getQualifierTypeFormatted() {
-		return rbKey( "entity.promotionQualifier.qualifierType." & getQualifierType() );
-	}
-
 	public any function getMinimumOrderQuantityFormatted() {
 		if(isNull(getMinimumOrderQuantity()) || !isNumeric(getMinimumOrderQuantity()) || getMinimumOrderQuantity() == 0) {
 			return 0;

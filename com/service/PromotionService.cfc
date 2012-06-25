@@ -236,7 +236,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 											
 												// Now that we know the fulfillment is ok, lets check and cache then number of times this orderItem qualifies based on the promotionPeriod
 												if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems, orderItem.getOrderItemID())) {
-													promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ] = getPromotionPeriodOrderItemQualificationCount(promotionPeriod=reward.getPromotionPeriod(), orderItem=orderItem);
+													promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ] = getPromotionPeriodOrderItemQualificationCount(promotionPeriod=reward.getPromotionPeriod(), orderItem=orderItem, order=arguments.order);
 												}
 												
 												// If the qualification count for this order item is > 0 then we can try to apply the reward
@@ -641,60 +641,99 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	
-	private numeric function getPromotionPeriodOrderItemQualificationCount(required any promotionPeriod, required any orderItem) {
-		var qualificationCount = orderItem.getQuantity();
+	private numeric function getPromotionPeriodOrderItemQualificationCount(required any promotionPeriod, required any orderItem, required any order) {
+		// Setup the allQualifiersCount to the totalSaleQuantity, that way if there are no item qualifiers then every item quantity qualifies
+		var allQualifiersCount = arguments.order.getTotalSaleQuantity();
 		
 		// Loop over Qualifiers looking for fulfillment qualifiers
 		for(var q=1; q<=arrayLen(arguments.promotionPeriod.getPromotionQualifiers()); q++) {
 			
 			var qualifier = arguments.promotionPeriod.getPromotionQualifiers()[q];
+			var qualifierCount = 0;
 			
-			// If the orderItem has a qualifier of the same type
-			if(qualifier.getQualifierType() == arguments.orderItem.getSku().getProduct().getBaseProductType()) {
+			// Check to make sure that this is an orderItem type of qualifier
+			if(listFindNoCase("merchandise,subscription,contentAccess", qualifier.getQualifierType())) {
 				
-				// First we run an "if" to see if this doesn't qualify to set the count to 0
-				if( ( arrayLen( qualifier.getProductTypes() ) && !qualifier.hasProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
-					||
-					( qualifier.hasExcludedProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
-					||
-					( arrayLen( qualifier.getProducts() ) && !qualifier.hasProduct( arguments.orderItem.getSku().getProduct() ) )
-					||
-					( qualifier.hasExcludedProduct( arguments.orderItem.getSku().getProduct() ) )
-					||
-					( arrayLen( qualifier.getSkus() ) && !qualifier.hasSku( arguments.orderItem.getSku() ) )
-					||
-					( qualifier.hasExcludedSku( arguments.orderItem.getSku() ) )
-					||
-					( arrayLen( qualifier.getBrands() ) && !qualifier.hasBrand( arguments.orderItem.getSku().getProduct().getBrand() ) ) 
-					||
-					( qualifier.hasExcludedBrand( arguments.orderItem.getSku().getProduct().getBrand() ) )
-					||
-					( arrayLen( qualifier.getOptions() ) && !qualifier.hasAnyOption( arguments.orderItem.getSku().getOptions() ) )
-					||
-					( qualifier.hasAnyExcludedOption( arguments.orderItem.getSku().getOptions() ) )
-					||
-					( !isNull(qualifier.getMinimumItemQuantity()) && qualifier.getMinimumItemQuantity() > arguments.orderItem.getQuantity() )
-					||
-					( !isNull(qualifier.getMaximumItemQuantity()) && qualifier.getMaximumItemQuantity() < arguments.orderItem.getQuantity() )
-					||
-					( !isNull(qualifier.getMinimumItemPrice()) && qualifier.getMinimumItemPrice() > arguments.orderItem.getPrice() )
-					||
-					( !isNull(qualifier.getMaximumItemPrice()) && qualifier.getMaximumItemPrice() < arguments.orderItem.getPrice() )
-					) {
-						
-					qualificationCount = 0;
-				
-				// Otherwise we can see based on the Minimum Item Qty how many times it qualifies		
-				} else if(!isNull(qualifier.getMinimumItemQuantity())) {
+				// Loop over the orderItems and see how many times this item has been qualified
+				for(var o=1; o<=arrayLen(arguments.order.getOrderItems()); o++) {
 					
-					qualificationCount = int(orderItem.getQuantity() / qualifier.getMinimumItemQuantity() );
+					// Setup a local var for this orderItem
+					var thisOrderItem = arguments.order.getOrderItems()[1];
+					var orderItemQualifierCount = 0;
+					
+					// First we run an "if" to see if this doesn't qualify for any reason and if so then set the count to 0
+					if( 
+						// First check the simple value stuff
+						( !isNull(qualifier.getMinimumItemQuantity()) && qualifier.getMinimumItemQuantity() > arguments.orderItem.getQuantity() )
+						||
+						( !isNull(qualifier.getMaximumItemQuantity()) && qualifier.getMaximumItemQuantity() < arguments.orderItem.getQuantity() )
+						||
+						( !isNull(qualifier.getMinimumItemPrice()) && qualifier.getMinimumItemPrice() > arguments.orderItem.getPrice() )
+						||
+						( !isNull(qualifier.getMaximumItemPrice()) && qualifier.getMaximumItemPrice() < arguments.orderItem.getPrice() )
+						||
+						// Check the basic qualification groups for this item like, sku, product, productType, brand option
+						( arrayLen( qualifier.getProductTypes() ) && !qualifier.hasProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
+						||
+						( qualifier.hasExcludedProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
+						||
+						( arrayLen( qualifier.getProducts() ) && !qualifier.hasProduct( arguments.orderItem.getSku().getProduct() ) )
+						||
+						( qualifier.hasExcludedProduct( arguments.orderItem.getSku().getProduct() ) )
+						||
+						( arrayLen( qualifier.getSkus() ) && !qualifier.hasSku( arguments.orderItem.getSku() ) )
+						||
+						( qualifier.hasExcludedSku( arguments.orderItem.getSku() ) )
+						||
+						( arrayLen( qualifier.getBrands() ) && !qualifier.hasBrand( arguments.orderItem.getSku().getProduct().getBrand() ) ) 
+						||
+						( qualifier.hasExcludedBrand( arguments.orderItem.getSku().getProduct().getBrand() ) )
+						||
+						( arrayLen( qualifier.getOptions() ) && !qualifier.hasAnyOption( arguments.orderItem.getSku().getOptions() ) )
+						||
+						( qualifier.hasAnyExcludedOption( arguments.orderItem.getSku().getOptions() ) )
+						||
+						// Then check the match type of based on the current orderitem, and the orderItem we are getting a count for
+						( qualifier.getMatchingType() == "sku" && thisOrderItem.getSku().getSkuID() != arguments.orderItem.getSku().getSkuID() )
+						||
+						( qualifier.getMatchingType() == "product" && thisOrderItem.getSku().getProduct().getProductID() != arguments.orderItem.getSku().getProduct().getProductID() )
+						||
+						( qualifier.getMatchingType() == "productType" && thisOrderItem.getSku().getProduct().getProductType().getProductTypeID() != arguments.orderItem.getSku().getProduct().getProductType().getProductTypeID() )
+						||
+						( qualifier.getMatchingType() == "brand" && isNull(thisOrderItem.getSku().getProduct().getBrand()))
+						||
+						( qualifier.getMatchingType() == "brand" && isNull(arguments.orderItem.getSku().getProduct().getBrand()))
+						||
+						( qualifier.getMatchingType() == "brand" && thisOrderItem.getSku().getProduct().getBrand().getBrandID() != arguments.orderItem.getSku().getBrand().getBrandID() )
+						) {
+							
+						orderItemQualifierCount = 0;
+						
+						
+					// Lastly if there was a minimumItemQuantity then we can make this qualification based on the quantity ordered divided by minimum
+					} else if( !isNull(qualifier.getMinimumItemQuantity()) ) {
+						orderItemQualifierCount = int(orderItem.getQuantity() / qualifier.getMinimumItemQuantity() );	
+					}	
+					
+					qualifierCount += orderItemQualifierCount;
 					
 				}
 				
-			}	
+				// If this particular qualifier has less qualifications than the previous, well use the lower of the two qualifier counts
+				if(qualifierCount lt allQualifiersCount) {
+					allQualifiersCount = qualifierCount;
+				}
+				
+				// If after this qualifier we show that it amounted to 0, then we return 0 because the item doesn't meet all qualifiacitons
+				if(allQualifiersCount <= 0) {
+					return 0;
+				}
+				
+			}
+			
 		}
 		
-		return qualificationCount;
+		return allQualifiersCount;
 	}
 	
 	public boolean function getOrderItemInReward(required any reward, required any orderItem) {

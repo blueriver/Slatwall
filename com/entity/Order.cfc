@@ -101,6 +101,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="total" persistent="false" formatType="currency";
 	property name="totalItems" persistent="false";
 	property name="totalQuantity" persistent="false";
+	property name="totalSaleQuantity" persistent="false";
+	property name="totalReturnQuantity" persistent="false";
 	
 	
 	public string function getStatus() {
