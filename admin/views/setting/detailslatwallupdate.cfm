@@ -70,7 +70,7 @@ Notes:
 					<option value="#local.updateOption.value#" <cfif rc.currentBranch eq local.updateOption.value>selected="selected"</cfif>>#local.updateOption.name#</option>
 				</cfloop>
 			</select>
-			<cf_SlatwallActionCaller action="admin:setting.updateSlatwall" class="btn btn-primary" confirm="true">
+			<cf_SlatwallActionCaller action="admin:setting.updateSlatwall" class="btn btn-primary" type="button" submit="true">
 		</form>
 	</div>
 </cfoutput>

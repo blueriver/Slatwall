@@ -138,7 +138,7 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.availableDevelopVersion = versions.develop;
 		rc.availableMasterVersion = versions.master;
 
-		rc.currentVersion = getFW().getValue('SlatwallVersion');
+		rc.currentVersion = getApplicationValue('version');
 		if(find("-", rc.currentVersion)) {
 			rc.currentBranch = "develop";
 		} else {
