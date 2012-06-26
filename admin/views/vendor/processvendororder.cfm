@@ -67,19 +67,6 @@ Notes:
 					<cf_SlatwallProcessColumn data="cost" fieldType="text" fieldClass="span1 number" />
 				</cf_SlatwallProcessListing>
 
-				<!---
-				<cf_SlatwallProcessListing processSmartList="#local.vendorOrder.getVendor().getVendorSkusSmartList()#">
-					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
-					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
-					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
-					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
-					<cf_SlatwallProcessColumn data="estimatedReceivalDateTime" fieldType="datetime" />
-					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
-					<cf_SlatwallProcessColumn data="cost" fieldType="text" fieldClass="span1 number" />
-					<cf_SlatwallProcessColumn data="vendorOrderID" fieldType="hidden" value="#local.vendorOrder.getVendorOrderID()#" />
-				</cf_SlatwallProcessListing>
-				--->
-				
 			</cfcase>
 			
 			<!--- Receive Stock --->
@@ -88,17 +75,17 @@ Notes:
 				<cfset vendorOrder = rc.$.slatwall.getService('VendorOrderService').getVendorOrder(rc.vendorOrderID) />
 				<cfset locations = rc.$.slatwall.getService('LocationService').getLocationOptions() /> 
 				
+				<cf_SlatwallFieldDisplay title="Box Count" fieldtype="text" fieldname="processOptions.boxcount" edit="true">
+				<cf_SlatwallFieldDisplay title="Packing Slip Number" fieldtype="text" fieldname="processOptions.packingslipnumber" edit="true">
+				<cf_SlatwallFieldDisplay title="Location" fieldname="processOptions.locationID" fieldType="select" valueOptions="#locations#" edit="true">
+			
+				<cf_SlatwallProcessListing processSmartList="#vendorOrder.getVendorOrderItemsSmartList()#">
+					<cf_SlatwallProcessColumn propertyIdentifier="stock.sku.skucode" />
+					<cf_SlatwallProcessColumn propertyIdentifier="quantity"/>
+					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span2 number" value="" />
+					<cf_SlatwallProcessColumn data="vendorOrderID" fieldType="hidden" value="#rc.vendorOrderID#" />
+				</cf_SlatwallProcessListing>
 				
-					<cf_SlatwallFieldDisplay title="Box Count" fieldtype="text" fieldname="processOptions.boxcount" edit="true">
-					<cf_SlatwallFieldDisplay title="Packing Slip Number" fieldtype="text" fieldname="processOptions.packingslipnumber" edit="true">
-					<cf_SlatwallFieldDisplay title="Location" fieldname="processOptions.locationID" fieldType="select" valueOptions="#locations#" edit="true">
-				
-					<cf_SlatwallProcessListing processSmartList="#vendorOrder.getVendorOrderItemsSmartList()#">
-						<cf_SlatwallProcessColumn propertyIdentifier="stock.sku.skucode" />
-						<cf_SlatwallProcessColumn propertyIdentifier="quantity"/>
-						<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span2 number" value="" />
-						<cf_SlatwallProcessColumn data="vendorOrderID" fieldType="hidden" value="#rc.vendorOrderID#" />
-					</cf_SlatwallProcessListing>
 			</cfcase>
 			
 		</cfswitch>

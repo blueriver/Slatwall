@@ -57,8 +57,8 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="displayName";
-	property name="adjustmentSkuOptions";
+	property name="displayName" persistent="false";
+	property name="adjustmentSkuOptions" persistent="false";
 	
 	public any function getAdjustmentSkuOptions() {
 		if(!structKeyExists(variables, "adjustmentSkuOptions")) {

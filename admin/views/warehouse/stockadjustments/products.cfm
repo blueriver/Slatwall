@@ -39,17 +39,30 @@ Notes:
 <cfparam name="rc.stockAdjustment" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.stockAdjustment.getstockAdjustmentItemsSmartList()#"
-	recorddeleteaction="admin:warehouse.deleteStockAdjustmentItem"
-	recorddeletequerystring="returnaction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#"
-	recordeditmodal="true"
-	recordeditaction="admin:warehouse.editStockAdjustmentItem"
-	recordeditquerystring="returnaction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#">
+						   recorddeleteaction="admin:warehouse.deleteStockAdjustmentItem"
+						   recorddeletequerystring="returnaction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#"
+						   recordeditmodal="true"
+						   recordeditaction="admin:warehouse.editStockAdjustmentItem"
+						   recordeditquerystring="returnaction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#">
+						   	   
+	<cfif listFindNoCase("satLocationTransfer,satManualOut", rc.stockAdjustment.getStockAdjustmentType().getSystemCode())>
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fromstock.sku.skucode" />
+		<cf_SlatwallListingColumn propertyIdentifier="fromstock.sku.product.brand.brandName" />
+		<cf_SlatwallListingColumn propertyIdentifier="fromstock.sku.product.productName" />
+		<cf_SlatwallListingColumn propertyIdentifier="fromstock.sku.optionsDisplay" sort="false" />
 		
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fromstock.sku.skucode" />
-	<cf_SlatwallListingColumn propertyIdentifier="fromstock.sku.product.brand.brandName" />
-	<cf_SlatwallListingColumn propertyIdentifier="fromstock.sku.product.productName" />
-	<cf_SlatwallListingColumn propertyIdentifier="fromstock.location.locationName" />
-	<cf_SlatwallListingColumn propertyIdentifier="tostock.location.locationName" />
+		<cf_SlatwallListingColumn propertyIdentifier="fromstock.location.locationName" title="#$.slatwall.rbKey('admin.warehouse.detailstockadjustment.fromlocationname')#" />
+		<cfif rc.stockAdjustment.getStockAdjustmentType().getSystemCode() eq "satLocationTransfer">
+			<cf_SlatwallListingColumn propertyIdentifier="tostock.location.locationName" title="#$.slatwall.rbKey('admin.warehouse.detailstockadjustment.tolocationname')#" />
+		</cfif>
+	<cfelse>
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="tostock.sku.skucode" />
+		<cf_SlatwallListingColumn propertyIdentifier="tostock.sku.product.brand.brandName" />
+		<cf_SlatwallListingColumn propertyIdentifier="tostock.sku.product.productName" />
+		<cf_SlatwallListingColumn propertyIdentifier="tostock.sku.optionsDisplay" sort="false" />
+		<cf_SlatwallListingColumn propertyIdentifier="tostock.location.locationName" title="#$.slatwall.rbKey('admin.warehouse.detailstockadjustment.tolocationname')#" />
+	</cfif>
+	
 	<cf_SlatwallListingColumn propertyIdentifier="quantity" />
 </cf_SlatwallListingDisplay>
 

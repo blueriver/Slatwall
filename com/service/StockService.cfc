@@ -110,7 +110,7 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	// ===================== START: Process Methods ===========================
 	
-	public void function processStockAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
+	public any function processStockAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
 		
 		if(arguments.processcontext eq 'addItems'){
 			
@@ -123,27 +123,39 @@ component extends="BaseService" accessors="true" output="false" {
 					
 					var foundItem = false;
 					var sku = getSkuService().getSku( thisRecord.skuid );
-					var fromStock = getStockBySkuAndLocation(sku,arguments.stockAdjustment.getFromLocation());
-					var toStock = getStockBySkuAndLocation(sku,arguments.stockAdjustment.getToLocation());
+					
+					if( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+						var fromStock = getStockBySkuAndLocation(sku, arguments.stockAdjustment.getFromLocation());	
+					}
+					if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+						var toStock = getStockBySkuAndLocation(sku, arguments.stockAdjustment.getToLocation());
+					}
+					
 					
 					// Look for the orderItem in the vendorOrder
 					for(var ai=1; ai<=arrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); ai++) {
-						
 						// If the location, sku, cost & estimated arrival are already the same as an item on the order then we can merge them.  Otherwise seperate
-						if( arguments.stockAdjustment.getStockAdjustmentItems()[ai].getFromStock().getSku().getSkuID() == thisRecord.skuid ) {
-							
+						if( ( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) && arguments.stockAdjustment.getStockAdjustmentItems()[ai].getFromStock().getSku().getSkuID() == thisRecord.skuid )
+							||
+							( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) && arguments.stockAdjustment.getStockAdjustmentItems()[ai].getToStock().getSku().getSkuID() == thisRecord.skuid )
+							) {
+								
 							foundItem = true;
 							arguments.stockAdjustment.getStockAdjustmentItems()[ai].setQuantity( arguments.stockAdjustment.getStockAdjustmentItems()[ai].getQuantity() + int(thisRecord.quantity) );
-							
 						}
 					}
 					
+					
 					if(!foundItem) {
 						
-						var stockAdjustmentItem = this.newVendorOrderItem();
-						vendorOrderItem.setQuantity( int(thisRecord.quantity) );
-						stockAdjustmentItem.setFromStock( fromStock );
-						stockAdjustmentItem.setToStock( toStock );
+						var stockAdjustmentItem = this.newStockAdjustmentItem();
+						stockAdjustmentItem.setQuantity( int(thisRecord.quantity) );
+						if( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+							stockAdjustmentItem.setFromStock( fromStock );
+						}
+						if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+							stockAdjustmentItem.setToStock( toStock );
+						}
 						stockAdjustmentItem.setStockAdjustment( arguments.stockAdjustment );
 						
 					}
@@ -154,7 +166,8 @@ component extends="BaseService" accessors="true" output="false" {
 		} else if(arguments.processcontext eq 'processAdjustment'){
 			
 			if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualIn") {
-				var stockReceiver = this.newStockReceiverStockAdjustment();
+				var stockReceiver = this.newStockReceiver();
+				stockReceiver.setStockReceiverType("stockAdjustment");
 				stockReceiver.setStockAdjustment(arguments.stockAdjustment);
 				
 				for(var i=1; i <= ArrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
