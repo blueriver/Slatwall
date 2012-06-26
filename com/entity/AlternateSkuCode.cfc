@@ -81,6 +81,10 @@ component displayname="Alternate Sku Code" entityname="SlatwallAlternateSkuCode"
 	
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentationPropertyName() {
+		return "alternateSkuCode";
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================
