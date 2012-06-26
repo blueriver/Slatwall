@@ -103,13 +103,18 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 		return getStockAdjustmentStatusType().getSystemCode() == "sastClosed";
 	}
 	
-	
-	public string function getSimpleRepresentationPropertyName() {
-		return "displayname";
-	}
-	
 	public string function getDisplayName(){
-		return getFromLocation().getLocationName() & " " & getToLocation().getLocationName()  & " ";
+		var displayName = "#getStockAdjustmentType().getType()#:";
+		if(!isNull(getFromLocation())) {
+			displayName = listAppend(displayName, getFromLocation().getLocationName(), " ");
+		}
+		if(!isNull(getFromLocation()) && !isNull(getToLocation())) {
+			displayName = listAppend(displayName, "-", " ");
+		}
+		if(!isNull(getToLocation())) {
+			displayName = listAppend(displayName, getToLocation().getLocationName(), " ");
+		}
+		return displayName;
 	}
 	
 	
@@ -145,6 +150,10 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode("sastNew");
 		}
 		return variables.stockAdjustmentStatusType;
+	}
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "displayName";
 	}
 	
 	// ==============  END: Overridden Implicet Getters ====================

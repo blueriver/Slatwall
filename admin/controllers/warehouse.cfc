@@ -53,4 +53,39 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:warehouse.liststockreceiver");
 	}
 	
+	public void function createLocationTransferAdjustment(required struct rc) {
+		rc.stockAdjustment = getStockService().newStockAdjustment();
+		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode('satLocationTransfer') );
+		
+		rc.listAction = "admin:warehouse.liststockadjustment"; 
+		rc.saveAction = "admin:warehouse.savestockadjustment";
+		rc.cancelAction = "admin:warehouse.savestockadjustment";
+		
+		rc.edit = true;
+		getFW().setView("admin:warehouse.detailstockadjustment");
+	}
+	
+	public void function createManualInAdjustment(required struct rc) {
+		rc.stockAdjustment = getStockService().newStockAdjustment();
+		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode('satManualIn') );
+		
+		rc.listAction = "admin:warehouse.liststockadjustment"; 
+		rc.saveAction = "admin:warehouse.savestockadjustment";
+		rc.cancelAction = "admin:warehouse.savestockadjustment";
+		
+		rc.edit = true;
+		getFW().setView("admin:warehouse.detailstockadjustment");
+	}
+	
+	public void function createManualOutAdjustment(required struct rc) {
+		rc.stockAdjustment = getStockService().newStockAdjustment();
+		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode('createManualOut') );
+		
+		rc.listAction = "admin:warehouse.liststockadjustment"; 
+		rc.saveAction = "admin:warehouse.savestockadjustment";
+		rc.cancelAction = "admin:warehouse.savestockadjustment";
+		
+		rc.edit = true;
+		getFW().setView("admin:warehouse.detailstockadjustment");
+	}
 }

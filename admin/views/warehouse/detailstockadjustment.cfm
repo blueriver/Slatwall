@@ -36,24 +36,27 @@
 Notes:
 
 --->
-
-
-
 <cfparam name="rc.stockAdjustment" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.stockAdjustment#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.stockAdjustment#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:warehouse.processStockAdjustment" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#&processContext=processStockAdjustment" type="list" modal=true   text="#rc.$.Slatwall.rbKey("admin.warehouse.processStockAdjustment_actions")#"/>
+			<cf_SlatwallProcessCaller entity="#rc.stockAdjustment#" action="admin:warehouse.processStockAdjustment" processContext="processStockAdjustment" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#" type="list" modal=true />
 		</cf_SlatwallActionBar>
-		
-			
+					
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="stockAdjustmentType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="fromLocation" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="toLocation" edit="#rc.edit#">
+				<cfif rc.edit>
+					<input type="hidden" name="stockAdjustmentType.typeID" value="#rc.stockadjustment.getStockAdjustmentType().getTypeID()#" />
+				</cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="stockAdjustmentType" edit="false">
+				<cfif listFindNoCase("satLocationTransfer,satManualOut", rc.stockAdjustment.getStockAdjustmentType().getSystemCode())>
+					<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="fromLocation" edit="#rc.stockAdjustment.isNew()#">
+				</cfif>
+				<cfif listFindNoCase("satLocationTransfer,satManualIn", rc.stockAdjustment.getStockAdjustmentType().getSystemCode())>
+					<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="toLocation" edit="#rc.stockAdjustment.isNew()#">
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

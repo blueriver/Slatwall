@@ -39,16 +39,16 @@ Notes:
 <cfparam name="rc.stockAdjustmentSmartList" type="any"/>
 
 <cfoutput>
-	<cf_slatwallactionbar type="listing" object="#rc.stockAdjustmentSmartList#"/>
+	<cf_slatwallActionBar type="listing" object="#rc.stockAdjustmentSmartList#" createAction="admin:warehouse.createlocationtransferadjustment,admin:warehouse.createmanualinadjustment,admin:warehouse.createmanualoutadjustment" createModal="true" createReturnAction="admin:warehouse.detailStockAdjustment" />
 
 	<cf_slatwalllistingdisplay smartlist="#rc.stockAdjustmentSmartList#" 
 	                          recordeditaction="admin:warehouse.editstockadjustment"
-							  recorddeleteaction="admin:warehouse.deletestockadjustment"
 							  recorddetailaction="admin:warehouse.detailstockadjustment">
 		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stockAdjustmentType.type"/>
 		<cf_slatwalllistingcolumn propertyidentifier="stockAdjustmentStatusType.type" filter=true/>
 		<cf_slatwalllistingcolumn propertyidentifier="fromLocation.locationName" filter=true/>
 		<cf_slatwalllistingcolumn propertyidentifier="toLocation.locationName" filter=true/>
+		<cf_slatwalllistingcolumn propertyidentifier="createdDateTime" range=true/>
 	</cf_slatwalllistingdisplay>
 
 </cfoutput>
