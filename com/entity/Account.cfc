@@ -206,6 +206,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return "#getFirstName()# #getLastName()#";
 	}
 	
+	public any function getPaymentMethodOptionsSmartList() {
+		if(!structKeyExists(variables, "paymentMethodOptionsSmartList")) {
+			variables.paymentMethodOptionsSmartList = getService("paymentService").getPaymentMethodSmartList();
+			variables.paymentMethodOptionsSmartList.addFilter("activeFlag", 1);
+		}
+		return variables.paymentMethodOptionsSmartList;
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================

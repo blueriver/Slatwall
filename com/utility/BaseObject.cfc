@@ -901,7 +901,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 	}
 	
-	public string function encryptValue(required string value) {
+	public string function encryptValue(string value) {
 		var encryptedValue = "";
 		if(!isNull(arguments.value) && arguments.value != "") {
 			if(setting("globalEncryptionService") == "internal"){
@@ -913,7 +913,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		return encryptedValue;
 	}
 	
-	public string function decryptValue(required string value) {
+	public string function decryptValue(string value) {
 		var decryptedValue = "";
 		if(!isNull(arguments.value) && arguments.value != "") {
 			if(setting("globalEncryptionService") == "internal"){
