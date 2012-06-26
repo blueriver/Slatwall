@@ -408,12 +408,10 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	// Helper method to go in and delete a content node that was previously saved in Slatwall. 
 	private void function deleteSlatwallPage(required any $) {
 		var slatwallContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("contentID"),true);
-		if(!slatwallContent.isNew() && !slatwallContent.isDeletable()) {
-			slatwallContent.setCmsContentID("");
-			slatwallContent.setCmsContentIDPath("");
+		// do not delete content form slatwall, only make it inactive
+		if(!slatwallContent.isNew()) {
+			slatwallContent.setActiveFlag(0);
 			$.slatwall.getService("contentService").saveContent(slatwallContent);
-		} else if(!slatwallContent.isNew()) {
-			$.slatwall.getService("contentService").deleteContent(slatwallContent);
 		}
 	}
 }
