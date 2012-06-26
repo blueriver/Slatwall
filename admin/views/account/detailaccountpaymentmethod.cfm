@@ -44,6 +44,7 @@ Notes:
 	<cf_SlatwallDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.accountPaymentMethod#" />
 		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
+		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 		<input type="hidden" name="returnaction" value="admin:account.detailaccount&accountID=#rc.account.getAccountID()#" />
 		
 		<cf_SlatwallDetailHeader>
