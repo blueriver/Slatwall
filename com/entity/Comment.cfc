@@ -100,6 +100,10 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentation() {
+		return getCreatedByAccount().getFullName() & " - " & getFormattedValue("createdDateTime");
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
