@@ -56,7 +56,16 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non-Persistent Properties
 	property name="displayName";
+	property name="adjustmentSkuOptions";
+	
+	public any function getAdjustmentSkuOptions() {
+		if(!structKeyExists(variables, "adjustmentSkuOptions")) {
+			variables.adjustmentSkuOptions = getService("skuService").listSku({activeFlag=1}); 
+		}
+		return variables.adjustmentSkuOptions;
+	}
 	
 	// For use with Adjustment Items interface, get one location that we will use for stock lookup. 
 	public any function getOneLocation() {

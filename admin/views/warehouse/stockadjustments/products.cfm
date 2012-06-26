@@ -53,5 +53,5 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="quantity" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:warehouse.processStockAdjustment" class="btn btn-inverse" icon="plus icon-white" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#&processContext=addItems" modal=true />
+<cf_SlatwallProcessCaller entity="#rc.stockAdjustment#" action="admin:warehouse.processStockAdjustment" processContext="addItems" class="btn btn-inverse" icon="plus icon-white" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#" modal=true />
 

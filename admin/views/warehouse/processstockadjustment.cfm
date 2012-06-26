@@ -45,37 +45,21 @@ Notes:
 	<cf_SlatwallProcessForm>
 		
 		<cf_SlatwallActionBar type="process" />
+		
 		<cfswitch expression="#rc.processcontext#" >
-				<cfcase value="addItems">
-					<cfset SkuSmartList = rc.$.slatwall.getService('SkuService').getSkuSmartList() />
-					<cfset locations = rc.$.slatwall.getService('LocationService').getLocationOptions() /> 
-
-					<cf_SlatwallProcessListing processSmartList="#SkuSmartList#">
-						<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
-						<cf_SlatwallProcessColumn propertyIdentifier="product.productName" />
-						<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
-						<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
-						<cfif arrayLen(locations) gt 1>
-							<cf_SlatwallProcessColumn data="locationID" fieldType="select" valueOptions="#locations#" fieldClass="span2" value="" />
-						<cfelse>
-							<cf_SlatwallProcessColumn data="locationID" fieldType="hidden" value="#locations[1]['value']#" />
-						</cfif>
-						<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span2 number" value="" />
-						<cf_SlatwallProcessColumn data="stockAdjustmentID" fieldType="hidden" value="#rc.stockAdjustmentID#" />
-					</cf_SlatwallProcessListing>
-					
-				</cfcase> 
+			<cfcase value="addItems">
 				
-				<cfcase value="processStockAdjustment">
-					<p>
-						Are you sure that you want to process this stock adjustment? It will no longer be editable.
-					</p>	
-					<cf_SlatwallProcessListing processSmartList="#rc.processstockadjustmentsmartlist#">
-						<cf_SlatwallProcessColumn data="locationID" fieldType="hidden" value="#rc.stockAdjustmentID#" />
-					</cf_SlatwallProcessListing>
-				</cfcase>	
-			</cfswitch>	
-		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
-		<input type="hidden" name="returnAction" value="admin:warehouse.liststockadjustment" />
+				<cf_SlatwallProcessListing processSmartList="#rc.processStockAdjustmentSmartList#" processRecordsProperty="adjustmentSkuOptions">
+					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
+					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
+					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
+					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
+					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
+				</cf_SlatwallProcessListing>
+				
+			</cfcase> 
+				
+		</cfswitch>
+		
 	</cf_SlatwallProcessForm>
 </cfoutput>

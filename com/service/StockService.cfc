@@ -99,21 +99,59 @@ component extends="BaseService" accessors="true" output="false" {
 		return stockAdjustmentItem;
 	}
 	
+
+	// ===================== START: Logical Methods ===========================
+	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: Process Methods ===========================
+	
 	public void function processStockAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
-		if(arguments.processcontext eq 'addItems' && val(arguments.data.quantity)){	
-			var stockAdjustmentItem = new ('stockAdjustmentItem');
-			var sku = getSkuService().getSku(arguments.data.skuID);
-			
-			var fromStock = getStockBySkuAndLocation(sku,arguments.stockAdjustment.getFromLocation());
-			var toStock = getStockBySkuAndLocation(sku,arguments.stockAdjustment.getToLocation());
-			
-			stockAdjustmentItem.setQuantity(arguments.data.quantity);
-			stockAdjustmentItem.setFromStock(fromStock);
-			stockAdjustmentItem.setToStock(toStock);
-			stockAdjustmentItem.setStockAdjustment(arguments.stockAdjustment);
-		}
 		
-		if(arguments.processcontext eq 'processStockAdjustment'){
+		if(arguments.processcontext eq 'addItems'){
+			
+				
+			for(var i=1; i<=arrayLen(arguments.data.records); i++) {
+				
+				var thisRecord = arguments.data.records[i];
+				
+				if(val(thisRecord.quantity)) {
+					
+					var foundItem = false;
+					var sku = getSkuService().getSku( thisRecord.skuid );
+					var fromStock = getStockBySkuAndLocation(sku,arguments.stockAdjustment.getFromLocation());
+					var toStock = getStockBySkuAndLocation(sku,arguments.stockAdjustment.getToLocation());
+					
+					// Look for the orderItem in the vendorOrder
+					for(var ai=1; ai<=arrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); ai++) {
+						
+						// If the location, sku, cost & estimated arrival are already the same as an item on the order then we can merge them.  Otherwise seperate
+						if( arguments.stockAdjustment.getStockAdjustmentItems()[ai].getFromStock().getSku().getSkuID() == thisRecord.skuid ) {
+							
+							foundItem = true;
+							arguments.stockAdjustment.getStockAdjustmentItems()[ai].setQuantity( arguments.stockAdjustment.getStockAdjustmentItems()[ai].getQuantity() + int(thisRecord.quantity) );
+							
+						}
+					}
+					
+					if(!foundItem) {
+						
+						var stockAdjustmentItem = this.newVendorOrderItem();
+						vendorOrderItem.setQuantity( int(thisRecord.quantity) );
+						stockAdjustmentItem.setFromStock( fromStock );
+						stockAdjustmentItem.setToStock( toStock );
+						stockAdjustmentItem.setStockAdjustment( arguments.stockAdjustment );
+						
+					}
+					
+				}
+			}
+			
+		} else if(arguments.processcontext eq 'processAdjustment'){
 			
 			if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualIn") {
 				var stockReceiver = this.newStockReceiverStockAdjustment();
@@ -156,24 +194,6 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		return arguments.stockAdjustment;
 	}
-	
-	public any function processStockReceiver(required any stockReceiver, required struct data, string processContext="process") {
-		
-		if(arguments.processContext == "returnOrder") {
-			
-		}
-	}
-	
-
-	// ===================== START: Logical Methods ===========================
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: Process Methods ===========================
 	
 	// =====================  END: Process Methods ============================
 	
