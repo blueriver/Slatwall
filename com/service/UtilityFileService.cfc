@@ -76,14 +76,22 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 						var currentDir = replacenocase(replacenocase(destinationDirList.directory[i],'\','/','all'),arguments.baseDestinationDir,'') & "/" & destinationDirList.name[i];
 						// if the directory exists and not part of exclusion the delete
 						if(directoryExists("#arguments.destination##currentDir#") && findNoCase(currentDir,arguments.deleteDestinationContentExclusionList) EQ 0){
-							directoryDelete("#arguments.destination##currentDir#",true);
+							try {
+								directoryDelete("#arguments.destination##currentDir#",true);	
+							} catch(any e) {
+								logSlatwall("Could not delete the directory: #arguments.destination##currentDir# most likely because it is in use by the file system");
+							}
 						}
 					} else if(destinationDirList.type[i] == "File") {
 						// get the current file path without the base path
 						var currentFile = replacenocase(replacenocase(destinationDirList.directory[i],'\','/','all'),arguments.baseDestinationDir,'') & "/" & destinationDirList.name[i];
 						// if the file exists and not part of exclusion the delete
 						if(fileExists("#arguments.destination##currentFile#") && findNoCase(currentFile,arguments.deleteDestinationContentExclusionList) EQ 0){
-							fileDelete("#arguments.destination##currentFile#");
+							try {
+								fileDelete("#arguments.destination##currentFile#");	
+							} catch(any e) {
+								logSlatwall("Could not delete file: #arguments.destination##currentFile# most likely because it is in use by the file system");
+							}
 						}
 					}
 				}
