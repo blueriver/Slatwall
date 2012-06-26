@@ -1,6 +1,6 @@
 /*
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -45,12 +45,65 @@ Notes:
 component displayname="Measurement Unit" entityname="SlatwallMeasurementUnit" table="SlatwallMeasurementUnit" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="unitCode" ormtype="string" fieldtype="id";
+	property name="unitCode" ormtype="string" fieldtype="id" unique="true" generated="never";
 	property name="measurementType" ormtype="string" formFieldType="select";
 	property name="unitName" ormtype="string";
 	property name="conversionRatio" ormtype="float";
+
+	// Related Object Properties (many-to-one)
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
+	
+	// Remote Properties
+	
+	// Audit Properties
+	
+	// Non-Persistent Properties
+
+
+
+	
+	// ============ START: Non-Persistent Property Methods =================
 	
 	public array function getMeasurementTypeOptions() {
 		return [{name=rbKey('define.length'), value='length'},{name=rbKey('define.weight'), value='weight'}];
 	}
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "unitName";
+	}
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
 }

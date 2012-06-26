@@ -182,6 +182,10 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().setView("admin:setting.detailmeasurementunit");
 	}
 	
+	public void function detailMeasurementUnit(required struct rc) {
+		rc.measurementUnit = getMeasurementUnitService().getMeasurementUnit(rc.unitCode);
+	}
+	
 	public void function editCountry(required struct rc) {
 		rc.country = getAddressService().getCountry(rc.countryCode);
 		rc.edit = true;
