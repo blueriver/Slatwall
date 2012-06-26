@@ -73,10 +73,12 @@ Notes:
 							<!--- Listing --->
 							<cfif attributes.type eq "listing" >
 								<cfparam name="request.context.keywords" default="" />
+								
 								<form name="search" class="action-bar-search btn-group" action="/plugins/Slatwall/" method="get">
 									<input type="hidden" name="slatAction" value="#request.context.slatAction#" />
 									<input type="text" name="keywords" value="#request.context.keywords#" placeholder="#request.slatwallScope.rbKey('define.search')# #attributes.pageTitle#" data-tableid="LD#replace(attributes.object.getSavedStateID(),'-','','all')#">
 								</form>
+								
 								<!---
 									Export
 									
@@ -87,7 +89,7 @@ Notes:
 										#thistag.generatedcontent#
 									</ul>
 								</div>
-								--->
+								 --->
 								<cfif len(attributes.createAction)>
 									<div class="btn-group">
 										<cfif listLen(attributes.createAction) eq 1>
