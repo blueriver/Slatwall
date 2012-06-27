@@ -152,7 +152,7 @@ component displayname="Image Service" persistent="false" extends="BaseService" o
 			var uploadPath = result.serverDirectory & "/" & result.serverFile;
 			var validFile = isImageFile(uploadPath);
 			if(len(arguments.allowedExtensions)) {
-				validFile = listFind(arguments.allowedExtensions,result.serverFileExt);
+				validFile = listFindNoCase(arguments.allowedExtensions,result.serverFileExt);
 			}
 			if(validFile) {
 				var img=imageRead(uploadPath);
