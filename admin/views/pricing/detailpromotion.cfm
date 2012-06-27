@@ -39,6 +39,10 @@ Notes:
 <cfparam name="rc.promotion" type="any">
 <cfparam name="rc.edit" type="boolean">
 
+<cfif arrayLen(rc.promotion.getPromotionPeriods()) eq 1 and !arrayLen(rc.promotion.getPromotionPeriods()[1].getPromotionRewards())>
+	<cfset request.slatwallScope.showMessageKey('admin.pricing.detailpromotion.norewards_info') />
+</cfif>
+
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.promotion#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" />
