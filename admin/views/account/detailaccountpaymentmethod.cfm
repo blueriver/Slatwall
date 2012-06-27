@@ -37,15 +37,17 @@ Notes:
 
 --->
 <cfparam name="rc.accountPaymentMethod" type="any">
-<cfparam name="rc.paymentMethod" type="any">
+<cfparam name="rc.paymentMethod" type="any" default="#rc.accountPaymentMethod.getPaymentMethod()#">
+<cfparam name="rc.account" type="any" default="#rc.accountPaymentMethod.getAccount()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" saveActionQueryString="accountID=#rc.account.getAccountID()#">
+		
 		<cf_SlatwallActionBar type="detail" object="#rc.accountPaymentMethod#" />
+		
 		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
-		<input type="hidden" name="returnaction" value="admin:account.detailaccount&accountID=#rc.account.getAccountID()#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
