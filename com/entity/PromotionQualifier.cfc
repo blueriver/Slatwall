@@ -92,11 +92,11 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	
 	public array function getRewardMatchingTypeOptions() {
 		return [
-			{name=rbKey('promotionQualifier.rewardMatchingType.any'), value="any"},
-			{name=rbKey('promotionQualifier.rewardMatchingType.sku'), value="sku"},
-			{name=rbKey('promotionQualifier.rewardMatchingType.product'), value="product"},
-			{name=rbKey('promotionQualifier.rewardMatchingType.productType'), value="productType"},
-			{name=rbKey('promotionQualifier.rewardMatchingType.brand'), value="brand"}
+			{name=rbKey('entity.promotionQualifier.rewardMatchingType.any'), value="any"},
+			{name=rbKey('entity.promotionQualifier.rewardMatchingType.sku'), value="sku"},
+			{name=rbKey('entity.promotionQualifier.rewardMatchingType.product'), value="product"},
+			{name=rbKey('entity.promotionQualifier.rewardMatchingType.productType'), value="productType"},
+			{name=rbKey('entity.promotionQualifier.rewardMatchingType.brand'), value="brand"}
 		];
 	}
 	
