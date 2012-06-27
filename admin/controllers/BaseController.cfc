@@ -303,15 +303,18 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			
 		// If Errors
 		} else {
+			
 			rc.edit = true;
 			getFW().setView(action=rc.detailAction);
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_error");
+			
 			for( var p in rc[ arguments.entityName ].getErrors() ) {
 				local.thisErrorArray = rc[ arguments.entityName ].getErrors()[p];
 				for(var i=1; i<=arrayLen(local.thisErrorArray); i++) {
 					showMessage(local.thisErrorArray[i], "error");
 				}
 			}
+			
 			if(rc[ arguments.entityName ].isNew()) {
 				rc.slatAction = rc.createAction;
 				rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
@@ -319,6 +322,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				rc.slatAction = rc.editAction;
 				rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#rc.itemEntityName#'));	
 			}
+			
 			rc.edit = true;
 			loadEntitiesFromRCIDs( rc );
 		}

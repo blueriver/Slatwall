@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.promotionperiod" type="any">
-<cfparam name="rc.promotion" type="any" default="#rc.promotionperiod.getPromotion()#">
+<cfparam name="rc.promotion" type="any" default="#rc.promotionPeriod.getPromotion()#">
 <cfparam name="rc.edit" type="boolean">
 
 <!--- prevent editing promotion period if it has expired --->
@@ -47,8 +47,8 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.promotionperiod#" saveAction="admin:pricing.savepromotionperiod" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.promotionperiod#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+	<cf_SlatwallDetailForm object="#rc.promotionperiod#" saveAction="admin:pricing.savepromotionperiod" saveActionQueryString="promotionID=#rc.promotion.getPromotionID()#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.promotionPeriod#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
 
 		<cf_SlatwallDetailHeader>
