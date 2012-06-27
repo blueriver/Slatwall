@@ -138,8 +138,10 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	}
 	
 	private void function createSetting(required struct page,required any siteID) {
-		var setting = getService("settingService").getSettingBySettingName(arguments.page.settingName,true);
-		if(setting.isNew() || setting.getSettingValue() == ""){
+		var settingList = getService("settingService").listSetting({settingName=arguments.page.settingName});
+		
+		if(!arrayLen(settingList)){
+			var setting = getService("settingService").newSetting();
 			setting.setSettingValue(arguments.page.settingValue);
 			setting.setSettingName(arguments.page.settingName);
 			getService("settingService").saveSetting(setting);
