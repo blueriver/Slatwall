@@ -41,25 +41,18 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	// Persistent Properties
 	property name="contentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="contentIDPath" ormtype="string";
+	property name="activeFlag" ormtype="boolean" default=1;
 	
 	property name="title" ormtype="string";
 	property name="cmsContentID" ormtype="string";
 	property name="cmsContentIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
 	
-	property name="allowPurchaseFlag" ormtype="boolean";  // property
-	property name="disableProductAssignmentFlag" ormtype="boolean"; // property
-	property name="templateFlag" ormtype="boolean"; // property
-	
-	//property name="restrictAccessFlag" ormtype="boolean";  // setting
-	//property name="requirePurchaseFlag" ormtype="boolean";  // setting
-	//property name="requireSubscriptionFlag" ormtype="boolean"; // setting
-	//property name="productListingFlag" ormtype="boolean"; // setting
-	//property name="defaultProductsPerPage" ormtype="integer"; // setting
-	//property name="showProductInSubPagesFlag" ormtype="boolean"; // setting
+	property name="allowPurchaseFlag" ormtype="boolean";
+	property name="disableProductAssignmentFlag" ormtype="boolean";
+	property name="templateFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
-	//property name="restrictedContentTemplateContent" cfc="Content" fieldtype="many-to-one" fkcolumn="restrictedContentTemplateContentID";  // setting
 	property name="parentContent" cfc="Content" fieldtype="many-to-one" fkcolumn="parentContentID";
 	
 	// Related Object Properties (one-to-many)

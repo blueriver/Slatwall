@@ -52,5 +52,9 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="expirationYear" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:account.createaccountpaymentmethod" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
+	<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
+		<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()#" action="admin:account.createaccountpaymentmethod" querystring="accountID=#rc.account.getAccountID()#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#" modal=true />
+	</cfloop>
+</cf_SlatwallActionCallerDropdown>
 

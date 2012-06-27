@@ -48,11 +48,12 @@ Notes:
 
 	<cf_SlatwallListingColumn propertyIdentifier="account.firstName" search="true" sort="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="account.lastName" search="true" sort="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="account.company" search="true" sort="true" />
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="nextBillDate" />
 	<cf_SlatwallListingColumn propertyIdentifier="expirationDate" />
-	<cf_SlatwallListingColumn propertyIdentifier="gracePeriodTerm.termName" />
+	<cf_SlatwallListingColumn propertyIdentifier="gracePeriodTerm.termName" title="#$.slatwall.rbKey('define.gracePeriod')#" />
 	<cf_SlatwallListingColumn propertyIdentifier="renewalPrice" />
 	<cf_SlatwallListingColumn propertyIdentifier="autoPayFlag" filter="true" />
 

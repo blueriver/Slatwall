@@ -46,6 +46,7 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.content#" property="title">
+				<cf_SlatwallPropertyDisplay object="#rc.content#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.content#" property="cmsContentID" edit="false">
 				<cf_SlatwallPropertyDisplay object="#rc.content#" property="templateFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.content#" property="disableProductAssignmentFlag" edit="#rc.edit#">
