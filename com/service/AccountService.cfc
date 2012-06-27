@@ -326,6 +326,8 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		smartList.addKeywordProperty(propertyIdentifier="firstName", weight=3);
 		smartList.addKeywordProperty(propertyIdentifier="lastName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="company", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="primaryEmailAddress.emailAddress", weight=3);
 		
 		return smartList;
 	}
