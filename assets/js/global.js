@@ -564,7 +564,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 				if(!afterRowID) {
 					jQuery(tableBodySelector).append(jQuery(rowSelector));
 				} else {
-					jQuery('#' + afterRowID).after(jQuery(rowSelector));
+					jQuery(tableBodySelector).find('#' + afterRowID).after(jQuery(rowSelector));
 				}
 			});
 			
