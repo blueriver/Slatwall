@@ -8,6 +8,8 @@
 		<context name="save" />
 		<context name="delete" />
 		<context name="edit" />
+		<context name="addItems" />
+		<context name="processAdjustment" />
 	</contexts>
 	<objectProperties>
 		<property name="stockAdjustmentType">
@@ -21,6 +23,11 @@
 		</property>
 		<property name="toLocation">
 			<rule type="required" contexts="save" condition="shouldHaveToLocation" />
+		</property>
+		<property name="statusCode">
+			<rule type="inList" contexts="addItems,processAdjustment">
+				<param name="list" value="sastNew" />
+			</rule>
 		</property>
 	</objectProperties>
 </validateThis>

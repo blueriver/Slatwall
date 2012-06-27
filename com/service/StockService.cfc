@@ -113,7 +113,6 @@ component extends="BaseService" accessors="true" output="false" {
 	public any function processStockAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
 		
 		if(arguments.processcontext eq 'addItems'){
-			
 				
 			for(var i=1; i<=arrayLen(arguments.data.records); i++) {
 				
@@ -167,14 +166,14 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualIn") {
 				var stockReceiver = this.newStockReceiver();
-				stockReceiver.setStockReceiverType("stockAdjustment");
+				stockReceiver.setReceiverType("stockAdjustment");
 				stockReceiver.setStockAdjustment(arguments.stockAdjustment);
 				
 				for(var i=1; i <= ArrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
 					var stockAdjustmentItem = arguments.stockAdjustment.getStockAdjustmentItems()[i];
 					var stockReceiverItem = this.newStockReceiverItem();
-					stockReceiverItem.setStockReceiver(stockReceiver);
-					stockReceiverItem.setStockAdjustmentItem(stockAdjustmentItem);
+					stockReceiverItem.setStockReceiver( stockReceiver );
+					stockReceiverItem.setStockAdjustmentItem( stockAdjustmentItem );
 					stockReceiverItem.setQuantity(stockAdjustmentItem.getQuantity());
 					stockReceiverItem.setCost(0);
 					stockReceiverItem.setStock(stockAdjustmentItem.getToStock());

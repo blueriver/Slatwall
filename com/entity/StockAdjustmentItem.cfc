@@ -66,7 +66,7 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
+
 	// Stock Adjustment (many-to-one)    
 	public void function setStockAdjustment(required any stockAdjustment) {    
 		variables.stockAdjustment = arguments.stockAdjustment;    
@@ -101,10 +101,35 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 		arguments.stockReceiverItem.removeStockAdjustmentItem( this );
 	}
 	
-	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentation() {
+		return getOneStock().getSku().getProduct().getTitle() & " - " & getOneStock().getSku().getOptionsDisplay();
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
+	
+	
 }

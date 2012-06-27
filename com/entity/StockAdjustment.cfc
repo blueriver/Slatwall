@@ -58,7 +58,12 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	
 	// Non-Persistent Properties
 	property name="displayName" persistent="false";
+	property name="statusCode" persistent="false";
 	property name="adjustmentSkuOptions" persistent="false";
+	
+	public string function getStatusCode() {
+		return getStockAdjustmentStatusType().getSystemCode();
+	}
 	
 	public any function getAdjustmentSkuOptions() {
 		if(!structKeyExists(variables, "adjustmentSkuOptions")) {
