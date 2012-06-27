@@ -293,7 +293,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			if( !listFind(filenames, getImages()[i].getImageID()) ) {
 				filenames = listAppend(filenames, getImages()[i].getImageID());
 				var thisImage = {};
-				thisImage.originalFilename = getImages()[i].getImageID() & "." & getImages()[i].getImageExtension();
+				thisImage.originalFilename = getImages()[i].getImageFile();
 				thisImage.originalPath = getImages()[i].getImagePath();
 				thisImage.type = "productAlternateImage";
 				thisImage.skuID = "";
