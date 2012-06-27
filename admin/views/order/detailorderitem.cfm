@@ -47,9 +47,9 @@ Notes:
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].orderItemStatusType.typeID" property="orderItemStatusType" edit="false" />
 				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].sku.skuID" property="sku" edit="#rc.orderItem.isNew()#">
 				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].quantity" property="quantity" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].orderItemStatusType.typeID" property="orderItemStatusType" edit="#rc.edit#" />
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
