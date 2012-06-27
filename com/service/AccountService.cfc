@@ -324,6 +324,8 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
+		smartList.joinRelatedProperty("SlatwallAccount", "primaryEmailAddress", "left");
+		
 		smartList.addKeywordProperty(propertyIdentifier="firstName", weight=3);
 		smartList.addKeywordProperty(propertyIdentifier="lastName", weight=3);
 		smartList.addKeywordProperty(propertyIdentifier="company", weight=3);
