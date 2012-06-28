@@ -57,19 +57,16 @@ component extends="BaseService" accessors="true" output="false" {
 		var currentSession = this.getSession(session.slatwall.sessionID, true);
 		getSlatwallScope().setCurrentSession( currentSession );
 		
-		// Setup a default param for the mura session variable
-		param name="session.mura.isLoggedIn" default="false";
+		if(!structKeyExists(request, "muraScope")) {
+			request.muraScope = application.serviceFactory.getBean("muraScope").init(application.serviceFactory.getBean("contentServer").bindToDomain());
+		}
+
+		var cmsUser = request.muraScope.currentUser();
 		
-		if(session.mura.isLoggedIn) {
-			
-			if(!structKeyExists(request, "muraScope")) {
-				request.muraScope = application.serviceFactory.getBean("muraScope").init(application.serviceFactory.getBean("contentServer").bindToDomain());
-			}
-	
-			var cmsUser = request.muraScope.currentUser();
+		if(cmsUser.isLoggedIn()) {
 			
 			// Load the account
-			var slatwallAccount = getAccountService().saveAccountByCmsUser( cmsUser );
+			var slatwallAccount = getAccountService().saveAccountByCmsUser(cmsUser);
 			
 			// Set the account in the current session
 			currentSession.setAccount( slatwallAccount );
