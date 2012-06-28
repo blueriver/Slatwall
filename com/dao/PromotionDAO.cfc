@@ -109,9 +109,11 @@ Notes:
 	<cffunction name="getPromotionPeriodUseCount" returntype="numeric" access="public">
 		<cfargument name="promotionPeriod" required="true" type="any" />
 		
-		<cfset var results = ormExecuteQuery("SELECT count(pa.promotionAppliedID)
+		<cfset var results = ormExecuteQuery("SELECT count(pa.promotionAppliedID) as count 
 				FROM
 					SlatwallPromotionApplied pa
+				  LEFT JOIN
+				  	pa.promotion pap
 				  LEFT JOIN
 				  	pa.orderItem oi
 				  LEFT JOIN
@@ -125,23 +127,24 @@ Notes:
 				  	o.orderStatusType oost
 				  	
 				  LEFT JOIN
-				  	pa.orderFulfillment of
+				  	pa.orderFulfillment orderf
 				  LEFT JOIN
-				  	of.order ofo
+				  	orderf.order ofo
 				  LEFT JOIN
 				  	ofo.orderStatusType ofoost
 				WHERE
+				
 					oioost.systemCode not in ('ostNotPlaced')
 				  and
 				  	oost.systemCode not in ('ostNotPlaced')
 				  and
 				  	ofoost.systemCode not in ('ostNotPlaced')
 				  and
-					pa.promotion.promotionID = :promotionID
+					pap.promotionID = :promotionID
 				  and
 					pa.createdDateTime > :promotionPeriodStartDateTime
 				  and
-				  	pa.createdDateTime < :promotionPeriodEndDateTime)", {
+				  	pa.createdDateTime < :promotionPeriodEndDateTime", {
 					  
 				promotionID = arguments.promotionPeriod.getPromotion().getPromotionID(),
 				promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime(),
@@ -155,7 +158,7 @@ Notes:
 		<cfargument name="promotionPeriod" required="true" type="any" />
 		<cfargument name="account" required="true" type="any" />
 		
-		<cfset var results = ormExecuteQuery("SELECT count(pa.promotionAppliedID)
+		<cfset var results = ormExecuteQuery("SELECT count(pa.promotionAppliedID) as count
 				FROM
 					SlatwallPromotionApplied pa
 				  LEFT JOIN
@@ -175,9 +178,9 @@ Notes:
 				  	o.account oa
 				  	
 				  LEFT JOIN
-				  	pa.orderFulfillment of
+				  	pa.orderFulfillment orderf
 				  LEFT JOIN
-				  	of.order ofo
+				  	orderf.order ofo
 				  LEFT JOIN
 				  	ofo.orderStatusType ofoost
 				  LEFT JOIN
@@ -199,10 +202,13 @@ Notes:
 				  and
 					pa.promotion.promotionID = :promotionID
 				  and
-				  	pa.createdDateTime > :promotionPeriodStartDateTime and pa.createdDateTime < :promotionPeriodEndDateTime)", {
-				promotionID = arguments.promotionPeriod.getPromotion().getPromotionID(),
-				promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime(),
-				promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime()
+				  	pa.createdDateTime > :promotionPeriodStartDateTime
+				  and
+				  	pa.createdDateTime < :promotionPeriodEndDateTime", {
+					  	accountID = arguments.account.getAccountID(),
+						promotionID = arguments.promotionPeriod.getPromotion().getPromotionID(),
+						promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime(),
+						promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime()
 				}) />
 		
 		<cfreturn results[1] />
