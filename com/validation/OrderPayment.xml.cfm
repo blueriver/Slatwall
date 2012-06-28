@@ -41,10 +41,10 @@
 			</rule>
 		</property>
 		<property name="orderStatusCode">
-			<rule type="inList" context="chargePreAuthorization,authorizeAndCharge,authorize,credit">
+			<rule type="inList" contexts="chargePreAuthorization,authorizeAndCharge,authorize,credit">
 				<param name="list" value="ostNew,ostProcessing,ostOnHold" />
 			</rule>
-			<rule type="inList" context="edit">
+			<rule type="inList" contexts="edit">
 				<param name="list" value="ostNotPlaced,ostNew,ostProcessing,ostOnHold" />
 			</rule>
 		</property>
