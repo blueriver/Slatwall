@@ -90,7 +90,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 
 	// Non-persistent entities
 	property name="amountTypeOptions" persistent="false";
-	property name="roundingRuleOptions" persistent="false";
 	property name="applicableTermOptions" persistent="false";
 	property name="rewards" type="string" persistent="false";
 

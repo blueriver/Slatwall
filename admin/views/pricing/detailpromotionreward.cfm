@@ -65,6 +65,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amountType" fieldType="select" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="roundingRule" edit="#rc.edit#" />
+				
 				<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.rewardType)>
 					<cfif rc.rewardType eq "subscription">
 						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="applicableTerm" edit="#rc.edit#" />

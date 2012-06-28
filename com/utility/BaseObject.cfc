@@ -519,6 +519,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		
 		// This is the null format option
 		if(isNull(arguments.value)) {
+			var propertyMeta = getPropertyMetaData( arguments.propertyName );
+			if(structKeyExists(propertyMeta, "nullRBKey")) {
+				return rbKey(propertyMeta.nullRBKey);
+			}
+			
 			return "";
 		// This is a simple value, so now lets try to actually format the value
 		} else if (isSimpleValue(arguments.value)) {
