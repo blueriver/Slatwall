@@ -79,7 +79,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function createManualOutAdjustment(required struct rc) {
 		rc.stockAdjustment = getStockService().newStockAdjustment();
-		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode('createManualOut') );
+		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode('satManualOut') );
 		
 		rc.listAction = "admin:warehouse.liststockadjustment"; 
 		rc.saveAction = "admin:warehouse.savestockadjustment";
