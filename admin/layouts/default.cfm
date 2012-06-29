@@ -54,6 +54,7 @@ Notes:
 				dateFormat : '#request.slatwallScope.setting("globalDateFormat")#'
 				,timeFormat : '#request.slatwallScope.setting("globalTimeFormat")#'
 				,tabIndex : #rc.tabIndex#
+				,rootURL : '#request.slatwallScope.getSlatwallRootURL()#'
 			};
 		</script>
 	</head>

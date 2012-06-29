@@ -441,7 +441,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 	}
 	
 	jQuery.ajax({
-		url: '/plugins/Slatwall/',
+		url: slatwall.rootURL,
 		method: 'post',
 		data: data,
 		dataType: 'json',
