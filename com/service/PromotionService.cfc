@@ -694,17 +694,17 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						( qualifier.hasAnyExcludedOption( arguments.orderItem.getSku().getOptions() ) )
 						||
 						// Then check the match type of based on the current orderitem, and the orderItem we are getting a count for
-						( qualifier.getMatchingType() == "sku" && thisOrderItem.getSku().getSkuID() != arguments.orderItem.getSku().getSkuID() )
+						( qualifier.getRewardMatchingType() == "sku" && thisOrderItem.getSku().getSkuID() != arguments.orderItem.getSku().getSkuID() )
 						||
-						( qualifier.getMatchingType() == "product" && thisOrderItem.getSku().getProduct().getProductID() != arguments.orderItem.getSku().getProduct().getProductID() )
+						( qualifier.getRewardMatchingType() == "product" && thisOrderItem.getSku().getProduct().getProductID() != arguments.orderItem.getSku().getProduct().getProductID() )
 						||
-						( qualifier.getMatchingType() == "productType" && thisOrderItem.getSku().getProduct().getProductType().getProductTypeID() != arguments.orderItem.getSku().getProduct().getProductType().getProductTypeID() )
+						( qualifier.getRewardMatchingType() == "productType" && thisOrderItem.getSku().getProduct().getProductType().getProductTypeID() != arguments.orderItem.getSku().getProduct().getProductType().getProductTypeID() )
 						||
-						( qualifier.getMatchingType() == "brand" && isNull(thisOrderItem.getSku().getProduct().getBrand()))
+						( qualifier.getRewardMatchingType() == "brand" && isNull(thisOrderItem.getSku().getProduct().getBrand()))
 						||
-						( qualifier.getMatchingType() == "brand" && isNull(arguments.orderItem.getSku().getProduct().getBrand()))
+						( qualifier.getRewardMatchingType() == "brand" && isNull(arguments.orderItem.getSku().getProduct().getBrand()))
 						||
-						( qualifier.getMatchingType() == "brand" && thisOrderItem.getSku().getProduct().getBrand().getBrandID() != arguments.orderItem.getSku().getBrand().getBrandID() )
+						( qualifier.getRewardMatchingType() == "brand" && thisOrderItem.getSku().getProduct().getBrand().getBrandID() != arguments.orderItem.getSku().getBrand().getBrandID() )
 						) {
 							
 						orderItemQualifierCount = 0;
