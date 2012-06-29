@@ -624,6 +624,10 @@ component displayname="Base Object" accessors="true" output="false" {
 		if(right(exactMatch, 8) != "_missing") {
 			return exactMatch;
 		}
+		var genericMatch = rbKey("entity.define.#arguments.propertyName#_hint");
+		if(right(genericMatch, 8) != "_missing") {
+			return genericMatch;
+		}
 		return "";
 	}
 	
