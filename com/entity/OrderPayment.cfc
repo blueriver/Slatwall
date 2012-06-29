@@ -370,13 +370,6 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 
 	// ================== START: Overridden Methods ========================
 	
-	public boolean function isEditable() {
-		if(listFindNoCase("ostClosed,ostCanceled", getOrder().getStatusCode())) {
-			return false;
-		}
-		return true;
-	} 
-	
 	public any function getSimpleRepresentation() {
 		if(getPaymentMethodType() == "creditCard") {
 			return getPaymentMethod().getPaymentMethodName() & " - " & getCreditCardType() & " - ***" & getCreditCardLastFour();	

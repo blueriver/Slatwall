@@ -13,6 +13,11 @@
 		<context name="credit" />
 	</contexts>
 	<objectProperties>
+		<property name="orderPaymentID">
+			<rule type="maxLength" contexts="delete">
+				<param name="maxLength" value="0" />
+			</rule>
+		</property>
 		<property name="nameOnCreditCard">
 			<rule type="required" contexts="save" condition="paymentTypeCreditCard" />
 		</property>
