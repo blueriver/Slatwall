@@ -61,7 +61,7 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID" nullRBKey="define.none";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="eligablePriceGroups" singularname="eligablePriceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardEligablePriceGroup" fkcolumn="promotionRewardID" inversejoincolumn="priceGroupID";
+	property name="eligiblePriceGroups" singularname="eligiblePriceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardEligiblePriceGroup" fkcolumn="promotionRewardID" inversejoincolumn="priceGroupID";
 	
 	property name="fulfillmentMethods" singularname="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardFulfillmentMethod" fkcolumn="promotionRewardID" inversejoincolumn="fulfillmentMethodID";
 	property name="shippingAddressZones" singularname="shippingAddressZone" cfc="AddressZone" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingAddressZone" fkcolumn="promotionRewardID" inversejoincolumn="addressZoneID";
@@ -142,22 +142,22 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
     }
 
 	// Eligable Price Groups (many-to-many - owner)
-	public void function addEligablePriceGroup(required any eligablePriceGroup) {
-		if(arguments.eligablePriceGroup.isNew() or !hasEligablePriceGroup(arguments.eligablePriceGroup)) {
-			arrayAppend(variables.eligablePriceGroups, arguments.eligablePriceGroup);
+	public void function addEligiblePriceGroup(required any eligiblePriceGroup) {
+		if(arguments.eligiblePriceGroup.isNew() or !hasEligiblePriceGroup(arguments.eligiblePriceGroup)) {
+			arrayAppend(variables.eligiblePriceGroups, arguments.eligiblePriceGroup);
 		}
-		if(isNew() or !arguments.eligablePriceGroup.hasPromotionReward( this )) {
-			arrayAppend(arguments.eligablePriceGroup.getPromotionRewards(), this);
+		if(isNew() or !arguments.eligiblePriceGroup.hasPromotionReward( this )) {
+			arrayAppend(arguments.eligiblePriceGroup.getPromotionRewards(), this);
 		}
 	}
-	public void function removeEligablePriceGroup(required any eligablePriceGroup) {
-		var thisIndex = arrayFind(variables.eligablePriceGroups, arguments.eligablePriceGroup);
+	public void function removeEligiblePriceGroup(required any eligiblePriceGroup) {
+		var thisIndex = arrayFind(variables.eligiblePriceGroups, arguments.eligiblePriceGroup);
 		if(thisIndex > 0) {
-			arrayDeleteAt(variables.eligablePriceGroups, thisIndex);
+			arrayDeleteAt(variables.eligiblePriceGroups, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.eligablePriceGroup.getPromotionRewards(), this);
+		var thatIndex = arrayFind(arguments.eligiblePriceGroup.getPromotionRewards(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.eligablePriceGroup.getPromotionRewards(), thatIndex);
+			arrayDeleteAt(arguments.eligiblePriceGroup.getPromotionRewards(), thatIndex);
 		}
 	}
 
