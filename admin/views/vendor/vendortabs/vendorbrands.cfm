@@ -39,14 +39,5 @@ Notes:
 <cfparam name="rc.vendor" type="any" />
 
 <cf_slatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="brands" edit="#rc.edit#"  fieldType="multiselect"  />
+	<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="brands" edit="#rc.edit#" displayType="plain"/>
 </cf_slatwallPropertyList>
-
-<!---<cfoutput>
-	<cfif !rc.edit AND ArrayLen(rc.Vendor.getBrands()) EQ 0>
-		#rc.$.Slatwall.rbKey("admin.vendor.detail.tab.vendorOrders.noBrands")#
-	<cfelse>
-		<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="#rc.edit#"  fieldType="multiselect"  />
-		<!--- <cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="products" edit="#rc.edit#"  fieldType="multiselect" /> --->
-	</cfif>
-</cfoutput>--->
