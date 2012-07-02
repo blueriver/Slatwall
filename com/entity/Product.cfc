@@ -557,14 +557,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public array function getUnusedProductOptions() {
 		if( !structKeyExists(variables, "unusedProductOptions") ) {
-			variables.unusedProductOptions = getService('optionService').getUnusedProductOptions( getProductID() );
+			variables.unusedProductOptions = getService('optionService').getUnusedProductOptions( getProductID(), structKeyList(getOptionGroupsStruct()) );
 		}
 		return variables.unusedProductOptions;
 	}
 	
 	public array function getUnusedProductOptionGroups() {
 		if( !structKeyExists(variables, "unusedProductOptionGroups") ) {
-			variables.unusedProductOptionGroups = getService('optionService').getUnusedProductOptionGroups( getProductID() );
+			variables.unusedProductOptionGroups = getService('optionService').getUnusedProductOptionGroups( structKeyList(getOptionGroupsStruct()) );
 		}
 		return variables.unusedProductOptionGroups;
 	}

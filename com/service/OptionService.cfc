@@ -58,10 +58,6 @@ component extends="BaseService" accessors="true" {
 		}
 	}
 	
-	public array function getMaximumOptionSortOrders() {
-		return getDAO().getMaximumOptionSortOrders();
-	}
-	
 	public array function getOptionsForSelect(required any options){
 		var sortedOptions = [];
 		
@@ -79,12 +75,12 @@ component extends="BaseService" accessors="true" {
 	
 	// ===================== START: DAO Passthrough ===========================
 	
-	public array function getUnusedProductOptionGroups(required string productID){
-		return getDAO().getUnusedProductOptionGroups(arguments.productID);
+	public array function getUnusedProductOptions(required string productID, required string existingOptionGroupIDList){
+		return getDAO().getUnusedProductOptions(argumentCollection=arguments);
 	}
 	
-	public array function getUnusedProductOptions(required string productID){
-		return getDAO().getUnusedProductOptions(arguments.productID);
+	public array function getUnusedProductOptionGroups(required string existingOptionGroupIDList){
+		return getDAO().getUnusedProductOptionGroups(argumentCollection=arguments);
 	}
 	
 	// ===================== START: DAO Passthrough ===========================

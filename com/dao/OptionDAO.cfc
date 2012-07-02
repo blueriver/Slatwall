@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,92 +35,77 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
+--->
+<cfcomponent extends="BaseDAO">
 	
-	// @hint checks if the passed if the option code of the passed in option is already in use within its option group
-	public any function isDuplicateOptionCode( required any option ) {
-		return arrayLen(ormExecuteQuery("from SlatwallOption where optionCode = :code and optionGroup = :group and optionID != :id", {code=arguments.option.getOptionCode(), group=arguments.option.getOptionGroup(), id=arguments.option.getOptionID()}));
-	}
-	
-	public array function getMaximumOptionSortOrders() {
-		return ormExecuteQuery("Select max(o.sortOrder), max(og.sortOrder) from SlatwallOption o inner join o.optionGroup og")[1];
-	}
-	
-	public any function getUnusedProductOptions(required string productID){
-		var q = new Query();
-		var sql = "SELECT 
-				DISTINCT slatwallOption.optionID,slatwallOption.optionName, slatwallOptionGroup.optionGroupName
-				FROM
-					slatwallOption
-				INNER JOIN slatwallOptionGroup on slatwallOptionGroup.optionGroupID = slatwallOption.optionGroupID
-				WHERE
-					slatwallOption.optionID NOT IN (		
-							SELECT slatwallOption.optionID FROM slatwallSku
-								INNER JOIN slatwallSkuOption on slatwallSku.skuID = slatwallSkuOption.skuID
-								INNER JOIN slatwallOption on slatwallSkuOption.optionID = slatwallOption.optionID
-							WHERE
-								slatwallSku.productID=:productID	
+	<cffunction name="getUnusedProductOptions" returntype="any" access="public">
+		<cfargument name="productID" type="string" required="true" />
+		<cfargument name="existingOptionGroupIDList" type="string" required="true" />
+		
+		<cfset var rs = "" />
+		<cfset var result = [] />
+		
+		<cfquery name="rs">
+			SELECT
+				slatwallOption.optionID,
+				slatwallOption.optionName,
+				slatwallOptionGroup.optionGroupName
+			FROM
+				slatwallOption
+			  INNER JOIN
+			  	slatwallOptionGroup on slatwallOptionGroup.optionGroupID = slatwallOption.optionGroupID
+			WHERE
+				NOT EXISTS (
+					SELECT
+						a.optionID
+					FROM
+						SlatwallOption a
+					  INNER JOIN
+					  	SlatwallSkuOption b on a.optionID = b.optionID
+					  INNER JOIN
+					  	SlatwallSku c on b.skuID = c.skuID
+					WHERE
+					  	a.optionID = SlatwallOption.optionID
+					  AND
+					  	c.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
 				)
-				AND
-					slatwallOption.optionGroupID IN (
-						SELECT slatwallOptionGroup.optionGroupID  FROM slatwallSku
-								INNER JOIN slatwallSkuOption on slatwallSku.skuID = slatwallSkuOption.skuID
-								INNER JOIN slatwallOption on slatwallSkuOption.optionID = slatwallOption.optionID
-								INNER JOIN slatwallOptionGroup on slatwallOption.optionGroupID = slatwallOptionGroup.optionGroupID
-							WHERE
-								slatwallSku.productID=:productID	
-					)
-				ORDER BY 
-					slatwallOptionGroup.optionGroupName, slatwallOption.optionName
-				";
-		q.addParam(name="productID",value="#arguments.productID#",cfsqltype="cf_sql_varchar");		
-		q.setSQL(sql);
+			  AND
+			  	slatwallOption.optionGroupID IN (#wrapListItemsInSingleQuotes(arguments.existingOptionGroupIDList)#)
+			ORDER BY
+				SlatwallOptionGroup.optionGroupName,
+				SlatwallOption.optionName
+		</cfquery>
 		
-		var records = q.execute().getResult();
-		var result = [];
-
-		for(var i=1;i<=records.recordCount;i++) {
-			arrayAppend(result, {
-				"name" = records.optionGroupName[i] & ' - ' & records.optionName[i],
-				"value" = records.optionID[i]
-			});
-		}
-		return result;		
-	}
-
-	public any function getUnusedProductOptionGroups(required string productID){
-		var q = new Query();
-		var sql = "SELECT 
-				DISTINCT slatwallOptionGroup.optionGroupID, slatwallOptionGroup.optionGroupName
-				FROM
-					slatwallOptionGroup
-				WHERE
-					slatwallOptionGroup.optionGroupID NOT IN (		
-							SELECT slatwallOptionGroup.optionGroupID  FROM slatwallSku
-								INNER JOIN slatwallSkuOption on slatwallSku.skuID = slatwallSkuOption.skuID
-								INNER JOIN slatwallOption on slatwallSkuOption.optionID = slatwallOption.optionID
-								INNER JOIN slatwallOptionGroup on slatwallOption.optionGroupID = slatwallOptionGroup.optionGroupID
-							WHERE
-								slatwallSku.productID=:productID	
-				)	
-				ORDER BY 
-					slatwallOptionGroup.optionGroupName
-				";
-		q.addParam(name="productID",value="#arguments.productID#",cfsqltype="cf_sql_varchar");		
-		q.setSQL(sql);
+		<cfloop query="rs">
+			<cfset arrayAppend(result, {name="#rs.optionGroupName# - #rs.optionName#", value=rs.optionID}) />
+		</cfloop>
 		
-		var records = q.execute().getResult();
-		var result = [];
-
-		for(var i=1;i<=records.recordCount;i++) {
-			arrayAppend(result, {
-				"name" = records.optionGroupName[i],
-				"value" = records.optionGroupID[i]
-			});
-		}
-		return result;		
-	}
+		<cfreturn result />
+	</cffunction>
 	
+	<cffunction name="getUnusedProductOptionGroups">
+		<cfargument name="existingOptionGroupIDList" type="string" required="true" />
 		
-}
+		<cfset var result = [] />
+		<cfset var rs = "" />
+		
+		<cfquery name="rs">
+			SELECT
+				SlatwallOptionGroup.optionGroupID,
+				slatwallOptionGroup.optionGroupName
+			FROM
+				SlatwallOptionGroup
+			WHERE
+				SlatwallOptionGroup.optionGroupID NOT IN (#wrapListItemsInSingleQuotes(arguments.existingOptionGroupIDList)#)
+			ORDER BY 
+				SlatwallOptionGroup.optionGroupName
+		</cfquery>
+		
+		<cfloop query="rs">
+			<cfset arrayAppend(result, {name=rs.optionGroupName, value=rs.optionGroupID}) />
+		</cfloop>
+		
+		<cfreturn result />
+	</cffunction>
+
+</cfcomponent>

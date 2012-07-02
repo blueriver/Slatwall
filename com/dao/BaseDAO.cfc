@@ -132,4 +132,19 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		return smartList;
 	}
 	
+	// ===================== START: Private Helper Methods ===========================
+	
+	private string function wrapListItemsInSingleQuotes( required string list ) {
+		var returnList = "";
+		
+		for(var i=1; i<=listLen(arguments.list); i++) {
+			returnList = listAppend(returnList, "'#listGetAt(arguments.list, i)#'");	
+		}
+		
+		return returnList;
+	}
+	
+	// =====================  END: Private Helper Methods ============================
+	
+	
 }
