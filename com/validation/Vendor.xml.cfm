@@ -7,5 +7,10 @@
 		<property name="vendorWebsite">
 			<rule type="url" contexts="save" />
 		</property>
+		<property name="vendororders">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>

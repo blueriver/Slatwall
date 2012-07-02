@@ -58,7 +58,7 @@ Notes:
 				</cfif>
 			</cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyList divClass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountReceived" />
 				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountCredited" />
 			</cf_SlatwallPropertyList>

@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.sku.getAlternateSkuCodesSmartList()#"
 			recordEditAction="admin:product.editalternateskucode"
-			redordEditModal="true">
+			recordEditModal="true">
 			
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="alternateSkuCode" />
 		
