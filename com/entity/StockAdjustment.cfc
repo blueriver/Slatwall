@@ -49,6 +49,7 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	
 	// Related Object Properties (one-to-many)
 	property name="stockAdjustmentItems" singularname="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="one-to-many" fkcolumn="stockAdjustmentID" inverse="true" cascade="all-delete-orphan";
+	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentID" cascade="all" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -147,6 +148,14 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Stock Receivers (one-to-many)
+	public void function addStockReceiver(required any stockReceiver) {
+		arguments.stockReceiver.setStockAdjustment( this );
+	}
+	public void function removeStockReceiver(required any stockReceiver) {
+		arguments.stockReceiver.removeStockAdjustment( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

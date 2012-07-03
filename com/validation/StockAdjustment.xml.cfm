@@ -25,8 +25,13 @@
 			<rule type="required" contexts="save" condition="shouldHaveToLocation" />
 		</property>
 		<property name="statusCode">
-			<rule type="inList" contexts="addItems,processAdjustment">
+			<rule type="inList" contexts="addItems,processAdjustment,delete">
 				<param name="list" value="sastNew" />
+			</rule>
+		</property>
+		<property name="stockReceivers">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
 			</rule>
 		</property>
 	</objectProperties>

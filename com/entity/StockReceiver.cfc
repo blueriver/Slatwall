@@ -112,6 +112,24 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 		structDelete(variables, "vendorOrder");
 	}
 	
+	// Stock Adjustment (many-to-one)    
+	public void function setStockAdjustment(required any stockAdjustment) {    
+		variables.stockAdjustment = arguments.stockAdjustment;    
+		if(isNew() or !arguments.stockAdjustment.hasStockReceiver( this )) {    
+			arrayAppend(arguments.stockAdjustment.getStockReceivers(), this);    
+		}    
+	}    
+	public void function removeStockAdjustment(any stockAdjustment) {    
+		if(!structKeyExists(arguments, "stockAdjustment")) {    
+			arguments.stockAdjustment = variables.stockAdjustment;    
+		}    
+		var index = arrayFind(arguments.stockAdjustment.getStockReceivers(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.stockAdjustment.getStockReceivers(), index);    
+		}    
+		structDelete(variables, "stockAdjustment");    
+	}
+	
 	// Stock Receiver Items (one-to-many)
 	public void function addStockReceiverItem(required any stockReceiverItem) {
 		arguments.stockReceiverItem.setStockReceiver( this );
