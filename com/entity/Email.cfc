@@ -69,7 +69,25 @@ component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" p
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
+
+	// Email Template (many-to-one)
+	public void function setEmailTemplate(required any emailTemplate) {
+		variables.emailTemplate = arguments.emailTemplate;
+		if(isNew() or !arguments.emailTemplate.hasEmail( this )) {
+			arrayAppend(arguments.emailTemplate.getEmails(), this);
+		}
+	}
+	public void function removeEmailTemplate(any emailTemplate) {
+		if(!structKeyExists(arguments, "emailTemplate")) {
+			arguments.emailTemplate = variables.emailTemplate;
+		}
+		var index = arrayFind(arguments.emailTemplate.getEmails(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.emailTemplate.getEmails(), index);
+		}
+		structDelete(variables, "emailTemplate");
+	}
+
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================

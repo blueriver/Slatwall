@@ -49,6 +49,7 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	
 	// Related Object Properties (one-to-many)
 	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" type="array" fieldtype="one-to-many" fkcolumn="fulfillmentMethodID" cascade="all-delete-orphan" inverse="true";
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="fulfillmentMethodID" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -88,6 +89,14 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	}    
 	public void function removeShippingMethod(required any shippingMethod) {    
 		arguments.shippingMethod.removeFulfillmentMethod( this );    
+	}
+	
+	// Order Fulfillments (one-to-many)
+	public void function addOrderFulfillment(required any orderFulfillment) {
+		arguments.orderFulfillment.setFulfillmentMethod( this );
+	}
+	public void function removeOrderFulfillment(required any orderFulfillment) {
+		arguments.orderFulfillment.removeFulfillmentMethod( this );
 	}
 	
 	// Promotion Qualifiers (many-to-many - inverse)
