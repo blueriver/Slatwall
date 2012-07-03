@@ -11,6 +11,11 @@
 		<context name="fulfillItems" />
 	</contexts>
 	<objectProperties>
+		<property name="orderFulfillmentID">
+			<rule type="maxLength" contexts="delete">
+				<param name="maxLength" value="0" />
+			</rule>
+		</property>
 		<property name="orderFulfillmentItems">
 			<rule type="collectionSize" contexts="save,placeOrder,fulfillItems">
 				<param name="min" value="1" />
