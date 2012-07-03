@@ -77,6 +77,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		// If the entity Passes validation
 		if(arguments.entity.isDeletable()) {
 			
+			// Remove any Many-to-Many relationships
+			arguments.entity.removeAllManyToManyRelationships();
+			
 			// Call delete in the DAO
 			getDAO().delete(target=arguments.entity);
 			
