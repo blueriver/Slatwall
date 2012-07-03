@@ -429,6 +429,26 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}    
 	}
 	
+	// Subscription Benefits (many-to-many - owner)    
+	public void function addSubscriptionBenefit(required any subscriptionBenefit) {    
+		if(arguments.subscriptionBenefit.isNew() or !hasSubscriptionBenefit(arguments.subscriptionBenefit)) {    
+			arrayAppend(variables.subscriptionBenefits, arguments.subscriptionBenefit);    
+		}    
+		if(isNew() or !arguments.subscriptionBenefit.hasSku( this )) {    
+			arrayAppend(arguments.subscriptionBenefit.getSkus(), this);    
+		}    
+	}    
+	public void function removeSubscriptionBenefit(required any subscriptionBenefit) {    
+		var thisIndex = arrayFind(variables.subscriptionBenefits, arguments.subscriptionBenefit);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.subscriptionBenefits, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.subscriptionBenefit.getSkus(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.subscriptionBenefit.getSkus(), thatIndex);    
+		}    
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================

@@ -53,9 +53,11 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPromotion" fkcolumn="subscriptionBenefitID" inversejoincolumn="promotionID" cascade="all";
 	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
 	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
-	
 	property name="excludedCategories" singularname="excludedCategory" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitExcludedCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
 	property name="excludedContents" singularname="excludedContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitExcludedContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
+	
+	// Related Object Properties (many-to-many - inverse)
+	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallSkuSubscriptionBenefit" fkcolumn="subscriptionBenefitID" inversejoincolumn="skuID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -128,6 +130,14 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.priceGroup.getSubscriptionBenefits(), thatIndex);
 		}
+	}
+	
+	// Skus (many-to-many - inverse)
+	public void function addSku(required any sku) {
+		arguments.sku.addSubscriptionBenefit( this );
+	}
+	public void function removeSku(required any sku) {
+		arguments.sku.removeSubscriptionBenefit( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
