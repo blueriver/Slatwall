@@ -377,6 +377,24 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		structDelete(variables, "product");
 	}
 	
+	// SubscriptionTerm (many-to-one)    
+	public void function setSubscriptionTerm(required any subscriptionTerm) {    
+		variables.subscriptionTerm = arguments.subscriptionTerm;    
+		if(isNew() or !arguments.subscriptionTerm.hasSku( this )) {    
+			arrayAppend(arguments.subscriptionTerm.getSkus(), this);    
+		}    
+	}    
+	public void function removeSubscriptionTerm(any subscriptionTerm) {    
+		if(!structKeyExists(arguments, "subscriptionTerm")) {    
+			arguments.subscriptionTerm = variables.subscriptionTerm;    
+		}    
+		var index = arrayFind(arguments.subscriptionTerm.getSkus(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.subscriptionTerm.getSkus(), index);    
+		}    
+		structDelete(variables, "subscriptionTerm");    
+	}
+	
 	// Stocks (one-to-many)
 	public void function addStock(required any stock) {
 		arguments.stock.setSku( this );
@@ -408,6 +426,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeSku( this );
 	}
+	
 	
 	// Access Contents (many-to-many - owner)    
 	public void function addAccessContent(required any accessContent) {    

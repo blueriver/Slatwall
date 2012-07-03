@@ -53,6 +53,7 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	property name="gracePeriodTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
 	
 	// Related Object Properties (one-to-many)
+	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="one-to-many" fkcolumn="subscriptionTermID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -74,6 +75,14 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Skus (one-to-many)
+	public void function addSku(required any sku) {
+		arguments.sku.setSubscriptionTerm( this );
+	}
+	public void function removeSku(required any sku) {
+		arguments.sku.removeSubscriptionTerm( this );
+	}
 
 	// =============  END:  Bidirectional Helper Methods ===================
 

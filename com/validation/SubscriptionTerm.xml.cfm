@@ -10,5 +10,10 @@
 		<property name="renewalTerm">
 			<rule type="required" contexts="save" />
 		</property>
+		<property name="skus">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>
