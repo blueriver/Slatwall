@@ -26,8 +26,11 @@
 			<rule type="inList" contexts="addOrderItem">
 				<param name="list" value="ostNotPlaced,ostNew,ostProcessing,ostOnHold" />
 			</rule>
-			<rule type="inList" contexts="addOrderPayment,cancelOrder,closeOrder,createReturn">
+			<rule type="inList" contexts="addOrderPayment,cancelOrder,closeOrder">
 				<param name="list" value="ostNew,ostProcessing,ostOnHold" />
+			</rule>
+			<rule type="inList" contexts="createReturn">
+				<param name="list" value="ostNew,ostProcessing,ostOnHold,ostClosed" />
 			</rule>
 			<rule type="inList" contexts="takeOffHold">
 				<param name="list" value="ostOnHold" />
