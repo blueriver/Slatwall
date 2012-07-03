@@ -478,6 +478,14 @@ globalEncryptionKeySize
 			return settingDetails;
 		}
 		
+		public void function removeAllEntityRelatedSettings(required any entity) {
+			
+			if( listFindNoCase("brandID,contentID,emailID,emailTemplateID,productID,productTypeID,skuID,shippingMethodID,shippingMethodRateID,paymentMethodID", arguments.entity.getPrimaryIDPropertyName()) ){
+				getDAO().removeAllRelatedSettings(columnName=arguments.entity.getPrimaryIDPropertyName(), columnID=arguments.entity.getPrimaryIDValue());	
+			}
+			clearAllSettingsQuery();
+		}
+		
 	</cfscript>
 	
 	<cffunction name="getSettingRecordCount" output="false">

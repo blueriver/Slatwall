@@ -51,4 +51,16 @@ Notes:
 		<cfreturn rs />
 	</cffunction>
 	
+	<cffunction name="removeAllRelatedSettings">
+		<cfargument name="columnName" type="string" />
+		<cfargument name="columnID" type="string" />
+		
+		<cfset var rs = "" />
+		
+		<cfquery name="rs">
+			DELETE FROM SlatwallSetting WHERE #columnName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.columnID#">
+		</cfquery>
+		
+	</cffunction>
+	
 </cfcomponent>

@@ -80,6 +80,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			// Remove any Many-to-Many relationships
 			arguments.entity.removeAllManyToManyRelationships();
 			
+			getService("settingService").removeAllEntityRelatedSettings( entity=arguments.entity );
+			
 			// Call delete in the DAO
 			getDAO().delete(target=arguments.entity);
 			
