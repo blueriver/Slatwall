@@ -37,11 +37,16 @@ Notes:
 
 --->
 <cfparam name="rc.attribute" type="any">
-<cfparam name="rc.attributeset" type="any" default="#rc.attribute.getAttributeSet()#">
+<cfparam name="rc.attributeSet" type="any" default="#rc.attribute.getAttributeSet()#">
 <cfparam name="rc.edit" type="boolean">
+
+<cfif isStruct(rc.attributeSet) and rc.attribute.hasErrors()>
+	<cfset rc.attributeSet = rc.attribute.getAttributeSet() />
+</cfif>
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.attribute#" saveAction="admin:setting.saveattribute" edit="#rc.edit#">
+		
 		<cf_SlatwallActionBar type="detail" object="#rc.attribute#" edit="#rc.edit#" backAction="admin:setting.detailAttributeSet" backQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
 		
 		<cfif rc.edit>
