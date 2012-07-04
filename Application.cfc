@@ -111,6 +111,17 @@ component extends="org.fw1.framework" output="false" {
 						writeLog(file="Slatwall", text="General Log - Application Setup Started ( Hard )");
 					}
 					
+					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
+					if(!structKeyExists(application, "slatwallFW1")) {
+						
+						writeLog(file="Slatwall", text="General Log - onApplicationStart() was called");
+						
+						onApplicationStart();
+						
+						writeLog(file="Slatwall", text="General Log - onApplicationStart() finished");
+						
+					}
+					
 					request.slatwallScope.setApplicationValue("initialized", false);
 					
 					writeLog(file="Slatwall", text="General Log - Application Value 'initialized' set to false");
