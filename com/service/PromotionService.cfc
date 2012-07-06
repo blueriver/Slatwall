@@ -149,8 +149,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				
 				var reward = promotionRewards[pr];
 				
-				logSlatwall( "promotionRewardID" & reward.getPromotionRewardID());
-				
 				// Setup the promotionReward usage Details. This will be used for the maxUsePerQualification & and maxUsePerItem up front, and then later to remove discounts that violate max usage
 				promotionRewardUsageDetails[ reward.getPromotionRewardID() ] = {
 					usedInOrder = 0,
@@ -169,11 +167,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification = reward.getMaximumUsePerQualification();
 				}
 				
-				logSlatwall( "maximumUsePerOrder " & promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder );
-				logSlatwall( "maximumUsePerItem " & promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerItem );
-				logSlatwall( "maximumUsePerQualification " & promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification );
-				
-				
 				// Setup the boolean for if the promotionPeriod is okToApply based on general use count
 				if(!structKeyExists(promotionPeriodQualifications, reward.getPromotionPeriod().getPromotionPeriodID())) {
 					promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ] = {
@@ -185,8 +178,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				// If this promotion period is ok to apply based on general useCount
 				if(promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ].promotionPeriodQualifies) {
 					
-					logSlatwall("period ok");
-					
 					// Now that we know the period is ok, lets check and cache if the order qualifiers
 					if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()], "orderQulifies")) {
 						promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderQulifies = getPromotionPeriodOkToApplyByOrderQualifiers(promotionPeriod=reward.getPromotionPeriod(), order=arguments.order);
@@ -195,26 +186,18 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					// If order qualifies for the rewards promotion period
 					if(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderQulifies) {
 						
-						logSlatwall("order qualifies");
-						
 						// Now that we know the order is ok, lets check and cache if at least one of the fulfillment qualifies
 						if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()], "qualifiedFulfillmentIDList")) {
 							promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList = getPromotionPeriodQualifiedFulfillmentIDList(promotionPeriod=reward.getPromotionPeriod(), order=arguments.order);
 						}
 						
-						logSlatwall("fulfillment list: " & promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList);
-						
 						// Check to make sure that at least one of the fulfillents is in the list of qualified fulfillments
 						if(len(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList)) {
-							
-							logSlatwall("fulfillment in list");
 							
 							switch(reward.getRewardType()) {
 								
 								// =============== Order Item Reward ==============
 								case "merchandise": case "subscription": case "contentAccess":
-								
-									logSlatwall("reward is #reward.getRewardType()#");
 								
 									// Loop over all the orderItems
 									for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
@@ -222,18 +205,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 										// Get The order Item
 										var orderItem = arguments.order.getOrderItems()[i];
 										
-										logSlatwall("order item ID: " & orderItem.getOrderItemID());
-										
 										// Verify that this is an item being sold
 										if(orderItem.getOrderItemType().getSystemCode() == "oitSale") {
-											
-											logSlatwall("order item is sale");
 											
 											// Make sure that this order item is in the acceptable fulfillment list
 											if(listFindNoCase(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].qualifiedFulfillmentIDList, orderItem.getOrderFulfillment().getOrderFulfillmentID())) {
 												
-												logSlatwall("order item is in qualified fulfillment");
-											
 												// Now that we know the fulfillment is ok, lets check and cache then number of times this orderItem qualifies based on the promotionPeriod
 												if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems, orderItem.getOrderItemID())) {
 													promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ] = getPromotionPeriodOrderItemQualificationCount(promotionPeriod=reward.getPromotionPeriod(), orderItem=orderItem, order=arguments.order);
@@ -242,34 +219,22 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 												// If the qualification count for this order item is > 0 then we can try to apply the reward
 												if(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ]) {
 													
-													logSlatwall("order item qualification count is > 0");
-												
 													// Check the reward settings to see if this orderItem applies
 													if( getOrderItemInReward(reward, orderItem) ) {
-														
-														logSlatwall("order item applies");
 														
 														// setup the discountQuantity based on the qualification quantity.  If there were no qualification constrints than this will just be the orderItem quantity
 														var qualificationQuantity = promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ];
 														var discountQuantity = qualificationQuantity * promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification;
-														
-														logSlatwall("quanlifiaction count: " & qualificationQuantity);
-														logSlatwall("discount quantity: " & discountQuantity);
-														
 														
 														// If the discountQuantity is > the orderItem quantity then just set it to the orderItem quantity
 														if(discountQuantity > orderItem.getQuantity()) {
 															discountQuantity = orderItem.getQuantity();
 														}
 														
-														logSlatwall("discount quantity 2: " & discountQuantity);
-														
 														// If the discountQuantity is > than maximumUsePerItem then set it to maximumUsePerItem
 														if(discountQuantity > promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerItem) {
 															discountQuantity = promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerItem;
 														}
-														
-														logSlatwall("discount quantity 3: " & discountQuantity);
 														
 														// If there is not applied Price Group, or if this reward has the applied pricegroup as an eligible one then use priceExtended... otherwise use skuPriceExtended and then adjust the discount.
 														if( isNull(orderItem.getAppliedPriceGroup()) || reward.hasEligiblePriceGroup( orderItem.getAppliedPriceGroup() ) ) {
@@ -286,8 +251,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 															var discountAmount = precisionEvaluate(originalDiscountAmount - (orderItem.getExtendedSkuPrice() - orderItem.getExtendedPrice()));
 															
 														}
-														
-														logSlatwall("discount amount: " & discountAmount);
 														
 														// If the discountAmount is gt 0 then we can add the details in order to the potential orderItem discounts
 														if(discountAmount > 0) {
