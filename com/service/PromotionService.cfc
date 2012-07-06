@@ -433,7 +433,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 								// ================== Order Reward =========================
 								case "order": 
 								
-									var discountAmount = getDiscountAmount(reward, getOrderTotal(), 1);
+									var discountAmount = getDiscountAmount(reward, arguments.order.getOrderTotal(), 1);
 											
 									var addNew = false;
 										
@@ -441,19 +441,19 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 									if(discountAmount > 0) {
 										
 										// If there aren't any promotions applied to this order fulfillment yet, then we can add this one
-										if(!arrayLen(order.getAppliedPromotions())) {
+										if(!arrayLen(arguments.order.getAppliedPromotions())) {
 											addNew = true;
 											
 										// If one has already been set then we just need to check if this new discount amount is greater
-										} else if ( order.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
+										} else if ( arguments.order.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
 											
 											// If the promotion is the same, then we just update the amount
-											if(order.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
-												order.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
+											if(arguments.order.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
+												arguments.order.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
 												
 											// If the promotion is a different then remove the original and set addNew to true
 											} else {
-												order.getAppliedPromotions()[1].removeOrder();
+												arguments.order.getAppliedPromotions()[1].removeOrder();
 												addNew = true;
 											}
 										}
