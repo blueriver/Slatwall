@@ -50,15 +50,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect("admin:pricing.listpromotion");
 	}
 
-	public void function createPromotion() {
-		param name="rc.promotionID" default="";
-		rc.edit = "true";
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
+	public void function createPromotion(required struct rc) {
+		super.genericCreateMethod('Promotion', rc);
+		
 		if( rc.promotion.isNew() ) {
 			rc.promotionPeriod = getPromotionService().newPromotionPeriod();
 		}
-
-		getFW().setView( "admin:pricing.detailpromotion" );
 	}
 
 }

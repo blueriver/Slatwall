@@ -107,8 +107,11 @@ component extends="BaseService" accessors="true" output="false" {
 			accountEmailAddress.setAccount(arguments.account);
 			arguments.account.setPrimaryEmailAddress(accountEmailAddress);
 			
+			getDAO().save(target=accountEmailAddress);
+			
 			// Validate This Object
 			accountEmailAddress.validate();
+			
 			if(accountEmailAddress.hasErrors()) {
 				getSlatwallScope().setORMHasErrors( true );
 				arguments.account.addError("emailAddress", "The Email address has errors");
@@ -124,6 +127,8 @@ component extends="BaseService" accessors="true" output="false" {
 			accountPhoneNumber.populate(arguments.data);
 			accountPhoneNumber.setAccount(arguments.account);
 			arguments.account.setPrimaryPhoneNumber(accountPhoneNumber);
+			
+			getDAO().save(target=accountPhoneNumber);
 			
 			// Validate This Object
 			accountPhoneNumber.validate();
@@ -141,6 +146,8 @@ component extends="BaseService" accessors="true" output="false" {
 			accountAddress.setAccount(arguments.account);
 			arguments.account.setPrimaryAddress(accountAddress);
 
+			getDAO().save(target=accountAddress);
+			
 			// Validate Address
 			accountAddress.getAddress().validate();
 			if(accountAddress.getAddress().hasErrors()) {
@@ -309,6 +316,7 @@ component extends="BaseService" accessors="true" output="false" {
 				var primaryEmail = this.newAccountEmailAddress();
 				primaryEmail.setEmailAddress(arguments.cmsUser.getEmail());
 				primaryEmail.setAccount(arguments.account);
+				getDAO().save(target=primaryEmail);
 			}
 			arguments.account.setPrimaryEmailAddress(primaryEmail);
 		}
