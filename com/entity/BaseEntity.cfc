@@ -231,7 +231,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			// Set any one-to-many or many-to-many properties with a blank array as the default value
 			if(structKeyExists(getProperties()[i], "fieldtype") && getProperties()[i].fieldtype == "many-to-many" && ( !structKeyExists(getProperties()[i], "cascade") || !listFindNoCase("all-delete-orphan,delete,delete-orphan", getProperties()[i].cascade) ) ) {
 				var relatedEntities = variables[ getProperties()[i].name ];
-				for(var e = arrayLen(relatedEntities); e >= 1; e++) {
+				for(var e = arrayLen(relatedEntities); e >= 1; e--) {
 					this.invokeMethod("remove#getProperties()[i].singularname#", {1=relatedEntities[e]});	
 				}
 			}
