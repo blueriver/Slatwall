@@ -473,39 +473,43 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		
 		var timestamp = now();
 		
-		// Call the calculatedProperties update
-		updateCalculatedProperties();
-		
 		// Setup The First Created Date Time
 		if(structKeyExists(this,"setCreatedDateTime")){
 			this.setCreatedDateTime(timestamp);
-		}
-		if(structKeyExists(this,"setCreatedByAccount")){
-			if( !getSlatwallScope().getCurrentAccount().isNew() ) {
-				setCreatedByAccount( getSlatwallScope().getCurrentAccount() );	
-			}
 		}
 		
 		// Setup The First Modified Date Time
 		if(structKeyExists(this,"setModifiedDateTime")){
 			this.setModifiedDateTime(timestamp);
 		}
-		if(structKeyExists(this,"setModifiedByAccount")){
-			if( !getSlatwallScope().getCurrentAccount().isNew() ) {
-				setModifiedByAccount(getSlatwallScope().getCurrentAccount());	
-			}
-		}
 		
-		// Setup the first sortOrder
-		if(structKeyExists(this,"setSortOrder")) {
-			var metaData = getPropertyMetaData("sortOrder");
-			var topSortOrder = 0;
-			if(structKeyExists(metaData, "sortContext") && structKeyExists(variables, metaData.sortContext)) {
-				topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).table, contextIDColumn=variables[ metaData.sortContext ].getPrimaryIDPropertyName(), contextIDValue=variables[ metaData.sortContext ].getPrimaryIDValue() );
-			} else {
-				topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).table );
+		// These are more complicated options that should not be called during application setup
+		if(getSlatwallScope().hasApplicationValue("initialized") && getSlatwallScope().getApplicationValue("initialized")) {
+			
+			// Call the calculatedProperties update
+			updateCalculatedProperties();
+			
+			// Set createdByAccount
+			if(structKeyExists(this,"setCreatedByAccount") && !getSlatwallScope().getCurrentAccount().isNew() && len(getSlatwallScope().getCurrentAccount().getAllPermissions()) ){
+				setCreatedByAccount( getSlatwallScope().getCurrentAccount() );	
 			}
-			setSortOrder( topSortOrder + 1 );
+			
+			// Set modifiedByAccount
+			if(structKeyExists(this,"setModifiedByAccount") && !getSlatwallScope().getCurrentAccount().isNew() && len(getSlatwallScope().getCurrentAccount().getAllPermissions()) ){
+				setModifiedByAccount(getSlatwallScope().getCurrentAccount());
+			}
+			
+			// Setup the first sortOrder
+			if(structKeyExists(this,"setSortOrder")) {
+				var metaData = getPropertyMetaData("sortOrder");
+				var topSortOrder = 0;
+				if(structKeyExists(metaData, "sortContext") && structKeyExists(variables, metaData.sortContext)) {
+					topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).table, contextIDColumn=variables[ metaData.sortContext ].getPrimaryIDPropertyName(), contextIDValue=variables[ metaData.sortContext ].getPrimaryIDValue() );
+				} else {
+					topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).table );
+				}
+				setSortOrder( topSortOrder + 1 );
+			}
 		}
 	}
 	
@@ -517,16 +521,20 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		
 		var timestamp = now();
 		
-		// Call the calculatedProperties update
-		updateCalculatedProperties();
-		
 		// Update the Modified datetime if one exists
 		if(structKeyExists(this,"setModifiedDateTime")){
 			this.setModifiedDateTime(timestamp);
 		}
-		if(structKeyExists(this,"setModifiedByAccount")){
-			if( !getSlatwallScope().getCurrentAccount().isNew() ) {
-				setModifiedByAccount( getSlatwallScope().getCurrentAccount() );	
+		
+		// These are more complicated options that should not be called during application setup
+		if(getSlatwallScope().hasApplicationValue("initialized") && getSlatwallScope().getApplicationValue("initialized")) {
+		
+			// Call the calculatedProperties update
+			updateCalculatedProperties();
+		
+			// Set modifiedByAccount
+			if(structKeyExists(this,"setModifiedByAccount") && !getSlatwallScope().getCurrentAccount().isNew() && len(getSlatwallScope().getCurrentAccount().getAllPermissions()) ){
+				setModifiedByAccount(getSlatwallScope().getCurrentAccount());
 			}
 		}
 	}

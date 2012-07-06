@@ -50,11 +50,16 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	property name="createdDateTime" ormtype="timestamp";
 	property name="modifiedDateTime" ormtype="timestamp";
 	
+	// Non-Persistent Properties
+	property name="requestAccount" type="any" persistent="false"; 
+	
 	public any function getAccount() {
-		if(!structKeyExists(variables, "account")) {
-			return getService("accountService").newAccount();
+		if(structKeyExists(variables, "account")) {
+			return variables.account;
+		} else if (!structKeyExists(variables, "requestAccount")) {
+			variables.requestAccount = getService("accountService").newAccount();
 		}
-		return variables.account;
+		return variables.requestAccount;
 	}
 	
 	public void function removeAccount() {
