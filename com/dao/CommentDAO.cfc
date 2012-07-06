@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="BaseDAO" output="false">
 	
 	<cffunction name="getRelatedCommentsForEntity" returntype="Array" access="public">
 		<cfargument name="primaryIDPropertyName" type="string" required="true" />
@@ -44,6 +44,7 @@ Notes:
 		
 		<cftry>
 			<cfset var results = ormExecuteQuery("SELECT NEW MAP(
+				scr.commentRelationshipID as commentRelationshipID,
 				scr.referencedRelationshipFlag as referencedRelationshipFlag,
 				scr.referencedExpressionStart as referencedExpressionStart,
 				scr.referencedExpressionEnd as referencedExpressionEnd,
@@ -60,6 +61,25 @@ Notes:
 		</cftry>
 		
 		<cfreturn results /> 
+	</cffunction>
+	
+	
+	<cffunction name="deleteAllRelatedCommentsForEntity" returntype="boolean" access="public">
+		<cfargument name="primaryIDPropertyName" type="string" required="true" />
+		<cfargument name="primaryIDValue" type="string" required="true" />
+		
+		<cfset var relatedComments = getRelatedCommentsForEntity(argumentcollection=arguments) />
+		<cfset var relatedComment = "" />
+		
+		<cfloop array="#relatedComments#" index="relatedComment" >
+			<cfset var results = ormExecuteQuery("DELETE SlatwallCommentRelationship WHERE commentRelationshipID = ?", [relatedComment["commentRelationshipID"]]) />
+			
+			<cfif not relatedComment["referencedRelationshipFlag"]>
+				<cfset var results = ormExecuteQuery("DELETE SlatwallComment WHERE commentID = ?", [relatedComment["comment"].getCommentID()]) />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn true />
 	</cffunction>
 	
 </cfcomponent>

@@ -38,10 +38,10 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 
+	property name="commentService" type="any";
 	property name="locationService" type="any";
 	property name="skuService" type="any";
 	property name="typeService" type="any";
-	property name="stockService" type="any";
 	
 	public any function getStockBySkuAndLocation(required any sku, required any location){
 		var stock = getDAO().getStockBySkuAndLocation(argumentCollection=arguments);
@@ -224,5 +224,39 @@ component extends="BaseService" accessors="true" output="false" {
 	// ====================== START: Get Overrides ============================
 	
 	// ======================  END: Get Overrides =============================
+	
+	// ===================== START: Delete Overrides ==========================
+	
+	public any function deleteStockAdjustment(required any entity) {
+		
+		// If the entity Passes validation
+		if(arguments.entity.isDeletable()) {
+			
+			// Remove any Many-to-Many relationships
+			arguments.entity.removeAllManyToManyRelationships();
+			
+			// Remove any Settings
+			getService("settingService").removeAllEntityRelatedSettings( entity=arguments.entity );
+			
+			// Remove any comments
+			getCommentService().deleteAllRelatedCommentsForEntity("stockAdjustmentID", arguments.entity.getStockAdjustmentID());
+			
+			// Call delete in the DAO
+			getDAO().delete(target=arguments.entity);
+			
+			// Return that the delete was sucessful
+			return true;
+			
+		}
+			
+		// Setup ormHasErrors because it didn't pass validation
+		getSlatwallScope().setORMHasErrors( true );
+
+		return false;
+		
+	}
+
+	// =====================  END: Delete Overrides ===========================
+	
 	
 }

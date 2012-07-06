@@ -310,6 +310,7 @@
 		<property name="locationService"><ref bean="locationService" /></property>
 		<property name="skuService"><ref bean="skuService" /></property>
 		<property name="typeService"><ref bean="typeService" /></property>
+		<property name="commentService"><ref bean="commentService" /></property>
     </bean>
     <bean id="subscriptionService" class="Slatwall.com.service.SubscriptionService">
         <property name="DAO"><ref bean="SubscriptionDAO" /></property>

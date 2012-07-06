@@ -110,9 +110,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return arrayToList(returnCommentArray, " ");
 	}
 	
-	public array function getRelatedCommentsForEntity(required string primaryIDPropertyName, required string primaryIDValue) {
-		return getDAO().getRelatedCommentsForEntity(argumentCollection=arguments);
-	}
+
 
 
 	
@@ -121,6 +119,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
+	
+	public array function getRelatedCommentsForEntity(required string primaryIDPropertyName, required string primaryIDValue) {
+		return getDAO().getRelatedCommentsForEntity(argumentCollection=arguments);
+	}
+	
+	public boolean function deleteAllRelatedCommentsForEntity(required string primaryIDPropertyName, required string primaryIDValue) {
+		return getDAO().deleteAllRelatedCommentsForEntity(argumentCollection=arguments);
+	}
 	
 	// ===================== START: DAO Passthrough ===========================
 	

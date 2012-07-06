@@ -71,6 +71,10 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	
 	// ======================  END: Get Overrides =============================
 	
+	// ===================== START: Delete Overrides ==========================
+	
+	// =====================  END: Delete Overrides ===========================
+	
 }]]></starttext>
 <endtext><![CDATA[]]></endtext>
 </snippet>
