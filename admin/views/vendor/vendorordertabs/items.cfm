@@ -55,4 +55,4 @@ Notes:
 	<cf_slatwalllistingcolumn propertyidentifier="extendedCost" sort="false" />
 </cf_slatwalllistingdisplay>
 
-<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
+<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" class="btn btn-inverse" icon="plus icon-white" />

@@ -230,10 +230,12 @@ function setupEventHandlers() {
 		}
 		
 		jQuery('#adminModal').load( modalLink, function(){
+			
 			initUIElements('#adminModal');
+			
 			jQuery('#adminModal').css({
-				width: 'auto',
-		        'margin-left': function () {
+				'width': 'auto',
+				'margin-left': function () {
 		            return -(jQuery('#adminModal').width() / 2);
 		        }
 			});
