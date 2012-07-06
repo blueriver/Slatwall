@@ -14,6 +14,9 @@
 		
 		<Record settingID="dbb327f70a6671d22c58b7635e8f4921" settingName="emailToAddress" settingValue="${account.emailAddress}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
 		<Record settingID="dbb327f8d5114720d065a3009a4da731" settingName="emailSubject" settingValue="Order Confirmation - Order Number: ${orderNumber}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
+		
+		<Record settingID="dbb327f9dd92fd95a7c6fdf14f1b141c" settingName="emailToAddress" settingValue="${order.account.emailAddress}" emailTemplateID="dbb327e694534908c60ea354766bf0a8" />
+		<Record settingID="dbb327fafb738698d58c2fa990ae45dd" settingName="emailSubject" settingValue="Delivery Confirmation - Order Number: ${order.orderNumber}" emailTemplateID="dbb327e694534908c60ea354766bf0a8" />
 			
 		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="globalCurrencyLocale" settingValue="English (US)" />
 		<Record settingID="dbb327b0b5496521002aa35ab68ab120" settingName="globalCurrencyType" settingValue="Local" />
@@ -84,8 +87,8 @@
 Below Are UUID's to use... delete after using
 	
 	
-	dbb327f9dd92fd95a7c6fdf14f1b141c
-	dbb327fafb738698d58c2fa990ae45dd
+	
+	
 	dbb327fbdba2dfd5a9d385ba7fa98ee0
 	dbb327fce3c46bd94bdd602e435a431b
 	dbb327fdd9e6a7f22ad24c575c2e3f25
