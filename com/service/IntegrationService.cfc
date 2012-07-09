@@ -155,6 +155,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					integration.setIntegrationPackage(integrationPackage);
 					integration.setIntegrationName(integrationCFC.getDisplayName());
 					
+					if(integration.isNew()) {
+						integration.setFW1ReadyFlag(0);
+						integration.setFW1ActiveFlag(0);
+						integration.setPaymentReadyFlag(0);
+						integration.setPaymentActiveFlag(0);
+						integration.setShippingReadyFlag(0);
+						integration.setShippingActiveFlag(0);
+						integration.setCustomReadyFlag(0);
+						integration.setCustomActiveFlag(0);
+					}
+					
 					var integrationTypes = integrationCFC.getIntegrationTypes();
 					
 					// Start: Get Integration Types
