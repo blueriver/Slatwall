@@ -667,7 +667,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						||
 						( qualifier.getRewardMatchingType() == "brand" && isNull(arguments.orderItem.getSku().getProduct().getBrand()))
 						||
-						( qualifier.getRewardMatchingType() == "brand" && thisOrderItem.getSku().getProduct().getBrand().getBrandID() != arguments.orderItem.getSku().getBrand().getBrandID() )
+						( qualifier.getRewardMatchingType() == "brand" && thisOrderItem.getSku().getProduct().getBrand().getBrandID() != arguments.orderItem.getSku().getProduct().getBrand().getBrandID() )
 						) {
 							
 						orderItemQualifierCount = 0;
