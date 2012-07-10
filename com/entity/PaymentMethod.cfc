@@ -47,6 +47,16 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";
 	
+	// Related Object Properties (many-to-one)
+	
+	// Related Object Properties (one-to-many)
+	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="paymentMethodID" cascade="all" inverse="true" lazy="extra";		// Set to lazy, just used for delete validation
+	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" type="array" fieldtype="one-to-many" fkcolumn="paymentMethodID" cascade="all-delete-orphan" inverse="true" lazy="extra";				// Set to lazy, just used for delete validation
+	
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
+	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 
@@ -56,6 +66,9 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non-Persistent Properties
+
+
 	public array function getPaymentMethodTypeOptions() {
 		var options = [
 			{name="Cash", value="cash"},
@@ -79,16 +92,53 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 		return getService("integrationService").getIntegrationByIntegrationPackage(getProviderGateway());
 	}
 	
-
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Account Payment Methods (one-to-many)
+	public void function addAccountPaymentMethod(required any accountPaymentMethod) {
+		arguments.accountPaymentMethod.setPaymentMethod( this );
+	}
+	public void function removeAccountPaymentMethod(required any accountPaymentMethod) {
+		arguments.accountPaymentMethod.removePaymentMethod( this );
+	}
+	
+	// Order Payments (one-to-many)
+	public void function addOrderPayment(required any orderPayment) {
+		arguments.orderPayment.setPaymentMethod( this );
+	}
+	public void function removeOrderPayment(required any orderPayment) {
+		arguments.orderPayment.removePaymentMethod( this );
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
+	
 }

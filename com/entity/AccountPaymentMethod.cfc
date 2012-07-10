@@ -134,6 +134,24 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 		structDelete(variables, "account");
 	}
 	
+	// Payment Method (many-to-one)
+	public void function setPaymentMethod(required any paymentMethod) {
+		variables.paymentMethod = arguments.paymentMethod;
+		if(isNew() or !arguments.paymentMethod.hasAccountPaymentMethod( this )) {
+			arrayAppend(arguments.paymentMethod.getAccountPaymentMethods(), this);
+		}
+	}
+	public void function removePaymentMethod(any paymentMethod) {
+		if(!structKeyExists(arguments, "paymentMethod")) {
+			arguments.paymentMethod = variables.paymentMethod;
+		}
+		var index = arrayFind(arguments.paymentMethod.getAccountPaymentMethods(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.paymentMethod.getAccountPaymentMethods(), index);
+		}
+		structDelete(variables, "paymentMethod");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================

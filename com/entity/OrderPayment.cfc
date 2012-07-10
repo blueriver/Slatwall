@@ -331,6 +331,24 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		structDelete(variables, "referencedOrderPayment");    
 	}
 	
+	// Payment Method (many-to-one)
+	public void function setPaymentMethod(required any paymentMethod) {
+		variables.paymentMethod = arguments.paymentMethod;
+		if(isNew() or !arguments.paymentMethod.hasOrderPayment( this )) {
+			arrayAppend(arguments.paymentMethod.getOrderPayments(), this);
+		}
+	}
+	public void function removePaymentMethod(any paymentMethod) {
+		if(!structKeyExists(arguments, "paymentMethod")) {
+			arguments.paymentMethod = variables.paymentMethod;
+		}
+		var index = arrayFind(arguments.paymentMethod.getOrderPayments(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.paymentMethod.getOrderPayments(), index);
+		}
+		structDelete(variables, "paymentMethod");
+	}
+	
 	// Credit Card Transactions (one-to-many)
 	public void function addCreditCardTransaction(required any creditCardTransaction) {
 		arguments.creditCardTransaction.setOrderPayment( this );
