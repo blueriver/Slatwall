@@ -63,14 +63,14 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Non-Persistent Properties
-	property name="discountAmountDetials" persistent="false";
+	property name="discountAmountDetails" persistent="false";
 	property name="totalChargeAfterDiscount" persistent="false" formatType="currency";
 	
 	public struct function getDiscountAmountDetails() {
-		if(!structKeyExists(variables, "discountAmountDetials")) {
-			variables.discountAmountDetials = getService("promotionService").getShippingMethodOptionsDiscountAmountDetails(shippingMethodOption=this);
+		if(!structKeyExists(variables, "discountAmountDetails")) {
+			variables.discountAmountDetails = getService("promotionService").getShippingMethodOptionsDiscountAmountDetails(shippingMethodOption=this);
 		}
-		return variables.discountAmountDetials;
+		return variables.discountAmountDetails;
 	}
 	
 	public numeric function getDiscountAmount() {
@@ -103,6 +103,24 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 			arrayDeleteAt(arguments.orderFulfillment.getfulfillmentShippingMethodOptions(), index);
 		}
 		structDelete(variables, "orderFulfillment");
+	}
+
+	// Shipping Method Rate (many-to-one)
+	public void function setShippingMethodRate(required any shippingMethodRate) {
+		variables.shippingMethodRate = arguments.shippingMethodRate;
+		if(isNew() or !arguments.shippingMethodRate.hasShippingMethodOption( this )) {
+			arrayAppend(arguments.shippingMethodRate.getShippingMethodOptions(), this);
+		}
+	}
+	public void function removeShippingMethodRate(any shippingMethodRate) {
+		if(!structKeyExists(arguments, "shippingMethodRate")) {
+			arguments.shippingMethodRate = variables.shippingMethodRate;
+		}
+		var index = arrayFind(arguments.shippingMethodRate.getShippingMethodOptions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.shippingMethodRate.getShippingMethodOptions(), index);
+		}
+		structDelete(variables, "shippingMethodRate");
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

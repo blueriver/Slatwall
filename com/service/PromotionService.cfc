@@ -1,3 +1,4 @@
+
 /*
 
     Slatwall - An Open Source eCommerce Platform
@@ -782,19 +783,25 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		var promotionRewards = getDAO().getActivePromotionRewards( rewardTypeList="fulfillment", promotionCodeList=arguments.shippingMethodOption.getOrderFulfillment().getOrder().getPromotionCodeList() );
 		
+		
 		// Loop over the Promotion Rewards to look for the best discount
 		for(var i=1; i<=arrayLen(promotionRewards); i++) {
-			var qc = 1;
 			
-			// Check to see if this requires any promotion codes
-			if(arrayLen(promotionRewards[i].getPromotionPeriod().getPromotion().getPromotionCodes())) {
-				// set the qc to 0 so that we can then 
-				qc = 0;
+			var reward = promotionRewards[i];
+			
+			if( ( !arrayLen(reward.getFulfillmentMethods()) || reward.hasFulfillmentMethod(arguments.shippingMethodOption.getOrderFulfillment().getFulfillmentMethod()) ) 
+				&&
+				( !arrayLen(reward.getShippingMethods()) || reward.hasShippingMethod(arguments.shippingMethodOption.getShippingMethodRate().getShippingMethod()) ) ) {
+					
+				var discountAmount = getDiscountAmount(reward, arguments.shippingMethodOption.getTotalCharge(), 1);
 				
-				// loop over the promotion codes looking for 
+				if(discountAmount > details.discountAmount) {
+					details.discountAmount = discountAmount;
+					details.promotionID = reward.getPromotionPeriod().getPromotion().getPromotionID();
+				}
 			}
+			
 		}
-		
 		
 		return details;
 	}

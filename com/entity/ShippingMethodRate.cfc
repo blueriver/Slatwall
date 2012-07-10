@@ -54,6 +54,7 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 	
 	// Related Object Properties (one-to-many)
+	property name="shippingMethodOptions" singularname="shippingMethodOption" cfc="ShippingMethodOption" type="array" fieldtype="one-to-many" fkcolumn="shippingMethodRateID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 	
@@ -196,6 +197,14 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 			arrayDeleteAt(arguments.shippingMethod.getShippingMethodRates(), index);
 		}
 		structDelete(variables, "shippingMethod");
+	}
+	
+	// Shipping Method Options (one-to-many)    
+	public void function addShippingMethodOption(required any shippingMethodOption) {    
+		arguments.shippingMethodOption.setShippingMethodRate( this );    
+	}    
+	public void function removeShippingMethodOption(required any shippingMethodOption) {    
+		arguments.shippingMethodOption.removeShippingMethodRate( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
