@@ -79,11 +79,10 @@ Notes:
 				<cf_SlatwallFieldDisplay title="Packing Slip Number" fieldtype="text" fieldname="processOptions.packingslipnumber" edit="true">
 				<cf_SlatwallFieldDisplay title="Location" fieldname="processOptions.locationID" fieldType="select" valueOptions="#locations#" edit="true">
 			
-				<cf_SlatwallProcessListing processSmartList="#vendorOrder.getVendorOrderItemsSmartList()#">
+				<cf_SlatwallProcessListing processSmartList="#rc.processVendorOrderSmartList#" processRecordsProperty="vendorOrderItems">
 					<cf_SlatwallProcessColumn propertyIdentifier="stock.sku.skucode" />
 					<cf_SlatwallProcessColumn propertyIdentifier="quantity"/>
 					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span2 number" value="" />
-					<cf_SlatwallProcessColumn data="vendorOrderID" fieldType="hidden" value="#rc.vendorOrderID#" />
 				</cf_SlatwallProcessListing>
 				
 			</cfcase>

@@ -43,7 +43,7 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="packingSlipNumber" ormtype="string";
 	property name="boxCount" ormtype="integer";
-	property name="receiverType" ormtype="string" formatType="rbKey";
+	property name="receiverType" ormtype="string" formatType="rbKey" notnull="true";
 	
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -58,17 +58,6 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Not actually required for TPC implemention. Just providing type tracking for new entities.
-	public void function setReceiverType(required string type) {
-		var listAllowableTypes = "vendorOrder,order,stockAdjustment";
-		
-		if(ListFind(listAllowableTypes, arguments.type) == 0) {
-			throw("The type (#arguments.type#) is not allowed! The allowed StockReceiver types are: #listAllowedTypes#");
-		} else {
-			variables.receiverType = arguments.type;
-		}
-	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

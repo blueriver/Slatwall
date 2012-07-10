@@ -38,15 +38,21 @@ Notes:
 --->
 <cfparam name="rc.vendorOrderSmartList" type="any" />
 
-<cf_SlatwallActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:vendor.editvendororder" />
+<cfsilent>
+	<cfset rc.vendorOrderSmartList.addOrder("createdDateTime|DESC") />
+</cfsilent>
 
-<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#"
-						   recordDetailAction="admin:vendor.detailvendororder"
-						   recordEditAction="admin:vendor.editvendororder">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="estimatedReceivalDateTime" range="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="total" sort="false" />
-</cf_SlatwallListingDisplay>
+<cfoutput>
+	<cf_SlatwallActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:vendor.editvendororder" />
+	
+	<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#"
+							   recordDetailAction="admin:vendor.detailvendororder"
+							   recordEditAction="admin:vendor.editvendororder">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="estimatedReceivalDateTime" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="total" sort="false" />
+	</cf_SlatwallListingDisplay>
+</cfoutput>

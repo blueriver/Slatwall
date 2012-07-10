@@ -144,25 +144,39 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				break;
 			
 			case 'receiveStock':
-				if(val(arguments.data.quantity)){
-						
-					var stockReceiver = getStockService().getStockReceiverByPackingSlipNumber(arguments.data.packingSlipNumber);
-					var stockreceiverItem = new('StockReceiverItem');
-					var vendorOrderItem = get('VendorOrderItem',arguments.data.vendorOrderItemID);
-					var location = getLocationService().getLocation(arguments.data.locationID);
-					var stock = vendorOrderItem.getStock();
-					
-					stockReceiver.setReceiverType('vendorOrder');
-					stockReceiver.setBoxCount(arguments.data.boxcount);
-					
-					stockreceiverItem.setQuantity(arguments.data.quantity);
-					stockReceiverItem.setStock(stock);
-					stockReceiverItem.setVendorOrderItem(vendorOrderItem);
-					stockReceiverItem.setStockReceiver(stockReceiver);
-				}
-				break;
-		}	
+			
+				var stockReceiver = getStockService().newStockReceiver();
+				stockReceiver.setReceiverType("vendorOrder");
+				stockReceiver.populate(arguments.data);
 				
+				stockReceiver.setVendorOrder( arguments.vendorOrder );
+				
+				var location = getLocationService().getLocation( arguments.data.locationID );
+				
+				for(var i=1; i<=arrayLen(arguments.data.records); i++) {
+					
+					var thisRecord = arguments.data.records[i];
+					
+					if(val(thisRecord.quantity) gt 0) {
+						
+						var foundItem = false;
+						var vendorOrderItem = this.getVendorOrderItem( thisRecord.vendorOrderItemID );
+						var stock = getStockService().getStockBySkuAndLocation( vendorOrderItem.getStock().getSku(), location );
+						
+						var stockreceiverItem = getStockService().newStockReceiverItem();
+					
+						stockreceiverItem.setQuantity( thisRecord.quantity );
+						stockreceiverItem.setStock( stock );
+						stockreceiverItem.setVendorOrderItem( vendorOrderItem );
+						stockreceiverItem.setStockReceiver( stockReceiver );
+						
+					}
+				}
+				
+				break;
+		}
+		
+		return arguments.vendorOrder;
 	}
 	
 	// =====================  END: Process Methods ============================

@@ -48,6 +48,4 @@ Notes:
 	<cf_slatwalllistingcolumn propertyidentifier="packingSlipNumber"/>
 </cf_slatwalllistingdisplay>
 
-<cf_slatwallactioncaller action="admin:vendor.processVendorOrder" class="btn btn-inverse" icon="plus icon-white" 
-                         querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&processContext=receiveStock" 
-                         modal=true/>
+<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" class="btn btn-inverse" icon="plus icon-white" />
