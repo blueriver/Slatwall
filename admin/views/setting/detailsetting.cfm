@@ -49,6 +49,7 @@ Notes:
 		<cfset local.hasRelationshipKey = true />
 		<cfset local.returnActionQueryString = listAppend(local.returnActionQueryString, '#local.key#=#rc[local.key]#', '&') />
 		<cfif local.key eq "contentID">
+			<cfset rc.content = $.slatwall.getService("contentService").getContent(rc.contentID) />
 			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="cmsContentID" value="#rc.content.getCMSContentID()#" />', chr(13)) />	
 		<cfelse>
 			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#left(local.key, len(local.key)-2)#.#local.key#" value="#rc[local.key]#" />', chr(13)) />	
