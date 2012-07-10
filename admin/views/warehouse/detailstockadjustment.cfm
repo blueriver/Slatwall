@@ -64,6 +64,7 @@ Notes:
 		
 		<cf_SlatwallTabGroup object="#rc.stockAdjustment#" allowComments="true">
 			<cf_SlatwallTab view="admin:warehouse/stockadjustments/products" />
+			<cf_SlatwallTab view="admin:warehouse/stockadjustments/stockreceivers" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

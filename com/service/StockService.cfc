@@ -164,6 +164,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 		} else if(arguments.processcontext eq 'processAdjustment'){
 			
+			// Incoming
 			if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualIn") {
 				var stockReceiver = this.newStockReceiver();
 				stockReceiver.setReceiverType("stockAdjustment");
@@ -179,7 +180,7 @@ component extends="BaseService" accessors="true" output="false" {
 					stockReceiverItem.setStock(stockAdjustmentItem.getToStock());
 				}
 				
-				this.saveStockReceiver(stockReceiver);
+				this.saveStockReceiver( stockReceiver );
 			}
 			
 			// Outgoing
@@ -201,7 +202,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			
 			// Set the status to closed
-			arguments.stockAdjustment.setStockAdjustmentStatusType(getTypeService().getTypeBySystemCode("sastClosed"));
+			arguments.stockAdjustment.setStockAdjustmentStatusType( getTypeService().getTypeBySystemCode("sastClosed") );
 		}
 		
 		return arguments.stockAdjustment;
