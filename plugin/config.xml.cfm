@@ -53,7 +53,7 @@ Notes:
 	<providerURL>http://www.getslatwall.com/</providerURL>
 	<category>Application</category>
 	<ormcfclocation>/com/entity/,/integrationServices/</ormcfclocation>
-	<customtagpaths>tags</customtagpaths>
+	<customtagpaths>frontend/tags,tags</customtagpaths>
 	<mappings>
 		<mapping name="ValidateThis" directory="org/ValidateThis"/>
 	</mappings>
