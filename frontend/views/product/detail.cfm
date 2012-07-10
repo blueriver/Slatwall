@@ -75,6 +75,11 @@ Notes:
 			</cfif>
 			<!--- END: Product Options --->
 			
+			<!--- START: Sku Price --->
+			<cfif $.slatwall.product('defaultSku').getUserDefinedPriceFlag()>
+				<input type="text" name="price" value="" />
+			</cfif>
+			
 			<!--- Fulfillment Options --->
 			<cfif len(structKeyList(local.fulfillmentMethodSkus)) GT 1>
 				<cfset local.fulfillmentMethodSmartList = $.slatwall.getService("fulfillmentService").getFulfillmentMethodSmartList() />

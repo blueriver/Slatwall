@@ -170,8 +170,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						// do not increment quantity for content access product
 						if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
 							orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-							orderItems[i].setPrice( arguments.sku.getPrice() );
-							orderItems[i].setSkuPrice( arguments.sku.getPrice() );
+							if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
+								orderItems[i].setPrice( arguments.sku.getPrice() );
+								orderItems[i].setSkuPrice( arguments.sku.getPrice() );	
+							} else {
+								orderItems[i].setPrice( arguments.data.price );
+								orderItems[i].setSkuPrice( arguments.data.price );
+							}
 						}
 						break;
 						
@@ -189,8 +194,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			newItem.setOrderFulfillment(arguments.orderFulfillment);
 			
 			// All new items have the price and skuPrice set to the current price of the sku being added.  Later the price may be changed by the recalculateOrderAmounts() method
-			newItem.setPrice( arguments.sku.getPrice() );
-			newItem.setSkuPrice( arguments.sku.getPrice() );
+			if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
+				newItem.setPrice( arguments.sku.getPrice() );
+				newItem.setSkuPrice( arguments.sku.getPrice() );	
+			} else {
+				newItem.setPrice( arguments.data.price );
+				newItem.setSkuPrice( arguments.data.price );
+			}
+			
 			
 			// If a stock was passed in, then assign it to this new item
 			if(!isNull(arguments.stock)) {
