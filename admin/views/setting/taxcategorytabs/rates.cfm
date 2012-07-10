@@ -39,11 +39,14 @@ Notes:
 <cfparam name="rc.taxCategory" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.taxCategory.getTaxCategoryRatesSmartList()#"
-		recordEditAction="admin:setting.edittaxcategoryrate"
-		recordEditQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#"
-		recordEditModal=true
-		recordDeleteAction="admin:setting.deletetaxcategoryrate"
-		recordDeleteQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#&returnAction=admin:setting.detailtaxcategory">
+						   recordEditAction="admin:setting.edittaxcategoryrate"
+						   recordEditQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#"
+						   recordEditModal=true
+						   recordDetailAction="admin:setting.detailtaxcategoryrate"
+						   recordDetailQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#"
+						   recordDetailModal=true
+						   recordDeleteAction="admin:setting.deletetaxcategoryrate"
+						   recordDeleteQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#&returnAction=admin:setting.detailtaxcategory">
 		
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="taxRate" />
 	<cf_SlatwallListingColumn propertyIdentifier="addressZone.addressZoneName" />

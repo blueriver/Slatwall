@@ -43,7 +43,7 @@ component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" t
 	property name="taxRate" ormtype="float" formatType="percentage";
 	
 	// Related Object Properties
-	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
+	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID" nullRBKey="define.all";
 	property name="taxCategory" cfc="TaxCategory" fieldtype="many-to-one" fkcolumn="taxCategoryID";
 	
 	// Remote properties
@@ -82,11 +82,40 @@ component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" t
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
 	// ================== START: Overridden Methods ========================
+	
+	
+	public string function getSimpleRepresentation() {
+		var sr = getTaxCategory().getTaxCategoryName();
+		if( !isNull(getAddressZone()) ) {
+			sr = listAppend(sr, getAddressZone().getAddressZoneName(), " - ");
+		} else {
+			sr = listAppend(sr, rbKey('define.all'), " - ");
+		}
+		sr = listAppend(sr, getTaxRate(), " - ");
+		return sr;// getTaxCategory().getTaxCategoryName() & " - " & getAddressZone().getAddressZoneName() & " - " & getTaxRate();
+	}
+	
 	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
 }
