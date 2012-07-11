@@ -41,11 +41,41 @@ Notes:
 <cfoutput>
 	<div class="svoaccountlistsubscription">
 		<!--- <cfdump var="#rc.account.getSubscriptionUsages()#" top="3" /> --->
-		<dl>
-		<cfloop array="#rc.account.getSubscriptionUsages()#" index="local.subscription">
-			<dt>#local.subscription.getSubscriptionOrderItemName()#</dt>
-			<dd>#local.subscription.getCurrentStatusType()#</dd>
-		</cfloop>
-		</dl>
+		<form name="account" method="post" action="#$.createHREF(filename='my-account')#">
+			<input type="hidden" name="slatAction" value="frontend:account.save" />
+	
+			<table>
+				<tr>
+					<th>Subscription</th>
+					<th>Status</th>
+					<th>Expiration Date</th>
+					<th>Next Bill Date</th>
+					<th>Auto Renew</th>
+					<th>Payment Method</th>
+					<th>Admin</th>
+				</tr>
+			
+				<cfset local.subscriptionIndex = 0 />
+				<cfloop array="#rc.account.getSubscriptionUsages()#" index="local.subscriptionUsage">
+					<cfset local.subscriptionIndex++ />
+					<tr>
+						<td>#local.subscriptionUsage.getSubscriptionOrderItemName()#</td>
+						<td>#local.subscriptionUsage.getCurrentStatusType()#</td>
+						<td>#local.subscriptionUsage.getFormattedValue('expirationDate')#</td>
+						<td>#local.subscriptionUsage.getFormattedValue('nextBillDate')#</td>
+						<td>#local.subscriptionUsage.getFormattedValue('autoPayFlag')#</td>
+						<td>
+							<select name="subscriptionUsages[#local.subscriptionIndex#].accountPaymentMethod.accountPaymentMethodID">
+								<cfloop array="#rc.account.getAccountPaymentMethodsOptions()#" index="local.accountPaymentMethod">
+									<option value="#local.accountPaymentMethod['value']#" <cfif !isNull(local.subscriptionUsage.getAccountPaymentMethod()) && local.subscriptionUsage.getAccountPaymentMethod().getAccountPaymentMethodID() eq local.accountPaymentMethod['value']></cfif>>#local.accountPaymentMethod['name']#</option>
+								</cfloop>
+							</select>
+							<button type="submit">Update Payment Method</button>
+						</td>
+						<td><a href="#$.createHREF(filename='my-account', queryString='slatAction=frontend:account.renewsubscription&subscriptionUsageID=#local.subscriptionUsage.getSubscriptionUsageID()#')#">Renew Now</a></td>
+					</tr>
+				</cfloop>
+			</table>
+		</form>
 	</div>
 </cfoutput>

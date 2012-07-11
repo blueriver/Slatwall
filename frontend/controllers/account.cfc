@@ -42,6 +42,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="orderService" type="any";
 	property name="userUtility" type="any";
 	property name="paymentService" type="any";
+	property name="subscriptionService" type="any";
 	
 	public any function init(required any fw) {
 		setUserUtility( getCMSBean("userUtility") );
@@ -230,6 +231,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(rc.returnURL neq "") {
 			getFW().redirectExact(rc.returnURL);
 		}
+	}
+	
+	public void function renewSubscription(required struct rc) {
+		var subscriptionUsage = getSubscriptionService().getSubscriptionUsage(rc.subscriptionUsageID);
+		
+		getSubscriptionService().processSubscriptionUsage( subscriptionUsage, {}, "manualRenew" );
+		
+		getFW().setView("frontend:account.listsubscription");
 	}
 	
 }
