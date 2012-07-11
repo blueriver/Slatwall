@@ -36,28 +36,16 @@
 Notes:
 
 --->
+<cfparam name="rc.account" type="any" />
+
 <cfoutput>
-<ul id="accountNav">
-	<cfif rc.slatAction neq "frontend:account.detail">
-		<li><a href="#$.createHREF(filename='my-account')#">Account Overview</a></li>
-	</cfif>
-	<cfif rc.slatAction neq "frontend:account.edit">
-		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=edit')#">Edit Profile</a></li>
-	</cfif>
-	<cfif listLast(rc.slatAction,".") neq "editlogin">
-		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=editLogin')#">Edit Login</a></li>
-	</cfif>
-	<cfif arrayLen($.slatwall.account().getOrders()) and listLast(rc.slatAction,".") neq "frontend:account.listorder">
-		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=listorder')#">View Orders</a></li>
-	</cfif>
-	<cfif listLast(rc.slatAction,".") neq "listaddress">
-		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=listaddress')#">View Addresses</a></li>
-	</cfif>
-	<cfif listLast(rc.slatAction,".") neq "listpaymentmethod">
-		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=listpaymentmethod')#">View Payment Methods</a></li>
-	</cfif>
-	<cfif listLast(rc.slatAction,".") neq "listsubscriptions">
-		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=listsubscription')#">View Subscriptions</a></li>
-	</cfif>
-</ul>
+	<div class="svoaccountlistsubscription">
+		<!--- <cfdump var="#rc.account.getSubscriptionUsages()#" top="3" /> --->
+		<dl>
+		<cfloop array="#rc.account.getSubscriptionUsages()#" index="local.subscription">
+			<dt>#local.subscription.getSubscriptionOrderItemName()#</dt>
+			<dd>#local.subscription.getCurrentStatusType()#</dd>
+		</cfloop>
+		</dl>
+	</div>
 </cfoutput>

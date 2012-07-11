@@ -153,6 +153,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:account.listpaymentmethod");
 	}
 	
+	public void function listSubscription(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		
+		getFW().setView("frontend:account.listsubscription");
+	}
+	
+	
 	public void function editPaymentMethod(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
 		rc.accountPaymentMethod = getAccountService().getAccountPaymentMethod(rc.accountPaymentMethodID);
