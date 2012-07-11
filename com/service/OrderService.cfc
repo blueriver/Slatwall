@@ -209,13 +209,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 			// Check for product customization
 			if(structKeyExists(arguments, "customizatonData") && structKeyExists(arguments.customizatonData, "attribute")) {
-				var pcas = arguments.sku.getProduct().getAttributeSets(['astProductCustomization']);
+				var pcas = arguments.sku.getProduct().getAttributeSets(['astOrderItem']);
 				for(var i = 1; i <= arrayLen(pcas); i++) {
 					var attributes = pcas[i].getAttributes();
 					
 					for(var a = 1; a <= arrayLen(attributes); a++) {
 						if(structKeyExists(arguments.customizatonData.attribute, attributes[a].getAttributeID())) {
-							var av = this.newOrderItemAttributeValue();
+							var av = this.newAttributeValue();
+							av.setAttributeValueType("orderItem");
 							av.setAttribute(attributes[a]);
 							av.setAttributeValue(arguments.customizatonData.attribute[attributes[a].getAttributeID()]);
 							av.setOrderItem(newItem);
