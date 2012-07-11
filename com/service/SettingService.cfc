@@ -463,7 +463,11 @@ globalEncryptionKeySize
 						}
 					// Password
 					} else if (getSettingMetaData(arguments.settingName).fieldType == "password") {
-						settingDetails.settingValueFormatted = "********";
+						if(len(settingDetails.settingValue)) {
+							settingDetails.settingValueFormatted = "********";	
+						} else {
+							settingDetails.settingValueFormatted = "";
+						}
 					} else {
 						settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, getSettingMetaData(arguments.settingName).fieldType);	
 					}
