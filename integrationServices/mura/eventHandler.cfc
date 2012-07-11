@@ -352,6 +352,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 		var contentProductListingFlag = slatwallContent.getSettingDetails('contentProductListingFlag');
 		// check if content needs to be saved
 		if(slatwallData.templateFlag || slatwallData.setting.contentProductListingFlag != "" || contentProductListingFlag.settingValueFormatted || slatwallData.setting.contentRestrictAccessFlag != "" || contentRestrictAccessFlag.settingValueFormatted || slatwallData.setting.contentRestrictedContentDisplayTemplate != "") {
+			createParentSlatwallPage($);
 			// set the parent content
 			var parentContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("parentID"));
 			if(!isNull(parentContent)) {
@@ -361,6 +362,26 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 			// now save all the content settings
 			saveSlatwallSetting($,slatwallData.setting,slatwallContent);
 			return slatwallContent;
+		}
+	}
+	
+	private void function createParentSlatwallPage(required any $) {
+		var contentIDPathArray = listToArray($.content('path'));
+		var parentCount = arrayLen(contentIDPathArray) - 1;
+		// create all except first (home) and last (the content being saved)
+		for(var i = 2; i < parentCount; i++) {
+			var slatwallContent = $.slatwall.getService("contentService").getContentByCmsContentID(contentIDPathArray[i],true);
+			if(slatwallContent.isNew()) {
+				var muraContent = $.getBean('content').loadBy(contentID=contentIDPathArray[i]) ;
+				slatwallContent.setCmsSiteID(muraContent.getSiteID());
+				slatwallContent.setCmsContentID(muraContent.getContentID());
+				slatwallContent.setCmsContentIDPath(muraContent.getPath());
+				slatwallContent.setTitle(muraContent.getTitle());
+				if(!isNull(parentSlatwallContent)) {
+					slatwallContent.setParentContent(parentSlatwallContent);
+				}
+				var parentSlatwallContent = $.slatwall.getService("contentService").saveContent(slatwallContent);
+			}
 		}
 	}
 	
