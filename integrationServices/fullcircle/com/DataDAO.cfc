@@ -11,7 +11,7 @@
 		
 		<cfset var integration = getService("integrationService").getIntegrationByIntegrationPackage("fullcircle") />
 		
-		<cfftp action="listdir" name="pickupDirectoryList" server="#integration.setting('fcFTPServer')#" username="#integration.setting('fcFTPUsername')#" password="#integration.setting('fcFTPPassword')#" secure="#integration.setting('fcFTPUseSecure')#" port="#integration.setting('fcFTPPort')#" directory="#integration.setting('fcFTPDirecotry')#/s/">
+		<cfftp action="listdir" name="pickupDirectoryList" server="#integration.setting('fcFTPAddress')#" username="#integration.setting('fcFTPUsername')#" password="#integration.setting('fcFTPPassword')#" secure="#integration.setting('fcFTPUseSecure')#" port="#integration.setting('fcFTPPort')#" directory="#integration.setting('fcFTPDirecotry')#/s/">
 		
 		<cfloop query="pickupDirectoryList">
 			<cfif not pickupDirectoryList.isDirectory and left(pickupDirectoryList.name, len(integration.setting('companyCode')) + 1) eq "#integration.setting('companyCode')#_" and right(pickupDirectoryList.name, 12) eq "_product.txt">
@@ -26,7 +26,7 @@
 				<cfset directoryCreate(integration.setting('localTransferDirctory'))>
 			</cfif>
 			
-			<cfftp action="getFile" server="#integration.setting('fcFTPServer')#" username="#integration.setting('fcFTPUsername')#" password="#integration.setting('fcFTPPassword')#" secure="#integration.setting('fcFTPUseSecure')#" port="#integration.setting('fcFTPPort')#" remotefile="#integration.setting('fcFTPDirecotry')#/s/#productFilename#" localfile="#integration.setting('localTransferDirctory')#/#productFilename#" failIfExists="no">
+			<cfftp action="getFile" server="#integration.setting('fcFTPAddress')#" username="#integration.setting('fcFTPUsername')#" password="#integration.setting('fcFTPPassword')#" secure="#integration.setting('fcFTPUseSecure')#" port="#integration.setting('fcFTPPort')#" remotefile="#integration.setting('fcFTPDirecotry')#/s/#productFilename#" localfile="#integration.setting('localTransferDirctory')#/#productFilename#" failIfExists="no">
 			
 			<cfhttp method="get"
 					url="#integration.setting('localTransferDirctory')#/#productFilename#"
