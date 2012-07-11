@@ -144,6 +144,82 @@ Notes:
 	</cfquery>
 </cfif>
 
+<cftry>
+	<cfquery name="alterProductCategory">
+		ALTER TABLE SlatwallProductCategory 
+		ALTER COLUMN productID VARCHAR(32) NOT NULL;
+	</cfquery>
+	<cfcatch>
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>	
+	<cfquery name="alterCategory">
+		ALTER TABLE SlatwallProductCategory 
+		ALTER COLUMN categoryID VARCHAR(32) NOT NULL;
+	</cfquery>
+	<cfcatch>
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="alterOrderPayment">
+		ALTER TABLE SlatwallOrderPayment 
+		ALTER COLUMN paymentMethodID VARCHAR(32) NOT NULL;
+	</cfquery>
+	<cfcatch>
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="alterPaymentMethod">
+		ALTER TABLE SlatwallPaymentMethod 
+		ALTER COLUMN paymentMethodID VARCHAR(32) NOT NULL;
+	</cfquery>
+	<cfcatch>
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="alterOrderFulfillment">
+		ALTER TABLE SlatwallOrderFulfillment 
+		ALTER COLUMN fulfillmentMethodID VARCHAR(32) NULL;
+	</cfquery>
+	<cfcatch>
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="alterOrderDelivery">
+		ALTER TABLE SlatwallOrderDelivery 
+		ALTER COLUMN fulfillmentMethodID VARCHAR(32) NULL;
+	</cfquery>
+	<cfcatch>
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="alterFulfillmentMethod">
+		ALTER TABLE SlatwallFulfillmentMethod 
+		ALTER COLUMN fulfillmentMethodID VARCHAR(32) NULL;
+	</cfquery>
+	<cfcatch>
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>	
+	<cfcatch>
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
 <!--- TODO: --->
 <!--- easier to DROP ALL FK AND THEN DO THIS --->
 <!--- drop FK constraint from fulfillmentMethodID from orderDelivery --->
