@@ -2,6 +2,7 @@
 <validateThis xsi:noNamespaceSchemaLocation="validateThis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<conditions>
 		<condition name="paymentTypeCreditCard" serverTest="getPaymentMethodType() EQ 'creditCard'" />
+		<condition name="paymentTypeCreditCardWithAmountAndNoAuthorization" serverTest="getPaymentMethodType() EQ 'creditCard' AND getAmountAuthorized() eq 0 AND getAmount() gt 0" />
 	</conditions>
 	<contexts>
 		<context name="save" />
@@ -22,7 +23,7 @@
 			<rule type="required" contexts="save" condition="paymentTypeCreditCard" />
 		</property>
 		<property name="creditCardNumber">
-			<rule type="required" contexts="save" condition="paymentTypeCreditCard" />
+			<rule type="required" contexts="save" condition="paymentTypeCreditCardWithAmountAndNoAuthorization" />
 			<rule type="numeric" contexts="save" condition="paymentTypeCreditCard" />
 		</property>
 		<property name="amountUnauthorized">
