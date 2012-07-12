@@ -163,6 +163,10 @@ component extends="org.fw1.framework" output="false" {
 					if(!structKeyExists(url, "soft") || !url.soft) {
 						writeLog(file="Slatwall", text="General Log - Pre ORMReload()");
 						
+						include "/plugins/Slatwall/config/scripts/database/preORMReload.cfm";
+						
+						writeLog(file="Slatwall", text="Gerneral Log - preORMReload scripts run");
+						
 						ormReload();
 						
 						writeLog(file="Slatwall", text="General Log - ORMReload() was successful");		

@@ -39,7 +39,7 @@ Notes:
 
 <cfset local.scriptHasErrors = false />
 
-<cfdbinfo datasource="bootstrap" type="Tables" name="local.infoTables" />
+<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Tables" name="local.infoTables" />
 
 <!--- Update fulfillmentMethodID for all shippingMethods where the fulfillmentMethodID = "shipping" --->
 <cftry>
