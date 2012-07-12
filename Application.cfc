@@ -165,7 +165,7 @@ component extends="org.fw1.framework" output="false" {
 						
 						include "/plugins/Slatwall/config/scripts/database/preORMReload.cfm";
 						
-						writeLog(file="Slatwall", text="Gerneral Log - preORMReload scripts run");
+						writeLog(file="Slatwall", text="General Log - preORMReload scripts run");
 						
 						ormReload();
 						

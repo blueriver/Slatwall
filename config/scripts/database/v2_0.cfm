@@ -215,11 +215,49 @@ Notes:
 </cftry>
 
 <!--- Create Content Record for Every Content in Mura Admin with type of SlatwallProductListing --->
-
+<cftry>
+	<cfquery name="local.getData">
+		SELECT DISTINCT
+			contentID,
+			path
+		FROM
+			tcontent
+		WHERE
+			subType = <cfqueryparam cfsqltype="cf_sql_varchar" value="SlatwallProductListing">
+	</cfquery>
+	
+	<cfloop query="local.getData">
+		<cfquery name="local.contentExists">
+			SELECT DISTINCT
+				cmsContentID
+			FROM
+				SlatwallContent
+			WHERE
+				cmsContentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.getData.contentID#">
+		</cfquery>
+		
+		<cfif not local.contentExists.recordCount>
+			<cfquery name="local.updateData">
+				INSERT INTO SlatwallContent (
+					contentID,
+					cmsContentID,
+					cmsContentIDPath
+				) VALUES (
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#replace(lcase(createUUID()), "-", "", "all")#">,
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.getData.contentID#">,
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.getData.path#">
+				)
+			</cfquery>
+		</cfif>
+	</cfloop>
+	
+	<cfcatch>	
+		<cflog file="Slatwall" text="General Log - Create Listing Pages Has Errors">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
 
 <!--- Delete Extended Attribute Type of "SlatwallProductListing" --->
-
-<!--- Create Content Record for Every Content in Mura Admin with type of SlatwallProductTemplate --->
 
 <!--- Delete Extended Attribute Type of "SlatwallProductTemplate" --->
 
