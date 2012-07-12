@@ -397,7 +397,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 								// ================== Order Reward =========================
 								case "order": 
 								
-									var discountAmount = getDiscountAmount(reward, arguments.order.getOrderTotal(), 1);
+									var discountAmount = getDiscountAmount(reward, arguments.order.getTotal(), 1);
 											
 									var addNew = false;
 										
