@@ -147,7 +147,7 @@ Notes:
 							</cfif>
 						</cf_SlatwallActionCallerDropdown>
 					</ul>
-					<form name="search" class="navbar-search pull-right" action="/">
+					<form name="search" class="navbar-search pull-right" action="/" onSubmit="return false;">
 						<input id="global-search" type="text" name="serach" class="search-query span2" placeholder="Search">
 					</form>
 				</div>
