@@ -383,7 +383,8 @@ function setupEventHandlers() {
 			if( !showLoadedRows( jQuery(this).closest('table').attr('ID'), jQuery(this).closest('tr').attr('id') ) ) {
 				var data = {};
 				data[ 'F:' + jQuery(this).closest('table').data('parentidproperty') ] = jQuery(this).closest('tr').attr('id');
-				
+				data[ 'OrderBy' ] = jQuery(this).closest('table').data('expandsortproperty') + '|DESC';
+				console.log(data);
 				listingDisplayUpdate( jQuery(this).closest('table').attr('id'), data, jQuery(this).closest('tr').attr('id') );
 			}
 		
