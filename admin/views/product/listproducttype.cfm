@@ -38,15 +38,15 @@ Notes:
 --->
 <cfparam name="rc.productTypeSmartList" type="any" />
 
+<cfset rc.productTypeSmartList.addOrder("productTypeName|ASC") />
+
 <cfoutput>
-	
 	<cf_SlatwallActionBar type="listing" object="#rc.productTypeSmartList#" showrecordsperpage="false" createAction="admin:product.createmerchandiseproducttype,admin:product.createsubscriptionproducttype,admin:product.createcontentaccessproducttype" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.productTypeSmartList#" 
 								recordEditAction="admin:product.editproducttype"
 								recordDetailAction="admin:product.detailproducttype">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productTypeName" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productTypeName" sort="false" />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" sort="false" />
 	</cf_SlatwallListingDisplay>
-
 </cfoutput>
