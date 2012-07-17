@@ -37,6 +37,102 @@ Notes:
 
 --->
 
+<!--- Many to Many Index Creation Function --->
+<cffunction name="verifyManyToManyIndex">
+	<cfargument name="tableName" type="string" required="true" />
+	
+	<cfset var qrs = "" />
+	<cfset var infoColumns = "" />
+	<cfset var infoIndexes = "" />
+
+	
+	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="#arguments.tableName#" name="infoColumns" />
+	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Index" table="#arguments.tableName#" name="infoIndexes" />
+	
+	<cfloop query="infoColumns">
+		<cfif infoColumns.column_size eq 32>
+			<cfquery name="qrs" dbtype="query">
+				SELECT
+					infoIndexes.column_name
+				FROM
+					infoIndexes
+				WHERE
+					LOWER(infoIndexes.column_name) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(infoColumns.column_name)#">
+			</cfquery>
+			<cfif not qrs.recordCount>
+				<cfquery name="createIndex">
+					CREATE INDEX MTMSA#UCASE(infoColumns.column_name)# ON #arguments.tableName# ( #infoColumns.column_name# )
+				</cfquery>
+			</cfif>
+		</cfif>
+	</cfloop>
+</cffunction>
+
+
+<!--- Lost of Many-To-Many tables to ensure that indexes exist --->
+<cfset verifyManyToManyIndex("SlatwallProductCategory") />
+<cfset verifyManyToManyIndex("SlatwallAccountContentAccessContent") />
+<cfset verifyManyToManyIndex("SlatwallAccountPermissionGroup") />
+<cfset verifyManyToManyIndex("SlatwallAccountPriceGroup") />
+<cfset verifyManyToManyIndex("SlatwallAddressZoneLocation") />
+<cfset verifyManyToManyIndex("SlatwallAttributeSetProductType") />
+<cfset verifyManyToManyIndex("SlatwallOrderPromotionCode") />
+<cfset verifyManyToManyIndex("SlatwallPriceGroupRateExcludedProduct") />
+<cfset verifyManyToManyIndex("SlatwallPriceGroupRateExcludedProductType") />
+<cfset verifyManyToManyIndex("SlatwallPriceGroupRateExcludedSku") />
+<cfset verifyManyToManyIndex("SlatwallPriceGroupRateProduct") />
+<cfset verifyManyToManyIndex("SlatwallPriceGroupRateProductType") />
+<cfset verifyManyToManyIndex("SlatwallPriceGroupRateSku") />
+<cfset verifyManyToManyIndex("SlatwallProductCategory") />
+<cfset verifyManyToManyIndex("SlatwallProductListingPage") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierBrand") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierExcludedBrand") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierExcludedOption") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierExcludedProduct") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierExcludedProductType") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierExcludedSku") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierFulfillmentMethod") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierOption") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierProduct") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierProductType") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierShippingAddressZone") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierShippingMethod") />
+<cfset verifyManyToManyIndex("SlatwallPromotionQualifierSku") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardBrand") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardEligiblePriceGroup") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardExcludedBrand") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardExcludedOption") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardExcludedProduct") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardExcludedProductType") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardExcludedSku") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardFulfillmentMethod") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardOption") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardProduct") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardProductType") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardShippingAddressZone") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardShippingMethod") />
+<cfset verifyManyToManyIndex("SlatwallPromotionRewardSku") />
+<cfset verifyManyToManyIndex("SlatwallRelatedProduct") />
+<cfset verifyManyToManyIndex("SlatwallSkuAccessContent") />
+<cfset verifyManyToManyIndex("SlatwallSkuOption") />
+<cfset verifyManyToManyIndex("SlatwallSkuRenewalSubscriptionBenefit") />
+<cfset verifyManyToManyIndex("SlatwallSkuSubscriptionBenefit") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionBenefitCategory") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionBenefitContent") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionBenefitExcludedCategory") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionBenefitExcludedContent") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionBenefitPriceGroup") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionBenefitPromotion") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionUsageBenefitCategory") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionUsageBenefitContent") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionUsageBenefitExcludedCategory") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionUsageBenefitExcludedContent") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionUsageBenefitPriceGroup") />
+<cfset verifyManyToManyIndex("SlatwallSubscriptionUsageBenefitPromotion") />
+<cfset verifyManyToManyIndex("SlatwallVendorBrand") />
+<cfset verifyManyToManyIndex("SlatwallVendorProduct") />
+
+
 <!--- INDEX to inforce SlatwallStock has unique Sku & Location combo --->
 <cfdbinfo type="Index" name="dbiSkuLocation" table="SlatwallStock">
 <cfquery name="indexExists" dbtype="query">
@@ -53,3 +149,6 @@ Notes:
 		CREATE UNIQUE INDEX SkuLocation ON SlatwallStock (locationID,skuID)
 	</cfquery>
 </cfif>
+
+
+
