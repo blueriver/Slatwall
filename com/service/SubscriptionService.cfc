@@ -313,7 +313,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 				// set next bill date, calculated from the last bill date
 				// need setting to decide what start date to use for next bill date calculation
-				arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
+				arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getRenewalTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
 					
 				// flush session to make sure order is persisted to DB
 				getDAO().flushORMSession();
@@ -394,7 +394,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 			// set next bill date, calculated from the last bill date
 			// need setting to decide what start date to use for next bill date calculation
-			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
+			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getRenewalTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
 				
 			// flush session to make sure order is persisted to DB
 			getDAO().flushORMSession();
