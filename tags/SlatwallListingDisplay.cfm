@@ -213,6 +213,10 @@ Notes:
 		<!--- Setup the list of all property identifiers to be used later --->
 		<cfloop array="#thistag.columns#" index="column">
 			<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
+			<cfif findNoCase("primary", column.tdClass) and thistag.expandable>
+				<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-expandsortproperty="#column.propertyIdentifier#"', " ") />
+				<cfset column.sort = false />
+			</cfif>
 		</cfloop>
 	</cfsilent>
 	<cfoutput>
