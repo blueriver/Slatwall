@@ -55,11 +55,11 @@ component extends="org.fw1.framework" output="false" {
 	variables.framework.reload = "reload";
 	
 	// If we are installed inside of mura, then use the core application settings, otherwise use standalone settings
-	if( fileExists(expandPath("../../config/applicationSettings.cfm")) ) {
+	if( fileExists(expandPath("/muraWRM/config/applicationSettings.cfm")) ) {
 		
-		include "../../config/applicationSettings.cfm";
-		include "../../config/mappings.cfm";
-		include "../mappings.cfm";
+		include "/muraWRM/config/applicationSettings.cfm";
+		include "/muraWRM/config/mappings.cfm";
+		include "/muraWRM/mappings.cfm";
 	
 	// Default Standalone settings
 	} else {
