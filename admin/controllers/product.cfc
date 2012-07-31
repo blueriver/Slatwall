@@ -142,7 +142,11 @@ component extends="BaseController" output=false accessors=true {
 			
 			//set up image name
 			if(structKeyExists(rc,'imageExclusive') && rc.imageExclusive){
-				imageNameToUse = rc.skucode & setting('globalImageExtension');
+				if(left(setting('globalImageExtension'),1) eq '.') {
+					imageNameToUse = rc.skucode & setting('globalImageExtension');	
+				} else {
+					imageNameToUse = rc.skucode & '.' & setting('globalImageExtension');
+				}
 			}else{
 				imageNameToUse=sku.getImageFile();
 			}
