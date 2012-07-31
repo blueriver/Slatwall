@@ -138,7 +138,7 @@ component extends="org.fw1.framework" output="false" {
 					writeLog(file="Slatwall", text="General Log - slatwallVfsRoot directory has been confirmed");
 					
 					// Set up ValidateThis
-					request.slatwallScope.setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = "/Slatwall/com/validation/",injectResultIntoBO = true,defaultFailureMessagePrefix = ""}));
+					request.slatwallScope.setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = expandPath('/Slatwall/com/validation/'),injectResultIntoBO = true,defaultFailureMessagePrefix = ""}));
 					
 					writeLog(file="Slatwall", text="General Log - Application Value 'validateThis' setup");
 					
