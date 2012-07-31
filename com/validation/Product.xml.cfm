@@ -53,5 +53,11 @@
 				<param name="list" value="subscription" />
 			</rule>
 		</property>
+		<property name="price">
+			<rule type="numeric" contexts="save" />
+		</property>
+		<property name="listPrice">
+			<rule type="numeric" contexts="save" />
+		</property>
 	</objectProperties>
 </validateThis>
