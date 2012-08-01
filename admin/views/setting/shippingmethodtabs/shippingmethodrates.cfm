@@ -48,6 +48,7 @@ Notes:
 							   sortContextIDColumn="shippingMethodID"
 							   sortContextIDValue="#rc.shippingMethod.getShippingMethodID()#">
 		<cf_SlatwallListingColumn tdclass="primary" propertyidentifier="shippingMethodRateName" />
+		<cf_SlatwallListingColumn propertyidentifier="addressZone.addressZoneName" />
 		<cf_SlatwallListingColumn propertyidentifier="shipmentWeightRange" />
 		<cf_SlatwallListingColumn propertyidentifier="shipmentItemPriceRange" />
 		<cf_SlatwallListingColumn propertyidentifier="defaultAmount" />
