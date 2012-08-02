@@ -45,14 +45,20 @@ component accessors="true" output="false" displayname="Endicia" extends="Slatwal
 	public struct function getSettings() {
 		variables.settings = {
 			accountID = {fieldType="text", displayName="Account ID"},
+			fromPostalCode = {fieldType="text", displayName="From Postal Code"},
 			passPhrase = {fieldType="password", displayName="Pass Phrase", encryptValue=true},
-			fromPostalCode = {fieldType="text", displayName="From Postal Code"}
+			syncFTPSite = {fieldType="text", displayName="FTP Sync Server Address"},
+			syncFTPSiteUsername = {fieldType="text", displayName="FTP Sync Username"},
+			syncFTPSitePassword = {fieldType="text", displayName="FTP Sync Password", encryptValue=true},
+			syncFTPSitePort = {fieldType="text", displayName="FTP Sync Port", defaultValue=21},
+			syncFTPSiteDropoffDirectory = {fieldType="text", displayName="FTP Sync Dropoff Directory"},
+			syncFTPSiteDropoffFilename = {fieldType="text", displayName="FTP Sync Dropoff Fielname"}
 		};
 		return variables.settings;
 	}
 	
 	public string function getIntegrationTypes() {
-		return "shipping";
+		return "shipping,fw1";
 	}
 	
 	public string function getDisplayName() {
