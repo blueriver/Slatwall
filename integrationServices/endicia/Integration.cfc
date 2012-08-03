@@ -49,7 +49,7 @@ component accessors="true" output="false" displayname="Endicia" extends="Slatwal
 			passPhrase = {fieldType="password", displayName="Pass Phrase", encryptValue=true},
 			syncFTPSite = {fieldType="text", displayName="FTP Sync Server Address"},
 			syncFTPSiteUsername = {fieldType="text", displayName="FTP Sync Username"},
-			syncFTPSitePassword = {fieldType="text", displayName="FTP Sync Password", encryptValue=true},
+			syncFTPSitePassword = {fieldType="password", displayName="FTP Sync Password", encryptValue=true},
 			syncFTPSitePort = {fieldType="text", displayName="FTP Sync Port", defaultValue=21},
 			syncFTPSiteDropoffDirectory = {fieldType="text", displayName="FTP Sync Dropoff Directory"},
 			syncFTPSiteDropoffFilename = {fieldType="text", displayName="FTP Sync Dropoff Fielname"}
