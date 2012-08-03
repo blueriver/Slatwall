@@ -112,7 +112,9 @@ component accessors="true" output="false" extends="BaseObject" {
 			if(isBoolean(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) && getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
 				variables.currentProductSmartList.addLikeFilter('listingPages.cmsContentIDPath', '%#getCurrentContent().getCMSContentID()#%');	
 			} else {
-				variables.currentProductSmartList.addFilter('listingPages.cmsContentID', getCurrentContent().getCMSContentID());
+				if(!isNull(getCurrentContent().getCMSContentID())) {
+					variables.currentProductSmartList.addFilter('listingPages.cmsContentID');	
+				}
 			}
 		}
 		return variables.currentProductSmartList;
