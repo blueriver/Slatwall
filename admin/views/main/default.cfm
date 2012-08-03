@@ -42,7 +42,7 @@ Notes:
 <cfparam name="rc.vendorOrderSmartList" type="any" />
 
 <cfsilent>
-	<cfif application.configBean.getTrackSessionInNewThread() && listLast(application.autoUpdater.getCurrentCompleteVersion(), ".") lt 4970>
+	<cfif application.configBean.getTrackSessionInNewThread() NEQ "1" && listLast(application.autoUpdater.getCurrentCompleteVersion(), ".") lt 4970>
 		<cfset $.slatwall.showMessageKey('dashboard.tracksessionissue_error') />
 	</cfif>
 </cfsilent>
