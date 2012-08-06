@@ -59,7 +59,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		if(rc.orderNumber != "") {
 			rc.order = getOrderService().getOrderByOrderNumber(rc.orderNumber, true);
-			if(rc.order.getAccount().getLastName() != rc.lastName || rc.order.getAccount().getPrimaryEmailAddress().getEmailAddress() != rc.emailAddress) {
+			
+			if(isNull(rc.order.getAccount()) || rc.order.getAccount().getLastName() != rc.lastName || rc.order.getAccount().getEmailAddress() != rc.emailAddress) {
 				rc.order = getOrderService().newOrder();	
 			}
 		}

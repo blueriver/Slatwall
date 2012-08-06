@@ -579,14 +579,14 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		// Add Where Conditions
 		if( arrayLen(getWhereConditions()) ) {
-			if(len(hqlWhere) == 0) {
-				if(!arguments.suppressWhere) {
-					hqlWhere &= " WHERE";
-				}
-			} else {
-				hqlWhere &= " AND";
-			}
 			for(var i=1; i<=arrayLen(getWhereConditions()); i++) {
+				if(len(hqlWhere) == 0) {
+					if(!arguments.suppressWhere && i==1) {
+						hqlWhere &= " WHERE";
+					}
+				} else {
+					hqlWhere &= " AND";
+				}
 				structAppend(variables.hqlParams,getWhereConditions()[i].conditionParams);
 				hqlWhere &= " #getWhereConditions()[i].condition#";
 			}

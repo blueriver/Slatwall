@@ -109,8 +109,9 @@ component accessors="true" output="false" extends="BaseObject" {
 			variables.currentProductSmartList = getService("productService").getProductSmartList(data=url);
 			variables.currentProductSmartList.addFilter('activeFlag', 1);
 			variables.currentProductSmartList.addFilter('publishedFlag', 1);
+			variables.currentProductSmartList.addWhereCondition(" (aslatwallproduct.calculatedAllowBackorderFlag = 1 OR aslatwallproduct.calculatedQATS > 0) ");
 			if(isBoolean(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) && getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
-				variables.currentProductSmartList.addLikeFilter('listingPages.cmsContentIDPath', '%#getCurrentContent().getCMSContentID()#%');	
+				variables.currentProductSmartList.addWhereCondition(" EXISTS(SELECT sc.contentID FROM SlatwallContent sc INNER JOIN sc.listingProducts slp WHERE sc.cmsContentIDPath LIKE '%#getCurrentContent().getCMSContentID()#%' AND slp.productID = aslatwallproduct.productID) ");
 			} else {
 				if(!isNull(getCurrentContent().getCMSContentID())) {
 					variables.currentProductSmartList.addFilter('listingPages.cmsContentID');	
