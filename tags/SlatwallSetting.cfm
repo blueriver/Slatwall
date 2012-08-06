@@ -52,7 +52,7 @@ Notes:
 	
 	<cfif left(attributes.settingName, 11) eq "integration">
 		<cfloop collection="#attributes.settingObject.getSettings()#" item="simpleSettingName">
-			<cfif right(attributes.settingName, len(simpleSettingName)) eq simpleSettingName and structKeyExists(attributes.settingObject.getSettings()[simpleSettingName], "displayName")>
+			<cfif attributes.settingName eq "integration#attributes.settingObject.getIntegrationPackage()##simpleSettingName#" and structKeyExists(attributes.settingObject.getSettings()[simpleSettingName], "displayName")>
 				<cfset attributes.settingDisplayName = attributes.settingObject.getSettings()[simpleSettingName].displayName />
 				<cfif structKeyExists(attributes.settingObject.getSettings()[simpleSettingName], "hint")>
 					<cfset attributes.settingHint = attributes.settingObject.getSettings()[simpleSettingName].hint />
