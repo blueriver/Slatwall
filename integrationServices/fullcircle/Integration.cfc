@@ -1,4 +1,4 @@
-component accessors="true" output="false" displayname="Celerant" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
+component accessors="true" output="false" displayname="Full Circle" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
 	public any function init() {
 		return this;
