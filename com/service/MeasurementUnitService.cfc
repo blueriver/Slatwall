@@ -47,10 +47,16 @@ component extends="BaseService" output="false" {
 	}
 	
 	public numeric function convertWeight(required numeric weight, required originalUnitCode, required convertToUnitCode) {
-		var omu = this.getMeasurementUnit(arguments.originalUnitCode, arguments.originalUnitCode);
-		var nmu = this.getMeasurementUnit(arguments.originalUnitCode, arguments.convertToUnitCode);
+		var omu = this.getMeasurementUnit(arguments.originalUnitCode);
+		var nmu = this.getMeasurementUnit(arguments.convertToUnitCode);
 		
-		return (arguments.weight / omu.getConversionRation()) * nmu.getConversionRation();
+		// As long as both of the measurement units exist, then we can return the conversion 
+		if(!isNull(omu) && !isNUll(nmu) && !isNull(omu.getConversionRatio()) && !isNull(nmu.getConversionRatio()) ) {
+			return (arguments.weight / omu.getConversionRatio()) * nmu.getConversionRatio();	
+		}
+		
+		// Otherwise just return the original weight
+		return arguments.weight;
 	}
 	
 	// ===================== START: Logical Methods ===========================
