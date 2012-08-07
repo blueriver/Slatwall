@@ -328,10 +328,12 @@ Notes:
 			<cfquery name="local.updateData">
 				INSERT INTO SlatwallPromotionPeriod (
 					promotionPeriodID,
+					promotionID,
 					startDateTime,
 					endDateTime
 				) VALUES (
 					<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.newUUID#">,
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.getData.startDateTime#">,
 					<cfqueryparam cfsqltype="cf_sql_timestamp" value="#local.getData.startDateTime#">,
 					<cfqueryparam cfsqltype="cf_sql_timestamp" value="#local.getData.endDateTime#">
 				)
