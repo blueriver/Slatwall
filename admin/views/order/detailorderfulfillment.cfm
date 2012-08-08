@@ -45,13 +45,24 @@ Notes:
 			<cf_SlatwallProcessCaller entity="#rc.orderFulfillment#" action="admin:order.processorderfulfillment" processContext="fulfillItems" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" />
 		</cf_SlatwallActionBar>
 		
-		<cfif !isNull(rc.orderFulfillment.getAddress())>
+		
 			<cf_SlatwallDetailHeader>
-				<cf_SlatwallPropertyList>
-					<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" edit="#rc.edit#">
+				<cf_SlatwallPropertyList divClass="span6">
+					<cfif !isNull(rc.orderFulfillment.getAddress())>
+						<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" edit="#rc.edit#">
+					</cfif>
+					<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "auto">
+						<!--- TODO: Add Fulfill From Location --->
+					</cfif>
+				</cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyList divClass="span6">
+					<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="fulfillmentCharge" edit="#rc.edit#">
+					<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+						<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="#rc.edit#">
+					</cfif>
 				</cf_SlatwallPropertyList>
 			</cf_SlatwallDetailHeader>
-		</cfif>
+		
 		
 		<cf_SlatwallTabGroup object="#rc.orderFulfillment#">
 			<cf_SlatwallTab view="admin:order/orderfulfillmenttabs/orderfulfillmentitems">
