@@ -1293,17 +1293,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		param name="arguments.data.providerTransactionID" default="";
 		
 		// CONTEXT: authorize
-		if(arguments.processContext == "authorize" && arguments.data.amount <= getAmountUnauthorized()) {
+		if(arguments.processContext == "authorize" && arguments.data.amount <= arguments.orderPayment.getAmountUnauthorized()) {
 			
 			getPaymentService().processPayment(arguments.orderPayment, "authorize", arguments.data.amount);
 		
 		// CONTEXT: authorizeAndCharge
-		} else if (arguments.processContext == "authorizeAndCharge" && arguments.data.amount <= getAmountUnreceived()) {
+		} else if (arguments.processContext == "authorizeAndCharge" && arguments.data.amount <= arguments.orderPayment.getAmountUnreceived()) {
 			
 			getPaymentService().processPayment(arguments.orderPayment, "authorizeAndCharge", arguments.data.amount);
 		
 		// CONTEXT: chargePreAuthorization
-		} else if (arguments.processContext == "chargePreAuthorization" && arguments.data.amount <= getAmountUncaptured()) {
+		} else if (arguments.processContext == "chargePreAuthorization" && arguments.data.amount <= arguments.orderPayment.getAmountUncaptured()) {
 			
 			// If not explicitly defined providerTransactionID was passed in, then we can loop over previous transactions for authroization codes to capture the amount we need.
 			if(!len(arguments.data.providerTransactionID)) {
@@ -1320,7 +1320,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						
 						arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
 						
-						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, capturableAmount, arguments.data.providerTransactionID);
+						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", capturableAmount, arguments.data.providerTransactionID);
 						
 						if(paymentOK) {
 							totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
@@ -1337,11 +1337,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 			// If a providerID was passed in, then we can just use it.
 			} else {
-				var paymentOK = getPaymentService().processPayment(arguments.orderPayment, arguments.data.transactionType, arguments.data.amount, arguments.data.providerTransactionID);
+				var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", arguments.data.amount, arguments.data.providerTransactionID);
 			}
 		
 		// CONTEXT: credit
-		} else if (arguments.processContext == "credit" && arguments.data.amount <= getAmountUncredited()) {
+		} else if (arguments.processContext == "credit" && arguments.data.amount <= arguments.orderPayment.getAmountUncredited()) {
 			
 			getPaymentService().processPayment(arguments.orderPayment, "credit", arguments.data.amount, arguments.data.providerTransactionID);
 			
