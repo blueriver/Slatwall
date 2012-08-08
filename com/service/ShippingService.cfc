@@ -65,7 +65,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				for(var r=1; r<=arrayLen(shippingMethodRates); r++) {
 					
 					// check to make sure that this rate applies to the current orderFulfillment
-					if(isShippingMethodRateUsable(shippingMethodRates[r], arguments.orderFulfillment.getAddress(), arguments.orderFulfillment.getSubtotal(), arguments.orderFulfillment.getTotalShippingWeight())) {
+					if(isShippingMethodRateUsable(shippingMethodRates[r], arguments.orderFulfillment.getAddress(), arguments.orderFulfillment.getTotalShippingWeight(), arguments.orderFulfillment.getSubtotal())) {
 						// Add any new shipping integrations in any of the rates the the shippingIntegrations array that we are going to query for rates later
 						if(!isNull(shippingMethodRates[r].getShippingIntegration()) && !arrayFind(integrations, shippingMethodRates[r].getShippingIntegration())) {
 							arrayAppend(integrations, shippingMethodRates[r].getShippingIntegration());
@@ -100,13 +100,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			for(var m=1; m<=arrayLen(shippingMethods); m++) {
 				
 				var shippingMethodRates = shippingMethods[m].getShippingMethodRates();
+				var qualifiedRateOptions = [];
 				
 				for(var r=1; r<=arrayLen(shippingMethodRates); r++) {
 					
-					var qualifiedRateOptions = [];
-					
 					// again, check to make sure that this rate applies to the current orderFulfillment
-					if(isShippingMethodRateUsable(shippingMethodRates[r], arguments.orderFulfillment.getAddress(), arguments.orderFulfillment.getSubtotal(), arguments.orderFulfillment.getTotalShippingWeight())) {
+					if(isShippingMethodRateUsable(shippingMethodRates[r], arguments.orderFulfillment.getAddress(), arguments.orderFulfillment.getTotalShippingWeight(), arguments.orderFulfillment.getSubtotal())) {
 						
 						// If this rate is a manual one, then use the default amount
 						if(isNull(shippingMethodRates[r].getShippingIntegration())) {
