@@ -36,27 +36,9 @@
 Notes:
 
 --->
-<cfparam name="rc.optiongroup" type="any" />
-<cfparam name="rc.edit" default="false" />
+<cfparam name="rc.optionGroup" type="any"/>
+<cfparam name="rc.edit" type="boolean" />
 
-<cfoutput>
-	<cf_SlatwallDetailForm object="#rc.optiongroup#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:product.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="list" modal=true />
-		</cf_SlatwallActionBar>
-		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="optionGroupName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="optionGroupCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="imageGroupFlag" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallTabGroup object="#rc.optiongroup#">
-			<cf_SlatwallTab view="admin:product/optiongrouptabs/options" />
-			<cf_SlatwallTab view="admin:product/optiongrouptabs/description" />
-		</cf_SlatwallTabGroup>
-		
-	</cf_SlatwallDetailForm>
-</cfoutput>
+<cf_SlatwallPropertyList>
+	<cf_SlatwallPropertyDisplay object="#rc.optionGroup#" property="optionGroupDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+</cf_SlatwallPropertyList>
