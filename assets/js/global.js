@@ -553,6 +553,15 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								newtd += ' disabled';
 							}
 							newtd += '" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a></td>';
+							
+						} else if( jQuery(cv).hasClass('select') ) {
+							
+							newtd += '<td><a href="#" class="table-action-select';
+							if(jQuery(cv).hasClass('disabled')) {
+								newtd += ' disabled';
+							}
+							newtd += '" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-radio"></i></a></td>';
+								
 								
 						} else if ( jQuery(cv).hasClass('admin') ){
 							
@@ -626,6 +635,10 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 				
 				if(jQuery('#' + tableID).data('multiselectfield')) {
 					updateMultiselectTableUI( jQuery('#' + tableID).data('multiselectfield') );
+				}
+				
+				if(jQuery('#' + tableID).data('selectfield')) {
+					updateSelectTableUI( jQuery('#' + tableID).data('selectfield') );
 				}
 				
 				// Unload the loading icon
