@@ -114,7 +114,7 @@ component accessors="true" output="false" extends="BaseObject" {
 				variables.currentProductSmartList.addWhereCondition(" EXISTS(SELECT sc.contentID FROM SlatwallContent sc INNER JOIN sc.listingProducts slp WHERE sc.cmsContentIDPath LIKE '%#getCurrentContent().getCMSContentID()#%' AND slp.productID = aslatwallproduct.productID) ");
 			} else {
 				if(!isNull(getCurrentContent().getCMSContentID())) {
-					variables.currentProductSmartList.addFilter('listingPages.cmsContentID');	
+					variables.currentProductSmartList.addFilter('listingPages.cmsContentID',getCurrentContent().getCMSContentID());	
 				}
 			}
 		}
