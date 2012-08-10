@@ -9,7 +9,17 @@
  * 
  */
 
-var ajaxlock = 0;
+var listingUpdateCache = {
+	onHold: false,
+	tableID: "",
+	data: {},
+	afterRowID: ""
+}
+
+var globalSearchCache = {
+	onHold: false
+}
+
 
 jQuery(document).ready(function() {
 	
@@ -33,13 +43,14 @@ jQuery(document).ready(function() {
 		jQuery('#global-search').keyup(); 
 	}
 	
+	/*
 	jQuery("#global-search").typeWatch( {
 	    callback:function(){ updateGlobalSearchResults(); },
 	    wait:450,
 	    highlight: false,
 	    captureLength:2
 	} );
-	
+	*/
 });
 
 function initUIElements( scopeSelector ) {
@@ -149,7 +160,9 @@ function setupEventHandlers() {
 	
 	// Global Search
 	jQuery('body').on('keyup', '#global-search', function(e){
-		if(jQuery(this).val() != "") {
+		if(jQuery(this).val().length >= 2) {
+			updateGlobalSearchResults(); 
+			
 			if(jQuery("body").scrollTop() > 0) {
 				jQuery("body").animate({scrollTop:0}, 300, function(){
 					jQuery('#search-results').animate({'margin-top': '0px'}, 150);
@@ -429,161 +442,215 @@ function showLoadedRows( tableID, parentID ) {
 	return found;
 }
 
-function listingDisplayUpdate( tableID, data, afterRowID ) {
-	
-	data[ 'slatAction' ] = 'admin:ajax.updateListingDisplay';
-	data[ 'propertyIdentifiers' ] = jQuery('#' + tableID).data('propertyidentifiers');
-	data[ 'savedStateID' ] = jQuery('#' + tableID).data('savedstateid');
-	data[ 'entityName' ] = jQuery('#' + tableID).data('entityname');
-	
-	var idProperty = jQuery('#' + tableID).data('idproperty');
-	var nextRowDepth = 0;
-	
-	if(afterRowID) {
-		nextRowDepth = jQuery('#' + afterRowID).find('[data-depth]').attr('data-depth');
-		nextRowDepth++;
+function listingUpdateHold( tableID, data, afterRowID) {
+	if(!listingUpdateCache.onHold) {
+		listingUpdateCache.onHold = true;
+		return false;
 	}
 	
-	jQuery.ajax({
-		url: slatwall.rootURL,
-		method: 'post',
-		data: data,
-		dataType: 'json',
-		contentType: 'application/json',
-		error: function(result) {
-			console.log(r);
-			alert('Error Loading');
-		},
-		success: function(r) {
-			
-			// Setup Selectors
-			var tableBodySelector = '#' + tableID + ' tbody';
-			var tableHeadRowSelector = '#' + tableID + ' thead tr';
-			
-			// Clear out the old Body, if there is no afterRowID
-			if(!afterRowID) {
-				jQuery(tableBodySelector).html('');
-			}
-			
-			// Loop over each of the records in the response
-			jQuery.each( r["pageRecords"], function(ri, rv) {
+	listingUpdateCache.tableID = tableID;
+	listingUpdateCache.data = data;
+	listingUpdateCache.afterRowID = afterRowID;
+	
+	return true;
+}
+
+function listingUpdateRelease( ) {
+	
+	listingUpdateCache.onHold = false;
+	
+	if(listingUpdateCache.tableID.length > 0) {
+		listingDisplayUpdate( listingUpdateCache.tableID, listingUpdateCache.data, listingUpdateCache.afterRowID );
+	}
+	
+	listingUpdateCache.tableID = "";
+	listingUpdateCache.data = {};
+	listingUpdateCache.afterRowID = "";
+}
+
+function listingDisplayUpdate( tableID, data, afterRowID ) {
+	
+	if( !listingUpdateHold( tableID, data, afterRowID ) ) {
+		
+		addLoadingDiv( tableID );
+		
+		data[ 'slatAction' ] = 'admin:ajax.updateListingDisplay';
+		data[ 'propertyIdentifiers' ] = jQuery('#' + tableID).data('propertyidentifiers');
+		data[ 'savedStateID' ] = jQuery('#' + tableID).data('savedstateid');
+		data[ 'entityName' ] = jQuery('#' + tableID).data('entityname');
+		
+		var idProperty = jQuery('#' + tableID).data('idproperty');
+		var nextRowDepth = 0;
+		
+		if(afterRowID) {
+			nextRowDepth = jQuery('#' + afterRowID).find('[data-depth]').attr('data-depth');
+			nextRowDepth++;
+		}
+		
+		jQuery.ajax({
+			url: slatwall.rootURL,
+			method: 'post',
+			data: data,
+			dataType: 'json',
+			contentType: 'application/json',
+			error: function(result) {
+				console.log(r);
+				removeLoadingDiv( tableID );
+				listingUpdateRelease();
+				alert('Error Loading');
+			},
+			success: function(r) {
 				
-				var rowSelector = jQuery('<tr></tr>');
-				jQuery(rowSelector).attr('id', rv[ idProperty ]);
+				// Setup Selectors
+				var tableBodySelector = '#' + tableID + ' tbody';
+				var tableHeadRowSelector = '#' + tableID + ' thead tr';
 				
-				if(afterRowID) {
-					jQuery(rowSelector).attr('data-idpath', rv[ idProperty + 'Path' ]);
-					jQuery(rowSelector).data('idpath', rv[ idProperty + 'Path' ]);
-					jQuery(rowSelector).attr('data-parentid', afterRowID);
-					jQuery(rowSelector).data('parentid', afterRowID);
+				// Clear out the old Body, if there is no afterRowID
+				if(!afterRowID) {
+					jQuery(tableBodySelector).html('');
 				}
 				
-				// Loop over each column of the header to pull the data out of the response and populate new td's
-				jQuery.each(jQuery(tableHeadRowSelector).children(), function(ci, cv){
-					var newtd = '';
-					var link = '';
+				// Loop over each of the records in the response
+				jQuery.each( r["pageRecords"], function(ri, rv) {
 					
-					if( jQuery(cv).hasClass('data') ) {
-						
-						if( typeof rv[jQuery(cv).data('propertyidentifier')] === 'boolean' && rv[jQuery(cv).data('propertyidentifier')] ) {
-							newtd += '<td class="' + jQuery(cv).attr('class') + '">Yes</td>';
-						} else if ( typeof rv[jQuery(cv).data('propertyidentifier')] === 'boolean' && !rv[jQuery(cv).data('propertyidentifier')] ) {
-							newtd += '<td class="' + jQuery(cv).attr('class') + '">No</td>';
-						} else {
-							if(jQuery(cv).hasClass('primary') && afterRowID) {
-								newtd += '<td class="' + jQuery(cv).attr('class') + '"><a href="#" class="table-action-expand depth' + nextRowDepth + '" data-depth="' + nextRowDepth + '"><i class="icon-plus"></i></a> ' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
-							} else {
-								newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
-							}
-						}
-						
-					} else if( jQuery(cv).hasClass('sort') ) {
-						
-						newtd += '<td><a href="#" class="table-action-sort" data-idvalue="' + rv[ idProperty ] + '" data-sortpropertyvalue="' + rv.sortOrder + '"><i class="icon-move"></i></a></td>';
+					var rowSelector = jQuery('<tr></tr>');
+					jQuery(rowSelector).attr('id', rv[ idProperty ]);
 					
-					} else if( jQuery(cv).hasClass('multiselect') ) {
-						
-						newtd += '<td><a href="#" class="table-action-multiselect';
-						if(jQuery(cv).hasClass('disabled')) {
-							newtd += ' disabled';
-						}
-						newtd += '" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a></td>';
-							
-					} else if ( jQuery(cv).hasClass('admin') ){
-						
-						newtd += '<td>';
-						
-
-						if( jQuery(cv).data('detailaction') != undefined ) {
-							link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + rv[ idProperty ];
-							if( jQuery(cv).data('detailquerystring') != undefined ) {
-								link += '&' + jQuery(cv).data('detailquerystring');
-							}
-							if( jQuery(cv).data('detailmodal') ) {
-								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-eye-open"></i></a> ';
-							} else {
-								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-eye-open"></i></a> ';	
-							}
-						}
-						
-						if( jQuery(cv).data('editaction') != undefined ) {
-							link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
-							if( jQuery(cv).data('editquerystring') != undefined ) {
-								link += '&' + jQuery(cv).data('editquerystring');
-							}
-							if( jQuery(cv).data('editmodal') ) {
-								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
-							} else {
-								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
-							}
-						}
-						
-						if( jQuery(cv).data('deleteaction') != undefined ) {
-							link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + rv[ idProperty ];
-							if( jQuery(cv).data('deletequerystring') != undefined ) {
-								link += '&' + jQuery(cv).data('deletequerystring');
-							}
-							newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-trash"></i></a> ';
-						}
-						/*
-						if( jQuery(cv).data('processaction') != undefined ) {
-							link = '?slatAction=' + jQuery(cv).data('processaction') + '&' + idProperty + '=' + rv[ idProperty ];
-							if( jQuery(cv).data('processquerystring') != undefined ) {
-								link += '&' + jQuery(cv).data('processquerystring');
-							}
-							if( jQuery(cv).data('processmodal') ) {
-								newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-cog"></i> Process</a> ';
-							} else {
-								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-cog"></i> Process</a> ';	
-							}
-						}
-						*/
-						newtd += '</td>';
-						
+					if(afterRowID) {
+						jQuery(rowSelector).attr('data-idpath', rv[ idProperty + 'Path' ]);
+						jQuery(rowSelector).data('idpath', rv[ idProperty + 'Path' ]);
+						jQuery(rowSelector).attr('data-parentid', afterRowID);
+						jQuery(rowSelector).data('parentid', afterRowID);
 					}
 					
-					jQuery(rowSelector).append(newtd);
+					// Loop over each column of the header to pull the data out of the response and populate new td's
+					jQuery.each(jQuery(tableHeadRowSelector).children(), function(ci, cv){
+						var newtd = '';
+						var link = '';
+						
+						if( jQuery(cv).hasClass('data') ) {
+							
+							if( typeof rv[jQuery(cv).data('propertyidentifier')] === 'boolean' && rv[jQuery(cv).data('propertyidentifier')] ) {
+								newtd += '<td class="' + jQuery(cv).attr('class') + '">Yes</td>';
+							} else if ( typeof rv[jQuery(cv).data('propertyidentifier')] === 'boolean' && !rv[jQuery(cv).data('propertyidentifier')] ) {
+								newtd += '<td class="' + jQuery(cv).attr('class') + '">No</td>';
+							} else {
+								if(jQuery(cv).hasClass('primary') && afterRowID) {
+									newtd += '<td class="' + jQuery(cv).attr('class') + '"><a href="#" class="table-action-expand depth' + nextRowDepth + '" data-depth="' + nextRowDepth + '"><i class="icon-plus"></i></a> ' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+								} else {
+									newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+								}
+							}
+							
+						} else if( jQuery(cv).hasClass('sort') ) {
+							
+							newtd += '<td><a href="#" class="table-action-sort" data-idvalue="' + rv[ idProperty ] + '" data-sortpropertyvalue="' + rv.sortOrder + '"><i class="icon-move"></i></a></td>';
+						
+						} else if( jQuery(cv).hasClass('multiselect') ) {
+							
+							newtd += '<td><a href="#" class="table-action-multiselect';
+							if(jQuery(cv).hasClass('disabled')) {
+								newtd += ' disabled';
+							}
+							newtd += '" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a></td>';
+								
+						} else if ( jQuery(cv).hasClass('admin') ){
+							
+							newtd += '<td>';
+							
+	
+							if( jQuery(cv).data('detailaction') != undefined ) {
+								link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								if( jQuery(cv).data('detailquerystring') != undefined ) {
+									link += '&' + jQuery(cv).data('detailquerystring');
+								}
+								if( jQuery(cv).data('detailmodal') ) {
+									newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-eye-open"></i></a> ';
+								} else {
+									newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-eye-open"></i></a> ';	
+								}
+							}
+							
+							if( jQuery(cv).data('editaction') != undefined ) {
+								link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								if( jQuery(cv).data('editquerystring') != undefined ) {
+									link += '&' + jQuery(cv).data('editquerystring');
+								}
+								if( jQuery(cv).data('editmodal') ) {
+									newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
+								} else {
+									newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
+								}
+							}
+							
+							if( jQuery(cv).data('deleteaction') != undefined ) {
+								link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								if( jQuery(cv).data('deletequerystring') != undefined ) {
+									link += '&' + jQuery(cv).data('deletequerystring');
+								}
+								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-trash"></i></a> ';
+							}
+							/*
+							if( jQuery(cv).data('processaction') != undefined ) {
+								link = '?slatAction=' + jQuery(cv).data('processaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								if( jQuery(cv).data('processquerystring') != undefined ) {
+									link += '&' + jQuery(cv).data('processquerystring');
+								}
+								if( jQuery(cv).data('processmodal') ) {
+									newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-cog"></i> Process</a> ';
+								} else {
+									newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-cog"></i> Process</a> ';	
+								}
+							}
+							*/
+							newtd += '</td>';
+							
+						}
+						
+						jQuery(rowSelector).append(newtd);
+					});
+					
+					if(!afterRowID) {
+						jQuery(tableBodySelector).append(jQuery(rowSelector));
+					} else {
+						jQuery(tableBodySelector).find('#' + afterRowID).after(jQuery(rowSelector));
+					}
 				});
 				
-				if(!afterRowID) {
-					jQuery(tableBodySelector).append(jQuery(rowSelector));
-				} else {
-					jQuery(tableBodySelector).find('#' + afterRowID).after(jQuery(rowSelector));
+				// Update the paging nav
+				jQuery('div[class="pagination"][data-tableid="' + tableID + '"]').html(buildPagingNav(r["currentPage"], r["totalPages"], r["pageRecordsStart"], r["pageRecordsEnd"], r["recordsCount"]));
+				
+				// Update the saved state ID of the table
+				jQuery('#' + tableID).data('savedstateid', r["savedStateID"]);
+				jQuery('#' + tableID).attr('data-savedstateid', r["savedStateID"]);
+				
+				if(jQuery('#' + tableID).data('multiselectfield')) {
+					updateMultiselectTableUI( jQuery('#' + tableID).data('multiselectfield') );
 				}
-			});
-			
-			// Update the paging nav
-			jQuery('div[class="pagination"][data-tableid="' + tableID + '"]').html(buildPagingNav(r["currentPage"], r["totalPages"], r["pageRecordsStart"], r["pageRecordsEnd"], r["recordsCount"]));
-			
-			// Update the saved state ID of the table
-			jQuery('#' + tableID).data('savedstateid', r["savedStateID"]);
-			jQuery('#' + tableID).attr('data-savedstateid', r["savedStateID"]);
-			
-			if(jQuery('#' + tableID).data('multiselectfield')) {
-				updateMultiselectTableUI( jQuery('#' + tableID).data('multiselectfield') );
+				
+				// Unload the loading icon
+				removeLoadingDiv( tableID );
+				
+				// Release the hold
+				listingUpdateRelease();
 			}
-		}
-	});
+		});
+	
+	}
+}
+
+function addLoadingDiv( elementID ) {
+	var loadingDiv = '<div id="loading' + elementID + '" style="position:absolute;float:left;text-align:center;background-color:#FFFFFF;opacity:.9;z-index:900;"><img src="/plugins/Slatwall/assets/images/loading.gif" title="loading" /></div>';
+	jQuery('#' + elementID).before(loadingDiv);
+	jQuery('#loading' + elementID).width(jQuery('#' + elementID).width() + 2);
+	jQuery('#loading' + elementID).height(jQuery('#' + elementID).height() + 2);
+	if(jQuery('#' + elementID).height() > 66) {
+		jQuery('#loading' + elementID + ' img').css('margin-top', ((jQuery('#' + elementID).height() / 2) - 66) + 'px');
+	}
+}
+
+function removeLoadingDiv( elementID ) {
+	jQuery('#loading' + elementID).remove();
 }
 
 
@@ -765,53 +832,75 @@ function tableSelectClick( toggleLink ) {
 	}
 }
 
+function globalSearchHold() {
+	if(!globalSearchCache.onHold) {
+		globalSearchCache.onHold = true;
+		return false;
+	}
+	
+	return true;
+}
+
+function globalSearchRelease() {
+	globalSearchCache.onHold = false;
+}
+
 function updateGlobalSearchResults() {
 	
-	var data = {
-		slatAction: 'admin:ajax.updateGlobalSearchResults',
-		keywords: jQuery('#global-search').val()
-	};
-	
-	jQuery.ajax({
-		url: '/plugins/Slatwall/',
-		method: 'post',
-		data: data,
-		dataType: 'json',
-		contentType: 'application/json',
-		error: function(result) {
-			console.log(r);
-			alert('Error Loading Global Search');
-		},
-		success: function(result) {
-			
-			var buckets = {
-				product: {primaryIDProperty:'productID', listAction:'admin:product.listproduct', detailAction:'admin:product.detailproduct'},
-				productType: {primaryIDProperty:'productTypeID', listAction:'admin:product.listproducttype', detailAction:'admin:product.detailproducttype'},
-				brand: {primaryIDProperty:'brandID', listAction:'admin:product.listbrand', detailAction:'admin:product.detailbrand'},
-				promotion: {primaryIDProperty:'promotionID', listAction:'admin:pricing.listpromotion', detailAction:'admin:pricing.detailpromotion'},
-				order: {primaryIDProperty:'orderID', listAction:'admin:order.listorder', detailAction:'admin:order.detailorder'},
-				account: {primaryIDProperty:'accountID', listAction:'admin:account.listaccount', detailAction:'admin:account.detailaccount'},
-				vendorOrder: {primaryIDProperty:'vendorOrderID', listAction:'admin:order.listvendororder', detailAction:'admin:order.detailvendororder'},
-				vendor: {primaryIDProperty:'vendorID', listAction:'admin:vendor.listvendor', detailAction:'admin:vendor.detailvendor'}
-			};
-			for (var key in buckets) {
-				jQuery('#golbalsr-' + key).html('');
-				var records = result[key]['records'];
-			    for(var r=0; r < records.length; r++) {
-			    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
-			    }
-			    if(result[key]['recordCount'] > 10) {
-			    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
-			    } else if (result[key]['recordCount'] == 0) {
-			    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
-			    }
-			}
-		}
+	if(!globalSearchHold()) {
+		addLoadingDiv( 'search-results' );
 		
-	});
-	
-
+		var data = {
+			slatAction: 'admin:ajax.updateGlobalSearchResults',
+			keywords: jQuery('#global-search').val()
+		};
+		
+		jQuery.ajax({
+			url: '/plugins/Slatwall/',
+			method: 'post',
+			data: data,
+			dataType: 'json',
+			contentType: 'application/json',
+			error: function(result) {
+				console.log(r);
+				removeLoadingDiv( 'search-results' );
+				globalSearchRelease();
+				alert('Error Loading Global Search');
+			},
+			success: function(result) {
+				
+				var buckets = {
+					product: {primaryIDProperty:'productID', listAction:'admin:product.listproduct', detailAction:'admin:product.detailproduct'},
+					productType: {primaryIDProperty:'productTypeID', listAction:'admin:product.listproducttype', detailAction:'admin:product.detailproducttype'},
+					brand: {primaryIDProperty:'brandID', listAction:'admin:product.listbrand', detailAction:'admin:product.detailbrand'},
+					promotion: {primaryIDProperty:'promotionID', listAction:'admin:pricing.listpromotion', detailAction:'admin:pricing.detailpromotion'},
+					order: {primaryIDProperty:'orderID', listAction:'admin:order.listorder', detailAction:'admin:order.detailorder'},
+					account: {primaryIDProperty:'accountID', listAction:'admin:account.listaccount', detailAction:'admin:account.detailaccount'},
+					vendorOrder: {primaryIDProperty:'vendorOrderID', listAction:'admin:order.listvendororder', detailAction:'admin:order.detailvendororder'},
+					vendor: {primaryIDProperty:'vendorID', listAction:'admin:vendor.listvendor', detailAction:'admin:vendor.detailvendor'}
+				};
+				for (var key in buckets) {
+					jQuery('#golbalsr-' + key).html('');
+					var records = result[key]['records'];
+				    for(var r=0; r < records.length; r++) {
+				    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
+				    }
+				    if(result[key]['recordCount'] > 10) {
+				    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
+				    } else if (result[key]['recordCount'] == 0) {
+				    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
+				    }
+				}
+				
+				removeLoadingDiv( 'search-results' );
+				globalSearchRelease();
+			}
+			
+		});
+	}
 }
+
+
 
 
 // ========================= START: HELPER METHODS ================================
