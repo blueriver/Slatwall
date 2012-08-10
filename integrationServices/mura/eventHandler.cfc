@@ -407,6 +407,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 				var newSku = $.slatwall.getService("SkuService").newSku();
 				newSku.setPrice(slatwallData.product.price);
 				newSku.setProduct(product);
+				newSku.setSkuCode(product.getProductCode() & "-#arrayLen(product.getSkus()) + 1#");
 				newSku.addAccessContent( slatwallContent );
 				$.slatwall.getService("SkuService").saveSKU( newSku );
 			}
