@@ -63,7 +63,9 @@ Notes:
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<ul class="nav">
-						<a href="#buildURL(action='admin:main.default')#" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
+						<a href="/admin" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/mura.logo.png" title="Mura" /></a>
+						<li class="divider-vertical"></li>
+						<a href="#buildURL(action='admin:main.default')#" class="brand brand-two"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
 						<li class="divider-vertical"></li>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.product_nav')#" icon="tags icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:product.listproduct" type="list">
