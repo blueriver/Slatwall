@@ -445,7 +445,10 @@ globalEncryptionKeySize
 						settingDetails.settingValueFormatted = "";
 						for(var i=1; i<=listLen(settingDetails.settingValue); i++) {
 							var thisID = listGetAt(settingDetails.settingValue, i);
-							settingDetails.settingValueFormatted = listAppend(settingDetails.settingValueFormatted, " " & getUtilityORMService().getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#", {1=thisID}).getSimpleRepresentation());	
+							var thisEntity =  getUtilityORMService().getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#", {1=thisID});
+							if(!isNull(thisEntity)) {
+								settingDetails.settingValueFormatted = listAppend(settingDetails.settingValueFormatted, " " & thisEntity.getSimpleRepresentation());	
+							}
 						}
 					// Select
 					} else if (getSettingMetaData(arguments.settingName).fieldType == "select") {
