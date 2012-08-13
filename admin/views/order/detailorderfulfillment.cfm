@@ -58,7 +58,7 @@ Notes:
 				<cf_SlatwallPropertyList divClass="span6">
 					<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="fulfillmentCharge" edit="#rc.edit#">
 					<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-						<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="#rc.edit#">
+						<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="false">
 					</cfif>
 				</cf_SlatwallPropertyList>
 			</cf_SlatwallDetailHeader>
