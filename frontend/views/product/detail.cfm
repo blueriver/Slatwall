@@ -76,7 +76,7 @@ Notes:
 			<!--- END: Product Options --->
 			
 			<!--- START: Sku Price --->
-			<cfif $.slatwall.product('defaultSku').getUserDefinedPriceFlag()>
+			<cfif !isNull($.slatwall.product('defaultSku').getUserDefinedPriceFlag()) AND $.slatwall.product('defaultSku').getUserDefinedPriceFlag()>
 				<input type="text" name="price" value="" />
 			</cfif>
 			
