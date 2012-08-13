@@ -36,19 +36,20 @@
 Notes:
 
 --->
-
 <cfparam name="rc.orderFulfillmentSmartList" type="any" />
 
-<cfoutput>
-	
+<cfsilent>
+	<cfset rc.orderFulfillmentSmartList.addInFilter('order.orderStatusType.systemCode', 'ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled') />
+	<cfset rc.orderFulfillmentSmartList.addOrder('order.orderOpenDateTime|desc') />
+</cfsilent>
+
 <cf_SlatwallActionBar type="listing" object="#rc.orderFulfillmentSmartList#" createAction="" />
 
 <cf_SlatwallListingDisplay smartList="#rc.orderFulfillmentSmartList#"
 		recorddetailaction="admin:order.detailorderfulfillment"
 		recordeditaction="admin:order.editorderfulfillment">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
-	<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
+	<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="order.orderOpenDateTime" range="true" />
 </cf_SlatwallListingDisplay>
-
-</cfoutput>

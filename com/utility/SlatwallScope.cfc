@@ -110,12 +110,10 @@ component accessors="true" output="false" extends="BaseObject" {
 			variables.currentProductSmartList.addFilter('activeFlag', 1);
 			variables.currentProductSmartList.addFilter('publishedFlag', 1);
 			variables.currentProductSmartList.addWhereCondition(" (aslatwallproduct.calculatedAllowBackorderFlag = 1 OR aslatwallproduct.calculatedQATS > 0) ");
-			if(isBoolean(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) && getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
+			if(isBoolean(getCurrentContent().setting('contentProductListingFlag')) && getCurrentContent().setting('contentProductListingFlag') && isBoolean(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) && getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
 				variables.currentProductSmartList.addWhereCondition(" EXISTS(SELECT sc.contentID FROM SlatwallContent sc INNER JOIN sc.listingProducts slp WHERE sc.cmsContentIDPath LIKE '%#getCurrentContent().getCMSContentID()#%' AND slp.productID = aslatwallproduct.productID) ");
-			} else {
-				if(!isNull(getCurrentContent().getCMSContentID())) {
-					variables.currentProductSmartList.addFilter('listingPages.cmsContentID',getCurrentContent().getCMSContentID());	
-				}
+			} else if(isBoolean(getCurrentContent().setting('contentProductListingFlag')) && getCurrentContent().setting('contentProductListingFlag') && !isNull(getCurrentContent().getCMSContentID())) {
+				variables.currentProductSmartList.addFilter('listingPages.cmsContentID',getCurrentContent().getCMSContentID());
 			}
 		}
 		return variables.currentProductSmartList;
