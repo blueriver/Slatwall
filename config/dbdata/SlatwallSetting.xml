@@ -65,7 +65,6 @@
 		<Record settingID="dbb327b8fb8c0843e5cb7cd6525e2f6a" settingName="skuShippingWeightUnitCode" settingValue="lb" />
 		<Record settingID="dbb327e4f28cd7cb53868c55e0cfcd55" settingName="skuTaxCategory" settingValue="444df2c8cce9f1417627bd164a65f133" />
 		<Record settingID="dbb327c6d74a8e837f0cfa41aab9cd94" settingName="skuTrackInventoryFlag" settingValue="0" />
-		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="skuTrackInventoryFlag" settingValue="1" productTypeID="444df2f7ea9c87e60051f3cd87b435a1" />
 		
 		<Record settingID="dbb327d5c8200946403aefdb964ce106" settingName="shippingMethodQualifiedRateSelection" settingValue="lowest" />
 		
