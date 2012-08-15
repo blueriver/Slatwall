@@ -81,63 +81,27 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		rc.deleteAction = rc.slatAction;
 		rc.editAction = rc.slatAction;
 		rc.createAction = rc.slatAction;
+		rc.exportAction = rc.slatAction;
 		
 		if(left(itemName, 4) == "list") {
 			rc.itemEntityName = right(itemName, len(itemName)-4);
-			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
-			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
-			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
-			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
-			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
-			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
-			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
 		} else if (left(itemName, 4) == "edit") {
 			rc.itemEntityName = right(itemName, len(itemName)-4);
-			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
-			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
-			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
-			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
-			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
-			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
-			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";	
 		} else if (left(itemName, 4) == "save") {
 			rc.itemEntityName = right(itemName, len(itemName)-4);
-			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
-			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
-			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
-			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
-			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
-			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
-			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
 		} else if (left(itemName, 6) == "detail") {
 			rc.itemEntityName = right(itemName, len(itemName)-6);
-			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
-			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
-			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
-			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
-			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
-			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
-			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
 		} else if (left(itemName, 6) == "delete") {
 			rc.itemEntityName = right(itemName, len(itemName)-6);
-			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
-			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
-			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
-			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
-			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
-			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
-			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
 		} else if (left(itemName, 6) == "create") {
 			rc.itemEntityName = right(itemName, len(itemName)-6);
-			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
-			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
-			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
-			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
-			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
-			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
-			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
 		} else if (left(itemName, 7) == "process") {
 			rc.itemEntityName = right(itemName, len(itemName)-7);
+		} else if (left(itemName, 6) == "export") {
+			rc.itemEntityName = right(itemName, len(itemName)-6);
+		}
+		
+		if(rc.itemEntityName != "") {
 			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
 			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
 			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
@@ -145,6 +109,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
 			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
 			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
+			rc.exportAction = "admin:#getFW().getSection(rc.slatAction)#.export#rc.itemEntityName#"; 
 		}
 		
 		rc.pageTitle = rbKey(replace(rc.slatAction,':','.','all'));
@@ -183,6 +148,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				genericCreateMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 7) == "process" ) {
 				genericProcessMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			} else if ( left(arguments.missingMethodName, 6) == "export" ) {
+				genericExportMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			}	
 		}
 	}
@@ -438,6 +405,13 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				rc.multiProcess = true;
 			}
 		}
+	}
+	
+	public void function genericExportMethod(required string entityName, required struct rc) {
+		
+		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		
+		entityService.invokeMethod("export#arguments.entityName#");
 	}
 	
 	private void function loadEntitiesFromRCIDs(required struct rc) {

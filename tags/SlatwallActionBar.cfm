@@ -79,17 +79,14 @@ Notes:
 									<input type="text" name="keywords" value="#request.context.keywords#" placeholder="#request.slatwallScope.rbKey('define.search')# #attributes.pageTitle#" data-tableid="LD#replace(attributes.object.getSavedStateID(),'-','','all')#">
 								</form>
 								
-								<!---
-									Export
-									
 								<div class="btn-group">
 									<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #request.slatwallScope.rbKey('define.actions')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">
-										<cf_SlatwallActionCaller action="admin:export.list" queryString="savedStateID=#attributes.object.getSavedStateID()#" text="#request.slatwallScope.rbKey('define.exportlist')#" type="list">
+										<cf_SlatwallActionCaller action="#request.context.exportAction#" text="#request.slatwallScope.rbKey('define.exportlist')#" type="list">
 										#thistag.generatedcontent#
 									</ul>
 								</div>
-								 --->
+
 								<cfif len(attributes.createAction)>
 									<div class="btn-group">
 										<cfif listLen(attributes.createAction) eq 1>
