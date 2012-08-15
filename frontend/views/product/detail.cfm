@@ -105,9 +105,7 @@ Notes:
 				<div class="productCustomizationSet #lcase(replace(local.customizationAttributeSet.getAttributeSetName(), ' ', '', 'all'))#">
 					<h4>#local.customizationAttributeSet.getAttributeSetName()#</h4>
 					<dl>
-					<cfloop array="#local.customizationAttributeSet.getAttributes()#" index="local.attribute">
-						<cf_SlatwallAttributeDisplay attribute="#local.attribute#" />
-					</cfloop>
+						<cf_SlatwallAttributeSetDisplay attributeSet="#local.customizationAttributeSet#" entity="#$.slatwall.product()#" edit="true" />
 					</dl>
 				</div>
 			</cfloop>
