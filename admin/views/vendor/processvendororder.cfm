@@ -80,7 +80,8 @@ Notes:
 				<cf_SlatwallFieldDisplay title="Location" fieldname="processOptions.locationID" fieldType="select" valueOptions="#locations#" edit="true">
 			
 				<cf_SlatwallProcessListing processSmartList="#rc.processVendorOrderSmartList#" processRecordsProperty="vendorOrderItems">
-					<cf_SlatwallProcessColumn tdclass="primary" propertyIdentifier="stock.sku.product.title" />
+					<cf_SlatwallProcessColumn propertyIdentifier="stock.sku.product.brand.brandName" />
+					<cf_SlatwallProcessColumn tdclass="primary" propertyIdentifier="stock.sku.product.productName" />
 					<cf_SlatwallProcessColumn propertyIdentifier="stock.sku.skucode" />
 					<cf_SlatwallProcessColumn propertyIdentifier="stock.sku.optionsDisplay" />
 					<cf_SlatwallProcessColumn propertyIdentifier="quantity"/>
