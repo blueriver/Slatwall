@@ -79,7 +79,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					// Setup the New Sku
 					var newSku = this.newSku();
 					newSku.setPrice(arguments.data.price);
-					if(structKeyExists(arguments.data, "listPrice")) {
+					if(structKeyExists(arguments.data, "listPrice") && isNumeric(arguments.data.listPrice) && arguments.data.listPrice > 0) {
 						newSku.setListPrice(arguments.data.listPrice);	
 					}
 					newSku.setSkuCode(arguments.product.getProductCode() & "-#arrayLen(arguments.product.getSkus()) + 1#");
