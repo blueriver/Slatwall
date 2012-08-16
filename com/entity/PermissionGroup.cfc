@@ -41,7 +41,7 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	// Persistent Properties
 	property name="permissionGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="permissionGroupName" ormtype="string";
-	property name="permissions" ormtype="string" length="4000";
+	property name="permissions" ormtype="string" length="100000";
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="permissionGroupID" inversejoincolumn="accountID" inverse="true";
