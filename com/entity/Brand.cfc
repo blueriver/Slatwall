@@ -56,7 +56,8 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (one-to-many)
-	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="brandID" cascade="all-delete-orphan" inverse="true";
+	property name="products" singularname="product" cfc="Product" type="array" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 	
@@ -73,8 +74,15 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Products (one-to-many)
+	// Attribute Values (one-to-many)    
+	public void function addAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.setBrand( this );    
+	}    
+	public void function removeAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.removeBrand( this );    
+	}
 	
+	// Products (one-to-many)
 	public void function addProduct(required Product Product) {
 	   arguments.Product.setBrand(this);
 	}

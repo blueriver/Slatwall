@@ -52,7 +52,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.brand#">
+		<cf_SlatwallTabGroup object="#rc.brand#" allowCustomAttributes="true">
 			<cf_SlatwallTab view="admin:product/brandtabs/products" />
 			<cf_SlatwallTab view="admin:product/brandtabs/vendors" />
 			<cf_SlatwallTab view="admin:product/brandtabs/brandsettings" />

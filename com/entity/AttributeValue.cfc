@@ -52,6 +52,7 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// Related Object Properties (many-to-one)
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" lazy="false" fetch="join";  // Lazy is turned off because any time we get an attributeValue we also want the attribute
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	
@@ -101,6 +102,24 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 			arrayDeleteAt(arguments.account.getAttributeValues(), index);
 		}
 		structDelete(variables, "account");
+	}
+	
+	// Brand (many-to-one)
+	public void function setBrand(required any brand) {
+		variables.brand = arguments.brand;
+		if(isNew() or !arguments.brand.hasAttributeValue( this )) {
+			arrayAppend(arguments.brand.getAttributeValues(), this);
+		}
+	}
+	public void function removeBrand(any brand) {
+		if(!structKeyExists(arguments, "brand")) {
+			arguments.brand = variables.brand;
+		}
+		var index = arrayFind(arguments.brand.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.brand.getAttributeValues(), index);
+		}
+		structDelete(variables, "brand");
 	}
 	
 	// Order Item (many-to-one)

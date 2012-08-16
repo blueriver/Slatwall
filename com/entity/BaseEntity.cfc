@@ -38,7 +38,10 @@ Notes:
 */
 component displayname="Base Entity" accessors="true" extends="Slatwall.com.utility.BaseObject" {
 
-	property name="persistableErrors" type="array";
+	property name="persistableErrors" type="array" persistent="false";
+	property name="assignedAttributeSetSmartList" type="struct" persistent="false";
+	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";
+	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
 	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
@@ -101,6 +104,68 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 		}
 		return newEntity;
+	}
+	
+	// Attribute Value
+	public any function getAttributeValue(required string attribute, returnEntity=false){
+		
+		if(len(arguments.attribute) eq 32) {
+			if( structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
+				if(arguments.returnEntity) {
+					return getAttributeValuesByAttributeIDStruct()[arguments.attribute];
+				}
+				return getAttributeValuesByAttributeIDStruct()[arguments.attribute].getAttributeValue();
+			}
+		}
+		
+		if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
+			if(arguments.returnEntity) {
+				return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ];
+			}
+			
+			return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ].getAttributeValue();
+		}
+				
+		if(arguments.returnEntity) {
+			var newAttributeValue = getService("attributeService").newAttributeValue();
+			newAttributeValue.setAttributeValueType( lcase( replace(getEntityName(),'Slatwall','') ) );
+			return newAttributeValue;
+		}
+		
+		return "";
+	}
+	
+	public any function getAssignedAttributeSetSmartList(){
+		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
+			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
+			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
+			variables.assignedAttributeSetSmartList.addFilter('globalFlag', 1);
+			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'ast#replace(getEntityName(),'Slatwall','')#');
+		}
+		
+		return variables.assignedAttributeSetSmartList;
+	}
+	
+	public struct function getAttributeValuesByAttributeIDStruct() {
+		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
+			variables.attributeValuesByAttributeIDStruct = {};
+			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
+				variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
+			}
+		}
+		
+		return variables.attributeValuesByAttributeIDStruct;
+	}
+	
+	public struct function getAttributeValuesByAttributeCodeStruct() {
+		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
+			variables.attributeValuesByAttributeCodeStruct = {};
+			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
+				variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
+			}
+		}
+		
+		return variables.attributeValuesByAttributeCodeStruct;
 	}
 	
 	// @hint Returns the persistableErrors array, if one hasn't been setup yet it returns a new one

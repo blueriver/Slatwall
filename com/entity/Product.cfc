@@ -86,9 +86,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="assignedAttributeSetSmartList" type="struct" persistent="false";
-	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";
-	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
 	property name="brandName" type="string" persistent="false";
 	property name="brandOptions" type="array" persistent="false";
 	property name="salePriceDetailsForSkus" type="struct" persistent="false";
@@ -397,70 +394,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables[quantityType];
 	}
 	
-	// Attribute Value
-	public any function getAttributeValue(required string attribute, returnEntity=false){
-		
-		if(len(arguments.attribute) eq 32) {
-			if( structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
-				if(arguments.returnEntity) {
-					return getAttributeValuesByAttributeIDStruct()[arguments.attribute];
-				}
-				return getAttributeValuesByAttributeIDStruct()[arguments.attribute].getAttributeValue();
-			}
-		}
-		
-		if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
-			if(arguments.returnEntity) {
-				return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ];
-			}
-			
-			return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ].getAttributeValue();
-		}
-				
-		if(arguments.returnEntity) {
-			var newAttributeValue = getService("ProductService").newAttributeValue();
-			newAttributeValue.setAttributeValueType("product");
-			return newAttributeValue;
-		}
-		
-		return "";
-	}
-	
 	// ============ START: Non-Persistent Property Methods =================
-	
-	public any function getAssignedAttributeSetSmartList(){
-		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
-			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
-			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
-			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
-			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProduct');
-			variables.assignedAttributeSetSmartList.addWhereCondition(" (aslatwallattributeset.globalFlag = 1 OR aslatwallproducttype.productTypeIDPath LIKE '%#getProductType().getProductTypeID()#') )" );
-		}
-		
-		return variables.assignedAttributeSetSmartList;
-	}
-	
-	public struct function getAttributeValuesByAttributeIDStruct() {
-		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
-			variables.attributeValuesByAttributeIDStruct = {};
-			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-				variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
-			}
-		}
-		
-		return variables.attributeValuesByAttributeIDStruct;
-	}
-	
-	public struct function getAttributeValuesByAttributeCodeStruct() {
-		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
-			variables.attributeValuesByAttributeCodeStruct = {};
-			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-				variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
-			}
-		}
-		
-		return variables.attributeValuesByAttributeCodeStruct;
-	}
 	
 	public struct function getSalePriceDetailsForSkus() {
 		if(!structKeyExists(variables, "salePriceDetailsForSkus")) {
@@ -735,6 +669,18 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			return super.isDeletable();
 		}
 		return false;
+	}
+	
+	public any function getAssignedAttributeSetSmartList(){
+		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
+			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
+			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
+			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProduct');
+			variables.assignedAttributeSetSmartList.addWhereCondition(" (aslatwallattributeset.globalFlag = 1 OR aslatwallproducttype.productTypeIDPath LIKE '%#getProductType().getProductTypeID()#') )" );
+		}
+		
+		return variables.assignedAttributeSetSmartList;
 	}
 	
 	// ==================  END:  Overridden Methods ========================
