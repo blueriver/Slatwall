@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Utility - File Service" persistent="false" extends="BaseService" output="false" hint="This is a utility component which handles common file operations" {
+component displayname="Utility - File Service" persistent="false" accessors="true" extends="BaseService" output="false" hint="This is a utility component which handles common file operations" {
 	property name="utilityTagService" type="any"; 
 	
 	public string function filterFilename(required string filename) {

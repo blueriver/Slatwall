@@ -132,6 +132,14 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		return smartList;
 	}
 	
+	public any function getExportQuery(required string entityName) {
+		var qry = new query();
+		qry.setName("exportQry");
+		var result = qry.execute(sql="SELECT * FROM Slatwall#arguments.entityName#"); 
+    	exportQry = result.getResult(); 
+		return exportQry;
+	}
+	
 	// ===================== START: Private Helper Methods ===========================
 	
 	private string function wrapListItemsInSingleQuotes( required string list ) {
