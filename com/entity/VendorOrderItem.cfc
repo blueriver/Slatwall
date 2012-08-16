@@ -59,7 +59,8 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	
 	// Non-persistant properties
 	property name="extendedCost" persistent="false" formatType="currency";
-	
+	property name="quantityReceived" persistent="false";
+	property name="quantityUnreceived" persistent="false";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -69,6 +70,20 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 		}
 		return 0;
 		
+	}
+	
+	public numeric function getQuantityReceived() {
+		var quantityReceived = 0;
+		
+		for( var i=1; i<=arrayLen(getStockReceiverItems()); i++){
+			quantityReceived += getStockReceiverItems()[i].getQuantity();
+		}
+		
+		return quantityReceived;
+	}
+	
+	public numeric function getQuantityUnreceived() {
+		return getQuantity() - getQuantityReceived();
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
