@@ -50,7 +50,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Calculated Properties
 	property name="calculatedSalePrice" ormtype="big_decimal";
-	property name="calculatedQATS" ormtype="string";
+	property name="calculatedQATS" ormtype="integer";
 	property name="calculatedAllowBackorderFlag" ormtype="boolean";
 	property name="calculatedTitle" ormtype="string";
 	
