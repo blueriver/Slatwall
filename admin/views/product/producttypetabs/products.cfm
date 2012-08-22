@@ -41,8 +41,8 @@ Notes:
 	<cf_SlatwallListingDisplay smartList="#rc.productType.getProductsSmartList()#"
 							   recordEditAction="admin:product.editproduct"
 							   recordDetailAction="admin:product.detailproduct">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" linkAction="admin:product.detailproduct" />
-		<cf_SlatwallListingColumn propertyIdentifier="productCode" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
+		<cf_SlatwallListingColumn propertyIdentifier="productCode" search=true />
 		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
