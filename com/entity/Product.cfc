@@ -41,7 +41,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Persistent Properties
 	property name="productID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" hint="As Products Get Old, They would be marked as Not Active";
-	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
+	property name="urlTitle" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
 	property name="productName" ormtype="string" notNull="true" hint="Primary Notation for the Product to be Called By";
 	property name="productCode" ormtype="string" unique="true" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
