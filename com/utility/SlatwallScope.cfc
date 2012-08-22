@@ -115,6 +115,9 @@ component accessors="true" output="false" extends="BaseObject" {
 			} else if(isBoolean(getCurrentContent().setting('contentProductListingFlag')) && getCurrentContent().setting('contentProductListingFlag') && !isNull(getCurrentContent().getCMSContentID())) {
 				variables.currentProductSmartList.addFilter('listingPages.cmsContentID',getCurrentContent().getCMSContentID());
 			}
+			if(!structKeyExists(url, "P:Show") && isNumeric(getCurrentContent().setting('contentDefaultProductsPerPage'))) {
+				variables.currentProductSmartList.setPageRecordsShow(getCurrentContent().setting('contentDefaultProductsPerPage'));
+			}
 		}
 		return variables.currentProductSmartList;
 	}
