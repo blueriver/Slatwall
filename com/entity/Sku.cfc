@@ -88,7 +88,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
 	property name="defaultFlag" type="boolean" persistent="false";
 	
-	
     public boolean function getDefaultFlag() {
     	if(getProduct().getDefaultSku().getSkuID() == getSkuID()) {
     		return true;
@@ -273,20 +272,18 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// END: Price Methods
 	
 	// Start: Quantity Helper Methods
-	public numeric function getQuantity(required string quantityType, string locationID) {
-		if(structKeyExists(arguments, "locationID")) {
-			return getService("stockService").getStockBySkuAndLocation(this, getService("locationService").getLocation(arguments.locationID)).invokeMethod("getQuantity", {quantityType=arguments.quantityType});
-		}
-		if(!structKeyExists(variables, quantityType)) {
+	public numeric function getQuantity(required string quantityType, string locationID, string stockID) {
+		if( !structKeyExists(variables, arguments.quantityType) ) {
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {skuID=getSkuID(), skuRemoteID=getRemoteID()});	
+				arguments.skuID = this.getSkuID();
+				return getProduct().getQuantity(argumentCollection=arguments);
 			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
+				variables[ arguments.quantityType ] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
 			} else {
 				throw("The quantity type you passed in '#arguments.quantityType#' is not a valid quantity type.  Valid quantity types are: QOH, QOSH, QNDOO, QNDORVO, QNDOSA, QNRORO, QNROVO, QNROSA, QC, QE, QNC, QATS, QIATS");
 			}
 		}
-		return variables[quantityType];
+		return variables[ arguments.quantityType ];
 	}
 	// END: Quantity Helper Methods
 	

@@ -57,17 +57,21 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	
+	
+	// Quantity
 	public numeric function getQuantity(required string quantityType) {
-		if(!structKeyExists(variables, quantityType)) {
+		if( !structKeyExists(variables, arguments.quantityType) ) {
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {stockID=getStockID(), stockRemoteID=getRemoteID()});	
+				argumenst.skuID = this.getSkuID();
+				return getSku().getQuantity(quantityType=arguments.quantityType, stockID=this.getStockID());
 			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
+				variables[ arguments.quantityType ] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
 			} else {
 				throw("The quantity type you passed in '#arguments.quantityType#' is not a valid quantity type.  Valid quantity types are: QOH, QOSH, QNDOO, QNDORVO, QNDOSA, QNRORO, QNROVO, QNROSA, QC, QE, QNC, QATS, QIATS");
-			}
+			}	
 		}
-		return variables[quantityType];
+		return variables[ arguments.quantityType ];
 	}
 	
 	

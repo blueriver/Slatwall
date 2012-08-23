@@ -55,7 +55,7 @@ Notes:
 			  INNER JOIN
 			  	slatwallOptionGroup on slatwallOptionGroup.optionGroupID = slatwallOption.optionGroupID
 			WHERE
-				slatwallOption.optionGroupID IN (#wrapListItemsInSingleQuotes(arguments.existingOptionGroupIDList)#)
+				slatwallOption.optionGroupID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.existingOptionGroupIDList#" list="true">)
 			  AND
 			  	NOT EXISTS(
 			  		SELECT DISTINCT

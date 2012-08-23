@@ -378,20 +378,60 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	
 	// Quantity
-	public numeric function getQuantity(required string quantityType, string skuID, string locationID) {
-		if(structKeyExists(arguments, "skuID")) {
-			return getService("skuService").getSku(arguments.skuID).invokeMethod("getQuantity", arguments);
-		}
-		if(!structKeyExists(variables, quantityType)) {
+	public numeric function getQuantity(required string quantityType, string skuID, string locationID, string stockID) {
+		
+		// First we check to see if that quantityType is defined, if not we need to go out an get the specific struct, or value and cache it
+		if(!structKeyExists(variables, arguments.quantityType)) {
+			
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {productID=getProductID(), productRemoteID=getRemoteID()});	
+				variables[ arguments.quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {productID=getProductID(), productRemoteID=getRemoteID()});	
 			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
+				variables[ arguments.quantityType ] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
 			} else {
 				throw("The quantity type you passed in '#arguments.quantityType#' is not a valid quantity type.  Valid quantity types are: QOH, QOSH, QNDOO, QNDORVO, QNDOSA, QNRORO, QNROVO, QNROSA, QC, QE, QNC, QATS, QIATS");
 			}
+			
 		}
-		return variables[quantityType];
+		
+		// If this is a calculated quantity, then we can just return it
+		if( listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType) ) {
+			return variables[ arguments.quantityType ];	
+		}
+		
+		// If we have a stockID
+		if( structKeyExists( arguments, "stockID" ) ) {
+			if( structKeyExists(variables[ quantityType ].stocks, arguments.stockID) ) {
+				return variables[ arguments.quantityType ].stocks[stockID];
+			}
+			return 0;
+		}
+		
+		// If we have a skuID & locationID
+		if( structKeyExists( arguments, "skuID" ) && structKeyExists(arguments, "locationID") ) {
+			if( structKeyExists(variables[ arguments.quantityType ].skus, arguments.skuID) && structKeyExists(variables[ quantityType ].skus[ arguments.skuID ], arguments.locationID) ) {
+				return variables[ arguments.quantityType ].skus[ arguments.skuID ].locations[ arguments.locationID ];
+			}
+			return 0;
+		}
+		
+		// If we have a skuID
+		if( structKeyExists( arguments, "skuID") ) {
+			if( structKeyExists(variables[ arguments.quantityType ].skus, arguments.skuID) ) {
+				return variables[ arguments.quantityType ].skus[ arguments.skuID ][ arguments.quantityType ];
+			}
+			return 0;
+		}
+		
+		// If we have a locationID
+		if( structKeyExists( arguments, "locationID") ) {
+			if( structKeyExists(variables[ arguments.quantityType ].locations, arguments.locationID) ) {
+				variables[ arguments.quantityType ].locations[ arguments.locationID ];
+			}
+			return 0;
+		}
+		
+		// If we don't have anything, then just return for the entire product
+		return variables[ arguments.quantityType ][ arguments.quantityType ];
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

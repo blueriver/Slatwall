@@ -41,135 +41,116 @@ Notes:
 	<cfscript>
 		
 		// Quantity on hand. Physically at any location
-		public numeric function getQOH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID, string groupBy) {
-			var params = [];
-			var hql = "SELECT coalesce( sum(inventory.quantityIn), 0 ) - coalesce( sum(inventory.quantityOut), 0 ) FROM SlatwallInventory inventory WHERE ";
+		public array function getQOH(required string productID, string productRemoteID) {
+			var params = [arguments.productID];
 			
-			if(structKeyExists(arguments, "stockID")) {
-				params[1] = arguments.stockID;
-				hql &= "inventory.stock.stockID = ?";
-			} else if (structKeyExists(arguments, "skuID")) {
-				params[1] = arguments.skuID;
-				hql &= "inventory.stock.sku.skuID = ?";
-			} else if (structKeyExists(arguments, "productID")) {
-				params[1] = arguments.productID;
-				hql &= "inventory.stock.sku.product.productID = ?";
-			} else {
-				throw("You must specify a stockID, skuID, or productID to this method.");
-			}
+			var hql = "SELECT NEW MAP(coalesce( sum(inventory.quantityIn), 0 ) - coalesce( sum(inventory.quantityOut), 0 ) as QOH, inventory.stock.sku.skuID as skuID, inventory.stock.stockID as stockID, inventory.stock.location.locationID as locationID)
+					FROM
+						SlatwallInventory inventory
+					WHERE
+						inventory.stock.sku.product.productID = ?
+					GROUP BY
+						inventory.stock.sku.skuID,
+						inventory.stock.stockID,
+						inventory.stock.location.locationID";
+						
 			
-			return ormExecuteQuery(hql, params, true);
+			return ormExecuteQuery(hql, params);
 		}
 		
 		// Quantity On Sales Hold
-		public numeric function getQOSH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
+		public numeric function getQOSH(required string productID, string productRemoteID) {
 			// TODO: Setup Sales Hold
 			return 0;
 		}
 		
 		// Quantity Not Delivered on Order 
-		public numeric function getQNDOO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
+		public array function getQNDOO(required string productID, string productRemoteID) {
 			
-			var params = [];
-			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(orderDeliveryItem.quantity), 0 )
+			var params = [ arguments.productID ];
+			var hql = "SELECT NEW MAP(coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(orderDeliveryItem.quantity), 0 ) as QNDOO, orderItem.sku.skuID as skuID, stock.stockID as stockID, stock.location.locationID as locationID)
 					FROM
 						SlatwallOrderItem orderItem
 					  LEFT JOIN
 				  		orderItem.orderDeliveryItems orderDeliveryItem
+				  	  LEFT JOIN
+				  	  	orderItem.stock stock
 					WHERE
 						orderItem.order.orderStatusType.systemCode != 'ostNotPlaced'
 					  AND
 					    orderItem.order.orderStatusType.systemCode != 'ostClosed'
 					  AND
 					  	orderItem.orderItemType.systemCode = 'oitSale'
-					  AND ";
+					  AND 
+						orderItem.sku.product.productID = ?
+					GROUP BY
+						orderItem.sku.skuID,
+						stock.stockID,
+						stock.location.locationID";
 			
-			if(structKeyExists(arguments, "stockID")) {
-				params[1] = arguments.stockID;
-				hql &= "orderItem.stock.stockID = ?";
-			} else if (structKeyExists(arguments, "skuID")) {
-				params[1] = arguments.skuID;
-				hql &= "orderItem.sku.skuID = ?";
-			} else if (structKeyExists(arguments, "productID")) {
-				params[1] = arguments.productID;
-				hql &= "orderItem.sku.product.productID = ?";
-			} else {
-				throw("You must specify a stockID, skuID, or productID to this method.");
-			}
+			return ormExecuteQuery(hql, params);
 			
-			return ormExecuteQuery(hql, params, true);
 		}
 		
 		// Quantity not delivered on return vendor order 
-		public numeric function getQNDORVO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
+		public numeric function getQNDORVO(required string productID, string productRemoteID) {
 			// TODO: Impliment this later when we add return vendor orders
 			return 0;
 		}
 		
 		// Quantity not delivered on stock adjustment
-		public numeric function getQNDOSA(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
+		public array function getQNDOSA(required string productID, string productRemoteID) {
 			
-			var params = [];
-			var hql = "SELECT coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockAdjustmentDeliveryItem.quantity), 0 ) FROM
+			var params = [ arguments.productID ];
+			var hql = "SELECT NEW MAP(coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockAdjustmentDeliveryItem.quantity), 0 ) as QNDOSA, stockAdjustmentItem.fromStock.sku.skuID as skuID, stockAdjustmentItem.fromStock.stockID as stockID, stockAdjustmentItem.fromStock.location.locationID)
+				FROM
 					SlatwallStockAdjustmentItem stockAdjustmentItem
 				  LEFT JOIN
 				  	stockAdjustmentItem.stockAdjustmentDeliveryItems stockAdjustmentDeliveryItem
 				WHERE
 					stockAdjustmentItem.stockAdjustment.stockAdjustmentStatusType.systemCode != 'sastClosed'
-				AND ";
+				  AND
+					stockAdjustmentItem.fromStock.sku.product.productID = ?
+				GROUP BY
+					stockAdjustmentItem.fromStock.sku.skuID,
+					stockAdjustmentItem.fromStock.stockID,
+					stockAdjustmentItem.fromStock.location.locationID";
 			
-			if(structKeyExists(arguments, "stockID")) {
-				params[1] = arguments.stockID;
-				hql &= "stockAdjustmentItem.fromStock.stockID = ?";
-			} else if (structKeyExists(arguments, "skuID")) {
-				params[1] = arguments.skuID;
-				hql &= "stockAdjustmentItem.fromStock.sku.skuID = ?";
-			} else if (structKeyExists(arguments, "productID")) {
-				params[1] = arguments.productID;
-				hql &= "stockAdjustmentItem.fromStock.sku.product.productID = ?";
-			} else {
-				throw("You must specify a stockID, skuID, or productID to this method.");
-			}
-			
-			return ormExecuteQuery(hql, params, true);
+			return ormExecuteQuery(hql, params);
 		}
 		
 		// Quantity not received on return order
-		public numeric function getQNRORO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-			var params = [];
-			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 )
+		public array function getQNRORO(required string productID, string productRemoteID) {
+			
+			var params = [ arguments.productID ];
+			var hql = "SELECT NEW MAP(coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 ) as QNRORO, orderItem.sku.skuID as skuID, stock.stockID as stockID, stock.location.locationID as locationID)
 					FROM
 						SlatwallOrderItem orderItem
 					  LEFT JOIN
 				  		orderItem.stockReceiverItems stockReceiverItem
+				  	  LEFT JOIN
+				  	  	orderItem.stock stock
 					WHERE
 						orderItem.order.orderStatusType.systemCode != 'ostNotPlaced'
 					  AND
 					    orderItem.order.orderStatusType.systemCode != 'ostClosed'
 					  AND
 					  	orderItem.orderItemStatusType.systemCode = 'oitReturn'
-					  AND ";
-			
-			if(structKeyExists(arguments, "stockID")) {
-				params[1] = arguments.stockID;
-				hql &= "orderItem.stock.stockID = ?";
-			} else if (structKeyExists(arguments, "skuID")) {
-				params[1] = arguments.skuID;
-				hql &= "orderItem.sku.skuID = ?";
-			} else if (structKeyExists(arguments, "productID")) {
-				params[1] = arguments.productID;
-				hql &= "orderItem.sku.product.productID = ?";
-			} else {
-				throw("You must specify a stockID, skuID, or productID to this method.");
-			}
-			
-			return ormExecuteQuery(hql, params, true);
+					  AND
+						orderItem.sku.product.productID = ?
+					GROUP BY
+						orderItem.sku.skuID,
+						stock.stockID,
+						stock.location.locationID";
+				
+			return ormExecuteQuery(hql, params);
 		}
 		
 		// Quantity not received on vendor order
-		public numeric function getQNROVO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-			var params = [];
-			var hql = "SELECT coalesce( sum(vendorOrderItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 )
+		public array function getQNROVO(required string productID, string productRemoteID) {
+			
+			var params = [ arguments.productID ];
+			var hql = "SELECT NEW MAP(coalesce( sum(vendorOrderItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 ) as QNROVO, vendorOrderItem.stock.sku.skuID as skuID, vendorOrderItem.stock.stockID as stockID, vendorOrderItem.stock.location.locationID as locationID)
 					FROM
 						SlatwallVendorOrderItem vendorOrderItem
 					  LEFT JOIN
@@ -178,49 +159,35 @@ Notes:
 						vendorOrderItem.vendorOrder.vendorOrderStatusType.systemCode != 'ostClosed'
 					  AND
 					  	vendorOrderItem.vendorOrder.vendorOrderType = 'votPurchaseOrder'
-					  AND ";
+					  AND
+						vendorOrderItem.stock.sku.product.productID = ?
+					GROUP BY
+						vendorOrderItem.stock.sku.skuID,
+						vendorOrderItem.stock.stockID,
+						vendorOrderItem.stock.location.locationID";
 			
-			if(structKeyExists(arguments, "stockID")) {
-				params[1] = arguments.stockID;
-				hql &= "vendorOrderItem.stock.stockID = ?";
-			} else if (structKeyExists(arguments, "skuID")) {
-				params[1] = arguments.skuID;
-				hql &= "vendorOrderItem.stock.sku.skuID = ?";
-			} else if (structKeyExists(arguments, "productID")) {
-				params[1] = arguments.productID;
-				hql &= "vendorOrderItem.stock.sku.product.productID = ?";
-			} else {
-				throw("You must specify a stockID, skuID, or productID to this method.");
-			}
-			
-			return ormExecuteQuery(hql, params, true);
+			return ormExecuteQuery(hql, params);
 		}
 		
 		// Quantity not received on stock adjustment
-		public numeric function getQNROSA(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-			var params = [];
-			var hql = "SELECT coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 ) FROM
+		public array function getQNROSA(required string productID, string productRemoteID) {
+			
+			var params = [ arguments.productID ];
+			var hql = "SELECT NEW MAP(coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 ) as QNROSA, stockAdjustmentItem.toStock.sku.skuID as skuID, stockAdjustmentItem.toStock.stockID as stockID, stockAdjustmentItem.toStock.location.locationID as locationID)
+				FROM
 					SlatwallStockAdjustmentItem stockAdjustmentItem
 				  LEFT JOIN
 				  	stockAdjustmentItem.stockReceiverItems stockReceiverItem
 				WHERE
 					stockAdjustmentItem.stockAdjustment.stockAdjustmentStatusType.systemCode != 'sastClosed'
-				AND ";
+				  AND 
+					stockAdjustmentItem.toStock.sku.product.productID = ?
+				GROUP BY
+					stockAdjustmentItem.toStock.sku.skuID,
+					stockAdjustmentItem.toStock.stockID,
+					stockAdjustmentItem.toStock.location.locationID";
 			
-			if(structKeyExists(arguments, "stockID")) {
-				params[1] = arguments.stockID;
-				hql &= "stockAdjustmentItem.toStock.stockID = ?";
-			} else if (structKeyExists(arguments, "skuID")) {
-				params[1] = arguments.skuID;
-				hql &= "stockAdjustmentItem.toStock.sku.skuID = ?";
-			} else if (structKeyExists(arguments, "productID")) {
-				params[1] = arguments.productID;
-				hql &= "stockAdjustmentItem.toStock.sku.product.productID = ?";
-			} else {
-				throw("You must specify a stockID, skuID, or productID to this method.");
-			}
-			
-			return ormExecuteQuery(hql, params, true);
+			return ormExecuteQuery(hql, params);
 		}
 		
 		// Quantity received
@@ -233,32 +200,5 @@ Notes:
 			return 0;
 		}
 	</cfscript>
-	
-	<cffunction name="getProductQuantityDetailsQuery">
-		<cfargument name ="productID" />
-		<cfargument name ="remoteProductID" />
-		<cfargument name ="groupBy" default="productID" />
-		
-		<cfset var rs = "" />
-		
-		<cfquery name="rs">
-			SELECT
-				astock.stockID,
-				asku.skuID,
-				aproduct.productID,
-				COALESCE( sum(inventory.quantityIn), 0 ) - COALESE( sum(inventory.quantityOut) ) as 'qoh'
-			FROM
-				SlatwallStock
-			  INNER JOIN
-			  	SlatwallSku on astock.skuID = asku.skuID
-			  INNER JOIN
-			  	SlatwallProduct on asku.productID = aproduct.productID
-			  LEFT JOIN
-			  	SlatwallInventory on SlatwallProduct.
-			WHERE
-				aproduct.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
-		</cfquery>
-		
-	</cffunction>
-	
+
 </cfcomponent>

@@ -96,6 +96,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return false;
 	}
 	
+	
 	// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
     public any function save(required any entity, struct data, string context="save") {
     	
