@@ -48,9 +48,10 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="productCode" search=true />
 		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="defaultSku.price" range=true />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="defaultSku.price" range=true />
+		<cf_SlatwallListingColumn propertyIdentifier="calculatedQATS" range=true />
 	</cf_SlatwallListingDisplay>
 	
 </cfoutput>

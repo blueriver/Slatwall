@@ -51,17 +51,20 @@ Notes:
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divClass="span6">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="publishedFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#" valueLink="#rc.product.getProductURL()#">
 			</cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divClass="span6">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="#rc.edit#">
+				<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('define.qats.full')#" value="#rc.product.getQuantity('QATS')#">
+				<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('define.qiats.full')#" value="#rc.product.getQuantity('QIATS')#">
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
-		
 		<cf_SlatwallTabGroup object="#rc.product#" allowCustomAttributes="true">
 			<cf_SlatwallTab view="admin:product/producttabs/skus" />
 			<cf_SlatwallTab view="admin:product/producttabs/productdescription" />

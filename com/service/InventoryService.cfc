@@ -165,7 +165,7 @@ component extends="BaseService" accessors="true" output="false" {
 		if(arguments.entity.getEntityName() eq "SlatwallStock") {
 			var trackInventoryFlag = arguments.entity.getSku().setting('skuTrackInventoryFlag');
 			var allowBackorderFlag = arguments.entity.getSku().setting('skuAllowBackorderFlag');
-			var orderMaximumQuantity = arguments.entity.getSku().setting('skuAllowBackorderFlag'); 
+			var orderMaximumQuantity = arguments.entity.getSku().setting('skuOrderMaximumQuantity'); 
 			var qatsIncludesQNROROFlag = arguments.entity.getSku().setting('skuQATSIncludesQNROROFlag');
 			var qatsIncludesQNROVOFlag = arguments.entity.getSku().setting('skuQATSIncludesQNROVOFlag');
 			var qatsIncludesQNROSAFlag = arguments.entity.getSku().setting('skuQATSIncludesQNROSAFlag');
@@ -173,13 +173,13 @@ component extends="BaseService" accessors="true" output="false" {
 		} else {
 			var trackInventoryFlag = arguments.entity.setting('skuTrackInventoryFlag');
 			var allowBackorderFlag = arguments.entity.setting('skuAllowBackorderFlag');
-			var orderMaximumQuantity = arguments.entity.setting('skuAllowBackorderFlag'); 
+			var orderMaximumQuantity = arguments.entity.setting('skuOrderMaximumQuantity'); 
 			var qatsIncludesQNROROFlag = arguments.entity.setting('skuQATSIncludesQNROROFlag');
 			var qatsIncludesQNROVOFlag = arguments.entity.setting('skuQATSIncludesQNROVOFlag');
 			var qatsIncludesQNROSAFlag = arguments.entity.setting('skuQATSIncludesQNROSAFlag');
 			var holdBackQuantity = arguments.entity.setting('skuHoldBackQuantity');
 		}
-		
+
 		// If trackInventory is not turned on, or backorder is true then we can set the qats to the max orderQuantity
 		if( !trackInventoryFlag || allowBackorderFlag ) {
 			return orderMaximumQuantity;
@@ -207,7 +207,21 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public numeric function getQIATS(required any entity) {
-		return arguments.entity.getQuantity('QNC') - arguments.entity.setting("skuHoldBackQuantity");
+		if(arguments.entity.getEntityName() eq "SlatwallStock") {
+			var trackInventoryFlag = arguments.entity.getSku().setting('skuTrackInventoryFlag');
+			var orderMaximumQuantity = arguments.entity.getSku().setting('skuOrderMaximumQuantity'); 
+			var holdBackQuantity = arguments.entity.getSku().setting('skuHoldBackQuantity');
+		} else {
+			var trackInventoryFlag = arguments.entity.setting('skuTrackInventoryFlag');
+			var orderMaximumQuantity = arguments.entity.setting('skuOrderMaximumQuantity'); 
+			var holdBackQuantity = arguments.entity.setting('skuHoldBackQuantity');
+		}
+		
+		if(!trackInventoryFlag) {
+			return orderMaximumQuantity;
+		}
+		
+		return arguments.entity.getQuantity('QNC') - holdBackQuantity;
 	}
 
 	private struct function createInventoryDataStruct(required any inventoryArray, required string inventoryType) {
