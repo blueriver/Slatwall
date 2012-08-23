@@ -249,7 +249,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getOrderDiscountAmountTotal() {
-		return 0;
+		var discountAmount = 0;
+
+		for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
+			discountAmount = precisionEvaluate(discountAmount + getAppliedPromotions()[i].getDiscountAmount());
+		}
+
+		return discountAmount;
 	}
 	
 	public numeric function getPaymentAmountTotal() {
