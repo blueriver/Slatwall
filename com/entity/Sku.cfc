@@ -273,6 +273,19 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Start: Quantity Helper Methods
 	public numeric function getQuantity(required string quantityType, string locationID, string stockID) {
+		
+		// If this is a calculated quantity and locationID exists, then delegate
+		if( listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType) && structKeyExists(arguments, "locationID") ) {
+			var location = getService("locationService").getLocation(arguments.locationID);
+			var stock = getService("stockService").getStockBySkuAndLocation(this, location);
+			return stock.getQuantity(arguments.quantityType);
+		// If this is a calculated quantity and stockID exists, then delegate
+		} else if ( listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType) && structKeyExists(arguments, "stockID") ) {
+			var stock = getService("stockService").getStock(arguments.stockID);
+			return stock.getQuantity(arguments.quantityType);
+		}
+		
+		// Standard Logic
 		if( !structKeyExists(variables, arguments.quantityType) ) {
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
 				arguments.skuID = this.getSkuID();

@@ -384,7 +384,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(!structKeyExists(variables, arguments.quantityType)) {
 			
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
-				variables[ arguments.quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {productID=getProductID(), productRemoteID=getRemoteID()});	
+				variables[ arguments.quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {productID=getProductID(), productRemoteID=getRemoteID()});
 			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
 				variables[ arguments.quantityType ] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
 			} else {
@@ -408,7 +408,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		
 		// If we have a skuID & locationID
 		if( structKeyExists( arguments, "skuID" ) && structKeyExists(arguments, "locationID") ) {
-			if( structKeyExists(variables[ arguments.quantityType ].skus, arguments.skuID) && structKeyExists(variables[ quantityType ].skus[ arguments.skuID ], arguments.locationID) ) {
+			if( structKeyExists(variables[ arguments.quantityType ].skus, arguments.skuID) && structKeyExists(variables[ quantityType ].skus[ arguments.skuID ].locations, arguments.locationID) ) {
 				return variables[ arguments.quantityType ].skus[ arguments.skuID ].locations[ arguments.locationID ];
 			}
 			return 0;

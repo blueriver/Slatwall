@@ -102,7 +102,7 @@ Notes:
 		public array function getQNDOSA(required string productID, string productRemoteID) {
 			
 			var params = [ arguments.productID ];
-			var hql = "SELECT NEW MAP(coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockAdjustmentDeliveryItem.quantity), 0 ) as QNDOSA, stockAdjustmentItem.fromStock.sku.skuID as skuID, stockAdjustmentItem.fromStock.stockID as stockID, stockAdjustmentItem.fromStock.location.locationID)
+			var hql = "SELECT NEW MAP(coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockAdjustmentDeliveryItem.quantity), 0 ) as QNDOSA, stockAdjustmentItem.fromStock.sku.skuID as skuID, stockAdjustmentItem.fromStock.stockID as stockID, stockAdjustmentItem.fromStock.location.locationID as locationID)
 				FROM
 					SlatwallStockAdjustmentItem stockAdjustmentItem
 				  LEFT JOIN

@@ -162,26 +162,44 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	public numeric function getQATS(required any entity) {
 		
+		if(arguments.entity.getEntityName() eq "SlatwallStock") {
+			var trackInventoryFlag = arguments.entity.getSku().setting('skuTrackInventoryFlag');
+			var allowBackorderFlag = arguments.entity.getSku().setting('skuAllowBackorderFlag');
+			var orderMaximumQuantity = arguments.entity.getSku().setting('skuAllowBackorderFlag'); 
+			var qatsIncludesQNROROFlag = arguments.entity.getSku().setting('skuQATSIncludesQNROROFlag');
+			var qatsIncludesQNROVOFlag = arguments.entity.getSku().setting('skuQATSIncludesQNROVOFlag');
+			var qatsIncludesQNROSAFlag = arguments.entity.getSku().setting('skuQATSIncludesQNROSAFlag');
+			var holdBackQuantity = arguments.entity.getSku().setting('skuHoldBackQuantity');
+		} else {
+			var trackInventoryFlag = arguments.entity.setting('skuTrackInventoryFlag');
+			var allowBackorderFlag = arguments.entity.setting('skuAllowBackorderFlag');
+			var orderMaximumQuantity = arguments.entity.setting('skuAllowBackorderFlag'); 
+			var qatsIncludesQNROROFlag = arguments.entity.setting('skuQATSIncludesQNROROFlag');
+			var qatsIncludesQNROVOFlag = arguments.entity.setting('skuQATSIncludesQNROVOFlag');
+			var qatsIncludesQNROSAFlag = arguments.entity.setting('skuQATSIncludesQNROSAFlag');
+			var holdBackQuantity = arguments.entity.setting('skuHoldBackQuantity');
+		}
+		
 		// If trackInventory is not turned on, or backorder is true then we can set the qats to the max orderQuantity
-		if( !arguments.entity.setting('skuTrackInventoryFlag') || arguments.entity.setting('skuAllowBackorderFlag') ) {
-			return arguments.entity.setting('skuOrderMaximumQuantity');
+		if( !trackInventoryFlag || allowBackorderFlag ) {
+			return orderMaximumQuantity;
 		}
 		
 		// Otherwise we will do a normal bit of calculation logic
 		var ats = arguments.entity.getQuantity('QNC');
 		
-		if(arguments.entity.setting("skuQATSIncludesQNROROFlag")) {
+		if(qatsIncludesQNROROFlag) {
 			ats += arguments.entity.getQuantity('QNRORO');
 		}
-		if(arguments.entity.setting("skuQATSIncludesQNROVOFlag")) {
+		if(qatsIncludesQNROVOFlag) {
 			ats += arguments.entity.getQuantity('QNROVO');
 		}
-		if(arguments.entity.setting("skuQATSIncludesQNROSAFlag")) {
+		if(qatsIncludesQNROSAFlag) {
 			ats += arguments.entity.getQuantity('QNROSA');
 		}
 		
-		if(isNumeric(arguments.entity.setting("skuHoldBackQuantity"))) {
-			ats -= arguments.entity.setting("skuHoldBackQuantity");
+		if(isNumeric(holdBackQuantity)) {
+			ats -= holdBackQuantity;
 		}
 		
 		return ats;
