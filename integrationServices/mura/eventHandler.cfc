@@ -135,12 +135,12 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 	// Hook into the onRender start so that we can do any slatActions that might have been called, or if the current content is a listing page
 	public any function onRenderStart(required any $) {
-		// check if user has access to this page
-		checkAccess($);
-				
 		// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
 		$.slatwall.setCurrentContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
 		
+		// check if user has access to this page
+		checkAccess($);
+				
 		// Check for any slatActions that might have been passed in and render that page as the first
 		if(len($.event('slatAction'))) {
 			$.content('body', $.content('body') & doAction($.event('slatAction')));
