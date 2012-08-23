@@ -115,6 +115,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var thisSku = this.newSku();
 				thisSku.setProduct(arguments.product);
 				thisSku.setPrice(arguments.data.price);
+				if(structKeyExists(arguments.data, "listPrice") && isNumeric(arguments.data.listPrice) && arguments.data.listPrice > 0) {
+					newSku.setListPrice(arguments.data.listPrice);	
+				}
 				thisSku.setSkuCode(arguments.product.getProductCode() & "-1");
 				arguments.product.setDefaultSku( thisSku );
 				
