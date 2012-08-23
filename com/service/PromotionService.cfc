@@ -58,8 +58,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			// Clear all previously applied promotions for fulfillment
 			for(var of=1; of<=arrayLen(arguments.order.getOrderFulfillments()); of++) {
-				for(var pa=arrayLen(arguments.order.getAppliedPromotions()); pa >= 1; pa--) {
-					arguments.order.getAppliedPromotions()[pa].removeOrderFulfillment();
+				for(var pa=arrayLen(arguments.order.getOrderFulfillments()[of].getAppliedPromotions()); pa >= 1; pa--) {
+					arguments.order.getOrderFulfillments()[of].getAppliedPromotions()[pa].removeOrderFulfillment();
 				}
 			}
 			
