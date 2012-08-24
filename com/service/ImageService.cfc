@@ -57,7 +57,7 @@ component displayname="Image Service" persistent="false" extends="BaseService" o
 		
 		if(!arguments.width && !arguments.height) {
 			// if no width and height is passed in, display the original image
-			resizedPath = arguments.imagePath;
+			resizedImagePath = arguments.imagePath;
 		} else {
 			// if dimensions are passed in, check to see if the image has already been created. If so, display it, if not create it first and then display it
 			var imageNameSuffix = (arguments.width && arguments.height) ? "_#arguments.width#w_#arguments.height#h" : (arguments.width ? "_#arguments.width#w" : "_#arguments.height#h");

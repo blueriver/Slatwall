@@ -196,9 +196,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     }
     
     public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
-		// Get the expected Image Path
-		arguments.path=getImagePath();
-		arguments.missingImagePath = setting('productMissingImagePath');
 		
 		var	path = getResizedImagePath(argumentcollection=arguments);
 		
@@ -220,6 +217,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+		
+		arguments.imagePath=getImagePath();
+		arguments.missingImagePath=getProduct().setting('productMissingImagePath');
+		
 		if(structKeyExists(arguments, "size")) {
 			arguments.size = lcase(arguments.size);
 			if(arguments.size eq "l" || arguments.size eq "large") {
@@ -232,8 +233,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arguments.width = getProduct().setting("productImage#arguments.size#Width");
 			arguments.height = getProduct().setting("productImage#arguments.size#Height");
 		}
-		arguments.imagePath=getImagePath();
-		arguments.missingImagePath=product.setting('productMissingImagePath');
 		
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
