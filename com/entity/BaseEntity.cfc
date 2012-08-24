@@ -109,27 +109,38 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// Attribute Value
 	public any function getAttributeValue(required string attribute, returnEntity=false){
 		
-		if(len(arguments.attribute) eq 32) {
-			if( structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
-				if(arguments.returnEntity) {
-					return getAttributeValuesByAttributeIDStruct()[arguments.attribute];
-				}
-				return getAttributeValuesByAttributeIDStruct()[arguments.attribute].getAttributeValue();
-			}
+		var attributeValueEntity = "";
+		
+		// If an ID was passed, and that value exists in the ID struct then use it
+		if(len(arguments.attribute) eq 32 && structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
+			attributeValueEntity = getAttributeValuesByAttributeIDStruct()[arguments.attribute];
+			
+		// If some other string was passed check the attributeCode struct for it's existance
+		} else if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
+			attributeValueEntity = getAttributeValuesByAttributeIDStruct()[arguments.attribute];
+			
 		}
 		
-		if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
-			if(arguments.returnEntity) {
-				return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ];
+		// Value Entity Found, and we are returning the entire thing
+		if( isObject(attributeValueEntity) && arguments.returnEntity) {
+			
+			return attributeValueEntity;
+		
+		// Value Entity Found and we are just returning the value (or the default for that attribute)
+		} else if ( isObject(attributeValueEntity) ){
+			
+			if(!isNull(attributeValueEntity.getAttributeValue()) && len(attributeValueEntity.getAttributeValue())) {
+				return attributeValueEntity.getAttributeValue();
+			} else if (!isNull(attributeValueEntity.getAttribute().getDefaultValue()) && len(attributeValueEntity.getAttribute().getDefaultValue())) {
+				return attributeValueEntity.getAttribute().getDefaultValue();
 			}
 			
-			return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ].getAttributeValue();
-		}
-				
-		if(arguments.returnEntity) {
+		// Attribute was not found, and we wanted an entity back
+		} else if(arguments.returnEntity) {
 			var newAttributeValue = getService("attributeService").newAttributeValue();
 			newAttributeValue.setAttributeValueType( lcase( replace(getEntityName(),'Slatwall','') ) );
 			return newAttributeValue;
+		
 		}
 		
 		return "";
