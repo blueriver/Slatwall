@@ -40,12 +40,21 @@ component displayname="Image Service" persistent="false" extends="BaseService" o
 	property name="utilityTagService" type="any";
 		
 	// Image File Methods
-	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100) {
+	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100,string missingImagePath) {
 		var resizedImagePath = "";
 		
+		
+		// If the image can't be found default to a missing image
 		if(!fileExists(expandPath(arguments.imagePath))) {
-			arguments.imagePath = "#getSlatwallRootPath()#/assets/images/missingimage.jpg";
+			if(structKeyExists(arguments, "missingImagePath") && fileExists(expandPath(arguments.missingImagePath))) {
+				arguments.imagePath = arguments.missingImagePath;
+			} else if ( fileExists(expandPath(setting('globalMissingImagePath'))) ) {
+				arguments.imagePath = setting('globalMissingImagePath');
+			} else {
+				arguments.imagePath = "#getSlatwallRootPath()#/assets/images/missingimage.jpg";	
+			}
 		}
+		
 		if(!arguments.width && !arguments.height) {
 			// if no width and height is passed in, display the original image
 			resizedPath = arguments.imagePath;

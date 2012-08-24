@@ -163,6 +163,7 @@ globalEncryptionKeySize
 			productImageMediumHeight = {fieldType="text", formatType="pixels"},
 			productImageLargeWidth = {fieldType="text", formatType="pixels"},
 			productImageLargeHeight = {fieldType="text", formatType="pixels"},
+			productMissingImagePath = {fieldType="text"},
 			productTitleString = {fieldType="text"},
 			productHTMLTitleString = {fieldType="text"},
 			productMetaDescriptionString = {fieldType="textarea"},

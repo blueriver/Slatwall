@@ -87,6 +87,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="salePriceDiscountAmount" type="string" persistent="false";
 	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
 	property name="defaultFlag" type="boolean" persistent="false";
+	property name="imageExistsFlag" type="boolean" persistent="false";
 	
     public boolean function getDefaultFlag() {
     	if(getProduct().getDefaultSku().getSkuID() == getSkuID()) {
@@ -196,24 +197,17 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     
     public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		// Get the expected Image Path
-		var path=getImagePath();
+		arguments.path=getImagePath();
+		arguments.missingImagePath = setting('productMissingImagePath');
 		
-		// If no image Exists use the defult missing image 
-		if(!fileExists(expandPath(path))) {
-			path = setting('globalMissingImagePath');
-		}
-		
-		// If there were sizes specified, get the resized image path
-		if(structKeyExists(arguments, "size") || arguments.width != 0 || arguments.height != 0) {
-			path = getResizedImagePath(argumentcollection=arguments);	
-		}
+		var	path = getResizedImagePath(argumentcollection=arguments);
 		
 		// Setup Alt & Class for the image
 		if(arguments.alt == "" && !isNull(getProduct().getCalculatedTitle())) {
 			arguments.alt = "#getProduct().getCalculatedTitle()#";
 		}
 		if(arguments.class == "") {
-			arguments.class = "skuImage";	
+			arguments.class = "skuImage";
 		}
 		
 		// Try to read and return the image, otherwise don't specify the height and width
@@ -239,10 +233,12 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arguments.height = getProduct().setting("productImage#arguments.size#Height");
 		}
 		arguments.imagePath=getImagePath();
+		arguments.missingImagePath=product.setting('productMissingImagePath');
+		
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
-	public boolean function imageExists() {
+	public boolean function getImageExistsFlag() {
 		if( fileExists(expandPath(getImagePath())) ) {
 			return true;
 		} else {

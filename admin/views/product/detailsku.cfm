@@ -61,7 +61,7 @@ Notes:
 				<cfif rc.edit>
 					<div class="image pull-right">
 						<img src="#rc.sku.getResizedImagePath(width="150", height="150")#" border="0" width="150px" height="150px" /><br />
-						<cfif rc.sku.imageExists()>
+						<cfif rc.sku.getImageExistsFlag()>
 							<cf_SlatwallFieldDisplay fieldType="yesno" title="Delete Current Image" fieldname="deleteImage" edit="true" />
 						</cfif>
 						<cf_SlatwallFieldDisplay fieldType="file" title="Upload New Image" fieldname="imageFileUpload" edit="true" />
