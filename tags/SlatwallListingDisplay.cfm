@@ -93,7 +93,7 @@ Notes:
 		</cfif>
 		
 		<!--- Setup the example entity --->
-		<cfset thistag.exampleEntity = createObject("component", "Slatwall.com.entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '')#") />
+		<cfset thistag.exampleEntity = entityNew(attributes.smartList.getBaseEntityName()) />
 		
 		<!--- Setup the default table class --->
 		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-striped table-bordered table-condensed', ' ') />
