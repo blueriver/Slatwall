@@ -102,14 +102,14 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		}
 		
 		if(rc.itemEntityName != "") {
-			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
-			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
-			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
-			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
-			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
-			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
-			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
-			rc.exportAction = "admin:#getFW().getSection(rc.slatAction)#.export#rc.itemEntityName#"; 
+			rc.listAction = "#subsystemName#:#sectionName#.list#rc.itemEntityName#"; 
+			rc.saveAction = "#subsystemName#:#sectionName#.save#rc.itemEntityName#";
+			rc.detailAction = "#subsystemName#:#sectionName#.detail#rc.itemEntityName#";		
+			rc.deleteAction = "#subsystemName#:#sectionName#.delete#rc.itemEntityName#";
+			rc.editAction = "#subsystemName#:#sectionName#.edit#rc.itemEntityName#";
+			rc.createAction = "#subsystemName#:#sectionName#.create#rc.itemEntityName#";
+			rc.cancelAction = "#subsystemName#:#sectionName#.list#rc.itemEntityName#";
+			rc.exportAction = "#subsystemName#:#sectionName#.export#rc.itemEntityName#"; 
 		}
 		
 		rc.pageTitle = rbKey(replace(rc.slatAction,':','.','all'));
