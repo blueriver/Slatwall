@@ -975,6 +975,50 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getService("utilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues);
 	}
 	
+	// Helper method to combine xml documents
+	public any function xmlImport(required xml parentDocument, required any nodes) {
+		/*
+			Check to see how the XML nodes were passed to us. If it
+			was an array, import each node index as its own XML tree.
+			If it was an XML tree, import recursively.
+		*/
+		if( isArray( arguments.nodes ) ) {
+			var importedNodes = [] ;
+	 
+			for(var node in arguments.nodes) {
+				arrayAppend(importedNodes,xmlImport(arguments.parentDocument,node)) ;
+			}
+	
+			return importedNodes;
+	
+		} else {
+			/*
+				We were passed an XML document or nodes or XML string.
+				Either way, let's copy the top level node and then
+				copy and append any children.
+	 
+				NOTE: Add ( arguments.Nodes.XmlNsURI ) as second
+				argument if you are dealing with name spaces.
+			*/
+			var newNode = XmlElemNew(arguments.parentDocument,arguments.Nodes.XmlName) ;
+	 
+			structAppend(newNode.XmlAttributes,arguments.nodes.XmlAttributes) ;
+	 
+			// Copy simple values. 
+			newNode.XmlText = arguments.nodes.XmlText ;
+			newNode.XmlComment = arguments.nodes.XmlComment ;
+	 
+			/*
+				Loop over the child nodes and import them as well
+				and then append them to the new node.
+			*/
+			for(var childNode in arguments.nodes.XmlChildren) {
+				arrayAppend(newNode.XmlChildren,XmlImport(arguments.parentDocument,childNode)) ;
+			}
+			return newNode ;
+		}
+	}
+	
 	// ===========================  END:  UTILITY METHODS ===========================================
 	
 	// ========================= START: DELIGATION HELPERS ==========================================
