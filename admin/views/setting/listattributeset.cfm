@@ -43,6 +43,7 @@ Notes:
 	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.brand')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=brand&returnAction=admin:setting.editattributeset" />
 	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.product')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=product&returnAction=admin:setting.editattributeset" />
 	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.orderItem')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=orderitem&returnAction=admin:setting.editattributeset" />
+	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.vendor')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=vendor&returnAction=admin:setting.editattributeset" />
 </cf_SlatwallActionBar>
 
 <cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#"

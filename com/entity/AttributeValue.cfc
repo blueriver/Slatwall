@@ -55,6 +55,7 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	
 	// Quick Lookup Properties
 	property name="attributeID" length="32" insert="false" update="false";
@@ -156,6 +157,24 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 			arrayDeleteAt(arguments.product.getAttributeValues(), index);
 		}
 		structDelete(variables, "product");
+	}
+	
+	// Vendor (many-to-one)
+	public void function setVendor(required any vendor) {
+		variables.vendor = arguments.vendor;
+		if(isNew() or !arguments.vendor.hasAttributeValue( this )) {
+			arrayAppend(arguments.vendor.getAttributeValues(), this);
+		}
+	}
+	public void function removeVendor(any vendor) {
+		if(!structKeyExists(arguments, "vendor")) {
+			arguments.vendor = variables.vendor;
+		}
+		var index = arrayFind(arguments.vendor.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendor.getAttributeValues(), index);
+		}
+		structDelete(variables, "vendor");
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
