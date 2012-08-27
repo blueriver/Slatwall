@@ -83,11 +83,11 @@ Notes:
 									<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #request.slatwallScope.rbKey('define.actions')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">
 										<cf_SlatwallActionCaller action="#request.context.exportAction#" text="#request.slatwallScope.rbKey('define.exportlist')#" type="list">
-										#thistag.generatedcontent#
+										<!---#thistag.generatedcontent#--->
 									</ul>
 								</div>
 
-								<cfif len(attributes.createAction)>
+								<cfif len(attributes.createAction) or len(thistag.generatedcontent)>
 									<div class="btn-group">
 										<cfif listLen(attributes.createAction) eq 1>
 											<cfif attributes.createModal>
@@ -100,8 +100,10 @@ Notes:
 												<cfloop list="#attributes.createAction#" index="action">
 													<cf_SlatwallActionCaller action="#action#" type="list" queryString="returnAction=#attributes.createReturnAction#" modal="#attributes.createModal#" /> 
 												</cfloop>
+												#thistag.generatedcontent#
 											</cf_SlatwallActionCallerDropdown>
 										</cfif>
+										
 									</div>
 								</cfif>
 							<!--- Detail --->

@@ -38,7 +38,12 @@ Notes:
 --->
 <cfparam name="rc.attributeSetSmartList" type="any" />
 	
-<cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createReturnAction="admin:setting.editattributeset" createAction="admin:setting.createaccountattributeset,admin:setting.createproductattributeset,admin:setting.createproductcustomizationattributeset" />
+<cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createAction="">
+	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.account')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=account&returnAction=admin:setting.editattributeset" />
+	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.brand')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=brand&returnAction=admin:setting.editattributeset" />
+	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.product')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=product&returnAction=admin:setting.editattributeset" />
+	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.orderItem')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=orderitem&returnAction=admin:setting.editattributeset" />
+</cf_SlatwallActionBar>
 
 <cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#"
 						   recordDetailAction="admin:setting.detailattributeset"
