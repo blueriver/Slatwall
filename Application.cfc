@@ -206,6 +206,8 @@ component extends="org.fw1.framework" output="false" {
 
 					// Build RB Factory
 					rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
+					// Build RB Factory for integrations
+					rbFactory= new mura.resourceBundle.resourceBundleFactory(rbFactory, getDirectoryFromPath(expandPath("/plugins/Slatwall/integrationServices/resourceBundles/") ));
 					application.slatwall.rbFactory = rbFactory;
 					
 					writeLog(file="Slatwall", text="General Log - RBFactory Initiated");

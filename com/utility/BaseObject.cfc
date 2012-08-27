@@ -254,25 +254,25 @@ component displayname="Base Object" accessors="true" output="false" {
 					var manyToOneStructData = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name
-					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
+					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 					
 					// If the primaryID exists then we can set the relationship
 					if(structKeyExists(manyToOneStructData, primaryIDPropertyName)) {
 						
 						// set the service to use to get the specific entity
-						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 						
 						// If there were additional values in the data, then we will get the entity by the primaryID and populate / validate by calling save in its service.
 						if(structCount(manyToOneStructData) gt 1) {
 							
 							// Load the specifiv entity, if one doesn't exist, this will return a new entity
-							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
+							var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
 							
 							// Set the value of the property as the loaded entity
 							_setProperty(currentProperty.name, thisEntity );
 							
 							// Call the save method for this sub property entity and pass in the data
-							thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=thisEntity, 2=manyToOneStructData});
+							thisEntity = entityService.invokeMethod( "save#listLast(currentProperty.cfc,'.')#", {1=thisEntity, 2=manyToOneStructData});
 							
 							// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
 							if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
@@ -289,7 +289,7 @@ component displayname="Base Object" accessors="true" output="false" {
 							} else {
 							
 								// Load the specifiv entity, if one doesn't exist... this will be null
-								var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
+								var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=manyToOneStructData[primaryIDPropertyName]});
 							
 								// Set the value of the property as the loaded entity
 								_setProperty(currentProperty.name, thisEntity );
@@ -304,7 +304,7 @@ component displayname="Base Object" accessors="true" output="false" {
 					var oneToManyArrayData = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name for the related object
-					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
+					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 					
 					// Loop over the array of objects in the data... Then load, populate, and validate each one
 					for(var a=1; a<=arrayLen(oneToManyArrayData); a++) {
@@ -313,10 +313,10 @@ component displayname="Base Object" accessors="true" output="false" {
 						if(structKeyExists(oneToManyArrayData[a], primaryIDPropertyName) && (!structKeyExists(arguments.data, "populateSubProperties") || arguments.data.populateSubProperties)) {
 							
 							// set the service to use to get the specific entity
-							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 							
 							// Load the specific entity, and if one doesn't exist yet then return a new entity
-							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[a][primaryIDPropertyName],2=true});
+							var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=oneToManyArrayData[a][primaryIDPropertyName],2=true});
 							
 							// Add the entity to the existing objects properties
 							this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
@@ -325,7 +325,7 @@ component displayname="Base Object" accessors="true" output="false" {
 							if(structCount(oneToManyArrayData[a]) gt 1) {
 								
 								// Call the save method for this sub property entity and pass in the data
-								thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=thisEntity, 2=oneToManyArrayData[a]});
+								thisEntity = entityService.invokeMethod( "save#listLast(currentProperty.cfc,'.')#", {1=thisEntity, 2=oneToManyArrayData[a]});
 								
 								// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
 								if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
@@ -341,7 +341,7 @@ component displayname="Base Object" accessors="true" output="false" {
 					var manyToManyIDList = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name
-					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
+					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 					
 					// Get all of the existing related entities
 					var existingRelatedEntities = invokeMethod("get#currentProperty.name#");
@@ -372,13 +372,13 @@ component displayname="Base Object" accessors="true" output="false" {
 					for(var n=1; n<=listLen( manyToManyIDList ); n++) {
 						
 						// set the service to use to get the specific entity
-						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 							
 						// set the id of this entity into a local variable
 						var thisEntityID = listGetAt(manyToManyIDList, n);
 						
 						// Load the specific entity, if one doesn't exist... this will be null
-						var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=thisEntityID});
+						var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=thisEntityID});
 						
 						// If the entity exists, then add it to the relationship
 						if(!isNull(thisEntity)) {
@@ -634,7 +634,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint public method to get the rbKey value for a property in a subentity
 	public string function getTitleByPropertyIdentifier( required string propertyIdentifier ) {
 		if(find(".", arguments.propertyIdentifier)) {
-			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc#");
+			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc,'.')#");
 			return exampleEntity.getTitleByPropertyIdentifier( replace(arguments.propertyIdentifier, "#listFirst(arguments.propertyIdentifier, '.')#.", '') );
 		}
 		return getPropertyTitle( arguments.propertyIdentifier );
@@ -643,7 +643,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint public method to get the rbKey value for a property in a subentity
 	public string function getFieldTypeByPropertyIdentifier( required string propertyIdentifier ) {
 		if(find(".", arguments.propertyIdentifier)) {
-			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc#");
+			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc,'.')#");
 			return exampleEntity.getFieldTypeByPropertyIdentifier( replace(arguments.propertyIdentifier, "#listFirst(arguments.propertyIdentifier, '.')#.", '') );
 		}
 		return getPropertyFieldType( arguments.propertyIdentifier );
@@ -658,7 +658,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		// If this is a relational property, and the relationship is many-to-one, then return the propertyName and propertyName of primaryID
 		if( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-one" ) {
 			
-			var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#propertyMeta.cfc#" );
+			var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(propertyMeta.cfc,'.')#" );
 			return "#arguments.propertyName#.#primaryIDPropertyName#";
 		}
 		
@@ -973,6 +973,50 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	public string function stringReplace( required string templateString, boolean formatValues=false ) {
 		return getService("utilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues);
+	}
+	
+	// Helper method to combine xml documents
+	public any function xmlImport(required xml parentDocument, required any nodes) {
+		/*
+			Check to see how the XML nodes were passed to us. If it
+			was an array, import each node index as its own XML tree.
+			If it was an XML tree, import recursively.
+		*/
+		if( isArray( arguments.nodes ) ) {
+			var importedNodes = [] ;
+	 
+			for(var node in arguments.nodes) {
+				arrayAppend(importedNodes,xmlImport(arguments.parentDocument,node)) ;
+			}
+	
+			return importedNodes;
+	
+		} else {
+			/*
+				We were passed an XML document or nodes or XML string.
+				Either way, let's copy the top level node and then
+				copy and append any children.
+	 
+				NOTE: Add ( arguments.Nodes.XmlNsURI ) as second
+				argument if you are dealing with name spaces.
+			*/
+			var newNode = XmlElemNew(arguments.parentDocument,arguments.Nodes.XmlName) ;
+	 
+			structAppend(newNode.XmlAttributes,arguments.nodes.XmlAttributes) ;
+	 
+			// Copy simple values. 
+			newNode.XmlText = arguments.nodes.XmlText ;
+			newNode.XmlComment = arguments.nodes.XmlComment ;
+	 
+			/*
+				Loop over the child nodes and import them as well
+				and then append them to the new node.
+			*/
+			for(var childNode in arguments.nodes.XmlChildren) {
+				arrayAppend(newNode.XmlChildren,XmlImport(arguments.parentDocument,childNode)) ;
+			}
+			return newNode ;
+		}
 	}
 	
 	// ===========================  END:  UTILITY METHODS ===========================================

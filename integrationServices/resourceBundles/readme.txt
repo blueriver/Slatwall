@@ -1,0 +1,1 @@
+Custom resource bundle files can be created in this folder.

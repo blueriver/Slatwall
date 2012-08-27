@@ -384,7 +384,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			
 			var smartList = getPropertyOptionsSmartList( arguments.propertyName );
 			
-			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( arguments.propertyName ).cfc#");
+			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
 			
 			smartList.addSelect(propertyIdentifier=exampleEntity.getSimpleRepresentationPropertyName(), alias="name");
 			smartList.addSelect(propertyIdentifier=exampleEntity.getPrimaryIDPropertyName(), alias="value"); 
@@ -412,8 +412,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		var cacheKey = "#arguments.propertyName#OptionsSmartList";
 		
 		if(!structKeyExists(variables, cacheKey)) {
-			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
-			variables[ cacheKey ] = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
+			var entityService = getService("utilityORMService").getServiceByEntityName( listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.') );
+			variables[ cacheKey ] = entityService.invokeMethod("get#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#SmartList");
 			// If the cfc is "Type" then we should be looking for a parentTypeSystemCode in the metaData
 			if(getPropertyMetaData( arguments.propertyName ).cfc == "Type") {
 				if(structKeyExists(getPropertyMetaData( arguments.propertyName ), "systemCode")) {
@@ -433,11 +433,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		
 		if(!structKeyExists(variables, cacheKey)) {
 			
-			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
-			var smartList = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
+			var entityService = getService("utilityORMService").getServiceByEntityName( listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.') );
+			var smartList = entityService.invokeMethod("get#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#SmartList");
 			
 			// Create an example entity so that we can read the meta data
-			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
+			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
 			
 			// If its a one-to-many, then add filter
 			if(getPropertyMetaData( arguments.propertyName ).fieldtype == "one-to-many") {
