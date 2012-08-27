@@ -12,7 +12,6 @@ thumbs.db
 settings.xml/addLicense.cfm
 logs/
 assets/images/cache/
-staticAssets/min/
-staticAssets/images/cache
-assets/min/
+assets/min/*.css
+assets/min/*.js
 assets/css/global.less.css
