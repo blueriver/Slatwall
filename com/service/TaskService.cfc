@@ -98,7 +98,9 @@ component extends="BaseService" output="false" accessors="true"{
 		var type = 'HTML';
 
 		if(arguments.status eq "Failed"){
-			savecontent variable="errorString" { writedump(var="#arguments.error#" top="2"); };
+			savecontent variable="errorString" { 
+				writeDump(var="#arguments.error#", top="2");
+			};
 			var to = arguments.taskSchedule.getFailureEmailList();
 			var body = "<p>The #arguments.taskSchedule.getTask().getTaskName()# task failed on <i>#dateformat(now(),"mm/dd/yyyy")# #timeformat(now(),"medium")#</i></p><h2>Error Details</h2>#arguments.error.message#" & errorString ;
 		}else{
