@@ -290,9 +290,12 @@ component displayname="Base Object" accessors="true" output="false" {
 							
 								// Load the specifiv entity, if one doesn't exist... this will be null
 								var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=manyToOneStructData[primaryIDPropertyName]});
-							
-								// Set the value of the property as the loaded entity
-								_setProperty(currentProperty.name, thisEntity );
+								
+								if(!isNull(thisEntity)) {
+									// Set the value of the property as the loaded entity
+									_setProperty(currentProperty.name, thisEntity );	
+								}
+								
 							}
 						}
 					}
