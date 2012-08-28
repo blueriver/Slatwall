@@ -117,7 +117,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			
 		// If some other string was passed check the attributeCode struct for it's existance
 		} else if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
-			attributeValueEntity = getAttributeValuesByAttributeIDStruct()[arguments.attribute];
+			attributeValueEntity = getAttributeValuesByAttributeCodeStruct()[arguments.attribute];
 			
 		}
 		
