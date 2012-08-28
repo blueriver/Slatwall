@@ -211,8 +211,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function updateColdspringWithDataIntegration(required any serviceFactory, required xml originalXML) {
-		if(fileExists(expandPath('/Slatwall/integrationServices/coldspring.xml'))) {
-			var newXML = xmlParse(fileRead(expandPath('/Slatwall/integrationServices/coldspring.xml')));
+		if(fileExists(expandPath('/Slatwall/config/custom/coldspring.xml'))) {
+			var newXML = xmlParse(fileRead(expandPath('/Slatwall/config/custom/coldspring.xml')));
 			
 			var newBeanCount = arrayLen(newXML.beans.bean);
 			for(var x=newBeanCount; x>=1; x--) {
