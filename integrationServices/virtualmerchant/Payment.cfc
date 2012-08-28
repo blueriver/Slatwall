@@ -114,7 +114,9 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		
 		var paymentData = [];
 		arrayAppend(paymentData,"ssl_amount=#requestBean.getTransactionAmount()#");
-		arrayAppend(paymentData,"ssl_card_number=#requestBean.getCreditCardNumber()#");
+		if(len(requestBean.getCreditCardNumber())) {
+			arrayAppend(paymentData,"ssl_card_number=#requestBean.getCreditCardNumber()#");
+		}
 		arrayAppend(paymentData,"ssl_card_present=N");
 		arrayAppend(paymentData,"ssl_exp_date=#Left(requestBean.getExpirationMonth(),2)##Right(requestBean.getExpirationYear(),2)#");
 		arrayAppend(paymentData,"ssl_avs_address=#requestBean.getBillingStreetAddress()#");
