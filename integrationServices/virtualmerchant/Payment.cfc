@@ -74,6 +74,15 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		
 		var requestData = "";
 		requestData = "ssl_transaction_type=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#&ssl_show_form=false&ssl_result_format=ASCII";
+		
+		// If this is a ccforce for capturing a pre-authorization, then we need to pass the auth code
+		if(arguments.requestBean.getTransactionType() eq "arguments.requestBean.getTransactionType()" && !isNull(requestBean.getProviderTransationID()) && len(requestBean.getProviderTransationID())) {
+			var originalCCTransaction = getService("paymentService").getCreditCardTransactionByProviderTransactionID( requestBean.getProviderTransationID() );
+			if(!isNull(originalCCTransaction) && !isNull(originalCCTransaction.getAuthorizationCode()) && len(originalCCTransaction.getAuthorizationCode())) {
+				requestData = listAppend(requestData, "ssl_approval_code=#originalCCTransaction.getAuthorizationCode()#","&");		
+			}
+		}
+		
 		requestData = listAppend(requestData, getLoginNVP(),"&");
 		requestData = listAppend(requestData, getPaymentNVP(requestBean),"&");
 		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
@@ -165,8 +174,6 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 				param name="responseData.errorName" default="";
 				
 				response.addError("processing", "#responseData['errorName']# (#responseData['errorCode']#) : #responseData['errorMessage']#");
-			} else {
-				response.addError("processing", "An unknown error occured.  Please try again.");
 			}
 		} else {
 			// Add message for what happened
