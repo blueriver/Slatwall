@@ -165,6 +165,8 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 				param name="responseData.errorName" default="";
 				
 				response.addError("processing", "#responseData['errorName']# (#responseData['errorCode']#) : #responseData['errorMessage']#");
+			} else {
+				response.addError("processing", "An unknown error occured.  Please try again.");
 			}
 		} else {
 			// Add message for what happened
