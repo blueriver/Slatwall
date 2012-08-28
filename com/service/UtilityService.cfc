@@ -416,6 +416,7 @@ Notes:
 				replaceDetails.value = arguments.object.getValueByPropertyIdentifier(replace(replace(templateKeys[i], "${", ""),"}",""), arguments.formatValues);	
 			} catch(any e) {
 				writeDump(templateKeys[i]);
+				writeDump(e);
 				abort;
 			}
 			
