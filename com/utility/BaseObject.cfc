@@ -1014,7 +1014,13 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function the virtual file system directory
 	public any function getSlatwallVFSRootDirectory() {
-		return getApplicationValue("slatwallVfsRoot");
+		var vfsDirectory = getApplicationValue("slatwallVfsRoot");
+		
+		if(!directoryExists( vfsDirectory )) {
+			directoryCreate( vfsDirectory );
+		}
+					
+		return vfsDirectory;
 	}
 	
 	// @hint  helper function to get the database type
@@ -1024,11 +1030,24 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function to return the Slatwall RB Factory in any component
 	public any function getRBFactory() {
+		if( !hasApplicationValue("rbFactory") ) {
+			// Build RB Factory
+			var rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
+			
+			// Build custom RB Factory
+			rbFactory= new mura.resourceBundle.resourceBundleFactory(rbFactory, getDirectoryFromPath(expandPath("/plugins/Slatwall/config/custom/resourceBundles/") ));
+			
+			setApplicationValue("rbFactory", rbFactory);
+		}
+		
 		return getApplicationValue("rbFactory");
 	}
 	
 	// @hint  helper function for returning the Validate This Facade Object
 	public any function getValidateThis() {
+		if( !hasApplicationValue("validateThis") ) {
+			setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = expandPath('/Slatwall/com/validation/'),injectResultIntoBO = true,defaultFailureMessagePrefix = ""}) );
+		}
 		return getApplicationValue("validateThis");
 	}
 	
@@ -1093,7 +1112,9 @@ component displayname="Base Object" accessors="true" output="false" {
 	public void function setApplicationValue(required any key, required any value) {
 		param name="application.slatwall" default="#structNew()#";
 		
-		application.slatwall[ arguments.key ] = arguments.value;
+		lock scope="application" timeout="60" {
+			application.slatwall[ arguments.key ] = arguments.value;	
+		}
 	}
 	
 	// @hint facade method to get values from the slatwall application scope
