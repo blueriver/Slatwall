@@ -11,7 +11,3 @@ ehthumbs.db
 thumbs.db
 settings.xml/addLicense.cfm
 logs/
-assets/images/cache/
-assets/min/*.css
-assets/min/*.js
-assets/css/global.less.css
