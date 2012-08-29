@@ -191,16 +191,17 @@ component extends="org.fw1.framework" output="false" {
 						ormReload();
 						writeLog(file="Slatwall", text="General Log - ORMReload() was successful");
 						
-						// Reload All Integrations
-						getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-						writeLog(file="Slatwall", text="General Log - Integrations have been updated");
-						
 						thread action="run" name="fullUpdateThread" {
 							writeLog(file="Slatwall", text="Full Update Thread Started");
+							
+							// Reload All Integrations
+							getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+							writeLog(file="Slatwall", text="General Log - Integrations have been updated");
 							
 							// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
 							var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
 							muraIntegrationService.setupIntegration();
+							writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
 							
 							// Setup Default Data... Not called on soft reloads.
 							getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
