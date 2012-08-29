@@ -1,1 +1,0 @@
-This folder is meant to be empty.  It is were compiled JS & CSS files are saved during runtime.

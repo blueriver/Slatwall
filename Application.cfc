@@ -110,6 +110,9 @@ component extends="org.fw1.framework" output="false" {
 				// Check again so that the qued requests don't back up
 				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
 					
+					// Clear out the old Slatwall application
+					application.slatwall = {};
+					
 					// Application Setup Started
 					writeLog(file="Slatwall", text="General Log - Application Setup Started");	
 					request.slatwallScope.setApplicationValue("initialized", false);
