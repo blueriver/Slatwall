@@ -158,7 +158,7 @@ Notes:
 					WHERE
 						vendorOrderItem.vendorOrder.vendorOrderStatusType.systemCode != 'ostClosed'
 					  AND
-					  	vendorOrderItem.vendorOrder.vendorOrderType = 'votPurchaseOrder'
+					  	vendorOrderItem.vendorOrder.vendorOrderType.systemCode = 'votPurchaseOrder'
 					  AND
 						vendorOrderItem.stock.sku.product.productID = ?
 					GROUP BY
