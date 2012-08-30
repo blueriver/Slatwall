@@ -44,12 +44,6 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="vendorWebsite" ormtype="string";
 	property name="accountNumber" ormtype="string";
 	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
 	// Related Object Properties (many-to-one)
 	property name="primaryEmailAddress" cfc="VendorEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
 	property name="primaryPhoneNumber" cfc="VendorPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
@@ -65,6 +59,15 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	// Related Object Properties (many-to-many - owner)
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID";
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="vendorID" inversejoincolumn="productID";
+	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="vendorSkusSmartList" persistent="false";
