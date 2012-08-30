@@ -266,7 +266,6 @@ component extends="BaseService" accessors="true" output="false" {
 				
 				if(!structKeyExists(returnStruct.skus, skuID)) {
 					returnStruct.skus[ skuID ] = {};
-					returnStruct.skus[ skuID ].stocks = {};
 					returnStruct.skus[ skuID ].locations = {};
 					returnStruct.skus[ skuID ][ arguments.inventoryType ] = 0;
 				}
@@ -277,10 +276,7 @@ component extends="BaseService" accessors="true" output="false" {
 				if(len(locationID)) {
 					returnStruct.skus[ skuID ].locations[ locationID ] = arguments.inventoryArray[i][ arguments.inventoryType ];
 				}
-				// Add stock to sku if it exists
-				if(len(stockID)) {
-					returnStruct.skus[ skuID ].stocks[ stockID ] = arguments.inventoryArray[i][ arguments.inventoryType ];
-				}
+
 			}
 			
 		}

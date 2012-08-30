@@ -95,6 +95,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="unusedProductOptions" type="array" persistent="false";
 	property name="unusedProductOptionGroups" type="array" persistent="false";
 	property name="unusedProductSubscriptionTerms" type="array" persistent="false";
+	property name="estimatedReceivalDetails" type="struct" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
@@ -376,6 +377,41 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return productCrumbData;
 	}
 	
+	// Availability
+	public struct function getEstimatedReceivalDetails() {
+		if(!structKeyExists(variables, "estimatedReceivalDetails")) {
+			variables.estimatedReceivalDetails = getService("stockService").getEstimatedReceivalDetails( getProductID() );
+		}
+		return variables.estimatedReceivalDetails;
+	}
+	
+	public array function getEstimatedReceivalDates(string skuID, string locationID, string stockID) {
+		var details = getEstimatedReceivalDetails();
+		
+		// If stockID was passed in
+		if(structKeyExists(arguments, "stockID")) {
+			if(structKeyExists(details.stocks, arguments.stockID)) {
+				return details.stocks[ arguments.stockID ];	
+			}
+		// If skuID and locationID were passed in
+		} else if (structKeyExists(arguments, "skuID") && structKeyExists(arguments, "locationID") ) {
+			if( structKeyExists(details.skus, arguments.skuID) && structKeyExists(details.skus[ arguments.skuID ].locations, arguments.locationID) ) {
+				return details.skus[ arguments.skuID ].locations[ arguments.locationID ];
+			}
+		} else if (structKeyExists(arguments, "skuID") ) {
+			if( structKeyExists(details.skus, arguments.skuID) ) {
+				return details.skus[ arguments.skuID ].estimatedReceivals;
+			}
+		} else if ( structKeyExists(arguments, "locationID") ) {
+			if( structKeyExists(details.locations, arguments.locationID) ) {
+				return details.locations[ arguments.locationID ];	
+			}
+		} else {
+			return details.estimatedReceivals;
+		}
+		
+		return [];
+	}
 	
 	// Quantity
 	public numeric function getQuantity(required string quantityType, string skuID, string locationID, string stockID) {

@@ -88,6 +88,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
 	property name="defaultFlag" type="boolean" persistent="false";
 	property name="imageExistsFlag" type="boolean" persistent="false";
+	property name="nextEstimatedAvailableDate" type="string" persistent="false";
 	
     public boolean function getDefaultFlag() {
     	if(getProduct().getDefaultSku().getSkuID() == getSkuID()) {
@@ -302,6 +303,29 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			variables.currentAccountPrice = getService("priceGroupService").calculateSkuPriceBasedOnCurrentAccount(sku=this);
 		}
 		return variables.currentAccountPrice;
+	}
+	
+	public string function getNextEstimatedAvailableDate() {
+		if(!structKeyExists(variables, "nextEstimatedAvailableDate")) {
+			if(getQuantity("QIATS")) {
+				return dateFormat(now(), setting('globalDateFormat'));
+			}
+			var quantityNeeded = getQuantity("QNC") * -1;
+			var dates = getProduct().getEstimatedReceivalDates( skuID=getSkuID() );
+			for(var i = 1; i<=arrayLen(dates); i++) {
+				
+				if(quantityNeeded lt dates[i].quantity) {
+					if(dates[i].estimatedReceivalDateTime gt now()) {
+						return dateFormat(dates[i].estimatedReceivalDateTime, setting('globalDateFormat'));	
+					}
+					return dateFormat(now(), setting('globalDateFormat'));
+				} else {
+					quantityNeeded - dates[i].quantity;
+				}
+			}
+		}
+		
+		return "";
 	}
 	
 	public any function getLivePrice() {
