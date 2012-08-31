@@ -36,7 +36,7 @@
 Notes:
 
 */
-component output="false" accessors="true" {
+component output="false" accessors="true" extends="BaseObject"  {
 	
 	property name="data" type="any";
 	

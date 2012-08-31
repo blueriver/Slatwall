@@ -60,11 +60,11 @@
 	        <ns:PackagingType>YOUR_PACKAGING</ns:PackagingType>
 	        <ns:TotalWeight>
 	            <ns:Units>LB</ns:Units>
-	            <ns:Value>#totalItemsWeight#</ns:Value>
+	            <ns:Value>#arguments.requestBean.getTotalWeight( unitCode='lb' )#</ns:Value>
 	        </ns:TotalWeight>
 	        <ns:TotalInsuredValue>
 	            <ns:Currency>USD</ns:Currency>
-	            <ns:Amount>#totalItemsValue#</ns:Amount>
+	            <ns:Amount>#arguments.requestBean.getTotalValue()#</ns:Amount>
 	        </ns:TotalInsuredValue>
 	        <ns:Shipper>
 	            <ns:Address>
@@ -92,11 +92,11 @@
 	            <ns:SequenceNumber>1</ns:SequenceNumber>
 	            <ns:InsuredValue>
 	                <ns:Currency>USD</ns:Currency>
-	                <ns:Amount>#totalItemsValue#</ns:Amount>
+	                <ns:Amount>#arguments.requestBean.getTotalValue()#</ns:Amount>
 	            </ns:InsuredValue>
 	            <ns:Weight>
 	                <ns:Units>LB</ns:Units>
-	                <ns:Value>#totalItemsWeight#</ns:Value>
+	                <ns:Value>#arguments.requestBean.getTotalWeight( unitCode='lb' )#</ns:Value>
 	            </ns:Weight>
 	        </ns:RequestedPackageLineItems>
 	    </ns:RequestedShipment>

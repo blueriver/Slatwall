@@ -137,16 +137,21 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 			addShippingItem(
 				value=arguments.orderFulfillmentItems[i].getSku().getPrice(),
 				weight=arguments.orderFulfillmentItems[i].getSku().setting( 'skuShippingWeight' ),
+				weightUnitOfMeasure=arguments.orderFulfillmentItems[i].getSku().setting( 'skuShippingWeightUnitCode' ),
 				quantity=arguments.orderFulfillmentItems[i].getQuantity()
 			);
 		}
 	}
 	
-	public numeric function getTotalWeight() {
+	public numeric function getTotalWeight( string unitCode="lb" ) {
 		var totalWeight = 0;
 		for(var i=1; i<=arrayLen(getShippingItemRequestBeans()); i++) {
 			if(isNumeric(getShippingItemRequestBeans()[i].getWeight())) {
-				totalWeight = precisionEvaluate(totalWeight + (getShippingItemRequestBeans()[i].getWeight() * getShippingItemRequestBeans()[i].getQuantity()));
+				var itemWeight = getShippingItemRequestBeans()[i].getWeight();
+				if(arguments.unitCode neq getShippingItemRequestBeans()[i].getWeightUnitOfMeasure()) {
+					itemWeight = getService("measurementUnitService").convertWeight(weight=getShippingItemRequestBeans()[i].getWeight(), originalUnitCode=getShippingItemRequestBeans()[i].getWeightUnitOfMeasure(), convertToUnitCode=arguments.unitCode);
+				}
+				totalWeight = precisionEvaluate(totalWeight + (itemWeight * getShippingItemRequestBeans()[i].getQuantity()));
 			}
 		}
 		return totalWeight;
