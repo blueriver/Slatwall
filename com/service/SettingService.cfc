@@ -187,7 +187,7 @@ globalEncryptionKeySize
 			skuQATSIncludesQNROROFlag = {fieldType="yesno"},
 			skuQATSIncludesQNROVOFlag = {fieldType="yesno"},
 			skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
-			skuShippingWeight = {fieldType="text", formatType="weight"},
+			skuShippingWeight = {fieldType="text"},
 			skuShippingWeightUnitCode = {fieldType="select"},
 			skuTaxCategory = {fieldType="select"},
 			skuTrackInventoryFlag = {fieldType="yesno"},
