@@ -299,11 +299,14 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	private void function checkAccess(required any $) {
 		if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'))){
 			
-			// Set the content of the current content to noAccess
-			$.content('body', doAction('frontend:account.noaccess'));
-			
 			// save the current content to be used on the barrier page
 			$.event("restrictedContent",$.content());
+			
+			// save the current content to be used on the barrier page
+			$.event("restrictedContentBody",$.content('body'));
+			
+			// Set the content of the current content to noAccess
+			$.content('body', doAction('frontend:account.noaccess'));
 			
 			// get the slatwall content
 			var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
