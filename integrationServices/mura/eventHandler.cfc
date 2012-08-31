@@ -302,6 +302,9 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 			// save the current content to be used on the barrier page
 			$.event("restrictedContent",$.content());
 			
+			// save the current content to be used on the barrier page
+			$.event("restrictedContentBody",$.content('body'));
+			
 			// Set the content of the current content to noAccess
 			$.content('body', doAction('frontend:account.noaccess'));
 			
