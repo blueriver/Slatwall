@@ -49,6 +49,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="vendorOrderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderStatusTypeID";
 	
 	// Related Object Properties (One-To-Many)
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderID" cascade="all-delete-orphan" inverse="true";
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all";
 	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderID" cascade="all-delete-orphan" inverse="true";
 	
@@ -165,6 +166,14 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 			arrayDeleteAt(arguments.vendor.getVendorOrders(), index);
 		}
 		structDelete(variables, "vendor");
+	}
+	
+	// Attribute Values (one-to-many)    
+	public void function addAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.setAttributeValues( this );    
+	}    
+	public void function removeAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.removeAttributeValues( this );    
 	}
 	
 	// Stock Receivers (one-to-many)
