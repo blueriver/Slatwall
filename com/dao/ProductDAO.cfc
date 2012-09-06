@@ -144,17 +144,8 @@ Notes:
 			if(!arrayFindNoCase(columnList,"product_publishedFlag")){
 				arrayAppend(productExtraData,{name="publishedFlag",value="1"});
 			}
-			if(!arrayFindNoCase(columnList,"product_manufactureDiscontinuedFlag")){
-				arrayAppend(productExtraData,{name="manufactureDiscontinuedFlag",value="0"});
-			}
-			if(!arrayFindNoCase(columnList,"product_template")){
-				arrayAppend(productExtraData,{name="template",value=setting('productDefaultTemplate')});
-			}
 	
 			var skuExtraData = [];
-			if(!arrayFindNoCase(columnList,"sku_shippingWeight")){
-				arrayAppend(skuExtraData,{name="shippingWeight",value="0"});
-			}
 			
 			var timeStamp = now();
 			var administratorID = getSlatwallScope().getCurrentAccount().getAccountID();
@@ -292,20 +283,36 @@ Notes:
 			}
 			
 			//set default sku for all the new products to the first sku
-			dataQuery.setSql("
-				UPDATE SlatwallProduct
-				SET defaultSkuID = (SELECT top 1 skuID FROM SlatwallSku WHERE SlatwallSku.productID = SlatwallProduct.productID)
-				FROM SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
-				WHERE SlatwallProduct.defaultSkuID IS NULL
-			");
+			if(getDBType() eq "mySql") {
+				dataQuery.setSql("
+					UPDATE SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
+					SET defaultSkuID = (SELECT skuID FROM SlatwallSku WHERE SlatwallSku.productID = SlatwallProduct.productID LIMIT 1)
+					WHERE SlatwallProduct.defaultSkuID IS NULL
+				");
+			} else {	
+				dataQuery.setSql("
+					UPDATE SlatwallProduct
+					SET defaultSkuID = (SELECT top 1 skuID FROM SlatwallSku WHERE SlatwallSku.productID = SlatwallProduct.productID)
+					FROM SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
+					WHERE SlatwallProduct.defaultSkuID IS NULL
+				");
+			}
 			dataQuery.execute();
 			//set sku image to product default image
-			dataQuery.setSql("
-				UPDATE SlatwallSku
-				SET imageFile = (SELECT productCode + '.' + '#setting("globalImageExtension")#' FROM SlatwallProduct WHERE SlatwallSku.productID = SlatwallProduct.productID)
-				FROM SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
-				WHERE SlatwallSku.imageFile IS NULL
-			");
+			if(getDBType() eq "mySql") {
+				dataQuery.setSql("
+					UPDATE SlatwallSku INNER JOIN SlatwallProduct ON SlatwallProduct.productID = SlatwallSku.productID
+					SET imageFile = (SELECT concat(productCode, '.#setting("globalImageExtension")#') FROM SlatwallProduct WHERE SlatwallSku.productID = SlatwallProduct.productID)
+					WHERE SlatwallSku.imageFile IS NULL
+				");
+			} else {	
+				dataQuery.setSql("
+					UPDATE SlatwallSku
+					SET imageFile = (SELECT productCode + '.' + '#setting("globalImageExtension")#' FROM SlatwallProduct WHERE SlatwallSku.productID = SlatwallProduct.productID)
+					FROM SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
+					WHERE SlatwallSku.imageFile IS NULL
+				");
+			}
 			dataQuery.execute();
 		}
 		
@@ -331,8 +338,8 @@ Notes:
 			for(var thisColumn in arguments.columnList) {
 				value = arguments.data[thisColumn][arguments.rowNumber];
 				
-				if(isNumeric(value)) {
-					updateSetString &= " #listLast(thisColumn,'_')#='#value#',";
+				if(listLast(thisColumn,'_').endsWith('Flag') || listLast(thisColumn,'_').endsWith('Weight')) {
+					updateSetString &= " #listLast(thisColumn,'_')#=#value#,";
 				} else {
 					updateSetString &= " #listLast(thisColumn,'_')#='#value#',";
 				}
@@ -351,7 +358,11 @@ Notes:
 			
 			for(var item in extraData){
 				insertColumns &= " #item.name#,";
-				insertValues &= " '#item.value#',";
+				if(item.name.endsWith('Flag') || item.name.endsWith('Weight')){
+					insertValues &= " #item.value#,";
+				} else {
+					insertValues &= " '#item.value#',";
+				}
 				if(item.name == listLast(arguments.lookupColumn,'_')){
 					lookupColumnValue = item.value;
 				}
@@ -379,12 +390,12 @@ Notes:
 					var fileName = getService("utilityFileService").filterFileName(arguments.data['product_productName'][arguments.rowNumber]);
 					/* check if the fileName (product url) already exists*/
 					dataQuery.setSql("
-						SELECT productID FROM SlatwallProduct WHERE fileName = '#fileName#';
+						SELECT productID FROM SlatwallProduct WHERE urlTitle = '#fileName#';
 					");
 					if(dataQuery.execute().getResult().recordCount){
 						fileName &= "_#arguments.data['product_productCode'][arguments.rowNumber]#"; 
 					}
-					insertColumns &= " filename,";
+					insertColumns &= " urlTitle,";
 					insertValues &= " '#fileName#',";
 				}
 				idColumnValue = lcase(replace(createUUID(),"-","","all"));
