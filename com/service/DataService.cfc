@@ -38,6 +38,26 @@ Notes:
 */
 component displayname="Data Service" extends="BaseService" {
 	
+	public string function createUniqueURLTitle(required string titleString, required string tableName) {
+		
+		var addon = 1;
+		
+		var urlTitle = reReplace(lcase(arguments.titleString), "[ ]+", "-", "all");
+		urlTitle = reReplace(urlTitle, "[^a-z0-9\-]", "", "all");
+		
+		var returnTitle = urlTitle;
+		
+		var unique = getDAO().verifyUnique(tableName=arguments.tableName, column="urlTitle", value=returnTitle);
+		
+		while(!unique) {
+			addon++;
+			returnTitle = "#urlTitle#-#addon#";
+			unique = getDAO().verifyUnique(tableName=arguments.tableName, column="urlTitle", value=returnTitle);
+		}
+		
+		return returnTitle;
+	}
+	
 	public boolean function loadDataFromXMLDirectory(required string xmlDirectory) {
 		var dirList = directoryList(arguments.xmlDirectory);
 				

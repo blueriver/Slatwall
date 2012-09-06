@@ -214,16 +214,7 @@ component extends="BaseService" accessors="true" {
 			
 			// if urlTitle wasn't set in bean, default it to the product's name.
 			if(arguments.Product.getUrlTitle() == "") {
-				arguments.Product.setUrlTitle(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
-			}
-			
-			// make sure that the UrlTitle doesn't already exist, if it does then just rename with a number until it doesn't
-			var lastAppended = 1;
-			var uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
-			while(!uniqueUrlTitle) {
-				arguments.Product.setUrlTitle(arguments.Product.getUrlTitle() & lastAppended);	
-				uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
-				lastAppended += 1;
+				arguments.Product.setUrlTitle(getDataService().createUniqueURLTitle(titleString=arguments.Product.getProductName(), tableName="SlatwallProduct"));
 			}
 		}
 		

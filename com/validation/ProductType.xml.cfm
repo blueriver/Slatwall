@@ -9,6 +9,12 @@
 		<property name="productTypeName">
 			<rule type="required" contexts="save" />
 		</property>
+		<property name="urlTitle">
+			<rule type="required" contexts="save" />
+			<rule type="custom" contexts="save" failureMessage="URL Title is Not Unique">
+				<param name="methodName" value="hasUniqueURLTitle" />
+			</rule>
+		</property>
 		<property name="products">
 			<rule type="collectionSize" contexts="delete">
 				<param name="max" value="0" />
