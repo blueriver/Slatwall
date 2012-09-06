@@ -119,7 +119,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.order#" allowComments=true>
+		<cf_SlatwallTabGroup object="#rc.order#" allowComments="true" allowCustomAttributes="true">
 			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" />
 			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" />
 			<cfif rc.order.getOrderType().getSystemCode() eq "otSalesOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">

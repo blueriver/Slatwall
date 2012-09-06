@@ -137,7 +137,10 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentation() {
-		return getStock().getSku().getProduct().getCalculatedTitle();
+		if(!isNull(getStock().getSku().getProduct().getCalculatedTitle())) {
+			return getStock().getSku().getProduct().getCalculatedTitle();
+		}
+		return getStock().getSku().getProduct().getTitle(); 
 	}
 	
 	// ==================  END:  Overridden Methods ========================

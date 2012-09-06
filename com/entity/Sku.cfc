@@ -53,6 +53,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="subscriptionTerm" cfc="SubscriptionTerm" fieldtype="many-to-one" fkcolumn="subscriptionTermID";
 	
 	// Related Object Properties (one-to-many)
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="skuID" cascade="all-delete-orphan" inverse="true";
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="skuID" cfc="Stock" inverse="true" cascade="all";
 	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="skuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan";
 	
@@ -422,6 +423,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arrayDeleteAt(arguments.subscriptionTerm.getSkus(), index);    
 		}    
 		structDelete(variables, "subscriptionTerm");    
+	}
+	
+	// Attribute Values (one-to-many)    
+	public void function addAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.setSku( this );    
+	}    
+	public void function removeAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.removeSku( this );    
 	}
 	
 	// Stocks (one-to-many)

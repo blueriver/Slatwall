@@ -76,7 +76,7 @@ Notes:
 			
 		</cf_SlatwallDetailHeader>
 
-		<cf_SlatwallTabGroup object="#rc.sku#">
+		<cf_SlatwallTabGroup object="#rc.sku#" allowCustomAttributes="true">
 			<cfif rc.product.getBaseProductType() EQ "subscription">
 				<cf_SlatwallTab view="admin:product/skutabs/subscription" />
 			<cfelseif rc.product.getBaseProductType() EQ "contentaccess">
