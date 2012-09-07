@@ -42,7 +42,7 @@ component displayname="Data Service" extends="BaseService" {
 		
 		var addon = 1;
 		
-		var urlTitle = reReplace(lcase(arguments.titleString), "[^a-z0-9 \-]", "", "all");
+		var urlTitle = reReplace(lcase(trim(arguments.titleString)), "[^a-z0-9 \-]", "", "all");
 		urlTitle = reReplace(urlTitle, "[ ]+", "-", "all");
 		
 		var returnTitle = urlTitle;
