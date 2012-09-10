@@ -856,7 +856,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		if(structKeyExists(session.entitySmartList, arguments.savedStateID)) {
 			structDelete(session.entitySmartList, arguments.savedStateID);	
 		}
-		arrayDeleteAt(session.entitySmartList.savedStates, arrayFind(session.entitySmartList.savedStates, arguments.savedStateID));
+		if(arrayFind(session.entitySmartList.savedStates, arguments.savedStateID)) {
+			arrayDeleteAt(session.entitySmartList.savedStates, arrayFind(session.entitySmartList.savedStates, arguments.savedStateID));	
+		}
 	}
 	
 	private void function saveState() {
