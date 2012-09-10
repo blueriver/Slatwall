@@ -202,6 +202,10 @@ component extends="BaseService" accessors="true" {
 	// ====================== START: Save Overrides ===========================
 	
 	public any function saveProduct(required any product, required struct data) {
+		if( (isNull(arguments.product.getURLTitle()) || !len(arguments.product.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
+			param name="arguments.data.productName" default="";
+			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productName, tableName="SlatwallProduct");
+		}
 		
 		// populate bean from values in the data Struct
 		arguments.product.populate(arguments.data);
@@ -212,10 +216,6 @@ component extends="BaseService" accessors="true" {
 			// Create Skus
 			getSkuService().createSkus(arguments.product, arguments.data);
 			
-			// if urlTitle wasn't set in bean, default it to the product's name.
-			if(arguments.Product.getUrlTitle() == "") {
-				arguments.Product.setUrlTitle(getDataService().createUniqueURLTitle(titleString=arguments.Product.getProductName(), tableName="SlatwallProduct"));
-			}
 		}
 		
 		// Update the Image FileName for all the skus
@@ -236,22 +236,17 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function saveProductType(required any productType, required struct data) {
-		
-		arguments.productType.populate(data=arguments.data);
-
-		arguments.productType.validate();
-
-		// if this type has a parent, inherit all products that were assigned to that parent
-		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
-			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
+		if( (isNull(product.getURLTitle()) || !len(arguments.productType.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
+			param name="arguments.data.productTypeName" default="";
+			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productTypeName, tableName="SlatwallProduct");
 		}
 		
-		if( !arguments.productType.hasErrors() ) {
-			// Call entitySave on the productType 
-			getDAO().save(target=arguments.productType);
-		} else {
-            getSlatwallScope().setORMHasErrors( true );
-        }
+		arguments.productType = super.saveProductType(arguments.productType, arguments.data);
+
+		// if this type has a parent, inherit all products that were assigned to that parent
+		if(!arguments.productType.hasErrors() && !isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
+			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
+		}
 		
 		return arguments.productType;
 	}
