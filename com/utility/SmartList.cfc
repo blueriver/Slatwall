@@ -365,14 +365,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	public void function addOrder(required string orderStatement, numeric position) {
 		var propertyIdentifier = listFirst(arguments.orderStatement, variables.orderDirectionDelimiter);
-		var orderDirection = listLast(arguments.orderStatement, variables.orderDirectionDelimiter);
-		var aliasedProperty = getAliasedProperty(propertyIdentifier=propertyIdentifier);
-		
-		if(orderDirection == "A") {
-			orderDirection == "ASC";
-		} else if (orderDirection == "D") {
+		var orderDirection = "ASC";
+		if(listLen(arguments.orderStatement, variables.orderDirectionDelimiter) > 1 && listFindNoCase("D,DESC", listLast(arguments.orderStatement, variables.orderDirectionDelimiter))) {
 			orderDirection == "DESC";
 		}
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=propertyIdentifier);
+		
 		arrayAppend(variables.orders, {property=aliasedProperty, direction=orderDirection});
 	}
 
