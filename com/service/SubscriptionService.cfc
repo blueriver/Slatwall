@@ -242,9 +242,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			this.saveSubscriptionUsage(arguments.subscriptionUsage);
 			
 			// copy all the renewal subscription benefits
-			for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits()) {
+			for(var renewalSubscriptionUsageBenefit in arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits()) {
 				var subscriptionUsageBenefit = this.newSubscriptionUsageBenefit();
-				subscriptionUsageBenefit.copyFromSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				subscriptionUsageBenefit.copyFromSubscriptionUsageBenefit(renewalSubscriptionUsageBenefit);
 				subscriptionUsage.addSubscriptionUsageBenefit(subscriptionUsageBenefit);
 	
 				// call save on this entity to make it persistent so we can use it for further lookup
