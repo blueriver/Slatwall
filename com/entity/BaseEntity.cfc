@@ -361,6 +361,13 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return getService("dataService").isUniqueProperty(propertyName=propertyName, entity=this);
 	}
 	
+	public boolean function hasUniqueOrNullProperty( required string propertyName ) {
+		if(!structKeyExists(variables, arguments.propertyName) || isNull(variables[arguments.propertyName])) {
+			return true;
+		}
+		return getService("dataService").isUniqueProperty(propertyName=propertyName, entity=this);
+	}
+	
 	// @hint returns true if given property contains any of the entities passed into the entityArray argument. 
 	public boolean function hasAnyInProperty( required string propertyName, array entityArray ) {
 		
@@ -487,6 +494,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if( left(arguments.missingMethodName, 9) == "hasUnique") {
 			
 			return hasUniqueProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 9) );
+		
+		// hasUniqueOrNullXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
+		} else if( left(arguments.missingMethodName, 15) == "hasUniqueOrNull") {
+			
+			return hasUniqueOrNullProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 15) );
 		
 		// hasAnyXXX() 			Where XXX is one-to-many or many-to-many property and we want to see if it has any of an array of entities
 		} else if( left(arguments.missingMethodName, 6) == "hasAny") {
