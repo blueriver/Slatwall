@@ -108,7 +108,7 @@ Notes:
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.setting_nav')#" icon="cog icon-white" type="nav">
 							<cfsavecontent variable="local.settingGroupOne">
-								<cf_SlatwallActionCaller action="admin:setting.listsetting" type="list">
+								<cf_SlatwallActionCaller action="admin:setting.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list" divideAfter="true">
 							</cfsavecontent>

@@ -81,6 +81,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		rc.deleteAction = rc.slatAction;
 		rc.editAction = rc.slatAction;
 		rc.createAction = rc.slatAction;
+		rc.cancelAction = rc.slatAction;
 		rc.exportAction = rc.slatAction;
 		
 		if(left(itemName, 4) == "list") {
