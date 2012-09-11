@@ -83,6 +83,7 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:order.listorderitem" type="list">
 							<cf_SlatwallActionCaller action="admin:order.listorderfulfillment" type="list">
 							<cf_SlatwallActionCaller action="admin:vendor.listvendororder" type="list">
+							<cf_SlatwallActionCaller action="admin:vendor.listvendororderitem" type="list">
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.account_nav')#" icon="user icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:account.listaccount" type="list">
