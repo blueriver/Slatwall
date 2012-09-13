@@ -101,7 +101,8 @@ Notes:
 			<!--- END: Fulfillment Options --->
 			
 			<!--- Product Customizations --->
-			<cfloop array="#$.slatwall.product().getAttributeSets(['astProductCustomization'])#" index="local.customizationAttributeSet">
+			<cfset customAttributeSetTypeArray = ['astProductCustomization','astOrderItem'] />
+			<cfloop array="#$.slatwall.product().getAttributeSets(customAttributeSetTypeArray)#" index="local.customizationAttributeSet">
 				<div class="productCustomizationSet #lcase(replace(local.customizationAttributeSet.getAttributeSetName(), ' ', '', 'all'))#">
 					<h4>#local.customizationAttributeSet.getAttributeSetName()#</h4>
 					<dl>
