@@ -658,6 +658,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(!isNull(arguments.originalOrder.getOrderItems()[i].getStock())) {
 				newOrderItem.setStock( arguments.originalOrder.getOrderItems()[i].getStock() );
 			}
+			
+			// copy order item customization
+			for(var attributeValue in arguments.originalOrder.getOrderItems()[i].getAttributeValues()) {
+				var av = this.newAttributeValue();
+				av.setAttributeValueType(attributeValue.getAttributeValueType());
+				av.setAttribute(attributeValue.getAttribute());
+				av.setAttributeValue(attributeValue.getAttributeValue());
+				av.setOrderItem(newOrderItem);
+			}
+
 			// check if there is a fulfillment method of this type in the order
 			for(var fulfillment in newOrder.getOrderFulfillments()) {
 				if(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodID() == fulfillment.getFulfillmentMethod().getFulfillmentMethodID()) {
