@@ -105,7 +105,14 @@
 		</cfloop>
 		
 		<cftry>
-			<cfftp action="putfile" server="#integration.setting('syncFTPSite')#" username="#integration.setting('syncFTPSiteUsername')#" password="#integration.setting('syncFTPSitePassword')#" port="#integration.setting('syncFTPSitePort')#" remotefile="#remoteFullFilePath#" localfile="#localFullFilePath#">
+			
+			<!--- Railo Specific --->
+			<cfif not structKeyExists(server, "railo")>
+				<cfftp action="putfile" server="#integration.setting('syncFTPSite')#" username="#integration.setting('syncFTPSiteUsername')#" password="#integration.setting('syncFTPSitePassword')#" port="#integration.setting('syncFTPSitePort')#" remotefile="#remoteFullFilePath#" localfile="#localFullFilePath#">
+			<cfelse>
+				<cfftp action="putfile" server="#integration.setting('syncFTPSite')#" username="#integration.setting('syncFTPSiteUsername')#" password="#integration.setting('syncFTPSitePassword')#" port="#integration.setting('syncFTPSitePort')#" remotefile="#remoteFullFilePath#" localfile="#localFullFilePath#" secure="#integration.setting('syncFTPSiteSecure')#">
+			</cfif>
+			
 			<cfcatch>
 				<cfset logSlatwallException(cfcatch) />
 				<cfset responseBean.addError("ftp", "There was an error connecting to the sync ftp server.  Please check your setting credentials and try again") />

@@ -52,7 +52,8 @@ component accessors="true" output="false" displayname="Endicia" extends="Slatwal
 			syncFTPSitePassword = {fieldType="password", displayName="FTP Sync Password", encryptValue=true},
 			syncFTPSitePort = {fieldType="text", displayName="FTP Sync Port", defaultValue=21},
 			syncFTPSiteDropoffDirectory = {fieldType="text", displayName="FTP Sync Dropoff Directory"},
-			syncFTPSiteDropoffFilename = {fieldType="text", displayName="FTP Sync Dropoff Fielname"}
+			syncFTPSiteDropoffFilename = {fieldType="text", displayName="FTP Sync Dropoff Fielname"},
+			syncFTPSiteSecure = {fieldType="yesno", displayName="FTP Sync Secure?", defaultValue=0}
 		};
 		return variables.settings;
 	}
