@@ -40,7 +40,7 @@ Notes:
 <cfset slatwallContent = request.slatwallScope.getService("contentService").getContentByCmsContentID($.content("contentID"), true) />
 
 <cfset slatwallProductSmartList = request.slatwallScope.getService("productService").getSmartList(entityName="SlatwallProduct") />
-<cfset slatwallProductSmartList.addLikeFilter(propertyIdentifier="productType_productTypeIDPath", value="444df313ec53a08c32d8ae434af5819a") />
+<cfset slatwallProductSmartList.addLikeFilter(propertyIdentifier="productType_productTypeIDPath", value="%444df313ec53a08c32d8ae434af5819a%") />
 <cfset slatwallProducts = slatwallProductSmartList.getRecords() />
 
 <cfset restrictedContentTemplates = request.slatwallScope.getService("contentService").listContentFilterByTemplateFlag(1) />
