@@ -40,7 +40,7 @@ Notes:
 <cfset slatwallContent = request.slatwallScope.getService("contentService").getContentByCmsContentID($.content("contentID"), true) />
 
 <cfset slatwallProductSmartList = request.slatwallScope.getService("productService").getSmartList(entityName="SlatwallProduct") />
-<cfset slatwallProductSmartList.addFilter(propertyIdentifier="productType_systemCode", value="contentAccess") />
+<cfset slatwallProductSmartList.addLikeFilter(propertyIdentifier="productType_productTypeIDPath", value="444df313ec53a08c32d8ae434af5819a") />
 <cfset slatwallProducts = slatwallProductSmartList.getRecords() />
 
 <cfset restrictedContentTemplates = request.slatwallScope.getService("contentService").listContentFilterByTemplateFlag(1) />
@@ -275,9 +275,9 @@ $(document).ready(function(){
 			success: function(r) {
 				$('select[name="slatwallData.product.sku.skuID"]').html('');
 				$('select[name="slatwallData.product.sku.skuID"]').append('<option value="">New Sku</option>');
-				if(r.PAGERECORDSCOUNT > 0){
-					$.each(r.RECORDS,function(index,value){
-						var option = '<option value="'+value.skuID+'">$'+value.price+' - '+value.skuCode+'</option>';
+				if(r['skusmartList']['records'].length > 0){
+					$.each(r['skusmartList']['records'],function(index,value){
+						var option = '<option value="'+value['skuID']+'">$'+value['price']+' - '+value['skuCode']+'</option>';
 						$('select[name="slatwallData.product.sku.skuID"]').append(option);
 					});
 				}
