@@ -230,13 +230,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public void function setupRenewalSubscriptionBenefitAccess(required any subscriptionUsage) {
 		//setup renewal benefits, if first renewal and renewal benefit exists
 		if(arrayLen(arguments.subscriptionUsage.getSubscriptionOrderItems()) == 2 && arrayLen(arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits())) {
-			// remove all existing benefits
-			while(arrayLen(arguments.subscriptionUsage.getSubscriptionUsageBenefits())) {
-				var subscriptionUsageBenefit = arguments.subscriptionUsage.getSubscriptionUsageBenefits()[1];
-				// delete old subscriptionUsageBenefitAccount
+			// expire all existing benefits
+			for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getSubscriptionUsageBenefits()) {
 				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit);
-				this.deleteSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-				arguments.subscriptionUsage.removeSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				subscriptionUsageBenefitAccount.setEndDateTime(now());
+				this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
 			}
 			
 			this.saveSubscriptionUsage(arguments.subscriptionUsage);
