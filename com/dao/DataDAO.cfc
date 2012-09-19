@@ -195,7 +195,7 @@ Notes:
 		</cfquery>
 	</cffunction>
 	
-	<cffunction name="verifyUnique" returntype="boolean">
+	<cffunction name="verifyUniqueTableValue" returntype="boolean">
 		<cfargument name="tableName" type="string" required="true" />
 		<cfargument name="column" type="string" required="true" />
 		<cfargument name="value" type="string" required="true" />

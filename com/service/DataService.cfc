@@ -47,12 +47,12 @@ component displayname="Data Service" extends="BaseService" {
 		
 		var returnTitle = urlTitle;
 		
-		var unique = getDAO().verifyUnique(tableName=arguments.tableName, column="urlTitle", value=returnTitle);
+		var unique = getDAO().verifyUniqueTableValue(tableName=arguments.tableName, column="urlTitle", value=returnTitle);
 		
 		while(!unique) {
 			addon++;
 			returnTitle = "#urlTitle#-#addon#";
-			unique = getDAO().verifyUnique(tableName=arguments.tableName, column="urlTitle", value=returnTitle);
+			unique = getDAO().verifyUniqueTableValue(tableName=arguments.tableName, column="urlTitle", value=returnTitle);
 		}
 		
 		return returnTitle;
