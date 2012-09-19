@@ -203,7 +203,11 @@ component extends="BaseService" accessors="true" {
 	
 	public any function saveProduct(required any product, required struct data) {
 		if( (isNull(arguments.product.getURLTitle()) || !len(arguments.product.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
-			param name="arguments.data.productName" default="";
+			if(!isNull(arguments.product.getProductName())) {
+				param name="arguments.data.productName" default="#arguments.product.getProductName()#";
+			} else {
+				param name="arguments.data.productName" default="";
+			}
 			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productName, tableName="SlatwallProduct");
 		}
 		
@@ -237,7 +241,11 @@ component extends="BaseService" accessors="true" {
 	
 	public any function saveProductType(required any productType, required struct data) {
 		if( (isNull(product.getURLTitle()) || !len(arguments.productType.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
-			param name="arguments.data.productTypeName" default="";
+			if(!isNull(arguments.productType.getProductTypeName())) {
+				param name="arguments.data.productTypeName" default="#arguments.productType.getProductTypeName()#";
+			} else {
+				param name="arguments.data.productTypeName" default="";
+			}
 			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productTypeName, tableName="SlatwallProduct");
 		}
 		
