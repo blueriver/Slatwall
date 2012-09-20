@@ -1323,14 +1323,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					var originalTransaction = arguments.orderPayment.getCreditCardTransactions()[i];
 					if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
 						var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
+						var leftToCapture = arguments.data.amount - totalCaptured;
+						var captureAmount = 0;
 						
-						if(arguments.data.amount - totalCaptured > capturableAmount) {
-							capturableAmount = totalCaptured - arguments.data.amount;
+						if(leftToCapture < capturableAmount) {
+							captureAmount = leftToCapture;
+						} else {
+							captureAmount = capturableAmount;
 						}
 						
 						arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
 						
-						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", capturableAmount, arguments.data.providerTransactionID);
+						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", captureAmount, arguments.data.providerTransactionID);
 						
 						if(paymentOK) {
 							totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
