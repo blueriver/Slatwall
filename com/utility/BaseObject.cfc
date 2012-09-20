@@ -39,11 +39,11 @@ Notes:
 component displayname="Base Object" accessors="true" output="false" {
 	
 	
-	property name="vtResult" type="any";							// This propery holds the ValidateThis result bean once it has been set.
-	property name="errorBean" type="any";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
-	property name="messageBean" type="any";
-	property name="populatedSubProperties" type="array";
-	property name="validations" type="struct";
+	property name="vtResult" type="any" persistent="false";								// This propery holds the ValidateThis result bean once it has been set.
+	property name="errorBean" type="any" persistent="false";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
+	property name="messageBean" type="any" persistent="false";
+	property name="populatedSubProperties" type="array" persistent="false";
+	property name="validations" type="struct" persistent="false";
 	
 	// Constructor Metod
 	public any function init() {
