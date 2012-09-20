@@ -1104,8 +1104,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						updateOrderStatus( arguments.orderFulfillment.getOrder(), true );
 						
 						// Look to charge orderPayments
-						if(structKeyExists(arguments.data, "processCreditCard") && arguments.data.processCreditCard) {
-							
+						if(structKeyExists(arguments.data, "processCreditCard") && isBoolean(arguments.data.processCreditCard) && arguments.data.processCreditCard) {
 							var totalAmountToCharge = arguments.orderFulfillment.getOrder().getDeliveredItemsPaymentAmountUnreceived();
 							var totalAmountCharged = 0;
 							
@@ -1127,6 +1126,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 											if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
 												thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
 											}
+											
 											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge}, "chargePreAuthorization");
 											if(!orderPayment.hasErrors()) {
 												totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);

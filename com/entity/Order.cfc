@@ -366,8 +366,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 					if(item.getQuantityUndelivered() == 0) {
 						amountDelivered = precisionEvaluate(amountDelivered + item.getItemTotal());
 					} else if (item.getQuantityDelivered() > 0) {
-						amountDelivered = precisionEvaluate(amountDelivered + (item.getItemTotal() * (item.getQuantityDelivered() / item.getQuantity())) );
+						var itemQDValue = (round(item.getItemTotal() * (item.getQuantityDelivered() / item.getQuantity()) * 100) / 100);
+						amountDelivered = precisionEvaluate(amountDelivered + itemQDValue );
 					}
+					
 				}
 			}
 		}
