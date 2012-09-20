@@ -72,7 +72,8 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	
 	private string function getRequestData(required any requestBean){
 		var requestData = "";
-		requestData = "TRXTYPE=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#&TENDER=C&VERBOSITY=#variables.verbosity#";
+		requestData = "TENDER=C&VERBOSITY=#variables.verbosity#";
+		
 		requestData = listAppend(requestData,getLoginNVP(),"&");
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
 		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
@@ -80,6 +81,25 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
 			requestData = listAppend(requestData,"ORIGID=#requestBean.getProviderTransactionID()#","&");
 		}
+		
+		// This is a bit of a hack because PayFlow Pro doesn't allow for second delay capture on an original authroization code.  So if the transactionType is delayed capture, and we have already captured a partial... then we will need to just recharge
+		var forceSale = false;
+		if( arguments.requestBean.getTransactionType() eq "chargePreAuthorization" ) {
+			var query = new Query();
+			query.setSQL("SELECT creditCardTransactionID FROM SlatwallCreditCardTransaction WHERE orderPaymentID = '#arguments.requestBean.getOrderPaymentID()#' AND transactionType = 'chargePreAuthorization' AND authorizationCode IN (SELECT authorizationCode FROM SlatwallCreditCardTransaction WHERE providerTransactionID='#requestBean.getProviderTransactionID()#')"); 
+			var qresults = query.Execute().getResult();
+			
+			if(qresults.recordCount) {
+				forceSale = true;
+			}
+		}
+		
+		if(forceSale) {
+			requestData = listAppend(requestData, "TRXTYPE=S", "&");
+		} else {
+			requestData = listAppend(requestData, "TRXTYPE=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#", "&");
+		}
+		// END HACK
 		
 		return requestData;
 	}
