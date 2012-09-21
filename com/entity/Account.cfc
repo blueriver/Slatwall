@@ -80,9 +80,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
-	property name="assignedAttributeSetSmartList" type="struct" persistent="false";
-	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";
-	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
 	property name="fullName" persistent="false";
 	property name="emailAddress" persistent="false" formatType="email";
 	property name="phoneNumber" persistent="false";
@@ -126,69 +123,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
 	}
 	
-	// Attribute Value
-	public any function getAttributeValue(required string attribute, returnEntity=false){
-		
-		if(len(arguments.attribute) eq 32) {
-			if( structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
-				if(arguments.returnEntity) {
-					return getAttributeValuesByAttributeIDStruct()[arguments.attribute];
-				}
-				return getAttributeValuesByAttributeIDStruct()[arguments.attribute].getAttributeValue();
-			}
-		}
-		
-		if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
-			if(arguments.returnEntity) {
-				return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ];
-			}
-			
-			return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ].getAttributeValue();
-		}
-				
-		if(arguments.returnEntity) {
-			var newAttributeValue = getService("accountService").newAttributeValue();
-			newAttributeValue.setAttributeValueType("account");
-			return newAttributeValue;
-		}
-		
-		return "";
-	}
-	
 	// ============ START: Non-Persistent Property Methods =================
-	
-	public any function getAssignedAttributeSetSmartList(){
-		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
-			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
-			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
-			variables.assignedAttributeSetSmartList.addFilter('globalFlag', 1);
-			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astAccount');
-		}
-		
-		return variables.assignedAttributeSetSmartList;
-	}
-	
-	public struct function getAttributeValuesByAttributeIDStruct() {
-		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
-			variables.attributeValuesByAttributeIDStruct = {};
-			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-				variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
-			}
-		}
-		
-		return variables.attributeValuesByAttributeIDStruct;
-	}
-	
-	public struct function getAttributeValuesByAttributeCodeStruct() {
-		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
-			variables.attributeValuesByAttributeCodeStruct = {};
-			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-				variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
-			}
-		}
-		
-		return variables.attributeValuesByAttributeCodeStruct;
-	}
 	
 	public string function getPhoneNumber() {
 		return getPrimaryPhoneNumber().getPhoneNumber();

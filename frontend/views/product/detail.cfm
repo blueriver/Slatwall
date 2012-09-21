@@ -76,7 +76,7 @@ Notes:
 			<!--- END: Product Options --->
 			
 			<!--- START: Sku Price --->
-			<cfif $.slatwall.product('defaultSku').getUserDefinedPriceFlag()>
+			<cfif !isNull($.slatwall.product('defaultSku').getUserDefinedPriceFlag()) AND $.slatwall.product('defaultSku').getUserDefinedPriceFlag()>
 				<input type="text" name="price" value="" />
 			</cfif>
 			
@@ -101,13 +101,12 @@ Notes:
 			<!--- END: Fulfillment Options --->
 			
 			<!--- Product Customizations --->
-			<cfloop array="#$.slatwall.product().getAttributeSets(['astProductCustomization'])#" index="local.customizationAttributeSet">
+			<cfset customAttributeSetTypeArray = ['astProductCustomization','astOrderItem'] />
+			<cfloop array="#$.slatwall.product().getAttributeSets(customAttributeSetTypeArray)#" index="local.customizationAttributeSet">
 				<div class="productCustomizationSet #lcase(replace(local.customizationAttributeSet.getAttributeSetName(), ' ', '', 'all'))#">
 					<h4>#local.customizationAttributeSet.getAttributeSetName()#</h4>
 					<dl>
-					<cfloop array="#local.customizationAttributeSet.getAttributes()#" index="local.attribute">
-						<cf_SlatwallAttributeDisplay attribute="#local.attribute#" />
-					</cfloop>
+						<cf_SlatwallAttributeSetDisplay attributeSet="#local.customizationAttributeSet#" entity="#$.slatwall.product()#" edit="true" />
 					</dl>
 				</div>
 			</cfloop>

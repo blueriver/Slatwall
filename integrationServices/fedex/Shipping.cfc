@@ -64,23 +64,6 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 	
 	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
 		
-		// Insert Custom Logic Here
-		var totalItemsWeight = 0;
-		var totalItemsValue = 0;
-		
-		// Loop over all items to get a price and weight for shipping
-		for(var i=1; i<=arrayLen(arguments.requestBean.getShippingItemRequestBeans()); i++) {
-			if(isNumeric(arguments.requestBean.getShippingItemRequestBeans()[i].getWeight())) {
-				totalItemsWeight +=	arguments.requestBean.getShippingItemRequestBeans()[i].getWeight() * arguments.requestBean.getShippingItemRequestBeans()[i].getQuantity();
-			}
-			 
-			totalItemsValue += arguments.requestBean.getShippingItemRequestBeans()[i].getValue() * arguments.requestBean.getShippingItemRequestBeans()[i].getQuantity();
-		}
-		
-		if(totalItemsWeight < 1) {
-			totalItemsWeight = 1;
-		}
-		
 		// Build Request XML
 		var xmlPacket = "";
 		

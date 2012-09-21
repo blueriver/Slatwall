@@ -112,8 +112,8 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
     }
     
     public void function flushORMSession() {
-		ormFlush();	
-		// flush again to persist any changes done during ORM Event handler
+    	ormFlush();	
+    	// flush again to persist any changes done during ORM Event handler
 		ormFlush();	
     }
     
@@ -132,17 +132,17 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		return smartList;
 	}
 	
-	// ===================== START: Private Helper Methods ===========================
-	
-	private string function wrapListItemsInSingleQuotes( required string list ) {
-		var returnList = "";
-		
-		for(var i=1; i<=listLen(arguments.list); i++) {
-			returnList = listAppend(returnList, "'#listGetAt(arguments.list, i)#'");	
-		}
-		
-		return returnList;
+	public any function getExportQuery(required string entityName) {
+		var qry = new query();
+		qry.setName("exportQry");
+		var result = qry.execute(sql="SELECT * FROM Slatwall#arguments.entityName#"); 
+    	exportQry = result.getResult(); 
+		return exportQry;
 	}
+	
+	
+	
+	// ===================== START: Private Helper Methods ===========================
 	
 	// =====================  END: Private Helper Methods ============================
 	

@@ -38,7 +38,10 @@ Notes:
 */
 component displayname="Base Entity" accessors="true" extends="Slatwall.com.utility.BaseObject" {
 
-	property name="persistableErrors" type="array";
+	property name="persistableErrors" type="array" persistent="false";
+	property name="assignedAttributeSetSmartList" type="struct" persistent="false";
+	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";
+	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
 	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
@@ -101,6 +104,79 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 		}
 		return newEntity;
+	}
+	
+	// Attribute Value
+	public any function getAttributeValue(required string attribute, returnEntity=false){
+		
+		var attributeValueEntity = "";
+		
+		// If an ID was passed, and that value exists in the ID struct then use it
+		if(len(arguments.attribute) eq 32 && structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
+			attributeValueEntity = getAttributeValuesByAttributeIDStruct()[arguments.attribute];
+			
+		// If some other string was passed check the attributeCode struct for it's existance
+		} else if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
+			attributeValueEntity = getAttributeValuesByAttributeCodeStruct()[arguments.attribute];
+			
+		}
+		
+		// Value Entity Found, and we are returning the entire thing
+		if( isObject(attributeValueEntity) && arguments.returnEntity) {
+			
+			return attributeValueEntity;
+		
+		// Value Entity Found and we are just returning the value (or the default for that attribute)
+		} else if ( isObject(attributeValueEntity) ){
+			
+			if(!isNull(attributeValueEntity.getAttributeValue()) && len(attributeValueEntity.getAttributeValue())) {
+				return attributeValueEntity.getAttributeValue();
+			} else if (!isNull(attributeValueEntity.getAttribute().getDefaultValue()) && len(attributeValueEntity.getAttribute().getDefaultValue())) {
+				return attributeValueEntity.getAttribute().getDefaultValue();
+			}
+			
+		// Attribute was not found, and we wanted an entity back
+		} else if(arguments.returnEntity) {
+			var newAttributeValue = getService("attributeService").newAttributeValue();
+			newAttributeValue.setAttributeValueType( lcase( replace(getEntityName(),'Slatwall','') ) );
+			return newAttributeValue;
+		
+		}
+		
+		return "";
+	}
+	
+	public any function getAssignedAttributeSetSmartList(){
+		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
+			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
+			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
+			variables.assignedAttributeSetSmartList.addFilter('globalFlag', 1);
+			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'ast#replace(getEntityName(),'Slatwall','')#');
+		}
+		
+		return variables.assignedAttributeSetSmartList;
+	}
+	
+	public struct function getAttributeValuesByAttributeIDStruct() {
+		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
+			variables.attributeValuesByAttributeIDStruct = {};
+			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
+				variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
+			}
+		}
+		
+		return variables.attributeValuesByAttributeIDStruct;
+	}
+	
+	public struct function getAttributeValuesByAttributeCodeStruct() {
+		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
+			variables.attributeValuesByAttributeCodeStruct = {};
+			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
+				variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
+			}
+		}
+		
+		return variables.attributeValuesByAttributeCodeStruct;
 	}
 	
 	// @hint Returns the persistableErrors array, if one hasn't been setup yet it returns a new one
@@ -285,6 +361,13 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return getService("dataService").isUniqueProperty(propertyName=propertyName, entity=this);
 	}
 	
+	public boolean function hasUniqueOrNullProperty( required string propertyName ) {
+		if(!structKeyExists(variables, arguments.propertyName) || isNull(variables[arguments.propertyName])) {
+			return true;
+		}
+		return getService("dataService").isUniqueProperty(propertyName=propertyName, entity=this);
+	}
+	
 	// @hint returns true if given property contains any of the entities passed into the entityArray argument. 
 	public boolean function hasAnyInProperty( required string propertyName, array entityArray ) {
 		
@@ -308,7 +391,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			
 			var smartList = getPropertyOptionsSmartList( arguments.propertyName );
 			
-			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( arguments.propertyName ).cfc#");
+			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
 			
 			smartList.addSelect(propertyIdentifier=exampleEntity.getSimpleRepresentationPropertyName(), alias="name");
 			smartList.addSelect(propertyIdentifier=exampleEntity.getPrimaryIDPropertyName(), alias="value"); 
@@ -336,8 +419,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		var cacheKey = "#arguments.propertyName#OptionsSmartList";
 		
 		if(!structKeyExists(variables, cacheKey)) {
-			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
-			variables[ cacheKey ] = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
+			var entityService = getService("utilityORMService").getServiceByEntityName( listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.') );
+			variables[ cacheKey ] = entityService.invokeMethod("get#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#SmartList");
 			// If the cfc is "Type" then we should be looking for a parentTypeSystemCode in the metaData
 			if(getPropertyMetaData( arguments.propertyName ).cfc == "Type") {
 				if(structKeyExists(getPropertyMetaData( arguments.propertyName ), "systemCode")) {
@@ -357,11 +440,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		
 		if(!structKeyExists(variables, cacheKey)) {
 			
-			var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( arguments.propertyName ).cfc );
-			var smartList = entityService.invokeMethod("get#getPropertyMetaData( arguments.propertyName ).cfc#SmartList");
+			var entityService = getService("utilityORMService").getServiceByEntityName( listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.') );
+			var smartList = entityService.invokeMethod("get#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#SmartList");
 			
 			// Create an example entity so that we can read the meta data
-			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
+			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
 			
 			// If its a one-to-many, then add filter
 			if(getPropertyMetaData( arguments.propertyName ).fieldtype == "one-to-many") {
@@ -411,6 +494,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if( left(arguments.missingMethodName, 9) == "hasUnique") {
 			
 			return hasUniqueProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 9) );
+		
+		// hasUniqueOrNullXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
+		} else if( left(arguments.missingMethodName, 15) == "hasUniqueOrNull") {
+			
+			return hasUniqueOrNullProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 15) );
 		
 		// hasAnyXXX() 			Where XXX is one-to-many or many-to-many property and we want to see if it has any of an array of entities
 		} else if( left(arguments.missingMethodName, 6) == "hasAny") {

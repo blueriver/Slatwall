@@ -36,19 +36,19 @@
 Notes:
 
 --->
+<cfparam name="rc.settingSmartList" type="any" />
+
 <cfoutput>
-	<cf_SlatwallActionBar type="static"></cf_SlatwallActionBar>
 	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/globalpage" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/sku" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/shippingmethod" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/shippingmethodrate" />
-		<cf_SlatwallTab view="admin:setting/listsettingtabs/fulfillmentmethod" />
-	</cf_SlatwallTabGroup>
+	<cf_SlatwallActionBar type="listing" object="#rc.settingSmartList#" createAction="" />
+	
+	<cf_SlatwallListingDisplay smartList="#rc.settingSmartList#"
+							   recordDeleteAction="admin:setting.deleteSetting">
+		<cf_SlatwallListingColumn propertyIdentifier="settingName" filter="true" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="settingValue" sort="false" />
+		<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="product.productName" />
+		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" />
+	</cf_SlatwallListingDisplay>
+
 </cfoutput>

@@ -44,18 +44,13 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="vendorWebsite" ormtype="string";
 	property name="accountNumber" ormtype="string";
 	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
 	// Related Object Properties (many-to-one)
 	property name="primaryEmailAddress" cfc="VendorEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
 	property name="primaryPhoneNumber" cfc="VendorPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
 	property name="primaryAddress" cfc="VendorAddress" fieldtype="many-to-one" fkcolumn="primaryAddressID";
 	
 	// Related Object Properties (one-to-many)
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all-delete-orphan" inverse="true";
 	property name="vendorOrders" singularname="vendorOrder" type="array" cfc="VendorOrder" fieldtype="one-to-many" fkcolumn="vendorID" cascade="save-update" inverse="true";
 	property name="vendorAddresses" singularname="vendorAddress" type="array" cfc="VendorAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all-delete-orphan" inverse="true";
 	property name="vendorPhoneNumbers" singularname="vendorPhoneNumber" type="array" cfc="VendorPhoneNumber" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all-delete-orphan" inverse="true";
@@ -64,6 +59,15 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	// Related Object Properties (many-to-many - owner)
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID";
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="vendorID" inversejoincolumn="productID";
+	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="vendorSkusSmartList" persistent="false";
@@ -94,6 +98,14 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	
+	// Attribute Values (one-to-many)
+	public void function addAttributeValue(required any attributeValue) {
+		arguments.attributeValue.setVendor( this );
+	}
+	public void function removeAttributeValue(required any attributeValue) {
+		arguments.attributeValue.removeVendor( this );
+	}
 	
 	// Vendor Email Addresses (one-to-many)
 	public void function addVendorEmailAddress(required any vendorEmailAddress) {

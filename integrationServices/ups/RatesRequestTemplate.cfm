@@ -80,14 +80,14 @@
 				</Address>
 			</ShipFrom>
 			<ShipmentWeight>
-				<Weight>#totalItemsWeight#</Weight>
+				<Weight>#arguments.requestBean.getTotalValue()#</Weight>
 			</ShipmentWeight>
 			<Package>
 				<PackagingType>
 					<Code>02</Code>
 				</PackagingType>
 				<PackageWeight>
-					<Weight>#totalItemsWeight#</Weight>
+					<Weight>#arguments.requestBean.getTotalWeight( unitCode='lb' )#</Weight>
 					<UnitOfMeasurement>
 						<Code>LBS</Code>
 					</UnitOfMeasurement>

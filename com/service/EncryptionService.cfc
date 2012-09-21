@@ -75,7 +75,7 @@ component extends="BaseService" {
 	}
 	
 	private string function getEncryptionKeyLocation() {
-		return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/Slatwall/config/');
+		return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/Slatwall/config/custom/');
 	}
 	
 	private string function getEncryptionKeyFileName() {

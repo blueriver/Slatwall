@@ -9,10 +9,5 @@ aspnet_client/
 settings.xml
 ehthumbs.db
 thumbs.db
-settings.xml/addLicense.cfm
+settings.xml/
 logs/
-assets/images/cache/
-staticAssets/min/
-staticAssets/images/cache
-assets/min/
-assets/css/global.less.css

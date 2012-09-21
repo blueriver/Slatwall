@@ -116,13 +116,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				rc.$.slatwall.session().setOrder(rc.$.slatwall.cart());
 				
 				// Build up any possible product customizations
-				var cusomtizationData = getUtilityFormService().buildFormCollections(rc);
+				var customizationData = getUtilityFormService().buildFormCollections(rc);
 				
 				// Add to the cart() order the new sku with quantity and shipping id
 				if(!isNull(stock)) {
-					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, stock=stock, quantity=rc.quantity, customizatonData=cusomtizationData, data=rc);	
+					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, stock=stock, quantity=rc.quantity, customizationData=customizationData, data=rc);	
 				} else {
-					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizatonData=cusomtizationData, data=rc);
+					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizationData=customizationData, data=rc);
 				}
 			}
 		}

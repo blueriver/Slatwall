@@ -53,6 +53,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	// ====================== START: Save Overrides ===========================
 	
+	public any function saveBrand(required any brand, required struct data) {
+		if( (isNull(arguments.brand.getURLTitle()) || !len(arguments.brand.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
+			param name="arguments.data.brandName" default="";
+			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.brandName, tableName="SlatwallBrand");
+		}
+		
+		return super.saveBrand(arguments.brand, arguments.data);;
+	}
+	
 	// ======================  END: Save Overrides ============================
 	
 	// ==================== START: Smart List Overrides =======================

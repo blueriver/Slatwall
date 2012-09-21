@@ -37,6 +37,7 @@ Notes:
 
 */
 component extends="BaseService" accessors="true" output="false" {
+
 	property name="inventoryDAO" type="any";
 	
 	// entity will be one of StockReceiverItem, StockPhysicalItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem
@@ -94,44 +95,56 @@ component extends="BaseService" accessors="true" output="false" {
 		
 	}
 	
-	public numeric function getQOH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID, string groupBy) {
-		return getDAO().getQOH(argumentCollection=arguments);
+	// Quantity On Hand
+	public struct function getQOH(string productID, string productRemoteID) {
+		return createInventoryDataStruct( getDAO().getQOH(argumentCollection=arguments), "QOH" );
 	}
 	
-	public numeric function getQOSH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-		return getDAO().getQOSH(argumentCollection=arguments);
+	// Quantity On Sales Hold
+	public struct function getQOSH(string productID, string productRemoteID) {
+		return {skus={},stocks={},locations={},QOSH=0};
+		//return createInventoryDataStruct( getDAO().getQOSH(argumentCollection=arguments), "QOSH" );
 	}
 	
-	public numeric function getQNDOO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-		return getDAO().getQNDOO(argumentCollection=arguments);
+	// Quantity Not Delivered On Open Order
+	public struct function getQNDOO(string productID, string productRemoteID) {
+		return createInventoryDataStruct( getDAO().getQNDOO(argumentCollection=arguments), "QNDOO" );
 	}
 	
-	public numeric function getQNDORVO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-		return getDAO().getQNDORVO(argumentCollection=arguments);
+	// Quantity Not Delivered On Return Vendor Order
+	public struct function getQNDORVO(string productID, string productRemoteID) {
+		return {skus={},stocks={},locations={},QNDORVO=0};
+		//return createInventoryDataStruct( getDAO().getQNDORVO(argumentCollection=arguments), "QNDORVO" );
 	}
 	
-	public numeric function getQNDOSA(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-		return getDAO().getQNDOSA(argumentCollection=arguments);
+	// Quantity Not Delivered On Stock Adjustment
+	public struct function getQNDOSA(string productID, string productRemoteID) {
+		return createInventoryDataStruct( getDAO().getQNDOSA(argumentCollection=arguments), "QNDOSA" );
 	}
 	
-	public numeric function getQNRORO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-		return getDAO().getQNRORO(argumentCollection=arguments);
+	// Quantity Not Received On Return Order
+	public struct function getQNRORO(string productID, string productRemoteID) {
+		return createInventoryDataStruct( getDAO().getQNRORO(argumentCollection=arguments), "QNRORO" );
 	}
 	
-	public numeric function getQNROVO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-		return getDAO().getQNROVO(argumentCollection=arguments);
+	// Quantity Not Received On Vendor Order
+	public struct function getQNROVO(string productID, string productRemoteID) {
+		return createInventoryDataStruct( getDAO().getQNROVO(argumentCollection=arguments), "QNROVO" );
 	}
 	
-	public numeric function getQNROSA(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-		return getDAO().getQNROSA(argumentCollection=arguments);
+	// Quantity Not Received On Stock Adjustment
+	public struct function getQNROSA(string productID, string productRemoteID) {
+		return createInventoryDataStruct( getDAO().getQNROSA(argumentCollection=arguments), "QNROSA" );
 	}
 	
-	public numeric function getQR(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-		return getDAO().getQR(argumentCollection=arguments);
+	// Quantity Returned
+	public struct function getQR(string productID, string productRemoteID) {
+		return createInventoryDataStruct( getDAO().getQR(argumentCollection=arguments), "QR" );
 	}
 	
-	public numeric function getQS(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
-		return getDAO().getQS(argumentCollection=arguments);
+	// Quantity Sold
+	public struct function getQS(string productID, string productRemoteID) {
+		return createInventoryDataStruct( getDAO().getQS(argumentCollection=arguments), "QS" );
 	}
 	
 	// These methods are derived quantity methods from respective DAO methods
@@ -148,27 +161,128 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public numeric function getQATS(required any entity) {
+		
+		if(arguments.entity.getEntityName() eq "SlatwallStock") {
+			var trackInventoryFlag = arguments.entity.getSku().setting('skuTrackInventoryFlag');
+			var allowBackorderFlag = arguments.entity.getSku().setting('skuAllowBackorderFlag');
+			var orderMaximumQuantity = arguments.entity.getSku().setting('skuOrderMaximumQuantity'); 
+			var qatsIncludesQNROROFlag = arguments.entity.getSku().setting('skuQATSIncludesQNROROFlag');
+			var qatsIncludesQNROVOFlag = arguments.entity.getSku().setting('skuQATSIncludesQNROVOFlag');
+			var qatsIncludesQNROSAFlag = arguments.entity.getSku().setting('skuQATSIncludesQNROSAFlag');
+			var holdBackQuantity = arguments.entity.getSku().setting('skuHoldBackQuantity');
+		} else {
+			var trackInventoryFlag = arguments.entity.setting('skuTrackInventoryFlag');
+			var allowBackorderFlag = arguments.entity.setting('skuAllowBackorderFlag');
+			var orderMaximumQuantity = arguments.entity.setting('skuOrderMaximumQuantity'); 
+			var qatsIncludesQNROROFlag = arguments.entity.setting('skuQATSIncludesQNROROFlag');
+			var qatsIncludesQNROVOFlag = arguments.entity.setting('skuQATSIncludesQNROVOFlag');
+			var qatsIncludesQNROSAFlag = arguments.entity.setting('skuQATSIncludesQNROSAFlag');
+			var holdBackQuantity = arguments.entity.setting('skuHoldBackQuantity');
+		}
+
+		// If trackInventory is not turned on, or backorder is true then we can set the qats to the max orderQuantity
+		if( !trackInventoryFlag || allowBackorderFlag ) {
+			return orderMaximumQuantity;
+		}
+		
+		// Otherwise we will do a normal bit of calculation logic
 		var ats = arguments.entity.getQuantity('QNC');
 		
-		if(arguments.entity.setting("skuQATSIncludesQNROROFlag")) {
+		if(qatsIncludesQNROROFlag) {
 			ats += arguments.entity.getQuantity('QNRORO');
 		}
-		if(arguments.entity.setting("skuQATSIncludesQNROVOFlag")) {
+		if(qatsIncludesQNROVOFlag) {
 			ats += arguments.entity.getQuantity('QNROVO');
 		}
-		if(arguments.entity.setting("skuQATSIncludesQNROSAFlag")) {
+		if(qatsIncludesQNROSAFlag) {
 			ats += arguments.entity.getQuantity('QNROSA');
 		}
 		
-		if(isNumeric(arguments.entity.setting("skuHoldBackQuantity"))) {
-			ats -= arguments.entity.setting("skuHoldBackQuantity");
+		if(isNumeric(holdBackQuantity)) {
+			ats -= holdBackQuantity;
 		}
 		
 		return ats;
+		
 	}
 	
 	public numeric function getQIATS(required any entity) {
-		return arguments.entity.getQuantity('QNC') - arguments.entity.setting("skuHoldBackQuantity");
+		if(arguments.entity.getEntityName() eq "SlatwallStock") {
+			var trackInventoryFlag = arguments.entity.getSku().setting('skuTrackInventoryFlag');
+			var orderMaximumQuantity = arguments.entity.getSku().setting('skuOrderMaximumQuantity'); 
+			var holdBackQuantity = arguments.entity.getSku().setting('skuHoldBackQuantity');
+		} else {
+			var trackInventoryFlag = arguments.entity.setting('skuTrackInventoryFlag');
+			var orderMaximumQuantity = arguments.entity.setting('skuOrderMaximumQuantity'); 
+			var holdBackQuantity = arguments.entity.setting('skuHoldBackQuantity');
+		}
+		
+		if(!trackInventoryFlag) {
+			return orderMaximumQuantity;
+		}
+		
+		return arguments.entity.getQuantity('QNC') - holdBackQuantity;
+	}
+
+	private struct function createInventoryDataStruct(required any inventoryArray, required string inventoryType) {
+		
+		var returnStruct = {};
+		
+		returnStruct[ arguments.inventoryType ] = 0;
+		returnStruct.locations = {};
+		returnStruct.skus = {};
+		returnStruct.stocks = {};
+		
+		for(var i=1; i<=arrayLen(arguments.inventoryArray); i++) {
+			
+			var locationID = "";
+			var stockID = "";
+			var skuID = "";
+		
+			// Increment Product value
+			returnStruct[ arguments.inventoryType ] += arguments.inventoryArray[i][ arguments.inventoryType ];
+			
+			// Setup the location
+			if( structKeyExists(arguments.inventoryArray[i], "locationID") ) {
+				var locationID = arguments.inventoryArray[i]["locationID"];
+					
+				if( !structKeyExists(returnStruct.locations, locationID) ) {
+					returnStruct.locations[ locationID ] = 0;
+				}
+				
+				// Increment Location
+				returnStruct.locations[ locationID ] += arguments.inventoryArray[i][ arguments.inventoryType ];	
+			}
+			
+			// Setup the stock
+			if( structKeyExists(arguments.inventoryArray[i], "stockID") ) {
+				var stockID = arguments.inventoryArray[i]["stockID"];	
+				returnStruct.stocks[ stockID ] = arguments.inventoryArray[i][ arguments.inventoryType ];	
+			}
+			
+			// Setup the sku
+			if( structKeyExists(arguments.inventoryArray[i], "skuID") ) {
+				var skuID = arguments.inventoryArray[i]["skuID"];
+				
+				if(!structKeyExists(returnStruct.skus, skuID)) {
+					returnStruct.skus[ skuID ] = {};
+					returnStruct.skus[ skuID ].locations = {};
+					returnStruct.skus[ skuID ][ arguments.inventoryType ] = 0;
+				}
+				
+				returnStruct.skus[ skuID ][ arguments.inventoryType ] += arguments.inventoryArray[i][ arguments.inventoryType ];
+				
+				// Add location to sku if it exists
+				if(len(locationID)) {
+					returnStruct.skus[ skuID ].locations[ locationID ] = arguments.inventoryArray[i][ arguments.inventoryType ];
+				}
+
+			}
+			
+		}
+		
+		return returnStruct;
+		
 	}
 	
 

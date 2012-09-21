@@ -51,13 +51,13 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	// Related Object Properties (one-to-many)
 	
 	// Related Object Properties (many-to-many)
-	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="priceGroupID" cascade="all";
-	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPromotion" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="promotionID" cascade="all";
-	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID" cascade="all";
-	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID" cascade="all";
+	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="priceGroupID";
+	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPromotion" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="promotionID";
+	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID";
+	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID";
 	
-	property name="excludedCategories" singularname="excludedCategory" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID" cascade="all";
-	property name="excludedContents" singularname="excludedContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID" cascade="all";
+	property name="excludedCategories" singularname="excludedCategory" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID";
+	property name="excludedContents" singularname="excludedContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -171,24 +171,24 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 		structDelete(variables, "renewalSubscriptionUsage");    
 	}
 	
-	// Price Groups (many-to-many - owner)
-	public void function addPriceGroup(required any priceGroup) {
-		if(arguments.priceGroup.isNew() or !hasPriceGroup(arguments.priceGroup)) {
-			arrayAppend(variables.priceGroups, arguments.priceGroup);
-		}
-		if(isNew() or !arguments.priceGroup.hasSubscriptionUsageBenefit( this )) {
-			arrayAppend(arguments.priceGroup.getSubscriptionUsageBenefits(), this);
-		}
-	}
-	public void function removePriceGroup(required any priceGroup) {
-		var thisIndex = arrayFind(variables.priceGroups, arguments.priceGroup);
-		if(thisIndex > 0) {
-			arrayDeleteAt(variables.priceGroups, thisIndex);
-		}
-		var thatIndex = arrayFind(arguments.priceGroup.getSubscriptionUsageBenefits(), this);
-		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.priceGroup.getSubscriptionUsageBenefits(), thatIndex);
-		}
+	// Price Groups (many-to-many - owner)    
+	public void function addPriceGroup(required any priceGroup) {    
+		if(arguments.priceGroup.isNew() or !hasPriceGroup(arguments.priceGroup)) {    
+			arrayAppend(variables.priceGroups, arguments.priceGroup);    
+		}    
+		if(isNew() or !arguments.priceGroup.hasSubscriptionUsageBenefit( this )) {    
+			arrayAppend(arguments.priceGroup.getSubscriptionUsageBenefits(), this);    
+		}    
+	}    
+	public void function removePriceGroup(required any priceGroup) {    
+		var thisIndex = arrayFind(variables.priceGroups, arguments.priceGroup);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.priceGroups, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.priceGroup.getSubscriptionUsageBenefits(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.priceGroup.getSubscriptionUsageBenefits(), thatIndex);    
+		}    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

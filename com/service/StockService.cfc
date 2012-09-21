@@ -67,28 +67,6 @@ component extends="BaseService" accessors="true" output="false" {
 		return stock;
 	}
 	
-	public any function getStockReceiverByPackingSlipNumber(required any packingSlipNumber){
-		var stockReceiver = getDAO().getStockReceiverByPackingSlipNumber(argumentCollection=arguments);
-		
-		if(isNull(stockReceiver)) {
-			
-			if(getSlatwallScope().hasValue("stockReceiver_#arguments.packingSlipNumber#")) {
-				// Set the stock receiver in the requestCache so that duplicates for this stock don't get created.
-				stockReceiver = getSlatwallScope().getValue("stockReceiver_#arguments.packingSlipNumber#");
-				
-			} else {
-				stockReceiver = this.newStockReceiver();
-				stockReceiver.setPackingSlipNumber(arguments.packingSlipNumber);
-				getDAO().save(stockReceiver);
-				
-				// Set the stock in the requestCache so that duplicates for this stock don't get created.
-				getSlatwallScope().setValue("stockReceiver_#arguments.packingSlipNumber#", stockReceiver);
-			}
-		}
-		
-		return stockReceiver;
-	}
-	
 	public any function getStockAdjustmentItemForSku(required any sku, required any stockAdjustment){
 		var stockAdjustmentItem = getDAO().getStockAdjustmentItemForSku(arguments.sku, arguments.stockAdjustment);
 		
@@ -99,7 +77,143 @@ component extends="BaseService" accessors="true" output="false" {
 		return stockAdjustmentItem;
 	}
 	
-
+	public any function getEstimatedReceivalDetails(required string productID) {
+		return createEstimatedReceivalDataStruct( getDAO().getEstimatedReceival(arguments.productID) );
+	}
+	
+	private struct function createEstimatedReceivalDataStruct(required array receivalArray) {
+		
+		var returnStruct = {};
+		var insertedAt = 0;
+		
+		returnStruct.locations = {};
+		returnStruct.skus = {};
+		returnStruct.stocks = {};
+		returnStruct.estimatedReceivals = [];
+		
+		for(var i=1; i<=arrayLen(arguments.receivalArray); i++) {
+			
+			var skuID = arguments.receivalArray[i]["skuID"];
+			var locationID = arguments.receivalArray[i]["locationID"];
+			var stockID = arguments.receivalArray[i]["stockID"];
+			
+			// Setup the estimate data
+			var data = {};
+			data.quantity = arguments.receivalArray[i]["orderedQuantity"] - arguments.receivalArray[i]["receivedQuantity"];
+			if(structKeyExists(arguments.receivalArray[i], "orderItemEstimatedReceival")) {
+				data.estimatedReceivalDateTime = arguments.receivalArray[i]["orderItemEstimatedReceival"];	
+			} else {
+				data.estimatedReceivalDateTime = arguments.receivalArray[i]["orderEstimatedReceival"];	
+			}
+			
+			// First do the product level addition
+			inserted = false;
+			for(var e=1; e<=arrayLen(returnStruct.estimatedReceivals); e++) {
+				if(returnStruct.estimatedReceivals[e].estimatedReceivalDateTime eq data.estimatedReceivalDateTime) {
+					returnStruct.estimatedReceivals[e].quantity += data.quantity;
+					inserted = true;
+					break;
+				} else if (returnStruct.estimatedReceivals[e].estimatedReceivalDateTime gt data.estimatedReceivalDateTime) {
+					arrayInsertAt(returnStruct.estimatedReceivals, e, duplicate(data));
+					inserted = true;
+					break;
+				}
+			}
+			if(!inserted) {
+				arrayAppend(returnStruct.estimatedReceivals, duplicate(data));
+			}
+			
+			
+			// Do the sku level addition
+			if(!structKeyExists(returnStruct.skus, skuID)) {
+				returnStruct.skus[ skuID ] = {};
+				returnStruct.skus[ skuID ].locations = {};
+				returnStruct.skus[ skuID ].estimatedReceivals = [];
+			}
+			inserted = false;
+			for(var e=1; e<=arrayLen(returnStruct.skus[ skuID ].estimatedReceivals); e++) {
+				if(returnStruct.skus[ skuID ].estimatedReceivals[e].estimatedReceivalDateTime eq data.estimatedReceivalDateTime) {
+					returnStruct.skus[ skuID ].estimatedReceivals[e].quantity += data.quantity;
+					inserted = true;
+					break;
+				} else if (returnStruct.skus[ skuID ].estimatedReceivals[e].estimatedReceivalDateTime gt data.estimatedReceivalDateTime) {
+					arrayInsertAt(returnStruct.skus[ skuID ].estimatedReceivals, e, duplicate(data));
+					inserted = true;
+					break;
+				}
+			}
+			if(!inserted) {
+				arrayAppend(returnStruct.skus[ skuID ].estimatedReceivals, duplicate(data));
+			}
+			// Add the location break up to this sku
+			if(!structKeyExists(returnStruct.skus[ skuID ].locations, locationID)) {
+				returnStruct.skus[ skuID ].locations[ locationID ] = [];
+			}
+			inserted = false;
+			for(var e=1; e<=arrayLen(returnStruct.skus[ skuID ].locations[ locationID ] ); e++) {
+				if(returnStruct.skus[ skuID ].locations[ locationID ][e].estimatedReceivalDateTime eq data.estimatedReceivalDateTime) {
+					returnStruct.skus[ skuID ].locations[ locationID ][e].quantity += data.quantity;
+					inserted = true;
+					break;
+				} else if (returnStruct.skus[ skuID ].locations[ locationID ][e].estimatedReceivalDateTime gt data.estimatedReceivalDateTime) {
+					arrayInsertAt(returnStruct.skus[ skuID ].locations[ locationID ], e, duplicate(data));
+					inserted = true;
+					break;
+				}
+			}
+			if(!inserted) {
+				arrayAppend(returnStruct.skus[ skuID ].locations[ locationID ], duplicate(data));
+			}
+			
+			
+			
+			// Do the location level addition
+			if(!structKeyExists(returnStruct.locations, locationID)) {
+				returnStruct.locations[ locationID ] = [];
+			}
+			inserted = false;
+			for(var e=1; e<=arrayLen(returnStruct.locations[ locationID ]); e++) {
+				if(returnStruct.locations[ locationID ][e].estimatedReceivalDateTime eq data.estimatedReceivalDateTime) {
+					returnStruct.locations[ locationID ][e].quantity += data.quantity;
+					inserted = true;
+					break;
+				} else if (returnStruct.locations[ locationID ][e].estimatedReceivalDateTime gt data.estimatedReceivalDateTime) {
+					arrayInsertAt(returnStruct.locations[ locationID ], e, duplicate(data));
+					inserted = true;
+					break;
+				}
+			}
+			if(!inserted) {
+				arrayAppend(returnStruct.locations[ locationID ], duplicate(data));
+			}
+			
+			// Do the stock level addition
+			if(!structKeyExists(returnStruct.stocks, stockID)) {
+				returnStruct.stocks[ stockID ] = [];
+			}
+			inserted = false;
+			for(var e=1; e<=arrayLen(returnStruct.stocks[ stockID ]); e++) {
+				if(returnStruct.stocks[ stockID ][e].estimatedReceivalDateTime eq data.estimatedReceivalDateTime) {
+					returnStruct.stocks[ stockID ][e].quantity += data.quantity;
+					inserted = true;
+					break;
+				} else if (returnStruct.stocks[ stockID ][e].estimatedReceivalDateTime gt data.estimatedReceivalDateTime) {
+					arrayInsertAt(returnStruct.stocks[ stockID ], e, duplicate(data));
+					inserted = true;
+					break;
+				}
+			}
+			if(!inserted) {
+				arrayAppend(returnStruct.stocks[ stockID ], duplicate(data));
+			}
+			
+			
+		}
+		
+		return returnStruct;
+	}
+	
+	
 	// ===================== START: Logical Methods ===========================
 	
 	// =====================  END: Logical Methods ============================

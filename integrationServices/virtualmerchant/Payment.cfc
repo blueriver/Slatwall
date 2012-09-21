@@ -74,6 +74,15 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		
 		var requestData = "";
 		requestData = "ssl_transaction_type=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#&ssl_show_form=false&ssl_result_format=ASCII";
+		
+		// If this is a ccforce for capturing a pre-authorization, then we need to pass the auth code
+		if(arguments.requestBean.getTransactionType() eq "arguments.requestBean.getTransactionType()" && !isNull(requestBean.getProviderTransationID()) && len(requestBean.getProviderTransationID())) {
+			var originalCCTransaction = getService("paymentService").getCreditCardTransactionByProviderTransactionID( requestBean.getProviderTransationID() );
+			if(!isNull(originalCCTransaction) && !isNull(originalCCTransaction.getAuthorizationCode()) && len(originalCCTransaction.getAuthorizationCode())) {
+				requestData = listAppend(requestData, "ssl_approval_code=#originalCCTransaction.getAuthorizationCode()#","&");		
+			}
+		}
+		
 		requestData = listAppend(requestData, getLoginNVP(),"&");
 		requestData = listAppend(requestData, getPaymentNVP(requestBean),"&");
 		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
@@ -105,7 +114,9 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		
 		var paymentData = [];
 		arrayAppend(paymentData,"ssl_amount=#requestBean.getTransactionAmount()#");
-		arrayAppend(paymentData,"ssl_card_number=#requestBean.getCreditCardNumber()#");
+		if(len(requestBean.getCreditCardNumber())) {
+			arrayAppend(paymentData,"ssl_card_number=#requestBean.getCreditCardNumber()#");
+		}
 		arrayAppend(paymentData,"ssl_card_present=N");
 		arrayAppend(paymentData,"ssl_exp_date=#Left(requestBean.getExpirationMonth(),2)##Right(requestBean.getExpirationYear(),2)#");
 		arrayAppend(paymentData,"ssl_avs_address=#requestBean.getBillingStreetAddress()#");
@@ -159,40 +170,50 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 			responseData[listFirst(item,"=")] = listRest(item,"=");
 		}
 		
-		// Add message for what happened
-		response.addMessage(responseData["ssl_result"], responseData["ssl_result_message"]);
-		
-		// Set the status Code
-		response.setStatusCode(responseData["ssl_result"]);
-		
-		// Set the transaction ID
-		response.setTransactionID(responseData["ssl_txn_id"]);
-		
-		// Check to see if it was successful
-		if(responseData["ssl_result"] != 0) {
-			// Transaction did not go through
-			response.addError("processing", responseData["ssl_result_message"]);
+		if(!structKeyExists(responseData, "ssl_result")) {
+			if(structKeyExists(responseData, "errorMessage")) {
+				param name="responseData.errorCode" default="";
+				param name="responseData.errorName" default="";
+				
+				response.addError("processing", "#responseData['errorName']# (#responseData['errorCode']#) : #responseData['errorMessage']#");
+			}
 		} else {
-			if(requestBean.getTransactionType() == "authorize") {
-				response.setAmountAuthorized(requestBean.getTransactionAmount());
-			} else if(requestBean.getTransactionType() == "authorizeAndCharge") {
-				response.setAmountAuthorized(requestBean.getTransactionAmount());
-				response.setAmountCharged(requestBean.getTransactionAmount());
-			} else if(requestBean.getTransactionType() == "chargePreAuthorization") {
-				response.setAmountCharged(requestBean.getTransactionAmount());
-			} else if(requestBean.getTransactionType() == "credit") {
-				response.setAmountCredited(requestBean.getTransactionAmount());
+			// Add message for what happened
+			response.addMessage(responseData["ssl_result"], responseData["ssl_result_message"]);
+			
+			// Set the status Code
+			response.setStatusCode(responseData["ssl_result"]);
+			
+			// Set the transaction ID
+			response.setTransactionID(responseData["ssl_txn_id"]);
+			
+			// Check to see if it was successful
+			if(responseData["ssl_result"] != 0) {
+				// Transaction did not go through
+				response.addError("processing", responseData["ssl_result_message"]);
+			} else {
+				if(requestBean.getTransactionType() == "authorize") {
+					response.setAmountAuthorized(requestBean.getTransactionAmount());
+				} else if(requestBean.getTransactionType() == "authorizeAndCharge") {
+					response.setAmountAuthorized(requestBean.getTransactionAmount());
+					response.setAmountCharged(requestBean.getTransactionAmount());
+				} else if(requestBean.getTransactionType() == "chargePreAuthorization") {
+					response.setAmountCharged(requestBean.getTransactionAmount());
+				} else if(requestBean.getTransactionType() == "credit") {
+					response.setAmountCredited(requestBean.getTransactionAmount());
+				}
+				
+				response.setAuthorizationCode(responseData["ssl_approval_code"]);
+				response.setAVSCode( responseData["ssl_avs_response"] );
+				
 			}
 			
-			response.setAuthorizationCode(responseData["ssl_approval_code"]);
-			response.setAVSCode( responseData["ssl_avs_response"] );
+			if(responseData["ssl_cvv2_response"] == 'M') {
+				response.setSecurityCodeMatch(true);
+			} else {
+				response.setSecurityCodeMatch(false);
+			}
 			
-		}
-		
-		if(responseData["ssl_cvv2_response"] == 'M') {
-			response.setSecurityCodeMatch(true);
-		} else {
-			response.setSecurityCodeMatch(false);
 		}
 		
 		return response;

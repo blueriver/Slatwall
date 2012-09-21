@@ -17,6 +17,9 @@
 	<objectProperties>
 		<property name="urlTitle">
 			<rule type="required" contexts="save" />
+			<rule type="custom" contexts="save" failureMessage="URL Title is Not Unique">
+				<param name="methodName" value="hasUniqueURLTitle" />
+			</rule>
 		</property>
 		<property name="productName">
 			<rule type="required" contexts="save" />
@@ -27,6 +30,7 @@
 				<param name="methodName" value="hasUniqueProductCode" />
 			</rule>
 		</property>
+		
 		<property name="productType">
 			<rule type="required" contexts="save" />
 		</property>

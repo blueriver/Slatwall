@@ -76,6 +76,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="taxAmount" type="numeric" persistent="false" formatType="currency";
 	property name="totalShippingWeight" type="numeric" persistent="false" formatType="weight";
 	property name="shippingMethodOptions" type="array" persistent="false";
+	property name="shippingMethodRate" type="array" persistent="false";
 	property name="accountAddressOptions" type="array" persistent="false";
 	property name="discountAmount" type="numeric" persistent="false" formatType="currency";
 	property name="chargeAfterDiscount" type="numeric" persistent="false" formatType="currency";
@@ -209,6 +210,21 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		variables.shippingMethodOptions = variables.fulfillmentShippingMethodOptions;
     	}
     	return variables.shippingMethodOptions; 
+    }
+    
+    public any function getShippingMethodRate() {
+    	if(!structKeyExists(variables, "shippingMethodRate")) {
+    		if(!isNull(getShippingMethod())) {
+	    		for(var i=1; i<=arrayLen(getFulfillmentShippingMethodOptions()); i++) {
+	    			if(getShippingMethod().getShippingMethodID() == getFulfillmentShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()) {
+	    				variables.shippingMethodRate = getFulfillmentShippingMethodOptions()[i].getShippingMethodRate();
+	    			}		 	
+	    		}	
+	    	}	
+    	}
+    	if(structKeyExists(variables, "shippingMethodRate")) {
+    		return variables.shippingMethodRate;	
+    	}
     }
     
     public any function getAccountAddressOptions() {

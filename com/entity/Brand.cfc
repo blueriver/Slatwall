@@ -42,7 +42,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="brandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" hint="As Brands Get Old, They would be marked as Not Active";
 	property name="publishedFlag" ormtype="boolean";
-	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
+	property name="urlTitle" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
 	property name="brandName" ormtype="string" hint="This is the common name that the brand goes by.";
 	property name="brandWebsite" ormtype="string" formatType="url" hint="This is the Website of the brand";
 	
@@ -56,7 +56,8 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (one-to-many)
-	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="brandID" cascade="all-delete-orphan" inverse="true";
+	property name="products" singularname="product" cfc="Product" type="array" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 	
@@ -73,8 +74,15 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Products (one-to-many)
+	// Attribute Values (one-to-many)    
+	public void function addAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.setBrand( this );    
+	}    
+	public void function removeAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.removeBrand( this );    
+	}
 	
+	// Products (one-to-many)
 	public void function addProduct(required Product Product) {
 	   arguments.Product.setBrand(this);
 	}

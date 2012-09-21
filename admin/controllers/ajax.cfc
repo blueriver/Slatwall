@@ -51,8 +51,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	this.anyAdminMethods="updateListingDisplay,updateGlobalSearchResults,updateSortOrder";
 	this.secureMethods="";
 	
-	public void function default(required struct rc) {
-		getFW().redirect(action="admin:account.listaccount");
+	public void function before(required struct rc) {
+		getFW().setView("admin:ajax.default");
 	}
 	
 	public void function updateListingDisplay(required struct rc) {

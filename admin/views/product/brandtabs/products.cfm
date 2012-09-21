@@ -37,12 +37,15 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.brand.getProductsSmartList()#" recordEditAction="admin:product.editproduct">
+	
+	<cf_SlatwallListingDisplay smartList="#rc.brand.getProductsSmartList()#"
+							   recordEditAction="admin:product.editproduct"
+							   recordDetailAction="admin:product.detailproduct">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
-		<cf_SlatwallListingColumn propertyIdentifier="productCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="price" />
+		<cf_SlatwallListingColumn propertyIdentifier="productCode" search=true />
+		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="price" range=true />
 	</cf_SlatwallListingDisplay>
 </cfoutput>

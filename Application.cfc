@@ -105,81 +105,36 @@ component extends="org.fw1.framework" output="false" {
 		if(!request.slatwallScope.hasApplicationValue("initialized") || !request.slatwallScope.getApplicationValue("initialized")) {
 			
 			// If not, lock the application until this is finished
-			lock scope="Application" timeout="120"  {
+			lock scope="Application" timeout="60"  {
 				
 				// Check again so that the qued requests don't back up
 				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
 					
-					// Log that the application is starting it's setup, and what type of reload this was
-					if(structKeyExists(url, "soft") && url.soft) {
-						writeLog(file="Slatwall", text="General Log - Application Setup Started ( Soft )");	
-					} else {
-						writeLog(file="Slatwall", text="General Log - Application Setup Started ( Hard )");
-					}
+					// Clear out the old Slatwall application
+					application.slatwall = {};
 					
-					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
-					if(!structKeyExists(application, "slatwallFW1")) {
-						
-						writeLog(file="Slatwall", text="General Log - onApplicationStart() was called");
-						
-						onApplicationStart();
-						
-						writeLog(file="Slatwall", text="General Log - onApplicationStart() finished");
-						
-					}
-					
+					// Application Setup Started
+					writeLog(file="Slatwall", text="General Log - Application Setup Started");	
 					request.slatwallScope.setApplicationValue("initialized", false);
 					
-					writeLog(file="Slatwall", text="General Log - Application Value 'initialized' set to false");
 					
-					request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
-					
-					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallVfsRoot' setup as: #this.mappings[ "/slatwallVfsRoot" ]#");
-					
-					// Set vfs root for slatwall 
-					if(!directoryExists( request.slatwallScope.getApplicationValue("slatwallVfsRoot") )) {
-						directoryCreate( request.slatwallScope.getApplicationValue("slatwallVfsRoot") );
+					// =================== Required Application Setup ===================
+					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
+					if(!structKeyExists(application, "slatwallFW1")) {
+						writeLog(file="Slatwall", text="General Log - onApplicationStart() was called");
+						onApplicationStart();
+						writeLog(file="Slatwall", text="General Log - onApplicationStart() finished");
 					}
-					
-					writeLog(file="Slatwall", text="General Log - slatwallVfsRoot directory has been confirmed");
-					
-					// Set up ValidateThis
-					request.slatwallScope.setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = expandPath('/Slatwall/com/validation/'),injectResultIntoBO = true,defaultFailureMessagePrefix = ""}));
-					
-					writeLog(file="Slatwall", text="General Log - Application Value 'validateThis' setup");
-					
-					// Make sure the correct version is in the application scope
-					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
-					if( fileExists( versionFile ) ) {
-						request.slatwallScope.setApplicationValue("version", trim(fileRead(versionFile)));
-					} else {
-						request.slatwallScope.setApplicationValue("version", "unknown");
-					}
-					
-					writeLog(file="Slatwall", text="General Log - Application Value 'version' setup as #request.slatwallScope.getApplicationValue('version')#");
 					
 					// This will force the Taffy API to reload on next request
 					if(structKeyExists(application, "_taffy")){
-						structDelete(application,"_taffy");	
+						structDelete(application,"_taffy");
+						writeLog(file="Slatwall", text="General Log - Taffy application valirable removed so that it reloads");
 					}
+					// ================ END: Required Application Setup ==================
 					
-					writeLog(file="Slatwall", text="General Log - Taffy application valirable removed so that it reloads");
-					
-					// Make's sure that our entities get updated... Not called on soft reloads.
-					if(!structKeyExists(url, "soft") || !url.soft) {
-						writeLog(file="Slatwall", text="General Log - Pre ORMReload()");
-						
-						include "/plugins/Slatwall/config/scripts/database/preORMReload.cfm";
-						
-						writeLog(file="Slatwall", text="General Log - preORMReload scripts run");
-						
-						ormReload();
-						
-						writeLog(file="Slatwall", text="General Log - ORMReload() was successful");		
-					}
 					
 					// ========================= Coldspring Setup =========================
-					
 					// Get Coldspring Config
 					var serviceFactory = "";
 					var integrationService = "";
@@ -199,56 +154,73 @@ component extends="org.fw1.framework" output="false" {
 					
 					// Now place the service factory as the fw1 bean
 					setBeanFactory( serviceFactory );
-					
+					writeLog(file="Slatwall", text="General Log - Coldspring Setup Confirmed");
 					//========================= END: Coldsping Setup =========================
 					
-					writeLog(file="Slatwall", text="General Log - Coldspring Setup Confirmed");
-
-					// Build RB Factory
-					rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
-					application.slatwall.rbFactory = rbFactory;
 					
-					writeLog(file="Slatwall", text="General Log - RBFactory Initiated");
+					// ======================== Enviornment Setup ============================
 					
-					// Setup Default Data... Not called on soft reloads.
-					if(!structKeyExists(url, "soft") || !url.soft) {
-						getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
+					// Version
+					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
+					if( fileExists( versionFile ) ) {
+						request.slatwallScope.setApplicationValue("version", trim(fileRead(versionFile)));
+					} else {
+						request.slatwallScope.setApplicationValue("version", "unknown");
 					}
+					writeLog(file="Slatwall", text="General Log - Application Value 'version' setup as #request.slatwallScope.getApplicationValue('version')#");
 					
-					writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
+					// VFS
+					request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
+					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallVfsRoot' setup as: #this.mappings[ "/slatwallVfsRoot" ]#");
 					
-					// Run Scripts
-					getBeanFactory().getBean("updateService").runScripts();
-					
-					writeLog(file="Slatwall", text="General Log - Update Service Scripts Have been Run");
-					
-					// Reload All Integrations
-					getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-					
-					writeLog(file="Slatwall", text="General Log - Integrations have been updated");
-					
-					// Set the frameworks baseURL to be used by the buildURL() method
+					// BASE URL
 					variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
-					
 					writeLog(file="Slatwall", text="General Log - FW1 baseURL set to #variables.framework.baseURL#");
 					
-					// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
-					var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
-					muraIntegrationService.setupIntegration();
-					
-					writeLog(file="Slatwall", text="General Log - Mura Integration Setup");
-					
-					//make sure super user has super user permissions
+					// Super Users
 					getBeanFactory().getBean("permissionService").setupDefaultPermissions();
-					
 					writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
 					
-					// Set initialized to true
+					// ======================== END: Enviornment Setup ========================
+					
+					
+					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
+					if(!fileExists(expandPath('/Slatwall/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, "update") && url.update)){
+						
+						// Write File
+						fileWrite(expandPath('/Slatwall/config/lastFullUpdate.txt.cfm'), now());
+						
+						// Reload ORM
+						ormReload();
+						writeLog(file="Slatwall", text="General Log - ORMReload() was successful");
+						
+						thread action="run" name="fullUpdateThread" {
+							writeLog(file="Slatwall", text="Full Update Thread Started");
+							
+							// Reload All Integrations
+							getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+							writeLog(file="Slatwall", text="General Log - Integrations have been updated");
+							
+							// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
+							var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
+							muraIntegrationService.setupIntegration();
+							writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
+							
+							// Setup Default Data... Not called on soft reloads.
+							getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
+							writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
+							
+							// Run Scripts
+							getBeanFactory().getBean("updateService").runScripts();
+							writeLog(file="Slatwall", text="General Log - Update Service Scripts Have been Run");
+							
+							writeLog(file="Slatwall", text="Full Update Thread Finished");	
+						}
+					}
+					// ========================== END: FULL UPDATE ==============================
+					
+					// Application Setup Ended
 					request.slatwallScope.setApplicationValue("initialized", true);
-					
-					writeLog(file="Slatwall", text="General Log - Application Value 'initialized' set to true");
-					
-					// Log that the application is finished setting up
 					writeLog(file="Slatwall", text="General Log - Application Setup Complete");
 				}
 			}
@@ -291,7 +263,7 @@ component extends="org.fw1.framework" output="false" {
 	
 	public void function setupView() {
 		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
+		if(structKeyExists(httpRequestData.headers, "X-Slatwall-AJAX") && isBoolean(httpRequestData.headers["X-Slatwall-AJAX"]) && httpRequestData.headers["X-Slatwall-AJAX"]) {
 			setupResponse();
 		}
 		
@@ -308,7 +280,7 @@ component extends="org.fw1.framework" output="false" {
 	public void function setupResponse() {
 		endSlatwallLifecycle();
 		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
+		if(structKeyExists(httpRequestData.headers, "X-Slatwall-AJAX") && isBoolean(httpRequestData.headers["X-Slatwall-AJAX"]) && httpRequestData.headers["X-Slatwall-AJAX"]) {
 			if(structKeyExists(request.context, "fw")) {
 				structDelete(request.context, "fw");
 			}

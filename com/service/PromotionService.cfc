@@ -263,26 +263,26 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 															}
 															
 															// If there are already values in the array then figure out where to insert
-															if(arrayLen(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ])) {
-																var indexToInsertAt = 1;
-															
-																// loop over any discounts that might be already in assigned and pick an index where the discount amount is best
-																for(var d=1; d<=arrayLen(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ]) ; d++) {
-																	if(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ][d].discountAmount < discountAmount) {
-																		indexToInsertAt = d;
-																		break;
-																	}
-																}
+															var discountAdded = false;
 																
-																// Insert this value into the potential discounts array
-																arrayInsertAt(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ], indexToInsertAt, {
-																	promotionRewardID = reward.getPromotionRewardID(),
-																	promotion = reward.getPromotionPeriod().getPromotion(),
-																	discountAmount = discountAmount
-																});
+															// loop over any discounts that might be already in assigned and pick an index where the discount amount is best
+															for(var d=1; d<=arrayLen(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ]) ; d++) {
+																
+																if(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ][d].discountAmount < discountAmount) {
+																	
+																	// Insert this value into the potential discounts array
+																	arrayInsertAt(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ], d, {
+																		promotionRewardID = reward.getPromotionRewardID(),
+																		promotion = reward.getPromotionPeriod().getPromotion(),
+																		discountAmount = discountAmount
+																	});
+																	
+																	discountAdded = true;
+																	break;
+																}
+															}
 															
-															// Otherwise just add it as the first record
-															} else {
+															if(!discountAdded) {
 																
 																// Insert this value into the potential discounts array
 																arrayAppend(orderItemQulifiedDiscounts[ orderItem.getOrderItemID() ], {
@@ -290,6 +290,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 																	promotion = reward.getPromotionPeriod().getPromotion(),
 																	discountAmount = discountAmount
 																});
+																
 															}
 															
 															
@@ -298,27 +299,26 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 															
 															var discountPerUseValue = precisionEvaluate(discountAmount / discountQuantity);
 															
-															// If there are already values in the array then figure out where to insert
-															if(arrayLen(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage)) {
-																var indexToInsertAt = 1;
+															var usageAdded = false;
+															
+															// loop over any previous orderItemUsage of this reward an place it in ASC order based on discountPerUseValue
+															for(var oiu=1; oiu<=arrayLen(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage) ; oiu++) {
 																
-																// loop over any previous orderItemUsage of this reward an place it in ASC order based on discountPerUseValue
-																for(var oiu=1; oiu<=arrayLen(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage) ; oiu++) {
-																	if(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage[oiu].discountPerUseValue > discountPerUseValue) {
-																		indexToInsertAt = oiu;
-																		break;
-																	}
+																if(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage[oiu].discountPerUseValue > discountPerUseValue) {
+																	
+																	// Insert this value into the potential discounts array
+																	arrayInsertAt(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage, oiu, {
+																		orderItemID = orderItem.getOrderItemID(),
+																		discountQuantity = discountQuantity,
+																		discountPerUseValue = discountPerUseValue
+																	});
+																	
+																	usageAdded = true;
+																	break;
 																}
-																
-																// Insert this value into the potential discounts array
-																arrayInsertAt(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage, indexToInsertAt, {
-																	orderItemID = orderItem.getOrderItemID(),
-																	discountQuantity = discountQuantity,
-																	discountPerUseValue = discountPerUseValue
-																});
-																
-															// Otherwise just add it as the first record
-															} else {
+															}
+															
+															if(!usageAdded) {
 																
 																// Insert this value into the potential discounts array
 																arrayAppend(promotionRewardUsageDetails[ reward.getPromotionRewardID() ].orderItemsUsage, {
@@ -500,7 +500,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 				
 			} // End Promotion Reward loop for removing anything that was overused
-			
 			
 			// Loop over the orderItems one last time, and look for the top 1 discounts that can be applied
 			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {

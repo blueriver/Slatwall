@@ -208,17 +208,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		
 			// Check for product customization
-			if(structKeyExists(arguments, "customizatonData") && structKeyExists(arguments.customizatonData, "attribute")) {
+			if(structKeyExists(arguments, "customizationData") && structKeyExists(arguments.customizationData, "attribute")) {
 				var pcas = arguments.sku.getProduct().getAttributeSets(['astOrderItem']);
 				for(var i = 1; i <= arrayLen(pcas); i++) {
 					var attributes = pcas[i].getAttributes();
 					
 					for(var a = 1; a <= arrayLen(attributes); a++) {
-						if(structKeyExists(arguments.customizatonData.attribute, attributes[a].getAttributeID())) {
+						if(structKeyExists(arguments.customizationData.attribute, attributes[a].getAttributeID())) {
 							var av = this.newAttributeValue();
 							av.setAttributeValueType("orderItem");
 							av.setAttribute(attributes[a]);
-							av.setAttributeValue(arguments.customizatonData.attribute[attributes[a].getAttributeID()]);
+							av.setAttributeValue(arguments.customizationData.attribute[attributes[a].getAttributeID()]);
 							av.setOrderItem(newItem);
 						}
 					}
@@ -658,6 +658,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(!isNull(arguments.originalOrder.getOrderItems()[i].getStock())) {
 				newOrderItem.setStock( arguments.originalOrder.getOrderItems()[i].getStock() );
 			}
+			
+			// copy order item customization
+			for(var attributeValue in arguments.originalOrder.getOrderItems()[i].getAttributeValues()) {
+				var av = this.newAttributeValue();
+				av.setAttributeValueType(attributeValue.getAttributeValueType());
+				av.setAttribute(attributeValue.getAttribute());
+				av.setAttributeValue(attributeValue.getAttributeValue());
+				av.setOrderItem(newOrderItem);
+			}
+
 			// check if there is a fulfillment method of this type in the order
 			for(var fulfillment in newOrder.getOrderFulfillments()) {
 				if(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodID() == fulfillment.getFulfillmentMethod().getFulfillmentMethodID()) {
@@ -1094,8 +1104,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						updateOrderStatus( arguments.orderFulfillment.getOrder(), true );
 						
 						// Look to charge orderPayments
-						if(structKeyExists(arguments.data, "processCreditCard") && arguments.data.processCreditCard) {
-							
+						if(structKeyExists(arguments.data, "processCreditCard") && isBoolean(arguments.data.processCreditCard) && arguments.data.processCreditCard) {
 							var totalAmountToCharge = arguments.orderFulfillment.getOrder().getDeliveredItemsPaymentAmountUnreceived();
 							var totalAmountCharged = 0;
 							
@@ -1117,6 +1126,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 											if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
 												thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
 											}
+											
 											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge}, "chargePreAuthorization");
 											if(!orderPayment.hasErrors()) {
 												totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
@@ -1313,14 +1323,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					var originalTransaction = arguments.orderPayment.getCreditCardTransactions()[i];
 					if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
 						var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
+						var leftToCapture = arguments.data.amount - totalCaptured;
+						var captureAmount = 0;
 						
-						if(arguments.data.amount - totalCaptured > capturableAmount) {
-							capturableAmount = totalCaptured - arguments.data.amount;
+						if(leftToCapture < capturableAmount) {
+							captureAmount = leftToCapture;
+						} else {
+							captureAmount = capturableAmount;
 						}
 						
 						arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
 						
-						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", capturableAmount, arguments.data.providerTransactionID);
+						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", captureAmount, arguments.data.providerTransactionID);
 						
 						if(paymentOK) {
 							totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);

@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,60 +35,82 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
+--->
+<cfcomponent extends="BaseDAO">
 
+	<cfscript>
 	
-	public any function getStockBySkuAndLocation(required any sku, required any location) {
-		return entityLoad("SlatwallStock", {location=arguments.location, sku=arguments.sku}, true);
-		/*
-		var params = [arguments.sku.getSkuID(), arguments.location.getLocationID()];
-		var hql = " SELECT s
-					FROM SlatwallStock s
-					INNER JOIN s.sku sk
-					INNER JOIN s.location l
-					WHERE sk.skuID = ?
-					AND l.locationID = ?    ";
-	
-		return ormExecuteQuery(hql, params, true);
-		*/	
-	}
-	
-	public any function getStockReceiverByPackingSlipNumber(required any packingSlipNumber) {
-		return entityLoad("SlatwallStockReceiver", {packingSlipNumber=arguments.packingSlipNumber}, true);
-	}	
-	
-	public any function getStockAdjustmentItemForSku(required any sku, required any stockAdjustment) {
-		var params = [arguments.sku.getSkuID(), arguments.stockAdjustment.getStockAdjustmentID()];
-		
-	 	// Epic hack. In order to find the stockAdjustment Item for this Sku, we don't know if it will be in the fromStock or toStock, so try them both.
-		
-		var hql = " SELECT i
-					FROM SlatwallStockAdjustmentItem i
-					WHERE i.fromStock.sku.skuID = ? 
-					AND i.stockAdjustment.stockAdjustmentID = ? ";
-	
-		var stockAdjustmentItem =  ormExecuteQuery(hql, params, true);
-		
-		if(!isNull(stockAdjustmentItem)) {
-			return stockAdjustmentItem;
+		public any function getStockBySkuAndLocation(required any sku, required any location) {
+			return entityLoad("SlatwallStock", {location=arguments.location, sku=arguments.sku}, true);
 		}
 		
-		var hql = " SELECT i
-					FROM SlatwallStockAdjustmentItem i
-					WHERE i.toStock.sku.skuID = ? 
-					AND i.stockAdjustment.stockAdjustmentID = ? ";
-	
-		var stockAdjustmentItem = ormExecuteQuery(hql, params, true);
+		public any function getStockAdjustmentItemForSku(required any sku, required any stockAdjustment) {
+			var params = [arguments.sku.getSkuID(), arguments.stockAdjustment.getStockAdjustmentID()];
+			
+		 	// Epic hack. In order to find the stockAdjustment Item for this Sku, we don't know if it will be in the fromStock or toStock, so try them both.
+			var hql = " SELECT i
+						FROM SlatwallStockAdjustmentItem i
+						WHERE i.fromStock.sku.skuID = ? 
+						AND i.stockAdjustment.stockAdjustmentID = ? ";
 		
-		if(!isNull(stockAdjustmentItem)) {
-			return stockAdjustmentItem;
-		} else {
-			// Return void
-			return;
+			var stockAdjustmentItem =  ormExecuteQuery(hql, params, true);
+			
+			if(!isNull(stockAdjustmentItem)) {
+				return stockAdjustmentItem;
+			}
+			
+			var hql = " SELECT i
+						FROM SlatwallStockAdjustmentItem i
+						WHERE i.toStock.sku.skuID = ? 
+						AND i.stockAdjustment.stockAdjustmentID = ? ";
+		
+			var stockAdjustmentItem = ormExecuteQuery(hql, params, true);
+			
+			if(!isNull(stockAdjustmentItem)) {
+				return stockAdjustmentItem;
+			} else {
+				// Return void
+				return;
+			}
+	
 		}
-
-	}	
+		
+		public array function getEstimatedReceival(required string productID) {
+			var params = [arguments.productID];
+			
+			var hql = "SELECT NEW MAP(
+							vendorOrder.estimatedReceivalDateTime as orderEstimatedReceival,
+							vendorOrderItem.estimatedReceivalDateTime as orderItemEstimatedReceival,
+							vendorOrderItem.quantity as orderedQuantity,
+							(SELECT coalesce( sum(stockReceiverItem.quantity), 0 ) FROM SlatwallStockReceiverItem stockReceiverItem WHERE stockReceiverItem.vendorOrderItem.vendorOrderItemID = vendorOrderItem.vendorOrderItemID) as receivedQuantity,
+							vendorOrderItem.stock.sku.skuID as skuID,
+							vendorOrderItem.stock.stockID as stockID,
+							vendorOrderItem.stock.location.locationID as locationID,
+							vendorOrderItem.stock.sku.product.productID as productID)
+						FROM
+							SlatwallVendorOrderItem vendorOrderItem
+						  INNER JOIN
+						  	vendorOrderItem.vendorOrder vendorOrder
+						  INNER JOIN
+						  	vendorOrderItem.stock stock
+						  INNER JOIN
+						  	stock.sku sku
+						  INNER JOIN
+						  	sku.product product
+						WHERE
+							vendorOrder.vendorOrderStatusType.systemCode != 'ostClosed'
+						  AND
+						  	vendorOrder.vendorOrderType.systemCode = 'votPurchaseOrder'
+						  AND
+							product.productID = ?
+						  AND
+						  	(vendorOrderItem.estimatedReceivalDateTime IS NOT NULL OR vendorOrder.estimatedReceivalDateTime IS NOT NULL)
+						  AND
+							(SELECT coalesce( sum(sri.quantity), 0 ) FROM SlatwallStockReceiverItem sri INNER JOIN sri.vendorOrderItem voi WHERE voi.vendorOrderItemID = vendorOrderItem.vendorOrderItemID) < vendorOrderItem.quantity
+						";
+			
+			return ormExecuteQuery(hql, params);
+		}
 	
-	
-}
+	</cfscript>
+</cfcomponent>

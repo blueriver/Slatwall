@@ -43,7 +43,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="productTypeIDPath" ormtype="string";
 	property name="activeFlag" ormtype="boolean" hint="As A ProductType Get Old, They would be marked as Not Active";
 	property name="publishedFlag" ormtype="boolean";
-	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
+	property name="urlTitle" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
 	property name="productTypeName" ormtype="string";
 	property name="productTypeDescription" ormtype="string" length="4000";
 	property name="systemCode" ormtype="string";

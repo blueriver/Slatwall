@@ -48,10 +48,10 @@
 		<cfelse>
 			<MailClass>International</MailClass>
 		</cfif>
-		<WeightOz>#totalItemsWeight#</WeightOz>
+		<WeightOz>#arguments.requestBean.getTotalWeight( unitCode='oz' )#</WeightOz>
 		<MailpieceShape>Parcel</MailpieceShape>
 		<Machinable>True</Machinable>
-		<InsuredValue>#totalItemsValue#</InsuredValue>
+		<InsuredValue>#arguments.requestBean.getTotalValue()#</InsuredValue>
 		<Services CertifiedMail="OFF" COD="OFF" DeliveryConfirmation="OFF" ElectronicReturnReceipt="OFF" InsuredMail="OFF" RestrictedDelivery="OFF" ReturnReceipt="OFF" SignatureConfirmation="OFF" />
 		<FromPostalCode>#setting('fromPostalCode')#</FromPostalCode>
 		<ToPostalCode>#arguments.requestBean.getShipToPostalCode()#</ToPostalCode>

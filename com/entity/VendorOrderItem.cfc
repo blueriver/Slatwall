@@ -51,15 +51,20 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	// Related Object Properties (One-to-Many)
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderItemID" cascade="all-delete-orphan" inverse="true";
 	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	
 	// Non-persistant properties
 	property name="extendedCost" persistent="false" formatType="currency";
-	
+	property name="quantityReceived" persistent="false";
+	property name="quantityUnreceived" persistent="false";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -69,6 +74,20 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 		}
 		return 0;
 		
+	}
+	
+	public numeric function getQuantityReceived() {
+		var quantityReceived = 0;
+		
+		for( var i=1; i<=arrayLen(getStockReceiverItems()); i++){
+			quantityReceived += getStockReceiverItems()[i].getQuantity();
+		}
+		
+		return quantityReceived;
+	}
+	
+	public numeric function getQuantityUnreceived() {
+		return getQuantity() - getQuantityReceived();
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -118,7 +137,10 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentation() {
-		return getStock().getSku().getProduct().getCalculatedTitle();
+		if(!isNull(getStock().getSku().getProduct().getCalculatedTitle())) {
+			return getStock().getSku().getProduct().getCalculatedTitle();
+		}
+		return getStock().getSku().getProduct().getTitle(); 
 	}
 	
 	// ==================  END:  Overridden Methods ========================

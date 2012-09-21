@@ -39,6 +39,7 @@ Notes:
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="DAO" type="any";
+	property name="utilityService" type="any";
 	
 	// Place holder properties that get populated lazily
 	property name="settings" type="any";
@@ -211,18 +212,47 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function updateColdspringWithDataIntegration(required any serviceFactory, required xml originalXML) {
-		if(fileExists(expandPath('/Slatwall/integrationServices/coldspring.xml'))) {
-			var newXML = xmlParse(fileRead(expandPath('/Slatwall/integrationServices/coldspring.xml')));
-
-			for(var x=1; x<=arrayLen(newXML.beans.bean); x++) {
+		if(fileExists(expandPath('/Slatwall/config/custom/coldspring.xml'))) {
+			var newXML = xmlParse(fileRead(expandPath('/Slatwall/config/custom/coldspring.xml')));
+			
+			var newBeanCount = arrayLen(newXML.beans.bean);
+			for(var x=newBeanCount; x>=1; x--) {
 				var newBean = newXML.beans.bean[x];
 				for(var c=1; c<=arrayLen(arguments.originalXML.beans.bean); c++) {
 					if(arguments.originalXML.beans.bean[c].xmlAttributes.id == newBean.xmlAttributes.id) {
 						arguments.originalXML.beans.bean[c].xmlAttributes.class = newBean.xmlAttributes.class;
+						if(newBean.xmlAttributes.id != "utilityORMService") {
+							arrayDeleteAt(newXML.beans.XmlChildren, x);
+						} else {
+							var utilityORMServicePosOriginalXml = c;
+							var utilityORMServicePosNewXml = x;
+						}
+						break;
 					}
 				}
 			}
-			
+			if(arrayLen(newXML.beans.XmlChildren)) {
+				// add service mapping if exists
+				var serviceMappingArray = xmlSearch(newXML,"beans/bean[@id = 'utilityORMService']/property/map/entry"); 
+				if(arrayLen(serviceMappingArray)) {
+					var serviceMapNode = arguments.originalXML.beans.bean[utilityORMServicePosOriginalXml].property.map[1];
+					for(var entry in serviceMappingArray) {
+						arrayAppend(serviceMapNode.XmlChildren,XmlElemNew(arguments.originalXML,"entry"));
+						var newChildIndex = arrayLen(serviceMapNode.XmlChildren);
+						serviceMapNode.XmlChildren[newChildIndex].xmlAttributes["key"] = entry.xmlAttributes.key;
+						arrayAppend(serviceMapNode.entry[newChildIndex].XmlChildren,XmlElemNew(arguments.originalXML,"value"));
+						serviceMapNode.XmlChildren[newChildIndex].XmlChildren[1].xmlText = entry.XmlChildren[1].xmlText;
+					}
+					// service mapping added now remove the utilityORMService node from the custom xml file
+					arrayDeleteAt(newXML.beans.XmlChildren, utilityORMServicePosNewXml);
+				}
+				// import all the custom beans to coldspring
+				var importedBeans = getUtilityService().xmlImport(arguments.originalXML,newXML.XmlRoot.XmlChildren);
+				for(var node in importedBeans) {
+					arrayAppend(arguments.originalXML.XmlRoot.XmlChildren,node);
+				}
+			}
+
 			var newFactory = createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
 			newFactory.loadBeansFromXmlObj( arguments.originalXML );
 			

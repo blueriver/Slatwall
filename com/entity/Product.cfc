@@ -41,7 +41,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Persistent Properties
 	property name="productID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" hint="As Products Get Old, They would be marked as Not Active";
-	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
+	property name="urlTitle" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
 	property name="productName" ormtype="string" notNull="true" hint="Primary Notation for the Product to be Called By";
 	property name="productCode" ormtype="string" unique="true" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
@@ -50,7 +50,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Calculated Properties
 	property name="calculatedSalePrice" ormtype="big_decimal";
-	property name="calculatedQATS" ormtype="string";
+	property name="calculatedQATS" ormtype="integer";
 	property name="calculatedAllowBackorderFlag" ormtype="boolean";
 	property name="calculatedTitle" ormtype="string";
 	
@@ -86,9 +86,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="assignedAttributeSetSmartList" type="struct" persistent="false";
-	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";
-	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
 	property name="brandName" type="string" persistent="false";
 	property name="brandOptions" type="array" persistent="false";
 	property name="salePriceDetailsForSkus" type="struct" persistent="false";
@@ -98,6 +95,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="unusedProductOptions" type="array" persistent="false";
 	property name="unusedProductOptionGroups" type="array" persistent="false";
 	property name="unusedProductSubscriptionTerms" type="array" persistent="false";
+	property name="estimatedReceivalDetails" type="struct" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
@@ -379,88 +377,100 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return productCrumbData;
 	}
 	
+	// Availability
+	public struct function getEstimatedReceivalDetails() {
+		if(!structKeyExists(variables, "estimatedReceivalDetails")) {
+			variables.estimatedReceivalDetails = getService("stockService").getEstimatedReceivalDetails( getProductID() );
+		}
+		return variables.estimatedReceivalDetails;
+	}
+	
+	public array function getEstimatedReceivalDates(string skuID, string locationID, string stockID) {
+		var details = getEstimatedReceivalDetails();
+		
+		// If stockID was passed in
+		if(structKeyExists(arguments, "stockID")) {
+			if(structKeyExists(details.stocks, arguments.stockID)) {
+				return details.stocks[ arguments.stockID ];	
+			}
+		// If skuID and locationID were passed in
+		} else if (structKeyExists(arguments, "skuID") && structKeyExists(arguments, "locationID") ) {
+			if( structKeyExists(details.skus, arguments.skuID) && structKeyExists(details.skus[ arguments.skuID ].locations, arguments.locationID) ) {
+				return details.skus[ arguments.skuID ].locations[ arguments.locationID ];
+			}
+		} else if (structKeyExists(arguments, "skuID") ) {
+			if( structKeyExists(details.skus, arguments.skuID) ) {
+				return details.skus[ arguments.skuID ].estimatedReceivals;
+			}
+		} else if ( structKeyExists(arguments, "locationID") ) {
+			if( structKeyExists(details.locations, arguments.locationID) ) {
+				return details.locations[ arguments.locationID ];	
+			}
+		} else {
+			return details.estimatedReceivals;
+		}
+		
+		return [];
+	}
 	
 	// Quantity
-	public numeric function getQuantity(required string quantityType, string skuID, string locationID) {
-		if(structKeyExists(arguments, "skuID")) {
-			return getService("skuService").getSku(arguments.skuID).invokeMethod("getQuantity", arguments);
-		}
-		if(!structKeyExists(variables, quantityType)) {
+	public numeric function getQuantity(required string quantityType, string skuID, string locationID, string stockID) {
+		
+		// First we check to see if that quantityType is defined, if not we need to go out an get the specific struct, or value and cache it
+		if(!structKeyExists(variables, arguments.quantityType)) {
+			
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {productID=getProductID(), productRemoteID=getRemoteID()});	
+				variables[ arguments.quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {productID=getProductID(), productRemoteID=getRemoteID()});
 			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
+				variables[ arguments.quantityType ] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
 			} else {
 				throw("The quantity type you passed in '#arguments.quantityType#' is not a valid quantity type.  Valid quantity types are: QOH, QOSH, QNDOO, QNDORVO, QNDOSA, QNRORO, QNROVO, QNROSA, QC, QE, QNC, QATS, QIATS");
 			}
-		}
-		return variables[quantityType];
-	}
-	
-	// Attribute Value
-	public any function getAttributeValue(required string attribute, returnEntity=false){
-		
-		if(len(arguments.attribute) eq 32) {
-			if( structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
-				if(arguments.returnEntity) {
-					return getAttributeValuesByAttributeIDStruct()[arguments.attribute];
-				}
-				return getAttributeValuesByAttributeIDStruct()[arguments.attribute].getAttributeValue();
-			}
-		}
-		
-		if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
-			if(arguments.returnEntity) {
-				return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ];
-			}
 			
-			return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ].getAttributeValue();
-		}
-				
-		if(arguments.returnEntity) {
-			var newAttributeValue = getService("ProductService").newAttributeValue();
-			newAttributeValue.setAttributeValueType("product");
-			return newAttributeValue;
 		}
 		
-		return "";
+		// If this is a calculated quantity, then we can just return it
+		if( listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType) ) {
+			return variables[ arguments.quantityType ];	
+		}
+		
+		// If we have a stockID
+		if( structKeyExists( arguments, "stockID" ) ) {
+			if( structKeyExists(variables[ quantityType ].stocks, arguments.stockID) ) {
+				return variables[ arguments.quantityType ].stocks[stockID];
+			}
+			return 0;
+		}
+		
+		// If we have a skuID & locationID
+		if( structKeyExists( arguments, "skuID" ) && structKeyExists(arguments, "locationID") ) {
+			if( structKeyExists(variables[ arguments.quantityType ].skus, arguments.skuID) && structKeyExists(variables[ quantityType ].skus[ arguments.skuID ].locations, arguments.locationID) ) {
+				return variables[ arguments.quantityType ].skus[ arguments.skuID ].locations[ arguments.locationID ];
+			}
+			return 0;
+		}
+		
+		// If we have a skuID
+		if( structKeyExists( arguments, "skuID") ) {
+			if( structKeyExists(variables[ arguments.quantityType ].skus, arguments.skuID) ) {
+				return variables[ arguments.quantityType ].skus[ arguments.skuID ][ arguments.quantityType ];
+			}
+			return 0;
+		}
+		
+		// If we have a locationID
+		if( structKeyExists( arguments, "locationID") ) {
+			if( structKeyExists(variables[ arguments.quantityType ].locations, arguments.locationID) ) {
+				variables[ arguments.quantityType ].locations[ arguments.locationID ];
+			}
+			return 0;
+		}
+		
+		// If we don't have anything, then just return for the entire product
+		return variables[ arguments.quantityType ][ arguments.quantityType ];
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
-	
-	public any function getAssignedAttributeSetSmartList(){
-		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
-			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
-			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
-			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
-			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProduct');
-			variables.assignedAttributeSetSmartList.addWhereCondition(" (aslatwallattributeset.globalFlag = 1 OR aslatwallproducttype.productTypeIDPath LIKE '%#getProductType().getProductTypeID()#') )" );
-		}
-		
-		return variables.assignedAttributeSetSmartList;
-	}
-	
-	public struct function getAttributeValuesByAttributeIDStruct() {
-		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
-			variables.attributeValuesByAttributeIDStruct = {};
-			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-				variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
-			}
-		}
-		
-		return variables.attributeValuesByAttributeIDStruct;
-	}
-	
-	public struct function getAttributeValuesByAttributeCodeStruct() {
-		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
-			variables.attributeValuesByAttributeCodeStruct = {};
-			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-				variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
-			}
-		}
-		
-		return variables.attributeValuesByAttributeCodeStruct;
-	}
 	
 	public struct function getSalePriceDetailsForSkus() {
 		if(!structKeyExists(variables, "salePriceDetailsForSkus")) {
@@ -527,7 +537,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public numeric function getSalePrice() {
 		if( structKeyExists(variables,"defaultSku") ) {
 			return getDefaultSku().getSalePrice();
+		} else if (arrayLen(getSkus())) {
+			getSkus()[1].getSalePrice();
 		}
+		return 0;
 	}
 	
 	
@@ -735,6 +748,18 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			return super.isDeletable();
 		}
 		return false;
+	}
+	
+	public any function getAssignedAttributeSetSmartList(){
+		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
+			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
+			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
+			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProduct');
+			variables.assignedAttributeSetSmartList.addWhereCondition(" (aslatwallattributeset.globalFlag = 1 OR aslatwallproducttype.productTypeIDPath LIKE '%#getProductType().getProductTypeID()#') )" );
+		}
+		
+		return variables.assignedAttributeSetSmartList;
 	}
 	
 	// ==================  END:  Overridden Methods ========================

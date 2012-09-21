@@ -52,8 +52,13 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// Related Object Properties (many-to-one)
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" lazy="false" fetch="join";  // Lazy is turned off because any time we get an attributeValue we also want the attribute
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
+	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	
 	// Quick Lookup Properties
 	property name="attributeID" length="32" insert="false" update="false";
@@ -103,6 +108,42 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 		structDelete(variables, "account");
 	}
 	
+	// Brand (many-to-one)
+	public void function setBrand(required any brand) {
+		variables.brand = arguments.brand;
+		if(isNew() or !arguments.brand.hasAttributeValue( this )) {
+			arrayAppend(arguments.brand.getAttributeValues(), this);
+		}
+	}
+	public void function removeBrand(any brand) {
+		if(!structKeyExists(arguments, "brand")) {
+			arguments.brand = variables.brand;
+		}
+		var index = arrayFind(arguments.brand.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.brand.getAttributeValues(), index);
+		}
+		structDelete(variables, "brand");
+	}
+	
+	// Order (many-to-one)    
+	public void function setOrder(required any order) {    
+		variables.order = arguments.order;    
+		if(isNew() or !arguments.order.hasAttributeValue( this )) {    
+			arrayAppend(arguments.order.getAttributeValues(), this);    
+		}    
+	}    
+	public void function removeOrder(any order) {    
+		if(!structKeyExists(arguments, "order")) {    
+			arguments.order = variables.order;    
+		}    
+		var index = arrayFind(arguments.order.getAttributeValues(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.order.getAttributeValues(), index);    
+		}    
+		structDelete(variables, "order");    
+	}
+	
 	// Order Item (many-to-one)
 	public void function setOrderItem(required any orderItem) {
 		variables.orderItem = arguments.orderItem;
@@ -137,6 +178,60 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 			arrayDeleteAt(arguments.product.getAttributeValues(), index);
 		}
 		structDelete(variables, "product");
+	}
+	
+	// Sku (many-to-one)    
+	public void function setSku(required any sku) {    
+		variables.sku = arguments.sku;    
+		if(isNew() or !arguments.sku.hasAttributeValue( this )) {    
+			arrayAppend(arguments.sku.getAttributeValues(), this);    
+		}    
+	}    
+	public void function removeSku(any sku) {    
+		if(!structKeyExists(arguments, "sku")) {    
+			arguments.sku = variables.sku;    
+		}    
+		var index = arrayFind(arguments.sku.getAttributeValues(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.sku.getAttributeValues(), index);    
+		}    
+		structDelete(variables, "sku");    
+	}
+	
+	// Vendor (many-to-one)
+	public void function setVendor(required any vendor) {
+		variables.vendor = arguments.vendor;
+		if(isNew() or !arguments.vendor.hasAttributeValue( this )) {
+			arrayAppend(arguments.vendor.getAttributeValues(), this);
+		}
+	}
+	public void function removeVendor(any vendor) {
+		if(!structKeyExists(arguments, "vendor")) {
+			arguments.vendor = variables.vendor;
+		}
+		var index = arrayFind(arguments.vendor.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendor.getAttributeValues(), index);
+		}
+		structDelete(variables, "vendor");
+	}
+	
+	// Vendor Order (many-to-one)
+	public void function setVendorOrder(required any vendorOrder) {
+		variables.vendorOrder = arguments.vendorOrder;
+		if(isNew() or !arguments.vendorOrder.hasAttributeValue( this )) {
+			arrayAppend(arguments.vendorOrder.getAttributeValues(), this);
+		}
+	}
+	public void function removeVendorOrder(any vendorOrder) {
+		if(!structKeyExists(arguments, "vendorOrder")) {
+			arguments.vendorOrder = variables.vendorOrder;
+		}
+		var index = arrayFind(arguments.vendorOrder.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendorOrder.getAttributeValues(), index);
+		}
+		structDelete(variables, "vendorOrder");
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Utility - File Service" persistent="false" extends="BaseService" output="false" hint="This is a utility component which handles common file operations" {
+component displayname="Utility - File Service" persistent="false" accessors="true" extends="BaseService" output="false" hint="This is a utility component which handles common file operations" {
 	property name="utilityTagService" type="any"; 
 	
 	public string function filterFilename(required string filename) {
@@ -79,7 +79,7 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 							try {
 								directoryDelete("#arguments.destination##currentDir#",true);	
 							} catch(any e) {
-								logSlatwall("Could not delete the directory: #arguments.destination##currentDir# most likely because it is in use by the file system");
+								writeLog(file="Slatwall", text="Could not delete the directory: #arguments.destination##currentDir# most likely because it is in use by the file system");
 							}
 						}
 					} else if(destinationDirList.type[i] == "File") {
@@ -90,7 +90,7 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 							try {
 								fileDelete("#arguments.destination##currentFile#");	
 							} catch(any e) {
-								logSlatwall("Could not delete file: #arguments.destination##currentFile# most likely because it is in use by the file system");
+								writeLog(file="Slatwall", text="Could not delete file: #arguments.destination##currentFile# most likely because it is in use by the file system");
 							}
 						}
 					}

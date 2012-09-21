@@ -65,19 +65,19 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 				arrayPrepend(crumbDataArray, $.slatwall.getCurrentProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
 				$.event('crumbdata', crumbDataArray);
 				
-			} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() && $.slatwall.getCurrentProductType().getPublishedFlag() ) {
+			} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() ) {
 				$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate')));
 				$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
 				$.content('body', $.content('body') & doAction('frontend:producttype.detail'));
-				$.content().setTitle( $.slatwall.getCurrentProductType().getTitle() );
-				$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getTitle() );
+				$.content().setTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
+				$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
 				
-			} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag() && $.slatwall.getCurrentProductType().getPublishedFlag()  ) {
+			} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag()  ) {
 				$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate')));
 				$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
 				$.content('body', $.content('body') & doAction('frontend:brand.detail'));
-				$.content().setTitle( $.slatwall.getCurrentBrand().getTitle() );
-				$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getTitle() );
+				$.content().setTitle( $.slatwall.getCurrentBrand().getBrandName() );
+				$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getBrandName() );
 			}
 			
 			
@@ -135,12 +135,12 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 	// Hook into the onRender start so that we can do any slatActions that might have been called, or if the current content is a listing page
 	public any function onRenderStart(required any $) {
-		// check if user has access to this page
-		checkAccess($);
-				
 		// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
 		$.slatwall.setCurrentContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
 		
+		// check if user has access to this page
+		checkAccess($);
+				
 		// Check for any slatActions that might have been passed in and render that page as the first
 		if(len($.event('slatAction'))) {
 			$.content('body', $.content('body') & doAction($.event('slatAction')));
@@ -299,11 +299,14 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	private void function checkAccess(required any $) {
 		if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'))){
 			
-			// Set the content of the current content to noAccess
-			$.content('body', doAction('frontend:account.noaccess'));
-			
 			// save the current content to be used on the barrier page
 			$.event("restrictedContent",$.content());
+			
+			// save the current content to be used on the barrier page
+			$.event("restrictedContentBody",$.content('body'));
+			
+			// Set the content of the current content to noAccess
+			$.content('body', doAction('frontend:account.noaccess'));
 			
 			// get the slatwall content
 			var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
@@ -407,6 +410,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 				var newSku = $.slatwall.getService("SkuService").newSku();
 				newSku.setPrice(slatwallData.product.price);
 				newSku.setProduct(product);
+				newSku.setSkuCode(product.getProductCode() & "-#arrayLen(product.getSkus()) + 1#");
 				newSku.addAccessContent( slatwallContent );
 				$.slatwall.getService("SkuService").saveSKU( newSku );
 			}

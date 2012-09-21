@@ -39,11 +39,11 @@ Notes:
 component displayname="Base Object" accessors="true" output="false" {
 	
 	
-	property name="vtResult" type="any";							// This propery holds the ValidateThis result bean once it has been set.
-	property name="errorBean" type="any";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
-	property name="messageBean" type="any";
-	property name="populatedSubProperties" type="array";
-	property name="validations" type="struct";
+	property name="vtResult" type="any" persistent="false";								// This propery holds the ValidateThis result bean once it has been set.
+	property name="errorBean" type="any" persistent="false";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
+	property name="messageBean" type="any" persistent="false";
+	property name="populatedSubProperties" type="array" persistent="false";
+	property name="validations" type="struct" persistent="false";
 	
 	// Constructor Metod
 	public any function init() {
@@ -254,25 +254,25 @@ component displayname="Base Object" accessors="true" output="false" {
 					var manyToOneStructData = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name
-					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
+					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 					
 					// If the primaryID exists then we can set the relationship
 					if(structKeyExists(manyToOneStructData, primaryIDPropertyName)) {
 						
 						// set the service to use to get the specific entity
-						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 						
 						// If there were additional values in the data, then we will get the entity by the primaryID and populate / validate by calling save in its service.
 						if(structCount(manyToOneStructData) gt 1) {
 							
 							// Load the specifiv entity, if one doesn't exist, this will return a new entity
-							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
+							var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
 							
 							// Set the value of the property as the loaded entity
 							_setProperty(currentProperty.name, thisEntity );
 							
 							// Call the save method for this sub property entity and pass in the data
-							thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=thisEntity, 2=manyToOneStructData});
+							thisEntity = entityService.invokeMethod( "save#listLast(currentProperty.cfc,'.')#", {1=thisEntity, 2=manyToOneStructData});
 							
 							// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
 							if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
@@ -289,10 +289,13 @@ component displayname="Base Object" accessors="true" output="false" {
 							} else {
 							
 								// Load the specifiv entity, if one doesn't exist... this will be null
-								var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
-							
-								// Set the value of the property as the loaded entity
-								_setProperty(currentProperty.name, thisEntity );
+								var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=manyToOneStructData[primaryIDPropertyName]});
+								
+								if(!isNull(thisEntity)) {
+									// Set the value of the property as the loaded entity
+									_setProperty(currentProperty.name, thisEntity );	
+								}
+								
 							}
 						}
 					}
@@ -304,7 +307,7 @@ component displayname="Base Object" accessors="true" output="false" {
 					var oneToManyArrayData = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name for the related object
-					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
+					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 					
 					// Loop over the array of objects in the data... Then load, populate, and validate each one
 					for(var a=1; a<=arrayLen(oneToManyArrayData); a++) {
@@ -313,10 +316,10 @@ component displayname="Base Object" accessors="true" output="false" {
 						if(structKeyExists(oneToManyArrayData[a], primaryIDPropertyName) && (!structKeyExists(arguments.data, "populateSubProperties") || arguments.data.populateSubProperties)) {
 							
 							// set the service to use to get the specific entity
-							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 							
 							// Load the specific entity, and if one doesn't exist yet then return a new entity
-							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[a][primaryIDPropertyName],2=true});
+							var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=oneToManyArrayData[a][primaryIDPropertyName],2=true});
 							
 							// Add the entity to the existing objects properties
 							this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
@@ -325,7 +328,7 @@ component displayname="Base Object" accessors="true" output="false" {
 							if(structCount(oneToManyArrayData[a]) gt 1) {
 								
 								// Call the save method for this sub property entity and pass in the data
-								thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=thisEntity, 2=oneToManyArrayData[a]});
+								thisEntity = entityService.invokeMethod( "save#listLast(currentProperty.cfc,'.')#", {1=thisEntity, 2=oneToManyArrayData[a]});
 								
 								// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
 								if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
@@ -341,7 +344,7 @@ component displayname="Base Object" accessors="true" output="false" {
 					var manyToManyIDList = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name
-					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
+					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 					
 					// Get all of the existing related entities
 					var existingRelatedEntities = invokeMethod("get#currentProperty.name#");
@@ -372,13 +375,13 @@ component displayname="Base Object" accessors="true" output="false" {
 					for(var n=1; n<=listLen( manyToManyIDList ); n++) {
 						
 						// set the service to use to get the specific entity
-						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
 							
 						// set the id of this entity into a local variable
 						var thisEntityID = listGetAt(manyToManyIDList, n);
 						
 						// Load the specific entity, if one doesn't exist... this will be null
-						var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=thisEntityID});
+						var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=thisEntityID});
 						
 						// If the entity exists, then add it to the relationship
 						if(!isNull(thisEntity)) {
@@ -634,7 +637,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint public method to get the rbKey value for a property in a subentity
 	public string function getTitleByPropertyIdentifier( required string propertyIdentifier ) {
 		if(find(".", arguments.propertyIdentifier)) {
-			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc#");
+			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc,'.')#");
 			return exampleEntity.getTitleByPropertyIdentifier( replace(arguments.propertyIdentifier, "#listFirst(arguments.propertyIdentifier, '.')#.", '') );
 		}
 		return getPropertyTitle( arguments.propertyIdentifier );
@@ -643,7 +646,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint public method to get the rbKey value for a property in a subentity
 	public string function getFieldTypeByPropertyIdentifier( required string propertyIdentifier ) {
 		if(find(".", arguments.propertyIdentifier)) {
-			var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc#");
+			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc,'.')#");
 			return exampleEntity.getFieldTypeByPropertyIdentifier( replace(arguments.propertyIdentifier, "#listFirst(arguments.propertyIdentifier, '.')#.", '') );
 		}
 		return getPropertyFieldType( arguments.propertyIdentifier );
@@ -658,7 +661,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		// If this is a relational property, and the relationship is many-to-one, then return the propertyName and propertyName of primaryID
 		if( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-one" ) {
 			
-			var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#propertyMeta.cfc#" );
+			var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(propertyMeta.cfc,'.')#" );
 			return "#arguments.propertyName#.#primaryIDPropertyName#";
 		}
 		
@@ -1011,7 +1014,13 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function the virtual file system directory
 	public any function getSlatwallVFSRootDirectory() {
-		return getApplicationValue("slatwallVfsRoot");
+		var vfsDirectory = getApplicationValue("slatwallVfsRoot");
+		
+		if(!directoryExists( vfsDirectory )) {
+			directoryCreate( vfsDirectory );
+		}
+					
+		return vfsDirectory;
 	}
 	
 	// @hint  helper function to get the database type
@@ -1021,11 +1030,24 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function to return the Slatwall RB Factory in any component
 	public any function getRBFactory() {
+		if( !hasApplicationValue("rbFactory") ) {
+			// Build RB Factory
+			var rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
+			
+			// Build custom RB Factory
+			rbFactory= new mura.resourceBundle.resourceBundleFactory(rbFactory, getDirectoryFromPath(expandPath("/plugins/Slatwall/config/custom/resourceBundles/") ));
+			
+			setApplicationValue("rbFactory", rbFactory);
+		}
+		
 		return getApplicationValue("rbFactory");
 	}
 	
 	// @hint  helper function for returning the Validate This Facade Object
 	public any function getValidateThis() {
+		if( !hasApplicationValue("validateThis") ) {
+			setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = expandPath('/Slatwall/com/validation/'),injectResultIntoBO = true,defaultFailureMessagePrefix = ""}) );
+		}
 		return getApplicationValue("validateThis");
 	}
 	
@@ -1090,7 +1112,9 @@ component displayname="Base Object" accessors="true" output="false" {
 	public void function setApplicationValue(required any key, required any value) {
 		param name="application.slatwall" default="#structNew()#";
 		
-		application.slatwall[ arguments.key ] = arguments.value;
+		lock scope="application" timeout="60" {
+			application.slatwall[ arguments.key ] = arguments.value;	
+		}
 	}
 	
 	// @hint facade method to get values from the slatwall application scope

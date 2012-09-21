@@ -53,6 +53,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="subscriptionTerm" cfc="SubscriptionTerm" fieldtype="many-to-one" fkcolumn="subscriptionTermID";
 	
 	// Related Object Properties (one-to-many)
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="skuID" cascade="all-delete-orphan" inverse="true";
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="skuID" cfc="Stock" inverse="true" cascade="all";
 	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="skuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan";
 	
@@ -87,7 +88,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="salePriceDiscountAmount" type="string" persistent="false";
 	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
 	property name="defaultFlag" type="boolean" persistent="false";
-	
+	property name="imageExistsFlag" type="boolean" persistent="false";
+	property name="nextEstimatedAvailableDate" type="string" persistent="false";
 	
     public boolean function getDefaultFlag() {
     	if(getProduct().getDefaultSku().getSkuID() == getSkuID()) {
@@ -196,25 +198,15 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     }
     
     public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
-		// Get the expected Image Path
-		var path=getImagePath();
 		
-		// If no image Exists use the defult missing image 
-		if(!fileExists(expandPath(path))) {
-			path = setting('globalMissingImagePath');
-		}
-		
-		// If there were sizes specified, get the resized image path
-		if(structKeyExists(arguments, "size") || arguments.width != 0 || arguments.height != 0) {
-			path = getResizedImagePath(argumentcollection=arguments);	
-		}
+		var	path = getResizedImagePath(argumentcollection=arguments);
 		
 		// Setup Alt & Class for the image
 		if(arguments.alt == "" && !isNull(getProduct().getCalculatedTitle())) {
 			arguments.alt = "#getProduct().getCalculatedTitle()#";
 		}
 		if(arguments.class == "") {
-			arguments.class = "skuImage";	
+			arguments.class = "skuImage";
 		}
 		
 		// Try to read and return the image, otherwise don't specify the height and width
@@ -227,6 +219,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+		
+		arguments.imagePath=getImagePath();
+		arguments.missingImagePath=getProduct().setting('productMissingImagePath');
+		
 		if(structKeyExists(arguments, "size")) {
 			arguments.size = lcase(arguments.size);
 			if(arguments.size eq "l" || arguments.size eq "large") {
@@ -239,11 +235,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arguments.width = getProduct().setting("productImage#arguments.size#Width");
 			arguments.height = getProduct().setting("productImage#arguments.size#Height");
 		}
-		arguments.imagePath=getImagePath();
+		
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
-	public boolean function imageExists() {
+	public boolean function getImageExistsFlag() {
 		if( fileExists(expandPath(getImagePath())) ) {
 			return true;
 		} else {
@@ -273,20 +269,31 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// END: Price Methods
 	
 	// Start: Quantity Helper Methods
-	public numeric function getQuantity(required string quantityType, string locationID) {
-		if(structKeyExists(arguments, "locationID")) {
-			return getService("stockService").getStockBySkuAndLocation(this, getService("locationService").getLocation(arguments.locationID)).invokeMethod("getQuantity", {quantityType=arguments.quantityType});
+	public numeric function getQuantity(required string quantityType, string locationID, string stockID) {
+		
+		// If this is a calculated quantity and locationID exists, then delegate
+		if( listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType) && structKeyExists(arguments, "locationID") ) {
+			var location = getService("locationService").getLocation(arguments.locationID);
+			var stock = getService("stockService").getStockBySkuAndLocation(this, location);
+			return stock.getQuantity(arguments.quantityType);
+		// If this is a calculated quantity and stockID exists, then delegate
+		} else if ( listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType) && structKeyExists(arguments, "stockID") ) {
+			var stock = getService("stockService").getStock(arguments.stockID);
+			return stock.getQuantity(arguments.quantityType);
 		}
-		if(!structKeyExists(variables, quantityType)) {
+		
+		// Standard Logic
+		if( !structKeyExists(variables, arguments.quantityType) ) {
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {skuID=getSkuID(), skuRemoteID=getRemoteID()});	
+				arguments.skuID = this.getSkuID();
+				return getProduct().getQuantity(argumentCollection=arguments);
 			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
+				variables[ arguments.quantityType ] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
 			} else {
 				throw("The quantity type you passed in '#arguments.quantityType#' is not a valid quantity type.  Valid quantity types are: QOH, QOSH, QNDOO, QNDORVO, QNDOSA, QNRORO, QNROVO, QNROSA, QC, QE, QNC, QATS, QIATS");
 			}
 		}
-		return variables[quantityType];
+		return variables[ arguments.quantityType ];
 	}
 	// END: Quantity Helper Methods
 	
@@ -297,6 +304,29 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			variables.currentAccountPrice = getService("priceGroupService").calculateSkuPriceBasedOnCurrentAccount(sku=this);
 		}
 		return variables.currentAccountPrice;
+	}
+	
+	public string function getNextEstimatedAvailableDate() {
+		if(!structKeyExists(variables, "nextEstimatedAvailableDate")) {
+			if(getQuantity("QIATS")) {
+				return dateFormat(now(), setting('globalDateFormat'));
+			}
+			var quantityNeeded = getQuantity("QNC") * -1;
+			var dates = getProduct().getEstimatedReceivalDates( skuID=getSkuID() );
+			for(var i = 1; i<=arrayLen(dates); i++) {
+				
+				if(quantityNeeded lt dates[i].quantity) {
+					if(dates[i].estimatedReceivalDateTime gt now()) {
+						return dateFormat(dates[i].estimatedReceivalDateTime, setting('globalDateFormat'));	
+					}
+					return dateFormat(now(), setting('globalDateFormat'));
+				} else {
+					quantityNeeded - dates[i].quantity;
+				}
+			}
+		}
+		
+		return "";
 	}
 	
 	public any function getLivePrice() {
@@ -393,6 +423,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arrayDeleteAt(arguments.subscriptionTerm.getSkus(), index);    
 		}    
 		structDelete(variables, "subscriptionTerm");    
+	}
+	
+	// Attribute Values (one-to-many)    
+	public void function addAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.setSku( this );    
+	}    
+	public void function removeAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.removeSku( this );    
 	}
 	
 	// Stocks (one-to-many)

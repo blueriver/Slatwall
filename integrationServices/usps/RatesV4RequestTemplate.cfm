@@ -37,13 +37,12 @@
 	
 --->
 <cfsilent>
-	<cfset local.totalWeight = arguments.requestBean.getTotalWeight()>
-	<cfif arguments.requestBean.getTotalWeight() gt 0>
-		<cfset local.pounds = listFirst(numberFormat(arguments.requestBean.getTotalWeight(),"0.00"), ".") />
-		<cfset local.poundDec = "." & listLast(numberFormat(arguments.requestBean.getTotalWeight(),"0.00"), ".") />
-		<cfset local.ounces = numberFormat(local.poundDec * 16,"0") />
-	<cfelse>
-		<cfset local.pounds = 1 />
+	<cfset local.pounds = 0 />
+	<cfset local.ounces = round(arguments.requestBean.getTotalWeight( unitCode="oz" ))>
+	<cfif local.ounces gt 16>
+		<cfset local.pounds = round(local.ounces / 16) />
+		<cfset local.ounces = local.ounces - (local.pounds * 16) />
+	<cfelseif local.ounces lte 1>
 		<cfset local.ounces = 0 />
 	</cfif>
 </cfsilent>

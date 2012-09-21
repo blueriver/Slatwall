@@ -41,7 +41,9 @@ Notes:
 
 <cf_SlatwallDetailForm object="#rc.fulfillmentMethod#" edit="#rc.edit#">
 	<cf_SlatwallActionBar type="detail" object="#rc.fulfillmentMethod#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" type="list" />
+		<cfif rc.fulfillmentMethod.getFulfillmentMethodType() eq "shipping">
+			<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" type="list" />
+		</cfif>
 	</cf_SlatwallActionBar>
 	
 	<cf_SlatwallDetailHeader>

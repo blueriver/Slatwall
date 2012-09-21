@@ -96,6 +96,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return false;
 	}
 	
+	
 	// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
     public any function save(required any entity, struct data, string context="save") {
     	
@@ -204,6 +205,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	 *
 	 * ...in which XXX is an ORM entity name, and YYY and ZZZ are entity property names.
 	 *
+	 *	 exportXXX()
+	 *
 	 * NOTE: Ordered arguments only--named arguments not supported.
 	*/
 	public any function onMissingMethod( required string missingMethodName, required struct missingMethodArguments ) {
@@ -225,6 +228,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			return onMissingDeleteMethod( missingMethodName, missingMethodArguments );
 		} else if ( lCaseMissingMethodName.startsWith( 'count' ) ) {
 			return onMissingCountMethod( missingMethodName, missingMethodArguments );
+		} else if ( lCaseMissingMethodName.startsWith( 'export' ) ) {
+			return onMissingExportMethod( missingMethodName, missingMethodArguments );
 		}
 
 		throw( 'No matching method for #missingMethodName#().' );
@@ -506,4 +511,19 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			return save( entity=missingMethodArguments[1] );
 		}
 	}
+	
+	/**
+	 * Provides dynamic export methods, by convention, on missing method:
+	 *
+	 *   exportXXX()
+	 *
+	 * ...in which XXX is an ORM entity name.
+	 */
+	private function onMissingExportMethod( required string missingMethodName, required struct missingMethodArguments ){
+		var entityName = missingMethodName.substring( 6 );
+		var exportQry = getDAO().getExportQuery(entityName = entityName);
+		
+		export(data=exportQry);
+	}
+
 }

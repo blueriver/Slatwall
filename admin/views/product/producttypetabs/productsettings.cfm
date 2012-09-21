@@ -47,6 +47,7 @@ Notes:
 		<cf_SlatwallSetting settingName="productImageMediumHeight" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productImageLargeWidth" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productImageLargeHeight" settingObject="#rc.productType#" />
+		<cf_SlatwallSetting settingName="productMissingImagePath" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productHTMLTitleString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productMetaDescriptionString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productMetaKeywordsString" settingObject="#rc.productType#" />

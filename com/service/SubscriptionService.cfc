@@ -230,21 +230,19 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public void function setupRenewalSubscriptionBenefitAccess(required any subscriptionUsage) {
 		//setup renewal benefits, if first renewal and renewal benefit exists
 		if(arrayLen(arguments.subscriptionUsage.getSubscriptionOrderItems()) == 2 && arrayLen(arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits())) {
-			// remove all existing benefits
-			while(arrayLen(arguments.subscriptionUsage.getSubscriptionUsageBenefits())) {
-				var subscriptionUsageBenefit = arguments.subscriptionUsage.getSubscriptionUsageBenefits()[1];
-				// delete old subscriptionUsageBenefitAccount
+			// expire all existing benefits
+			for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getSubscriptionUsageBenefits()) {
 				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit);
-				this.deleteSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
-				arguments.subscriptionUsage.removeSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				subscriptionUsageBenefitAccount.setEndDateTime(now());
+				this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
 			}
 			
 			this.saveSubscriptionUsage(arguments.subscriptionUsage);
 			
 			// copy all the renewal subscription benefits
-			for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits()) {
+			for(var renewalSubscriptionUsageBenefit in arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits()) {
 				var subscriptionUsageBenefit = this.newSubscriptionUsageBenefit();
-				subscriptionUsageBenefit.copyFromSubscriptionUsageBenefit(subscriptionUsageBenefit);
+				subscriptionUsageBenefit.copyFromSubscriptionUsageBenefit(renewalSubscriptionUsageBenefit);
 				subscriptionUsage.addSubscriptionUsageBenefit(subscriptionUsageBenefit);
 	
 				// call save on this entity to make it persistent so we can use it for further lookup
@@ -313,7 +311,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 				// set next bill date, calculated from the last bill date
 				// need setting to decide what start date to use for next bill date calculation
-				arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
+				arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getRenewalTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
 					
 				// flush session to make sure order is persisted to DB
 				getDAO().flushORMSession();
@@ -394,7 +392,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 			// set next bill date, calculated from the last bill date
 			// need setting to decide what start date to use for next bill date calculation
-			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getInitialTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
+			arguments.subscriptionUsage.setNextBillDate(order.getOrderItems()[1].getSku().getSubscriptionTerm().getRenewalTerm().getEndDate(arguments.subscriptionUsage.getNextBillDate()));
 				
 			// flush session to make sure order is persisted to DB
 			getDAO().flushORMSession();

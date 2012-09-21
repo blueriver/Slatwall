@@ -55,6 +55,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="orderOrigin" cfc="OrderOrigin" fieldtype="many-to-one" fkcolumn="orderOriginID";
 	
 	// Related Object Properties (One-To-Many)
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
@@ -365,8 +366,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 					if(item.getQuantityUndelivered() == 0) {
 						amountDelivered = precisionEvaluate(amountDelivered + item.getItemTotal());
 					} else if (item.getQuantityDelivered() > 0) {
-						amountDelivered = precisionEvaluate(amountDelivered + (item.getItemTotal() * (item.getQuantityDelivered() / item.getQuantity())) );
+						var itemQDValue = (round(item.getItemTotal() * (item.getQuantityDelivered() / item.getQuantity()) * 100) / 100);
+						amountDelivered = precisionEvaluate(amountDelivered + itemQDValue );
 					}
+					
 				}
 			}
 		}
@@ -490,6 +493,14 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			arrayDeleteAt(arguments.account.getOrders(), index);
 		}
 		structDelete(variables, "account");
+	}
+	
+	// Attribute Values (one-to-many)    
+	public void function addAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.setOrder( this );    
+	}    
+	public void function removeAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.removeOrder( this );    
 	}
 	
 	// Refrenced Order (many-to-one)

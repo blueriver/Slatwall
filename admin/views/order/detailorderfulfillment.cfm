@@ -49,7 +49,7 @@ Notes:
 			<cf_SlatwallDetailHeader>
 				<cf_SlatwallPropertyList divClass="span6">
 					<cfif !isNull(rc.orderFulfillment.getAddress())>
-						<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" edit="#rc.edit#">
+						<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" fieldnameprefix="shippingAddress." edit="#rc.edit#">
 					</cfif>
 					<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "auto">
 						<!--- TODO: Add Fulfill From Location --->
@@ -58,7 +58,7 @@ Notes:
 				<cf_SlatwallPropertyList divClass="span6">
 					<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="fulfillmentCharge" edit="#rc.edit#">
 					<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-						<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="#rc.edit#">
+						<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="false">
 					</cfif>
 				</cf_SlatwallPropertyList>
 			</cf_SlatwallDetailHeader>

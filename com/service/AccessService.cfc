@@ -46,6 +46,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(!getService("contentService").restrictedContentExists()) {
 			return true;
 		}
+		var currentContent = getSlatwallScope().getCurrentContent();
 		// get restricted content by cmsContentID
 		var restrictedContent = getService("contentService").getRestrictedContentBycmsContentID(arguments.cmsContentID);
 		if(isNull(restrictedContent)) {
@@ -83,7 +84,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=getSlatwallScope().getCurrentAccount().getAccountID());
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=restrictedContent.getContentID());
 			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredCmsContentID == "") {
-				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
+				logAccess(content=currentContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				getSlatwallScope().setValue("purchasedAccess","true");
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
@@ -97,7 +98,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_cmsContentID", value=purchaseRequiredCmsContentID);
 			// check if the content requires subcription in addition to purchase
 			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredCmsContentID == "") {
-				logAccess(content=restrictedContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
+				logAccess(content=currentContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
 				getSlatwallScope().setValue("purchasedAccess","true");
 				return true;
 			} else if(accountContentAccessSmartList.getRecordsCount()) {
@@ -111,7 +112,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive()
 					&& subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(restrictedContent)
 					&& !subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasExcludedContent(restrictedContent)) {
-					logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
+					logAccess(content=currentContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
 					getSlatwallScope().setValue("subscriptionAccess","true");
 					return true;
 				}
@@ -138,7 +139,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						if(!hasExcludedCategory) {
 							for(var category in categories) {
 								if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
-									logAccess(content=restrictedContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
+									logAccess(content=currentContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
 									getSlatwallScope().setValue("subscriptionAccess","true");
 									return true;
 								}
@@ -161,6 +162,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			contentAccess.setAccountContentAccess(arguments.accountContentAccess);
 		}
 		this.saveContentAccess(contentAccess);
+		// persist the content access log, needed in case file download aborts the request 
+		getDAO().flushORMSession();
 	}
 	
 	public string function createAccessCode() {

@@ -65,8 +65,35 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 		return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/#getDirectory()#/";	
 	}
 	
+	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+		
+		var path = getResizedImagePath(argumentcollection=arguments);
+		
+		// Setup Alt & Class for the image
+		if(arguments.alt == "" && len(getImageName())) {
+			arguments.alt = "#getImageName()#";
+		}
+		if(arguments.class == "") {
+			arguments.class = "productImage";	
+		}
+		
+		// Try to read and return the image, otherwise don't specify the height and width
+		try {
+			var img = imageRead(expandPath(path));
+			return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';	
+		} catch(any e) {
+			return '<img src="#path#" alt="#arguments.alt#" class="#arguments.class#" />';
+		}
+		
+	}
+	
 	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+		
 		arguments.imagePath = getImagePath();
+		
+		if(!isNull(getProduct())) {
+			arguments.missingImagePath = getProduct().setting('productMissingImagePath');
+		}
 		
 		if(structKeyExists(arguments, "size")) {
 			arguments.size = lcase(arguments.size);
@@ -82,34 +109,6 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 		}
 		
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
-	}
-	
-	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
-		// Get the expected Image Path
-		var path=getImagePath();
-		
-		// If no image Exists use the defult missing image 
-		if(!fileExists(expandPath(path))) {
-			path = setting('globalMissingImagePath');
-		}
-		
-		// If there were sizes specified, get the resized image path
-		if(arguments.width != 0 || arguments.height != 0) {
-			arguments.imagePath=path;
-			path = getResizedImagePath(argumentcollection=arguments);	
-		}
-		
-		// Read the Image
-		var img = imageRead(expandPath(path));
-		
-		// Setup Alt & Class for the image
-		if(arguments.alt == "" && len(getImageName())) {
-			arguments.alt = "#getImageName()#";
-		}
-		if(arguments.class == "") {
-			arguments.class = "productImage";	
-		}
-		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

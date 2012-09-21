@@ -63,7 +63,9 @@ Notes:
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<ul class="nav">
-						<a href="#buildURL(action='admin:main.default')#" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
+						<a href="/admin" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/mura.logo.png" title="Mura" /></a>
+						<li class="divider-vertical"></li>
+						<a href="#buildURL(action='admin:main.default')#" class="brand brand-two"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
 						<li class="divider-vertical"></li>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.product_nav')#" icon="tags icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:product.listproduct" type="list">
@@ -81,6 +83,7 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:order.listorderitem" type="list">
 							<cf_SlatwallActionCaller action="admin:order.listorderfulfillment" type="list">
 							<cf_SlatwallActionCaller action="admin:vendor.listvendororder" type="list">
+							<cf_SlatwallActionCaller action="admin:vendor.listvendororderitem" type="list">
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.account_nav')#" icon="user icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:account.listaccount" type="list">
@@ -105,7 +108,7 @@ Notes:
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.setting_nav')#" icon="cog icon-white" type="nav">
 							<cfsavecontent variable="local.settingGroupOne">
-								<cf_SlatwallActionCaller action="admin:setting.listsetting" type="list">
+								<cf_SlatwallActionCaller action="admin:setting.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list" divideAfter="true">
 							</cfsavecontent>
@@ -142,8 +145,8 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
 							<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
 							<cfif findNoCase("*", $.slatwall.getCurrentAccount().getAllPermissions())>
-								<li><a href="?#listAppend(cgi.query_string, 'reload=true&soft=true', '&')#">Reload Slatwall (Soft)</a></li>
-								<li><a href="?#listAppend(cgi.query_string, 'reload=true', '&')#">Reload Slatwall</a></li>
+								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true&update=true" type="list" text="Reload Slatwall (Full Update)">
+								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
 							</cfif>
 						</cf_SlatwallActionCallerDropdown>
 					</ul>

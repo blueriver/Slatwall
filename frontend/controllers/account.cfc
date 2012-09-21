@@ -137,7 +137,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		// make sure address belongs to this account
 		if(rc.account.hasAccountAddress(rc.accountAddress) || rc.accountAddress.isNew()){
 			rc.accountAddress.setAccount(rc.account);
-			rc.accountAddress = getAccountService().saveAccountAddress(accountAddress=rc.accountAddress, data=rc);
+			rc.accountAddress = getAccountService().saveAccountAddress(rc.accountAddress, rc);
 			if(rc.accountAddress.hasErrors()) {
 				getFW().setView("frontend:account.editaddress");
 			} else {

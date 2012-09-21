@@ -195,6 +195,24 @@ Notes:
 		</cfquery>
 	</cffunction>
 	
+	<cffunction name="verifyUniqueTableValue" returntype="boolean">
+		<cfargument name="tableName" type="string" required="true" />
+		<cfargument name="column" type="string" required="true" />
+		<cfargument name="value" type="string" required="true" />
+		
+		<cfset var rs="" />
+		
+		<cfquery name="rs">
+			SELECT #arguments.column# FROM #arguments.tableName# WHERE #arguments.column# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.value#" /> 
+		</cfquery>
+		
+		<cfif rs.recordCount>
+			<cfreturn false />
+		</cfif>
+		
+		<cfreturn true />
+	</cffunction>
+	
 	<!--- hint: This method is for doing validation checks to make sure a property value isn't already in use --->
 	<cffunction name="isUniqueProperty">
 		<cfargument name="propertyName" required="true" />

@@ -46,6 +46,7 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.location#" property="locationName" edit="#rc.edit#">
+				<input type="hidden" name="primaryAddress.locationAddressID" value="#rc.location.getPrimaryAddress().getLocationAddressID()#" />
 				<cf_SlatwallAddressDisplay address="#rc.location.getPrimaryAddress().getAddress()#" showName="false" showCompany="false" edit="#rc.edit#" fieldNamePrefix="primaryAddress.address."  />
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
