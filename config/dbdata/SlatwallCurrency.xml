@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Table tableName="SlatwallCurrency">
+	<Columns>
+		<column name="currencyCode" fieldtype="id" />
+		<column name="activeFlag" update="false" />
+		<column name="currencyName" />
+		<column name="currencyLocal" update="false" />
+	</Columns>
+	<Records>
+		<Record currencyCode="AED" activeFlag="0" currencyName="United Arab Emirates Dirham" />
+		<Record currencyCode="AFN" activeFlag="0" currencyName="Afghanistan Afghani" />
+		<Record currencyCode="ALL" activeFlag="0" currencyName="Albania Lek" />
+		<Record currencyCode="AMD" activeFlag="0" currencyName="Armenia Dram" />
+		<Record currencyCode="ANG" activeFlag="0" currencyName="Netherlands Antilles Guilder" />
+		<Record currencyCode="AOA" activeFlag="0" currencyName="Angola Kwanza" />
+		<Record currencyCode="ARS" activeFlag="0" currencyName="Argentina Peso" />
+		<Record currencyCode="AUD" activeFlag="0" currencyName="Australia Dollar" currencyLocal="English (Australian)" />
+		<Record currencyCode="AWG" activeFlag="0" currencyName="Aruba Guilder" />
+		<Record currencyCode="AZN" activeFlag="0" currencyName="Azerbaijan New Manat" />
+		<Record currencyCode="BAM" activeFlag="0" currencyName="Bosnia and Herzegovina Convertible Marka" />
+		<Record currencyCode="BBD" activeFlag="0" currencyName="Barbados Dollar" />
+		<Record currencyCode="BDT" activeFlag="0" currencyName="Bangladesh Taka" />
+		<Record currencyCode="BGN" activeFlag="0" currencyName="Bulgaria Lev" />
+		<Record currencyCode="BHD" activeFlag="0" currencyName="Bahrain Dinar" />
+		<Record currencyCode="BIF" activeFlag="0" currencyName="Burundi Franc" />
+		<Record currencyCode="BMD" activeFlag="0" currencyName="Bermuda Dollar" />
+		<Record currencyCode="BND" activeFlag="0" currencyName="Brunei Darussalam Dollar" />
+		<Record currencyCode="BOB" activeFlag="0" currencyName="Bolivia Boliviano" />
+		<Record currencyCode="BRL" activeFlag="0" currencyName="Brazil Real" currencyLocal="Portuguese (Brazilian)" />
+		<Record currencyCode="BSD" activeFlag="0" currencyName="Bahamas Dollar" />
+		<Record currencyCode="BTN" activeFlag="0" currencyName="Bhutan Ngultrum" />
+		<Record currencyCode="BWP" activeFlag="0" currencyName="Botswana Pula" />
+		<Record currencyCode="BYR" activeFlag="0" currencyName="Belarus Ruble" />
+		<Record currencyCode="BZD" activeFlag="0" currencyName="Belize Dollar" />
+		<Record currencyCode="CAD" activeFlag="0" currencyName="Canada Dollar" currencyLocal="English (Canadian)" />
+		<Record currencyCode="CDF" activeFlag="0" currencyName="Congo/Kinshasa Franc" />
+		<Record currencyCode="CHF" activeFlag="0" currencyName="Switzerland Franc" />
+		<Record currencyCode="CLP" activeFlag="0" currencyName="Chile Peso" />
+		<Record currencyCode="CNY" activeFlag="0" currencyName="China Yuan Renminbi" currencyLocal="Chinese (China)" />
+		<Record currencyCode="COP" activeFlag="0" currencyName="Colombia Peso" />
+		<Record currencyCode="CRC" activeFlag="0" currencyName="Costa Rica Colon" />
+		<Record currencyCode="CUC" activeFlag="0" currencyName="Cuba Convertible Peso" />
+		<Record currencyCode="CUP" activeFlag="0" currencyName="Cuba Peso" />
+		<Record currencyCode="CVE" activeFlag="0" currencyName="Cape Verde Escudo" />
+		<Record currencyCode="CZK" activeFlag="0" currencyName="Czech Republic Koruna" />
+		<Record currencyCode="DJF" activeFlag="0" currencyName="Djibouti Franc" />
+		<Record currencyCode="DKK" activeFlag="0" currencyName="Denmark Krone" />
+		<Record currencyCode="DOP" activeFlag="0" currencyName="Dominican Republic Peso" />
+		<Record currencyCode="DZD" activeFlag="0" currencyName="Algeria Dinar" />
+		<Record currencyCode="EGP" activeFlag="0" currencyName="Egypt Pound" />
+		<Record currencyCode="ERN" activeFlag="0" currencyName="Eritrea Nakfa" />
+		<Record currencyCode="ETB" activeFlag="0" currencyName="Ethiopia Birr" />
+		<Record currencyCode="EUR" activeFlag="0" currencyName="Euro Member Countries" currencyLocal="English (UK)" />
+		<Record currencyCode="FJD" activeFlag="0" currencyName="Fiji Dollar" />
+		<Record currencyCode="FKP" activeFlag="0" currencyName="Falkland Islands (Malvinas) Pound" />
+		<Record currencyCode="GBP" activeFlag="0" currencyName="United Kingdom Pound" />
+		<Record currencyCode="GEL" activeFlag="0" currencyName="Georgia Lari" />
+		<Record currencyCode="GGP" activeFlag="0" currencyName="Guernsey Pound" />
+		<Record currencyCode="GHS" activeFlag="0" currencyName="Ghana Cedi" />
+		<Record currencyCode="GIP" activeFlag="0" currencyName="Gibraltar Pound" />
+		<Record currencyCode="GMD" activeFlag="0" currencyName="Gambia Dalasi" />
+		<Record currencyCode="GNF" activeFlag="0" currencyName="Guinea Franc" />
+		<Record currencyCode="GTQ" activeFlag="0" currencyName="Guatemala Quetzal" />
+		<Record currencyCode="GYD" activeFlag="0" currencyName="Guyana Dollar" />
+		<Record currencyCode="HKD" activeFlag="0" currencyName="Hong Kong Dollar" currencyLocal="Chinese (Hong Kong)" />
+		<Record currencyCode="HNL" activeFlag="0" currencyName="Honduras Lempira" />
+		<Record currencyCode="HRK" activeFlag="0" currencyName="Croatia Kuna" />
+		<Record currencyCode="HTG" activeFlag="0" currencyName="Haiti Gourde" />
+		<Record currencyCode="HUF" activeFlag="0" currencyName="Hungary Forint" />
+		<Record currencyCode="IDR" activeFlag="0" currencyName="Indonesia Rupiah" />
+		<Record currencyCode="ILS" activeFlag="0" currencyName="Israel Shekel" />
+		<Record currencyCode="IMP" activeFlag="0" currencyName="Isle of Man Pound" />
+		<Record currencyCode="INR" activeFlag="0" currencyName="India Rupee" />
+		<Record currencyCode="IQD" activeFlag="0" currencyName="Iraq Dinar" />
+		<Record currencyCode="IRR" activeFlag="0" currencyName="Iran Rial" />
+		<Record currencyCode="ISK" activeFlag="0" currencyName="Iceland Krona" />
+		<Record currencyCode="JEP" activeFlag="0" currencyName="Jersey Pound" />
+		<Record currencyCode="JMD" activeFlag="0" currencyName="Jamaica Dollar" />
+		<Record currencyCode="JOD" activeFlag="0" currencyName="Jordan Dinar" />
+		<Record currencyCode="JPY" activeFlag="0" currencyName="Japan Yen" currencyLocal="Japanese" />
+		<Record currencyCode="KES" activeFlag="0" currencyName="Kenya Shilling" />
+		<Record currencyCode="KGS" activeFlag="0" currencyName="Kyrgyzstan Som" />
+		<Record currencyCode="KHR" activeFlag="0" currencyName="Cambodia Riel" />
+		<Record currencyCode="KMF" activeFlag="0" currencyName="Comoros Franc" />
+		<Record currencyCode="KPW" activeFlag="0" currencyName="Korea (North) Won" />
+		<Record currencyCode="KRW" activeFlag="0" currencyName="Korea (South) Won" />
+		<Record currencyCode="KWD" activeFlag="0" currencyName="Kuwait Dinar" />
+		<Record currencyCode="KYD" activeFlag="0" currencyName="Cayman Islands Dollar" />
+		<Record currencyCode="KZT" activeFlag="0" currencyName="Kazakhstan Tenge" />
+		<Record currencyCode="LAK" activeFlag="0" currencyName="Laos Kip" />
+		<Record currencyCode="LBP" activeFlag="0" currencyName="Lebanon Pound" />
+		<Record currencyCode="LKR" activeFlag="0" currencyName="Sri Lanka Rupee" />
+		<Record currencyCode="LRD" activeFlag="0" currencyName="Liberia Dollar" />
+		<Record currencyCode="LSL" activeFlag="0" currencyName="Lesotho Loti" />
+		<Record currencyCode="LTL" activeFlag="0" currencyName="Lithuania Litas" />
+		<Record currencyCode="LVL" activeFlag="0" currencyName="Latvia Lat" />
+		<Record currencyCode="LYD" activeFlag="0" currencyName="Libya Dinar" />
+		<Record currencyCode="MAD" activeFlag="0" currencyName="Morocco Dirham" />
+		<Record currencyCode="MDL" activeFlag="0" currencyName="Moldova Leu" />
+		<Record currencyCode="MGA" activeFlag="0" currencyName="Madagascar Ariary" />
+		<Record currencyCode="MKD" activeFlag="0" currencyName="Macedonia Denar" />
+		<Record currencyCode="MMK" activeFlag="0" currencyName="Myanmar (Burma) Kyat" />
+		<Record currencyCode="MNT" activeFlag="0" currencyName="Mongolia Tughrik" />
+		<Record currencyCode="MOP" activeFlag="0" currencyName="Macau Pataca" />
+		<Record currencyCode="MRO" activeFlag="0" currencyName="Mauritania Ouguiya" />
+		<Record currencyCode="MUR" activeFlag="0" currencyName="Mauritius Rupee" />
+		<Record currencyCode="MVR" activeFlag="0" currencyName="Maldives (Maldive Islands) Rufiyaa" />
+		<Record currencyCode="MWK" activeFlag="0" currencyName="Malawi Kwacha" />
+		<Record currencyCode="MXN" activeFlag="0" currencyName="Mexico Peso" currencyLocal="Spanish (Mexican)" />
+		<Record currencyCode="MYR" activeFlag="0" currencyName="Malaysia Ringgit" />
+		<Record currencyCode="MZN" activeFlag="0" currencyName="Mozambique Metical" />
+		<Record currencyCode="NAD" activeFlag="0" currencyName="Namibia Dollar" />
+		<Record currencyCode="NGN" activeFlag="0" currencyName="Nigeria Naira" />
+		<Record currencyCode="NIO" activeFlag="0" currencyName="Nicaragua Cordoba" />
+		<Record currencyCode="NOK" activeFlag="0" currencyName="Norway Krone" />
+		<Record currencyCode="NPR" activeFlag="0" currencyName="Nepal Rupee" />
+		<Record currencyCode="NZD" activeFlag="0" currencyName="New Zealand Dollar" currencyLocal="English (New Zealand)" />
+		<Record currencyCode="OMR" activeFlag="0" currencyName="Oman Rial" />
+		<Record currencyCode="PAB" activeFlag="0" currencyName="Panama Balboa" />
+		<Record currencyCode="PEN" activeFlag="0" currencyName="Peru Nuevo Sol" />
+		<Record currencyCode="PGK" activeFlag="0" currencyName="Papua New Guinea Kina" />
+		<Record currencyCode="PHP" activeFlag="0" currencyName="Philippines Peso" />
+		<Record currencyCode="PKR" activeFlag="0" currencyName="Pakistan Rupee" />
+		<Record currencyCode="PLN" activeFlag="0" currencyName="Poland Zloty" />
+		<Record currencyCode="PYG" activeFlag="0" currencyName="Paraguay Guarani" />
+		<Record currencyCode="QAR" activeFlag="0" currencyName="Qatar Riyal" />
+		<Record currencyCode="RON" activeFlag="0" currencyName="Romania New Leu" />
+		<Record currencyCode="RSD" activeFlag="0" currencyName="Serbia Dinar" />
+		<Record currencyCode="RUB" activeFlag="0" currencyName="Russia Ruble" />
+		<Record currencyCode="RWF" activeFlag="0" currencyName="Rwanda Franc" />
+		<Record currencyCode="SAR" activeFlag="0" currencyName="Saudi Arabia Riyal" />
+		<Record currencyCode="SBD" activeFlag="0" currencyName="Solomon Islands Dollar" />
+		<Record currencyCode="SCR" activeFlag="0" currencyName="Seychelles Rupee" />
+		<Record currencyCode="SDG" activeFlag="0" currencyName="Sudan Pound" />
+		<Record currencyCode="SEK" activeFlag="0" currencyName="Sweden Krona" currencyLocal="Swedish" />
+		<Record currencyCode="SGD" activeFlag="0" currencyName="Singapore Dollar" />
+		<Record currencyCode="SHP" activeFlag="0" currencyName="Saint Helena Pound" />
+		<Record currencyCode="SLL" activeFlag="0" currencyName="Sierra Leone Leone" />
+		<Record currencyCode="SOS" activeFlag="0" currencyName="Somalia Shilling" />
+		<Record currencyCode="SPL" activeFlag="0" currencyName="Seborga Luigino" />
+		<Record currencyCode="SRD" activeFlag="0" currencyName="Suriname Dollar" />
+		<Record currencyCode="STD" activeFlag="0" currencyName="São Tomé and Príncipe Dobra" />
+		<Record currencyCode="SVC" activeFlag="0" currencyName="El Salvador Colon" />
+		<Record currencyCode="SYP" activeFlag="0" currencyName="Syria Pound" />
+		<Record currencyCode="SZL" activeFlag="0" currencyName="Swaziland Lilangeni" />
+		<Record currencyCode="THB" activeFlag="0" currencyName="Thailand Baht" />
+		<Record currencyCode="TJS" activeFlag="0" currencyName="Tajikistan Somoni" />
+		<Record currencyCode="TMT" activeFlag="0" currencyName="Turkmenistan Manat" />
+		<Record currencyCode="TND" activeFlag="0" currencyName="Tunisia Dinar" />
+		<Record currencyCode="TOP" activeFlag="0" currencyName="Tonga Pa'anga" />
+		<Record currencyCode="TRY" activeFlag="0" currencyName="Turkey Lira" />
+		<Record currencyCode="TTD" activeFlag="0" currencyName="Trinidad and Tobago Dollar" />
+		<Record currencyCode="TVD" activeFlag="0" currencyName="Tuvalu Dollar" />
+		<Record currencyCode="TWD" activeFlag="0" currencyName="Taiwan New Dollar" currencyLocal="Chinese (Taiwan)" />
+		<Record currencyCode="TZS" activeFlag="0" currencyName="Tanzania Shilling" />
+		<Record currencyCode="UAH" activeFlag="0" currencyName="Ukraine Hryvna" />
+		<Record currencyCode="UGX" activeFlag="0" currencyName="Uganda Shilling" />
+		<Record currencyCode="USD" activeFlag="1" currencyName="United States Dollar" />
+		<Record currencyCode="UYU" activeFlag="0" currencyName="Uruguay Peso" />
+		<Record currencyCode="UZS" activeFlag="0" currencyName="Uzbekistan Som" />
+		<Record currencyCode="VEF" activeFlag="0" currencyName="Venezuela Bolivar Fuerte" />
+		<Record currencyCode="VND" activeFlag="0" currencyName="Viet Nam Dong" />
+		<Record currencyCode="VUV" activeFlag="0" currencyName="Vanuatu Vatu" />
+		<Record currencyCode="WST" activeFlag="0" currencyName="Samoa Tala" />
+		<Record currencyCode="XAF" activeFlag="0" currencyName="Communauté Financière Africaine (BEAC) CFA Franc BEAC" />
+		<Record currencyCode="XCD" activeFlag="0" currencyName="East Caribbean Dollar" />
+		<Record currencyCode="XDR" activeFlag="0" currencyName="International Monetary Fund (IMF) Special Drawing Rights" />
+		<Record currencyCode="XOF" activeFlag="0" currencyName="Communauté Financière Africaine (BCEAO) Franc" />
+		<Record currencyCode="XPF" activeFlag="0" currencyName="Comptoirs Français du Pacifique (CFP) Franc" />
+		<Record currencyCode="YER" activeFlag="0" currencyName="Yemen Rial" />
+		<Record currencyCode="ZAR" activeFlag="0" currencyName="South Africa Rand" />
+		<Record currencyCode="ZMK" activeFlag="0" currencyName="Zambia Kwacha" />
+		<Record currencyCode="ZWD" activeFlag="0" currencyName="Zimbabwe Dollar" />
+	</Records>
+</Table>

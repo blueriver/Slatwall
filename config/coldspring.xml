@@ -11,6 +11,7 @@
 	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
 	<bean id="commentDAO" class="Slatwall.com.dao.CommentDAO" />
 	<bean id="contentDAO" class="Slatwall.com.dao.ContentDAO" />
+	<bean id="currencyDAO" class="Slatwall.com.dao.CurrencyDAO" />
 	<bean id="dataDAO" class="Slatwall.com.dao.DataDAO" />
 	<bean id="emailDAO" class="Slatwall.com.dao.EmailDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
@@ -26,6 +27,7 @@
 	<bean id="sessionDAO" class="Slatwall.com.dao.SessionDAO" />
 	<bean id="orderDAO" class="Slatwall.com.dao.OrderDAO" />
 	<bean id="settingDAO" class="Slatwall.com.dao.SettingDAO" />
+	<bean id="siteDAO" class="Slatwall.com.dao.SiteDAO" />
 	<bean id="skuDAO" class="Slatwall.com.dao.SkuDAO" />
 	<bean id="optionDAO" class="Slatwall.com.dao.OptionDAO" />
 	<bean id="taskDAO" class="Slatwall.com.dao.TaskDAO" />
@@ -76,6 +78,7 @@
 				<entry key="ContentAccess"><value>accessService</value></entry>
 				<entry key="Country"><value>addressService</value></entry>
 				<entry key="CreditCardTransaction"><value>paymentService</value></entry>
+				<entry key="Currency"><value>currencyService</value></entry>
 				<entry key="Email"><value>emailService</value></entry>
 				<entry key="EmailTemplate"><value>emailService</value></entry>
 				<entry key="FulfillmentMethod"><value>fulfillmentService</value></entry>
@@ -190,6 +193,9 @@
         <property name="DAO"><ref bean="contentDAO" /></property>
 		<property name="settingService"><ref bean="settingService" /></property>
 	</bean>
+	<bean id="currencyService" class="Slatwall.com.service.CurrencyService">
+        <property name="DAO"><ref bean="currencyDAO" /></property>
+	</bean>
 	<bean id="dataService" class="Slatwall.com.service.DataService">
         <property name="DAO"><ref bean="dataDAO" /></property>
 	</bean>
@@ -298,6 +304,9 @@
         <property name="DAO"><ref bean="shippingDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
 		<property name="integrationService"><ref bean="integrationService" /></property>
+    </bean>
+	<bean id="siteService" class="Slatwall.com.service.SiteService">
+        <property name="DAO"><ref bean="siteDAO" /></property>
     </bean>
 	<bean id="skuService" class="Slatwall.com.service.SkuService">
         <property name="DAO"><ref bean="SkuDAO" /></property>
