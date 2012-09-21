@@ -482,7 +482,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 			method: 'post',
 			data: data,
 			dataType: 'json',
-			contentType: 'application/json',
+			beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
 			error: function(result) {
 				removeLoadingDiv( tableID );
 				listingUpdateRelease();
@@ -757,7 +757,7 @@ function tableApplySort(event, ui) {
 		async: false,
 		data: data,
 		dataType: 'json',
-		contentType: 'application/json',
+		beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
 		error: function(r) {
 			alert('Error Updating the Sort Order for this table');
 		}
@@ -861,7 +861,7 @@ function updateGlobalSearchResults() {
 			method: 'post',
 			data: data,
 			dataType: 'json',
-			contentType: 'application/json',
+			beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
 			error: function(result) {
 				removeLoadingDiv( 'search-results' );
 				globalSearchRelease();

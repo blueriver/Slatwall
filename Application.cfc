@@ -263,7 +263,7 @@ component extends="org.fw1.framework" output="false" {
 	
 	public void function setupView() {
 		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
+		if(structKeyExists(httpRequestData.headers, "X-Slatwall-AJAX") && isBoolean(httpRequestData.headers["X-Slatwall-AJAX"]) && httpRequestData.headers["X-Slatwall-AJAX"]) {
 			setupResponse();
 		}
 		
@@ -280,7 +280,7 @@ component extends="org.fw1.framework" output="false" {
 	public void function setupResponse() {
 		endSlatwallLifecycle();
 		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
+		if(structKeyExists(httpRequestData.headers, "X-Slatwall-AJAX") && isBoolean(httpRequestData.headers["X-Slatwall-AJAX"]) && httpRequestData.headers["X-Slatwall-AJAX"]) {
 			if(structKeyExists(request.context, "fw")) {
 				structDelete(request.context, "fw");
 			}
