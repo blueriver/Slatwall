@@ -2,6 +2,6 @@
 <snippet filetemplate="false" extension="">
 <name>Property Column - Boolean</name>
 <help></help>
-<starttext><![CDATA[property name="$${propertyName}" ormtype="boolean" formatType="yesno" fieldType="yesno";]]></starttext>
+<starttext><![CDATA[property name="$${propertyName}" ormtype="boolean";]]></starttext>
 <endtext><![CDATA[]]></endtext>
 </snippet>
