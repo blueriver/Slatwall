@@ -39,18 +39,10 @@ jQuery(document).ready(function() {
 		}
 	}
 	
-	if(jQuery('#global-search').val() != '') {
+	if(jQuery('#global-search').val() !== '') {
 		jQuery('#global-search').keyup(); 
 	}
 	
-	/*
-	jQuery("#global-search").typeWatch( {
-	    callback:function(){ updateGlobalSearchResults(); },
-	    wait:450,
-	    highlight: false,
-	    captureLength:2
-	} );
-	*/
 });
 
 function initUIElements( scopeSelector ) {
@@ -120,7 +112,7 @@ function initUIElements( scopeSelector ) {
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('form')), function(index, value){
 		jQuery(value).validate({
 			invalidHandler: function() {
-				console.log(jQuery(value).find('input[data-emptyvalue]').blur());
+
 			}
 		});
 	});
@@ -144,15 +136,13 @@ function initUIElements( scopeSelector ) {
 	
 	// Table Filters
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('.listing-filter')), function(i, v){
-		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() != undefined) {
+		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() !== undefined && typeof jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() === "string" && jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val().length > 0 ) {
 			var hvArr = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val().split(',');
-			if(hvArr.indexOf(jQuery(v).data('filtervalue')) != -1) {
+			if(hvArr.indexOf(jQuery(v).data('filtervalue')) !== -1) {
 				jQuery(v).children('.slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked').removeClass('slatwall-ui-checkbox');
 			}
 		}
 	});
-	
-	
 	
 }
 
@@ -236,7 +226,7 @@ function setupEventHandlers() {
 		jQuery('#adminModal').html('');
 		var modalLink = jQuery(this).attr( 'href' );
 		
-		if( modalLink.indexOf("?") != -1) {
+		if( modalLink.indexOf("?") !== -1) {
 			modalLink = modalLink + '&modal=1&tabIndex=' + slatwall.tabIndex;
 		} else {
 			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
@@ -307,7 +297,7 @@ function setupEventHandlers() {
 		
 		var value = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val();
 		var valueArray = [];
-		if(value != '') {
+		if(value !== '') {
 			valueArray = value.split(',');
 		}
 		var i = jQuery.inArray(jQuery(this).data('filtervalue'), valueArray);
@@ -321,7 +311,7 @@ function setupEventHandlers() {
 		jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val(valueArray.join(","));
 		
 		var data = {};
-		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() != '') {
+		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() !== '') {
 			data[ 'F:' + jQuery(this).closest('th').data('propertyidentifier') ] = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val();
 		} else {
 			data[ 'FR:' + jQuery(this).closest('th').data('propertyidentifier') ] = 1;	
@@ -355,7 +345,7 @@ function setupEventHandlers() {
 	jQuery('body').on('keyup', '.listing-search', function(e) {
 		var data = {};
 		
-		if(jQuery(this).val() != '') {
+		if(jQuery(this).val() !== '') {
 			data[ jQuery(this).attr('name') ] = jQuery(this).val();	
 		} else {
 			data[ 'FKR:' + jQuery(this).attr('name').split(':')[1] ] = 1;
@@ -494,10 +484,9 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 			dataType: 'json',
 			contentType: 'application/json',
 			error: function(result) {
-				console.log(r);
 				removeLoadingDiv( tableID );
 				listingUpdateRelease();
-				alert('Error Loading');
+				alert('Error During Listing Display Update.');
 			},
 			success: function(r) {
 				
@@ -568,9 +557,9 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							newtd += '<td>';
 							
 	
-							if( jQuery(cv).data('detailaction') != undefined ) {
+							if( jQuery(cv).data('detailaction') !== undefined ) {
 								link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + rv[ idProperty ];
-								if( jQuery(cv).data('detailquerystring') != undefined ) {
+								if( jQuery(cv).data('detailquerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('detailquerystring');
 								}
 								if( jQuery(cv).data('detailmodal') ) {
@@ -580,9 +569,9 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								}
 							}
 							
-							if( jQuery(cv).data('editaction') != undefined ) {
+							if( jQuery(cv).data('editaction') !== undefined ) {
 								link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
-								if( jQuery(cv).data('editquerystring') != undefined ) {
+								if( jQuery(cv).data('editquerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('editquerystring');
 								}
 								if( jQuery(cv).data('editmodal') ) {
@@ -592,17 +581,17 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								}
 							}
 							
-							if( jQuery(cv).data('deleteaction') != undefined ) {
+							if( jQuery(cv).data('deleteaction') !== undefined ) {
 								link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + rv[ idProperty ];
-								if( jQuery(cv).data('deletequerystring') != undefined ) {
+								if( jQuery(cv).data('deletequerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('deletequerystring');
 								}
 								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-trash"></i></a> ';
 							}
 							/*
-							if( jQuery(cv).data('processaction') != undefined ) {
+							if( jQuery(cv).data('processaction') !== undefined ) {
 								link = '?slatAction=' + jQuery(cv).data('processaction') + '&' + idProperty + '=' + rv[ idProperty ];
-								if( jQuery(cv).data('processquerystring') != undefined ) {
+								if( jQuery(cv).data('processquerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('processquerystring');
 								}
 								if( jQuery(cv).data('processmodal') ) {
@@ -770,8 +759,7 @@ function tableApplySort(event, ui) {
 		dataType: 'json',
 		contentType: 'application/json',
 		error: function(r) {
-			console.log(r);
-			alert('Error Loading');
+			alert('Error Updating the Sort Order for this table');
 		}
 	});
 
@@ -780,7 +768,7 @@ function tableApplySort(event, ui) {
 function updateMultiselectTableUI( multiselectField ) {
 	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
 	
-	if(inputValue != undefined) {
+	if(inputValue !== undefined) {
 		jQuery.each(inputValue.split(','), function(vi, vv) {
 			jQuery(jQuery('table[data-multiselectfield="' + multiselectField  + '"]').find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
 		});
@@ -824,7 +812,7 @@ function tableMultiselectClick( toggleLink ) {
 function updateSelectTableUI( selectField ) {
 	var inputValue = jQuery('input[name="' + selectField + '"]').val();
 	
-	if(inputValue != undefined) {
+	if(inputValue !== undefined) {
 		jQuery('table[data-selectfield="' + selectField  + '"]').find('tr[id=' + inputValue + '] .slatwall-ui-radio').addClass('slatwall-ui-radio-checked').removeClass('slatwall-ui-radio');
 	}
 }
@@ -875,7 +863,6 @@ function updateGlobalSearchResults() {
 			dataType: 'json',
 			contentType: 'application/json',
 			error: function(result) {
-				console.log(r);
 				removeLoadingDiv( 'search-results' );
 				globalSearchRelease();
 				alert('Error Loading Global Search');
