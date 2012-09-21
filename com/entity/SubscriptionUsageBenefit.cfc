@@ -171,6 +171,26 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 		structDelete(variables, "renewalSubscriptionUsage");    
 	}
 	
+	// Price Groups (many-to-many - owner)    
+	public void function addPriceGroup(required any priceGroup) {    
+		if(arguments.priceGroup.isNew() or !hasPriceGroup(arguments.priceGroup)) {    
+			arrayAppend(variables.priceGroups, arguments.priceGroup);    
+		}    
+		if(isNew() or !arguments.priceGroup.hasSubscriptionUsageBenefit( this )) {    
+			arrayAppend(arguments.priceGroup.getSubscriptionUsageBenefits(), this);    
+		}    
+	}    
+	public void function removePriceGroup(required any priceGroup) {    
+		var thisIndex = arrayFind(variables.priceGroups, arguments.priceGroup);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.priceGroups, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.priceGroup.getSubscriptionUsageBenefits(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.priceGroup.getSubscriptionUsageBenefits(), thatIndex);    
+		}    
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================
