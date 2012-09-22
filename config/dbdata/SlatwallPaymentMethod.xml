@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Table tableName="SlatwallPaymentMethod">
 	<Columns>
 		<column name="paymentMethodID" fieldtype="id" />

@@ -294,6 +294,7 @@
     </bean>
     <bean id="settingService" class="Slatwall.com.service.SettingService">
         <property name="DAO"><ref bean="settingDAO" /></property>
+		<property name="currencyService"><ref bean="currencyService" /></property>
 		<property name="contentService"><ref bean="contentService" /></property>
 		<property name="utilityORMService"><ref bean="utilityORMService" /></property>
 		<property name="locationService"><ref bean="locationService" /></property>

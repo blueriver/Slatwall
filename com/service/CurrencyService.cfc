@@ -38,8 +38,17 @@ Notes:
 */
 
 component  extends="Slatwall.com.service.BaseService" accessors="true" {
-	
+
 	// ===================== START: Logical Methods ===========================
+	
+	public array function getCurrencyOptions() {
+		var csl = this.getCurrencySmartList();
+		
+		csl.addSelect(propertyIdentifier="currencyName", alias="name");
+		csl.addSelect(propertyIdentifier="currencyCode", alias="value");
+		
+		return csl.getRecords(); 
+	}
 	
 	// =====================  END: Logical Methods ============================
 	

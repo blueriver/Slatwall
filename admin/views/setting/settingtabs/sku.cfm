@@ -40,6 +40,8 @@ Notes:
 	<cf_SlatwallSettingTable>
 		<cf_SlatwallSetting settingName="skuAllowBackorderFlag" />
 		<cf_SlatwallSetting settingName="skuAllowPreorderFlag" />
+		<cf_SlatwallSetting settingName="skuCurrency" />
+		<cf_SlatwallSetting settingName="skuEligibleCurrencies" />
 		<cf_SlatwallSetting settingName="skuEligibleFulfillmentMethods" />
 		<cf_SlatwallSetting settingName="skuEligibleOrderOrigins" />
 		<cf_SlatwallSetting settingName="skuEligiblePaymentMethods" />

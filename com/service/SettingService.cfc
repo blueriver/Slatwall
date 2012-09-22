@@ -44,6 +44,7 @@ globalEncryptionKeySize
 
 	<!--- Injected from Coldspring --->
 	<cfproperty name="contentService" type="any" />
+	<cfproperty name="currencyService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="measurementUnitService" type="any" />
 	<cfproperty name="taxService" type="any" />
@@ -178,6 +179,8 @@ globalEncryptionKeySize
 			// Sku
 			skuAllowBackorderFlag = {fieldType="yesno"},
 			skuAllowPreorderFlag = {fieldType="yesno"},
+			skuCurrency = {fieldType="select"},
+			skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency"},
 			skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
 			skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
 			skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
@@ -238,6 +241,8 @@ globalEncryptionKeySize
 					return [{name='Sort Order', value='sortOrder'}, {name='Lowest Rate', value='lowest'}, {name='Highest Rate', value='highest'}];
 				case "shippingMethodRateAdjustmentType" :
 					return [{name='Increase Percentage', value='increasePercentage'}, {name='Decrease Percentage', value='decreasePercentage'}, {name='Increase Amount', value='increaseAmount'}, {name='Decrease Amount', value='decreaseAmount'}];
+				case "skuCurrency" :
+					return getCurrencyService().getCurrencyOptions();
 				case "skuTaxCategory":
 					var optionSL = getTaxService().getTaxCategorySmartList();
 					optionSL.addSelect('taxCategoryName', 'name');

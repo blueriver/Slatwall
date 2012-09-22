@@ -2,8 +2,8 @@
 <Table tableName="SlatwallCurrency">
 	<Columns>
 		<column name="currencyCode" fieldtype="id" />
-		<column name="activeFlag" update="false" />
-		<column name="currencyName" />
+		<column name="activeFlag" datatype="bit" update="false" />
+		<column name="currencyName" update="false" />
 		<column name="currencyLocal" update="false" />
 	</Columns>
 	<Records>

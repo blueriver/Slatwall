@@ -40,6 +40,7 @@ component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCu
 	
 	// Persistent Properties
 	property name="currencyCode" ormtype="string" fieldtype="id" unique="true" generated="never";
+	property name="activeFlag" ormtype="boolean";
 	property name="currencyName" ormtype="string";
 	property name="currencyLocal" ormtype="string";
 	
