@@ -5,7 +5,6 @@
 		<column name="activeFlag" datatype="bit" update="false" />
 		<column name="currencyName" />
 		<column name="currencyLocale" />
-		<column name="currencyMask" />
 	</Columns>
 	<Records>
 		<Record currencyCode="AED" activeFlag="0" currencyName="AED - United Arab Emirates Dirham" />
