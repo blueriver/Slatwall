@@ -34,7 +34,7 @@
 		<Record currencyCode="BZD" activeFlag="0" currencyName="BZD - Belize Dollar" />
 		<Record currencyCode="CAD" activeFlag="0" currencyName="CAD - Canada Dollar" currencyLocale="English (Canadian)" />
 		<Record currencyCode="CDF" activeFlag="0" currencyName="CDF - Congo/Kinshasa Franc" />
-		<Record currencyCode="CHF" activeFlag="0" currencyName="CHF - Switzerland Franc" />
+		<Record currencyCode="CHF" activeFlag="0" currencyName="CHF - Switzerland Franc" currencyLocale="French (Swiss)" />
 		<Record currencyCode="CLP" activeFlag="0" currencyName="CLP - Chile Peso" />
 		<Record currencyCode="CNY" activeFlag="0" currencyName="CNY - China Yuan Renminbi" currencyLocale="Chinese (China)" />
 		<Record currencyCode="COP" activeFlag="0" currencyName="COP - Colombia Peso" />
@@ -53,7 +53,7 @@
 		<Record currencyCode="EUR" activeFlag="0" currencyName="EUR - Euro Member Countries" currencyLocale="English (UK)" />
 		<Record currencyCode="FJD" activeFlag="0" currencyName="FJD - Fiji Dollar" />
 		<Record currencyCode="FKP" activeFlag="0" currencyName="FKP - Falkland Islands (Malvinas) Pound" />
-		<Record currencyCode="GBP" activeFlag="0" currencyName="GBP - United Kingdom Pound" />
+		<Record currencyCode="GBP" activeFlag="0" currencyName="GBP - United Kingdom Pound" currencyLocale="English (UK)" />
 		<Record currencyCode="GEL" activeFlag="0" currencyName="GEL - Georgia Lari" />
 		<Record currencyCode="GGP" activeFlag="0" currencyName="GGP - Guernsey Pound" />
 		<Record currencyCode="GHS" activeFlag="0" currencyName="GHS - Ghana Cedi" />
@@ -83,7 +83,7 @@
 		<Record currencyCode="KHR" activeFlag="0" currencyName="KHR - Cambodia Riel" />
 		<Record currencyCode="KMF" activeFlag="0" currencyName="KMF - Comoros Franc" />
 		<Record currencyCode="KPW" activeFlag="0" currencyName="KPW - Korea (North) Won" />
-		<Record currencyCode="KRW" activeFlag="0" currencyName="KRW - Korea (South) Won" />
+		<Record currencyCode="KRW" activeFlag="0" currencyName="KRW - Korea (South) Won" currencyLocale="Korean" />
 		<Record currencyCode="KWD" activeFlag="0" currencyName="KWD - Kuwait Dinar" />
 		<Record currencyCode="KYD" activeFlag="0" currencyName="KYD - Cayman Islands Dollar" />
 		<Record currencyCode="KZT" activeFlag="0" currencyName="KZT - Kazakhstan Tenge" />
@@ -112,7 +112,7 @@
 		<Record currencyCode="NAD" activeFlag="0" currencyName="NAD - Namibia Dollar" />
 		<Record currencyCode="NGN" activeFlag="0" currencyName="NGN - Nigeria Naira" />
 		<Record currencyCode="NIO" activeFlag="0" currencyName="NIO - Nicaragua Cordoba" />
-		<Record currencyCode="NOK" activeFlag="0" currencyName="NOK - Norway Krone" />
+		<Record currencyCode="NOK" activeFlag="0" currencyName="NOK - Norway Krone" currencyLocale="Norwegian (Bokmal)" />
 		<Record currencyCode="NPR" activeFlag="0" currencyName="NPR - Nepal Rupee" />
 		<Record currencyCode="NZD" activeFlag="0" currencyName="NZD - New Zealand Dollar" currencyLocale="English (New Zealand)" />
 		<Record currencyCode="OMR" activeFlag="0" currencyName="OMR - Oman Rial" />
