@@ -41,6 +41,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormtype="big_decimal" notnull="true";
+	property name="currencyCode" ormtype="string" length="3";
 	
 	// Persistent Properties - creditCard Specific
 	property name="nameOnCreditCard" ormType="string";

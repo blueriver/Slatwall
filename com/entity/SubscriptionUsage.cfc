@@ -42,6 +42,7 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="subscriptionUsageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="renewalPrice" ormtype="big_decimal" formatType="currency";
+	property name="currencyCode" ormtype="string" length="3";
 	property name="autoRenewFlag" ormtype="boolean" formatType="yesno";
 	property name="autoPayFlag" ormtype="boolean" formatType="yesno";
 	property name="nextBillDate" ormtype="timestamp";

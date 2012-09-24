@@ -41,6 +41,7 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	// Persistent Properties
 	property name="shippingMethodOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="totalCharge" ormtype="big_decimal";
+	property name="currencyCode" ormtype="string" length="3";
 	property name="totalShippingWeight" ormtype="string";
 	property name="totalShippingItemPrice" ormtype="string";
 	property name="shipToPostalCode" ormtype="string";

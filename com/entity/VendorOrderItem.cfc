@@ -42,6 +42,7 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	property name="vendorOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="quantity" ormtype="integer" default=0;
 	property name="cost" ormtype="big_decimal" formatType="currency";
+	property name="currencyCode" ormtype="string" length="3";
 	property name="estimatedReceivalDateTime" ormtype="timestamp";
 	
 	// Related Object Properties (Many-to-One)

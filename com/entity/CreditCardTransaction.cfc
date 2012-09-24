@@ -46,6 +46,7 @@ component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTr
 	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="currencyCode" ormtype="string" length="3";
 	property name="avsCode" ormtype="string";				// @hint this is whatever the avs code was that got returned
 	property name="statusCode" ormtype="string";			// @hint this is the status code that was passed back in the response bean
 	property name="message" ormtype="string";  				// @hint this is a pipe and tilda delimited list of any messages that came back in the response.

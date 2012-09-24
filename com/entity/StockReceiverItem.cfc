@@ -42,6 +42,7 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	property name="stockReceiverItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="quantity" ormtype="integer";
 	property name="cost" ormtype="big_decimal";
+	property name="currencyCode" ormtype="string" length="3";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

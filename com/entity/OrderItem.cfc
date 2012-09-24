@@ -42,6 +42,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="price" ormtype="big_decimal";
 	property name="skuPrice" ormtype="big_decimal";
+	property name="currencyCode" ormtype="string" length="3";
 	property name="quantity" ormtype="integer";
 	property name="estimatedFulfillmentDateTime" ormtype="timestamp";
 	
