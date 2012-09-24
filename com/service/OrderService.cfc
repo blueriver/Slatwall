@@ -94,140 +94,165 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return arguments.order;
 	}
 	
-	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData, struct data = {})	{
+	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData, string currencyCode, struct data = {})	{
 	
 		// Check to see if the order has already been closed or canceled
 		if(arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
 			throw("You cannot add an item to an order that has been closed or canceled");
 		}
 		
-		// save order so it's added to the hibernate scope
-		save( arguments.order );
+		// If the currency code was not passed in, then set it to the sku default
+		if(!structKeyExists(arguments, "currencyCode")) {
+			if( !isNull(arguments.order.getCurrencyCode()) && listFindNoCase(arguments.sku.setting('skuEligibleCurrencies'), arguments.order.getCurrencyCode()) ) {
+				arguments.currencyCode = arguments.order.getCurrencyCode();
+			} else {
+				arguments.currencyCode = arguments.sku.setting('skuCurrency');
+			}
+		}
 		
-		// if a filfillmentMethodID is passed in the data, set orderfulfillment to that
-		if(structKeyExists(arguments.data, "fulfillmentMethodID")) {
-			// make sure this is eligible fulfillment method
-			if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), arguments.data.fulfillmentMethodID)) {
-				var fulfillmentMethod = this.getFulfillmentService().getFulfillmentMethod(arguments.data.fulfillmentMethodID);
-				arguments.orderFulfillment = this.getOrderFulfillment({order=arguments.order,fulfillmentMethod=fulfillmentMethod},true);
-				if(arguments.orderFulfillment.isNew()) {
-					arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
-					arguments.orderFulfillment.setOrder( arguments.order );
+		// Make sure the order has a currency code
+		if( isNull(arguments.order.getCurrencyCode()) ) {
+			arguments.order.setCurrencyCode( arguments.currencyCode );
+		}
+		
+		// Verify the order has the same currency as the one being added
+		if(arguments.order.getCurrencyCode() eq arguments.currencyCode) {
+			
+			// save order so it's added to the hibernate scope
+			save( arguments.order );
+			
+			// if a filfillmentMethodID is passed in the data, set orderfulfillment to that
+			if(structKeyExists(arguments.data, "fulfillmentMethodID")) {
+				// make sure this is eligible fulfillment method
+				if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), arguments.data.fulfillmentMethodID)) {
+					var fulfillmentMethod = this.getFulfillmentService().getFulfillmentMethod(arguments.data.fulfillmentMethodID);
+					arguments.orderFulfillment = this.getOrderFulfillment({order=arguments.order,fulfillmentMethod=fulfillmentMethod},true);
+					if(arguments.orderFulfillment.isNew()) {
+						arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
+						arguments.orderFulfillment.setOrder( arguments.order );
+						arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
+						// Push the fulfillment into the hibernate scope
+						getDAO().save(arguments.orderFulfillment);
+					}
+				}
+				
+			}
+			
+			// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
+			if(!structKeyExists(arguments, "orderFulfillment"))	{
+				
+				var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligibleFulfillmentMethods'),1)).getFulfillmentMethodType();
+				
+				// check if there is a fulfillment method of this type in the order
+				for(var fulfillment in arguments.order.getOrderFulfillments()) {
+					if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), fulfillment.getFulfillmentMethod().getFulfillmentMethodID())) {
+						arguments.orderFulfillment = fulfillment;
+						break;
+					}
+				}
+				
+				// if no fulfillment of this type found then create a new one 
+				if(!structKeyExists(arguments, "orderFulfillment")) {
+					
+					var fulfillmentMethodOptions = arguments.sku.getEligibleFulfillmentMethods();
+					
+					// If there are at least 1 options, then we create the new method, otherwise stop and just return the order
+					if(arrayLen(fulfillmentMethodOptions)) {
+						arguments.orderFulfillment = this.newSlatwallOrderFulfillment();
+						arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethodOptions[1] );
+						arguments.orderFulfillment.setOrder( arguments.order );
+						arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
+					} else {
+						return arguments.order;
+					}
+					
 					// Push the fulfillment into the hibernate scope
 					getDAO().save(arguments.orderFulfillment);
 				}
 			}
-			
-		}
 		
-		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
-		if(!structKeyExists(arguments, "orderFulfillment"))	{
+			var orderItems = arguments.order.getOrderItems();
+			var itemExists = false;
 			
-			var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligibleFulfillmentMethods'),1)).getFulfillmentMethodType();
-			
-			// check if there is a fulfillment method of this type in the order
-			for(var fulfillment in arguments.order.getOrderFulfillments()) {
-				if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), fulfillment.getFulfillmentMethod().getFulfillmentMethodID())) {
-					arguments.orderFulfillment = fulfillment;
-					break;
-				}
-			}
-			
-			// if no fulfillment of this type found then create a new one 
-			if(!structKeyExists(arguments, "orderFulfillment")) {
-				
-				var fulfillmentMethodOptions = arguments.sku.getEligibleFulfillmentMethods();
-				
-				// If there are at least 1 options, then we create the new method, otherwise stop and just return the order
-				if(arrayLen(fulfillmentMethodOptions)) {
-					arguments.orderFulfillment = this.newSlatwallOrderFulfillment();
-					arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethodOptions[1] );
-					arguments.orderFulfillment.setOrder(arguments.order);
-				} else {
-					return arguments.order;
-				}
-				
-				// Push the fulfillment into the hibernate scope
-				getDAO().save(arguments.orderFulfillment);
-			}
-		}
-	
-		var orderItems = arguments.order.getOrderItems();
-		var itemExists = false;
-		
-		// If there are no product customizations then we can check for the order item already existing.
-		if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData,"attribute"))	{
-			// Check the existing order items and increment quantity if possible.
-			for(var i = 1; i <= arrayLen(orderItems); i++) {
-				
-				// This is a simple check inside of the loop to find any sku that matches
-				if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
+			// If there are no product customizations then we can check for the order item already existing.
+			if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData,"attribute"))	{
+				// Check the existing order items and increment quantity if possible.
+				for(var i = 1; i <= arrayLen(orderItems); i++) {
 					
-					// This verifies that the stock being passed in matches the stock on the order item, or that both are null
-					if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
+					// This is a simple check inside of the loop to find any sku that matches
+					if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
 						
-						itemExists = true;
-						// do not increment quantity for content access product
-						if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
-							orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-							if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
-								orderItems[i].setPrice( arguments.data.price );
-								orderItems[i].setSkuPrice( arguments.data.price );	
-							} else {
-								orderItems[i].setPrice( arguments.sku.getPrice() );
-								orderItems[i].setSkuPrice( arguments.sku.getPrice() );
+						// This verifies that the stock being passed in matches the stock on the order item, or that both are null
+						if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
+							
+							itemExists = true;
+							// do not increment quantity for content access product
+							if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
+								orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+								if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
+									orderItems[i].setPrice( arguments.data.price );
+									orderItems[i].setSkuPrice( arguments.data.price );	
+								} else {
+									orderItems[i].setPrice( arguments.sku.getPrice() );
+									orderItems[i].setSkuPrice( arguments.sku.getPrice() );
+								}
+							}
+							break;
+							
+						}
+					}
+				}
+			}
+		
+			// If the sku doesn't exist in the order, then create a new order item and add it
+			if(!itemExists)	{
+				var newItem = this.newOrderItem();
+				newItem.setSku(arguments.sku);
+				newItem.setQuantity(arguments.quantity);
+				newItem.setOrder(arguments.order);
+				newItem.setOrderFulfillment(arguments.orderFulfillment);
+				newItem.setCurrencyCode( arguments.order.getCurrencyCode() );
+				
+				// All new items have the price and skuPrice set to the current price of the sku being added.  Later the price may be changed by the recalculateOrderAmounts() method
+				if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
+					newItem.setPrice( arguments.data.price );
+					newItem.setSkuPrice( arguments.data.price );
+				} else {
+					newItem.setPrice( arguments.sku.getPrice() );
+					newItem.setSkuPrice( arguments.sku.getPrice() );
+				}
+				
+				// If a stock was passed in, then assign it to this new item
+				if(!isNull(arguments.stock)) {
+					newItem.setStock(arguments.stock);
+				}
+			
+				// Check for product customization
+				if(structKeyExists(arguments, "customizationData") && structKeyExists(arguments.customizationData, "attribute")) {
+					var pcas = arguments.sku.getProduct().getAttributeSets(['astOrderItem']);
+					for(var i = 1; i <= arrayLen(pcas); i++) {
+						var attributes = pcas[i].getAttributes();
+						
+						for(var a = 1; a <= arrayLen(attributes); a++) {
+							if(structKeyExists(arguments.customizationData.attribute, attributes[a].getAttributeID())) {
+								var av = this.newAttributeValue();
+								av.setAttributeValueType("orderItem");
+								av.setAttribute(attributes[a]);
+								av.setAttributeValue(arguments.customizationData.attribute[attributes[a].getAttributeID()]);
+								av.setOrderItem(newItem);
 							}
 						}
-						break;
-						
 					}
 				}
-			}
-		}
-	
-		// If the sku doesn't exist in the order, then create a new order item and add it
-		if(!itemExists)	{
-			var newItem = this.newOrderItem();
-			newItem.setSku(arguments.sku);
-			newItem.setQuantity(arguments.quantity);
-			newItem.setOrder(arguments.order);
-			newItem.setOrderFulfillment(arguments.orderFulfillment);
-			
-			// All new items have the price and skuPrice set to the current price of the sku being added.  Later the price may be changed by the recalculateOrderAmounts() method
-			if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
-				newItem.setPrice( arguments.data.price );
-				newItem.setSkuPrice( arguments.data.price );
-			} else {
-				newItem.setPrice( arguments.sku.getPrice() );
-				newItem.setSkuPrice( arguments.sku.getPrice() );
-			}
-			
-			// If a stock was passed in, then assign it to this new item
-			if(!isNull(arguments.stock)) {
-				newItem.setStock(arguments.stock);
 			}
 		
-			// Check for product customization
-			if(structKeyExists(arguments, "customizationData") && structKeyExists(arguments.customizationData, "attribute")) {
-				var pcas = arguments.sku.getProduct().getAttributeSets(['astOrderItem']);
-				for(var i = 1; i <= arrayLen(pcas); i++) {
-					var attributes = pcas[i].getAttributes();
-					
-					for(var a = 1; a <= arrayLen(attributes); a++) {
-						if(structKeyExists(arguments.customizationData.attribute, attributes[a].getAttributeID())) {
-							var av = this.newAttributeValue();
-							av.setAttributeValueType("orderItem");
-							av.setAttribute(attributes[a]);
-							av.setAttributeValue(arguments.customizationData.attribute[attributes[a].getAttributeID()]);
-							av.setOrderItem(newItem);
-						}
-					}
-				}
-			}
+			// Recalculate the order amounts for tax and promotions and priceGroups
+			recalculateOrderAmounts( arguments.order );
+		
+		} else {
+			order.addError("currency", "The existing cart is already in the currency of #arguments.order.getCurrencyCode()# so this item can not be added as #arguments.currencyCode#");
 		}
-	
-		// Recalculate the order amounts for tax and promotions and priceGroups
-		recalculateOrderAmounts( arguments.order );
+		
 	}
 	
 	public void function removeOrderItem(required any order, required string orderItemID) {
@@ -329,6 +354,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					
 					// Make sure the payment is attached to the order
 					payment.setOrder(arguments.order);
+					
+					// Make sure the payment currency matches the order
+					payment.setCurrencyCode( arguments.order.getCurrencyCode() );
 					
 					// Attempt to Validate & Save Order Payment
 					payment = this.saveOrderPayment(payment, paymentsDataArray[i]);
