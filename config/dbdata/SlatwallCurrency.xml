@@ -4,7 +4,8 @@
 		<column name="currencyCode" fieldtype="id" />
 		<column name="activeFlag" datatype="bit" update="false" />
 		<column name="currencyName" />
-		<column name="currencyLocal" update="false" />
+		<column name="currencyLocale" />
+		<column name="currencyMask" />
 	</Columns>
 	<Records>
 		<Record currencyCode="AED" activeFlag="0" currencyName="AED - United Arab Emirates Dirham" />
@@ -14,7 +15,7 @@
 		<Record currencyCode="ANG" activeFlag="0" currencyName="ANG - Netherlands Antilles Guilder" />
 		<Record currencyCode="AOA" activeFlag="0" currencyName="AOA - Angola Kwanza" />
 		<Record currencyCode="ARS" activeFlag="0" currencyName="ARS - Argentina Peso" />
-		<Record currencyCode="AUD" activeFlag="0" currencyName="AUD - Australia Dollar" currencyLocal="English (Australian)" />
+		<Record currencyCode="AUD" activeFlag="0" currencyName="AUD - Australia Dollar" currencyLocale="English (Australian)" />
 		<Record currencyCode="AWG" activeFlag="0" currencyName="AWG - Aruba Guilder" />
 		<Record currencyCode="AZN" activeFlag="0" currencyName="AZN - Azerbaijan New Manat" />
 		<Record currencyCode="BAM" activeFlag="0" currencyName="BAM - Bosnia and Herzegovina Convertible Marka" />
@@ -26,17 +27,17 @@
 		<Record currencyCode="BMD" activeFlag="0" currencyName="BMD - Bermuda Dollar" />
 		<Record currencyCode="BND" activeFlag="0" currencyName="BND - Brunei Darussalam Dollar" />
 		<Record currencyCode="BOB" activeFlag="0" currencyName="BOB - Bolivia Boliviano" />
-		<Record currencyCode="BRL" activeFlag="0" currencyName="BRL - Brazil Real" currencyLocal="Portuguese (Brazilian)" />
+		<Record currencyCode="BRL" activeFlag="0" currencyName="BRL - Brazil Real" currencyLocale="Portuguese (Brazilian)" />
 		<Record currencyCode="BSD" activeFlag="0" currencyName="BSD - Bahamas Dollar" />
 		<Record currencyCode="BTN" activeFlag="0" currencyName="BTN - Bhutan Ngultrum" />
 		<Record currencyCode="BWP" activeFlag="0" currencyName="BWP - Botswana Pula" />
 		<Record currencyCode="BYR" activeFlag="0" currencyName="BYR - Belarus Ruble" />
 		<Record currencyCode="BZD" activeFlag="0" currencyName="BZD - Belize Dollar" />
-		<Record currencyCode="CAD" activeFlag="0" currencyName="CAD - Canada Dollar" currencyLocal="English (Canadian)" />
+		<Record currencyCode="CAD" activeFlag="0" currencyName="CAD - Canada Dollar" currencyLocale="English (Canadian)" />
 		<Record currencyCode="CDF" activeFlag="0" currencyName="CDF - Congo/Kinshasa Franc" />
 		<Record currencyCode="CHF" activeFlag="0" currencyName="CHF - Switzerland Franc" />
 		<Record currencyCode="CLP" activeFlag="0" currencyName="CLP - Chile Peso" />
-		<Record currencyCode="CNY" activeFlag="0" currencyName="CNY - China Yuan Renminbi" currencyLocal="Chinese (China)" />
+		<Record currencyCode="CNY" activeFlag="0" currencyName="CNY - China Yuan Renminbi" currencyLocale="Chinese (China)" />
 		<Record currencyCode="COP" activeFlag="0" currencyName="COP - Colombia Peso" />
 		<Record currencyCode="CRC" activeFlag="0" currencyName="CRC - Costa Rica Colon" />
 		<Record currencyCode="CUC" activeFlag="0" currencyName="CUC - Cuba Convertible Peso" />
@@ -50,7 +51,7 @@
 		<Record currencyCode="EGP" activeFlag="0" currencyName="EGP - Egypt Pound" />
 		<Record currencyCode="ERN" activeFlag="0" currencyName="ERN - Eritrea Nakfa" />
 		<Record currencyCode="ETB" activeFlag="0" currencyName="ETB - Ethiopia Birr" />
-		<Record currencyCode="EUR" activeFlag="0" currencyName="EUR - Euro Member Countries" currencyLocal="English (UK)" />
+		<Record currencyCode="EUR" activeFlag="0" currencyName="EUR - Euro Member Countries" currencyLocale="English (UK)" />
 		<Record currencyCode="FJD" activeFlag="0" currencyName="FJD - Fiji Dollar" />
 		<Record currencyCode="FKP" activeFlag="0" currencyName="FKP - Falkland Islands (Malvinas) Pound" />
 		<Record currencyCode="GBP" activeFlag="0" currencyName="GBP - United Kingdom Pound" />
@@ -62,7 +63,7 @@
 		<Record currencyCode="GNF" activeFlag="0" currencyName="GNF - Guinea Franc" />
 		<Record currencyCode="GTQ" activeFlag="0" currencyName="GTQ - Guatemala Quetzal" />
 		<Record currencyCode="GYD" activeFlag="0" currencyName="GYD - Guyana Dollar" />
-		<Record currencyCode="HKD" activeFlag="0" currencyName="HKD - Hong Kong Dollar" currencyLocal="Chinese (Hong Kong)" />
+		<Record currencyCode="HKD" activeFlag="0" currencyName="HKD - Hong Kong Dollar" currencyLocale="Chinese (Hong Kong)" />
 		<Record currencyCode="HNL" activeFlag="0" currencyName="HNL - Honduras Lempira" />
 		<Record currencyCode="HRK" activeFlag="0" currencyName="HRK - Croatia Kuna" />
 		<Record currencyCode="HTG" activeFlag="0" currencyName="HTG - Haiti Gourde" />
@@ -77,7 +78,7 @@
 		<Record currencyCode="JEP" activeFlag="0" currencyName="JEP - Jersey Pound" />
 		<Record currencyCode="JMD" activeFlag="0" currencyName="JMD - Jamaica Dollar" />
 		<Record currencyCode="JOD" activeFlag="0" currencyName="JOD - Jordan Dinar" />
-		<Record currencyCode="JPY" activeFlag="0" currencyName="JPY - Japan Yen" currencyLocal="Japanese" />
+		<Record currencyCode="JPY" activeFlag="0" currencyName="JPY - Japan Yen" currencyLocale="Japanese" />
 		<Record currencyCode="KES" activeFlag="0" currencyName="KES - Kenya Shilling" />
 		<Record currencyCode="KGS" activeFlag="0" currencyName="KGS - Kyrgyzstan Som" />
 		<Record currencyCode="KHR" activeFlag="0" currencyName="KHR - Cambodia Riel" />
@@ -106,7 +107,7 @@
 		<Record currencyCode="MUR" activeFlag="0" currencyName="MUR - Mauritius Rupee" />
 		<Record currencyCode="MVR" activeFlag="0" currencyName="MVR - Maldives (Maldive Islands) Rufiyaa" />
 		<Record currencyCode="MWK" activeFlag="0" currencyName="MWK - Malawi Kwacha" />
-		<Record currencyCode="MXN" activeFlag="0" currencyName="MXN - Mexico Peso" currencyLocal="Spanish (Mexican)" />
+		<Record currencyCode="MXN" activeFlag="0" currencyName="MXN - Mexico Peso" currencyLocale="Spanish (Mexican)" />
 		<Record currencyCode="MYR" activeFlag="0" currencyName="MYR - Malaysia Ringgit" />
 		<Record currencyCode="MZN" activeFlag="0" currencyName="MZN - Mozambique Metical" />
 		<Record currencyCode="NAD" activeFlag="0" currencyName="NAD - Namibia Dollar" />
@@ -114,7 +115,7 @@
 		<Record currencyCode="NIO" activeFlag="0" currencyName="NIO - Nicaragua Cordoba" />
 		<Record currencyCode="NOK" activeFlag="0" currencyName="NOK - Norway Krone" />
 		<Record currencyCode="NPR" activeFlag="0" currencyName="NPR - Nepal Rupee" />
-		<Record currencyCode="NZD" activeFlag="0" currencyName="NZD - New Zealand Dollar" currencyLocal="English (New Zealand)" />
+		<Record currencyCode="NZD" activeFlag="0" currencyName="NZD - New Zealand Dollar" currencyLocale="English (New Zealand)" />
 		<Record currencyCode="OMR" activeFlag="0" currencyName="OMR - Oman Rial" />
 		<Record currencyCode="PAB" activeFlag="0" currencyName="PAB - Panama Balboa" />
 		<Record currencyCode="PEN" activeFlag="0" currencyName="PEN - Peru Nuevo Sol" />
@@ -132,7 +133,7 @@
 		<Record currencyCode="SBD" activeFlag="0" currencyName="SBD - Solomon Islands Dollar" />
 		<Record currencyCode="SCR" activeFlag="0" currencyName="SCR - Seychelles Rupee" />
 		<Record currencyCode="SDG" activeFlag="0" currencyName="SDG - Sudan Pound" />
-		<Record currencyCode="SEK" activeFlag="0" currencyName="SEK - Sweden Krona" currencyLocal="Swedish" />
+		<Record currencyCode="SEK" activeFlag="0" currencyName="SEK - Sweden Krona" currencyLocale="Swedish" />
 		<Record currencyCode="SGD" activeFlag="0" currencyName="SGD - Singapore Dollar" />
 		<Record currencyCode="SHP" activeFlag="0" currencyName="SHP - Saint Helena Pound" />
 		<Record currencyCode="SLL" activeFlag="0" currencyName="SLL - Sierra Leone Leone" />
@@ -151,11 +152,11 @@
 		<Record currencyCode="TRY" activeFlag="0" currencyName="TRY - Turkey Lira" />
 		<Record currencyCode="TTD" activeFlag="0" currencyName="TTD - Trinidad and Tobago Dollar" />
 		<Record currencyCode="TVD" activeFlag="0" currencyName="TVD - Tuvalu Dollar" />
-		<Record currencyCode="TWD" activeFlag="0" currencyName="TWD - Taiwan New Dollar" currencyLocal="Chinese (Taiwan)" />
+		<Record currencyCode="TWD" activeFlag="0" currencyName="TWD - Taiwan New Dollar" currencyLocale="Chinese (Taiwan)" />
 		<Record currencyCode="TZS" activeFlag="0" currencyName="TZS - Tanzania Shilling" />
 		<Record currencyCode="UAH" activeFlag="0" currencyName="UAH - Ukraine Hryvna" />
 		<Record currencyCode="UGX" activeFlag="0" currencyName="UGX - Uganda Shilling" />
-		<Record currencyCode="USD" activeFlag="1" currencyName="USD - United States Dollar" />
+		<Record currencyCode="USD" activeFlag="1" currencyName="USD - United States Dollar" currencyLocale="English (US)" />
 		<Record currencyCode="UYU" activeFlag="0" currencyName="UYU - Uruguay Peso" />
 		<Record currencyCode="UZS" activeFlag="0" currencyName="UZS - Uzbekistan Som" />
 		<Record currencyCode="VEF" activeFlag="0" currencyName="VEF - Venezuela Bolivar Fuerte" />

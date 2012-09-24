@@ -80,6 +80,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Non-Persistent Properties
 	property name="optionsDisplay" persistent="false";
 	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
+	property name="currencyCode" type="string" persistent="false";
 	property name="eligibleFulfillmentMethods" type="array" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePriceDetails" type="struct" persistent="false";
@@ -298,6 +299,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// END: Quantity Helper Methods
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public string function getCurrencyCode() {
+		return this.setting('skuCurrency');
+	}
 	
 	public any function getCurrentAccountPrice() {
 		if(!structKeyExists(variables, "currentAccountPrice")) {

@@ -42,7 +42,7 @@ component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCu
 	property name="currencyCode" ormtype="string" fieldtype="id" unique="true" generated="never";
 	property name="activeFlag" ormtype="boolean";
 	property name="currencyName" ormtype="string";
-	property name="currencyLocal" ormtype="string";
+	property name="currencyLocale" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	

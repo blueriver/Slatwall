@@ -858,10 +858,23 @@ component displayname="Base Object" accessors="true" output="false" {
 				if(isBoolean(arguments.value) && arguments.value) {
 					return rbKey('define.true');
 				} else {
-				return rbKey('define.false');
+					return rbKey('define.false');
 				}
 			}
 			case "currency": {
+				// Check to see if this object has a currencyCode
+				if( this.hasProperty("currencyCode") && !isNull(getCurrencyCode()) && len(getCurrencyCode()) eq 3 ) {
+					
+					var currency = getService("currencyService").getCurrency(getCurrencyCode());
+					
+					if(!isNull( currency.getCurrencyLocale() ) ) {
+						return LSCurrencyFormat(arguments.value, setting("globalCurrencyType"), currency.getCurrencyLocale());
+					}
+					
+					return getCurrencyCode() & numberFormat(arguments.value, ',.__');
+				}
+				
+				// Otherwsie use the global currencyLocal
 				return LSCurrencyFormat(arguments.value, setting("globalCurrencyType"), setting("globalCurrencyLocale"));
 			}
 			case "datetime": {
