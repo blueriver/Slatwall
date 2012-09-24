@@ -123,6 +123,7 @@
 				<entry key="ShippingMethodOption"><value>shippingService</value></entry>
 				<entry key="ShippingMethodRate"><value>shippingService</value></entry>
 				<entry key="Sku"><value>skuService</value></entry>
+				<entry key="SkuCurrency"><value>skuService</value></entry>
 				<entry key="State"><value>addressService</value></entry>
 				<entry key="Stock"><value>stockService</value></entry>
 				<entry key="StockAdjustment"><value>stockService</value></entry>

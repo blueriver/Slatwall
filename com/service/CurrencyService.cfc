@@ -39,6 +39,9 @@ Notes:
 
 component  extends="Slatwall.com.service.BaseService" accessors="true" {
 
+	// Cached in Application Scope
+	property name="europeanCentralBankRates" type="struct";
+
 	// ===================== START: Logical Methods ===========================
 	
 	public array function getCurrencyOptions() {
@@ -48,6 +51,60 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 		csl.addSelect(propertyIdentifier="currencyCode", alias="value");
 		
 		return csl.getRecords(); 
+	}
+	
+	public numeric function convertCurrency(required numeric amount, required originalCurrencyCode, required convertToCurrencyCode) {
+		// If an integration exists for currency conversion, then pass to that integration
+		// TODO: Add integration support
+		
+		
+		// If both currencyCodes exist in the European Central Bank list then convert based on that info
+		var cbRates = getEuropeanCentralBankRates();
+		if( ( structKeyExists(cbRates, arguments.originalCurrencyCode) || arguments.originalCurrencyCode eq "EUR" ) && ( structKeyExists(cbRates, arguments.convertToCurrencyCode) || arguments.convertToCurrencyCode eq "EUR" ) ) {
+			if(arguments.originalCurrencyCode eq "EUR") {
+				var amountInEUR = arguments.amount;	
+			} else {
+				var amountInEUR = arguments.amount / cbRates[ arguments.originalCurrencyCode ];
+			}
+			
+			if(arguments.convertToCurrencyCode eq "EUR") {
+				return round(amountInEUR * 100) / 100;
+			} else {
+				return round(amountInEUR * cbRates[ arguments.convertToCurrencyCode ] * 100) / 100;
+			}
+		}
+		
+		// If no conversion could be done, just return the original amount
+		return arguments.amount;
+	}
+	
+	public struct function getEuropeanCentralBankRates() {
+		if( !structKeyExists(variables, "europeanCentralBankRates") || !structKeyExists(variables.europeanCentralBankRates, "retrieved") || variables.europeanCentralBankRates.retrieved <= dateFormat(now() - 1, "yyyy-mm-dd")) {
+			try {
+				var httpRequest = new http();
+				httpRequest.setMethod( "GET" );
+				httpRequest.setUrl("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml");
+				httpRequest.setPort( 80 );
+				httpRequest.setTimeout( 60 );
+				httpRequest.setResolveurl( false );
+				
+				var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
+				
+				var newDetails = {};
+				
+				for(var i = 1; i<=arrayLen(xmlResponse["gesmes:Envelope"]["Cube"]["Cube"].xmlChildren); i++) {
+					if(structKeyExists(xmlResponse["gesmes:Envelope"]["Cube"]["Cube"].xmlChildren[ i ].xmlAttributes, "currency") && structKeyExists(xmlResponse["gesmes:Envelope"]["Cube"]["Cube"].xmlChildren[ i ].xmlAttributes, "rate")) {
+						newDetails[ xmlResponse["gesmes:Envelope"]["Cube"]["Cube"].xmlChildren[ i ].xmlAttributes.currency ] = xmlResponse["gesmes:Envelope"]["Cube"]["Cube"].xmlChildren[ i ].xmlAttributes.rate;
+					}
+				}
+				
+				newDetails.retrieved = now();
+				
+				variables.europeanCentralBankRates = duplicate(newDetails);	
+			} catch (any e) {
+			}
+		}
+		return variables.europeanCentralBankRates;
 	}
 	
 	// =====================  END: Logical Methods ============================

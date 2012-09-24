@@ -53,9 +53,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="subscriptionTerm" cfc="SubscriptionTerm" fieldtype="many-to-one" fkcolumn="subscriptionTermID";
 	
 	// Related Object Properties (one-to-many)
-	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="skuID" cascade="all-delete-orphan" inverse="true";
-	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="skuID" cfc="Stock" inverse="true" cascade="all";
 	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="skuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="skuID" cascade="all-delete-orphan" inverse="true";
+	property name="skuCurrencies" singularname="skuCurrency" cfc="SkuCurrency" type="array" fieldtype="one-to-many" fkcolumn="skuID" cascade="all-delete-orphan" inverse="true";
+	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="skuID" cfc="Stock" inverse="true" cascade="all";
 	
 	// Related Object Properties (many-to-many - owner)
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
@@ -81,6 +82,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="optionsDisplay" persistent="false";
 	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
 	property name="currencyCode" type="string" persistent="false";
+	property name="currencyDetails" type="struct" persistent="false";
 	property name="eligibleFulfillmentMethods" type="array" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePriceDetails" type="struct" persistent="false";
@@ -102,6 +104,12 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     // used by validate this
     public boolean function isNotDefaultSku() {
 		return !getDefaultFlag();
+    }
+    
+    public numeric function getPriceByCurrencyCode( required string currencyCode ) {
+    	if(structKeyExists(getCurrencyDetails(), arguments.currencyCode)) {
+    		return getCurrencyDetails()[ arguments.currencyCode ].price;
+    	}
     }
     
     // @hint this method validates that this skus has a unique option combination that no other sku has
@@ -301,7 +309,62 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public string function getCurrencyCode() {
-		return this.setting('skuCurrency');
+		if(!structKeyExists(variables, "currencyCode")) {
+			variables.currencyCode = this.setting('skuCurrency');
+		}
+		return variables.currencyCode;
+	}
+	
+	public struct function getCurrencyDetails() {
+		if(!structKeyExists(variables, "currencyDetails")) {
+			variables.currencyDetails = {};
+			
+			var eligibleCurrencySL = getService("currencyService").getCurrencySmartList();
+			eligibleCurrencySL.addInFilter('currencyCode', setting('skuEligibleCurrencies') );
+			
+			for(var i = 1; i<=arrayLen(eligibleCurrencySL.getRecords()); i++) {
+				
+				var thisCurrency = eligibleCurrencySL.getRecords()[i];
+				
+				variables.currencyDetails[ thisCurrency.getCurrencyCode() ] = {};
+				variables.currencyDetails[ thisCurrency.getCurrencyCode() ].skuCurrencyID = "";
+				
+				// Check to see if thisCurrency is the same as the default currency
+				if(thisCurrency.getCurrencyCode() eq this.setting('skuCurrency')) {
+					if(!isNull(getListPrice())) {
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice = getListPrice();
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPriceFormatted = getFormattedValue("listPrice");
+					}
+					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price = getPrice();
+					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].priceFormatted = getFormattedValue("price");
+					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].converted = false;
+				}
+				// Look through the definitions to see if this currency is defined for this sku
+				for(var c=1; c<=arrayLen(getSkuCurrencies()); c++) {
+					if(getSkuCurrencies()[c].getCurrencyCode() eq thisCurrency.getCurrencyCode()) {
+						if(!isNull(getSkuCurrencies()[c].getListPrice())) {
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice = getSkuCurrencies()[c].getListPrice();
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPriceFormatted = getSkuCurrencies()[c].getFormattedValue("listPrice");	
+						}
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price = getSkuCurrencies()[c].getPrice();
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].priceFormatted = getSkuCurrencies()[c].getFormattedValue("price");
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].converted = false;
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].skuCurrencyID = getSkuCurrencies()[c].getSkuCurrencyID();
+					}
+				}
+				// Use a conversion mechinism
+				if(!structKeyExists(variables.currencyDetails[ thisCurrency.getCurrencyCode() ], "price")) {
+					if(!isNull(getListPrice())) {
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice = getService("currencyService").convertCurrency(getListPrice(), this.setting('skuCurrency'), thisCurrency.getCurrencyCode());
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPriceFormatted = thisCurrency.formatValue( variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice, "currency");
+					}
+					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price = getService("currencyService").convertCurrency(getPrice(), this.setting('skuCurrency'), thisCurrency.getCurrencyCode());
+					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].priceFormatted = thisCurrency.formatValue( variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price, "currency");
+					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].converted = true;
+				}
+			}
+		}
+		return variables.currencyDetails;
 	}
 	
 	public any function getCurrentAccountPrice() {
@@ -430,12 +493,28 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		structDelete(variables, "subscriptionTerm");    
 	}
 	
+	// Alternate Sku Codes (one-to-many)
+	public void function addAlternateSkuCode(required any alternateSkuCode) {
+		arguments.alternateSkuCode.setSku( this );
+	}
+	public void function removeAlternateSkuCode(required any alternateSkuCode) {
+		arguments.alternateSkuCode.removeSku( this );
+	}
+
 	// Attribute Values (one-to-many)    
 	public void function addAttributeValue(required any attributeValue) {    
 		arguments.attributeValue.setSku( this );    
 	}    
 	public void function removeAttributeValue(required any attributeValue) {    
 		arguments.attributeValue.removeSku( this );    
+	}
+	
+	// Sku Currencies (one-to-many)    
+	public void function addSkuCurrency(required any skuCurrency) {    
+		arguments.skuCurrency.setSku( this );    
+	}    
+	public void function removeSkuCurrency(required any skuCurrency) {    
+		arguments.skuCurrency.removeSku( this );    
 	}
 	
 	// Stocks (one-to-many)
@@ -446,15 +525,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		arguments.stock.removeSku( this );
 	}
 	
-	// Alternate Sku Codes (one-to-many)
-	public void function addAlternateSkuCode(required any alternateSkuCode) {
-		arguments.alternateSkuCode.setSku( this );
-	}
-	public void function removeAlternateSkuCode(required any alternateSkuCode) {
-		arguments.alternateSkuCode.removeSku( this );
-	}
-
-	// Promotion Rewards (one-to-many)
+	// Promotion Rewards (many-to-many - inverse)
 	public void function addPromotionReward(required any promotionReward) {
 		arguments.promotionReward.addSku( this );
 	}
@@ -462,14 +533,13 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		arguments.promotionReward.removeSku( this );
 	}
 
-	// Promotion Qualifiers (one-to-many)
+	// Promotion Qualifiers (many-to-many - inverse)
 	public void function addPromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.addSku( this );
 	}
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeSku( this );
 	}
-	
 	
 	// Access Contents (many-to-many - owner)    
 	public void function addAccessContent(required any accessContent) {    

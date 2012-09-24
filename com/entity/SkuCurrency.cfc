@@ -41,7 +41,8 @@ component displayname="Sku Currency" entityname="SlatwallSkuCurrency" table="Sla
 	// Persistent Properties
 	property name="skuCurrencyID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="price" ormtype="big_decimal" formatType="currency" default="0";
-
+	property name="listPrice" ormtype="big_decimal" formatType="currency" default="0";
+	
 	// Related Object Properties (many-to-one)
 	property name="currency" cfc="Currency" fieldtype="many-to-one" fkcolumn="currencyCode";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
@@ -51,6 +52,9 @@ component displayname="Sku Currency" entityname="SlatwallSkuCurrency" table="Sla
 	// Related Object Properties (many-to-many - owner)
 
 	// Related Object Properties (many-to-many - inverse)
+	
+	// Non Update-Insert Properties
+	property name="currencyCode" insert="false" update="false";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -63,14 +67,30 @@ component displayname="Sku Currency" entityname="SlatwallSkuCurrency" table="Sla
 	
 	// Non-Persistent Properties
 
-
-
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Sku (many-to-one)
+	public void function setSku(required any sku) {
+		variables.sku = arguments.sku;
+		if(isNew() or !arguments.sku.hasSkuCurrency( this )) {
+			arrayAppend(arguments.sku.getSkuCurrencies(), this);
+		}
+	}
+	public void function removeSku(any sku) {
+		if(!structKeyExists(arguments, "sku")) {
+			arguments.sku = variables.sku;
+		}
+		var index = arrayFind(arguments.sku.getSkuCurrencies(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.sku.getSkuCurrencies(), index);
+		}
+		structDelete(variables, "sku");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
@@ -83,6 +103,10 @@ component displayname="Sku Currency" entityname="SlatwallSkuCurrency" table="Sla
 	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentation() {
+		return getSku().getSkuCode() & " - " & getCurrency().getCurrencyCode(); 
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	
