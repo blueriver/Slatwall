@@ -367,7 +367,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var propertyIdentifier = listFirst(arguments.orderStatement, variables.orderDirectionDelimiter);
 		var orderDirection = "ASC";
 		if(listLen(arguments.orderStatement, variables.orderDirectionDelimiter) > 1 && listFindNoCase("D,DESC", listLast(arguments.orderStatement, variables.orderDirectionDelimiter))) {
-			orderDirection == "DESC";
+			orderDirection = "DESC";
 		}
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=propertyIdentifier);
 		
