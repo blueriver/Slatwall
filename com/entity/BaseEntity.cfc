@@ -531,7 +531,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			return arrayLen(variables[ left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-8) ]);
 			
 		// getXXX() 			Where XXX is either and attributeID or attributeCode
-		} else if (left(arguments.missingMethodName, 3) == "get" && structKeyExists(variables, "getAttributeValue")) {
+		} else if (left(arguments.missingMethodName, 3) == "get" && structKeyExists(variables, "getAttributeValue") && hasProperty("attributeValues")) {
 			
 			return getAttributeValue(right(arguments.missingMethodName, len(arguments.missingMethodName)-3));	
 			

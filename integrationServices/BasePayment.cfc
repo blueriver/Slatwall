@@ -68,4 +68,8 @@ component extends="Slatwall.com.utility.BaseObject" {
 	public any function getPackageName() {
 		return lcase(listGetAt(getClassFullname(), listLen(getClassFullname(), '.') - 1, '.'));
 	}
+	
+	public string function getExternalPaymentCheckoutViewPath() {
+		return "/Slatwall/integrationServices/#getPackageName()#/views/checkout/externalpayment.cfm";
+	}
 }

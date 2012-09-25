@@ -38,12 +38,15 @@ Notes:
 --->
 <cfinterface>
 	
+	<cffunction name="getPaymentMethodTypes" access="public" returntype="string">
+	</cffunction>
+	
 	<cffunction name="processCreditCard" access="public" returntype="Slatwall.com.utility.payment.CreditCardTransactionResponseBean">
 		<cfargument name="requestBean" type="Slatwall.com.utility.payment.CreditCardTransactionRequestBean" required="true" />
 		
 	</cffunction>
 	
-	<cffunction name="getPaymentMethodTypes" access="public" returntype="string">
+	<cffunction name="getExternalPaymentCheckoutViewPath" access="public" returntype="string">
 	</cffunction>
 		
 </cfinterface>

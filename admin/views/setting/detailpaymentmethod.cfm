@@ -37,7 +37,12 @@ Notes:
 
 --->
 <cfparam name="rc.paymentMethod" type="any" />
+<cfparam name="rc.paymentMethodType" type="string" default="#rc.paymentMethod.getPaymentMethodType()#" />
 <cfparam name="rc.edit" type="boolean" default="false" />
+
+<cfif rc.paymentMethod.isNew()>
+	<cfset rc.paymentMethod.setPaymentMethodType(rc.paymentMethodType) />
+</cfif>
 
 <cf_SlatwallDetailForm object="#rc.paymentMethod#" edit="#rc.edit#">
 	<cf_SlatwallActionBar type="detail" object="#rc.paymentMethod#" edit="#rc.edit#">
@@ -48,8 +53,7 @@ Notes:
 		<cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="providerGateway" edit="#rc.edit#" fieldType="select">
-			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodType" edit="#rc.paymentMethod.isNew()#">
+			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentIntegration" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="allowSaveFlag" edit="#rc.edit#">
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
