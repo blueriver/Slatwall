@@ -49,7 +49,7 @@ Notes:
 		</tr>
 		<cfloop list="#rc.sku.setting('skuEligibleCurrencies')#" index="local.currencyCode">
 			<cfset local.currency = $.slatwall.getService("currencyService").getCurrency( local.currencyCode ) />
-			<cfif local.currencyCode eq rc.sku.setting('skuCurrency')>
+			<cfif local.currency.getCurrencyCode() eq rc.sku.setting('skuCurrency')>
 				<tr class="highlight-yellow">
 			<cfelse>
 				<tr>
@@ -63,7 +63,9 @@ Notes:
 				<td>#rc.sku.getCurrencyDetails()[ local.currency.getCurrencyCode() ].priceFormatted#</td>
 				<td>#local.currencyCode#</td>
 				<td>
-					<cfif rc.sku.getCurrencyDetails()[ local.currency.getCurrencyCode() ].converted>
+					<cfif local.currency.getCurrencyCode() eq rc.sku.setting('skuCurrency')>
+						<cf_SlatwallActionCaller action="admin:product.editSkuCurrency" class="btn btn-mini" icon="pencil" icononly="true" modal="true" disabled="true" />
+					<cfelseif rc.sku.getCurrencyDetails()[ local.currency.getCurrencyCode() ].converted>
 						<cf_SlatwallActionCaller action="admin:product.createSkuCurrency" querystring="currencyCode=#local.currencyCode#&skuID=#rc.sku.getSkuID()#&returnAction=admin:product.detailsku" class="btn btn-mini" icon="pencil" icononly="true" modal="true" />
 					<cfelse>
 						<cf_SlatwallActionCaller action="admin:product.editSkuCurrency" querystring="skuCurrencyID=#rc.sku.getCurrencyDetails()[ local.currency.getCurrencyCode() ].skuCurrencyID#&currencyCode=#local.currencyCode#&skuID=#rc.sku.getSkuID()#&returnAction=admin:product.detailsku" class="btn btn-mini" icon="pencil" icononly="true" modal="true" />
