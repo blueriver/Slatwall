@@ -780,23 +780,45 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			discountAmount=0
 		};
 		
-		var promotionRewards = getDAO().getActivePromotionRewards( rewardTypeList="fulfillment", promotionCodeList=arguments.shippingMethodOption.getOrderFulfillment().getOrder().getPromotionCodeList() );
+		var promotionPeriodQualifications = {};
 		
+		var promotionRewards = getDAO().getActivePromotionRewards( rewardTypeList="fulfillment", promotionCodeList=arguments.shippingMethodOption.getOrderFulfillment().getOrder().getPromotionCodeList() );
 		
 		// Loop over the Promotion Rewards to look for the best discount
 		for(var i=1; i<=arrayLen(promotionRewards); i++) {
 			
 			var reward = promotionRewards[i];
 			
-			if( ( !arrayLen(reward.getFulfillmentMethods()) || reward.hasFulfillmentMethod(arguments.shippingMethodOption.getOrderFulfillment().getFulfillmentMethod()) ) 
-				&&
-				( !arrayLen(reward.getShippingMethods()) || reward.hasShippingMethod(arguments.shippingMethodOption.getShippingMethodRate().getShippingMethod()) ) ) {
-					
-				var discountAmount = getDiscountAmount(reward, arguments.shippingMethodOption.getTotalCharge(), 1);
+			// Setup the boolean for if the promotionPeriod is okToApply based on general use count
+			if(!structKeyExists(promotionPeriodQualifications, reward.getPromotionPeriod().getPromotionPeriodID())) {
+				promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ] = {
+					orderItems = {}
+				};
+				promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ].promotionPeriodQualifies = getPromotionPeriodOKToApply(promotionPeriod=reward.getPromotionPeriod(), order=arguments.shippingMethodOption.getOrderFulfillment().getOrder());
+			}
 				
-				if(discountAmount > details.discountAmount) {
-					details.discountAmount = discountAmount;
-					details.promotionID = reward.getPromotionPeriod().getPromotion().getPromotionID();
+			// If this promotion period is ok to apply based on general useCount
+			if(promotionPeriodQualifications[ reward.getPromotionPeriod().getPromotionPeriodID() ].promotionPeriodQualifies) {
+				
+				// Now that we know the period is ok, lets check and cache if the order qualifiers
+				if(!structKeyExists(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()], "orderQulifies")) {
+					promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderQulifies = getPromotionPeriodOkToApplyByOrderQualifiers(promotionPeriod=reward.getPromotionPeriod(), order=arguments.shippingMethodOption.getOrderFulfillment().getOrder());
+				}
+				
+				// If order qualifies for the rewards promotion period
+				if(promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderQulifies) {
+			
+					if( ( !arrayLen(reward.getFulfillmentMethods()) || reward.hasFulfillmentMethod(arguments.shippingMethodOption.getOrderFulfillment().getFulfillmentMethod()) ) 
+						&&
+						( !arrayLen(reward.getShippingMethods()) || reward.hasShippingMethod(arguments.shippingMethodOption.getShippingMethodRate().getShippingMethod()) ) ) {
+							
+						var discountAmount = getDiscountAmount(reward, arguments.shippingMethodOption.getTotalCharge(), 1);
+						
+						if(discountAmount > details.discountAmount) {
+							details.discountAmount = discountAmount;
+							details.promotionID = reward.getPromotionPeriod().getPromotion().getPromotionID();
+						}
+					}
 				}
 			}
 			
