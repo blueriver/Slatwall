@@ -94,7 +94,7 @@ Notes:
 			FROM
 				SlatwallOptionGroup
 			WHERE
-				SlatwallOptionGroup.optionGroupID NOT IN (#wrapListItemsInSingleQuotes(arguments.existingOptionGroupIDList)#)
+				SlatwallOptionGroup.optionGroupID NOT IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.existingOptionGroupIDList#" list="true">)
 			ORDER BY 
 				SlatwallOptionGroup.optionGroupName
 		</cfquery>
