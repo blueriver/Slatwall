@@ -42,11 +42,13 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.promotionSmartList#" />
 
+<cfset rc.promotionSmartList.addOrder("promotionName|ASC") />
+
 <cf_SlatwallListingDisplay smartList="#rc.promotionSmartList#"
 						   recorddetailaction="admin:pricing.detailpromotion"
 						   recordEditAction="admin:pricing.editpromotion">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="currentFlag" />
+	<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_SlatwallListingDisplay>
 
