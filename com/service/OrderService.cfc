@@ -343,27 +343,31 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(structKeyExists(data, "orderPayments")) {
 			var paymentsDataArray = data.orderPayments;
 			for(var i = 1; i <= arrayLen(paymentsDataArray); i++) {
-				var payment = this.getOrderPayment(paymentsDataArray[i].orderPaymentID, true);
 				
-				if(requirePayment || (payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
-					if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i],"amount"))	{
-						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
-					} else if(!payment.isNew() && (isNull(payment.getAmountAuthorized()) || payment.getAmountAuthorized() == 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
-						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountAuthorizedTotal();
-					}
+				if(!structKeyExists(data, "newOrderPaymentIndex") || data.newOrderPaymentIndex == 1) {
 					
-					// Make sure the payment is attached to the order
-					payment.setOrder(arguments.order);
-					
-					// Make sure the payment currency matches the order
-					payment.setCurrencyCode( arguments.order.getCurrencyCode() );
-					
-					// Attempt to Validate & Save Order Payment
-					payment = this.saveOrderPayment(payment, paymentsDataArray[i]);
-					
-					// Check to see if this payment has any errors and if so then don't proceed
-					if(payment.hasErrors()) {
-						paymentsOK = false;
+					var payment = this.getOrderPayment(paymentsDataArray[i].orderPaymentID, true);
+				
+					if(requirePayment || (payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
+						if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i],"amount"))	{
+							paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
+						} else if(!payment.isNew() && (isNull(payment.getAmountAuthorized()) || payment.getAmountAuthorized() == 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
+							paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountAuthorizedTotal();
+						}
+						
+						// Make sure the payment is attached to the order
+						payment.setOrder(arguments.order);
+						
+						// Make sure the payment currency matches the order
+						payment.setCurrencyCode( arguments.order.getCurrencyCode() );
+						
+						// Attempt to Validate & Save Order Payment
+						payment = this.saveOrderPayment(payment, paymentsDataArray[i]);
+						
+						// Check to see if this payment has any errors and if so then don't proceed
+						if(payment.hasErrors()) {
+							paymentsOK = false;
+						}
 					}
 				}
 			}
