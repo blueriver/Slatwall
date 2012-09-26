@@ -573,7 +573,7 @@ globalEncryptionKeySize
 				WHERE
 					LOWER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
 				  AND
-					<cfif structKeyExists(settingRelationships, "contentID")>
+				  	<cfif structKeyExists(settingRelationships, "contentID")>
 						LOWER(allSettings.contentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.contentID)#" > 
 					<cfelse>
 						allSettings.contentID IS NULL
@@ -585,7 +585,13 @@ globalEncryptionKeySize
 						allSettings.cmsContentID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "productTypeID")>
+				  	<cfif structKeyExists(settingRelationships, "paymentMethodID")>
+						LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
+					<cfelse>
+						allSettings.paymentMethodID IS NULL
+					</cfif>
+				  AND
+				  	<cfif structKeyExists(settingRelationships, "productTypeID")>
 						LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
 					<cfelse>
 						allSettings.productTypeID IS NULL
