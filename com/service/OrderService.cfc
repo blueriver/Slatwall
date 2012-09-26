@@ -339,7 +339,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			}
 		}
-	
+		
 		if(structKeyExists(data, "orderPayments")) {
 			var paymentsDataArray = data.orderPayments;
 			for(var i = 1; i <= arrayLen(paymentsDataArray); i++) {
@@ -372,17 +372,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			}
 		}
-	
+		
 		// Verify that there are enough payments applied to the order to proceed
 		if(order.getPaymentAmountTotal() < order.getTotal()) {
 			paymentsOK = false;
 		}
-	
+		
 		// Verify that payment method is provided for subscription order, even if the amount is 0
 		if(!arrayLen(order.getOrderPayments()) && requirePayment) {
 			paymentsOK = false;
 		}
-	
+		
 		return paymentsOK;
 	}
 	
@@ -393,8 +393,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
 			var transactionType = order.getOrderPayments()[i].getPaymentMethod().setting('paymentMethodCheckoutTransactionType');
 			
-			if(transactionType != 'none' && order.getOrderPayments()[i].getAmount() > 0) {
+			if(transactionType != '' && transactionType != 'none' && order.getOrderPayments()[i].getAmount() > 0) {
+			
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount());
+				
 				if(!paymentOK) {
 					order.getOrderPayments()[i].setAmount(0);
 					allPaymentsProcessed = false;
@@ -758,10 +760,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					if(!validAccount) {
 						arguments.order.addError("processing", "The order account was invalid for one reason or another.");
 					}
+					
 					var validPayments = updateAndVerifyOrderPayments(order=arguments.order, data=arguments.data);
 					if(!validPayments) {
 						arguments.order.addError("processing", "One or more of the order payments were invalid for one reason or another.");
 					}
+					
 					var validFulfillments = updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
 					if(!validFulfillments) {
 						arguments.order.addError("processing", "One or more of the order fulfillments were invalid for one reason or another.");
@@ -1456,7 +1460,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 	}	
 
-	// =====================  END: Status Methods ===============================
+	// =====================  END: Status Methods =============================
 	
 	
 	// ===================== START: Logical Methods ===========================
