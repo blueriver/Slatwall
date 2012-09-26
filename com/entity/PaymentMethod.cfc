@@ -81,7 +81,7 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	}
 	
 	public array function getPaymentIntegrationOptions() {
-		var returnArray = [];
+		var returnArray = [{name=rbKey('define.select'), value=""}];
 		
 		var optionsSL = getService("integrationService").getIntegrationSmartList();
 		optionsSL.addFilter('paymentActiveFlag', '1');
