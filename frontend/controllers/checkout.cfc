@@ -91,7 +91,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 		
 		// Setup some elements to be used by different views
-		rc.activePaymentMethods = getPaymentService().listPaymentMethodFilterByActiveFlag(1);
+		rc.activePaymentMethods = getPaymentService().getEligiblePaymentMethodsForOrder(order=getSlatwallScope().cart());
 	}
 	
 	public void function confirmation(required struct rc) {

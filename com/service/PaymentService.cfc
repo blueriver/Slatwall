@@ -147,4 +147,26 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		return 'Invalid';
 	}
+	
+	public any function getEligiblePaymentMethodsForOrder(required any order) {
+		var paymentMethodSmartList = this.getPaymentMethodSmartList();
+		var eligiblePMList = "";
+		
+		for(var i = 1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+			var epmList = arguments.order.getOrderItems()[i].getSku().setting("skuEligiblePaymentMethods");
+			for(var x=1; x<=listLen( epmList ); x++) {
+				if(!listFindNoCase(eligiblePMList, listGetAt(epmList, x))) {
+					eligiblePMList = listAppend(eligiblePMList, listGetAt(epmList, x));
+				}
+			}	
+		}
+		
+		if( listLen(eligiblePMList) ) {
+			paymentMethodSmartList.addFilter('activeFlag', 1);
+			paymentMethodSmartList.addInFilter('paymentMethodID', eligiblePMList);
+			return paymentMethodSmartList.getRecords();	
+		}
+		
+		return [];
+	}
 }
