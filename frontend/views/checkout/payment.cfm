@@ -74,7 +74,7 @@ Notes:
 					</cfloop>
 				</cfif>
 				<input type="hidden" name="orderID" value="#$.slatwall.cart().getOrderID()#" />
-				<button type="submit" tabIndex="#rc.tabIndex++#">Submit</button>
+				<button type="submit">Submit</button>
 			</form>
 		</cfif>
 	</div>

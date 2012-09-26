@@ -88,7 +88,7 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 		
 		for(var i=1; i<=arrayLen(optionsSL.getRecords()); i++) {
 			if(listFindNoCase(optionsSL.getRecords()[i].getIntegrationCFC("payment").getPaymentMethodTypes(), getPaymentMethodType())) {
-				arrayAppend(returnArray, {name=optionsSL.getRecords()[i].getIntegrationName(), value=optionsSL.getRecords()[i].getIntegrationPackage()});	
+				arrayAppend(returnArray, {name=optionsSL.getRecords()[i].getIntegrationName(), value=optionsSL.getRecords()[i].getIntegrationID()});	
 			}
 		}
 		
