@@ -186,6 +186,7 @@
 	</bean>
 	<bean id="brandService" class="Slatwall.com.service.BrandService">
         <property name="DAO"><ref bean="brandDAO" /></property>
+		<property name="dataService"><ref bean="dataService" /></property>
 	</bean>
 	<bean id="commentService" class="Slatwall.com.service.CommentService">
         <property name="DAO"><ref bean="commentDAO" /></property>

@@ -1,6 +1,6 @@
-/*
+<!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -35,42 +35,23 @@
 
 Notes:
 
-*/
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.orderReturn" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-	property name="dataService" type="any";
-	
-	// ===================== START: Logical Methods ===========================
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: Process Methods ===========================
-	
-	// =====================  END: Process Methods ============================
-	
-	// ====================== START: Save Overrides ===========================
-	
-	public any function saveBrand(required any brand, required struct data) {
-		if( (isNull(arguments.brand.getURLTitle()) || !len(arguments.brand.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
-			param name="arguments.data.brandName" default="";
-			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.brandName, tableName="SlatwallBrand");
-		}
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.orderReturn#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.orderReturn#" edit="#rc.edit#" backaction="admin:order.detailorder" backquerystring="orderID=#rc.orderReturn.getOrder().getOrderID()#"></cf_SlatwallActionBar>
 		
-		return super.save(arguments.brand, arguments.data);
-	}
-	
-	// ======================  END: Save Overrides ============================
-	
-	// ==================== START: Smart List Overrides =======================
-	
-	// ====================  END: Smart List Overrides ========================
-	
-	// ====================== START: Get Overrides ============================
-	
-	// ======================  END: Get Overrides =============================
-	
-}
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.orderReturn#" property="returnLocation" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.orderReturn#">
+			<cf_SlatwallTab view="admin:order/orderreturntabs/orderreturnitems">
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
+</cfoutput>
