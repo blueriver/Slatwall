@@ -240,7 +240,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function saveProductType(required any productType, required struct data) {
-		if( (isNull(product.getURLTitle()) || !len(arguments.productType.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
+		if( (isNull(arguments.productType.getURLTitle()) || !len(arguments.productType.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
 			if(!isNull(arguments.productType.getProductTypeName())) {
 				param name="arguments.data.productTypeName" default="#arguments.productType.getProductTypeName()#";
 			} else {
@@ -249,7 +249,7 @@ component extends="BaseService" accessors="true" {
 			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productTypeName, tableName="SlatwallProduct");
 		}
 		
-		arguments.productType = super.saveProductType(arguments.productType, arguments.data);
+		arguments.productType = super.save(arguments.productType, arguments.data);
 
 		// if this type has a parent, inherit all products that were assigned to that parent
 		if(!arguments.productType.hasErrors() && !isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {

@@ -51,7 +51,9 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" edit="#rc.edit#" valueOptions="#rc.productType.getParentProductTypeOptions(rc.baseProductType)#">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="urlTitle" edit="#rc.edit#">
+				<cfif not rc.productType.isNew()>
+					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="urlTitle" edit="#rc.edit#">
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
