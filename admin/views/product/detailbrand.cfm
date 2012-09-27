@@ -48,7 +48,9 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandWebsite" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="urlTitle" edit="#rc.edit#">
+				<cfif not rc.brand.isNew()>
+					<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="urlTitle" edit="#rc.edit#">
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

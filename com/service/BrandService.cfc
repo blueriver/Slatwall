@@ -59,7 +59,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.brandName, tableName="SlatwallBrand");
 		}
 		
-		return super.saveBrand(arguments.brand, arguments.data);;
+		return super.save(arguments.brand, arguments.data);
 	}
 	
 	// ======================  END: Save Overrides ============================
