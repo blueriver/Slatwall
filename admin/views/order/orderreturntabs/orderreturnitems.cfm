@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,42 +35,16 @@
 
 Notes:
 
-*/
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.orderReturn" type="any" />
 
-	property name="dataService" type="any";
-	
-	// ===================== START: Logical Methods ===========================
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: Process Methods ===========================
-	
-	// =====================  END: Process Methods ============================
-	
-	// ====================== START: Save Overrides ===========================
-	
-	public any function saveBrand(required any brand, required struct data) {
-		if( (isNull(arguments.brand.getURLTitle()) || !len(arguments.brand.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
-			param name="arguments.data.brandName" default="";
-			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.brandName, tableName="SlatwallBrand");
-		}
-		
-		return super.save(arguments.brand, arguments.data);
-	}
-	
-	// ======================  END: Save Overrides ============================
-	
-	// ==================== START: Smart List Overrides =======================
-	
-	// ====================  END: Smart List Overrides ========================
-	
-	// ====================== START: Get Overrides ============================
-	
-	// ======================  END: Get Overrides =============================
-	
-}
+<cfoutput>
+	<cf_SlatwallListingDisplay smartList="#rc.orderReturn.getOrderReturnItemsSmartList()#">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
+		<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityReceived" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityUnreceived" />
+	</cf_SlatwallListingDisplay>
+</cfoutput>

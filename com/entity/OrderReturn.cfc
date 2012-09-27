@@ -49,6 +49,15 @@ component displayname="Order Return" entityname="SlatwallOrderReturn" table="Sla
 	// Related Object Properties (one-to-many)
 	property name="orderReturnItems" singularname="orderReturnItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderReturnID" cascade="all" inverse="true";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
