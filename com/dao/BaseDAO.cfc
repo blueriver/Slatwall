@@ -64,7 +64,7 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		}
 	}
 
-	function list( string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
+	public any function list( string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
 		// Adds the Slatwall Prefix to the entityName when needed.
 		if(left(arguments.entityName,8) != "Slatwall") {
 			arguments.entityName = "Slatwall#arguments.entityName#";
@@ -74,7 +74,7 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 	}
 
 
-	function new( required string entityName ) {
+	public any function new( required string entityName ) {
 		// Adds the Slatwall Prefix to the entityName when needed.
 		if(left(arguments.entityName,8) != "Slatwall") {
 			arguments.entityName = "Slatwall#arguments.entityName#";
@@ -84,7 +84,7 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 	}
 
 
-	function save( required target ) {
+	public any function save( required target ) {
 		entitySave( target );
 		return target;
 	}
