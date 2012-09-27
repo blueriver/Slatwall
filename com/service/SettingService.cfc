@@ -119,6 +119,7 @@ globalEncryptionKeySize
 			fulfillmentMethodEmailBCC = {fieldType="text"},
 			fulfillmentMethodEmailSubjectString = {fieldType="text"},
 			fulfillmentMethodAutoLocation = {fieldType="select"},
+			fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage"},
 			
 			// Global
 			globalCurrencyLocale = {fieldType="select"},

@@ -82,6 +82,7 @@
 		<Record settingID="dbb327e2bfbef63ad4ae55e61c215760" settingName="paymentMethodCheckoutTransactionType" settingValue="none" paymentMethodID="444df303dedc6dab69dd7ebcc9b8036a" />
 		
 		<Record settingID="dbb327e3c7e233a8163146fd2f22179d" settingName="fulfillmentMethodAutoLocation" settingValue="88e6d435d3ac2e5947c81ab3da60eba2" />
+		<Record settingID="dbb327fef478617cd0704c40883c7841" settingName="fulfillmentMethodAutoMinReceivedPercentage" settingValue="0" />
 
 	</Records>
 </Table>
@@ -89,7 +90,7 @@
 <!--
 Below Are UUID's to use... delete after using
 
-	dbb327fef478617cd0704c40883c7841
+	
 	dbb327ffa8c83b9003ccdf5a65c92d25
 	dbb32800cda3d64df34a388d19eae81d
 	dbb32801f856cefe9571571405c90957
