@@ -49,4 +49,21 @@ component accessors="true" output="false" displayname="USA epay" extends="Slatwa
 	public string function getDisplayName() {
 		return "Google";
 	}
+	
+	public struct function getSettings() {
+		return {};
+	}
+	
+	public struct function getIntegratedSettings() {
+		return {
+			productGoogleProductType = {fieldType="select"}
+		};
+	}
+	
+	public array function getSettingOptions(required string settingName) {
+		if(arguments.settingName eq "productGoogleProductType") {
+			
+		}
+	}
+	
 }
