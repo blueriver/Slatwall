@@ -50,6 +50,15 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	// Related Object Properties (one-to-many)
 	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderDeliveryItemID" inverse="true" cascade="all"; // Used For Returns
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
 	// Non-Persistent Properties
 	property name="quantityReturned" persistent="false";
 	

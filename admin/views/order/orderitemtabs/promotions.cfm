@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,26 +36,11 @@
 Notes:
 
 --->
-<cfparam name="rc.orderDelivery" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.orderItem" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderDelivery#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderDelivery#" edit="#rc.edit#"></cf_SlatwallActionBar>
-		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="createdDateTime">
-				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="fulfillmentMethod">
-				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="trackingNumber">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-		<cf_SlatwallListingDisplay smartList="#rc.orderDelivery.getOrderDeliveryItemsSmartList()#">
-			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.title" />
-			<cf_SlatwallListingColumn propertyIdentifier="stock.sku.skuCode" />
-			<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-		</cf_SlatwallListingDisplay>
-		
-	</cf_SlatwallDetailForm>
+	<cf_SlatwallListingDisplay smartList="#rc.orderItem.getAppliedPromotionsSmartList()#">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotion.promotionName" />
+		<cf_SlatwallListingColumn propertyIdentifier="amount" />
+	</cf_SlatwallListingDisplay>
 </cfoutput>
