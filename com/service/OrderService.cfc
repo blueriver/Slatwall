@@ -57,42 +57,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="subscriptionService";
 	property name="typeService";
 	
-	
-	public any function getOrderSmartList(struct data={}) {
-		arguments.entityName = "SlatwallOrder";
-	
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		
-		smartList.joinRelatedProperty("SlatwallOrder", "account", "left", true);
-		smartList.joinRelatedProperty("SlatwallOrder", "orderType", "left", true);
-		smartList.joinRelatedProperty("SlatwallOrder", "orderStatusType", "left", true);
-		
-		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="account.firstName", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="account.lastName", weight=1);
-		
-		return smartList;
-	}
-	
-	public any function saveOrder(required any order, struct data={}, string context="save") {
-	
-		// Call the super.save() method to do the base populate & validate logic
-		arguments.order = super.save(entity=arguments.order, data=arguments.data, context=arguments.context);
-	
-		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
-		if(arguments.order.getStatusCode() == "ostNotPlaced") {
-			for(var i = arrayLen(arguments.order.getOrderItems()); i >= 1; i--) {
-				if(arguments.order.getOrderItems()[i].getQuantity() < 1) {
-					arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
-				}
-			}
-		}
-	
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
-	
-		return arguments.order;
-	}
+	// ===================== START: Logical Methods ===========================
 	
 	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData, string currencyCode, struct data = {})	{
 	
@@ -441,138 +406,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return orderRequirementsList;
 	}
 	
-	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
-	
-		// If fulfillment method is shipping do this
-		if(arguments.orderFulfillment.getFulfillmentMethodType() == "shipping") {
-			// define some variables for backward compatibility
-			param name="data.saveAccountAddress" default="0";
-			param name="data.saveAccountAddressName" default="";
-			param name="data.addressIndex" default="0";
-
-			// Get Address
-			if(data.addressIndex != 0) {
-				var address = getAddressService().getAddress(data.accountAddresses[data.addressIndex].address.addressID, true);
-				var newAddressDataStruct = data.accountAddresses[data.addressIndex].address;
-			} else {
-				var address = getAddressService().getAddress(data.shippingAddress.addressID, true);
-				var newAddressDataStruct = data.shippingAddress;
-			}
-
-			// Populate Address And check if it has changed
-			var serializedAddressBefore = address.getSimpleValuesSerialized();
-			address.populate(newAddressDataStruct);
-			var serializedAddressAfter = address.getSimpleValuesSerialized();
-
-			// If it has changed we need to update Taxes and Shipping Options
-			if(serializedAddressBefore != serializedAddressAfter) {
-				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
-			}
-
-			// USING ACCOUNT ADDRESS
-			if(data.saveAccountAddress == 1 || data.addressIndex != 0) {
-				// new account address
-				if(data.addressIndex == 0) {
-					var accountAddress = getAddressService().newAccountAddress();
-				} else {
-					//Existing address
-					var accountAddress = getAddressService().getAccountAddress(data.accountAddresses[data.addressIndex].accountAddressID, 
-					                                                           true);
-				}
-				accountAddress.setAddress(address);
-				accountAddress.setAccount(arguments.orderFulfillment.getOrder().getAccount());
-			
-				// Figure out the name for this new account address, or update it if needed
-				if(data.addressIndex == 0) {
-					if(structKeyExists(data, "saveAccountAddressName") && len(data.saveAccountAddressName)) {
-						accountAddress.setAccountAddressName(data.saveAccountAddressName);
-					} else {
-						accountAddress.setAccountAddressName(address.getname());
-					}
-				} else if(structKeyExists(data, "accountAddresses") && structKeyExists(data.accountAddresses[data.addressIndex], "accountAddressName")) {
-					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
-				}
-			
-			
-				// If there was previously a shipping Address we need to remove it and recalculate
-				if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
-					arguments.orderFulfillment.removeShippingAddress();
-					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-				}
-
-				// If there was previously an account address and we switch it, then we need to recalculate
-				if(!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				}
-
-				// Set the new account address in the order
-				arguments.orderFulfillment.setAccountAddress(accountAddress);
-			
-			// USING SHIPPING ADDRESS
-			} else {
-
-				// If there was previously an account address we need to remove and recalculate
-				if(!isNull(arguments.orderFulfillment.getAccountAddress())) {
-					arguments.orderFulfillment.removeAccountAddress();
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				}
-				
-				// Set the address in the order Fulfillment as shipping address
-				arguments.orderFulfillment.setShippingAddress(address);
-			}
-		
-			// Validate & Save Address
-			address.validate(context="full");
-		
-			address = getAddressService().saveAddress(address);
-			
-			// Check for a shippingMethodOptionID selected
-			if(structKeyExists(arguments.data, "fulfillmentShippingMethodOptionID")) {
-				var methodOption = getShippingService().getShippingMethodOption(arguments.data.fulfillmentShippingMethodOptionID);
-				
-				// Verify that the method option is one for this fulfillment
-				if(!isNull(methodOption) && arguments.orderFulfillment.hasFulfillmentShippingMethodOption(methodOption)) {
-					// Update the orderFulfillment to have this option selected
-					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethodRate().getShippingMethod());
-					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCharge());
-				}
-			
-			// If no shippingMethodOption, then just check for a shippingMethodID that was passed in
-			} else if (structKeyExists(arguments.data, "shippingMethodID")) {
-				var shippingMethod = getShippingService().getShippingMethod(arguments.data.shippingMethodID);
-				
-				// If this is a valid shipping method, then we can loop over all of the shippingMethodOptions and make sure this one exists
-				if(!isNull(shippingMethod)) {
-					for(var i=1; i<=arrayLen(arguments.orderFulfillment.getShippingMethodOptions()); i++) {
-						if(shippingMethod.getShippingMethodID() == arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod().getShippingMethodID()) {
-							arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod() );
-							arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getShippingMethodOptions()[i].getTotalCharge() );
-						}
-					}
-				}	
-			}
-			
-			// Validate the order Fulfillment
-			arguments.orderFulfillment.validate();
-			
-			// Set ORMHasErrors if the orderFulfillment has errors
-			if(arguments.orderFulfillment.hasErrors()) {
-				getSlatwallScope().setORMHasErrors( true );
-			}
-			
-			if(!getSlatwallScope().getORMHasErrors()) {
-				getDAO().flushORMSession();
-			}
-		}
-	
-		// Save the order Fulfillment
-		return getDAO().save(arguments.orderFulfillment);
-	}
-	
 	public any function copyFulfillmentAddress(required any order) {
 		for(var orderFulfillment in order.getOrderFulfillments()) {
 			if(orderFulfillment.getFulfillmentMethodType() == "shipping") {
@@ -653,13 +486,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 	}
 	
-	public struct function getQuantityPriceSkuAlreadyReturned(required any orderID, required any skuID) {
-		return getDAO().getQuantityPriceSkuAlreadyReturned(arguments.orderId, arguments.skuID);
-	}
-	
-	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID) {
-		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
-	}
 	
 	public any function forceItemQuantityUpdate(required any order, required any messageBean) {
 		// Loop over each order Item
@@ -730,13 +556,26 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return newOrder;
 	}
 	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	public struct function getQuantityPriceSkuAlreadyReturned(required any orderID, required any skuID) {
+		return getDAO().getQuantityPriceSkuAlreadyReturned(arguments.orderId, arguments.skuID);
+	}
+	
+	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID) {
+		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
+	}
+	
 	public any function getMaxOrderNumber() {
 		return getDAO().getMaxOrderNumber();
 	}
 	
+	// ===================== START: DAO Passthrough ===========================
 	
-	// ===================== START: Process Methods ================================
-	
+	// ===================== START: Process Methods ===========================
+
 	// Process: Order
 	public any function processOrder(required any order, struct data={}, string processContext="process") {
 		
@@ -1411,11 +1250,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		return arguments.orderPayment;
 	}
+
+	// =====================  END: Process Methods ============================
 	
-	
-	// =====================  END: Process Methods ==============================
-	
-	// ===================== START: Status Methods ==============================
+	// ====================== START: Status Methods ===========================
 	
 	public void function updateOrderStatus( required any order, updateItemStatus=false ) {
 		// First we make sure that this order status is not 'closed', 'canceld', 'notPlaced' or 'onHold' because we cannot automatically update those statuses
@@ -1459,32 +1297,183 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 		
-	}	
-
-	// =====================  END: Status Methods =============================
-	
-	
-	// ===================== START: Logical Methods ===========================
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: Process Methods ===========================
-	
-	// =====================  END: Process Methods ============================
-	
-	// ====================== START: Status Methods ===========================
+	}
 	
 	// ======================  END: Status Methods ============================
 	
 	// ====================== START: Save Overrides ===========================
 	
+	public any function saveOrder(required any order, struct data={}, string context="save") {
+	
+		// Call the super.save() method to do the base populate & validate logic
+		arguments.order = super.save(entity=arguments.order, data=arguments.data, context=arguments.context);
+	
+		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
+		if(arguments.order.getStatusCode() == "ostNotPlaced") {
+			for(var i = arrayLen(arguments.order.getOrderItems()); i >= 1; i--) {
+				if(arguments.order.getOrderItems()[i].getQuantity() < 1) {
+					arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
+				}
+			}
+		}
+	
+		// Recalculate the order amounts for tax and promotions
+		recalculateOrderAmounts(arguments.order);
+	
+		return arguments.order;
+	}
+	
+	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
+	
+		// If fulfillment method is shipping do this
+		if(arguments.orderFulfillment.getFulfillmentMethodType() == "shipping") {
+			// define some variables for backward compatibility
+			param name="data.saveAccountAddress" default="0";
+			param name="data.saveAccountAddressName" default="";
+			param name="data.addressIndex" default="0";
+
+			// Get Address
+			if(data.addressIndex != 0) {
+				var address = getAddressService().getAddress(data.accountAddresses[data.addressIndex].address.addressID, true);
+				var newAddressDataStruct = data.accountAddresses[data.addressIndex].address;
+			} else {
+				var address = getAddressService().getAddress(data.shippingAddress.addressID, true);
+				var newAddressDataStruct = data.shippingAddress;
+			}
+
+			// Populate Address And check if it has changed
+			var serializedAddressBefore = address.getSimpleValuesSerialized();
+			address.populate(newAddressDataStruct);
+			var serializedAddressAfter = address.getSimpleValuesSerialized();
+
+			// If it has changed we need to update Taxes and Shipping Options
+			if(serializedAddressBefore != serializedAddressAfter) {
+				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
+			}
+
+			// USING ACCOUNT ADDRESS
+			if(data.saveAccountAddress == 1 || data.addressIndex != 0) {
+				// new account address
+				if(data.addressIndex == 0) {
+					var accountAddress = getAddressService().newAccountAddress();
+				} else {
+					//Existing address
+					var accountAddress = getAddressService().getAccountAddress(data.accountAddresses[data.addressIndex].accountAddressID, 
+					                                                           true);
+				}
+				accountAddress.setAddress(address);
+				accountAddress.setAccount(arguments.orderFulfillment.getOrder().getAccount());
+			
+				// Figure out the name for this new account address, or update it if needed
+				if(data.addressIndex == 0) {
+					if(structKeyExists(data, "saveAccountAddressName") && len(data.saveAccountAddressName)) {
+						accountAddress.setAccountAddressName(data.saveAccountAddressName);
+					} else {
+						accountAddress.setAccountAddressName(address.getname());
+					}
+				} else if(structKeyExists(data, "accountAddresses") && structKeyExists(data.accountAddresses[data.addressIndex], "accountAddressName")) {
+					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
+				}
+			
+			
+				// If there was previously a shipping Address we need to remove it and recalculate
+				if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
+					arguments.orderFulfillment.removeShippingAddress();
+					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+				}
+
+				// If there was previously an account address and we switch it, then we need to recalculate
+				if(!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				}
+
+				// Set the new account address in the order
+				arguments.orderFulfillment.setAccountAddress(accountAddress);
+			
+			// USING SHIPPING ADDRESS
+			} else {
+
+				// If there was previously an account address we need to remove and recalculate
+				if(!isNull(arguments.orderFulfillment.getAccountAddress())) {
+					arguments.orderFulfillment.removeAccountAddress();
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				}
+				
+				// Set the address in the order Fulfillment as shipping address
+				arguments.orderFulfillment.setShippingAddress(address);
+			}
+		
+			// Validate & Save Address
+			address.validate(context="full");
+		
+			address = getAddressService().saveAddress(address);
+			
+			// Check for a shippingMethodOptionID selected
+			if(structKeyExists(arguments.data, "fulfillmentShippingMethodOptionID")) {
+				var methodOption = getShippingService().getShippingMethodOption(arguments.data.fulfillmentShippingMethodOptionID);
+				
+				// Verify that the method option is one for this fulfillment
+				if(!isNull(methodOption) && arguments.orderFulfillment.hasFulfillmentShippingMethodOption(methodOption)) {
+					// Update the orderFulfillment to have this option selected
+					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethodRate().getShippingMethod());
+					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCharge());
+				}
+			
+			// If no shippingMethodOption, then just check for a shippingMethodID that was passed in
+			} else if (structKeyExists(arguments.data, "shippingMethodID")) {
+				var shippingMethod = getShippingService().getShippingMethod(arguments.data.shippingMethodID);
+				
+				// If this is a valid shipping method, then we can loop over all of the shippingMethodOptions and make sure this one exists
+				if(!isNull(shippingMethod)) {
+					for(var i=1; i<=arrayLen(arguments.orderFulfillment.getShippingMethodOptions()); i++) {
+						if(shippingMethod.getShippingMethodID() == arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod().getShippingMethodID()) {
+							arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod() );
+							arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getShippingMethodOptions()[i].getTotalCharge() );
+						}
+					}
+				}	
+			}
+			
+			// Validate the order Fulfillment
+			arguments.orderFulfillment.validate();
+			
+			// Set ORMHasErrors if the orderFulfillment has errors
+			if(arguments.orderFulfillment.hasErrors()) {
+				getSlatwallScope().setORMHasErrors( true );
+			}
+			
+			if(!getSlatwallScope().getORMHasErrors()) {
+				getDAO().flushORMSession();
+			}
+		}
+	
+		// Save the order Fulfillment
+		return getDAO().save(arguments.orderFulfillment);
+	}
+	
 	// ======================  END: Save Overrides ============================
 	
 	// ==================== START: Smart List Overrides =======================
+	
+	public any function getOrderSmartList(struct data={}) {
+		arguments.entityName = "SlatwallOrder";
+	
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.joinRelatedProperty("SlatwallOrder", "account", "left", true);
+		smartList.joinRelatedProperty("SlatwallOrder", "orderType", "left", true);
+		smartList.joinRelatedProperty("SlatwallOrder", "orderStatusType", "left", true);
+		
+		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="account.firstName", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="account.lastName", weight=1);
+		
+		return smartList;
+	}
 	
 	// ====================  END: Smart List Overrides ========================
 	
