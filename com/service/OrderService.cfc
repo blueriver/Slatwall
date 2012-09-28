@@ -364,6 +364,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				if(!paymentOK) {
 					order.getOrderPayments()[i].setAmount(0);
+					order.getOrderPayments()[i].setCreditCardNumber(javaCast("null", ""));
 					allPaymentsProcessed = false;
 				}
 			}
