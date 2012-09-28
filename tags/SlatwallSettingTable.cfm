@@ -70,7 +70,7 @@ Notes:
 						<td>
 							<cfif thisSetting.settingDetails.settingInherited>
 								<cfif !structCount(thisSetting.settingDetails.settingRelationships)>
-									<cf_SlatwallActionCaller action="admin:setting.listsetting" text="#request.slatwallScope.rbKey('define.global')#"/>
+									<cf_SlatwallActionCaller action="admin:setting.settings" text="#request.slatwallScope.rbKey('define.global')#"/>
 								<cfelse>
 									<cfif structCount(thisSetting.settingDetails.settingRelationships) eq 1>
 										<cfif structKeyList(thisSetting.settingDetails.settingRelationships) eq "productTypeID">
