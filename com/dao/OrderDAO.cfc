@@ -38,6 +38,15 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cffunction name="getOrderItemExportQuery" access="public" returntype="Query">
+		<cfset var rs = "" />
+		
+		<cfquery name="rs">
+		</cfquery>
+		
+		<cfreturn rs />
+	</cffunction>
+	
 	<cfscript>
 		public struct function getQuantityPriceSkuAlreadyReturned(required any orderID, required any skuID) {
 			var params = [arguments.orderID, arguments.skuID];	
