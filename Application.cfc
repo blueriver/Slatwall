@@ -210,6 +210,9 @@ component extends="org.fw1.framework" output="false" {
 							getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
 							writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
 							
+							getBeanFactory().getBean("settingService").clearAllSettingsQuery();
+							writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared");
+							
 							// Run Scripts
 							getBeanFactory().getBean("updateService").runScripts();
 							writeLog(file="Slatwall", text="General Log - Update Service Scripts Have been Run");
