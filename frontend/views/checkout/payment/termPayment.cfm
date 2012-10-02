@@ -41,11 +41,7 @@ Notes:
 <cfparam name="params.orderPaymentIndex" type="string" />
 <cfparam name="params.paymentMethod" type="any" />
 <cfparam name="params.maximumAmount" type="numeric" />
-<cfparam name="params.paymentTerm" type="numeric" />
-
-<cfsilent>
-	<cfset local.maximumAccountPaymentAmount = 0 />
-</cfsilent>
+<cfparam name="params.paymentTerm" type="any" />
 
 <cfoutput>
 	<div class="svocheckoutpaymenttermpayment">
@@ -55,15 +51,15 @@ Notes:
 		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentTerm.paymentTermID" value="#params.paymentTerm.getPaymentTermID()#" />
 		<dl>
 			<dt>Account Terms</dt>
-			<dd>#$.slatwall.cart().getAccount().setting('accountPaymentTerm')#</dd>
+			<dd>#params.paymentTerm.getPaymentTermName()#</dd>
 			<dt>Account Credit Limit</dt>
-			<dd>#$.slatwall.cart().getAccount().setting('accountTermCreditLimit')#</dd>
+			<dd>#$.slatwall.formatValue( $.slatwall.cart().getAccount().setting('accountTermCreditLimit'), "currency")#</dd>
 			<dt>Unused Credit</dt>
-			<dd>#$.slatwall.cart().getAccount().getTermAccountAvailableCredit()#</dd>
+			<dd>#$.slatwall.cart().getAccount().getFormattedValue('termAccountAvailableCredit')#</dd>
 			<dt>Account Balance</dt>
-			<dd>#$.slatwall.cart().getAccount().getTermAccountBalance()#</dd>
+			<dd>#$.slatwall.cart().getAccount().getFormattedValue('termAccountBalance')#</dd>
 			<dt>Amount To Apply to Order</dt>
-			<dd><input type="text" name="orderPayments[#params.orderPaymentIndex#].amount" value="#local.maximumAccountPaymentAmount#" /></dd>
+			<dd><input type="text" name="orderPayments[#params.orderPaymentIndex#].amount" value="#params.maximumAmount#" /></dd>
 		</dl>
 	</div>
 </cfoutput>

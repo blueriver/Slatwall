@@ -84,7 +84,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 								maximumAmount = arguments.order.getAccount().getTermAccountAvailableCredit();
 							}
 							
-							arrayAppend(eligiblePaymentMethodDetails, {paymentMethod=activePaymentMethods[i], maximumAmount=maximumAmount});	
+							arrayAppend(eligiblePaymentMethodDetails, {paymentMethod=activePaymentMethods[i], maximumAmount=maximumAmount, paymentTerm=paymentTerm});	
 						}
 					}
 				} else {

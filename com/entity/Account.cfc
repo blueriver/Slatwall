@@ -85,7 +85,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="phoneNumber" persistent="false";
 	property name="address" persistent="false";
 	property name="password" persistent="false";
-	property name="availableTermAccountCredit" persistent="false";
+	property name="termAccountAvailableCredit" persistent="false" formattype="currency";
+	property name="termAccountBalance" persistent="false" formattype="currency";
 	
 	public boolean function isGuestAccount() {
 		if(isNull(getCmsAccountID())) {
