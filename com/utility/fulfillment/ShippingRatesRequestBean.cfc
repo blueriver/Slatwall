@@ -161,7 +161,7 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		var totalValue = 0;
 		for(var i=1; i<=arrayLen(getShippingItemRequestBeans()); i++) {
 			if(isNumeric(getShippingItemRequestBeans()[i].getValue())) {
-				totalValue = precisionEvaluate(totalValue + (getShippingItemRequestBeans()[i].getValue() * getShippingItemRequestBeans()[i].getValue()));
+				totalValue = precisionEvaluate(totalValue + (round(getShippingItemRequestBeans()[i].getValue() * getShippingItemRequestBeans()[i].getQuantity() * 100) / 100));
 			}
 		}
 		return totalValue;
