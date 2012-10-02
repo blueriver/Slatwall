@@ -309,7 +309,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			var paymentsDataArray = data.orderPayments;
 			for(var i = 1; i <= arrayLen(paymentsDataArray); i++) {
 				
-				if(!structKeyExists(data, "newOrderPaymentIndex") || data.newOrderPaymentIndex == 1) {
+				if(!structKeyExists(data, "newOrderPaymentIndex") || data.newOrderPaymentIndex == i) {
 					
 					var payment = this.getOrderPayment(paymentsDataArray[i].orderPaymentID, true);
 				
