@@ -37,32 +37,11 @@ Notes:
 
 --->
 <cfparam name="rc.account" type="any" />
-<cfparam name="rc.edit" type="boolean" />
 
-<cf_SlatwallDetailForm object="#rc.account#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:account.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
-	</cf_SlatwallActionBar>
-	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">			
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
-	
-	<cf_SlatwallTabGroup object="#rc.account#" allowCustomAttributes="true">
-		<cf_SlatwallTab view="admin:account/accounttabs/addresses" />
-		<cf_SlatwallTab view="admin:account/accounttabs/orders" />
-		<cf_SlatwallTab view="admin:account/accounttabs/paymentmethods" />
-		<cf_SlatwallTab view="admin:account/accounttabs/subscriptionusage" />
-		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />
-		<cf_SlatwallTab view="admin:account/accounttabs/productreviews" />
-		<cf_SlatwallTab view="admin:account/accounttabs/permissions" />
-		<cf_SlatwallTab view="admin:account/accounttabs/accountsettings" />
-	</cf_SlatwallTabGroup>
-	
-</cf_SlatwallDetailForm>
+<cfoutput>
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="accountEligiblePaymentTerms" settingObject="#rc.account#" />
+		<cf_SlatwallSetting settingName="accountPaymentTerm" settingObject="#rc.account#" />
+		<cf_SlatwallSetting settingName="accountTermCreditLimit" settingObject="#rc.account#" />
+	</cf_SlatwallSettingTable>
+</cfoutput>

@@ -587,6 +587,12 @@ globalEncryptionKeySize
 				WHERE
 					LOWER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
 				  AND
+				  	<cfif structKeyExists(settingRelationships, "accountID")>
+						LOWER(allSettings.accountID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.accountID)#" > 
+					<cfelse>
+						allSettings.accountID IS NULL
+					</cfif>
+				  AND
 				  	<cfif structKeyExists(settingRelationships, "contentID")>
 						LOWER(allSettings.contentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.contentID)#" > 
 					<cfelse>
