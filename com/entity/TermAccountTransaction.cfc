@@ -1,6 +1,6 @@
 /*
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -33,33 +33,22 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:					
-						
-	paymentMethodType	
-		cash			
-		check			
-		creditCard		
-		external		
-		giftCard		
-		paymentTerm		
-						
+Notes:
+
 */
-component displayname="Payment Method" entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Term Account Transaction" entityname="SlatwallTermAccountTransaction" table="SlatwallTermAccountTransaction" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="paymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="paymentMethodName" ormtype="string";
-	property name="paymentMethodType" ormtype="string" formatType="rbKey";
-	property name="allowSaveFlag" ormtype="boolean" default="false";
-	property name="activeFlag" ormtype="boolean" default="false";
-	property name="sortOrder" ormtype="integer";
+	property name="termAccountTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="transactionType" ormtype="string";
+	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Object Properties (many-to-one)
-	property name="paymentIntegration" cfc="Integration" fieldtype="many-to-one" fkcolumn="paymentIntegrationID";
 	
 	// Related Object Properties (one-to-many)
-	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="paymentMethodID" cascade="all" inverse="true" lazy="extra";		// Set to lazy, just used for delete validation
-	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" type="array" fieldtype="one-to-many" fkcolumn="paymentMethodID" cascade="all-delete-orphan" inverse="true" lazy="extra";				// Set to lazy, just used for delete validation
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -67,8 +56,8 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
-
-	// Audit properties
+	
+	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
@@ -77,42 +66,11 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	// Non-Persistent Properties
 
 	
-	public array function getPaymentIntegrationOptions() {
-		var returnArray = [{name=rbKey('define.select'), value=""}];
-		
-		var optionsSL = getService("integrationService").getIntegrationSmartList();
-		optionsSL.addFilter('paymentActiveFlag', '1');
-		
-		for(var i=1; i<=arrayLen(optionsSL.getRecords()); i++) {
-			if(listFindNoCase(optionsSL.getRecords()[i].getIntegrationCFC("payment").getPaymentMethodTypes(), getPaymentMethodType())) {
-				arrayAppend(returnArray, {name=optionsSL.getRecords()[i].getIntegrationName(), value=optionsSL.getRecords()[i].getIntegrationID()});	
-			}
-		}
-		
-		return returnArray;
-	}
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
-	// Account Payment Methods (one-to-many)
-	public void function addAccountPaymentMethod(required any accountPaymentMethod) {
-		arguments.accountPaymentMethod.setPaymentMethod( this );
-	}
-	public void function removeAccountPaymentMethod(required any accountPaymentMethod) {
-		arguments.accountPaymentMethod.removePaymentMethod( this );
-	}
-	
-	// Order Payments (one-to-many)
-	public void function addOrderPayment(required any orderPayment) {
-		arguments.orderPayment.setPaymentMethod( this );
-	}
-	public void function removeOrderPayment(required any orderPayment) {
-		arguments.orderPayment.removePaymentMethod( this );
-	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
@@ -123,10 +81,6 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	// =============== START: Custom Formatting Methods ====================
 	
 	// ===============  END: Custom Formatting Methods =====================
-	
-	// ============== START: Overridden Implicet Getters ===================
-	
-	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
 	
@@ -138,10 +92,5 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	
 	// ================== START: Deprecated Methods ========================
 	
-	public any function getIntegration() {
-		return getPaymentIntegration();
-	}
-	
 	// ==================  END:  Deprecated Methods ========================
-	
 }

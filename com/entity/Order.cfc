@@ -84,6 +84,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency";
 	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	property name="fulfillmentRefundTotal" persistent="false" formatType="currency";
+	property name="fulfillmentChargeAfterDiscountTotal" persistent="false" formatType="currency";
 	property name="orderDiscountAmountTotal" persistent="false" formatType="currency";
 	property name="paymentAmountTotal" persistent="false" formatType="currency";
 	property name="paymentAuthorizedTotal" persistent="false" formatType="currency";
@@ -248,6 +249,15 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		
 		return fulfillmentRefundTotal;
+	}
+	
+	public numeric function getFulfillmentChargeAfterDiscountTotal() {
+		var fulfillmentChargeAfterDiscountTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
+			fulfillmentChargeAfterDiscountTotal = precisionEvaluate(fulfillmentChargeAfterDiscountTotal + getOrderFulfillments()[i].getChargeAfterDiscount());
+		}
+		
+		return fulfillmentChargeAfterDiscountTotal;
 	}
 	
 	public numeric function getOrderDiscountAmountTotal() {

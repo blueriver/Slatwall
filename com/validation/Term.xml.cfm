@@ -9,17 +9,52 @@
 		<property name="termName">
 			<rule type="required" contexts="save" />
 		</property>
+		<property name="termHours">
+			<rule type="numeric" contexts="save" />
+		</property>
+		<property name="termDays">
+			<rule type="numeric" contexts="save" />
+		</property>
+		<property name="termMonths">
+			<rule type="numeric" contexts="save" />
+		</property>
+		<property name="termYears">
+			<rule type="numeric" contexts="save" />
+		</property>
+		<property name="paymentTerms">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="initialSubscriptionTerms">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="renewalSubscriptionTerms">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="gracePeriodSubscriptionTerms">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="initialSubscriptionUsageTerms">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="renewalSubscriptionUsageTerms">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="gracePeriodSubscriptionUsageTerms">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
-	<property name="termHours">
-		<rule type="numeric" contexts="save" />
-	</property>
-	<property name="termDays">
-		<rule type="numeric" contexts="save" />
-	</property>
-	<property name="termMonths">
-		<rule type="numeric" contexts="save" />
-	</property>
-	<property name="termYears">
-		<rule type="numeric" contexts="save" />
-	</property>
 </validateThis>

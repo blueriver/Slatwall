@@ -91,7 +91,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 		
 		// Setup some elements to be used by different views
-		rc.activePaymentMethods = getPaymentService().getEligiblePaymentMethodsForOrder(order=getSlatwallScope().cart());
+		rc.eligiblePaymentMethodDetails = getPaymentService().getEligiblePaymentMethodDetailsForOrder(order=getSlatwallScope().cart());
+		
+		// This RC Key is deprecated
+		rc.activePaymentMethods = getPaymentService().listPaymentMethodFilterByActiveFlag(1);
 	}
 	
 	public void function confirmation(required struct rc) {

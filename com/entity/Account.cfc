@@ -85,6 +85,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="phoneNumber" persistent="false";
 	property name="address" persistent="false";
 	property name="password" persistent="false";
+	property name="availableTermAccountCredit" persistent="false";
 	
 	public boolean function isGuestAccount() {
 		if(isNull(getCmsAccountID())) {
@@ -147,6 +148,18 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 			variables.paymentMethodOptionsSmartList.addFilter("activeFlag", 1);
 		}
 		return variables.paymentMethodOptionsSmartList;
+	}
+	
+	public numeric function getTermAccountAvailableCredit() {
+		var termAccountAvailableCredit = setting('accountTermCreditLimit');
+		
+		termAccountAvailableCredit = precisionEvaluate(termAccountAvailableCredit - getTermAccountBalance());
+		
+		return termAccountAvailableCredit;
+	}
+	
+	public numeric function getTermAccountBalance() {
+		return 0;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

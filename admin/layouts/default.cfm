@@ -63,9 +63,9 @@ Notes:
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<ul class="nav">
-						<a href="/admin" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/mura.logo.png" title="Mura" /></a>
+						<a href="/admin" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/mura.logo.png" style="width:25px;heigh:26px;" title="Mura" /></a>
 						<li class="divider-vertical"></li>
-						<a href="#buildURL(action='admin:main.default')#" class="brand brand-two"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
+						<a href="#buildURL(action='admin:main.default')#" class="brand brand-two"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
 						<li class="divider-vertical"></li>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.product_nav')#" icon="tags icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:product.listproduct" type="list">
@@ -109,42 +109,39 @@ Notes:
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.setting_nav')#" icon="cog icon-white" type="nav">
 							<cfsavecontent variable="local.settingGroupOne">
 								<cf_SlatwallActionCaller action="admin:setting.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list" divideAfter="true">
 							</cfsavecontent>
 							<cfif len(local.settingGroupOne)>
 								#local.settingGroupOne#
 								<li class="divider"></li>
 							</cfif>
-							<cfsavecontent variable="local.settingGroupTwo">
-								<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listorderorigin" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listpaymentmethod" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listtaxcategory" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listlocation" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listaddresszone" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listcountry" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listcategory" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listcontent" type="list" divideAfter="true">
-							</cfsavecontent>
-							<cfif len(local.settingGroupTwo)>
-								#local.settingGroupTwo#
-								<li class="divider"></li>
-							</cfif>
-							<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listmeasurementunit" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listemailtemplate" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listaddresszone" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listcategory" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listcontent" type="list" divideAfter="true">
+							<cf_SlatwallActionCaller action="admin:setting.listcountry" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listemail" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listemailtemplate" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listlocation" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listmeasurementunit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listorderorigin" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listpaymentmethod" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listpaymentterm" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtaxcategory" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.tools_nav')#" icon="magnet icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:main.about" type="list">
 							<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
-							<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
+							<li class="divider"></li>
+							<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
 							<cfif findNoCase("*", $.slatwall.getCurrentAccount().getAllPermissions())>
+								<li class="divider"></li>
+								<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
 								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true&update=true" type="list" text="Reload Slatwall (Full Update)">
 								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
 							</cfif>
