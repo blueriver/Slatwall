@@ -36,12 +36,24 @@
 Notes:
 
 */
-component displayname="Gift Card Transaction" entityname="SlatwallGiftCardTransaction" table="SlatwallGiftCardTransaction" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Payment Transaction" entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransaction" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="giftCardTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-
+	property name="paymentTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="transactionType" ormtype="string";
+	property name="providerTransactionID" ormtype="string";
+	property name="authorizationCode" ormtype="string";
+	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="currencyCode" ormtype="string" length="3";
+	property name="avsCode" ormtype="string";				// @hint this is whatever the avs code was that got returned
+	property name="statusCode" ormtype="string";			// @hint this is the status code that was passed back in the response bean
+	property name="message" ormtype="string";  				// @hint this is a pipe and tilda delimited list of any messages that came back in the response.
+	
 	// Related Object Properties (many-to-one)
+	property name="accountPayment" cfc="AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
+	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -61,13 +73,57 @@ component displayname="Gift Card Transaction" entityname="SlatwallGiftCardTransa
 	// Non-Persistent Properties
 
 
-
+	
+	public any function init() {
+		setAmountAuthorized(0);
+		setAmountCharged(0);
+		setAmountCredited(0);
+		
+		return super.init();
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account Payment (many-to-one)
+	public void function setAccountPayment(required any accountPayment) {
+		variables.accountPayment = arguments.accountPayment;
+		if(isNew() or !arguments.accountPayment.hasPaymentTransaction( this )) {
+			arrayAppend(arguments.accountPayment.getPaymentTransactions(), this);
+		}
+	}
+	public void function removeAccountPayment(any accountPayment) {
+		if(!structKeyExists(arguments, "accountPayment")) {
+			arguments.accountPayment = variables.accountPayment;
+		}
+		var index = arrayFind(arguments.accountPayment.getPaymentTransactions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.accountPayment.getPaymentTransactions(), index);
+		}
+		structDelete(variables, "accountPayment");
+	}
+	
+	// Order Payment (many-to-one)
+	public void function setOrderPayment(required any orderPayment) {
+		variables.orderPayment = arguments.orderPayment;
+		if(isNew() or !arguments.orderPayment.hasPaymentTransaction( this )) {
+			arrayAppend(arguments.orderPayment.getPaymentTransactions(), this);
+		}
+	}
+	public void function removeOrderPayment(any orderPayment) {
+		if(!structKeyExists(arguments, "orderPayment")) {
+			arguments.orderPayment = variables.orderPayment;
+		}
+		var index = arrayFind(arguments.orderPayment.getPaymentTransactions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderPayment.getPaymentTransactions(), index);
+		}
+		structDelete(variables, "orderPayment");
+	}
+	
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
@@ -80,6 +136,10 @@ component displayname="Gift Card Transaction" entityname="SlatwallGiftCardTransa
 	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "paymentTransactionID";
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

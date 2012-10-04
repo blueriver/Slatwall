@@ -1177,8 +1177,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
 		
 		param name="arguments.data.amount" default="0";
-		param name="arguments.data.providerTransactionID" default="";
 		
+		getPaymentService().processPayment(arguments.orderPayment, arguments.processContext, arguments.data.amount);
+		
+		/*
 		// CONTEXT: authorize
 		if(arguments.processContext == "authorize" && arguments.data.amount <= arguments.orderPayment.getAmountUnauthorized()) {
 			
@@ -1225,7 +1227,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					}
 					
 				}
-
 			// If a providerID was passed in, then we can just use it.
 			} else {
 				var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", arguments.data.amount, arguments.data.providerTransactionID);
@@ -1241,12 +1242,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			arguments.orderPayment.addError('processing', 'You attempted to process an order payment but either a transactionType or an amount was not defined.');
 			
 		}
+		*/
 		
 		if(!arguments.orderPayment.hasErrors()) {
-			
 			// Update the Order Status
 			updateOrderStatus( arguments.orderPayment.getOrder() );
-			
 		}
 		
 		return arguments.orderPayment;

@@ -77,7 +77,6 @@
 				<entry key="Content"><value>contentService</value></entry>
 				<entry key="ContentAccess"><value>accessService</value></entry>
 				<entry key="Country"><value>addressService</value></entry>
-				<entry key="CreditCardTransaction"><value>paymentService</value></entry>
 				<entry key="Currency"><value>currencyService</value></entry>
 				<entry key="Email"><value>emailService</value></entry>
 				<entry key="EmailTemplate"><value>emailService</value></entry>
@@ -99,8 +98,9 @@
 				<entry key="OrderOrigin"><value>settingService</value></entry>
 				<entry key="OrderPayment"><value>orderService</value></entry>
 				<entry key="OrderReturn"><value>orderService</value></entry>
-				<entry key="PaymentTerm"><value>paymentService</value></entry>
 				<entry key="PaymentMethod"><value>paymentService</value></entry>
+				<entry key="PaymentTerm"><value>paymentService</value></entry>
+				<entry key="PaymentTransaction"><value>paymentService</value></entry>
 				<entry key="PermissionGroup"><value>accountService</value></entry>
 				<entry key="PostalCode"><value>addressService</value></entry>
 				<entry key="PriceGroup"><value>priceGroupService</value></entry>

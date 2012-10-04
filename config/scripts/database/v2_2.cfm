@@ -39,6 +39,8 @@ Notes:
 
 <cfset local.scriptHasErrors = false />
 
+<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Tables" name="local.infoTables" />
+
 <!--- Update payment methods to use the new paymentIntegrationID value instead of provider gateway --->
 <cftry>
 	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPaymentMethod" name="local.infoColumns" />
@@ -64,6 +66,86 @@ Notes:
 			  	providerGateway IS NOT NULL
 		</cfquery>
 	</cfif>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update fulfillmentMethodID on SlatwallOrderFulfillment Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<!--- Update creditCard transactions and move them into the paymentTransaction table --->
+<cftry>
+	<cfquery name="local.hasTable" dbtype="query">
+		SELECT
+			* 
+		FROM
+			infoTables
+		WHERE
+			TABLE_NAME = 'SlatwallCreditCardTransaction'
+	</cfquery>
+	
+	<cfquery name="local.updateData" dbtype="query">
+		SELECT
+			creditCardTransactionID,
+			transactionType,
+			providerTransactionID,
+			authorizationCode,
+			amountAuthorized,
+			amountCharged,
+			amountCredited,
+			currencyCode,
+			avsCode,
+			statusCode,
+			message,
+			orderPaymentID,
+			createdDateTime,
+			createdByAccountID,
+			modifiedDateTime,
+			modifiedByAccountID
+		FROM
+			SlatwallCreditCardTransaction
+		WHERE NOT EXISTS( SELECT paymentTransactionID FROM SlatwallPaymentTransaction WHERE SlatwallPaymentTransaction.paymentTransactionID = SlatwallCreditCardTransaction.creditCardTransactionID )
+	</cfquery>
+	
+	<cfloop query="local.updateData">
+		<cfquery name="local.change">
+			INSERT INTO SlatwallPaymentTransaction (
+				creditCardTransactionID,
+				transactionType,
+				providerTransactionID,
+				authorizationCode,
+				amountAuthorized,
+				amountCharged,
+				amountCredited,
+				currencyCode,
+				avsCode,
+				statusCode,
+				message,
+				orderPaymentID,
+				createdDateTime,
+				createdByAccountID,
+				modifiedDateTime,
+				modifiedByAccountID
+			) VALUES (
+				<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.updateData.creditCardTransactionID#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.updateData.transactionType#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.providerTransactionID)#" value="#local.updateData.providerTransactionID#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.authorizationCode)#" value="#local.updateData.authorizationCode#" />,
+				<cfqueryparam cfsqltype="cf_sql_money" value="#local.updateData.amountAuthorized#" />,
+				<cfqueryparam cfsqltype="cf_sql_money" value="#local.updateData.amountCharged#" />,
+				<cfqueryparam cfsqltype="cf_sql_money" value="#local.updateData.amountCredited#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.currencyCode)#" value="#local.updateData.currencyCode#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.avsCode)#" value="#local.updateData.avsCode#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.statusCode)#" value="#local.updateData.statusCode#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.message)#" value="#local.updateData.message#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.orderPaymentID)#" value="#local.updateData.orderPaymentID#" />,
+				<cfqueryparam cfsqltype="cf_sql_timestamp" null="#not len(local.updateData.createdDateTime)#" value="#local.updateData.createdDateTime#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.createdByAccountID)#" value="#local.updateData.createdByAccountID#" />,
+				<cfqueryparam cfsqltype="cf_sql_timestamp" null="#not len(local.updateData.modifiedDateTime)#" value="#local.updateData.modifiedDateTime#" />,
+				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.modifiedByAccountID)#" value="#local.updateData.modifiedByAccountID#" />
+			)
+		</cfquery>
+	</cfloop>
 	
 	<cfcatch>
 		<cflog file="Slatwall" text="General Log - Update fulfillmentMethodID on SlatwallOrderFulfillment Has Error">

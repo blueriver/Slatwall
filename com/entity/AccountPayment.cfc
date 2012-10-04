@@ -36,14 +36,26 @@
 Notes:
 
 */
-component displayname="Check Transaction" entityname="SlatwallCheckTransaction" table="SlatwallCheckTransaction" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Account Payment" entityname="SlatwallAccountPayment" table="SlatwallAccountPayment" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="checkTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="accountPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="amount" ormtype="big_decimal" notnull="true";
+	property name="currencyCode" ormtype="string" length="3";
+	
+	// Persistent Properties - creditCard Specific
+	property name="nameOnCreditCard" ormType="string";
+	property name="creditCardNumberEncrypted" ormType="string";
+	property name="creditCardLastFour" ormType="string";
+	property name="creditCardType" ormType="string";
+	property name="expirationMonth" ormType="string" formfieldType="select";
+	property name="expirationYear" ormType="string" formfieldType="select";
 
 	// Related Object Properties (many-to-one)
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	// Related Object Properties (one-to-many)
+	property name="paymentTransactions" singularname="paymentTransaction" cfc="PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountPaymentID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -59,15 +71,51 @@ component displayname="Check Transaction" entityname="SlatwallCheckTransaction" 
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
-
-
+	property name="amountAuthorized" type="numeric" formatType="currency" persistent="false";
+	property name="amountCredited" type="numeric" formatType="currency" persistent="false";
+	property name="amountReceived" type="numeric" formatType="currency" persistent="false";
+	property name="amountUnauthorized" persistent="false" formatType="currency";	
+	property name="amountUncredited" persistent="false" formatType="currency";
+	property name="amountUncaptured" persistent="false" formatType="currency";
+	property name="amountUnreceived" persistent="false" formatType="currency";
+	property name="creditCardNumber" persistent="false";
+	property name="expirationDate" persistent="false";
+	property name="experationMonthOptions" persistent="false";
+	property name="expirationYearOptions" persistent="false";
+	property name="paymentMethodType" persistent="false";
+	property name="securityCode" persistent="false";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Payment Transactions (one-to-many)
+	public void function addPaymentTransaction(required any paymentTransaction) {
+		arguments.paymentTransaction.setAccountPayment( this );
+	}
+	public void function removePaymentTransaction(required any paymentTransaction) {
+		arguments.paymentTransaction.removeAccountPayment( this );
+	}
+	
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+		variables.account = arguments.account;
+		if(isNew() or !arguments.account.hasAccountPayment( this )) {
+			arrayAppend(arguments.account.getAccountPayments(), this);
+		}
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getAccountPayments(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAccountPayments(), index);
+		}
+		structDelete(variables, "account");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
