@@ -130,14 +130,18 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	// ===================== START: Process Methods ===========================
 	
-	public boolean function processPayment(required any orderPayment, required string transactionType, required numeric transactionAmount) {
+	// This is a generic processPayment method that works of orderPayment or accountPayment
+	public boolean function processPayment(required any payment, required string transactionType, required numeric transactionAmount, any referencedPaymentTransaction) {
 		
 		var processOK = false;
 		
 		// Lock down this determination so that the values getting called and set don't overlap
 		lock scope="Session" timeout="45" {
 			
-			var isDuplicateTransaction = getDAO().isDuplicatePaymentTransaction(orderPaymentID=arguments.orderPayment.getOrderPaymentID(), paymentType=paymentMethod.getPaymentMethodType(), transactionType=arguments.transactionType, transactionAmount=arguments.transactionAmount);
+			var paymentID = "";
+			var accountPaymentID = "";
+			
+			var isDuplicateTransaction = getDAO().isDuplicatePaymentTransaction(paymentID=arguments.payment.getPrimaryIDValue(), idColumnName=arguments.payment.getPrimaryIDPropertyName(), paymentType=arguments.payment.getPaymentMethodType(), transactionType=arguments.transactionType, transactionAmount=arguments.transactionAmount);
 			
 			if(isDuplicateTransaction){
 				processOK = true;
@@ -175,35 +179,46 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 	}
 	
-	public boolean function processCreditCardPayment(required any orderPayment, required string transactionType, required numeric transactionAmount) {
+	public boolean function processCreditCardPayment(required any payment, required string transactionType, required numeric transactionAmount, any referencedPaymentTransaction) {
 		// Get the relavent info and objects for this order payment
 		var processOK = false;
 		
-		var providerService = getIntegrationService().getPaymentIntegrationCFC( arguments.orderPayment.getPaymentMethod().getPaymentIntegration() );
-			
+		var providerService = getIntegrationService().getPaymentIntegrationCFC( arguments.payment.getPaymentMethod().getPaymentIntegration() );
+		
 		// Create a new Credit Card Transaction
 		var transaction = this.newPaymentTransaction();
 		transaction.setTransactionType( arguments.transactionType );
-		transaction.setOrderPayment( arguments.orderPayment );
+		if(arguments.payment.getEntityName() eq "SlatwallOrderPayment") {
+			transaction.setOrderPayment( arguments.payment );
+		} else if (arguments.payment.getEntityName() eq "SlatwallAccountPayment") {
+			transaction.setAccountPayment( arguments.payment );
+		}
 		
 		// Make sure that this transaction gets saved to the DB
 		this.savePaymentTransaction( transaction );
-		
 		getDAO().flushORMSession();
 
 		// Generate Process Request Bean
 		var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
 		
-		// Move all of the info into the new request bean
-		requestBean.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
-		
+		// Setup generic info
 		requestBean.setTransactionID( transaction.getPaymentTransactionID() );
 		requestBean.setTransactionType( arguments.transactionType );
 		requestBean.setTransactionAmount( arguments.transactionAmount );
+		requestBean.setTransactionCurrency( arguments.payment.getCurrencyCode() );
 		
-		requestBean.setProviderTransactionID( arguments.providerTransactionID );
+		// Move all of the info into the new request bean
+		if(arguments.payment.getEntityName() eq "SlatwallOrderPayment") {
+			requestBean.populatePaymentInfoWithOrderPayment( arguments.payment );	
+		} else if (arguments.payment.getEntityName() eq "SlatwallAccountPayment") {
+			requestBean.populatePaymentInfoWithAccountPayment( arguments.payment );
+		}
 		
-		requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
+		// If a referenced payment transaction was passed in, then we can assign the providerTransactionID
+		if(structKeyExists(arguments, "referencedPaymentTransaction")) {
+			requestBean.setProviderTransactionID( arguments.referencedPaymentTransaction.getProviderTransactionID() );
+			requestBean.setReferencedPaymentTransactionID( arguments.referencedPaymentTransaction.getPaymentTransactionID() );
+		}
 		
 		// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
 		try {
@@ -230,11 +245,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				processOK = true;
 			} else {
 				// Populate the orderPayment with the processing error
-				arguments.orderPayment.addError('processing', response.getAllErrorsHTML(), true);
+				arguments.payment.addError('processing', response.getAllErrorsHTML(), true);
 			}
 		} catch (any e) {
 			// Populate the orderPayment with the processing error
-			arguments.orderPayment.addError('processing', "An Unexpected Error Ocurred", true);
+			arguments.payment.addError('processing', "An Unexpected Error Ocurred", true);
 			
 			// Log the exception
 			logSlatwallException(e);

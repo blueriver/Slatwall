@@ -39,7 +39,8 @@ Notes:
 <cfcomponent extends="BaseDAO" output="false">
 	
 	<cffunction name="isDuplicatePaymentTransaction" access="public" returntype="boolean" output="false">
-		<cfargument name="orderPaymentID" type="string" required="true" />
+		<cfargument name="paymentID" type="string" required="true" />
+		<cfargument name="idColumnName" type="string" required="true" />
 		<cfargument name="paymentType" type="string" required="true" />
 		<cfargument name="transactionType" type="string" required="true" />
 		<cfargument name="transactionAmount" type="numeric" required="true" />
@@ -49,11 +50,11 @@ Notes:
 		<!--- check for any transaction for this payment in last 60 sec with same type and amount --->
 		<cfquery name="rs" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
 			SELECT
-				*
+				#idColumnName#
 			FROM
-				Slatwall#arguments.paymentType#Transaction 
+				SlatwallPaymentTransaction 
 			WHERE
-				orderPaymentID = <cfqueryparam value="#arguments.orderPaymentID#" cfsqltype="cf_sql_varchar" />
+				#idColumnName# = <cfqueryparam value="#arguments.paymentID#" cfsqltype="cf_sql_varchar" />
 			  AND
 				transactionType = <cfqueryparam value="#arguments.transactionType#" cfsqltype="cf_sql_varchar" />
 			  AND
