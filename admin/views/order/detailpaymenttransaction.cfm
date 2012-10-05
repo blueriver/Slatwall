@@ -36,19 +36,26 @@
 Notes:
 
 --->
-<cfparam name="rc.orderPayment" type="any" />
+<cfparam name="rc.paymentTransaction" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.orderPayment.getCreditCardTransactionsSmartList()#"
-			recordDetailAction="admin:order.detailcreditcardtransaction"
-			recordDetailModal="true">
+	<cf_SlatwallDetailForm object="#rc.paymentTransaction#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.paymentTransaction#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />		
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="transactionType" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountAuthorized" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountCharged" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="transactionType">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="providerTransactionID">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="authorizationCode">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountAuthorized">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountCharged">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountCredited">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="avsCode">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="statusCode">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="message">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
 		
-		
-	</cf_SlatwallListingDisplay>
+	</cf_SlatwallDetailForm>
 </cfoutput>

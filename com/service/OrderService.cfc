@@ -1198,8 +1198,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(!len(arguments.data.providerTransactionID)) {
 				var totalCaptured = 0;
 				
-				for(var i=1; i<=arrayLen(arguments.orderPayment.getCreditCardTransactions()); i++) {
-					var originalTransaction = arguments.orderPayment.getCreditCardTransactions()[i];
+				for(var i=1; i<=arrayLen(arguments.orderPayment.getPaymentTransactions()); i++) {
+					var originalTransaction = arguments.orderPayment.getPaymentTransactions()[i];
 					if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
 						var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
 						var leftToCapture = arguments.data.amount - totalCaptured;

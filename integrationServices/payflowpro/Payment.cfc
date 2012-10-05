@@ -86,7 +86,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		var forceSale = false;
 		if( arguments.requestBean.getTransactionType() eq "chargePreAuthorization" ) {
 			var query = new Query();
-			query.setSQL("SELECT creditCardTransactionID FROM SlatwallCreditCardTransaction WHERE orderPaymentID = '#arguments.requestBean.getOrderPaymentID()#' AND transactionType = 'chargePreAuthorization' AND authorizationCode IN (SELECT authorizationCode FROM SlatwallCreditCardTransaction WHERE providerTransactionID='#requestBean.getProviderTransactionID()#')"); 
+			query.setSQL("SELECT paymentTransactionID FROM SlatwallPaymentTransaction WHERE orderPaymentID = '#arguments.requestBean.getOrderPaymentID()#' AND transactionType = 'chargePreAuthorization' AND authorizationCode IN (SELECT authorizationCode FROM SlatwallPaymentTransaction WHERE providerTransactionID='#requestBean.getProviderTransactionID()#')"); 
 			var qresults = query.Execute().getResult();
 			
 			if(qresults.recordCount) {

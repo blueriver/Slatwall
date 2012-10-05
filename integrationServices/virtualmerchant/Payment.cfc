@@ -77,7 +77,7 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		
 		// If this is a ccforce for capturing a pre-authorization, then we need to pass the auth code
 		if(arguments.requestBean.getTransactionType() eq "arguments.requestBean.getTransactionType()" && !isNull(requestBean.getProviderTransationID()) && len(requestBean.getProviderTransationID())) {
-			var originalCCTransaction = getService("paymentService").getCreditCardTransactionByProviderTransactionID( requestBean.getProviderTransationID() );
+			var originalCCTransaction = getService("paymentService").getPaymentTransactionByProviderTransactionID( requestBean.getProviderTransationID() );
 			if(!isNull(originalCCTransaction) && !isNull(originalCCTransaction.getAuthorizationCode()) && len(originalCCTransaction.getAuthorizationCode())) {
 				requestData = listAppend(requestData, "ssl_approval_code=#originalCCTransaction.getAuthorizationCode()#","&");		
 			}
