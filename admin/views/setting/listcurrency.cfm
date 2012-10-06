@@ -43,7 +43,9 @@ Notes:
 	
 	<cf_SlatwallListingDisplay smartList="#rc.currencySmartList#"
 							   recordDetailAction="admin:setting.detailcurrency"
-							   recordEditAction="admin:setting.editcurrency">
+							   recordDetailModal="true"
+							   recordEditAction="admin:setting.editcurrency"
+							   recordEditModal="true">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="currencyName" />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
 		<cf_SlatwallListingColumn propertyIdentifier="currencyCode" />

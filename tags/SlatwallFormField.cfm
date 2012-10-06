@@ -170,12 +170,12 @@ Notes:
 		</cfcase>
 		<cfcase value="text">
 			<cfoutput>
-				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass#" #attributes.fieldAttributes# />
+				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#htmlEditFormat(attributes.value)#" class="#attributes.fieldClass#" #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="textarea">
 			<cfoutput>
-				<textarea tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes#>#attributes.value#</textarea>
+				<textarea tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes#>#htmlEditFormat(attributes.value)#</textarea>
 			</cfoutput>
 		</cfcase>
 		<cfcase value="time">

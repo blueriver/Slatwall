@@ -46,12 +46,18 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="activeFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="currencyCode">
+				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="currencyName">
+				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="currencySymbol" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="formattedExample">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
+		<!---
 		<cf_SlatwallTabGroup object="#rc.currency#">
 			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
 		</cf_SlatwallTabGroup>
+		--->
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>
