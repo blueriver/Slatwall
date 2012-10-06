@@ -113,6 +113,12 @@ Notes:
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-multiselect', ' ') />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
 		</cfif>
+		<cfif thistag.multiselectable and not arrayLen(thistag.columns) >
+			<cfif thistag.exampleEntity.hasProperty('activeFlag')>
+				<cfset attributes.smartList.addFilter("activeFlag", 1) />
+			</cfif>
+		</cfif>
+		
 		
 		<!--- Look for Hierarchy in example entity --->
 		<cfif not len(attributes.parentPropertyName)>
