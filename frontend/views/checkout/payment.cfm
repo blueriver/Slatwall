@@ -38,7 +38,8 @@ Notes:
 --->
 <cfparam name="rc.edit" type="string" default="" />
 <cfparam name="rc.orderRequirementsList" type="string" default="" />
-<cfparam name="rc.activePaymentMethods" type="array" />
+<cfparam name="rc.eligiblePaymentMethodDetails" type="array" />
+<cfparam name="rc.activePaymentMethods" type="array" /> <!--- IMPORTANT: This value is deprecated --->
 
 <cfset local.paymentShown = false />
 
@@ -75,33 +76,28 @@ Notes:
 				<cfif not local.paymentShown>
 					
 					<!--- Only 1 option for payment method --->
-					<cfif arrayLen(rc.activePaymentMethods) eq 1>
+					<cfif arrayLen(rc.eligiblePaymentMethodDetails) eq 1>
 						
-						<cfset params = structNew() />
+						<cfset params = rc.eligiblePaymentMethodDetails[1] />
 						<cfset params.edit = true />
-						<cfset params.paymentMethod = rc.activePaymentMethods[1] />
 						<cfset params.orderPayment = $.slatwall.getService("paymentService").newOrderPayment() />
 						<cfset params.orderPaymentIndex = local.orderPaymentIndex />
-						
 						<cfset local.orderPaymentIndex += 1 />
 						
-						#view("frontend:checkout/payment/#rc.activePaymentMethods[1].getPaymentMethodType()#", params)#
+						#view("frontend:checkout/payment/#rc.eligiblePaymentMethodDetails[1].paymentMethod.getPaymentMethodType()#", params)#
 						
 					<!--- More than 1 option for payment method --->
 					<cfelse>
-						<cfloop array="#rc.activePaymentMethods#" index="local.paymentMethod">
+						<cfloop array="#rc.eligiblePaymentMethodDetails#" index="local.paymentMethodDetails">
 							<dl>
-								<dt><input type="radio" name="newOrderPaymentIndex" value="#local.orderPaymentIndex#"> #local.paymentMethod.getPaymentMethodName()#</dt>
+								<dt><input type="radio" name="newOrderPaymentIndex" value="#local.orderPaymentIndex#"> #local.paymentMethodDetails.paymentMethod.getPaymentMethodName()#</dt>
 								<dd>
-									<cfset params = structNew() />
+									<cfset params = local.paymentMethodDetails />
 									<cfset params.edit = true />
-									<cfset params.paymentMethod = local.paymentMethod />
 									<cfset params.orderPayment = $.slatwall.getService("paymentService").newOrderPayment() />
 									<cfset params.orderPaymentIndex = local.orderPaymentIndex />
-									
 									<cfset local.orderPaymentIndex += 1 />
-									
-									#view("frontend:checkout/payment/#local.paymentMethod.getPaymentMethodType()#", params)#
+									#view("frontend:checkout/payment/#local.paymentMethodDetails.paymentMethod.getPaymentMethodType()#", params)#
 								</dd>
 							</dl>
 						</cfloop>

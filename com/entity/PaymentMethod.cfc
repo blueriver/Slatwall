@@ -33,15 +33,23 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
-
+Notes:					
+						
+	paymentMethodType	
+		cash			
+		check			
+		creditCard		
+		external		
+		giftCard		
+		paymentTerm		
+						
 */
 component displayname="Payment Method" entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="paymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="paymentMethodName" ormtype="string";
-	property name="paymentMethodType" ormtype="string" formFieldType="select";
+	property name="paymentMethodType" ormtype="string" formatType="rbKey";
 	property name="allowSaveFlag" ormtype="boolean" default="false";
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";
@@ -68,17 +76,6 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	
 	// Non-Persistent Properties
 
-
-	public array function getPaymentMethodTypeOptions() {
-		var options = [
-			{name="Cash", value="cash"},
-			{name="Check", value="check"},
-			{name="Credit Card", value="creditCard"},
-			{name="External", value="external"},
-			{name="Gift Card", value="giftCard"}
-		];
-		return options;
-	}
 	
 	public array function getPaymentIntegrationOptions() {
 		var returnArray = [{name=rbKey('define.select'), value=""}];

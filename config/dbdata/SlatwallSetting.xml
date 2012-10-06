@@ -9,13 +9,13 @@
 		<column name="paymentMethodID" update="false" />
 	</Columns>
 	<Records>
+		<Record settingID="dbb327ffa8c83b9003ccdf5a65c92d25" settingName="accountTermCreditLimit" settingValue="0" />
+		
 		<Record settingID="dbb327f4e3ad1e47a1a932a8ad2a3ad8" settingName="emailFromAddress" settingValue="info@myslatwallStore.com" />
 		<Record settingID="dbb327f508d234f07c5c50064d14f223" settingName="emailToAddress" settingValue="info@myslatwallStore.com" />
 		<Record settingID="dbb327f6b9e0d4497b3cd2f9c9a6cc7a" settingName="emailSubject" settingValue="Message From MySlatwallStore" />
-		
 		<Record settingID="dbb327f70a6671d22c58b7635e8f4921" settingName="emailToAddress" settingValue="${account.emailAddress}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
 		<Record settingID="dbb327f8d5114720d065a3009a4da731" settingName="emailSubject" settingValue="Order Confirmation - Order Number: ${orderNumber}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
-		
 		<Record settingID="dbb327f9dd92fd95a7c6fdf14f1b141c" settingName="emailToAddress" settingValue="${order.account.emailAddress}" emailTemplateID="dbb327e694534908c60ea354766bf0a8" />
 		<Record settingID="dbb327fafb738698d58c2fa990ae45dd" settingName="emailSubject" settingValue="Delivery Confirmation - Order Number: ${order.orderNumber}" emailTemplateID="dbb327e694534908c60ea354766bf0a8" />
 			
@@ -90,7 +90,7 @@
 Below Are UUID's to use... delete after using
 
 	
-	dbb327ffa8c83b9003ccdf5a65c92d25
+	
 	dbb32800cda3d64df34a388d19eae81d
 	dbb32801f856cefe9571571405c90957
 	dbb32802d0afe98f27c73469f742355e

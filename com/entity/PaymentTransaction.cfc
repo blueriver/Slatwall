@@ -36,15 +36,24 @@
 Notes:
 
 */
-component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCurrency" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Payment Transaction" entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransaction" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="currencyCode" ormtype="string" fieldtype="id" unique="true" generated="never";
-	property name="activeFlag" ormtype="boolean";
-	property name="currencyName" ormtype="string";
-	property name="currencySymbol" ormtype="string";
+	property name="paymentTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="transactionType" ormtype="string";
+	property name="providerTransactionID" ormtype="string";
+	property name="authorizationCode" ormtype="string";
+	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="currencyCode" ormtype="string" length="3";
+	property name="avsCode" ormtype="string";				// @hint this is whatever the avs code was that got returned
+	property name="statusCode" ormtype="string";			// @hint this is the status code that was passed back in the response bean
+	property name="message" ormtype="string";  				// @hint this is a pipe and tilda delimited list of any messages that came back in the response.
 	
 	// Related Object Properties (many-to-one)
+	property name="accountPayment" cfc="AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
+	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -62,22 +71,59 @@ component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCu
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="currencyLocalOptions" persistent="false";
-	property name="formattedExample" persistent="false"; 
+
 
 	
-	// ============ START: Non-Persistent Property Methods =================
-	public array function getCurrencyLocalOptions() {
-		return ['Chinese (China)','Chinese (Hong Kong)','Chinese (Taiwan)','Dutch (Belgian)','Dutch (Standard)','English (Australian)','English (Canadian)','English (New Zealand)','English (UK)','English (US)','French (Belgian)','French (Canadian)','French (Standard)','French (Swiss)','German (Austrian)','German (Standard)','German (Swiss)','Italian (Standard)', 'Italian (Swiss)','Japanese','Korean','Norwegian (Bokmal)','Norwegian (Nynorsk)','Portuguese (Brazilian)','Portuguese (Standard)','Spanish (Mexican)','Spanish (Modern)','Spanish (Standard)','Swedish'];
+	public any function init() {
+		setAmountAuthorized(0);
+		setAmountCharged(0);
+		setAmountCredited(0);
+		
+		return super.init();
 	}
 	
-	public string function getFormattedExample() {
-		return formatValue(12345.67, "currency");
-	}
+	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account Payment (many-to-one)
+	public void function setAccountPayment(required any accountPayment) {
+		variables.accountPayment = arguments.accountPayment;
+		if(isNew() or !arguments.accountPayment.hasPaymentTransaction( this )) {
+			arrayAppend(arguments.accountPayment.getPaymentTransactions(), this);
+		}
+	}
+	public void function removeAccountPayment(any accountPayment) {
+		if(!structKeyExists(arguments, "accountPayment")) {
+			arguments.accountPayment = variables.accountPayment;
+		}
+		var index = arrayFind(arguments.accountPayment.getPaymentTransactions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.accountPayment.getPaymentTransactions(), index);
+		}
+		structDelete(variables, "accountPayment");
+	}
+	
+	// Order Payment (many-to-one)
+	public void function setOrderPayment(required any orderPayment) {
+		variables.orderPayment = arguments.orderPayment;
+		if(isNew() or !arguments.orderPayment.hasPaymentTransaction( this )) {
+			arrayAppend(arguments.orderPayment.getPaymentTransactions(), this);
+		}
+	}
+	public void function removeOrderPayment(any orderPayment) {
+		if(!structKeyExists(arguments, "orderPayment")) {
+			arguments.orderPayment = variables.orderPayment;
+		}
+		var index = arrayFind(arguments.orderPayment.getPaymentTransactions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderPayment.getPaymentTransactions(), index);
+		}
+		structDelete(variables, "orderPayment");
+	}
+	
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
@@ -90,6 +136,10 @@ component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCu
 	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "paymentTransactionID";
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

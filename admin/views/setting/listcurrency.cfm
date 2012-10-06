@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,20 +36,19 @@
 Notes:
 
 --->
+<cfparam name="rc.currencySmartList" type="any" />
+
 <cfoutput>
-	<cf_SlatwallActionBar type="static"></cf_SlatwallActionBar>
+	<cf_SlatwallActionBar type="listing" object="#rc.currencySmartList#" />
 	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/settingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globalpage" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/account" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/sku" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethod" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethodrate" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/fulfillmentmethod" />
-	</cf_SlatwallTabGroup>
+	<cf_SlatwallListingDisplay smartList="#rc.currencySmartList#"
+							   recordDetailAction="admin:setting.detailcurrency"
+							   recordDetailModal="true"
+							   recordEditAction="admin:setting.editcurrency"
+							   recordEditModal="true">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="currencyName" />
+		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
+		<cf_SlatwallListingColumn propertyIdentifier="currencyCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="formattedExample" />
+	</cf_SlatwallListingDisplay>
 </cfoutput>

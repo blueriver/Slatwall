@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,20 +36,24 @@
 Notes:
 
 --->
+<cfparam name="rc.paymentTerm" type="any" />
+<cfparam name="rc.edit" type="boolean" />
+
 <cfoutput>
-	<cf_SlatwallActionBar type="static"></cf_SlatwallActionBar>
-	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/settingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globalpage" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/account" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/sku" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethod" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethodrate" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/fulfillmentmethod" />
-	</cf_SlatwallTabGroup>
+	<cf_SlatwallDetailForm object="#rc.paymentTerm#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.paymentTerm#" edit="#rc.edit#"></cf_SlatwallActionBar>
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTerm#" property="activeFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTerm#" property="paymentTermName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTerm#" property="term" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.paymentTerm#">
+			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
 </cfoutput>

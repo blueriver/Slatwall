@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,20 +36,16 @@
 Notes:
 
 --->
+<cfparam name="rc.paymentTermSmartList" type="any" />
+
 <cfoutput>
-	<cf_SlatwallActionBar type="static"></cf_SlatwallActionBar>
+	<cf_SlatwallActionBar type="listing" object="#rc.paymentTermSmartList#" createmodal="true" />
 	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/settingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globalpage" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/account" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/sku" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethod" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethodrate" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/fulfillmentmethod" />
-	</cf_SlatwallTabGroup>
+	<cf_SlatwallListingDisplay smartList="#rc.paymentTermSmartList#"
+							   recordEditAction="admin:setting.editpaymentTerm"
+							   recordEditModal="true"
+							   recordDetailAction="admin:setting.detailpaymentTerm"
+							   recordDetailModal="true">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentTermName" />
+	</cf_SlatwallListingDisplay>
 </cfoutput>

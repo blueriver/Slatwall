@@ -36,20 +36,19 @@
 Notes:
 
 --->
+<cfparam name="rc.orderPayment" type="any" />
+
 <cfoutput>
-	<cf_SlatwallActionBar type="static"></cf_SlatwallActionBar>
-	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/settingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globalpage" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/account" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/sku" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethod" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethodrate" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/fulfillmentmethod" />
-	</cf_SlatwallTabGroup>
+	<cf_SlatwallListingDisplay smartList="#rc.orderPayment.getPaymentTransactionsSmartList()#"
+			recordDetailAction="admin:order.detailpaymenttransaction"
+			recordDetailModal="true">
+		
+		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />		
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="transactionType" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountAuthorized" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountCharged" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
+		
+		
+	</cf_SlatwallListingDisplay>
 </cfoutput>

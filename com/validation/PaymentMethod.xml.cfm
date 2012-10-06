@@ -19,7 +19,7 @@
 		<property name="paymentMethodType">
 			<rule type="required" contexts="save" /> 
 			<rule type="inList" contexts="save">
-				<param name="list" value="cash,check,creditCard,external,giftCard" />
+				<param name="list" value="cash,check,creditCard,external,giftCard,termPayment" />
 			</rule>
 		</property>
 	</objectProperties>

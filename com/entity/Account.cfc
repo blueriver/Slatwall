@@ -56,6 +56,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="accountContentAccesses" singularname="accountContentAccess" cfc="AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
 	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
+	property name="accountPayments" singularname="accountPayment" cfc="AccountPayment" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all" inverse="true";
 	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
@@ -85,6 +86,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="phoneNumber" persistent="false";
 	property name="address" persistent="false";
 	property name="password" persistent="false";
+	property name="termAccountAvailableCredit" persistent="false" formattype="currency";
+	property name="termAccountBalance" persistent="false" formattype="currency";
 	
 	public boolean function isGuestAccount() {
 		if(isNull(getCmsAccountID())) {
@@ -149,6 +152,19 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return variables.paymentMethodOptionsSmartList;
 	}
 	
+	public numeric function getTermAccountAvailableCredit() {
+		var termAccountAvailableCredit = setting('accountTermCreditLimit');
+		
+		termAccountAvailableCredit = precisionEvaluate(termAccountAvailableCredit - getTermAccountBalance());
+		
+		return termAccountAvailableCredit;
+	}
+	
+	public numeric function getTermAccountBalance() {
+		
+		return 0;
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
@@ -183,6 +199,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}    
 	public void function removeAccountPaymentMethod(required any accountPaymentMethod) {    
 		arguments.accountPaymentMethod.removeAccount( this );    
+	}
+	
+	// Account Payments (one-to-many)    
+	public void function addAccountPayment(required any accountPayment) {    
+		arguments.accountPayment.setAccount( this );    
+	}    
+	public void function removeAccountPayment(required any accountPayment) {    
+		arguments.accountPayment.removeAccount( this );    
 	}
 	
 	// Account Phone Numbers (one-to-many)    

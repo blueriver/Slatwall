@@ -36,20 +36,26 @@
 Notes:
 
 --->
+<cfparam name="rc.paymentTransaction" type="any" />
+<cfparam name="rc.edit" type="boolean" />
+
 <cfoutput>
-	<cf_SlatwallActionBar type="static"></cf_SlatwallActionBar>
-	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/settingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globalpage" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/account" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/sku" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethod" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethodrate" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/fulfillmentmethod" />
-	</cf_SlatwallTabGroup>
+	<cf_SlatwallDetailForm object="#rc.paymentTransaction#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.paymentTransaction#" edit="#rc.edit#"></cf_SlatwallActionBar>
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="transactionType">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="providerTransactionID">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="authorizationCode">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountAuthorized">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountCharged">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountCredited">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="avsCode">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="statusCode">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="message">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+	</cf_SlatwallDetailForm>
 </cfoutput>

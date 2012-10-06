@@ -59,8 +59,8 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
 	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
 	
-	// Related Object Properties (one-to-many)
-	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
+	// Related Object Properties (one-to-many)			
+	property name="paymentTransactions" singularname="paymentTransaction" cfc="PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
 	property name="referencingOrderPayments" singularname="referencingOrderPayment" cfc="OrderPayment" fieldType="one-to-many" fkcolumn="referencedOrderPaymentID" cascade="all" inverse="true";
 
 	// Related Object Properties (many-to-many - owner)
@@ -101,9 +101,9 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	}
 	
 	public string function getMostRecentChargeProviderTransactionID() {
-		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-			if(!isNull(getCreditCardTransactions()[i].getAmountCharged()) && getCreditCardTransactions()[i].getAmountCharged() > 0 && !isNull(getCreditCardTransactions()[i].getProviderTransactionID()) && len(getCreditCardTransactions()[i].getProviderTransactionID())) {
-				return getCreditCardTransactions()[i].getProviderTransactionID();
+		for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
+			if(!isNull(getPaymentTransactions()[i].getAmountCharged()) && getPaymentTransactions()[i].getAmountCharged() > 0 && !isNull(getPaymentTransactions()[i].getProviderTransactionID()) && len(getPaymentTransactions()[i].getProviderTransactionID())) {
+				return getPaymentTransactions()[i].getProviderTransactionID();
 			}
 		}
 		// Check referenced payment, and might have a charge.  This works recursivly
@@ -133,8 +133,8 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 			switch(getPaymentMethodType()) {
 			
 				case "creditCard" :
-					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-						amountReceived = precisionEvaluate(amountReceived + getCreditCardTransactions()[i].getAmountCharged());
+					for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
+						amountReceived = precisionEvaluate(amountReceived + getPaymentTransactions()[i].getAmountCharged());
 					}
 					break;
 					
@@ -155,8 +155,8 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 			switch(getPaymentMethodType()) {
 				
 				case "creditCard" :
-					for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-						amountCredited = precisionEvaluate(amountCredited + getCreditCardTransactions()[i].getAmountCredited());
+					for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
+						amountCredited = precisionEvaluate(amountCredited + getPaymentTransactions()[i].getAmountCredited());
 					}
 					break;
 					
@@ -176,8 +176,8 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		
 			case "creditCard" :
 				amountAuthorized = 0;
-				for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-					amountAuthorized = precisionEvaluate(amountAuthorized + getCreditCardTransactions()[i].getAmountAuthorized());
+				for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
+					amountAuthorized = precisionEvaluate(amountAuthorized + getPaymentTransactions()[i].getAmountAuthorized());
 				}
 				break;
 				
@@ -350,12 +350,12 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		structDelete(variables, "paymentMethod");
 	}
 	
-	// Credit Card Transactions (one-to-many)
-	public void function addCreditCardTransaction(required any creditCardTransaction) {
-		arguments.creditCardTransaction.setOrderPayment( this );
+	// Payment Transactions (one-to-many)
+	public void function addPaymentTransaction(required any paymentTransaction) {
+		arguments.paymentTransaction.setOrderPayment( this );
 	}
-	public void function removeCreditCardTransaction(required any creditCardTransaction) {
-		arguments.creditCardTransaction.removeOrderPayment( this );
+	public void function removePaymentTransaction(required any paymentTransaction) {
+		arguments.paymentTransaction.removeOrderPayment( this );
 	}
 	
 	// Referencing Order Payments (one-to-many)    

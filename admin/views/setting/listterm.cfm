@@ -42,7 +42,12 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.termSmartList#" createModal="true" />
 
-<cf_SlatwallListingDisplay smartList="#rc.termSmartList#" recordEditAction="admin:setting.editterm" recordEditQueryString="returnAction=admin:setting.listterm" recordEditModal="true" recordDeleteAction="admin:setting.deleteterm">
+<cf_SlatwallListingDisplay smartList="#rc.termSmartList#"
+						   recordEditAction="admin:setting.editterm"
+						   recordEditQueryString="returnAction=admin:setting.listterm"
+						   recordEditModal="true"
+						   recordDeleteAction="admin:setting.deleteterm"
+						   sortProperty="sortOrder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="termName" search="true" />
 </cf_SlatwallListingDisplay>
 

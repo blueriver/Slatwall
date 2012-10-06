@@ -36,26 +36,5 @@
 Notes:
 
 --->
-<cfparam name="rc.creditCardTransaction" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.paymentMethod" type="any" />
 
-<cfoutput>
-	<cf_SlatwallDetailForm object="#rc.creditCardTransaction#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.creditCardTransaction#" edit="#rc.edit#"></cf_SlatwallActionBar>
-		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="transactionType">
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="providerTransactionID">
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="authorizationCode">
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="amountAuthorized">
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="amountCharged">
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="amountCredited">
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="avsCode">
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="statusCode">
-				<cf_SlatwallPropertyDisplay object="#rc.creditCardTransaction#" property="message">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		
-	</cf_SlatwallDetailForm>
-</cfoutput>

@@ -194,6 +194,12 @@ component extends="org.fw1.framework" output="false" {
 						ormReload();
 						writeLog(file="Slatwall", text="General Log - ORMReload() was successful");
 						
+						// Manually call necessary beans so that they don't create a lock issue later
+						var bean = getBeanFactory().getBean("dataService");
+						bean = getBeanFactory().getBean("settingService");
+						bean = getBeanFactory().getBean("sessionService");
+						bean = getBeanFactory().getBean("updateService");
+						
 						thread action="run" name="fullUpdateThread" {
 							writeLog(file="Slatwall", text="Full Update Thread Started");
 							

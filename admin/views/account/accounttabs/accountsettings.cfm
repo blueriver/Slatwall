@@ -36,19 +36,12 @@
 Notes:
 
 --->
-<cfparam name="rc.orderPayment" type="any" />
+<cfparam name="rc.account" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.orderPayment.getCreditCardTransactionsSmartList()#"
-			recordDetailAction="admin:order.detailcreditcardtransaction"
-			recordDetailModal="true">
-		
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />		
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="transactionType" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountAuthorized" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountCharged" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
-		
-		
-	</cf_SlatwallListingDisplay>
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="accountEligiblePaymentTerms" settingObject="#rc.account#" />
+		<cf_SlatwallSetting settingName="accountPaymentTerm" settingObject="#rc.account#" />
+		<cf_SlatwallSetting settingName="accountTermCreditLimit" settingObject="#rc.account#" />
+	</cf_SlatwallSettingTable>
 </cfoutput>

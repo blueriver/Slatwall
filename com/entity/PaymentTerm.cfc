@@ -36,16 +36,16 @@
 Notes:
 
 */
-component displayname="External Transaction" entityname="SlatwallExternalTransaction" table="SlatwallExternalTransaction" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Payment Term" entityname="SlatwallPaymentTerm" table="SlatwallPaymentTerm" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="externalTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
-	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
-	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";
-	property name="currencyCode" ormtype="string" length="3";
+	property name="paymentTermID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="activeFlag" ormtype="boolean";
+	property name="paymentTermName" ormtype="string";
+	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
+	property name="term" cfc="Term" fieldtype="many-to-one" fkcolumn="termID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -72,6 +72,24 @@ component displayname="External Transaction" entityname="SlatwallExternalTransac
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+
+	// Term (many-to-one)
+	public void function setTerm(required any term) {
+		variables.term = arguments.term;
+		if(isNew() or !arguments.term.hasPaymentMethod( this )) {
+			arrayAppend(arguments.term.getPaymentMethods(), this);
+		}
+	}
+	public void function removeTerm(any term) {
+		if(!structKeyExists(arguments, "term")) {
+			arguments.term = variables.term;
+		}
+		var index = arrayFind(arguments.term.getPaymentMethods(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.term.getPaymentMethods(), index);
+		}
+		structDelete(variables, "term");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

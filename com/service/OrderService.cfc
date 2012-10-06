@@ -309,7 +309,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			var paymentsDataArray = data.orderPayments;
 			for(var i = 1; i <= arrayLen(paymentsDataArray); i++) {
 				
-				if(!structKeyExists(data, "newOrderPaymentIndex") || data.newOrderPaymentIndex == 1) {
+				if(!structKeyExists(data, "newOrderPaymentIndex") || data.newOrderPaymentIndex == i) {
 					
 					var payment = this.getOrderPayment(paymentsDataArray[i].orderPaymentID, true);
 				
@@ -1177,65 +1177,56 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
 		
 		param name="arguments.data.amount" default="0";
-		param name="arguments.data.providerTransactionID" default="";
 		
-		// CONTEXT: authorize
-		if(arguments.processContext == "authorize" && arguments.data.amount <= arguments.orderPayment.getAmountUnauthorized()) {
-			
-			getPaymentService().processPayment(arguments.orderPayment, "authorize", arguments.data.amount);
-		
-		// CONTEXT: authorizeAndCharge
-		} else if (arguments.processContext == "authorizeAndCharge" && arguments.data.amount <= arguments.orderPayment.getAmountUnreceived()) {
-			
-			getPaymentService().processPayment(arguments.orderPayment, "authorizeAndCharge", arguments.data.amount);
+		// CONTEXT: authorize, authorizeAndCharge, credit
+		if( (arguments.processContext == "authorize" && arguments.data.amount <= arguments.orderPayment.getAmountUnauthorized())
+			||
+			(arguments.processContext == "authorizeAndCharge" && arguments.data.amount <= arguments.orderPayment.getAmountUnreceived())
+			||
+			(arguments.processContext == "credit" && arguments.data.amount <= arguments.orderPayment.getAmountUncredited()) ) {
+				
+			// Standard Payment Process
+			getPaymentService().processPayment(arguments.orderPayment, arguments.processContext, arguments.data.amount);
 		
 		// CONTEXT: chargePreAuthorization
 		} else if (arguments.processContext == "chargePreAuthorization" && arguments.data.amount <= arguments.orderPayment.getAmountUncaptured()) {
 			
-			// If not explicitly defined providerTransactionID was passed in, then we can loop over previous transactions for authroization codes to capture the amount we need.
-			if(!len(arguments.data.providerTransactionID)) {
-				var totalCaptured = 0;
+			// We can loop over previous transactions for authroization codes to capture the amount we need.
+			var totalCaptured = 0;
+			
+			for(var i=1; i<=arrayLen(arguments.orderPayment.getPaymentTransactions()); i++) {
 				
-				for(var i=1; i<=arrayLen(arguments.orderPayment.getCreditCardTransactions()); i++) {
-					var originalTransaction = arguments.orderPayment.getCreditCardTransactions()[i];
-					if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
-						var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
-						var leftToCapture = arguments.data.amount - totalCaptured;
-						var captureAmount = 0;
-						
-						if(leftToCapture < capturableAmount) {
-							captureAmount = leftToCapture;
-						} else {
-							captureAmount = capturableAmount;
-						}
-						
-						arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
-						
-						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", captureAmount, arguments.data.providerTransactionID);
-						
-						if(paymentOK) {
-							totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
-						}
-						
-						// If some payments failed but the total was finally captured, then we can can remove any processing errors
-						if(totalCaptured == arguments.data.amount) {
-							structDelete(arguments.orderPayment.getErrors(), 'processing');
-							break;
-						}
+				var originalTransaction = arguments.orderPayment.getPaymentTransactions()[i];
+				
+				if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
+					
+					var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
+					var leftToCapture = arguments.data.amount - totalCaptured;
+					var captureAmount = 0;
+					
+					if(leftToCapture < capturableAmount) {
+						captureAmount = leftToCapture;
+					} else {
+						captureAmount = capturableAmount;
 					}
 					
+					arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
+					
+					var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", captureAmount, originalTransaction);
+					
+					if(paymentOK) {
+						totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
+					}
+					
+					// If some payments failed but the total was finally captured, then we can can remove any processing errors
+					if(totalCaptured == arguments.data.amount) {
+						structDelete(arguments.orderPayment.getErrors(), 'processing');
+						break;
+					}
 				}
-
-			// If a providerID was passed in, then we can just use it.
-			} else {
-				var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", arguments.data.amount, arguments.data.providerTransactionID);
 			}
+			
 		
-		// CONTEXT: credit
-		} else if (arguments.processContext == "credit" && arguments.data.amount <= arguments.orderPayment.getAmountUncredited()) {
-			
-			getPaymentService().processPayment(arguments.orderPayment, "credit", arguments.data.amount, arguments.data.providerTransactionID);
-			
 		} else {
 			
 			arguments.orderPayment.addError('processing', 'You attempted to process an order payment but either a transactionType or an amount was not defined.');
@@ -1243,10 +1234,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		if(!arguments.orderPayment.hasErrors()) {
-			
 			// Update the Order Status
 			updateOrderStatus( arguments.orderPayment.getOrder() );
-			
 		}
 		
 		return arguments.orderPayment;

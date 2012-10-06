@@ -47,6 +47,7 @@ globalEncryptionKeySize
 	<cfproperty name="currencyService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="measurementUnitService" type="any" />
+	<cfproperty name="paymentService" type="any" />
 	<cfproperty name="taxService" type="any" />
 	<cfproperty name="utilityORMService" type="any" />
 	<cfproperty name="locationService" type="any" />
@@ -71,6 +72,7 @@ globalEncryptionKeySize
 			"productType",
 			"product",
 			"content",
+			"account",
 			"brand",
 			"email",
 			"stock",
@@ -88,6 +90,11 @@ globalEncryptionKeySize
 		};
 		
 		variables.settingMetaData = {
+			// Account
+			accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
+			accountPaymentTerm = {fieldType="select"},
+			accountTermCreditLimit = {fieldType="text", formatType="currency"},
+			
 			// Brand
 			brandDisplayTemplate = {fieldType="select"},
 			brandHTMLTitleString = {fieldType="text"},
@@ -210,6 +217,12 @@ globalEncryptionKeySize
 		
 		public array function getSettingOptions(required string settingName) {
 			switch(arguments.settingName) {
+				case "accountPaymentTerm" :
+					var optionSL = getPaymentService().getPaymentTermSmartList();
+					optionSL.addFilter('activeFlag', 1);
+					optionSL.addSelect('paymentTermName', 'name');
+					optionSL.addSelect('paymentTermID', 'value');
+					return optionSL.getRecords();
 				case "brandDisplayTemplate": case "productDisplayTemplate": case "productTypeDisplayTemplate" : case "contentRestrictedContentDisplayTemplate" :
 					return getContentService().getDisplayTemplateOptions();
 				case "globalCurrencyLocale":
@@ -573,6 +586,12 @@ globalEncryptionKeySize
 				allSettings
 				WHERE
 					LOWER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
+				  AND
+				  	<cfif structKeyExists(settingRelationships, "accountID")>
+						LOWER(allSettings.accountID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.accountID)#" > 
+					<cfelse>
+						allSettings.accountID IS NULL
+					</cfif>
 				  AND
 				  	<cfif structKeyExists(settingRelationships, "contentID")>
 						LOWER(allSettings.contentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.contentID)#" > 

@@ -36,11 +36,16 @@
 Notes:
 
 */
-component displayname="Gift Card Transaction" entityname="SlatwallGiftCardTransaction" table="SlatwallGiftCardTransaction" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Term Account Transaction" entityname="SlatwallTermAccountTransaction" table="SlatwallTermAccountTransaction" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="giftCardTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-
+	property name="termAccountTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="transactionType" ormtype="string";
+	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="currencyCode" ormtype="string" length="3";
+	
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
@@ -59,8 +64,6 @@ component displayname="Gift Card Transaction" entityname="SlatwallGiftCardTransa
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
-
 
 	
 	// ============ START: Non-Persistent Property Methods =================

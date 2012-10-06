@@ -44,7 +44,6 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="transactionType" type="string" ;
 	property name="transactionAmount" ormtype="float";
 	property name="transactionCurrency" ormtype="float";
-	property name="providerTransactionID" type="string";
 	property name="isDuplicateFlag" type="boolean";
 	
 	// Credit Card Info
@@ -76,6 +75,8 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="orderPaymentID" type="string" ;
 	property name="orderID" type="string" ;
 	property name="accountID" type="string";
+	property name="providerTransactionID" type="string";
+	property name="referencedPaymentTransactionID" type="string";
 	
 	/*
 	Process Types
@@ -88,6 +89,10 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	inquirey
 	
 	*/
+	
+	public void function populatePaymentInfoWithAccountPayment(required any accountPayment) {
+		
+	}
 	
 	public void function populatePaymentInfoWithOrderPayment(required any orderPayment) {
 		

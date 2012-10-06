@@ -54,7 +54,7 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
-				<cfif rc.paymentMethod.getPaymentMethodType() neq "cash">
+				<cfif rc.paymentMethod.getPaymentMethodType() neq "cash" and rc.paymentMethod.getPaymentMethodType() neq "termPayment">
 					<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentIntegration" edit="#rc.edit#">
 				</cfif>
 				<cfif rc.paymentMethod.getPaymentMethodType() eq "creditCard">

@@ -46,10 +46,10 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termHours" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termDays" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termMonths" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termYears" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termHours" edit="#rc.edit && rc.term.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termDays" edit="#rc.edit && rc.term.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termMonths" edit="#rc.edit && rc.term.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termYears" edit="#rc.edit && rc.term.isNew()#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

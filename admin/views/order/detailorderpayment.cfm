@@ -66,7 +66,7 @@ Notes:
 		
 		<cf_SlatwallTabGroup object="#rc.orderPayment#">
 			<cfif rc.orderPayment.getPaymentMethodType() eq "creditCard">
-				<cf_SlatwallTab view="admin:order/orderpaymenttabs/creditcardtransactions" />
+				<cf_SlatwallTab view="admin:order/orderpaymenttabs/paymenttransactions" />
 			</cfif>
 		</cf_SlatwallTabGroup>
 		
