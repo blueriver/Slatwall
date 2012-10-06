@@ -119,6 +119,7 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:setting.listcategory" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listcontent" type="list" divideAfter="true">
 							<cf_SlatwallActionCaller action="admin:setting.listcountry" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listcurrency" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listemail" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listemailtemplate" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">

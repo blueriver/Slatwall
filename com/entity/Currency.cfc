@@ -42,7 +42,7 @@ component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCu
 	property name="currencyCode" ormtype="string" fieldtype="id" unique="true" generated="never";
 	property name="activeFlag" ormtype="boolean";
 	property name="currencyName" ormtype="string";
-	property name="currencyLocale" ormtype="string";
+	property name="currencySymbol" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	
@@ -63,12 +63,16 @@ component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCu
 	
 	// Non-Persistent Properties
 	property name="currencyLocalOptions" persistent="false";
-
+	property name="formattedExample" persistent="false"; 
 
 	
 	// ============ START: Non-Persistent Property Methods =================
 	public array function getCurrencyLocalOptions() {
 		return ['Chinese (China)','Chinese (Hong Kong)','Chinese (Taiwan)','Dutch (Belgian)','Dutch (Standard)','English (Australian)','English (Canadian)','English (New Zealand)','English (UK)','English (US)','French (Belgian)','French (Canadian)','French (Standard)','French (Swiss)','German (Austrian)','German (Standard)','German (Swiss)','Italian (Standard)', 'Italian (Swiss)','Japanese','Korean','Norwegian (Bokmal)','Norwegian (Nynorsk)','Portuguese (Brazilian)','Portuguese (Standard)','Spanish (Mexican)','Spanish (Modern)','Spanish (Standard)','Swedish'];
+	}
+	
+	public string function getFormattedExample() {
+		return formatValue(12345.67, "currency");
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

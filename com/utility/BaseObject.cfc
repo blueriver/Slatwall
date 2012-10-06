@@ -865,13 +865,9 @@ component displayname="Base Object" accessors="true" output="false" {
 				// Check to see if this object has a currencyCode
 				if( this.hasProperty("currencyCode") && !isNull(getCurrencyCode()) && len(getCurrencyCode()) eq 3 ) {
 					
-					var currency = getService("currencyService").getCurrency(getCurrencyCode());
+					var currency = getService("currencyService").getCurrency( getCurrencyCode() );
 					
-					if(!isNull( currency.getCurrencyLocale() ) ) {
-						return LSCurrencyFormat(arguments.value, setting("globalCurrencyType"), currency.getCurrencyLocale());
-					}
-					
-					return getCurrencyCode() & numberFormat(arguments.value, ',.__');
+					return currency.getCurrencySymbol() & " " & LSNumberFormat(arguments.value); numberFormat(arguments.value, ',.__');
 				}
 				
 				// Otherwsie use the global currencyLocal
