@@ -130,18 +130,11 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		
 		// We only show 'received' for charged payments
 		if( getOrderPaymentType().getSystemCode() == "optCharge" ) {
-			switch(getPaymentMethodType()) {
 			
-				case "creditCard" :
-					for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
-						amountReceived = precisionEvaluate(amountReceived + getPaymentTransactions()[i].getAmountCharged());
-					}
-					break;
-					
-				default :
-					amountReceived = getAmount();
-					
+			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
+				amountReceived = precisionEvaluate(amountReceived + getPaymentTransactions()[i].getAmountCharged());
 			}
+			
 		}
 				
 		return amountReceived;
@@ -152,17 +145,11 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		
 		// We only show 'credited' for credited payments
 		if( getOrderPaymentType().getSystemCode() == "optCredit" ) {
-			switch(getPaymentMethodType()) {
-				
-				case "creditCard" :
-					for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
-						amountCredited = precisionEvaluate(amountCredited + getPaymentTransactions()[i].getAmountCredited());
-					}
-					break;
-					
-				default :
-					amountCredited = getAmount();
+			
+			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
+				amountCredited = precisionEvaluate(amountCredited + getPaymentTransactions()[i].getAmountCredited());
 			}
+			
 		}
 			
 		return amountCredited;

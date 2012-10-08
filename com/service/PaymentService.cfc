@@ -145,9 +145,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			if(isDuplicateTransaction){
 				processOK = true;
-				arguments.orderPayment.addError('processing', "This transaction is duplicate of an already processed transaction.", true);
+				arguments.payment.addError('processing', "This transaction is duplicate of an already processed transaction.", true);
 			} else {
-				switch(paymentMethod.getPaymentMethodType()) {
+				switch(arguments.payment.getPaymentMethodType()) {
 					case "cash" :
 							processOK = processCashPayment(argumentcollection=arguments);
 						break;
