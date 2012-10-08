@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -41,25 +41,11 @@ Notes:
 <cfparam name="params.orderPaymentIndex" type="string" />
 <cfparam name="params.paymentMethod" type="any" />
 <cfparam name="params.maximumAmount" type="numeric" />
-<cfparam name="params.paymentTerm" type="any" />
 
 <cfoutput>
-	<div class="svocheckoutpaymenttermpayment">
-		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethodType" value="creditCard" />
+	<div class="svocheckoutpaymentcheck">
+		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethodType" value="check" />
 		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethod.paymentMethodID" value="#params.paymentMethod.getPaymentMethodID()#" />
 		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
-		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentTerm.paymentTermID" value="#params.paymentTerm.getPaymentTermID()#" />
-		<dl>
-			<dt>Account Terms</dt>
-			<dd>#params.paymentTerm.getPaymentTermName()#</dd>
-			<dt>Account Credit Limit</dt>
-			<dd>#$.slatwall.formatValue( $.slatwall.cart().getAccount().setting('accountTermCreditLimit'), "currency")#</dd>
-			<dt>Unused Credit</dt>
-			<dd>#$.slatwall.cart().getAccount().getFormattedValue('termAccountAvailableCredit')#</dd>
-			<dt>Account Balance</dt>
-			<dd>#$.slatwall.cart().getAccount().getFormattedValue('termAccountBalance')#</dd>
-			<dt>Amount To Apply to Order</dt>
-			<dd><input type="text" name="orderPayments[#params.orderPaymentIndex#].amount" value="#params.maximumAmount#" /></dd>
-		</dl>
 	</div>
 </cfoutput>
