@@ -867,7 +867,7 @@ component displayname="Base Object" accessors="true" output="false" {
 					
 					var currency = getService("currencyService").getCurrency( getCurrencyCode() );
 					
-					return currency.getCurrencySymbol() & " " & LSNumberFormat(arguments.value, ',.__');
+					return currency.getCurrencySymbol() & LSNumberFormat(arguments.value, ',.__');
 				}
 				
 				// Otherwsie use the global currencyLocal
