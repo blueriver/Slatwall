@@ -54,15 +54,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function clearCart(required struct rc) {
 		getOrderService().clearCart();
 		
-		/*
-		redirect(action='', querystring='');
-		redirectExact(fullURL='');
-		redirectSetting(settingName='');
-		*/
 		
-		//redirectSetting( 'gloablShoppingCartURL' );
-		
-		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
+		getFW().setView("frontend:cart.detail");
 	}
 	
 	public void function update(required struct rc) {
@@ -127,7 +120,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			}
 		}
 		
-		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);
+		getFW().setView("frontend:cart.detail");
 	}
 	
 	public void function removeItem(required struct rc) {
@@ -135,7 +128,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		getOrderService().removeOrderItem(order=rc.$.slatwall.cart(), orderItemID=rc.orderItemID);
 		
-		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);
+		getFW().setView("frontend:cart.detail");
 	}
 	
 	public void function addPromotionCode(required struct rc) {

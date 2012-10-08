@@ -59,7 +59,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	// ===================== START: Logical Methods ===========================
 	
-	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData, string currencyCode, struct data = {})	{
+	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData, struct data = {})	{
 	
 		// Check to see if the order has already been closed or canceled
 		if(arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
@@ -67,21 +67,21 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		// If the currency code was not passed in, then set it to the sku default
-		if(!structKeyExists(arguments, "currencyCode")) {
+		if(!structKeyExists(arguments.data, "currencyCode")) {
 			if( !isNull(arguments.order.getCurrencyCode()) && listFindNoCase(arguments.sku.setting('skuEligibleCurrencies'), arguments.order.getCurrencyCode()) ) {
-				arguments.currencyCode = arguments.order.getCurrencyCode();
+				arguments.data.currencyCode = arguments.order.getCurrencyCode();
 			} else {
-				arguments.currencyCode = arguments.sku.setting('skuCurrency');
+				arguments.data.currencyCode = arguments.sku.setting('skuCurrency');
 			}
 		}
 		
 		// Make sure the order has a currency code
 		if( isNull(arguments.order.getCurrencyCode()) ) {
-			arguments.order.setCurrencyCode( arguments.currencyCode );
+			arguments.order.setCurrencyCode( arguments.data.currencyCode );
 		}
 		
 		// Verify the order has the same currency as the one being added
-		if(arguments.order.getCurrencyCode() eq arguments.currencyCode) {
+		if(arguments.order.getCurrencyCode() eq arguments.data.currencyCode) {
 			
 			// save order so it's added to the hibernate scope
 			save( arguments.order );
@@ -158,8 +158,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 									orderItems[i].setPrice( arguments.data.price );
 									orderItems[i].setSkuPrice( arguments.data.price );	
 								} else {
-									orderItems[i].setPrice( arguments.sku.getPrice() );
-									orderItems[i].setSkuPrice( arguments.sku.getPrice() );
+									orderItems[i].setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+									orderItems[i].setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
 								}
 							}
 							break;
@@ -183,8 +183,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					newItem.setPrice( arguments.data.price );
 					newItem.setSkuPrice( arguments.data.price );
 				} else {
-					newItem.setPrice( arguments.sku.getPrice() );
-					newItem.setSkuPrice( arguments.sku.getPrice() );
+					newItem.setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+					newItem.setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
 				}
 				
 				// If a stock was passed in, then assign it to this new item
@@ -215,7 +215,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			recalculateOrderAmounts( arguments.order );
 		
 		} else {
-			order.addError("currency", "The existing cart is already in the currency of #arguments.order.getCurrencyCode()# so this item can not be added as #arguments.currencyCode#");
+			order.addError("currency", "The existing cart is already in the currency of #arguments.order.getCurrencyCode()# so this item can not be added as #arguments.data.currencyCode#");
 		}
 		
 	}
@@ -458,9 +458,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Loop over the orderItems to see if the skuPrice Changed
 			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-				if(arguments.order.getOrderItems()[i].getSkuPrice() != arguments.order.getOrderItems()[i].getSku().getPrice()) {
-					arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
-					arguments.order.getOrderItems()[i].setSkuPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
+				if(arguments.order.getOrderItems()[i].getSkuPrice() != arguments.order.getOrderItems()[i].getSku().getPriceByCurrencyCode( arguments.order.getOrderItems()[i].getCurrencyCode() )) {
+					arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSku().getPriceByCurrencyCode( arguments.order.getOrderItems()[i].getCurrencyCode() ) );
+					arguments.order.getOrderItems()[i].setSkuPrice( arguments.order.getOrderItems()[i].getSku().getPriceByCurrencyCode( arguments.order.getOrderItems()[i].getCurrencyCode() ) );
 				}
 			}
 			
