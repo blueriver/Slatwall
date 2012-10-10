@@ -153,6 +153,230 @@ Notes:
 	</cfcatch>
 </cftry>
 
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallOrder
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrder Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallOrderFulfillment
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrderFulfillment Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallOrderReturn
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrderReturn Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallOrderPayment
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrderPayment Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallPaymentTransaction
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallPaymentTransaction Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallPromotionApplied
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallPromotionApplied Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallShippingMethodOption
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallShippingMethodOption Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallStockReceiverItem
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallStockReceiverItem Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallSubscriptionUsage
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallSubscriptionUsage Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallTaxApplied
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallTaxApplied Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallVendorOrder
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallVendorOrder Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallVendorOrderItem
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallVendorOrderItem Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallVendorSkuStock
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallVendorSkuStock Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<cftry>
+	<cfquery name="local.change">
+		UPDATE
+			SlatwallOrderItem
+		SET
+			currencyCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="USD" />
+		WHERE
+			currencyCode is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrderItem Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
 <cfif local.scriptHasErrors>
 	<cflog file="Slatwall" text="General Log - Part of Script v2_2 had errors when running">
 	<cfthrow detail="Part of Script v2_2 had errors when running">

@@ -506,12 +506,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function duplicateOrderWithNewAccount(required any originalOrder, required any newAccount) {
 		
 		var newOrder = this.newOrder();
+		newOrder.setCurrencyCode( arguments.originalOrder.getCurrencyCode() );
 		
 		// Copy Order Items
 		for(var i=1; i<=arrayLen(arguments.originalOrder.getOrderItems()); i++) {
 			var newOrderItem = this.newOrderItem();
 			
 			newOrderItem.setPrice( arguments.originalOrder.getOrderItems()[i].getPrice() );
+			newOrderItem.setSkuPrice( arguments.originalOrder.getOrderItems()[i].getSkuPrice() );
+			newOrderItem.setCurrencyCode( arguments.originalOrder.getOrderItems()[i].getCurrencyCode() );
 			newOrderItem.setQuantity( arguments.originalOrder.getOrderItems()[i].getQuantity() );
 			newOrderItem.setOrderItemType( arguments.originalOrder.getOrderItems()[i].getOrderItemType() );
 			newOrderItem.setOrderItemStatusType( arguments.originalOrder.getOrderItems()[i].getOrderItemStatusType() );
@@ -540,6 +543,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var newOrderFulfillment = this.newOrderFulfillment();
 				newOrderFulfillment.setFulfillmentMethod( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod() );
 				newOrderFulfillment.setOrder( newOrder );
+				newOrderFulfillment.setCurrencyCode( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getCurrencyCode() );
 			}
 			newOrderItem.setOrder( newOrder );
 			newOrderItem.setOrderFulfillment( newOrderFulfillment );
