@@ -79,47 +79,7 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 				$.content().setTitle( $.slatwall.getCurrentBrand().getBrandName() );
 				$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getBrandName() );
 			}
-			
-			
-			
-			
-			
-			/*
-			if( keyLocation && keyLocation < listLen(rc.path,"/") ) {
-				// Load Product
-				getRequestCacheService().setValue("currentProductFilename", listGetAt(rc.path, keyLocation+1, "/"));
-				var product = getProductService().getProductByFilename(getRequestCacheService().getValue("currentProductFilename"));
-	
-				// If Product Exists, is Active, and is published then put the product in the slatwall scope and setup product template for muras contentBean to be loaded later
-				if(!isNull(product)) {
-					getRequestCacheService().setValue("currentProduct", product);
-					getRequestCacheService().setValue("currentProductID", product.getProductID());
-					rc.$.event('slatAction', 'frontend:product.detail');
-					rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getSetting('displayTemplate'), rc.$.event('siteid'), true));
-	
-					// Check if this came from a product listing page and setup the base crumb list array
-					if( keyLocation gt 2) {
-						var listingPageFilename = left(rc.path, find("/#setting('product_urlKey')#/", rc.path)-1);
-						listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
-						getRequestCacheService().setValue("currentListingPageOfProduct", getContentManager().getActiveContentByFilename(listingPageFilename, rc.$.event('siteid'), true));
-						var crumbDataArray = getRequestCacheService().getValue("currentListingPageOfProduct").getCrumbArray();
-					} else {
-						var crumbDataArray = getContentManager().getCrumbList(contentID="00000000000000000000000000000000001", siteID=rc.$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
-					}
-	
-					// add the product to the base crumb list array
-					arrayPrepend(crumbDataArray, product.getCrumbData(path=rc.path, siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
-	
-					// Push the new crumb list into the event
-					rc.$.event('crumbdata', crumbDataArray);
-				}	
-			}
-			
-			*/
-			
-			
-			
-			
+
 		}
 	}
 	
