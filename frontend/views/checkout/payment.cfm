@@ -88,9 +88,11 @@ Notes:
 						
 					<!--- More than 1 option for payment method --->
 					<cfelse>
+						<cfset local.newOrderPaymentIndex = 0 />
 						<cfloop array="#rc.eligiblePaymentMethodDetails#" index="local.paymentMethodDetails">
+							<cfset local.newOrderPaymentIndex += 1 />
 							<dl>
-								<dt><input type="radio" name="newOrderPaymentIndex" value="#local.orderPaymentIndex#"> #local.paymentMethodDetails.paymentMethod.getPaymentMethodName()#</dt>
+								<dt><input type="radio" name="newOrderPaymentIndex" value="#local.newOrderPaymentIndex#"> #local.paymentMethodDetails.paymentMethod.getPaymentMethodName()#</dt>
 								<dd>
 									<cfset params = local.paymentMethodDetails />
 									<cfset params.edit = true />
