@@ -218,11 +218,16 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	
 	public void function setCreditCardNumber(required string creditCardNumber) {
-		variables.creditCardNumber = arguments.creditCardNumber;
-		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
-		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
-		if(getCreditCardType() != "Invalid" && getPaymentMethod().setting("paymentMethodStoreCreditCardNumberWithOrder") == 1) {
-			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+		if(len(arguments.creditCardNumber)) {
+			variables.creditCardNumber = arguments.creditCardNumber;
+			setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
+			setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
+			if(getCreditCardType() != "Invalid" && getPaymentMethod().setting("paymentMethodStoreCreditCardNumberWithOrder") == 1) {
+				setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+			}
+		} else {
+			setCreditCardType(javaCast("null", ""));
+			setCreditCardNumberEncrypted(javaCast("null", ""));
 		}
 	}
 	
