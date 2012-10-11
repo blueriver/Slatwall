@@ -753,7 +753,7 @@ function tableApplySort(event, ui) {
 	});
 	
 	jQuery.ajax({
-		url: '/plugins/Slatwall/',
+		url: slatwall.rootURL,
 		async: false,
 		data: data,
 		dataType: 'json',
@@ -857,7 +857,7 @@ function updateGlobalSearchResults() {
 		};
 		
 		jQuery.ajax({
-			url: '/plugins/Slatwall/',
+			url: slatwall.rootURL,
 			method: 'post',
 			data: data,
 			dataType: 'json',
