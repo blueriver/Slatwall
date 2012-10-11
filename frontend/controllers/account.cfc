@@ -205,9 +205,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	private void function redirectToView(string view="") {
 		if(view == ""){
-			getFW().redirectExact("/my-account");
+			getFW().redirectExact( $.createHREF(filename=setting('globalPageMyAccount')) );
 		} else {
-			getFW().redirectExact("/my-account/?showitem=#arguments.view#");
+			getFW().redirectExact( $.createHREF(filename=setting('globalPageMyAccount'), queryString='showItem=#arguments.view#'));
 		}
 	}
 	
