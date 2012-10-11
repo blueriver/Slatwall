@@ -478,7 +478,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 		}
 		
 		jQuery.ajax({
-			url: slatwall.rootURL,
+			url: slatwall.rootURL + '/',
 			method: 'post',
 			data: data,
 			dataType: 'json',
@@ -753,7 +753,7 @@ function tableApplySort(event, ui) {
 	});
 	
 	jQuery.ajax({
-		url: slatwall.rootURL,
+		url: slatwall.rootURL + '/',
 		async: false,
 		data: data,
 		dataType: 'json',
@@ -857,7 +857,7 @@ function updateGlobalSearchResults() {
 		};
 		
 		jQuery.ajax({
-			url: slatwall.rootURL,
+			url: slatwall.rootURL + '/',
 			method: 'post',
 			data: data,
 			dataType: 'json',
