@@ -53,6 +53,7 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="expirationMonth" type="numeric";   
 	property name="expirationYear" type="numeric";
 	property name="securityCode" type="numeric";
+	property name="providerToken" type="string";
 	
 	// Account Info
 	property name="accountFirstName" type="string";   
