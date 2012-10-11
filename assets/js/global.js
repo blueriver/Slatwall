@@ -642,7 +642,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 }
 
 function addLoadingDiv( elementID ) {
-	var loadingDiv = '<div id="loading' + elementID + '" style="position:absolute;float:left;text-align:center;background-color:#FFFFFF;opacity:.9;z-index:900;"><img src="/plugins/Slatwall/assets/images/loading.gif" title="loading" /></div>';
+	var loadingDiv = '<div id="loading' + elementID + '" style="position:absolute;float:left;text-align:center;background-color:#FFFFFF;opacity:.9;z-index:900;"><img src="' + slatwall.rootURL + '/assets/images/loading.gif" title="loading" /></div>';
 	jQuery('#' + elementID).before(loadingDiv);
 	jQuery('#loading' + elementID).width(jQuery('#' + elementID).width() + 2);
 	jQuery('#loading' + elementID).height(jQuery('#' + elementID).height() + 2);
@@ -883,10 +883,10 @@ function updateGlobalSearchResults() {
 					jQuery('#golbalsr-' + key).html('');
 					var records = result[key]['records'];
 				    for(var r=0; r < records.length; r++) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
+				    	jQuery('#golbalsr-' + key).append('<li><a href="' + slatwall.rootURL + '/?slatAction=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
 				    }
 				    if(result[key]['recordCount'] > 10) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="/plugins/Slatwall/?slatAction=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
+				    	jQuery('#golbalsr-' + key).append('<li><a href="' + slatwall.rootURL + '/?slatAction=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
 				    } else if (result[key]['recordCount'] == 0) {
 				    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
 				    }
