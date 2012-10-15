@@ -296,6 +296,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 				// set the orderitem price to renewal price
 				order.getOrderItems()[1].setPrice(arguments.subscriptionUsage.getRenewalPrice());
+				order.getOrderItems()[1].setSkuPrice(arguments.subscriptionUsage.getRenewalPrice());
 		
 				// create new subscription orderItem
 				var subscriptionOrderItem = this.newSubscriptionOrderItem();
@@ -377,6 +378,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 			// set the orderitem price to renewal price
 			order.getOrderItems()[1].setPrice(arguments.subscriptionUsage.getRenewalPrice());
+			order.getOrderItems()[1].setSkuPrice(arguments.subscriptionUsage.getRenewalPrice());
 	
 			// create new subscription orderItem
 			var subscriptionOrderItem = this.newSubscriptionOrderItem();

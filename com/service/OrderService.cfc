@@ -589,10 +589,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		} else {
 			
 			// Loop over the orderItems to see if the skuPrice Changed
-			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-				if(arguments.order.getOrderItems()[i].getSkuPrice() != arguments.order.getOrderItems()[i].getSku().getPrice()) {
-					arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
-					arguments.order.getOrderItems()[i].setSkuPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
+			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
+				for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+					if(arguments.order.getOrderItems()[i].getOrderItemType().getSystemCode() == "oitSale" && arguments.order.getOrderItems()[i].getSkuPrice() != arguments.order.getOrderItems()[i].getSku().getPrice()) {
+						arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
+						arguments.order.getOrderItems()[i].setSkuPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
+					}
 				}
 			}
 			
