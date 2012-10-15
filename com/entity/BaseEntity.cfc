@@ -160,10 +160,10 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	public struct function getAttributeValuesByAttributeIDStruct() {
 		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
 			variables.attributeValuesByAttributeIDStruct = {};
-			if(structKeyExists(variables, "getAttributeValues")) {
+			if(hasProperty("attributeValues")) {
 				for(var i=1; i<=arrayLen(getAttributeValues()); i++){
 					variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
-				}
+				}	
 			}
 		}
 		
@@ -173,7 +173,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	public struct function getAttributeValuesByAttributeCodeStruct() {
 		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
 			variables.attributeValuesByAttributeCodeStruct = {};
-			if(structKeyExists(variables, "getAttributeValues")) {
+			if(hasProperty("attributeValues")) {
 				for(var i=1; i<=arrayLen(getAttributeValues()); i++){
 					variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
 				}
