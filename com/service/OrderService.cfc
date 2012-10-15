@@ -68,7 +68,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// If the currency code was not passed in, then set it to the sku default
 		if(!structKeyExists(arguments.data, "currencyCode")) {
-			if( !isNull(arguments.order.getCurrencyCode()) && listFindNoCase(arguments.sku.setting('skuEligibleCurrencies'), arguments.order.getCurrencyCode()) ) {
+			if( !isNull(arguments.order.getCurrencyCode()) && listFindNoCase(arguments.sku.setting('skuEligibleCurrencies'), arguments.order.getCurrencyCode()) && arrayLen(arguments.order.getOrderItems()) ) {
 				arguments.data.currencyCode = arguments.order.getCurrencyCode();
 			} else {
 				arguments.data.currencyCode = arguments.sku.setting('skuCurrency');
@@ -76,7 +76,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		// Make sure the order has a currency code
-		if( isNull(arguments.order.getCurrencyCode()) ) {
+		if( isNull(arguments.order.getCurrencyCode()) || !arrayLen(arguments.order.getOrderItems()) ) {
 			arguments.order.setCurrencyCode( arguments.data.currencyCode );
 		}
 		
