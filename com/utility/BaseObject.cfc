@@ -1001,6 +1001,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		return application.slatwallfw1.factory.getBean( arguments.serviceName );
 	}
 	
+	// @hint helper function for getting a bean out of the bean factory
+	public any function getBean(required string beanName) {
+		return getService(arguments.beanName);
+	}
+	
 	// @hint  rounding function
 	public string function round(required any value, string roundingExpression="0.00", string roundingDirection="Closest") {
 		return getService("roundingRuleService").roundValue(argumentcollection=arguments);
