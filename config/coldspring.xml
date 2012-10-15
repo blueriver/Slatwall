@@ -161,6 +161,7 @@
 			</map>
 		</property>
 	</bean>
+	<bean id="utilityRBService" class="Slatwall.com.service.UtilityRBService" singleton="true" />
 	<bean id="utilityTagService" class="Slatwall.com.service.UtilityTagService" />
 	<bean id="utilityEmailService" class="Slatwall.com.service.UtilityEmailService">
 		<property name="utilityService"><ref bean="utilityService" /></property>

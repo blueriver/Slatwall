@@ -38,6 +38,15 @@ Notes:
 */
 component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
 
+	public void function setUp() {
+		super.setup();
+		
+		variables.accountService = request.slatwallScope.getBean("accountService");
+	}
+	
+	public void function defaults_are_correct() {
+		assertTrue( isObject(variables.accountService.getEmailService()) );
+	}
 	
 }
 

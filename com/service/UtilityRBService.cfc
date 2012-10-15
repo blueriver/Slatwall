@@ -37,9 +37,67 @@ Notes:
 
 */
 component extends="BaseService" accessors="true" {
+
+	variables.resourceBundles = {};
+	variables.instantiaded = now();
 	
-	public any function getRBKey(required any key, string local="US") {
+	public string function getRBKey(required string key, string locale="en_us", string checkedKeys="", string originalKey) {
+		// Check the exact bundle file
+		var bundle = getResourceBundle( arguments.locale );
+		if(structKeyExists(bundle, arguments.key)) {
+			return bundle[ arguments.key ];
+		}
 		
+		// Check the broader bundle file
+		if(listLen(arguments.locale, "_") == 2) {
+			bundle = getResourceBundle( listFirst(arguments.locale, "_") );
+			if(structKeyExists(bundle, arguments.key)) {
+				return bundle[ arguments.key ];
+			}
+		}
+		
+		// Because the value was not found, we can add this to the checkedKeys, and setup the original Kye
+		arguments.checkedKeys = listAppend(arguments.checkedKeys, arguments.key & "_" & arguments.locale & "_missing");
+		if(!structKeyExists(arguments, "originalKey")) {
+			arguments.originalKey = arguments.key;
+		}
+		
+		if(listLen(arguments.key, ".") >= 3 && listGetAt(arguments.key, 2, ".") neq "define") {
+			return getRBKey(replace(arguments.key, ".#listGetAt(arguments.key, 2, ".")#.", ".define.", "one"), arguments.locale, arguments.checkedKeys, arguments.originalKey);
+		}
+		
+		if(listLen(arguments.key, ".") >= 2 && listGetAt(arguments.key, 1, ".") neq "define") {
+			return getRBKey("define.#listLast(arguments.key)#", arguments.locale, arguments.checkedKeys, arguments.originalKey);
+		}
+		
+		if(listFirst(arguments.locale, "_") neq "en") {
+			return getRBKey(arguments.originalKey, "en", arguments.checkedKeys);
+		}
+		
+		return arguments.checkedKeys;
 	}
+	
+	public struct function getResourceBundle(required string locale="en_us") {
+		if(!structKeyExists(variables.resourceBundles, arguments.locale)) {
+			var javaRB = new Slatwall.org.javaRB.javaRB();
+			
+			variables.resourceBundles[ arguments.locale ] = {};
+			
+			try {
+				variables.resourceBundles[ arguments.locale ] = javaRB.getResourceBundle(expandPath("/Slatwall/config/resourceBundles/#arguments.locale#.properties"));
+			} catch (any e) {
+				// No RB File Found
+			}
+			
+			try {
+				structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/Slatwall/config/custom/resourceBundles/#arguments.locale#.properties")), true);
+			} catch (any e) {
+				// No RB File Found
+			}
+		}
+		
+		return variables.resourceBundles[ arguments.locale ];
+	}
+	
 	
 }

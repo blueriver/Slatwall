@@ -45,7 +45,7 @@ component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
 		variables.brand = request.slatwallScope.getService("brandService").newBrand();
 	}
 	
-	public void function defaultsAreCorrect() {
+	public void function defaults_are_correct() {
 		assertEquals(variables.brand.getProducts(), []);
 	}
 }

@@ -996,14 +996,18 @@ component displayname="Base Object" accessors="true" output="false" {
 		return request.slatwallScope;
 	}
 	
-	// @hint  function for returning the any of the services in the application
-	public any function getService(required string serviceName) {
-		return application.slatwallfw1.factory.getBean( arguments.serviceName );
+	// @hint gets a bean out of whatever the fw1 bean factory is
+	public any function getBean(required string beanName) {
+		return application.slatwallfw1.factory.getBean( arguments.beanName );
 	}
 	
-	// @hint helper function for getting a bean out of the bean factory
-	public any function getBean(required string beanName) {
-		return getService(arguments.beanName);
+	// @hint returns an application scope cached version of the service
+	public any function getService(required string serviceName) {
+		if( !hasApplicationValue("serviceCache_#arguments.serviceName#") ) {
+			setApplicationValue("serviceCache_#arguments.serviceName#", getBean( arguments.serviceName ));
+		}
+		
+		return getApplicationValue("serviceCache_#arguments.serviceName#");
 	}
 	
 	// @hint  rounding function
@@ -1045,13 +1049,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint  helper function to return the Slatwall RB Factory in any component
 	public any function getRBFactory() {
 		if( !hasApplicationValue("rbFactory") ) {
-			// Build RB Factory
-			var rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
-			
-			// Build custom RB Factory
-			rbFactory= new mura.resourceBundle.resourceBundleFactory(rbFactory, getDirectoryFromPath(expandPath("/plugins/Slatwall/config/custom/resourceBundles/") ));
-			
-			setApplicationValue("rbFactory", rbFactory);
+			setApplicationValue("rbFactory", getService("utilityRBService"));
 		}
 		
 		return getApplicationValue("rbFactory");
@@ -1088,8 +1086,8 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint  helper function to return the RB Key from RB Factory in any component
-	public string function rbKey(required string key, string local="us") {
-		return getRBFactory().getKeyValue(arguments.local, arguments.key);
+	public string function rbKey(required string key, string locale="us") {
+		return getRBFactory().getRBKey(arguments.key, arguments.locale);
 	}
 	
 	// @hint helper function to return a Setting
