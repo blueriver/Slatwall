@@ -747,6 +747,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							orderItem.setOrder( returnOrder );
 							orderItem.setPrice( arguments.data.records[r].returnPrice );
 							orderItem.setSkuPrice( originalOrderItem.getSku().getPrice() );
+							orderItem.setCurrencyCode( originalOrderItem.getSku().getCurrencyCode() );
 							orderItem.setQuantity( arguments.data.records[r].returnQuantity );
 							orderItem.setSku( originalOrderItem.getSku() );
 							

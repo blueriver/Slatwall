@@ -90,7 +90,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="experationMonthOptions" persistent="false";
 	property name="expirationYearOptions" persistent="false";
 	property name="paymentMethodType" persistent="false";
-	property name="orderStatusCode" type="numeric" persistent="false";
+	property name="orderStatusCode" persistent="false";
 	property name="securityCode" persistent="false";
 		
 	public any function init() {
@@ -108,8 +108,8 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 			}
 		}
 		// Check referenced payment, and might have a charge.  This works recursivly
-		if(!isNull(getReferencedPayment())) {
-			return getReferencedPayment().getMostRecentChargeProviderTransactionID();
+		if(!isNull(getReferencedOrderPayment())) {
+			return getReferencedOrderPayment().getMostRecentChargeProviderTransactionID();
 		}
 		return "";
 	}
