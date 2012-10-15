@@ -414,16 +414,17 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public void function updateOrderAmountsWithPriceGroups(required any order) {
 		if( !isNull(arguments.order.getAccount()) && !arguments.order.getAccount().isGuestAccount() ) {
 			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++){
-				
-				var priceGroupDetails = getBestPriceGroupDetailsBasedOnSkuAndAccount(arguments.order.getOrderItems()[i].getSku(), arguments.order.getAccount());
-				
-				if(priceGroupDetails.price < arguments.order.getOrderItems()[i].getSkuPrice() && isObject(priceGroupDetails.priceGroup)) {
-					arguments.order.getOrderItems()[i].setPrice( priceGroupDetails.price );
-					arguments.order.getOrderItems()[i].setAppliedPriceGroup( priceGroupDetails.priceGroup );
-				} else {
-					arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSkuPrice() );
-					arguments.order.getOrderItems()[i].setAppliedPriceGroup( javaCast("null", "") );
-				}
+				if(arguments.order.getOrderItems()[i].getOrderItemType().getSystemCode() == "oitSale") {
+					var priceGroupDetails = getBestPriceGroupDetailsBasedOnSkuAndAccount(arguments.order.getOrderItems()[i].getSku(), arguments.order.getAccount());
+					
+					if(priceGroupDetails.price < arguments.order.getOrderItems()[i].getSkuPrice() && isObject(priceGroupDetails.priceGroup)) {
+						arguments.order.getOrderItems()[i].setPrice( priceGroupDetails.price );
+						arguments.order.getOrderItems()[i].setAppliedPriceGroup( priceGroupDetails.priceGroup );
+					} else {
+						arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSkuPrice() );
+						arguments.order.getOrderItems()[i].setAppliedPriceGroup( javaCast("null", "") );
+					}
+				}	
 			}	
 		}
 	}
