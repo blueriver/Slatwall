@@ -38,17 +38,9 @@ Notes:
 */
 component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
 
-	// @hint put things in here that you want to run befor EACH test
-	public void function SetUp() {
-		super.setup();
-		
-		variables.product = request.slatwallScope.getService("productService").newProduct();
-	}
-	
-	public void function productUrlIsCorrectlyFormatted() {
-		variables.product.setURLTitle("nike-air-jorden");
-		
-		assertEquals("/sp/nike-air-jorden/", variables.product.getProductURL());
+	public void function inst_ok() {
+		var obj = request.slatwallScope.getBean("accountDAO");
+		assertTrue(isObject(obj));
 	}
 }
 

@@ -38,17 +38,31 @@ Notes:
 */
 component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
 
-	// @hint put things in here that you want to run befor EACH test
-	public void function SetUp() {
+	public void function setUp() {
 		super.setup();
 		
-		variables.product = request.slatwallScope.getService("productService").newProduct();
+		variables.factory = new Slatwall.org.di1.ioc("/Slatwall/com/");
+	}
+
+	public void function inst_factory_partial_DAO() {
+		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/dao/");
+		assertTrue(isObject(ioc));
 	}
 	
-	public void function productUrlIsCorrectlyFormatted() {
-		variables.product.setURLTitle("nike-air-jorden");
-		
-		assertEquals("/sp/nike-air-jorden/", variables.product.getProductURL());
+	public void function inst_factory_partial_Service() {
+		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/service/");
+		assertTrue(isObject(ioc));
 	}
+	
+	public void function inst_factory_partial_Utility() {
+		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/utility/");
+		assertTrue(isObject(ioc));
+	}
+	
+	public void function inst_factory() {
+		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/");
+		assertTrue(isObject(ioc));
+	}
+	
 }
 

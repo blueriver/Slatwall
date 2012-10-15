@@ -36,16 +36,13 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.BaseTest" {
+component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
 
 	// @hint put things in here that you want to run befor EACH test
 	public void function setUp() {
-		variables.brand = getService("brandService").newBrand();
-	}
-	
-	// @hint put things in here that you want to run after EACH test
-	public void function tearDown() {
+		super.setup();
 		
+		variables.brand = request.slatwallScope.getService("brandService").newBrand();
 	}
 	
 	public void function defaultsAreCorrect() {
