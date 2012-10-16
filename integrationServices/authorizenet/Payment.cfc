@@ -129,7 +129,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 	private any function postRequest(required struct requestData){
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
-		if( setting('testModeFlag') ) {
+		if( setting('testServerFlag') ) {
 			httpRequest.setUrl( variables.testGatewayURL );
 		} else {
 			httpRequest.setUrl( variables.gatewayURL );	
