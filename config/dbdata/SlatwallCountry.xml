@@ -2,26 +2,26 @@
 <Table tableName="SlatwallCountry">
 	<Columns>
 		<column name="countryCode" fieldtype="id" />
-		<column name="countryName" />
-		<column name="activeFlag" datatype="bit" update="false" />
+		<column name="countryName" update="false" />
+		<column name="activeFlag" update="false" datatype="bit" />
 		<column name="streetAddressLabel" update="false" />
-		<column name="streetAddressShowFlag" datatype="bit" update="false" />
-		<column name="streetAddressRequiredFlag" datatype="bit" update="false" />
+		<column name="streetAddressShowFlag" update="false" datatype="bit" />
+		<column name="streetAddressRequiredFlag" update="false" datatype="bit" />
 		<column name="street2AddressLabel" update="false" />
-		<column name="street2AddressShowFlag" datatype="bit" update="false" />
-		<column name="street2AddressRequiredFlag" datatype="bit" update="false" />
+		<column name="street2AddressShowFlag" update="false" datatype="bit" />
+		<column name="street2AddressRequiredFlag" update="false" datatype="bit" />
 		<column name="localityLabel" update="false" />
-		<column name="localityShowFlag" datatype="bit" update="false" />
-		<column name="localityRequiredFlag" datatype="bit" update="false" />
+		<column name="localityShowFlag" update="false" datatype="bit" />
+		<column name="localityRequiredFlag" update="false" datatype="bit" />
 		<column name="cityLabel" update="false" />
-		<column name="cityShowFlag" datatype="bit" update="false" />
-		<column name="cityRequiredFlag" datatype="bit" update="false" />
+		<column name="cityShowFlag" update="false" datatype="bit" />
+		<column name="cityRequiredFlag" update="false" datatype="bit" />
 		<column name="stateCodeLabel" update="false" />
-		<column name="stateCodeShowFlag" datatype="bit" update="false" />
-		<column name="stateCodeRequiredFlag" datatype="bit" update="false" />
+		<column name="stateCodeShowFlag" update="false" datatype="bit" />
+		<column name="stateCodeRequiredFlag" update="false" datatype="bit" />
 		<column name="postalCodeLabel" update="false" />
-		<column name="postalCodeShowFlag" datatype="bit" update="false" />
-		<column name="postalCodeRequiredFlag" datatype="bit" update="false" />
+		<column name="postalCodeShowFlag" update="false" datatype="bit" />
+		<column name="postalCodeRequiredFlag" update="false" datatype="bit" />
 	</Columns>
 	<Records>
 		<Record countryCode="AD" countryName="Andorra" activeFlag="1" streetAddressLabel="Street Address" streetAddressShowFlag="1" streetAddressRequiredFlag="1" street2AddressLabel="Street Address 2" street2AddressShowFlag="1" street2AddressRequiredFlag="0" localityLabel="Locality" localityShowFlag="0" localityRequiredFlag="0" cityLabel="City" cityShowFlag="1" cityRequiredFlag="1" stateCodeLabel="State" stateCodeShowFlag="1" stateCodeRequiredFlag="0" postalCodeLabel="Postal Code" postalCodeShowFlag="1" postalCodeRequiredFlag="1" />
