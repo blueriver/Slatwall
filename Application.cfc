@@ -176,11 +176,6 @@ component extends="org.fw1.framework" output="false" {
 					// BASE URL
 					variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
 					writeLog(file="Slatwall", text="General Log - FW1 baseURL set to #variables.framework.baseURL#");
-					
-					// Super Users
-					getBeanFactory().getBean("permissionService").setupDefaultPermissions();
-					writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
-					
 					// ======================== END: Enviornment Setup ========================
 					
 					
@@ -215,6 +210,10 @@ component extends="org.fw1.framework" output="false" {
 							// Setup Default Data... Not called on soft reloads.
 							getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
 							writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
+							
+							// Super Users
+							getBeanFactory().getBean("permissionService").setupDefaultPermissions();
+							writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
 							
 							getBeanFactory().getBean("settingService").clearAllSettingsQuery();
 							writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared");

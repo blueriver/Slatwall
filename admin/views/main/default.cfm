@@ -64,7 +64,8 @@ Notes:
 			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductupdates")#</h4>
 			<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" 
 					recordDetailAction="admin:product.detailproduct">
-				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
+				<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" />
+				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
 				<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" />
 				<cf_SlatwallListingColumn propertyIdentifier="modifiedByAccount.fullname" />
 			</cf_SlatwallListingDisplay>

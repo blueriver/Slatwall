@@ -46,20 +46,18 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	// Uses the current mura user to check security against a given action
 	public boolean function secureDisplay(required string action, any account) {
-		//return true;
-		
 		if(!structKeyExists(arguments, "account")) {
 			arguments.account = getSlatwallScope().getCurrentAccount();
 		}
-		
-		var subsystemName = listFirst( arguments.action, ":" );
-		var sectionName = listFirst( listLast(arguments.action, ":"), "." );
-		var itemName = listLast( arguments.action, "." );
 		
 		// Check if the user is a super admin, if true no need to worry about security
 		if( findNoCase("*", arguments.account.getAllPermissions()) ) {
 			return true;
 		}
+		
+		var subsystemName = listFirst( arguments.action, ":" );
+		var sectionName = listFirst( listLast(arguments.action, ":"), "." );
+		var itemName = listLast( arguments.action, "." );
 		
 		//check if the page is public, if public no need to worry about security
 		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].publicMethods, itemName)){

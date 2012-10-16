@@ -320,6 +320,16 @@ globalEncryptionKeySize
 		}
 		
 		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
+			// Faster Method for simple global settings
+			if( left(arguments.settingName, 6) eq "global" ) {
+				if( !structKeyExists(variables.globalSettingValues, arguments.settingName) ) {
+					variables.globalSettingValues[ arguments.settingName ] = getSettingDetails(argumentCollection=arguments);
+				}
+				if( arguments.formatValue ) {
+					return variables.globalSettingValues[ arguments.settingName ].settingValueFormatted;
+				}
+				return variables.globalSettingValues[ arguments.settingName ].settingValue;
+			}
 			if(arguments.formatValue) {
 				return getSettingDetails(argumentCollection=arguments).settingValueFormatted;	
 			}

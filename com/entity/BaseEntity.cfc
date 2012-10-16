@@ -631,30 +631,25 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		}
 	}
 	
+	/*
 	public void function preDelete(any entity){
-		
-
 	}
 	
 	public void function preLoad(any entity){
-
 	}
 	
 	public void function postInsert(any entity){
-
 	}
 	
 	public void function postUpdate(any entity){
-
 	}
 	
 	public void function postDelete(any entity){
-
 	}
 	
 	public void function postLoad(any entity){
-
 	}
+	*/
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }
