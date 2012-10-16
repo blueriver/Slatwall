@@ -610,6 +610,8 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
+		return rbKey("entity.#getClassName()#.#arguments.propertyName#");
+		/*
 		var exactMatch = rbKey("entity.#getClassName()#.#arguments.propertyName#");
 		if(right(exactMatch, 8) != "_missing") {
 			return exactMatch;
@@ -619,6 +621,7 @@ component displayname="Base Object" accessors="true" output="false" {
 			return genericMatch;
 		}
 		return exactMatch;
+		*/
 	}
 	
 	// @hint public method for getting the title hint to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
@@ -627,11 +630,13 @@ component displayname="Base Object" accessors="true" output="false" {
 		if(right(exactMatch, 8) != "_missing") {
 			return exactMatch;
 		}
+		return "";
+		/*
 		var genericMatch = rbKey("entity.define.#arguments.propertyName#_hint");
 		if(right(genericMatch, 8) != "_missing") {
 			return genericMatch;
 		}
-		return "";
+		*/
 	}
 	
 	// @hint public method to get the rbKey value for a property in a subentity

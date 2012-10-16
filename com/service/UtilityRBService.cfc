@@ -48,26 +48,31 @@ component extends="BaseService" accessors="true" {
 			return bundle[ arguments.key ];
 		}
 		
-		// Check the broader bundle file
-		if(listLen(arguments.locale, "_") == 2) {
-			bundle = getResourceBundle( listFirst(arguments.locale, "_") );
-			if(structKeyExists(bundle, arguments.key)) {
-				return bundle[ arguments.key ];
-			}
-		}
-		
 		// Because the value was not found, we can add this to the checkedKeys, and setup the original Kye
 		arguments.checkedKeys = listAppend(arguments.checkedKeys, arguments.key & "_" & arguments.locale & "_missing");
 		if(!structKeyExists(arguments, "originalKey")) {
 			arguments.originalKey = arguments.key;
 		}
 		
-		if(listLen(arguments.key, ".") >= 3 && listGetAt(arguments.key, 2, ".") neq "define") {
-			return getRBKey(replace(arguments.key, ".#listGetAt(arguments.key, 2, ".")#.", ".define.", "one"), arguments.locale, arguments.checkedKeys, arguments.originalKey);
+		// Check the broader bundle file
+		if(listLen(arguments.locale, "_") == 2) {
+			bundle = getResourceBundle( listFirst(arguments.locale, "_") );
+			if(structKeyExists(bundle, arguments.key)) {
+				return bundle[ arguments.key ];
+			}
+			// Add this more broad term to the checked keys
+			arguments.checkedKeys = listAppend(arguments.checkedKeys, arguments.key & "_" & listFirst(arguments.locale, "_") & "_missing");
 		}
 		
-		if(listLen(arguments.key, ".") >= 2 && listGetAt(arguments.key, 1, ".") neq "define") {
-			return getRBKey("define.#listLast(arguments.key)#", arguments.locale, arguments.checkedKeys, arguments.originalKey);
+		// Recursivly step the key back with the word 'define' replacing the previous.  Basically Look for just the "xxx.yyy.define.zzz" version of the end key and then "yyy.define.zzz" and then "define.zzz"
+		if ( listLen(arguments.key, ".") >= 3 && listGetAt(arguments.key, listLen(arguments.key, ".") - 1, ".") eq "define" ) {
+			var newKey = replace(arguments.key, "#listGetAt(arguments.key, listLen(arguments.key, ".") - 2, ".")#.define", "define", "one");
+			
+			return getRBKey(newKey, arguments.locale, arguments.checkedKeys, arguments.originalKey);
+		} else if( listLen(arguments.key, ".") >= 2 && listGetAt(arguments.key, listLen(arguments.key, ".") - 1, ".") neq "define" ) {
+			var newKey = replace(arguments.key, "#listGetAt(arguments.key, listLen(arguments.key, ".") - 1, ".")#.", "define.", "one");
+			
+			return getRBKey(newKey, arguments.locale, arguments.checkedKeys, arguments.originalKey);
 		}
 		
 		if(listFirst(arguments.locale, "_") neq "en") {
