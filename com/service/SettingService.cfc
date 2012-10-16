@@ -54,7 +54,7 @@ globalEncryptionKeySize
 	
 	<!--- Used For Caching --->
 	<cfproperty name="allSettingsQuery" type="query" />
-	<cfproperty name="globalSettingValues" type="struct" />
+	<cfproperty name="settingDetailsCache" type="struct" />
 	
 	<!--- Used As Meta information --->
 	<cfproperty name="settingMetaData" type="struct" />
@@ -62,7 +62,7 @@ globalEncryptionKeySize
 	<cfproperty name="settingPrefixInOrder" type="array" />
 	
 	<cfscript>
-		variables.globalSettingValues = {};
+		variables.settingDetailsCache = {};
 		
 		variables.settingPrefixInOrder = [
 			"shippingMethodRate",
@@ -307,6 +307,9 @@ globalEncryptionKeySize
 			if(structKeyExists(variables, "allSettingsQuery")) {
 				structDelete(variables, "allSettingsQuery");
 			}
+			if(structKeyExists(variables, "settingDetailsCache")) {
+				variables.settingDetailsCache = {};
+			}
 		}
 		
 		public any function saveSetting(required any entity, struct data={}) {
@@ -320,16 +323,24 @@ globalEncryptionKeySize
 		}
 		
 		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
-			// Faster Method for simple global settings
-			if( left(arguments.settingName, 6) eq "global" ) {
-				if( !structKeyExists(variables.globalSettingValues, arguments.settingName) ) {
-					variables.globalSettingValues[ arguments.settingName ] = getSettingDetails(argumentCollection=arguments);
-				}
-				if( arguments.formatValue ) {
-					return variables.globalSettingValues[ arguments.settingName ].settingValueFormatted;
-				}
-				return variables.globalSettingValues[ arguments.settingName ].settingValue;
+			
+			// Attempt to pull out a cached value first if possible
+			var cacheKey = "";
+			if( left(arguments.settingName, 6) eq "global" || !arguments.object.isPersistent() ) {
+				cacheKey = arguments.settingName;
+			} else if( ( !structKeyExists(arguments, "filterEntities") || !arrayLen(arguments.filterEntities) ) ) {
+				cacheKey &= arguments.object.getPrimaryIDValue();
 			}
+			if( len(cacheKey) ) {
+				if(!structKeyExists(variables.settingDetailsCache, cacheKey)) {
+					variables.settingDetailsCache[ cacheKey ] = getSettingDetails(argumentCollection=arguments);
+				}
+				if(arguments.formatValue) {
+					return variables.settingDetailsCache[ cacheKey ].settingValueFormatted;	
+				}
+				return variables.settingDetailsCache[ cacheKey ].settingValue;	
+			}
+			
 			if(arguments.formatValue) {
 				return getSettingDetails(argumentCollection=arguments).settingValueFormatted;	
 			}
