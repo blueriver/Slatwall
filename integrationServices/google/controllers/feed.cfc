@@ -14,6 +14,8 @@ component extends="Slatwall.admin.controllers.BaseController" persistent="false"
 		// Create the product feed
 		rc.skuSmartList = getSkuService().getSkuSmartList();
 		rc.skuSmartList.joinRelatedProperty("SlatwallSku", "product");
+		rc.skuSmartList.joinRelatedProperty("SlatwallProduct", "defaultSku");
+		rc.skuSmartList.joinRelatedProperty("SlatwallProduct", "brand", "left");
 		
 		rc.skuSmartList.addFilter('activeFlag', 1);
 		rc.skuSmartList.addFilter('product.activeFlag', 1);

@@ -17,23 +17,28 @@
 		<cfloop array="#rc.skuSmartList.getRecords()#" index="local.sku">
 		<item>
 			<g:id>#local.sku.getSkuCode()#</g:id>
-			<title>#local.sku.getProduct().getCalculatedTitle()# - #local.sku.displayOptions()#</title>
+			<title>#local.sku.getProduct().getCalculatedTitle()#</title>
 			<description>#local.sku.getProduct().getDescription()#</description>
 			<g:google_product_category></g:google_product_category>
 			<g:product_type>#local.sku.getProduct().getProductType().getSimpleRepresentation()#</g:product_type>
 			<link>http://#CGI.HTTP_HOST##local.sku.getProduct().getProductURL()#</link>
 			<g:image_link>http://#CGI.HTTP_HOST##local.sku.getResizedImagePath()#</g:image_link>
 			<cfloop array="#local.sku.getProduct().getProductImages()#" index="local.image">
-				<g:additional_image_link>http://#CGI.HTTP_HOST##local.image.getResizedImagePath()#</g:additional_image_link>
+			<g:additional_image_link>http://#CGI.HTTP_HOST##local.image.getResizedImagePath()#</g:additional_image_link>
 			</cfloop>
 			<g:condition>new</g:condition>
-			<g:price>#local.sku.getPrice()#</g:price>
-			
+			<cfif local.sku.getProduct().getCalculatedQATS() gt 0>
+			<g:availability>in stock</g:availability>
+			</cfif>
+			<g:price>#local.sku.getProduct().getPrice()#</g:price>
+			<cfif local.sku.getPrice() gt local.sku.getProduct().getCalculatedSalePrice()>
+			<g:sale_price>#local.sku.getSalePrice()#</g:sale_price>
+			<g:sale_price_effective_date>#dateFormat(now(), "YYYY-MM-DD")#T#timeFormat(now(), "HH:mm")#-#getTimeZoneInfo().utcHourOffset#/#dateFormat(local.sku.getSalePriceExpirationDateTime(), "YYYY-MM-DD")#T#timeFormat(local.sku.getSalePriceExpirationDateTime(), "HH:mm")#-#getTimeZoneInfo().utcHourOffset#</g:sale_price_effective_date>	
+			</cfif>
+			<cfif not isNull(local.sku.getProduct().getBrand())>
+			<g:brand>#local.sku.getProduct().getBrand().getBrandName()#</g:brand>
+			</cfif>
 			<!---
-			<g:availability></g:availability>
-			<g:sale_price></g:sale_price>
-			<g:sale_price_effective_date></g:sale_price_effective_date>
-			<g:brand></g:brand>
 			<g:gtin></g:gtin>
 			<g:mpn></g:mpn>
 			<g:gender></g:gender>
@@ -57,7 +62,9 @@
 			   <g:service></g:service>
 			   <g:price></g:price>
 			</g:shipping>
-			<g:shipping_weight></g:shipping_weight>
+			--->
+			<g:shipping_weight>#local.sku.setting('skuShippingWeight')# #local.sku.setting('skuShippingWeightUnitCode')#</g:shipping_weight>
+			<!---
 			<g:online_only></g:online_only>
 			--->
 		</item>
