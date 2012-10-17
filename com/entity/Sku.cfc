@@ -241,8 +241,12 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			} else {
 				arguments.size = "small";
 			}
-			arguments.width = getProduct().setting("productImage#arguments.size#Width");
-			arguments.height = getProduct().setting("productImage#arguments.size#Height");
+			if(isNumeric(getProduct().setting("productImage#arguments.size#Width")) && getProduct().setting("productImage#arguments.size#Width") > 0) {
+				arguments.width = getProduct().setting("productImage#arguments.size#Width");	
+			}
+			if(isNumeric(getProduct().setting("productImage#arguments.size#Height")) && getProduct().setting("productImage#arguments.size#Height") > 0) {
+				arguments.height = getProduct().setting("productImage#arguments.size#Height");	
+			}
 		}
 		
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);

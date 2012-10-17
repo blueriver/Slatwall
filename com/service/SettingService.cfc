@@ -329,7 +329,7 @@ globalEncryptionKeySize
 			if( left(arguments.settingName, 6) eq "global" || !arguments.object.isPersistent() ) {
 				cacheKey = arguments.settingName;
 			} else if( ( !structKeyExists(arguments, "filterEntities") || !arrayLen(arguments.filterEntities) ) ) {
-				cacheKey &= arguments.object.getPrimaryIDValue();
+				cacheKey = "#arguments.settingName#_#arguments.object.getPrimaryIDValue()#";
 			}
 			if( len(cacheKey) ) {
 				if(!structKeyExists(variables.settingDetailsCache, cacheKey)) {
