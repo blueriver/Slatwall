@@ -72,8 +72,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
-
-	
 	
 	
 	public array function getInheritedAttributeSetAssignments(){

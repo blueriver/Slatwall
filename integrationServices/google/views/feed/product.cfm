@@ -5,7 +5,7 @@
 	
 --->
 
-<cfparam name="rc.productFeedSmartList" type="any" />
+<cfparam name="rc.skuSmartList" type="any" />
 
 <cfoutput>
 <?xml version="1.0"?>
@@ -18,17 +18,19 @@
 		<item>
 			<g:id>#local.sku.getSkuCode()#</g:id>
 			<title>#local.sku.getProduct().getCalculatedTitle()# - #local.sku.displayOptions()#</title>
-			<description>#local.product.getDescription()#</description>
+			<description>#local.sku.getProduct().getDescription()#</description>
 			<g:google_product_category></g:google_product_category>
-			<g:product_type>#local.sku.getProduct().getProductType().getTitle()#</g:product_type>
-			<link>http://#CGI.HTTP_HOST##local.product.getProductURL()#</link>
+			<g:product_type>#local.sku.getProduct().getProductType().getSimpleRepresentation()#</g:product_type>
+			<link>http://#CGI.HTTP_HOST##local.sku.getProduct().getProductURL()#</link>
 			<g:image_link>http://#CGI.HTTP_HOST##local.sku.getResizedImagePath()#</g:image_link>
-			<cfloop array="#local.product.getProductImages()#" index="local.image">
+			<cfloop array="#local.sku.getProduct().getProductImages()#" index="local.image">
 				<g:additional_image_link>http://#CGI.HTTP_HOST##local.image.getResizedImagePath()#</g:additional_image_link>
 			</cfloop>
 			<g:condition>new</g:condition>
+			<g:price>#local.sku.getPrice()#</g:price>
+			
+			<!---
 			<g:availability></g:availability>
-			<g:price></g:price>
 			<g:sale_price></g:sale_price>
 			<g:sale_price_effective_date></g:sale_price_effective_date>
 			<g:brand></g:brand>
@@ -36,7 +38,9 @@
 			<g:mpn></g:mpn>
 			<g:gender></g:gender>
 			<g:age_group></g:age_group>
+			--->
 			<g:item_group_id>#local.sku.getProduct().getProductCode()#</g:item_group_id>
+			<!---
 			<g:color></g:color>
 			<g:size></g:size>
 			<g:material></g:material>
@@ -55,6 +59,7 @@
 			</g:shipping>
 			<g:shipping_weight></g:shipping_weight>
 			<g:online_only></g:online_only>
+			--->
 		</item>
 		</cfloop>
 	</channel>

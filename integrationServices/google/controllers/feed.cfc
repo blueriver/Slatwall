@@ -1,6 +1,7 @@
 component extends="Slatwall.admin.controllers.BaseController" persistent="false" accessors="true" output="false" {
 
 	property name="productService" type="any";
+	property name="skuService" type="any";
 	
 	this.publicMethods="product";
 	this.anyAdminMethods="";
@@ -12,9 +13,12 @@ component extends="Slatwall.admin.controllers.BaseController" persistent="false"
 		
 		// Create the product feed
 		rc.skuSmartList = getSkuService().getSkuSmartList();
+		rc.skuSmartList.joinRelatedProperty("SlatwallSku", "product");
+		
 		rc.skuSmartList.addFilter('activeFlag', 1);
 		rc.skuSmartList.addFilter('product.activeFlag', 1);
 		rc.skuSmartList.addFilter('product.publishedFlag', 1);
+		
 		rc.skuSmartList.addRange('product.calculatedQATS', '1^');
 	}
 }
