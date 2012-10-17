@@ -1,14 +1,13 @@
+<?xml version="1.0"?>
 <!---
 	
 	This template was built based on the specifications found here:
 	http://support.google.com/merchants/bin/answer.py?hl=en&answer=188494&topic=2473824&ctx=topic#US
 	
 --->
-
 <cfparam name="rc.skuSmartList" type="any" />
 
 <cfoutput>
-<?xml version="1.0"?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
 	<channel>
 		<title>Slatwall Product Feed</title>
