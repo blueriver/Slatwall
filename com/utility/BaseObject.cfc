@@ -753,7 +753,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	*/
 	
-	public array function getProperties(required string serviceName) {
+	public array function getProperties() {
 		if( !hasApplicationValue("classPropertyCache_#getClassFullname()#") ) {
 			var metaData = getMetaData(this);
 			var metaProperties = metaData.properties;
