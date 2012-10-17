@@ -736,6 +736,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		return false;
 	}
 	
+	/*
 	// @help public method for getting a recursive list of all the meta data of the properties of an object
 	public array function getProperties() {
 		if(!structKeyExists(variables, "metaProperties")) {
@@ -750,6 +751,24 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 		return variables.metaProperties;
 	}
+	*/
+	
+	public array function getProperties(required string serviceName) {
+		if( !hasApplicationValue("classPropertyCache_#getClassFullname()#") ) {
+			var metaData = getMetaData(this);
+			var metaProperties = metaData.properties;
+			
+			// Also add any extended data
+			if(structKeyExists(metaData, "extends") && structKeyExists(metaData.extends, "properties")) {
+				metaProperties = getService("utilityService").arrayConcat(metaData.extends.properties, metaProperties);
+			}
+			
+			setApplicationValue("classPropertyCache_#getClassFullname()#", metaProperties);
+		}
+		
+		return getApplicationValue("classPropertyCache_#getClassFullname()#");
+	}
+	
 	
 	// @help public method for getting the meta data of a specific property
 	public struct function getPropertyMetaData(string propertyName) {
