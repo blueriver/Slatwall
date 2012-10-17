@@ -351,7 +351,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		for(var f=1; f<=arrayLen(getOrderFulfillments()); f++) {
 			// If this fulfillment is fully delivered, then just add the entire amount
 			if(getOrderFulfillments()[f].getQuantityUndelivered() == 0) {
-				amountDelivered = precisionEvaluate(amountDelivered + getFulfillmentTotal());
+				amountDelivered = precisionEvaluate(amountDelivered + getOrderFulfillments()[f].getFulfillmentTotal());
 				
 			// If this fulfillment has at least one item delivered
 			} else if(getOrderFulfillments()[f].getQuantityDelivered() > 0) {
