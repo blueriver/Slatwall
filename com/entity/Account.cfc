@@ -109,18 +109,16 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		var stPermissions = {};
 		var permissionGroups = getPermissionGroups();
 		
-		for(i=1; i <= arrayLen(permissionGroups); i++){
+		for(var i=1; i <= arrayLen(permissionGroups); i++){
 			var permissions = permissionGroups[i].getPermissions();
 			
-			for(j=1; j<= listlen(permissions); j++){
+			for(var j=1; j<= listlen(permissions); j++){
 				stPermissions[listGetAt(permissions,j)]='';
 			}
 		}		
 		
 		return structKeyList(stPermissions);
 	}
-		
-	
 	
 	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
 		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	

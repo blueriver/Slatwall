@@ -292,14 +292,14 @@ component extends="BaseService" accessors="true" output="false" {
 	public any function updateAccountFromCmsUser(required any account, required any cmsUser) {
 		
 		// Sync Name & Company
-		if(arguments.account.getFirstName() != cmsUser.getFName()){
-			arguments.account.setFirstName(cmsUser.getFName());
+		if(arguments.account.getFirstName() != arguments.cmsUser.getFName()){
+			arguments.account.setFirstName(arguments.cmsUser.getFName());
 		}
-		if(arguments.account.getLastName() != cmsUser.getLName()) {
-			arguments.account.setLastName(cmsUser.getLName());
+		if(arguments.account.getLastName() != arguments.cmsUser.getLName()) {
+			arguments.account.setLastName(arguments.cmsUser.getLName());
 		}
-		if(arguments.account.getCompany() != cmsUser.getCompany()) {
-			arguments.account.setCompany(cmsUser.getCompany());
+		if(arguments.account.getCompany() != arguments.cmsUser.getCompany()) {
+			arguments.account.setCompany(arguments.cmsUser.getCompany());
 		}
 		
 		// Sync the primary email if out of sync

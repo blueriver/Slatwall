@@ -327,13 +327,13 @@ component extends="org.fw1.framework" output="false" {
 	
 	// Allows for integration services to have a seperate directory structure
 	public any function getSubsystemDirPrefix( string subsystem ) {
-		if ( subsystem eq '' ) {
+		if ( arguments.subsystem eq '' ) {
 			return '';
 		}
 		if ( !listFind('admin,frontend', arguments.subsystem) ) {
-			return 'integrationServices/' & subsystem & '/';
+			return 'integrationServices/' & arguments.subsystem & '/';
 		}
-		return subsystem & '/';
+		return arguments.subsystem & '/';
 	}
 	
 	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
