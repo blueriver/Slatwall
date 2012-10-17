@@ -348,6 +348,16 @@ component extends="org.fw1.framework" output="false" {
 		
 	}
 	
+	public string function buildURL(required string action, string queryString="") {
+		if(len(arguments.queryString)) {
+			arguments.queryString = "&#arguments.queryString#";
+		}
+		if(findNoCase(":", arguments.action)) {
+			return "#variables.framework.baseURL#?slatAction=#arguments.action##arguments.queryString#";	
+		}
+		return "#variables.framework.baseURL#?slatAction=admin:#arguments.action##arguments.queryString#";
+	}
+	
 	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle
 	public string function doAction(required string action) {
 		var response = "";
