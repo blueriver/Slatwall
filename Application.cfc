@@ -353,9 +353,9 @@ component extends="org.fw1.framework" output="false" {
 			arguments.queryString = "&#arguments.queryString#";
 		}
 		if(findNoCase(":", arguments.action)) {
-			return "#variables.framework.baseURL#?slatAction=#arguments.action##arguments.queryString#";	
+			return "#application.configBean.getContext()#/plugins/Slatwall/?slatAction=#arguments.action##arguments.queryString#";	
 		}
-		return "#variables.framework.baseURL#?slatAction=admin:#arguments.action##arguments.queryString#";
+		return "#application.configBean.getContext()#/plugins/Slatwall/?slatAction=admin:#arguments.action##arguments.queryString#";
 	}
 	
 	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle
