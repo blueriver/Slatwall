@@ -45,10 +45,10 @@ Notes:
 
 <cfoutput>
 	<div class="svocheckoutpaymenttermpayment">
-		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethodType" value="termPayment" />
 		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethod.paymentMethodID" value="#params.paymentMethod.getPaymentMethodID()#" />
 		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
 		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentTerm.paymentTermID" value="#params.paymentTerm.getPaymentTermID()#" />
+		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].termPaymentAccount.accountID" value="#$.slatwall.cart('account').getAccountID()#" />
 		<dl>
 			<dt>Account Terms</dt>
 			<dd>#params.paymentTerm.getPaymentTermName()#</dd>

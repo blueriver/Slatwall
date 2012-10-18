@@ -8,7 +8,7 @@ component extends="mxunit.framework.TestCase" output="false" {
 	
 	// @hint put things in here that you want to run after EACH test
 	public void function tearDown() {
-		variables.slatwallFW1Application.endSlatwallLifecycle();
+		//variables.slatwallFW1Application.endSlatwallLifecycle();
 	}
 	
 	

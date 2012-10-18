@@ -36,17 +36,17 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
+component extends="Slatwall.meta.tests.mxunit.entity.SlatwallEntityTestBase" {
 
 	// @hint put things in here that you want to run befor EACH test
 	public void function setUp() {
 		super.setup();
 		
-		variables.vendor = request.slatwallScope.getService("vendorService").newVendor();
+		variables.entity = request.slatwallScope.getService("vendorService").newVendor();
 	}
 	
-	public any function defaultsAreCorrect() {
-		assertEquals(variables.vendor.getVendorOrders(), []);
+	public any function defaults_are_correct() {
+		assertEquals(variables.entity.getVendorOrders(), []);
 	}
 	
 }

@@ -39,7 +39,7 @@ Notes:
 
 <cfparam name="rc.orderPaymentSmartList" type="any" />
 
-<cfset rc.orderPaymentSmartList.addOrder("order.orderOpenDateTime|DESC") />
+<cfset rc.orderPaymentSmartList.addOrder("createdDateTime|DESC") />
 <cfset rc.orderPaymentSmartList.addInFilter("order.orderStatusType.systemCode", "ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceld") />
 
 <cfoutput>

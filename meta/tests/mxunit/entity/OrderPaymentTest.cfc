@@ -1,6 +1,6 @@
-<!---
+/*
 
-    Slatwall - An e-commerce plugin for Mura CMS
+    Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -35,16 +35,20 @@
 
 Notes:
 
---->
-<cfparam name="params.edit" type="boolean" default="true" />
-<cfparam name="params.orderPayment" type="any" />
-<cfparam name="params.orderPaymentIndex" type="string" />
-<cfparam name="params.paymentMethod" type="any" />
-<cfparam name="params.maximumAmount" type="numeric" />
+*/
+component extends="Slatwall.meta.tests.mxunit.entity.SlatwallEntityTestBase" {
 
-<cfoutput>
-	<div class="svocheckoutpaymentcash">
-		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethod.paymentMethodID" value="#params.paymentMethod.getPaymentMethodID()#" />
-		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
-	</div>
-</cfoutput>
+	// @hint put things in here that you want to run befor EACH test
+	public void function setUp() {
+		super.setup();
+		
+		variables.entity = request.slatwallScope.getService("orderService").newOrderPayment();
+	}
+	
+	public void function defaults_are_correct() {
+		assertEquals(variables.entity.getPaymentTransactions(), []);
+		assertEquals(variables.entity.getReferencingOrderPayments(), []);
+	}
+	
+}
+

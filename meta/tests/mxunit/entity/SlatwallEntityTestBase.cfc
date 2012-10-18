@@ -1,6 +1,6 @@
-<!---
+/*
 
-    Slatwall - An e-commerce plugin for Mura CMS
+    Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -35,16 +35,13 @@
 
 Notes:
 
---->
-<cfparam name="params.edit" type="boolean" default="true" />
-<cfparam name="params.orderPayment" type="any" />
-<cfparam name="params.orderPaymentIndex" type="string" />
-<cfparam name="params.paymentMethod" type="any" />
-<cfparam name="params.maximumAmount" type="numeric" />
+*/
+component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
 
-<cfoutput>
-	<div class="svocheckoutpaymentcash">
-		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethod.paymentMethodID" value="#params.paymentMethod.getPaymentMethodID()#" />
-		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
-	</div>
-</cfoutput>
+	public void function validate_a_new_doesnt_pass() {
+		variables.entity.validate();
+		assert(variables.entity.hasErrors());
+	}
+	
+}
+

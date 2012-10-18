@@ -44,7 +44,6 @@ Notes:
 
 <cfoutput>
 	<div class="svocheckoutpaymentcheck">
-		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethodType" value="check" />
 		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethod.paymentMethodID" value="#params.paymentMethod.getPaymentMethodID()#" />
 		<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
 	</div>

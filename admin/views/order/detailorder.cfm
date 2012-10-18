@@ -114,17 +114,17 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.order#" allowComments="true" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" />
-			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" />
+			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" count="#rc.order.getOrderItemsCount()#" />
+			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" count="#rc.order.getOrderPaymentsCount()#" />
 			<cfif rc.order.getOrderType().getSystemCode() eq "otSalesOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
-				<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
-				<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" />
+				<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" count="#rc.order.getOrderFulfillmentsCount()#" />
+				<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" count="#rc.order.getOrderDeliveriesCount()#" />
 			</cfif>
 			<cfif rc.order.getOrderType().getSystemCode() eq "otReturnOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
-				<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" />
-				<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" />
+				<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" count="#rc.order.getOrderReturnsCount()#" />
+				<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" count="#rc.order.getStockReceiversCount()#" />
 			</cfif>
-			<cf_SlatwallTab view="admin:order/ordertabs/referencingOrders" />
+			<cf_SlatwallTab view="admin:order/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

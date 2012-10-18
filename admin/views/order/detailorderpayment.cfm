@@ -55,6 +55,8 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="creditCardType" />
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
+				<cfelseif rc.orderPayment.getPaymentMethodType() eq "termPayment">
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="termPaymentAccount" edit="false" />
 				</cfif>
 			</cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyList divClass="span6">

@@ -56,7 +56,7 @@ Notes:
 				<div class="tabsLeft">
 					<ul class="nav nav-tabs">
 						<cfloop array="#thistag.tabs#" index="tab">
-							<cfoutput><li <cfif activeTab eq tab.tabid>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#</a></li></cfoutput>
+							<cfoutput><li <cfif activeTab eq tab.tabid>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#<cfif tab.count> <span class="badge">#tab.count#</span></cfif></a></li></cfoutput>
 						</cfloop>
 						<cfif isObject(attributes.object) && attributes.allowCustomAttributes>
 							<cfloop array="#attributes.object.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">

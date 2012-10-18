@@ -63,6 +63,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
 	property name="subscriptionUsageBenefitAccounts" singularname="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="subscriptionUsages" singularname="subscriptionUsage" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
+	property name="termAccountOrderPayments" singularname="termAccountOrderPayment" cfc="OrderPayment" type="array" fieldtype="one-to-many" fkcolumn="termPaymentAccountID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
@@ -160,8 +161,13 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	public numeric function getTermAccountBalance() {
+		var termAccountBalance = 0;
 		
-		return 0;
+		for(var i=1; i<=arrayLen(getTermAccountOrderPayments()); i++) {
+			termAccountBalance = precisionEvaluate(termAccountBalance + getTermAccountOrderPayments()[i].getAmountUnreceived());
+		}
+		
+		return termAccountBalance;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -262,6 +268,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}    
 	public void function removeSubscriptionUsage(required any subscriptionUsage) {    
 		arguments.subscriptionUsage.removeAccount( this );    
+	}
+	
+	// Term Account Order Payments (one-to-many)
+	public void function addTermAccountOrderPayment(required any termAccountOrderPayment) {
+		arguments.termAccountOrderPayment.setTermPaymentAccount( this );
+	}
+	public void function removeTermAccountOrderPayment(required any termAccountOrderPayment) {
+		arguments.termAccountOrderPayment.removeTermPaymentAccount( this );
 	}
 	
 	// Price Groups (many-to-many - owner)

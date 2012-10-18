@@ -53,12 +53,13 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (many-to-one)
+	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID";
-	property name="referencedOrderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="referencedOrderPaymentID";
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
-	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
-	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
+	property name="referencedOrderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="referencedOrderPaymentID";
+	property name="termPaymentAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="termPaymentAccountID";
 	
 	// Related Object Properties (one-to-many)			
 	property name="paymentTransactions" singularname="paymentTransaction" cfc="PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
@@ -277,7 +278,10 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	}
 	
 	public string function getPaymentMethodType() {
-		return getPaymentMethod().getPaymentMethodType();
+		if(!isNull(getPaymentMethod())) {
+			return getPaymentMethod().getPaymentMethodType();
+		}
+		return javaCast("null", "");
 	}
 	
 	public any function getOrderStatusCode() {
@@ -341,6 +345,24 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 			arrayDeleteAt(arguments.paymentMethod.getOrderPayments(), index);
 		}
 		structDelete(variables, "paymentMethod");
+	}
+	
+	// Term Payment Account (many-to-one)    
+	public void function setTermPaymentAccount(required any termPaymentAccount) {    
+		variables.termPaymentAccount = arguments.termPaymentAccount;    
+		if(isNew() or !arguments.termPaymentAccount.hasTermAccountOrderPayment( this )) {    
+			arrayAppend(arguments.termPaymentAccount.getTermAccountOrderPayments(), this);    
+		}    
+	}    
+	public void function removeTermPaymentAccount(any termPaymentAccount) {    
+		if(!structKeyExists(arguments, "termPaymentAccount")) {    
+			arguments.termPaymentAccount = variables.termPaymentAccount;    
+		}    
+		var index = arrayFind(arguments.termPaymentAccount.getTermAccountOrderPayments(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.termPaymentAccount.getTermAccountOrderPayments(), index);    
+		}    
+		structDelete(variables, "termPaymentAccount");    
 	}
 	
 	// Payment Transactions (one-to-many)

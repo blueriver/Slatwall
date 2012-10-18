@@ -70,7 +70,6 @@ Notes:
 		</div>
 		<div class="paymentMethod">
 			<h4>Credit Card Details</h4>
-			<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethodType" value="creditCard" />
 			<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethod.paymentMethodID" value="#params.paymentMethod.getPaymentMethodID()#" />
 			<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
 			<cf_SlatwallErrorDisplay object="#params.orderPayment#" errorName="processing" displayType="div" />

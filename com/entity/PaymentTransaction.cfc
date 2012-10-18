@@ -42,6 +42,7 @@ component displayname="Payment Transaction" entityname="SlatwallPaymentTransacti
 	property name="paymentTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="transactionType" ormtype="string";
 	property name="providerTransactionID" ormtype="string";
+	property name="transactionDateTime" ormtype="timestamp";
 	property name="authorizationCode" ormtype="string";
 	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
@@ -145,6 +146,22 @@ component displayname="Payment Transaction" entityname="SlatwallPaymentTransacti
 	
 	// =================== START: ORM Event Hooks  =========================
 	
+	public void function preInsert(){
+		super.preInsert();
+		
+		// Verify that the transactionDateTime is not null
+		if(isNull(getTransactionDateTime()) || !isDate(getTransactionDateTime())) {
+			setTransactionDateTime( getCreatedDateTime() );
+		}
+	}
+	
+	public void function preUpdate(Struct oldData){
+		throw("Updates to a Payment Transactions are not allowed because this illustrates a fundamental flaw in accounting.");
+	}
+	
+	public void function preDelete() {
+		throw("Deleting a Payment Transaction is not allowed because this illustrates a fundamental flaw in accounting.");
+	}
 	// ===================  END:  ORM Event Hooks  =========================
 	
 	// ================== START: Deprecated Methods ========================
