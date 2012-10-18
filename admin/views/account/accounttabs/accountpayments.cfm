@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,19 +36,15 @@
 Notes:
 
 --->
-<cfparam name="rc.orderPayment" type="any" />
+<cfparam name="rc.account" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.orderPayment.getPaymentTransactionsSmartList()#"
-			recordDetailAction="admin:order.detailpaymenttransaction"
-			recordDetailModal="true">
-		
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />		
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="transactionType" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountAuthorized" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
-		
+	<cf_SlatwallListingDisplay smartList="#rc.account.getAccountPaymentsSmartList()#"
+			recordDetailAction="admin:account.detailaccountpayment">
+			
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountPaymentID" />
 		
 	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:account.createaccountpayment" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getaccountID()#" />
 </cfoutput>

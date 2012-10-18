@@ -65,6 +65,7 @@ Notes:
 		<cf_SlatwallTab view="admin:account/accounttabs/subscriptionusage" />
 		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />
 		<cf_SlatwallTab view="admin:account/accounttabs/productreviews" />
+		<cf_SlatwallTab view="admin:account/accounttabs/accountpayments" />
 		<cf_SlatwallTab view="admin:account/accounttabs/permissions" />
 		<cf_SlatwallTab view="admin:account/accounttabs/accountsettings" />
 	</cf_SlatwallTabGroup>

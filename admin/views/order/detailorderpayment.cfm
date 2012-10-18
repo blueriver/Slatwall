@@ -46,6 +46,7 @@ Notes:
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="authorizeAndCharge" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="authorize" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="credit" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="offlineTransaction" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>

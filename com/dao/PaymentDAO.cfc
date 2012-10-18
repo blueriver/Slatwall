@@ -63,7 +63,7 @@ Notes:
 				(
 					amountAuthorized = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
 					OR
-					amountCharged = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
+					amountReceived = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
 					OR
 					amountCredited = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
 				)

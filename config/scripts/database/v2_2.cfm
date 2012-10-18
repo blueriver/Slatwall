@@ -213,7 +213,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrderPayment Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallOrderPayment Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -229,7 +229,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallPaymentTransaction Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallPaymentTransaction Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -245,7 +245,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallPromotionApplied Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallPromotionApplied Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -261,7 +261,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallShippingMethodOption Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallShippingMethodOption Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -277,7 +277,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallStockReceiverItem Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallStockReceiverItem Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -293,7 +293,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallSubscriptionUsage Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallSubscriptionUsage Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -309,7 +309,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallTaxApplied Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallTaxApplied Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -325,7 +325,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallVendorOrder Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallVendorOrder Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -341,7 +341,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallVendorOrderItem Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallVendorOrderItem Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -357,7 +357,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallVendorSkuStock Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallVendorSkuStock Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -373,7 +373,42 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrderItem Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallOrderItem Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<!--- Move amountCharged into amountReceived --->
+<cftry>
+	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPaymentTransaction" name="local.infoColumns" />
+	
+	<cfquery name="local.hasColumn" dbtype="query">
+		SELECT
+			* 
+		FROM
+			infoColumns
+		WHERE
+			COLUMN_NAME = 'amountCharged'
+	</cfquery>
+	
+	<cfif local.hasColumn.recordCount>
+		<cfquery name="local.updateData">
+			UPDATE
+				SlatwallPaymentTransaction
+			SET
+				amountReceived = amountCharged,
+				amountCharged = 0
+			WHERE
+				amountCharged IS NOT NULL
+			  AND
+			  	amountCharged > 0
+		</cfquery>
+	<cfelse>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - WHAT!!!!">
+	</cfif>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update amountCharged column into amountReceived column Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>

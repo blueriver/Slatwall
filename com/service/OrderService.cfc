@@ -1205,9 +1205,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				var originalTransaction = arguments.orderPayment.getPaymentTransactions()[i];
 				
-				if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
+				if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountReceived() ) {
 					
-					var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
+					var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountReceived();
 					var leftToCapture = arguments.data.amount - totalCaptured;
 					var captureAmount = 0;
 					
@@ -1233,7 +1233,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			}
 			
+		// CONTEXT: offlineTransaction
+		} else if (arguments.processContext == "offlineTransaction") {
 		
+			var newPaymentTransaction = getPaymentService().newPaymentTransaction();
+			newPaymentTransaction.setTransactionType( "offline" );
+			newPaymentTransaction.setOrderPayment( arguments.orderPayment );
+			newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
+			
+			if(newPaymentTransaction.hasErrors()) {
+				arguments.orderPayment.addError('processing', 'There was an unknown error trying to add an offline transaction for this order payment.');	
+			}
+			
 		} else {
 			
 			arguments.orderPayment.addError('processing', 'You attempted to process an order payment but either a transactionType or an amount was not defined.');

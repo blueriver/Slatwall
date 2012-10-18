@@ -104,7 +104,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	public string function getMostRecentChargeProviderTransactionID() {
 		for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
-			if(!isNull(getPaymentTransactions()[i].getAmountCharged()) && getPaymentTransactions()[i].getAmountCharged() > 0 && !isNull(getPaymentTransactions()[i].getProviderTransactionID()) && len(getPaymentTransactions()[i].getProviderTransactionID())) {
+			if(!isNull(getPaymentTransactions()[i].getAmountReceived()) && getPaymentTransactions()[i].getAmountReceived() > 0 && !isNull(getPaymentTransactions()[i].getProviderTransactionID()) && len(getPaymentTransactions()[i].getProviderTransactionID())) {
 				return getPaymentTransactions()[i].getProviderTransactionID();
 			}
 		}
@@ -134,7 +134,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		if( getOrderPaymentType().getSystemCode() == "optCharge" ) {
 			
 			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
-				amountReceived = precisionEvaluate(amountReceived + getPaymentTransactions()[i].getAmountCharged());
+				amountReceived = precisionEvaluate(amountReceived + getPaymentTransactions()[i].getAmountReceived());
 			}
 			
 		}

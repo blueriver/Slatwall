@@ -49,7 +49,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="providerTransactionID">
 				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="authorizationCode">
 				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountAuthorized">
-				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountCharged">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountReceived">
 				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="amountCredited">
 				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="avsCode">
 				<cf_SlatwallPropertyDisplay object="#rc.paymentTransaction#" property="statusCode">

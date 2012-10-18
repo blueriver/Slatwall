@@ -45,7 +45,8 @@ component displayname="Payment Transaction" entityname="SlatwallPaymentTransacti
 	property name="transactionDateTime" ormtype="timestamp";
 	property name="authorizationCode" ormtype="string";
 	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
-	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal"; // This property is deprecated DO NOT USE!
+	property name="amountReceived" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="avsCode" ormtype="string";				// @hint this is whatever the avs code was that got returned
@@ -79,6 +80,7 @@ component displayname="Payment Transaction" entityname="SlatwallPaymentTransacti
 		setAmountAuthorized(0);
 		setAmountCharged(0);
 		setAmountCredited(0);
+		setAmountReceived(0);
 		
 		return super.init();
 	}
@@ -130,6 +132,10 @@ component displayname="Payment Transaction" entityname="SlatwallPaymentTransacti
 
 	// =============== START: Custom Validation Methods ====================
 	
+	public boolean function hasOrderPaymentOrAccountPayment() {
+		return !isNull(getAccountPayment()) || !isNull(getOrderPayment());
+	}
+	
 	// ===============  END: Custom Validation Methods =====================
 	
 	// =============== START: Custom Formatting Methods ====================
@@ -165,6 +171,12 @@ component displayname="Payment Transaction" entityname="SlatwallPaymentTransacti
 	// ===================  END:  ORM Event Hooks  =========================
 	
 	// ================== START: Deprecated Methods ========================
+	
+	public numeric function getAmountCharged() {
+		if(!isNull(getAmountReceived())) {
+			return getAmountReceived();
+		}
+	}
 	
 	// ==================  END:  Deprecated Methods ========================
 }

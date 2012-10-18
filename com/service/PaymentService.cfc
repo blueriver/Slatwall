@@ -232,7 +232,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			transaction.setProviderTransactionID(response.getTransactionID());
 			transaction.setAuthorizationCode(response.getAuthorizationCode());
 			transaction.setAmountAuthorized(response.getAmountAuthorized());
-			transaction.setAmountCharged(response.getAmountCharged());
+			transaction.setAmountReceived(response.getAmountCharged());
 			transaction.setAmountCredited(response.getAmountCredited());
 			transaction.setAVSCode(response.getAVSCode());
 			transaction.setStatusCode(response.getStatusCode());
