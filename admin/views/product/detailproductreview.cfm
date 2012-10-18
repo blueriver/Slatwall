@@ -1,6 +1,6 @@
-/*
+<!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -35,24 +35,25 @@
 
 Notes:
 
-*/
-component persistent="false" accessors="true" output="false" extends="BaseController" {
-	
-	property name="productService" type="any";
-	
-	public void function detail(required struct rc) {
+--->
+<cfparam name="rc.productReview" type="any" />
+<cfparam name="rc.edit" type="boolean" />
+
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.productReview#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.productReview#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
-	}
-	
-	public void function addReview(required struct rc) {
-		if(structKeyExists(rc, "product") && structKeyExists(rc.product, "productID")) {
-			var product = getProductService().getProduct(rc.product.productID);
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.productReview#" property="activeFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.productReview#" property="reviewTitle" edit="false">
+				<cf_SlatwallPropertyDisplay object="#rc.productReview#" property="review" edit="false">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
 		
-			var review = getProductService().newProductReview();
-			
-			review = getProductService().saveProductReview(review, rc);
-		}
+		<cf_SlatwallTabGroup object="#rc.productReview#">
+			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
+		</cf_SlatwallTabGroup>
 		
-		getFW().setView("frontend:product.detail");
-	}
-}
+	</cf_SlatwallDetailForm>
+</cfoutput>

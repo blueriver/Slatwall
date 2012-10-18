@@ -126,8 +126,28 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 		}
 		structDelete(variables, "account");
 	}
-	
+
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "reviewTitle";
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
@@ -141,4 +161,8 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
 }

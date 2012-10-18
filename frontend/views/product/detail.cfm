@@ -126,7 +126,7 @@ Notes:
 			</cfloop>
 			<form action="?nocache=1" method="post">
 				<input type="hidden" name="slatAction" value="frontend:product.addReview" />
-				<input type="hidden" name="productID" value="#$.slatwall.product('productID')#" />
+				<input type="hidden" name="product.productID" value="#$.slatwall.product('productID')#" />
 				<dl>
 					<dt>Name</dt>
 					<dd><input type="text" name="reviewerName" value="#$.slatwall.account('fullname')#" /></dd>
