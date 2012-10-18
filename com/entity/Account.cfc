@@ -81,6 +81,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
+	property name="guestAccountFlag" persistent="false" formatType="yesno";
 	property name="fullName" persistent="false";
 	property name="emailAddress" persistent="false" formatType="email";
 	property name="phoneNumber" persistent="false";
@@ -90,11 +91,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="termAccountBalance" persistent="false" formattype="currency";
 	
 	public boolean function isGuestAccount() {
-		if(isNull(getCmsAccountID())) {
-			return true;
-		} else {
-			return false;
-		}
+		return isNull(getCmsAccountID());
 	}
 	
 	public string function getGravatarURL(numeric size=80) {
@@ -125,6 +122,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function getGuestAccountFlag() {
+		return isNull(getCmsAccountID());
+	}
 	
 	public string function getPhoneNumber() {
 		return getPrimaryPhoneNumber().getPhoneNumber();

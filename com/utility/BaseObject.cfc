@@ -1110,7 +1110,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint  helper function to return the RB Key from RB Factory in any component
-	public string function rbKey(required string key, string locale="us") {
+	public string function rbKey(required string key, string locale="en_us") {
 		return getRBFactory().getRBKey(arguments.key, arguments.locale);
 	}
 	

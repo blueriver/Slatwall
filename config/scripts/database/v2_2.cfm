@@ -68,7 +68,7 @@ Notes:
 	</cfif>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update fulfillmentMethodID on SlatwallOrderFulfillment Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update paymentIntegrationID on SlatwallPaymentMethod Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -84,32 +84,9 @@ Notes:
 			TABLE_NAME = 'SlatwallCreditCardTransaction'
 	</cfquery>
 	
-	<cfquery name="local.updateData" dbtype="query">
-		SELECT
-			creditCardTransactionID,
-			transactionType,
-			providerTransactionID,
-			authorizationCode,
-			amountAuthorized,
-			amountCharged,
-			amountCredited,
-			currencyCode,
-			avsCode,
-			statusCode,
-			message,
-			orderPaymentID,
-			createdDateTime,
-			createdByAccountID,
-			modifiedDateTime,
-			modifiedByAccountID
-		FROM
-			SlatwallCreditCardTransaction
-		WHERE NOT EXISTS( SELECT paymentTransactionID FROM SlatwallPaymentTransaction WHERE SlatwallPaymentTransaction.paymentTransactionID = SlatwallCreditCardTransaction.creditCardTransactionID )
-	</cfquery>
-	
-	<cfloop query="local.updateData">
-		<cfquery name="local.change">
-			INSERT INTO SlatwallPaymentTransaction (
+	<cfif local.hasTable.recordCount>
+		<cfquery name="local.updateData">
+			SELECT
 				creditCardTransactionID,
 				transactionType,
 				providerTransactionID,
@@ -117,7 +94,6 @@ Notes:
 				amountAuthorized,
 				amountCharged,
 				amountCredited,
-				currencyCode,
 				avsCode,
 				statusCode,
 				message,
@@ -126,29 +102,52 @@ Notes:
 				createdByAccountID,
 				modifiedDateTime,
 				modifiedByAccountID
-			) VALUES (
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.updateData.creditCardTransactionID#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.updateData.transactionType#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.providerTransactionID)#" value="#local.updateData.providerTransactionID#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.authorizationCode)#" value="#local.updateData.authorizationCode#" />,
-				<cfqueryparam cfsqltype="cf_sql_money" value="#local.updateData.amountAuthorized#" />,
-				<cfqueryparam cfsqltype="cf_sql_money" value="#local.updateData.amountCharged#" />,
-				<cfqueryparam cfsqltype="cf_sql_money" value="#local.updateData.amountCredited#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.currencyCode)#" value="#local.updateData.currencyCode#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.avsCode)#" value="#local.updateData.avsCode#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.statusCode)#" value="#local.updateData.statusCode#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.message)#" value="#local.updateData.message#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.orderPaymentID)#" value="#local.updateData.orderPaymentID#" />,
-				<cfqueryparam cfsqltype="cf_sql_timestamp" null="#not len(local.updateData.createdDateTime)#" value="#local.updateData.createdDateTime#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.createdByAccountID)#" value="#local.updateData.createdByAccountID#" />,
-				<cfqueryparam cfsqltype="cf_sql_timestamp" null="#not len(local.updateData.modifiedDateTime)#" value="#local.updateData.modifiedDateTime#" />,
-				<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.modifiedByAccountID)#" value="#local.updateData.modifiedByAccountID#" />
-			)
+			FROM
+				SlatwallCreditCardTransaction
+			WHERE NOT EXISTS( SELECT paymentTransactionID FROM SlatwallPaymentTransaction WHERE SlatwallPaymentTransaction.paymentTransactionID = SlatwallCreditCardTransaction.creditCardTransactionID )
 		</cfquery>
-	</cfloop>
+		
+		<cfloop query="local.updateData">
+			<cfquery name="local.change">
+				INSERT INTO SlatwallPaymentTransaction (
+					paymentTransactionID,
+					transactionType,
+					providerTransactionID,
+					authorizationCode,
+					amountAuthorized,
+					amountCharged,
+					amountCredited,
+					avsCode,
+					statusCode,
+					message,
+					orderPaymentID,
+					createdDateTime,
+					createdByAccountID,
+					modifiedDateTime,
+					modifiedByAccountID
+				) VALUES (
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.updateData.creditCardTransactionID#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.updateData.transactionType#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.providerTransactionID)#" value="#local.updateData.providerTransactionID#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.authorizationCode)#" value="#local.updateData.authorizationCode#" />,
+					<cfqueryparam cfsqltype="cf_sql_money" value="#local.updateData.amountAuthorized#" />,
+					<cfqueryparam cfsqltype="cf_sql_money" value="#local.updateData.amountCharged#" />,
+					<cfqueryparam cfsqltype="cf_sql_money" value="#local.updateData.amountCredited#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.avsCode)#" value="#local.updateData.avsCode#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.statusCode)#" value="#local.updateData.statusCode#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.message)#" value="#local.updateData.message#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.orderPaymentID)#" value="#local.updateData.orderPaymentID#" />,
+					<cfqueryparam cfsqltype="cf_sql_timestamp" null="#not len(local.updateData.createdDateTime)#" value="#local.updateData.createdDateTime#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.createdByAccountID)#" value="#local.updateData.createdByAccountID#" />,
+					<cfqueryparam cfsqltype="cf_sql_timestamp" null="#not len(local.updateData.modifiedDateTime)#" value="#local.updateData.modifiedDateTime#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" null="#not len(local.updateData.modifiedByAccountID)#" value="#local.updateData.modifiedByAccountID#" />
+				)
+			</cfquery>
+		</cfloop>
+	</cfif>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update fulfillmentMethodID on SlatwallOrderFulfillment Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - move credit card transactions to payment transactions has error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -164,7 +163,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrder Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallOrder Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -180,7 +179,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrderFulfillment Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallOrderFulfillment Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
@@ -196,7 +195,7 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="General Log - Update currencyCode on SlatwallOrderReturn Has Error">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Update currencyCode on SlatwallOrderReturn Has Error">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>

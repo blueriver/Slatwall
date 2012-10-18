@@ -82,6 +82,7 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:order.listorder" type="list">
 							<cf_SlatwallActionCaller action="admin:order.listorderitem" type="list">
 							<cf_SlatwallActionCaller action="admin:order.listorderfulfillment" type="list">
+							<cf_SlatwallActionCaller action="admin:order.listorderpayment" type="list">
 							<cf_SlatwallActionCaller action="admin:vendor.listvendororder" type="list">
 							<cf_SlatwallActionCaller action="admin:vendor.listvendororderitem" type="list">
 						</cf_SlatwallActionCallerDropdown>

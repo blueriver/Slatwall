@@ -36,22 +36,25 @@
 Notes:
 
 --->
-<cfparam name="rc.accountSmartList" type="any" />
+
+<cfparam name="rc.orderPaymentSmartList" type="any" />
+
+<cfset rc.orderPaymentSmartList.addOrder("order.orderOpenDateTime|DESC") />
+<cfset rc.orderPaymentSmartList.addInFilter("order.orderStatusType.systemCode", "ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceld") />
 
 <cfoutput>
+	<cf_SlatwallActionBar type="listing" object="#rc.orderPaymentSmartList#" createAction="" />
 	
-<cf_SlatwallActionBar type="listing" object="#rc.accountSmartList#" />
-
-<cf_SlatwallListingDisplay smartList="#rc.accountSmartList#"
-						   recordEditAction="admin:account.editaccount"
-						   recordDetailAction="admin:account.detailaccount">
-	<cf_SlatwallListingColumn propertyIdentifier="firstName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="lastName" search="true" />
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="company" />
-	<cf_SlatwallListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="guestAccountFlag" sort="false" />
-	
-</cf_SlatwallListingDisplay>
-
+	<cf_SlatwallListingDisplay smartList="#rc.orderPaymentSmartList#"
+							   recorddetailaction="admin:order.detailorderpayment">
+		<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="order.account.firstName" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="order.account.lastName" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_SlatwallListingColumn propertyIdentifier="orderPaymentType.type" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="amount" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" sort="false" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" sort="false" />
+	</cf_SlatwallListingDisplay>
 </cfoutput>
