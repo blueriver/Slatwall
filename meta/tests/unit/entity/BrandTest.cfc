@@ -36,46 +36,17 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
+	// @hint put things in here that you want to run befor EACH test
 	public void function setUp() {
 		super.setup();
 		
-		variables.service = request.slatwallScope.getService("utilityRBService");
+		variables.entity = request.slatwallScope.getService("brandService").newBrand();
 	}
 	
-	// getRBKey()
-	public void function getRBKey_default() {
-		assertEquals("all", variables.service.getRBKey('define.all'));
-	}
-	
-	public void function getRBKey_en() {
-		assertEquals("all", variables.service.getRBKey('define.all', 'en'));
-	}
-	
-	public void function getRBKey_en_fully_qualified() {
-		assertEquals("all", variables.service.getRBKey('define.all', 'en_us'));
-	}
-	
-	public void function getRBKey_fully_qualified_local_missing_shows_both_tried() {
-		assertEquals("define.aaa_en_us_missing,define.aaa_en_missing", variables.service.getRBKey('define.aaa', 'en_us'));
-	}
-	
-	public void function getRBKey_step_down_define_works_when_key_not_found() {
-		assertEquals("aaa.bbb.ccc.ddd_en_us_missing,aaa.bbb.ccc.ddd_en_missing,aaa.bbb.define.ddd_en_us_missing,aaa.bbb.define.ddd_en_missing,aaa.define.ddd_en_us_missing,aaa.define.ddd_en_missing,define.ddd_en_us_missing,define.ddd_en_missing", variables.service.getRBKey('aaa.bbb.ccc.ddd', 'en_us'));
-	}
-	
-	public void function getRBKey_another_language_besides_english_works() {
-		assertEquals("todos", variables.service.getRBKey('define.all', 'es'));
-	}
-	
-	public void function getRBKey_another_language_besides_english_works_with_fully_qualified_locale() {
-		assertEquals("todos", variables.service.getRBKey('define.all', 'es_sp'));
-	}
-	
-	// getResourceBundle()
-	public void function getResourceBundle_en() {
-		assert(structCount(variables.service.getResourceBundle('en')) gt 1);
+	public void function defaults_are_correct() {
+		assertEquals(variables.entity.getProducts(), []);
 	}
 }
 

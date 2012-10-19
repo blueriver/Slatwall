@@ -36,11 +36,17 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
-	public void function inst_ok() {
-		var obj = request.slatwallScope.getBean("accessDAO");
-		assertTrue(isObject(obj));
+	public void function setUp() {
+		super.setup();
+		
+		variables.accountService = request.slatwallScope.getBean("accountService");
 	}
+	
+	public void function defaults_are_correct() {
+		assertTrue( isObject(variables.accountService.getEmailService()) );
+	}
+	
 }
 

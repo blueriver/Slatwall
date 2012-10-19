@@ -36,11 +36,19 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
-	public void function inst_ok() {
-		var obj = request.slatwallScope.getBean("accountDAO");
-		assertTrue(isObject(obj));
+	// @hint put things in here that you want to run befor EACH test
+	public void function setUp() {
+		super.setup();
+		
+		variables.entity = request.slatwallScope.getService("orderService").newOrderPayment();
 	}
+	
+	public void function defaults_are_correct() {
+		assertEquals(variables.entity.getPaymentTransactions(), []);
+		assertEquals(variables.entity.getReferencingOrderPayments(), []);
+	}
+	
 }
 

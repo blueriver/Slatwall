@@ -36,17 +36,10 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.entity.SlatwallEntityTestBase" {
+component extends="Slatwall.meta.tests.functional.SlatwallFunctionalTestBase" {
 
-	// @hint put things in here that you want to run befor EACH test
-	public void function setUp() {
-		super.setup();
-		
-		variables.entity = request.slatwallScope.getService("brandService").newBrand();
-	}
-	
-	public void function defaults_are_correct() {
-		assertEquals(variables.entity.getProducts(), []);
+	public void function my_first_functional() {
+		selenium.open("/sp/air-jordan/");
+		assertEquals("Nike Air Jordan", selenium.getTitle());
 	}
 }
-

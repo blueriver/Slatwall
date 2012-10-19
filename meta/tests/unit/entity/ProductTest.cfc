@@ -36,19 +36,19 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.entity.SlatwallEntityTestBase" {
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 	// @hint put things in here that you want to run befor EACH test
-	public void function setUp() {
+	public void function SetUp() {
 		super.setup();
 		
-		variables.entity = request.slatwallScope.getService("orderService").newOrderPayment();
+		variables.entity = request.slatwallScope.getService("productService").newProduct();
 	}
 	
-	public void function defaults_are_correct() {
-		assertEquals(variables.entity.getPaymentTransactions(), []);
-		assertEquals(variables.entity.getReferencingOrderPayments(), []);
+	public void function productUrlIsCorrectlyFormatted() {
+		variables.entity.setURLTitle("nike-air-jorden");
+		
+		assertEquals("/sp/nike-air-jorden/", variables.entity.getProductURL());
 	}
-	
 }
 

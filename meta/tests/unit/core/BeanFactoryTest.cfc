@@ -36,17 +36,32 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.entity.SlatwallEntityTestBase" {
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
-	// @hint put things in here that you want to run befor EACH test
 	public void function setUp() {
 		super.setup();
 		
-		variables.entity = request.slatwallScope.getService("vendorService").newVendor();
+		variables.factory = new Slatwall.org.di1.ioc("/Slatwall/com/");
+	}
+
+	public void function inst_factory_partial_DAO() {
+		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/dao/");
+		assertTrue(isObject(ioc));
 	}
 	
-	public any function defaults_are_correct() {
-		assertEquals(variables.entity.getVendorOrders(), []);
+	public void function inst_factory_partial_Service() {
+		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/service/");
+		assertTrue(isObject(ioc));
+	}
+	
+	public void function inst_factory_partial_Utility() {
+		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/utility/");
+		assertTrue(isObject(ioc));
+	}
+	
+	public void function inst_factory() {
+		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/");
+		assertTrue(isObject(ioc));
 	}
 	
 }

@@ -36,33 +36,11 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
+component extends="CFSelenium.CFSeleniumTestCase" {
 
-	public void function setUp() {
-		super.setup();
-		
-		variables.factory = new Slatwall.org.di1.ioc("/Slatwall/com/");
-	}
-
-	public void function inst_factory_partial_DAO() {
-		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/dao/");
-		assertTrue(isObject(ioc));
-	}
-	
-	public void function inst_factory_partial_Service() {
-		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/service/");
-		assertTrue(isObject(ioc));
-	}
-	
-	public void function inst_factory_partial_Utility() {
-		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/utility/");
-		assertTrue(isObject(ioc));
-	}
-	
-	public void function inst_factory() {
-		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/");
-		assertTrue(isObject(ioc));
+	public void function beforeTests(){
+	    browserURL = "http://bootstrap/";
+	    super.beforeTests();
 	}
 	
 }
-

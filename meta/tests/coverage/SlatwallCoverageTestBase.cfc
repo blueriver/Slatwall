@@ -36,19 +36,8 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.entity.SlatwallEntityTestBase" {
+component extends="mxunit.framework.TestCase" output="false" {
 
-	// @hint put things in here that you want to run befor EACH test
-	public void function SetUp() {
-		super.setup();
-		
-		variables.entity = request.slatwallScope.getService("productService").newProduct();
-	}
 	
-	public void function productUrlIsCorrectlyFormatted() {
-		variables.entity.setURLTitle("nike-air-jorden");
-		
-		assertEquals("/sp/nike-air-jorden/", variables.entity.getProductURL());
-	}
+	
 }
-

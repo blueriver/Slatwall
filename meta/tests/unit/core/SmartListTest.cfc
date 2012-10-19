@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.mxunit.SlatwallTestBase" {
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 
 	/*
