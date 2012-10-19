@@ -114,7 +114,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			if(accountEmailAddress.hasErrors()) {
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("emailAddress", "The Email address has errors");
+				arguments.account.addError("emailAddress", rbKey('validate.account.emailAddress'));
 			}
 
 		}
@@ -134,7 +134,7 @@ component extends="BaseService" accessors="true" output="false" {
 			accountPhoneNumber.validate();
 			if(accountPhoneNumber.hasErrors()) {
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("phoneNumber", "The Phone Number has errors");
+				arguments.account.addError("phoneNumber", rbKey('validate.account.phoneNumber'));
 			}
 		}
 		
@@ -166,7 +166,7 @@ component extends="BaseService" accessors="true" output="false" {
 			if(isNull(access)) {
 				//return access code error
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("access", "The access code you provided is invalid.");
+				arguments.account.addError("access", rbKey('validate.account.accessCode'));
 			}
 		}
 		
@@ -179,11 +179,11 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			if(!cmsUser.getIsNew()) {
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("emailAddress", "This E-Mail Address is already in use with another Account.");
+				arguments.account.addError("emailAddress", rbKey('validate.account.emailAddress.exists'));
 				// make sure password is entered 
 			} else if(!len(trim(arguments.data.password))) {
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("password", "The field Password is required.");
+				arguments.account.addError("password", rbKey('validate.account.password'));
 			} else {
 				// Setup a new mura user
 				cmsUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
