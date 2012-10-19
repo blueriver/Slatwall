@@ -494,15 +494,15 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint Generic abstract dynamic ORM methods by convention via onMissingMethod.
 	public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
-		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
-		if( left(arguments.missingMethodName, 9) == "hasUnique") {
-			
-			return hasUniqueProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 9) );
-		
 		// hasUniqueOrNullXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
-		} else if( left(arguments.missingMethodName, 15) == "hasUniqueOrNull") {
+		if( left(arguments.missingMethodName, 15) == "hasUniqueOrNull") {
 			
 			return hasUniqueOrNullProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 15) );
+		
+		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
+		} else if( left(arguments.missingMethodName, 9) == "hasUnique") {
+			
+			return hasUniqueProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 9) );
 		
 		// hasAnyXXX() 			Where XXX is one-to-many or many-to-many property and we want to see if it has any of an array of entities
 		} else if( left(arguments.missingMethodName, 6) == "hasAny") {
