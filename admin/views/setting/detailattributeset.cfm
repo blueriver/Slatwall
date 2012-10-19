@@ -49,20 +49,26 @@ Notes:
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList divclass="span6">
 			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="activeFlag" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetType" edit="#rc.attributeSet.isNew()#">
 			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetName" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetCode" edit="#rc.edit#">
-			<cfset local.canEditGlobal = listFind( "astProduct,astOrderItem", rc.attributeSet.getAttributeSetType().getSystemCode() ) && rc.edit />
-			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#local.canEditGlobal#">
 		</cf_SlatwallPropertyList>
-		<cfif listFind( "astOrderItem", rc.attributeSet.getAttributeSetType().getSystemCode() )>
+		
+		<cfif rc.attributeSet.isNew()>
+			<input type="hidden" name="globalFlag" value="1" />
+		<cfelse>
 			<cf_SlatwallPropertyList divclass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="requiredFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="accountSaveFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="additionalCharge" edit="#rc.edit#">
+				<cfset local.canEditGlobal = listFind( "astProduct,astOrderItem", rc.attributeSet.getAttributeSetType().getSystemCode() ) && rc.edit />
+				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#local.canEditGlobal#">
+				<cfif listFind( "astOrderItem", rc.attributeSet.getAttributeSetType().getSystemCode() )>
+					<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="requiredFlag" edit="#rc.edit#">
+					<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="accountSaveFlag" edit="#rc.edit#">
+					<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="additionalCharge" edit="#rc.edit#">
+				</cfif>
 			</cf_SlatwallPropertyList>
 		</cfif>
 	</cf_SlatwallDetailHeader>
-	<input type="hidden" name="attributeSetType.typeID" value="#rc.attributeSet.getAttributeSetType().getTypeID()#" />
+	
 	<cf_SlatwallTabGroup object="#rc.attributeSet#">
 		<cf_SlatwallTab view="admin:setting/attributesettabs/attributes" />
 		<cf_SlatwallTab view="admin:setting/attributesettabs/description" />

@@ -52,9 +52,11 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// Related Object Properties (many-to-one)
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" lazy="false" fetch="join";  // Lazy is turned off because any time we get an attributeValue we also want the attribute
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountPayment" cfc="AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
@@ -106,6 +108,24 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 			arrayDeleteAt(arguments.account.getAttributeValues(), index);
 		}
 		structDelete(variables, "account");
+	}
+	
+	// Account Payment (many-to-one)
+	public void function setAccountPayment(required any accountPayment) {
+		variables.accountPayment = arguments.accountPayment;
+		if(isNew() or !arguments.accountPayment.hasAttributeValue( this )) {
+			arrayAppend(arguments.accountPayment.getAttributeValues(), this);
+		}
+	}
+	public void function removeAccountPayment(any accountPayment) {
+		if(!structKeyExists(arguments, "accountPayment")) {
+			arguments.accountPayment = variables.accountPayment;
+		}
+		var index = arrayFind(arguments.accountPayment.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.accountPayment.getAttributeValues(), index);
+		}
+		structDelete(variables, "accountPayment");
 	}
 	
 	// Brand (many-to-one)
@@ -160,6 +180,24 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 			arrayDeleteAt(arguments.orderItem.getAttributeValues(), index);
 		}
 		structDelete(variables, "orderItem");
+	}
+	
+	// Order Payment (many-to-one)
+	public void function setOrderPayment(required any orderPayment) {
+		variables.orderPayment = arguments.orderPayment;
+		if(isNew() or !arguments.orderPayment.hasAttributeValue( this )) {
+			arrayAppend(arguments.orderPayment.getAttributeValues(), this);
+		}
+	}
+	public void function removeOrderPayment(any orderPayment) {
+		if(!structKeyExists(arguments, "orderPayment")) {
+			arguments.orderPayment = variables.orderPayment;
+		}
+		var index = arrayFind(arguments.orderPayment.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderPayment.getAttributeValues(), index);
+		}
+		structDelete(variables, "orderPayment");
 	}
 	
 	// Product (many-to-one)

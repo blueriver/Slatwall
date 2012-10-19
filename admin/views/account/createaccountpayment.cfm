@@ -1,6 +1,6 @@
-/*
+<!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -35,25 +35,23 @@
 
 Notes:
 
-*/
-component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
+--->
+<cfparam name="rc.accountPayment" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-	public void function validate_a_new_doesnt_pass() {
-		variables.entity.validate();
-		assert(variables.entity.hasErrors());
-	}
-	
-	public void function simple_representation_property_name_exists() {
-		assert(len(variables.entity.getSimpleRepresentationPropertyName()));
-	}
-	
-	public void function has_primary_id_property_name() {
-		assert(len(variables.entity.getPrimaryIDPropertyName()));
-	}
-	
-	public void function defaults_are_correct() {
-		assert(variables.entity.isNew());
-		assert(!len(variables.entity.getPrimaryIDValue()));
-	}
-}
-
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#"></cf_SlatwallActionBar>
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="activeFlag" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.accountPayment#">
+			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
+</cfoutput>

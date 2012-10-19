@@ -56,6 +56,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	// Related Object Properties (one-to-many)
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="accountPaymentID" cascade="all-delete-orphan" inverse="true";
 	property name="paymentTransactions" singularname="paymentTransaction" cfc="PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountPaymentID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
@@ -98,6 +99,14 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	}
 	public void function removePaymentTransaction(required any paymentTransaction) {
 		arguments.paymentTransaction.removeAccountPayment( this );
+	}
+	
+	// Attribute Values (one-to-many)    
+	public void function addAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.setAccountPayment( this );    
+	}    
+	public void function removeAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.removeAccountPayment( this );    
 	}
 	
 	// Account (many-to-one)

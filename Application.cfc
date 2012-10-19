@@ -348,7 +348,7 @@ component extends="org.fw1.framework" output="false" {
 		
 	}
 	
-	public string function buildURL(required string action, string queryString="") {
+	public string function buildURL( string action = '', string path = '', any queryString = '' ) {
 		if(len(arguments.queryString)) {
 			arguments.queryString = "&#arguments.queryString#";
 		}

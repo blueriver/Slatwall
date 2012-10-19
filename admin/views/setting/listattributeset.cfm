@@ -37,17 +37,8 @@ Notes:
 
 --->
 <cfparam name="rc.attributeSetSmartList" type="any" />
-	
-<cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createAction="">
-	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.account')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=account&returnAction=admin:setting.editattributeset" />
-	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.brand')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=brand&returnAction=admin:setting.editattributeset" />
-	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.product')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=product&returnAction=admin:setting.editattributeset" />
-	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.order')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=order&returnAction=admin:setting.editattributeset" />
-	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.orderItem')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=orderitem&returnAction=admin:setting.editattributeset" />
-	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.sku')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=sku&returnAction=admin:setting.editattributeset" />
-	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.vendor')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=vendor&returnAction=admin:setting.editattributeset" />
-	<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.vendorOrder')# #$.slatwall.rbKey('entity.attributeSet')#" queryString="attributeSetType=vendorOrder&returnAction=admin:setting.editattributeset" />
-</cf_SlatwallActionBar>
+
+<cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createmodal="true" createReturnAction="admin:setting.detailattributeset" />
 
 <cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#"
 						   recordDetailAction="admin:setting.detailattributeset"
@@ -56,4 +47,5 @@ Notes:
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeSetName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="attributeSetType.type" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="globalFlag" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_SlatwallListingDisplay>

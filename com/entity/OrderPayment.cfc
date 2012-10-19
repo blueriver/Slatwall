@@ -62,6 +62,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="termPaymentAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="termPaymentAccountID";
 	
 	// Related Object Properties (one-to-many)			
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all-delete-orphan" inverse="true";
 	property name="paymentTransactions" singularname="paymentTransaction" cfc="PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
 	property name="referencingOrderPayments" singularname="referencingOrderPayment" cfc="OrderPayment" fieldType="one-to-many" fkcolumn="referencedOrderPaymentID" cascade="all" inverse="true";
 
@@ -363,6 +364,14 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 			arrayDeleteAt(arguments.termPaymentAccount.getTermAccountOrderPayments(), index);    
 		}    
 		structDelete(variables, "termPaymentAccount");    
+	}
+	
+	// AttributeValues (one-to-many)
+	public void function addAttributeValue(required any attributeValue) {
+		arguments.attributeValue.setOrderPayment( this );
+	}
+	public void function removeAttributeValue(required any attributeValue) {
+		arguments.attributeValue.removeOrderPayment( this );
 	}
 	
 	// Payment Transactions (one-to-many)

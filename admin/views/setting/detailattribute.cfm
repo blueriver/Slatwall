@@ -45,7 +45,7 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.attribute#" saveAction="admin:setting.saveattribute" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.attribute#" edit="#rc.edit#">
 		
 		<cf_SlatwallActionBar type="detail" object="#rc.attribute#" edit="#rc.edit#" backAction="admin:setting.detailAttributeSet" backQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
 		

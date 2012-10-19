@@ -83,17 +83,6 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:setting.detailaddresszone", queryString="addressZoneID=#rc.addressZoneID#&messageKeys=admin.setting.deleteaddresszonelocation_success");
 	}
 	
-	public void function createAttributeSet( required struct rc ) {    
-		param name="rc.attributeSetID" default="";
-		param name="rc.attributeSetType" default="";
-		
-		rc.attributeSet = getAttributeService().getAttributeSet( rc.attributeSetID, true );
-		var asType = getService("typeService").getTypeBySystemCode( "ast#rc.attributeSetType#" );
-		rc.attributeSet.setAttributeSetType( asType );
-		rc.edit = true;
-		getFW().setView( "admin:setting.detailattributeset" );
-	}
-	
 	// slatwall update
 	public void function detailSlatwallUpdate(required struct rc) {
 
