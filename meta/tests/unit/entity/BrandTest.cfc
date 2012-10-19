@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
+component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 	// @hint put things in here that you want to run befor EACH test
 	public void function setUp() {
@@ -48,5 +48,6 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	public void function defaults_are_correct() {
 		assertEquals(variables.entity.getProducts(), []);
 	}
+	
 }
 

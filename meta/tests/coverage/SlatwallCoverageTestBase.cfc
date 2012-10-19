@@ -38,6 +38,12 @@ Notes:
 */
 component extends="mxunit.framework.TestCase" output="false" {
 
-	
+	// @hint put things in here that you want to run befor EACH test
+	public void function setUp() {
+		
+		variables.entityDirectory = getDirectoryFromPath(expandPath("/Slatwall/com/entity/"));
+		variables.entityTestDirectory = getDirectoryFromPath(expandPath("/Slatwall/meta/tests/unit/entity/"));
+		
+	}
 	
 }

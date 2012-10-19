@@ -39,16 +39,13 @@ Notes:
 component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 	// @hint put things in here that you want to run befor EACH test
-	public void function SetUp() {
+	public void function setUp() {
 		super.setup();
 		
-		variables.entity = request.slatwallScope.getService("productService").newProduct();
+		variables.entityService = "accountService";
+		variables.entity = request.slatwallScope.getService( variables.entityService ).newAccount();
 	}
 	
-	public void function productUrlIsCorrectlyFormatted() {
-		variables.entity.setURLTitle("nike-air-jorden");
-		
-		assertEquals("/sp/nike-air-jorden/", variables.entity.getProductURL());
-	}
+	
 }
 
