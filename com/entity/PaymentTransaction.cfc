@@ -161,10 +161,6 @@ component displayname="Payment Transaction" entityname="SlatwallPaymentTransacti
 		}
 	}
 	
-	public void function preUpdate(Struct oldData){
-		throw("Updates to a Payment Transactions are not allowed because this illustrates a fundamental flaw in accounting.");
-	}
-	
 	public void function preDelete() {
 		throw("Deleting a Payment Transaction is not allowed because this illustrates a fundamental flaw in accounting.");
 	}

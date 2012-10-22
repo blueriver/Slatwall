@@ -73,8 +73,9 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="billingCountryCode" type="string";   
 	
 	// Pertinent Reference Information
-	property name="orderPaymentID" type="string" ;
-	property name="orderID" type="string" ;
+	property name="accountPaymentID" type="string";
+	property name="orderPaymentID" type="string";
+	property name="orderID" type="string";
 	property name="accountID" type="string";
 	property name="providerTransactionID" type="string";
 	property name="referencedPaymentTransactionID" type="string";

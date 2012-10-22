@@ -43,8 +43,8 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assert(variables.entity.hasErrors());
 	}
 	
-	public void function simple_representation_property_name_exists() {
-		assert(len(variables.entity.getSimpleRepresentationPropertyName()));
+	public void function simple_representation_exists() {
+		assert(len(variables.entity.getSimpleRepresentation()));
 	}
 	
 	public void function has_primary_id_property_name() {
