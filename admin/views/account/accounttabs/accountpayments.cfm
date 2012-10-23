@@ -40,11 +40,26 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.account.getAccountPaymentsSmartList()#"
-			recordDetailAction="admin:account.detailaccountpayment">
+							   recordDetailAction="admin:account.detailaccountpayment"
+							   recordEditAction="admin:account.editaccountpayment">
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountPaymentID" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_SlatwallListingColumn propertyIdentifier="accountPaymentType.type" />
+		<cf_SlatwallListingColumn propertyIdentifier="amount" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
+		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
 		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:account.createaccountpayment" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getaccountID()#" />
+	<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('define.charge')#" icon="plus" buttonClass="btn-inverse">
+		<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
+				<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:account.createaccountpayment" querystring="accountID=#rc.accountID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&accountPaymentTypeSystemCode=aptCharge" modal=true />
+		</cfloop>
+	</cf_SlatwallActionCallerDropdown><br />
+	<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('define.credit')#" icon="plus" buttonClass="btn-inverse">
+		<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
+				<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.refund')#" action="admin:account.createaccountpayment" querystring="accountID=#rc.accountID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&accountPaymentTypeSystemCode=aptCredit" modal=true />
+		</cfloop>
+	</cf_SlatwallActionCallerDropdown>
+	
 </cfoutput>

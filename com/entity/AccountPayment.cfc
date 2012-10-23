@@ -54,6 +54,9 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPaymentTypeID";
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
 	
 	// Related Object Properties (one-to-many)
 	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="accountPaymentID" cascade="all-delete-orphan" inverse="true";
@@ -73,9 +76,9 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="amountAuthorized" type="numeric" formatType="currency" persistent="false";
-	property name="amountCredited" type="numeric" formatType="currency" persistent="false";
-	property name="amountReceived" type="numeric" formatType="currency" persistent="false";
+	property name="amountAuthorized" persistent="false" type="numeric" formatType="currency";
+	property name="amountCredited" persistent="false" type="numeric" formatType="currency";
+	property name="amountReceived" persistent="false" type="numeric" formatType="currency";
 	property name="amountUnauthorized" persistent="false" formatType="currency";	
 	property name="amountUncredited" persistent="false" formatType="currency";
 	property name="amountUncaptured" persistent="false" formatType="currency";
@@ -87,7 +90,133 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="paymentMethodType" persistent="false";
 	property name="securityCode" persistent="false";
 	
+	public any function init() {
+		if(isNull(variables.amount)) {
+			variables.amount = 0;
+		}
+		
+		return super.init();
+	}
+	
+	public string function getPaymentMethodType() {
+		if(!isNull(getPaymentMethod())) {
+			return getPaymentMethod().getPaymentMethodType();	
+		}
+	}
+	public array function getExpirationMonthOptions() {
+		return [
+			'01',
+			'02',
+			'03',
+			'04',
+			'05',
+			'06',
+			'07',
+			'08',
+			'09',
+			'10',
+			'11',
+			'12'
+		];
+	}
+	
+	public array function getExpirationYearOptions() {
+		var yearOptions = [];
+		var currentYear = year(now());
+		for(var i = 0; i < 20; i++) {
+			var thisYear = currentYear + i;
+			arrayAppend(yearOptions,{name=thisYear, value=right(thisYear,2)});
+		}
+		return yearOptions;
+	}
+	
+	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public numeric function getAmountReceived() {
+		var amountReceived = 0;
+		
+		// We only show 'received' for charged payments
+		if( getAccountPaymentType().getSystemCode() == "aptCharge" ) {
+			
+			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
+				amountReceived = precisionEvaluate(amountReceived + getPaymentTransactions()[i].getAmountReceived());
+			}
+			
+		}
+				
+		return amountReceived;
+	}
+	
+	public numeric function getAmountCredited() {
+		var amountCredited = 0;
+		
+		// We only show 'credited' for credited payments
+		if( getAccountPaymentType().getSystemCode() == "aptCredit" ) {
+			
+			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
+				amountCredited = precisionEvaluate(amountCredited + getPaymentTransactions()[i].getAmountCredited());
+			}
+			
+		}
+			
+		return amountCredited;
+	}
+	
+
+	public numeric function getAmountAuthorized() {
+		var amountAuthorized = 0;
+			
+		if( getAccountPaymentType().getSystemCode() == "aptCharge" ) {
+			
+			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
+				amountAuthorized = precisionEvaluate(amountAuthorized + getPaymentTransactions()[i].getAmountAuthorized());
+			}
+			
+		}
+		
+		return amountAuthorized;
+	}
+	
+	public numeric function getAmountUnauthorized() {
+		var unauthroized = 0;
+		
+		if ( getOrderPaymentType().getSystemCode() == "optCharge" ) {
+			unauthroized = precisionEvaluate(getAmount() - getAmountReceived() - getAmountAuthorized());
+		}
+		
+		return unauthroized;
+	}
+	
+	public numeric function getAmountUncaptured() {
+		var uncaptured = 0;
+		
+		if ( getOrderPaymentType().getSystemCode() == "optCharge" ) {
+			uncaptured = precisionEvaluate(getAmountAuthorized() - getAmountReceived());
+		}
+		
+		return uncaptured;
+	}
+	
+	public numeric function getAmountUnreceived() {
+		var unreceived = 0;
+		
+		if ( getOrderPaymentType().getSystemCode() == "optCharge" ) {
+			unreceived = precisionEvaluate(getAmount() - getAmountReceived());
+		}
+		
+		return unreceived;
+	}
+	
+	public numeric function getAmountUncredited() {
+		var uncredited = 0;
+		
+		if ( getOrderPaymentType().getSystemCode() == "optCredit" ) {
+			uncredited = precisionEvaluate(getAmount() - getAmountCredited());
+		}
+		
+		return uncredited;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
@@ -138,6 +267,18 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
+	
+	public any function getSimpleRepresentation() {
+		if(isNew()) {
+			return rbKey('define.new') & ' ' & rbKey('entity.accountPayment');
+		}
+		
+		if(getPaymentMethodType() == "creditCard") {
+			return getPaymentMethod().getPaymentMethodName() & " - " & getCreditCardType() & " ***" & getCreditCardLastFour() & ' - ' & getFormattedValue('amount');	
+		}
+		
+		return getPaymentMethod().getPaymentMethodName() & ' - ' & getFormattedValue('amount');
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

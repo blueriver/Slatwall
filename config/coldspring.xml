@@ -175,8 +175,9 @@
 	<bean id="accountService" class="Slatwall.com.service.AccountService">
         <property name="DAO"><ref bean="accountDAO" /></property>
 		<property name="emailService"><ref bean="emailService" /></property>
-		<property name="sessionService"><ref bean="sessionService" /></property>
+		<property name="paymentService"><ref bean="paymentService" /></property>
 		<property name="priceGroupService"><ref bean="priceGroupService" /></property>
+		<property name="sessionService"><ref bean="sessionService" /></property>
     </bean>
 	<bean id="addressService" class="Slatwall.com.service.AddressService">
         <property name="DAO"><ref bean="addressDAO" /></property>

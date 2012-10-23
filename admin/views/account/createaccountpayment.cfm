@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An e-commerce plugin for Mura CMS
+    Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,22 +36,68 @@
 Notes:
 
 --->
+
 <cfparam name="rc.accountPayment" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.account" type="any" />
+<cfparam name="rc.paymentMethod" type="any" />
+<cfparam name="rc.accountPaymentTypeSystemCode" type="string" />
+<cfparam name="rc.edit" type="boolean" default="tr" />
+
+<cfsilent>
+	<cfset local.amount = rc.account.getTermAccountBalance() />
+</cfsilent>
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="activeFlag" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
+		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
 		
-		<cf_SlatwallTabGroup object="#rc.accountPayment#">
-			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
-		</cf_SlatwallTabGroup>
+		<cfif rc.accountPaymentTypeSystemCode eq "aptCharge">
+			<input type="hidden" name="accountPaymentType.typeID" value="444df32dd2b0583d59a19f1b77869025" />
+		<cfelse>
+			<input type="hidden" name="accountPaymentType.typeID" value="444df32e9b448ea196c18c66e1454c46" />
+		</cfif>
+		
+		<!--- Credit Card --->
+		<cfif rc.paymentMethod.getPaymentMethodType() eq "creditCard">
+			
+			<input type="hidden" name="process" value="1" />
+			
+			<cf_SlatwallDetailHeader>
+				<cf_SlatwallPropertyList>
+					<cfif rc.accountPaymentTypeSystemCode eq "aptCharge">
+						<cf_SlatwallFieldDisplay fieldname="processContext" title="#$.slatwall.rbKey('admin.order.createorderpayment.transactionType')#" fieldtype="select" valueOptions="#[{value='authorizeAndCharge', name=$.slatwall.rbKey('define.authorizeAndCharge')}, {value='authorize', name=$.slatwall.rbKey('define.authorize')}]#" edit="true">
+					<cfelse>
+						<cf_SlatwallFieldDisplay fieldname="processContext" title="#$.slatwall.rbKey('admin.order.createorderpayment.transactionType')#" fieldtype="select" valueOptions="#[{value='credit', name=$.slatwall.rbKey('define.credit')}]#" edit="true">
+					</cfif>
+					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
+				</cf_SlatwallPropertyList>
+			</cf_SlatwallDetailHeader>
+			
+			<cf_SlatwallDetailHeader>
+				<cf_SlatwallPropertyList divClass="span6">
+					<cf_SlatwallAddressDisplay address="#$.slatwall.getService("addressService").newAddress()#" fieldnameprefix="billingAddress." edit="#rc.edit#" />
+				</cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyList divClass="span6">
+					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
+					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="creditCardNumber" edit="#rc.edit#" />
+					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="expirationMonth" edit="#rc.edit#" />
+					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="expirationYear" edit="#rc.edit#" />
+					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="securityCode" edit="#rc.edit#" />
+				</cf_SlatwallPropertyList>
+			</cf_SlatwallDetailHeader>
+			
+		<!--- Check --->
+		<cfelseif rc.paymentMethod.getPaymentMethodType() eq "check">
+			<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
+		<!--- Cash --->
+		<cfelseif rc.paymentMethod.getPaymentMethodType() eq "cash">	
+			<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
+		<!--- ??? --->
+		<cfelse>
+			<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />	
+		</cfif>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>

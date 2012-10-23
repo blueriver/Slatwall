@@ -36,24 +36,25 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
+component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
-	public void function validate_a_new_doesnt_pass() {
-		variables.entity.validate();
-		assert(variables.entity.hasErrors());
+	// @hint put things in here that you want to run befor EACH test
+	public void function setUp() {
+		super.setup();
+		
+		variables.entityService = "accountService";
+		variables.entity = request.slatwallScope.getService( variables.entityService ).newAccountPayment();
+		
 	}
 	
-	public void function simple_representation_exists_and_is_simple() {
-		assert(isSimpleValue(variables.entity.getSimpleRepresentation()));
+	public void function getExpirationMonthOptions_returns_a_12_index_array() {
+		assert(arrayLen(variables.entity.getExpirationMonthOptions()) eq 12);
 	}
 	
-	public void function has_primary_id_property_name() {
-		assert(len(variables.entity.getPrimaryIDPropertyName()));
+	public void function getExpirationYearOptions_returns_a_20_index_array() {
+		assertEquals(arrayLen(variables.entity.getExpirationYearOptions()), 20);
 	}
 	
-	public void function defaults_are_correct() {
-		assert(variables.entity.isNew());
-		assert(!len(variables.entity.getPrimaryIDValue()));
-	}
+	
 }
 

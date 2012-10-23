@@ -40,6 +40,7 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	property name="emailService" type="any";
 	property name="sessionService" type="any";
+	property name="paymentService" type="any";
 	property name="priceGroupService" type="any";
 	property name="validationService" type="any";
 	
@@ -379,6 +380,31 @@ component extends="BaseService" accessors="true" output="false" {
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
+	
+	public any function processAccountPayment(required any accountPayment, struct data={}, string processContext="process") {
+		
+		param name="arguments.data.amount" default="0";
+		
+		// CONTEXT: offlineTransaction
+		if (arguments.processContext == "offlineTransaction") {
+		
+			var newPaymentTransaction = getPaymentService().newPaymentTransaction();
+			newPaymentTransaction.setTransactionType( "offline" );
+			newPaymentTransaction.setAccountPayment( arguments.accountPayment );
+			newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
+			
+			if(newPaymentTransaction.hasErrors()) {
+				arguments.accountPayment.addError('processing', 'There was an unknown error trying to add an offline transaction for this order payment.');	
+			}
+			
+		} else {
+			
+			getPaymentService().processPayment(arguments.accountPayment, arguments.processContext, arguments.data.amount);
+			
+		}
+		
+		return arguments.accountPayment;
+	}
 	
 	// =====================  END: Process Methods ============================
 	

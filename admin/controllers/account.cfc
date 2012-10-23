@@ -38,8 +38,9 @@ Notes:
 */
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
-	property name="AccountService";
-	property name="SubscriptionService";
+	property name="accountService";
+	property name="paymentService";
+	property name="subscriptionService";
 	
 	this.publicMethods='';
 	this.secureMethods='listPermissionGroup,editPermissionGroup,detailPermissionGroup,deletePermissionGroup,savePermissionGroup,listAccount,detailAccount,editAccount,deleteAccount,saveAccount';
@@ -59,11 +60,22 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		super.genericCreateMethod('PermissionGroup',rc);
 	}
-	
+	 
 	public void function detailPermissionGroup(required struct rc){
 		rc.permissions = getPermissionService().getPermissions();
 		
 		super.genericDetailMethod('PermissionGroup',rc);
+	}
+	
+	public any function createaccountpayment( required struct rc ) {
+		param name="rc.accountID" type="string" default="";
+		param name="rc.paymentMethodID" type="string" default="";
+		
+		rc.accountPayment = getAccountService().newAccountPayment();
+		rc.account = getAccountService().getAccount( rc.accountID );
+		rc.paymentMethod = getPaymentService().getPaymentMethod( rc.paymentMethodID );
+		
+		rc.edit = true;
 	}
 	
 }

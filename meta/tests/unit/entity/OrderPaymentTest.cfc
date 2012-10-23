@@ -46,6 +46,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 	}
 	
 	public void function defaults_are_correct() {
+		assertEquals(0, variables.entity.getAmountAuthorized());
 		assertEquals(variables.entity.getPaymentTransactions(), []);
 		assertEquals(variables.entity.getReferencingOrderPayments(), []);
 	}

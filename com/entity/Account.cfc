@@ -148,6 +148,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(!structKeyExists(variables, "paymentMethodOptionsSmartList")) {
 			variables.paymentMethodOptionsSmartList = getService("paymentService").getPaymentMethodSmartList();
 			variables.paymentMethodOptionsSmartList.addFilter("activeFlag", 1);
+			variables.paymentMethodOptionsSmartList.addInFilter("paymentMethodType", "cash,check,creditCard,external,giftCard");
 		}
 		return variables.paymentMethodOptionsSmartList;
 	}

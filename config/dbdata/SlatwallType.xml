@@ -8,6 +8,10 @@
 		<column name="systemCode" />
 	</Columns>
 	<Records>
+		<Record typeID="444df32cee42886828d43a685445e6a0" typeIDPath="444df32cee42886828d43a685445e6a0" parentTypeID="NULL" type="Account Payment Types" systemCode="accountPaymentType" />
+		<Record typeID="444df32dd2b0583d59a19f1b77869025" typeIDPath="444df32cee42886828d43a685445e6a0,444df32dd2b0583d59a19f1b77869025" parentTypeID="444df32cee42886828d43a685445e6a0" type="Charge" systemCode="aptCharge" />
+		<Record typeID="444df32e9b448ea196c18c66e1454c46" typeIDPath="444df32cee42886828d43a685445e6a0,444df32e9b448ea196c18c66e1454c46" parentTypeID="444df32cee42886828d43a685445e6a0" type="Credit" systemCode="aptCredit" />
+		
 		<Record typeID="444df29db643e69a26c071dabe619e8a" typeIDPath="444df29db643e69a26c071dabe619e8a" parentTypeID="NULL" type="Account Phone Types" systemCode="accountPhoneType" />
 		<Record typeID="444df29eaef3cfd1af021d4d31205328" typeIDPath="444df29db643e69a26c071dabe619e8a,444df29eaef3cfd1af021d4d31205328" parentTypeID="444df29db643e69a26c071dabe619e8a" type="Home Phone" systemCode="aptHome" />
 		<Record typeID="444df29ff763bac292f9aba2d3debafb" typeIDPath="444df29db643e69a26c071dabe619e8a,444df29ff763bac292f9aba2d3debafb" parentTypeID="444df29db643e69a26c071dabe619e8a" type="Mobile Phone" systemCode="aptMobile" />
@@ -139,9 +143,6 @@
 <!--
 Below Are UUID's to use... delete after using
 
-444df32cee42886828d43a685445e6a0
-444df32dd2b0583d59a19f1b77869025
-444df32e9b448ea196c18c66e1454c46
 444df32f9fb5d68f03f1af307b3d0644
 444df330fc19e5beb17ff974ac03db18
 444df331c2c2c3b093212519e8c1ae8b

@@ -223,7 +223,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		if(len(arguments.creditCardNumber)) {
 			variables.creditCardNumber = arguments.creditCardNumber;
 			setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
-			setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
+			setCreditCardType( getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber) );
 			if(getCreditCardType() != "Invalid" && getPaymentMethod().setting("paymentMethodStoreCreditCardNumberWithOrder") == 1) {
 				setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
 			}
@@ -271,7 +271,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	public array function getExpirationYearOptions() {
 		var yearOptions = [];
 		var currentYear = year(now());
-		for(var i = 0; i < 10; i++) {
+		for(var i = 0; i < 20; i++) {
 			var thisYear = currentYear + i;
 			arrayAppend(yearOptions,{name=thisYear, value=right(thisYear,2)});
 		}
@@ -414,10 +414,15 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	// ================== START: Overridden Methods ========================
 	
 	public any function getSimpleRepresentation() {
-		if(getPaymentMethodType() == "creditCard") {
-			return getPaymentMethod().getPaymentMethodName() & " - " & getCreditCardType() & " - ***" & getCreditCardLastFour();	
+		if(this.isNew()) {
+			return rbKey('define.new') & ' ' & rbKey('entity.orderPayment');
 		}
-		return getPaymentMethod().getPaymentMethodName();
+		
+		if(getPaymentMethodType() == "creditCard") {
+			return getPaymentMethod().getPaymentMethodName() & " - " & getCreditCardType() & " ***" & getCreditCardLastFour() & ' - ' & getFormattedValue('amount');	
+		}
+		
+		return getPaymentMethod().getPaymentMethodName() & ' - ' & getFormattedValue('amount');
 	}
 	
 	// ==================  END:  Overridden Methods ========================

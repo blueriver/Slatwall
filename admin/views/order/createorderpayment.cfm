@@ -66,13 +66,16 @@ Notes:
 			
 			<input type="hidden" name="process" value="1" />
 			
-			<cf_SlatwallProcessOptionBar>
-				<cfif rc.orderPaymentTypeSystemCode eq "optCharge">
-					<cf_SlatwallProcessOption data="transactionType" fieldType="select" valueOptions="#[{value='authorizeAndCharge', name='Authorize & Charge'}, {value='authorize', name='Authorize'}]#" />
-				<cfelse>
-					<cf_SlatwallProcessOption data="transactionType" fieldType="select" valueOptions="#[{value='credit', name='Credit'}]#" />
-				</cfif>
-			</cf_SlatwallProcessOptionBar>
+			<cf_SlatwallDetailHeader>
+				<cf_SlatwallPropertyList>
+					<cfif rc.orderPaymentTypeSystemCode eq "optCharge">
+						<cf_SlatwallFieldDisplay fieldname="processContext" title="#$.slatwall.rbKey('admin.order.createorderpayment.transactionType')#" fieldtype="select" valueOptions="#[{value='authorizeAndCharge', name=$.slatwall.rbKey('define.authorizeAndCharge')}, {value='authorize', name=$.slatwall.rbKey('define.authorize')}]#" edit="true">
+					<cfelse>
+						<cf_SlatwallFieldDisplay fieldname="processContext" title="#$.slatwall.rbKey('admin.order.createorderpayment.transactionType')#" fieldtype="select" valueOptions="#[{value='credit', name=$.slatwall.rbKey('define.credit')}]#" edit="true">
+					</cfif>
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
+				</cf_SlatwallPropertyList>
+			</cf_SlatwallDetailHeader>
 			
 			<cf_SlatwallDetailHeader>
 				<cf_SlatwallPropertyList divClass="span6">
@@ -84,7 +87,6 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="securityCode" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />	
 				</cf_SlatwallPropertyList>
 			</cf_SlatwallDetailHeader>
 		<!--- Term Payment --->

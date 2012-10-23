@@ -36,24 +36,20 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
+component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
-	public void function validate_a_new_doesnt_pass() {
-		variables.entity.validate();
-		assert(variables.entity.hasErrors());
-	}
-	
-	public void function simple_representation_exists_and_is_simple() {
-		assert(isSimpleValue(variables.entity.getSimpleRepresentation()));
-	}
-	
-	public void function has_primary_id_property_name() {
-		assert(len(variables.entity.getPrimaryIDPropertyName()));
+	// @hint put things in here that you want to run befor EACH test
+	public void function setUp() {
+		super.setup();
+		
+		variables.entity = request.slatwallScope.getService("paymentService").newPaymentTransaction();
 	}
 	
 	public void function defaults_are_correct() {
-		assert(variables.entity.isNew());
-		assert(!len(variables.entity.getPrimaryIDValue()));
+		super.defaults_are_correct();
+		assertEquals(0, variables.entity.getAmountAuthorized());
+		assertEquals(0, variables.entity.getAmountReceived());
+		assertEquals(0, variables.entity.getAmountCredited());
 	}
 }
 
