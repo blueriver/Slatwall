@@ -681,7 +681,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								// Look for 'auto' order fulfillments
 								for(var i=1; i<=arrayLen(order.getOrderFulfillments()); i++) {
 									// As long as the amount received for this orderFulfillment is within the treshold of the auto fulfillment setting
-									if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto" && (order.getTotal() == 0 || order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoMinReceivedPercentage') <= (order.getPaymentAmountReceivedTotal()*100/order.getTotal())) ) {
+									if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto" && (order.getTotal() == 0 || order.getOrderFulfillments()[i].getFulfillmentMethod().setting('fulfillmentMethodAutoMinReceivedPercentage') <= (order.getPaymentAmountReceivedTotal()*100/order.getTotal())) ) {
 										processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')}, "fulfillItems");
 									}
 								}
