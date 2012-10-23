@@ -79,6 +79,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="amountAuthorized" persistent="false" type="numeric" formatType="currency";
 	property name="amountCredited" persistent="false" type="numeric" formatType="currency";
 	property name="amountReceived" persistent="false" type="numeric" formatType="currency";
+	property name="amountUnassigned" persistent="false" type="numeric" formatType="currency";
 	property name="amountUnauthorized" persistent="false" formatType="currency";	
 	property name="amountUncredited" persistent="false" formatType="currency";
 	property name="amountUncaptured" persistent="false" formatType="currency";
@@ -216,6 +217,11 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		}
 		
 		return uncredited;
+	}
+	
+	public numeric function getAmountUnassigned() {
+		// This is temporary until we get the assignment of accountPayments to orderPayments
+		return getAmountReceived();
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
