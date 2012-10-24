@@ -69,6 +69,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
 	property name="permissionGroups" singularname="permissionGroup" cfc="PermissionGroup" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="accountID" inversejoincolumn="permissionGroupID";
 
+	// Related Object Properties (many-to-many - inverse)
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionCodeAccount" fkcolumn="accountID" inversejoincolumn="promotionCodeID" inverse="true";
+
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -323,6 +326,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.permissionGroup.getAccounts(), thatIndex);
 		}
+	}
+	
+	// Promotion Codes (many-to-many - inverse)    
+	public void function addPromotionCode(required any promotionCode) {    
+		arguments.promotionCode.addAccount( this );    
+	}    
+	public void function removePromotionCode(required any promotionCode) {    
+		arguments.promotionCode.removeAccount( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

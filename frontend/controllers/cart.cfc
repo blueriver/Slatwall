@@ -135,13 +135,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.promotionCode" default="";
 		param name="rc.promotionCodeOK" default="true";
 		
-		var pc = getPromotionService().getPromotionCodeByPromotionCode(rc.promotionCode);
-		
-		if(!isNull(pc) && pc.getPromotion().getActiveFlag()) {
-			getOrderService().addPromotionCode(order=rc.$.slatwall.cart(), promotionCode=pc);
-		} else {
-			rc.promotionCodeOK = false;
-		}
+		getOrderService().addPromotionCode(order=rc.$.slatwall.cart(), promotionCode=rc.promotionCode);
 		
 		getFW().setView("frontend:cart.detail");
 	}

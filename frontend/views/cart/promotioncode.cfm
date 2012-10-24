@@ -36,8 +36,6 @@
 Notes:
 
 --->
-<cfparam name="rc.promotionCodeOK" default="true" />
-
 <cfoutput>
 	<div class="svocartpromotioncode">
 		<cfif arrayLen($.slatwall.cart().getPromotionCodes())>
@@ -50,11 +48,6 @@ Notes:
 			</dl>
 		</cfif>
 		<form name="addPromotionCode" method="post">
-			<cfif not rc.promotionCodeOK>
-				<p class="error">The promotion code that you entered is invalid, please try again</p>
-			<cfelse>
-				<p>If you have received a promotion code, you can submit it in the form below to access your rewards.</p>
-			</cfif>
 			<dl>
 				<dt>Promotion Code:</dt>
 				<dd><input type="text" name="promotionCode" /></dd>

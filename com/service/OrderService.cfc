@@ -477,11 +477,23 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
-	public void function addPromotionCode(required any order, required any promotionCode) {
-		if(!arguments.order.hasPromotionCode(arguments.promotionCode)) {
-			arguments.order.addPromotionCode(arguments.promotionCode);
+	public any function addPromotionCode(required any order, required string promotionCode) {
+		var pc = getPromotionService().getPromotionCode(arguments.promotionCode);
+		
+		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
+			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
+		} else if (pc.getStartDateTime() > now() || pc.getEndDateTime() < now() || !pc.getPromotion().getCurrentFlag()) {
+			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
+		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
+			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
+		} else {
+			if(!arguments.order.hasPromotionCode( pc )) {
+				arguments.order.addPromotionCode( pc );
+			}
+			getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 		}
-		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
+		
+		return arguments.order;
 	}
 	
 	public void function removePromotionCode(required any order, required any promotionCode) {

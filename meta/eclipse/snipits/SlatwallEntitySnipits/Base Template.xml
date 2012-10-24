@@ -45,6 +45,8 @@ component displayname="$${Display Name}" entityname="$${EntityName}" table="$${E
 	// Persistent Properties
 	property name="$${idPropertyName}" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 
+	// Calculated Properties
+
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
