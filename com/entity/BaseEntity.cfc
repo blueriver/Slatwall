@@ -107,6 +107,19 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	// Attribute Value
+	public array function getAttributeValuesArrayMap() {
+		if(!structKeyExists(variables, "attributeValuesArrayMap")) {
+			var attributeValuesSmartList = getService("attributeService").getAttributeValueSmartList();
+			attributeValuesSmartList.addFilter('#replace(getEntityName(),'Slatwall','')#.#getPrimaryIDPropertyName()#', getPrimaryIDValue());
+			attributeValuesSmartList.addSelect('attribute.attributeCode', 'attributeCode');
+			attributeValuesSmartList.addSelect('attribute.attributeID', 'attributeID');
+			attributeValuesSmartList.addSelect('attributeValue', 'attributeValue');
+			
+			variables.attributeValuesArrayMap = attributeValuesSmartList.getRecords();
+		}
+		return variables.attributeValuesArrayMap;
+	}
+	
 	public any function getAttributeValue(required string attribute, returnEntity=false){
 		
 		var attributeValueEntity = "";
@@ -161,8 +174,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
 			variables.attributeValuesByAttributeIDStruct = {};
 			if(hasProperty("attributeValues")) {
-				for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-					variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
+				var attributeValuesArrayMap = getAttributeValuesArrayMap();
+				for(var i=1; i<=arrayLen(attributeValuesArrayMap); i++){
+					variables.attributeValuesByAttributeIDStruct[ attributeValuesArrayMap[i]['attributeID'] ] = attributeValuesArrayMap[i]['attributeValue'];
 				}	
 			}
 		}
@@ -174,8 +188,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
 			variables.attributeValuesByAttributeCodeStruct = {};
 			if(hasProperty("attributeValues")) {
-				for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-					variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
+				var attributeValuesArrayMap = getAttributeValuesArrayMap();
+				for(var i=1; i<=arrayLen(attributeValuesArrayMap); i++){
+					variables.attributeValuesByAttributeCodeStruct[ attributeValuesArrayMap[i]['attributeCode'] ] = attributeValuesArrayMap[i]['attributeValue'];
 				}
 			}
 		}

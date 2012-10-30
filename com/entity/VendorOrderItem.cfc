@@ -47,7 +47,7 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	
 	// Related Object Properties (Many-to-One)
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
-	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID" lazy="false" fetch="join";  // We always want stock when we get a vendorOrderItem
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
 	// Related Object Properties (One-to-Many)
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderItemID" cascade="all-delete-orphan" inverse="true";

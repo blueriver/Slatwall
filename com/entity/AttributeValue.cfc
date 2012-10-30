@@ -50,7 +50,7 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	property name="attributeValueType" ormType="string" formFieldType="select" formatType="custom";
 	
 	// Related Object Properties (many-to-one)
-	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" lazy="false" fetch="join";  // Lazy is turned off because any time we get an attributeValue we also want the attribute
+	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="accountPayment" cfc="AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
