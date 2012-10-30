@@ -42,7 +42,7 @@ Notes:
 		<cfargument name="primaryIDPropertyIdentifier">
 		<cfargument name="primaryIDValue" />
 		
-		<cfreturn ormExecuteQuery(" FROM SlatwallAttributeValue av INNER JOIN FETCH av.attribute att WHERE av.#primaryIDPropertyIdentifier# = ?", [arguments.primaryIDValue], false, {ignoreCase="true"}) />
+		<cfreturn ormExecuteQuery("SELECT av FROM SlatwallAttributeValue av INNER JOIN FETCH av.attribute att INNER JOIN FETCH att.attributeSet ats WHERE av.#primaryIDPropertyIdentifier# = ?", [arguments.primaryIDValue], false, {ignoreCase="true"}) />
 	</cffunction>
 	
 </cfcomponent>
