@@ -109,13 +109,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// Attribute Value
 	public array function getAttributeValuesArrayMap() {
 		if(!structKeyExists(variables, "attributeValuesArrayMap")) {
-			var attributeValuesSmartList = getService("attributeService").getAttributeValueSmartList();
-			attributeValuesSmartList.addFilter('#replace(getEntityName(),'Slatwall','')#.#getPrimaryIDPropertyName()#', getPrimaryIDValue());
-			attributeValuesSmartList.addSelect('attribute.attributeCode', 'attributeCode');
-			attributeValuesSmartList.addSelect('attribute.attributeID', 'attributeID');
-			attributeValuesSmartList.addSelect('attributeValue', 'attributeValue');
-			
-			variables.attributeValuesArrayMap = attributeValuesSmartList.getRecords();
+			variables.attributeValuesArrayMap = [];
+			if(hasProperty("attributeValues")) {
+				var primaryIDPropertyIdentifier = "#replace(getEntityName(), 'Slatwall', '')#.#getPrimaryIDPropertyName()#";
+				primaryIDPropertyIdentifier = lcase(left(primaryIDPropertyIdentifier, 1)) & right(primaryIDPropertyIdentifier, len(primaryIDPropertyIdentifier)-1);
+				variables.attributeValuesArrayMap = getService("attributeService").getAttributeValuesArrayMap(primaryIDPropertyIdentifier=primaryIDPropertyIdentifier, primaryIDValue=getPrimaryIDValue());
+			}
 		}
 		return variables.attributeValuesArrayMap;
 	}
