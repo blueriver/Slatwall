@@ -45,8 +45,8 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	
 	// ===================== START: DAO Passthrough ===========================
 	
-	public array function getAttributeValuesArrayMap() {
-		return getDAO().getAttributeValuesArrayMap(argumentcollection=arguments);
+	public array function getAttributeValuesForEntity() {
+		return getDAO().getAttributeValuesForEntity(argumentcollection=arguments);
 	}
 	
 	// ===================== START: DAO Passthrough ===========================

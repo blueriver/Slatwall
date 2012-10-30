@@ -107,16 +107,16 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	// Attribute Value
-	public array function getAttributeValuesArrayMap() {
-		if(!structKeyExists(variables, "attributeValuesArrayMap")) {
-			variables.attributeValuesArrayMap = [];
+	public array function getAttributeValuesForEntity() {
+		if(!structKeyExists(variables, "attributeValuesForEntity")) {
+			variables.attributeValuesForEntity = [];
 			if(hasProperty("attributeValues")) {
 				var primaryIDPropertyIdentifier = "#replace(getEntityName(), 'Slatwall', '')#.#getPrimaryIDPropertyName()#";
 				primaryIDPropertyIdentifier = lcase(left(primaryIDPropertyIdentifier, 1)) & right(primaryIDPropertyIdentifier, len(primaryIDPropertyIdentifier)-1);
-				variables.attributeValuesArrayMap = getService("attributeService").getAttributeValuesArrayMap(primaryIDPropertyIdentifier=primaryIDPropertyIdentifier, primaryIDValue=getPrimaryIDValue());
+				variables.attributeValuesForEntity = getService("attributeService").getAttributeValuesForEntity(primaryIDPropertyIdentifier=primaryIDPropertyIdentifier, primaryIDValue=getPrimaryIDValue());
 			}
 		}
-		return variables.attributeValuesArrayMap;
+		return variables.attributeValuesForEntity;
 	}
 	
 	public any function getAttributeValue(required string attribute, returnEntity=false){
@@ -173,9 +173,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
 			variables.attributeValuesByAttributeIDStruct = {};
 			if(hasProperty("attributeValues")) {
-				var attributeValuesArrayMap = getAttributeValuesArrayMap();
-				for(var i=1; i<=arrayLen(attributeValuesArrayMap); i++){
-					variables.attributeValuesByAttributeIDStruct[ attributeValuesArrayMap[i]['attributeID'] ] = attributeValuesArrayMap[i]['attributeValue'];
+				var attributeValues = getAttributeValuesForEntity();
+				for(var i=1; i<=arrayLen(attributeValues); i++){
+					variables.attributeValuesByAttributeIDStruct[ attributeValues[i].getAttribute().getAttributeID() ] = attributeValues[i];
 				}	
 			}
 		}
@@ -187,9 +187,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
 			variables.attributeValuesByAttributeCodeStruct = {};
 			if(hasProperty("attributeValues")) {
-				var attributeValuesArrayMap = getAttributeValuesArrayMap();
-				for(var i=1; i<=arrayLen(attributeValuesArrayMap); i++){
-					variables.attributeValuesByAttributeCodeStruct[ attributeValuesArrayMap[i]['attributeCode'] ] = attributeValuesArrayMap[i]['attributeValue'];
+				var attributeValues = getAttributeValuesForEntity();
+				for(var i=1; i<=arrayLen(attributeValues); i++){
+					variables.attributeValuesByAttributeCodeStruct[ attributeValues[i].getAttribute().getAttributeCode() ] = attributeValues[i];
 				}
 			}
 		}
