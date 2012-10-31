@@ -45,14 +45,16 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
+		var properties = getProperties();
+		
 		// Loop over all properties
-		for(var i=1; i<=arrayLen(getProperties()); i++) {
+		for(var i=1; i<=arrayLen(properties); i++) {
 			// Set any one-to-many or many-to-many properties with a blank array as the default value
-			if(structKeyExists(getProperties()[i], "fieldtype") && listFindNoCase("many-to-many,one-to-many", getProperties()[i].fieldtype) && !structKeyExists(variables, getProperties()[i].name) ) {
-				variables[ getProperties()[i].name ] = [];
+			if(structKeyExists(properties[i], "fieldtype") && listFindNoCase("many-to-many,one-to-many", properties[i].fieldtype) && !structKeyExists(variables, properties[i].name) ) {
+				variables[ properties[i].name ] = [];
 			}
 			// set any activeFlag's to true by default 
-			if( getProperties()[i].name == "activeFlag" && isNull(getActiveFlag()) ) {
+			if( properties[i].name == "activeFlag" && isNull(getActiveFlag()) ) {
 				variables.activeFlag = 1;
 			}
 		}
