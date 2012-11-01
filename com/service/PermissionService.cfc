@@ -75,6 +75,18 @@ component extends="BaseService" accessors="true" output="false" {
 			return true;
 		}
 		
+		// If this is a save method, then we can check create and edit
+		if(left(listLast(arguments.action, "."),4) eq "save") {
+			var createAction = replace(arguments.action, '.save', '.create');
+			var editAction = replace(arguments.action, '.save', '.edit');
+			if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(createAction, ".", "", "all"), ":", "", "all")) ) {
+				return true;
+			}
+			if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(editAction, ".", "", "all"), ":", "", "all")) ) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 	
@@ -112,15 +124,44 @@ component extends="BaseService" accessors="true" output="false" {
 				}
 				if(structKeyExists(obj, 'secureMethods')){	
 					allPermissions.admin[ section ].secureMethods = obj.secureMethods;
-				
+					
 					for(j=1; j <= listLen(allPermissions.admin[ section ].secureMethods); j++){
 						
 						var item = listGetAt(allPermissions.admin[ section ].secureMethods, j);
 						
-						arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {
-							name=rbKey( 'permission.#section#.#item#' ),
-							value="admin#section##item#"
-						});
+						if(left(item, 2) eq '**') {
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.list_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#list#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#detail#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#create#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#edit#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#delete#item#"});
+						} else if(left(item, 1) eq '*') {
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#detail#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#create#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#edit#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#delete#item#"});
+						} else {
+							
+							var permissionTitle = rbKey( 'admin.#section#.#item#_permission' );
+							
+							if(right(permissionTitle, 8) eq "_missing") {
+								if(left(item, 4) eq "list") {
+									permissionTitle = replace(rbKey( 'admin.define.list_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-4)#'));
+								} else if (left(item, 6) eq "detail") {
+									permissionTitle = replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
+								} else if (left(item, 6) eq "create") {
+									permissionTitle = replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
+								} else if (left(item, 4) eq "edit") {
+									permissionTitle = replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-4)#'));
+								} else if (left(item, 6) eq "delete") {
+									permissionTitle = replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
+								} else if (left(item, 7) eq "process") {
+									permissionTitle = replace(rbKey( 'admin.define.process_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-7)#'));
+								}
+							}
+							
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=permissionTitle, value="admin#section##item#"});
+						}
 					}
 				}
 			}
@@ -158,7 +199,7 @@ component extends="BaseService" accessors="true" output="false" {
 							var item = listGetAt(allPermissions[ activeFW1Integrations[i].subsystem ][ section ].secureMethods, k);
 							
 							arrayAppend(allPermissions[ activeFW1Integrations[i].subsystem ][ section ].securePermissionOptions, {
-								name="#activeFW1Integrations[i].subsystem#:#section#.#item#",
+								name=rbKey("#activeFW1Integrations[i].subsystem#.#section#.#item#_permission"),
 								value="#activeFW1Integrations[i].subsystem##section##item#"
 							});
 						}

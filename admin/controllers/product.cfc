@@ -46,7 +46,18 @@ component extends="BaseController" output=false accessors=true {
 	property name="ImageService" type="any";
 	
 	this.publicMethods='';
-	this.secureMethods='listproduct,editproduct,detailproduct,deleteProduct,saveproduct,listProductType,editProductType,detailProductType,deleteProductType,saveProductType,listOptionGroup,editOptionGroup,detailOptionGroup,deleteOptionGroup,saveOptionGroup,listBrand,editBrand,detailBrand,deleteBrand,saveBrand,listSubscriptionTerm,editSubscriptionTerm,detailSubscriptionTerm,deleteSubscriptionTerm,saveSubscriptionTerm,listSubscriptionBenefit,editSubscriptionBenefit,detailSubscriptionBenefit,deleteSubscriptionBenefit,saveSubscriptionBenefit,listProductReview,editProductReview,detailProductReview,deleteProductReview,saveProductReview';
+	
+	this.anyAdminMethods='';
+	
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods, '**brand');
+	this.secureMethods=listAppend(this.secureMethods, '**product');
+	this.secureMethods=listAppend(this.secureMethods, '**productReview');
+	this.secureMethods=listAppend(this.secureMethods, '**productType');
+	this.secureMethods=listAppend(this.secureMethods, '**optionGroup');
+	this.secureMethods=listAppend(this.secureMethods, '*option');
+	this.secureMethods=listAppend(this.secureMethods, '**subscriptionTerm');
+	this.secureMethods=listAppend(this.secureMethods, '**subscriptionBenefit');
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:product.listproduct");

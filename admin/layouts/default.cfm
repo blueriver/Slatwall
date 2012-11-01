@@ -143,7 +143,7 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
 							<cfif findNoCase("*", $.slatwall.getCurrentAccount().getAllPermissions())>
 								<li class="divider"></li>
-								<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
+								<cf_SlatwallActionCaller action="admin:main.update" type="list">
 								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true&update=true" type="list" text="Reload Slatwall (Full Update)">
 								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
 							</cfif>

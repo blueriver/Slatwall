@@ -55,23 +55,24 @@ Notes:
 	<cf_SlatwallActionBar type="none"></cf_SlatwallActionBar>
 	
 	<cf_SlatwallPropertyList divClass="span12">
-		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.setting.detailslatwallupdate.currentVersion')#" value="#rc.currentVersion#" />
+		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentVersion')#" value="#rc.currentVersion#" />
 		<cfif rc.currentBranch eq 'master'>
-			<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.setting.detailslatwallupdate.currentReleaseType')#" value="#$.slatwall.rbKey('admin.setting.detailslatwallupdate.stable')#" />
+			<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentReleaseType')#" value="#$.slatwall.rbKey('admin.main.update.stable')#" />
 		<cfelse>
-			<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.setting.detailslatwallupdate.currentReleaseType')#" value="#$.slatwall.rbKey('admin.setting.detailslatwallupdate.bleedingEdge')#" />
+			<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentReleaseType')#" value="#$.slatwall.rbKey('admin.main.update.bleedingEdge')#" />
 		</cfif>
-		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.setting.detailslatwallupdate.availableStableVersion')#" value="#rc.availableMasterVersion#" />
-		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.setting.detailslatwallupdate.availableBleedingEdgeVersion')#" value="#rc.availableDevelopVersion#" />
+		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.availableStableVersion')#" value="#rc.availableMasterVersion#" />
+		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.availableBleedingEdgeVersion')#" value="#rc.availableDevelopVersion#" />
 		<hr />
 		<form method="post">
-			<input type="hidden" name="slatAction" value="admin:setting.updateSlatwall" />
+			<input type="hidden" name="slatAction" value="admin:main.update" />
+			<input type="hidden" name="process" value="1" />
 			<select name="updateBranch">
 				<cfloop array="#local.updateOptions#" index="local.updateOption" >
 					<option value="#local.updateOption.value#" <cfif rc.currentBranch eq local.updateOption.value>selected="selected"</cfif>>#local.updateOption.name#</option>
 				</cfloop>
 			</select>
-			<cf_SlatwallActionCaller action="admin:setting.updateSlatwall" class="btn btn-primary" type="button" submit="true">
+			<cf_SlatwallActionCaller action="admin:main.update" class="btn btn-primary" type="button" submit="true">
 		</form>
 	</cf_SlatwallPropertyList>
 </cfoutput>

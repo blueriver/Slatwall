@@ -44,9 +44,23 @@ component extends="BaseController" output=false accessors=true {
 	property name="vendorService" type="any";
 	property name="dataService" type="any";
 	property name="imageService" type="any";
+	property name="updateService" type="any";
 	
-	this.publicMethods='noaccess,error,detailimage,editimage,createimage,deleteimage';
-	this.secureMethods='default,ckfinder';
+	this.publicMethods='';
+	this.publicMethods=listAppend(this.publicMethods, 'noaccess');
+	this.publicMethods=listAppend(this.publicMethods, 'error');
+	
+	this.anyAdminMethods='';
+	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'default');
+	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'createImage');
+	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'deleteImage');
+	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'detailImage');
+	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'editImage');
+	
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods, 'ckfinder');
+	this.secureMethods=listAppend(this.secureMethods, 'about');
+	this.secureMethods=listAppend(this.secureMethods, 'update');
 	
 	public void function default(required struct rc) {
 		
@@ -98,6 +112,26 @@ component extends="BaseController" output=false accessors=true {
 		
 		super.genericSaveMethod('Image',rc);
 		
+	}
+	
+	public void function update(required struct rc) {
+		param name="rc.process" default="0";
+		
+		if(rc.process) {
+			getUpdateService().update(branch=rc.updateBranch);
+			getFW().redirect(action="admin:setting.detailslatwallupdate", queryString="reload=1&messageKeys=admin.setting.updateslatwall_success");
+		}
+		
+		var versions = getUpdateService().getAvailableVersions();
+		rc.availableDevelopVersion = versions.develop;
+		rc.availableMasterVersion = versions.master;
+
+		rc.currentVersion = getApplicationValue('version');
+		if(find("-", rc.currentVersion)) {
+			rc.currentBranch = "develop";
+		} else {
+			rc.currentBranch = "master";
+		}
 	}
 	
 

@@ -43,7 +43,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="subscriptionService";
 	
 	this.publicMethods='';
-	this.secureMethods='listPermissionGroup,editPermissionGroup,detailPermissionGroup,deletePermissionGroup,savePermissionGroup,listAccount,detailAccount,editAccount,deleteAccount,saveAccount';
+	
+	this.anyAdminMethods='';
+	
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods, '**account');
+	this.secureMethods=listAppend(this.secureMethods, '*accountPayment');
+	this.secureMethods=listAppend(this.secureMethods, '*accountPaymentMethod');
+	this.secureMethods=listAppend(this.secureMethods, '**permissionGroup');
+	this.secureMethods=listAppend(this.secureMethods, '**subscriptionUsage');
+
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.listaccount");

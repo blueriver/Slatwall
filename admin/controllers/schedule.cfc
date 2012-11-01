@@ -40,7 +40,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	property name="scheduleService";
 	
-	this.publicMethods='executeScheduledTasks';
+	this.publicMethods='';
+	this.publicMethods=listAppend(this.publicMethods, 'executeScheduledTasks');
+	
+	this.anyAdminMethods='';
+	
 	this.secureMethods='';
 	
 	public void function executeScheduledTasks() {

@@ -50,7 +50,45 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="utilityFileService" type="any";
 	
 	this.publicMethods='';
-	this.secureMethods = 'listsetting,detailsetting,editsetting,listfulfillmentmethod,editfulfillmentmethod,detailfulfillmentmethod,deletefulfillmentmethod,createfulfillmentmethod,listmeasurementunit,editmeasurementunit,detailmeasurementunit,createmeasurementunit,deletemeasurementunit,listorderorigin,createorderorigin,deleteorderorigin,editorderorigin,detailorderorigin,listpaymentmethod,editpaymentmethod,detailpaymentmethod,createpaymentmethod,deletepaymentmethod,listroundingrule,editroundingrule,detailroundingrule,createroundingrule,deleteroundingrule,listtaxcategory,edittaxcategory,detailtaxcategory,createtaxcategory,deletetaxcategory,listterm,detailterm,editterm,createterm,deleteterm,listType,editType,detailType,createType,deleteType,listLocation,editlocation,detaillocation,createlocation,deletelocation,listaddresszone,editaddresszone,detailaddresszone,createaddresszone,deleteaddresszone,listcountry,editcountry,detailcountry,createcountry,deletecountry,listattributeset,editattributeset,detailattributeset,createattributeset,deleteattributeset,createcategory,detailcategory,editcategory,deletecategory,listcategory,editcontent,detailcontent,createcontent,deletecontent,listschedule,editschedule,detailschedule,createschedule,deleteschedule,listtask,edittask,detailtask,createtask,deletetask,listtaskhistory,saveaddresszone,saveattributeset,savecategory,savecountry,savefulfillmentmethod,saveLocation,saveorderorigin,savepaymentmethod,saveroundingrule,saveschedule,savesetting,savetask,savetaskhistory,savetaxcategory,saveterm,saveType,savemeasurementunit';
+	
+	this.anyAdminMethods='';
+	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'deleteSetting');
+	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'detailSetting');
+	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'editSetting');
+	
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods, 'settings');
+	this.secureMethods=listAppend(this.secureMethods, '**addressZone');
+	this.secureMethods=listAppend(this.secureMethods, '**addressZoneLocation');
+	this.secureMethods=listAppend(this.secureMethods, '**attributeSet');
+	this.secureMethods=listAppend(this.secureMethods, '*attribute');
+	this.secureMethods=listAppend(this.secureMethods, '*attributeOption');
+	this.secureMethods=listAppend(this.secureMethods, '**category');
+	this.secureMethods=listAppend(this.secureMethods, '**content');
+	this.secureMethods=listAppend(this.secureMethods, '**country');
+	this.secureMethods=listAppend(this.secureMethods, '**currency');
+	this.secureMethods=listAppend(this.secureMethods, '**email');
+	this.secureMethods=listAppend(this.secureMethods, '**emailTemplate');
+	this.secureMethods=listAppend(this.secureMethods, '**fulfillmentMethod');
+	this.secureMethods=listAppend(this.secureMethods, '**location');
+	this.secureMethods=listAppend(this.secureMethods, '**measurementUnit');
+	this.secureMethods=listAppend(this.secureMethods, '**orderOrigin');
+	this.secureMethods=listAppend(this.secureMethods, '**paymentMethod');
+	this.secureMethods=listAppend(this.secureMethods, '**paymentTerm');
+	this.secureMethods=listAppend(this.secureMethods, '**roundingRule');
+	this.secureMethods=listAppend(this.secureMethods, '**schedule');
+	this.secureMethods=listAppend(this.secureMethods, '*shippingMethod');
+	this.secureMethods=listAppend(this.secureMethods, '*shippingMethodRate');
+	this.secureMethods=listAppend(this.secureMethods, '**task');
+	this.secureMethods=listAppend(this.secureMethods, '**taskSchedule');
+	this.secureMethods=listAppend(this.secureMethods, 'detailTaskHistory');
+	this.secureMethods=listAppend(this.secureMethods, 'processTask');
+	this.secureMethods=listAppend(this.secureMethods, 'processTaskSchedule');
+	this.secureMethods=listAppend(this.secureMethods, '**taxCategory');
+	this.secureMethods=listAppend(this.secureMethods, '*taxCategoryRate');
+	this.secureMethods=listAppend(this.secureMethods, '**term');
+	this.secureMethods=listAppend(this.secureMethods, '**type');
+	
 	
 	public void function default() {
 		getFW().redirect(action="admin:setting.listsetting");
@@ -81,31 +119,6 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.addressZone.removeAddressZoneLocation( rc.addressZoneLocation );
 		
 		getFW().redirect(action="admin:setting.detailaddresszone", queryString="addressZoneID=#rc.addressZoneID#&messageKeys=admin.setting.deleteaddresszonelocation_success");
-	}
-	
-	// slatwall update
-	public void function detailSlatwallUpdate(required struct rc) {
-
-		var versions = getUpdateService().getAvailableVersions();
-		rc.availableDevelopVersion = versions.develop;
-		rc.availableMasterVersion = versions.master;
-
-		rc.currentVersion = getApplicationValue('version');
-		if(find("-", rc.currentVersion)) {
-			rc.currentBranch = "develop";
-		} else {
-			rc.currentBranch = "master";
-		}
-
-	}
-
-	public void function updateSlatwall(required struct rc) {
-		getUpdateService().update(branch=rc.updateBranch);
-		getFW().redirect(action="admin:setting.detailslatwallupdate", queryString="reload=1&messageKeys=admin.setting.updateslatwall_success");	
-	}
-
-	public void function detailViewUpdate() {
-		// Do Nothing
 	}
 	
 	public void function saveTask(required struct rc){
