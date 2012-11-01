@@ -78,6 +78,12 @@ component extends="BaseService" accessors="true" output="false" {
 		return false;
 	}
 	
+	public void function clearPermissionCache(){
+		if(structKeyExists(variables, "permissions")) {
+			structDelete(variables, "permissions");
+		}
+	}
+	
 	public struct function getPermissions(){
 		if(!structKeyExists(variables, "permissions")){
 			var allPermissions={

@@ -214,6 +214,7 @@
     </bean>
 	<bean id="integrationService" class="Slatwall.com.service.IntegrationService">
         <property name="DAO"><ref bean="integrationDAO" /></property>
+		<property name="permissionService"><ref bean="permissionService" /></property>
         <property name="utilityService"><ref bean="utilityService" /></property>
     </bean>
 	<bean id="inventoryService" class="Slatwall.com.service.InventoryService">
