@@ -67,12 +67,13 @@ Notes:
 		<form method="post">
 			<input type="hidden" name="slatAction" value="admin:main.update" />
 			<input type="hidden" name="process" value="1" />
+			
 			<select name="updateBranch">
 				<cfloop array="#local.updateOptions#" index="local.updateOption" >
 					<option value="#local.updateOption.value#" <cfif rc.currentBranch eq local.updateOption.value>selected="selected"</cfif>>#local.updateOption.name#</option>
 				</cfloop>
-			</select>
-			<cf_SlatwallActionCaller action="admin:main.update" class="btn btn-primary" type="button" submit="true">
+			</select><br />
+			<button class="btn adminmainupdate btn-primary" title="#$.slatwall.rbKey('admin.main.update_title')#" type="submit">#$.slatwall.rbKey('admin.main.update_title')#</button>
 		</form>
 	</cf_SlatwallPropertyList>
 </cfoutput>
