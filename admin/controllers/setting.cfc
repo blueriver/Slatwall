@@ -171,4 +171,13 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.currency = getCurrencyService().getCurrency(rc.currencyCode);
 	}
 	
+	// Deprecated Methods
+	public void function detailSlatwallUpdate(required struct rc) {
+		getFW().redirect(action="admin:main.update");
+	}
+
+	public void function updateSlatwall(required struct rc) {
+		getFW().redirect(action="admin:main.update");	
+	}
+	
 }
