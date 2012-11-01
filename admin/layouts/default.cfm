@@ -135,15 +135,25 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.tools_nav')#" icon="magnet icon-white" type="nav">
-							<cf_SlatwallActionCaller action="admin:main.about" type="list">
-							<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
-							<li class="divider"></li>
-							<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
-							<cfif findNoCase("*", $.slatwall.getCurrentAccount().getAllPermissions())>
+							<cfsavecontent variable="local.toolGroupOne">
+								<cf_SlatwallActionCaller action="admin:main.about" type="list">
+								<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
+							</cfsavecontent>
+							<cfif len(local.toolGroupOne)>
+								#local.toolGroupOne#
 								<li class="divider"></li>
-								<cf_SlatwallActionCaller action="admin:main.update" type="list">
+							</cfif>
+							<cfsavecontent variable="local.toolGroupTwo">
+								<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
+								<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
+								<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
+							</cfsavecontent>
+							<cfif len(local.toolGroupTwo)>
+								#local.toolGroupOne#
+								<li class="divider"></li>
+							</cfif>
+							<cf_SlatwallActionCaller action="admin:main.update" type="list">
+							<cfif findNoCase("*", $.slatwall.getCurrentAccount().getAllPermissions())>
 								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true&update=true" type="list" text="Reload Slatwall (Full Update)">
 								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
 							</cfif>
