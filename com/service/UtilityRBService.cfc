@@ -38,6 +38,8 @@ Notes:
 */
 component extends="BaseService" accessors="true" {
 
+	property name="integrationService" type="any";
+
 	variables.resourceBundles = {};
 	variables.instantiaded = now();
 	
@@ -88,12 +90,25 @@ component extends="BaseService" accessors="true" {
 			
 			variables.resourceBundles[ arguments.locale ] = {};
 			
+			// Get the primary resource bundle for Slatwall
 			try {
 				variables.resourceBundles[ arguments.locale ] = javaRB.getResourceBundle(expandPath("/Slatwall/config/resourceBundles/#arguments.locale#.properties"));
 			} catch (any e) {
 				// No RB File Found
 			}
 			
+			
+			// Loop over the active FW/1 subsystems to look for a resource bundle there
+			var activeFW1Integrations = getIntegrationService().getActiveFW1Subsystems();
+			for(var i=1; i<=arrayLen(activeFW1Integrations); i++) {
+				try {
+					structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/Slatwall/integrationServices/#activeFW1Integrations[i].subsystem#/config/resourceBundles/#arguments.locale#.properties")), true);
+				} catch (any e) {
+					// No RB File Found
+				}	
+			}
+			
+			// Get whatever resource bundle is in the custom config directory
 			try {
 				structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/Slatwall/config/custom/resourceBundles/#arguments.locale#.properties")), true);
 			} catch (any e) {
