@@ -46,9 +46,9 @@ Notes:
 		<cfif request.status eq 'failed'>
 			<cfif isDate(session.blockLoginUntil) and session.blockLoginUntil gt now()>
 				<cfset request.isBlocked=true />
-				<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginblocked')#</p>
+				<p id="loginMsg" class="error">#$.slatwall.rbKey('validate.account.loginblocked')#</p>
 			<cfelse>
-				<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginfailed')#</p>
+				<p id="loginMsg" class="error">#$.slatwall.rbKey('validate.account.loginfailed')#</p>
 			</cfif>
 		</cfif>
 		<cfif len(rc.forgotPasswordResult)>
