@@ -279,6 +279,9 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// Sync Primary Email
 		if(!isNull(arguments.account.getPrimaryEmailAddress())) {
+			if(arguments.cmsUser.getUsername() == arguments.cmsUser.getEmail()) {
+				arguments.cmsUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());	
+			}
 			arguments.cmsUser.setEmail(arguments.account.getPrimaryEmailAddress().getEmailAddress());	
 		}
 		
