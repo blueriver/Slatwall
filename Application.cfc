@@ -185,45 +185,38 @@ component extends="org.fw1.framework" output="false" {
 						// Write File
 						fileWrite(expandPath('/Slatwall/config/lastFullUpdate.txt.cfm'), now());
 						
+						// Set the request timeout to 360
+						getBeanFactory().getBean("utilityTagService").cfsetting(requesttimeout=360);
+						
 						// Reload ORM
 						ormReload();
 						writeLog(file="Slatwall", text="General Log - ORMReload() was successful");
+							
+						// Reload All Integrations
+						getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+						writeLog(file="Slatwall", text="General Log - Integrations have been updated");
 						
-						// Manually call necessary beans so that they don't create a lock issue later
-						var bean = getBeanFactory().getBean("dataService");
-						bean = getBeanFactory().getBean("settingService");
-						bean = getBeanFactory().getBean("sessionService");
-						bean = getBeanFactory().getBean("updateService");
+						// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
+						var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
+						muraIntegrationService.setupIntegration();
+						writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
 						
-						thread action="run" name="fullUpdateThread" {
-							writeLog(file="Slatwall", text="Full Update Thread Started");
-							
-							// Reload All Integrations
-							getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-							writeLog(file="Slatwall", text="General Log - Integrations have been updated");
-							
-							// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
-							var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
-							muraIntegrationService.setupIntegration();
-							writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
-							
-							// Setup Default Data... Not called on soft reloads.
-							getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
-							writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
-							
-							// Super Users
-							getBeanFactory().getBean("permissionService").setupDefaultPermissions();
-							writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
-							
-							getBeanFactory().getBean("settingService").clearAllSettingsQuery();
-							writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared");
-							
-							// Run Scripts
-							getBeanFactory().getBean("updateService").runScripts();
-							writeLog(file="Slatwall", text="General Log - Update Service Scripts Have been Run");
-							
-							writeLog(file="Slatwall", text="Full Update Thread Finished");	
-						}
+						// Setup Default Data... Not called on soft reloads.
+						getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
+						writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
+						
+						// Super Users
+						getBeanFactory().getBean("permissionService").setupDefaultPermissions();
+						writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
+						
+						// Clear the setting cache so that it can be reloaded
+						getBeanFactory().getBean("settingService").clearAllSettingsQuery();
+						writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared");
+						
+						// Run Scripts
+						getBeanFactory().getBean("updateService").runScripts();
+						writeLog(file="Slatwall", text="General Log - Update Service Scripts Have been Run");
+						
 					}
 					// ========================== END: FULL UPDATE ==============================
 					

@@ -258,6 +258,7 @@
     </bean>
 	<bean id="permissionService" class="Slatwall.com.service.PermissionService">
         <property name="DAO"><ref bean="permissionDAO" /></property>
+		<property name="accountService"><ref bean="accountService" /></property>
 		<property name="integrationService"><ref bean="integrationService" /></property>
     </bean>
     <bean id="productService" class="Slatwall.com.service.ProductService">

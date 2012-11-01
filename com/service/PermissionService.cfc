@@ -39,6 +39,7 @@ Notes:
 component extends="BaseService" accessors="true" output="false" {
 
 	// Injected via Coldspring
+	property name="accountService" type="any";
 	property name="integrationService" type="any";
 
 	// Properties used for Caching values in the application scope
@@ -167,13 +168,19 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	public function setupDefaultPermissions(){
 		var accounts = getDAO().getMissingUserAccounts();
-		var permissionGroup = get('PermissionGroup',{permissionGroupID='4028808a37037dbf01370ed2001f0074'});
+		var permissionGroup = this.getPermissionGroup('4028808a37037dbf01370ed2001f0074');
 		
 		for(i=1; i <= accounts.recordcount; i++){
-			account = get('Account',{accountID=accounts.accountID[i]});
-			account.addPermissionGroup(permissionGroup);
+			// Get the account
+			account = getAccountService().getAccount( accounts.accountID[i] );
+			
+			// Set the permission group
+			account.addPermissionGroup( permissionGroup );
+			
+			// Flush the session
+			getDAO().flushORMSession();
 		}
-		//getDAO().FlushORMSession();
+		
 	}
 	
 }
