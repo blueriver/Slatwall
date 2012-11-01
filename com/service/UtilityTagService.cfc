@@ -108,9 +108,9 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="cfsetting" output="false">
-		<cfargument name="enablecfoutputonly" type="boolean" />
-		<cfargument name="requesttimeout" type="numeric" />
-		<cfargument name="showdebugoutput" type="boolean" />
+		<cfargument name="enablecfoutputonly" type="boolean" default="false" />
+		<cfargument name="requesttimeout" type="numeric" default="30" />
+		<cfargument name="showdebugoutput" type="boolean" default="false" />
 		
 		<cfsetting attributecollection="#arguments#" />
 	</cffunction>
