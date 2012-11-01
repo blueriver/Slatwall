@@ -614,16 +614,27 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
 					
 					// update and validate all aspects of the order
+					
+					// populate extended attributes
+					if(structKeyExists(arguments.data, "attributeValues")) {
+						var extendedAttributeData = {};
+						extendedAttributeData.attributeValues = arguments.data.attributeValues;
+						arguments.order.populate( extendedAttributeData );
+					}
+					
+					// Update account
 					var validAccount = updateAndVerifyOrderAccount(order=arguments.order, data=arguments.data);
 					if(!validAccount) {
 						arguments.order.addError("processing", "The order account was invalid for one reason or another.");
 					}
 					
+					// Update payments
 					var validPayments = updateAndVerifyOrderPayments(order=arguments.order, data=arguments.data);
 					if(!validPayments) {
 						arguments.order.addError("processing", "One or more of the order payments were invalid for one reason or another.");
 					}
 					
+					// Update fulfillments
 					var validFulfillments = updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
 					if(!validFulfillments) {
 						arguments.order.addError("processing", "One or more of the order fulfillments were invalid for one reason or another.");
