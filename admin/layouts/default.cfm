@@ -36,7 +36,6 @@
 Notes:
 
 --->
-<cfparam name="rc.tabIndex" default="1" />
 
 <cfoutput>
 <!DOCTYPE html>
@@ -53,7 +52,6 @@ Notes:
 			var slatwall = {
 				dateFormat : '#request.slatwallScope.setting("globalDateFormat")#'
 				,timeFormat : '#request.slatwallScope.setting("globalTimeFormat")#'
-				,tabIndex : #rc.tabIndex#
 				,rootURL : '#request.slatwallScope.getSlatwallRootURL()#'
 			};
 		</script>
