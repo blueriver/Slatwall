@@ -113,8 +113,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		for(var i=1; i <= arrayLen(permissionGroups); i++){
 			var permissions = permissionGroups[i].getPermissions();
 			
-			for(var j=1; j<= listlen(permissions); j++){
-				stPermissions[listGetAt(permissions,j)]='';
+			if(!isNull(permissions)) {
+				for(var j=1; j<= listlen(permissions); j++){
+					stPermissions[listGetAt(permissions,j)]='';
+				}	
 			}
 		}		
 		
