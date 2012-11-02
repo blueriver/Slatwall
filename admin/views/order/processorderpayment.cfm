@@ -77,7 +77,7 @@ Notes:
 				<cf_SlatwallProcessOption data="amountReceived" fieldType="text" value="#local.amountReceived#" />
 				<cf_SlatwallProcessOption data="amountCredited" fieldType="text" value="#local.amountCredited#" />
 			<cfelse>
-				<cf_SlatwallProcessOption data="amount" fieldType="text" value="#local.defaultValue#" />	
+				<cf_SlatwallProcessOption data="amount" fieldType="text" value="#local.amount#" />	
 			</cfif>
 		</cf_SlatwallProcessOptionBar>
 		
