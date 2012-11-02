@@ -205,6 +205,9 @@ component extends="org.fw1.framework" output="false" {
 						getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
 						writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
 						
+						// Confirm Session Setup
+						getBeanFactory().getBean("sessionService").setPropperSession();
+						
 						// Super Users
 						getBeanFactory().getBean("permissionService").setupDefaultPermissions();
 						writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
