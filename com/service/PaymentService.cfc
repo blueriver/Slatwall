@@ -172,11 +172,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public boolean function processCashPayment() {
-		
+		return true;
 	}
 	
 	public boolean function processCheckPayment() {
-		
+		return true;
 	}
 	
 	public boolean function processCreditCardPayment(required any payment, required string transactionType, required numeric transactionAmount, any referencedPaymentTransaction) {
@@ -261,15 +261,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public boolean function processExternalPayment() {
-		
+		return true;
 	}
 	
 	public boolean function processGiftCardPayment() {
-		
+		return true;
 	}
 	
 	public boolean function processTermAccountPayment() {
-		
+		return true;
 	}
 	
 	
