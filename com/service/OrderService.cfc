@@ -478,7 +478,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function addPromotionCode(required any order, required string promotionCode) {
-		var pc = getPromotionService().getPromotionCode(arguments.promotionCode);
+		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.promotionCode);
 		
 		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
 			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
