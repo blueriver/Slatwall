@@ -214,15 +214,23 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public function setupDefaultPermissions(){
+		logSlatwall("Default Permission Flush", true);
+		
+		// Flush the session so that the currentAccount is persisted
+		getDAO().flushORMSession();
+		
 		var accounts = getDAO().getMissingUserAccounts();
 		var permissionGroup = this.getPermissionGroup('4028808a37037dbf01370ed2001f0074');
 		
+		logSlatwall("There are #accounts.recordcount# super users that need to be setup with default permissions", true);
 		for(i=1; i <= accounts.recordcount; i++){
 			// Get the account
 			account = getAccountService().getAccount( accounts.accountID[i] );
 			
 			// Set the permission group
 			account.addPermissionGroup( permissionGroup );
+			
+			logSlatwall("Account Flush", true);
 			
 			// Flush the session
 			getDAO().flushORMSession();
