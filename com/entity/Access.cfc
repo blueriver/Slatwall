@@ -75,6 +75,13 @@ component displayname="Access" entityname="SlatwallAccess" table="SlatwallAccess
 
 	// =============== START: Custom Validation Methods ====================
 	
+	public boolean function hasUsageOrUsageBenefitOrUsageBenefitAccount() {
+		if(!isNull(getSubscriptionUsage()) || !isNull(getSubscriptionUsageBenefit()) || !isNull(getsubscriptionUsageBenefitAccount())) {
+			return true;
+		}
+		return false;
+	}
+	
 	// ===============  END: Custom Validation Methods =====================
 	
 	// =============== START: Custom Formatting Methods ====================

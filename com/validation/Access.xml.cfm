@@ -5,4 +5,9 @@
 		<context name="delete" />
 		<context name="edit" />
 	</contexts>
+	<property name="accessID">
+		<rule type="custom" contexts="save" failureMessage="Requires a SubscriptionUsage, SubscriptionUsageBenefit or SubscriptionUsageBenefitAccount">
+			<param name="methodName" value="hasUsageOrUsageBenefitOrUsageBenefitAccount" />
+		</rule>
+	</property>
 </validateThis>
