@@ -53,11 +53,11 @@ Notes:
 		</cfif>
 		<cfif len(rc.forgotPasswordResult)>
 			<cfif FindNoCase('is not a valid',rc.forgotPasswordResult)>
-				<div class="error">#$.slatwall.rbKey('user.forgotnotvalid')#
+				<div class="error">#$.slatwall.rbKey('validate.account.forgotnotvalid')#
 			<cfelseif FindNoCase('no account',rc.forgotPasswordResult)>
-				<div class="error">#$.slatwall.rbKey('user.forgotnotfound')#
+				<div class="error">#$.slatwall.rbKey('validate.account.forgotnotfound')#
 			<cfelse>
-				<div class="notice">#$.slatwall.rbKey('user.forgotsuccess')#</cfif>
+				<div class="notice">#$.slatwall.rbKey('validate.account.forgotsuccess')#</cfif>
 			</div>
 		</cfif>
 		<form name="loginAccount" method="post" action="?nocache=1">
