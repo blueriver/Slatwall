@@ -482,7 +482,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
 			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
-		} else if (pc.getStartDateTime() > now() || pc.getEndDateTime() < now() || !pc.getPromotion().getCurrentFlag()) {
+		} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
 			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
 		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
 			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
