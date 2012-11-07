@@ -16,7 +16,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-component displayname="Smart List" accessors="true" persistent="false" output="false" {
+component displayname="Smart List" accessors="true" persistent="false" output="false" extends="BaseObject" {
 	
 	property name="baseEntityName" type="string";
 	property name="cacheable" type="boolean";
@@ -85,13 +85,13 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var baseEntity = entityNew(arguments.entityName);
 		var baseEntityMeta = getMetaData(baseEntity);
 		
-		setBaseEntityName(baseEntityMeta.entityName);
+		setBaseEntityName( getService("utilityORMService").getProperlyCasedFullEntityName( arguments.entityName ) );
 		
 		addEntity(
-			entityName=baseEntityMeta.entityName,
-			entityAlias="a#lcase(baseEntityMeta.entityName)#",
-			entityFullName=baseEntityMeta.fullName,
-			entityProperties=getPropertiesStructFromEntityMeta(baseEntityMeta)
+			entityName=getBaseEntityName(),
+			entityAlias="a#lcase(getBaseEntityName())#",
+			entityFullName=getService("utilityORMService").getProperlyCasedFullClassNameByEntityName( arguments.entityName ),
+			entityProperties=getService("utilityORMService").getPropertiesStructByEntityName( arguments.entityName )
 		);
 		
 		if(structKeyExists(arguments, "data")) {
