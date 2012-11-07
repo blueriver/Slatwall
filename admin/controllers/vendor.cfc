@@ -49,7 +49,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="vendorOrderService" type="any";
 	
 	this.publicMethods='';
-	this.secureMethods='createVendor,listVendor,editVendor,detailVendor,deleteVendor,saveVendor,createVendorOrder,listVendorOrder,editVendorOrder,detailVendorOrder,deleteVendorOrder,saveVendorOrder';
+	
+	this.anyAdminMethods='';
+	
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods, '**vendor');
+	this.secureMethods=listAppend(this.secureMethods, '*vendorAddress');
+	this.secureMethods=listAppend(this.secureMethods, '**vendorOrder');
+	this.secureMethods=listAppend(this.secureMethods, 'processVendorOrder');
+	this.secureMethods=listAppend(this.secureMethods, '**vendorOrderItem');
+	
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:vendor.listvendor");

@@ -39,6 +39,7 @@ Notes:
 <cfoutput>
 	<div class="svocartdetail">
 		#$.slatwall.getAllMessagesHTML()#
+		#$.slatwall.cart().getAllMessagesHTML()#
 		<form name="updateCart" method="post">
 			<input type="hidden" name="slatAction" value="frontend:cart.update" />
 		<cfif not arrayLen($.slatwall.cart().getOrderItems())>

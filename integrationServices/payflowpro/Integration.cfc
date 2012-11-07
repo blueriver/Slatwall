@@ -56,7 +56,11 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 			partnerID = {fieldType="text", displayName="Partner ID"},
 			username = {fieldType="text", displayName="User Name"},
 			password = {fieldType="password", displayName="Password", encryptValue=true},
-			liveModeFlag = {fieldType="yesno", displayName="Live Mode", defaultValue="0"}
+			liveModeFlag = {fieldType="yesno", displayName="Live Mode", defaultValue="0"},
+			orderPaymentCommentOneTemplate = {fieldtype="text", displayName="Order Pyament Comment One Template", hint="This template will be string replaced based on the order payment, and then passed as custom comment 1 to PayFlow Pro.  An Example would be: ${orderPaymentID} or ${myCustomOrderPaymentAttributeCode}.  Plain text works as well"},
+			orderPaymentCommentTwoTemplate = {fieldtype="text", displayName="Order Pyament Comment Two Template", hint="This template will be string replaced based on the order payment, and then passed as custom comment 2 to PayFlow Pro.  An Example would be: ${orderPaymentID} or ${myCustomOrderPaymentAttributeCode}.  Plain text works as well"},
+			accountPaymentCommentOneTemplate = {fieldtype="text", displayName="Account Pyament Comment One Template", hint="This template will be string replaced based on the order payment, and then passed as custom comment 1 to PayFlow Pro.  An Example would be: ${accountPaymentID} or ${myCustomAccountPaymentAttributeCode}.  Plain text works as well"},
+			accountPaymentCommentTwoTemplate = {fieldtype="text", displayName="Account Pyament Comment Two Template", hint="This template will be string replaced based on the order payment, and then passed as custom comment 2 to PayFlow Pro.  An Example would be: ${accountPaymentID} or ${myCustomAccountPaymentAttributeCode}.  Plain text works as well"}
 		};
 		
 		return settings;

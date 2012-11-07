@@ -85,6 +85,7 @@ Notes:
 				<cf_SlatwallTab view="admin:product/skutabs/inventory" />
 				<cf_SlatwallTab view="admin:product/skutabs/options" />
 			</cfif>
+			<cf_SlatwallTab view="admin:product/skutabs/currencies" />
 			<cf_SlatwallTab view="admin:product/skutabs/alternateskucodes" />
 			<cf_SlatwallTab view="admin:product/skutabs/skusettings" />
 		</cf_SlatwallTabGroup>

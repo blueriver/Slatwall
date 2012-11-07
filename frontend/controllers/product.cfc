@@ -51,8 +51,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			var review = getProductService().newProductReview();
 			
 			review = getProductService().saveProductReview(review, rc);
-			
-			getFW().redirectExact(product.getProductURL(), false);
 		}
+		
+		getFW().setView("frontend:product.detail");
 	}
 }

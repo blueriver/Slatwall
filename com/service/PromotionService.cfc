@@ -1,4 +1,3 @@
-
 /*
 
     Slatwall - An Open Source eCommerce Platform

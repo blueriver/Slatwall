@@ -57,42 +57,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="subscriptionService";
 	property name="typeService";
 	
-	
-	public any function getOrderSmartList(struct data={}) {
-		arguments.entityName = "SlatwallOrder";
-	
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		
-		smartList.joinRelatedProperty("SlatwallOrder", "account", "left", true);
-		smartList.joinRelatedProperty("SlatwallOrder", "orderType", "left", true);
-		smartList.joinRelatedProperty("SlatwallOrder", "orderStatusType", "left", true);
-		
-		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="account.firstName", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="account.lastName", weight=1);
-		
-		return smartList;
-	}
-	
-	public any function saveOrder(required any order, struct data={}, string context="save") {
-	
-		// Call the super.save() method to do the base populate & validate logic
-		arguments.order = super.save(entity=arguments.order, data=arguments.data, context=arguments.context);
-	
-		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
-		if(arguments.order.getStatusCode() == "ostNotPlaced") {
-			for(var i = arrayLen(arguments.order.getOrderItems()); i >= 1; i--) {
-				if(arguments.order.getOrderItems()[i].getQuantity() < 1) {
-					arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
-				}
-			}
-		}
-	
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
-	
-		return arguments.order;
-	}
+	// ===================== START: Logical Methods ===========================
 	
 	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData, struct data = {})	{
 	
@@ -101,133 +66,163 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			throw("You cannot add an item to an order that has been closed or canceled");
 		}
 		
-		// save order so it's added to the hibernate scope
-		save( arguments.order );
+		// If the currency code was not passed in, then set it to the sku default
+		if(!structKeyExists(arguments.data, "currencyCode")) {
+			if( !isNull(arguments.order.getCurrencyCode()) && listFindNoCase(arguments.sku.setting('skuEligibleCurrencies'), arguments.order.getCurrencyCode()) && arrayLen(arguments.order.getOrderItems()) ) {
+				arguments.data.currencyCode = arguments.order.getCurrencyCode();
+			} else {
+				arguments.data.currencyCode = arguments.sku.setting('skuCurrency');
+			}
+		}
 		
-		// if a filfillmentMethodID is passed in the data, set orderfulfillment to that
-		if(structKeyExists(arguments.data, "fulfillmentMethodID")) {
-			// make sure this is eligible fulfillment method
-			if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), arguments.data.fulfillmentMethodID)) {
-				var fulfillmentMethod = this.getFulfillmentService().getFulfillmentMethod(arguments.data.fulfillmentMethodID);
-				arguments.orderFulfillment = this.getOrderFulfillment({order=arguments.order,fulfillmentMethod=fulfillmentMethod},true);
-				if(arguments.orderFulfillment.isNew()) {
-					arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
-					arguments.orderFulfillment.setOrder( arguments.order );
+		// Make sure the order has a currency code
+		if( isNull(arguments.order.getCurrencyCode()) || !arrayLen(arguments.order.getOrderItems()) ) {
+			arguments.order.setCurrencyCode( arguments.data.currencyCode );
+		}
+		
+		// Verify the order has the same currency as the one being added
+		if(arguments.order.getCurrencyCode() eq arguments.data.currencyCode) {
+			
+			// save order so it's added to the hibernate scope
+			save( arguments.order );
+			
+			// if a filfillmentMethodID is passed in the data, set orderfulfillment to that
+			if(structKeyExists(arguments.data, "fulfillmentMethodID")) {
+				// make sure this is eligible fulfillment method
+				if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), arguments.data.fulfillmentMethodID)) {
+					var fulfillmentMethod = this.getFulfillmentService().getFulfillmentMethod(arguments.data.fulfillmentMethodID);
+					arguments.orderFulfillment = this.getOrderFulfillment({order=arguments.order,fulfillmentMethod=fulfillmentMethod},true);
+					if(arguments.orderFulfillment.isNew()) {
+						arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
+						arguments.orderFulfillment.setOrder( arguments.order );
+						arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
+						// Push the fulfillment into the hibernate scope
+						getDAO().save(arguments.orderFulfillment);
+					}
+				}
+				
+			}
+			
+			// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
+			if(!structKeyExists(arguments, "orderFulfillment"))	{
+				
+				var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligibleFulfillmentMethods'),1)).getFulfillmentMethodType();
+				
+				// check if there is a fulfillment method of this type in the order
+				for(var fulfillment in arguments.order.getOrderFulfillments()) {
+					if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), fulfillment.getFulfillmentMethod().getFulfillmentMethodID())) {
+						arguments.orderFulfillment = fulfillment;
+						break;
+					}
+				}
+				
+				// if no fulfillment of this type found then create a new one 
+				if(!structKeyExists(arguments, "orderFulfillment")) {
+					
+					var fulfillmentMethodOptions = arguments.sku.getEligibleFulfillmentMethods();
+					
+					// If there are at least 1 options, then we create the new method, otherwise stop and just return the order
+					if(arrayLen(fulfillmentMethodOptions)) {
+						arguments.orderFulfillment = this.newSlatwallOrderFulfillment();
+						arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethodOptions[1] );
+						arguments.orderFulfillment.setOrder( arguments.order );
+						arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
+					} else {
+						return arguments.order;
+					}
+					
 					// Push the fulfillment into the hibernate scope
 					getDAO().save(arguments.orderFulfillment);
 				}
 			}
-			
-		}
 		
-		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
-		if(!structKeyExists(arguments, "orderFulfillment"))	{
+			var orderItems = arguments.order.getOrderItems();
+			var itemExists = false;
 			
-			var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligibleFulfillmentMethods'),1)).getFulfillmentMethodType();
-			
-			// check if there is a fulfillment method of this type in the order
-			for(var fulfillment in arguments.order.getOrderFulfillments()) {
-				if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), fulfillment.getFulfillmentMethod().getFulfillmentMethodID())) {
-					arguments.orderFulfillment = fulfillment;
-					break;
-				}
-			}
-			
-			// if no fulfillment of this type found then create a new one 
-			if(!structKeyExists(arguments, "orderFulfillment")) {
-				
-				var fulfillmentMethodOptions = arguments.sku.getEligibleFulfillmentMethods();
-				
-				// If there are at least 1 options, then we create the new method, otherwise stop and just return the order
-				if(arrayLen(fulfillmentMethodOptions)) {
-					arguments.orderFulfillment = this.newSlatwallOrderFulfillment();
-					arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethodOptions[1] );
-					arguments.orderFulfillment.setOrder(arguments.order);
-				} else {
-					return arguments.order;
-				}
-				
-				// Push the fulfillment into the hibernate scope
-				getDAO().save(arguments.orderFulfillment);
-			}
-		}
-	
-		var orderItems = arguments.order.getOrderItems();
-		var itemExists = false;
-		
-		// If there are no product customizations then we can check for the order item already existing.
-		if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData,"attribute"))	{
-			// Check the existing order items and increment quantity if possible.
-			for(var i = 1; i <= arrayLen(orderItems); i++) {
-				
-				// This is a simple check inside of the loop to find any sku that matches
-				if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
+			// If there are no product customizations then we can check for the order item already existing.
+			if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData,"attribute"))	{
+				// Check the existing order items and increment quantity if possible.
+				for(var i = 1; i <= arrayLen(orderItems); i++) {
 					
-					// This verifies that the stock being passed in matches the stock on the order item, or that both are null
-					if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
+					// This is a simple check inside of the loop to find any sku that matches
+					if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
 						
-						itemExists = true;
-						// do not increment quantity for content access product
-						if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
-							orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-							if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
-								orderItems[i].setPrice( arguments.data.price );
-								orderItems[i].setSkuPrice( arguments.data.price );	
-							} else {
-								orderItems[i].setPrice( arguments.sku.getPrice() );
-								orderItems[i].setSkuPrice( arguments.sku.getPrice() );
+						// This verifies that the stock being passed in matches the stock on the order item, or that both are null
+						if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
+							
+							itemExists = true;
+							// do not increment quantity for content access product
+							if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
+								orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+								if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
+									orderItems[i].setPrice( arguments.data.price );
+									orderItems[i].setSkuPrice( arguments.data.price );	
+								} else {
+									orderItems[i].setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+									orderItems[i].setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+								}
+							}
+							break;
+							
+						}
+					}
+				}
+			}
+		
+			// If the sku doesn't exist in the order, then create a new order item and add it
+			if(!itemExists)	{
+				var newItem = this.newOrderItem();
+				newItem.setSku(arguments.sku);
+				newItem.setQuantity(arguments.quantity);
+				newItem.setOrder(arguments.order);
+				newItem.setOrderFulfillment(arguments.orderFulfillment);
+				newItem.setCurrencyCode( arguments.order.getCurrencyCode() );
+				
+				// All new items have the price and skuPrice set to the current price of the sku being added.  Later the price may be changed by the recalculateOrderAmounts() method
+				if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
+					newItem.setPrice( arguments.data.price );
+					newItem.setSkuPrice( arguments.data.price );
+				} else {
+					newItem.setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+					newItem.setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+				}
+				
+				// If a stock was passed in, then assign it to this new item
+				if(!isNull(arguments.stock)) {
+					newItem.setStock(arguments.stock);
+				}
+			
+				// Check for product customization
+				if(structKeyExists(arguments, "customizationData") && structKeyExists(arguments.customizationData, "attribute")) {
+					var pcas = arguments.sku.getProduct().getAttributeSets(['astOrderItem']);
+					for(var i = 1; i <= arrayLen(pcas); i++) {
+						var attributes = pcas[i].getAttributes();
+						
+						for(var a = 1; a <= arrayLen(attributes); a++) {
+							if(structKeyExists(arguments.customizationData.attribute, attributes[a].getAttributeID())) {
+								var av = this.newAttributeValue();
+								av.setAttributeValueType("orderItem");
+								av.setAttribute(attributes[a]);
+								av.setAttributeValue(arguments.customizationData.attribute[attributes[a].getAttributeID()]);
+								av.setOrderItem(newItem);
+								// Push the attribute value
+								getDAO().save(av);
 							}
 						}
-						break;
-						
 					}
 				}
 			}
-		}
-	
-		// If the sku doesn't exist in the order, then create a new order item and add it
-		if(!itemExists)	{
-			var newItem = this.newOrderItem();
-			newItem.setSku(arguments.sku);
-			newItem.setQuantity(arguments.quantity);
-			newItem.setOrder(arguments.order);
-			newItem.setOrderFulfillment(arguments.orderFulfillment);
 			
-			// All new items have the price and skuPrice set to the current price of the sku being added.  Later the price may be changed by the recalculateOrderAmounts() method
-			if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
-				newItem.setPrice( arguments.data.price );
-				newItem.setSkuPrice( arguments.data.price );
-			} else {
-				newItem.setPrice( arguments.sku.getPrice() );
-				newItem.setSkuPrice( arguments.sku.getPrice() );
-			}
+			// Push the order Item into the hibernate scope
+			getDAO().save(newItem);
 			
-			// If a stock was passed in, then assign it to this new item
-			if(!isNull(arguments.stock)) {
-				newItem.setStock(arguments.stock);
-			}
+			// Recalculate the order amounts for tax and promotions and priceGroups
+			recalculateOrderAmounts( arguments.order );
 		
-			// Check for product customization
-			if(structKeyExists(arguments, "customizationData") && structKeyExists(arguments.customizationData, "attribute")) {
-				var pcas = arguments.sku.getProduct().getAttributeSets(['astOrderItem']);
-				for(var i = 1; i <= arrayLen(pcas); i++) {
-					var attributes = pcas[i].getAttributes();
-					
-					for(var a = 1; a <= arrayLen(attributes); a++) {
-						if(structKeyExists(arguments.customizationData.attribute, attributes[a].getAttributeID())) {
-							var av = this.newAttributeValue();
-							av.setAttributeValueType("orderItem");
-							av.setAttribute(attributes[a]);
-							av.setAttributeValue(arguments.customizationData.attribute[attributes[a].getAttributeID()]);
-							av.setOrderItem(newItem);
-						}
-					}
-				}
-			}
+		} else {
+			order.addError("currency", "The existing cart is already in the currency of #arguments.order.getCurrencyCode()# so this item can not be added as #arguments.data.currencyCode#");
 		}
-	
-		// Recalculate the order amounts for tax and promotions and priceGroups
-		recalculateOrderAmounts( arguments.order );
+		
 	}
 	
 	public void function removeOrderItem(required any order, required string orderItemID) {
@@ -314,43 +309,50 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			}
 		}
-	
+		
 		if(structKeyExists(data, "orderPayments")) {
 			var paymentsDataArray = data.orderPayments;
 			for(var i = 1; i <= arrayLen(paymentsDataArray); i++) {
-				var payment = this.getOrderPayment(paymentsDataArray[i].orderPaymentID, true);
 				
-				if(requirePayment || (payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
-					if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i],"amount"))	{
-						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
-					} else if(!payment.isNew() && (isNull(payment.getAmountAuthorized()) || payment.getAmountAuthorized() == 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
-						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountAuthorizedTotal();
-					}
+				if(!structKeyExists(data, "newOrderPaymentIndex") || data.newOrderPaymentIndex == i) {
 					
-					// Make sure the payment is attached to the order
-					payment.setOrder(arguments.order);
-					
-					// Attempt to Validate & Save Order Payment
-					payment = this.saveOrderPayment(payment, paymentsDataArray[i]);
-					
-					// Check to see if this payment has any errors and if so then don't proceed
-					if(payment.hasErrors()) {
-						paymentsOK = false;
+					var payment = this.getOrderPayment(paymentsDataArray[i].orderPaymentID, true);
+				
+					if(requirePayment || (payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
+						if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i],"amount"))	{
+							paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
+						} else if(!payment.isNew() && (isNull(payment.getAmountAuthorized()) || payment.getAmountAuthorized() == 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
+							paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountAuthorizedTotal();
+						}
+						
+						// Make sure the payment is attached to the order
+						payment.setOrder(arguments.order);
+						
+						// Make sure the payment currency matches the order
+						payment.setCurrencyCode( arguments.order.getCurrencyCode() );
+						
+						// Attempt to Validate & Save Order Payment
+						payment = this.saveOrderPayment(payment, paymentsDataArray[i]);
+						
+						// Check to see if this payment has any errors and if so then don't proceed
+						if(payment.hasErrors()) {
+							paymentsOK = false;
+						}
 					}
 				}
 			}
 		}
-	
+		
 		// Verify that there are enough payments applied to the order to proceed
 		if(order.getPaymentAmountTotal() < order.getTotal()) {
 			paymentsOK = false;
 		}
-	
+		
 		// Verify that payment method is provided for subscription order, even if the amount is 0
 		if(!arrayLen(order.getOrderPayments()) && requirePayment) {
 			paymentsOK = false;
 		}
-	
+		
 		return paymentsOK;
 	}
 	
@@ -361,10 +363,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
 			var transactionType = order.getOrderPayments()[i].getPaymentMethod().setting('paymentMethodCheckoutTransactionType');
 			
-			if(transactionType != 'none' && order.getOrderPayments()[i].getAmount() > 0) {
+			if(transactionType != '' && transactionType != 'none' && order.getOrderPayments()[i].getAmount() > 0) {
+			
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount());
+				
 				if(!paymentOK) {
 					order.getOrderPayments()[i].setAmount(0);
+					order.getOrderPayments()[i].setCreditCardNumber("");
 					allPaymentsProcessed = false;
 				}
 			}
@@ -405,138 +410,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	
 		return orderRequirementsList;
-	}
-	
-	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
-	
-		// If fulfillment method is shipping do this
-		if(arguments.orderFulfillment.getFulfillmentMethodType() == "shipping") {
-			// define some variables for backward compatibility
-			param name="data.saveAccountAddress" default="0";
-			param name="data.saveAccountAddressName" default="";
-			param name="data.addressIndex" default="0";
-
-			// Get Address
-			if(data.addressIndex != 0) {
-				var address = getAddressService().getAddress(data.accountAddresses[data.addressIndex].address.addressID, true);
-				var newAddressDataStruct = data.accountAddresses[data.addressIndex].address;
-			} else {
-				var address = getAddressService().getAddress(data.shippingAddress.addressID, true);
-				var newAddressDataStruct = data.shippingAddress;
-			}
-
-			// Populate Address And check if it has changed
-			var serializedAddressBefore = address.getSimpleValuesSerialized();
-			address.populate(newAddressDataStruct);
-			var serializedAddressAfter = address.getSimpleValuesSerialized();
-
-			// If it has changed we need to update Taxes and Shipping Options
-			if(serializedAddressBefore != serializedAddressAfter) {
-				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
-			}
-
-			// USING ACCOUNT ADDRESS
-			if(data.saveAccountAddress == 1 || data.addressIndex != 0) {
-				// new account address
-				if(data.addressIndex == 0) {
-					var accountAddress = getAddressService().newAccountAddress();
-				} else {
-					//Existing address
-					var accountAddress = getAddressService().getAccountAddress(data.accountAddresses[data.addressIndex].accountAddressID, 
-					                                                           true);
-				}
-				accountAddress.setAddress(address);
-				accountAddress.setAccount(arguments.orderFulfillment.getOrder().getAccount());
-			
-				// Figure out the name for this new account address, or update it if needed
-				if(data.addressIndex == 0) {
-					if(structKeyExists(data, "saveAccountAddressName") && len(data.saveAccountAddressName)) {
-						accountAddress.setAccountAddressName(data.saveAccountAddressName);
-					} else {
-						accountAddress.setAccountAddressName(address.getname());
-					}
-				} else if(structKeyExists(data, "accountAddresses") && structKeyExists(data.accountAddresses[data.addressIndex], "accountAddressName")) {
-					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
-				}
-			
-			
-				// If there was previously a shipping Address we need to remove it and recalculate
-				if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
-					arguments.orderFulfillment.removeShippingAddress();
-					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-				}
-
-				// If there was previously an account address and we switch it, then we need to recalculate
-				if(!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				}
-
-				// Set the new account address in the order
-				arguments.orderFulfillment.setAccountAddress(accountAddress);
-			
-			// USING SHIPPING ADDRESS
-			} else {
-
-				// If there was previously an account address we need to remove and recalculate
-				if(!isNull(arguments.orderFulfillment.getAccountAddress())) {
-					arguments.orderFulfillment.removeAccountAddress();
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				}
-				
-				// Set the address in the order Fulfillment as shipping address
-				arguments.orderFulfillment.setShippingAddress(address);
-			}
-		
-			// Validate & Save Address
-			address.validate(context="full");
-		
-			address = getAddressService().saveAddress(address);
-			
-			// Check for a shippingMethodOptionID selected
-			if(structKeyExists(arguments.data, "fulfillmentShippingMethodOptionID")) {
-				var methodOption = getShippingService().getShippingMethodOption(arguments.data.fulfillmentShippingMethodOptionID);
-				
-				// Verify that the method option is one for this fulfillment
-				if(!isNull(methodOption) && arguments.orderFulfillment.hasFulfillmentShippingMethodOption(methodOption)) {
-					// Update the orderFulfillment to have this option selected
-					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethodRate().getShippingMethod());
-					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCharge());
-				}
-			
-			// If no shippingMethodOption, then just check for a shippingMethodID that was passed in
-			} else if (structKeyExists(arguments.data, "shippingMethodID")) {
-				var shippingMethod = getShippingService().getShippingMethod(arguments.data.shippingMethodID);
-				
-				// If this is a valid shipping method, then we can loop over all of the shippingMethodOptions and make sure this one exists
-				if(!isNull(shippingMethod)) {
-					for(var i=1; i<=arrayLen(arguments.orderFulfillment.getShippingMethodOptions()); i++) {
-						if(shippingMethod.getShippingMethodID() == arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod().getShippingMethodID()) {
-							arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod() );
-							arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getShippingMethodOptions()[i].getTotalCharge() );
-						}
-					}
-				}	
-			}
-			
-			// Validate the order Fulfillment
-			arguments.orderFulfillment.validate();
-			
-			// Set ORMHasErrors if the orderFulfillment has errors
-			if(arguments.orderFulfillment.hasErrors()) {
-				getSlatwallScope().setORMHasErrors( true );
-			}
-			
-			if(!getSlatwallScope().getORMHasErrors()) {
-				getDAO().flushORMSession();
-			}
-		}
-	
-		// Save the order Fulfillment
-		return getDAO().save(arguments.orderFulfillment);
 	}
 	
 	public any function copyFulfillmentAddress(required any order) {
@@ -591,9 +464,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// Loop over the orderItems to see if the skuPrice Changed
 			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
 				for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-					if(arguments.order.getOrderItems()[i].getOrderItemType().getSystemCode() == "oitSale" && arguments.order.getOrderItems()[i].getSkuPrice() != arguments.order.getOrderItems()[i].getSku().getPrice()) {
-						arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
-						arguments.order.getOrderItems()[i].setSkuPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
+					if(arguments.order.getOrderItems()[i].getOrderItemType().getSystemCode() == "oitSale" && arguments.order.getOrderItems()[i].getSkuPrice() != arguments.order.getOrderItems()[i].getSku().getPriceByCurrencyCode( arguments.order.getOrderItems()[i].getCurrencyCode() )) {
+						arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSku().getPriceByCurrencyCode( arguments.order.getOrderItems()[i].getCurrencyCode() ) );
+						arguments.order.getOrderItems()[i].setSkuPrice( arguments.order.getOrderItems()[i].getSku().getPriceByCurrencyCode( arguments.order.getOrderItems()[i].getCurrencyCode() ) );
 					}
 				}
 			}
@@ -609,11 +482,23 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
-	public void function addPromotionCode(required any order, required any promotionCode) {
-		if(!arguments.order.hasPromotionCode(arguments.promotionCode)) {
-			arguments.order.addPromotionCode(arguments.promotionCode);
+	public any function addPromotionCode(required any order, required string promotionCode) {
+		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.promotionCode);
+		
+		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
+			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
+		} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
+			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
+		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
+			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
+		} else {
+			if(!arguments.order.hasPromotionCode( pc )) {
+				arguments.order.addPromotionCode( pc );
+			}
+			getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 		}
-		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
+		
+		return arguments.order;
 	}
 	
 	public void function removePromotionCode(required any order, required any promotionCode) {
@@ -621,13 +506,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 	}
 	
-	public struct function getQuantityPriceSkuAlreadyReturned(required any orderID, required any skuID) {
-		return getDAO().getQuantityPriceSkuAlreadyReturned(arguments.orderId, arguments.skuID);
-	}
-	
-	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID) {
-		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
-	}
 	
 	public any function forceItemQuantityUpdate(required any order, required any messageBean) {
 		// Loop over each order Item
@@ -647,12 +525,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function duplicateOrderWithNewAccount(required any originalOrder, required any newAccount) {
 		
 		var newOrder = this.newOrder();
+		newOrder.setCurrencyCode( arguments.originalOrder.getCurrencyCode() );
 		
 		// Copy Order Items
 		for(var i=1; i<=arrayLen(arguments.originalOrder.getOrderItems()); i++) {
 			var newOrderItem = this.newOrderItem();
 			
 			newOrderItem.setPrice( arguments.originalOrder.getOrderItems()[i].getPrice() );
+			newOrderItem.setSkuPrice( arguments.originalOrder.getOrderItems()[i].getSkuPrice() );
+			newOrderItem.setCurrencyCode( arguments.originalOrder.getOrderItems()[i].getCurrencyCode() );
 			newOrderItem.setQuantity( arguments.originalOrder.getOrderItems()[i].getQuantity() );
 			newOrderItem.setOrderItemType( arguments.originalOrder.getOrderItems()[i].getOrderItemType() );
 			newOrderItem.setOrderItemStatusType( arguments.originalOrder.getOrderItems()[i].getOrderItemStatusType() );
@@ -681,6 +562,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var newOrderFulfillment = this.newOrderFulfillment();
 				newOrderFulfillment.setFulfillmentMethod( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod() );
 				newOrderFulfillment.setOrder( newOrder );
+				newOrderFulfillment.setCurrencyCode( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getCurrencyCode() );
 			}
 			newOrderItem.setOrder( newOrder );
 			newOrderItem.setOrderFulfillment( newOrderFulfillment );
@@ -698,13 +580,26 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return newOrder;
 	}
 	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	public struct function getQuantityPriceSkuAlreadyReturned(required any orderID, required any skuID) {
+		return getDAO().getQuantityPriceSkuAlreadyReturned(arguments.orderId, arguments.skuID);
+	}
+	
+	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID) {
+		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
+	}
+	
 	public any function getMaxOrderNumber() {
 		return getDAO().getMaxOrderNumber();
 	}
 	
+	// ===================== START: DAO Passthrough ===========================
 	
-	// ===================== START: Process Methods ================================
-	
+	// ===================== START: Process Methods ===========================
+
 	// Process: Order
 	public any function processOrder(required any order, struct data={}, string processContext="process") {
 		
@@ -724,14 +619,27 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
 					
 					// update and validate all aspects of the order
+					
+					// populate extended attributes
+					if(structKeyExists(arguments.data, "attributeValues")) {
+						var extendedAttributeData = {};
+						extendedAttributeData.attributeValues = arguments.data.attributeValues;
+						arguments.order.populate( extendedAttributeData );
+					}
+					
+					// Update account
 					var validAccount = updateAndVerifyOrderAccount(order=arguments.order, data=arguments.data);
 					if(!validAccount) {
 						arguments.order.addError("processing", "The order account was invalid for one reason or another.");
 					}
+					
+					// Update payments
 					var validPayments = updateAndVerifyOrderPayments(order=arguments.order, data=arguments.data);
 					if(!validPayments) {
 						arguments.order.addError("processing", "One or more of the order payments were invalid for one reason or another.");
 					}
+					
+					// Update fulfillments
 					var validFulfillments = updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
 					if(!validFulfillments) {
 						arguments.order.addError("processing", "One or more of the order fulfillments were invalid for one reason or another.");
@@ -800,7 +708,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								
 								// Look for 'auto' order fulfillments
 								for(var i=1; i<=arrayLen(order.getOrderFulfillments()); i++) {
-									if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto") {
+									// As long as the amount received for this orderFulfillment is within the treshold of the auto fulfillment setting
+									if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto" && (order.getTotal() == 0 || order.getOrderFulfillments()[i].getFulfillmentMethod().setting('fulfillmentMethodAutoMinReceivedPercentage') <= (order.getPaymentAmountReceivedTotal()*100/order.getTotal())) ) {
 										processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')}, "fulfillItems");
 									}
 								}
@@ -866,6 +775,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							orderItem.setOrder( returnOrder );
 							orderItem.setPrice( arguments.data.records[r].returnPrice );
 							orderItem.setSkuPrice( originalOrderItem.getSku().getPrice() );
+							orderItem.setCurrencyCode( originalOrderItem.getSku().getCurrencyCode() );
 							orderItem.setQuantity( arguments.data.records[r].returnQuantity );
 							orderItem.setSku( originalOrderItem.getSku() );
 							
@@ -1302,64 +1212,66 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
 		
 		param name="arguments.data.amount" default="0";
-		param name="arguments.data.providerTransactionID" default="";
 		
-		// CONTEXT: authorize
-		if(arguments.processContext == "authorize" && arguments.data.amount <= arguments.orderPayment.getAmountUnauthorized()) {
-			
-			getPaymentService().processPayment(arguments.orderPayment, "authorize", arguments.data.amount);
-		
-		// CONTEXT: authorizeAndCharge
-		} else if (arguments.processContext == "authorizeAndCharge" && arguments.data.amount <= arguments.orderPayment.getAmountUnreceived()) {
-			
-			getPaymentService().processPayment(arguments.orderPayment, "authorizeAndCharge", arguments.data.amount);
+		// CONTEXT: authorize, authorizeAndCharge, credit
+		if( (arguments.processContext == "authorize" && arguments.data.amount <= arguments.orderPayment.getAmountUnauthorized())
+			||
+			(arguments.processContext == "authorizeAndCharge" && arguments.data.amount <= arguments.orderPayment.getAmountUnreceived())
+			||
+			(arguments.processContext == "credit" && arguments.data.amount <= arguments.orderPayment.getAmountUncredited()) ) {
+				
+			// Standard Payment Process
+			getPaymentService().processPayment(arguments.orderPayment, arguments.processContext, arguments.data.amount);
 		
 		// CONTEXT: chargePreAuthorization
 		} else if (arguments.processContext == "chargePreAuthorization" && arguments.data.amount <= arguments.orderPayment.getAmountUncaptured()) {
 			
-			// If not explicitly defined providerTransactionID was passed in, then we can loop over previous transactions for authroization codes to capture the amount we need.
-			if(!len(arguments.data.providerTransactionID)) {
-				var totalCaptured = 0;
+			// We can loop over previous transactions for authroization codes to capture the amount we need.
+			var totalCaptured = 0;
+			
+			for(var i=1; i<=arrayLen(arguments.orderPayment.getPaymentTransactions()); i++) {
 				
-				for(var i=1; i<=arrayLen(arguments.orderPayment.getCreditCardTransactions()); i++) {
-					var originalTransaction = arguments.orderPayment.getCreditCardTransactions()[i];
-					if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountCharged() ) {
-						var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountCharged();
-						var leftToCapture = arguments.data.amount - totalCaptured;
-						var captureAmount = 0;
-						
-						if(leftToCapture < capturableAmount) {
-							captureAmount = leftToCapture;
-						} else {
-							captureAmount = capturableAmount;
-						}
-						
-						arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
-						
-						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", captureAmount, arguments.data.providerTransactionID);
-						
-						if(paymentOK) {
-							totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
-						}
-						
-						// If some payments failed but the total was finally captured, then we can can remove any processing errors
-						if(totalCaptured == arguments.data.amount) {
-							structDelete(arguments.orderPayment.getErrors(), 'processing');
-							break;
-						}
+				var originalTransaction = arguments.orderPayment.getPaymentTransactions()[i];
+				
+				if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountReceived() ) {
+					
+					var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountReceived();
+					var leftToCapture = arguments.data.amount - totalCaptured;
+					var captureAmount = 0;
+					
+					if(leftToCapture < capturableAmount) {
+						captureAmount = leftToCapture;
+					} else {
+						captureAmount = capturableAmount;
 					}
 					
+					arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
+					
+					var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", captureAmount, originalTransaction);
+					
+					if(paymentOK) {
+						totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
+					}
+					
+					// If some payments failed but the total was finally captured, then we can can remove any processing errors
+					if(totalCaptured == arguments.data.amount) {
+						structDelete(arguments.orderPayment.getErrors(), 'processing');
+						break;
+					}
 				}
-
-			// If a providerID was passed in, then we can just use it.
-			} else {
-				var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", arguments.data.amount, arguments.data.providerTransactionID);
 			}
-		
-		// CONTEXT: credit
-		} else if (arguments.processContext == "credit" && arguments.data.amount <= arguments.orderPayment.getAmountUncredited()) {
 			
-			getPaymentService().processPayment(arguments.orderPayment, "credit", arguments.data.amount, arguments.data.providerTransactionID);
+		// CONTEXT: offlineTransaction
+		} else if (arguments.processContext == "offlineTransaction") {
+		
+			var newPaymentTransaction = getPaymentService().newPaymentTransaction();
+			newPaymentTransaction.setTransactionType( "offline" );
+			newPaymentTransaction.setOrderPayment( arguments.orderPayment );
+			newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
+			
+			if(newPaymentTransaction.hasErrors()) {
+				arguments.orderPayment.addError('processing', 'There was an unknown error trying to add an offline transaction for this order payment.');	
+			}
 			
 		} else {
 			
@@ -1368,19 +1280,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		if(!arguments.orderPayment.hasErrors()) {
-			
 			// Update the Order Status
 			updateOrderStatus( arguments.orderPayment.getOrder() );
-			
 		}
 		
 		return arguments.orderPayment;
 	}
+
+	// =====================  END: Process Methods ============================
 	
-	
-	// =====================  END: Process Methods ==============================
-	
-	// ===================== START: Status Methods ==============================
+	// ====================== START: Status Methods ===========================
 	
 	public void function updateOrderStatus( required any order, updateItemStatus=false ) {
 		// First we make sure that this order status is not 'closed', 'canceld', 'notPlaced' or 'onHold' because we cannot automatically update those statuses
@@ -1424,32 +1333,183 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 		
-	}	
-
-	// =====================  END: Status Methods ===============================
-	
-	
-	// ===================== START: Logical Methods ===========================
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: Process Methods ===========================
-	
-	// =====================  END: Process Methods ============================
-	
-	// ====================== START: Status Methods ===========================
+	}
 	
 	// ======================  END: Status Methods ============================
 	
 	// ====================== START: Save Overrides ===========================
 	
+	public any function saveOrder(required any order, struct data={}, string context="save") {
+	
+		// Call the super.save() method to do the base populate & validate logic
+		arguments.order = super.save(entity=arguments.order, data=arguments.data, context=arguments.context);
+	
+		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
+		if(arguments.order.getStatusCode() == "ostNotPlaced") {
+			for(var i = arrayLen(arguments.order.getOrderItems()); i >= 1; i--) {
+				if(arguments.order.getOrderItems()[i].getQuantity() < 1) {
+					arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
+				}
+			}
+		}
+	
+		// Recalculate the order amounts for tax and promotions
+		recalculateOrderAmounts(arguments.order);
+	
+		return arguments.order;
+	}
+	
+	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
+	
+		// If fulfillment method is shipping do this
+		if(arguments.orderFulfillment.getFulfillmentMethodType() == "shipping") {
+			// define some variables for backward compatibility
+			param name="data.saveAccountAddress" default="0";
+			param name="data.saveAccountAddressName" default="";
+			param name="data.addressIndex" default="0";
+
+			// Get Address
+			if(data.addressIndex != 0) {
+				var address = getAddressService().getAddress(data.accountAddresses[data.addressIndex].address.addressID, true);
+				var newAddressDataStruct = data.accountAddresses[data.addressIndex].address;
+			} else {
+				var address = getAddressService().getAddress(data.shippingAddress.addressID, true);
+				var newAddressDataStruct = data.shippingAddress;
+			}
+
+			// Populate Address And check if it has changed
+			var serializedAddressBefore = address.getSimpleValuesSerialized();
+			address.populate(newAddressDataStruct);
+			var serializedAddressAfter = address.getSimpleValuesSerialized();
+
+			// If it has changed we need to update Taxes and Shipping Options
+			if(serializedAddressBefore != serializedAddressAfter) {
+				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
+			}
+
+			// USING ACCOUNT ADDRESS
+			if(data.saveAccountAddress == 1 || data.addressIndex != 0) {
+				// new account address
+				if(data.addressIndex == 0) {
+					var accountAddress = getAddressService().newAccountAddress();
+				} else {
+					//Existing address
+					var accountAddress = getAddressService().getAccountAddress(data.accountAddresses[data.addressIndex].accountAddressID, 
+					                                                           true);
+				}
+				accountAddress.setAddress(address);
+				accountAddress.setAccount(arguments.orderFulfillment.getOrder().getAccount());
+			
+				// Figure out the name for this new account address, or update it if needed
+				if(data.addressIndex == 0) {
+					if(structKeyExists(data, "saveAccountAddressName") && len(data.saveAccountAddressName)) {
+						accountAddress.setAccountAddressName(data.saveAccountAddressName);
+					} else {
+						accountAddress.setAccountAddressName(address.getname());
+					}
+				} else if(structKeyExists(data, "accountAddresses") && structKeyExists(data.accountAddresses[data.addressIndex], "accountAddressName")) {
+					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
+				}
+			
+			
+				// If there was previously a shipping Address we need to remove it and recalculate
+				if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
+					arguments.orderFulfillment.removeShippingAddress();
+					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+				}
+
+				// If there was previously an account address and we switch it, then we need to recalculate
+				if(!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				}
+
+				// Set the new account address in the order
+				arguments.orderFulfillment.setAccountAddress(accountAddress);
+			
+			// USING SHIPPING ADDRESS
+			} else {
+
+				// If there was previously an account address we need to remove and recalculate
+				if(!isNull(arguments.orderFulfillment.getAccountAddress())) {
+					arguments.orderFulfillment.removeAccountAddress();
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				}
+				
+				// Set the address in the order Fulfillment as shipping address
+				arguments.orderFulfillment.setShippingAddress(address);
+			}
+		
+			// Validate & Save Address
+			address.validate(context="full");
+		
+			address = getAddressService().saveAddress(address);
+			
+			// Check for a shippingMethodOptionID selected
+			if(structKeyExists(arguments.data, "fulfillmentShippingMethodOptionID")) {
+				var methodOption = getShippingService().getShippingMethodOption(arguments.data.fulfillmentShippingMethodOptionID);
+				
+				// Verify that the method option is one for this fulfillment
+				if(!isNull(methodOption) && arguments.orderFulfillment.hasFulfillmentShippingMethodOption(methodOption)) {
+					// Update the orderFulfillment to have this option selected
+					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethodRate().getShippingMethod());
+					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCharge());
+				}
+			
+			// If no shippingMethodOption, then just check for a shippingMethodID that was passed in
+			} else if (structKeyExists(arguments.data, "shippingMethodID")) {
+				var shippingMethod = getShippingService().getShippingMethod(arguments.data.shippingMethodID);
+				
+				// If this is a valid shipping method, then we can loop over all of the shippingMethodOptions and make sure this one exists
+				if(!isNull(shippingMethod)) {
+					for(var i=1; i<=arrayLen(arguments.orderFulfillment.getShippingMethodOptions()); i++) {
+						if(shippingMethod.getShippingMethodID() == arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod().getShippingMethodID()) {
+							arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod() );
+							arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getShippingMethodOptions()[i].getTotalCharge() );
+						}
+					}
+				}	
+			}
+			
+			// Validate the order Fulfillment
+			arguments.orderFulfillment.validate();
+			
+			// Set ORMHasErrors if the orderFulfillment has errors
+			if(arguments.orderFulfillment.hasErrors()) {
+				getSlatwallScope().setORMHasErrors( true );
+			}
+			
+			if(!getSlatwallScope().getORMHasErrors()) {
+				getDAO().flushORMSession();
+			}
+		}
+	
+		// Save the order Fulfillment
+		return getDAO().save(arguments.orderFulfillment);
+	}
+	
 	// ======================  END: Save Overrides ============================
 	
 	// ==================== START: Smart List Overrides =======================
+	
+	public any function getOrderSmartList(struct data={}) {
+		arguments.entityName = "SlatwallOrder";
+	
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.joinRelatedProperty("SlatwallOrder", "account", "left", true);
+		smartList.joinRelatedProperty("SlatwallOrder", "orderType", "left", true);
+		smartList.joinRelatedProperty("SlatwallOrder", "orderStatusType", "left", true);
+		
+		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="account.firstName", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="account.lastName", weight=1);
+		
+		return smartList;
+	}
 	
 	// ====================  END: Smart List Overrides ========================
 	

@@ -17,8 +17,10 @@
 				<param name="max" value="0" />
 			</rule>
 		</property>
-		<rule type="custom" contexts="save" failureMessage="URL Title is Not Unique">
-			<param name="methodName" value="hasUniqueOrNullCMSAccountID" />
-		</rule>
+		<property name="cmsAccountID">
+			<rule type="custom" contexts="save" failureMessage="URL Title is Not Unique">
+				<param name="methodName" value="hasUniqueOrNullCMSAccountID" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>

@@ -39,6 +39,7 @@ Notes:
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="DAO" type="any";
+	property name="permissionService" type="any";
 	property name="utilityService" type="any";
 	
 	// Place holder properties that get populated lazily
@@ -52,6 +53,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if( structKeyExists(variables, "activeFW1Subsystems") ) {
 			structDelete(variables, "activeFW1Subsystems");
 		}
+		getPermissionService().clearPermissionCache();
 		return super.save(argumentCollection=arguments);
 	}
 	

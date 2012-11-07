@@ -86,7 +86,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		var forceSale = false;
 		if( arguments.requestBean.getTransactionType() eq "chargePreAuthorization" ) {
 			var query = new Query();
-			query.setSQL("SELECT creditCardTransactionID FROM SlatwallCreditCardTransaction WHERE orderPaymentID = '#arguments.requestBean.getOrderPaymentID()#' AND transactionType = 'chargePreAuthorization' AND authorizationCode IN (SELECT authorizationCode FROM SlatwallCreditCardTransaction WHERE providerTransactionID='#requestBean.getProviderTransactionID()#')"); 
+			query.setSQL("SELECT paymentTransactionID FROM SlatwallPaymentTransaction WHERE orderPaymentID = '#arguments.requestBean.getOrderPaymentID()#' AND transactionType = 'chargePreAuthorization' AND authorizationCode IN (SELECT authorizationCode FROM SlatwallPaymentTransaction WHERE providerTransactionID='#requestBean.getProviderTransactionID()#')"); 
 			var qresults = query.Execute().getResult();
 			
 			if(qresults.recordCount) {
@@ -119,6 +119,33 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		arrayAppend(paymentData,"EXPDATE[4]=#numberFormat(Left(requestBean.getExpirationMonth(),2),'00')##Right(requestBean.getExpirationYear(),2)#");
 		arrayAppend(paymentData,"CVV2[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
 		arrayAppend(paymentData,"AMT[#len(requestBean.getTransactionAmount())#]=#requestBean.getTransactionAmount()#");
+		
+		// Try to populate the custom one and two for order payments
+		if(!isNull(requestBean.getOrderPaymentID()) && len(requestBean.getOrderPaymentID())) {
+			var entity = getService("orderService").getOrderPayment( requestBean.getOrderPaymentID() );
+			var template1 = setting('orderPaymentCommentOneTemplate');
+			var template2 = setting('orderPaymentCommentTwoTemplate');
+		} else if (!isNull(requestBean.getAccountPaymentID()) && len(requestBean.getAccountPaymentID())) {
+			var entity = getService("accountService").getAccountPayment( requestBean.getAccountPaymentID() );
+			var template1 = setting('accountPaymentCommentOneTemplate');
+			var template2 = setting('accountPaymentCommentTwoTemplate');
+		}
+		
+		if(!isNull(entity)) {
+			var comment1 = entity.stringReplace(template1);
+			var comment2 = entity.stringReplace(template2);
+			
+			if(len(comment1) gt 128) {
+				comment1 = left(comment1, 128);	
+			}
+			if(len(comment2) gt 128) {
+				comment2 = left(comment2, 128);
+			}
+			
+			arrayAppend(paymentData,"COMMENT1[#len(comment1)#]=#comment1#");
+			arrayAppend(paymentData,"COMMENT2[#len(comment2)#]=#comment2#");			
+		}
+		
 		return arrayToList(paymentData,"&");
 	}
 	

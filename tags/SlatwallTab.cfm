@@ -41,6 +41,7 @@ Notes:
 	<cfparam name="attributes.tabid" type="string" default="" />
 	<cfparam name="attributes.text" type="string" default="" />
 	<cfparam name="attributes.params" type="struct" default="#structNew()#" />
+	<cfparam name="attributes.count" type="string" default="0" />
 	
 	<cfif not len(attributes.tabid)>
 		<cfset attributes.tabid = "tab" & listLast(attributes.view, '/') />

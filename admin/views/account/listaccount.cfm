@@ -45,9 +45,13 @@ Notes:
 <cf_SlatwallListingDisplay smartList="#rc.accountSmartList#"
 						   recordEditAction="admin:account.editaccount"
 						   recordDetailAction="admin:account.detailaccount">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="firstName" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="firstName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="lastName" search="true" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="company" />
+	<cf_SlatwallListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="guestAccountFlag" sort="false" />
+	
 </cf_SlatwallListingDisplay>
 
 </cfoutput>

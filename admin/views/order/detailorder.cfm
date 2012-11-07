@@ -54,11 +54,6 @@ Notes:
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#" showedit="false" showdelete="false">
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			
-			<!--- This is currently done old school, should be updated --->
-			<!---<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="addOrderItem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />--->
-			<!---<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="addOrderPayment" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />--->
-			
 			<!--- Add Order Item --->
 			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
 				<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
@@ -72,7 +67,6 @@ Notes:
 					</cfloop>
 				</cfif>
 			</cfif>
-			
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
@@ -120,17 +114,17 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.order#" allowComments="true" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" />
-			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" />
+			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" count="#rc.order.getOrderItemsCount()#" />
+			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" count="#rc.order.getOrderPaymentsCount()#" />
 			<cfif rc.order.getOrderType().getSystemCode() eq "otSalesOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
-				<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" />
-				<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" />
+				<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" count="#rc.order.getOrderFulfillmentsCount()#" />
+				<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" count="#rc.order.getOrderDeliveriesCount()#" />
 			</cfif>
 			<cfif rc.order.getOrderType().getSystemCode() eq "otReturnOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
-				<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" />
-				<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" />
+				<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" count="#rc.order.getOrderReturnsCount()#" />
+				<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" count="#rc.order.getStockReceiversCount()#" />
 			</cfif>
-			<cf_SlatwallTab view="admin:order/ordertabs/referencingOrders" />
+			<cf_SlatwallTab view="admin:order/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

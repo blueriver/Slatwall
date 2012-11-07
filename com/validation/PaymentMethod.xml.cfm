@@ -16,5 +16,11 @@
 				<param name="max" value="0" />
 			</rule>
 		</property>
+		<property name="paymentMethodType">
+			<rule type="required" contexts="save" /> 
+			<rule type="inList" contexts="save">
+				<param name="list" value="cash,check,creditCard,external,giftCard,termPayment" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>

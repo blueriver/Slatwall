@@ -37,24 +37,34 @@ Notes:
 
 --->
 <cfparam name="rc.paymentMethod" type="any" />
+<cfparam name="rc.paymentMethodType" type="string" default="#rc.paymentMethod.getPaymentMethodType()#" />
 <cfparam name="rc.edit" type="boolean" default="false" />
 
-<cf_SlatwallDetailForm object="#rc.paymentMethod#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.paymentMethod#" edit="#rc.edit#">
-		
-	</cf_SlatwallActionBar>
-	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="providerGateway" edit="#rc.edit#" fieldType="select">
-			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodType" edit="#rc.paymentMethod.isNew()#">
-			<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="allowSaveFlag" edit="#rc.edit#">
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
-	
-	<cfif not rc.paymentMethod.isNew()>
-		<cfoutput>#view("admin:setting/paymentmethodtypes/#lcase(rc.paymentMethod.getPaymentMethodType())#")#</cfoutput>
+<cfoutput>
+	<cfif rc.paymentMethod.isNew()>
+		<cfset rc.paymentMethod.setPaymentMethodType(rc.paymentMethodType) />
 	</cfif>
-</cf_SlatwallDetailForm>
+	
+	<cf_SlatwallDetailForm object="#rc.paymentMethod#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.paymentMethod#" edit="#rc.edit#" />
+	
+		<input type="hidden" name="paymentMethodType" value="#rc.paymentMethod.getPaymentMethodType()#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
+				<cfif rc.paymentMethod.getPaymentMethodType() neq "cash" and rc.paymentMethod.getPaymentMethodType() neq "termPayment">
+					<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentIntegration" edit="#rc.edit#">
+				</cfif>
+				<cfif rc.paymentMethod.getPaymentMethodType() eq "creditCard">
+					<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="allowSaveFlag" edit="#rc.edit#">
+				</cfif>
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cfif not rc.paymentMethod.isNew()>
+			<cfoutput>#view("admin:setting/paymentmethodtypes/#lcase(rc.paymentMethod.getPaymentMethodType())#")#</cfoutput>
+		</cfif>
+	</cf_SlatwallDetailForm>
+</cfoutput>

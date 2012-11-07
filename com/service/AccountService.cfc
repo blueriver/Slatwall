@@ -40,6 +40,7 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	property name="emailService" type="any";
 	property name="sessionService" type="any";
+	property name="paymentService" type="any";
 	property name="priceGroupService" type="any";
 	property name="validationService" type="any";
 	
@@ -114,7 +115,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			if(accountEmailAddress.hasErrors()) {
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("emailAddress", "The Email address has errors");
+				arguments.account.addError("emailAddress", rbKey('validate.account.emailAddress'));
 			}
 
 		}
@@ -134,7 +135,7 @@ component extends="BaseService" accessors="true" output="false" {
 			accountPhoneNumber.validate();
 			if(accountPhoneNumber.hasErrors()) {
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("phoneNumber", "The Phone Number has errors");
+				arguments.account.addError("phoneNumber", rbKey('validate.account.phoneNumber'));
 			}
 		}
 		
@@ -166,7 +167,7 @@ component extends="BaseService" accessors="true" output="false" {
 			if(isNull(access)) {
 				//return access code error
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("access", "The access code you provided is invalid.");
+				arguments.account.addError("access", rbKey('validate.account.accessCode'));
 			}
 		}
 		
@@ -179,11 +180,11 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			if(!cmsUser.getIsNew()) {
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("emailAddress", "This E-Mail Address is already in use with another Account.");
+				arguments.account.addError("emailAddress", rbKey('validate.account.emailAddress.exists'));
 				// make sure password is entered 
 			} else if(!len(trim(arguments.data.password))) {
 				getSlatwallScope().setORMHasErrors( true );
-				arguments.account.addError("password", "The field Password is required.");
+				arguments.account.addError("password", rbKey('validate.account.password'));
 			} else {
 				// Setup a new mura user
 				cmsUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
@@ -278,6 +279,9 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// Sync Primary Email
 		if(!isNull(arguments.account.getPrimaryEmailAddress())) {
+			if(arguments.cmsUser.getUsername() == arguments.cmsUser.getEmail()) {
+				arguments.cmsUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());	
+			}
 			arguments.cmsUser.setEmail(arguments.account.getPrimaryEmailAddress().getEmailAddress());	
 		}
 		
@@ -292,14 +296,14 @@ component extends="BaseService" accessors="true" output="false" {
 	public any function updateAccountFromCmsUser(required any account, required any cmsUser) {
 		
 		// Sync Name & Company
-		if(arguments.account.getFirstName() != cmsUser.getFName()){
-			arguments.account.setFirstName(cmsUser.getFName());
+		if(arguments.account.getFirstName() != arguments.cmsUser.getFName()){
+			arguments.account.setFirstName(arguments.cmsUser.getFName());
 		}
-		if(arguments.account.getLastName() != cmsUser.getLName()) {
-			arguments.account.setLastName(cmsUser.getLName());
+		if(arguments.account.getLastName() != arguments.cmsUser.getLName()) {
+			arguments.account.setLastName(arguments.cmsUser.getLName());
 		}
-		if(arguments.account.getCompany() != cmsUser.getCompany()) {
-			arguments.account.setCompany(cmsUser.getCompany());
+		if(arguments.account.getCompany() != arguments.cmsUser.getCompany()) {
+			arguments.account.setCompany(arguments.cmsUser.getCompany());
 		}
 		
 		// Sync the primary email if out of sync
@@ -379,6 +383,31 @@ component extends="BaseService" accessors="true" output="false" {
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
+	
+	public any function processAccountPayment(required any accountPayment, struct data={}, string processContext="process") {
+		
+		param name="arguments.data.amount" default="0";
+		
+		// CONTEXT: offlineTransaction
+		if (arguments.processContext == "offlineTransaction") {
+		
+			var newPaymentTransaction = getPaymentService().newPaymentTransaction();
+			newPaymentTransaction.setTransactionType( "offline" );
+			newPaymentTransaction.setAccountPayment( arguments.accountPayment );
+			newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
+			
+			if(newPaymentTransaction.hasErrors()) {
+				arguments.accountPayment.addError('processing', 'There was an unknown error trying to add an offline transaction for this order payment.');	
+			}
+			
+		} else {
+			
+			getPaymentService().processPayment(arguments.accountPayment, arguments.processContext, arguments.data.amount);
+			
+		}
+		
+		return arguments.accountPayment;
+	}
 	
 	// =====================  END: Process Methods ============================
 	

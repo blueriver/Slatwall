@@ -47,6 +47,7 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="cmsContentID" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="content" cfc="Content" fieldtype="many-to-one" fkcolumn="contentID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID"; 

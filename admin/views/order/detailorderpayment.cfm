@@ -46,6 +46,7 @@ Notes:
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="authorizeAndCharge" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="authorize" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="credit" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="offlineTransaction" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
@@ -55,6 +56,8 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="creditCardType" />
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
 					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
+				<cfelseif rc.orderPayment.getPaymentMethodType() eq "termPayment">
+					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="termPaymentAccount" edit="false" />
 				</cfif>
 			</cf_SlatwallPropertyList>
 			<cf_SlatwallPropertyList divClass="span6">
@@ -64,10 +67,8 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.orderPayment#">
-			<cfif rc.orderPayment.getPaymentMethodType() eq "creditCard">
-				<cf_SlatwallTab view="admin:order/orderpaymenttabs/creditcardtransactions" />
-			</cfif>
+		<cf_SlatwallTabGroup object="#rc.orderPayment#" allowCustomAttributes="true">
+			<cf_SlatwallTab view="admin:order/orderpaymenttabs/paymenttransactions" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

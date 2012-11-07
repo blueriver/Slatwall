@@ -41,7 +41,11 @@ component extends="BaseController" output=false accessors=true {
 	property name="integrationService";
 
 	this.publicMethods='';
-	this.secureMethods='listintegration,detailintegration,editintegration,createintegration,saveintegration';
+	
+	this.anyAdminMethods='';
+	
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods, '**integration');
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:integration.listintegration");

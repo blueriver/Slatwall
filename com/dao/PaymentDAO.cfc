@@ -38,30 +38,38 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO" output="false">
 	
-	<cffunction name="isDuplicateCreditCardTransaction" access="public" returntype="boolean" output="false">
-		<cfargument name="orderPaymentID" type="string" required="true" />
+	<cffunction name="isDuplicatePaymentTransaction" access="public" returntype="boolean" output="false">
+		<cfargument name="paymentID" type="string" required="true" />
+		<cfargument name="idColumnName" type="string" required="true" />
+		<cfargument name="paymentType" type="string" required="true" />
 		<cfargument name="transactionType" type="string" required="true" />
 		<cfargument name="transactionAmount" type="numeric" required="true" />
 		
-		<cfset var checkDuplicateTransaction = "" />
+		<cfset var rs = "" />
+		
 		<!--- check for any transaction for this payment in last 60 sec with same type and amount --->
-		<cfquery name="checkDuplicateTransaction" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
-			SELECT SlatwallCreditCardTransaction.creditCardTransactionID
-			FROM SlatwallCreditCardTransaction 
-			WHERE SlatwallCreditCardTransaction.orderPaymentID = <cfqueryparam value="#arguments.orderPaymentID#" cfsqltype="cf_sql_varchar" />
-			AND SlatwallCreditCardTransaction.transactionType = <cfqueryparam value="#arguments.transactionType#" cfsqltype="cf_sql_varchar" />
-			AND modifiedDateTime > <cfqueryparam value="#DateAdd("n",-60,now())#" cfsqltype="cf_sql_date" />
-			AND 
+		<cfquery name="rs" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
+			SELECT
+				#idColumnName#
+			FROM
+				SlatwallPaymentTransaction 
+			WHERE
+				#idColumnName# = <cfqueryparam value="#arguments.paymentID#" cfsqltype="cf_sql_varchar" />
+			  AND
+				transactionType = <cfqueryparam value="#arguments.transactionType#" cfsqltype="cf_sql_varchar" />
+			  AND
+				modifiedDateTime > <cfqueryparam value="#DateAdd("n",-60,now())#" cfsqltype="cf_sql_date" />
+			  AND 
 				(
-					SlatwallCreditCardTransaction.amountAuthorized = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
+					amountAuthorized = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
 					OR
-					SlatwallCreditCardTransaction.amountCharged = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
+					amountReceived = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
 					OR
-					SlatwallCreditCardTransaction.amountCredited = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
+					amountCredited = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
 				)
 		</cfquery>
 		
-		<cfreturn checkDuplicateTransaction.recordcount />
+		<cfreturn rs.recordcount />
 	</cffunction>
 
 </cfcomponent>

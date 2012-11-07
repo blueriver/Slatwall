@@ -46,18 +46,18 @@ Notes:
 		<cfif request.status eq 'failed'>
 			<cfif isDate(session.blockLoginUntil) and session.blockLoginUntil gt now()>
 				<cfset request.isBlocked=true />
-				<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginblocked')#</p>
+				<p id="loginMsg" class="error">#$.slatwall.rbKey('validate.account.loginblocked')#</p>
 			<cfelse>
-				<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginfailed')#</p>
+				<p id="loginMsg" class="error">#$.slatwall.rbKey('validate.account.loginfailed')#</p>
 			</cfif>
 		</cfif>
 		<cfif len(rc.forgotPasswordResult)>
 			<cfif FindNoCase('is not a valid',rc.forgotPasswordResult)>
-				<div class="error">#$.slatwall.rbKey('user.forgotnotvalid')#
+				<div class="error">#$.slatwall.rbKey('validate.account.forgotnotvalid')#
 			<cfelseif FindNoCase('no account',rc.forgotPasswordResult)>
-				<div class="error">#$.slatwall.rbKey('user.forgotnotfound')#
+				<div class="error">#$.slatwall.rbKey('validate.account.forgotnotfound')#
 			<cfelse>
-				<div class="notice">#$.slatwall.rbKey('user.forgotsuccess')#</cfif>
+				<div class="notice">#$.slatwall.rbKey('validate.account.forgotsuccess')#</cfif>
 			</div>
 		</cfif>
 		<form name="loginAccount" method="post" action="?nocache=1">

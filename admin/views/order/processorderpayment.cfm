@@ -42,18 +42,26 @@ Notes:
 <cfparam name="rc.processContext" type="string" />
 
 <cfsilent>
-	<cfset local.defaultValue = 0 />
+	<cfset local.amount = 0 />
+	<cfset local.amountReceived = 0 />
+	<cfset local.amountCredited = 0 />
 	
 	<cfset local.orderPayment = rc.processOrderPaymentSmartList.getRecords()[1] />
 	
 	<cfif rc.processContext eq "chargePreAuthorization" >
-		<cfset local.defaultValue = local.orderPayment.getAmountUncaptured() />
-	<cfelseif rc.processContext eq "authorizeAndCharge" >
-		<cfset local.defaultValue = local.orderPayment.getAmountUnreceived() />
+		<cfset local.amount = local.orderPayment.getAmountUncaptured() />
+	<cfelseif rc.processContext eq "authorizeAndCharge">
+		<cfset local.amount = local.orderPayment.getAmountUnreceived() />
 	<cfelseif rc.processContext eq "authorize" >
-		<cfset local.defaultValue = local.orderPayment.getAmountUnauthorized() />
+		<cfset local.amount = local.orderPayment.getAmountUnauthorized() />
 	<cfelseif rc.processContext eq "credit" >
-		<cfset local.defaultValue = local.orderPayment.getAmountUncredited() />
+		<cfset local.amount = local.orderPayment.getAmountUncredited() />
+	<cfelseif rc.processContext eq "offlineTransaction">
+		<cfif local.orderPayment.getAmountUnreceived() gt 0>
+			<cfset local.amountReceived = local.orderPayment.getAmountUnreceived() />
+		<cfelseif local.orderPayment.getAmountUncredited() gt 0>
+			<cfset local.amountCredited = local.orderPayment.getAmountUncredited() />
+		</cfif>
 	</cfif>
 </cfsilent>
 
@@ -64,7 +72,13 @@ Notes:
 		<input type="hidden" name="orderPaymentID" value="#local.orderPayment.getOrderPaymentID()#" />
 			
 		<cf_SlatwallProcessOptionBar>
-			<cf_SlatwallProcessOption data="amount" fieldType="text" value="#local.defaultValue#" />
+			<cfif rc.processContext eq "offlineTransaction">
+				<cf_SlatwallProcessOption data="transactionDateTime" fieldType="datetime" value="#$.slatwall.formatValue(now(), "datetime")#" />
+				<cf_SlatwallProcessOption data="amountReceived" fieldType="text" value="#local.amountReceived#" />
+				<cf_SlatwallProcessOption data="amountCredited" fieldType="text" value="#local.amountCredited#" />
+			<cfelse>
+				<cf_SlatwallProcessOption data="amount" fieldType="text" value="#local.amount#" />	
+			</cfif>
 		</cf_SlatwallProcessOptionBar>
 		
 	</cf_SlatwallProcessForm>

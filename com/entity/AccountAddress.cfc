@@ -46,6 +46,15 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID" cascade="all";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

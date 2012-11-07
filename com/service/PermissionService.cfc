@@ -39,6 +39,7 @@ Notes:
 component extends="BaseService" accessors="true" output="false" {
 
 	// Injected via Coldspring
+	property name="accountService" type="any";
 	property name="integrationService" type="any";
 
 	// Properties used for Caching values in the application scope
@@ -46,20 +47,18 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	// Uses the current mura user to check security against a given action
 	public boolean function secureDisplay(required string action, any account) {
-		//return true;
-		
 		if(!structKeyExists(arguments, "account")) {
 			arguments.account = getSlatwallScope().getCurrentAccount();
 		}
-		
-		var subsystemName = listFirst( arguments.action, ":" );
-		var sectionName = listFirst( listLast(arguments.action, ":"), "." );
-		var itemName = listLast( arguments.action, "." );
 		
 		// Check if the user is a super admin, if true no need to worry about security
 		if( findNoCase("*", arguments.account.getAllPermissions()) ) {
 			return true;
 		}
+		
+		var subsystemName = listFirst( arguments.action, ":" );
+		var sectionName = listFirst( listLast(arguments.action, ":"), "." );
+		var itemName = listLast( arguments.action, "." );
 		
 		//check if the page is public, if public no need to worry about security
 		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].publicMethods, itemName)){
@@ -76,7 +75,25 @@ component extends="BaseService" accessors="true" output="false" {
 			return true;
 		}
 		
+		// If this is a save method, then we can check create and edit
+		if(left(listLast(arguments.action, "."),4) eq "save") {
+			var createAction = replace(arguments.action, '.save', '.create');
+			var editAction = replace(arguments.action, '.save', '.edit');
+			if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(createAction, ".", "", "all"), ":", "", "all")) ) {
+				return true;
+			}
+			if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(editAction, ".", "", "all"), ":", "", "all")) ) {
+				return true;
+			}
+		}
+		
 		return false;
+	}
+	
+	public void function clearPermissionCache(){
+		if(structKeyExists(variables, "permissions")) {
+			structDelete(variables, "permissions");
+		}
 	}
 	
 	public struct function getPermissions(){
@@ -107,15 +124,44 @@ component extends="BaseService" accessors="true" output="false" {
 				}
 				if(structKeyExists(obj, 'secureMethods')){	
 					allPermissions.admin[ section ].secureMethods = obj.secureMethods;
-				
+					
 					for(j=1; j <= listLen(allPermissions.admin[ section ].secureMethods); j++){
 						
 						var item = listGetAt(allPermissions.admin[ section ].secureMethods, j);
 						
-						arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {
-							name=rbKey( 'permission.#section#.#item#' ),
-							value="admin#section##item#"
-						});
+						if(left(item, 2) eq '**') {
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.list_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#list#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#detail#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#create#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#edit#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#delete#item#"});
+						} else if(left(item, 1) eq '*') {
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#detail#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#create#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#edit#item#"});
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#delete#item#"});
+						} else {
+							
+							var permissionTitle = rbKey( 'admin.#section#.#item#_permission' );
+							
+							if(right(permissionTitle, 8) eq "_missing") {
+								if(left(item, 4) eq "list") {
+									permissionTitle = replace(rbKey( 'admin.define.list_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-4)#'));
+								} else if (left(item, 6) eq "detail") {
+									permissionTitle = replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
+								} else if (left(item, 6) eq "create") {
+									permissionTitle = replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
+								} else if (left(item, 4) eq "edit") {
+									permissionTitle = replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-4)#'));
+								} else if (left(item, 6) eq "delete") {
+									permissionTitle = replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
+								} else if (left(item, 7) eq "process") {
+									permissionTitle = replace(rbKey( 'admin.define.process_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-7)#'));
+								}
+							}
+							
+							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=permissionTitle, value="admin#section##item#"});
+						}
 					}
 				}
 			}
@@ -153,7 +199,7 @@ component extends="BaseService" accessors="true" output="false" {
 							var item = listGetAt(allPermissions[ activeFW1Integrations[i].subsystem ][ section ].secureMethods, k);
 							
 							arrayAppend(allPermissions[ activeFW1Integrations[i].subsystem ][ section ].securePermissionOptions, {
-								name="#activeFW1Integrations[i].subsystem#:#section#.#item#",
+								name=rbKey("#activeFW1Integrations[i].subsystem#.#section#.#item#_permission"),
 								value="#activeFW1Integrations[i].subsystem##section##item#"
 							});
 						}
@@ -168,14 +214,28 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public function setupDefaultPermissions(){
-		var accounts = getDAO().getMissingUserAccounts();
-		var permissionGroup = get('PermissionGroup',{permissionGroupID='4028808a37037dbf01370ed2001f0074'});
+		logSlatwall("Default Permission Flush", true);
 		
+		// Flush the session so that the currentAccount is persisted
+		getDAO().flushORMSession();
+		
+		var accounts = getDAO().getMissingUserAccounts();
+		var permissionGroup = this.getPermissionGroup('4028808a37037dbf01370ed2001f0074');
+		
+		logSlatwall("There are #accounts.recordcount# super users that need to be setup with default permissions", true);
 		for(i=1; i <= accounts.recordcount; i++){
-			account = get('Account',{accountID=accounts.accountID[i]});
-			account.addPermissionGroup(permissionGroup);
+			// Get the account
+			account = getAccountService().getAccount( accounts.accountID[i] );
+			
+			// Set the permission group
+			account.addPermissionGroup( permissionGroup );
+			
+			logSlatwall("Account Flush", true);
+			
+			// Flush the session
+			getDAO().flushORMSession();
 		}
-		//getDAO().FlushORMSession();
+		
 	}
 	
 }

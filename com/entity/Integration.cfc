@@ -40,7 +40,7 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	
 	// Persistent Properties
 	property name="integrationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="integrationPackage" ormtype="string";
+	property name="integrationPackage" ormtype="string" unique="true";
 	property name="integrationName" ormtype="string";
 	property name="installedFlag" ormtype="boolean";
 	

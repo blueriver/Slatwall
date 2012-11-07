@@ -869,7 +869,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			}
 		}
 		
-		session.entitySmartList[ savedStateID ] = getStateStruct();
+		session.entitySmartList[ getSavedStateID() ] = getStateStruct();
 	}
 	
 	public string function getSavedStateID() {

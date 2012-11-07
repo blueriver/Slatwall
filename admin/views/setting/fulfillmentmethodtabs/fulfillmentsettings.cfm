@@ -44,7 +44,8 @@ Notes:
 			<cf_SlatwallSetting settingName="fulfillmentMethodEmailCC" settingObject="#rc.fulfillmentMethod#" />
 			<cf_SlatwallSetting settingName="fulfillmentMethodEmailSubjectString" settingObject="#rc.fulfillmentMethod#" />
 		<cfelseif rc.fulfillmentMethod.getFulfillmentMethodType() eq "auto">
-			<cf_SlatwallSetting settingName="fulfillmentMethodAutoLocation" />
+			<cf_SlatwallSetting settingName="fulfillmentMethodAutoLocation" settingObject="#rc.fulfillmentMethod#" />
+			<cf_SlatwallSetting settingName="fulfillmentMethodAutoMinReceivedPercentage" settingObject="#rc.fulfillmentMethod#" />
 		</cfif>
 	</cf_SlatwallSettingTable>
 </cfoutput>

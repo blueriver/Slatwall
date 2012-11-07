@@ -176,11 +176,6 @@ component extends="org.fw1.framework" output="false" {
 					// BASE URL
 					variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
 					writeLog(file="Slatwall", text="General Log - FW1 baseURL set to #variables.framework.baseURL#");
-					
-					// Super Users
-					getBeanFactory().getBean("permissionService").setupDefaultPermissions();
-					writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
-					
 					// ======================== END: Enviornment Setup ========================
 					
 					
@@ -190,35 +185,41 @@ component extends="org.fw1.framework" output="false" {
 						// Write File
 						fileWrite(expandPath('/Slatwall/config/lastFullUpdate.txt.cfm'), now());
 						
+						// Set the request timeout to 360
+						getBeanFactory().getBean("utilityTagService").cfsetting(requesttimeout=360);
+						
 						// Reload ORM
 						ormReload();
 						writeLog(file="Slatwall", text="General Log - ORMReload() was successful");
+							
+						// Reload All Integrations
+						getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+						writeLog(file="Slatwall", text="General Log - Integrations have been updated");
 						
-						thread action="run" name="fullUpdateThread" {
-							writeLog(file="Slatwall", text="Full Update Thread Started");
-							
-							// Reload All Integrations
-							getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-							writeLog(file="Slatwall", text="General Log - Integrations have been updated");
-							
-							// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
-							var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
-							muraIntegrationService.setupIntegration();
-							writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
-							
-							// Setup Default Data... Not called on soft reloads.
-							getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
-							writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
-							
-							getBeanFactory().getBean("settingService").clearAllSettingsQuery();
-							writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared");
-							
-							// Run Scripts
-							getBeanFactory().getBean("updateService").runScripts();
-							writeLog(file="Slatwall", text="General Log - Update Service Scripts Have been Run");
-							
-							writeLog(file="Slatwall", text="Full Update Thread Finished");	
-						}
+						// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
+						var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
+						muraIntegrationService.setupIntegration();
+						writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
+						
+						// Setup Default Data... Not called on soft reloads.
+						getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
+						writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
+						
+						// Confirm Session Setup
+						getBeanFactory().getBean("sessionService").setPropperSession();
+						
+						// Super Users
+						getBeanFactory().getBean("permissionService").setupDefaultPermissions();
+						writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
+						
+						// Clear the setting cache so that it can be reloaded
+						getBeanFactory().getBean("settingService").clearAllSettingsQuery();
+						writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared");
+						
+						// Run Scripts
+						getBeanFactory().getBean("updateService").runScripts();
+						writeLog(file="Slatwall", text="General Log - Update Service Scripts Have been Run");
+						
 					}
 					// ========================== END: FULL UPDATE ==============================
 					
@@ -322,13 +323,13 @@ component extends="org.fw1.framework" output="false" {
 	
 	// Allows for integration services to have a seperate directory structure
 	public any function getSubsystemDirPrefix( string subsystem ) {
-		if ( subsystem eq '' ) {
+		if ( arguments.subsystem eq '' ) {
 			return '';
 		}
 		if ( !listFind('admin,frontend', arguments.subsystem) ) {
-			return 'integrationServices/' & subsystem & '/';
+			return 'integrationServices/' & arguments.subsystem & '/';
 		}
-		return subsystem & '/';
+		return arguments.subsystem & '/';
 	}
 	
 	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
@@ -341,6 +342,16 @@ component extends="org.fw1.framework" output="false" {
 	public void function redirectSetting(required string settingName) {
 		endSlatwallLifecycle();
 		
+	}
+	
+	public string function buildURL( string action = '', string path = '', any queryString = '' ) {
+		if(len(arguments.queryString)) {
+			arguments.queryString = "&#arguments.queryString#";
+		}
+		if(findNoCase(":", arguments.action)) {
+			return "#application.configBean.getContext()#/plugins/Slatwall/?slatAction=#arguments.action##arguments.queryString#";	
+		}
+		return "#application.configBean.getContext()#/plugins/Slatwall/?slatAction=admin:#arguments.action##arguments.queryString#";
 	}
 	
 	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle

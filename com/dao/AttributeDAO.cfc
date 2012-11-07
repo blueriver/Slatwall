@@ -38,4 +38,11 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cffunction name="getAttributeValuesForEntity" returntype="array" access="public">
+		<cfargument name="primaryIDPropertyIdentifier">
+		<cfargument name="primaryIDValue" />
+		
+		<cfreturn ormExecuteQuery("SELECT av FROM SlatwallAttributeValue av INNER JOIN FETCH av.attribute att INNER JOIN FETCH att.attributeSet ats WHERE av.#primaryIDPropertyIdentifier# = ?", [arguments.primaryIDValue], false, {ignoreCase="true"}) />
+	</cffunction>
+	
 </cfcomponent>

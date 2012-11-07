@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfif structKeyExists(request.context, "fw") AND request.context.fw.getSubsystem() EQ "admin">
+<cfif structKeyExists(request, "context") AND structKeyExists(request.context, "fw") AND request.context.fw.getSubsystem() EQ "admin">
 	<cfinclude template="SlatwallPropertyDisplayAdmin.cfm" >
 <cfelse>
 	<cfinclude template="SlatwallPropertyDisplayFrontEnd.cfm" >

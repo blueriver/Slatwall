@@ -42,86 +42,60 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="sessionService" type="any";
 	property name="settingService" type="any";
 	
-	public boolean function processPayment(required any orderPayment, required string transactionType, required numeric transactionAmount, string providerTransactionID="") {
-		// Lock down this determination so that the values getting called and set don't overlap
-		lock scope="Session" timeout="45" {
-			// Get the relavent info and objects for this order payment
-			var processOK = false;
-			var paymentMethod = arguments.orderPayment.getPaymentMethod();
-			var providerService = getIntegrationService().getPaymentIntegrationCFC(paymentMethod.getIntegration());
-			
-			if(arguments.orderPayment.getPaymentMethodType() eq "creditCard") {
-				// Chech if it's a duplicate transaction. Determination is made based on matching
-				// transactionType and transactionAmount for this payment in last 60 sec.
-				var isDuplicateTransaction = getDAO().isDuplicateCreditCardTransaction(orderPaymentID=arguments.orderPayment.getOrderPaymentID(),transactionType=arguments.transactionType,transactionAmount=arguments.transactionAmount);
-				if(isDuplicateTransaction){
-					processOK = true;
-					arguments.orderPayment.addError('processing', "This transaction is duplicate of an already processed transaction.", true);
-				} else {
-					// Create a new Credit Card Transaction
-					var transaction = this.newCreditCardTransaction();
-					transaction.setTransactionType(arguments.transactionType);
-					transaction.setOrderPayment(arguments.orderPayment);
+	// ===================== START: Logical Methods ===========================
+	
+	public any function getEligiblePaymentMethodDetailsForOrder(required any order) {
+		var paymentMethodMaxAmount = {};
+		var eligiblePaymentMethodDetails = [];
+		
+		var paymentMethodSmartList = this.getPaymentMethodSmartList();
+		paymentMethodSmartList.addFilter('activeFlag', 1);
+		paymentMethodSmartList.addOrder('sortOrder|ASC');
+		var activePaymentMethods = paymentMethodSmartList.getRecords();
+		
+		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+			var epmList = arguments.order.getOrderItems()[i].getSku().setting("skuEligiblePaymentMethods");
+			for(var x=1; x<=listLen( epmList ); x++) {
+				var thisPaymentMethodID = listGetAt(epmList, x);
+				if(!structKeyExists(paymentMethodMaxAmount, thisPaymentMethodID)) {
+					paymentMethodMaxAmount[thisPaymentMethodID] = arguments.order.getFulfillmentChargeAfterDiscountTotal();
+				}
+				paymentMethodMaxAmount[thisPaymentMethodID] = precisionEvaluate(paymentMethodMaxAmount[thisPaymentMethodID] + precisionEvaluate(arguments.order.getOrderItems()[i].getExtendedPriceAfterDiscount() + arguments.order.getOrderItems()[i].getTaxAmount()));
+			}
+		}
+		
+		// Loop over and update the maxAmounts on these payment methods based on the skus for each
+		for(var i=1; i<=arrayLen(activePaymentMethods); i++) {
+			if( structKeyExists(paymentMethodMaxAmount, activePaymentMethods[i].getPaymentMethodID()) && paymentMethodMaxAmount[ activePaymentMethods[i].getPaymentMethodID() ] gt 0 ) {
+				
+				// Define the maximum amount
+				var maximumAmount = paymentMethodMaxAmount[ activePaymentMethods[i].getPaymentMethodID() ];
+				
+				// If this is a termPayment type, then we need to check the account on the order to verify the max that it can use.
+				if(activePaymentMethods[i].getPaymentMethodType() eq "termPayment") {
 					
-					// Make sure that this transaction gets saved to the DB
-					this.saveCreditCardTransaction(transaction);
-					getDAO().flushORMSession();
-
-					// Generate Process Request Bean
-					var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
-					
-					// Move all of the info into the new request bean
-					requestBean.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
-					
-					requestBean.setTransactionID(transaction.getCreditCardTransactionID());
-					requestBean.setTransactionType( arguments.transactionType );
-					requestBean.setTransactionAmount( arguments.transactionAmount );
-					requestBean.setProviderTransactionID( arguments.providerTransactionID );
-					requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
-					
-					// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
-					try {
+					// Make sure that we have enough credit limit on the account
+					if(!isNull(arguments.order.getAccount()) && arguments.order.getAccount().getTermAccountAvailableCredit() > 0) {
 						
-						// Get Response Bean from provider service
-						logSlatwall("Payment Processing Request - Started", true);
-						var response = providerService.processCreditCard(requestBean);
-						logSlatwall("Payment Processing Request - Finished", true);
+						var paymentTerm = this.getPaymentTerm(arguments.order.getAccount().setting('accountPaymentTerm'));
 						
-						// Populate the Credit Card Transaction with the details of this process
-						transaction.setProviderTransactionID(response.getTransactionID());
-						transaction.setAuthorizationCode(response.getAuthorizationCode());
-						transaction.setAmountAuthorized(response.getAmountAuthorized());
-						transaction.setAmountCharged(response.getAmountCharged());
-						transaction.setAmountCredited(response.getAmountCredited());
-						transaction.setAVSCode(response.getAVSCode());
-						transaction.setStatusCode(response.getStatusCode());
-						transaction.setMessage(serializeJSON(response.getMessages()));
-											
-						// Make sure that this transaction with all of it's info gets added to the DB
-						ormFlush();
-						
-						if(!response.hasErrors()) {
-							processOK = true;
-						} else {
-							// Populate the orderPayment with the processing error
-							arguments.orderPayment.addError('processing', response.getAllErrorsHTML(), true);
+						if(!isNull(paymentTerm)) {
+							if(arguments.order.getAccount().getTermAccountAvailableCredit() < maximumAmount) {
+								maximumAmount = arguments.order.getAccount().getTermAccountAvailableCredit();
+							}
+							
+							arrayAppend(eligiblePaymentMethodDetails, {paymentMethod=activePaymentMethods[i], maximumAmount=maximumAmount, paymentTerm=paymentTerm});	
 						}
-					} catch (any e) {
-						// Populate the orderPayment with the processing error
-						arguments.orderPayment.addError('processing', "An Unexpected Error Ocurred", true);
-						
-						// Log the exception
-						logSlatwallException(e);
-						
-						rethrow;
 					}
+				} else {
+					arrayAppend(eligiblePaymentMethodDetails, {paymentMethod=activePaymentMethods[i], maximumAmount=maximumAmount});
 				}
 			}
 		}
 
-		return processOK;
+		return eligiblePaymentMethodDetails;
 	}
-
+	
 	public string function getCreditCardTypeFromNumber(required string creditCardNumber) {
 		if(isNumeric(arguments.creditCardNumber)) {
 			var n = arguments.creditCardNumber;
@@ -147,4 +121,177 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		return 'Invalid';
 	}
+	
+	// =====================  END: Logical Methods ============================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: DAO Passthrough ===========================
+	
+	// ===================== START: Process Methods ===========================
+	
+	// This is a generic processPayment method that works of orderPayment or accountPayment
+	public boolean function processPayment(required any payment, required string transactionType, required numeric transactionAmount, any referencedPaymentTransaction) {
+		
+		var processOK = false;
+		
+		// Lock down this determination so that the values getting called and set don't overlap
+		lock scope="Session" timeout="45" {
+			
+			var paymentID = "";
+			var accountPaymentID = "";
+			
+			var isDuplicateTransaction = getDAO().isDuplicatePaymentTransaction(paymentID=arguments.payment.getPrimaryIDValue(), idColumnName=arguments.payment.getPrimaryIDPropertyName(), paymentType=arguments.payment.getPaymentMethodType(), transactionType=arguments.transactionType, transactionAmount=arguments.transactionAmount);
+			
+			if(isDuplicateTransaction){
+				processOK = true;
+				arguments.payment.addError('processing', "This transaction is duplicate of an already processed transaction.", true);
+			} else {
+				switch(arguments.payment.getPaymentMethodType()) {
+					case "cash" :
+							processOK = processCashPayment(argumentcollection=arguments);
+						break;
+					case "check" :
+							processOK = processCheckPayment(argumentcollection=arguments);
+						break;
+					case "creditCard" :
+							processOK = processCreditCardPayment(argumentcollection=arguments);
+						break;
+					case "external" :
+							processOK = processExternalPayment(argumentcollection=arguments);
+						break;
+					case "giftCard" :
+							processOK = processGiftCardPayment(argumentcollection=arguments);
+						break;
+				}
+			}
+			
+		}
+		
+		return processOK;
+	}
+	
+	public boolean function processCashPayment() {
+		return true;
+	}
+	
+	public boolean function processCheckPayment() {
+		return true;
+	}
+	
+	public boolean function processCreditCardPayment(required any payment, required string transactionType, required numeric transactionAmount, any referencedPaymentTransaction) {
+		// Get the relavent info and objects for this order payment
+		var processOK = false;
+		
+		var providerService = getIntegrationService().getPaymentIntegrationCFC( arguments.payment.getPaymentMethod().getPaymentIntegration() );
+		
+		// Create a new Credit Card Transaction
+		var transaction = this.newPaymentTransaction();
+		transaction.setTransactionType( arguments.transactionType );
+		if(arguments.payment.getEntityName() eq "SlatwallOrderPayment") {
+			transaction.setOrderPayment( arguments.payment );
+		} else if (arguments.payment.getEntityName() eq "SlatwallAccountPayment") {
+			transaction.setAccountPayment( arguments.payment );
+		}
+		
+		// Make sure that this transaction gets saved to the DB
+		this.savePaymentTransaction( transaction );
+		getDAO().flushORMSession();
+
+		// Generate Process Request Bean
+		var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
+		
+		// Setup generic info
+		requestBean.setTransactionID( transaction.getPaymentTransactionID() );
+		requestBean.setTransactionType( arguments.transactionType );
+		requestBean.setTransactionAmount( arguments.transactionAmount );
+		requestBean.setTransactionCurrency( arguments.payment.getCurrencyCode() );
+		
+		// Move all of the info into the new request bean
+		if(arguments.payment.getEntityName() eq "SlatwallOrderPayment") {
+			requestBean.populatePaymentInfoWithOrderPayment( arguments.payment );	
+		} else if (arguments.payment.getEntityName() eq "SlatwallAccountPayment") {
+			requestBean.populatePaymentInfoWithAccountPayment( arguments.payment );
+		}
+		
+		// If a referenced payment transaction was passed in, then we can assign the providerTransactionID
+		if(structKeyExists(arguments, "referencedPaymentTransaction")) {
+			requestBean.setProviderTransactionID( arguments.referencedPaymentTransaction.getProviderTransactionID() );
+			requestBean.setReferencedPaymentTransactionID( arguments.referencedPaymentTransaction.getPaymentTransactionID() );
+		}
+		
+		// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
+		try {
+			
+			// Get Response Bean from provider service
+			logSlatwall("Payment Processing Request - Started", true);
+			var response = providerService.processCreditCard(requestBean);
+			logSlatwall("Payment Processing Request - Finished", true);
+			
+			// Populate the Credit Card Transaction with the details of this process
+			transaction.setProviderTransactionID(response.getTransactionID());
+			transaction.setAuthorizationCode(response.getAuthorizationCode());
+			transaction.setAmountAuthorized(response.getAmountAuthorized());
+			transaction.setAmountReceived(response.getAmountCharged());
+			transaction.setAmountCredited(response.getAmountCredited());
+			transaction.setAVSCode(response.getAVSCode());
+			transaction.setStatusCode(response.getStatusCode());
+			transaction.setMessage(serializeJSON(response.getMessages()));
+								
+			// Make sure that this transaction with all of it's info gets added to the DB
+			getDAO().flushORMSession();
+			
+			if(!response.hasErrors()) {
+				processOK = true;
+			} else {
+				// Populate the orderPayment with the processing error
+				arguments.payment.addError('processing', response.getAllErrorsHTML(), true);
+			}
+		} catch (any e) {
+			// Populate the orderPayment with the processing error
+			arguments.payment.addError('processing', "An Unexpected Error Ocurred", true);
+			
+			// Log the exception
+			logSlatwallException(e);
+			
+			rethrow;
+		}
+		
+		return processOK;
+	}
+	
+	public boolean function processExternalPayment() {
+		return true;
+	}
+	
+	public boolean function processGiftCardPayment() {
+		return true;
+	}
+	
+	public boolean function processTermAccountPayment() {
+		return true;
+	}
+	
+	
+	// =====================  END: Process Methods ============================
+	
+	// ====================== START: Status Methods ===========================
+	
+	// ======================  END: Status Methods ============================
+	
+	// ====================== START: Save Overrides ===========================
+	
+	// ======================  END: Save Overrides ============================
+	
+	// ==================== START: Smart List Overrides =======================
+	
+	// ====================  END: Smart List Overrides ========================
+	
+	// ====================== START: Get Overrides ============================
+	
+	// ======================  END: Get Overrides =============================
+	
+	// ===================== START: Delete Overrides ==========================
+	
+	// =====================  END: Delete Overrides ===========================
 }

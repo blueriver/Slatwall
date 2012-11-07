@@ -47,9 +47,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="vendorService" type="any";
 	property name="vendorOrderService" type="any";
 	
-	this.publicMethods="";
-	this.anyAdminMethods="updateListingDisplay,updateGlobalSearchResults,updateSortOrder";
-	this.secureMethods="";
+	this.publicMethods='';
+	
+	this.anyAdminMethods='';
+	this.anyAdminMethods=listAppend(this.anyAdminMethods,'updateListingDisplay');
+	this.anyAdminMethods=listAppend(this.anyAdminMethods,'updateGlobalSearchResults');
+	this.anyAdminMethods=listAppend(this.anyAdminMethods,'updateSortOrder');
+	
+	this.secureMethods='';
 	
 	public void function before(required struct rc) {
 		getFW().setView("admin:ajax.default");

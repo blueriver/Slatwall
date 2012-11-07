@@ -64,7 +64,8 @@ Notes:
 			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductupdates")#</h4>
 			<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" 
 					recordDetailAction="admin:product.detailproduct">
-				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
+				<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" />
+				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
 				<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" />
 				<cf_SlatwallListingColumn propertyIdentifier="modifiedByAccount.fullname" />
 			</cf_SlatwallListingDisplay>
@@ -85,7 +86,7 @@ Notes:
 			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductreviews")#</h4>
 			<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#" 
 					recordDetailAction="admin:product.detailproductreview">
-				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="product.title" />
+				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="product.calculatedTitle" />
 				<cf_SlatwallListingColumn propertyIdentifier="reviewerName" />
 				<cf_SlatwallListingColumn propertyIdentifier="reviewTitle" />
 			</cf_SlatwallListingDisplay>

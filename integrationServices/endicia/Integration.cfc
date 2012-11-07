@@ -43,7 +43,7 @@ component accessors="true" output="false" displayname="Endicia" extends="Slatwal
 	}
 	
 	public struct function getSettings() {
-		variables.settings = {
+		return {
 			accountID = {fieldType="text", displayName="Account ID"},
 			fromPostalCode = {fieldType="text", displayName="From Postal Code"},
 			passPhrase = {fieldType="password", displayName="Pass Phrase", encryptValue=true},
@@ -55,7 +55,6 @@ component accessors="true" output="false" displayname="Endicia" extends="Slatwal
 			syncFTPSiteDropoffFilename = {fieldType="text", displayName="FTP Sync Dropoff Fielname"},
 			syncFTPSiteSecure = {fieldType="yesno", displayName="FTP Sync Secure?", defaultValue=0}
 		};
-		return variables.settings;
 	}
 	
 	public string function getIntegrationTypes() {

@@ -38,24 +38,12 @@ Notes:
 --->
 <cfparam name="rc.product" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.product.getProductReviewsSmartList()#">
+<cf_SlatwallListingDisplay smartList="#rc.product.getProductReviewsSmartList()#"
+						   recorddetailaction="admin:product.detailproductreview"
+						   recorddetailmodal="true"
+						   recordeditaction="admin:product.editproductreview"
+						   recordeditmodal="true">
 	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="review" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
 </cf_SlatwallListingDisplay>
-
-<!---<cfoutput>
-	<table id="productCategories" class="listing-grid stripe">
-		<tr>
-			<th>#rc.$.Slatwall.rbKey("entity.productReview.createdDateTime")#</th>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.productReview.review")#</th>
-			<th></th>
-		</tr>
-		<cfloop array="#rc.product.getProductReviews()#" index="local.review">
-			<tr>
-				<td>#dateFormat(review.getCreatedDateTime())#</td>
-				<td class="varWidth">#local.review.getReview()#</td>
-				<td></td>
-			</tr>	
-		</cfloop>
-	</table>
-</cfoutput>--->

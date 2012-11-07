@@ -44,15 +44,17 @@ globalEncryptionKeySize
 
 	<!--- Injected from Coldspring --->
 	<cfproperty name="contentService" type="any" />
+	<cfproperty name="currencyService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="measurementUnitService" type="any" />
+	<cfproperty name="paymentService" type="any" />
 	<cfproperty name="taxService" type="any" />
 	<cfproperty name="utilityORMService" type="any" />
 	<cfproperty name="locationService" type="any" />
 	
 	<!--- Used For Caching --->
 	<cfproperty name="allSettingsQuery" type="query" />
-	<cfproperty name="globalSettingValues" type="struct" />
+	<cfproperty name="settingDetailsCache" type="struct" />
 	
 	<!--- Used As Meta information --->
 	<cfproperty name="settingMetaData" type="struct" />
@@ -60,7 +62,7 @@ globalEncryptionKeySize
 	<cfproperty name="settingPrefixInOrder" type="array" />
 	
 	<cfscript>
-		variables.globalSettingValues = {};
+		variables.settingDetailsCache = {};
 		
 		variables.settingPrefixInOrder = [
 			"shippingMethodRate",
@@ -70,6 +72,7 @@ globalEncryptionKeySize
 			"productType",
 			"product",
 			"content",
+			"account",
 			"brand",
 			"email",
 			"stock",
@@ -87,6 +90,11 @@ globalEncryptionKeySize
 		};
 		
 		variables.settingMetaData = {
+			// Account
+			accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
+			accountPaymentTerm = {fieldType="select"},
+			accountTermCreditLimit = {fieldType="text", formatType="currency"},
+			
 			// Brand
 			brandDisplayTemplate = {fieldType="select"},
 			brandHTMLTitleString = {fieldType="text"},
@@ -118,6 +126,7 @@ globalEncryptionKeySize
 			fulfillmentMethodEmailBCC = {fieldType="text"},
 			fulfillmentMethodEmailSubjectString = {fieldType="text"},
 			fulfillmentMethodAutoLocation = {fieldType="select"},
+			fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage"},
 			
 			// Global
 			globalCurrencyLocale = {fieldType="select"},
@@ -178,6 +187,8 @@ globalEncryptionKeySize
 			// Sku
 			skuAllowBackorderFlag = {fieldType="yesno"},
 			skuAllowPreorderFlag = {fieldType="yesno"},
+			skuCurrency = {fieldType="select"},
+			skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency"},
 			skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
 			skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
 			skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
@@ -206,6 +217,12 @@ globalEncryptionKeySize
 		
 		public array function getSettingOptions(required string settingName) {
 			switch(arguments.settingName) {
+				case "accountPaymentTerm" :
+					var optionSL = getPaymentService().getPaymentTermSmartList();
+					optionSL.addFilter('activeFlag', 1);
+					optionSL.addSelect('paymentTermName', 'name');
+					optionSL.addSelect('paymentTermID', 'value');
+					return optionSL.getRecords();
 				case "brandDisplayTemplate": case "productDisplayTemplate": case "productTypeDisplayTemplate" : case "contentRestrictedContentDisplayTemplate" :
 					return getContentService().getDisplayTemplateOptions();
 				case "globalCurrencyLocale":
@@ -238,6 +255,8 @@ globalEncryptionKeySize
 					return [{name='Sort Order', value='sortOrder'}, {name='Lowest Rate', value='lowest'}, {name='Highest Rate', value='highest'}];
 				case "shippingMethodRateAdjustmentType" :
 					return [{name='Increase Percentage', value='increasePercentage'}, {name='Decrease Percentage', value='decreasePercentage'}, {name='Increase Amount', value='increaseAmount'}, {name='Decrease Amount', value='decreaseAmount'}];
+				case "skuCurrency" :
+					return getCurrencyService().getCurrencyOptions();
 				case "skuTaxCategory":
 					var optionSL = getTaxService().getTaxCategorySmartList();
 					optionSL.addSelect('taxCategoryName', 'name');
@@ -288,6 +307,9 @@ globalEncryptionKeySize
 			if(structKeyExists(variables, "allSettingsQuery")) {
 				structDelete(variables, "allSettingsQuery");
 			}
+			if(structKeyExists(variables, "settingDetailsCache")) {
+				variables.settingDetailsCache = {};
+			}
 		}
 		
 		public any function saveSetting(required any entity, struct data={}) {
@@ -301,6 +323,24 @@ globalEncryptionKeySize
 		}
 		
 		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
+			
+			// Attempt to pull out a cached value first if possible
+			var cacheKey = "";
+			if( left(arguments.settingName, 6) eq "global" || !arguments.object.isPersistent() ) {
+				cacheKey = arguments.settingName;
+			} else if( ( !structKeyExists(arguments, "filterEntities") || !arrayLen(arguments.filterEntities) ) ) {
+				cacheKey = "#arguments.settingName#_#arguments.object.getPrimaryIDValue()#";
+			}
+			if( len(cacheKey) ) {
+				if(!structKeyExists(variables.settingDetailsCache, cacheKey)) {
+					variables.settingDetailsCache[ cacheKey ] = getSettingDetails(argumentCollection=arguments);
+				}
+				if(arguments.formatValue) {
+					return variables.settingDetailsCache[ cacheKey ].settingValueFormatted;	
+				}
+				return variables.settingDetailsCache[ cacheKey ].settingValue;	
+			}
+			
 			if(arguments.formatValue) {
 				return getSettingDetails(argumentCollection=arguments).settingValueFormatted;	
 			}
@@ -568,7 +608,13 @@ globalEncryptionKeySize
 				WHERE
 					LOWER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
 				  AND
-					<cfif structKeyExists(settingRelationships, "contentID")>
+				  	<cfif structKeyExists(settingRelationships, "accountID")>
+						LOWER(allSettings.accountID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.accountID)#" > 
+					<cfelse>
+						allSettings.accountID IS NULL
+					</cfif>
+				  AND
+				  	<cfif structKeyExists(settingRelationships, "contentID")>
 						LOWER(allSettings.contentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.contentID)#" > 
 					<cfelse>
 						allSettings.contentID IS NULL
@@ -580,7 +626,13 @@ globalEncryptionKeySize
 						allSettings.cmsContentID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "productTypeID")>
+				  	<cfif structKeyExists(settingRelationships, "paymentMethodID")>
+						LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
+					<cfelse>
+						allSettings.paymentMethodID IS NULL
+					</cfif>
+				  AND
+				  	<cfif structKeyExists(settingRelationships, "productTypeID")>
 						LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
 					<cfelse>
 						allSettings.productTypeID IS NULL

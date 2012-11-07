@@ -139,7 +139,9 @@ component extends="BaseService" output="false" accessors="true"{
 		var subscriptionUsages = getService("subscriptionService").getDAO().getSubscriptionUsageForRenewalReminder();
 		for(var subscriptionUsage in subscriptionUsages) {
 			if(!isNull(subscriptionUsage.getAutoPayFlag()) && subscriptionUsage.getAutoPayFlag()) {
-				getService("subscriptionService").processSubscriptionUsageRenewalReminder(subscriptionUsage, {}, 'auto');
+				getService("subscriptionService").processSubscriptionUsageRenewalReminder(subscriptionUsage, {eventName = 'subscriptionUsageAutoRenewalReminder'}, 'auto');
+			} else {
+				getService("subscriptionService").processSubscriptionUsageRenewalReminder(subscriptionUsage, {eventName = 'subscriptionUsageManualRenewalReminder'}, 'auto');
 			}
 		}
 		

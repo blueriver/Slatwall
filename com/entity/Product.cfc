@@ -98,6 +98,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="estimatedReceivalDetails" type="struct" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
+	property name="currencyCode" type="string" persistent="false";
 	property name="price" type="numeric" formatType="currency" persistent="false";
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
@@ -508,6 +509,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public numeric function getAllowBackorderFlag() {
 		return setting("skuAllowBackorderFlag");
+	}
+	
+	public any function getCurrencyCode() {
+		if( structKeyExists(variables, "defaultSku") ) {
+			return getDefaultSku().getCurrencyCode();
+		}
 	}
 	
 	public any function getPrice() {

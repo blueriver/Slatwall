@@ -41,6 +41,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="fulfillmentCharge" ormtype="big_decimal" default=0;
+	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Object Properties (many-to-one)
 	property name="accountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";

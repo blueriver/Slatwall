@@ -56,9 +56,7 @@ Notes:
 	
 	<cf_SlatwallListingDisplay smartList="#rc.orderItemSmartList#"
 							   recorddetailaction="admin:order.detailorderitem"
-							   recorddetailmodal="true"
-							   recordeditaction="admin:order.editorderitem"
-							   recordeditmodal="true">
+							   recordeditaction="admin:order.editorderitem">
 		<cf_SlatwallListingColumn propertyIdentifier="order.account.firstName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="order.account.lastName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />

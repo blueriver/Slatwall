@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Table tableName="SlatwallType">
 	<Columns>
 		<column name="typeID" fieldtype="id" />
@@ -7,6 +8,10 @@
 		<column name="systemCode" />
 	</Columns>
 	<Records>
+		<Record typeID="444df32cee42886828d43a685445e6a0" typeIDPath="444df32cee42886828d43a685445e6a0" parentTypeID="NULL" type="Account Payment Types" systemCode="accountPaymentType" />
+		<Record typeID="444df32dd2b0583d59a19f1b77869025" typeIDPath="444df32cee42886828d43a685445e6a0,444df32dd2b0583d59a19f1b77869025" parentTypeID="444df32cee42886828d43a685445e6a0" type="Charge" systemCode="aptCharge" />
+		<Record typeID="444df32e9b448ea196c18c66e1454c46" typeIDPath="444df32cee42886828d43a685445e6a0,444df32e9b448ea196c18c66e1454c46" parentTypeID="444df32cee42886828d43a685445e6a0" type="Credit" systemCode="aptCredit" />
+		
 		<Record typeID="444df29db643e69a26c071dabe619e8a" typeIDPath="444df29db643e69a26c071dabe619e8a" parentTypeID="NULL" type="Account Phone Types" systemCode="accountPhoneType" />
 		<Record typeID="444df29eaef3cfd1af021d4d31205328" typeIDPath="444df29db643e69a26c071dabe619e8a,444df29eaef3cfd1af021d4d31205328" parentTypeID="444df29db643e69a26c071dabe619e8a" type="Home Phone" systemCode="aptHome" />
 		<Record typeID="444df29ff763bac292f9aba2d3debafb" typeIDPath="444df29db643e69a26c071dabe619e8a,444df29ff763bac292f9aba2d3debafb" parentTypeID="444df29db643e69a26c071dabe619e8a" type="Mobile Phone" systemCode="aptMobile" />
@@ -25,14 +30,16 @@
 		
 		<Record typeID="444df2919d15d8ef5c9bc67857f19228" typeIDPath="444df2919d15d8ef5c9bc67857f19228" parentTypeID="NULL" type="Attribute Set Types" systemCode="attributeSetType" />
 		<Record typeID="444df2a3ebb07d6280c339a09c0d90d3" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df2a3ebb07d6280c339a09c0d90d3" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Account" systemCode="astAccount" />
+		<Record typeID="444df32b9730e4a50af0c0ecb9d77f3b" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df32b9730e4a50af0c0ecb9d77f3b" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Account Payment" systemCode="astAccountPayment" />
 		<Record typeID="444df325adea07a73014e74b449eb315" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df2a3ebb07d6280c339a09c0d90d3" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Brand" systemCode="astBrand" />
 		<Record typeID="444df327c72a5bd51bb2f691aac17008" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df327c72a5bd51bb2f691aac17008" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Order" systemCode="astOrder" />
 		<Record typeID="444df292eea355ddad72f5614726bc75" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df292eea355ddad72f5614726bc75" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Order Item" systemCode="astOrderItem" />
+		<Record typeID="444df32ac631b198a0f0319dd64e0e00" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df32ac631b198a0f0319dd64e0e00" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Order Payment" systemCode="astOrderPayment" />
 		<Record typeID="444df293fcc530434949d63e408cac2b" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df293fcc530434949d63e408cac2b" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product" systemCode="astProduct" />
 		<Record typeID="444df328fa718364a389a4495f386a27" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df328fa718364a389a4495f386a27" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="SKU" systemCode="astSku" />
 		<Record typeID="444df326c87e098e420297b5a1691e69" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df326c87e098e420297b5a1691e69" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Vendor" systemCode="astVendor" />
 		<Record typeID="444df329d293eeec641b805b68cca95f" typeIDPath="444df2919d15d8ef5c9bc67857f19228,444df329d293eeec641b805b68cca95f" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Vendor Order" systemCode="astVendorOrder" />
-		
+				
 		<Record typeID="444df2a4e7c799436c29759e09b6e2c5" typeIDPath="444df2a4e7c799436c29759e09b6e2c5" parentTypeID="NULL" type="Attribute Types" systemCode="attributeType" />
 		<Record typeID="444df2aaed92cb33d16a83d2bde93e72" typeIDPath="444df2a4e7c799436c29759e09b6e2c5,444df2aaed92cb33d16a83d2bde93e72" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Check Box" systemCode="atCheckbox" />
 		<Record typeID="444df2d2bd86e1f290c2cce99d5ca2d8" typeIDPath="444df2a4e7c799436c29759e09b6e2c5,444df2d2bd86e1f290c2cce99d5ca2d8" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Check Box Group" systemCode="atCheckBoxGroup" />
@@ -136,10 +143,10 @@
 <!--
 Below Are UUID's to use... delete after using
 
-
-
-
-
+444df32f9fb5d68f03f1af307b3d0644
+444df330fc19e5beb17ff974ac03db18
+444df331c2c2c3b093212519e8c1ae8b
+444df332f3988ad0c802b83361f99a01
 444df32ac631b198a0f0319dd64e0e00
 444df32b9730e4a50af0c0ecb9d77f3b
 444df32cee42886828d43a685445e6a0

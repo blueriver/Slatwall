@@ -44,7 +44,6 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="transactionType" type="string" ;
 	property name="transactionAmount" ormtype="float";
 	property name="transactionCurrency" ormtype="float";
-	property name="providerTransactionID" type="string";
 	property name="isDuplicateFlag" type="boolean";
 	
 	// Credit Card Info
@@ -54,6 +53,7 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="expirationMonth" type="numeric";   
 	property name="expirationYear" type="numeric";
 	property name="securityCode" type="numeric";
+	property name="providerToken" type="string";
 	
 	// Account Info
 	property name="accountFirstName" type="string";   
@@ -73,9 +73,12 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="billingCountryCode" type="string";   
 	
 	// Pertinent Reference Information
-	property name="orderPaymentID" type="string" ;
-	property name="orderID" type="string" ;
+	property name="accountPaymentID" type="string";
+	property name="orderPaymentID" type="string";
+	property name="orderID" type="string";
 	property name="accountID" type="string";
+	property name="providerTransactionID" type="string";
+	property name="referencedPaymentTransactionID" type="string";
 	
 	/*
 	Process Types
@@ -89,6 +92,62 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	
 	*/
 	
+	public void function populatePaymentInfoWithAccountPayment(required any accountPayment) {
+		// Populate Credit Card Info
+		setNameOnCreditCard(arguments.accountPayment.getNameOnCreditCard());
+		setCreditCardNumber(arguments.accountPayment.getCreditCardNumber());
+		setCreditCardType(arguments.accountPayment.getCreditCardType());
+		setExpirationMonth(arguments.accountPayment.getExpirationMonth());
+		setExpirationYear(arguments.accountPayment.getExpirationYear());
+		setSecurityCode(arguments.accountPayment.getSecurityCode());
+		if(!isNull(arguments.accountPayment.getProviderToken())) {
+			setProviderToken(arguments.accountPayment.getProviderToken());	
+		}
+		
+		// Populate Account Info
+		setAccountFirstName(arguments.accountPayment.getAccount().getFirstName());
+		setAccountLastName(arguments.accountPayment.getAccount().getLastName());
+		if(!isNull(arguments.accountPayment.getAccount().getPrimaryPhoneNumber())) {
+			setAccountPrimaryPhoneNumber(arguments.accountPayment.getAccount().getPrimaryPhoneNumber().getPhoneNumber());	
+		}
+		if(!isNull(arguments.accountPayment.getAccount().getPrimaryEmailAddress())) {
+			setAccountPrimaryEmailAddress(arguments.accountPayment.getAccount().getPrimaryEmailAddress().getEmailAddress());	
+		}
+		
+		// Populate Billing Address Info
+		if(!isNull(arguments.accountPayment.getBillingAddress().getName())) {
+			setBillingName(arguments.accountPayment.getBillingAddress().getName());
+		}
+		if(!isNull(arguments.accountPayment.getBillingAddress().getCompany())) {
+			setBillingCompany(arguments.accountPayment.getBillingAddress().getCompany());
+		}
+		if(!isNull(arguments.accountPayment.getBillingAddress().getStreetAddress())) {
+			setBillingStreetAddress(arguments.accountPayment.getBillingAddress().getStreetAddress());
+		}
+		if(!isNull(arguments.accountPayment.getBillingAddress().getStreet2Address())) {
+			setBillingStreet2Address(arguments.accountPayment.getBillingAddress().getStreet2Address());
+		}
+		if(!isNull(arguments.accountPayment.getBillingAddress().getLocality())) {
+			setBillingLocality(arguments.accountPayment.getBillingAddress().getLocality());
+		}
+		if(!isNull(arguments.accountPayment.getBillingAddress().getCity())) {
+			setBillingCity(arguments.accountPayment.getBillingAddress().getCity());
+		}
+		if(!isNull(arguments.accountPayment.getBillingAddress().getStateCode())) {
+			setBillingStateCode(arguments.accountPayment.getBillingAddress().getStateCode());
+		}
+		if(!isNull(arguments.accountPayment.getBillingAddress().getPostalCode())) {
+			setBillingPostalCode(arguments.accountPayment.getBillingAddress().getPostalCode());
+		}
+		if(!isNull(arguments.accountPayment.getBillingAddress().getCountryCode())) {
+			setBillingCountryCode(arguments.accountPayment.getBillingAddress().getCountryCode());
+		}
+		
+		// Populate relavent Misc Info
+		setAccountPaymentID(arguments.accountPayment.getAccountPaymentID());
+		setAccountID(arguments.accountPayment.getAccount().getAccountID());
+	}
+	
 	public void function populatePaymentInfoWithOrderPayment(required any orderPayment) {
 		
 		// Populate Credit Card Info
@@ -98,6 +157,9 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 		setExpirationMonth(arguments.orderPayment.getExpirationMonth());
 		setExpirationYear(arguments.orderPayment.getExpirationYear());
 		setSecurityCode(arguments.orderPayment.getSecurityCode());
+		if(!isNull(arguments.orderPayment.getProviderToken())) {
+			setProviderToken(arguments.orderPayment.getProviderToken());	
+		}
 		
 		// Populate Account Info
 		setAccountFirstName(arguments.orderPayment.getOrder().getAccount().getFirstName());
@@ -143,5 +205,5 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 		setOrderID(arguments.orderPayment.getOrder().getOrderID());
 		setAccountID(arguments.orderPayment.getOrder().getAccount().getAccountID());
 	}
-	
+
 }

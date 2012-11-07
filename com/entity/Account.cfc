@@ -56,16 +56,21 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="accountContentAccesses" singularname="accountContentAccess" cfc="AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
 	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
+	property name="accountPayments" singularname="accountPayment" cfc="AccountPayment" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all" inverse="true";
 	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
 	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
 	property name="subscriptionUsageBenefitAccounts" singularname="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="subscriptionUsages" singularname="subscriptionUsage" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
+	property name="termAccountOrderPayments" singularname="termAccountOrderPayment" cfc="OrderPayment" type="array" fieldtype="one-to-many" fkcolumn="termPaymentAccountID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
 	property name="permissionGroups" singularname="permissionGroup" cfc="PermissionGroup" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="accountID" inversejoincolumn="permissionGroupID";
+
+	// Related Object Properties (many-to-many - inverse)
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionCodeAccount" fkcolumn="accountID" inversejoincolumn="promotionCodeID" inverse="true";
 
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -80,18 +85,17 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
+	property name="guestAccountFlag" persistent="false" formatType="yesno";
 	property name="fullName" persistent="false";
 	property name="emailAddress" persistent="false" formatType="email";
 	property name="phoneNumber" persistent="false";
 	property name="address" persistent="false";
 	property name="password" persistent="false";
+	property name="termAccountAvailableCredit" persistent="false" formattype="currency";
+	property name="termAccountBalance" persistent="false" formattype="currency";
 	
 	public boolean function isGuestAccount() {
-		if(isNull(getCmsAccountID())) {
-			return true;
-		} else {
-			return false;
-		}
+		return isNull(getCmsAccountID());
 	}
 	
 	public string function getGravatarURL(numeric size=80) {
@@ -106,24 +110,28 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		var stPermissions = {};
 		var permissionGroups = getPermissionGroups();
 		
-		for(i=1; i <= arrayLen(permissionGroups); i++){
+		for(var i=1; i <= arrayLen(permissionGroups); i++){
 			var permissions = permissionGroups[i].getPermissions();
 			
-			for(j=1; j<= listlen(permissions); j++){
-				stPermissions[listGetAt(permissions,j)]='';
+			if(!isNull(permissions)) {
+				for(var j=1; j<= listlen(permissions); j++){
+					stPermissions[listGetAt(permissions,j)]='';
+				}	
 			}
 		}		
 		
 		return structKeyList(stPermissions);
 	}
-		
-	
 	
 	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
 		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function getGuestAccountFlag() {
+		return isNull(getCmsAccountID());
+	}
 	
 	public string function getPhoneNumber() {
 		return getPrimaryPhoneNumber().getPhoneNumber();
@@ -145,8 +153,33 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(!structKeyExists(variables, "paymentMethodOptionsSmartList")) {
 			variables.paymentMethodOptionsSmartList = getService("paymentService").getPaymentMethodSmartList();
 			variables.paymentMethodOptionsSmartList.addFilter("activeFlag", 1);
+			variables.paymentMethodOptionsSmartList.addInFilter("paymentMethodType", "cash,check,creditCard,external,giftCard");
 		}
 		return variables.paymentMethodOptionsSmartList;
+	}
+	
+	public numeric function getTermAccountAvailableCredit() {
+		var termAccountAvailableCredit = setting('accountTermCreditLimit');
+		
+		termAccountAvailableCredit = precisionEvaluate(termAccountAvailableCredit - getTermAccountBalance());
+		
+		return termAccountAvailableCredit;
+	}
+	
+	public numeric function getTermAccountBalance() {
+		var termAccountBalance = 0;
+		
+		// First look at all the unreceived open order payment
+		for(var i=1; i<=arrayLen(getTermAccountOrderPayments()); i++) {
+			termAccountBalance = precisionEvaluate(termAccountBalance + getTermAccountOrderPayments()[i].getAmountUnreceived());
+		}
+		
+		// Now look for the unasigned payment amount 
+		for(var i=1; i<=arrayLen(getAccountPayments()); i++) {
+			termAccountBalance = precisionEvaluate(termAccountBalance - getAccountPayments()[i].getAmountUnassigned());
+		}
+		
+		return termAccountBalance;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -183,6 +216,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}    
 	public void function removeAccountPaymentMethod(required any accountPaymentMethod) {    
 		arguments.accountPaymentMethod.removeAccount( this );    
+	}
+	
+	// Account Payments (one-to-many)    
+	public void function addAccountPayment(required any accountPayment) {    
+		arguments.accountPayment.setAccount( this );    
+	}    
+	public void function removeAccountPayment(required any accountPayment) {    
+		arguments.accountPayment.removeAccount( this );    
 	}
 	
 	// Account Phone Numbers (one-to-many)    
@@ -241,6 +282,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		arguments.subscriptionUsage.removeAccount( this );    
 	}
 	
+	// Term Account Order Payments (one-to-many)
+	public void function addTermAccountOrderPayment(required any termAccountOrderPayment) {
+		arguments.termAccountOrderPayment.setTermPaymentAccount( this );
+	}
+	public void function removeTermAccountOrderPayment(required any termAccountOrderPayment) {
+		arguments.termAccountOrderPayment.removeTermPaymentAccount( this );
+	}
+	
 	// Price Groups (many-to-many - owner)
 	public void function addPriceGroup(required any priceGroup) {
 		if(arguments.priceGroup.isNew() or !hasPriceGroup(arguments.priceGroup)) {
@@ -279,6 +328,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.permissionGroup.getAccounts(), thatIndex);
 		}
+	}
+	
+	// Promotion Codes (many-to-many - inverse)    
+	public void function addPromotionCode(required any promotionCode) {    
+		arguments.promotionCode.addAccount( this );    
+	}    
+	public void function removePromotionCode(required any promotionCode) {    
+		arguments.promotionCode.removeAccount( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

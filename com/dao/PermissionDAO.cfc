@@ -37,8 +37,8 @@ Notes:
 
 --->
 <cfcomponent extends="BaseDAO">
-		<cffunction name="getMissingUserAccounts" returntype="any" access="public">
-		
+	
+	<cffunction name="getMissingUserAccounts" returntype="any" access="public">
 		<cfquery name="accounts">
 			SELECT
 				accountID
@@ -58,4 +58,5 @@ Notes:
 		</cfquery>	
 		<cfreturn accounts />
 	</cffunction>
+	
 </cfcomponent>

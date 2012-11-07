@@ -33,10 +33,6 @@ jQuery(document).ready(function() {
 	// Focus on the first tab index
 	if(jQuery('.firstfocus').length) {
 		jQuery('.firstfocus').focus();	
-	} else {
-		if(!jQuery('input[tabindex=1]').hasClass('noautofocus')) {
-			jQuery('input[tabindex=1]').focus();
-		}
 	}
 	
 	if(jQuery('#global-search').val() !== '') {
@@ -227,9 +223,9 @@ function setupEventHandlers() {
 		var modalLink = jQuery(this).attr( 'href' );
 		
 		if( modalLink.indexOf("?") !== -1) {
-			modalLink = modalLink + '&modal=1&tabIndex=' + slatwall.tabIndex;
+			modalLink = modalLink + '&modal=1';
 		} else {
-			modalLink = modalLink + '?modal=1&tabIndex=' + slatwall.tabIndex;
+			modalLink = modalLink + '?modal=1';
 		}
 		
 		jQuery('#adminModal').load( modalLink, function(){

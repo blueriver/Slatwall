@@ -41,17 +41,47 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.order#" saveAction="admin:order.saveorder" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.orderItem#" saveAction="admin:order.saveOrderItem" edit="#rc.edit#" >
+		<cf_SlatwallActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:order.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
 		
-		<input type="hidden" name="orderItems[1].orderItemID" value="#rc.orderItem.getOrderItemID()#" />
+		<input type="hidden" name="orderItemID" value="#rc.orderItem.getOrderItemID()#" />
 		
 		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].orderItemStatusType.typeID" property="orderItemStatusType" edit="false" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].sku.skuID" property="sku" edit="#rc.orderItem.isNew()#">
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldName="orderItems[1].quantity" property="quantity" edit="#rc.edit#" />
+			<cf_SlatwallPropertyList divclass="span4">
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="orderItemStatusType" edit="false" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="sku" edit="#rc.orderItem.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="skuPrice" edit="false" />
+			</cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divclass="span4">
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantity" edit="#rc.edit#" />
+				<cfif rc.orderItem.getOrderItemType().getSystemCode() eq "oitSale">
+					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantityDelivered" edit="false" />
+					<hr />
+					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantityUndelivered" edit="false" />
+				<cfelse>
+					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantityReceived" edit="false" />
+					<hr />
+					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantityUnreceived" edit="false" />
+				</cfif>
+			</cf_SlatwallPropertyList>	
+			<cf_SlatwallPropertyList divclass="span4">
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="price" edit="false" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="extendedPrice" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="discountAmount" edit="false" />
+				<hr />
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="extendedPriceAfterDiscount" edit="false" />
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.orderItem#" allowCustomAttributes="true">
+			<cf_SlatwallTab view="admin:order/orderitemtabs/taxes" />
+			<cf_SlatwallTab view="admin:order/orderitemtabs/promotions" />
+			<cfif rc.orderItem.getOrderItemType().getSystemCode() eq "oitSale">
+				<cf_SlatwallTab view="admin:order/orderitemtabs/deliveryitems" />
+			<cfelse>
+				<cf_SlatwallTab view="admin:order/orderitemtabs/stockReceiverItems" />
+			</cfif>
+		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>

@@ -73,11 +73,38 @@ component displayname="Access" entityname="SlatwallAccess" table="SlatwallAccess
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
+	// =============== START: Custom Validation Methods ====================
+	
+	public boolean function hasUsageOrUsageBenefitOrUsageBenefitAccount() {
+		if(!isNull(getSubscriptionUsage()) || !isNull(getSubscriptionUsageBenefit()) || !isNull(getsubscriptionUsageBenefitAccount())) {
+			return true;
+		}
+		return false;
+	}
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "accessCode";
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
 }

@@ -38,11 +38,21 @@ Notes:
 */
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
-	property name="AccountService";
-	property name="SubscriptionService";
+	property name="accountService";
+	property name="paymentService";
+	property name="subscriptionService";
 	
 	this.publicMethods='';
-	this.secureMethods='listPermissionGroup,editPermissionGroup,detailPermissionGroup,deletePermissionGroup,savePermissionGroup,listAccount,detailAccount,editAccount,deleteAccount,saveAccount';
+	
+	this.anyAdminMethods='';
+	
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods, '**account');
+	this.secureMethods=listAppend(this.secureMethods, '*accountPayment');
+	this.secureMethods=listAppend(this.secureMethods, '*accountPaymentMethod');
+	this.secureMethods=listAppend(this.secureMethods, '**permissionGroup');
+	this.secureMethods=listAppend(this.secureMethods, '**subscriptionUsage');
+
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.listaccount");
@@ -59,11 +69,22 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		super.genericCreateMethod('PermissionGroup',rc);
 	}
-	
+	 
 	public void function detailPermissionGroup(required struct rc){
 		rc.permissions = getPermissionService().getPermissions();
 		
 		super.genericDetailMethod('PermissionGroup',rc);
+	}
+	
+	public any function createaccountpayment( required struct rc ) {
+		param name="rc.accountID" type="string" default="";
+		param name="rc.paymentMethodID" type="string" default="";
+		
+		rc.accountPayment = getAccountService().newAccountPayment();
+		rc.account = getAccountService().getAccount( rc.accountID );
+		rc.paymentMethod = getPaymentService().getPaymentMethod( rc.paymentMethodID );
+		
+		rc.edit = true;
 	}
 	
 }

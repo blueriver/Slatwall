@@ -94,7 +94,8 @@ component displayname="Data Service" extends="BaseService" {
 	}
 	
 	public void function loadDataFromXMLRaw(required string xmlRaw) {
-		var xmlData = xmlParse(xmlRaw);
+		var xmlRawEscaped = replace(xmlRaw,"&","&amp;","all");
+		var xmlData = xmlParse(xmlRawEscaped);
 		var columns = {};
 		var idColumns = "";
 		

@@ -56,12 +56,6 @@ component accessors="true" output="false" extends="BaseObject" {
 	}
 	
 	public any function getCurrentAccount() {
-		/*
-		if(!isNull(getCurrentSession().getAccount())) {
-			return getCurrentSession().getAccount();
-		}
-		return getService("accountService").newAccount();
-		*/
 		return getCurrentSession().getAccount();
 	}
 	

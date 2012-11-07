@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Table tableName="SlatwallSetting">
 	<Columns>
 		<column name="settingID" fieldtype="id" />
@@ -8,13 +9,13 @@
 		<column name="paymentMethodID" update="false" />
 	</Columns>
 	<Records>
+		<Record settingID="dbb327ffa8c83b9003ccdf5a65c92d25" settingName="accountTermCreditLimit" settingValue="0" />
+		
 		<Record settingID="dbb327f4e3ad1e47a1a932a8ad2a3ad8" settingName="emailFromAddress" settingValue="info@myslatwallStore.com" />
 		<Record settingID="dbb327f508d234f07c5c50064d14f223" settingName="emailToAddress" settingValue="info@myslatwallStore.com" />
 		<Record settingID="dbb327f6b9e0d4497b3cd2f9c9a6cc7a" settingName="emailSubject" settingValue="Message From MySlatwallStore" />
-		
 		<Record settingID="dbb327f70a6671d22c58b7635e8f4921" settingName="emailToAddress" settingValue="${account.emailAddress}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
 		<Record settingID="dbb327f8d5114720d065a3009a4da731" settingName="emailSubject" settingValue="Order Confirmation - Order Number: ${orderNumber}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
-		
 		<Record settingID="dbb327f9dd92fd95a7c6fdf14f1b141c" settingName="emailToAddress" settingValue="${order.account.emailAddress}" emailTemplateID="dbb327e694534908c60ea354766bf0a8" />
 		<Record settingID="dbb327fafb738698d58c2fa990ae45dd" settingName="emailSubject" settingValue="Delivery Confirmation - Order Number: ${order.orderNumber}" emailTemplateID="dbb327e694534908c60ea354766bf0a8" />
 			
@@ -50,6 +51,8 @@
 		
 		<Record settingID="dbb3279aa919ec2609ab33bfbfa732e6" settingName="skuAllowBackorderFlag" settingValue="0" />
 		<Record settingID="dbb3279708f5d43e0e5a45a1918b0e2b" settingName="skuAllowPreorderFlag" settingValue="0" />
+		<Record settingID="dbb327fce3c46bd94bdd602e435a431b" settingName="skuCurrency" settingValue="USD" />
+		<Record settingID="dbb327fdd9e6a7f22ad24c575c2e3f25" settingName="skuEligibleCurrencies" settingValue="USD" />
 		<Record settingID="dbb327d3f6444d22ddcdc2afb43a899b" settingName="skuEligibleFulfillmentMethods" settingValue="444df2fb93d5fa960ba2966ba2017953,444df2ffeca081dc22f69c807d2bd8fe" />
 		<Record settingID="dbb327c3ebccc259a5484776f066cad5" settingName="skuEligibleFulfillmentMethods" settingValue="444df2fb93d5fa960ba2966ba2017953" productTypeID="444df2f7ea9c87e60051f3cd87b435a1" />
 		<Record settingID="dbb327cbea9fe180f55e9e8a06896138" settingName="skuEligibleFulfillmentMethods" settingValue="444df2ffeca081dc22f69c807d2bd8fe" productTypeID="444df2f9c7deaa1582e021e894c0e299" />
@@ -79,21 +82,15 @@
 		<Record settingID="dbb327e2bfbef63ad4ae55e61c215760" settingName="paymentMethodCheckoutTransactionType" settingValue="none" paymentMethodID="444df303dedc6dab69dd7ebcc9b8036a" />
 		
 		<Record settingID="dbb327e3c7e233a8163146fd2f22179d" settingName="fulfillmentMethodAutoLocation" settingValue="88e6d435d3ac2e5947c81ab3da60eba2" />
-
+		<Record settingID="dbb327fef478617cd0704c40883c7841" settingName="fulfillmentMethodAutoMinReceivedPercentage" settingValue="100" />
 	</Records>
 </Table>
 		
 <!--
 Below Are UUID's to use... delete after using
+
 	
 	
-	
-	
-	
-	dbb327fce3c46bd94bdd602e435a431b
-	dbb327fdd9e6a7f22ad24c575c2e3f25
-	dbb327fef478617cd0704c40883c7841
-	dbb327ffa8c83b9003ccdf5a65c92d25
 	dbb32800cda3d64df34a388d19eae81d
 	dbb32801f856cefe9571571405c90957
 	dbb32802d0afe98f27c73469f742355e

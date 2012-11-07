@@ -610,6 +610,8 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
+		return rbKey("entity.#getClassName()#.#arguments.propertyName#");
+		/*
 		var exactMatch = rbKey("entity.#getClassName()#.#arguments.propertyName#");
 		if(right(exactMatch, 8) != "_missing") {
 			return exactMatch;
@@ -619,6 +621,7 @@ component displayname="Base Object" accessors="true" output="false" {
 			return genericMatch;
 		}
 		return exactMatch;
+		*/
 	}
 	
 	// @hint public method for getting the title hint to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
@@ -627,11 +630,13 @@ component displayname="Base Object" accessors="true" output="false" {
 		if(right(exactMatch, 8) != "_missing") {
 			return exactMatch;
 		}
+		return "";
+		/*
 		var genericMatch = rbKey("entity.define.#arguments.propertyName#_hint");
 		if(right(genericMatch, 8) != "_missing") {
 			return genericMatch;
 		}
-		return "";
+		*/
 	}
 	
 	// @hint public method to get the rbKey value for a property in a subentity
@@ -731,6 +736,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		return false;
 	}
 	
+	/*
 	// @help public method for getting a recursive list of all the meta data of the properties of an object
 	public array function getProperties() {
 		if(!structKeyExists(variables, "metaProperties")) {
@@ -745,6 +751,24 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 		return variables.metaProperties;
 	}
+	*/
+	
+	public array function getProperties() {
+		if( !hasApplicationValue("classPropertyCache_#getClassFullname()#") ) {
+			var metaData = getMetaData(this);
+			var metaProperties = metaData.properties;
+			
+			// Also add any extended data
+			if(structKeyExists(metaData, "extends") && structKeyExists(metaData.extends, "properties")) {
+				metaProperties = getService("utilityService").arrayConcat(metaData.extends.properties, metaProperties);
+			}
+			
+			setApplicationValue("classPropertyCache_#getClassFullname()#", metaProperties);
+		}
+		
+		return getApplicationValue("classPropertyCache_#getClassFullname()#");
+	}
+	
 	
 	// @help public method for getting the meta data of a specific property
 	public struct function getPropertyMetaData(string propertyName) {
@@ -858,10 +882,19 @@ component displayname="Base Object" accessors="true" output="false" {
 				if(isBoolean(arguments.value) && arguments.value) {
 					return rbKey('define.true');
 				} else {
-				return rbKey('define.false');
+					return rbKey('define.false');
 				}
 			}
 			case "currency": {
+				// Check to see if this object has a currencyCode
+				if( this.hasProperty("currencyCode") && !isNull(getCurrencyCode()) && len(getCurrencyCode()) eq 3 ) {
+					
+					var currency = getService("currencyService").getCurrency( getCurrencyCode() );
+					
+					return currency.getCurrencySymbol() & LSNumberFormat(arguments.value, ',.__');
+				}
+				
+				// Otherwsie use the global currencyLocal
 				return LSCurrencyFormat(arguments.value, setting("globalCurrencyType"), setting("globalCurrencyLocale"));
 			}
 			case "datetime": {
@@ -987,9 +1020,18 @@ component displayname="Base Object" accessors="true" output="false" {
 		return request.slatwallScope;
 	}
 	
-	// @hint  function for returning the any of the services in the application
+	// @hint gets a bean out of whatever the fw1 bean factory is
+	public any function getBean(required string beanName) {
+		return application.slatwallfw1.factory.getBean( arguments.beanName );
+	}
+	
+	// @hint returns an application scope cached version of the service
 	public any function getService(required string serviceName) {
-		return application.slatwallfw1.factory.getBean( arguments.serviceName );
+		if( !hasApplicationValue("serviceCache_#arguments.serviceName#") ) {
+			setApplicationValue("serviceCache_#arguments.serviceName#", getBean( arguments.serviceName ));
+		}
+		
+		return getApplicationValue("serviceCache_#arguments.serviceName#");
 	}
 	
 	// @hint  rounding function
@@ -1031,13 +1073,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint  helper function to return the Slatwall RB Factory in any component
 	public any function getRBFactory() {
 		if( !hasApplicationValue("rbFactory") ) {
-			// Build RB Factory
-			var rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
-			
-			// Build custom RB Factory
-			rbFactory= new mura.resourceBundle.resourceBundleFactory(rbFactory, getDirectoryFromPath(expandPath("/plugins/Slatwall/config/custom/resourceBundles/") ));
-			
-			setApplicationValue("rbFactory", rbFactory);
+			setApplicationValue("rbFactory", getService("utilityRBService"));
 		}
 		
 		return getApplicationValue("rbFactory");
@@ -1074,8 +1110,8 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint  helper function to return the RB Key from RB Factory in any component
-	public string function rbKey(required string key, string local="us") {
-		return getRBFactory().getKeyValue(arguments.local, arguments.key);
+	public string function rbKey(required string key, string locale="en_us") {
+		return getRBFactory().getRBKey(arguments.key, arguments.locale);
 	}
 	
 	// @hint helper function to return a Setting

@@ -74,9 +74,6 @@ Notes:
 		</cfloop>
 	</cfsilent>
 	
-	<cfparam name="request.context.tabindex" default="0" >
-	<cfset request.context.tabindex++ />
-	
 	<cfswitch expression="#attributes.fieldType#">
 		<cfcase value="hidden">
 			<cfoutput>
@@ -86,7 +83,7 @@ Notes:
 		<cfcase value="checkbox">
 			<cfoutput>
 				<input type="hidden" name="#attributes.fieldName#" value="" />
-				<input tabindex="#request.context.tabindex#" type="checkbox" name="#attributes.fieldName#" value="1" class="#attributes.fieldClass#" <cfif attributes.value EQ "1"> checked="checked"</cfif> #attributes.fieldAttributes# />
+				<input type="checkbox" name="#attributes.fieldName#" value="1" class="#attributes.fieldClass#" <cfif attributes.value EQ "1"> checked="checked"</cfif> #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="checkboxgroup">
@@ -95,24 +92,23 @@ Notes:
 				<cfloop array="#attributes.valueOptions#" index="option">
 					<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
 					<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
-					<input tabindex="#request.context.tabindex#" type="checkbox" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, thisOptionValue)> checked="checked"</cfif> #attributes.fieldAttributes# /> <span class="#attributes.fieldClass#">#thisOptionName#</span> <br />
-					<cfset request.context.tabindex++ />
+					<input type="checkbox" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, thisOptionValue)> checked="checked"</cfif> #attributes.fieldAttributes# /> <span class="#attributes.fieldClass#">#thisOptionName#</span> <br />
 				</cfloop>
 			</cfoutput>
 		</cfcase>
 		<cfcase value="date">
 			<cfoutput>
-				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# datepicker" #attributes.fieldAttributes# />
+				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# datepicker" #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="dateTime">
 			<cfoutput>
-				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# datetimepicker" #attributes.fieldAttributes# />
+				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# datetimepicker" #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="file">
 			<cfoutput>
-				<input tabindex="#request.context.tabindex#" type="file" name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes# />
+				<input type="file" name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="listingMultiselect">
@@ -121,7 +117,7 @@ Notes:
 		<cfcase value="multiselect">
 			<cfoutput>
 				<input name="#attributes.fieldName#" type="hidden" value="" />
-				<select tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass# multiselect" multiple="multiple" #attributes.fieldAttributes#>
+				<select name="#attributes.fieldName#" class="#attributes.fieldClass# multiselect" multiple="multiple" #attributes.fieldAttributes#>
 					<cfloop array="#attributes.valueOptions#" index="option">
 						<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
 						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
@@ -132,7 +128,7 @@ Notes:
 		</cfcase>
 		<cfcase value="password">
 			<cfoutput>
-				<input tabindex="#request.context.tabindex#" type="password" name="#attributes.fieldName#" class="#attributes.fieldClass#" autocomplete="off" #attributes.fieldAttributes# />
+				<input type="password" name="#attributes.fieldName#" class="#attributes.fieldClass#" autocomplete="off" #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="radiogroup">
@@ -152,14 +148,13 @@ Notes:
 				<cfloop array="#attributes.valueOptions#" index="option">
 						<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
 						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
-					<input tabindex="#request.context.tabindex#" type="radio" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif attributes.value EQ thisOptionValue> checked="checked"</cfif> #attributes.fieldAttributes# /><span class="#attributes.fieldClass#">#thisOptionName#</span>
-					<cfset request.context.tabindex++ />
+					<input type="radio" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif attributes.value EQ thisOptionValue> checked="checked"</cfif> #attributes.fieldAttributes# /><span class="#attributes.fieldClass#">#thisOptionName#</span>
 				</cfloop>
 			</cfoutput>
 		</cfcase>
 		<cfcase value="select">
 			<cfoutput>
-				<select tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes#>
+				<select name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes#>
 					<cfloop array="#attributes.valueOptions#" index="option">
 						<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
 						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
@@ -170,12 +165,12 @@ Notes:
 		</cfcase>
 		<cfcase value="text">
 			<cfoutput>
-				<input tabindex="#request.context.tabindex#" type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass#" #attributes.fieldAttributes# />
+				<input type="text" name="#attributes.fieldName#" value="#htmlEditFormat(attributes.value)#" class="#attributes.fieldClass#" #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="textarea">
 			<cfoutput>
-				<textarea tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes#>#attributes.value#</textarea>
+				<textarea name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes#>#htmlEditFormat(attributes.value)#</textarea>
 			</cfoutput>
 		</cfcase>
 		<cfcase value="time">
@@ -185,14 +180,13 @@ Notes:
 		</cfcase>
 		<cfcase value="wysiwyg">
 			<cfoutput>
-				<textarea tabindex="#request.context.tabindex#" name="#attributes.fieldName#" class="#attributes.fieldClass# wysiwyg" #attributes.fieldAttributes#>#attributes.value#</textarea>
+				<textarea name="#attributes.fieldName#" class="#attributes.fieldClass# wysiwyg" #attributes.fieldAttributes#>#attributes.value#</textarea>
 			</cfoutput>
 		</cfcase>
 		<cfcase value="yesno">
 			<cfoutput>
-				<label class="radio inline"><input tabindex="#request.context.tabindex#" type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="1" <cfif isBoolean(attributes.value) && attributes.value>checked="checked"</cfif> #attributes.fieldAttributes# />#yesNoFormat(1)#</label>
-				<cfset request.context.tabindex++ />
-				<label class="radio inline"><input tabindex="#request.context.tabindex#" type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="0" <cfif (isboolean(attributes.value) && not attributes.value) || not isBoolean(attributes.value)>checked="checked"</cfif> #attributes.fieldAttributes# />#yesNoFormat(0)#</label>
+				<label class="radio inline"><input type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="1" <cfif isBoolean(attributes.value) && attributes.value>checked="checked"</cfif> #attributes.fieldAttributes# />#yesNoFormat(1)#</label>
+				<label class="radio inline"><input type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="0" <cfif (isboolean(attributes.value) && not attributes.value) || not isBoolean(attributes.value)>checked="checked"</cfif> #attributes.fieldAttributes# />#yesNoFormat(0)#</label>
 			</cfoutput>
 		</cfcase>
 	</cfswitch>

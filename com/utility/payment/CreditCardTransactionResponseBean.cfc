@@ -47,6 +47,7 @@ component displayname="Gateway Response"  accessors="true" output="false" extend
 	property name="avsCode" type="string";
 	property name="securityCodeMatch" type="boolean";
 	property name="duplicateFlag" type="boolean";
+	property name="providerToken" type="string";
 	
 	public function init(){
 		// Set Defaults
@@ -57,6 +58,7 @@ component displayname="Gateway Response"  accessors="true" output="false" extend
 		setAmountCredited(0);
 		setAVSCode("E");
 		setSecurityCodeMatch(false);
+		setProviderToken("");
 		
 		return super.init();
 	}

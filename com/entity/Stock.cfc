@@ -43,7 +43,7 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	
 	// Related Object Properties (many-to-one)
 	property name="location" fieldtype="many-to-one" fkcolumn="locationID" cfc="Location";
-	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku" cascadeCalculated="true" lazy="false" fetch="join"; // We always want sku when we get a stock
+	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku" cascadeCalculated="true"; // We always want sku when we get a stock
 	
 	// Related Object Properties (one-to-many). Including this property to allow HQL to do  stock -> vendorOrderItem lookups
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="stockID" inverse="true";

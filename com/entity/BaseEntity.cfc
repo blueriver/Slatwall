@@ -45,14 +45,16 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
+		var properties = getProperties();
+		
 		// Loop over all properties
-		for(var i=1; i<=arrayLen(getProperties()); i++) {
+		for(var i=1; i<=arrayLen(properties); i++) {
 			// Set any one-to-many or many-to-many properties with a blank array as the default value
-			if(structKeyExists(getProperties()[i], "fieldtype") && listFindNoCase("many-to-many,one-to-many", getProperties()[i].fieldtype) && !structKeyExists(variables, getProperties()[i].name) ) {
-				variables[ getProperties()[i].name ] = [];
+			if(structKeyExists(properties[i], "fieldtype") && listFindNoCase("many-to-many,one-to-many", properties[i].fieldtype) && !structKeyExists(variables, properties[i].name) ) {
+				variables[ properties[i].name ] = [];
 			}
 			// set any activeFlag's to true by default 
-			if( getProperties()[i].name == "activeFlag" && isNull(getActiveFlag()) ) {
+			if( properties[i].name == "activeFlag" && isNull(getActiveFlag()) ) {
 				variables.activeFlag = 1;
 			}
 		}
@@ -107,6 +109,18 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	// Attribute Value
+	public array function getAttributeValuesForEntity() {
+		if(!structKeyExists(variables, "attributeValuesForEntity")) {
+			variables.attributeValuesForEntity = [];
+			if(hasProperty("attributeValues")) {
+				var primaryIDPropertyIdentifier = "#replace(getEntityName(), 'Slatwall', '')#.#getPrimaryIDPropertyName()#";
+				primaryIDPropertyIdentifier = lcase(left(primaryIDPropertyIdentifier, 1)) & right(primaryIDPropertyIdentifier, len(primaryIDPropertyIdentifier)-1);
+				variables.attributeValuesForEntity = getService("attributeService").getAttributeValuesForEntity(primaryIDPropertyIdentifier=primaryIDPropertyIdentifier, primaryIDValue=getPrimaryIDValue());
+			}
+		}
+		return variables.attributeValuesForEntity;
+	}
+	
 	public any function getAttributeValue(required string attribute, returnEntity=false){
 		
 		var attributeValueEntity = "";
@@ -161,8 +175,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
 			variables.attributeValuesByAttributeIDStruct = {};
 			if(hasProperty("attributeValues")) {
-				for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-					variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
+				var attributeValues = getAttributeValuesForEntity();
+				for(var i=1; i<=arrayLen(attributeValues); i++){
+					variables.attributeValuesByAttributeIDStruct[ attributeValues[i].getAttribute().getAttributeID() ] = attributeValues[i];
 				}	
 			}
 		}
@@ -174,8 +189,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
 			variables.attributeValuesByAttributeCodeStruct = {};
 			if(hasProperty("attributeValues")) {
-				for(var i=1; i<=arrayLen(getAttributeValues()); i++){
-					variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
+				var attributeValues = getAttributeValuesForEntity();
+				for(var i=1; i<=arrayLen(attributeValues); i++){
+					variables.attributeValuesByAttributeCodeStruct[ attributeValues[i].getAttribute().getAttributeCode() ] = attributeValues[i];
 				}
 			}
 		}
@@ -494,15 +510,15 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint Generic abstract dynamic ORM methods by convention via onMissingMethod.
 	public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
-		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
-		if( left(arguments.missingMethodName, 9) == "hasUnique") {
-			
-			return hasUniqueProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 9) );
-		
 		// hasUniqueOrNullXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
-		} else if( left(arguments.missingMethodName, 15) == "hasUniqueOrNull") {
+		if( left(arguments.missingMethodName, 15) == "hasUniqueOrNull") {
 			
 			return hasUniqueOrNullProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 15) );
+		
+		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
+		} else if( left(arguments.missingMethodName, 9) == "hasUnique") {
+			
+			return hasUniqueProperty( right(arguments.missingMethodName, len(arguments.missingMethodName) - 9) );
 		
 		// hasAnyXXX() 			Where XXX is one-to-many or many-to-many property and we want to see if it has any of an array of entities
 		} else if( left(arguments.missingMethodName, 6) == "hasAny") {
@@ -535,7 +551,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			return arrayLen(variables[ left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-8) ]);
 			
 		// getXXX() 			Where XXX is either and attributeID or attributeCode
-		} else if (left(arguments.missingMethodName, 3) == "get" && structKeyExists(variables, "getAttributeValue")) {
+		} else if (left(arguments.missingMethodName, 3) == "get" && structKeyExists(variables, "getAttributeValue") && hasProperty("attributeValues")) {
 			
 			return getAttributeValue(right(arguments.missingMethodName, len(arguments.missingMethodName)-3));	
 			
@@ -631,30 +647,25 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		}
 	}
 	
+	/*
 	public void function preDelete(any entity){
-		
-
 	}
 	
 	public void function preLoad(any entity){
-
 	}
 	
 	public void function postInsert(any entity){
-
 	}
 	
 	public void function postUpdate(any entity){
-
 	}
 	
 	public void function postDelete(any entity){
-
 	}
 	
 	public void function postLoad(any entity){
-
 	}
+	*/
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

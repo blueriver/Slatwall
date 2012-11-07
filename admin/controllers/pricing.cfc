@@ -44,7 +44,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="productService" type="any";
 	
 	this.publicMethods='';
-	this.secureMethods='listPromotion,editPromotion,detailPromotion,deletePromotion,savePromotion,listPricegroup,editPriceGroup,detailPriceGroup,deletePricegroup,savePricegroup';
+	
+	this.anyAdminMethods='';
+	
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods, '**priceGroup');
+	this.secureMethods=listAppend(this.secureMethods, '*priceGroupRate');
+	this.secureMethods=listAppend(this.secureMethods, '**promotion');
+	this.secureMethods=listAppend(this.secureMethods, '*promotionCode');
+	this.secureMethods=listAppend(this.secureMethods, '*promotionPeriod');
+	this.secureMethods=listAppend(this.secureMethods, '*promotionQualifier');
+	this.secureMethods=listAppend(this.secureMethods, '*promotionReward');
 	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:pricing.listpromotion");

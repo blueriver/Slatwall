@@ -42,7 +42,7 @@ component displayname="Subscription Order Item" entityname="SlatwallSubscription
 	property name="subscriptionOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties (many-to-one)
-	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" lazy="false" fetch="join";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="subscriptionOrderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionOrderItemTypeID";
 	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" cascade="all";
 

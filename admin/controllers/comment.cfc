@@ -43,7 +43,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="orderService" type="any";
 	
 	this.publicMethods='';
-	this.secureMethods='';
+	
+	this.anyAdminMethods='';
+	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
+	
+	this.secureMethods=listAppend(this.anyAdminMethods, 'detailComment');
+	this.secureMethods=listAppend(this.anyAdminMethods, 'editComment');
 	
     public void function link(required struct rc) {
     	param name="rc.entity";

@@ -44,7 +44,20 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="LocationService" type="any";
 	
 	this.publicMethods='';
-	this.secureMethods='listOrder,detailOrder,editOrder,deleteOrder,saveOrder,listOrderFullfillment,editOrderFullfillment,detailOrderFullfillment,deleteOrderFullfillment,saveOrderFullfillment';
+	
+	this.anyAdminMethods='';
+	
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods, '**order');
+	this.secureMethods=listAppend(this.secureMethods, 'processOrder');
+	this.secureMethods=listAppend(this.secureMethods, '*orderDelivery');
+	this.secureMethods=listAppend(this.secureMethods, '**orderFulfillment');
+	this.secureMethods=listAppend(this.secureMethods, 'processOrderFulfillment');
+	this.secureMethods=listAppend(this.secureMethods, '**orderItem');
+	this.secureMethods=listAppend(this.secureMethods, '**orderPayment');
+	this.secureMethods=listAppend(this.secureMethods, 'processOrderPayment');
+	this.secureMethods=listAppend(this.secureMethods, '*orderReturn');
+	this.secureMethods=listAppend(this.secureMethods, 'detailPaymentTransaction');
 	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:order.listorder");

@@ -511,11 +511,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	private void function manualRenewalReminderSubscriptionUsage(required any subscriptionUsage, struct data={}) {
-		getEmailService().sendEmailByEvent("subscriptionUsageRenewalReminder", arguments.subscriptionUsage);
+		param name="arguments.data.eventName" type="string" default="subscriptionUsageRenewalReminder";
+		getEmailService().sendEmailByEvent(arguments.data.eventName, arguments.subscriptionUsage);
 	}
 	
 	private void function autoRenewalReminderSubscriptionUsage(required any subscriptionUsage, struct data={}) {
-		var emails = getEmailService().listEmail({eventName='subscriptionUsageRenewalReminder'});
+		param name="arguments.data.eventName" type="string" default="subscriptionUsageRenewalReminder";
+		var emails = getEmailService().listEmail({eventName = arguments.data.eventName});
 		if(arrayLen(emails)) {
 			var reminderEmail = emails[1];
 			// check if its time to send reminder email
@@ -534,7 +536,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							} else {
 								arguments.subscriptionUsage.setNextReminderEmailDate(javaCast("null",""));
 							}
-							getEmailService().sendEmailByEvent("subscriptionUsageRenewalReminder", arguments.subscriptionUsage);
+							getEmailService().sendEmailByEvent(arguments.data.eventName, arguments.subscriptionUsage);
 							getDAO().flushORMSession();
 							break;
 						}

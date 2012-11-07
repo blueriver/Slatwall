@@ -38,6 +38,8 @@ Notes:
 */
 component extends="BaseService" output="false" {
 
+	// ===================== START: Logical Methods ===========================
+	
 	public numeric function convertWeightToGlobalWeightUnit(required numeric weight, required any measurementUnitCode) {
 		if(setting('globalWeightUnitCode') eq arguments.measurementUnitCode) {
 			return arguments.weight;
@@ -58,8 +60,6 @@ component extends="BaseService" output="false" {
 		// Otherwise just return the original weight
 		return arguments.weight;
 	}
-	
-	// ===================== START: Logical Methods ===========================
 	
 	// =====================  END: Logical Methods ============================
 	

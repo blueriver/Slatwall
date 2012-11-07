@@ -127,7 +127,11 @@ Notes:
 			GROUP BY
 				SlatwallSku.skuID
 			ORDER BY
-				SUM(SlatwallOption.sortOrder * POWER(10, #getNextOptionGroupSortOrder()# - SlatwallOptionGroup.sortOrder)) ASC
+				<cfif application.configBean.getDBType() eq "mssql">
+					SUM(SlatwallOption.sortOrder * POWER(CAST(10 as bigint), CAST((#getNextOptionGroupSortOrder()# - SlatwallOptionGroup.sortOrder) as bigint))) ASC
+				<cfelse>
+					SUM(SlatwallOption.sortOrder * POWER(10, #getNextOptionGroupSortOrder()# - SlatwallOptionGroup.sortOrder)) ASC
+				</cfif>
 		</cfquery>
 		
 		<cfreturn sorted />

@@ -37,7 +37,10 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.product.getSkusSmartList()#"
+	<cfset local.skusSmartList = rc.product.getSkusSmartList() />
+	<cfset local.skusSmartList.joinRelatedProperty("SlatwallSku", "options", "left", true) />
+	
+	<cf_SlatwallListingDisplay smartList="#local.skusSmartList#"
 							   edit="#rc.edit#"
 							   recordDetailAction="admin:product.detailsku"
 							   recordDetailQueryString="productID=#rc.product.getProductID()#"

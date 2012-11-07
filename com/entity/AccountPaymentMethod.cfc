@@ -47,6 +47,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string" formfieldType="select";
 	property name="expirationYear" ormType="string" formfieldType="select";
+	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (Many-to-One)
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";

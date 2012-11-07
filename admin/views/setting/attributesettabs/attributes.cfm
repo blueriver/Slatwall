@@ -46,15 +46,15 @@ Notes:
 							   recordDetailAction="admin:setting.detailattribute"
 							   recordDetailQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
 							   recordDeleteAction="admin:setting.deleteattribute"
-							   recordDeleteQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#&returnAction=admin:setting.detailAttributeSet"
+							   recordDeleteQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#&returnAction=admin:setting.detailattributeset"
 							   sortProperty="sortOrder"
 							   sortContextID="attributeSetID"
 							   sortContextIDValue="#rc.attributeSet.getAttributeSetID()#">
 							      
 		<cf_SlatwallListingColumn propertyIdentifier="attributeCode" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeName" />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" /> 
-		<cf_SlatwallListingColumn propertyIdentifier="attributeType.type" /> 
+		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
+		<cf_SlatwallListingColumn propertyIdentifier="attributeType.type" />
 	</cf_SlatwallListingDisplay>
 	
 	<cf_SlatwallActionCaller action="admin:setting.createattribute" class="btn btn-inverse" icon="plus icon-white" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />

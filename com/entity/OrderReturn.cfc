@@ -41,6 +41,7 @@ component displayname="Order Return" entityname="SlatwallOrderReturn" table="Sla
 	// Persistent Properties
 	property name="orderReturnID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="fulfillmentRefundAmount" ormtype="big_decimal";
+	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";

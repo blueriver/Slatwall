@@ -15,9 +15,10 @@ http://github.com/ten24/Slatwall/wiki/Developer-Guide
 Requirements
 ------------
 
-Mura Version 5.4 or Newer
-Coldfusion 9.0.1
-Railo 3.3.0.022 (Not officially supported yet)
+Mura Version 5.6 or Newer
+
+Coldfusion 9.0.1 or Newer
+Railo 4 or Newer
 
 
 Installation

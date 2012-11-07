@@ -45,12 +45,16 @@ Notes:
 	</cf_SlatwallActionBar>
 	
 	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
+		<cf_SlatwallPropertyList divclass="span6">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">			
+		</cf_SlatwallPropertyList>
+		<cf_SlatwallPropertyList divclass="span6">
+			<cf_SlatwallPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
+			<cf_SlatwallPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
 		</cf_SlatwallPropertyList>
 	</cf_SlatwallDetailHeader>
 	
@@ -61,7 +65,9 @@ Notes:
 		<cf_SlatwallTab view="admin:account/accounttabs/subscriptionusage" />
 		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />
 		<cf_SlatwallTab view="admin:account/accounttabs/productreviews" />
+		<cf_SlatwallTab view="admin:account/accounttabs/accountpayments" />
 		<cf_SlatwallTab view="admin:account/accounttabs/permissions" />
+		<cf_SlatwallTab view="admin:account/accounttabs/accountsettings" />
 	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>

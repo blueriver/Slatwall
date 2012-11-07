@@ -39,13 +39,9 @@ Notes:
 
 component accessors="true" output="false" displayname="Authorize.net" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
-	// Custom Properties that need to be set by the end user
-	property name="loginID" displayname="Login ID" type="string";
-	property name="transKey" validateRequired="true" displayname="Transaction Key" type="string";
-	property name="testModeFlag" displayname="Test Mode" type="boolean" default="true";
-	
 	//Global variables
 	variables.gatewayURL = "https://secure.authorize.net/gateway/transact.dll";
+	variables.testGatewayURL = "https://test.authorize.net/gateway/transact.dll";
 	variables.version = "3.1";
 	variables.timeout = "45";
 	variables.responseDelimiter = "|";
@@ -133,7 +129,11 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 	private any function postRequest(required struct requestData){
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
-		httpRequest.setUrl( variables.gatewayURL );
+		if( setting('testServerFlag') ) {
+			httpRequest.setUrl( variables.testGatewayURL );
+		} else {
+			httpRequest.setUrl( variables.gatewayURL );	
+		}
 		httpRequest.setTimeout(variables.timeout);
 		httpRequest.setResolveurl(false);
 		for(var key in requestData){

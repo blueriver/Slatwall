@@ -41,20 +41,21 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Persistent Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="orderNumber" ormtype="string";
+	property name="currencyCode" ormtype="string" length="3";
 	property name="orderOpenDateTime" ormtype="timestamp";
 	property name="orderCloseDateTime" ormtype="timestamp";
 	
 	// Calculated Properties
 	property name="calculatedTotal" ormtype="big_decimal";
 	
-	// Related Object Properties (Many-To-One)
+	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="referencedOrder" cfc="Order" fieldtype="many-to-one" fkcolumn="referencedOrderID";	// Points at the "parent" (NOT return) order.
 	property name="orderType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderTypeID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
 	property name="orderOrigin" cfc="OrderOrigin" fieldtype="many-to-one" fkcolumn="orderOriginID";
 	
-	// Related Object Properties (One-To-Many)
+	// Related Object Properties (one-To-many)
 	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
@@ -65,8 +66,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
 	
-	// Related Object Properties (Many-To-Many)
+	// Related Object Properties (many-To-many - owner)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
+	
+	// Related Object Properties (many-to-many - inverse)
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -83,6 +86,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency";
 	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	property name="fulfillmentRefundTotal" persistent="false" formatType="currency";
+	property name="fulfillmentChargeAfterDiscountTotal" persistent="false" formatType="currency";
 	property name="orderDiscountAmountTotal" persistent="false" formatType="currency";
 	property name="paymentAmountTotal" persistent="false" formatType="currency";
 	property name="paymentAuthorizedTotal" persistent="false" formatType="currency";
@@ -247,6 +251,15 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		
 		return fulfillmentRefundTotal;
+	}
+	
+	public numeric function getFulfillmentChargeAfterDiscountTotal() {
+		var fulfillmentChargeAfterDiscountTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
+			fulfillmentChargeAfterDiscountTotal = precisionEvaluate(fulfillmentChargeAfterDiscountTotal + getOrderFulfillments()[i].getChargeAfterDiscount());
+		}
+		
+		return fulfillmentChargeAfterDiscountTotal;
 	}
 	
 	public numeric function getOrderDiscountAmountTotal() {
@@ -470,8 +483,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return arrayLen(getOrderItems());
 	}
 	
-	
-	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
@@ -583,6 +594,26 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	public void function removeAppliedPromotion(required any appliedPromotion) {
 		arguments.appliedPromotion.removeOrder( this );
+	}
+	
+	// Promotion Codes (many-to-many - owner)
+	public void function addPromotionCode(required any promotionCode) {
+		if(arguments.promotionCode.isNew() or !hasPromotionCode(arguments.promotionCode)) {
+			arrayAppend(variables.promotionCodes, arguments.promotionCode);
+		}
+		if(isNew() or !arguments.promotionCode.hasOrder( this )) {
+			arrayAppend(arguments.promotionCode.getOrders(), this);
+		}
+	}
+	public void function removePromotionCode(required any promotionCode) {
+		var thisIndex = arrayFind(variables.promotionCodes, arguments.promotionCode);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.promotionCodes, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.promotionCode.getOrders(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.promotionCode.getOrders(), thatIndex);
+		}
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

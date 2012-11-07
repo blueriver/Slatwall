@@ -51,10 +51,9 @@ Notes:
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderitems.saleItems')#</h4>
 		<cf_SlatwallListingDisplay smartList="#local.saleList#"
 								   recordDetailAction="admin:order.detailorderitem"
-								   recordDetailModal="true"
+								   recordDetailQueryString="returnAction=admin:order.detailOrder&orderID=#rc.order.getOrderID()#"
 								   recordEditAction="admin:order.editorderitem"
-								   recordEditQueryString="orderID=#rc.order.getOrderID()#"
-								   recordEditModal="true">
+								   recordEditQueryString="returnAction=admin:order.detailOrder&orderID=#rc.order.getOrderID()#">
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
 			<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
 			<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
@@ -71,10 +70,7 @@ Notes:
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderitems.returnItems')#</h4>
 		<cf_SlatwallListingDisplay smartList="#local.returnList#"
 								   recordDetailAction="admin:order.detailorderitem"
-								   recordDetailModal="true"
-								   recordEditAction="admin:order.editorderitem"
-								   recordEditQueryString="orderID=#rc.order.getOrderID()#"
-								   recordEditModal="true">
+								   recordEditAction="admin:order.editorderitem">
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
 			<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
 			<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />

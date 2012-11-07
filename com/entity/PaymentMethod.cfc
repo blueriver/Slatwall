@@ -33,21 +33,29 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
-
+Notes:					
+						
+	paymentMethodType	
+		cash			
+		check			
+		creditCard		
+		external		
+		giftCard		
+		paymentTerm		
+						
 */
 component displayname="Payment Method" entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="paymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="paymentMethodName" ormtype="string";
-	property name="paymentMethodType" ormtype="string" formFieldType="select";
-	property name="providerGateway" ormtype="string";
+	property name="paymentMethodType" ormtype="string" formatType="rbKey";
 	property name="allowSaveFlag" ormtype="boolean" default="false";
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
+	property name="paymentIntegration" cfc="Integration" fieldtype="many-to-one" fkcolumn="paymentIntegrationID";
 	
 	// Related Object Properties (one-to-many)
 	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="paymentMethodID" cascade="all" inverse="true" lazy="extra";		// Set to lazy, just used for delete validation
@@ -68,30 +76,22 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	
 	// Non-Persistent Properties
 
-
-	public array function getPaymentMethodTypeOptions() {
-		var options = [
-			{name="Cash", value="cash"},
-			{name="Check", value="check"},
-			{name="Credit Card", value="creditCard"},
-			{name="External", value="external"},
-			{name="Gift Card", value="giftCard"}
-		];
-		return options;
-	}
 	
-	public array function getProviderGatewayOptions() {
+	public array function getPaymentIntegrationOptions() {
+		var returnArray = [{name=rbKey('define.select'), value=""}];
+		
 		var optionsSL = getService("integrationService").getIntegrationSmartList();
+		optionsSL.addFilter('installedFlag', '1');
 		optionsSL.addFilter('paymentActiveFlag', '1');
-		optionsSL.addSelect('integrationName', 'name');
-		optionsSL.addSelect('integrationPackage', 'value');
-		return optionsSL.getRecords();
+		
+		for(var i=1; i<=arrayLen(optionsSL.getRecords()); i++) {
+			if(listFindNoCase(optionsSL.getRecords()[i].getIntegrationCFC("payment").getPaymentMethodTypes(), getPaymentMethodType())) {
+				arrayAppend(returnArray, {name=optionsSL.getRecords()[i].getIntegrationName(), value=optionsSL.getRecords()[i].getIntegrationID()});	
+			}
+		}
+		
+		return returnArray;
 	}
-	
-	public any function getIntegration() {
-		return getService("integrationService").getIntegrationByIntegrationPackage(getProviderGateway());
-	}
-	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -138,6 +138,10 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	// ===================  END:  ORM Event Hooks  =========================
 	
 	// ================== START: Deprecated Methods ========================
+	
+	public any function getIntegration() {
+		return getPaymentIntegration();
+	}
 	
 	// ==================  END:  Deprecated Methods ========================
 	
