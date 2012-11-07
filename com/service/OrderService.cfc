@@ -205,12 +205,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								av.setAttribute(attributes[a]);
 								av.setAttributeValue(arguments.customizationData.attribute[attributes[a].getAttributeID()]);
 								av.setOrderItem(newItem);
+								// Push the attribute value
+								getDAO().save(av);
 							}
 						}
 					}
 				}
 			}
-		
+			
+			// Push the order Item into the hibernate scope
+			getDAO().save(newItem);
+			
 			// Recalculate the order amounts for tax and promotions and priceGroups
 			recalculateOrderAmounts( arguments.order );
 		
