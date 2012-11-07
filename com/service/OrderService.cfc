@@ -211,10 +211,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						}
 					}
 				}
+				
+				// Push the order Item into the hibernate scope
+				getDAO().save(newItem);
 			}
-			
-			// Push the order Item into the hibernate scope
-			getDAO().save(newItem);
 			
 			// Recalculate the order amounts for tax and promotions and priceGroups
 			recalculateOrderAmounts( arguments.order );
