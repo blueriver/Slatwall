@@ -683,7 +683,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	public string function buildURL(required string queryAddition, boolean appendValues=true, boolean toggleKeys=true, string currentURL=variables.currentURL) {
 		// Generate full URL if one wasn't passed in
 		if(arguments.currentURL == "") {
-			arguments.currentURL &= CGI.SCRIPT_NAME;
+			//arguments.currentURL &= CGI.SCRIPT_NAME;
 			if(CGI.PATH_INFO != "" && CGI.PATH_INFO neq CGI.SCRIPT_NAME) {
 				arguments.currentURL &= CGI.PATH_INFO;	
 			}
@@ -786,9 +786,17 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return modifiedURL;
 	}
 	
-	public boolean function isFilterApplied(required string filter,required string value){
+	public boolean function isFilterApplied(required string filter, required string value){
 		var exists = false;
 		if(structKeyExists(url,"F#variables.dataKeyDelimiter##arguments.filter#") && listFindNoCase(url["F#variables.dataKeyDelimiter##arguments.filter#"],arguments.value,variables.valueDelimiter)){
+			exists = true;
+		}
+		return exists;
+	}
+	
+	public boolean function isLikeFilterApplied(required string filter, required string value){
+		var exists = false;
+		if(structKeyExists(url,"FK#variables.dataKeyDelimiter##arguments.filter#") && listFindNoCase(url["FK#variables.dataKeyDelimiter##arguments.filter#"],arguments.value,variables.valueDelimiter)){
 			exists = true;
 		}
 		return exists;
@@ -837,7 +845,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		for(var i=1; i<=arrayLen(variables.whereGroups); i++) {
 			for(var key in variables.whereGroups[i].ranges) {
 				if(key == rangeProperty) {
-					structDelete(variables.whereGroups[i].filters, key);
+					structDelete(variables.whereGroups[i].ranges, key);
 				}
 			}
 		}
