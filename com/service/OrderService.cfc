@@ -381,7 +381,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public void function setupOrderItemContentAccess(required any orderItem) {
 		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
 			var accountContentAccess = getAccountService().newAccountContentAccess();
-			accountContentAccess.setAccount(getSlatwallScope().getCurrentAccount());
+			accountContentAccess.setAccount(arguments.orderItem.getOrder().getAccount());
 			accountContentAccess.setOrderItem(arguments.orderItem);
 			accountContentAccess.addAccessContent(accessContent);
 			getAccountService().saveAccountContentAccess(accountContentAccess);
