@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,33 @@
 
 Notes:
 
---->
-<cfcomponent extends="BaseDAO">
-	
-	<cffunction name="getAttributeValuesForEntity" returntype="array" access="public">
-		<cfargument name="primaryIDPropertyIdentifier">
-		<cfargument name="primaryIDValue" />
+*/
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
+
+	public void function setUp() {
+		super.setup();
 		
-		<cfreturn ormExecuteQuery("SELECT av FROM SlatwallAttributeValue av INNER JOIN FETCH av.attribute att INNER JOIN FETCH att.attributeSet ats WHERE av.#primaryIDPropertyIdentifier# = ?", [arguments.primaryIDValue], false, {ignoreCase="true"}) />
-	</cffunction>
+		variables.service = request.slatwallScope.getService("utilityORMService");
+	}
 	
-	<cffunction name="getAttributeCodesQueryByAttributeSetType" returntype="query" access="public">
-		<cfargument name="attributeSetType" required="true" type="string" />
-		
-		<cfset var rs = "" />
-		<cfquery name="rs">
-			SELECT
-				SlatwallAttribute.attributeCode
-			FROM
-				SlatwallAttribute
-			  INNER JOIN
-			  	SlatwallAttributeSet on SlatwallAttribute.attributeSetID = SlatwallAttributeSet.attributeSetID
-			  INNER JOIN
-			  	SlatwallType on SlatwallAttributeSet.attributeSetTypeID = SlatwallType.typeID
-			WHERE
-				SlatwallType.systemCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.attributeSetType#"/>
-		</cfquery>
-		<cfreturn rs />
-	</cffunction> 
+	// getProperlyCasedShortEntityName()
+	public void function getProperlyCasedShortEntityName_returns_entity_name_correctly() {
+		assertEquals("OrderItem", variables.service.getProperlyCasedShortEntityName("SLATWALLORDERITEM"));
+	}
 	
-</cfcomponent>
+	
+	// getProperlyCasedFullEntityName()
+	public void function getProperlyCasedFullEntityName_returns_entity_name_correctly_if_CAPS() {
+		assertEquals("SlatwallOrderItem", variables.service.getProperlyCasedFullEntityName("ORDERITEM"));
+	}
+	
+	public void function getProperlyCasedFullEntityName_returns_entity_name_correctly_if_mixed() {
+		assertEquals("SlatwallOrderItem", variables.service.getProperlyCasedFullEntityName("SlaTWAllOrderItEM"));
+	}
+	
+	// getProperlyCasedFullClassNameByEntityName()
+	public void function getProperlyCasedFullClassNameByEntityName() {
+		assertEquals("Slatwall.com.entity.OrderItem", variables.service.getProperlyCasedFullClassNameByEntityName("SlaTWAllOrderItEM"));
+	}
+}
+
