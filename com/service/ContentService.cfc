@@ -50,7 +50,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			content.setCmsContentID(arguments.cmsContentID);
 		}
 		var settingDetails = content.getSettingDetails('contentRestrictAccessFlag');
-		if(settingDetails.settingValueformatted){
+		if(settingDetails.settingValue){
 			if(!content.isNew() && !settingDetails.settingInherited) {
 				return content;
 			} else if(settingDetails.settingInherited) {
