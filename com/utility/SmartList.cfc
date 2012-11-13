@@ -770,7 +770,20 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			modifiedURL &= "P#variables.dataKeyDelimiter#Show=#oldQueryKeys[ 'P#variables.dataKeyDelimiter#Show' ]#&";
 		}
 	
-		return left(modifiedURL, len(modifiedURL)-1);
+		
+		/*
+		if(right(modifiedURL, 1) eq "&" || right(modifiedURL, 1) eq "?") {
+			modifiedURL &= "savedStateID=#getSavedStateID()#";
+		} else {
+			modifiedURL &= "?savedStateID=#getSavedStateID()#";
+		}
+		*/
+		
+		if(right(modifiedURL, 1) eq "&" || right(modifiedURL, 1) eq "?") {
+			modifiedURL = left(modifiedURL, len(modifiedURL)-1);
+		}
+		
+		return modifiedURL;
 	}
 	
 	public boolean function isFilterApplied(required string filter,required string value){
