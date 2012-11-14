@@ -44,7 +44,7 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID" cascade="all-delete-orphan";
+	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID" cascade="all";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
