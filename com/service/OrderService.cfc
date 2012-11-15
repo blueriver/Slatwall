@@ -1466,8 +1466,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// If this is a valid shipping method, then we can loop over all of the shippingMethodOptions and make sure this one exists
 				if(!isNull(shippingMethod)) {
 					for(var i=1; i<=arrayLen(arguments.orderFulfillment.getShippingMethodOptions()); i++) {
-						if(shippingMethod.getShippingMethodID() == arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod().getShippingMethodID()) {
-							arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethod() );
+						if(shippingMethod.getShippingMethodID() == arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()) {
+							arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod() );
 							arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getShippingMethodOptions()[i].getTotalCharge() );
 						}
 					}
