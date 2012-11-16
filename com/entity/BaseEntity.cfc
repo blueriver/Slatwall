@@ -578,7 +578,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!this.isPersistable()) {
 			for(var errorName in getErrors()) {
 				for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
-					logSlatwall("an ormFlush() failed for an Entity Insert of #getEntityName()# with an errorName: #errorName# and errorMessage: #getErrors()[errorName][i]#");	
+					logSlatwall("an ormFlush() failed for an Entity Insert of #getEntityName()# with an errorName: #errorName# and errorMessage: #getErrors()[errorName][i]#", true);	
 				}
 			}
 			writeDump(getErrors());
@@ -631,7 +631,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(!this.isPersistable()) {
 			for(var errorName in getErrors()) {
 				for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
-					logSlatwall("an ormFlush() failed for an Entity Update of #getEntityName()# with an errorName: #errorName# and errorMessage: #getErrors()[errorName][i]#");	
+					logSlatwall("an ormFlush() failed for an Entity Update of #getEntityName()# with an errorName: #errorName# and errorMessage: #getErrors()[errorName][i]#", true);	
 				}
 			}
 			writeDump(getErrors());
