@@ -50,7 +50,7 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 			var rs = getDAO().getAttributeCodesQueryByAttributeSetType( arguments.attributeSetType );
 			
 			for(var i=1; i<=rs.recordCount; i++) {
-				attributeCodeList = listAppend(attributeCodeList, rs[ "attributeValue" ][i]);			
+				attributeCodeList = listAppend(attributeCodeList, rs[ "attributeCode" ][i]);			
 			}
 			
 			variables.attributeCodesListByAttributeSetType[ arguments.attributeSetType ] = attributeCodeList;

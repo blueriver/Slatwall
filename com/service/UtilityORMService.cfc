@@ -38,6 +38,7 @@ Notes:
 */
 component extends="BaseService" accessors="true" {
 
+	property name="attributeService" type="any";
 	property name="entityServiceMapping" type="struct";
 	
 	variables.entityORMMetaDataObjects = {};
@@ -73,7 +74,7 @@ component extends="BaseService" accessors="true" {
 			return listGetAt(keyList, keyIndex);
 		}
 		
-		throw("The entity name that you have requested: #arguments.entityname# is not in the ORM Library of entity names that is setup in coldsrping.  Please add #shortEntityName# to the list of entity mappings in coldspring.");
+		throw("The entity name that you have requested: #arguments.entityname# is not in the ORM Library of entity names that is setup in coldsrping.  Please add #arguments.entityname# to the list of entity mappings in coldspring.");
 	}
 	
 	public string function getProperlyCasedFullEntityName( required string entityName ) {
@@ -159,32 +160,35 @@ component extends="BaseService" accessors="true" {
 	
 	// @hint returns true or false based on an entityName, and checks if that property exists for that entity 
 	public boolean function getEntityHasPropertyByEntityName( required string entityName, required string propertyName ) {
-		return structKeyExists(getPropertiesStructByEntityName(), arguments.propertyName );
+		return structKeyExists(getPropertiesStructByEntityName(arguments.entityName), arguments.propertyName );
 	}
 	
 	// @hint returns true or false based on an entityName, and checks if that entity has an extended attribute with that attributeCode
 	public boolean function getEntityHasAttributeByEntityName( required string entityName, required string attributeCode ) {
-		return listFindNoCase(getAttributeService().getAttributeCodesListByAttributeSetType( "ast#getProperlyCasedShortEntityName(arguments.entityName)#" ), arguments.attributeCode);
+		if(listFindNoCase(getAttributeService().getAttributeCodesListByAttributeSetType( "ast#getProperlyCasedShortEntityName(arguments.entityName)#" ), arguments.attributeCode)) {
+			return true;
+		}
+		return false; 
 	}
 	
 	// @hint leverages the getEntityHasPropertyByEntityName() by traverses a propertyIdentifier first using getLastEntityNameInPropertyIdentifier()
 	public boolean function getHasPropertyByEntityNameAndPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
-		return getEntityHasPropertyByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), propertyName=listLast(arguments.propertyIdentifier, ".") );
+		return getEntityHasPropertyByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), propertyName=listLast(arguments.propertyIdentifier, "._") );
 	}
 	
 	// @hint leverages the getEntityHasAttributeByEntityName() by traverses a propertyIdentifier first using getLastEntityNameInPropertyIdentifier()
 	public boolean function getHasAttributeByEntityNameAndPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
-		return getEntityHasAttributeByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), propertyName=listLast(arguments.propertyIdentifier, ".") );
+		return getEntityHasAttributeByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), attributeCode=listLast(arguments.propertyIdentifier, "._") );
 	}
 	
 	// @hint traverses a propertyIdentifier to find the last entityName in the list... this is then used by the hasProperty and hasAttribute methods()
-	public boolean function getLastEntityNameInPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
-		if(listLen(arguments.propertyIdentifier, ".") gt 1) {
+	public string function getLastEntityNameInPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
+		if(listLen(arguments.propertyIdentifier, "._") gt 1) {
 			var propertiesSruct = getPropertiesStructByEntityName( arguments.entityName );
-			if( !structKeyExists(propertiesSruct, listFirst(arguments.propertyIdentifier, ".")) || !structKeyExists(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")], "cfc") ) {
+			if( !structKeyExists(propertiesSruct, listFirst(arguments.propertyIdentifier, "._")) || !structKeyExists(propertiesSruct[listFirst(arguments.propertyIdentifier, "._")], "cfc") ) {
 				throw("The Property Identifier #arguments.propertyIdentifier# is invalid for the entity #arguments.entityName#");
 			}
-			return getLastEntityNameInPropertyIdentifier( entityName=propertiesSruct[listFirst(arguments.propertyIdentifier, ".")].cfc, propertyIdentifier=right(arguments.propertyIdentifier, len(arguments.propertyIdentifier)-(len(listFirst(arguments.propertyIdentifier, "."))-1)));	
+			return getLastEntityNameInPropertyIdentifier( entityName=propertiesSruct[listFirst(arguments.propertyIdentifier, "._")].cfc, propertyIdentifier=right(arguments.propertyIdentifier, len(arguments.propertyIdentifier)-(len(listFirst(arguments.propertyIdentifier, "._"))+1)));	
 		}
 		
 		return arguments.entityName;

@@ -236,7 +236,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if( !structKeyExists(variables, "optionGroups") ) {
 			variables.optionGroups = [];
 			var smartList = getService("OptionService").getOptionGroupSmartList();
-			smartList.addFilter("options_skus_product_productID",this.getProductID());
+			smartList.addFilter("options.skus.product.productID",this.getProductID());
 			smartList.addOrder("sortOrder|ASC");
 			variables.optionGroups = smartList.getRecords();
 		}

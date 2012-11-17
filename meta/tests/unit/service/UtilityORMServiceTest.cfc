@@ -63,5 +63,19 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	public void function getProperlyCasedFullClassNameByEntityName() {
 		assertEquals("Slatwall.com.entity.OrderItem", variables.service.getProperlyCasedFullClassNameByEntityName("SlaTWAllOrderItEM"));
 	}
+	
+	
+	// getHasPropertyByEntityNameAndPropertyIdentifier()
+	public void function getHasPropertyByEntityNameAndPropertyIdentifier_returns_true_when_property_exists() {
+		assertTrue(variables.service.getHasPropertyByEntityNameAndPropertyIdentifier("SlatwallSku", "product.brand.brandName"));
+	}
+	
+	public void function getHasPropertyByEntityNameAndPropertyIdentifier_returns_false_when_property_doesnt_exists() {
+		assertFalse(variables.service.getHasPropertyByEntityNameAndPropertyIdentifier("SlatwallSku", "product.brand.notRealProperty"));
+	}
+	
+	public void function getHasPropertyByEntityNameAndPropertyIdentifier_returns_false_when_entity_chain_is_invalid() {
+		assertFalse(variables.service.getHasPropertyByEntityNameAndPropertyIdentifier("SlatwallSku", "product.brokenChain.notRealProperty"));
+	}
 }
 

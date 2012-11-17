@@ -81,17 +81,14 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		setPageRecordsStart(arguments.pageRecordsStart);
 		setPageRecordsShow(arguments.pageRecordsShow);
 		
-		// Temporary Slatwall Specific Bug Fix For Railo
-		var baseEntity = entityNew(arguments.entityName);
-		var baseEntityMeta = getMetaData(baseEntity);
-		
 		setBaseEntityName( getService("utilityORMService").getProperlyCasedFullEntityName( arguments.entityName ) );
 		
 		addEntity(
 			entityName=getBaseEntityName(),
 			entityAlias="a#lcase(getBaseEntityName())#",
 			entityFullName=getService("utilityORMService").getProperlyCasedFullClassNameByEntityName( arguments.entityName ),
-			entityProperties=getService("utilityORMService").getPropertiesStructByEntityName( arguments.entityName )
+			entityProperties=getService("utilityORMService").getPropertiesStructByEntityName( arguments.entityName ),
+			attributeCount=0
 		);
 		
 		if(structKeyExists(arguments, "data")) {
@@ -210,92 +207,143 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return propertyStruct;
 	}
 	
-	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="", boolean fetch) {
-		var parentEntityFullName = variables.entities[ arguments.parentEntityName ].entityFullName;
-		
-		if(listLen(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc,".") < 2) {
-			var newEntityCFC = Replace(parentEntityFullName, listLast(parentEntityFullName,"."), variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc);	
-		} else {
-			var newEntityCFC = variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc;
-		}
-		var newEntity = createObject("component","#newEntityCFC#");
-		var newEntityMeta = getMetaData(newEntity);
-		
-		if(structKeyExists(newEntityMeta, "entityName")) {
-			var newEntityName = newEntityMeta.entityName;
-		} else {
-			var newEntityName = listLast(newEntityMeta.fullName,".");
-		}
-		
-		var aliaseOK = false;
-		var aoindex = 1;
-		var aolist = "a,b,c,d,e,f,g,h,i,j,k,l";
-		var baseAliase = newEntityName;
-		do {
-			var newEntityAlias = "#listGetAt(aolist,aoindex)##lcase(baseAliase)#";
-			if(aoindex > 1) {
-				newEntityName = "#lcase(newEntityName)#_#UCASE(listGetAt(aolist,aoindex))#";
-			}
-			if( (structKeyExists(variables.entities, newEntityName) && variables.entities[newEntityName].entityAlias == newEntityAlias && variables.entities[newEntityName].parentRelatedProperty != relatedProperty) || newEntityAlias == variables.entities[ arguments.parentEntityName ].entityAlias) {
-				aoindex++;
-			} else {
-				aliaseOK = true;
-			}
-		} while(!aliaseOK);
-		
-		// Check to see if this is a Self Join, and setup appropriatly.
-		if(newEntityAlias == variables.entities[ arguments.parentEntityName ].entityAlias) {
-			arguments.fetch = false;
-		}
-		
-		if(!structKeyExists(variables.entities,newEntityName)) {
-			arrayAppend(variables.entityJoinOrder, newEntityName);
+	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="", boolean fetch, boolean isAttribute=false) {
+		if(arguments.isAttribute) {
 			
-			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch") && arguments.parentEntityName == getBaseEntityName()) {
-				arguments.fetch = true;
-			} else if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "one-to-one" && !structKeyExists(arguments, "fetch")) {
-				arguments.fetch = true;
-			} else if(!structKeyExists(arguments, "fetch")) {
+			var newEntityMeta = getService("utilityORMService").getEntityObject( "AttributeValue" ).getThisMetaData();
+			var newEntityName = "#parentEntityName#_#UCASE(arguments.relatedProperty)#";
+			var newEntityAlias = "#variables.entities[ arguments.parentEntityName ].entityAlias#_#lcase(arguments.relatedProperty)#";
+			
+			if(!structKeyExists(variables.entities, newEntityName)) {
+				arrayAppend(variables.entityJoinOrder, newEntityName);
+				logSlatwall("WHY DID I GET HERE", true);
+				confirmWhereGroup(1);
+				variables.whereGroups[1].filters["#newEntityAlias#.attribute.attributeCode"] = arguments.relatedProperty;
+				
+				addEntity(
+					entityName=newEntityName,
+					entityAlias=newEntityAlias,
+					entityFullName="Slatwall.com.entity.AttributeValue",
+					entityProperties=getPropertiesStructFromEntityMeta(newEntityMeta),
+					parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
+					parentRelatedProperty="attributeValues",
+					joinType="left",
+					fetch=false
+				);
+			}
+			
+			return newEntityName;
+		} else {
+			var newEntityMeta = getService("utilityORMService").getEntityObject( variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc ).getThisMetaData();
+		
+			// Figure out the newEntityName
+			if(structKeyExists(newEntityMeta, "entityName")) {
+				var newEntityName = newEntityMeta.entityName;
+			} else {
+				var newEntityName = listLast(newEntityMeta.fullName,".");
+			}
+			
+			// Figure out the newEntityAliase
+			var aliaseOK = false;
+			var aoindex = 1;
+			var aolist = "a,b,c,d,e,f,g,h,i,j,k,l";
+			var baseAliase = newEntityName;
+			do {
+				var newEntityAlias = "#listGetAt(aolist,aoindex)##lcase(baseAliase)#";
+				if(aoindex > 1) {
+					newEntityName = "#lcase(newEntityName)#_#UCASE(listGetAt(aolist,aoindex))#";
+				}
+				if( (structKeyExists(variables.entities, newEntityName) && variables.entities[newEntityName].entityAlias == newEntityAlias && variables.entities[newEntityName].parentRelatedProperty != relatedProperty) || newEntityAlias == variables.entities[ arguments.parentEntityName ].entityAlias) {
+					aoindex++;
+				} else {
+					aliaseOK = true;
+				}
+			} while(!aliaseOK);
+			
+			// Check to see if this is a Self Join, and setup appropriatly.
+			if(newEntityAlias == variables.entities[ arguments.parentEntityName ].entityAlias) {
 				arguments.fetch = false;
 			}
 			
-			addEntity(
-				entityName=newEntityName,
-				entityAlias=newEntityAlias,
-				entityFullName=newEntityMeta.fullName,
-				entityProperties=getPropertiesStructFromEntityMeta(newEntityMeta),
-				parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
-				parentRelationship=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype,
-				parentRelatedProperty=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].name,
-				joinType=arguments.joinType,
-				fetch=arguments.fetch
-			);
-		} else {
-			if(arguments.joinType != "") {
-				variables.entities[newEntityName].joinType = arguments.joinType;
+			if(!structKeyExists(variables.entities,newEntityName)) {
+				arrayAppend(variables.entityJoinOrder, newEntityName);
+				
+				if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch") && arguments.parentEntityName == getBaseEntityName()) {
+					arguments.fetch = true;
+				} else if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "one-to-one" && !structKeyExists(arguments, "fetch")) {
+					arguments.fetch = true;
+				} else if(!structKeyExists(arguments, "fetch")) {
+					arguments.fetch = false;
+				}
+				
+				addEntity(
+					entityName=newEntityName,
+					entityAlias=newEntityAlias,
+					entityFullName=newEntityMeta.fullName,
+					entityProperties=getPropertiesStructFromEntityMeta(newEntityMeta),
+					parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
+					parentRelatedProperty=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].name,
+					joinType=arguments.joinType,
+					fetch=arguments.fetch
+				);
+			} else {
+				if(arguments.joinType != "") {
+					variables.entities[newEntityName].joinType = arguments.joinType;
+				}
+				if(structKeyExists(arguments, "fetch")) {
+					variables.entities[newEntityName].fetch = arguments.fetch;
+				}
 			}
-			if(structKeyExists(arguments, "fetch")) {
-				variables.entities[newEntityName].fetch = arguments.fetch;
-			}
+			
+			return newEntityName;	
 		}
-		
-		return newEntityName;
 	}
 	
-	private void function addEntity(required string entityName, required string entityAlias, required string entityFullName, required struct entityProperties, string parentAlias="", string parentRelationship="",string parentRelatedProperty="", string joinType="") {
+	private void function addEntity(required string entityName, required string entityAlias, required string entityFullName, required struct entityProperties, string parentAlias="", string parentRelatedProperty="", string joinType="") {
 		variables.entities[arguments.entityName] = duplicate(arguments);
 	}
 	
 	private string function getAliasedProperty(required string propertyIdentifier, boolean fetch) {
 		var entityName = getBaseEntityName();
 		var entityAlias = variables.entities[getBaseEntityName()].entityAlias;
-		for(var i=1; i<listLen(arguments.propertyIdentifier, variables.subEntityDelimiters); i++) {
+		
+		var propertyExists = getService("utilityORMService").getHasPropertyByEntityNameAndPropertyIdentifier(entityName=entityName, propertyIdentifier=arguments.propertyIdentifier);
+		var propertyIsAttribute = false;
+		
+		if(!propertyExists) {
+			var propertyIsAttribute = getService("utilityORMService").getHasAttributeByEntityNameAndPropertyIdentifier(entityName=entityName, propertyIdentifier=arguments.propertyIdentifier);
+			if(!propertyIsAttribute) {
+				writeDump(propertyIdentifier);
+				abort;
+				return "";	
+			}
+		}
+		
+		if(propertyIsAttribute && listLen(arguments.propertyIdentifier, variables.subEntityDelimiters) eq 1) {
 			if(structKeyExists(arguments,"fetch")){
-				entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=listGetAt(arguments.propertyIdentifier, i, variables.subEntityDelimiters),fetch=arguments.fetch);
+				entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=arguments.propertyIdentifier,fetch=arguments.fetch,isAttribute=true);
 			} else {
-				entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=listGetAt(arguments.propertyIdentifier, i, variables.subEntityDelimiters));
+				entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=arguments.propertyIdentifier,isAttribute=true);
 			}
 			entityAlias = variables.entities[entityName].entityAlias;
+		} else {
+			for(var i=1; i<listLen(arguments.propertyIdentifier, variables.subEntityDelimiters); i++) {
+				var thisProperty = listGetAt(arguments.propertyIdentifier, i, variables.subEntityDelimiters);
+				var isAttribute = false;
+				if(propertyIsAttribute && listLen(arguments.propertyIdentifier, variables.subEntityDelimiters) == i+1) {
+					isAttribute = true;
+				}
+				if(structKeyExists(arguments,"fetch")){
+					entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=thisProperty,fetch=arguments.fetch,isAttribute=isAttribute);
+				} else {
+					entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=thisProperty,isAttribute=isAttribute);
+				}
+				entityAlias = variables.entities[entityName].entityAlias;
+			}
+		}
+		
+		if(propertyIsAttribute) {
+			return "#entityAlias#.attributeValue";	
 		}
 		return "#entityAlias#.#variables.entities[entityName].entityProperties[listLast(propertyIdentifier, variables.subEntityDelimiters)].name#";
 	}
@@ -624,19 +672,35 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 
 	public array function getRecords(boolean refresh=false) {
-		if( !structKeyExists(variables, "records") || arguments.refresh == true) {
-			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
+		try {
+			if( !structKeyExists(variables, "records") || arguments.refresh == true) {
+				variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
+			}
+			return variables.records;
+		} catch(any e) {
+			writeDump(variables.wheregroups);
+			writeDump(getHQL());
+			writeDump(getHQLParams());
+			writeDump(e);
+			abort;	
 		}
-		return variables.records;
 	}
 	
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
-		if( !structKeyExists(variables, "pageRecords")) {
-			saveState();
-			variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
+		try {
+			if( !structKeyExists(variables, "pageRecords")) {
+				saveState();
+				variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
+			}
+			return variables.pageRecords;
+		} catch(any e) {
+			writeDump(variables.wheregroups);
+			writeDump(getHQL());
+			writeDump(getHQLParams());
+			writeDump(e);
+			abort;		
 		}
-		return variables.pageRecords;
 	}
 	
 	public numeric function getRecordsCount() {
