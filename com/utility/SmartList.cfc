@@ -879,6 +879,14 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return exists;
 	}
 	
+	public boolean function isRangeApplied(required string range){
+		var exists = false;
+		if(structKeyExists(url,"R#variables.dataKeyDelimiter##arguments.range#")){
+			exists = true;
+		}
+		return exists;
+	}
+	
 	public array function getFilterOptions(required string valuePropertyIdentifier, required string namePropertyIdentifier) {
 		var nameProperty = getAliasedProperty(propertyIdentifier=arguments.namePropertyIdentifier);
 		var valueProperty = getAliasedProperty(propertyIdentifier=arguments.valuePropertyIdentifier);
