@@ -227,7 +227,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 					entityProperties=getPropertiesStructFromEntityMeta(newEntityMeta),
 					parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
 					parentRelatedProperty="attributeValues",
-					joinType="left",
+					joinType=arguments.joinType,
 					fetch=false
 				);
 			}
@@ -376,7 +376,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			structDelete(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty);
 		};
 	}
-	
 	public any function getFilters(string propertyIdentifier, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		if( structKeyExists(arguments, "propertyIdentifier") ) {
@@ -403,6 +402,17 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			structDelete(variables.whereGroups[arguments.whereGroup].likeFilters, aliasedProperty);
 		};
 	}
+	public any function getLikeFilters(string propertyIdentifier, numeric whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		if( structKeyExists(arguments, "propertyIdentifier") ) {
+			var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+			if(structKeyExists(variables.whereGroups[ arguments.whereGroup ].likeFilters, aliasedProperty)){
+				return variables.whereGroups[ arguments.whereGroup ].likeFilters[aliasedProperty];
+			}
+			return "";
+		}
+		return variables.whereGroups[ arguments.whereGroup ].likeFilters; 
+	}
 	
 	public void function addInFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
@@ -411,6 +421,24 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			variables.whereGroups[arguments.whereGroup].inFilters[aliasedProperty] = arguments.value;	
 		}
 	}
+	public void function removeInFilter(required string propertyIdentifier, whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		if(structKeyExists(variables.whereGroups[arguments.whereGroup].inFilters, aliasedProperty)){
+			structDelete(variables.whereGroups[arguments.whereGroup].inFilters, aliasedProperty);
+		};
+	}
+	public any function getInFilters(string propertyIdentifier, numeric whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		if( structKeyExists(arguments, "propertyIdentifier") ) {
+			var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+			if(structKeyExists(variables.whereGroups[ arguments.whereGroup ].inFilters, aliasedProperty)){
+				return variables.whereGroups[ arguments.whereGroup ].inFilters[aliasedProperty];
+			}
+			return "";
+		}
+		return variables.whereGroups[ arguments.whereGroup ].inFilters; 
+	}
 	
 	public void function addRange(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
@@ -418,6 +446,24 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		if(len(aliasedProperty)) {
 			variables.whereGroups[arguments.whereGroup].ranges[aliasedProperty] = arguments.value;
 		}
+	}
+	public void function removeRange(required string propertyIdentifier, whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		if(structKeyExists(variables.whereGroups[arguments.whereGroup].ranges, aliasedProperty)){
+			structDelete(variables.whereGroups[arguments.whereGroup].ranges, aliasedProperty);
+		};
+	}
+	public any function getRanges(string propertyIdentifier, numeric whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		if( structKeyExists(arguments, "propertyIdentifier") ) {
+			var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+			if(structKeyExists(variables.whereGroups[ arguments.whereGroup ].ranges, aliasedProperty)){
+				return variables.whereGroups[ arguments.whereGroup ].ranges[aliasedProperty];
+			}
+			return "";
+		}
+		return variables.whereGroups[ arguments.whereGroup ].ranges; 
 	}
 	
 	public void function addOrder(required string orderStatement, numeric position) {
