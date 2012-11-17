@@ -339,9 +339,9 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	// Additional redirect function that allows us to redirect to a setting.  This can be defined in an integration as well
-	public void function redirectSetting(required string settingName) {
+	public void function redirectSetting(required string settingName, string queryString="") {
 		endSlatwallLifecycle();
-		location(request.muraScope.createHREF(filename=request.slatwallScope.setting(arguments.settingName)), false);
+		location(request.muraScope.createHREF(filename=request.slatwallScope.setting(arguments.settingName), queryString=arguments.queryString), false);
 	}
 	
 	public string function buildURL( string action = '', string path = '', any queryString = '' ) {
