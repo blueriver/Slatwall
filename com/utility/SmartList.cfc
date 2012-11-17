@@ -116,7 +116,11 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				} else if(left(i,3) == "FR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
 					removeFilter(propertyIdentifier=right(i, len(i)-3));
 				} else if(left(i,3) == "FK#variables.dataKeyDelimiter#") {
-					addLikeFilter(propertyIdentifier=right(i, len(i)-3), value="%#arguments.data[i]#%");
+					var likeValueList = "";
+					for(var x=1; x<=listLen(arguments.data[i], variables.valueDelimiter); x++) {
+						likeValueList = listAppend(likeValueList, "%#listGetAt(arguments.data[i], x, variables.valueDelimiter)#%");
+					}
+					addLikeFilter(propertyIdentifier=right(i, len(i)-3), value=likeValueList);
 				} else if(left(i,4) == "FKR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
 					removeLikeFilter(propertyIdentifier=right(i, len(i)-4));
 				} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
