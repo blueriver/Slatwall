@@ -860,7 +860,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			modifiedURL = left(modifiedURL, len(modifiedURL)-1);
 		}
 		
-		return modifiedURL;
+		// Always return lower case
+		return lcase(modifiedURL);
 	}
 	
 	public boolean function isFilterApplied(required string filter, required string value){
