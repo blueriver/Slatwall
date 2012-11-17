@@ -349,7 +349,10 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 	
 	public void function addSelect(required string propertyIdentifier, required string alias) {
-		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier,fetch=false)] = arguments.alias;
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier,fetch=false);
+		if(len(aliasedProperty)) {
+			variables.selects[aliasedProperty] = arguments.alias;	
+		} 
 	}
 	
 	public void function addWhereCondition(required string condition, struct conditionParams={}) {
@@ -363,8 +366,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		} else {
 			var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		}
-		
-		variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = arguments.value;
+		if(len(aliasedProperty)) {
+			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = arguments.value;	
+		}
 	}
 	
 	public void function removeFilter(required string propertyIdentifier, numeric whereGroup=1) {
@@ -390,8 +394,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	public void function addLikeFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
-		
-		variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] = arguments.value;
+		if(len(aliasedProperty)) {
+			variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] = arguments.value;	
+		}
 	}
 	public void function removeLikeFilter(required string propertyIdentifier, whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
@@ -404,15 +409,17 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	public void function addInFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
-		
-		variables.whereGroups[arguments.whereGroup].inFilters[aliasedProperty] = arguments.value;
+		if(len(aliasedProperty)) {
+			variables.whereGroups[arguments.whereGroup].inFilters[aliasedProperty] = arguments.value;	
+		}
 	}
 	
 	public void function addRange(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
-		
-		variables.whereGroups[arguments.whereGroup].ranges[aliasedProperty] = arguments.value;
+		if(len(aliasedProperty)) {
+			variables.whereGroups[arguments.whereGroup].ranges[aliasedProperty] = arguments.value;
+		}
 	}
 	
 	public void function addOrder(required string orderStatement, numeric position) {
@@ -422,12 +429,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			orderDirection = "DESC";
 		}
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=propertyIdentifier);
-		
-		arrayAppend(variables.orders, {property=aliasedProperty, direction=orderDirection});
+		if(len(aliasedProperty)) {
+			arrayAppend(variables.orders, {property=aliasedProperty, direction=orderDirection});
+		}
 	}
 
 	public void function addKeywordProperty(required string propertyIdentifier, required numeric weight) {
-		variables.keywordProperties[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier)] = arguments.weight;
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=propertyIdentifier);
+		if(len(aliasedProperty)) {
+			variables.keywordProperties[aliasedProperty] = arguments.weight;
+		}
 	}
 	
 	public void function addHQLParam(required string paramName, required any paramValue) {
