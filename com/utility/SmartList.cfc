@@ -313,8 +313,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		if(!propertyExists) {
 			var propertyIsAttribute = getService("utilityORMService").getHasAttributeByEntityNameAndPropertyIdentifier(entityName=entityName, propertyIdentifier=arguments.propertyIdentifier);
 			if(!propertyIsAttribute) {
-				writeDump(propertyIdentifier);
-				abort;
 				return "";	
 			}
 		}
