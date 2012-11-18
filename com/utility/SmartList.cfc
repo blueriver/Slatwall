@@ -856,7 +856,11 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 							}
 						}
 						if(len(oldQueryKeys[key]) && len(newQueryKeys[key])) {
-							modifiedURL &= "#key#=#oldQueryKeys[key]##variables.valueDelimiter##newQueryKeys[key]#&";	
+							if(left(key, 1) eq "r") {
+								modifiedURL &= "#key#=#newQueryKeys[key]#&";	
+							} else {
+								modifiedURL &= "#key#=#oldQueryKeys[key]##variables.valueDelimiter##newQueryKeys[key]#&";
+							}
 						} else if(len(oldQueryKeys[key])) {
 							modifiedURL &= "#key#=#oldQueryKeys[key]#&";
 						}
@@ -913,9 +917,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return exists;
 	}
 	
-	public boolean function isRangeApplied(required string range){
+	public boolean function isRangeApplied(required string range, required string value){
 		var exists = false;
-		if(structKeyExists(url,"R#variables.dataKeyDelimiter##arguments.range#")){
+		if(structKeyExists(url,"R#variables.dataKeyDelimiter##arguments.range#") and url["R#variables.dataKeyDelimiter##arguments.range#"] eq arguments.value){
 			exists = true;
 		}
 		return exists;
