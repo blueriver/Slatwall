@@ -216,7 +216,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			
 			if(!structKeyExists(variables.entities, newEntityName)) {
 				arrayAppend(variables.entityJoinOrder, newEntityName);
-
+				
 				confirmWhereGroup(1);
 				variables.whereGroups[1].filters["#newEntityAlias#.attribute.attributeCode"] = arguments.relatedProperty;
 				
@@ -879,10 +879,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				modifiedURL &= "P#variables.dataKeyDelimiter#Start=#newQueryKeys[ 'P#variables.dataKeyDelimiter#Start' ]#&";
 			} else if( structKeyExists(newQueryKeys, "P#variables.dataKeyDelimiter#Current") ) {
 				modifiedURL &= "P#variables.dataKeyDelimiter#Current=#newQueryKeys[ 'P#variables.dataKeyDelimiter#Current' ]#&";
-			} else if( structKeyExists(oldQueryKeys, "P#variables.dataKeyDelimiter#Start") ) {
-				modifiedURL &= "P#variables.dataKeyDelimiter#Start=#oldQueryKeys[ 'P#variables.dataKeyDelimiter#Start' ]#&";
-			} else if( structKeyExists(oldQueryKeys, "P#variables.dataKeyDelimiter#Current") ) {
-				modifiedURL &= "P#variables.dataKeyDelimiter#Current=#oldQueryKeys[ 'P#variables.dataKeyDelimiter#Current' ]#&";
 			}
 		}
 		
@@ -892,15 +888,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		} else if( structKeyExists(oldQueryKeys, "P#variables.dataKeyDelimiter#Show") ) {
 			modifiedURL &= "P#variables.dataKeyDelimiter#Show=#oldQueryKeys[ 'P#variables.dataKeyDelimiter#Show' ]#&";
 		}
-	
-		
-		/*
-		if(right(modifiedURL, 1) eq "&" || right(modifiedURL, 1) eq "?") {
-			modifiedURL &= "savedStateID=#getSavedStateID()#";
-		} else {
-			modifiedURL &= "?savedStateID=#getSavedStateID()#";
-		}
-		*/
 		
 		if(right(modifiedURL, 1) eq "&" || right(modifiedURL, 1) eq "?") {
 			modifiedURL = left(modifiedURL, len(modifiedURL)-1);
