@@ -216,7 +216,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			
 			if(!structKeyExists(variables.entities, newEntityName)) {
 				arrayAppend(variables.entityJoinOrder, newEntityName);
-				logSlatwall("WHY DID I GET HERE", true);
+
 				confirmWhereGroup(1);
 				variables.whereGroups[1].filters["#newEntityAlias#.attribute.attributeCode"] = arguments.relatedProperty;
 				
