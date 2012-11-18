@@ -1412,22 +1412,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
 				}
 			
-			
 				// If there was previously a shipping Address we need to remove it and recalculate
 				if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
 					arguments.orderFulfillment.removeShippingAddress();
+					arguments.orderFulfillment.setAccountAddress(accountAddress);
 					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
 					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-				}
-
 				// If there was previously an account address and we switch it, then we need to recalculate
-				if(!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
+				} else if (!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
+					arguments.orderFulfillment.setAccountAddress(accountAddress);
 					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
 					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				// Else just set the account address
+				} else {
+					arguments.orderFulfillment.setAccountAddress(accountAddress);	
 				}
-
-				// Set the new account address in the order
-				arguments.orderFulfillment.setAccountAddress(accountAddress);
+				
 			
 			// USING SHIPPING ADDRESS
 			} else {
@@ -1461,6 +1461,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// If no shippingMethodOption, then just check for a shippingMethodID that was passed in
 			} else if (structKeyExists(arguments.data, "shippingMethodID")) {
+				
 				var shippingMethod = getShippingService().getShippingMethod(arguments.data.shippingMethodID);
 				
 				// If this is a valid shipping method, then we can loop over all of the shippingMethodOptions and make sure this one exists
