@@ -199,6 +199,15 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return variables.attributeValuesByAttributeCodeStruct;
 	}
 	
+	public void function clearAttributeCache() {
+		if(structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
+			structDelete(variables, "attributeValuesByAttributeIDStruct");
+		}
+		if(structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
+			structDelete(variables, "attributeValuesByAttributeCodeStruct");
+		}
+	}
+	
 	// @hint Returns the persistableErrors array, if one hasn't been setup yet it returns a new one
 	public array function getPersistableErrors() {
 		if(!structKeyExists(variables, "persistableErrors")) {
