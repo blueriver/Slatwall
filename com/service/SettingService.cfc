@@ -177,6 +177,7 @@ globalEncryptionKeySize
 			productHTMLTitleString = {fieldType="text"},
 			productMetaDescriptionString = {fieldType="textarea"},
 			productMetaKeywordsString = {fieldType="textarea"},
+			productShowDetailWhenNotPublishedFlag = {fieldType="yesno"},
 			
 			// Product Type
 			productTypeDisplayTemplate = {fieldType="select"},

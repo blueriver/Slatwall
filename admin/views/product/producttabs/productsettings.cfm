@@ -40,6 +40,7 @@ Notes:
 
 <cf_SlatwallSettingTable>
 	<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.product#" />
+	<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" settingObject="#rc.product#" />
 	<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.product#" />
 	<cf_SlatwallSetting settingName="productImageSmallWidth" settingObject="#rc.product#" />
 	<cf_SlatwallSetting settingName="productImageSmallHeight" settingObject="#rc.product#" />
