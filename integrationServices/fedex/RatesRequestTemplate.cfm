@@ -79,7 +79,11 @@
 	        	<ns:Address>
 	                <ns:StreetLines>#arguments.requestBean.getShipToStreetAddress()#</ns:StreetLines>
 	                <ns:City>#arguments.requestBean.getShipToCity()#</ns:City>
-	                <ns:StateOrProvinceCode>#arguments.requestBean.getShipToStateCode()#</ns:StateOrProvinceCode>
+					<cfif len(arguments.requestBean.getShipToStateCode()) eq 2>
+	                	<ns:StateOrProvinceCode>#arguments.requestBean.getShipToStateCode()#</ns:StateOrProvinceCode>
+					<cfelseif len(arguments.requestBean.getShipToStateCode()) eq 3>
+						<ns:StateOrProvinceCode>#left(arguments.requestBean.getShipToStateCode(),2)#</ns:StateOrProvinceCode> 
+					</cfif>
 	                <ns:PostalCode>#arguments.requestBean.getShipToPostalCode()#</ns:PostalCode>
 	                <ns:CountryCode>#arguments.requestBean.getShipToCountryCode()#</ns:CountryCode>
 					<ns:Residential>false</ns:Residential>
