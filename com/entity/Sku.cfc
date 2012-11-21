@@ -148,7 +148,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		var optionString = "";
 		for(var option in getOptions()){
 			if(option.getOptionGroup().getImageGroupFlag()){
-				optionString &= "-" & reReplaceNoCase(option.getOptionCode(), "[^a-z0-9\-\_]","","all");
+				optionString &= getProduct().setting('productImageOptionCodeDelimiter') & reReplaceNoCase(option.getOptionCode(), "[^a-z0-9\-\_]","","all");
 			}
 		}
 		return reReplaceNoCase(getProduct().getProductCode(), "[^a-z0-9\-\_]","","all") & optionString & ".#setting('globalImageExtension')#";
