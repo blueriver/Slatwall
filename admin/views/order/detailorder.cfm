@@ -124,6 +124,7 @@ Notes:
 				<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" count="#rc.order.getOrderReturnsCount()#" />
 				<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" count="#rc.order.getStockReceiversCount()#" />
 			</cfif>
+			<cf_SlatwallTab view="admin:order/ordertabs/promotions" count="#rc.order.getPromotionCodesCount()#" />
 			<cf_SlatwallTab view="admin:order/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
 		</cf_SlatwallTabGroup>
 		
