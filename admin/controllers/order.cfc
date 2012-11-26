@@ -83,9 +83,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 	}
 	
-	public any function savereturnorder( required struct rc ) {
+	public any function createOrder(required struct rc) {
 		rc.order = getOrderService().newOrder();
-		
+		rc.edit = true;
 	}
 	
 }
