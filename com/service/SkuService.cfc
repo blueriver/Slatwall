@@ -161,7 +161,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		} else if (arguments.product.getProductType().getBaseProductType() == "contentAccess") {
 			// Make sure there was at least one contentAccess Product
 			if(!structKeyExists(arguments.data, "accessContents") || !listLen(arguments.data.accessContents)) {
-				arguments.product.addError("accessContents", rbKey('entity.product.accesscontentsrequired'));
+				arguments.product.addError("accessContents", rbKey('validate.product.accesscontentsrequired'));
 			}
 			
 			// If the product still doesn't have any errors then we can create the skus
