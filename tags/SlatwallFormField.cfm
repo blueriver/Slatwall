@@ -168,6 +168,11 @@ Notes:
 				<input type="text" name="#attributes.fieldName#" value="#htmlEditFormat(attributes.value)#" class="#attributes.fieldClass#" #attributes.fieldAttributes# />
 			</cfoutput>
 		</cfcase>
+		<cfcase value="textautocomplete">
+			<cfoutput>
+				<input type="text" name="#attributes.fieldName#" value="#htmlEditFormat(attributes.value)#" class="textautocomplete #attributes.fieldClass#" #attributes.fieldAttributes# />
+			</cfoutput>
+		</cfcase>
 		<cfcase value="textarea">
 			<cfoutput>
 				<textarea name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes#>#htmlEditFormat(attributes.value)#</textarea>

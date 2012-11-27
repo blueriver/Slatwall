@@ -39,8 +39,12 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.order#" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" edit="true">
+	<form method="post" action="?s=1" class="form-horizontal" enctype="application/x-www-form-urlencoded" novalidate="novalidate">
+		<input type="hidden" name="slatAction" value="admin:order.saveorder">
+		<input type="hidden" name="orderID" value="">
 		
-	</cf_SlatwallDetailForm>
+		
+		
+		<input type="text"><a title="Add Account" class="btn btn-mini modalload" href="/plugins/Slatwall/?slatAction=admin:account.createaccount" data-toggle="modal" data-target="##adminModal"><i class="icon-plus"></i></a>
+	</form>
 </cfoutput>
