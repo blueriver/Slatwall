@@ -277,10 +277,17 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		
 		// If the account doesn't have errors, is new, has and email address and password, has a password passed in, and not supposed to be a guest account. then attempt to setup the username and password in Mura
-		if( !arguments.account.hasErrors() && wasNew && !isNull(arguments.account.getPrimaryEmailAddress()) && structKeyExists(arguments.data, "password") && (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) ) {
+		if( !arguments.account.hasErrors() && wasNew && (!isNull(arguments.account.getPrimaryEmailAddress()) || (structKeyExists(arguments.data, "username") && len(arguments.data.username))) && structKeyExists(arguments.data, "password") && (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) ) {
+			
+			var username="";
+			if(structKeyExists(arguments.data, "username") && len(arguments.data.username)) {
+				username=arguments.data.username;
+			} else if (!isNull(arguments.account.getPrimaryEmailAddress())) {
+				username=arguments.account.getPrimaryEmailAddress().getEmailAddress();
+			}
 			
 			// Try to get the user out of the mura database using the primaryEmail as the username
-			var cmsUser = getUserManager().getBean().loadBy(siteID=arguments.siteID, username=arguments.account.getPrimaryEmailAddress().getEmailAddress());
+			var cmsUser = getUserManager().getBean().loadBy(siteID=arguments.siteID, username=username);
 			
 			if(!cmsUser.getIsNew()) {
 				getSlatwallScope().setORMHasErrors( true );
