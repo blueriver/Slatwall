@@ -298,7 +298,7 @@ component extends="BaseService" accessors="true" output="false" {
 				arguments.account.addError("password", rbKey('validate.account.password'));
 			} else {
 				// Setup a new mura user
-				cmsUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
+				cmsUser.setUsername(username);
 				cmsUser.setPassword(arguments.data.password);
 				cmsUser.setSiteID(arguments.siteID);
 				
