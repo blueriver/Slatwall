@@ -51,5 +51,6 @@ Notes:
 		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethod" />
 		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethodrate" />
 		<cf_SlatwallTab view="admin:setting/settingtabs/fulfillmentmethod" />
+		<cf_SlatwallTab view="admin:setting/settingtabs/email" />
 	</cf_SlatwallTabGroup>
 </cfoutput>

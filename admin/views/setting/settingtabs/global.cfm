@@ -45,10 +45,6 @@ Notes:
 		<cf_SlatwallSetting settingName="globalTimeFormat" />
 		<cf_SlatwallSetting settingName="globalMissingImagePath" />
 		<cf_SlatwallSetting settingName="globalImageExtension" />
-		<cf_SlatwallSetting settingName="globalOrderPlacedEmailFrom" />
-		<cf_SlatwallSetting settingName="globalOrderPlacedEmailCC" />
-		<cf_SlatwallSetting settingName="globalOrderPlacedEmailBCC" />
-		<cf_SlatwallSetting settingName="globalOrderPlacedEmailSubjectString" />
 		<cf_SlatwallSetting settingName="globalOrderNumberGeneration" />
 		<cf_SlatwallSetting settingName="globalURLKeyBrand" />
 		<cf_SlatwallSetting settingName="globalURLKeyProduct" />
