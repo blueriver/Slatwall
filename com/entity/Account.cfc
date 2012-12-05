@@ -93,7 +93,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="password" persistent="false";
 	property name="termAccountAvailableCredit" persistent="false" formattype="currency";
 	property name="termAccountBalance" persistent="false" formattype="currency";
-	
+	property name="gravatarURL" persistent="false";
+	property name="gravatarIcon55" persistent="false";
+
 	public boolean function isGuestAccount() {
 		return isNull(getCmsAccountID());
 	}
@@ -104,6 +106,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		} else {
 			return "http://www.gravatar.com/avatar/#lcase(hash(lcase(getEmailAddress()), "MD5" ))#?s=#arguments.size#";	
 		}
+	}
+	
+	public string function getGravatarIcon55() {
+		return '<img src="#getGravatarURL(55)#" style="width:55px;" />';
 	}
 	
 	public string function getAllPermissions(){

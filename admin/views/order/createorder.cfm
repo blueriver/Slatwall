@@ -44,7 +44,6 @@ Notes:
 		<input type="hidden" name="orderID" value="">
 		
 		
-		
-		<input type="text"><a title="Add Account" class="btn btn-mini modalload" href="/plugins/Slatwall/?slatAction=admin:account.createaccount" data-toggle="modal" data-target="##adminModal"><i class="icon-plus"></i></a>
+		<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" modalCreateAction="admin:account.createaccount" edit="true">
 	</form>
 </cfoutput>

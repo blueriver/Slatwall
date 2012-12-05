@@ -119,6 +119,11 @@ function initUIElements( scopeSelector ) {
 			tableApplySort(event, ui);
 		}
 	});
+
+	// Text Autocomplete
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('.textautocomplete')), function(ti, tv){
+		updateTextAutocompleteUI( jQuery(tv) );
+	});
 	
 	// Table Multiselect
 	jQuery.each(jQuery( scopeSelector ).find(jQuery('.table-multiselect')), function(ti, tv){
@@ -178,6 +183,13 @@ function setupEventHandlers() {
 		e.preventDefault();
 	});
 	
+	// Text Autocomplete
+	jQuery('body').on('keyup', '.textautocomplete', function(e){
+		if(jQuery(this).val().length >= 1) {
+			textAutocompleteKeyup( jQuery(this) );
+		}
+	});
+	
 	// Tab Selecting
 	jQuery('body').on('shown', 'a[data-toggle="tab"]', function(e){
 		window.location.hash = jQuery(this).attr('href');
@@ -226,6 +238,10 @@ function setupEventHandlers() {
 			modalLink = modalLink + '&modal=1';
 		} else {
 			modalLink = modalLink + '?modal=1';
+		}
+		
+		if( jQuery(this).hasClass('modal-fieldupdate-textautocomplete') ) {
+			modalLink = modalLink + '&ajaxsubmit=1';
 		}
 		
 		jQuery('#adminModal').load( modalLink, function(){
@@ -761,6 +777,55 @@ function tableApplySort(event, ui) {
 
 }
 
+function updateTextAutocompleteUI( autocompleteField ) {
+	console.log( "UI WAS LOADED" );
+}
+
+function textAutocompleteKeyup( autocompleteField ) {
+	
+	updateTextAutocompleteSuggestions( autocompleteField );
+}
+
+function updateTextAutocompleteSuggestions( autocompleteField, pageshow ) {
+	
+	var data = {
+		slatAction : 'admin:ajax.updatelistingdisplay',
+		entityName : 'Account',
+		propertyIdentifiers : 'accountID,gravatarIcon55,fullName,emailAddress,phoneNumber',
+		keywords : jQuery(autocompleteField).val()
+	};
+	
+	data[ "P:Show" ] = pageshow || 4;
+	
+	jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).html('');
+	
+	jQuery.ajax({
+		url: slatwall.rootURL + '/',
+		method: 'post',
+		data: data,
+		dataType: 'json',
+		beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
+		error: function( er ) {
+			alert('An Error Occured');
+		},
+		success: function(r) {
+			
+			jQuery.each( r["pageRecords"], function(ri, rv) {
+				var innerLI = '<li><a href="">';
+				
+				jQuery.each( data["propertyIdentifiers"].split(','), function(pi, pv) {
+					if(pv !== 'accountID') {
+						innerLI += '<span class="' + pv + '">' + rv[ pv ] + '</span>';
+					}
+				});
+				innerLI += '</a></li>';
+				jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).append( innerLI );
+			});
+			
+		}
+	});
+}
+
 function updateMultiselectTableUI( multiselectField ) {
 	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
 	
@@ -896,8 +961,23 @@ function updateGlobalSearchResults() {
 	}
 }
 
-
-
+/*
+function getEntityAutocompleteTemplate( entityName, data ) {
+	var output = "";
+	if( entityName === 'Account') {
+		output += '<span class="image"><img src="';
+		output += data.gravatarURL;
+		output += '" /></span>';
+		output += '<span class="image">';
+		output += '</span>';
+		output += '<span class="image">';
+		output += '</span>';
+		output += '<span class="image">';
+		output += '</span>';
+	}
+	return output;
+}
+*/
 
 // ========================= START: HELPER METHODS ================================
 
