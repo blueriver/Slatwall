@@ -36,29 +36,12 @@
 Notes:
 
 --->
-
-<cfparam name="rc.returnAction" type="string" default="admin:setting.edittask&taskID=#rc.taskID#" />
-<cfparam name="rc.processTaskSmartList" type="any" />
-<!--- Not sure how this is supposed to work --->
-
-<cfset availableSchedules = [] />
-<cfset aSchedules = rc.$.slatwall.getService('taskService').getTask(rc.taskID).getTaskSchedules() />
-
-<cfloop array="#aSchedules#" index="schedule">
-	<cfset arrayAppend(availableSchedules,{value=schedule.getTaskScheduleID(), name=schedule.getSchedule().getScheduleName()}) />
-</cfloop>	
-
 <cfoutput>
-	<cf_SlatwallProcessForm>
-		
-		<cf_SlatwallActionBar type="process" />	
-		
-		<cf_SlatwallProcessListing processSmartList="#rc.processTaskSmartList#">
-			<cf_SlatwallProcessColumn data="taskScheduleID" fieldType="select" valueOptions="#availableSchedules#" fieldClass="span2" value="" />
-		</cf_SlatwallProcessListing>
-		
-		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
-		<input type="hidden" name="returnAction" value="#rc.returnAction#" />
-	</cf_SlatwallProcessForm>
-		
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="emailFromAddress" />
+		<cf_SlatwallSetting settingName="emailToAddress" />
+		<cf_SlatwallSetting settingName="emailCCAddress" />
+		<cf_SlatwallSetting settingName="emailBCCAddress" />
+		<cf_SlatwallSetting settingName="emailSubject" />
+	</cf_SlatwallSettingTable>
 </cfoutput>
