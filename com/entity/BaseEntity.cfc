@@ -38,6 +38,7 @@ Notes:
 */
 component displayname="Base Entity" accessors="true" extends="Slatwall.com.utility.BaseObject" {
 
+	property name="simpleRepresentation" type="string" persistent="false";
 	property name="persistableErrors" type="array" persistent="false";
 	property name="assignedAttributeSetSmartList" type="struct" persistent="false";
 	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";

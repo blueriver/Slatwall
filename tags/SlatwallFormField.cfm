@@ -171,74 +171,17 @@ Notes:
 		<cfcase value="textautocomplete">
 			<cfoutput>
 				<cfset suggestionsID = createUUID() />
-				<input type="hidden" name="#attributes.fieldName#" value="#htmlEditFormat(attributes.value)#" />
-				<input type="text" name="#attributes.fieldName#-autocompletesearch" value="#htmlEditFormat(attributes.value)#" class="textautocomplete#attributes.fieldClass#" data-sugessionsid="#suggestionsID#" #attributes.fieldAttributes# />
-				<cfif len(attributes.modalCreateAction)>
-					<cf_SlatwallActionCaller action="#attributes.modalCreateAction#" modal="true" icon="plus" type="link" class="btn btn-mini modal-fieldupdate-textautocomplete" icononly="true">
-				</cfif>
-				<div class="autocomplete-options">
-					<ul id="#suggestionsID#"></ul>
+				<div class="autoselect-container">
+					<input type="hidden" name="#attributes.fieldName#" value="#htmlEditFormat(attributes.value)#" />
+					<input type="text" name="#attributes.fieldName#-autocompletesearch" value="#htmlEditFormat(attributes.value)#" class="textautocomplete#attributes.fieldClass#" data-acfieldname="#attributes.fieldName#" data-sugessionsid="#suggestionsID#" #attributes.fieldAttributes# />
+					<div class="autocomplete-selected"><span class="textautocompleteremove"><i class="icon-remove"></i></span> <span class="value" id="selected-#suggestionsID#">Greg Moser</span></div>
+					<cfif len(attributes.modalCreateAction)>
+						<cf_SlatwallActionCaller action="#attributes.modalCreateAction#" modal="true" icon="plus" type="link" class="btn btn-mini modal-fieldupdate-textautocomplete" icononly="true">
+					</cfif>
+					<div class="autocomplete-options">
+						<ul id="#suggestionsID#"></ul>
+					</div>
 				</div>
-				<!---
-				<div class="autocomplete-options">
-					<ul>
-						<li>
-							<a href="">
-								<img src="//www.gravatar.com/avatar/a0572373c82e428eca2216ec31ec580c/?s=55" />
-								<span class="name">Greg Moser</span>
-								<span class="email">greg@gregmoser.com</span>
-								<span class="phone">(760) 518-5314</span>
-								<span class="address">137 2ND Street, Encinitas, CA</span>
-							</a>
-						</li>
-						<li>
-							<a href="">
-								<img src="//www.gravatar.com/avatar/#lcase(hash('simon@simonfree.com', 'MD5'))#/?s=55" />
-								<span class="name">Simon Free</span>
-								<span class="email">simon@simonfree.com</span>
-								<span class="phone">(919) 917-6869</span>
-								<span class="address">1619 Trinity Road, Raleigh, NC</span>
-							</a>
-						</li>
-						<li>
-							<a href="">
-								<span class="image"><img src="//www.gravatar.com/avatar/#lcase(hash(lcase('EVANGELOS-ALEXANDROS.SOULIOTIS@BNPPARIBAS.COM'), 'MD5'))#/?s=55" /></span>
-								<span class="name">EVANGELOS ALEXANDROS ALEXANDROS</span>
-								<span class="email">#lcase('EVANGELOS-ALEXANDROS.SOULIOTIS@BNPPARIBAS.COM')#</span>
-								<span class="phone">(919) 917-6869</span>
-								<span class="address">1619 Trinity Road, Raleigh, NC</span>
-							</a>
-						</li>
-						<li>
-							<a href="">
-								<img src="//www.gravatar.com/avatar/a0572373c82e428eca2216ec31ec580c/?s=55" />
-								<span class="name">Greg Moser</span>
-								<span class="email">greg@gregmoser.com</span>
-								<span class="phone">(760) 518-5314</span>
-								<span class="address">137 2ND Street, Encinitas, CA</span>
-							</a>
-						</li>
-						<li>
-							<a href="">
-								<img src="//www.gravatar.com/avatar/#lcase(hash('simon@simonfree.com', 'MD5'))#/?s=55" />
-								<span class="name">Simon Free</span>
-								<span class="email">simon@simonfree.com</span>
-								<span class="phone">(919) 917-6869</span>
-								<span class="address">1619 Trinity Road, Raleigh, NC</span>
-							</a>
-						</li>
-						<li>
-							<a href="">
-								<span class="image"><img src="//www.gravatar.com/avatar/#lcase(hash(lcase('EVANGELOS-ALEXANDROS.SOULIOTIS@BNPPARIBAS.COM'), 'MD5'))#/?s=55" /></span>
-								<span class="name">EVANGELOS ALEXANDROS ALEXANDROS</span>
-								<span class="email">#lcase('EVANGELOS-ALEXANDROS.SOULIOTIS@BNPPARIBAS.COM')#</span>
-								<span class="phone">(919) 917-6869</span>
-								<span class="address">1619 Trinity Road, Raleigh, NC</span>
-							</a>
-						</li>
-					</ul>
-				</div>
-				--->
 			</cfoutput>
 		</cfcase>
 		<cfcase value="textarea">

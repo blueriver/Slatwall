@@ -44,6 +44,6 @@ Notes:
 		<input type="hidden" name="orderID" value="">
 		
 		
-		<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" modalCreateAction="admin:account.createaccount" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" modalCreateAction="admin:account.createaccount" autocompletePropertyIdentifiers="gravatarIcon55,fullName,emailAddress,phoneNumber" edit="true">
 	</form>
 </cfoutput>

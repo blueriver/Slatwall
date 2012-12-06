@@ -14,12 +14,11 @@ var listingUpdateCache = {
 	tableID: "",
 	data: {},
 	afterRowID: ""
-}
+};
 
 var globalSearchCache = {
 	onHold: false
-}
-
+};
 
 jQuery(document).ready(function() {
 	
@@ -183,13 +182,6 @@ function setupEventHandlers() {
 		e.preventDefault();
 	});
 	
-	// Text Autocomplete
-	jQuery('body').on('keyup', '.textautocomplete', function(e){
-		if(jQuery(this).val().length >= 1) {
-			textAutocompleteKeyup( jQuery(this) );
-		}
-	});
-	
 	// Tab Selecting
 	jQuery('body').on('shown', 'a[data-toggle="tab"]', function(e){
 		window.location.hash = jQuery(this).attr('href');
@@ -256,6 +248,41 @@ function setupEventHandlers() {
 			});
 		});
 	});
+	
+	// Text Autocomplete
+	jQuery('body').on('keyup', '.textautocomplete', function(e){
+		if(jQuery(this).val().length >= 1) {
+			textAutocompleteKeyup( jQuery(this) );
+		} else {
+			jQuery( '#' + jQuery(this).data('sugessionsid') ).html('');
+		}
+	});
+	jQuery('body').on('click', '.textautocompleteadd', function(e){
+		e.preventDefault();
+		
+		var acSearchField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		jQuery( 'input[name="' + jQuery(acSearchField).data('acfieldname') + '"]' ).val( jQuery(this).data('acvalue') );
+		jQuery(this).closest('.autoselect-container').find('.autocomplete-selected').show();
+		jQuery( '#selected-' + jQuery(acSearchField).data('sugessionsid') ).html(jQuery(this).data('acname')) ;
+		jQuery(acSearchField).val('');
+		jQuery(acSearchField).attr("disabled", "disabled");
+	});
+	jQuery('body').on('blur', '.textautocomplete', function(e){
+		
+		sid = jQuery(this).data('sugessionsid');
+		bip = this;
+		setTimeout(function(){
+			jQuery( bip ).val('');
+			jQuery( '#' + sid ).html('');
+		}, 300);
+		
+	});
+	
+	
+	jQuery('body').on('click', '.textautocompleteremove', function(e){
+		console.log('REMOVE CLICKED');
+	});
+	
 	
 	// Listing Page - Searching
 	jQuery('body').on('submit', '.action-bar-search', function(e){
@@ -777,27 +804,40 @@ function tableApplySort(event, ui) {
 
 }
 
+function clearTextAutocompleteSuggestions( autocompleteField ) {
+	
+}
+
 function updateTextAutocompleteUI( autocompleteField ) {
 	console.log( "UI WAS LOADED" );
 }
 
 function textAutocompleteKeyup( autocompleteField ) {
-	
 	updateTextAutocompleteSuggestions( autocompleteField );
 }
 
 function updateTextAutocompleteSuggestions( autocompleteField, pageshow ) {
 	
+	jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).html('');
+	
 	var data = {
 		slatAction : 'admin:ajax.updatelistingdisplay',
 		entityName : 'Account',
-		propertyIdentifiers : 'accountID,gravatarIcon55,fullName,emailAddress,phoneNumber',
+		propertyIdentifiers : jQuery(autocompleteField).data('acpropertyidentifiers'),
 		keywords : jQuery(autocompleteField).val()
 	};
 	
 	data[ "P:Show" ] = pageshow || 4;
 	
-	jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).html('');
+	var piarr = jQuery(autocompleteField).data('acpropertyidentifiers').split(',');
+	
+	if( piarr.indexOf( jQuery(autocompleteField).data('acvalueproperty') ) === -1 ) {
+		data["propertyIdentifiers"] += ',' + jQuery(autocompleteField).data('acvalueproperty');
+	}
+	
+	if( piarr.indexOf( jQuery(autocompleteField).data('acnameproperty') ) === -1 ) {
+		data["propertyIdentifiers"] += ',' + jQuery(autocompleteField).data('acnameproperty');
+	}
 	
 	jQuery.ajax({
 		url: slatwall.rootURL + '/',
@@ -809,11 +849,10 @@ function updateTextAutocompleteSuggestions( autocompleteField, pageshow ) {
 			alert('An Error Occured');
 		},
 		success: function(r) {
-			
 			jQuery.each( r["pageRecords"], function(ri, rv) {
-				var innerLI = '<li><a href="">';
+				var innerLI = '<li><a href="#" class="textautocompleteadd" data-acvalue="' + rv[ jQuery(autocompleteField).data('acvalueproperty') ] + '" data-acname="' + rv[ jQuery(autocompleteField).data('acnameproperty') ] + '">';
 				
-				jQuery.each( data["propertyIdentifiers"].split(','), function(pi, pv) {
+				jQuery.each( piarr, function(pi, pv) {
 					if(pv !== 'accountID') {
 						innerLI += '<span class="' + pv + '">' + rv[ pv ] + '</span>';
 					}
