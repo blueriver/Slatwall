@@ -257,6 +257,17 @@ function setupEventHandlers() {
 			jQuery( '#' + jQuery(this).data('sugessionsid') ).html('');
 		}
 	});
+	jQuery('body').on('click', '.textautocompleteremove', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		jQuery(this).closest('.autocomplete-selected').hide();
+		
+		var acSearchField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		jQuery( 'input[name="' + jQuery(acSearchField).data('acfieldname') + '"]' ).val( '' );
+		jQuery(acSearchField).removeAttr("disabled");
+		
+	});
 	jQuery('body').on('click', '.textautocompleteadd', function(e){
 		e.preventDefault();
 		
@@ -277,11 +288,13 @@ function setupEventHandlers() {
 		}, 300);
 		
 	});
-	
-	
-	jQuery('body').on('click', '.textautocompleteremove', function(e){
-		console.log('REMOVE CLICKED');
+	jQuery('body').on('mouseenter', '.autocomplete-selected', function(e) {
+		console.log('hover on');
 	});
+	jQuery('body').on('mouseleave', '.autocomplete-selected', function(e) {
+		console.log('hover off');
+	});
+	
 	
 	
 	// Listing Page - Searching

@@ -174,9 +174,9 @@ Notes:
 				<div class="autoselect-container">
 					<input type="hidden" name="#attributes.fieldName#" value="#htmlEditFormat(attributes.value)#" />
 					<input type="text" name="#attributes.fieldName#-autocompletesearch" value="#htmlEditFormat(attributes.value)#" class="textautocomplete#attributes.fieldClass#" data-acfieldname="#attributes.fieldName#" data-sugessionsid="#suggestionsID#" #attributes.fieldAttributes# />
-					<div class="autocomplete-selected"><span class="textautocompleteremove"><i class="icon-remove"></i></span> <span class="value" id="selected-#suggestionsID#">Greg Moser</span></div>
+					<div class="autocomplete-selected"><a href="##" class="textautocompleteremove"><i class="icon-remove"></i></a> <span class="value" id="selected-#suggestionsID#">Greg Moser</span></div>
 					<cfif len(attributes.modalCreateAction)>
-						<cf_SlatwallActionCaller action="#attributes.modalCreateAction#" modal="true" icon="plus" type="link" class="btn btn-mini modal-fieldupdate-textautocomplete" icononly="true">
+						<cf_SlatwallActionCaller action="#attributes.modalCreateAction#" modal="true" icon="plus" type="link" class="btn modal-fieldupdate-textautocomplete" icononly="true">
 					</cfif>
 					<div class="autocomplete-options">
 						<ul id="#suggestionsID#"></ul>
