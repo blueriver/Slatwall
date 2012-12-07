@@ -195,7 +195,7 @@ Notes:
 		<!--- Setup textautocomplete values if they wern't passed in --->
 		<cfif attributes.fieldType eq "textautocomplete">
 			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acpropertyidentifiers="#attributes.autocompletePropertyIdentifiers#"', ' ') />
-			
+			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-entityName="#attributes.object.getPropertyMetaData(attributes.property).cfc#"', ' ') />
 			<cfif len(attributes.autocompleteValueProperty)>
 				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acvalueproperty="#attributes.autocompleteValueProperty#"', ' ') />	
 			<cfelse>

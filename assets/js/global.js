@@ -15,7 +15,11 @@ var listingUpdateCache = {
 	data: {},
 	afterRowID: ""
 };
-
+var textAutocompleteCache = {
+	onHold: false,
+	autocompleteField: undefined,
+	data: {},
+};
 var globalSearchCache = {
 	onHold: false
 };
@@ -249,54 +253,6 @@ function setupEventHandlers() {
 		});
 	});
 	
-	// Text Autocomplete
-	jQuery('body').on('keyup', '.textautocomplete', function(e){
-		if(jQuery(this).val().length >= 1) {
-			textAutocompleteKeyup( jQuery(this) );
-		} else {
-			jQuery( '#' + jQuery(this).data('sugessionsid') ).html('');
-		}
-	});
-	jQuery('body').on('click', '.textautocompleteremove', function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		
-		jQuery(this).closest('.autocomplete-selected').hide();
-		
-		var acSearchField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
-		jQuery( 'input[name="' + jQuery(acSearchField).data('acfieldname') + '"]' ).val( '' );
-		jQuery(acSearchField).removeAttr("disabled");
-		
-	});
-	jQuery('body').on('click', '.textautocompleteadd', function(e){
-		e.preventDefault();
-		
-		var acSearchField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
-		jQuery( 'input[name="' + jQuery(acSearchField).data('acfieldname') + '"]' ).val( jQuery(this).data('acvalue') );
-		jQuery(this).closest('.autoselect-container').find('.autocomplete-selected').show();
-		jQuery( '#selected-' + jQuery(acSearchField).data('sugessionsid') ).html(jQuery(this).data('acname')) ;
-		jQuery(acSearchField).val('');
-		jQuery(acSearchField).attr("disabled", "disabled");
-	});
-	jQuery('body').on('blur', '.textautocomplete', function(e){
-		
-		sid = jQuery(this).data('sugessionsid');
-		bip = this;
-		setTimeout(function(){
-			jQuery( bip ).val('');
-			jQuery( '#' + sid ).html('');
-		}, 300);
-		
-	});
-	jQuery('body').on('mouseenter', '.autocomplete-selected', function(e) {
-		console.log('hover on');
-	});
-	jQuery('body').on('mouseleave', '.autocomplete-selected', function(e) {
-		console.log('hover off');
-	});
-	
-	
-	
 	// Listing Page - Searching
 	jQuery('body').on('submit', '.action-bar-search', function(e){
 		e.preventDefault();
@@ -455,7 +411,168 @@ function setupEventHandlers() {
 		}
 		
 	});
+	
+	// Text Autocomplete
+	jQuery('body').on('keyup', '.textautocomplete', function(e){
+		if(jQuery(this).val().length >= 1) {
+			updateTextAutocompleteSuggestions( jQuery(this) );
+		} else {
+			jQuery( '#' + jQuery(this).data('sugessionsid') ).html('');
+		}
+	});
+	jQuery('body').on('click', '.textautocompleteremove', function(e) {
+		e.preventDefault();
+		
+		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		
+		// Update Hidden Value
+		jQuery( 'input[name="' + jQuery( autocompleteField ).data('acfieldname') + '"]' ).val( '' );
+		
+		// Re-enable the search box
+		jQuery( autocompleteField ).removeAttr("disabled");
+		jQuery( autocompleteField ).focus();
+		
+		// Set the html for suggestoins to blank and show it
+		jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).html('');
+		
+		// Hide the simple rep display
+		jQuery(this).closest('.autocomplete-selected').hide();
+	});
+	jQuery('body').on('click', '.textautocompleteadd', function(e){
+		e.preventDefault();
+	});
+	jQuery('body').on('mousedown', '.textautocompleteadd', function(e){
+		//e.preventDefault();
+		
+		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		
+		if(jQuery( autocompleteField ).attr("disabled") === undefined) {
+			// Set hidden input
+			jQuery( 'input[name="' + jQuery( autocompleteField ).data('acfieldname') + '"]' ).val( jQuery(this).data('acvalue') );
+			
+			// Set the simple rep display
+			jQuery( autocompleteField ).closest('.autoselect-container').find('.autocomplete-selected').show();
+			jQuery( '#selected-' + jQuery( autocompleteField ).data('sugessionsid') ).html( jQuery(this).data('acname') ) ;
+			
+			// update the suggestions and searchbox
+			jQuery( autocompleteField ).attr("disabled", "disabled");
+			jQuery( autocompleteField ).val('');
+			
+			// Udate the suggestions to only show 1
+			jQuery.each( jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).children(), function(i, v) {
+				if( jQuery(v).find('.textautocompleteadd').data('acvalue') !== jQuery( 'input[name="' + jQuery( autocompleteField ).data('acfieldname') + '"]' ).val() ) {
+					jQuery(v).remove();
+				}
+			});
+			
+			jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().hide();
+		}
+	});
+	jQuery('body').on('blur', '.textautocomplete', function(e){
+		// update the suggestions and searchbox
+		jQuery( this ).val('');
+		jQuery( '#' + jQuery( this ).data('sugessionsid') ).html('');
+		jQuery( '#' + jQuery( this ).data('sugessionsid') ).parent().hide();
+	});
+	jQuery('body').on('mouseenter', '.autocomplete-selected', function(e) {
+		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().show();
+	});
+	jQuery('body').on('mouseleave', '.autocomplete-selected', function(e) {
+		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().hide();
+	});
 }
+
+function textAutocompleteHold( autocompleteField, data ) {
+	if(!textAutocompleteCache.onHold) {
+		textAutocompleteCache.onHold = true;
+		return false;
+	}
+	
+	textAutocompleteCache.autocompleteField = autocompleteField;
+	textAutocompleteCache.data = data;
+	
+	return true;
+}
+
+function textAutocompleteRelease( ) {
+	
+	textAutocompleteCache.onHold = false;
+	
+	if(listingUpdateCache.autocompleteField !== undefined) {
+		updateTextAutocompleteSuggestions( textAutocompleteCache.autocompleteField, textAutocompleteCache.data );
+	}
+	
+	textAutocompleteCache.autocompleteField = undefined;
+	textAutocompleteCache.data = {};
+}
+
+function updateTextAutocompleteUI( autocompleteField ) {
+	// If there is a value set, then we can go out and get the necessary quickview value
+	if(jQuery( 'input[name="' + jQuery(autocompleteField).data('acfieldname') + '"]' ).val().length) {
+		//Update UI with pre-selected value
+	}
+}
+function updateTextAutocompleteSuggestions( autocompleteField, data ) {
+	if(jQuery(autocompleteField).val().length) {
+		// Setup the correct data
+		var thisData = {
+			slatAction: 'admin:ajax.updatelistingdisplay',
+			entityName: jQuery( autocompleteField ).data('entityname'),
+			propertyIdentifiers: jQuery( autocompleteField ).data('acpropertyidentifiers'),
+			keywords: jQuery(autocompleteField).val()
+		};
+		thisData["P:Show"] = 4;
+		var piarr = jQuery(autocompleteField).data('acpropertyidentifiers').split(',');
+		if( piarr.indexOf( jQuery(autocompleteField).data('acvalueproperty') ) === -1 ) {
+			thisData["propertyIdentifiers"] += ',' + jQuery(autocompleteField).data('acvalueproperty');
+		}
+		if( piarr.indexOf( jQuery(autocompleteField).data('acnameproperty') ) === -1 ) {
+			thisData["propertyIdentifiers"] += ',' + jQuery(autocompleteField).data('acnameproperty');
+		}
+		
+		if( data !== undefined ) {
+			if( data["keywords"] !== undefined) {
+				thisData["keywords"] = data["keywords"];
+			}
+			if( data["P:Show"] !== undefined) {
+				thisData["P:Show"] = data["P:Show"];
+			}
+		}
+		
+		// Verify that an update isn't already running
+		if(!textAutocompleteHold(autocompleteField, thisData)) {
+			jQuery.ajax({
+				url: slatwall.rootURL + '/',
+				method: 'post',
+				data: thisData,
+				dataType: 'json',
+				beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
+				error: function( er ) {
+					console.log( er );
+					alert('An Error Occured');
+				},
+				success: function(r) {
+					jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).html('');
+					jQuery.each( r["pageRecords"], function(ri, rv) {
+						var innerLI = '<li><a href="#" class="textautocompleteadd" data-acvalue="' + rv[ jQuery(autocompleteField).data('acvalueproperty') ] + '" data-acname="' + rv[ jQuery(autocompleteField).data('acnameproperty') ] + '">';
+						
+						jQuery.each( piarr, function(pi, pv) {
+							innerLI += '<span class="' + pv + '">' + rv[ pv ] + '</span>';
+						});
+						innerLI += '</a></li>';
+						jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).append( innerLI );
+					});
+					jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().show();
+					
+					textAutocompleteRelease();
+				}
+			});
+		}
+	}
+}
+
 
 function hideLoadedRows( tableID, parentID ) {
 	jQuery.each( jQuery( '#' + tableID).find('tr[data-parentid="' + parentID + '"]'), function(i, v) {
@@ -817,66 +934,7 @@ function tableApplySort(event, ui) {
 
 }
 
-function clearTextAutocompleteSuggestions( autocompleteField ) {
-	
-}
 
-function updateTextAutocompleteUI( autocompleteField ) {
-	console.log( "UI WAS LOADED" );
-}
-
-function textAutocompleteKeyup( autocompleteField ) {
-	updateTextAutocompleteSuggestions( autocompleteField );
-}
-
-function updateTextAutocompleteSuggestions( autocompleteField, pageshow ) {
-	
-	jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).html('');
-	
-	var data = {
-		slatAction : 'admin:ajax.updatelistingdisplay',
-		entityName : 'Account',
-		propertyIdentifiers : jQuery(autocompleteField).data('acpropertyidentifiers'),
-		keywords : jQuery(autocompleteField).val()
-	};
-	
-	data[ "P:Show" ] = pageshow || 4;
-	
-	var piarr = jQuery(autocompleteField).data('acpropertyidentifiers').split(',');
-	
-	if( piarr.indexOf( jQuery(autocompleteField).data('acvalueproperty') ) === -1 ) {
-		data["propertyIdentifiers"] += ',' + jQuery(autocompleteField).data('acvalueproperty');
-	}
-	
-	if( piarr.indexOf( jQuery(autocompleteField).data('acnameproperty') ) === -1 ) {
-		data["propertyIdentifiers"] += ',' + jQuery(autocompleteField).data('acnameproperty');
-	}
-	
-	jQuery.ajax({
-		url: slatwall.rootURL + '/',
-		method: 'post',
-		data: data,
-		dataType: 'json',
-		beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
-		error: function( er ) {
-			alert('An Error Occured');
-		},
-		success: function(r) {
-			jQuery.each( r["pageRecords"], function(ri, rv) {
-				var innerLI = '<li><a href="#" class="textautocompleteadd" data-acvalue="' + rv[ jQuery(autocompleteField).data('acvalueproperty') ] + '" data-acname="' + rv[ jQuery(autocompleteField).data('acnameproperty') ] + '">';
-				
-				jQuery.each( piarr, function(pi, pv) {
-					if(pv !== 'accountID') {
-						innerLI += '<span class="' + pv + '">' + rv[ pv ] + '</span>';
-					}
-				});
-				innerLI += '</a></li>';
-				jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).append( innerLI );
-			});
-			
-		}
-	});
-}
 
 function updateMultiselectTableUI( multiselectField ) {
 	var inputValue = jQuery('input[name=' + multiselectField + ']').val();

@@ -173,12 +173,12 @@ Notes:
 				<cfset suggestionsID = createUUID() />
 				<div class="autoselect-container">
 					<input type="hidden" name="#attributes.fieldName#" value="#htmlEditFormat(attributes.value)#" />
-					<input type="text" name="#attributes.fieldName#-autocompletesearch" value="#htmlEditFormat(attributes.value)#" class="textautocomplete#attributes.fieldClass#" data-acfieldname="#attributes.fieldName#" data-sugessionsid="#suggestionsID#" #attributes.fieldAttributes# />
-					<div class="autocomplete-selected"><a href="##" class="textautocompleteremove"><i class="icon-remove"></i></a> <span class="value" id="selected-#suggestionsID#">Greg Moser</span></div>
+					<input type="text" name="#attributes.fieldName#-autocompletesearch" value="#htmlEditFormat(attributes.value)#" class="textautocomplete #attributes.fieldClass#" data-acfieldname="#attributes.fieldName#" data-sugessionsid="#suggestionsID#" #attributes.fieldAttributes# />
+					<div class="autocomplete-selected"><a href="##" class="textautocompleteremove"><i class="icon-remove"></i></a> <span class="value" id="selected-#suggestionsID#"></span></div>
 					<cfif len(attributes.modalCreateAction)>
 						<cf_SlatwallActionCaller action="#attributes.modalCreateAction#" modal="true" icon="plus" type="link" class="btn modal-fieldupdate-textautocomplete" icononly="true">
 					</cfif>
-					<div class="autocomplete-options">
+					<div class="autocomplete-options" style="display:none;">
 						<ul id="#suggestionsID#"></ul>
 					</div>
 				</div>

@@ -186,14 +186,18 @@ div.autocomplete-selected {
 	display:none;
 }
 div.autocomplete-options {
+	position:absolute;
 	margin:3px 0px 0px 0px;
 	height:300px;
 	width:361px;
 	overflow-y: auto;
 	padding:0px;
+	z-index: 1000;
 	ul {
 		list-style:none;
 		margin:0px;
+		background-color: #ffffff;
+		
 		li {
 			list-style:none;
 			a {

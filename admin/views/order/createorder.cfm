@@ -45,5 +45,8 @@ Notes:
 		
 		
 		<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" modalCreateAction="admin:account.createaccount" autocompletePropertyIdentifiers="gravatarIcon55,fullName,emailAddress,phoneNumber" edit="true">
+		
+		<cfset testOrderItem = request.slatwallScope.getService("orderService").newOrderItem() />
+		<cf_SlatwallPropertyDisplay object="#testOrderItem#" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="product.productName,skuCode,price,optionsDisplay" edit="true">
 	</form>
 </cfoutput>
