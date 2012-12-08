@@ -424,6 +424,8 @@ Notes:
 			WHERE
 				ppGlobal.promotionPeriodID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#salePromotionPeriodIDs#" list="true">)
 			  AND
+			  	prGlobal.rewardType IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="merchandise,subscription,contentAccess" list="true">)
+			  AND
 			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardProduct WHERE SlatwallPromotionRewardProduct.promotionRewardID = prGlobal.promotionRewardID)
 			  AND
 			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardBrand WHERE SlatwallPromotionRewardBrand.promotionRewardID = prGlobal.promotionRewardID)
