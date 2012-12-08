@@ -533,9 +533,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			} 
 		}
 		if(!isNull(arguments.promotionPeriod.getMaximumAccountUseCount()) && arguments.promotionPeriod.getMaximumAccountUseCount() gt 0) {
-			var periodAccountUseCount = getDAO().getPromotionPeriodAccountUseCount(promotionPeriod = arguments.promotionPeriod, account=arguments.order.getAccount());
-			if(periodAccountUseCount >= arguments.promotionPeriod.getMaximumAccountUseCount()) {
-				return false;
+			if(!isNull(arguments.order.getAccount())) {
+				var periodAccountUseCount = getDAO().getPromotionPeriodAccountUseCount(promotionPeriod = arguments.promotionPeriod, account=arguments.order.getAccount());
+				if(periodAccountUseCount >= arguments.promotionPeriod.getMaximumAccountUseCount()) {
+					return false;
+				}	
 			}
 		}
 		
