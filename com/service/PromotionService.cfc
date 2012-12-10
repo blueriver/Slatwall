@@ -224,6 +224,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 														
 														// setup the discountQuantity based on the qualification quantity.  If there were no qualification constrints than this will just be the orderItem quantity
 														var qualificationQuantity = promotionPeriodQualifications[reward.getPromotionPeriod().getPromotionPeriodID()].orderItems[ orderItem.getOrderItemID() ];
+														if(qualificationQuantity lt promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder) {
+															promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder = qualificationQuantity;
+														}
+														
 														var discountQuantity = qualificationQuantity * promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification;
 														
 														// If the discountQuantity is > the orderItem quantity then just set it to the orderItem quantity
@@ -291,7 +295,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 																});
 																
 															}
-															
 															
 															// Increment the number of times this promotion reward has been used
 															promotionRewardUsageDetails[ reward.getPromotionRewardID() ].usedInOrder += discountQuantity;
@@ -622,16 +625,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				for(var o=1; o<=arrayLen(arguments.order.getOrderItems()); o++) {
 					
 					// Setup a local var for this orderItem
-					var thisOrderItem = arguments.order.getOrderItems()[1];
-					var orderItemQualifierCount = 0;
+					var thisOrderItem = arguments.order.getOrderItems()[o];
+					var orderItemQualifierCount = thisOrderItem.getQuantity();
 					
 					// First we run an "if" to see if this doesn't qualify for any reason and if so then set the count to 0
 					if( 
 						// First check the simple value stuff
-						( !isNull(qualifier.getMinimumItemQuantity()) && qualifier.getMinimumItemQuantity() > arguments.orderItem.getQuantity() )
-						||
-						( !isNull(qualifier.getMaximumItemQuantity()) && qualifier.getMaximumItemQuantity() < arguments.orderItem.getQuantity() )
-						||
 						( !isNull(qualifier.getMinimumItemPrice()) && qualifier.getMinimumItemPrice() > arguments.orderItem.getPrice() )
 						||
 						( !isNull(qualifier.getMaximumItemPrice()) && qualifier.getMaximumItemPrice() < arguments.orderItem.getPrice() )
@@ -673,15 +672,31 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							
 						orderItemQualifierCount = 0;
 						
-						
-					// Lastly if there was a minimumItemQuantity then we can make this qualification based on the quantity ordered divided by minimum
-					} else if( !isNull(qualifier.getMinimumItemQuantity()) ) {
-						orderItemQualifierCount = int(orderItem.getQuantity() / qualifier.getMinimumItemQuantity() );	
 					}	
+					
+					
+					
 					
 					qualifierCount += orderItemQualifierCount;
 					
+					/*
+					writeDump(thisOrderItem.getSku().getProduct().getProductName());
+					writeDump(thisOrderItem.getSku().getProduct().getProductType().getProductTypeID());
+					writeDump(orderItemQualifierCount);
+					writeDump(qualifierCount);
+					*/
+					
 				}
+				
+				// Lastly if there was a minimumItemQuantity then we can make this qualification based on the quantity ordered divided by minimum
+				if( !isNull(qualifier.getMinimumItemQuantity()) ) {
+					qualifierCount = int(qualifierCount / qualifier.getMinimumItemQuantity() );
+				}
+				
+				/*
+				writeDump(qualifierCount);
+				abort;
+				*/
 				
 				// If this particular qualifier has less qualifications than the previous, well use the lower of the two qualifier counts
 				if(qualifierCount lt allQualifiersCount) {
