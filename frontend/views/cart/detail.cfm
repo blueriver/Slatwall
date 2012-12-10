@@ -40,7 +40,7 @@ Notes:
 	<div class="svocartdetail">
 		#$.slatwall.getAllMessagesHTML()#
 		#$.slatwall.cart().getAllMessagesHTML()#
-		<form name="updateCart" method="post">
+		<form name="updateCart" method="post" action="?update=1">
 			<input type="hidden" name="slatAction" value="frontend:cart.update" />
 		<cfif not arrayLen($.slatwall.cart().getOrderItems())>
 			<p class="noitems">#$.slatwall.rbKey('frontend.cart.detail.noitems')#</p>
