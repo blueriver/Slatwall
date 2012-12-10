@@ -21,14 +21,12 @@ function CheckAuthentication()
 	//WARNING : DO NOT simply return "true". By doing so, you are allowing
 	//"anyone" to upload and list the files in your server. You must implement
 	//some kind of session validation here. Even something very simple as...
-	
-	//return application.slatwallfw1.factory.getBean("permissionService").secureDisplay('admin:main.ckfinder');
-	return true;
-
 	//... where session.IsAuthorized is set to "true" as soon as the
 	//user logs in your system.
-
-	return false;
+	
+	request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
+	return request.slatwallScope.getService("permissionService").secureDisplay('admin:main.ckfinder');
+	
 }
 
 config.licenseName = 'Slatwall eCommerce';
