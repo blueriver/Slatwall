@@ -674,17 +674,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						
 					}	
 					
-					
-					
-					
 					qualifierCount += orderItemQualifierCount;
-					
-					/*
-					writeDump(thisOrderItem.getSku().getProduct().getProductName());
-					writeDump(thisOrderItem.getSku().getProduct().getProductType().getProductTypeID());
-					writeDump(orderItemQualifierCount);
-					writeDump(qualifierCount);
-					*/
 					
 				}
 				
@@ -692,11 +682,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				if( !isNull(qualifier.getMinimumItemQuantity()) ) {
 					qualifierCount = int(qualifierCount / qualifier.getMinimumItemQuantity() );
 				}
-				
-				/*
-				writeDump(qualifierCount);
-				abort;
-				*/
 				
 				// If this particular qualifier has less qualifications than the previous, well use the lower of the two qualifier counts
 				if(qualifierCount lt allQualifiersCount) {
