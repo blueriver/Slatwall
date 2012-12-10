@@ -16,14 +16,11 @@
 	Run the pseudo constructor to set up default
 	data structures.
 	--->
+	<cfinclude template="../../../../../../../config/applicationSettings.cfm">
+	<cfinclude template="../../../../../../../config/mappings.cfm">
+	<cfinclude template="../../../../../../../plugins/mappings.cfm">
 	<cfscript>
-	// Set up the application.
-	THIS.Name = "CKFinder_Connector";
-	THIS.ApplicationTimeout = "#CreateTimeSpan( 0, 2, 0, 0 )#";
-	THIS.SessionTimeout = "#CreateTimeSpan(0,0,45,0)#";
-	THIS.SessionManagement = true;
-	THIS.SetClientCookies = true;
-	THIS.mappings["/CKFinder_Connector"] = getDirectoryFromPath(getCurrentTemplatePath());
+	THIS.mappings["/CKFinder_Connector"] = mapPrefix & BaseDir & "/plugins/Slatwall/org/ckfinder/core/connector/cfm/";
 	</cfscript>
 
 	<!--- Include the CFC creation proxy. --->
