@@ -238,6 +238,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				break;
 			}
 		}
+		
+		// Recalculate the order amounts for tax and promotions
+		recalculateOrderAmounts(arguments.order);
 	}
 	
 	public boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
