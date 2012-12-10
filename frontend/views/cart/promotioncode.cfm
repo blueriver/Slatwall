@@ -47,7 +47,7 @@ Notes:
 				</cfloop>
 			</dl>
 		</cfif>
-		<form name="addPromotionCode" method="post">
+		<form name="addPromotionCode" method="post" action="?update=1">
 			<dl>
 				<dt>Promotion Code:</dt>
 				<dd><input type="text" name="promotionCode" /></dd>
