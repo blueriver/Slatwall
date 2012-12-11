@@ -39,9 +39,10 @@ Notes:
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 
 	// fw1 Auto-Injected Service Properties
+	property name="locationService" type="any";
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
-	property name="LocationService" type="any";
+	property name="skuService" type="any";
 	
 	this.publicMethods='';
 	
@@ -100,8 +101,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.order = getOrderService().getOrder(rc.orderID);
 		rc.sku = getSkuService().getSku(rc.skuID);
 		
-		rc.orderItem = getOrderService().addOrderItem(order=rc.order, sku=rc.sku);
+		getOrderService().addOrderItem(order=rc.order, sku=rc.sku, quantity=rc.quantity, data=rc);
 		
-		getFW().redirect('admin:order.detailOrder', 'orderID=#rc.orderID#');
+		getFW().redirect(action='admin:order.detailOrder', queryString='orderID=#rc.orderID#&messagekeys=admin.order.saveorder_success');
 	}
 }

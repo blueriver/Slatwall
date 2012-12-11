@@ -52,7 +52,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#" showdelete="false">
+		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<!--- Add Order Item --->
 			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
@@ -77,7 +77,7 @@ Notes:
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divclass="span4">
 				<cfif rc.edit>
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,fullName,emailAddress,phoneNumber" edit="true">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,fullName,emailAddress,phoneNumber,address.simpleRepresentation" edit="true">
 				<cfelseif !isNull(rc.order.getAccount())>
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="fullName" valuelink="?slatAction=admin:account.detailaccount&accountID=#rc.order.getAccount().getAccountID()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress" valuelink="mailto:#rc.order.getAccount().getEmailAddress()#">

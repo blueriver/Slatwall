@@ -148,7 +148,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return getPrimaryEmailAddress().getEmailAddress();
 	}
 	
-	public string function getAddress() {
+	public any function getAddress() {
 		return getPrimaryAddress().getAddress();
 	}
 	

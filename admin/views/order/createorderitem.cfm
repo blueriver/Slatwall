@@ -41,25 +41,55 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderItem#" edit="true">
+	<cf_SlatwallDetailForm object="#rc.orderItem#" edit="true" saveaction="admin:order.addOrderItem">
 		
 		<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<div style="width:550px;height:300px;">
-					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="skuID" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,product.productName,product.productType.productTypeName,skuCode" edit="true">
-					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="quantity" property="quantity" edit="true" value="1">
-					
+		<cf_SlatwallDetailHeader fluidDisplay="false">
+			<cf_SlatwallPropertyList divClass="span6">
+				<div style="height:300px;">
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="skuID" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,product.productName,product.productType.productTypeName,skuCode,price" edit="true">
+				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="quantity" property="quantity" edit="true" value="1">
+				</div>
+			</cf_SlatwallPropertyList>
+			<cf_SlatwallPropertyList divClass="span6">
+				<cfset local.orderFulfillmentSmartList = rc.order.getOrderFulfillmentsSmartList() />
+				<cfset local.existingFulfillmentSelected = false />
+				<div class="control-group">
+					<label for="fulfillmentMethodID" class="control-label">#$.slatwall.rbKey('entity.orderFulfillment')#</label>
+					<div class="controls">
+						<select name="orderFulfillment.orderFulfillmentID" class="valid">
+							<cfloop array="#local.orderFulfillmentSmartList.getRecords()#" index="orderFulfillment">
+								<cfif not local.existingFulfillmentSelected>
+									<cfset local.existingFulfillmentSelected = true />
+									<option value="#orderFulfillment.getOrderFulfillmentID()#" selected="selected">#orderFulfillment.getFulfillmentMethod().getFulfillmentMethodName()# | <cfif not isNull(orderFulfillment.getAddress())>#orderFulfillment.getAddress().getSimpleRepresentation()#</cfif></option>
+								<cfelse>
+									<option value="#orderFulfillment.getOrderFulfillmentID()#">#orderFulfillment.getFulfillmentMethod().getFulfillmentMethodName()# | <cfif not isNull(orderFulfillment.getAddress())>#orderFulfillment.getAddress().getSimpleRepresentation()#</cfif></option>
+								</cfif>
+							</cfloop>
+							<option value="">#$.slatwall.rbKey('define.new')#</option>
+						</select>
+					</div>
+				</div>
+				<div <cfif local.existingFulfillmentSelected>style="display:none;"</cfif> id="newFulfillmentMethod">
 					<cfset local.fulfillmentMethodSmartList = $.slatwall.getService("fulfillmentService").getFulfillmentMethodSmartList() />
 					<cfset local.fulfillmentMethodSmartList.addFilter('activeFlag', 1) />
 					<cfset local.fulfillmentMethodSmartList.addOrder('sortOrder|ASC') />
-					<cfset local.fulfillmentMethodSmartList.addSelect('fulfillmentMethodID', 'value') />
-					<cfset local.fulfillmentMethodSmartList.addSelect('fulfillmentMethodName', 'name') />
-					<cf_SlatwallFieldDisplay title="Fulfillment Method" fieldname="fulfillmentMethodID" fieldtype="select" valueOptions="#local.fulfillmentMethodSmartList.getRecords()#" edit="true" />
-					
-				</div>			
-			</cf_SlatwallPropertyList>
+					<div class="control-group">
+						<label for="fulfillmentMethodID" class="control-label">#$.slatwall.rbKey('entity.fulfillmentMethod')#</label>
+						<div class="controls">
+							<select name="orderFulfillment.orderFulfillmentID" class="valid">
+								<cfloop array="#local.fulfillmentMethodSmartList.getRecords()#" index="fulfillmentMethod">
+									<option value="#fulfillmentMethod.getFulfillmentMethodID()#">
+										#fulfillmentMethod.getFulfillmentMethodName()#
+									</option>
+								</cfloop>
+							</select>
+						</div>
+					</div>
+					<cf_SlatwallAddressDisplay address="#$.slatwall.getService('addressService').newAddress()#" edit="true" />
+				</div>
+			</cf_SlatwallPropertyList>	
 		</cf_SlatwallDetailHeader>
 		
 	</cf_SlatwallDetailForm>

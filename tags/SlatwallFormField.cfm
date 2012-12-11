@@ -181,13 +181,15 @@ Notes:
 					<div class="autocomplete-selected" <cfif not len(attributes.value)>style="display:none;"</cfif>><a href="##" class="textautocompleteremove"><i class="icon-remove"></i></a> <span class="value" id="selected-#suggestionsID#"><cfif len(attributes.value)>#attributes.autocompleteSelectedValueDetails[ attributes.autocompleteNameProperty ]#</cfif></span></div>
 					<div class="autocomplete-options" style="display:none;">
 						<ul id="#suggestionsID#">
-							<li>
-								<a href="##" class="textautocompleteadd" data-acvalue="#attributes.value#" data-acname="Greg Moser">
-								<cfloop list="#attributes.autocompletePropertyIdentifiers#" index="pi">
-									<span class="#pi#">#attributes.autocompleteSelectedValueDetails[ pi ]#</span>
-								</cfloop>
-								</a>
-							</li>
+							<cfif len(attributes.value)>
+								<li>
+									<a href="##" class="textautocompleteadd" data-acvalue="#attributes.value#" data-acname="Greg Moser">
+									<cfloop list="#attributes.autocompletePropertyIdentifiers#" index="pi">
+										<span class="#pi#">#attributes.autocompleteSelectedValueDetails[ pi ]#</span>
+									</cfloop>
+									</a>
+								</li>
+							</cfif>
 						</ul>
 					</div>
 					<cfif len(attributes.modalCreateAction)>
