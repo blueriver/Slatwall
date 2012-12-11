@@ -75,6 +75,7 @@ Notes:
 	<cfparam name="attributes.autocompletePropertyIdentifiers" type="string" default="" />	<!--- hint: This describes the list of properties that we want to get from an entity --->
 	<cfparam name="attributes.autocompleteNameProperty" type="string" default="" />			<!--- hint: This is the value property that will get assigned to the hidden field when selected --->
 	<cfparam name="attributes.autocompleteValueProperty" type="string" default="" /> 		<!--- hint: This is the single name property that shows once an option is selected --->
+	<cfparam name="attributes.autocompleteSelectedValueDetails" type="struct" default="#structNew()#" />
 	
 	<cfparam name="attributes.fieldAttributes" type="string" default="" />					<!--- hint: This is uesd to pass specific additional fieldAttributes when in edit mode --->
 	
@@ -114,6 +115,33 @@ Notes:
 			<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
 		</cfif>
 		
+		<!--- If this is in edit mode then get the pertinent field info --->
+		<cfif attributes.edit or attributes.fieldType eq "listingMultiselect">
+			<cfset attributes.fieldClass = listAppend(attributes.fieldClass, attributes.object.getPropertyValidationClass( attributes.property ), " ") />
+			<cfif attributes.fieldName eq "">
+				<cfset attributes.fieldName = attributes.object.getPropertyFieldName( attributes.property ) />
+			</cfif>
+			<cfif listFindNoCase("checkboxgroup,radiogroup,select,multiselect", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
+				<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
+			<cfelseif listFindNoCase("listingMultiselect", attributes.fieldType)>
+				<cfset attributes.valueOptionsSmartList = attributes.object.invokeMethod( "get#attributes.property#OptionsSmartList" ) />
+			</cfif>
+		</cfif>
+		
+		<!--- Setup textautocomplete values if they wern't passed in --->
+		<cfif attributes.fieldType eq "textautocomplete">
+			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acpropertyidentifiers="#attributes.autocompletePropertyIdentifiers#"', ' ') />
+			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-entityName="#attributes.object.getPropertyMetaData(attributes.property).cfc#"', ' ') />
+			<cfif not len(attributes.autocompleteValueProperty)>
+				<cfset attributes.autocompleteValueProperty = listLast(attributes.fieldName, '.') />
+			</cfif>
+			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acvalueproperty="#attributes.autocompleteValueProperty#"', ' ') />
+			<cfif not len(attributes.autocompleteNameProperty)>
+				<cfset attributes.autocompleteNameProperty = "simpleRepresentation" />
+			</cfif>
+			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acnameproperty="#attributes.autocompleteNameProperty#"', ' ') />
+		</cfif>
+		
 		<!--- Set Up The Value --->
 		<cfif attributes.value eq "">
 
@@ -126,7 +154,16 @@ Notes:
 			<!--- If the value was an object, typically a MANY-TO-ONE, then we get either the identifierValue or for display a simpleRepresentation --->
 			<cfif isObject(attributes.value) && attributes.object.isPersistent()>
 				<cfif attributes.edit>
-					<cfset attributes.value = attributes.value.getIdentifierValue() />
+					<!--- If this is a textautocomplete then we need to setup all of the propertyIdentifiers --->
+					<cfif attributes.fieldType eq "textautocomplete">
+						<cfloop list="#attributes.autocompletePropertyIdentifiers#" index="pi">
+							<cfset attributes.autocompleteSelectedValueDetails[ pi ] = attributes.value.getValueByPropertyIdentifier( pi ) />
+						</cfloop>
+						<cfif not structKeyExists(attributes.autocompleteSelectedValueDetails, attributes.autocompleteNameProperty)>
+							<cfset attributes.autocompleteSelectedValueDetails[ attributes.autocompleteNameProperty ] = attributes.value.getValueByPropertyIdentifier( attributes.autocompleteNameProperty ) />
+						</cfif>
+					</cfif>
+					<cfset attributes.value = attributes.value.getIdentifierValue() />  
 				<cfelse>
 					<cfset attributes.value = attributes.value.getSimpleRepresentation() />
 				</cfif>
@@ -171,42 +208,12 @@ Notes:
 		<cfif attributes.hint eq "">
 			<cfset attributes.hint = attributes.object.getPropertyHint( attributes.property ) />
 		</cfif>
-		
-		<!--- If this is in edit mode then get the pertinent field info --->
-		<cfif attributes.edit or attributes.fieldType eq "listingMultiselect">
-			<cfset attributes.fieldClass = listAppend(attributes.fieldClass, attributes.object.getPropertyValidationClass( attributes.property ), " ") />
-			<cfif attributes.fieldName eq "">
-				<cfset attributes.fieldName = attributes.object.getPropertyFieldName( attributes.property ) />
-			</cfif>
-			<cfif listFindNoCase("checkboxgroup,radiogroup,select,multiselect", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
-				<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
-			<cfelseif listFindNoCase("listingMultiselect", attributes.fieldType)>
-				<cfset attributes.valueOptionsSmartList = attributes.object.invokeMethod( "get#attributes.property#OptionsSmartList" ) />
-			</cfif>
-		</cfif>
 			
 		<!--- Add the error class to the form field if it didn't pass validation --->
 		<cfif attributes.object.hasError(attributes.property)>
 			<cfset attributes.fieldClass = attributes.fieldClass & " error" />
 			
 			<cfset attributes.errors = attributes.object.getError( attributes.property ) />
-		</cfif>
-		
-		<!--- Setup textautocomplete values if they wern't passed in --->
-		<cfif attributes.fieldType eq "textautocomplete">
-			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acpropertyidentifiers="#attributes.autocompletePropertyIdentifiers#"', ' ') />
-			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-entityName="#attributes.object.getPropertyMetaData(attributes.property).cfc#"', ' ') />
-			<cfif len(attributes.autocompleteValueProperty)>
-				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acvalueproperty="#attributes.autocompleteValueProperty#"', ' ') />	
-			<cfelse>
-				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acvalueproperty="#listLast(attributes.fieldName, '.')#"', ' ') />
-			</cfif>
-			
-			<cfif len(attributes.autocompleteNameProperty)>
-				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acnameproperty="#attributes.autocompleteNameProperty#"', ' ') />
-			<cfelse>
-				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acnameproperty=simpleRepresentation', ' ') />
-			</cfif>
 		</cfif>
 	</cfsilent>
 	

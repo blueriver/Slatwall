@@ -41,22 +41,24 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderItem#" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.orderItem#" edit="true">
 		
-		<input type="hidden" name="order.orderID" value="#rc.order.getOrderID()#" />
+		<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
-				<div style="width:500px;">
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="skuCode" edit="true">
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantity" edit="true">
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				</div>
+				<div style="width:550px;height:300px;">
+					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="skuID" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,product.productName,product.productType.productTypeName,skuCode" edit="true">
+					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="quantity" property="quantity" edit="true" value="1">
+					
+					<cfset local.fulfillmentMethodSmartList = $.slatwall.getService("fulfillmentService").getFulfillmentMethodSmartList() />
+					<cfset local.fulfillmentMethodSmartList.addFilter('activeFlag', 1) />
+					<cfset local.fulfillmentMethodSmartList.addOrder('sortOrder|ASC') />
+					<cfset local.fulfillmentMethodSmartList.addSelect('fulfillmentMethodID', 'value') />
+					<cfset local.fulfillmentMethodSmartList.addSelect('fulfillmentMethodName', 'name') />
+					<cf_SlatwallFieldDisplay title="Fulfillment Method" fieldname="fulfillmentMethodID" fieldtype="select" valueOptions="#local.fulfillmentMethodSmartList.getRecords()#" edit="true" />
+					
+				</div>			
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

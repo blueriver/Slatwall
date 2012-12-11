@@ -91,4 +91,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	}
 
+	public any function addOrderItem(required struct rc) {
+		param name="rc.orderID" type="any" default="";
+		param name="rc.skuID" type="any" default="";
+		param name="rc.quantity" type="any" default="";
+		param name="rc.fulfillmentMethodID" type="any" default="";
+		
+		rc.order = getOrderService().getOrder(rc.orderID);
+		rc.sku = getSkuService().getSku(rc.skuID);
+		
+		rc.orderItem = getOrderService().addOrderItem(order=rc.order, sku=rc.sku);
+		
+		getFW().redirect('admin:order.detailOrder', 'orderID=#rc.orderID#');
+	}
 }
