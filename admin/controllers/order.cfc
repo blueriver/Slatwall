@@ -82,10 +82,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.edit = true;
 		
 	}
-	
+	/*
 	public any function createOrder(required struct rc) {
 		rc.order = getOrderService().newOrder();
 		rc.edit = true;
 	}
-	
+	*/
 }
