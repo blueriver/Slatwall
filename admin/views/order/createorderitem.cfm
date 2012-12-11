@@ -45,7 +45,7 @@ Notes:
 		
 		<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
 		
-		<cf_SlatwallDetailHeader fluidDisplay="false">
+		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divClass="span6">
 				<div style="height:300px;">
 				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="skuID" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,product.productName,product.productType.productTypeName,skuCode,price" edit="true">
@@ -75,22 +75,48 @@ Notes:
 					<cfset local.fulfillmentMethodSmartList = $.slatwall.getService("fulfillmentService").getFulfillmentMethodSmartList() />
 					<cfset local.fulfillmentMethodSmartList.addFilter('activeFlag', 1) />
 					<cfset local.fulfillmentMethodSmartList.addOrder('sortOrder|ASC') />
+					<cfset local.fulfillmentMethodTypeSelected = "" />
 					<div class="control-group">
 						<label for="fulfillmentMethodID" class="control-label">#$.slatwall.rbKey('entity.fulfillmentMethod')#</label>
 						<div class="controls">
-							<select name="orderFulfillment.orderFulfillmentID" class="valid">
+							<select name="orderFulfillment.fulfillmentMethod.fulfillmentMethodID" class="valid">
 								<cfloop array="#local.fulfillmentMethodSmartList.getRecords()#" index="fulfillmentMethod">
-									<option value="#fulfillmentMethod.getFulfillmentMethodID()#">
-										#fulfillmentMethod.getFulfillmentMethodName()#
-									</option>
+									<cfif not len(local.fulfillmentMethodTypeSelected)>
+										<cfset local.fulfillmentMethodTypeSelected = fulfillmentMethod.getFulfillmentMethodType() />
+										<option value="#fulfillmentMethod.getFulfillmentMethodID()#" data-fulfillmentmethodtype="#fulfillmentMethod.getFulfillmentMethodType()#">#fulfillmentMethod.getFulfillmentMethodName()#</option>
+									<cfelse>
+										<option value="#fulfillmentMethod.getFulfillmentMethodID()#" data-fulfillmentmethodtype="#fulfillmentMethod.getFulfillmentMethodType()#">#fulfillmentMethod.getFulfillmentMethodName()#</option>
+									</cfif>
 								</cfloop>
 							</select>
 						</div>
 					</div>
-					<cf_SlatwallAddressDisplay address="#$.slatwall.getService('addressService').newAddress()#" edit="true" />
+					<div class="fulfillmentDetails" data-showtype="shipping" <cfif local.fulfillmentMethodTypeSelected neq "shipping">style="display:none;"</cfif>>
+						<cf_SlatwallAddressDisplay address="#$.slatwall.getService('addressService').newAddress()#" fieldnameprefix="orderFulfillment.shippingAddress" edit="true" />
+					</div>
 				</div>
-			</cf_SlatwallPropertyList>	
+			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
 	</cf_SlatwallDetailForm>
 </cfoutput>
+<script type="text/javascript">
+	jQuery(document).ready(function(e){
+		jQuery('select[name="orderFulfillment.orderFulfillmentID"]').change(function(e){
+			
+			if(jQuery(this).val() === '') {
+				jQuery('#newFulfillmentMethod').show();
+			} else {
+				jQuery('#newFulfillmentMethod').hide();
+			}
+			
+		});
+		
+		jQuery('select[name="orderFulfillment.fulfillmentMethod.fulfillmentMethodID"]').change(function(e){
+			var selector = 'div[data-showtype="' + jQuery(this).find(':selected').data('fulfillmentmethodtype') + '"]';
+			console.log(selector);
+			jQuery('.fulfillmentDetails').hide();
+			jQuery(selector).show();
+		});
+	});
+</script>
