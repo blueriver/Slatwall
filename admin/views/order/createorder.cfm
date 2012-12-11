@@ -44,9 +44,20 @@ Notes:
 		<input type="hidden" name="orderID" value="">
 		
 		
-		<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" modalCreateAction="admin:account.createaccount" autocompletePropertyIdentifiers="gravatarIcon55,fullName,emailAddress,phoneNumber" edit="true">
+		<div class="row-fluid">
+			<div class="span8">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" modalCreateAction="admin:account.createaccount" autocompletePropertyIdentifiers="gravatarIcon55,fullName,emailAddress,phoneNumber" edit="true">
 		
-		<cfset testOrderItem = request.slatwallScope.getService("orderService").newOrderItem() />
-		<cf_SlatwallPropertyDisplay object="#testOrderItem#" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="product.productName,skuCode,price,optionsDisplay" edit="true">
+				<cfset testOrderItem = request.slatwallScope.getService("orderService").newOrderItem() />
+				<cf_SlatwallPropertyDisplay object="#testOrderItem#" property="sku" fieldName="orderFulfillments[1].sku.skuID" fieldtype="textautocomplete" autocompletePropertyIdentifiers="product.productName,skuCode,price,optionsDisplay" edit="true">
+				<cf_SlatwallActionCaller action="admin:order.saveorder" text="#request.slatwallScope.rbKey('define.create')#" class="btn btn-primary" type="button" submit="true">
+				
+			</div>	
+			<div class="span4">
+				<div class="well">
+					
+				</div>
+			</div>	
+		</div>
 	</form>
 </cfoutput>
