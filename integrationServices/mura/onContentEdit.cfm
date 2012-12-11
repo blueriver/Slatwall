@@ -262,28 +262,30 @@ $(document).ready(function(){
 	$('select[name="slatwallData.product.productID"]').change(function() {
 		
 		var postData = {};
-		postData['F:product_productID'] = $('select[name="slatwallData.product.productID"]').val();
+		postData['slatAction'] = 'admin:ajax.updateListingDisplay';
+		postData['entityName'] = 'Sku';
+		postData['F:product.productID'] = $('select[name="slatwallData.product.productID"]').val();
 		postData['P:Show'] = 'all';
 		postData['propertyIdentifiers'] = 'skuID,skuCode,price';
+		
 
 		$.ajax({
 			type: 'get',
-			url: '/plugins/Slatwall/?slatAction=admin:product.listsku',
+			url: '#request.slatwallScope.getSlatwallRootURL()#',
 			data: postData,
-			dataType: "json",
-			contentType: 'application/json',
+			dataType: 'json',
+			beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
 			success: function(r) {
 				$('select[name="slatwallData.product.sku.skuID"]').html('');
 				$('select[name="slatwallData.product.sku.skuID"]').append('<option value="">New Sku</option>');
-				if(r['skusmartList']['records'].length > 0){
-					$.each(r['skusmartList']['records'],function(index,value){
-						var option = '<option value="'+value['skuID']+'">$'+value['price']+' - '+value['skuCode']+'</option>';
+				if(r["pageRecords"].length > 0){
+					$.each(r["pageRecords"],function(index,value){
+						var option = '<option value="'+value['skuID']+'">'+value['price']+' - '+value['skuCode']+'</option>';
 						$('select[name="slatwallData.product.sku.skuID"]').append(option);
 					});
 				}
 			}, error: function(r) {
-				console.log("Error");
-				console.log(r);
+				alert("Error Loading Skus");
 			}
 		});
 		
