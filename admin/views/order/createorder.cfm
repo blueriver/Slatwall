@@ -36,28 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.order" type="any" />
+<cfparam name="rc.order" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<form method="post" action="?s=1" class="form-horizontal" enctype="application/x-www-form-urlencoded" novalidate="novalidate">
-		<input type="hidden" name="slatAction" value="admin:order.saveorder">
-		<input type="hidden" name="orderID" value="">
+	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#" returnAction="admin:order.detail">
+		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#" />
 		
-		
-		<div class="row-fluid">
-			<div class="span8">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" modalCreateAction="admin:account.createaccount" autocompletePropertyIdentifiers="gravatarIcon55,fullName,emailAddress,phoneNumber" edit="true">
-		
-				<cfset testOrderItem = request.slatwallScope.getService("orderService").newOrderItem() />
-				<cf_SlatwallPropertyDisplay object="#testOrderItem#" property="sku" fieldName="orderFulfillments[1].sku.skuID" fieldtype="textautocomplete" autocompletePropertyIdentifiers="product.productName,skuCode,price,optionsDisplay" edit="true">
-				<cf_SlatwallActionCaller action="admin:order.saveorder" text="#request.slatwallScope.rbKey('define.create')#" class="btn btn-primary" type="button" submit="true">
-				
-			</div>	
-			<div class="span4">
-				<div class="well">
-					
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<div style="width:600px;height:450px;">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" autocompletePropertyIdentifiers="gravatarIcon55,fullName,emailAddress,phoneNumber" edit="true">
 				</div>
-			</div>	
-		</div>
-	</form>
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+
+	</cf_SlatwallDetailForm>
 </cfoutput>

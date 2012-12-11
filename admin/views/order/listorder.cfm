@@ -53,7 +53,7 @@ Notes:
 	<cfset rc.orderSmartList.addFilter('orderStatusType.type', local.defaultStatusFilter) />
 </cfif>
 
-<cf_SlatwallActionBar type="listing" object="#rc.orderSmartList#" />
+<cf_SlatwallActionBar type="listing" object="#rc.orderSmartList#" createmodal="true" />
 	
 <cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
 							recordDetailAction="admin:order.detailorder">
