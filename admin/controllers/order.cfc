@@ -96,13 +96,32 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.orderID" type="any" default="";
 		param name="rc.skuID" type="any" default="";
 		param name="rc.quantity" type="any" default="";
-		param name="rc.fulfillmentMethodID" type="any" default="";
+		param name="rc.orderFulfillmentID" type="any" default="";
 		
-		rc.order = getOrderService().getOrder(rc.orderID);
-		rc.sku = getSkuService().getSku(rc.skuID);
+		arguments.rc.order = getOrderService().getOrder(arguments.rc.orderID);
+		var sku = getSkuService().getSku(arguments.rc.skuID);
+		var orderFulfillment = getOrderService().getOrderFulfillment(arguments.rc.orderFulfillmentID);
 		
-		getOrderService().addOrderItem(order=rc.order, sku=rc.sku, quantity=rc.quantity, data=rc);
+		if(!isNull(orderFulfillment)) {
+			getOrderService().addOrderItem(order=arguments.rc.order, sku=sku, quantity=arguments.rc.quantity, orderFulfillment=orderFulfillment);	
+		} else {
+			getOrderService().addOrderItem(order=arguments.rc.order, sku=sku, quantity=arguments.rc.quantity, data=arguments.rc);
+		}
 		
-		getFW().redirect(action='admin:order.detailOrder', queryString='orderID=#rc.orderID#&messagekeys=admin.order.saveorder_success');
+		// If no errors redirect to success
+		if(!rc.order.hasErrors()) {
+			getFW().redirect(action='admin:order.detailOrder', queryString='orderID=#rc.orderID#&messagekeys=admin.order.saveorder_success');	
+		}
+		
+		for( var p in arguments.rc.order.getErrors() ) {
+			var thisErrorArray = arguments.order.getErrors()[p];
+			for(var i=1; i<=arrayLen(thisErrorArray); i++) {
+				showMessage(thisErrorArray[i], "error");
+			}
+		}
+		
+		getFW().setView(action='admin:order.detailOrder');
+		arguments.rc.slatAction = 'admin:order.detailOrder';
+		arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.order'));	
 	}
 }

@@ -47,7 +47,7 @@ Notes:
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divClass="span6">
-				<div style="height:300px;">
+				<div style="height:350px;">
 				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="skuID" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,product.productName,product.productType.productTypeName,skuCode,price" edit="true">
 				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="quantity" property="quantity" edit="true" value="1">
 				</div>
@@ -56,9 +56,9 @@ Notes:
 				<cfset local.orderFulfillmentSmartList = rc.order.getOrderFulfillmentsSmartList() />
 				<cfset local.existingFulfillmentSelected = false />
 				<div class="control-group">
-					<label for="fulfillmentMethodID" class="control-label">#$.slatwall.rbKey('entity.orderFulfillment')#</label>
+					<label for="orderFulfillmentID" class="control-label">#$.slatwall.rbKey('entity.orderFulfillment')#</label>
 					<div class="controls">
-						<select name="orderFulfillment.orderFulfillmentID" class="valid">
+						<select name="orderFulfillmentID" class="valid">
 							<cfloop array="#local.orderFulfillmentSmartList.getRecords()#" index="orderFulfillment">
 								<cfif not local.existingFulfillmentSelected>
 									<cfset local.existingFulfillmentSelected = true />
@@ -72,6 +72,7 @@ Notes:
 					</div>
 				</div>
 				<div <cfif local.existingFulfillmentSelected>style="display:none;"</cfif> id="newFulfillmentMethod">
+					<cfset local.newOrderFulfillment = $.slatwall.getService("orderService").newOrderFulfillment() />
 					<cfset local.fulfillmentMethodSmartList = $.slatwall.getService("fulfillmentService").getFulfillmentMethodSmartList() />
 					<cfset local.fulfillmentMethodSmartList.addFilter('activeFlag', 1) />
 					<cfset local.fulfillmentMethodSmartList.addOrder('sortOrder|ASC') />
@@ -79,7 +80,7 @@ Notes:
 					<div class="control-group">
 						<label for="fulfillmentMethodID" class="control-label">#$.slatwall.rbKey('entity.fulfillmentMethod')#</label>
 						<div class="controls">
-							<select name="orderFulfillment.fulfillmentMethod.fulfillmentMethodID" class="valid">
+							<select name="fulfillmentMethodID" class="valid">
 								<cfloop array="#local.fulfillmentMethodSmartList.getRecords()#" index="fulfillmentMethod">
 									<cfif not len(local.fulfillmentMethodTypeSelected)>
 										<cfset local.fulfillmentMethodTypeSelected = fulfillmentMethod.getFulfillmentMethodType() />
@@ -91,8 +92,14 @@ Notes:
 							</select>
 						</div>
 					</div>
+					<cf_SlatwallPropertyDisplay object="#local.newOrderFulfillment#" property="fulfillmentCharge" fieldName="orderFulfillment.fulfillmentCharge" edit="true" />
 					<div class="fulfillmentDetails" data-showtype="shipping" <cfif local.fulfillmentMethodTypeSelected neq "shipping">style="display:none;"</cfif>>
-						<cf_SlatwallAddressDisplay address="#$.slatwall.getService('addressService').newAddress()#" fieldnameprefix="orderFulfillment.shippingAddress" edit="true" />
+						<cfset shippingMethodOptionsSL = $.slatwall.getService("shippingService").getShippingMethodSmartList() />
+						<cfset shippingMethodOptionsSL.addFilter('activeFlag', 1) />
+						<cfset shippingMethodOptionsSL.addSelect('shippingMethodName', 'name') />
+						<cfset shippingMethodOptionsSL.addSelect('shippingMethodID', 'value') />
+						<cf_SlatwallPropertyDisplay object="#local.newOrderFulfillment#" property="shippingMethod" fieldName="orderFulfillment.shippingMethod.shippingMethodID" valueOptions="#shippingMethodOptionsSL.getRecords()#" edit="true" />
+						<cf_SlatwallAddressDisplay address="#$.slatwall.getService('addressService').newAddress()#" fieldnameprefix="orderFulfillment.shippingAddress." edit="true" />
 					</div>
 				</div>
 			</cf_SlatwallPropertyList>
@@ -102,7 +109,7 @@ Notes:
 </cfoutput>
 <script type="text/javascript">
 	jQuery(document).ready(function(e){
-		jQuery('select[name="orderFulfillment.orderFulfillmentID"]').change(function(e){
+		jQuery('select[name="orderFulfillmentID"]').change(function(e){
 			
 			if(jQuery(this).val() === '') {
 				jQuery('#newFulfillmentMethod').show();
@@ -112,7 +119,7 @@ Notes:
 			
 		});
 		
-		jQuery('select[name="orderFulfillment.fulfillmentMethod.fulfillmentMethodID"]').change(function(e){
+		jQuery('select[name="fulfillmentMethodID"]').change(function(e){
 			var selector = 'div[data-showtype="' + jQuery(this).find(':selected').data('fulfillmentmethodtype') + '"]';
 			console.log(selector);
 			jQuery('.fulfillmentDetails').hide();

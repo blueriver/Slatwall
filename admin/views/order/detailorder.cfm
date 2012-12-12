@@ -83,8 +83,8 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress" valuelink="mailto:#rc.order.getAccount().getEmailAddress()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="phoneNumber">
 				</cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin">
 				<cfif !isNull(rc.order.getReferencedOrder())>
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencedOrder" valuelink="?slatAction=admin:order.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
 				</cfif>
@@ -95,24 +95,26 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
 				</cfif>
 			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divclass="span4">
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
-					<hr />
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountCreditedTotal">
-					<cfif arrayLen(rc.order.getReferencingOrders())>
+			<cfif not rc.order.isNew()>
+				<cf_SlatwallPropertyList divclass="span4">
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
 						<hr />
-						<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencingPaymentAmountCreditedTotal">
-					</cfif>
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divclass="span4">
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="subtotal">
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="taxtotal">
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="fulfillmenttotal">
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="discounttotal">
-					<hr />
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="total">
-			</cf_SlatwallPropertyList>
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="paymentAmountCreditedTotal">
+						<cfif arrayLen(rc.order.getReferencingOrders())>
+							<hr />
+							<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencingPaymentAmountCreditedTotal">
+						</cfif>
+				</cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyList divclass="span4">
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="subtotal">
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="taxtotal">
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="fulfillmenttotal">
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="discounttotal">
+						<hr />
+						<cf_SlatwallPropertyDisplay object="#rc.order#" property="total">
+				</cf_SlatwallPropertyList>
+			</cfif>
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.order#" allowComments="true" allowCustomAttributes="true">
