@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,25 +35,17 @@
 
 Notes:
 
---->
+*/
+component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
+	// @hint put things in here that you want to run befor EACH test
+	public void function setUp() {
+		super.setup();
+		
+		variables.entityService = "addressService";
+		variables.entity = request.slatwallScope.getService( variables.entityService ).newAddress();
+	}
+	
+	
+}
 
-<cfparam name="rc.returnAction" type="string" default="admin:setting.edittask&taskScheduleID=#rc.taskScheduleID#" />
-<cfparam name="rc.processTaskScheduleSmartList" type="any" />
-
-<cfoutput>
-	<cf_SlatwallProcessForm>
-		
-		<cf_SlatwallActionBar type="process" />
-		
-		<p>
-			Are you sure you wish to run this task?
-		</p>	
-		
-        <cf_SlatwallProcessListing processSmartList="#rc.processTaskScheduleSmartList#"></cf_SlatwallProcessListing>
-		
-		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
-		<input type="hidden" name="returnAction" value="admin:setting.edittask&taskScheduleID=#rc.taskScheduleID#" />
-	</cf_SlatwallProcessForm>
-		
-</cfoutput>

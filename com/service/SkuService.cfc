@@ -301,6 +301,23 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	// ==================== START: Smart List Overrides =======================
 	
+	public any function getSkuSmartList(struct data={}, currentURL="") {
+		arguments.entityName = "SlatwallSku";
+		
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.joinRelatedProperty("SlatwallSku", "product");
+		smartList.joinRelatedProperty("SlatwallProduct", "productType");
+		
+		smartList.addKeywordProperty(propertyIdentifier="skuCode", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="skuID", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="product.productName", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="product.productType.productTypeName", weight=1);
+		
+		
+		return smartList;
+	}
+	
 	// ====================  END: Smart List Overrides ========================
 	
 	// ====================== START: Get Overrides ============================
