@@ -61,7 +61,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if( !structKeyExists(variables, "activeFW1Subsystems") ) {
 			variables.activeFW1Subsystems = [];
 			
-			var integrations = this.listIntegration({fw1ActiveFlag=1, installedFlag=1});
+			var integrations = this.listIntegration({fw1ActiveFlag=1, fw1ReadyFlag=1, installedFlag=1});
 			for(var i=1; i<=arrayLen(integrations); i++) {
 				arrayAppend(variables.activeFW1Subsystems, {subsystem=integrations[i].getIntegrationPackage(), name=integrations[i].getIntegrationName()});
 			}
