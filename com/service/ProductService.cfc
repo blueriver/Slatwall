@@ -206,7 +206,7 @@ component extends="BaseService" accessors="true" {
 		arguments.product.populate(arguments.data);
 		
 		if(isNull(arguments.product.getURLTitle())) {
-			getDataService().createUniqueURLTitle(titleString=arguments.product.getTitle(), tableName="SlatwallProduct");
+			arguments.product.setURLTitle(getDataService().createUniqueURLTitle(titleString=arguments.product.getTitle(), tableName="SlatwallProduct"));
 		}
 		
 		// If this is a new product and it doesn't have any errors... there are a few additional steps we need to take
