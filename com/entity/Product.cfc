@@ -721,7 +721,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Promotion Reward Exclusions (many-to-many - inverse)    
 	public void function addPromotionRewardExclusion(required any promotionReward) {
-		logSlatwall("GOT HERE 2", true);
 		arguments.promotionReward.addExcludedProduct( this );    
 	}
 	public void function removePromotionRewardExclusion(required any promotionReward) {    

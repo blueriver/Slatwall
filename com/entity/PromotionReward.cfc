@@ -343,7 +343,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	
 	// Excluded Products (many-to-many - owner)
 	public void function addExcludedProduct(required any product) {
-		logSlatwall("GOT HERE 1", true);
 		if(arguments.product.isNew() or !hasExcludedProduct(arguments.product)) {
 			arrayAppend(variables.excludedProducts, arguments.product);
 		}
