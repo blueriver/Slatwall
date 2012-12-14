@@ -52,7 +52,9 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	// Related Object Properties (many-to-many - inverse)
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="optionID" inversejoincolumn="skuID" inverse="true"; 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierOption" fkcolumn="optionID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedOption" fkcolumn="optionID" inversejoincolumn="promotionQualifierID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -145,6 +147,14 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 		arguments.promotionReward.removeOption( this );
 	}
 	
+	// Promotion Reward Exclusions (many-to-many - inverse)    
+	public void function addPromotionRewardExclusion(required any promotionReward) {    
+		arguments.promotionReward.addExcludedOption( this );    
+	}
+	public void function removePromotionRewardExclusion(required any promotionReward) {    
+		arguments.promotionReward.addExcludedOption( this );    
+	}
+	
 	// Promotion Qualifiers (many-to-many - inverse)
 	public void function addPromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.addOption( this );
@@ -152,6 +162,14 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeOption( this );
 	}	
+	
+	// Promotion Qualifier Exclusions (many-to-many - inverse)    
+	public void function addPromotionQualifierExclusion(required any promotionQualifier) {    
+		arguments.promotionQualifier.addExcludedOption( this );    
+	}
+	public void function removePromotionQualifierExclusion(required any promotionQualifier) {    
+		arguments.promotionQualifier.addExcludedOption( this );    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

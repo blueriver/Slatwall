@@ -122,6 +122,206 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 		structDelete(variables, "promotionPeriod");
 	}
 	
+	// Brands (many-to-many - owner)
+	public void function addBrand(required any brand) {
+		if(arguments.brand.isNew() or !hasBrand(arguments.brand)) {
+			arrayAppend(variables.brands, arguments.brand);
+		}
+		if(isNew() or !arguments.brand.hasPromotionQualifier( this )) {
+			arrayAppend(arguments.brand.getPromotionQualifiers(), this);
+		}
+	}
+	public void function removeBrand(required any brand) {
+		var thisIndex = arrayFind(variables.brands, arguments.brand);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.brands, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.brand.getPromotionQualifiers(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.brand.getPromotionQualifiers(), thatIndex);
+		}
+	}
+
+	// Options (many-to-many - owner)
+	public void function addOption(required any option) {
+		if(arguments.option.isNew() or !hasOption(arguments.option)) {
+			arrayAppend(variables.options, arguments.option);
+		}
+		if(isNew() or !arguments.option.hasPromotionQualifier( this )) {
+			arrayAppend(arguments.option.getPromotionQualifiers(), this);
+		}
+	}
+	public void function removeOption(required any option) {
+		var thisIndex = arrayFind(variables.options, arguments.option);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.options, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.option.getPromotionQualifiers(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.option.getPromotionQualifiers(), thatIndex);
+		}
+	}
+	
+	// Skus (many-to-many - owner)    
+	public void function addSku(required any sku) {    
+		if(arguments.sku.isNew() or !hasSku(arguments.sku)) {    
+			arrayAppend(variables.skus, arguments.sku);    
+		}    
+		if(isNew() or !arguments.sku.hasPromotionQualifier( this )) {    
+			arrayAppend(arguments.sku.getPromotionQualifiers(), this);    
+		}    
+	}    
+	public void function removeSku(required any sku) {    
+		var thisIndex = arrayFind(variables.skus, arguments.sku);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.skus, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.sku.getPromotionQualifiers(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.sku.getPromotionQualifiers(), thatIndex);    
+		}    
+	}
+
+	// Products (many-to-many - owner)
+	public void function addProduct(required any product) {
+		if(arguments.product.isNew() or !hasProduct(arguments.product)) {
+			arrayAppend(variables.products, arguments.product);
+		}
+		if(isNew() or !arguments.product.hasPromotionQualifier( this )) {
+			arrayAppend(arguments.product.getPromotionQualifiers(), this);
+		}
+	}
+	public void function removeProduct(required any product) {
+		var thisIndex = arrayFind(variables.products, arguments.product);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.products, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.product.getPromotionQualifiers(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.product.getPromotionQualifiers(), thatIndex);
+		}
+	}
+	
+	// Product Types (many-to-many - owner)
+	public void function addProductType(required any productType) {
+		if(arguments.productType.isNew() or !hasProductType(arguments.productType)) {
+			arrayAppend(variables.productTypes, arguments.productType);
+		}
+		if(isNew() or !arguments.productType.hasPromotionQualifier( this )) {
+			arrayAppend(arguments.productType.getPromotionQualifiers(), this);
+		}
+	}
+	public void function removeProductType(required any productType) {
+		var thisIndex = arrayFind(variables.productTypes, arguments.productType);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.productTypes, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.productType.getPromotionQualifiers(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.productType.getPromotionQualifiers(), thatIndex);
+		}
+	}
+	
+	// Excluded Brands (many-to-many - owner)    
+	public void function addExcludedBrand(required any brand) {    
+		if(arguments.brand.isNew() or !hasExcludedBrand(arguments.brand)) {    
+			arrayAppend(variables.excludedBrands, arguments.brand);    
+		}    
+		if(isNew() or !arguments.brand.hasPromotionQualifierExclusion( this )) {    
+			arrayAppend(arguments.brand.getPromotionQualifierExclusions(), this);    
+		}    
+	}    
+	public void function removeExcludedBrand(required any brand) {    
+		var thisIndex = arrayFind(variables.excludedBrands, arguments.brand);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.excludedBrands, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.brand.getPromotionQualifierExclusions(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.brand.getPromotionQualifierExclusions(), thatIndex);    
+		}    
+	}
+	
+	// Excluded Options (many-to-many - owner)    
+	public void function addExcludedOption(required any option) {    
+		if(arguments.option.isNew() or !hasExcludedOption(arguments.option)) {    
+			arrayAppend(variables.excludedOptions, arguments.option);    
+		}    
+		if(isNew() or !arguments.option.hasPromotionQualifierExclusion( this )) {    
+			arrayAppend(arguments.option.getPromotionQualifierExclusions(), this);    
+		}    
+	}    
+	public void function removeExcludedOption(required any option) {    
+		var thisIndex = arrayFind(variables.excludedOptions, arguments.option);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.excludedOptions, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.option.getPromotionQualifierExclusions(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.option.getPromotionQualifierExclusions(), thatIndex);    
+		}    
+	}
+	
+	// Excluded Skus (many-to-many - owner)
+	public void function addExcludedSku(required any sku) {
+		if(arguments.sku.isNew() or !hasExcludedSku(arguments.sku)) {
+			arrayAppend(variables.excludedSkus, arguments.sku);
+		}
+		if(isNew() or !arguments.sku.hasPromotionQualifierExclusion( this )) {
+			arrayAppend(arguments.sku.getPromotionQualifierExclusions(), this);
+		}
+	}
+	public void function removeExcludedSku(required any sku) {
+		var thisIndex = arrayFind(variables.excludedSkus, arguments.sku);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.excludedSkus, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.sku.getPromotionQualifierExclusions(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.sku.getPromotionQualifierExclusions(), thatIndex);
+		}
+	}
+	
+	// Excluded Products (many-to-many - owner)
+	public void function addExcludedProduct(required any product) {
+		if(arguments.product.isNew() or !hasExcludedProduct(arguments.product)) {
+			arrayAppend(variables.excludedProducts, arguments.product);
+		}
+		if(isNew() or !arguments.product.hasPromotionQualifierExclusion( this )) {
+			arrayAppend(arguments.product.getPromotionQualifierExclusions(), this);
+		}
+	}
+	public void function removeExcludedProduct(required any product) {
+		var thisIndex = arrayFind(variables.excludedProducts, arguments.product);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.excludedProducts, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.product.getPromotionQualifierExclusions(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.product.getPromotionQualifierExclusions(), thatIndex);
+		}
+	}
+
+	// Excluded Product Types (many-to-many - owner)
+	public void function addExcludedProductType(required any productType) {
+		if(arguments.productType.isNew() or !hasExcludedProductType(arguments.productType)) {
+			arrayAppend(variables.excludedProductTypes, arguments.productType);
+		}
+		if(isNew() or !arguments.productType.hasPromotionQualifierExclusion( this )) {
+			arrayAppend(arguments.productType.getPromotionQualifierExclusions(), this);
+		}
+	}
+	public void function removeExcludedProductType(required any productType) {
+		var thisIndex = arrayFind(variables.excludedProductTypes, arguments.productType);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.excludedProductTypes, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.productType.getPromotionQualifierExclusions(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.productType.getPromotionQualifierExclusions(), thatIndex);
+		}
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// =============== START: Custom Validation Methods ====================

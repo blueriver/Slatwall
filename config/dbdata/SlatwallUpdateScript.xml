@@ -13,13 +13,12 @@
 		<Record updateScriptID="d7f98d34e79a53bf4f13e1b3ad9fda23" scriptPath="database/v1_4.cfm" loadOrder="4" maxExecutionCount="1" />
 		<Record updateScriptID="d7f98d35f8b584a031146b3e236e01d5" scriptPath="database/v2_0.cfm" loadOrder="5" maxExecutionCount="1" />
 		<Record updateScriptID="d7f98d37bfadcdf6de92d6de3ea5da55" scriptPath="database/v2_2.cfm" loadOrder="6" maxExecutionCount="1" />
+		<Record updateScriptID="d7f98d38dd25d3a8dd622a0230120dff" scriptPath="database/v2_3.cfm" loadOrder="7" maxExecutionCount="1" />
 	</Records>
 </Table>
 
 <!--
 
-
-d7f98d38dd25d3a8dd622a0230120dff
 d7f98d39e4a5ed87a57612843f8c2d5b
 d7f98d3ae8690ce0a5d392da35b8a68c
 d7f98d3bb59b0169d2a47677981db86d

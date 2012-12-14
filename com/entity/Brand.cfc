@@ -63,7 +63,9 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID" inverse="true";
 	
 	
@@ -91,8 +93,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	   arguments.Product.removeBrand(this);
 	}
 	
-	
-	// promotionRewards (many-to-many - inverse)
+	// Promotion Rewards (many-to-many - inverse)
 	public void function addPromotionReward(required any promotionReward) {
 	   arguments.promotionReward.addBrand(this);
 	}
@@ -101,13 +102,29 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	   arguments.promotionReward.removeBrand(this);
 	}
 	
-	// promotionQualifiers (many-to-many - inverse)
+	// Promotion Reward Exclusions (many-to-many - inverse)    
+	public void function addPromotionRewardExclusion(required any promotionReward) {    
+		arguments.promotionReward.addExcludedBrand( this );    
+	}
+	public void function removePromotionRewardExclusion(required any promotionReward) {    
+		arguments.promotionReward.removeExcludedBrand( this );    
+	}
+	
+	// Promotion Qualifiers (many-to-many - inverse)
 	public void function addPromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.addBrand( this );
 	}
 	
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeBrand( this );
+	}
+	
+	// Promotion Qualifier Exclusions (many-to-many - inverse)    
+	public void function addPromotionQualifierExclusion(required any promotionQualifier) {    
+		arguments.promotionQualifier.addExcludedBrand( this );    
+	}    
+	public void function removePromotionQualifierExclusion(required any promotionQualifier) {    
+		arguments.promotionQualifier.removeExcludedBrand( this );    
 	}
 	
 	// Vendors (many-to-many - inverse)    
