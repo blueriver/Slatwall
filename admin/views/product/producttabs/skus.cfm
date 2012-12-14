@@ -65,7 +65,7 @@ Notes:
 		<cfif isNull(rc.product.getDefaultSku().getUserDefinedPriceFlag()) || !rc.product.getDefaultSku().getUserDefinedPriceFlag()>
 			<cf_SlatwallListingColumn propertyIdentifier="listPrice" range="true" />
 			<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
-			<cf_SlatwallListingColumn propertyIdentifier="salePrice" range="true" />
+			<cf_SlatwallListingColumn propertyIdentifier="salePrice" sort="false" />
 		</cfif>
 	</cf_SlatwallListingDisplay>
 	
