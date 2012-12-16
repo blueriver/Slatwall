@@ -180,7 +180,7 @@ component extends="BaseService" accessors="true" output="false" {
 			newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
 			
 			if(newPaymentTransaction.hasErrors()) {
-				arguments.accountPayment.addError('processing', 'There was an unknown error trying to add an offline transaction for this order payment.');	
+				arguments.accountPayment.addError('processing', rbKey('validate.accountPayment.offlineProcessingError'));	
 			}
 			
 		} else {
