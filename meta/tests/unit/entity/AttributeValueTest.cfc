@@ -42,14 +42,13 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 	public void function setUp() {
 		super.setup();
 		
-		variables.entityService = "addressService";
+		variables.entityService = "attributeService";
 		variables.entity = request.slatwallScope.getService( variables.entityService ).newAddress();
 	}
 	
-	// Addresses are alowed to be saved with no data
 	public void function validate_a_new_doesnt_pass() {
-		assert(!variables.entity.hasErrors());
+		variables.entity.validate(context="save");
+		assert(variables.entity.hasErrors());
 	}
-	
 }
 

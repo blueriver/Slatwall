@@ -47,10 +47,10 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValue" ormtype="string" length="4000";
 	property name="attributeValueEncrypted" ormtype="string";
-	property name="attributeValueType" ormType="string" formFieldType="select" formatType="custom";
+	property name="attributeValueType" ormType="string" formFieldType="select" formatType="custom" notnull="true";
 	
 	// Related Object Properties (many-to-one)
-	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";
+	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" notnull="true";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="accountPayment" cfc="AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
