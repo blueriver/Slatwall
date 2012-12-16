@@ -334,6 +334,17 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	// ==================== START: Smart List Overrides =======================
 	
+	public any function getStockAdjustmentSmartList(struct data={}, currentURL="") {
+		arguments.entityName = "SlatwallStockAdjustment";
+		
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.joinRelatedProperty("SlatwallStockAdjustment", "fromLocation", "left");
+		smartList.joinRelatedProperty("SlatwallStockAdjustment", "toLocation", "left");
+		
+		return smartList;
+	}
+	
 	// ====================  END: Smart List Overrides ========================
 	
 	// ====================== START: Get Overrides ============================
