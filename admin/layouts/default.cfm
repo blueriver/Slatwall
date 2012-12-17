@@ -135,19 +135,20 @@ Notes:
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.tools_nav')#" icon="magnet icon-white" type="nav">
 							<cfsavecontent variable="local.toolGroupOne">
 								<cf_SlatwallActionCaller action="admin:main.about" type="list">
-								<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
+								<cf_SlatwallActionCaller action="admin:main.log" type="list">
 							</cfsavecontent>
 							<cfif len(local.toolGroupOne)>
 								#local.toolGroupOne#
 								<li class="divider"></li>
 							</cfif>
 							<cfsavecontent variable="local.toolGroupTwo">
+								<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
 								<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
 							</cfsavecontent>
 							<cfif len(local.toolGroupTwo)>
-								#local.toolGroupOne#
+								#local.toolGroupTwo#
 								<li class="divider"></li>
 							</cfif>
 							<cf_SlatwallActionCaller action="admin:main.update" type="list">
