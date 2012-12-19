@@ -73,7 +73,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.orderItem#" allowCustomAttributes="true">
+		<cf_SlatwallTabGroup object="#rc.orderItem#" allowComments="true" allowCustomAttributes="true">
 			<cf_SlatwallTab view="admin:order/orderitemtabs/taxes" />
 			<cf_SlatwallTab view="admin:order/orderitemtabs/promotions" />
 			<cfif rc.orderItem.getOrderItemType().getSystemCode() eq "oitSale">

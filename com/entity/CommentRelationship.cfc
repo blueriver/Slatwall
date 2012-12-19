@@ -51,6 +51,7 @@ component displayname="Comment Relationship" entityname="SlatwallCommentRelation
 	property name="comment" cfc="Comment" fieldtype="many-to-one" fkcolumn="commentID";
 	
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	
