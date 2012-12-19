@@ -873,7 +873,7 @@ function buildPagingNav(currentPage, totalPages, pageRecordStart, pageRecordEnd,
 		
 		if(currentPage > 3 && totalPages > 6) {
 			nav += '<li><a href="#" class="listing-pager page-option" data-page="1">1</a></li>';
-			nav += '<li class="disabled"><a href="#" class="page-option">...</a></li>';
+			nav += '<li><a href="#" class="listing-pager page-option" data-page="' + (currentPage - 3) + '">...</a></li>';
 		}
 	
 		for(var i=pageStart; i<pageStart + pageCount; i++){
@@ -886,7 +886,7 @@ function buildPagingNav(currentPage, totalPages, pageRecordStart, pageRecordEnd,
 		}
 		
 		if(currentPage < totalPages - 3 && totalPages > 6) {
-			nav += '<li class="disabled"><a href="#" class="page-option">...</a></li>';
+			nav += '<li><a href="#" class="listing-pager page-option" data-page="' + (currentPage + 3) + '">...</a></li>';
 			nav += '<li><a href="#" class="listing-pager page-option" data-page="' + totalPages + '">' + totalPages + '</a></li>';
 		}
 		
