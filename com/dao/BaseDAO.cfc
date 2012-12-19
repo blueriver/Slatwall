@@ -48,7 +48,7 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 			arguments.entityName = "Slatwall#arguments.entityName#";
 		}
 		
-		if ( isSimpleValue( idOrFilter ) && len( idOrFilter ) && idOrFilter != 0 ) {
+		if ( isSimpleValue( idOrFilter ) && len( idOrFilter ) ) {
 			var entity = entityLoadByPK( entityName, idOrFilter );
 		} else if ( isStruct( idOrFilter ) ){
 			var entity = entityLoad( entityName, idOrFilter, true );

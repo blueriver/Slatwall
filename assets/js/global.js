@@ -673,11 +673,11 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 				jQuery.each( r["pageRecords"], function(ri, rv) {
 					
 					var rowSelector = jQuery('<tr></tr>');
-					jQuery(rowSelector).attr('id', rv[ idProperty ]);
+					jQuery(rowSelector).attr('id', jQuery.trim(rv[ idProperty ]));
 					
 					if(afterRowID) {
-						jQuery(rowSelector).attr('data-idpath', rv[ idProperty + 'Path' ]);
-						jQuery(rowSelector).data('idpath', rv[ idProperty + 'Path' ]);
+						jQuery(rowSelector).attr('data-idpath', jQuery.trim(rv[ idProperty + 'Path' ]));
+						jQuery(rowSelector).data('idpath', jQuery.trim(rv[ idProperty + 'Path' ]));
 						jQuery(rowSelector).attr('data-parentid', afterRowID);
 						jQuery(rowSelector).data('parentid', afterRowID);
 					}
@@ -695,15 +695,15 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								newtd += '<td class="' + jQuery(cv).attr('class') + '">No</td>';
 							} else {
 								if(jQuery(cv).hasClass('primary') && afterRowID) {
-									newtd += '<td class="' + jQuery(cv).attr('class') + '"><a href="#" class="table-action-expand depth' + nextRowDepth + '" data-depth="' + nextRowDepth + '"><i class="icon-plus"></i></a> ' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+									newtd += '<td class="' + jQuery(cv).attr('class') + '"><a href="#" class="table-action-expand depth' + nextRowDepth + '" data-depth="' + nextRowDepth + '"><i class="icon-plus"></i></a> ' + jQuery.trim(rv[jQuery(cv).data('propertyidentifier')]) + '</td>';
 								} else {
-									newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+									newtd += '<td class="' + jQuery(cv).attr('class') + '">' + jQuery.trim(rv[jQuery(cv).data('propertyidentifier')]) + '</td>';
 								}
 							}
 							
 						} else if( jQuery(cv).hasClass('sort') ) {
 							
-							newtd += '<td><a href="#" class="table-action-sort" data-idvalue="' + rv[ idProperty ] + '" data-sortpropertyvalue="' + rv.sortOrder + '"><i class="icon-move"></i></a></td>';
+							newtd += '<td><a href="#" class="table-action-sort" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '" data-sortpropertyvalue="' + rv.sortOrder + '"><i class="icon-move"></i></a></td>';
 						
 						} else if( jQuery(cv).hasClass('multiselect') ) {
 							
@@ -711,7 +711,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							if(jQuery(cv).hasClass('disabled')) {
 								newtd += ' disabled';
 							}
-							newtd += '" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a></td>';
+							newtd += '" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '"><i class="slatwall-ui-checkbox"></i></a></td>';
 							
 						} else if( jQuery(cv).hasClass('select') ) {
 							
@@ -719,7 +719,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							if(jQuery(cv).hasClass('disabled')) {
 								newtd += ' disabled';
 							}
-							newtd += '" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-radio"></i></a></td>';
+							newtd += '" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '"><i class="slatwall-ui-radio"></i></a></td>';
 								
 								
 						} else if ( jQuery(cv).hasClass('admin') ){
@@ -728,7 +728,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							
 	
 							if( jQuery(cv).data('detailaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + jQuery.trim(rv[ idProperty ]);
 								if( jQuery(cv).data('detailquerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('detailquerystring');
 								}
@@ -740,7 +740,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							}
 							
 							if( jQuery(cv).data('editaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + jQuery.trim(rv[ idProperty ]);
 								if( jQuery(cv).data('editquerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('editquerystring');
 								}
@@ -752,25 +752,12 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							}
 							
 							if( jQuery(cv).data('deleteaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + jQuery.trim(rv[ idProperty ]);
 								if( jQuery(cv).data('deletequerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('deletequerystring');
 								}
 								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-trash"></i></a> ';
 							}
-							/*
-							if( jQuery(cv).data('processaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('processaction') + '&' + idProperty + '=' + rv[ idProperty ];
-								if( jQuery(cv).data('processquerystring') !== undefined ) {
-									link += '&' + jQuery(cv).data('processquerystring');
-								}
-								if( jQuery(cv).data('processmodal') ) {
-									newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-cog"></i> Process</a> ';
-								} else {
-									newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-cog"></i> Process</a> ';	
-								}
-							}
-							*/
 							newtd += '</td>';
 							
 						}
