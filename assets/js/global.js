@@ -470,9 +470,11 @@ function setupEventHandlers() {
 	});
 	jQuery('body').on('blur', '.textautocomplete', function(e){
 		// update the suggestions and searchbox
+		/*
 		jQuery( this ).val('');
 		jQuery( '#' + jQuery( this ).data('sugessionsid') ).html('');
 		jQuery( '#' + jQuery( this ).data('sugessionsid') ).parent().hide();
+		*/
 	});
 	jQuery('body').on('mouseenter', '.autocomplete-selected', function(e) {
 		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
@@ -524,7 +526,7 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 			keywords: jQuery(autocompleteField).val()
 		};
 		thisData["f:activeFlag"] = 1;
-		thisData["P:Show"] = 4;
+		thisData["p:current"] = 1;
 		var piarr = jQuery(autocompleteField).data('acpropertyidentifiers').split(',');
 		if( piarr.indexOf( jQuery(autocompleteField).data('acvalueproperty') ) === -1 ) {
 			thisData["propertyIdentifiers"] += ',' + jQuery(autocompleteField).data('acvalueproperty');
@@ -537,8 +539,8 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 			if( data["keywords"] !== undefined) {
 				thisData["keywords"] = data["keywords"];
 			}
-			if( data["P:Show"] !== undefined) {
-				thisData["P:Show"] = data["P:Show"];
+			if( data["p:current"] !== undefined) {
+				thisData["p:current"] = data["p:current"];
 			}
 		}
 		
@@ -555,12 +557,19 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 					alert('An Error Occured');
 				},
 				success: function(r) {
-					jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).html('');
+					if(r["p:current"] === 1) {
+						jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).html('');
+					}
 					jQuery.each( r["pageRecords"], function(ri, rv) {
 						var innerLI = '<li><a href="#" class="textautocompleteadd" data-acvalue="' + rv[ jQuery(autocompleteField).data('acvalueproperty') ] + '" data-acname="' + rv[ jQuery(autocompleteField).data('acnameproperty') ] + '">';
 						
 						jQuery.each( piarr, function(pi, pv) {
-							innerLI += '<span class="' + pv + '">' + rv[ pv ] + '</span>';
+							var pvarr = pv.split('.');
+							var cls = pvarr[ pvarr.length - 1 ];
+							if (pi <= 1 && pv !== "adminIcon") {
+								cls += " first";
+							}
+							innerLI += '<span class="' + cls + '">' + rv[ pv ] + '</span>';
 						});
 						innerLI += '</a></li>';
 						jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).append( innerLI );
@@ -568,6 +577,13 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 					jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().show();
 					
 					textAutocompleteRelease();
+					
+					if(!textAutocompleteCache.onHold && r["p:current"] < r["totalPages"] && r["p:current"] < 10) {
+						var newData = {};
+						newData["p:current"] = r["p:current"] + 1;
+						updateTextAutocompleteSuggestions( autocompleteField, newData );
+					}
+					
 				}
 			});
 		}

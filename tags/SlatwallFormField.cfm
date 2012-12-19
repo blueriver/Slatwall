@@ -180,12 +180,19 @@ Notes:
 					<input type="text" name="#attributes.fieldName#-autocompletesearch" class="textautocomplete #attributes.fieldClass#" data-acfieldname="#attributes.fieldName#" data-sugessionsid="#suggestionsID#" #attributes.fieldAttributes# <cfif len(attributes.value)>disabled="disabled"</cfif> />
 					<div class="autocomplete-selected" <cfif not len(attributes.value)>style="display:none;"</cfif>><a href="##" class="textautocompleteremove"><i class="icon-remove"></i></a> <span class="value" id="selected-#suggestionsID#"><cfif len(attributes.value)>#attributes.autocompleteSelectedValueDetails[ attributes.autocompleteNameProperty ]#</cfif></span></div>
 					<div class="autocomplete-options" style="display:none;">
-						<ul id="#suggestionsID#">
+						<ul class="#listLast(lcase(attributes.fieldName),".")#" id="#suggestionsID#">
 							<cfif len(attributes.value)>
 								<li>
-									<a href="##" class="textautocompleteadd" data-acvalue="#attributes.value#" data-acname="Greg Moser">
+									<a href="##" class="textautocompleteadd" data-acvalue="#attributes.value#" data-acname="#attributes.autocompleteSelectedValueDetails[ attributes.autocompleteNameProperty ]#">
+									<cfset local.counter = 0 />
 									<cfloop list="#attributes.autocompletePropertyIdentifiers#" index="pi">
-										<span class="#pi#">#attributes.autocompleteSelectedValueDetails[ pi ]#</span>
+										<cfset local.counter++ />
+										<cfif local.counter lte 2 and pi neq "adminIcon">
+											<span class="#listLast(pi,".")# first">
+										<cfelse>
+											<span class="#listLast(pi,".")#">
+										</cfif>
+										#attributes.autocompleteSelectedValueDetails[ pi ]#</span>
 									</cfloop>
 									</a>
 								</li>
