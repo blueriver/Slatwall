@@ -64,7 +64,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		try {
 			
 			var entityService = getUtilityORMService().getServiceByEntityName( entityName=rc.entityName );
-			var smartList = entityService.invokeMethod( "get#rc.entityName#SmartList", {1=rc} );
+			var smartList = entityService.invokeMethod( "get#getUtilityORMService().getProperlyCasedShortEntityName( rc.entityName )#SmartList", {1=rc} );
 			
 			var smartListPageRecords = smartList.getPageRecords();
 			var piArray = listToArray(rc.propertyIdentifiers);
