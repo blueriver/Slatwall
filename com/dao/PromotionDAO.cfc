@@ -43,6 +43,14 @@ Notes:
 		<cfargument name="promotionCodeList" required="true" type="string" />
 		<cfargument name="qualificationRequired" type="boolean" default="false" />
 		
+		<cfset var noQualRequiredList = "" />
+		<cfif listFindNoCase(arguments.rewardTypeList,"fulfillment")>
+			<cfset noQualRequiredList = listAppend(noQualRequiredList, "fulfillment") />
+		</cfif>
+		<cfif listFindNoCase(arguments.rewardTypeList,"order")>
+			<cfset noQualRequiredList = listAppend(noQualRequiredList, "fulfillment") />
+		</cfif>
+		
 		<cfset var hql = "SELECT spr FROM
 				SlatwallPromotionReward spr
 			  INNER JOIN FETCH
@@ -60,17 +68,25 @@ Notes:
 		
 		<cfif arguments.qualificationRequired>
 			<cfif len(promotionCodeList)>
-				<cfset hql &= " and ( 
-						EXISTS( SELECT pq.promotionQualifierID FROM SlatwallPromotionQualifier pq WHERE pq.promotionPeriod.promotionPeriodID = spp.promotionPeriodID ) 
-							OR
-						EXISTS( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID AND c.promotionCode IN (:promotionCodeList) AND (c.startDateTime is null or c.startDateTime < :now) AND (c.endDateTime is null or c.endDateTime > :now) )
-					)" />
+				<cfset hql &= " AND (" />
+				<cfset hql &= " ( " />
+				<cfset hql &= " EXISTS( SELECT pq.promotionQualifierID FROM SlatwallPromotionQualifier pq WHERE pq.promotionPeriod.promotionPeriodID = spp.promotionPeriodID )" />
+				<cfif len(noQualRequiredList)>
+					<cfset hql &= " OR spr.rewardType IN (:noQualRequiredList)" /> 
+				</cfif>
+				<cfset hql &= " ) " />
+				<cfset hql &= " OR EXISTS( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID AND c.promotionCode IN (:promotionCodeList) AND (c.startDateTime is null or c.startDateTime < :now) AND (c.endDateTime is null or c.endDateTime > :now) )" />
+				<cfset hql &= ")" />
 			<cfelse>
-				<cfset hql &= " and ( 
-					EXISTS( SELECT pq.promotionQualifierID FROM SlatwallPromotionQualifier pq WHERE pq.promotionPeriod.promotionPeriodID = spp.promotionPeriodID ) 
-						AND
-					NOT EXISTS( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )
-				)" />
+				<cfset hql &= " AND (" />
+				<cfset hql &= " ( " />
+				<cfset hql &= " EXISTS( SELECT pq.promotionQualifierID FROM SlatwallPromotionQualifier pq WHERE pq.promotionPeriod.promotionPeriodID = spp.promotionPeriodID ) " />
+				<cfif len(noQualRequiredList)>
+					<cfset hql &= " OR spr.rewardType IN (:noQualRequiredList)" /> 
+				</cfif>
+				<cfset hql &= " ) " /> 
+				<cfset hql &= " AND NOT EXISTS( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )" />
+				<cfset hql &= ")" />
 			</cfif>
 		<cfelse>
 			<cfif len(promotionCodeList)>
@@ -83,11 +99,19 @@ Notes:
 				<cfset hql &=	" and NOT EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )" />
 			</cfif>	
 		</cfif>
-		
+			
 		<cfset var params = {
 			now = now(),
 			activeFlag = 1
 		} />
+		
+		<cfif arguments.qualificationRequired and len(noQualRequiredList)>
+			<cfif structKeyExists(server, "railo")>
+				<cfset params.noQualRequiredList = noQualRequiredList />
+			<cfelse>
+				<cfset params.noQualRequiredList = listToArray(noQualRequiredList) />		
+			</cfif>
+		</cfif>
 		
 		<cfif len(promotionCodeList)>
 			<cfif structKeyExists(server, "railo")>
