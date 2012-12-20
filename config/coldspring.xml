@@ -282,6 +282,7 @@
 	</bean>
 	<bean id="promotionService" class="Slatwall.com.service.PromotionService">
         <property name="DAO"><ref bean="PromotionDAO" /></property>
+		<property name="addressService"><ref bean="addressService" /></property>
 		<property name="roundingRuleService"><ref bean="roundingRuleService" /></property>
 		<property name="utilityService"><ref bean="utilityService" /></property>
 	</bean>

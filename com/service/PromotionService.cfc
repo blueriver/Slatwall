@@ -38,6 +38,7 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
+	property name="addressService" type="any";
 	property name="roundingRuleService" type="any";
 	property name="utilityService" type="any";
 
@@ -357,39 +358,54 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 										&&
 										( !arrayLen(reward.getShippingMethods()) || (!isNull(orderFulfillment.getShippingMethod()) && reward.hasShippingMethod(orderFulfillment.getShippingMethod()) ) ) ) {
 										
-										var discountAmount = getDiscountAmount(reward, orderFulfillment.getFulfillmentCharge(), 1);
 										
-										var addNew = false;
-											
-										// First we make sure that the discountAmount is > 0 before we check if we should add more discount
-										if(discountAmount > 0) {
-											
-											// If there aren't any promotions applied to this order fulfillment yet, then we can add this one
-											if(!arrayLen(orderFulfillment.getAppliedPromotions())) {
-												addNew = true;
-												
-											// If one has already been set then we just need to check if this new discount amount is greater
-											} else if ( orderFulfillment.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
-												
-												// If the promotion is the same, then we just update the amount
-												if(orderFulfillment.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
-													orderFulfillment.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
-													
-												// If the promotion is a different then remove the original and set addNew to true
-												} else {
-													orderFulfillment.getAppliedPromotions()[1].removeOrderFulfillment();
-													addNew = true;
+										var addressIsInZone = true;
+										if(arrayLen(reward.getShippingAddressZones())) {
+											addressIsInZone = false;
+											for(var az=1; az<=arrayLen(reward.getShippingAddressZones()); az++) {
+												if(getAddressService().isAddressInZone(address=orderFulfillment.getAddress(), addressZone=reward.getShippingAddressZones()[az])) {
+													addressIsInZone = true;
+													break;
 												}
 											}
 										}
 										
-										// Add the new appliedPromotion
-										if(addNew) {
-											var newAppliedPromotion = this.newPromotionApplied();
-											newAppliedPromotion.setAppliedType('orderFulfillment');
-											newAppliedPromotion.setPromotion( reward.getPromotionPeriod().getPromotion() );
-											newAppliedPromotion.setOrderFulfillment( orderFulfillment );
-											newAppliedPromotion.setDiscountAmount( discountAmount );
+										if(addressIsInZone) {
+											
+											var discountAmount = getDiscountAmount(reward, orderFulfillment.getFulfillmentCharge(), 1);
+											
+											var addNew = false;
+												
+											// First we make sure that the discountAmount is > 0 before we check if we should add more discount
+											if(discountAmount > 0) {
+												
+												// If there aren't any promotions applied to this order fulfillment yet, then we can add this one
+												if(!arrayLen(orderFulfillment.getAppliedPromotions())) {
+													addNew = true;
+													
+												// If one has already been set then we just need to check if this new discount amount is greater
+												} else if ( orderFulfillment.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
+													
+													// If the promotion is the same, then we just update the amount
+													if(orderFulfillment.getAppliedPromotions()[1].getPromotion().getPromotionID() == reward.getPromotionPeriod().getPromotion().getPromotionID()) {
+														orderFulfillment.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
+														
+													// If the promotion is a different then remove the original and set addNew to true
+													} else {
+														orderFulfillment.getAppliedPromotions()[1].removeOrderFulfillment();
+														addNew = true;
+													}
+												}
+											}
+											
+											// Add the new appliedPromotion
+											if(addNew) {
+												var newAppliedPromotion = this.newPromotionApplied();
+												newAppliedPromotion.setAppliedType('orderFulfillment');
+												newAppliedPromotion.setPromotion( reward.getPromotionPeriod().getPromotion() );
+												newAppliedPromotion.setOrderFulfillment( orderFulfillment );
+												newAppliedPromotion.setDiscountAmount( discountAmount );
+											}
 										}
 									}
 								}
@@ -819,13 +835,27 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					if( ( !arrayLen(reward.getFulfillmentMethods()) || reward.hasFulfillmentMethod(arguments.shippingMethodOption.getOrderFulfillment().getFulfillmentMethod()) ) 
 						&&
 						( !arrayLen(reward.getShippingMethods()) || reward.hasShippingMethod(arguments.shippingMethodOption.getShippingMethodRate().getShippingMethod()) ) ) {
-							
-						var discountAmount = getDiscountAmount(reward, arguments.shippingMethodOption.getTotalCharge(), 1);
 						
-						if(discountAmount > details.discountAmount) {
-							details.discountAmount = discountAmount;
-							details.promotionID = reward.getPromotionPeriod().getPromotion().getPromotionID();
+						var addressIsInZone = true;
+						if(arrayLen(reward.getShippingAddressZones())) {
+							addressIsInZone = false;
+							for(var az=1; az<=arrayLen(reward.getShippingAddressZones()); az++) {
+								if(getAddressService().isAddressInZone(address=arguments.shippingMethodOption.getOrderFulfillment().getAddress(), addressZone=reward.getShippingAddressZones()[az])) {
+									addressIsInZone = true;
+									break;
+								}
+							}
 						}
+						
+						if(addressIsInZone) {
+							var discountAmount = getDiscountAmount(reward, arguments.shippingMethodOption.getTotalCharge(), 1);
+							
+							if(discountAmount > details.discountAmount) {
+								details.discountAmount = discountAmount;
+								details.promotionID = reward.getPromotionPeriod().getPromotion().getPromotionID();
+							}
+						}
+						
 					}
 				}
 			}
