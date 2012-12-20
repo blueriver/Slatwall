@@ -157,12 +157,11 @@ Notes:
 				  LEFT JOIN
 				  	ofo.orderStatusType ofoost
 				WHERE
-				
-					oioost.systemCode not in ('ostNotPlaced')
+				  	(oioost.systemCode is null or oioost.systemCode != :ostNotPlaced)
 				  and
-				  	oost.systemCode not in ('ostNotPlaced')
+				  	(oost.systemCode is null or oost.systemCode != :ostNotPlaced)
 				  and
-				  	ofoost.systemCode not in ('ostNotPlaced')
+				  	(ofoost.systemCode is null or ofoost.systemCode != :ostNotPlaced)
 				  and
 					pap.promotionID = :promotionID
 				  and
@@ -172,7 +171,8 @@ Notes:
 					  
 				promotionID = arguments.promotionPeriod.getPromotion().getPromotionID(),
 				promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime(),
-				promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime()
+				promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime(),
+				ostNotPlaced = "ostNotPlaced"
 				}) />
 		
 		<cfreturn results[1] />
@@ -218,11 +218,11 @@ Notes:
 					  	ofoa.accountID = :accountID
 					)
 				  and
-					oioost.systemCode not in ('ostNotPlaced')
+					(oioost.systemCode is null or oioost.systemCode != :ostNotPlaced)
 				  and
-				  	oost.systemCode not in ('ostNotPlaced')
+				  	(oost.systemCode is null or oost.systemCode != :ostNotPlaced)
 				  and
-				  	ofoost.systemCode not in ('ostNotPlaced')
+				  	(ofoost.systemCode is null or ofoost.systemCode != :ostNotPlaced)
 				  and
 					pa.promotion.promotionID = :promotionID
 				  and
@@ -232,7 +232,8 @@ Notes:
 					  	accountID = arguments.account.getAccountID(),
 						promotionID = arguments.promotionPeriod.getPromotion().getPromotionID(),
 						promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime(),
-						promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime()
+						promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime(),
+						ostNotPlaced = "ostNotPlaced"
 				}) />
 		
 		<cfreturn results[1] />
