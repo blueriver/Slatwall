@@ -64,26 +64,25 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect("admin:order.listorder");
 	}
 	
-	public any function createreturnorder( required struct rc ) {
-		param name="rc.originalorderid" type="string" default="";
+	// Order
+	public void function listOrder(required struct rc) {
+		genericListMethod(entityName="Order", rc=arguments.rc);
 		
-		rc.originalOrder = getOrderService().getOrder(rc.originalOrderID);
-		
-		rc.edit = true;
+		arguments.rc.orderSmartList.addOrder("orderPlacedDateTime|DESC");
+		arguments.rc.orderSmartList.addInFilter('orderStatusType.systemCode', 'ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled');
+
 	}
 	
-	public any function createorderpayment( required struct rc ) {
-		param name="rc.orderID" type="string" default="";
-		param name="rc.paymentMethodID" type="string" default="";
+	public void function listCartAndQuote(required struct rc) {
+		genericListMethod(entityName="Order", rc=arguments.rc);
 		
-		rc.orderPayment = getOrderService().newOrderPayment();
-		rc.order = getOrderService().getOrder(rc.orderID);
-		rc.paymentMethod = getPaymentService().getPaymentMethod(rc.paymentMethodID);
+		arguments.rc.orderSmartList.addOrder("createdDateTime|DESC");
+		arguments.rc.orderSmartList.addInFilter('orderStatusType.systemCode', 'ostNotPlaced');
 		
-		rc.edit = true;
-		
+		getFW().setView("admin:order.listorder");
 	}
 	
+	// Order Item
 	public any function createOrderItem(required struct rc) {
 		param name="rc.orderID" type="string" default="";
 		
@@ -91,7 +90,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.order = getOrderService().getOrder(rc.orderID);
 
 	}
-
+	
 	public any function addOrderItem(required struct rc) {
 		param name="rc.orderID" type="any" default="";
 		param name="rc.skuID" type="any" default="";
@@ -124,4 +123,29 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		arguments.rc.slatAction = 'admin:order.detailOrder';
 		arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.order'));	
 	}
+
+	
+	// Order Payment
+	public any function createorderpayment( required struct rc ) {
+		param name="rc.orderID" type="string" default="";
+		param name="rc.paymentMethodID" type="string" default="";
+		
+		rc.orderPayment = getOrderService().newOrderPayment();
+		rc.order = getOrderService().getOrder(rc.orderID);
+		rc.paymentMethod = getPaymentService().getPaymentMethod(rc.paymentMethodID);
+		
+		rc.edit = true;
+		
+	}
+	
+	// Order Return
+	public any function createreturnorder( required struct rc ) {
+		param name="rc.originalorderid" type="string" default="";
+		
+		rc.originalOrder = getOrderService().getOrder(rc.originalOrderID);
+		
+		rc.edit = true;
+	}
+	
+	
 }

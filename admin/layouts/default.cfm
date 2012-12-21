@@ -78,6 +78,7 @@ Notes:
 						</cf_SlatwallActionCallerDropdown>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.order_nav')#" icon="inbox icon-white" type="nav">
 							<cf_SlatwallActionCaller action="admin:order.listorder" type="list">
+							<cf_SlatwallActionCaller action="admin:order.listcartandquote" type="list">
 							<cf_SlatwallActionCaller action="admin:order.listorderitem" type="list">
 							<cf_SlatwallActionCaller action="admin:order.listorderfulfillment" type="list">
 							<cf_SlatwallActionCaller action="admin:order.listorderpayment" type="list">
