@@ -373,7 +373,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			if(transactionType != '' && transactionType != 'none' && order.getOrderPayments()[i].getAmount() > 0) {
 			
-				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount());
+				var paymentOK = true;
+			
+				if(transactionType eq "authorize" && order.getOrderPayments()[i].getAmountAuthorized() < order.getOrderPayments()[i].getAmount()) {
+					paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount()-order.getOrderPayments()[i].getAmountAuthorized());
+				} else if (transactionType eq "authorizeAndCharge" && order.getOrderPayments()[i].getAmountReceived() < order.getOrderPayments()[i].getAmount()) {
+					paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount()-order.getOrderPayments()[i].getAmountReceived());
+				}
 				
 				if(!paymentOK) {
 					order.getOrderPayments()[i].setAmount(0);
