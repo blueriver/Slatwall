@@ -67,6 +67,7 @@ Notes:
 					</cfloop>
 				</cfif>
 			</cfif>
+			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="addPromotionCode" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />

@@ -46,9 +46,9 @@ Notes:
 		
 		<cf_SlatwallActionBar type="process" />
 		
-		<cfif rc.processContext eq "placeOrder">
+		<cfif rc.processContext eq "addPromotionCode">
 			
-			This feature is currently disabled
+			<input type="text" name="promotionCode" value />	
 			
 		<cfelseif rc.processContext eq "addOrderPayment">
 			
