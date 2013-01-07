@@ -48,7 +48,8 @@ Notes:
 		
 		<cfif rc.processContext eq "addPromotionCode">
 			
-			<input type="text" name="promotionCode" value />	
+			<input type="hidden" name="orderID" value="#rc.processOrderSmartList.getRecords()[1].getOrderID()#" />
+			<input type="text" name="promotionCode" value />
 			
 		<cfelseif rc.processContext eq "addOrderPayment">
 			

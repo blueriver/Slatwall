@@ -54,5 +54,10 @@
 				<param name="max" value="0" />
 			</rule>
 		</property>
+		<property name="total">
+			<rule type="equalTo" contexts="placeOrder">
+				<param name="comparePropertyName" value="paymentAmountTotal" />
+			</rule>
+		</property>	
 	</objectProperties>
 </validateThis>
