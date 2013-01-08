@@ -6,11 +6,13 @@
 		<context name="placeOrder" />
 		<context name="addOrderItem" />
 		<context name="addOrderPayment" />
+		<context name="addPromotionCode" />
 		<context name="placeOnHold" />
 		<context name="takeOffHold" />
 		<context name="cancelOrder" />
 		<context name="closeOrder" />
 		<context name="createReturn" />
+		<context name="placeOrder" />
 	</contexts>
 	<objectProperties>
 		<property name="orderType">
@@ -52,5 +54,10 @@
 				<param name="max" value="0" />
 			</rule>
 		</property>
+		<property name="total">
+			<rule type="equalTo" contexts="placeOrder">
+				<param name="comparePropertyName" value="paymentAmountTotal" />
+			</rule>
+		</property>	
 	</objectProperties>
 </validateThis>

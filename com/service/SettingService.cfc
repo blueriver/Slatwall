@@ -172,11 +172,14 @@ globalEncryptionKeySize
 			productImageMediumHeight = {fieldType="text", formatType="pixels"},
 			productImageLargeWidth = {fieldType="text", formatType="pixels"},
 			productImageLargeHeight = {fieldType="text", formatType="pixels"},
+			productImageOptionCodeDelimiter = {fieldType="select"},
 			productMissingImagePath = {fieldType="text"},
 			productTitleString = {fieldType="text"},
 			productHTMLTitleString = {fieldType="text"},
 			productMetaDescriptionString = {fieldType="textarea"},
 			productMetaKeywordsString = {fieldType="textarea"},
+			productShowDetailWhenNotPublishedFlag = {fieldType="yesno"},
+			
 			
 			// Product Type
 			productTypeDisplayTemplate = {fieldType="select"},
@@ -225,6 +228,8 @@ globalEncryptionKeySize
 					return optionSL.getRecords();
 				case "brandDisplayTemplate": case "productDisplayTemplate": case "productTypeDisplayTemplate" : case "contentRestrictedContentDisplayTemplate" :
 					return getContentService().getDisplayTemplateOptions();
+				case "productImageOptionCodeDelimiter":
+					return ['-','_'];
 				case "globalCurrencyLocale":
 					return ['Chinese (China)','Chinese (Hong Kong)','Chinese (Taiwan)','Dutch (Belgian)','Dutch (Standard)','English (Australian)','English (Canadian)','English (New Zealand)','English (UK)','English (US)','French (Belgian)','French (Canadian)','French (Standard)','French (Swiss)','German (Austrian)','German (Standard)','German (Swiss)','Italian (Standard)', 'Italian (Swiss)','Japanese','Korean','Norwegian (Bokmal)','Norwegian (Nynorsk)','Portuguese (Brazilian)','Portuguese (Standard)','Spanish (Mexican)','Spanish (Modern)','Spanish (Standard)','Swedish'];
 				case "globalCurrencyType":
@@ -608,79 +613,79 @@ globalEncryptionKeySize
 				WHERE
 					LOWER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
 				  AND
-				  	<cfif structKeyExists(settingRelationships, "accountID")>
+				  	<cfif structKeyExists(settingRelationships, "accountID") and structKeyExists(allSettings, "accountID")>
 						LOWER(allSettings.accountID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.accountID)#" > 
 					<cfelse>
 						allSettings.accountID IS NULL
 					</cfif>
 				  AND
-				  	<cfif structKeyExists(settingRelationships, "contentID")>
+				  	<cfif structKeyExists(settingRelationships, "contentID") and structKeyExists(allSettings, "contentID")>
 						LOWER(allSettings.contentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.contentID)#" > 
 					<cfelse>
 						allSettings.contentID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "cmsContentID")>
+					<cfif structKeyExists(settingRelationships, "cmsContentID") and structKeyExists(allSettings, "cmsContentID")>
 						LOWER(allSettings.cmsContentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.cmsContentID)#" > 
 					<cfelse>
 						allSettings.cmsContentID IS NULL
 					</cfif>
 				  AND
-				  	<cfif structKeyExists(settingRelationships, "paymentMethodID")>
+				  	<cfif structKeyExists(settingRelationships, "paymentMethodID") and structKeyExists(allSettings, "paymentMethodID")>
 						LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
 					<cfelse>
 						allSettings.paymentMethodID IS NULL
 					</cfif>
 				  AND
-				  	<cfif structKeyExists(settingRelationships, "productTypeID")>
+				  	<cfif structKeyExists(settingRelationships, "productTypeID") and structKeyExists(allSettings, "productTypeID")>
 						LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
 					<cfelse>
 						allSettings.productTypeID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "productID")>
+					<cfif structKeyExists(settingRelationships, "productID") and structKeyExists(allSettings, "productID")>
 						LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
 					<cfelse>
 						allSettings.productID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "skuID")>
+					<cfif structKeyExists(settingRelationships, "skuID") and structKeyExists(allSettings, "skuID")>
 						LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
 					<cfelse>
 						allSettings.skuID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "brandID")>
+					<cfif structKeyExists(settingRelationships, "brandID") and structKeyExists(allSettings, "brandID")>
 						LOWER(allSettings.brandID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.brandID)#" > 
 					<cfelse>
 						allSettings.brandID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "emailID")>
+					<cfif structKeyExists(settingRelationships, "emailID") and structKeyExists(allSettings, "emailID")>
 						LOWER(allSettings.emailID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.emailID)#" > 
 					<cfelse>
 						allSettings.emailID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "emailTemplateID")>
+					<cfif structKeyExists(settingRelationships, "emailTemplateID") and structKeyExists(allSettings, "emailTemplateID")>
 						LOWER(allSettings.emailTemplateID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.emailTemplateID)#" > 
 					<cfelse>
 						allSettings.emailTemplateID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "shippingMethodID")>
+					<cfif structKeyExists(settingRelationships, "shippingMethodID") and structKeyExists(allSettings, "shippingMethodID")>
 						LOWER(allSettings.shippingMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodID)#" > 
 					<cfelse>
 						allSettings.shippingMethodID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "shippingMethodRateID")>
+					<cfif structKeyExists(settingRelationships, "shippingMethodRateID") and structKeyExists(allSettings, "shippingMethodRateID")>
 						LOWER(allSettings.shippingMethodRateID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodRateID)#" > 
 					<cfelse>
 						allSettings.shippingMethodRateID IS NULL
 					</cfif>
 				  AND
-					<cfif structKeyExists(settingRelationships, "fulfillmentMethodID")>
+					<cfif structKeyExists(settingRelationships, "fulfillmentMethodID") and structKeyExists(allSettings, "fulfillmentMethodID")>
 						LOWER(allSettings.fulfillmentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.fulfillmentMethodID)#" > 
 					<cfelse>
 						allSettings.fulfillmentMethodID IS NULL

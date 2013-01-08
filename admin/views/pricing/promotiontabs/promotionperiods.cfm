@@ -49,6 +49,7 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
 		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" />
 		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" />
+		<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
 	</cf_SlatwallListingDisplay>
 	
 	<cf_SlatwallActionCaller action="admin:pricing.createpromotionperiod" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" />

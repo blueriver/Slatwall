@@ -40,16 +40,27 @@ Notes:
 <cfparam name="rc.processOrderFulfillmentSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 
+<cfsilent>
+	<cfset local.hasCreditCardPayment = false />
+	<cfloop array="#rc.processOrderFulfillmentSmartList.getRecords()[1].getOrder().getOrderPayments()#" index="local.orderPayment">
+		<cfif local.orderPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard">
+			<cfset local.hasCreditCardPayment = true />
+		</cfif>
+	</cfloop>
+</cfsilent>
+
 <cfoutput>
 	<cf_SlatwallProcessForm>
 		<cf_SlatwallActionBar type="process" />
 		
 		<cf_SlatwallProcessOptionBar>
 			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
-			<cfif !rc.multiProcess>
+			<cfif !rc.multiProcess and rc.processOrderFulfillmentSmartList.getRecords()[1].getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
 				<cf_SlatwallProcessOption data="trackingNumber" fieldType="text" />
 			</cfif>
-			<cf_SlatwallProcessOption data="processCreditCard" fieldType="yesno" />
+			<cfif local.hasCreditCardPayment>
+				<cf_SlatwallProcessOption data="processCreditCard" fieldType="yesno" />
+			</cfif>
 			<!---
 			<cf_SlatwallProcessOption print="packingSlip" />
 			--->

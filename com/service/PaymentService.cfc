@@ -237,7 +237,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			transaction.setAVSCode(response.getAVSCode());
 			transaction.setStatusCode(response.getStatusCode());
 			transaction.setMessage(serializeJSON(response.getMessages()));
-								
+			
 			// Make sure that this transaction with all of it's info gets added to the DB
 			getDAO().flushORMSession();
 			
@@ -255,6 +255,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			logSlatwallException(e);
 			
 			rethrow;
+		}
+		
+		// Update the orderPayment, accountPaymentMethod or accountPayment with the providerToken if one was returned in the response bean
+		if(len(response.getProviderToken())) {
+			arguments.payment.setProviderToken( response.getProviderToken() );
+			if(!isNull(arguments.payment.getAccountPaymentMethod())) {
+				arguments.payment.getAccountPaymentMethod().setProviderToken( response.getProviderToken() );
+			}
 		}
 		
 		return processOK;

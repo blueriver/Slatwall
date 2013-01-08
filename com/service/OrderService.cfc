@@ -83,144 +83,168 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Verify the order has the same currency as the one being added
 		if(arguments.order.getCurrencyCode() eq arguments.data.currencyCode) {
 			
-			// save order so it's added to the hibernate scope
-			save( arguments.order );
-			
-			// if a filfillmentMethodID is passed in the data, set orderfulfillment to that
-			if(structKeyExists(arguments.data, "fulfillmentMethodID")) {
-				// make sure this is eligible fulfillment method
-				if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), arguments.data.fulfillmentMethodID)) {
-					var fulfillmentMethod = this.getFulfillmentService().getFulfillmentMethod(arguments.data.fulfillmentMethodID);
-					arguments.orderFulfillment = this.getOrderFulfillment({order=arguments.order,fulfillmentMethod=fulfillmentMethod},true);
-					if(arguments.orderFulfillment.isNew()) {
-						arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
-						arguments.orderFulfillment.setOrder( arguments.order );
-						arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
+			// Make sure the item is in stock 
+			if(arguments.sku.getQuantity('qats') gt 0) {
+				
+				// Update the quantity to add to whatever the qats is if trying to add more.
+				if(arguments.sku.getQuantity('qats') lt arguments.quantity) {
+					arguments.quantity = arguments.sku.getQuantity('qats'); 
+				}
+					
+				// save order so it's added to the hibernate scope
+				save( arguments.order );
+				
+				// if a filfillmentMethodID is passed in the data, set orderfulfillment to that
+				if(structKeyExists(arguments.data, "fulfillmentMethodID") && !structKeyExists(arguments, "orderFulfillment")) {
+					// make sure this is eligible fulfillment method
+					if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), arguments.data.fulfillmentMethodID)) {
+						var fulfillmentMethod = this.getFulfillmentService().getFulfillmentMethod(arguments.data.fulfillmentMethodID);
+						if(!isNull(fulfillmentMethod)) {
+							arguments.orderFulfillment = this.getOrderFulfillment({order=arguments.order,fulfillmentMethod=fulfillmentMethod},true);
+							if(arguments.orderFulfillment.isNew()) {
+								if(structKeyExists(arguments.data, "orderFulfillment"))	{
+									arguments.orderFulfillment.populate( arguments.data.orderFulfillment );	
+								}
+								arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
+								arguments.orderFulfillment.setOrder( arguments.order );
+								arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
+								// Push the fulfillment into the hibernate scope
+								getDAO().save(arguments.orderFulfillment);
+							}
+						}
+					}
+					
+				}
+				
+				// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
+				if(!structKeyExists(arguments, "orderFulfillment"))	{
+					
+					var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligibleFulfillmentMethods'),1)).getFulfillmentMethodType();
+					
+					// check if there is a fulfillment method of this type in the order
+					for(var fulfillment in arguments.order.getOrderFulfillments()) {
+						if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), fulfillment.getFulfillmentMethod().getFulfillmentMethodID())) {
+							arguments.orderFulfillment = fulfillment;
+							break;
+						}
+					}
+					
+					// if no fulfillment of this type found then create a new one 
+					if(!structKeyExists(arguments, "orderFulfillment")) {
+						
+						var fulfillmentMethodOptions = arguments.sku.getEligibleFulfillmentMethods();
+						
+						// If there are at least 1 options, then we create the new method, otherwise stop and just return the order
+						if(arrayLen(fulfillmentMethodOptions)) {
+							arguments.orderFulfillment = this.newSlatwallOrderFulfillment();
+							arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethodOptions[1] );
+							arguments.orderFulfillment.setOrder( arguments.order );
+							arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
+						} else {
+							return arguments.order;
+						}
+						
 						// Push the fulfillment into the hibernate scope
 						getDAO().save(arguments.orderFulfillment);
 					}
 				}
-				
-			}
 			
-			// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
-			if(!structKeyExists(arguments, "orderFulfillment"))	{
+				var orderItems = arguments.order.getOrderItems();
+				var itemExists = false;
 				
-				var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligibleFulfillmentMethods'),1)).getFulfillmentMethodType();
-				
-				// check if there is a fulfillment method of this type in the order
-				for(var fulfillment in arguments.order.getOrderFulfillments()) {
-					if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), fulfillment.getFulfillmentMethod().getFulfillmentMethodID())) {
-						arguments.orderFulfillment = fulfillment;
-						break;
-					}
-				}
-				
-				// if no fulfillment of this type found then create a new one 
-				if(!structKeyExists(arguments, "orderFulfillment")) {
-					
-					var fulfillmentMethodOptions = arguments.sku.getEligibleFulfillmentMethods();
-					
-					// If there are at least 1 options, then we create the new method, otherwise stop and just return the order
-					if(arrayLen(fulfillmentMethodOptions)) {
-						arguments.orderFulfillment = this.newSlatwallOrderFulfillment();
-						arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethodOptions[1] );
-						arguments.orderFulfillment.setOrder( arguments.order );
-						arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
-					} else {
-						return arguments.order;
-					}
-					
-					// Push the fulfillment into the hibernate scope
-					getDAO().save(arguments.orderFulfillment);
-				}
-			}
-		
-			var orderItems = arguments.order.getOrderItems();
-			var itemExists = false;
-			
-			// If there are no product customizations then we can check for the order item already existing.
-			if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData,"attribute"))	{
-				// Check the existing order items and increment quantity if possible.
-				for(var i = 1; i <= arrayLen(orderItems); i++) {
-					
-					// This is a simple check inside of the loop to find any sku that matches
-					if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
+				// If there are no product customizations then we can check for the order item already existing.
+				if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData,"attribute"))	{
+					// Check the existing order items and increment quantity if possible.
+					for(var i = 1; i <= arrayLen(orderItems); i++) {
 						
-						// This verifies that the stock being passed in matches the stock on the order item, or that both are null
-						if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
+						// This is a simple check inside of the loop to find any sku that matches
+						if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
 							
-							itemExists = true;
-							// do not increment quantity for content access product
-							if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
-								orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-								if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
-									orderItems[i].setPrice( arguments.data.price );
-									orderItems[i].setSkuPrice( arguments.data.price );	
-								} else {
-									orderItems[i].setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
-									orderItems[i].setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+							// This verifies that the stock being passed in matches the stock on the order item, or that both are null
+							if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
+								
+								itemExists = true;
+								// do not increment quantity for content access product
+								if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
+									
+									// Verify that this item now that it has a greater quantity isn't bigger than the qats
+									if((orderItems[i].getQuantity() + arguments.quantity) gt orderItems.getSku().getQuantity('qats')) {
+										orderItems[i].setQuantity(orderItems.getSku().getQuantity('qats'));
+									} else {
+										orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);	
+									}
+									
+									if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
+										orderItems[i].setPrice( arguments.data.price );
+										orderItems[i].setSkuPrice( arguments.data.price );	
+									} else {
+										orderItems[i].setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+										orderItems[i].setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+									}
+								}
+								break;
+								
+							}
+						}
+					}
+				}
+			
+				// If the sku doesn't exist in the order, then create a new order item and add it
+				if(!itemExists)	{
+					var newItem = this.newOrderItem();
+					newItem.setSku(arguments.sku);
+					newItem.setQuantity(arguments.quantity);
+					newItem.setOrder(arguments.order);
+					newItem.setOrderFulfillment(arguments.orderFulfillment);
+					newItem.setCurrencyCode( arguments.order.getCurrencyCode() );
+					
+					// All new items have the price and skuPrice set to the current price of the sku being added.  Later the price may be changed by the recalculateOrderAmounts() method
+					if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
+						newItem.setPrice( arguments.data.price );
+						newItem.setSkuPrice( arguments.data.price );
+					} else {
+						newItem.setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+						newItem.setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
+					}
+					
+					// If a stock was passed in, then assign it to this new item
+					if(!isNull(arguments.stock)) {
+						newItem.setStock(arguments.stock);
+					}
+				
+					// Check for product customization
+					if(structKeyExists(arguments, "customizationData") && structKeyExists(arguments.customizationData, "attribute")) {
+						var pcas = arguments.sku.getProduct().getAttributeSets(['astOrderItem']);
+						for(var i = 1; i <= arrayLen(pcas); i++) {
+							var attributes = pcas[i].getAttributes();
+							
+							for(var a = 1; a <= arrayLen(attributes); a++) {
+								if(structKeyExists(arguments.customizationData.attribute, attributes[a].getAttributeID())) {
+									var av = this.newAttributeValue();
+									av.setAttributeValueType("orderItem");
+									av.setAttribute(attributes[a]);
+									av.setAttributeValue(arguments.customizationData.attribute[attributes[a].getAttributeID()]);
+									av.setOrderItem(newItem);
+									// Push the attribute value
+									getDAO().save(av);
 								}
 							}
-							break;
-							
 						}
 					}
+					
+					// Push the order Item into the hibernate scope
+					getDAO().save(newItem);
 				}
-			}
+				
+				// Recalculate the order amounts for tax and promotions and priceGroups
+				recalculateOrderAmounts( arguments.order );
 		
-			// If the sku doesn't exist in the order, then create a new order item and add it
-			if(!itemExists)	{
-				var newItem = this.newOrderItem();
-				newItem.setSku(arguments.sku);
-				newItem.setQuantity(arguments.quantity);
-				newItem.setOrder(arguments.order);
-				newItem.setOrderFulfillment(arguments.orderFulfillment);
-				newItem.setCurrencyCode( arguments.order.getCurrencyCode() );
 				
-				// All new items have the price and skuPrice set to the current price of the sku being added.  Later the price may be changed by the recalculateOrderAmounts() method
-				if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
-					newItem.setPrice( arguments.data.price );
-					newItem.setSkuPrice( arguments.data.price );
-				} else {
-					newItem.setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
-					newItem.setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
-				}
-				
-				// If a stock was passed in, then assign it to this new item
-				if(!isNull(arguments.stock)) {
-					newItem.setStock(arguments.stock);
-				}
-			
-				// Check for product customization
-				if(structKeyExists(arguments, "customizationData") && structKeyExists(arguments.customizationData, "attribute")) {
-					var pcas = arguments.sku.getProduct().getAttributeSets(['astOrderItem']);
-					for(var i = 1; i <= arrayLen(pcas); i++) {
-						var attributes = pcas[i].getAttributes();
-						
-						for(var a = 1; a <= arrayLen(attributes); a++) {
-							if(structKeyExists(arguments.customizationData.attribute, attributes[a].getAttributeID())) {
-								var av = this.newAttributeValue();
-								av.setAttributeValueType("orderItem");
-								av.setAttribute(attributes[a]);
-								av.setAttributeValue(arguments.customizationData.attribute[attributes[a].getAttributeID()]);
-								av.setOrderItem(newItem);
-								// Push the attribute value
-								getDAO().save(av);
-							}
-						}
-					}
-				}
-				
-				// Push the order Item into the hibernate scope
-				getDAO().save(newItem);
+			} else {
+				order.addError("quantity", rbKey('validate.order.orderitemoutofstock'));
 			}
-			
-			// Recalculate the order amounts for tax and promotions and priceGroups
-			recalculateOrderAmounts( arguments.order );
-		
 		} else {
-			order.addError("currency", "The existing cart is already in the currency of #arguments.order.getCurrencyCode()# so this item can not be added as #arguments.data.currencyCode#");
+			order.addError("currency", rbKey('validate.order.orderitemwrongcurrency'));
 		}
 		
 	}
@@ -368,7 +392,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			if(transactionType != '' && transactionType != 'none' && order.getOrderPayments()[i].getAmount() > 0) {
 			
-				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount());
+				var paymentOK = true;
+			
+				if(transactionType eq "authorize" && order.getOrderPayments()[i].getAmountAuthorized() < order.getOrderPayments()[i].getAmount()) {
+					paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount()-order.getOrderPayments()[i].getAmountAuthorized());
+				} else if (transactionType eq "authorizeAndCharge" && order.getOrderPayments()[i].getAmountReceived() < order.getOrderPayments()[i].getAmount()) {
+					paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount()-order.getOrderPayments()[i].getAmountReceived());
+				}
 				
 				if(!paymentOK) {
 					order.getOrderPayments()[i].setAmount(0);
@@ -903,7 +933,25 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			updateOrderStatus(arguments.order);	
 		
-		// CONTEXT: Not Defined
+		
+		// CONTEXT: Add Promotion Code
+		} else if (arguments.processContext == "addPromotionCode") {
+			
+			var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.data.promotionCode);
+			
+			if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
+				arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
+			} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
+				arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
+			} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
+				arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
+			} else {
+				if(!arguments.order.hasPromotionCode( pc )) {
+					arguments.order.addPromotionCode( pc );
+				}
+				recalculateOrderAmounts(order=arguments.order);
+			}
+			
 		} else {
 			
 			// Do Notion
@@ -1415,22 +1463,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
 				}
 			
-			
 				// If there was previously a shipping Address we need to remove it and recalculate
 				if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
 					arguments.orderFulfillment.removeShippingAddress();
+					arguments.orderFulfillment.setAccountAddress(accountAddress);
 					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
 					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-				}
-
 				// If there was previously an account address and we switch it, then we need to recalculate
-				if(!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
+				} else if (!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
+					arguments.orderFulfillment.setAccountAddress(accountAddress);
 					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
 					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				// Else just set the account address
+				} else {
+					arguments.orderFulfillment.setAccountAddress(accountAddress);	
 				}
-
-				// Set the new account address in the order
-				arguments.orderFulfillment.setAccountAddress(accountAddress);
+				
 			
 			// USING SHIPPING ADDRESS
 			} else {
@@ -1464,6 +1512,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// If no shippingMethodOption, then just check for a shippingMethodID that was passed in
 			} else if (structKeyExists(arguments.data, "shippingMethodID")) {
+				
 				var shippingMethod = getShippingService().getShippingMethod(arguments.data.shippingMethodID);
 				
 				// If this is a valid shipping method, then we can loop over all of the shippingMethodOptions and make sure this one exists
@@ -1506,10 +1555,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		smartList.joinRelatedProperty("SlatwallOrder", "account", "left", true);
 		smartList.joinRelatedProperty("SlatwallOrder", "orderType", "left", true);
 		smartList.joinRelatedProperty("SlatwallOrder", "orderStatusType", "left", true);
+		smartList.joinRelatedProperty("SlatwallOrder", "orderOrigin", "left", true);
+		smartList.joinRelatedProperty("SlatwallAccount", "primaryEmailAddress", "left", true);
+		smartList.joinRelatedProperty("SlatwallAccount", "primaryPhoneNumber", "left", true);
 		
 		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=1);
 		smartList.addKeywordProperty(propertyIdentifier="account.firstName", weight=1);
 		smartList.addKeywordProperty(propertyIdentifier="account.lastName", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="account.company", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="account.primaryEmailAddress.emailAddress", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="account.primaryPhoneNumber.phoneNumber", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="orderOrigin.orderOriginName", weight=1);
 		
 		return smartList;
 	}

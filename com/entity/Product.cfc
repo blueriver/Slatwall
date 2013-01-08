@@ -72,7 +72,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="vendors" singularname="vendor" cfc="Vendor" type="array" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="productID" inversejoincolumn="vendorID" inverse="true";
 	
@@ -236,7 +238,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if( !structKeyExists(variables, "optionGroups") ) {
 			variables.optionGroups = [];
 			var smartList = getService("OptionService").getOptionGroupSmartList();
-			smartList.addFilter("options_skus_product_productID",this.getProductID());
+			smartList.addFilter("options.skus.product.productID",this.getProductID());
 			smartList.addOrder("sortOrder|ASC");
 			variables.optionGroups = smartList.getRecords();
 		}
@@ -717,12 +719,28 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		arguments.promotionReward.removeProduct( this );    
 	}
 	
+	// Promotion Reward Exclusions (many-to-many - inverse)    
+	public void function addPromotionRewardExclusion(required any promotionReward) {
+		arguments.promotionReward.addExcludedProduct( this );    
+	}
+	public void function removePromotionRewardExclusion(required any promotionReward) {    
+		arguments.promotionReward.removeExcludedProduct( this );    
+	}
+	
 	// Promotion Qualifiers (many-to-many - inverse)
 	public void function addPromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.addProduct( this );
 	}
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeProduct( this );
+	}
+	
+	// Promotion Qualifier Exclusions (many-to-many - inverse)    
+	public void function addPromotionQualifierExclusion(required any promotionQualifier) {    
+		arguments.promotionQualifier.addExcludedProduct( this );    
+	}    
+	public void function removePromotionQualifierExclusion(required any promotionQualifier) {    
+		arguments.promotionQualifier.removeExcludedProduct( this );    
 	}
 	
 	// Price Group Rates (many-to-many - inverse)
@@ -763,7 +781,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
 			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
 			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProduct');
-			variables.assignedAttributeSetSmartList.addWhereCondition(" (aslatwallattributeset.globalFlag = 1 OR aslatwallproducttype.productTypeIDPath LIKE '%#getProductType().getProductTypeID()#') )" );
+			variables.assignedAttributeSetSmartList.addWhereCondition(" (aslatwallattributeset.globalFlag = 1 OR (aslatwallproducttype.productTypeID IN ('#replace(getProductType().getProductTypeIDPath(),",","','","all")#') ) )" );
 		}
 		
 		return variables.assignedAttributeSetSmartList;

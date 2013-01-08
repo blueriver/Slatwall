@@ -37,23 +37,19 @@ Notes:
 
 --->
 
+<cfsetting showdebugoutput="no" requesttimeout="200" />
 
-<cfparam name="rc.returnAction" type="string" default="admin:setting.edittask&taskScheduleID=#rc.taskScheduleID#" />
-<cfparam name="rc.processTaskScheduleSmartList" type="any" />
+<cfset local.logFile = Server.ColdFusion.RootDir & "/logs/Slatwall.log">
 
-<cfoutput>
-	<cf_SlatwallProcessForm>
-		
-		<cf_SlatwallActionBar type="process" />
-		
-		<p>
-			Are you sure you wish to run this task?
-		</p>	
-		
-        <cf_SlatwallProcessListing processSmartList="#rc.processTaskScheduleSmartList#"></cf_SlatwallProcessListing>
-		
-		<input type="hidden" name="processcontext" value="#rc.processcontext#" />
-		<input type="hidden" name="returnAction" value="admin:setting.edittask&taskScheduleID=#rc.taskScheduleID#" />
-	</cf_SlatwallProcessForm>
-		
-</cfoutput>
+<cfif fileExists(local.logFile)>
+	<cfset local.readFile = fileRead(local.logFile) />
+	<cfset local.fileArray = listToArray(local.readFile, chr(10)) />
+	<cfloop from="#arrayLen(local.fileArray)#" to="1" step="-1" index="local.i">
+		<cfif findNoCase(application.applicationname, local.fileArray[ local.i ])>
+			<cfset writeOutput(replace(replace(local.fileArray[ local.i ],'"Information",',''),'"#UCASE(application.applicationname)#",','')) />
+			<cfset writeOutput("<br />") />
+		</cfif>
+	</cfloop>
+<cfelse>
+    <p class="message failure">No Log File Could Be Found</p>
+</cfif>

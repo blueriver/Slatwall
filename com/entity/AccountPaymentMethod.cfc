@@ -49,14 +49,14 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="expirationYear" ormType="string" formfieldType="select";
 	property name="providerToken" ormType="string";
 	
-	// Related Object Properties (Many-to-One)
+	// Related Object Properties (many-to-one)
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
 	
-	// Related Object Properties (One-to-Many)
+	// Related Object Properties (one-to-many)
 	
-	// Related Object Properties (Many-to-Many)
+	// Related Object Properties (many-to-many)
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";

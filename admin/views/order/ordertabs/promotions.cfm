@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,30 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.content" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.content#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.content#" edit="#rc.edit#" />
+	<cf_SlatwallListingDisplay smartList="#rc.order.getPromotionCodesSmartList()#">
+			
+		<cf_SlatwallListingColumn propertyIdentifier="promotionCode" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotion.promotionName" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="title">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="cmsContentID" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="templateFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="disableProductAssignmentFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="allowPurchaseFlag" edit="false">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-
-	<cf_SlatwallTabGroup object="#rc.content#">
-		<cfif rc.content.setting('contentProductListingFlag')>
-			<cf_SlatwallTab view="admin:setting/contenttabs/products">
-		</cfif>
-		<cf_SlatwallTab view="admin:setting/contenttabs/settings">
-	</cf_SlatwallTabGroup>
-
-	</cf_SlatwallDetailForm>
+	</cf_SlatwallListingDisplay>
+	
 </cfoutput>

@@ -402,13 +402,13 @@ Notes:
 						</cfif>
 						<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() gt 3>
 							<li><a href="##" class="listing-pager page-option" data-page="1">1</a></li>
-							<li class="disabled"><a href="##" class="page-option">...</a></li>
+							<li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getCurrentPage()-3#">...</a></li>
 						</cfif>
 						<cfloop from="#local.pageStart#" to="#local.pageEnd#" index="i" step="1">
 							<li <cfif attributes.smartList.getCurrentPage() eq i>class="active"</cfif>><a href="##" class="listing-pager page-option" data-page="#i#">#i#</a></li>
 						</cfloop>
 						<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages() - 3>
-							<li class="disabled"><a href="##" class="page-option">...</a></li>
+							<li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getCurrentPage()+3#">...</a></li>
 							<li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getTotalPages()#">#attributes.smartList.getTotalPages()#</a></li>
 						</cfif>
 						<cfif attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages()>

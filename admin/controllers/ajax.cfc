@@ -64,7 +64,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		try {
 			
 			var entityService = getUtilityORMService().getServiceByEntityName( entityName=rc.entityName );
-			var smartList = entityService.invokeMethod( "get#rc.entityName#SmartList", {1=rc} );
+			var smartList = entityService.invokeMethod( "get#getUtilityORMService().getProperlyCasedShortEntityName( rc.entityName )#SmartList", {1=rc} );
 			
 			var smartListPageRecords = smartList.getPageRecords();
 			var piArray = listToArray(rc.propertyIdentifiers);
@@ -82,7 +82,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			for(var i=1; i<=arrayLen(smartListPageRecords); i++) {
 				var thisRecord = {};
 				for(var p=1; p<=arrayLen(piArray); p++) {
-					thisRecord[ piArray[p] ] = smartListPageRecords[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );	
+					var value = smartListPageRecords[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );
+					if((len(value) == 3 and value eq "YES") or (len(value) == 2 and value eq "NO")) {
+						thisRecord[ piArray[p] ] = value & " ";
+					} else {
+						thisRecord[ piArray[p] ] = value;
+					}
 				}
 				arrayAppend(rc[ "pageRecords" ], thisRecord);
 			}

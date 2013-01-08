@@ -83,16 +83,13 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	// ============ START: Non-Persistent Property Methods =================
 
 	public boolean function getCurrentFlag() {
-		var isCurrent = false;
 		for( var i=1; i<= arrayLen(getPromotionPeriods()); i++ ) {
-			local.thisPromotionPeriod = getPromotionPeriods()[1];
-			if( local.thisPromotionPeriod.isCurrent() ) {
-				isCurrent = true;
-				break;
+			if(getPromotionPeriods()[i].getCurrentFlag()) {
+				return true;
 			}
 		}
-		return isCurrent;
-	}	
+		return false;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

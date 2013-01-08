@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,31 +35,21 @@
 
 Notes:
 
---->
-<cfparam name="rc.content" type="any">
-<cfparam name="rc.edit" type="boolean">
+*/
+component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
-<cfoutput>
-	<cf_SlatwallDetailForm object="#rc.content#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.content#" edit="#rc.edit#" />
+	// @hint put things in here that you want to run befor EACH test
+	public void function setUp() {
+		super.setup();
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="title">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="cmsContentID" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="templateFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="disableProductAssignmentFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="allowPurchaseFlag" edit="false">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		variables.entityService = "addressService";
+		variables.entity = request.slatwallScope.getService( variables.entityService ).newAddress();
+	}
+	
+	// Addresses are alowed to be saved with no data
+	public void function validate_a_new_doesnt_pass() {
+		assert(!variables.entity.hasErrors());
+	}
+	
+}
 
-	<cf_SlatwallTabGroup object="#rc.content#">
-		<cfif rc.content.setting('contentProductListingFlag')>
-			<cf_SlatwallTab view="admin:setting/contenttabs/products">
-		</cfif>
-		<cf_SlatwallTab view="admin:setting/contenttabs/settings">
-	</cf_SlatwallTabGroup>
-
-	</cf_SlatwallDetailForm>
-</cfoutput>

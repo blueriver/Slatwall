@@ -39,9 +39,10 @@ Notes:
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 
 	// fw1 Auto-Injected Service Properties
+	property name="locationService" type="any";
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
-	property name="LocationService" type="any";
+	property name="skuService" type="any";
 	
 	this.publicMethods='';
 	
@@ -63,14 +64,68 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect("admin:order.listorder");
 	}
 	
-	public any function createreturnorder( required struct rc ) {
-		param name="rc.originalorderid" type="string" default="";
+	// Order
+	public void function listOrder(required struct rc) {
+		genericListMethod(entityName="Order", rc=arguments.rc);
 		
-		rc.originalOrder = getOrderService().getOrder(rc.originalOrderID);
+		arguments.rc.orderSmartList.addInFilter('orderStatusType.systemCode', 'ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled');
 		
-		rc.edit = true;
+		arguments.rc.orderSmartList.addOrder("orderOpenDateTime|DESC");
 	}
 	
+	public void function listCartAndQuote(required struct rc) {
+		genericListMethod(entityName="Order", rc=arguments.rc);
+		
+		arguments.rc.orderSmartList.addOrder("createdDateTime|DESC");
+		arguments.rc.orderSmartList.addInFilter('orderStatusType.systemCode', 'ostNotPlaced');
+		
+		getFW().setView("admin:order.listorder");
+	}
+	
+	// Order Item
+	public any function createOrderItem(required struct rc) {
+		param name="rc.orderID" type="string" default="";
+		
+		rc.orderItem = getOrderService().newOrderItem();
+		rc.order = getOrderService().getOrder(rc.orderID);
+
+	}
+	
+	public any function addOrderItem(required struct rc) {
+		param name="rc.orderID" type="any" default="";
+		param name="rc.skuID" type="any" default="";
+		param name="rc.quantity" type="any" default="";
+		param name="rc.orderFulfillmentID" type="any" default="";
+		
+		arguments.rc.order = getOrderService().getOrder(arguments.rc.orderID);
+		var sku = getSkuService().getSku(arguments.rc.skuID);
+		var orderFulfillment = getOrderService().getOrderFulfillment(arguments.rc.orderFulfillmentID);
+		
+		if(!isNull(orderFulfillment)) {
+			getOrderService().addOrderItem(order=arguments.rc.order, sku=sku, quantity=arguments.rc.quantity, orderFulfillment=orderFulfillment);	
+		} else {
+			getOrderService().addOrderItem(order=arguments.rc.order, sku=sku, quantity=arguments.rc.quantity, data=arguments.rc);
+		}
+		
+		// If no errors redirect to success
+		if(!rc.order.hasErrors()) {
+			getFW().redirect(action='admin:order.detailOrder', queryString='orderID=#rc.orderID#&messagekeys=admin.order.saveorder_success');	
+		}
+		
+		for( var p in arguments.rc.order.getErrors() ) {
+			var thisErrorArray = arguments.order.getErrors()[p];
+			for(var i=1; i<=arrayLen(thisErrorArray); i++) {
+				showMessage(thisErrorArray[i], "error");
+			}
+		}
+		
+		getFW().setView(action='admin:order.detailOrder');
+		arguments.rc.slatAction = 'admin:order.detailOrder';
+		arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.order'));	
+	}
+
+	
+	// Order Payment
 	public any function createorderpayment( required struct rc ) {
 		param name="rc.orderID" type="string" default="";
 		param name="rc.paymentMethodID" type="string" default="";
@@ -83,9 +138,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 	}
 	
-	public any function savereturnorder( required struct rc ) {
-		rc.order = getOrderService().newOrder();
+	// Order Return
+	public any function createreturnorder( required struct rc ) {
+		param name="rc.originalorderid" type="string" default="";
 		
+		rc.originalOrder = getOrderService().getOrder(rc.originalOrderID);
+		
+		rc.edit = true;
 	}
+	
 	
 }

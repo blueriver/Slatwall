@@ -14,12 +14,15 @@ var listingUpdateCache = {
 	tableID: "",
 	data: {},
 	afterRowID: ""
-}
-
+};
+var textAutocompleteCache = {
+	onHold: false,
+	autocompleteField: undefined,
+	data: {},
+};
 var globalSearchCache = {
 	onHold: false
-}
-
+};
 
 jQuery(document).ready(function() {
 	
@@ -118,6 +121,11 @@ function initUIElements( scopeSelector ) {
 		update: function(event, ui) {
 			tableApplySort(event, ui);
 		}
+	});
+
+	// Text Autocomplete
+	jQuery.each(jQuery( scopeSelector ).find(jQuery('.textautocomplete')), function(ti, tv){
+		updateTextAutocompleteUI( jQuery(tv) );
 	});
 	
 	// Table Multiselect
@@ -226,6 +234,10 @@ function setupEventHandlers() {
 			modalLink = modalLink + '&modal=1';
 		} else {
 			modalLink = modalLink + '?modal=1';
+		}
+		
+		if( jQuery(this).hasClass('modal-fieldupdate-textautocomplete') ) {
+			modalLink = modalLink + '&ajaxsubmit=1';
 		}
 		
 		jQuery('#adminModal').load( modalLink, function(){
@@ -399,7 +411,185 @@ function setupEventHandlers() {
 		}
 		
 	});
+	
+	// Text Autocomplete
+	jQuery('body').on('keyup', '.textautocomplete', function(e){
+		if(jQuery(this).val().length >= 1) {
+			updateTextAutocompleteSuggestions( jQuery(this) );
+		} else {
+			jQuery( '#' + jQuery(this).data('sugessionsid') ).html('');
+		}
+	});
+	jQuery('body').on('click', '.textautocompleteremove', function(e) {
+		e.preventDefault();
+		
+		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		
+		// Update Hidden Value
+		jQuery( 'input[name="' + jQuery( autocompleteField ).data('acfieldname') + '"]' ).val( '' );
+		
+		// Re-enable the search box
+		jQuery( autocompleteField ).removeAttr("disabled");
+		jQuery( autocompleteField ).focus();
+		
+		// Set the html for suggestoins to blank and show it
+		jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).html('');
+		
+		// Hide the simple rep display
+		jQuery(this).closest('.autocomplete-selected').hide();
+	});
+	jQuery('body').on('click', '.textautocompleteadd', function(e){
+		e.preventDefault();
+	});
+	jQuery('body').on('mousedown', '.textautocompleteadd', function(e){
+		//e.preventDefault();
+		
+		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		
+		if(jQuery( autocompleteField ).attr("disabled") === undefined) {
+			// Set hidden input
+			jQuery( 'input[name="' + jQuery( autocompleteField ).data('acfieldname') + '"]' ).val( jQuery(this).data('acvalue') );
+			
+			// Set the simple rep display
+			jQuery( autocompleteField ).closest('.autoselect-container').find('.autocomplete-selected').show();
+			jQuery( '#selected-' + jQuery( autocompleteField ).data('sugessionsid') ).html( jQuery(this).data('acname') ) ;
+			
+			// update the suggestions and searchbox
+			jQuery( autocompleteField ).attr("disabled", "disabled");
+			jQuery( autocompleteField ).val('');
+			
+			// Udate the suggestions to only show 1
+			jQuery.each( jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).children(), function(i, v) {
+				if( jQuery(v).find('.textautocompleteadd').data('acvalue') !== jQuery( 'input[name="' + jQuery( autocompleteField ).data('acfieldname') + '"]' ).val() ) {
+					jQuery(v).remove();
+				}
+			});
+			
+			jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().hide();
+		}
+	});
+	jQuery('body').on('blur', '.textautocomplete', function(e){
+		// update the suggestions and searchbox
+		/*
+		jQuery( this ).val('');
+		jQuery( '#' + jQuery( this ).data('sugessionsid') ).html('');
+		jQuery( '#' + jQuery( this ).data('sugessionsid') ).parent().hide();
+		*/
+	});
+	jQuery('body').on('mouseenter', '.autocomplete-selected', function(e) {
+		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().show();
+	});
+	jQuery('body').on('mouseleave', '.autocomplete-selected', function(e) {
+		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
+		jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().hide();
+	});
 }
+
+function textAutocompleteHold( autocompleteField, data ) {
+	if(!textAutocompleteCache.onHold) {
+		textAutocompleteCache.onHold = true;
+		return false;
+	}
+	
+	textAutocompleteCache.autocompleteField = autocompleteField;
+	textAutocompleteCache.data = data;
+	
+	return true;
+}
+
+function textAutocompleteRelease( ) {
+	
+	textAutocompleteCache.onHold = false;
+	
+	if(listingUpdateCache.autocompleteField !== undefined) {
+		updateTextAutocompleteSuggestions( textAutocompleteCache.autocompleteField, textAutocompleteCache.data );
+	}
+	
+	textAutocompleteCache.autocompleteField = undefined;
+	textAutocompleteCache.data = {};
+}
+
+function updateTextAutocompleteUI( autocompleteField ) {
+	// If there is a value set, then we can go out and get the necessary quickview value
+	if(jQuery( 'input[name="' + jQuery(autocompleteField).data('acfieldname') + '"]' ).val().length) {
+		//Update UI with pre-selected value
+	}
+}
+function updateTextAutocompleteSuggestions( autocompleteField, data ) {
+	if(jQuery(autocompleteField).val().length) {
+		// Setup the correct data
+		var thisData = {
+			slatAction: 'admin:ajax.updatelistingdisplay',
+			entityName: jQuery( autocompleteField ).data('entityname'),
+			propertyIdentifiers: jQuery( autocompleteField ).data('acpropertyidentifiers'),
+			keywords: jQuery(autocompleteField).val()
+		};
+		thisData["f:activeFlag"] = 1;
+		thisData["p:current"] = 1;
+		var piarr = jQuery(autocompleteField).data('acpropertyidentifiers').split(',');
+		if( piarr.indexOf( jQuery(autocompleteField).data('acvalueproperty') ) === -1 ) {
+			thisData["propertyIdentifiers"] += ',' + jQuery(autocompleteField).data('acvalueproperty');
+		}
+		if( piarr.indexOf( jQuery(autocompleteField).data('acnameproperty') ) === -1 ) {
+			thisData["propertyIdentifiers"] += ',' + jQuery(autocompleteField).data('acnameproperty');
+		}
+		
+		if( data !== undefined ) {
+			if( data["keywords"] !== undefined) {
+				thisData["keywords"] = data["keywords"];
+			}
+			if( data["p:current"] !== undefined) {
+				thisData["p:current"] = data["p:current"];
+			}
+		}
+		
+		// Verify that an update isn't already running
+		if(!textAutocompleteHold(autocompleteField, thisData)) {
+			jQuery.ajax({
+				url: slatwall.rootURL + '/',
+				method: 'post',
+				data: thisData,
+				dataType: 'json',
+				beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
+				error: function( er ) {
+					console.log( er );
+					alert('An Error Occured');
+				},
+				success: function(r) {
+					if(r["p:current"] === 1) {
+						jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).html('');
+					}
+					jQuery.each( r["pageRecords"], function(ri, rv) {
+						var innerLI = '<li><a href="#" class="textautocompleteadd" data-acvalue="' + rv[ jQuery(autocompleteField).data('acvalueproperty') ] + '" data-acname="' + rv[ jQuery(autocompleteField).data('acnameproperty') ] + '">';
+						
+						jQuery.each( piarr, function(pi, pv) {
+							var pvarr = pv.split('.');
+							var cls = pvarr[ pvarr.length - 1 ];
+							if (pi <= 1 && pv !== "adminIcon") {
+								cls += " first";
+							}
+							innerLI += '<span class="' + cls + '">' + rv[ pv ] + '</span>';
+						});
+						innerLI += '</a></li>';
+						jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).append( innerLI );
+					});
+					jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().show();
+					
+					textAutocompleteRelease();
+					
+					if(!textAutocompleteCache.onHold && r["p:current"] < r["totalPages"] && r["p:current"] < 10) {
+						var newData = {};
+						newData["p:current"] = r["p:current"] + 1;
+						updateTextAutocompleteSuggestions( autocompleteField, newData );
+					}
+					
+				}
+			});
+		}
+	}
+}
+
 
 function hideLoadedRows( tableID, parentID ) {
 	jQuery.each( jQuery( '#' + tableID).find('tr[data-parentid="' + parentID + '"]'), function(i, v) {
@@ -499,11 +689,11 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 				jQuery.each( r["pageRecords"], function(ri, rv) {
 					
 					var rowSelector = jQuery('<tr></tr>');
-					jQuery(rowSelector).attr('id', rv[ idProperty ]);
+					jQuery(rowSelector).attr('id', jQuery.trim(rv[ idProperty ]));
 					
 					if(afterRowID) {
-						jQuery(rowSelector).attr('data-idpath', rv[ idProperty + 'Path' ]);
-						jQuery(rowSelector).data('idpath', rv[ idProperty + 'Path' ]);
+						jQuery(rowSelector).attr('data-idpath', jQuery.trim(rv[ idProperty + 'Path' ]));
+						jQuery(rowSelector).data('idpath', jQuery.trim(rv[ idProperty + 'Path' ]));
 						jQuery(rowSelector).attr('data-parentid', afterRowID);
 						jQuery(rowSelector).data('parentid', afterRowID);
 					}
@@ -521,15 +711,15 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								newtd += '<td class="' + jQuery(cv).attr('class') + '">No</td>';
 							} else {
 								if(jQuery(cv).hasClass('primary') && afterRowID) {
-									newtd += '<td class="' + jQuery(cv).attr('class') + '"><a href="#" class="table-action-expand depth' + nextRowDepth + '" data-depth="' + nextRowDepth + '"><i class="icon-plus"></i></a> ' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+									newtd += '<td class="' + jQuery(cv).attr('class') + '"><a href="#" class="table-action-expand depth' + nextRowDepth + '" data-depth="' + nextRowDepth + '"><i class="icon-plus"></i></a> ' + jQuery.trim(rv[jQuery(cv).data('propertyidentifier')]) + '</td>';
 								} else {
-									newtd += '<td class="' + jQuery(cv).attr('class') + '">' + rv[jQuery(cv).data('propertyidentifier')] + '</td>';
+									newtd += '<td class="' + jQuery(cv).attr('class') + '">' + jQuery.trim(rv[jQuery(cv).data('propertyidentifier')]) + '</td>';
 								}
 							}
 							
 						} else if( jQuery(cv).hasClass('sort') ) {
 							
-							newtd += '<td><a href="#" class="table-action-sort" data-idvalue="' + rv[ idProperty ] + '" data-sortpropertyvalue="' + rv.sortOrder + '"><i class="icon-move"></i></a></td>';
+							newtd += '<td><a href="#" class="table-action-sort" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '" data-sortpropertyvalue="' + rv.sortOrder + '"><i class="icon-move"></i></a></td>';
 						
 						} else if( jQuery(cv).hasClass('multiselect') ) {
 							
@@ -537,7 +727,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							if(jQuery(cv).hasClass('disabled')) {
 								newtd += ' disabled';
 							}
-							newtd += '" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-checkbox"></i></a></td>';
+							newtd += '" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '"><i class="slatwall-ui-checkbox"></i></a></td>';
 							
 						} else if( jQuery(cv).hasClass('select') ) {
 							
@@ -545,7 +735,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							if(jQuery(cv).hasClass('disabled')) {
 								newtd += ' disabled';
 							}
-							newtd += '" data-idvalue="' + rv[ idProperty ] + '"><i class="slatwall-ui-radio"></i></a></td>';
+							newtd += '" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '"><i class="slatwall-ui-radio"></i></a></td>';
 								
 								
 						} else if ( jQuery(cv).hasClass('admin') ){
@@ -554,7 +744,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							
 	
 							if( jQuery(cv).data('detailaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + jQuery.trim(rv[ idProperty ]);
 								if( jQuery(cv).data('detailquerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('detailquerystring');
 								}
@@ -566,7 +756,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							}
 							
 							if( jQuery(cv).data('editaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + jQuery.trim(rv[ idProperty ]);
 								if( jQuery(cv).data('editquerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('editquerystring');
 								}
@@ -578,25 +768,12 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							}
 							
 							if( jQuery(cv).data('deleteaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + rv[ idProperty ];
+								link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + jQuery.trim(rv[ idProperty ]);
 								if( jQuery(cv).data('deletequerystring') !== undefined ) {
 									link += '&' + jQuery(cv).data('deletequerystring');
 								}
 								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-trash"></i></a> ';
 							}
-							/*
-							if( jQuery(cv).data('processaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('processaction') + '&' + idProperty + '=' + rv[ idProperty ];
-								if( jQuery(cv).data('processquerystring') !== undefined ) {
-									link += '&' + jQuery(cv).data('processquerystring');
-								}
-								if( jQuery(cv).data('processmodal') ) {
-									newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-cog"></i> Process</a> ';
-								} else {
-									newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-cog"></i> Process</a> ';	
-								}
-							}
-							*/
 							newtd += '</td>';
 							
 						}
@@ -696,7 +873,7 @@ function buildPagingNav(currentPage, totalPages, pageRecordStart, pageRecordEnd,
 		
 		if(currentPage > 3 && totalPages > 6) {
 			nav += '<li><a href="#" class="listing-pager page-option" data-page="1">1</a></li>';
-			nav += '<li class="disabled"><a href="#" class="page-option">...</a></li>';
+			nav += '<li><a href="#" class="listing-pager page-option" data-page="' + (currentPage - 3) + '">...</a></li>';
 		}
 	
 		for(var i=pageStart; i<pageStart + pageCount; i++){
@@ -709,7 +886,7 @@ function buildPagingNav(currentPage, totalPages, pageRecordStart, pageRecordEnd,
 		}
 		
 		if(currentPage < totalPages - 3 && totalPages > 6) {
-			nav += '<li class="disabled"><a href="#" class="page-option">...</a></li>';
+			nav += '<li><a href="#" class="listing-pager page-option" data-page="' + (currentPage + 3) + '">...</a></li>';
 			nav += '<li><a href="#" class="listing-pager page-option" data-page="' + totalPages + '">' + totalPages + '</a></li>';
 		}
 		
@@ -760,6 +937,8 @@ function tableApplySort(event, ui) {
 	});
 
 }
+
+
 
 function updateMultiselectTableUI( multiselectField ) {
 	var inputValue = jQuery('input[name=' + multiselectField + ']').val();
@@ -896,8 +1075,23 @@ function updateGlobalSearchResults() {
 	}
 }
 
-
-
+/*
+function getEntityAutocompleteTemplate( entityName, data ) {
+	var output = "";
+	if( entityName === 'Account') {
+		output += '<span class="image"><img src="';
+		output += data.gravatarURL;
+		output += '" /></span>';
+		output += '<span class="image">';
+		output += '</span>';
+		output += '<span class="image">';
+		output += '</span>';
+		output += '<span class="image">';
+		output += '</span>';
+	}
+	return output;
+}
+*/
 
 // ========================= START: HELPER METHODS ================================
 

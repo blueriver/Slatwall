@@ -48,8 +48,10 @@ Notes:
 						   recorddetailaction="admin:pricing.detailpromotion"
 						   recordEditAction="admin:pricing.editpromotion">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" range="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>

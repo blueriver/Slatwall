@@ -40,29 +40,19 @@ Notes:
 <cfparam name="rc.orderSmartList" type="any" />
 
 <cfoutput>
-
-<cfset rc.orderSmartList.addOrder("orderOpenDateTime|DESC") />
-
-<cfif not len(rc.orderSmartList.getFilters("orderStatusType.type")) >
-	<cfset local.defaultStatusFilter = $.slatwall.getService('typeService').getTypeBySystemCode("ostNew").getType() />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostNew").getType()) />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostProcessing").getType()) />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostOnHold").getType()) />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostClosed").getType()) />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostCanceled").getType()) />
-	<cfset rc.orderSmartList.addFilter('orderStatusType.type', local.defaultStatusFilter) />
-</cfif>
-
-<cf_SlatwallActionBar type="listing" object="#rc.orderSmartList#" createAction="" />
-	
-<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
-							recordDetailAction="admin:order.detailorder">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderType.type" filter=true />
-	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" filter=true />
-	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range=true />
-	<cf_SlatwallListingColumn propertyIdentifier="calculatedTotal" range=true />
-</cf_SlatwallListingDisplay>
-
+	<cf_SlatwallActionBar type="listing" object="#rc.orderSmartList#" createaction="admin:order.createorder" />
+		
+	<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
+								recordDetailAction="admin:order.detailorder">
+		<cf_SlatwallListingColumn propertyIdentifier="orderNumber" search="true" />
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.company" search="true"/>
+		<cf_SlatwallListingColumn propertyIdentifier="account.firstName" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="account.lastName" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="orderType.type" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="orderOrigin.orderOriginName" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime"  range=true />
+		<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime"  range=true />
+		<cf_SlatwallListingColumn propertyIdentifier="calculatedTotal" range=true />
+	</cf_SlatwallListingDisplay>
 </cfoutput>

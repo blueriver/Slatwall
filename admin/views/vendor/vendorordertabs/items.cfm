@@ -46,9 +46,9 @@ Notes:
                            recorddeleteaction="admin:vendor.deleteVendorOrderItem" 
                            recorddeletequerystring="returnaction=admin:vendor.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
 	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" />
-	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.skucode"/>
-	<cf_slatwalllistingcolumn propertyidentifier="stock.location.locationName" filter="true" />
+	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
+	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.skucode" search="true" />
+	<cf_slatwalllistingcolumn propertyidentifier="stock.location.locationName" filter="true" search="true" />
 	<cf_slatwalllistingcolumn propertyidentifier="quantity" range="true" />
 	<cf_slatwalllistingcolumn propertyidentifier="quantityReceived" sort="false" />
 	<cf_slatwalllistingcolumn propertyidentifier="quantityUnreceived" sort="false" />
