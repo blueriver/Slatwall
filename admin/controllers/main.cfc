@@ -47,6 +47,8 @@ component extends="BaseController" output=false accessors=true {
 	property name="updateService" type="any";
 	
 	this.publicMethods='';
+	this.publicMethods=listAppend(this.publicMethods, 'login');
+	this.publicMethods=listAppend(this.publicMethods, 'logout');
 	this.publicMethods=listAppend(this.publicMethods, 'noaccess');
 	this.publicMethods=listAppend(this.publicMethods, 'error');
 	
@@ -137,5 +139,8 @@ component extends="BaseController" output=false accessors=true {
 		}
 	}
 	
+	public void function logout(required struct rc) {
+		getFW().redirect('admin:main.login');
+	}
 
 }

@@ -67,7 +67,10 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		// Make sure the current user has access to this action
 		if(!secureDisplay(arguments.rc.slatAction, getSlatwallScope().getCurrentAccount())) {
-			getFW().redirect('main.noaccess');
+			if(getSlatwallScope().getCurrentAccount().isNew()) {
+				getFW().redirect('admin:main.login');	
+			}
+			getFW().redirect('admin:main.noaccess');
 		}
 		
 		var subsystemName = getFW().getSubsystem(arguments.rc.slatAction);
