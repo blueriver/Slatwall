@@ -60,7 +60,9 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
- 
+	
+ 	// Non-persistent properties
+	property name="currentFlag" type="boolean" persistent="false"; 
  
 	public any function getMaximumUseCountFormatted() {
 		if(isNull(getMaximumUseCount()) || !isNumeric(getMaximumUseCount()) || getMaximumUseCount() == 0) {
@@ -133,6 +135,13 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	}
 
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function getCurrentFlag() {
+		if( ( !isNull(getStartDateTime()) && getStartDateTime() > now() ) || ( !isNull(getEndDateTime()) && getEndDateTime() < now() ) ) {
+			return false;
+		}
+		return true;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	

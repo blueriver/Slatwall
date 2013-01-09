@@ -68,9 +68,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function listOrder(required struct rc) {
 		genericListMethod(entityName="Order", rc=arguments.rc);
 		
-		arguments.rc.orderSmartList.addOrder("orderPlacedDateTime|DESC");
 		arguments.rc.orderSmartList.addInFilter('orderStatusType.systemCode', 'ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled');
-
+		
+		arguments.rc.orderSmartList.addOrder("orderOpenDateTime|DESC");
 	}
 	
 	public void function listCartAndQuote(required struct rc) {

@@ -53,11 +53,10 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
-			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1" type="list" />
+			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&returnAction=admin:order.detailorder" type="list" />
 			<!--- Add Order Item --->
 			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
 				<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
-				
 			</cfif>
 			<!--- Add Order Payment --->
 			<cfif listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
@@ -67,6 +66,7 @@ Notes:
 					</cfloop>
 				</cfif>
 			</cfif>
+			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="addPromotionCode" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
