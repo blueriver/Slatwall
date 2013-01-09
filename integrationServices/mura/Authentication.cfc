@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,24 +35,14 @@
 
 Notes:
 
---->
-<cfcomponent extends="BaseDAO">
+*/
+
+component accessors="true" output="false" displayname="USPS" implements="Slatwall.integrationServices.AuthenticationInterface" extends="Slatwall.integrationServices.BaseAuthentication" {
+
+	public boolean function verifySessionLogin( required any session ) {
+		if(!structKeyExists(session, "mura") || !structKeyExists(session.mura, "isLoggedIn") || !structKeyExists(session.mura, "userID") || !session.mura.isLoggedIn || session.mura.userID != arguments.session.getAccountAuthentication().getIntegrationAccountID() ) {
+			return false;
+		}
+	}
 	
-	<cffunction name="readByCmsAccountID" returntype="any" access="public">
-		<cfargument name="cmsAccountID" required="true" type="string">
-		 
-		<cfreturn ormExecuteQuery(" from SlatwallAccount aSlatwallAccount where aSlatwallAccount.cmsAccountID=:cmsAccountID", {cmsAccountID=arguments.cmsAccountID}, true) />
-	</cffunction>
-	
-	<cffunction name="readByAccountEmail" returntype="any" access="public">
-		<cfargument name="email" required="true" type="string">
-		
-		<cfreturn ormExecuteQuery("SELECT account FROM SlatwallAccountEmailAddress aSlatwallAccountEmail where aSlatwallAccountEmail.email=:email", {email=arguments.email}, true) />
-	</cffunction>
-	
-	<cffunction name="getAccountAuthenticationsByEmailAddress" returntype="any" access="public">
-		<cfargument name="emailAddress" required="true" type="string" />
-		
-		<cfreturn ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aa.password is not null AND aea.email=:email", {email=arguments.emailAddress}) />
-	</cffunction>
-</cfcomponent>
+}

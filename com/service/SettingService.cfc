@@ -65,6 +65,7 @@ globalEncryptionKeySize
 		variables.settingDetailsCache = {};
 		
 		variables.settingPrefixInOrder = [
+			"accountAuthentication",
 			"shippingMethodRate",
 			"fulfillmentMethod",
 			"shippingMethod",
@@ -86,7 +87,8 @@ globalEncryptionKeySize
 			productType = ["productTypeIDPath"],
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
 			email = ["emailTemplate.emailTemplateID"],
-			shippingMethodRate = ["shippingMethod.shippingMethodID"]
+			shippingMethodRate = ["shippingMethod.shippingMethodID"],
+			accountAuthentication = [ "integration.integrationID" ]
 		};
 		
 		variables.settingMetaData = {
@@ -94,6 +96,9 @@ globalEncryptionKeySize
 			accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
 			accountPaymentTerm = {fieldType="select"},
 			accountTermCreditLimit = {fieldType="text", formatType="currency"},
+			
+			// Account Authentication
+			accountAuthenticationAutoLogoutTimespan = {fieldType="text"},
 			
 			// Brand
 			brandDisplayTemplate = {fieldType="select"},

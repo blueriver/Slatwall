@@ -56,6 +56,10 @@ component extends="BaseService" accessors="true" output="false" {
 		return super.init();
 	}
 	
+	public string function getHashedAndSaltedPassword(required string password, required string salt) {
+		return hash(arguments.password & arguments.salt, 'SHA-512');
+	}
+	
 	public boolean function loginCmsUser(required string username, required string password, required string siteID) {
 		var loginResult = getUserUtility().login(username=arguments.username, password=arguments.password, siteID=arguments.siteID);
 		
@@ -162,6 +166,10 @@ component extends="BaseService" accessors="true" output="false" {
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
+	
+	public any function getAccountAuthenticationsByEmailAddress(required string emailAddress) {
+		return getDAO().getAccountAuthenticationsByEmailAddress(argumentcollection=arguments);
+	}
 	
 	// ===================== START: DAO Passthrough ===========================
 	

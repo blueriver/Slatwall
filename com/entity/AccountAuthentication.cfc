@@ -1,6 +1,6 @@
 /*
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,55 +36,41 @@
 Notes:
 
 */
-component displayname="Session" entityname="SlatwallSession" table="SlatwallSession" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Account Authentication" entityname="SlatwallAccountAuthentication" table="SlatwallAccountAuthentication" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="sessionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="shippingAddressPostalCode" ormtype="string";
-	property name="lastRequestDateTime" ormtype="timestamp";
+	property name="accountAuthenticationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="password" ormtype="string";
+	property name="integrationAccountID" ormtype="string";
+	/*
+	property name="integrationAccessToken" ormtype="string";
+	property name="integrationAccessTokenExpiration" ormtype="string";
+	property name="integrationRefreshToken" ormtype="string";
+	*/
+
+	// Related Object Properties (many-to-one)
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="integration" cfc="Integration" fieldtype="many-to-one" fkcolumn="integrationID";
 	
-	// Related Entities
-	property name="account" type="any" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountAuthentication" cfc="AccountAuthentication" fieldtype="many-to-one" fkcolumn="accountAuthenticationID";
-	property name="order" type="any" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	// Related Object Properties (one-to-many)
 	
-	// Audit properties
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="requestAccount" type="any" persistent="false"; 
-	
-	public any function getAccount() {
-		if(structKeyExists(variables, "account")) {
-			return variables.account;
-		} else if (!structKeyExists(variables, "requestAccount")) {
-			variables.requestAccount = getService("accountService").newAccount();
-		}
-		return variables.requestAccount;
-	}
-	
-	public any function getOrder() {
-		if(structKeyExists(variables, "order")) {
-			return variables.order;
-		} else if (!structKeyExists(variables, "requestOrder")) {
-			variables.requestOrder = getService("orderService").newOrder();
-		}
-		return variables.requestOrder;
-	}
-	
-	public void function removeAccount() {
-		if(structKeyExists(variables, "account")) {
-			structDelete(variables, "account");	
-		}
-	}
-	
-	public void function removeOrder() {
-		if(structKeyExists(variables, "order")) {
-			structDelete(variables, "order");	
-		}
-	}
-	
+
+
+
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -93,8 +79,24 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// =============== START: Custom Validation Methods ====================
+	
+	// ===============  END: Custom Validation Methods =====================
+	
+	// =============== START: Custom Formatting Methods ====================
+	
+	// ===============  END: Custom Formatting Methods =====================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// ==================  END:  Deprecated Methods ========================
 }

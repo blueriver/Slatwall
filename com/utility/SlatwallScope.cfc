@@ -59,22 +59,15 @@ component accessors="true" output="false" extends="BaseObject" {
 		return getCurrentSession().getAccount();
 	}
 	
+	public any function getCurrentCart() {
+		return getCurrentSession().getOrder();
+	}
+	
 	public any function getCurrentBrand() {
 		if(!structKeyExists(variables, "currentBrand")) {
 			variables.currentBrand = getService("brandService").newBrand();
 		}
 		return variables.currentBrand;
-	}
-	
-	public any function getCurrentCart() {
-		if(!structKeyExists(variables, "currentCart")) {
-			if(!isNull(getCurrentSession().getOrder())) {
-				variables.currentCart = getCurrentSession().getOrder();
-			} else {
-				variables.currentCart = getService("orderService").newOrder();	
-			}
-		}
-		return variables.currentCart;
 	}
 	
 	public any function getCurrentContent() {

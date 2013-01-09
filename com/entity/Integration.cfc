@@ -74,6 +74,10 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	
 	public any function getIntegrationCFC( string integrationType="" ) {
 		switch (arguments.integrationType) {
+			case "authentication" : {
+				return getService("integrationService").getAuthenticationIntegrationCFC(this);
+				break;
+			}
 			case "payment" : {
 				return getService("integrationService").getPaymentIntegrationCFC(this);
 				break;

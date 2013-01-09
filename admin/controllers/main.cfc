@@ -44,6 +44,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="vendorService" type="any";
 	property name="dataService" type="any";
 	property name="imageService" type="any";
+	property name="sessionService" type="any";
 	property name="updateService" type="any";
 	
 	this.publicMethods='';
@@ -136,6 +137,15 @@ component extends="BaseController" output=false accessors=true {
 			rc.currentBranch = "develop";
 		} else {
 			rc.currentBranch = "master";
+		}
+	}
+	
+	public void function login(required struct rc) {
+		param name="rc.email" default="";
+		param name="rc.password" default="";
+		
+		if(len(rc.email) || len(rc.password)) {
+			getSessionService().processSession(account=getSlatwallScope().getCurrentSession(), data=rc, processContext="authorizeAccount");
 		}
 	}
 	
