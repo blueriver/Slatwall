@@ -92,8 +92,6 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	
-	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// =================== START: ORM Event Hooks  =========================

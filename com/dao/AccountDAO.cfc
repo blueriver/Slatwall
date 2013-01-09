@@ -48,4 +48,12 @@ Notes:
 		<cfset var aaCount = ormExecuteQuery("SELECT count(aa.accountAuthenticationID) FROM SlatwallAccountAuthentication aa") />
 		<cfreturn aaCount[1] gt 0 />
 	</cffunction>
+	
+	<cffunction name="removeAccountFromAllSessions" returntype="void" access="public">
+		<cfargument name="accountID" required="true"  />
+		<cfset var rs = "" />
+		<cfquery name="rs">
+			UPDATE SlatwallSession SET accountID = null, accountAuthenticationID = null WHERE accountID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.accountID#" />
+		</cfquery>
+	</cffunction>
 </cfcomponent>

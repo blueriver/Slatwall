@@ -182,6 +182,7 @@ component extends="BaseService" accessors="true" output="false" {
 	public boolean function deleteAccount(required any account) {
 	
 		// Set the primary fields temporarily in the local scope so we can reset if delete fails
+		var accountID = arguments.account.getAccountID();
 		var primaryEmailAddress = arguments.account.getPrimaryEmailAddress();
 		var primaryPhoneNumber = arguments.account.getPrimaryPhoneNumber();
 		var primaryAddress = arguments.account.getPrimaryAddress();
@@ -195,7 +196,14 @@ component extends="BaseService" accessors="true" output="false" {
 		var deleteOK = super.delete(arguments.account);
 		
 		// If the delete failed, then we just reset the primary fields in account and return false
-		if(!deleteOK) {
+		if(deleteOK) {
+			getDAO().removeAccountFromAllSessions( accountID );
+			
+			super.delete(primaryEmailAddress);
+			super.delete(primaryPhoneNumber);
+			super.delete(primaryAddress);
+			
+		} else {
 			arguments.account.setPrimaryEmailAddress(primaryEmailAddress);
 			arguments.account.setPrimaryPhoneNumber(primaryPhoneNumber);
 			arguments.account.setPrimaryAddress(primaryAddress);
