@@ -61,8 +61,10 @@ Notes:
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<ul class="nav">
+						<!---
 						<a href="#application.configBean.getContext()#/admin" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/mura.logo.png" style="width:25px;heigh:26px;" title="Mura" /></a>
 						<li class="divider-vertical"></li>
+						--->
 						<a href="#buildURL(action='admin:main.default')#" class="brand brand-two"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
 						<li class="divider-vertical"></li>
 						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.product_nav')#" icon="tags icon-white" type="nav">
@@ -159,9 +161,11 @@ Notes:
 							</cfif>
 						</cf_SlatwallActionCallerDropdown>
 					</ul>
-					<form name="search" class="navbar-search pull-right" action="/" onSubmit="return false;">
-						<input id="global-search" type="text" name="serach" class="search-query span2" placeholder="Search">
-					</form>
+					<cfif $.slatwall.getLoggedInAsAdminFlag()>
+						<form name="search" class="navbar-search pull-right" action="/" onSubmit="return false;">
+							<input id="global-search" type="text" name="serach" class="search-query span2" placeholder="Search">
+						</form>
+					</cfif>
 				</div>
 			</div>
 		</div>

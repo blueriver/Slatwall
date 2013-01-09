@@ -55,6 +55,20 @@ component accessors="true" output="false" extends="BaseObject" {
 		return this;
 	}
 	
+	public boolean function getLoggedInFlag() {
+		if(!getCurrentAccount().isNew()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function getLoggedInAsAdminFlag() {
+		if(len(getCurrentAccount().getAllPermissions())) {
+			return true;
+		}
+		return false;
+	}
+	
 	public any function getCurrentAccount() {
 		return getCurrentSession().getAccount();
 	}

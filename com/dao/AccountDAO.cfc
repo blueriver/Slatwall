@@ -38,21 +38,14 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
-	<cffunction name="readByCmsAccountID" returntype="any" access="public">
-		<cfargument name="cmsAccountID" required="true" type="string">
-		 
-		<cfreturn ormExecuteQuery(" from SlatwallAccount aSlatwallAccount where aSlatwallAccount.cmsAccountID=:cmsAccountID", {cmsAccountID=arguments.cmsAccountID}, true) />
-	</cffunction>
-	
-	<cffunction name="readByAccountEmail" returntype="any" access="public">
-		<cfargument name="email" required="true" type="string">
-		
-		<cfreturn ormExecuteQuery("SELECT account FROM SlatwallAccountEmailAddress aSlatwallAccountEmail where aSlatwallAccountEmail.email=:email", {email=arguments.email}, true) />
-	</cffunction>
-	
-	<cffunction name="getAccountAuthenticationsByEmailAddress" returntype="any" access="public">
+	<cffunction name="getInternalAccountAuthenticationsByEmailAddress" returntype="any" access="public">
 		<cfargument name="emailAddress" required="true" type="string" />
 		
-		<cfreturn ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aa.password is not null AND aea.email=:email", {email=arguments.emailAddress}) />
+		<cfreturn ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aa.password is not null AND aa.integration is null AND aea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress}) />
+	</cffunction>
+	
+	<cffunction name="getAccountAuthenticationExists" returntype="any" access="public">
+		<cfset var aaCount = ormExecuteQuery("SELECT count(aa.accountAuthenticationID) FROM SlatwallAccountAuthentication aa") />
+		<cfreturn aaCount[1] gt 0 />
 	</cffunction>
 </cfcomponent>

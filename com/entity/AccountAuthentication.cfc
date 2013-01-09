@@ -78,6 +78,24 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Account (many-to-one)    
+	public void function setAccount(required any account) {    
+		variables.account = arguments.account;    
+		if(isNew() or !arguments.account.hasAccountAuthentication( this )) {    
+			arrayAppend(arguments.account.getAccountAuthentications(), this);    
+		}    
+	}    
+	public void function removeAccount(any account) {    
+		if(!structKeyExists(arguments, "account")) {    
+			arguments.account = variables.account;    
+		}    
+		var index = arrayFind(arguments.account.getAccountAuthentications(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getAccountAuthentications(), index);    
+		}    
+		structDelete(variables, "account");    
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// =============== START: Custom Validation Methods ====================

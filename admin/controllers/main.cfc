@@ -44,6 +44,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="vendorService" type="any";
 	property name="dataService" type="any";
 	property name="imageService" type="any";
+	property name="permissionService" type="any";
 	property name="sessionService" type="any";
 	property name="updateService" type="any";
 	
@@ -52,6 +53,7 @@ component extends="BaseController" output=false accessors=true {
 	this.publicMethods=listAppend(this.publicMethods, 'logout');
 	this.publicMethods=listAppend(this.publicMethods, 'noaccess');
 	this.publicMethods=listAppend(this.publicMethods, 'error');
+	this.publicMethods=listAppend(this.publicMethods, 'setupInitialAdmin');
 	
 	this.anyAdminMethods='';
 	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'default');
@@ -140,13 +142,30 @@ component extends="BaseController" output=false accessors=true {
 		}
 	}
 	
-	public void function login(required struct rc) {
-		param name="rc.email" default="";
+	public void function setupInitialAdmin( required struct rc) {
 		param name="rc.password" default="";
+		param name="rc.passwordConfirm" default="";
+		
+		rc.account = getAccountService().processAccount_setupInitialAdmin(data=rc);
+		
+		if(!rc.account.hasErrors()) {
+			getFW().redirect('admin:main.default');
+		}
+		
+		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
+		getFW().setView("admin:main.login");
+	}
+	
+	public void function login(required struct rc) {
+		param name="rc.email" type="string" default="";
+		param name="rc.password" type="string" default="";
 		
 		if(len(rc.email) || len(rc.password)) {
-			getSessionService().processSession(account=getSlatwallScope().getCurrentSession(), data=rc, processContext="authorizeAccount");
+			getSessionService().processSession(session=getSlatwallScope().getCurrentSession(), data=rc, processContext="authorizeAccount");
 		}
+		
+		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
+		rc.account = getAccountService().newAccount();
 	}
 	
 	public void function logout(required struct rc) {

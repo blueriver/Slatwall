@@ -113,7 +113,8 @@ component extends="BaseService" accessors="true" output="false" {
 				
 			// Check with the auto logout setting of the authentication
 			} else if( listLen(currentSession.getAccountAuthentication().setting('accountAuthenticationAutoLogoutTimespan')) eq 4 ) {
-				var autoExpireDateTime = currentSession.getLastRequestDateTime() + createTimeSpan(currentSession.getAccountAuthentication().setting('accountAuthenticationAutoLogoutTimespan'));
+				var tsArr = listToArray(currentSession.getAccountAuthentication().setting('accountAuthenticationAutoLogoutTimespan'));
+				var autoExpireDateTime = currentSession.getLastRequestDateTime() + createTimeSpan(tsArr[1],tsArr[2],tsArr[3],tsArr[4]);
 				if(autoExpireDateTime lt now()) {
 					logoutAccount();
 				}
@@ -173,7 +174,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			// Take the email address and get all of the user accounts by primary e-mail address
 			
-			var accountAuthentications = getAccountService().getAccountAuthenticationsByEmailAddress(emailAddress=arguments.data.emailAddress);
+			var accountAuthentications = getAccountService().getInternalAccountAuthenticationsByEmailAddress(emailAddress=arguments.data.emailAddress);
 			
 			if(arrayLen(accountAuthentications)) {
 				for(var i=1; i<=arrayLen(accountAuthentications); i++) {
@@ -183,9 +184,9 @@ component extends="BaseService" accessors="true" output="false" {
 						return arguments.session;
 					}
 				}
-				arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidpassword'));
+				arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidpassword'), true);
 			} else {
-				arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidemail'));
+				arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidemail'), true);
 			}
 		}
 	}

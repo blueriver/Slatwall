@@ -60,6 +60,11 @@ component extends="BaseService" accessors="true" output="false" {
 		var sectionName = listFirst( listLast(arguments.action, ":"), "." );
 		var itemName = listLast( arguments.action, "." );
 		
+		// Verify that there is a subsystem and section setup for that action
+		if( !structKeyExists(getPermissions(), subsystemName) || !structKeyExists(getPermissions()[ subsystemName ], sectionName) ) {
+			return false;
+		}
+		
 		//check if the page is public, if public no need to worry about security
 		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].publicMethods, itemName)){
 			return true;

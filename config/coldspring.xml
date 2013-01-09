@@ -58,6 +58,7 @@
 				<entry key="Access"><value>accessService</value></entry>
 				<entry key="Account"><value>accountService</value></entry>
 				<entry key="AccountAddress"><value>accountService</value></entry>
+				<entry key="AccountAuthentication"><value>accountService</value></entry>
 				<entry key="AccountContentAccess"><value>accountService</value></entry>
 				<entry key="AccountEmailAddress"><value>accountService</value></entry>
 				<entry key="AccountPayment"><value>accountService</value></entry>
@@ -177,6 +178,7 @@
         <property name="DAO"><ref bean="accountDAO" /></property>
 		<property name="emailService"><ref bean="emailService" /></property>
 		<property name="paymentService"><ref bean="paymentService" /></property>
+		<property name="permissionService"><ref bean="permissionService" /></property>
 		<property name="priceGroupService"><ref bean="priceGroupService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
     </bean>
