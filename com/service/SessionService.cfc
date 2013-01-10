@@ -152,7 +152,7 @@ component extends="BaseService" accessors="true" output="false" {
 		getDAO().flushORMSession();
 	}
 	
-	private string function logoutAccount(required any account) {
+	public void function logoutAccount() {
 		var currentSession = getSlatwallScope().getCurrentSession();
 		
 		currentSession.removeAccount();
@@ -180,7 +180,7 @@ component extends="BaseService" accessors="true" output="false" {
 				for(var i=1; i<=arrayLen(accountAuthentications); i++) {
 					// If the password matches what it should be, then set the account in the session and 
 					if(!isNull(accountAuthentications[i].getPassword()) && len(accountAuthentications[i].getPassword()) && accountAuthentications[i].getPassword() == getAccountService().getHashedAndSaltedPassword(password=arguments.data.password, salt=accountAuthentications[i].getAccountAuthenticationID())) {
-						loginAccount( accountAuthentications[i].getAccount() );
+						loginAccount( accountAuthentications[i].getAccount(), accountAuthentications[i] );
 						return arguments.session;
 					}
 				}

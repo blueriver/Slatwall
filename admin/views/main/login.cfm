@@ -50,9 +50,9 @@ Notes:
 					<input type="hidden" name="slatAction" value="admin:main.login" />
 					<fieldset class="dl-horizontal">
 						<div class="control-group">
-							<label class="control-label" for="email">Email</label>
+							<label class="control-label" for="emailAddress">Email</label>
 							<div class="controls">
-								<input type="text" name="email" placeholder="Email">
+								<input type="text" name="emailAddress" placeholder="Email">
 							</div>
 						</div>
 						<div class="control-group">

@@ -41,7 +41,7 @@ Notes:
 	<cffunction name="getInternalAccountAuthenticationsByEmailAddress" returntype="any" access="public">
 		<cfargument name="emailAddress" required="true" type="string" />
 		
-		<cfreturn ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aa.password is not null AND aa.integration is null AND aea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress}) />
+		<cfreturn ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aa.password is not null AND aa.integration.integrationID is null AND aea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress}) />
 	</cffunction>
 	
 	<cffunction name="getAccountAuthenticationExists" returntype="any" access="public">

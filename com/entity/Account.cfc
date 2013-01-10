@@ -196,6 +196,30 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Primary Email Address (many-to-one | circular)
+	public void function setPrimaryEmailAddress(required any primaryEmailAddress) {    
+		variables.primaryEmailAddress = arguments.primaryEmailAddress;
+		arguments.primaryEmailAddress.setAccount( this );    
+	}
+	
+	// Primary Email Address (many-to-one | circular)
+	public void function setPrimaryPhoneNumber(required any primaryPhoneNumber) {    
+		variables.primaryPhoneNumber = arguments.primaryPhoneNumber;
+		arguments.primaryPhoneNumber.setAccount( this );    
+	}
+	
+	// Primary Email Address (many-to-one | circular)
+	public void function setPrimaryAddress(required any primaryAddress) {    
+		variables.primaryAddress = arguments.primaryAddress;
+		arguments.primaryAddress.setAccount( this );    
+	}
+	
+	// Primary Email Address (many-to-one | circular)
+	public void function setPrimaryAccountPaymentMethod(required any primaryAccountPaymentMethod) {    
+		variables.primaryAccountPaymentMethod = arguments.primaryAccountPaymentMethod;
+		arguments.primaryAccountPaymentMethod.setAccount( this );    
+	}
+	
 	// Account Addresses (one-to-many)
 	public void function addAccountAddress(required any accountAddress) {
 		arguments.accountAddress.setAccount( this );

@@ -79,6 +79,12 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 		}
 	}
 	
+	public void function removeAccountAuthentication() {
+		if(structKeyExists(variables, "accountAuthentication")) {
+			structDelete(variables, "accountAuthentication");	
+		}
+	}
+	
 	public void function removeOrder() {
 		if(structKeyExists(variables, "order")) {
 			structDelete(variables, "order");	

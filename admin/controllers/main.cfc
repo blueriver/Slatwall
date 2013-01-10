@@ -157,11 +157,15 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function login(required struct rc) {
-		param name="rc.email" type="string" default="";
+		param name="rc.emailAddress" type="string" default="";
 		param name="rc.password" type="string" default="";
 		
-		if(len(rc.email) || len(rc.password)) {
+		if(len(rc.emailAddress) || len(rc.password)) {
 			getSessionService().processSession(session=getSlatwallScope().getCurrentSession(), data=rc, processContext="authorizeAccount");
+			
+			if(getSlatwallScope().getLoggedInFlag()) {
+				getFW().redirect("admin:main.default");
+			}
 		}
 		
 		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
@@ -169,6 +173,8 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function logout(required struct rc) {
+		getSessionService().logoutAccount();
+		
 		getFW().redirect('admin:main.login');
 	}
 
