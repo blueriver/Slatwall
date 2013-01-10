@@ -111,7 +111,7 @@ Notes:
 		<cfset var sorted = "" />
 		
 		<!--- TODO: test to see if this query works with DB's other than MSSQL and MySQL --->
-		<cfquery name="sorted" datasource="#getApplicationValue("datasource")#" username="#application.configBean.getUsername()#" password="#application.configBean.getPassword()#">
+		<cfquery name="sorted" datasource="#getApplicationValue("datasource")#">
 			SELECT
 				SlatwallSku.skuID
 			FROM

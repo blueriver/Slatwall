@@ -66,13 +66,18 @@ component extends="org.fw1.framework" output="false" {
 	} else {
 		
 		this.name = "slatwall" & hash(getCurrentTemplatePath());
+		this.sessionManagement = true;
+		this.ormenabled = true;
+		this.datasource = "slatwall";
 		
 		this.mappings[ "/Slatwall" ] = getDirectoryFromPath(getCurrentTemplatePath());
 		this.mappings[ "/coldspring" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/coldspring";
 		this.mappings[ "/ValidateThis" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/ValidateThis";
 		
-		this.ormenabled = true;
-		this.datasource = "slatwall";
+		if(!structKeyExists(this, "customtagpaths")) {
+			this.customtagpaths = "";
+		}
+		this.customtagpaths = listAppend(this.customtagpaths, expandPath("/Slatwall/tags"));
 		
 		this.ormsettings = {};
 		this.ormsettings.cfclocation = ["com/entity"];
@@ -163,9 +168,13 @@ component extends="org.fw1.framework" output="false" {
 					}
 					writeLog(file="Slatwall", text="General Log - Application Value 'version' setup as #request.slatwallScope.getApplicationValue('version')#");
 					
+					// Slatwall Root URL
+					request.slatwallScope.setApplicationValue("slatwallRootURL", variables.framework.baseURL);
+					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallRootURL' setup as #request.slatwallScope.getApplicationValue("slatwallRootURL")#");
+					
 					// Set Datasource
 					request.slatwallScope.setApplicationValue("datasource", this.datasource);
-					writeLog(file="Slatwall", text="General Log - Application Value 'dbType' setup as #request.slatwallScope.getApplicationValue("datasource")#");
+					writeLog(file="Slatwall", text="General Log - Application Value 'datasource' setup as #request.slatwallScope.getApplicationValue("datasource")#");
 					
 					// SET Database Type
 					var dbVersion = new dbinfo(datasource=this.datasource).version()["DATABASE_PRODUCTNAME"];
@@ -175,7 +184,7 @@ component extends="org.fw1.framework" output="false" {
 						this.ormSettings.dialect = "MicrosoftSQLServer";
 					}
 					request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
-					writeLog(file="Slatwall", text="General Log - Application Value 'dbType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
+					writeLog(file="Slatwall", text="General Log - Application Value 'databaseType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
 					
 					// VFS
 					request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
@@ -213,8 +222,8 @@ component extends="org.fw1.framework" output="false" {
 						getBeanFactory().getBean("sessionService").setPropperSession();
 						
 						// Super Users
-						getBeanFactory().getBean("permissionService").setupDefaultPermissions();
-						writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
+						//getBeanFactory().getBean("permissionService").setupDefaultPermissions();
+						//writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
 						
 						// Clear the setting cache so that it can be reloaded
 						getBeanFactory().getBean("settingService").clearAllSettingsQuery();
@@ -356,9 +365,9 @@ component extends="org.fw1.framework" output="false" {
 			arguments.queryString = "&#arguments.queryString#";
 		}
 		if(findNoCase(":", arguments.action)) {
-			return "#application.configBean.getContext()#/plugins/Slatwall/?slatAction=#arguments.action##arguments.queryString#";	
+			return "#variables.framework.baseURL#?slatAction=#arguments.action##arguments.queryString#";	
 		}
-		return "#application.configBean.getContext()#/plugins/Slatwall/?slatAction=admin:#arguments.action##arguments.queryString#";
+		return "#variables.framework.baseURL#?slatAction=admin:#arguments.action##arguments.queryString#";
 	}
 	
 	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle

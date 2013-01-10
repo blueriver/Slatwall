@@ -1014,12 +1014,13 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint  helper function absolute url path from site root /* deprecated */
 	public string function getSlatwallRootPath() {
-		return "#application.configBean.getContext()#/plugins/Slatwall";
+		return getSlatwallRootURL();
 	}
 	
 	// @hint  helper function absolute url path from site root
 	public string function getSlatwallRootURL() {
-		return "#application.configBean.getContext()#/plugins/Slatwall";
+		var appSRURL = getApplicationValue("slatwallRootURL");
+		return left(appSRURL, len(appSRURL) - 1);
 	}
 	
 	// @hint  helper function the file system directory
