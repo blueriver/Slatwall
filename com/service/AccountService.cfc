@@ -45,22 +45,9 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="priceGroupService" type="any";
 	property name="validationService" type="any";
 	
-	// Mura Injection on Init
-	property name="userManager" type="any";
-	property name="userUtility" type="any";
-	
-	public any function init() {
-		setUserManager( getCMSBean("userManager") );
-		setUserUtility( getCMSBean("userUtility") );
-		variables.permissions = '';
-		
-		return super.init();
-	}
-	
 	public string function getHashedAndSaltedPassword(required string password, required string salt) {
 		return hash(arguments.password & arguments.salt, 'SHA-512');
 	}
-	
 	
 	// ===================== START: Logical Methods ===========================
 	

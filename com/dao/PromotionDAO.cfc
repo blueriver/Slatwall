@@ -409,7 +409,7 @@ Notes:
 			  INNER JOIN
 			  	SlatwallProductType on SlatwallProduct.productTypeID = SlatwallProductType.productTypeID
 			  INNER JOIN
-			  <cfif getDBType() eq "MySQL">
+			  <cfif getApplicationValue("databaseType") eq "MySQL">
 			  	SlatwallPromotionRewardProductType on SlatwallProductType.productTypeIDPath LIKE concat('%', SlatwallPromotionRewardProductType.productTypeID, '%')
 			  <cfelse>
 			  	SlatwallPromotionRewardProductType on SlatwallProductType.productTypeIDPath LIKE ('%' + SlatwallPromotionRewardProductType.productTypeID + '%')

@@ -120,7 +120,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function updateIntegrationsFromDirectory() {
 		logSlatwall("Update Integrations Started");
-		var dirList = directoryList( expandPath("/plugins/Slatwall/integrationServices") );
+		var dirList = directoryList( expandPath("/Slatwall/integrationServices") );
 		var integrationList = this.listIntegration();
 		var installedIntegrationList = "";
 		

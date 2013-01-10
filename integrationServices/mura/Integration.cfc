@@ -43,7 +43,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	property name="contentManager" type="any";
 	property name="categoryManager" type="any";
 	property name="feedManager" type="any";
-
+/*
 	public any function init() {
 		setConfigBean( getCMSBean("configBean") );
 		setContentManager( getCMSBean("contentManager") );
@@ -52,7 +52,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 
 		return this;
 	}
-	
+	*/
 	public string function getIntegrationTypes() {
 		return "cms,fw1";
 	}

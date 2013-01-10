@@ -1038,11 +1038,6 @@ component displayname="Base Object" accessors="true" output="false" {
 		return vfsDirectory;
 	}
 	
-	// @hint  helper function to get the database type
-	public string function getDBType() {
-		return application.configbean.getDBType();
-	}
-	
 	// @hint  helper function to return the Slatwall RB Factory in any component
 	public any function getRBFactory() {
 		if( !hasApplicationValue("rbFactory") ) {
@@ -1110,11 +1105,6 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint  helper function for using the Slatwall Log Exception service.
 	public void function logSlatwallException(required any exception){
 		getService("utilityLogService").logException(exception=arguments.exception);		
-	}
-	
-	// @hint helper function to get a bean for the underlying CMS (mura for now)
-	public any function getCMSBean( required any beanName ) {
-		return application.serviceFactory.getBean( arguments.beanName );
 	}
 	
 	// @hint facade method to set values in the slatwall application scope 

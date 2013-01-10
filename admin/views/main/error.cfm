@@ -36,6 +36,9 @@
 Notes:
 
 --->
+<cfdump var="#request.exception#" />
+<cfabort />
+
 
 <cfset arguments.exception = request.exception />
 <cfif structKeyExists(application,"configBean")>

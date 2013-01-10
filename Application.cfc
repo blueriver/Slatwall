@@ -112,7 +112,6 @@ component extends="org.fw1.framework" output="false" {
 					writeLog(file="Slatwall", text="General Log - Application Setup Started");	
 					request.slatwallScope.setApplicationValue("initialized", false);
 					
-					
 					// =================== Required Application Setup ===================
 					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
 					if(!structKeyExists(application, "slatwallFW1")) {
@@ -127,7 +126,6 @@ component extends="org.fw1.framework" output="false" {
 						writeLog(file="Slatwall", text="General Log - Taffy application valirable removed so that it reloads");
 					}
 					// ================ END: Required Application Setup ==================
-					
 					
 					// ========================= Coldspring Setup =========================
 					// Get Coldspring Config
@@ -149,6 +147,7 @@ component extends="org.fw1.framework" output="false" {
 					
 					// Now place the service factory as the fw1 bean
 					setBeanFactory( serviceFactory );
+					
 					writeLog(file="Slatwall", text="General Log - Coldspring Setup Confirmed");
 					//========================= END: Coldsping Setup =========================
 					
@@ -164,12 +163,25 @@ component extends="org.fw1.framework" output="false" {
 					}
 					writeLog(file="Slatwall", text="General Log - Application Value 'version' setup as #request.slatwallScope.getApplicationValue('version')#");
 					
+					// Set Datasource
+					request.slatwallScope.setApplicationValue("datasource", this.datasource);
+					writeLog(file="Slatwall", text="General Log - Application Value 'dbType' setup as #request.slatwallScope.getApplicationValue("datasource")#");
+					
+					// SET Database Type
+					var dbVersion = new dbinfo(datasource=this.datasource).version()["DATABASE_PRODUCTNAME"];
+					if(FindNoCase("MySQL", dbVersion)) {
+						this.ormSettings.dialect = "MySQL";
+					} else if (FindNoCase("Microsoft", dbVersion)) {
+						this.ormSettings.dialect = "MicrosoftSQLServer";
+					}
+					request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
+					writeLog(file="Slatwall", text="General Log - Application Value 'dbType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
+					
 					// VFS
 					request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
 					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallVfsRoot' setup as: #this.mappings[ "/slatwallVfsRoot" ]#");
 					
 					// ======================== END: Enviornment Setup ========================
-					
 					
 					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
 					if(!fileExists(expandPath('/Slatwall/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, "update") && url.update)){
@@ -189,9 +201,9 @@ component extends="org.fw1.framework" output="false" {
 						writeLog(file="Slatwall", text="General Log - Integrations have been updated");
 						
 						// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
-						var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
-						muraIntegrationService.setupIntegration();
-						writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
+						//var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
+						//muraIntegrationService.setupIntegration();
+						//writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
 						
 						// Setup Default Data... Not called on soft reloads.
 						getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
@@ -235,8 +247,11 @@ component extends="org.fw1.framework" output="false" {
 	}
 
 	public void function setupRequest() {
+		
+		
 		// Call the setup of the global Request
 		setupGlobalRequest();
+		
 		
 		// Setup structured Data if a request context exists meaning that a full action was called
 		var structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);

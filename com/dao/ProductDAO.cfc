@@ -283,7 +283,7 @@ Notes:
 			}
 			
 			//set default sku for all the new products to the first sku
-			if(getDBType() eq "mySql") {
+			if(getApplicationValue("databaseType") eq "mySQL") {
 				dataQuery.setSql("
 					UPDATE SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
 					SET defaultSkuID = (SELECT skuID FROM SlatwallSku WHERE SlatwallSku.productID = SlatwallProduct.productID LIMIT 1)
@@ -299,7 +299,7 @@ Notes:
 			}
 			dataQuery.execute();
 			//set sku image to product default image
-			if(getDBType() eq "mySql") {
+			if(getApplicationValue("databaseType") eq "mySql") {
 				dataQuery.setSql("
 					UPDATE SlatwallSku INNER JOIN SlatwallProduct ON SlatwallProduct.productID = SlatwallSku.productID
 					SET imageFile = (SELECT concat(productCode, '.#setting("globalImageExtension")#') FROM SlatwallProduct WHERE SlatwallSku.productID = SlatwallProduct.productID)

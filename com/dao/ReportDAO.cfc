@@ -282,9 +282,9 @@ Notes:
 		<cfargument name="datePart" type="string" hint="Values for this are: DD, MM, YYYY" />
 		<cfargument name="dateColumn" type="string" />
 		
-		<cfif application.configBean.getDBType() eq "mssql">
+		<cfif getApplicationValue("databaseType") eq "MicrosoftSQLServer">
 			<cfreturn "DATEPART(#arguments.datePart#, #arguments.dateColumn#)" />
-		<cfelseif application.configBean.getDBType() eq "mysql">
+		<cfelseif getApplicationValue("databaseType") eq "MySQL">
 			
 			<cfif arguments.datePart eq "DD">
 				<cfset arguments.datePart = "DAY" />

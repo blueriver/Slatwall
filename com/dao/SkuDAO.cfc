@@ -111,7 +111,7 @@ Notes:
 		<cfset var sorted = "" />
 		
 		<!--- TODO: test to see if this query works with DB's other than MSSQL and MySQL --->
-		<cfquery name="sorted" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getUsername()#" password="#application.configBean.getPassword()#">
+		<cfquery name="sorted" datasource="#getApplicationValue("datasource")#" username="#application.configBean.getUsername()#" password="#application.configBean.getPassword()#">
 			SELECT
 				SlatwallSku.skuID
 			FROM
@@ -127,7 +127,7 @@ Notes:
 			GROUP BY
 				SlatwallSku.skuID
 			ORDER BY
-				<cfif application.configBean.getDBType() eq "mssql">
+				<cfif getApplicationValue("databaseType") eq "MicrosoftSQLServer">
 					SUM(SlatwallOption.sortOrder * POWER(CAST(10 as bigint), CAST((#getNextOptionGroupSortOrder()# - SlatwallOptionGroup.sortOrder) as bigint))) ASC
 				<cfelse>
 					SUM(SlatwallOption.sortOrder * POWER(10, #getNextOptionGroupSortOrder()# - SlatwallOptionGroup.sortOrder)) ASC
