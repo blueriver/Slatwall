@@ -42,6 +42,7 @@ component extends="org.fw1.framework" output="false" {
 	variables.framework=structNew();
 	variables.framework.applicationKey="SlatwallFW1";
 	variables.framework.base="/Slatwall";
+	variables.framework.baseURL = replace(replace( getDirectoryFromPath(getCurrentTemplatePath()) , expandPath('/'), '/' ), '\', '/', 'all');
 	variables.framework.action="slatAction";
 	variables.framework.error="admin:main.error";
 	variables.framework.home="admin:main.default";
@@ -50,15 +51,10 @@ component extends="org.fw1.framework" output="false" {
 	variables.framework.usingsubsystems=true;
 	variables.framework.defaultSubsystem = "admin";
 	variables.framework.subsystemdelimiter=":";
-	variables.framework.generateSES = false;
+	variables.framework.generateSES = true;
 	variables.framework.SESOmitIndex = true;
 	variables.framework.reload = "reload";
 	
-	include "../../config/applicationSettings.cfm";
-	include "../../config/mappings.cfm";
-	include "../mappings.cfm";
-	
-	/*
 	// If we are installed inside of mura, then use the core application settings, otherwise use standalone settings
 	if( fileExists(expandPath("../../config/applicationSettings.cfm")) ) {
 		
@@ -91,7 +87,6 @@ component extends="org.fw1.framework" output="false" {
 		this.ormSettings.logsql = false;
 		
 	}
-	*/
 	
 	this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
 	
@@ -173,9 +168,6 @@ component extends="org.fw1.framework" output="false" {
 					request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
 					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallVfsRoot' setup as: #this.mappings[ "/slatwallVfsRoot" ]#");
 					
-					// BASE URL
-					variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
-					writeLog(file="Slatwall", text="General Log - FW1 baseURL set to #variables.framework.baseURL#");
 					// ======================== END: Enviornment Setup ========================
 					
 					
