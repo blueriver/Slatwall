@@ -38,23 +38,8 @@ Notes:
 */
 component extends="org.fw1.framework" output="false" {
 
-	// Setup Framwork Configuration
-	variables.framework=structNew();
-	variables.framework.applicationKey="SlatwallFW1";
-	variables.framework.base="/Slatwall";
-	variables.framework.baseURL = replace(replace( getDirectoryFromPath(getCurrentTemplatePath()) , expandPath('/'), '/' ), '\', '/', 'all');
-	variables.framework.action="slatAction";
-	variables.framework.error="admin:main.error";
-	variables.framework.home="admin:main.default";
-	variables.framework.defaultSection="main";
-	variables.framework.defaultItem="default";
-	variables.framework.usingsubsystems=true;
-	variables.framework.defaultSubsystem = "admin";
-	variables.framework.subsystemdelimiter=":";
-	variables.framework.generateSES = true;
-	variables.framework.SESOmitIndex = true;
-	variables.framework.reload = "reload";
-	
+	// ============================================================================== START OF REQUIRED APPLICATION SETTINGS
+
 	// If we are installed inside of mura, then use the core application settings, otherwise use standalone settings
 	if( fileExists(expandPath("../../config/applicationSettings.cfm")) ) {
 		
@@ -68,7 +53,9 @@ component extends="org.fw1.framework" output="false" {
 		this.name = "slatwall" & hash(getCurrentTemplatePath());
 		this.sessionManagement = true;
 		this.ormenabled = true;
-		this.datasource = "slatwall";
+		
+		this.datasource = {};
+		this.datasource.name = "Slatwall";
 		
 		this.mappings[ "/Slatwall" ] = getDirectoryFromPath(getCurrentTemplatePath());
 		this.mappings[ "/coldspring" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/coldspring";
@@ -94,6 +81,25 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
+	
+	// Setup Framwork Configuration
+	variables.framework=structNew();
+	variables.framework.applicationKey="SlatwallFW1";
+	variables.framework.base="/Slatwall";
+	variables.framework.baseURL = replace(replace( getDirectoryFromPath(getCurrentTemplatePath()) , expandPath('/'), '/' ), '\', '/', 'all');
+	variables.framework.action="slatAction";
+	variables.framework.error="admin:main.error";
+	variables.framework.home="admin:main.default";
+	variables.framework.defaultSection="main";
+	variables.framework.defaultItem="default";
+	variables.framework.usingsubsystems=true;
+	variables.framework.defaultSubsystem = "admin";
+	variables.framework.subsystemdelimiter=":";
+	variables.framework.generateSES = true;
+	variables.framework.SESOmitIndex = true;
+	variables.framework.reload = "reload";
+	
+	// ============================================================================== END OF REQUIRED APPLICATION SETTINGS
 	
 	public void function verifyApplicationSetup() {
 		
@@ -173,11 +179,11 @@ component extends="org.fw1.framework" output="false" {
 					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallRootURL' setup as #request.slatwallScope.getApplicationValue("slatwallRootURL")#");
 					
 					// Set Datasource
-					request.slatwallScope.setApplicationValue("datasource", this.datasource);
+					request.slatwallScope.setApplicationValue("datasource", this.datasource.name);
 					writeLog(file="Slatwall", text="General Log - Application Value 'datasource' setup as #request.slatwallScope.getApplicationValue("datasource")#");
 					
 					// SET Database Type
-					var dbVersion = new dbinfo(datasource=this.datasource).version()["DATABASE_PRODUCTNAME"];
+					var dbVersion = new dbinfo(datasource=this.datasource.name).version()["DATABASE_PRODUCTNAME"];
 					if(FindNoCase("MySQL", dbVersion)) {
 						this.ormSettings.dialect = "MySQL";
 					} else if (FindNoCase("Microsoft", dbVersion)) {
