@@ -194,7 +194,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return "/#setting('globalURLKeyProduct')#/#getURLTitle()#/";
 	}
 	
-	public string function getListingProductURL(string filename=request.muraScope.content('filename')) {
+	public string function getListingProductURL() {
 		return "#cgi.path_info##setting('globalURLKeyProduct')#/#getURLTitle()#/";
 	}
 	

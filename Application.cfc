@@ -320,6 +320,7 @@ component extends="org.fw1.framework" output="false" {
 	
 	// This is used to setup the frontend path to pull from the siteid directory or the theme directory if the file exists
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
+		/*
 		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
 			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
 			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
@@ -331,6 +332,7 @@ component extends="org.fw1.framework" output="false" {
 			}
 			
 		}
+		*/
 		return arguments.fullPath;
 	}
 	

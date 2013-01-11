@@ -140,6 +140,7 @@ Notes:
 							<cfsavecontent variable="local.toolGroupOne">
 								<cf_SlatwallActionCaller action="admin:main.about" type="list">
 								<cf_SlatwallActionCaller action="admin:main.log" type="list">
+								<cf_SlatwallActionCaller action="frontend:page.slatwall-productlisting" text="#$.slatwall.rbKey('admin.frontendexample')#" type="list">
 							</cfsavecontent>
 							<cfif len(local.toolGroupOne)>
 								#local.toolGroupOne#
