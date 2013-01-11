@@ -131,6 +131,7 @@ Notes:
 							<cf_SlatwallActionCaller action="admin:setting.listpaymentmethod" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listpaymentterm" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.listsite" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listtaxcategory" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">

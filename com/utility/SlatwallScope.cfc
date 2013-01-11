@@ -77,6 +77,13 @@ component accessors="true" output="false" extends="BaseObject" {
 		return getCurrentSession().getOrder();
 	}
 	
+	public any function getCurrentSite() {
+		if(!structKeyExists(variables, "currentSite")) {
+			variables.currentSite = getService("siteService").getSite( setting('globalDefaultSite') );
+		}
+		return variables.currentSite;
+	}
+	
 	public any function getCurrentBrand() {
 		if(!structKeyExists(variables, "currentBrand")) {
 			variables.currentBrand = getService("brandService").newBrand();

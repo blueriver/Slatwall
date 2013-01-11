@@ -1,6 +1,6 @@
-/*
+<!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -35,44 +35,17 @@
 
 Notes:
 
-*/
+--->
+<cfparam name="rc.siteSmartList" type="any" />
 
-component  extends="Slatwall.com.service.BaseService" accessors="true" {
+<cfoutput>
+	<cf_SlatwallActionBar type="listing" object="#rc.siteSmartList#" createmodal="true" />
 	
-	// ===================== START: Logical Methods ===========================
-	
-	public any function getCurrentRequestSite() {
-		
-	}
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: Process Methods ===========================
-	
-	// =====================  END: Process Methods ============================
-	
-	// ====================== START: Status Methods ===========================
-	
-	// ======================  END: Status Methods ============================
-	
-	// ====================== START: Save Overrides ===========================
-	
-	// ======================  END: Save Overrides ============================
-	
-	// ==================== START: Smart List Overrides =======================
-	
-	// ====================  END: Smart List Overrides ========================
-	
-	// ====================== START: Get Overrides ============================
-	
-	// ======================  END: Get Overrides =============================
-	
-	// ===================== START: Delete Overrides ==========================
-	
-	// =====================  END: Delete Overrides ===========================
-	
-}
+	<cf_SlatwallListingDisplay smartList="#rc.siteSmartList#"
+							   recordEditAction="admin:setting.editSite"
+							   recordEditModal="true"
+							   recordDetailAction="admin:setting.detailSite"
+							   recordDetailModal="true">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="siteName" />
+	</cf_SlatwallListingDisplay>
+</cfoutput>

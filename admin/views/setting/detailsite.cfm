@@ -1,6 +1,6 @@
-/*
+<!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -35,44 +35,23 @@
 
 Notes:
 
-*/
+--->
+<cfparam name="rc.site" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-component  extends="Slatwall.com.service.BaseService" accessors="true" {
-	
-	// ===================== START: Logical Methods ===========================
-	
-	public any function getCurrentRequestSite() {
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.site#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.site#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
-	}
-	
-	// =====================  END: Logical Methods ============================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: DAO Passthrough ===========================
-	
-	// ===================== START: Process Methods ===========================
-	
-	// =====================  END: Process Methods ============================
-	
-	// ====================== START: Status Methods ===========================
-	
-	// ======================  END: Status Methods ============================
-	
-	// ====================== START: Save Overrides ===========================
-	
-	// ======================  END: Save Overrides ============================
-	
-	// ==================== START: Smart List Overrides =======================
-	
-	// ====================  END: Smart List Overrides ========================
-	
-	// ====================== START: Get Overrides ============================
-	
-	// ======================  END: Get Overrides =============================
-	
-	// ===================== START: Delete Overrides ==========================
-	
-	// =====================  END: Delete Overrides ===========================
-	
-}
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.site#" property="siteName" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.site#">
+			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
+</cfoutput>

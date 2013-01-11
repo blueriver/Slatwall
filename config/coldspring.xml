@@ -126,6 +126,7 @@
 				<entry key="ShippingMethod"><value>shippingService</value></entry>
 				<entry key="ShippingMethodOption"><value>shippingService</value></entry>
 				<entry key="ShippingMethodRate"><value>shippingService</value></entry>
+				<entry key="Site"><value>siteService</value></entry>
 				<entry key="Sku"><value>skuService</value></entry>
 				<entry key="SkuCurrency"><value>skuService</value></entry>
 				<entry key="State"><value>addressService</value></entry>
@@ -312,6 +313,7 @@
 		<property name="locationService"><ref bean="locationService" /></property>
 		<property name="measurementUnitService"><ref bean="measurementUnitService" /></property>
 		<property name="paymentService"><ref bean="paymentService" /></property>
+		<property name="siteService"><ref bean="siteService" /></property>
 		<property name="taxService"><ref bean="taxService" /></property>
     </bean>
 	<bean id="shippingService" class="Slatwall.com.service.ShippingService">
