@@ -94,6 +94,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return variables.integrationCFCs[ arguments.integration.getIntegrationPackage() ];
 	}
 
+	public any function getAuthenticationIntegrationCFC(required any integration) {
+		if(!structKeyExists(variables.authenticationIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
+			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Authentication").init();
+			variables.authenticationIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
+		}
+		return variables.authenticationIntegrationCFCs[ arguments.integration.getIntegrationPackage() ];
+	}
+
 	public any function getPaymentIntegrationCFC(required any integration) {
 		if(!structKeyExists(variables.paymentIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
 			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Payment").init();
@@ -112,7 +120,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function updateIntegrationsFromDirectory() {
 		logSlatwall("Update Integrations Started");
-		var dirList = directoryList( expandPath("/plugins/Slatwall/integrationServices") );
+		var dirList = directoryList( expandPath("/Slatwall/integrationServices") );
 		var integrationList = this.listIntegration();
 		var installedIntegrationList = "";
 		

@@ -191,11 +191,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getProductURL() {
-		return request.muraScope.createHREF(filename="#setting('globalURLKeyProduct')#/#getURLTitle()#");
+		return "/#setting('globalURLKeyProduct')#/#getURLTitle()#/";
 	}
 	
 	public string function getListingProductURL(string filename=request.muraScope.content('filename')) {
-		return request.muraScope.createHREF(filename="#arguments.filename#/#setting('globalURLKeyProduct')#/#getURLTitle()#");
+		return "#cgi.path_info##setting('globalURLKeyProduct')#/#getURLTitle()#/";
 	}
 	
 	public string function getTemplate() {

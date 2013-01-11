@@ -39,7 +39,7 @@ Notes:
 
 <cfset local.scriptHasErrors = false />
 
-<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Tables" name="local.infoTables" />
+<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Tables" name="local.infoTables" />
 
 <!--- Update fulfillmentMethodID for all shippingMethods where the fulfillmentMethodID = "shipping" --->
 <cftry>
@@ -299,7 +299,7 @@ Notes:
 
 <!--- Update Promotions to move Info Down into PromotionPeriod --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPromotionReward" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallPromotionReward" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT
@@ -362,7 +362,7 @@ Notes:
 <!--- Update Integration Settings --->
 <!--- 
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallIntegration" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallIntegration" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT

@@ -54,7 +54,7 @@ Notes:
 
 		<cfset var getsu = "" />
 		<!--- can't figure out top 1 hql so, doing query: Sumit --->
-		<cfif getDBType() eq "mySql">
+		<cfif getApplicationValue("databaseType") eq "MySQL">
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
 				FROM SlatwallSubscriptionUsage su
@@ -95,7 +95,7 @@ Notes:
 
 		<cfset var getsu = "" />
 		<!--- can't figure out top 1 hql so, doing query: Sumit --->
-		<cfif getDBType() eq "mySql">
+		<cfif getApplicationValue("databaseType") eq "MySQL">
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
 				FROM SlatwallSubscriptionUsage su

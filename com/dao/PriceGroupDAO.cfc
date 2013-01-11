@@ -44,7 +44,7 @@ Notes:
 		
 		<cfset var getpg = "" />
 		<!--- can't figure out top 1 hql so, doing query: Sumit --->
-		<cfif getDBType() eq "mySql">
+		<cfif getApplicationValue("databaseType") eq "mySQL">
 				<cfquery name="getpg">
 					SELECT DISTINCT subpg.priceGroupID
 					FROM SlatwallSubscriptionUsageBenefitAccount suba

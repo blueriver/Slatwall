@@ -38,6 +38,7 @@ Notes:
 --->
 <cfoutput>
 	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="globalDefaultSite" />
 		<cf_SlatwallSetting settingName="globalCurrencyLocale" />
 		<cf_SlatwallSetting settingName="globalCurrencyType" />
 		<cf_SlatwallSetting settingName="globalDateFormat" />

@@ -147,7 +147,7 @@ Notes:
 		<cfset var sqlResult = "" />
 		<cfset var i = 0 />
 		
-		<cfquery datasource="#application.configBean.getDataSource()#" name="rs" result="sqlResult">
+		<cfquery datasource="#getApplicationValue("datasource")#" name="rs" result="sqlResult">
 			UPDATE
 				#arguments.tableName#
 			SET
@@ -179,7 +179,7 @@ Notes:
 		<cfset var sqlResult = "" />
 		<cfset var i = 0 />
 		
-		<cfquery datasource="#application.configBean.getDataSource()#" name="rs" result="sqlResult"> 
+		<cfquery datasource="#getApplicationValue("datasource")#" name="rs" result="sqlResult"> 
 			INSERT INTO	#arguments.tableName# (
 				#keyList#
 			) VALUES (

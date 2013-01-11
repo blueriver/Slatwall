@@ -82,7 +82,7 @@ component displayname="Data Service" extends="BaseService" {
 							retryCount += 1;
 							runPopulation = true;
 						} else {
-							throw(e);
+							rethrow;
 						}
 					}
 										

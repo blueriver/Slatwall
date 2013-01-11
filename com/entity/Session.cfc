@@ -41,9 +41,11 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	// Persistent Properties
 	property name="sessionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="shippingAddressPostalCode" ormtype="string";
+	property name="lastRequestDateTime" ormtype="timestamp";
 	
 	// Related Entities
 	property name="account" type="any" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountAuthentication" cfc="AccountAuthentication" fieldtype="many-to-one" fkcolumn="accountAuthenticationID";
 	property name="order" type="any" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	
 	// Audit properties
@@ -62,9 +64,24 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 		return variables.requestAccount;
 	}
 	
+	public any function getOrder() {
+		if(structKeyExists(variables, "order")) {
+			return variables.order;
+		} else if (!structKeyExists(variables, "requestOrder")) {
+			variables.requestOrder = getService("orderService").newOrder();
+		}
+		return variables.requestOrder;
+	}
+	
 	public void function removeAccount() {
 		if(structKeyExists(variables, "account")) {
 			structDelete(variables, "account");	
+		}
+	}
+	
+	public void function removeAccountAuthentication() {
+		if(structKeyExists(variables, "accountAuthentication")) {
+			structDelete(variables, "accountAuthentication");	
 		}
 	}
 	

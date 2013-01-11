@@ -39,11 +39,11 @@ Notes:
 
 <cfset local.scriptHasErrors = false />
 
-<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Tables" name="local.infoTables" />
+<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Tables" name="local.infoTables" />
 
 <!--- Update payment methods to use the new paymentIntegrationID value instead of provider gateway --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPaymentMethod" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallPaymentMethod" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT
@@ -380,7 +380,7 @@ Notes:
 
 <!--- Move amountCharged into amountReceived --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPaymentTransaction" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallPaymentTransaction" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT

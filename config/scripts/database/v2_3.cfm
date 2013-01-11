@@ -41,7 +41,7 @@ Notes:
 
 <!--- Update SlatwallPromotionQualifierExcludedProduct and drop priceGroupRateID if it exists --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPromotionQualifierExcludedProduct" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallPromotionQualifierExcludedProduct" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT
@@ -66,7 +66,7 @@ Notes:
 				<cftry>
 					<cfquery name="local.updateData">
 						ALTER TABLE SlatwallPromotionQualifierExcludedProduct DROP
-						<cfif application.configBean.getDBType() eq "mssql">
+						<cfif getApplicationValue("databaseType") eq "MicrosoftSQLServer">
 							CONSTRAINT
 						<cfelse>
 							FOREIGN KEY
@@ -92,7 +92,7 @@ Notes:
 
 <!--- Update SlatwallPromotionQualifierExcludedProductType and drop priceGroupRateID if it exists --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPromotionQualifierExcludedProductType" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallPromotionQualifierExcludedProductType" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT
@@ -117,7 +117,7 @@ Notes:
 				<cftry>
 					<cfquery name="local.updateData">
 						ALTER TABLE SlatwallPromotionQualifierExcludedProductType DROP
-						<cfif application.configBean.getDBType() eq "mssql">
+						<cfif getApplicationValue("databaseType") eq "MicrosoftSQLServer">
 							CONSTRAINT
 						<cfelse>
 							FOREIGN KEY
@@ -143,7 +143,7 @@ Notes:
 
 <!--- Update SlatwallPromotionQualifierExcludedSku and drop priceGroupRateID if it exists --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPromotionQualifierExcludedSku" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallPromotionQualifierExcludedSku" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT
@@ -168,7 +168,7 @@ Notes:
 				<cftry>
 					<cfquery name="local.updateData">
 						ALTER TABLE SlatwallPromotionQualifierExcludedSku DROP
-						<cfif application.configBean.getDBType() eq "mssql">
+						<cfif getApplicationValue("databaseType") eq "MicrosoftSQLServer">
 							CONSTRAINT
 						<cfelse>
 							FOREIGN KEY
@@ -194,7 +194,7 @@ Notes:
 
 <!--- Update SlatwallPromotionRewardExcludedProduct and drop priceGroupRateID if it exists --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPromotionRewardExcludedProduct" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallPromotionRewardExcludedProduct" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT
@@ -219,7 +219,7 @@ Notes:
 				<cftry>
 					<cfquery name="local.updateData">
 						ALTER TABLE SlatwallPromotionRewardExcludedProduct DROP
-						<cfif application.configBean.getDBType() eq "mssql">
+						<cfif getApplicationValue("databaseType") eq "MicrosoftSQLServer">
 							CONSTRAINT
 						<cfelse>
 							FOREIGN KEY
@@ -245,7 +245,7 @@ Notes:
 
 <!--- Update SlatwallPromotionRewardExcludedProductType and drop priceGroupRateID if it exists --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPromotionRewardExcludedProductType" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallPromotionRewardExcludedProductType" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT
@@ -270,7 +270,7 @@ Notes:
 				<cftry>
 					<cfquery name="local.updateData">
 						ALTER TABLE SlatwallPromotionRewardExcludedProductType DROP
-						<cfif application.configBean.getDBType() eq "mssql">
+						<cfif getApplicationValue("databaseType") eq "MicrosoftSQLServer">
 							CONSTRAINT
 						<cfelse>
 							FOREIGN KEY
@@ -297,7 +297,7 @@ Notes:
 
 <!--- Update SlatwallPromotionRewardExcludedSku and drop priceGroupRateID if it exists --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallPromotionRewardExcludedSku" name="local.infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallPromotionRewardExcludedSku" name="local.infoColumns" />
 	
 	<cfquery name="local.hasColumn" dbtype="query">
 		SELECT
@@ -322,7 +322,7 @@ Notes:
 				<cftry>
 					<cfquery name="local.updateData">
 						ALTER TABLE SlatwallPromotionRewardExcludedSku DROP
-						<cfif application.configBean.getDBType() eq "mssql">
+						<cfif getApplicationValue("databaseType") eq "MicrosoftSQLServer">
 							CONSTRAINT
 						<cfelse>
 							FOREIGN KEY

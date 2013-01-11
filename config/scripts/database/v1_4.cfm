@@ -40,8 +40,8 @@ Notes:
 <cfset local.scriptHasErrors = false />
 <!--- Move filename to urltitle for products. --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="index" table="SlatwallProduct" name="local.indexes" />
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallProduct" name="local.columns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="index" table="SlatwallProduct" name="local.indexes" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallProduct" name="local.columns" />
 	<cfquery name="getColumnInfo" dbtype="query">
 		SELECT * 
 		FROM columns
@@ -61,7 +61,7 @@ Notes:
 		<cfif getConstraint.recordcount>
 			<cfquery name="dropConstraint">
 				ALTER TABLE SlatwallProduct
-				DROP <cfif application.configBean.getDbType() eq "MySQL">INDEX<cfelse>CONSTRAINT</cfif> #getConstraint.INDEX_NAME#
+				DROP <cfif getApplicationValue("databaseType") eq "MySQL">INDEX<cfelse>CONSTRAINT</cfif> #getConstraint.INDEX_NAME#
 			</cfquery>
 		</cfif>
 		<cfquery name="dropFileName">
@@ -76,7 +76,7 @@ Notes:
 
 <!--- Move displayTemplate to productDisplayTemplate for products. --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallProduct" name="local.columns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallProduct" name="local.columns" />
 	<cfquery name="getColumnInfo" dbtype="query">
 		SELECT * 
 		FROM columns
@@ -100,7 +100,7 @@ Notes:
 
 <!--- Move displayTemplate to productDisplayTemplate for productTypes. --->
 <cftry>
-	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallProductType" name="local.columns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallProductType" name="local.columns" />
 	<cfquery name="getColumnInfo" dbtype="query">
 		SELECT * 
 		FROM columns

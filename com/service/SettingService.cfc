@@ -48,6 +48,7 @@ globalEncryptionKeySize
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="measurementUnitService" type="any" />
 	<cfproperty name="paymentService" type="any" />
+	<cfproperty name="siteService" type="any" />
 	<cfproperty name="taxService" type="any" />
 	<cfproperty name="utilityORMService" type="any" />
 	<cfproperty name="locationService" type="any" />
@@ -65,6 +66,7 @@ globalEncryptionKeySize
 		variables.settingDetailsCache = {};
 		
 		variables.settingPrefixInOrder = [
+			"accountAuthentication",
 			"shippingMethodRate",
 			"fulfillmentMethod",
 			"shippingMethod",
@@ -86,7 +88,8 @@ globalEncryptionKeySize
 			productType = ["productTypeIDPath"],
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
 			email = ["emailTemplate.emailTemplateID"],
-			shippingMethodRate = ["shippingMethod.shippingMethodID"]
+			shippingMethodRate = ["shippingMethod.shippingMethodID"],
+			accountAuthentication = [ "integration.integrationID" ]
 		};
 		
 		variables.settingMetaData = {
@@ -94,6 +97,9 @@ globalEncryptionKeySize
 			accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
 			accountPaymentTerm = {fieldType="select"},
 			accountTermCreditLimit = {fieldType="text", formatType="currency"},
+			
+			// Account Authentication
+			accountAuthenticationAutoLogoutTimespan = {fieldType="text"},
 			
 			// Brand
 			brandDisplayTemplate = {fieldType="select"},
@@ -132,6 +138,7 @@ globalEncryptionKeySize
 			globalCurrencyLocale = {fieldType="select"},
 			globalCurrencyType = {fieldType="select"},
 			globalDateFormat = {fieldType="text"},
+			globalDefaultSite = {fieldType="select"},
 			globalEncryptionAlgorithm = {fieldType="select"},
 			globalEncryptionEncoding = {fieldType="select"},
 			globalEncryptionKeyLocation = {fieldType="text"},
@@ -230,6 +237,11 @@ globalEncryptionKeySize
 					return getContentService().getDisplayTemplateOptions();
 				case "productImageOptionCodeDelimiter":
 					return ['-','_'];
+				case "globalDefaultSite":
+					var optionSL = getSiteService().getSiteSmartList();
+					optionSL.addSelect('siteName', 'name');
+					optionSL.addSelect('siteID', 'value');
+					return optionSL.getRecords();
 				case "globalCurrencyLocale":
 					return ['Chinese (China)','Chinese (Hong Kong)','Chinese (Taiwan)','Dutch (Belgian)','Dutch (Standard)','English (Australian)','English (Canadian)','English (New Zealand)','English (UK)','English (US)','French (Belgian)','French (Canadian)','French (Standard)','French (Swiss)','German (Austrian)','German (Standard)','German (Swiss)','Italian (Standard)', 'Italian (Swiss)','Japanese','Korean','Norwegian (Bokmal)','Norwegian (Nynorsk)','Portuguese (Brazilian)','Portuguese (Standard)','Spanish (Mexican)','Spanish (Modern)','Spanish (Standard)','Swedish'];
 				case "globalCurrencyType":

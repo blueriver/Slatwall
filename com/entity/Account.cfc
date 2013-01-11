@@ -53,6 +53,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Related Object Properties (one-to-many)
 	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
+	property name="accountAuthentications" singularname="accountAuthentication" cfc="AccountAuthentication" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="accountContentAccesses" singularname="accountContentAccess" cfc="AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
 	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
@@ -89,9 +90,11 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="guestAccountFlag" persistent="false" formatType="yesno";
 	property name="fullName" persistent="false";
 	property name="emailAddress" persistent="false" formatType="email";
+	property name="emailAddressConfirm" persistent="false" formatType="email";
 	property name="phoneNumber" persistent="false";
 	property name="address" persistent="false";
 	property name="password" persistent="false";
+	property name="passwordConfirm" persistent="false";
 	property name="termAccountAvailableCredit" persistent="false" formattype="currency";
 	property name="termAccountBalance" persistent="false" formattype="currency";
 	property name="gravatarURL" persistent="false";
@@ -193,12 +196,44 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Primary Email Address (many-to-one | circular)
+	public void function setPrimaryEmailAddress(required any primaryEmailAddress) {    
+		variables.primaryEmailAddress = arguments.primaryEmailAddress;
+		arguments.primaryEmailAddress.setAccount( this );    
+	}
+	
+	// Primary Email Address (many-to-one | circular)
+	public void function setPrimaryPhoneNumber(required any primaryPhoneNumber) {    
+		variables.primaryPhoneNumber = arguments.primaryPhoneNumber;
+		arguments.primaryPhoneNumber.setAccount( this );    
+	}
+	
+	// Primary Email Address (many-to-one | circular)
+	public void function setPrimaryAddress(required any primaryAddress) {    
+		variables.primaryAddress = arguments.primaryAddress;
+		arguments.primaryAddress.setAccount( this );    
+	}
+	
+	// Primary Email Address (many-to-one | circular)
+	public void function setPrimaryAccountPaymentMethod(required any primaryAccountPaymentMethod) {    
+		variables.primaryAccountPaymentMethod = arguments.primaryAccountPaymentMethod;
+		arguments.primaryAccountPaymentMethod.setAccount( this );    
+	}
+	
 	// Account Addresses (one-to-many)
 	public void function addAccountAddress(required any accountAddress) {
 		arguments.accountAddress.setAccount( this );
 	}
 	public void function removeAccountAddress(required any accountAddress) {
 		arguments.accountAddress.removeAccount( this );
+	}
+	
+	// Account Authentications (one-to-many)    
+	public void function addAccountAuthentication(required any accountAuthentication) {    
+		arguments.accountAuthentication.setAccount( this );    
+	}    
+	public void function removeAccountAuthentication(required any accountAuthentication) {    
+		arguments.accountAuthentication.removeAccount( this );    
 	}
 	
 	// Account Content Accesses (one-to-many)

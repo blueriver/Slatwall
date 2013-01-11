@@ -55,8 +55,33 @@ component accessors="true" output="false" extends="BaseObject" {
 		return this;
 	}
 	
+	public boolean function getLoggedInFlag() {
+		if(!getCurrentAccount().isNew()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function getLoggedInAsAdminFlag() {
+		if(len(getCurrentAccount().getAllPermissions())) {
+			return true;
+		}
+		return false;
+	}
+	
 	public any function getCurrentAccount() {
 		return getCurrentSession().getAccount();
+	}
+	
+	public any function getCurrentCart() {
+		return getCurrentSession().getOrder();
+	}
+	
+	public any function getCurrentSite() {
+		if(!structKeyExists(variables, "currentSite")) {
+			variables.currentSite = getService("siteService").getSite( setting('globalDefaultSite') );
+		}
+		return variables.currentSite;
 	}
 	
 	public any function getCurrentBrand() {
@@ -64,17 +89,6 @@ component accessors="true" output="false" extends="BaseObject" {
 			variables.currentBrand = getService("brandService").newBrand();
 		}
 		return variables.currentBrand;
-	}
-	
-	public any function getCurrentCart() {
-		if(!structKeyExists(variables, "currentCart")) {
-			if(!isNull(getCurrentSession().getOrder())) {
-				variables.currentCart = getCurrentSession().getOrder();
-			} else {
-				variables.currentCart = getService("orderService").newOrder();	
-			}
-		}
-		return variables.currentCart;
 	}
 	
 	public any function getCurrentContent() {

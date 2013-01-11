@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,24 +36,22 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
-	
-	<cffunction name="getInternalAccountAuthenticationsByEmailAddress" returntype="any" access="public">
-		<cfargument name="emailAddress" required="true" type="string" />
+<cfparam name="rc.site" type="any" />
+<cfparam name="rc.edit" type="boolean" />
+
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.site#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.site#" edit="#rc.edit#"></cf_SlatwallActionBar>
 		
-		<cfreturn ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aa.password is not null AND aa.integration.integrationID is null AND aea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress}) />
-	</cffunction>
-	
-	<cffunction name="getAccountAuthenticationExists" returntype="any" access="public">
-		<cfset var aaCount = ormExecuteQuery("SELECT count(aa.accountAuthenticationID) FROM SlatwallAccountAuthentication aa") />
-		<cfreturn aaCount[1] gt 0 />
-	</cffunction>
-	
-	<cffunction name="removeAccountFromAllSessions" returntype="void" access="public">
-		<cfargument name="accountID" required="true"  />
-		<cfset var rs = "" />
-		<cfquery name="rs">
-			UPDATE SlatwallSession SET accountID = null, accountAuthenticationID = null WHERE accountID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.accountID#" />
-		</cfquery>
-	</cffunction>
-</cfcomponent>
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.site#" property="siteName" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.site#">
+			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
+</cfoutput>

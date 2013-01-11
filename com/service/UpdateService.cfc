@@ -92,7 +92,7 @@ Notes:
 				<cftry>
 					<!--- if it's a database script look for db specific file --->
 					<cfif findNoCase("database/",script.getScriptPath())>
-						<cfset var dbSpecificFileName = replaceNoCase(script.getScriptPath(),".cfm",".#getDBType()#.cfm") />
+						<cfset var dbSpecificFileName = replaceNoCase(script.getScriptPath(),".cfm",".#getApplicationValue("databaseType")#.cfm") />
 						<cfif fileExists("#getSlatwallRootDirectory()#/config/scripts/#dbSpecificFileName#")>
 							<cfinclude template="#getSlatwallRootPath()#/config/scripts/#dbSpecificFileName#" />
 						<cfelseif fileExists("#getSlatwallRootDirectory()#/config/scripts/#script.getScriptPath()#")>

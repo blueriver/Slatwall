@@ -38,27 +38,8 @@ Notes:
 */
 component extends="org.fw1.framework" output="false" {
 
-	// Setup Framwork Configuration
-	variables.framework=structNew();
-	variables.framework.applicationKey="SlatwallFW1";
-	variables.framework.base="/Slatwall";
-	variables.framework.action="slatAction";
-	variables.framework.error="admin:main.error";
-	variables.framework.home="admin:main.default";
-	variables.framework.defaultSection="main";
-	variables.framework.defaultItem="default";
-	variables.framework.usingsubsystems=true;
-	variables.framework.defaultSubsystem = "admin";
-	variables.framework.subsystemdelimiter=":";
-	variables.framework.generateSES = false;
-	variables.framework.SESOmitIndex = true;
-	variables.framework.reload = "reload";
-	
-	include "../../config/applicationSettings.cfm";
-	include "../../config/mappings.cfm";
-	include "../mappings.cfm";
-	
-	/*
+	// ============================================================================== START OF REQUIRED APPLICATION SETTINGS
+
 	// If we are installed inside of mura, then use the core application settings, otherwise use standalone settings
 	if( fileExists(expandPath("../../config/applicationSettings.cfm")) ) {
 		
@@ -70,13 +51,20 @@ component extends="org.fw1.framework" output="false" {
 	} else {
 		
 		this.name = "slatwall" & hash(getCurrentTemplatePath());
+		this.sessionManagement = true;
+		this.ormenabled = true;
+		
+		this.datasource = {};
+		this.datasource.name = "Slatwall";
 		
 		this.mappings[ "/Slatwall" ] = getDirectoryFromPath(getCurrentTemplatePath());
 		this.mappings[ "/coldspring" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/coldspring";
 		this.mappings[ "/ValidateThis" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/ValidateThis";
 		
-		this.ormenabled = true;
-		this.datasource = "slatwall";
+		if(!structKeyExists(this, "customtagpaths")) {
+			this.customtagpaths = "";
+		}
+		this.customtagpaths = listAppend(this.customtagpaths, expandPath("/Slatwall/tags"));
 		
 		this.ormsettings = {};
 		this.ormsettings.cfclocation = ["com/entity"];
@@ -91,9 +79,27 @@ component extends="org.fw1.framework" output="false" {
 		this.ormSettings.logsql = false;
 		
 	}
-	*/
 	
 	this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
+	
+	// Setup Framwork Configuration
+	variables.framework=structNew();
+	variables.framework.applicationKey="SlatwallFW1";
+	variables.framework.base="/Slatwall";
+	variables.framework.baseURL = replace(replace( getDirectoryFromPath(getCurrentTemplatePath()) , expandPath('/'), '/' ), '\', '/', 'all');
+	variables.framework.action="slatAction";
+	variables.framework.error="admin:main.error";
+	variables.framework.home="admin:main.default";
+	variables.framework.defaultSection="main";
+	variables.framework.defaultItem="default";
+	variables.framework.usingsubsystems=true;
+	variables.framework.defaultSubsystem = "admin";
+	variables.framework.subsystemdelimiter=":";
+	variables.framework.generateSES = true;
+	variables.framework.SESOmitIndex = true;
+	variables.framework.reload = "reload";
+	
+	// ============================================================================== END OF REQUIRED APPLICATION SETTINGS
 	
 	public void function verifyApplicationSetup() {
 		
@@ -117,7 +123,6 @@ component extends="org.fw1.framework" output="false" {
 					writeLog(file="Slatwall", text="General Log - Application Setup Started");	
 					request.slatwallScope.setApplicationValue("initialized", false);
 					
-					
 					// =================== Required Application Setup ===================
 					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
 					if(!structKeyExists(application, "slatwallFW1")) {
@@ -132,7 +137,6 @@ component extends="org.fw1.framework" output="false" {
 						writeLog(file="Slatwall", text="General Log - Taffy application valirable removed so that it reloads");
 					}
 					// ================ END: Required Application Setup ==================
-					
 					
 					// ========================= Coldspring Setup =========================
 					// Get Coldspring Config
@@ -154,6 +158,7 @@ component extends="org.fw1.framework" output="false" {
 					
 					// Now place the service factory as the fw1 bean
 					setBeanFactory( serviceFactory );
+					
 					writeLog(file="Slatwall", text="General Log - Coldspring Setup Confirmed");
 					//========================= END: Coldsping Setup =========================
 					
@@ -169,15 +174,29 @@ component extends="org.fw1.framework" output="false" {
 					}
 					writeLog(file="Slatwall", text="General Log - Application Value 'version' setup as #request.slatwallScope.getApplicationValue('version')#");
 					
+					// Slatwall Root URL
+					request.slatwallScope.setApplicationValue("slatwallRootURL", variables.framework.baseURL);
+					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallRootURL' setup as #request.slatwallScope.getApplicationValue("slatwallRootURL")#");
+					
+					// Set Datasource
+					request.slatwallScope.setApplicationValue("datasource", this.datasource.name);
+					writeLog(file="Slatwall", text="General Log - Application Value 'datasource' setup as #request.slatwallScope.getApplicationValue("datasource")#");
+					
+					// SET Database Type
+					var dbVersion = new dbinfo(datasource=this.datasource.name).version()["DATABASE_PRODUCTNAME"];
+					if(FindNoCase("MySQL", dbVersion)) {
+						this.ormSettings.dialect = "MySQL";
+					} else if (FindNoCase("Microsoft", dbVersion)) {
+						this.ormSettings.dialect = "MicrosoftSQLServer";
+					}
+					request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
+					writeLog(file="Slatwall", text="General Log - Application Value 'databaseType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
+					
 					// VFS
 					request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
 					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallVfsRoot' setup as: #this.mappings[ "/slatwallVfsRoot" ]#");
 					
-					// BASE URL
-					variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
-					writeLog(file="Slatwall", text="General Log - FW1 baseURL set to #variables.framework.baseURL#");
 					// ======================== END: Enviornment Setup ========================
-					
 					
 					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
 					if(!fileExists(expandPath('/Slatwall/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, "update") && url.update)){
@@ -197,9 +216,9 @@ component extends="org.fw1.framework" output="false" {
 						writeLog(file="Slatwall", text="General Log - Integrations have been updated");
 						
 						// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
-						var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
-						muraIntegrationService.setupIntegration();
-						writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
+						//var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
+						//muraIntegrationService.setupIntegration();
+						//writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
 						
 						// Setup Default Data... Not called on soft reloads.
 						getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
@@ -209,8 +228,8 @@ component extends="org.fw1.framework" output="false" {
 						getBeanFactory().getBean("sessionService").setPropperSession();
 						
 						// Super Users
-						getBeanFactory().getBean("permissionService").setupDefaultPermissions();
-						writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
+						//getBeanFactory().getBean("permissionService").setupDefaultPermissions();
+						//writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
 						
 						// Clear the setting cache so that it can be reloaded
 						getBeanFactory().getBean("settingService").clearAllSettingsQuery();
@@ -243,8 +262,11 @@ component extends="org.fw1.framework" output="false" {
 	}
 
 	public void function setupRequest() {
+		
+		
 		// Call the setup of the global Request
 		setupGlobalRequest();
+		
 		
 		// Setup structured Data if a request context exists meaning that a full action was called
 		var structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
@@ -349,9 +371,9 @@ component extends="org.fw1.framework" output="false" {
 			arguments.queryString = "&#arguments.queryString#";
 		}
 		if(findNoCase(":", arguments.action)) {
-			return "#application.configBean.getContext()#/plugins/Slatwall/?slatAction=#arguments.action##arguments.queryString#";	
+			return "#variables.framework.baseURL#?slatAction=#arguments.action##arguments.queryString#";	
 		}
-		return "#application.configBean.getContext()#/plugins/Slatwall/?slatAction=admin:#arguments.action##arguments.queryString#";
+		return "#variables.framework.baseURL#?slatAction=admin:#arguments.action##arguments.queryString#";
 	}
 	
 	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle

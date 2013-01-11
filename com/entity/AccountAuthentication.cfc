@@ -36,14 +36,21 @@
 Notes:
 
 */
-component displayname="Site" entityname="SlatwallSite" table="SlatwallSite" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Account Authentication" entityname="SlatwallAccountAuthentication" table="SlatwallAccountAuthentication" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="siteID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="siteName" ormtype="string";
-	
-	
+	property name="accountAuthenticationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="password" ormtype="string";
+	property name="integrationAccountID" ormtype="string";
+	/*
+	property name="integrationAccessToken" ormtype="string";
+	property name="integrationAccessTokenExpiration" ormtype="string";
+	property name="integrationRefreshToken" ormtype="string";
+	*/
+
 	// Related Object Properties (many-to-one)
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="integration" cfc="Integration" fieldtype="many-to-one" fkcolumn="integrationID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -70,6 +77,24 @@ component displayname="Site" entityname="SlatwallSite" table="SlatwallSite" pers
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account (many-to-one)    
+	public void function setAccount(required any account) {    
+		variables.account = arguments.account;    
+		if(isNew() or !arguments.account.hasAccountAuthentication( this )) {    
+			arrayAppend(arguments.account.getAccountAuthentications(), this);    
+		}    
+	}    
+	public void function removeAccount(any account) {    
+		if(!structKeyExists(arguments, "account")) {    
+			arguments.account = variables.account;    
+		}    
+		var index = arrayFind(arguments.account.getAccountAuthentications(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getAccountAuthentications(), index);    
+		}    
+		structDelete(variables, "account");    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

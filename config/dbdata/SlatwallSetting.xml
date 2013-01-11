@@ -21,6 +21,7 @@
 			
 		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="globalCurrencyLocale" settingValue="English (US)" />
 		<Record settingID="dbb327b0b5496521002aa35ab68ab120" settingName="globalCurrencyType" settingValue="Local" />
+		<Record settingID="dbb32802d0afe98f27c73469f742355e" settingName="globalDefaultSite" settingValue="85aa4e16acdd4f665aabcd0ec826d07c" />
 		<Record settingID="dbb327abbbe32d31cc7c2b8e1e4c0c4c" settingName="globalDateFormat" settingValue="mmm dd, yyyy" />
 		<Record settingID="dbb327d09e27ea5cd8cf8a7772f7af27" settingName="globalEncryptionAlgorithm" settingValue="AES" />
 		<Record settingID="dbb327d1de2f05f1483ca1805e4e5c3f" settingName="globalEncryptionEncoding" settingValue="Base64" />
@@ -92,7 +93,7 @@
 Below Are UUID's to use... delete after using
 
 	
-	dbb32802d0afe98f27c73469f742355e
+	
 	dbb32803f69d7e560900faa65ffa53ec
 	dbb32804977b1824636aa1e075e7b690
 	dbb32805d4bb4e6e86c6df25b91a6c17

@@ -41,6 +41,10 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	
 	// ===================== START: Logical Methods ===========================
 	
+	public any function getCurrentRequestSite() {
+		
+	}
+	
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================

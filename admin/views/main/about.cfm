@@ -45,8 +45,8 @@ Notes:
 	<textarea name="debugDetails" style="width:100%; height:500px;">
 Operating System:	#server.os.name#
 CFML Server:		#server.coldfusion.productName#: <cfif structKeyExists(server,"railo")>#server.railo.version#<cfelse>#server.coldfusion.productVersion#</cfif>
-DB Dialect: 		#application.configBean.getDBType()#
-Slatwall Version:	#rc.$.slatwall.getApplicationValue('version')#
+DB Dialect: 		#$.slatwall.getApplicationValue('databaseType')#
+Slatwall Version:	#$.slatwall.getApplicationValue('version')#
 Current User Perm:	#$.slatwall.getCurrentAccount().getAllPermissions()#
 	</textarea>
 </div>

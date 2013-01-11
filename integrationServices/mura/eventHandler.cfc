@@ -1,5 +1,86 @@
 component extends="mura.plugin.pluginGenericEventHandler" {
 
+// Plugin Install Settings
+	// Account Sync Type 														['none'|'all'|'admin only'|'public only']
+	// Login to Mura when you Login to Slatwall (if mura exists)				[yes|no]														
+	// Login to Slatwall when you Login to Mura (if slatwall exists) 			[yes|no]														
+	// Add Mura Super Users with Slatwall Account to Slatwall Super User Group	[yes|no]												
+	
+// Integration Settings
+	// integrationMuraAccountSyncType						
+	// integrationMuraAutoLoginToSlatwall					
+	// integrationMuraAutoLoginToMura						
+
+// Install
+	// Call the first Slatwall Request
+	// Move Settings From Plugin-Install into Integration
+	// Enable FW/1 Integration
+	// Enable Authentication Integration
+	// Enable Content Integration
+
+	
+// MURA EVENTS
+	// onApplicationLoad
+		// Loop over all sites that this plugin is installed for, and make sure that there is a siteID on both sides
+		// Loop over all content of all sites, and make sure that they are synced
+		// Loop over all categories of all sites, and make sure that they are synced
+		// Loop over all accounts of all sites, and make sure that they are synced - based on the sync settings "integrationMuraAccountSyncType"
+		
+	// onSiteRequest
+		// Run anything in "slatAction"
+		// Look for productType hook
+		// Look for product hook
+		// Look for brand hook
+
+	// onLogin
+	
+	// onLogout
+	
+	// onCreateAccount
+	
+	// onUpdateAccount
+	
+	// onDeleteAccount
+	
+	// onCreateCategory
+	
+	// onUpdateCategory
+	
+	// onDeleteCategory
+	
+	// onCreateContent
+	
+	// onUpdateContent
+	
+	// onContentDelete
+	
+	// onSiteRequest
+			
+			
+// SLATWALL EVENTS
+	// onLogin
+	
+	// onLogout
+	
+	// onCreateAccount
+	
+	// onUpdateAccount
+	
+	// onDeleteAccount
+	
+	// onCreateCategory
+	
+	// onUpdateCategory
+	
+	// onDeleteCategory
+	
+	// onCreateContent
+	
+	// onUpdateContent
+	
+	// onDeleteContent
+	
+				
 	// On Application Load, we can clear the slatwall application key and register all of the methods in this eventHandler with the config
 	public void function onApplicationLoad() {
 		
