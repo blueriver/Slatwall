@@ -45,6 +45,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Object Properties (Many-To-One)
+	property name="billToLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
 	property name="vendorOrderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderStatusTypeID";
