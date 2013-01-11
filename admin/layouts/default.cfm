@@ -161,11 +161,22 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
 							</cfif>
 						</cf_SlatwallActionCallerDropdown>
+						
 					</ul>
 					<cfif $.slatwall.getLoggedInAsAdminFlag()>
-						<form name="search" class="navbar-search pull-right" action="/" onSubmit="return false;">
-							<input id="global-search" type="text" name="serach" class="search-query span2" placeholder="Search">
-						</form>
+						<div class="pull-right">
+							<ul class="nav">
+								<cf_SlatwallActionCallerDropdown title="" icon="user icon-white" dropdownclass="pull-right" type="nav">
+									<cf_SlatwallActionCaller action="admin:account.detailaccount" querystring="accountID=#$.slatwall.account('accountID')#" type="list">
+									<cf_SlatwallActionCaller action="admin:main.logout" type="list">
+								</cf_SlatwallActionCallerDropdown>
+								<li class="divider-vertical"></li>
+							</ul>
+							<form name="search" class="navbar-search" action="/" onSubmit="return false;">
+								<input id="global-search" type="text" name="serach" class="search-query span2" placeholder="Search">
+							</form>
+							
+						</div>
 					</cfif>
 				</div>
 			</div>
