@@ -155,12 +155,6 @@ component extends="org.fw1.framework" output="false" {
 					writeLog(file="Slatwall", text="General Log - Application Value 'datasource' setup as #request.slatwallScope.getApplicationValue("datasource")#");
 					
 					// SET Database Type
-					var dbVersion = new dbinfo(datasource=this.datasource.name).version()["DATABASE_PRODUCTNAME"];
-					if(FindNoCase("MySQL", dbVersion)) {
-						this.ormSettings.dialect = "MySQL";
-					} else if (FindNoCase("Microsoft", dbVersion)) {
-						this.ormSettings.dialect = "MicrosoftSQLServer";
-					}
 					request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
 					writeLog(file="Slatwall", text="General Log - Application Value 'databaseType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
 					

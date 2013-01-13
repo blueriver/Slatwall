@@ -1,1 +1,1 @@
-<cfset this.customtagpaths = expandPath("/Slatwall/tags") />
+<cfset this.customtagpaths = this.mappings[ "/Slatwall" ] & "tags/" />
