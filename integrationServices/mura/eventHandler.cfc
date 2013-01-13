@@ -2,9 +2,10 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 
 // Plugin Install Settings
 	// Account Sync Type 														['none'|'all'|'admin only'|'public only']
-	// Login to Mura when you Login to Slatwall (if mura exists)				[yes|no]														
-	// Login to Slatwall when you Login to Mura (if slatwall exists) 			[yes|no]														
-	// Add Mura Super Users with Slatwall Account to Slatwall Super User Group	[yes|no]												
+	// Login to Mura when you Login to Slatwall (if mura exists)				[yes|no]								
+	// Login to Slatwall when you Login to Mura (if slatwall exists) 			[yes|no]								
+	// Add Mura Super Users with Slatwall Account to Slatwall Super User Group	[yes|no]								
+	// Would you like to automatically create the default pages, and copy over slatwall template files [yes|no]			
 	
 // Integration Settings
 	// integrationMuraAccountSyncType						
