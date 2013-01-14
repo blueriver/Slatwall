@@ -2,9 +2,8 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 
 // Plugin Install Settings
 	// Account Sync Type 														['none'|'all'|'admin only'|'public only']
-	// Login to Mura when you Login to Slatwall (if mura exists)				[yes|no]														
-	// Login to Slatwall when you Login to Mura (if slatwall exists) 			[yes|no]														
-	// Add Mura Super Users with Slatwall Account to Slatwall Super User Group	[yes|no]												
+	// Add Mura Super Users with Slatwall Account to Slatwall Super User Group	[yes|no]								
+	// Would you like to automatically create the default pages, and copy over slatwall template files [yes|no]			
 	
 // Integration Settings
 	// integrationMuraAccountSyncType						
@@ -82,13 +81,16 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 				
 	// On Application Load, we can clear the slatwall application key and register all of the methods in this eventHandler with the config
-	public void function onApplicationLoad() {
+	public void function onApplicationLoad(required any pluginConfig) {
 		
 		// Set this object as an event handler
 		variables.pluginConfig.addEventHandler(this);
 		
 		// Setup slatwall as not initialized so that it loads on next request
-		application.slatwall.initialized = false;
+		lock timeout="10" name="application_slatwall_initialized" type="exclusive" {
+			application.slatwall.initialized = false;	
+		}
+		
 		
 	}
 	

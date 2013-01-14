@@ -42,7 +42,14 @@ Notes:
 <cfoutput>
 	<div style="width:100%;">
 		<cfif rc.accountAuthenticationExists>
-			<div class="well" style="width:400px;margin: 0px auto;">
+			<div class="well tabable" style="width:400px;margin: 0px auto;">
+				<ul class="">
+					
+				</ul>
+				<ul>
+					
+				</ul>
+					
 				<h3>Login</h3>
 				<br />
 				<cf_SlatwallErrorDisplay object="#$.slatwall.getCurrentSession()#" />

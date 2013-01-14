@@ -39,65 +39,37 @@ Notes:
 component extends="org.fw1.framework" output="false" {
 
 	// ============================================================================== START OF REQUIRED APPLICATION SETTINGS
-
+	include "config/configApplication.cfm";
+	if( fileExists(expandPath("config/custom/configApplication.cfm")) ) {
+		include "config/custom/configApplication.cfm";
+	}
+	include "config/configMappings.cfm";
+	if( fileExists(expandPath("config/custom/configMappings.cfm")) ) {
+		include "config/custom/configMappings.cfm";
+	}
+	include "config/configCustomTags.cfm";
+	if( fileExists(expandPath("config/custom/configCustomTags.cfm")) ) {
+		include "config/custom/configCustomTags.cfm";
+	}
+	include "config/configORM.cfm";
+	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
+		include "config/custom/configORM.cfm";
+	}
+	include "config/configFW1.cfm";
+	if( fileExists(expandPath("config/custom/configFW1.cfm")) ) {
+		include "config/custom/configFW1.cfm";
+	}
+	
+	/*
 	// If we are installed inside of mura, then use the core application settings, otherwise use standalone settings
 	if( fileExists(expandPath("../../config/applicationSettings.cfm")) ) {
-		
 		include "../../config/applicationSettings.cfm";
 		include "../../config/mappings.cfm";
 		include "../mappings.cfm";
-	
 	// Default Standalone settings
 	} else {
-		
-		this.name = "slatwall" & hash(getCurrentTemplatePath());
-		this.sessionManagement = true;
-		this.ormenabled = true;
-		
-		this.datasource = {};
-		this.datasource.name = "Slatwall";
-		
-		this.mappings[ "/Slatwall" ] = getDirectoryFromPath(getCurrentTemplatePath());
-		this.mappings[ "/coldspring" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/coldspring";
-		this.mappings[ "/ValidateThis" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "org/ValidateThis";
-		
-		if(!structKeyExists(this, "customtagpaths")) {
-			this.customtagpaths = "";
-		}
-		this.customtagpaths = listAppend(this.customtagpaths, expandPath("/Slatwall/tags"));
-		
-		this.ormsettings = {};
-		this.ormsettings.cfclocation = ["com/entity"];
-		this.ormSettings.dbcreate = "update";
-		this.ormSettings.flushAtRequestEnd = false;
-		this.ormsettings.eventhandling = true;
-		this.ormSettings.automanageSession = false;
-		this.ormSettings.savemapping = false;
-		this.ormSettings.skipCFCwitherror = false;
-		this.ormSettings.useDBforMapping = true;
-		this.ormSettings.autogenmap = true;
-		this.ormSettings.logsql = false;
-		
 	}
-	
-	this.mappings[ "/slatwallVfsRoot" ] = "ram:///" & this.name;
-	
-	// Setup Framwork Configuration
-	variables.framework=structNew();
-	variables.framework.applicationKey="SlatwallFW1";
-	variables.framework.base="/Slatwall";
-	variables.framework.baseURL = replace(replace( getDirectoryFromPath(getCurrentTemplatePath()) , expandPath('/'), '/' ), '\', '/', 'all');
-	variables.framework.action="slatAction";
-	variables.framework.error="admin:main.error";
-	variables.framework.home="admin:main.default";
-	variables.framework.defaultSection="main";
-	variables.framework.defaultItem="default";
-	variables.framework.usingsubsystems=true;
-	variables.framework.defaultSubsystem = "admin";
-	variables.framework.subsystemdelimiter=":";
-	variables.framework.generateSES = true;
-	variables.framework.SESOmitIndex = true;
-	variables.framework.reload = "reload";
+	*/
 	
 	// ============================================================================== END OF REQUIRED APPLICATION SETTINGS
 	
@@ -111,7 +83,7 @@ component extends="org.fw1.framework" output="false" {
 		if(!request.slatwallScope.hasApplicationValue("initialized") || !request.slatwallScope.getApplicationValue("initialized")) {
 			
 			// If not, lock the application until this is finished
-			lock scope="Application" timeout="60"  {
+			lock name="application_slatwall" timeout="240"  {
 				
 				// Check again so that the qued requests don't back up
 				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
@@ -183,12 +155,6 @@ component extends="org.fw1.framework" output="false" {
 					writeLog(file="Slatwall", text="General Log - Application Value 'datasource' setup as #request.slatwallScope.getApplicationValue("datasource")#");
 					
 					// SET Database Type
-					var dbVersion = new dbinfo(datasource=this.datasource.name).version()["DATABASE_PRODUCTNAME"];
-					if(FindNoCase("MySQL", dbVersion)) {
-						this.ormSettings.dialect = "MySQL";
-					} else if (FindNoCase("Microsoft", dbVersion)) {
-						this.ormSettings.dialect = "MicrosoftSQLServer";
-					}
 					request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
 					writeLog(file="Slatwall", text="General Log - Application Value 'databaseType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
 					
