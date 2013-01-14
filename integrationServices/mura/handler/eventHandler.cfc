@@ -79,7 +79,17 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	
 	// onDeleteContent
 	
-				
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
 	public void function onSiteRequestStart(required any $) {
 		
 		// Call the Slatwall Event Handler that gets the request setup
@@ -468,5 +478,6 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 			$.slatwall.getService("contentService").saveContent(slatwallContent);
 		}
 	}
+	*/
 }
 
