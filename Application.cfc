@@ -43,6 +43,10 @@ component extends="org.fw1.framework" output="false" {
 	if( fileExists(expandPath("config/custom/configApplication.cfm")) ) {
 		include "config/custom/configApplication.cfm";
 	}
+	include "config/configFW1.cfm";
+	if( fileExists(expandPath("config/custom/configFW1.cfm")) ) {
+		include "config/custom/configFW1.cfm";
+	}
 	include "config/configMappings.cfm";
 	if( fileExists(expandPath("config/custom/configMappings.cfm")) ) {
 		include "config/custom/configMappings.cfm";
@@ -54,10 +58,6 @@ component extends="org.fw1.framework" output="false" {
 	include "config/configORM.cfm";
 	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
 		include "config/custom/configORM.cfm";
-	}
-	include "config/configFW1.cfm";
-	if( fileExists(expandPath("config/custom/configFW1.cfm")) ) {
-		include "config/custom/configFW1.cfm";
 	}
 	
 	// ============================================================================== END OF REQUIRED APPLICATION SETTINGS

@@ -1,6 +1,6 @@
 <cfset this.ormenabled = true />
 <cfset this.ormsettings = {} />
-<cfset this.ormsettings.cfclocation = ["/com/entity"] />
+<cfset this.ormsettings.cfclocation = [ variables.framework.baseURL & "com/entity" ] />
 <cfset this.ormSettings.dbcreate = "update" />
 <cfset this.ormSettings.flushAtRequestEnd = false />
 <cfset this.ormsettings.eventhandling = true />
