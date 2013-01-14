@@ -36,7 +36,7 @@
 Notes: 
 	
 */
-component extends="org.fw1.framework" output="false" {
+component extends="org.Hibachi.Hibachi" output="false" {
 
 	// ============================================================================== START OF REQUIRED APPLICATION SETTINGS
 	include "config/configApplication.cfm";
@@ -59,6 +59,11 @@ component extends="org.fw1.framework" output="false" {
 	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
 		include "config/custom/configORM.cfm";
 	}
+	
+	variables.framework.routes = [
+		{ "$GET/api/:entityName/:entityID" = "/admin:api/get/entityName/:entityName/entityID/:entityID"},
+		{ "$GET/api/:entityName/" = "/admin:api/post/entityName/:entityName/"}
+	];
 	
 	// ============================================================================== END OF REQUIRED APPLICATION SETTINGS
 	public void function verifyApplicationSetup() {
@@ -467,5 +472,8 @@ component extends="org.fw1.framework" output="false" {
 		return response;
 	}
 	
+	public any function getEntityServiceByEntityName() {
+		return getBeanFactory().getBean("productService");
+	} 
 	
 }
