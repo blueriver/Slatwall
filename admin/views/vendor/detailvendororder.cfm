@@ -51,6 +51,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="#rc.vendorOrder.isNew()#">
 				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="#rc.vendorOrder.isNew()#">
 				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="estimatedReceivalDateTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="billToLocation" edit="#rc.edit#">
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		

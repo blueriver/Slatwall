@@ -872,7 +872,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 			}
 			
-		// CONTEXT: createReturn
+		// CONTEXT: placeOnHold
 		} else if (arguments.processContext == "placeOnHold") {
 		
 			arguments.order.setOrderStatusType( getTypeService().getTypeBySystemCode("ostOnHold") );
