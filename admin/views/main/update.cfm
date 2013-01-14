@@ -50,8 +50,6 @@ Notes:
 </cfif>
 
 <cfoutput>
-	
-	
 	<cf_SlatwallActionBar type="none"></cf_SlatwallActionBar>
 	
 	<cf_SlatwallPropertyList divClass="span12">
@@ -67,12 +65,13 @@ Notes:
 		<form method="post">
 			<input type="hidden" name="slatAction" value="admin:main.update" />
 			<input type="hidden" name="process" value="1" />
-			
-			<select name="updateBranch">
+			<input type="radio" name="branchType" value="custom" /> <input type="text" name="customBranch" value="" placeholder="Custom Branch (ex: feature-newadmin)" /><br />
+			<input type="radio" name="branchType" value="standard" checked="checked" /> <select name="updateBranch">
 				<cfloop array="#local.updateOptions#" index="local.updateOption" >
 					<option value="#local.updateOption.value#" <cfif rc.currentBranch eq local.updateOption.value>selected="selected"</cfif>>#local.updateOption.name#</option>
 				</cfloop>
 			</select><br />
+			
 			<button class="btn adminmainupdate btn-primary" title="#$.slatwall.rbKey('admin.main.update_title')#" type="submit">#$.slatwall.rbKey('admin.main.update_title')#</button>
 		</form>
 	</cf_SlatwallPropertyList>

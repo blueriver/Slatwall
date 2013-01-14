@@ -122,10 +122,17 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function update(required struct rc) {
 		param name="rc.process" default="0";
+		param name="rc.branchType" default="standard";
 		
 		if(rc.process) {
 			logSlatwall("Update Called", true);
-			getUpdateService().update(branch=rc.updateBranch);
+			
+			if(rc.branchType eq "standard") {
+				getUpdateService().update(branch=rc.updateBranch);	
+			} else if (rc.branchType eq "custom") {
+				getUpdateService().update(branch=rc.customBranch);
+			}
+			
 			logSlatwall("Update Finished, Now Calling Reload", true);
 			getFW().redirect(action="admin:main.update", queryString="reload=1&messageKeys=admin.main.update_success");
 		}

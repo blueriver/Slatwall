@@ -46,9 +46,7 @@ Notes:
 		<cfsetting requesttimeout="600" />
 		
 		<cftry>
-			<cfset var downloadURL = {} />
-			<cfset downloadURL["master"] = "https://github.com/ten24/Slatwall/zipball/master" />	
-			<cfset downloadURL["develop"] = "https://github.com/ten24/Slatwall/zipball/develop" />
+			<cfset var downloadURL = "https://github.com/ten24/Slatwall/zipball/#arguments.branch#" />	
 			<cfset var slatwallRootPath = getSlatwallRootDirectory() />
 			<cfset var downloadFileName = "slatwall.zip" />
 			<cfset var deleteDestinationContentExclusionList = "/integrationServices,/config/custom" />
@@ -58,7 +56,7 @@ Notes:
 			<cfzip action="zip" file="#getTempDirectory()#slatwall_bak.zip" source="#slatwallRootPath#" recurse="yes" overwrite="yes" />
 			
 			<!--- start download --->
-			<cfhttp url="#downloadURL[arguments.branch]#" method="get" path="#getTempDirectory()#" file="#downloadFileName#" />
+			<cfhttp url="#downloadURL#" method="get" path="#getTempDirectory()#" file="#downloadFileName#" />
 			
 			<!--- now read and unzip the downloaded file --->
 			<cfset var dirList = "" />
