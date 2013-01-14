@@ -216,11 +216,8 @@ component extends="org.fw1.framework" output="false" {
 	}
 
 	public void function setupRequest() {
-		
-		
 		// Call the setup of the global Request
 		setupGlobalRequest();
-		
 		
 		// Setup structured Data if a request context exists meaning that a full action was called
 		var structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
