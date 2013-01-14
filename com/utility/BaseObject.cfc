@@ -1112,7 +1112,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	public void function setApplicationValue(required any key, required any value) {
 		param name="application.slatwall" default="#structNew()#";
 		
-		lock scope="application" timeout="60" {
+		lock name="application_slatwall_#arguments.key#" timeout="5" {
 			application.slatwall[ arguments.key ] = arguments.value;	
 		}
 	}

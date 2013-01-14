@@ -83,7 +83,7 @@ component extends="org.fw1.framework" output="false" {
 		if(!request.slatwallScope.hasApplicationValue("initialized") || !request.slatwallScope.getApplicationValue("initialized")) {
 			
 			// If not, lock the application until this is finished
-			lock scope="Application" timeout="60"  {
+			lock name="application_slatwall" timeout="240"  {
 				
 				// Check again so that the qued requests don't back up
 				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
