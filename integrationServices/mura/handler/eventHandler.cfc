@@ -80,20 +80,6 @@ component extends="mura.plugin.pluginGenericEventHandler" {
 	// onDeleteContent
 	
 				
-	// On Application Load, we can clear the slatwall application key and register all of the methods in this eventHandler with the config
-	public void function onApplicationLoad(required any pluginConfig) {
-		
-		// Set this object as an event handler
-		variables.pluginConfig.addEventHandler(this);
-		
-		// Setup slatwall as not initialized so that it loads on next request
-		lock timeout="10" name="application_slatwall_initialized" type="exclusive" {
-			application.slatwall.initialized = false;	
-		}
-		
-		
-	}
-	
 	public void function onSiteRequestStart(required any $) {
 		
 		// Call the Slatwall Event Handler that gets the request setup
