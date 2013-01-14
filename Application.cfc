@@ -60,19 +60,7 @@ component extends="org.fw1.framework" output="false" {
 		include "config/custom/configFW1.cfm";
 	}
 	
-	/*
-	// If we are installed inside of mura, then use the core application settings, otherwise use standalone settings
-	if( fileExists(expandPath("../../config/applicationSettings.cfm")) ) {
-		include "../../config/applicationSettings.cfm";
-		include "../../config/mappings.cfm";
-		include "../mappings.cfm";
-	// Default Standalone settings
-	} else {
-	}
-	*/
-	
 	// ============================================================================== END OF REQUIRED APPLICATION SETTINGS
-	
 	public void function verifyApplicationSetup() {
 		
 		if(structKeyExists(url, variables.framework.reload)) {
