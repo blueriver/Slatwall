@@ -1,3 +1,3 @@
-component extends="Hibachi.HibachiRESTController" {
+component extends="Hibachi.HibachiControllerREST" {
 	
 }
