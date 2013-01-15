@@ -1,4 +1,4 @@
-<cfcomponent extends="Slatwall.com.utility.BaseObject" output="false">
+<cfcomponent extends="Hibachi.HibachiObject" output="false">
 	
 	<cffunction name="syncPush" access="public" returntype="Any" >
 		

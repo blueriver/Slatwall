@@ -1,4 +1,4 @@
-<cfcomponent output="false" extends="Slatwall.com.utility.BaseObject">
+<cfcomponent output="false" extends="Hibachi.HibachiObject">
 	
 	<cffunction name="updateProducts">
 		
