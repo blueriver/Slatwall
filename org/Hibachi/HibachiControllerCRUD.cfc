@@ -1,9 +1,14 @@
 component accessors="true" {
 	
 	property name="fw" type="any";
+	property name="hibachiService" type="any";
 	
 	public void function init( required any fw ) {
 		setFW(arguments.fw);
+	}
+	
+	public void function before( required any fw ) {
+		
 	}
 	
 	// Implicit onMissingMethod() to handle standard CRUD
@@ -25,30 +30,31 @@ component accessors="true" {
 				genericProcessMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "export" ) {
 				genericExportMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
-			}	
+			}
 		}
 	}
 	
 	public void function genericListMethod(required string entityName, required struct rc) {
+		// Verify List Permission
 		
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
-		
-		/*
-		Commenting back out because this now works, but we need to have display in the admin to show that filter(s) have been applied
-		if(getSessionService().hasValue( savedStateKey )) {
-			rc.savedStateID = getSessionService().getValue( savedStateKey );
-		}
-		*/
-		
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		arguments.rc["#arguments.entityName#smartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=arguments.rc} );
-		
-		getSessionService().setValue( savedStateKey, arguments.rc["#arguments.entityName#smartList"].getSavedStateID() );
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public void function genericCreateMethod(required string entityName, required struct rc) {
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		// Verify Create Permission
 		
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		arguments.rc["#arguments.entityName#"] = entityService.invokeMethod( "new#arguments.entityName#" );
 		
 		loadEntitiesFromRCIDs( arguments.rc );
@@ -85,8 +91,8 @@ component accessors="true" {
 	}
 	
 	public void function genericDeleteMethod(required string entityName, required struct rc) {
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
-		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
 		var entity = entityService.invokeMethod( "get#arguments.rc.itemEntityName#", {1=arguments.rc[ entityPrimaryID ]} );
 		
@@ -109,8 +115,8 @@ component accessors="true" {
 	
 	
 	public void function genericSaveMethod(required string entityName, required struct rc) {
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
-		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc[ entityPrimaryID ], 2=true} );
 		arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=entity, 2=arguments.rc} );
@@ -174,9 +180,9 @@ component accessors="true" {
 		param name="arguments.rc.processOptions" default="#{}#";
 		param name="arguments.rc.additionalData" default="#{}#";
 		
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
-		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
 		getFW().setLayout( "admin:process.default" );
 		
@@ -283,7 +289,7 @@ component accessors="true" {
 	
 	public void function genericExportMethod(required string entityName, required struct rc) {
 		
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		entityService.invokeMethod("export#arguments.entityName#");
 	}
@@ -293,7 +299,7 @@ component accessors="true" {
 			for(var key in arguments.rc) {
 				if(!find('.',key) && right(key, 2) == "ID" && len(arguments.rc[key]) == "32") {
 					var entityName = left(key, len(key)-2);
-					var entityService = getUtilityORMService().getServiceByEntityName( entityName=entityName );
+					var entityService = getHibachiService().getServiceByEntityName( entityName=entityName );
 					var entity = entityService.invokeMethod("get#entityName#", {1=arguments.rc[key]});
 					if(!isNull(entity)) {
 						arguments.rc[ entityName ] = entity;

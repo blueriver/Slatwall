@@ -1,3 +1,3 @@
-component extends="Hibachi.HibachiControllerCRUD" {
+component accessors="true" extends="Hibachi.HibachiControllerCRUD" {
 	
 }

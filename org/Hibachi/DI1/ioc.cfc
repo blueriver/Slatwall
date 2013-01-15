@@ -102,6 +102,12 @@ component {
 			return { beanInfo = variables.beanInfo };
 		}
 	}
+
+
+    // return the DI/1 version
+    public string function getVersion() {
+        return variables.config.version;
+    }
 	
 	
 	// return true iff bean is known to be a singleton
@@ -110,7 +116,11 @@ component {
 		if ( structKeyExists( variables.beanInfo, beanName ) ) {
 			return variables.beanInfo[ beanName ].isSingleton;
 		} else if ( structKeyExists( variables, 'parent' ) ) {
-			return variables.parent.isSingleton( beanName );
+            try {
+			    return variables.parent.isSingleton( beanName );
+            } catch ( any e ) {
+                return false; // parent doesn't know the bean therefore is it not singleton
+            }
 		} else {
 			return false; // we don't know the bean therefore it is not a managed singleton
 		}
@@ -166,7 +176,12 @@ component {
 	// PRIVATE METHODS
 	
 	private boolean function beanIsTransient( string singleDir, string dir, string beanName ) {
-		return singleDir == 'bean' || structKeyExists( variables.transients, dir ) || ( structKeyExists( variables.config, "singletonPattern" ) && refindNoCase( variables.config.singletonPattern, beanName ) == 0 );
+		return singleDir == 'bean' ||
+            structKeyExists( variables.transients, dir ) ||
+            ( structKeyExists( variables.config, "singletonPattern" ) &&
+              refindNoCase( variables.config.singletonPattern, beanName ) == 0 ) ||
+            ( structKeyExists( variables.config, "transientPattern" ) &&
+              refindNoCase( variables.config.transientPattern, beanName ) > 0 );
 	}
 
 
@@ -196,8 +211,8 @@ component {
 		var md = { extends = baseMetadata };
 		do {
 			md = md.extends;
-			// gather up setters based on metadata:
-			var implicitSetters = false;
+		    // gather up setters based on metadata:
+		    var implicitSetters = false;
 			// we have implicit setters if: accessors="true" or persistent="true"
 			if ( structKeyExists( md, 'persistent' ) && isBoolean( md.persistent ) ) {
 				implicitSetters = md.persistent;
@@ -471,12 +486,14 @@ component {
 						}
 					}
 				}
-				var setterMeta = findSetters( bean, info.metadata );
-				setterMeta.bean = bean;
-				accumulator.injection[ beanName ] = setterMeta; 
-				for ( var property in setterMeta.setters ) {
-					resolveBeanCreate( property, accumulator );
-				}
+                if ( !structKeyExists( accumulator.injection, beanName ) ) {
+				    var setterMeta = findSetters( bean, info.metadata );
+				    setterMeta.bean = bean;
+				    accumulator.injection[ beanName ] = setterMeta; 
+				    for ( var property in setterMeta.setters ) {
+					    resolveBeanCreate( property, accumulator );
+				    }
+                }
 				accumulator.bean = bean;
 			} else if ( structKeyExists( info, 'value' ) ) {
 				accumulator.bean = info.value;
@@ -520,8 +537,13 @@ component {
 				variables.transients[ transientFolder ] = true;
 			}
 		}
+
+        if ( structKeyExists( variables.config, 'singletonPattern' ) &&
+             structKeyExists( variables.config, 'transientPattern' ) ) {
+            throw 'singletonPattern and transientPattern are mutually exclusive';
+        }
 				
-		variables.config.version = '0.3.3';
+		variables.config.version = '0.4.2';
 	}
 	
 	

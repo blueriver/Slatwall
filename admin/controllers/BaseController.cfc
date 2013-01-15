@@ -72,7 +72,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			}
 			getFW().redirect('admin:main.noaccess');
 		}
-		
 		var subsystemName = getFW().getSubsystem(arguments.rc.slatAction);
 		var sectionName = getFW().getSection(arguments.rc.slatAction);
 		var itemName = getFW().getItem(arguments.rc.slatAction);

@@ -43,9 +43,9 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	if( fileExists(expandPath("config/custom/configApplication.cfm")) ) {
 		include "config/custom/configApplication.cfm";
 	}
-	include "config/configFW1.cfm";
-	if( fileExists(expandPath("config/custom/configFW1.cfm")) ) {
-		include "config/custom/configFW1.cfm";
+	include "config/configFramework.cfm";
+	if( fileExists(expandPath("config/custom/configFramework.cfm")) ) {
+		include "config/custom/configFramework.cfm";
 	}
 	include "config/configMappings.cfm";
 	if( fileExists(expandPath("config/custom/configMappings.cfm")) ) {
@@ -59,11 +59,6 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
 		include "config/custom/configORM.cfm";
 	}
-	
-	variables.framework.routes = [
-		{ "$GET/api/:entityName/:entityID" = "/admin:api/get/entityName/:entityName/entityID/:entityID"},
-		{ "$GET/api/:entityName/" = "/admin:api/post/entityName/:entityName/"}
-	];
 	
 	// ============================================================================== END OF REQUIRED APPLICATION SETTINGS
 	public void function verifyApplicationSetup() {
@@ -103,7 +98,9 @@ component extends="org.Hibachi.Hibachi" output="false" {
 					}
 					// ================ END: Required Application Setup ==================
 					
+					/*
 					// ========================= Coldspring Setup =========================
+					
 					// Get Coldspring Config
 					var serviceFactory = "";
 					var integrationService = "";
@@ -124,11 +121,24 @@ component extends="org.Hibachi.Hibachi" output="false" {
 					// Now place the service factory as the fw1 bean
 					setBeanFactory( serviceFactory );
 					
+					
 					writeLog(file="Slatwall", text="General Log - Coldspring Setup Confirmed");
 					//========================= END: Coldsping Setup =========================
+					*/
 					
+					//========================= IOC SETUP ====================================
+					
+					var beanFactory = new org.Hibachi.DI1.ioc("model");
+					beanFactory.declareBean("hibachiDAO", "Hibachi.HibachiDAO", true);
+					beanFactory.declareBean("hibachiService", "Hibachi.HibachiService", true);
+					setBeanFactory(beanFactory);
+					
+					//========================= END: IOC SETUP ===============================
 					
 					// ======================== Enviornment Setup ============================
+					
+					// SET Hibachi Key
+					request[ "#variables.framework.hibachiKey#Scope" ].setApplicationValue("hibachiKey", variables.framework.hibachiKey);
 					
 					// Version
 					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
@@ -211,7 +221,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	
 	public void function setupGlobalRequest() {
 		// Set up Slatwall Scope inside of request
-		request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
+		request.slatwallScope = new Slatwall.model.transient.SlatwallScope();
 		
 		// Verify that the application is setup
 		verifyApplicationSetup();

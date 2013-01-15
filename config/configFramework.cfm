@@ -1,4 +1,5 @@
 <cfset variables.framework=structNew() />
+<cfset variables.framework.hibachiKey="Slatwall" />
 <cfset variables.framework.applicationKey="SlatwallFW1" />
 <cfset variables.framework.base="/Slatwall" />
 <cfset variables.framework.baseURL = replace(replace(replace( getDirectoryFromPath(getCurrentTemplatePath()) , expandPath('/'), '/' ), '\', '/', 'all'),'/config/','/') />
@@ -13,3 +14,7 @@
 <cfset variables.framework.generateSES = true />
 <cfset variables.framework.SESOmitIndex = true />
 <cfset variables.framework.reload = "reload" />
+<cfset variables.framework.routes = [
+		{ "$GET/api/:entityName/:entityID" = "/admin:api/get/entityName/:entityName/entityID/:entityID"},
+		{ "$GET/api/:entityName/" = "/admin:api/post/entityName/:entityName/"}
+	] />
