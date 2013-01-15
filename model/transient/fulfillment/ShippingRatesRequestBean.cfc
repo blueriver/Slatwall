@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component accessors="true" output="false" extends="Slatwall.com.utility.RequestBean" {
+component accessors="true" output="false" extends="Slatwall.model.transient.RequestBean" {
 
 	property name="shipToName" type="string" default="";
 	property name="shipToCompany" type="string" default="";

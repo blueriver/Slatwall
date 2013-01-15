@@ -640,7 +640,7 @@
 		}
 		
 		public string function getProperlyCasedFullClassNameByEntityName( required string entityName ) {
-			return "Slatwall.com.entity.#replace(getProperlyCasedFullEntityName( arguments.entityName ), 'Slatwall', '')#";
+			return "Slatwall.model.entity.#replace(getProperlyCasedFullEntityName( arguments.entityName ), 'Slatwall', '')#";
 		}
 		
 		// =======================  END: Entity Name Helper Methods ===============================

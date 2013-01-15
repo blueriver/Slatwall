@@ -36,7 +36,7 @@
 Notes:
 
 */
-component accessors="true" output="false" extends="Slatwall.com.utility.ResponseBean" {
+component accessors="true" output="false" extends="Slatwall.model.transient.ResponseBean" {
 
 	property name="shippingProviderMethod" type="string";
 	property name="totalCharge" type="numeric";

@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component displayname="Gateway Request"  accessors="true" output="false" extends="Slatwall.com.utility.RequestBean" {
+component displayname="Gateway Request"  accessors="true" output="false" extends="Slatwall.model.transient.RequestBean" {
 	
 	// Process Info
 	property name="transactionID" type="string" ;

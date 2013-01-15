@@ -2,7 +2,7 @@
 	
 	<cffunction name="syncPush" access="public" returntype="Any" >
 		
-		<cfset var responseBean = new Slatwall.com.utility.ResponseBean() />
+		<cfset var responseBean = new Slatwall.model.transient.ResponseBean() />
 		<cfset var integration = getService("integrationService").getIntegrationByIntegrationPackage("endicia") /> 
 		
 		<!--- Setup Remote Dropoff File Location --->

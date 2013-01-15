@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component accessors="true" output="false" extends="Slatwall.com.utility.ResponseBean" {
+component accessors="true" output="false" extends="Slatwall.model.transient.ResponseBean" {
 
 	property name="shippingMethodResponseBeans" type="array";
 	

@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component output="false" accessors="true" extends="Slatwall.com.utility.RequestBean" {
+component output="false" accessors="true" extends="Slatwall.model.transient.RequestBean" {
 	
 	property name="value" type="numeric";
 	property name="weight" type="numeric";

@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component displayname="Gateway Response"  accessors="true" output="false" extends="Slatwall.com.utility.ResponseBean" {
+component displayname="Gateway Response"  accessors="true" output="false" extends="Slatwall.model.transient.ResponseBean" {
 
 	property name="transactionID" type="string";   
 	property name="authorizationCode" type="string";

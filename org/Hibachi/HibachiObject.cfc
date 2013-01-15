@@ -27,7 +27,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint Returns the errorBean object, if one hasn't been setup yet it returns a new one
 	public any function getErrorBean() {
 		if(!structKeyExists(variables, "errorBean")) {
-			variables.errorBean = new Slatwall.com.utility.ErrorBean(); 
+			variables.errorBean = new Slatwall.model.transient.ErrorBean(); 
 		}
 		return variables.errorBean;
 	}
