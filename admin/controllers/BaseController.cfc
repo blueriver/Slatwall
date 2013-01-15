@@ -39,13 +39,14 @@ Notes:
 component persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" {
 	
 	property name="fw" type="any";
-	property name="emailService" type="any";
-	property name="integrationService" type="any";
-	property name="sessionService" type="any";
-	property name="utilityORMService" type="any";
+	
 	property name="accountService" type="any";
-	property name="permissionService" type="any";
 	property name="commentService" type="any";
+	property name="emailService" type="any";
+	property name="hibachiService" type="any";
+	property name="integrationService" type="any";
+	property name="permissionService" type="any";
+	property name="sessionService" type="any";
 	
 	public any function init(required any fw) {
 		setFW(arguments.fw);
@@ -158,7 +159,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function genericListMethod(required string entityName, required struct rc) {
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		var httpRequestData = getHTTPRequestData();
 		
@@ -178,7 +179,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function genericCreateMethod(required string entityName, required struct rc) {
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		arguments.rc["#arguments.entityName#"] = entityService.invokeMethod( "new#arguments.entityName#" );
 		
@@ -216,8 +217,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function genericDeleteMethod(required string entityName, required struct rc) {
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
-		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
 		var entity = entityService.invokeMethod( "get#arguments.rc.itemEntityName#", {1=arguments.rc[ entityPrimaryID ]} );
 		
@@ -240,8 +241,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	
 	
 	public void function genericSaveMethod(required string entityName, required struct rc) {
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
-		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc[ entityPrimaryID ], 2=true} );
 		arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=entity, 2=arguments.rc} );
@@ -305,9 +306,9 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		param name="arguments.rc.processOptions" default="#{}#";
 		param name="arguments.rc.additionalData" default="#{}#";
 		
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
-		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
 		getFW().setLayout( "admin:process.default" );
 		
@@ -414,7 +415,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	
 	public void function genericExportMethod(required string entityName, required struct rc) {
 		
-		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		entityService.invokeMethod("export#arguments.entityName#");
 	}
@@ -424,7 +425,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			for(var key in arguments.rc) {
 				if(!find('.',key) && right(key, 2) == "ID" && len(arguments.rc[key]) == "32") {
 					var entityName = left(key, len(key)-2);
-					var entityService = getUtilityORMService().getServiceByEntityName( entityName=entityName );
+					var entityService = getHibachiService().getServiceByEntityName( entityName=entityName );
 					var entity = entityService.invokeMethod("get#entityName#", {1=arguments.rc[key]});
 					if(!isNull(entity)) {
 						arguments.rc[ entityName ] = entity;

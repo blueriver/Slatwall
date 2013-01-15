@@ -223,7 +223,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				addEntity(
 					entityName=newEntityName,
 					entityAlias=newEntityAlias,
-					entityFullName="Slatwall.com.entity.AttributeValue",
+					entityFullName="Slatwall.model.entity.AttributeValue",
 					entityProperties=getPropertiesStructFromEntityMeta(newEntityMeta),
 					parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
 					parentRelatedProperty="attributeValues",

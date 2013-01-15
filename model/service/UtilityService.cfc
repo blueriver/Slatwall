@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfcomponent extends="Slatwall.com.utility.BaseObject">
+<cfcomponent extends="BaseService">
 
 	<!---
 	QueryTreeSort takes a query and efficiently (O(n)) resorts it hierarchically (parent-child), adding a Depth column that can then be used when displaying the data.

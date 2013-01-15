@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component  extends="Slatwall.com.service.BaseService" accessors="true" {
+component  extends="BaseService" accessors="true" {
 	
 	// ===================== START: Logical Methods ===========================
 	
