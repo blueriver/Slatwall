@@ -36,7 +36,7 @@
 Notes:
 
 */
-component output="false" accessors="true" extends="BaseObject"  {
+component output="false" accessors="true" extends="Hibachi.HibachiObject"  {
 	
 	property name="data" type="any";
 	
