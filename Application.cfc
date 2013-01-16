@@ -251,6 +251,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 			request.context.sectionTitle = getSubsystem(request.context.slatAction);
 			request.context.itemTitle = getSection(request.context.slatAction);
 		}
+		
 	}
 	
 	public void function setupView() {
@@ -260,12 +261,13 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		}
 		
 		if(structKeyExists(url, "modal") && url.modal) {
-			request.layouts = [ "/Slatwall/admin/layouts/modal.cfm" ];
+			request.layout = false;
+			setLayout("admin:modal");
 		}
 		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
 		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
-			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
+			setLayout("admin:main");
 		}
 	}
 	
@@ -284,9 +286,10 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		}
 	}
 	
+	/*
 	// This is used to setup the frontend path to pull from the siteid directory or the theme directory if the file exists
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
-		/*
+		
 		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
 			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
 			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
@@ -298,9 +301,11 @@ component extends="org.Hibachi.Hibachi" output="false" {
 			}
 			
 		}
-		*/
+		
 		return arguments.fullPath;
 	}
+	*/
+	
 	
 	// This handels all of the ORM persistece.
 	public void function endSlatwallLifecycle() {
