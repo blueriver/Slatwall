@@ -63,11 +63,11 @@ component output="false" accessors="true" extends="Hibachi.HibachiObject" {
 					
 		// Loop over attribute sets
 		for(var ats=1; ats<=arrayLen(assignedAttributeSets); ats++) {
-			var attributes = assignedAttributeSets.getAttributes();
+			var attributes = assignedAttributeSets[ats].getAttributes();
 			
 			for(var at=1; at<=arrayLen(attributes); at++) {
 				if(structKeyExists(arguments.data, attributes[at].getAttributeCode())) {
-					var av = getAttributeValue(at.getAttributeCode, true);
+					var av = getAttributeValue(attributes[at].getAttributeCode(), true);
 					av.setAttributeValue( data[ attributes[at].getAttributeCode() ]);
 					av.setAttribute(at);
 					av.setAttributeType(attributeType);
