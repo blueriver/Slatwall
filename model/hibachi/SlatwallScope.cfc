@@ -36,10 +36,8 @@
 Notes:
 
 */
-component accessors="true" output="false" extends="Hibachi.HibachiScope" {
+component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiScope" {
 
-	property name="ormHasErrors";
-	
 	property name="currentAccount";
 	property name="currentBrand";
 	property name="currentCart";
@@ -48,12 +46,6 @@ component accessors="true" output="false" extends="Hibachi.HibachiScope" {
 	property name="currentProductType";
 	property name="currentProductSmartList";
 	property name="currentSession";
-	
-	public any function init() {
-		setORMHasErrors(false);
-		
-		return this;
-	}
 	
 	public boolean function getLoggedInFlag() {
 		if(!getCurrentAccount().isNew()) {

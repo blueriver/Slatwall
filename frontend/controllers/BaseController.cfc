@@ -36,7 +36,7 @@
 Notes:
 
 */
-component persistent="false" accessors="true" output="false" extends="Hibachi.HibachiObject" {
+component persistent="false" accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiController" {
 	
 	property name="fw" type="any";
 	

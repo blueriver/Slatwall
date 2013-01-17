@@ -1,4 +1,4 @@
-component extends="HibachiService" accessors="true" {
+component output="false" accessors="true" extends="HibachiService" {
 
 	property name="integrationService" type="any";
 

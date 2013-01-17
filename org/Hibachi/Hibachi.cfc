@@ -49,7 +49,7 @@ component extends="FW1.framework" {
 	variables.framework.preserveKeyURLKey = 'fw1pk';
 	variables.framework.maxNumContextsPreserved = 10;
 	variables.framework.cacheFileExists = false;
-	variables.framework.applicationKey = 'HibachiFW1';
+	variables.framework.applicationKey = 'MyHibachiAppFW1';
 	variables.framework.trace = false;
 	variables.framework.routes = [
 		{ "$GET/api/:entityName/:entityID" = "/admin:api/get/entityName/:entityName/entityID/:entityID"},
@@ -58,7 +58,7 @@ component extends="FW1.framework" {
 	
 	// Hibachi Setup
 	variables.framework.hibachi = {};
-	variables.framework.hibachi.applicationKey = "Hibachi";
+	variables.framework.hibachi.applicationKey = "MyHibachiApp";
 	variables.framework.hibachi.resourceBundleDirectories = "config/resourceBundles,config/custom/resourceBundles";
 	variables.framework.hibachi.hibachiScopeObject = "Hibachi.HibachiScope";
 	variables.framework.hibachi.smartListObject = "Hibachi.SmartList";
@@ -78,8 +78,10 @@ component extends="FW1.framework" {
 	// =============== configMappings
 	
 	// Defaults
-	this.mappings[ "/Hibachi" ] = getDirectoryFromPath(getCurrentTemplatePath());
-	this.mappings[ "/ValidateThis" ] = this.mappings[ "/Hibachi" ] & "ValidateThis";
+	this.mappings[ "/#variables.framework.hibachi.applicationKey#" ] = replace(replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all"), "/org/Hibachi/", "/");
+	
+	// THIS IS TEMPORARY AND SHOULD BE REMOVED
+	this.mappings[ "/ValidateThis" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "ValidateThis/";
 	
 	// Allow For Application Config 
 	if( fileExists(expandPath("config/configMappings.cfm")) ) {
@@ -132,15 +134,25 @@ component extends="FW1.framework" {
 	
 	// Make Sure that the required values end up in the application scope so that we can get them from somewhere else
 	
-	
 	// =======  END: ENVIORNMENT CONFIGURATION  =======
 	
-	public any function init() {
+	public any function bootstrap() {
 		setupGlobalRequest();
+		
+		return request["#variables.framework.hibachi.applicationKey#Scope"];
+	}
+	
+	public any function reloadApplication() {
+		lock name="application_#getHibachiInstanceApplicationScopeKey()#_initialized" timeout="10" {
+			if( !structKeyExists(application, getHibachiInstanceApplicationScopeKey()) ) {
+				application[ getHibachiInstanceApplicationScopeKey() ] = {};
+			}
+			application[ getHibachiInstanceApplicationScopeKey() ].initialized = false;
+		}
 	}
 	
 	public void function setupGlobalRequest() {
-		request["#variables.framework.hibachi.applicationKey#Scope"] = createObject("component", "#variables.framework.hibachi.hibachiScopeObject#").init( hibachiApplicationKey = variables.framework.hibachi.applicationKey );
+		request["#variables.framework.hibachi.applicationKey#Scope"] = createObject("component", "#variables.framework.hibachi.applicationKey#.model.hibachi.#variables.framework.hibachi.applicationKey#Scope").init();
 		
 		// Verify that the application is setup
 		verifyApplicationSetup();
@@ -172,8 +184,8 @@ component extends="FW1.framework" {
 	}
 	
 	public void function verifyApplicationSetup() {
-		if(structKeyExists(url, variables.framework.reload) && url[variables.framework.reload] == variables.framework.reload) {
-			getHibachiScope().setApplicationValue("initialized", false);
+		if(structKeyExists(url, variables.framework.reload) && url[variables.framework.reload] == variables.framework.password) {
+			reloadApplication();
 		}
 		
 		// Check to see if out application stuff is initialized
@@ -186,11 +198,14 @@ component extends="FW1.framework" {
 				if(!getHibachiScope().hasApplicationValue("initialized") || !getHibachiScope().getApplicationValue("initialized")) {
 					
 					// Clear out the old application scope
-					application[ variables.framework.hibachi.applicationKey ] = {};
+					application[ hash(getDirectoryFromPath(getCurrentTemplatePath())) ] = {};
 					
 					// Application Setup Started
 					writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - Application Setup Started");
 					getHibachiScope().setApplicationValue("initialized", false);
+					
+					// Setup the hibachiApplicationKey in the application scope to use it later
+					getHibachiScope().setApplicationValue("hibachiApplicationKey", variables.framework.hibachi.applicationKey);
 					
 					// =================== Required Application Setup ===================
 					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
@@ -207,14 +222,14 @@ component extends="FW1.framework" {
 					
 					beanFactory.addBean("hibachiApplicationKey", variables.framework.hibachi.applicationKey);
 					
-					beanFactory.declareBean("hibachiDAO", "Hibachi.HibachiDAO", true);
-					beanFactory.declareBean("hibachiService", "Hibachi.HibachiService", true);
-					beanFactory.declareBean("hibachiAuthenticationService", "Hibachi.HibachiAuthenticationService", true);
-					beanFactory.declareBean("hibachiRBService", "Hibachi.HibachiAuthenticationService", true);
-					beanFactory.declareBean("hibachiEventService", "Hibachi.HibachiAuthenticationService", true);
-					beanFactory.declareBean("hibachiTagService", "Hibachi.HibachiAuthenticationService", true);
+					beanFactory.declareBean("hibachiDAO", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiDAO", true);
+					beanFactory.declareBean("hibachiService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiService", true);
+					beanFactory.declareBean("hibachiAuthenticationService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiAuthenticationService", true);
+					beanFactory.declareBean("hibachiRBService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiRBService", true);
+					beanFactory.declareBean("hibachiEventService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiEventService", true);
+					beanFactory.declareBean("hibachiTagService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiTagService", true);
 					
-					beanFactory.declareBean("FormUtilities", "Hibachi.FormUtilities.FormUtilities", true);
+					beanFactory.declareBean("FormUtilities", "#variables.framework.hibachi.applicationKey#.org.Hibachi.FormUtilities.FormUtilities", true);
 					
 					setBeanFactory( beanFactory );
 					
@@ -432,10 +447,17 @@ component extends="FW1.framework" {
 	}
 	
 	// @hint private helper method
-	private any function getHibachiScope() {
+	public any function getHibachiScope() {
 		return request["#variables.framework.hibachi.applicationKey#Scope"];
 	}
 	
+	public any function getHibachiInstanceApplicationScopeKey() {
+		var currentDiretory = replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all");
+		if(right(currentDiretory, 13) neq "/org/Hibachi/") {
+			currentDiretory &= "org/Hibachi/";
+		}
+		return hash(lcase(currentDiretory));
+	}
 	
 	// THESE METHODS ARE INTENTIONALLY LEFT BLANK
 	public void function onEveryRequest() {}

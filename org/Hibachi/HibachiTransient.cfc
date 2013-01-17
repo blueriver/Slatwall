@@ -1,4 +1,4 @@
-component extends="Hibachi.HibachiObject" {
+component output="false" accessors="true" persistent="false" extends="HibachiObject" {
 
 	property name="vtResult" type="any" persistent="false";								// This propery holds the ValidateThis result bean once it has been set.
 	property name="errorBean" type="any" persistent="false";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.

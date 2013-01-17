@@ -74,10 +74,6 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
 		writeLog(file="Slatwall", text="General Log - Application Value 'databaseType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
 		
-		// VFS
-		request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
-		writeLog(file="Slatwall", text="General Log - Application Value 'slatwallVfsRoot' setup as: #this.mappings[ "/slatwallVfsRoot" ]#");
-		
 	}
 	
 	public void function onUpdateRequest() {

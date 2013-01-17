@@ -1,4 +1,4 @@
-component output="false" accessors="true" extends="Hibachi.HibachiTransient" {
+component output="false" accessors="true" persistent="false" extends="HibachiTransient" {
 
 	property name="simpleRepresentation" type="string" persistent="false";
 	property name="persistableErrors" type="array" persistent="false";
@@ -593,8 +593,8 @@ component output="false" accessors="true" extends="Hibachi.HibachiTransient" {
 			
 		}
 				
-		throw( 'No matching method for #missingMethodName#().' );
-	}	
+		return super.onMissingMethod(argumentCollection=arguments);
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

@@ -1,4 +1,4 @@
-<cfcomponent accessors="true" extends="Hibachi.HibachiObject">
+<cfcomponent accessors="true" extends="HibachiObject">
 	
 	<cfproperty name="hibachiDAO" type="any">
 	
@@ -121,7 +121,6 @@
 		public struct function getEntityServiceMapping() {
 			return variables.entityServiceMapping;
 		}
-		
 		
 		public any function get(required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
 			return getHibachiDAO().get(argumentcollection=arguments);

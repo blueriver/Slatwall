@@ -1,9 +1,10 @@
-component output="false" accessors="true" extends="Hibachi.HibachiTransient" {
+component output="false" accessors="true" extends="HibachiTransient" {
 
-	property name="hibachiApplicationKey" type="string";
+	property name="ormHasErrors";
 	
-	public any function init( required string hibachiApplicationKey ) {
-		setHibachiApplicationKey( arguments.hibachiApplicationKey);
+
+	public any function init() {
+		setORMHasErrors(false);
 		
 		return super.init();
 	}
@@ -45,34 +46,7 @@ component output="false" accessors="true" extends="Hibachi.HibachiTransient" {
 		arrayAppend(request.context.messages, arguments);
 	}
 	
-	// @hint facade method to check the slatwall application scope for a value
-	public boolean function hasApplicationValue(required any key) {
-		if( structKeyExists(application, getHibachiApplicationKey()) && structKeyExists(application[ getHibachiApplicationKey() ], arguments.key)) {
-			return true;
-		}
-		
-		return false;
-	}
 	
-	// @hint facade method to get values from the slatwall application scope
-	public any function getApplicationValue(required any key) {
-		
-		if( structKeyExists(application, getHibachiApplicationKey()) && structKeyExists(application[ getHibachiApplicationKey() ], arguments.key)) {
-			return application[ getHibachiApplicationKey() ][ arguments.key ];
-		}
-		
-		throw("You have requested a value for '#arguments.key#' from the core slatwall application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
-	}
-	
-	// @hint facade method to set values in the slatwall application scope 
-	public void function setApplicationValue(required any key, required any value) {
-		lock name="application_#getHibachiApplicationKey()#_#arguments.key#" timeout="10" {
-			if(!structKeyExists(application, getHibachiApplicationKey())) {
-				application[ getHibachiApplicationKey() ] = {};
-			}
-			application[ getHibachiApplicationKey() ][ arguments.key ] = arguments.value;
-		}
-	}
 	
 	
 }

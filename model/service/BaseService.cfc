@@ -1,3 +1,3 @@
-component accessors="true" extends="Hibachi.HibachiService" {
+component accessors="true" extends="Slatwall.org.Hibachi.HibachiService" {
 
 } 

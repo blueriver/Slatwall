@@ -16,7 +16,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-component displayname="Smart List" accessors="true" persistent="false" output="false" extends="Hibachi.HibachiObject" {
+component displayname="Smart List" accessors="true" persistent="false" output="false" extends="Slatwall.org.Hibachi.HibachiSmartList" {
 	
 	property name="baseEntityName" type="string";
 	property name="cacheable" type="boolean";

@@ -1,4 +1,4 @@
-component output="false" update="true" {
+component output="false" update="true" extends="HibachiService" {
 	
 	public void function announceEvent() {
 		

@@ -1,4 +1,4 @@
-component output="false" accessors="true" {
+component output="false" accessors="true" extends="HibachiController" {
 	
 	property name="fw" type="any";
 	property name="hibachiService" type="any";

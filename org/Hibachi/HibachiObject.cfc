@@ -1,4 +1,10 @@
-component displayname="Base Object" accessors="true" output="false" {
+component accessors="true" output="false" persistent="false" {
+	
+	/*
+	writeDump("From Object");
+	writeDump(getDirectoryFromPath(getCurrentTemplatePath()));
+	abort;
+	*/
 	
 	// Constructor Metod
 	public any function init( ) {
@@ -227,16 +233,6 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getRBFactory().getRBKey(arguments.key, arguments.locale);
 	}
 	
-	// @hint helper function to return a Setting
-	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
-		return getService("settingService").getSettingValue(settingName=arguments.settingName, object=this, filterEntities=arguments.filterEntities, formatValue=arguments.formatValue);
-	}
-	
-	// @hint helper function to return the details of a setting
-	public struct function getSettingDetails(required any settingName, array filterEntities=[]) {
-		return getService("settingService").getSettingDetails(settingName=arguments.settingName, object=this, filterEntities=arguments.filterEntities);
-	}
-	
 	// @hint  helper function for using the Slatwall Log service.
 	public void function logHibachi(required string message, boolean generalLog=false){
 		getService("hibachiLogService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
@@ -247,12 +243,58 @@ component displayname="Base Object" accessors="true" output="false" {
 		getService("hibachiLogService").logException(exception=arguments.exception);		
 	}
 	
-	
-	// =========================  END:  DELIGATION HELPERS ==========================================
-	
+	public any function getVirtualFileSystem() {
+		return "ram:///#getHibachiInstanceApplicationScopeKey()#";
+	}
 	
 	// @hint  helper function for returning the slatwallScope from the request scope
 	public any function getHibachiScope() {
-		return request["#getHibachiApplicationKey()#Scope"];;
+		return request[ "#getApplicationValue("hibachiApplicationKey")#Scope" ];
 	}
+	
+	// =========================  END:  DELIGATION HELPERS ==========================================
+	// ========================= START: APPLICATION VAUES ===========================================
+	
+	// @hint setups an application scope value that will always be consistent
+	public any function getHibachiInstanceApplicationScopeKey() {
+		var currentDiretory = replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all");
+		if(right(currentDiretory, 13) neq "/org/Hibachi/") {
+			currentDiretory &= "org/Hibachi/";
+		}
+		return hash(lcase(currentDiretory));
+	}
+	
+	// @hint facade method to check the slatwall application scope for a value
+	public boolean function hasApplicationValue(required any key) {
+		if( structKeyExists(application, getHibachiInstanceApplicationScopeKey()) && structKeyExists(application[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	// @hint facade method to get values from the slatwall application scope
+	public any function getApplicationValue(required any key) {
+		
+		if( structKeyExists(application, getHibachiInstanceApplicationScopeKey()) && structKeyExists(application[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
+			return application[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ];
+		}
+		
+		throw("You have requested a value for '#arguments.key#' from the core slatwall application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
+	}
+	
+	// @hint facade method to set values in the slatwall application scope 
+	public void function setApplicationValue(required any key, required any value) {
+		lock name="application_#getHibachiInstanceApplicationScopeKey()#_#arguments.key#" timeout="10" {
+			if(!structKeyExists(application, getHibachiInstanceApplicationScopeKey())) {
+				application[ getHibachiInstanceApplicationScopeKey() ] = {};
+			}
+			application[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ] = arguments.value;
+		}
+	}
+	
+	// ========================= START: APPLICATION VAUES ===========================================
+	
+	
+	
 }
