@@ -1,5 +1,8 @@
 component extends="FW1.framework" {
 	
+	
+	/*
+	
 	// ======= START: ENVIORNMENT CONFIGURATION =======
 
 	// =============== configApplication
@@ -136,6 +139,9 @@ component extends="FW1.framework" {
 	
 	// =======  END: ENVIORNMENT CONFIGURATION  =======
 	
+	
+	*/
+	
 	public any function bootstrap() {
 		setupGlobalRequest();
 		
@@ -228,6 +234,7 @@ component extends="FW1.framework" {
 					beanFactory.declareBean("hibachiRBService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiRBService", true);
 					beanFactory.declareBean("hibachiEventService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiEventService", true);
 					beanFactory.declareBean("hibachiTagService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiTagService", true);
+					beanFactory.declareBean("hibachiLogService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiLogService", true);
 					
 					beanFactory.declareBean("FormUtilities", "#variables.framework.hibachi.applicationKey#.org.Hibachi.FormUtilities.FormUtilities", true);
 					
@@ -456,8 +463,20 @@ component extends="FW1.framework" {
 		if(right(currentDiretory, 13) neq "/org/Hibachi/") {
 			currentDiretory &= "org/Hibachi/";
 		}
-		writeLog(file="Slatwall", text="Application currentDiretory: #currentDiretory#");
 		return hash(lcase(currentDiretory));
+	}
+	// @hint setups an application scope value that will always be consistent
+	public any function getHibachiInstanceApplicationScopeKey() {
+		var metaData = getMetaData( this );
+		do {
+			var filePath = metaData.path;
+			metaData = metaData.extends;
+		} while( structKeyExists(metaData, "extends") );
+		
+		filePath = lcase(replaceNoCase(getDirectoryFromPath(filePath), "/fw1/","/","all"));
+		var appKey = hash(filePath);
+		
+		return appKey;
 	}
 	
 	// THESE METHODS ARE INTENTIONALLY LEFT BLANK
