@@ -1,4 +1,4 @@
-component accessors="true" {
+component output="false" accessors="true" {
 	
 	property name="fw" type="any";
 	property name="hibachiService" type="any";
@@ -7,8 +7,65 @@ component accessors="true" {
 		setFW(arguments.fw);
 	}
 	
-	public void function before( required any fw ) {
+	public void function before( required any rc ) {
 		
+		var subsystemName = getFW().getSubsystem(arguments.rc.slatAction);
+		var sectionName = getFW().getSection(arguments.rc.slatAction);
+		var itemName = getFW().getItem(arguments.rc.slatAction);
+		
+		arguments.rc.itemEntityName = "";
+		arguments.rc.listAction = arguments.rc.slatAction;
+		arguments.rc.saveAction = arguments.rc.slatAction;
+		arguments.rc.detailAction = arguments.rc.slatAction;
+		arguments.rc.deleteAction = arguments.rc.slatAction;
+		arguments.rc.editAction = arguments.rc.slatAction;
+		arguments.rc.createAction = arguments.rc.slatAction;
+		arguments.rc.cancelAction = arguments.rc.slatAction;
+		arguments.rc.exportAction = arguments.rc.slatAction;
+		
+		if(left(itemName, 4) == "list") {
+			arguments.rc.itemEntityName = right(itemName, len(itemName)-4);
+		} else if (left(itemName, 4) == "edit") {
+			arguments.rc.itemEntityName = right(itemName, len(itemName)-4);
+		} else if (left(itemName, 4) == "save") {
+			arguments.rc.itemEntityName = right(itemName, len(itemName)-4);
+		} else if (left(itemName, 6) == "detail") {
+			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
+		} else if (left(itemName, 6) == "delete") {
+			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
+		} else if (left(itemName, 6) == "create") {
+			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
+		} else if (left(itemName, 7) == "process") {
+			arguments.rc.itemEntityName = right(itemName, len(itemName)-7);
+		} else if (left(itemName, 6) == "export") {
+			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
+		}
+		
+		if(arguments.rc.itemEntityName != "") {
+			arguments.rc.listAction = "#subsystemName#:#sectionName#.list#arguments.rc.itemEntityName#"; 
+			arguments.rc.saveAction = "#subsystemName#:#sectionName#.save#arguments.rc.itemEntityName#";
+			arguments.rc.detailAction = "#subsystemName#:#sectionName#.detail#arguments.rc.itemEntityName#";		
+			arguments.rc.deleteAction = "#subsystemName#:#sectionName#.delete#arguments.rc.itemEntityName#";
+			arguments.rc.editAction = "#subsystemName#:#sectionName#.edit#arguments.rc.itemEntityName#";
+			arguments.rc.createAction = "#subsystemName#:#sectionName#.create#arguments.rc.itemEntityName#";
+			arguments.rc.cancelAction = "#subsystemName#:#sectionName#.list#arguments.rc.itemEntityName#";
+			arguments.rc.exportAction = "#subsystemName#:#sectionName#.export#arguments.rc.itemEntityName#"; 
+		}
+		
+		arguments.rc.pageTitle = rbKey(replace(arguments.rc.slatAction,':','.','all'));
+		if(right(arguments.rc.pageTitle, 8) eq "_missing") {
+			if(left(listLast(arguments.rc.slatAction, "."), 4) eq "list") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.slatAction, "."), 4) eq "edit") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.slatAction, "."), 6) eq "create") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.slatAction, "."), 6) eq "detail") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.slatAction, "."), 7) eq "process") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.process'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
+			}
+		}
 	}
 	
 	// Implicit onMissingMethod() to handle standard CRUD
@@ -35,7 +92,7 @@ component accessors="true" {
 	}
 	
 	public void function genericListMethod(required string entityName, required struct rc) {
-		// Verify List Permission
+		// TODO: Verify List Permission
 		
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		arguments.rc["#arguments.entityName#smartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=arguments.rc} );
@@ -43,16 +100,8 @@ component accessors="true" {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	public void function genericCreateMethod(required string entityName, required struct rc) {
-		// Verify Create Permission
+		// TODO: Verify Create Permission
 		
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		arguments.rc["#arguments.entityName#"] = entityService.invokeMethod( "new#arguments.entityName#" );
@@ -64,6 +113,8 @@ component accessors="true" {
 	}
 	
 	public void function genericEditMethod(required string entityName, required struct rc) {
+		// TODO: Verify Edit Permission
+		// TODO: Verify Edit Validation
 		
 		loadEntitiesFromRCIDs( arguments.rc );
 		
@@ -171,6 +222,10 @@ component accessors="true" {
 			arguments.rc.edit = true;
 			loadEntitiesFromRCIDs( arguments.rc );
 		}
+	}
+	
+	public void function genericPreProcessMethod(required string entityName, required struct rc) {
+		
 	}
 	
 	public void function genericProcessMethod(required string entityName, required struct rc) {

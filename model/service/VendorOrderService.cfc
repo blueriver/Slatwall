@@ -123,9 +123,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								&&
 								arguments.vendorOrder.getVendorOrderItems()[oi].getStock().getSku().getSkuID() == thisRecord.skuid
 								&&
-								coalesce(arguments.vendorOrder.getVendorOrderItems()[oi].getCost(),"") == thisRecord.cost
+								nullReplace(arguments.vendorOrder.getVendorOrderItems()[oi].getCost(),"") == thisRecord.cost
 								&&
-								coalesce(arguments.vendorOrder.getVendorOrderItems()[oi].getEstimatedReceivalDateTime(),"") == thisRecord.estimatedReceivalDateTime
+								nullReplace(arguments.vendorOrder.getVendorOrderItems()[oi].getEstimatedReceivalDateTime(),"") == thisRecord.estimatedReceivalDateTime
 								) {
 									
 								foundItem = true;

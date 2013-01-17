@@ -1,4 +1,4 @@
-component output="false" accessors="true" extends="Hibachi.HibachiObject" {
+component output="false" accessors="true" extends="Hibachi.HibachiTransient" {
 
 	property name="simpleRepresentation" type="string" persistent="false";
 	property name="persistableErrors" type="array" persistent="false";
@@ -47,6 +47,38 @@ component output="false" accessors="true" extends="Hibachi.HibachiObject" {
 				}
 			}
 		}
+	}
+	
+	// @hint return a simple representation of this entity
+	public string function getSimpleRepresentation() {
+		
+		// Try to get the actual value of that property
+		var representation = this.invokeMethod("get#getSimpleRepresentationPropertyName()#");
+		
+		// If the value isn't null, and it is simple, then return it.
+		if(!isNull(representation) && isSimpleValue(representation)) {
+			return representation;
+		}
+		
+		// Default case is to return a blank value
+		return "";
+	}
+	
+	// @hint returns the propety who's value is a simple representation of this entity.  This can be overridden when necessary
+	public string function getSimpleRepresentationPropertyName() {
+		
+		// Get the meta data for all of the porperties
+		var properties = getProperties();
+		
+		// Look for a property that's last 4 is "name"
+		for(var i=1; i<=arrayLen(properties); i++) {
+			if(properties[i].name == getClassName() & "name") {
+				return properties[i].name;
+			}
+		}
+		
+		// If no properties could be identified as a simpleRepresentaition 
+		throw("There is no Simple Representation Property Name for #getClassName()#.  You can either override getSimpleRepresentation() or override getSimpleRepresentationPropertyName() in the entity, but be sure to do it at the bottom iside of commented sectin for overrides.");
 	}
 	
 	// @hint Override the populate method to look for custom attributes

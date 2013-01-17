@@ -45,10 +45,6 @@
 		</dd>
 	</dl>
 	
-	
-		
-	</dl>
-	
 	<slatwall:attributeSetInput attributeSetCode="accountDetails" displayType="dl" />
 	
 	<button type="submit">submit</button>

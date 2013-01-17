@@ -61,7 +61,7 @@
 				<cfset lineArray = arrayNew(1) />
 				
 				<!--- 1 --->	<cfset arrayAppend(lineArray, orderFulfillment.getOrderFulfillmentID()) />
-				<!--- 2 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getFulfillmentCharge(), 0)) />
+				<!--- 2 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getFulfillmentCharge(), 0)) />
 				<!--- 3 --->	<cfset arrayAppend(lineArray, orderFulfillment.getOrder().getOrderID()) />
 				<!--- 4 --->	<cfset arrayAppend(lineArray, orderFulfillment.getOrder().getOrderNumber()) />
 				<!--- 5 --->	<cfset arrayAppend(lineArray, orderFulfillment.getOrder().getAccount().getAccountID()) />
@@ -69,16 +69,16 @@
 				<!--- 7 --->	<cfset arrayAppend(lineArray, orderFulfillment.getOrder().getAccount().getLastName()) />
 				<!--- 8 --->	<cfset arrayAppend(lineArray, orderFulfillment.getOrder().getAccount().getEmailAddress()) />
 				<!--- 9 --->	<cfset arrayAppend(lineArray, orderFulfillment.getOrder().getAccount().getPhoneNumber()) />
-				<!--- 10 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getName(), "")) />
-				<!--- 11 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getCompany(), "")) />
-				<!--- 12 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getPhone(), "")) />
-				<!--- 13 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getStreetAddress(), "")) />
-				<!--- 14 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getStreet2Address(), "")) />
-				<!--- 15 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getLocality(), "")) />
-				<!--- 16 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getCity(), "")) />
-				<!--- 17 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getStateCode(), "")) />
-				<!--- 18 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getPostalCode(), "")) />
-				<!--- 19 --->	<cfset arrayAppend(lineArray, coalesce(orderFulfillment.getAddress().getCountryCode(), "")) />
+				<!--- 10 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getName(), "")) />
+				<!--- 11 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getCompany(), "")) />
+				<!--- 12 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getPhone(), "")) />
+				<!--- 13 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getStreetAddress(), "")) />
+				<!--- 14 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getStreet2Address(), "")) />
+				<!--- 15 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getLocality(), "")) />
+				<!--- 16 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getCity(), "")) />
+				<!--- 17 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getStateCode(), "")) />
+				<!--- 18 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getPostalCode(), "")) />
+				<!--- 19 --->	<cfset arrayAppend(lineArray, nullReplace(orderFulfillment.getAddress().getCountryCode(), "")) />
 				<!--- 20 --->	<cfset arrayAppend(lineArray, orderFulfillment.getShippingMethod().getShippingMethodID()) />
 				<!--- 21 --->	<cfset arrayAppend(lineArray, orderFulfillment.getShippingMethod().getShippingMethodName()) />
 				<cfif not isNull(orderFulfillment.getShippingMethodRate())>

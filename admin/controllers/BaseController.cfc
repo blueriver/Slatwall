@@ -58,78 +58,10 @@ component persistent="false" accessors="true" output="false" extends="Hibachi.Hi
 		param name="arguments.rc.modal" default="false";
 		param name="arguments.rc.edit" default="false";
 		
-		// Check to see if any message keys were passed via the URL
-		if(structKeyExists(arguments.rc, "messageKeys")) {
-			var messageKeys = listToArray(arguments.rc.messageKeys);
-			for(var i=1; i<=arrayLen(messageKeys); i++) {
-				showMessageKey(messageKeys[i]);
-			}
-		}
 		
-		// Make sure the current user has access to this action
-		if(!secureDisplay(arguments.rc.slatAction, getSlatwallScope().getCurrentAccount())) {
-			if(getSlatwallScope().getCurrentAccount().isNew()) {
-				getFW().redirect('admin:main.login');	
-			}
-			getFW().redirect('admin:main.noaccess');
-		}
-		var subsystemName = getFW().getSubsystem(arguments.rc.slatAction);
-		var sectionName = getFW().getSection(arguments.rc.slatAction);
-		var itemName = getFW().getItem(arguments.rc.slatAction);
 		
-		arguments.rc.itemEntityName = "";
-		arguments.rc.listAction = arguments.rc.slatAction;
-		arguments.rc.saveAction = arguments.rc.slatAction;
-		arguments.rc.detailAction = arguments.rc.slatAction;
-		arguments.rc.deleteAction = arguments.rc.slatAction;
-		arguments.rc.editAction = arguments.rc.slatAction;
-		arguments.rc.createAction = arguments.rc.slatAction;
-		arguments.rc.cancelAction = arguments.rc.slatAction;
-		arguments.rc.exportAction = arguments.rc.slatAction;
 		
-		if(left(itemName, 4) == "list") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-4);
-		} else if (left(itemName, 4) == "edit") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-4);
-		} else if (left(itemName, 4) == "save") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-4);
-		} else if (left(itemName, 6) == "detail") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
-		} else if (left(itemName, 6) == "delete") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
-		} else if (left(itemName, 6) == "create") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
-		} else if (left(itemName, 7) == "process") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-7);
-		} else if (left(itemName, 6) == "export") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
-		}
 		
-		if(arguments.rc.itemEntityName != "") {
-			arguments.rc.listAction = "#subsystemName#:#sectionName#.list#arguments.rc.itemEntityName#"; 
-			arguments.rc.saveAction = "#subsystemName#:#sectionName#.save#arguments.rc.itemEntityName#";
-			arguments.rc.detailAction = "#subsystemName#:#sectionName#.detail#arguments.rc.itemEntityName#";		
-			arguments.rc.deleteAction = "#subsystemName#:#sectionName#.delete#arguments.rc.itemEntityName#";
-			arguments.rc.editAction = "#subsystemName#:#sectionName#.edit#arguments.rc.itemEntityName#";
-			arguments.rc.createAction = "#subsystemName#:#sectionName#.create#arguments.rc.itemEntityName#";
-			arguments.rc.cancelAction = "#subsystemName#:#sectionName#.list#arguments.rc.itemEntityName#";
-			arguments.rc.exportAction = "#subsystemName#:#sectionName#.export#arguments.rc.itemEntityName#"; 
-		}
-		
-		arguments.rc.pageTitle = rbKey(replace(arguments.rc.slatAction,':','.','all'));
-		if(right(arguments.rc.pageTitle, 8) eq "_missing") {
-			if(left(listLast(arguments.rc.slatAction, "."), 4) eq "list") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.slatAction, "."), 4) eq "edit") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.slatAction, "."), 6) eq "create") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.slatAction, "."), 6) eq "detail") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.slatAction, "."), 7) eq "process") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.process'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
-			}
-		}
 		
 		// Place the framework in the rc
 		arguments.rc.fw = getFW();

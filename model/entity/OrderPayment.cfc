@@ -226,7 +226,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	public string function getCreditCardNumber() {
 		if(!structKeyExists(variables,"creditCardNumber")) {
-			if(coalesce(getCreditCardNumberEncrypted(), "") NEQ "") {
+			if(nullReplace(getCreditCardNumberEncrypted(), "") NEQ "") {
 				variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
 			} else {	
 				variables.creditCardNumber = "";
@@ -237,7 +237,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	public string function getExpirationDate() {
 		if(!structKeyExists(variables,"expirationDate")) {
-			variables.expirationDate = coalesce(getExpirationMonth(),"") & "/" & coalesce(getExpirationYear(), "");
+			variables.expirationDate = nullReplace(getExpirationMonth(),"") & "/" & nullReplace(getExpirationYear(), "");
 		}
 		return variables.expirationDate;
 	}

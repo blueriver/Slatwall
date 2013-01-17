@@ -1,3 +1,449 @@
 component extends="FW1.framework" {
-	this.mappings[ "/Hibachi" ] = getDirectoryFromPath(getCurrentTemplatePath());	
+	
+	// ======= START: ENVIORNMENT CONFIGURATION =======
+
+	// =============== configApplication
+	
+	// Defaults
+	this.name = "hibachi-" & hash(getCurrentTemplatePath());
+	this.sessionManagement = true;
+	this.datasource = {};
+	this.datasource.name = "hibachi";
+	
+	// Allow For Application Config
+	if( fileExists(expandPath("config/configApplication.cfm")) ) {
+		include "../../config/configApplication.cfm";
+	}
+	// Allow For Instance Config
+	if( fileExists(expandPath("config/custom/configApplication.cfm")) ) {
+		include "../../config/custom/configApplication.cfm";
+	}
+	
+	// =============== configFramework
+	
+	// Defaults
+	
+	// FW1 Setup
+	variables.framework=structNew();
+	variables.framework.action = 'action';
+	variables.framework.usingSubsystems = true;
+	variables.framework.defaultSubsystem = 'admin';
+	variables.framework.defaultSection = 'main';
+	variables.framework.defaultItem = 'default';
+	variables.framework.subsystemDelimiter = ':';
+	variables.framework.siteWideLayoutSubsystem = 'common';
+	variables.framework.home = 'admin:main.default';
+  	variables.framework.error = 'admin:main.error';
+  	variables.framework.reload = 'reload';
+  	variables.framework.password = 'true';
+  	variables.framework.reloadApplicationOnEveryRequest = false;
+  	variables.framework.generateSES = true;
+  	variables.framework.SESOmitIndex = false;
+  	// variables.framework.base = ""  This was left out because FW1 will automatically try to set it
+	variables.framework.baseURL = '/';
+	// variables.framework.cfcbase = ""  This was left out because FW1 will automatically try to set it
+	variables.framework.suppressImplicitService = true;
+	variables.framework.unhandledExtensions = 'cfc';
+	variables.framework.unhandledPaths = '/flex2gateway';
+	variables.framework.unhandledErrorCaught = false;
+	variables.framework.preserveKeyURLKey = 'fw1pk';
+	variables.framework.maxNumContextsPreserved = 10;
+	variables.framework.cacheFileExists = false;
+	variables.framework.applicationKey = 'HibachiFW1';
+	variables.framework.trace = false;
+	variables.framework.routes = [
+		{ "$GET/api/:entityName/:entityID" = "/admin:api/get/entityName/:entityName/entityID/:entityID"},
+		{ "$GET/api/:entityName/" = "/admin:api/post/entityName/:entityName/"}
+	];
+	
+	// Hibachi Setup
+	variables.framework.hibachi = {};
+	variables.framework.hibachi.applicationKey = "Hibachi";
+	variables.framework.hibachi.resourceBundleDirectories = "config/resourceBundles,config/custom/resourceBundles";
+	variables.framework.hibachi.hibachiScopeObject = "Hibachi.HibachiScope";
+	variables.framework.hibachi.smartListObject = "Hibachi.SmartList";
+	variables.framework.hibachi.fullUpdateKey = "Update";
+	variables.framework.hibachi.fullUpdatePassword = "true";
+	
+	// Allow For Application Config
+	if( fileExists(expandPath("config/configFramework.cfm")) ) {
+		include "../../config/configFramework.cfm";
+	}
+	
+	// Allow For Instance Config
+	if( fileExists(expandPath("config/custom/configFramework.cfm")) ) {
+		include "../../config/custom/configFramework.cfm";
+	}
+	
+	// =============== configMappings
+	
+	// Defaults
+	this.mappings[ "/Hibachi" ] = getDirectoryFromPath(getCurrentTemplatePath());
+	this.mappings[ "/ValidateThis" ] = this.mappings[ "/Hibachi" ] & "ValidateThis";
+	
+	// Allow For Application Config 
+	if( fileExists(expandPath("config/configMappings.cfm")) ) {
+		include "../../config/configMappings.cfm";
+	}
+	
+	// Allow For Instance Config
+	if( fileExists(expandPath("config/custom/configMappings.cfm")) ) {
+		include "../../config/custom/configMappings.cfm";
+	}
+	
+	// =============== configCustomTags
+	
+	// Defaults
+	this.customtagpaths = "/org/Hibachi/HibachiTags";
+	
+	// Allow For Application Config 
+	if( fileExists(expandPath("config/configCustomTags.cfm")) ) {
+		include "../../config/configCustomTags.cfm";
+	}
+	// Allow For Instance Config
+	if( fileExists(expandPath("config/custom/configCustomTags.cfm")) ) {
+		include "../../config/custom/configCustomTags.cfm";
+	}
+	
+	// =============== configORM
+	
+	// Defaults
+	this.ormenabled = true;
+	this.ormsettings = {};
+	this.ormsettings.cfclocation = [ variables.framework.baseURL & "model/entity" ];
+	this.ormSettings.dbcreate = "update";
+	this.ormSettings.flushAtRequestEnd = false;
+	this.ormsettings.eventhandling = true;
+	this.ormSettings.automanageSession = false;
+	this.ormSettings.savemapping = false;
+	this.ormSettings.skipCFCwitherror = true;
+	this.ormSettings.useDBforMapping = true;
+	this.ormSettings.autogenmap = false;
+	this.ormSettings.logsql = false;
+	
+	// Allow For Application Config
+	if( fileExists(expandPath("config/configORM.cfm")) ) {
+		include "../../config/configORM.cfm";
+	}
+	// Allow For Instance Config
+	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
+		include "../../config/custom/configORM.cfm";
+	}
+	
+	// Make Sure that the required values end up in the application scope so that we can get them from somewhere else
+	
+	
+	// =======  END: ENVIORNMENT CONFIGURATION  =======
+	
+	public any function init() {
+		setupGlobalRequest();
+	}
+	
+	public void function setupGlobalRequest() {
+		request["#variables.framework.hibachi.applicationKey#Scope"] = createObject("component", "#variables.framework.hibachi.hibachiScopeObject#").init( hibachiApplicationKey = variables.framework.hibachi.applicationKey );
+		
+		// Verify that the application is setup
+		verifyApplicationSetup();
+		
+		// Call the onEveryRequest() Method for the parent Application.cfc
+		onEveryRequest();
+	}
+	
+	public void function setupRequest() {
+		setupGlobalRequest();
+		
+		// Setup structured Data if a request context exists meaning that a full action was called
+		getBeanFaction().getBean("FormUtilities").buildFormCollections(request.context);
+		
+		// Setup a $ in the request context, and the slatwallScope shortcut
+		request.context.$ = {};
+		request.context.$[ variables.framework.hibachi.applicationKey ] = request[ "#variables.framework.hibachi.applicationKey#Scope" ];
+		
+		// Check to see if any message keys were passed via the URL
+		if(structKeyExists(request.context, "messageKeys")) {
+			var messageKeys = listToArray(request.context.messageKeys);
+			for(var i=1; i<=arrayLen(messageKeys); i++) {
+				request[ "#variables.framework.hibachi.applicationKey#Scope" ].showMessageKey( messageKeys[i] );
+			}
+		}
+		
+		// Call the onInternalRequest() Method for the parent Application.cfc
+		onInternalRequest();
+	}
+	
+	public void function verifyApplicationSetup() {
+		if(structKeyExists(url, variables.framework.reload) && url[variables.framework.reload] == variables.framework.reload) {
+			getHibachiScope().setApplicationValue("initialized", false);
+		}
+		
+		// Check to see if out application stuff is initialized
+		if(!getHibachiScope().hasApplicationValue("initialized") || !getHibachiScope().getApplicationValue("initialized")) {
+			
+			// If not, lock the application until this is finished
+			lock scope="Application" timeout="240"  {
+				
+				// Check again so that the qued requests don't back up
+				if(!getHibachiScope().hasApplicationValue("initialized") || !getHibachiScope().getApplicationValue("initialized")) {
+					
+					// Clear out the old application scope
+					application[ variables.framework.hibachi.applicationKey ] = {};
+					
+					// Application Setup Started
+					writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - Application Setup Started");
+					getHibachiScope().setApplicationValue("initialized", false);
+					
+					// =================== Required Application Setup ===================
+					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
+					if(!structKeyExists(application, variables.framework.applicationKey)) {
+						writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - onApplicationStart() was called");
+						onApplicationStart();
+						writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - onApplicationStart() finished");
+					}
+					// ================ END: Required Application Setup ==================
+					
+					//========================= IOC SETUP ====================================
+					
+					var beanFactory = new org.Hibachi.DI1.ioc("model");
+					
+					beanFactory.addBean("hibachiApplicationKey", variables.framework.hibachi.applicationKey);
+					
+					beanFactory.declareBean("hibachiDAO", "Hibachi.HibachiDAO", true);
+					beanFactory.declareBean("hibachiService", "Hibachi.HibachiService", true);
+					beanFactory.declareBean("hibachiAuthenticationService", "Hibachi.HibachiAuthenticationService", true);
+					beanFactory.declareBean("hibachiRBService", "Hibachi.HibachiAuthenticationService", true);
+					beanFactory.declareBean("hibachiEventService", "Hibachi.HibachiAuthenticationService", true);
+					beanFactory.declareBean("hibachiTagService", "Hibachi.HibachiAuthenticationService", true);
+					
+					beanFactory.declareBean("FormUtilities", "Hibachi.FormUtilities.FormUtilities", true);
+					
+					setBeanFactory( beanFactory );
+					
+					//========================= END: IOC SETUP ===============================
+					
+					// Call the onFirstRequest() Method for the parent Application.cfc
+					onFirstRequest();
+					
+					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
+					if(!fileExists(expandPath('config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+						
+						// Write File
+						fileWrite(expandPath('config/lastFullUpdate.txt.cfm'), now());
+						
+						// Set the request timeout to 360
+						getBeanFactory().getBean("hibachiTagService").cfsetting(requesttimeout=360);
+						
+						// Reload ORM
+						ormReload();
+						writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - ORMReload() was successful");
+							
+						onUpdateRequest();						
+					}
+					// ========================== END: FULL UPDATE ==============================
+					
+					// Application Setup Ended
+					getHibachiScope().setApplicationValue("initialized", true);
+					writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - Application Setup Complete");
+				}
+			}
+		}
+	}
+	
+	public void function setupResponse() {
+		endHibachiLifecycle();
+		var httpRequestData = getHTTPRequestData();
+		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.hibachi.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) {
+			if(structKeyExists(request.context, "fw")) {
+				structDelete(request.context, "fw");
+			}
+			if(structKeyExists(request.context, "$")) {
+				structDelete(request.context, "$");
+			}
+			writeOutput( serializeJSON(request.context) );
+			abort;
+		}
+	}
+	
+	public void function setupView() {
+		var httpRequestData = getHTTPRequestData();
+		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.hibachi.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) {
+			setupResponse();
+		}
+		
+		if(structKeyExists(url, "modal") && url.modal) {
+			request.layout = false;
+			setLayout("admin:modal");
+		}
+		
+		// If this is an integration subsystem, then apply add the default layout to the request.layout
+		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
+			setLayout("admin:main");
+		}
+	}
+	
+	
+	// This handels all of the ORM persistece.
+	public void function endHibachiLifecycle() {
+		if(getHibachiScope().getORMHasErrors()) {
+			getBeanFactory().getBean("hibachiDAO").clearORMSession();
+		} else {
+			getBeanFactory().getBean("hibachiDAO").flushORMSession();
+		}
+	}
+	
+	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
+	public void function redirectExact(required string location, boolean addToken=false) {
+		endHibachiLifecycle();
+		location(arguments.location, arguments.addToken);
+	}
+	
+	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle
+	public string function doAction(required string action) {
+		var response = "";
+		
+		// first, we double check to make sure all framework defaults are setup
+		setupFrameworkDefaults();
+		
+		var originalContext = {};
+		var originalServices = [];
+		var originalViewOverride = "";
+		var originalCFCBase = "";
+		var originalBase = "";
+		
+		
+		// If there was already a request.context, then we need to save it to be used later
+		if(structKeyExists(request, "context")) {
+			originalContext = request.context;
+			structDelete(request, "context");
+		}
+		
+		// If there was already a request.services, then we need to save it to be used later
+		if(structKeyExists(request, "services")) {
+			originalServices = request.services;
+			structDelete(request, "services");
+		}
+		
+		// If there was already a view override in the request, then we need to save it to be used later
+		if(structKeyExists(request, "overrideViewAction")) {
+			originalViewOverride = request.overrideViewAction;
+			structDelete(request, "overrideViewAction");
+		}
+		
+		// We also need to store the original cfcbase if there was one
+		if(structKeyExists(request, "cfcbase")) {
+			originalCFCBase = request.cfcbase;
+			structDelete(request, "cfcbase");
+		}
+		
+		// We also need to store the original base if there was one
+		if(structKeyExists(request, "base")) {
+			originalBase = request.base;
+			structDelete(request, "base");
+		}
+		
+		// create a new request context to hold simple data, and an empty request services so that the view() function works
+		request.context = {};
+		request.services = [];
+		
+		// Place form and URL into the new structure
+		structAppend(request.context, form);
+		structAppend(request.context, url);
+		
+		if(!structKeyExists(request.context, "$")) {
+			request.context.$ = {};
+			request.context.$[ variables.framework.hibachi.applicationKey ] = request[ "#variables.framework.hibachi.applicationKey#Scope" ];
+		}
+		
+		// Add the slatAction to the RC Scope
+		request.context[ variables.framework.action ] = arguments.action;
+		
+		// Do structured data just like a normal request
+		getBeanFaction().getBean("FormUtilities").buildFormCollections(request.context);
+		
+		// Get Action Details
+		var subsystem = getSubsystem( arguments.action );
+		var section = getSection( arguments.action );
+		var item = getItem( arguments.action );
+		
+		// Setup the cfc base so that the getController method works
+		request.cfcbase = variables.framework.cfcbase;
+		request.base = variables.framework.base;
+
+		// Call the controller
+		var controller = getController( section = section, subsystem = subsystem );
+		if(isObject(controller)) {
+			doController( controller, 'before' );
+			doController( controller, 'start' & item );
+			doController( controller, item );
+			doController( controller, 'end' & item );
+			doController( controller, 'after' );
+		}
+				
+		// Was the view overridden in the controller
+		if ( structKeyExists( request, 'overrideViewAction' ) ) {
+			subsystem = getSubsystem( request.overrideViewAction );
+			section = getSection( request.overrideViewAction );
+			item = getItem( request.overrideViewAction );
+		}
+		
+		var viewPath = parseViewOrLayoutPath( subsystem & variables.framework.subsystemDelimiter & section & '/' & item, 'view' );
+		
+		// Place all of this formated data into a var named rc just like a regular request
+		var rc = request.context;
+		var $ = request.context.$;
+		
+		// Include the view
+		savecontent variable="response"  {
+			include "#viewPath#";
+		}
+		
+		// Remove the cfcbase & base from the request so that future actions don't get screwed up
+		structDelete( request, 'context' );
+		structDelete( request, 'services' );
+		structDelete( request, 'overrideViewAction' );
+		structDelete( request, 'cfcbase' );
+		structDelete( request, 'base' );
+		
+		// If there was an override view action before... place it back into the request
+		if(structCount(originalContext)) {
+			request.context = originalContext;
+		}
+		
+		// If there was an override view action before... place it back into the request
+		if(arrayLen(originalServices)) {
+			request.services = originalServices;
+		}
+		
+		// If there was an override view action before... place it back into the request
+		if(len(originalViewOverride)) {
+			request.overrideViewAction = originalViewOverride;
+		}
+		
+		// If there was a different cfcbase before... place it back into the request
+		if(len(originalCFCBase)) {
+			request.cfcbase = originalCFCBase;
+		}
+		
+		// If there was a different base before... place it back into the request
+		if(len(originalBase)) {
+			request.base = originalBase;
+		}
+		
+		return response;
+	}
+	
+	// @hint private helper method
+	private any function getHibachiScope() {
+		return request["#variables.framework.hibachi.applicationKey#Scope"];
+	}
+	
+	
+	// THESE METHODS ARE INTENTIONALLY LEFT BLANK
+	public void function onEveryRequest() {}
+	
+	public void function onInternalRequest() {}
+	
+	public void function onFirstRequest() {}
+	
+	public void function onUpdateRequest() {}
+	
 }

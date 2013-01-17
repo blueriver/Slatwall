@@ -174,6 +174,30 @@
 			return false;
 		}
 		
+		public boolean function process(required any entity, required string processContext=""){
+			
+			// If the entity Passes validation
+			if(arguments.entity.isDeletable()) {
+				
+				// Remove any Many-to-Many relationships
+				arguments.entity.removeAllManyToManyRelationships();
+				
+				getService("settingService").removeAllEntityRelatedSettings( entity=arguments.entity );
+				
+				// Call delete in the DAO
+				getHibachiDAO().delete(target=arguments.entity);
+				
+				// Return that the delete was sucessful
+				return true;
+				
+			}
+				
+			// Setup ormHasErrors because it didn't pass validation
+			getSlatwallScope().setORMHasErrors( true );
+	
+			return false;
+		}
+		
 		
 		// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
 	    public any function save(required any entity, struct data, string context="save") {

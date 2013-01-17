@@ -67,38 +67,38 @@ Notes:
 						--->
 						<a href="#buildURL(action='admin:main.default')#" class="brand brand-two"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
 						<li class="divider-vertical"></li>
-						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.product_nav')#" icon="tags icon-white" type="nav">
-							<cf_SlatwallActionCaller action="admin:product.listproduct" type="list">
-							<cf_SlatwallActionCaller action="admin:product.listproducttype" type="list">
-							<cf_SlatwallActionCaller action="admin:product.listoptiongroup" type="list">
-							<cf_SlatwallActionCaller action="admin:product.listbrand" type="list">
-							<cf_SlatwallActionCaller action="admin:product.listsubscriptionterm" type="list">
-							<cf_SlatwallActionCaller action="admin:product.listsubscriptionbenefit" type="list">
-							<cf_SlatwallActionCaller action="admin:product.listproductreview" type="list">
-							<cf_SlatwallActionCaller action="admin:pricing.listpromotion" type="list">
-							<cf_SlatwallActionCaller action="admin:pricing.listpricegroup" type="list">
-						</cf_SlatwallActionCallerDropdown>
-						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.order_nav')#" icon="inbox icon-white" type="nav">
-							<cf_SlatwallActionCaller action="admin:order.listorder" type="list">
-							<cf_SlatwallActionCaller action="admin:order.listcartandquote" type="list">
-							<cf_SlatwallActionCaller action="admin:order.listorderitem" type="list">
-							<cf_SlatwallActionCaller action="admin:order.listorderfulfillment" type="list">
-							<cf_SlatwallActionCaller action="admin:order.listorderpayment" type="list">
-							<cf_SlatwallActionCaller action="admin:vendor.listvendororder" type="list">
-							<cf_SlatwallActionCaller action="admin:vendor.listvendororderitem" type="list">
-						</cf_SlatwallActionCallerDropdown>
-						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.account_nav')#" icon="user icon-white" type="nav">
-							<cf_SlatwallActionCaller action="admin:account.listaccount" type="list">
-							<cf_SlatwallActionCaller action="admin:vendor.listvendor" type="list">
-							<cf_SlatwallActionCaller action="admin:account.listsubscriptionusage" type="list">
-							<cf_SlatwallActionCaller action="admin:account.listpermissiongroup" type="list">
-						</cf_SlatwallActionCallerDropdown>
-						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.warehouse_nav')#" icon="barcode icon-white" type="nav">
-							<cf_SlatwallActionCaller action="admin:warehouse.liststockreceiver" type="list">
-							<cf_SlatwallActionCaller action="admin:warehouse.liststockadjustment" type="list">
-						</cf_SlatwallActionCallerDropdown>
-						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.integration_nav')#" icon="random icon-white" type="nav">
-							<cf_SlatwallActionCaller action="admin:integration.listintegration" type="list">
+						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.product_nav')#" icon="tags icon-white" type="nav">
+							<cf_HibachiActionCaller action="admin:crud.listproduct" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listproducttype" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listoptiongroup" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listbrand" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listsubscriptionterm" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listsubscriptionbenefit" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listproductreview" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listpromotion" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listpricegroup" type="list">
+						</cf_HibachiActionCallerDropdown>
+						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.order_nav')#" icon="inbox icon-white" type="nav">
+							<cf_HibachiActionCaller action="admin:crud.listorder" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listcartandquote" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listorderitem" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listorderfulfillment" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listorderpayment" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listvendororder" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listvendororderitem" type="list">
+						</cf_HibachiActionCallerDropdown>
+						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.account_nav')#" icon="user icon-white" type="nav">
+							<cf_HibachiActionCaller action="admin:crud.listaccount" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listvendor" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listsubscriptionusage" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listpermissiongroup" type="list">
+						</cf_HibachiActionCallerDropdown>
+						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.warehouse_nav')#" icon="barcode icon-white" type="nav">
+							<cf_HibachiActionCaller action="admin:crud.liststockreceiver" type="list">
+							<cf_HibachiActionCaller action="admin:crud.liststockadjustment" type="list">
+						</cf_HibachiActionCallerDropdown>
+						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.integration_nav')#" icon="random icon-white" type="nav">
+							<cf_HibachiActionCaller action="admin:crud.listintegration" type="list">
 							<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
 							<cfloop array="#local.integrationSubsystems#" index="local.intsys">
 								<cfif request.slatwallScope.secureDisplay('#local.intsys.subsystem#:main.default')>
@@ -107,70 +107,70 @@ Notes:
 									</li>
 								</cfif>
 							</cfloop>
-						</cf_SlatwallActionCallerDropdown>
-						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.setting_nav')#" icon="cog icon-white" type="nav">
+						</cf_HibachiActionCallerDropdown>
+						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.setting_nav')#" icon="cog icon-white" type="nav">
 							<cfsavecontent variable="local.settingGroupOne">
-								<cf_SlatwallActionCaller action="admin:setting.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list" divideAfter="true">
+								<cf_HibachiActionCaller action="admin:setting.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
+								<cf_HibachiActionCaller action="admin:crud.listattributeset" type="list" divideAfter="true">
 							</cfsavecontent>
 							<cfif len(local.settingGroupOne)>
 								#local.settingGroupOne#
 								<li class="divider"></li>
 							</cfif>
-							<cf_SlatwallActionCaller action="admin:setting.listaddresszone" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listcategory" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listcontent" type="list" divideAfter="true">
-							<cf_SlatwallActionCaller action="admin:setting.listcountry" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listcurrency" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listemail" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listemailtemplate" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listlocation" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listmeasurementunit" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listorderorigin" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listpaymentmethod" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listpaymentterm" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listsite" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listtaxcategory" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.listtype" type="list">
-						</cf_SlatwallActionCallerDropdown>
-						<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('admin.tools_nav')#" icon="magnet icon-white" type="nav">
+							<cf_HibachiActionCaller action="admin:crud.listaddresszone" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listcategory" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listcontent" type="list" divideAfter="true">
+							<cf_HibachiActionCaller action="admin:crud.listcountry" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listcurrency" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listemail" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listemailtemplate" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listfulfillmentmethod" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listlocation" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listmeasurementunit" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listorderorigin" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listpaymentmethod" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listpaymentterm" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listroundingrule" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listsite" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listtaxcategory" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listterm" type="list">
+							<cf_HibachiActionCaller action="admin:crud.listtype" type="list">
+						</cf_HibachiActionCallerDropdown>
+						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.tools_nav')#" icon="magnet icon-white" type="nav">
 							<cfsavecontent variable="local.toolGroupOne">
-								<cf_SlatwallActionCaller action="admin:main.about" type="list">
-								<cf_SlatwallActionCaller action="admin:main.log" type="list">
-								<cf_SlatwallActionCaller action="frontend:page.slatwall-productlisting" text="#$.slatwall.rbKey('admin.frontendexample')#" type="list">
+								<cf_HibachiActionCaller action="admin:main.about" type="list">
+								<cf_HibachiActionCaller action="admin:main.log" type="list">
+								<cf_HibachiActionCaller action="frontend:page.slatwall-productlisting" text="#$.slatwall.rbKey('admin.frontendexample')#" type="list">
 							</cfsavecontent>
 							<cfif len(local.toolGroupOne)>
 								#local.toolGroupOne#
 								<li class="divider"></li>
 							</cfif>
 							<cfsavecontent variable="local.toolGroupTwo">
-								<cf_SlatwallActionCaller action="admin:main.ckfinder" type="list" modal="true" />
-								<cf_SlatwallActionCaller action="admin:setting.listschedule" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listtask" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.listtaskhistory" type="list">
+								<cf_HibachiActionCaller action="admin:main.ckfinder" type="list" modal="true" />
+								<cf_HibachiActionCaller action="admin:crud.listschedule" type="list">
+								<cf_HibachiActionCaller action="admin:crud.listtask" type="list">
+								<cf_HibachiActionCaller action="admin:crud.listtaskhistory" type="list">
 							</cfsavecontent>
 							<cfif len(local.toolGroupTwo)>
 								#local.toolGroupTwo#
 								<li class="divider"></li>
 							</cfif>
-							<cf_SlatwallActionCaller action="admin:main.update" type="list">
+							<cf_HibachiActionCaller action="admin:main.update" type="list">
 							<cfif findNoCase("*", $.slatwall.getCurrentAccount().getAllPermissions())>
-								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true&update=true" type="list" text="Reload Slatwall (Full Update)">
-								<cf_SlatwallActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
+								<cf_HibachiActionCaller action="admin:main.default" querystring="reload=true&update=true" type="list" text="Reload Slatwall (Full Update)">
+								<cf_HibachiActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
 							</cfif>
-						</cf_SlatwallActionCallerDropdown>
+						</cf_HibachiActionCallerDropdown>
 						
 					</ul>
 					<cfif $.slatwall.getLoggedInAsAdminFlag()>
 						<div class="pull-right">
 							<ul class="nav">
-								<cf_SlatwallActionCallerDropdown title="" icon="user icon-white" dropdownclass="pull-right" type="nav">
-									<cf_SlatwallActionCaller action="admin:account.detailaccount" querystring="accountID=#$.slatwall.account('accountID')#" type="list">
-									<cf_SlatwallActionCaller action="admin:main.logout" type="list">
-								</cf_SlatwallActionCallerDropdown>
+								<cf_HibachiActionCallerDropdown title="" icon="user icon-white" dropdownclass="pull-right" type="nav">
+									<cf_HibachiActionCaller action="admin:account.detailaccount" querystring="accountID=#$.slatwall.account('accountID')#" type="list">
+									<cf_HibachiActionCaller action="admin:main.logout" type="list">
+								</cf_HibachiActionCallerDropdown>
 								<li class="divider-vertical"></li>
 							</ul>
 							<form name="search" class="navbar-search" action="/" onSubmit="return false;">

@@ -38,252 +38,90 @@ Notes:
 */
 component extends="org.Hibachi.Hibachi" output="false" {
 
-	// ============================================================================== START OF REQUIRED APPLICATION SETTINGS
-	include "config/configApplication.cfm";
-	if( fileExists(expandPath("config/custom/configApplication.cfm")) ) {
-		include "config/custom/configApplication.cfm";
-	}
-	include "config/configFramework.cfm";
-	if( fileExists(expandPath("config/custom/configFramework.cfm")) ) {
-		include "config/custom/configFramework.cfm";
-	}
-	include "config/configMappings.cfm";
-	if( fileExists(expandPath("config/custom/configMappings.cfm")) ) {
-		include "config/custom/configMappings.cfm";
-	}
-	include "config/configCustomTags.cfm";
-	if( fileExists(expandPath("config/custom/configCustomTags.cfm")) ) {
-		include "config/custom/configCustomTags.cfm";
-	}
-	include "config/configORM.cfm";
-	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
-		include "config/custom/configORM.cfm";
-	}
+	// ===================================== HIBACHI HOOKS
 	
-	// ============================================================================== END OF REQUIRED APPLICATION SETTINGS
-	public void function verifyApplicationSetup() {
-		
-		if(structKeyExists(url, variables.framework.reload)) {
-			request.slatwallScope.setApplicationValue("initialized", false);
-		}
-		
-		// Check to see if out application stuff is initialized
-		if(!request.slatwallScope.hasApplicationValue("initialized") || !request.slatwallScope.getApplicationValue("initialized")) {
-			
-			// If not, lock the application until this is finished
-			lock name="application_slatwall" timeout="240"  {
-				
-				// Check again so that the qued requests don't back up
-				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
-					
-					// Clear out the old Slatwall application
-					application.slatwall = {};
-					
-					// Application Setup Started
-					writeLog(file="Slatwall", text="General Log - Application Setup Started");	
-					request.slatwallScope.setApplicationValue("initialized", false);
-					
-					// =================== Required Application Setup ===================
-					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
-					if(!structKeyExists(application, "slatwallFW1")) {
-						writeLog(file="Slatwall", text="General Log - onApplicationStart() was called");
-						onApplicationStart();
-						writeLog(file="Slatwall", text="General Log - onApplicationStart() finished");
-					}
-					
-					// This will force the Taffy API to reload on next request
-					if(structKeyExists(application, "_taffy")){
-						structDelete(application,"_taffy");
-						writeLog(file="Slatwall", text="General Log - Taffy application valirable removed so that it reloads");
-					}
-					// ================ END: Required Application Setup ==================
-					
-					/*
-					// ========================= Coldspring Setup =========================
-					
-					// Get Coldspring Config
-					var serviceFactory = "";
-					var integrationService = "";
-					var rbFactory = "";
-					var xml = "";
-					var xmlPath = "";
-
-				    xmlPath = expandPath( '/Slatwall/config/coldspring.xml' );
-					xml = xmlParse(FileRead("#xmlPath#")); 
-					
-					// Build Coldspring factory
-					serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
-					serviceFactory.loadBeansFromXmlObj( xml );
-					
-					// Set a data service coldspring as the child factory, with the Slatwall as it's parent
-					serviceFactory = serviceFactory.getBean("integrationService").updateColdspringWithDataIntegration( serviceFactory, xml );
-					
-					// Now place the service factory as the fw1 bean
-					setBeanFactory( serviceFactory );
-					
-					
-					writeLog(file="Slatwall", text="General Log - Coldspring Setup Confirmed");
-					//========================= END: Coldsping Setup =========================
-					*/
-					
-					//========================= IOC SETUP ====================================
-					
-					var beanFactory = new org.Hibachi.DI1.ioc("model");
-					beanFactory.declareBean("hibachiDAO", "Hibachi.HibachiDAO", true);
-					beanFactory.declareBean("hibachiService", "Hibachi.HibachiService", true);
-					setBeanFactory(beanFactory);
-					
-					//========================= END: IOC SETUP ===============================
-					
-					// ======================== Enviornment Setup ============================
-					
-					// SET Hibachi Key
-					request[ "#variables.framework.hibachiKey#Scope" ].setApplicationValue("hibachiKey", variables.framework.hibachiKey);
-					
-					// Version
-					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
-					if( fileExists( versionFile ) ) {
-						request.slatwallScope.setApplicationValue("version", trim(fileRead(versionFile)));
-					} else {
-						request.slatwallScope.setApplicationValue("version", "unknown");
-					}
-					writeLog(file="Slatwall", text="General Log - Application Value 'version' setup as #request.slatwallScope.getApplicationValue('version')#");
-					
-					// Slatwall Root URL
-					request.slatwallScope.setApplicationValue("slatwallRootURL", variables.framework.baseURL);
-					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallRootURL' setup as #request.slatwallScope.getApplicationValue("slatwallRootURL")#");
-					
-					// Set Datasource
-					request.slatwallScope.setApplicationValue("datasource", this.datasource.name);
-					writeLog(file="Slatwall", text="General Log - Application Value 'datasource' setup as #request.slatwallScope.getApplicationValue("datasource")#");
-					
-					// SET Database Type
-					request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
-					writeLog(file="Slatwall", text="General Log - Application Value 'databaseType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
-					
-					// VFS
-					request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
-					writeLog(file="Slatwall", text="General Log - Application Value 'slatwallVfsRoot' setup as: #this.mappings[ "/slatwallVfsRoot" ]#");
-					
-					// ======================== END: Enviornment Setup ========================
-					
-					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
-					if(!fileExists(expandPath('/Slatwall/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, "update") && url.update)){
-						
-						// Write File
-						fileWrite(expandPath('/Slatwall/config/lastFullUpdate.txt.cfm'), now());
-						
-						// Set the request timeout to 360
-						getBeanFactory().getBean("utilityTagService").cfsetting(requesttimeout=360);
-						
-						// Reload ORM
-						ormReload();
-						writeLog(file="Slatwall", text="General Log - ORMReload() was successful");
-							
-						// Reload All Integrations
-						getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-						writeLog(file="Slatwall", text="General Log - Integrations have been updated");
-						
-						// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
-						//var muraIntegrationService = createObject("component", "Slatwall.integrationServices.mura.Integration").init();
-						//muraIntegrationService.setupIntegration();
-						//writeLog(file="Slatwall", text="General Log - Mura integration requirements complete");
-						
-						// Setup Default Data... Not called on soft reloads.
-						getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
-						writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
-						
-						// Confirm Session Setup
-						getBeanFactory().getBean("sessionService").setPropperSession();
-						
-						// Super Users
-						//getBeanFactory().getBean("permissionService").setupDefaultPermissions();
-						//writeLog(file="Slatwall", text="General Log - Super User Permissions have been confirmed");
-						
-						// Clear the setting cache so that it can be reloaded
-						getBeanFactory().getBean("settingService").clearAllSettingsQuery();
-						writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared");
-						
-						// Run Scripts
-						getBeanFactory().getBean("updateService").runScripts();
-						writeLog(file="Slatwall", text="General Log - Update Service Scripts Have been Run");
-						
-					}
-					// ========================== END: FULL UPDATE ==============================
-					
-					// Application Setup Ended
-					request.slatwallScope.setApplicationValue("initialized", true);
-					writeLog(file="Slatwall", text="General Log - Application Setup Complete");
-				}
-			}
-		}
-	}
-	
-	public void function setupGlobalRequest() {
-		// Set up Slatwall Scope inside of request
-		request.slatwallScope = new Slatwall.model.transient.SlatwallScope();
-		
-		// Verify that the application is setup
-		verifyApplicationSetup();
+	// @hint this method always fires one time, even if the request is coming from an outside application.
+	public void function onEveryRequest() {
 		
 		// Confirm Session Setup
 		getBeanFactory().getBean("sessionService").setPropperSession();
 	}
-
-	public void function setupRequest() {
-		// Call the setup of the global Request
-		setupGlobalRequest();
+	
+	// @hint this will fire 1 time if you are running the application.  If the application is bootstraped then it won't run
+	public void function onInternalRequest() {
 		
-		// Setup structured Data if a request context exists meaning that a full action was called
-		var structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
-		if(structCount(structuredData)) {
-			structAppend(request.context, structuredData);	
-		}
-		
-		// Setup a $ in the request context, and the slatwallScope shortcut
-		request.context.$ = {};
-		request.context.$.slatwall = request.slatwallScope;
-		
-		// Run subsytem specific logic.
-		if(getSubsystem(request.context.slatAction) != "frontend") {
-			controller("admin:BaseController.subSystemBefore");
+	}
+	
+	public void function onFirstRequest() {
+		// Version
+		var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
+		if( fileExists( versionFile ) ) {
+			request.slatwallScope.setApplicationValue("version", trim(fileRead(versionFile)));
 		} else {
-			request.context.sectionTitle = getSubsystem(request.context.slatAction);
-			request.context.itemTitle = getSection(request.context.slatAction);
+			request.slatwallScope.setApplicationValue("version", "unknown");
 		}
+		writeLog(file="Slatwall", text="General Log - Application Value 'version' setup as #request.slatwallScope.getApplicationValue('version')#");
+		
+		// Slatwall Root URL
+		request.slatwallScope.setApplicationValue("slatwallRootURL", variables.framework.baseURL);
+		writeLog(file="Slatwall", text="General Log - Application Value 'slatwallRootURL' setup as #request.slatwallScope.getApplicationValue("slatwallRootURL")#");
+		
+		// Set Datasource
+		request.slatwallScope.setApplicationValue("datasource", this.datasource.name);
+		writeLog(file="Slatwall", text="General Log - Application Value 'datasource' setup as #request.slatwallScope.getApplicationValue("datasource")#");
+		
+		// SET Database Type
+		request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
+		writeLog(file="Slatwall", text="General Log - Application Value 'databaseType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
+		
+		// VFS
+		request.slatwallScope.setApplicationValue("slatwallVfsRoot", this.mappings[ "/slatwallVfsRoot" ]);
+		writeLog(file="Slatwall", text="General Log - Application Value 'slatwallVfsRoot' setup as: #this.mappings[ "/slatwallVfsRoot" ]#");
 		
 	}
 	
-	public void function setupView() {
-		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "X-Slatwall-AJAX") && isBoolean(httpRequestData.headers["X-Slatwall-AJAX"]) && httpRequestData.headers["X-Slatwall-AJAX"]) {
-			setupResponse();
-		}
+	public void function onUpdateRequest() {
+		// Reload All Integrations
+		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+		writeLog(file="Slatwall", text="General Log - Integrations have been updated");
 		
-		if(structKeyExists(url, "modal") && url.modal) {
-			request.layout = false;
-			setLayout("admin:modal");
-		}
+		// Setup Default Data... Not called on soft reloads.
+		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
+		writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
 		
-		// If this is an integration subsystem, then apply add the default layout to the request.layout
-		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
-			setLayout("admin:main");
-		}
+		// Confirm Session Setup
+		getBeanFactory().getBean("sessionService").setPropperSession();
+		
+		// Clear the setting cache so that it can be reloaded
+		getBeanFactory().getBean("settingService").clearAllSettingsQuery();
+		writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared");
+		
+		// Run Scripts
+		getBeanFactory().getBean("updateService").runScripts();
+		writeLog(file="Slatwall", text="General Log - Update Service Scripts Have been Run");
 	}
 	
-	public void function setupResponse() {
-		endSlatwallLifecycle();
-		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "X-Slatwall-AJAX") && isBoolean(httpRequestData.headers["X-Slatwall-AJAX"]) && httpRequestData.headers["X-Slatwall-AJAX"]) {
-			if(structKeyExists(request.context, "fw")) {
-				structDelete(request.context, "fw");
-			}
-			if(structKeyExists(request.context, "$")) {
-				structDelete(request.context, "$");
-			}
-			writeOutput( serializeJSON(request.context) );
-			abort;
+	// ===================================== END: HIBACHI HOOKS
+	// ===================================== FW1 HOOKS
+	
+	// Allows for integration services to have a seperate directory structure
+	public any function getSubsystemDirPrefix( string subsystem ) {
+		if ( arguments.subsystem eq '' ) {
+			return '';
 		}
+		if ( !listFind('admin,frontend', arguments.subsystem) ) {
+			return 'integrationServices/' & arguments.subsystem & '/';
+		}
+		return arguments.subsystem & '/';
+	}
+	
+	// ===================================== END: FW1 HOOKS
+	// ===================================== SLATWALL FUNCTIONS
+	
+	// Additional redirect function that allows us to redirect to a setting.  This can be defined in an integration as well
+	public void function redirectSetting(required string settingName, string queryString="") {
+		endHibachiLifecycle();
+		location(request.muraScope.createHREF(filename=request.slatwallScope.setting(arguments.settingName), queryString=arguments.queryString), false);
 	}
 	
 	/*
@@ -306,39 +144,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	}
 	*/
 	
-	
-	// This handels all of the ORM persistece.
-	public void function endSlatwallLifecycle() {
-		if(request.slatwallScope.getORMHasErrors()) {
-			getBeanFactory().getBean("dataDAO").clearORMSession();
-		} else {
-			getBeanFactory().getBean("dataDAO").flushORMSession();
-		}
-	}
-	
-	// Allows for integration services to have a seperate directory structure
-	public any function getSubsystemDirPrefix( string subsystem ) {
-		if ( arguments.subsystem eq '' ) {
-			return '';
-		}
-		if ( !listFind('admin,frontend', arguments.subsystem) ) {
-			return 'integrationServices/' & arguments.subsystem & '/';
-		}
-		return arguments.subsystem & '/';
-	}
-	
-	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
-	public void function redirectExact(required string location, boolean addToken=false) {
-		endSlatwallLifecycle();
-		location(arguments.location, arguments.addToken);
-	}
-	
-	// Additional redirect function that allows us to redirect to a setting.  This can be defined in an integration as well
-	public void function redirectSetting(required string settingName, string queryString="") {
-		endSlatwallLifecycle();
-		location(request.muraScope.createHREF(filename=request.slatwallScope.setting(arguments.settingName), queryString=arguments.queryString), false);
-	}
-	
+	/*
 	public string function buildURL( string action = '', string path = '', any queryString = '' ) {
 		if(len(arguments.queryString)) {
 			arguments.queryString = "&#arguments.queryString#";
@@ -348,147 +154,8 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		}
 		return "#variables.framework.baseURL#?slatAction=admin:#arguments.action##arguments.queryString#";
 	}
+	*/
 	
-	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle
-	public string function doAction(required string action) {
-		var response = "";
-		
-		// first, we double check to make sure all framework defaults are setup
-		setupFrameworkDefaults();
-		
-		var originalContext = {};
-		var originalServices = [];
-		var originalViewOverride = "";
-		var originalCFCBase = "";
-		var originalBase = "";
-		
-		
-		// If there was already a request.context, then we need to save it to be used later
-		if(structKeyExists(request, "context")) {
-			originalContext = request.context;
-			structDelete(request, "context");
-		}
-		
-		// If there was already a request.services, then we need to save it to be used later
-		if(structKeyExists(request, "services")) {
-			originalServices = request.services;
-			structDelete(request, "services");
-		}
-		
-		// If there was already a view override in the request, then we need to save it to be used later
-		if(structKeyExists(request, "overrideViewAction")) {
-			originalViewOverride = request.overrideViewAction;
-			structDelete(request, "overrideViewAction");
-		}
-		
-		// We also need to store the original cfcbase if there was one
-		if(structKeyExists(request, "cfcbase")) {
-			originalCFCBase = request.cfcbase;
-			structDelete(request, "cfcbase");
-		}
-		
-		// We also need to store the original base if there was one
-		if(structKeyExists(request, "base")) {
-			originalBase = request.base;
-			structDelete(request, "base");
-		}
-		
-		// create a new request context to hold simple data, and an empty request services so that the view() function works
-		request.context = {};
-		request.services = [];
-		
-		// Place form and URL into the new structure
-		structAppend(request.context, form);
-		structAppend(request.context, url);
-		
-		if(!structKeyExists(request.context, "$")) {
-			request.context.$ = {};
-			request.context.$.slatwall = request.slatwallScope;
-		}
-		
-		// Add the slatAction to the RC Scope
-		request.context.slatAction = arguments.action;
-		
-		// Do structured data just like a normal request
-		var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections( request.context );
-		if(structCount(structuredData)) {
-			structAppend(request.context, structuredData);	
-		}
-		
-		// Get Action Details
-		var subsystem = getSubsystem( arguments.action );
-		var section = getSection( arguments.action );
-		var item = getItem( arguments.action );
-		
-		// Setup the cfc base so that the getController method works
-		request.cfcbase = variables.framework.cfcbase;
-		request.base = variables.framework.base;
-
-		// Call the controller
-		var controller = getController( section = section, subsystem = subsystem );
-		if(isObject(controller)) {
-			doController( controller, 'before' );
-			doController( controller, 'start' & item );
-			doController( controller, item );
-			doController( controller, 'end' & item );
-			doController( controller, 'after' );
-		}
-				
-		// Was the view overridden in the controller
-		if ( structKeyExists( request, 'overrideViewAction' ) ) {
-			subsystem = getSubsystem( request.overrideViewAction );
-			section = getSection( request.overrideViewAction );
-			item = getItem( request.overrideViewAction );
-		}
-		
-		var viewPath = parseViewOrLayoutPath( subsystem & variables.framework.subsystemDelimiter & section & '/' & item, 'view' );
-		
-		// Place all of this formated data into a var named rc just like a regular request
-		var rc = request.context;
-		var $ = request.context.$;
-		
-		// Include the view
-		savecontent variable="response"  {
-			include "#viewPath#";
-		}
-		
-		// Remove the cfcbase & base from the request so that future actions don't get screwed up
-		structDelete( request, 'context' );
-		structDelete( request, 'services' );
-		structDelete( request, 'overrideViewAction' );
-		structDelete( request, 'cfcbase' );
-		structDelete( request, 'base' );
-		
-		// If there was an override view action before... place it back into the request
-		if(structCount(originalContext)) {
-			request.context = originalContext;
-		}
-		
-		// If there was an override view action before... place it back into the request
-		if(arrayLen(originalServices)) {
-			request.services = originalServices;
-		}
-		
-		// If there was an override view action before... place it back into the request
-		if(len(originalViewOverride)) {
-			request.overrideViewAction = originalViewOverride;
-		}
-		
-		// If there was a different cfcbase before... place it back into the request
-		if(len(originalCFCBase)) {
-			request.cfcbase = originalCFCBase;
-		}
-		
-		// If there was a different base before... place it back into the request
-		if(len(originalBase)) {
-			request.base = originalBase;
-		}
-		
-		return response;
-	}
 	
-	public any function getEntityServiceByEntityName() {
-		return getBeanFactory().getBean("productService");
-	} 
 	
 }

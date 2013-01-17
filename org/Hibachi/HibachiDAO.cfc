@@ -1,4 +1,4 @@
-<cfcomponent output="false" accessors="true" extends="Hibachi.HibachiObject">
+<cfcomponent output="false" accessors="true" extends="HibachiObject">
 	
 	<cfscript>
 		public any function get( required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
