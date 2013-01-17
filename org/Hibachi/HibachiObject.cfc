@@ -257,11 +257,14 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint setups an application scope value that will always be consistent
 	public any function getHibachiInstanceApplicationScopeKey() {
-		var currentDiretory = replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all");
-		if(right(currentDiretory, 13) neq "/org/Hibachi/") {
-			currentDiretory &= "org/Hibachi/";
-		}
-		return hash(lcase(currentDiretory));
+		var metaData = getMetaData( this );
+		do {
+			var filePath = metaData.path;
+			metaData = metaData.extends;
+		} while( structKeyExists(metaData, "extends") );
+		filePath = hash(lcase(getDirectoryFromPath(filePath)));
+		
+		return filePath;
 	}
 	
 	// @hint facade method to check the slatwall application scope for a value

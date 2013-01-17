@@ -112,7 +112,7 @@ component extends="FW1.framework" {
 	// Defaults
 	this.ormenabled = true;
 	this.ormsettings = {};
-	this.ormsettings.cfclocation = [ variables.framework.baseURL & "model/entity" ];
+	this.ormsettings.cfclocation = [ "model/entity" ];
 	this.ormSettings.dbcreate = "update";
 	this.ormSettings.flushAtRequestEnd = false;
 	this.ormsettings.eventhandling = true;
@@ -120,7 +120,7 @@ component extends="FW1.framework" {
 	this.ormSettings.savemapping = false;
 	this.ormSettings.skipCFCwitherror = true;
 	this.ormSettings.useDBforMapping = true;
-	this.ormSettings.autogenmap = false;
+	this.ormSettings.autogenmap = true;
 	this.ormSettings.logsql = false;
 	
 	// Allow For Application Config
@@ -456,6 +456,7 @@ component extends="FW1.framework" {
 		if(right(currentDiretory, 13) neq "/org/Hibachi/") {
 			currentDiretory &= "org/Hibachi/";
 		}
+		writeLog(file="Slatwall", text="Application currentDiretory: #currentDiretory#");
 		return hash(lcase(currentDiretory));
 	}
 	

@@ -333,7 +333,7 @@
 				return onMissingExportMethod( missingMethodName, missingMethodArguments );
 			}
 	
-			throw( 'No matching method for #missingMethodName#().' );
+			return super.onMissingMethod(argumentsCollection=arguments);
 		}
 		
 	
