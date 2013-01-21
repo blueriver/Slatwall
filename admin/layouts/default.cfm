@@ -48,9 +48,9 @@ Notes:
 		<link rel="shortcut icon" href="#request.slatwallScope.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
-		<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
-		<link href="/assets/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
-		<link href="/assets/css/global.css" rel="stylesheet">
+		<link href="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
+		<link href="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/css/global.css" rel="stylesheet">
 		
 		<script type="text/javascript">
 			var slatwall = {
@@ -263,17 +263,16 @@ Notes:
 			</div>
 		</div>
 		
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-1.7.1.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-ui-1.8.20.custom.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-ui-timepicker-addon-0.9.9.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-validate-1.9.0.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-typewatch-2.0.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/global.js"></script>
-		
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckfinder/ckfinder.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-ui-1.8.20.custom.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-ui-timepicker-addon-0.9.9.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-validate-1.9.0.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-typewatch-2.0.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/global.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/ckeditor/ckeditor.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/ckeditor/adapters/jquery.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/ckfinder/ckfinder.js"></script>
 	</body>
 </html>
 </cfoutput>
