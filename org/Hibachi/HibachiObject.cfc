@@ -190,9 +190,7 @@ component accessors="true" output="false" persistent="false" {
 		
 		return getApplicationValue("serviceCache_#arguments.serviceName#");
 	}
-	
-
-	
+		
 	// @hint  helper function to return the Slatwall RB Factory in any component
 	public any function getRBFactory() {
 		if( !hasApplicationValue("rbFactory") ) {
@@ -225,17 +223,18 @@ component accessors="true" output="false" persistent="false" {
 		return getService("settingService").getSettingDetails(settingName=arguments.settingName, object=this, filterEntities=arguments.filterEntities);
 	}
 	
-	// @hint  helper function for using the Slatwall Log service.
+	// @hint helper function for using the Slatwall Log service.
 	public void function logHibachi(required string message, boolean generalLog=false){
 		getService("hibachiLogService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
 	}
 	
-	// @hint  helper function for using the Slatwall Log Exception service.
+	// @hint helper function for using the Slatwall Log Exception service.
 	public void function logHibachiException(required any exception){
 		getService("hibachiLogService").logException(exception=arguments.exception);		
 	}
 	
-	public any function getVirtualFileSystem() {
+	// @hint returns an application specfic virtual filesystem
+	public any function getVirtualFileSystemPath() {
 		return "ram:///#getHibachiInstanceApplicationScopeKey()#";
 	}
 	

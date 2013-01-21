@@ -1,13 +1,11 @@
 component extends="FW1.framework" {
 	
-/*
-	
 	// ======= START: ENVIORNMENT CONFIGURATION =======
 
 	// =============== configApplication
 	
 	// Defaults
-	this.name = "hibachi-" & hash(getCurrentTemplatePath());
+	this.name = "hibachi" & hash(getCurrentTemplatePath());
 	this.sessionManagement = true;
 	this.datasource = {};
 	this.datasource.name = "hibachi";
@@ -27,6 +25,7 @@ component extends="FW1.framework" {
 	
 	// FW1 Setup
 	variables.framework=structNew();
+	variables.framework.applicationKey = 'Hibachi';
 	variables.framework.action = 'action';
 	variables.framework.usingSubsystems = true;
 	variables.framework.defaultSubsystem = 'admin';
@@ -39,19 +38,15 @@ component extends="FW1.framework" {
   	variables.framework.reload = 'reload';
   	variables.framework.password = 'true';
   	variables.framework.reloadApplicationOnEveryRequest = false;
-  	variables.framework.generateSES = true;
+  	variables.framework.generateSES = false;
   	variables.framework.SESOmitIndex = false;
-  	// variables.framework.base = ""  This was left out because FW1 will automatically try to set it
-	variables.framework.baseURL = '/';
-	// variables.framework.cfcbase = ""  This was left out because FW1 will automatically try to set it
-	variables.framework.suppressImplicitService = true;
+  	variables.framework.suppressImplicitService = true;
 	variables.framework.unhandledExtensions = 'cfc';
 	variables.framework.unhandledPaths = '/flex2gateway';
 	variables.framework.unhandledErrorCaught = false;
 	variables.framework.preserveKeyURLKey = 'fw1pk';
 	variables.framework.maxNumContextsPreserved = 10;
 	variables.framework.cacheFileExists = false;
-	variables.framework.applicationKey = 'MyHibachiAppFW1';
 	variables.framework.trace = false;
 	variables.framework.routes = [
 		{ "$GET/api/:entityName/:entityID" = "/admin:api/get/entityName/:entityName/entityID/:entityID"},
@@ -60,10 +55,6 @@ component extends="FW1.framework" {
 	
 	// Hibachi Setup
 	variables.framework.hibachi = {};
-	variables.framework.hibachi.applicationKey = "MyHibachiApp";
-	variables.framework.hibachi.resourceBundleDirectories = "config/resourceBundles,config/custom/resourceBundles";
-	variables.framework.hibachi.hibachiScopeObject = "Hibachi.HibachiScope";
-	variables.framework.hibachi.smartListObject = "Hibachi.SmartList";
 	variables.framework.hibachi.fullUpdateKey = "Update";
 	variables.framework.hibachi.fullUpdatePassword = "true";
 	
@@ -80,10 +71,7 @@ component extends="FW1.framework" {
 	// =============== configMappings
 	
 	// Defaults
-	this.mappings[ "/#variables.framework.hibachi.applicationKey#" ] = replace(replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all"), "/org/Hibachi/", "/");
-	
-	// THIS IS TEMPORARY AND SHOULD BE REMOVED
-	this.mappings[ "/ValidateThis" ] = getDirectoryFromPath(getCurrentTemplatePath()) & "ValidateThis/";
+	this.mappings[ "/#variables.framework.applicationKey#" ] = replace(replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all"), "/org/Hibachi/", "/");
 	
 	// Allow For Application Config 
 	if( fileExists(expandPath("config/configMappings.cfm")) ) {
@@ -98,7 +86,7 @@ component extends="FW1.framework" {
 	// =============== configCustomTags
 	
 	// Defaults
-	this.customtagpaths = "/org/Hibachi/HibachiTags";
+	this.customtagpaths = this.mappings[ "/#variables.framework.applicationKey#" ] & "/org/Hibachi/HibachiTags";
 	
 	// Allow For Application Config 
 	if( fileExists(expandPath("config/configCustomTags.cfm")) ) {
@@ -114,7 +102,7 @@ component extends="FW1.framework" {
 	// Defaults
 	this.ormenabled = true;
 	this.ormsettings = {};
-	this.ormsettings.cfclocation = [ "model/entity" ];
+	this.ormsettings.cfclocation = [ "/#variables.framework.applicationKey#/model/entity" ];
 	this.ormSettings.dbcreate = "update";
 	this.ormSettings.flushAtRequestEnd = false;
 	this.ormsettings.eventhandling = true;
@@ -138,18 +126,13 @@ component extends="FW1.framework" {
 	
 	// =======  END: ENVIORNMENT CONFIGURATION  =======
 	
-	
-	*/
-	
 	public any function bootstrap() {
-		writeLog(file="Slatwall", text="Hibachi.cfc bootstrap");
 		setupGlobalRequest();
 		
-		return request["#variables.framework.hibachi.applicationKey#Scope"];
+		return request["#variables.framework.applicationKey#Scope"];
 	}
 	
 	public any function reloadApplication() {
-		writeLog(file="Slatwall", text="Hibachi.cfc reloadApplication");
 		lock name="application_#getHibachiInstanceApplicationScopeKey()#_initialized" timeout="10" {
 			if( !structKeyExists(application, getHibachiInstanceApplicationScopeKey()) ) {
 				application[ getHibachiInstanceApplicationScopeKey() ] = {};
@@ -159,8 +142,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupGlobalRequest() {
-		writeLog(file="Slatwall", text="Hibachi.cfc setupGlobalRequest");
-		request["#variables.framework.hibachi.applicationKey#Scope"] = createObject("component", "#variables.framework.hibachi.applicationKey#.model.hibachi.Scope").init();
+		request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.hibachi.Scope").init();
 		
 		// Verify that the application is setup
 		verifyApplicationSetup();
@@ -170,7 +152,6 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupRequest() {
-		writeLog(file="Slatwall", text="Hibachi.cfc setupRequest");
 		setupGlobalRequest();
 		
 		// Setup structured Data if a request context exists meaning that a full action was called
@@ -178,13 +159,13 @@ component extends="FW1.framework" {
 		
 		// Setup a $ in the request context, and the slatwallScope shortcut
 		request.context.$ = {};
-		request.context.$[ variables.framework.hibachi.applicationKey ] = request[ "#variables.framework.hibachi.applicationKey#Scope" ];
+		request.context.$[ variables.framework.applicationKey ] = request[ "#variables.framework.applicationKey#Scope" ];
 		
 		// Check to see if any message keys were passed via the URL
 		if(structKeyExists(request.context, "messageKeys")) {
 			var messageKeys = listToArray(request.context.messageKeys);
 			for(var i=1; i<=arrayLen(messageKeys); i++) {
-				request[ "#variables.framework.hibachi.applicationKey#Scope" ].showMessageKey( messageKeys[i] );
+				request[ "#variables.framework.applicationKey#Scope" ].showMessageKey( messageKeys[i] );
 			}
 		}
 		
@@ -193,7 +174,6 @@ component extends="FW1.framework" {
 	}
 	
 	public void function verifyApplicationSetup() {
-		writeLog(file="Slatwall", text="Hibachi.cfc verifyApplicationSetup");
 		if(structKeyExists(url, variables.framework.reload) && url[variables.framework.reload] == variables.framework.password) {
 			reloadApplication();
 		}
@@ -209,35 +189,36 @@ component extends="FW1.framework" {
 					
 					// Application Setup Started
 					reloadApplication();
-					writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - Application Setup Started");
+					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Setup Started");
 					
-					// Setup the hibachiApplicationKey in the application scope to use it later
-					getHibachiScope().setApplicationValue("hibachiApplicationKey", variables.framework.hibachi.applicationKey);
+					// Setup the fw1ApplicationKey in the application scope to use it later
+					getHibachiScope().setApplicationValue("applicationKey", variables.framework.applicationKey);
+					
+					// Place the entire application in the application scope so that we can introspect these values later
+					getHibachiScope().setApplicationValue("application", this);
 					
 					// =================== Required Application Setup ===================
 					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
 					if(!structKeyExists(application, variables.framework.applicationKey)) {
-						writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - onApplicationStart() was called");
+						writeLog(file="#variables.framework.applicationKey#", text="General Log - onApplicationStart() was called");
 						onApplicationStart();
-						writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - onApplicationStart() finished");
+						writeLog(file="#variables.framework.applicationKey#", text="General Log - onApplicationStart() finished");
 					}
 					// ================ END: Required Application Setup ==================
 					
 					//========================= IOC SETUP ====================================
 					
-					var beanFactory = new org.Hibachi.DI1.ioc("model");
+					var beanFactory = new org.Hibachi.DI1.ioc("/#variables.framework.applicationKey#/model");
 					
-					beanFactory.addBean("hibachiApplicationKey", variables.framework.hibachi.applicationKey);
+					beanFactory.declareBean("hibachiDAO", "#variables.framework.applicationKey#.org.Hibachi.HibachiDAO", true);
+					beanFactory.declareBean("hibachiService", "#variables.framework.applicationKey#.org.Hibachi.HibachiService", true);
+					beanFactory.declareBean("hibachiAuthenticationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiAuthenticationService", true);
+					beanFactory.declareBean("hibachiRBService", "#variables.framework.applicationKey#.org.Hibachi.HibachiRBService", true);
+					beanFactory.declareBean("hibachiEventService", "#variables.framework.applicationKey#.org.Hibachi.HibachiEventService", true);
+					beanFactory.declareBean("hibachiTagService", "#variables.framework.applicationKey#.org.Hibachi.HibachiTagService", true);
+					beanFactory.declareBean("hibachiLogService", "#variables.framework.applicationKey#.org.Hibachi.HibachiLogService", true);
 					
-					beanFactory.declareBean("hibachiDAO", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiDAO", true);
-					beanFactory.declareBean("hibachiService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiService", true);
-					beanFactory.declareBean("hibachiAuthenticationService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiAuthenticationService", true);
-					beanFactory.declareBean("hibachiRBService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiRBService", true);
-					beanFactory.declareBean("hibachiEventService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiEventService", true);
-					beanFactory.declareBean("hibachiTagService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiTagService", true);
-					beanFactory.declareBean("hibachiLogService", "#variables.framework.hibachi.applicationKey#.org.Hibachi.HibachiLogService", true);
-					
-					beanFactory.declareBean("FormUtilities", "#variables.framework.hibachi.applicationKey#.org.Hibachi.FormUtilities.FormUtilities", true);
+					beanFactory.declareBean("FormUtilities", "#variables.framework.applicationKey#.org.Hibachi.FormUtilities.FormUtilities", true);
 					
 					setBeanFactory( beanFactory );
 					
@@ -248,7 +229,7 @@ component extends="FW1.framework" {
 					
 					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
 					if(!fileExists(expandPath('config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
-						writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - Full Update Initiated");
+						writeLog(file="#variables.framework.applicationKey#", text="General Log - Full Update Initiated");
 						
 						// Write File
 						fileWrite(expandPath('config/lastFullUpdate.txt.cfm'), now());
@@ -258,7 +239,7 @@ component extends="FW1.framework" {
 						
 						// Reload ORM
 						ormReload();
-						writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - ORMReload() was successful");
+						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() was successful");
 							
 						onUpdateRequest();						
 					}
@@ -266,17 +247,16 @@ component extends="FW1.framework" {
 					
 					// Application Setup Ended
 					getHibachiScope().setApplicationValue("initialized", true);
-					writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - Application Setup Complete");
+					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Setup Complete");
 				}
 			}
 		}
 	}
 	
 	public void function setupResponse() {
-		writeLog(file="Slatwall", text="Hibachi.cfc setupResponse");
 		endHibachiLifecycle();
 		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.hibachi.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) {
+		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.applicationKey#-AJAX"]) {
 			if(structKeyExists(request.context, "fw")) {
 				structDelete(request.context, "fw");
 			}
@@ -289,9 +269,8 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupView() {
-		writeLog(file="Slatwall", text="Hibachi.cfc setupView");
 		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.hibachi.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) {
+		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.applicationKey#-AJAX"]) {
 			setupResponse();
 		}
 		
@@ -309,7 +288,6 @@ component extends="FW1.framework" {
 	
 	// This handels all of the ORM persistece.
 	public void function endHibachiLifecycle() {
-		writeLog(file="Slatwall", text="Hibachi.cfc endHibachiLifecycle");
 		if(getHibachiScope().getORMHasErrors()) {
 			getBeanFactory().getBean("hibachiDAO").clearORMSession();
 		} else {
@@ -319,14 +297,12 @@ component extends="FW1.framework" {
 	
 	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
 	public void function redirectExact(required string location, boolean addToken=false) {
-		writeLog(file="Slatwall", text="Hibachi.cfc redirectExact");
 		endHibachiLifecycle();
 		location(arguments.location, arguments.addToken);
 	}
 	
 	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle
 	public string function doAction(required string action) {
-		writeLog(file="Slatwall", text="Hibachi.cfc doAction");
 		var response = "";
 		
 		// first, we double check to make sure all framework defaults are setup
@@ -379,14 +355,14 @@ component extends="FW1.framework" {
 		
 		if(!structKeyExists(request.context, "$")) {
 			request.context.$ = {};
-			request.context.$[ variables.framework.hibachi.applicationKey ] = request[ "#variables.framework.hibachi.applicationKey#Scope" ];
+			request.context.$[ variables.framework.applicationKey ] = request[ "#variables.framework.applicationKey#Scope" ];
 		}
 		
 		// Add the slatAction to the RC Scope
 		request.context[ variables.framework.action ] = arguments.action;
 		
 		// Do structured data just like a normal request
-		getBeanFaction().getBean("FormUtilities").buildFormCollections(request.context);
+		getBeanFactory().getBean("FormUtilities").buildFormCollections(request.context);
 		
 		// Get Action Details
 		var subsystem = getSubsystem( arguments.action );
@@ -462,7 +438,7 @@ component extends="FW1.framework" {
 	
 	// @hint private helper method
 	public any function getHibachiScope() {
-		return request["#variables.framework.hibachi.applicationKey#Scope"];
+		return request["#variables.framework.applicationKey#Scope"];
 	}
 	
 	// @hint setups an application scope value that will always be consistent

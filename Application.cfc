@@ -38,7 +38,7 @@ Notes:
 */
 component extends="org.Hibachi.Hibachi" output="false" {
 
-
+	/*
 	include "config/configApplication.cfm";
 	if( fileExists(expandPath("config/custom/configApplication.cfm")) ) {
 		include "config/custom/configApplication.cfm";
@@ -59,7 +59,8 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	if( fileExists(expandPath("config/custom/configCustomTags.cfm")) ) {
 		include "config/custom/configCustomTags.cfm";
 	}
-
+	*/
+	
 	// ===================================== HIBACHI HOOKS
 	
 	// @hint this method always fires one time, even if the request is coming from an outside application.
