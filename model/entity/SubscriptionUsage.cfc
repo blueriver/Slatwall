@@ -50,17 +50,17 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	property name="expirationDate" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
-	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";
-	property name="renewalTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="renewalTermID";
-	property name="gracePeriodTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
+	property name="initialTerm" cfc="Slatwall.model.entity.Term" fieldtype="many-to-one" fkcolumn="initialTermID";
+	property name="renewalTerm" cfc="Slatwall.model.entity.Term" fieldtype="many-to-one" fkcolumn="renewalTermID";
+	property name="gracePeriodTerm" cfc="Slatwall.model.entity.Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
+	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountPaymentMethod" cfc="Slatwall.model.entity.AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
 	
 	// Related Object Properties (one-to-many)
-	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan";
-	property name="subscriptionOrderItems" singularname="subscriptionOrderItem" cfc="SubscriptionOrderItem" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
-	property name="subscriptionStatus" cfc="SubscriptionStatus" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
-	property name="renewalSubscriptionUsageBenefits" singularname="renewalSubscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="renewalSubscriptionUsageID" cascade="all-delete-orphan";
+	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="Slatwall.model.entity.SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan";
+	property name="subscriptionOrderItems" singularname="subscriptionOrderItem" cfc="Slatwall.model.entity.SubscriptionOrderItem" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
+	property name="subscriptionStatus" cfc="Slatwall.model.entity.SubscriptionStatus" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan" inverse="true";
+	property name="renewalSubscriptionUsageBenefits" singularname="renewalSubscriptionUsageBenefit" cfc="Slatwall.model.entity.SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="renewalSubscriptionUsageID" cascade="all-delete-orphan";
 				   
 	// Related Object Properties (many-to-many)
 	
@@ -69,9 +69,9 @@ component displayname="Subscription Usage" entityname="SlatwallSubscriptionUsage
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="currentStatus" persistent="false";

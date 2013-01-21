@@ -52,8 +52,8 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	
 	
 	// Related Object Properties (one-to-many)
-	property name="taskHistory" cfc="TaskHistory" type="array" fieldtype="one-to-many" fkcolumn="taskID" cascade="all-delete-orphan" inverse="true";
-	property name="taskSchedules" singularname="taskSchedule" cfc="TaskSchedule" type="array" fieldtype="one-to-many" fkcolumn="taskID" cascade="all-delete-orphan" inverse="true";
+	property name="taskHistory" cfc="Slatwall.model.entity.TaskHistory" type="array" fieldtype="one-to-many" fkcolumn="taskID" cascade="all-delete-orphan" inverse="true";
+	property name="taskSchedules" singularname="taskSchedule" cfc="Slatwall.model.entity.TaskSchedule" type="array" fieldtype="one-to-many" fkcolumn="taskID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -62,9 +62,9 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="taskMethodOptions" persistent="false";

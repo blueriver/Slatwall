@@ -45,7 +45,7 @@ component displayname="Payment Term" entityname="SlatwallPaymentTerm" table="Sla
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="term" cfc="Term" fieldtype="many-to-one" fkcolumn="termID";
+	property name="term" cfc="Slatwall.model.entity.Term" fieldtype="many-to-one" fkcolumn="termID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -58,9 +58,9 @@ component displayname="Payment Term" entityname="SlatwallPaymentTerm" table="Sla
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

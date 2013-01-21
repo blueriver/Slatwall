@@ -48,22 +48,22 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
-	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" type="array" fieldtype="one-to-many" fkcolumn="fulfillmentMethodID" cascade="all-delete-orphan" inverse="true";
-	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="fulfillmentMethodID" inverse="true" lazy="extra";						// Set to lazy, just used for delete validation
+	property name="shippingMethods" singularname="shippingMethod" cfc="Slatwall.model.entity.ShippingMethod" type="array" fieldtype="one-to-many" fkcolumn="fulfillmentMethodID" cascade="all-delete-orphan" inverse="true";
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="Slatwall.model.entity.OrderFulfillment" fieldtype="one-to-many" fkcolumn="fulfillmentMethodID" inverse="true" lazy="extra";						// Set to lazy, just used for delete validation
 	
 	// Related Object Properties (many-to-many - owner)
 
 	// Related Object Properties (many-to-many - inverse)
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierFulfillmentMethod" fkcolumn="fulfillmentMethodID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="Slatwall.model.entity.PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierFulfillmentMethod" fkcolumn="fulfillmentMethodID" inversejoincolumn="promotionQualifierID" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 		
 	public array function getFulfillmentMethodTypeOptions() {

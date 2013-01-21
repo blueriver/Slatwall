@@ -53,23 +53,23 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="templateFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
-	property name="parentContent" cfc="Content" fieldtype="many-to-one" fkcolumn="parentContentID";
+	property name="parentContent" cfc="Slatwall.model.entity.Content" fieldtype="many-to-one" fkcolumn="parentContentID";
 	
 	// Related Object Properties (one-to-many)
-	property name="childContents" singularname="childContent" cfc="Content" type="array" fieldtype="one-to-many" fkcolumn="parentContentID" cascade="all-delete-orphan" inverse="true";
+	property name="childContents" singularname="childContent" cfc="Slatwall.model.entity.Content" type="array" fieldtype="one-to-many" fkcolumn="parentContentID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - inverse)
-	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="contentID" inversejoincolumn="skuID" inverse="true";
-	property name="listingProducts" singularname="listingProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallProductListingPage" fkcolumn="contentID" inversejoincolumn="productID" inverse="true";
+	property name="skus" singularname="sku" cfc="Slatwall.model.entity.Sku" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="contentID" inversejoincolumn="skuID" inverse="true";
+	property name="listingProducts" singularname="listingProduct" cfc="Slatwall.model.entity.Product" type="array" fieldtype="many-to-many" linktable="SlatwallProductListingPage" fkcolumn="contentID" inversejoincolumn="productID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

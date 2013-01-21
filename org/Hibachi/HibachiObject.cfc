@@ -291,7 +291,6 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint facade method to get values from the slatwall application scope
 	public any function getApplicationValue(required any key) {
-		writeLog(file="Slatwall", text="GETTING-#getHibachiInstanceApplicationScopeKey()#: #arguments.key#");
 		if( structKeyExists(application, getHibachiInstanceApplicationScopeKey()) && structKeyExists(application[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
 			return application[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ];
 		}
@@ -301,11 +300,6 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint facade method to set values in the slatwall application scope 
 	public void function setApplicationValue(required any key, required any value) {
-		if(isSimpleValue(arguments.value)) {
-			writeLog(file="Slatwall", text="SETTING-#getHibachiInstanceApplicationScopeKey()#: #arguments.key# - #arguments.value#");
-		} else {
-			writeLog(file="Slatwall", text="SETTING-#getHibachiInstanceApplicationScopeKey()#: #arguments.key# - complex");	
-		}
 		lock name="application_#getHibachiInstanceApplicationScopeKey()#_#arguments.key#" timeout="10" {
 			if(!structKeyExists(application, getHibachiInstanceApplicationScopeKey())) {
 				application[ getHibachiInstanceApplicationScopeKey() ] = {};

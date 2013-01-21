@@ -53,18 +53,18 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
-	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID";
-	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
-	property name="referencedOrderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="referencedOrderPaymentID";
-	property name="termPaymentAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="termPaymentAccountID";
+	property name="accountPaymentMethod" cfc="Slatwall.model.entity.AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
+	property name="billingAddress" cfc="Slatwall.model.entity.Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
+	property name="order" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="orderPaymentType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID";
+	property name="paymentMethod" cfc="Slatwall.model.entity.PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
+	property name="referencedOrderPayment" cfc="Slatwall.model.entity.OrderPayment" fieldtype="many-to-one" fkcolumn="referencedOrderPaymentID";
+	property name="termPaymentAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="termPaymentAccountID";
 	
 	// Related Object Properties (one-to-many)			
-	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all-delete-orphan" inverse="true";
-	property name="paymentTransactions" singularname="paymentTransaction" cfc="PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
-	property name="referencingOrderPayments" singularname="referencingOrderPayment" cfc="OrderPayment" fieldType="one-to-many" fkcolumn="referencedOrderPaymentID" cascade="all" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="Slatwall.model.entity.AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all-delete-orphan" inverse="true";
+	property name="paymentTransactions" singularname="paymentTransaction" cfc="Slatwall.model.entity.PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
+	property name="referencingOrderPayments" singularname="referencingOrderPayment" cfc="Slatwall.model.entity.OrderPayment" fieldType="one-to-many" fkcolumn="referencedOrderPaymentID" cascade="all" inverse="true";
 
 	// Related Object Properties (many-to-many - owner)
 
@@ -75,9 +75,9 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="amountAuthorized" type="numeric" formatType="currency" persistent="false";

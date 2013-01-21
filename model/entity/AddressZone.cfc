@@ -43,19 +43,19 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 	property name="addressZoneName" ormtype="string";
 	
 	// Related Object Properties (One-To-Many) - These are for doing delete validation to ensure that there are no entities using this address zone
-	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
-	property name="shippingMethodRates" singularname="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
-	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
+	property name="shippingMethods" singularname="shippingMethod" cfc="Slatwall.model.entity.ShippingMethod" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
+	property name="shippingMethodRates" singularname="shippingMethodRate" cfc="Slatwall.model.entity.ShippingMethodRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
+	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="Slatwall.model.entity.TaxCategoryRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
 	
 	// Related Object Properties (Many-To-Many)
-	property name="addressZoneLocations" singularname="addressZoneLocation" cfc="Address" fieldtype="many-to-many" linktable="SlatwallAddressZoneLocation" fkcolumn="addressZoneID" inversejoincolumn="addressID" cascade="all-delete-orphan";
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierShippingAddressZone" fkcolumn="addressZoneID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="addressZoneLocations" singularname="addressZoneLocation" cfc="Slatwall.model.entity.Address" fieldtype="many-to-many" linktable="SlatwallAddressZoneLocation" fkcolumn="addressZoneID" inversejoincolumn="addressID" cascade="all-delete-orphan";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="Slatwall.model.entity.PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierShippingAddressZone" fkcolumn="addressZoneID" inversejoincolumn="promotionQualifierID" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

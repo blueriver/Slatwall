@@ -48,22 +48,22 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 	property name="allowProductAssignmentFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
-	property name="parentCategory" cfc="Category" fieldtype="many-to-one" fkcolumn="parentCategoryID";
+	property name="parentCategory" cfc="Slatwall.model.entity.Category" fieldtype="many-to-one" fkcolumn="parentCategoryID";
 	
 	// Related Object Properties (one-to-many)
-	property name="childCategories" singularname="childCategory" cfc="Category" type="array" fieldtype="one-to-many" fkcolumn="parentCategoryID" cascade="all-delete-orphan" inverse="true";
+	property name="childCategories" singularname="childCategory" cfc="Slatwall.model.entity.Category" type="array" fieldtype="one-to-many" fkcolumn="parentCategoryID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="categoryID" inversejoincolumn="productID" inverse="true";
+	property name="products" singularname="product" cfc="Slatwall.model.entity.Product" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="categoryID" inversejoincolumn="productID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

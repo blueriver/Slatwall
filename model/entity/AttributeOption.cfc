@@ -45,13 +45,13 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	property name="sortOrder" ormtype="integer" sortContext="attribute";
 	
 	// Related Object Properties (Many-To-One)
-	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";	
+	property name="attribute" cfc="Slatwall.model.entity.Attribute" fieldtype="many-to-one" fkcolumn="attributeID";	
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
 	public string function getAttributeOptionLabel() {

@@ -55,11 +55,11 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="paymentIntegration" cfc="Integration" fieldtype="many-to-one" fkcolumn="paymentIntegrationID";
+	property name="paymentIntegration" cfc="Slatwall.model.entity.Integration" fieldtype="many-to-one" fkcolumn="paymentIntegrationID";
 	
 	// Related Object Properties (one-to-many)
-	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="paymentMethodID" cascade="all" inverse="true" lazy="extra";		// Set to lazy, just used for delete validation
-	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" type="array" fieldtype="one-to-many" fkcolumn="paymentMethodID" cascade="all-delete-orphan" inverse="true" lazy="extra";				// Set to lazy, just used for delete validation
+	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="Slatwall.model.entity.AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="paymentMethodID" cascade="all" inverse="true" lazy="extra";		// Set to lazy, just used for delete validation
+	property name="orderPayments" singularname="orderPayment" cfc="Slatwall.model.entity.OrderPayment" type="array" fieldtype="one-to-many" fkcolumn="paymentMethodID" cascade="all-delete-orphan" inverse="true" lazy="extra";				// Set to lazy, just used for delete validation
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -70,9 +70,9 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

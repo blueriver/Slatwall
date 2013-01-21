@@ -50,17 +50,17 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	property name="attributeValueType" ormType="string" formFieldType="select" formatType="custom" notnull="true";
 	
 	// Related Object Properties (many-to-one)
-	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" notnull="true";
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountPayment" cfc="AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
-	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
-	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
+	property name="attribute" cfc="Slatwall.model.entity.Attribute" fieldtype="many-to-one" fkcolumn="attributeID" notnull="true";
+	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountPayment" cfc="Slatwall.model.entity.AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
+	property name="brand" cfc="Slatwall.model.entity.Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="order" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="orderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="orderPayment" cfc="Slatwall.model.entity.OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
+	property name="product" cfc="Slatwall.model.entity.Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="sku" cfc="Slatwall.model.entity.Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="vendor" cfc="Slatwall.model.entity.Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
+	property name="vendorOrder" cfc="Slatwall.model.entity.VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	
 	// Quick Lookup Properties
 	property name="attributeID" length="32" insert="false" update="false";

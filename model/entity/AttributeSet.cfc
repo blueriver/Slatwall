@@ -51,21 +51,21 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" systemCode="attributeSetType" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
+	property name="attributeSetType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" systemCode="attributeSetType" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
 	
 	// Related Object Properties (one-to-many)
-	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
+	property name="attributes" singularname="attribute" cfc="Slatwall.model.entity.Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProductType" fkcolumn="attributeSetID" inversejoincolumn="productTypeID";
+	property name="productTypes" singularname="productType" cfc="Slatwall.model.entity.ProductType" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProductType" fkcolumn="attributeSetID" inversejoincolumn="productTypeID";
 
 	// Related Object Properties (many-to-many - inverse)
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public array function getAttributes(orderby, sortType="text", direction="asc") {
 		if(!structKeyExists(arguments, "orderby")) {

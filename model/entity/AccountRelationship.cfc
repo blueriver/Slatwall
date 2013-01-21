@@ -42,9 +42,9 @@ component displayname="Account Relationship" entityname="SlatwallAccountRelation
 	property name="accountRelationshipID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties (Many-To-One)
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="relatedAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="relatedAccountID";
-	property name="relationshipType" cfc="Type" fieldtype="many-to-one" fkcolumn="relationshipTypeID";
+	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="relatedAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="relatedAccountID";
+	property name="relationshipType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="relationshipTypeID";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

@@ -48,12 +48,12 @@ component displayname="Comment Relationship" entityname="SlatwallCommentRelation
 	property name="referencedExpressionValue" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="comment" cfc="Comment" fieldtype="many-to-one" fkcolumn="commentID";
+	property name="comment" cfc="Slatwall.model.entity.Comment" fieldtype="many-to-one" fkcolumn="commentID";
 	
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
-	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
-	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
+	property name="order" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="orderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="stockAdjustment" cfc="Slatwall.model.entity.StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
+	property name="vendorOrder" cfc="Slatwall.model.entity.VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	
 	// Related Object Properties (one-to-many)
 	

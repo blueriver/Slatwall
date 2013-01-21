@@ -43,14 +43,14 @@ component displayname="Vendor Phone" entityname="SlatwallVendorPhoneNumber" tabl
 	property name="phoneNumber" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
+	property name="vendor" cfc="Slatwall.model.entity.Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
 	

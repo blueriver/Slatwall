@@ -48,12 +48,12 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	property name="renewalReminderDays" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";
-	property name="renewalTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="renewalTermID";
-	property name="gracePeriodTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
+	property name="initialTerm" cfc="Slatwall.model.entity.Term" fieldtype="many-to-one" fkcolumn="initialTermID";
+	property name="renewalTerm" cfc="Slatwall.model.entity.Term" fieldtype="many-to-one" fkcolumn="renewalTermID";
+	property name="gracePeriodTerm" cfc="Slatwall.model.entity.Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
 	
 	// Related Object Properties (one-to-many)
-	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="one-to-many" fkcolumn="subscriptionTermID" cascade="all" inverse="true";
+	property name="skus" singularname="sku" cfc="Slatwall.model.entity.Sku" type="array" fieldtype="one-to-many" fkcolumn="subscriptionTermID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -62,9 +62,9 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

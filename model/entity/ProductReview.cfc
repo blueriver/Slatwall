@@ -47,17 +47,17 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	property name="rating" ormtpe="int";
 
 	// Related Object Properties (many-to-one)
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="product" cfc="Slatwall.model.entity.Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
 
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 
 	public any function init() {
 		setActiveFlag(0);

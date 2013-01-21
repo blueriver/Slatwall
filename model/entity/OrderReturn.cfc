@@ -44,20 +44,20 @@ component displayname="Order Return" entityname="SlatwallOrderReturn" table="Sla
 	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Object Properties (many-to-one)
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="returnLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="returnLocationID";
+	property name="order" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="returnLocation" cfc="Slatwall.model.entity.Location" fieldtype="many-to-one" fkcolumn="returnLocationID";
 	
 	// Related Object Properties (one-to-many)
-	property name="orderReturnItems" singularname="orderReturnItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderReturnID" cascade="all" inverse="true";
+	property name="orderReturnItems" singularname="orderReturnItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="one-to-many" fkcolumn="orderReturnID" cascade="all" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
 	// ============ START: Non-Persistent Property Methods =================

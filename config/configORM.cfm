@@ -1,6 +1,9 @@
 <cfset this.ormenabled = true />
 <cfset this.ormsettings = {} />
+<!---
 <cfset this.ormsettings.cfclocation = [ variables.framework.baseURL & "model/entity" ] />
+--->
+<cfset this.ormsettings.cfclocation = [ "/Slatwall/model/entity" ] />
 <cfset this.ormSettings.dbcreate = "update" />
 <cfset this.ormSettings.flushAtRequestEnd = false />
 <cfset this.ormsettings.eventhandling = true />

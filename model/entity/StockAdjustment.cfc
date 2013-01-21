@@ -42,20 +42,20 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="stockAdjustmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties (many-to-one)
-	property name="fromLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="fromLocationID";
-	property name="toLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="toLocationID";
-	property name="stockAdjustmentType" cfc="Type" fieldtype="many-to-one" fkcolumn="stockAdjustmentTypeID";
-	property name="stockAdjustmentStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="stockAdjustmentStatusTypeID";
+	property name="fromLocation" cfc="Slatwall.model.entity.Location" fieldtype="many-to-one" fkcolumn="fromLocationID";
+	property name="toLocation" cfc="Slatwall.model.entity.Location" fieldtype="many-to-one" fkcolumn="toLocationID";
+	property name="stockAdjustmentType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="stockAdjustmentTypeID";
+	property name="stockAdjustmentStatusType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="stockAdjustmentStatusTypeID";
 	
 	// Related Object Properties (one-to-many)
-	property name="stockAdjustmentItems" singularname="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="one-to-many" fkcolumn="stockAdjustmentID" inverse="true" cascade="all-delete-orphan";
-	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentID" cascade="all" inverse="true";
+	property name="stockAdjustmentItems" singularname="stockAdjustmentItem" cfc="Slatwall.model.entity.StockAdjustmentItem" fieldtype="one-to-many" fkcolumn="stockAdjustmentID" inverse="true" cascade="all-delete-orphan";
+	property name="stockReceivers" singularname="stockReceiver" cfc="Slatwall.model.entity.StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentID" cascade="all" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="displayName" persistent="false";

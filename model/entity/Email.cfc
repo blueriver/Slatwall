@@ -44,7 +44,7 @@ component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" p
 	property name="eventName" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="emailTemplate" cfc="EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";
+	property name="emailTemplate" cfc="Slatwall.model.entity.EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -55,9 +55,9 @@ component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" p
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

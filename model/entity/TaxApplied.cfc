@@ -49,17 +49,17 @@ component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="Slatw
 	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Properties (many-to-one)
-	property name="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="many-to-one" fkcolumn="taxCategoryRateID";
-	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cascadeCalculated="true";
+	property name="taxCategoryRate" cfc="Slatwall.model.entity.TaxCategoryRate" fieldtype="many-to-one" fkcolumn="taxCategoryRateID";
+	property name="orderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cascadeCalculated="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
 	// ============ START: Non-Persistent Property Methods =================

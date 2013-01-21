@@ -43,23 +43,23 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	property name="trackingNumber" ormtype="string";
 	
 	// Related Object Properties (Many-To-One)
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
-	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
-	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
+	property name="order" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="location" cfc="Slatwall.model.entity.Location" fieldtype="many-to-one" fkcolumn="locationID";
+	property name="fulfillmentMethod" cfc="Slatwall.model.entity.FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
+	property name="shippingMethod" cfc="Slatwall.model.entity.ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="shippingAddress" cfc="Slatwall.model.entity.Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	
 	// Related Object Properties (One-To-Many)
-	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all-delete-orphan" inverse="true";
+	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="Slatwall.model.entity.OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all-delete-orphan" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="totalQuantityDelivered" persistent="false" type="numeric" formatType="numeric";

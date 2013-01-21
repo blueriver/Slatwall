@@ -45,14 +45,14 @@ component displayname="Inventory" entityname="SlatwallInventory" table="Slatwall
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 
 	// Related Object Properties (many-to-one)
-	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
-	property name="stockReceiverItem" cfc="StockReceiverItem" fieldtype="many-to-one" fkcolumn="stockReceiverItemID";
-	property name="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="many-to-one" fkcolumn="orderDeliveryItemID";
-	//property name="vendorOrderDeliveryItem" cfc="VendorOrderDeliveryItem" fieldtype="many-to-one" fkcolumn="vendorOrderDeliveryItemID";
-	property name="stockAdjustmentDeliveryItem" cfc="StockAdjustmentDeliveryItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentDeliveryItemID";
+	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Slatwall.model.entity.Stock";
+	property name="stockReceiverItem" cfc="Slatwall.model.entity.StockReceiverItem" fieldtype="many-to-one" fkcolumn="stockReceiverItemID";
+	property name="orderDeliveryItem" cfc="Slatwall.model.entity.OrderDeliveryItem" fieldtype="many-to-one" fkcolumn="orderDeliveryItemID";
+	//property name="vendorOrderDeliveryItem" cfc="Slatwall.model.entity.VendorOrderDeliveryItem" fieldtype="many-to-one" fkcolumn="vendorOrderDeliveryItemID";
+	property name="stockAdjustmentDeliveryItem" cfc="Slatwall.model.entity.StockAdjustmentDeliveryItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentDeliveryItemID";
 	
 	
 	

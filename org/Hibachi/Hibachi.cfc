@@ -142,12 +142,14 @@ component extends="FW1.framework" {
 	*/
 	
 	public any function bootstrap() {
+		writeLog(file="Slatwall", text="Hibachi.cfc bootstrap");
 		setupGlobalRequest();
 		
 		return request["#variables.framework.hibachi.applicationKey#Scope"];
 	}
 	
 	public any function reloadApplication() {
+		writeLog(file="Slatwall", text="Hibachi.cfc reloadApplication");
 		lock name="application_#getHibachiInstanceApplicationScopeKey()#_initialized" timeout="10" {
 			if( !structKeyExists(application, getHibachiInstanceApplicationScopeKey()) ) {
 				application[ getHibachiInstanceApplicationScopeKey() ] = {};
@@ -157,6 +159,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupGlobalRequest() {
+		writeLog(file="Slatwall", text="Hibachi.cfc setupGlobalRequest");
 		request["#variables.framework.hibachi.applicationKey#Scope"] = createObject("component", "#variables.framework.hibachi.applicationKey#.model.hibachi.Scope").init();
 		
 		// Verify that the application is setup
@@ -167,6 +170,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupRequest() {
+		writeLog(file="Slatwall", text="Hibachi.cfc setupRequest");
 		setupGlobalRequest();
 		
 		// Setup structured Data if a request context exists meaning that a full action was called
@@ -189,6 +193,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function verifyApplicationSetup() {
+		writeLog(file="Slatwall", text="Hibachi.cfc verifyApplicationSetup");
 		if(structKeyExists(url, variables.framework.reload) && url[variables.framework.reload] == variables.framework.password) {
 			reloadApplication();
 		}
@@ -202,12 +207,9 @@ component extends="FW1.framework" {
 				// Check again so that the qued requests don't back up
 				if(!getHibachiScope().hasApplicationValue("initialized") || !getHibachiScope().getApplicationValue("initialized")) {
 					
-					// Clear out the old application scope
-					application[ hash(getDirectoryFromPath(getCurrentTemplatePath())) ] = {};
-					
 					// Application Setup Started
+					reloadApplication();
 					writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - Application Setup Started");
-					getHibachiScope().setApplicationValue("initialized", false);
 					
 					// Setup the hibachiApplicationKey in the application scope to use it later
 					getHibachiScope().setApplicationValue("hibachiApplicationKey", variables.framework.hibachi.applicationKey);
@@ -246,6 +248,7 @@ component extends="FW1.framework" {
 					
 					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
 					if(!fileExists(expandPath('config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+						writeLog(file="#variables.framework.hibachi.applicationKey#", text="General Log - Full Update Initiated");
 						
 						// Write File
 						fileWrite(expandPath('config/lastFullUpdate.txt.cfm'), now());
@@ -270,6 +273,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupResponse() {
+		writeLog(file="Slatwall", text="Hibachi.cfc setupResponse");
 		endHibachiLifecycle();
 		var httpRequestData = getHTTPRequestData();
 		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.hibachi.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) {
@@ -285,6 +289,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupView() {
+		writeLog(file="Slatwall", text="Hibachi.cfc setupView");
 		var httpRequestData = getHTTPRequestData();
 		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.hibachi.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.hibachi.applicationKey#-AJAX"]) {
 			setupResponse();
@@ -304,6 +309,7 @@ component extends="FW1.framework" {
 	
 	// This handels all of the ORM persistece.
 	public void function endHibachiLifecycle() {
+		writeLog(file="Slatwall", text="Hibachi.cfc endHibachiLifecycle");
 		if(getHibachiScope().getORMHasErrors()) {
 			getBeanFactory().getBean("hibachiDAO").clearORMSession();
 		} else {
@@ -313,12 +319,14 @@ component extends="FW1.framework" {
 	
 	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
 	public void function redirectExact(required string location, boolean addToken=false) {
+		writeLog(file="Slatwall", text="Hibachi.cfc redirectExact");
 		endHibachiLifecycle();
 		location(arguments.location, arguments.addToken);
 	}
 	
 	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle
 	public string function doAction(required string action) {
+		writeLog(file="Slatwall", text="Hibachi.cfc doAction");
 		var response = "";
 		
 		// first, we double check to make sure all framework defaults are setup

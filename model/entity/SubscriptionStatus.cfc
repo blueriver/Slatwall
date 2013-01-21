@@ -44,9 +44,9 @@ component displayname="Subscription Status" entityname="SlatwallSubscriptionStat
 	property name="effectiveDateTime" ormtype="timestamp";
 
 	// Related Object Properties (many-to-one)
-	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";
-	property name="subscriptionStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionStatusTypeID";
-	property name="subscriptionStatusChangeReasonType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionStatusChangeReasonTypeID";
+	property name="subscriptionUsage" cfc="Slatwall.model.entity.SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";
+	property name="subscriptionStatusType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="subscriptionStatusTypeID";
+	property name="subscriptionStatusChangeReasonType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="subscriptionStatusChangeReasonTypeID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -57,9 +57,9 @@ component displayname="Subscription Status" entityname="SlatwallSubscriptionStat
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

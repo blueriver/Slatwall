@@ -49,8 +49,8 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 	*/
 
 	// Related Object Properties (many-to-one)
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="integration" cfc="Integration" fieldtype="many-to-one" fkcolumn="integrationID";
+	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="integration" cfc="Slatwall.model.entity.Integration" fieldtype="many-to-one" fkcolumn="integrationID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -63,9 +63,9 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

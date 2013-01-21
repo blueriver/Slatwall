@@ -42,7 +42,7 @@ component displayname="Email Verification" entityname="SlatwallEmailVerification
 	property name="emailVerificationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties (Many-to-One)
-	property name="accountEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
+	property name="accountEmailAddress" cfc="Slatwall.model.entity.AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
 	
 	// Related Object Properties (One-to-Many)
 	
@@ -53,9 +53,9 @@ component displayname="Email Verification" entityname="SlatwallEmailVerification
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

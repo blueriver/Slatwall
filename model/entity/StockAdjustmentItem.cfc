@@ -43,13 +43,13 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 	property name="quantity" ormtype="integer" default=0;
 	
 	// Related Object Properties (many-to-one)
-	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
-	property name="fromStock" cfc="Stock" fieldtype="many-to-one" fkcolumn="fromStockID";
-	property name="toStock" cfc="Stock" fieldtype="many-to-one" fkcolumn="toStockID";
+	property name="stockAdjustment" cfc="Slatwall.model.entity.StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
+	property name="fromStock" cfc="Slatwall.model.entity.Stock" fieldtype="many-to-one" fkcolumn="fromStockID";
+	property name="toStock" cfc="Slatwall.model.entity.Stock" fieldtype="many-to-one" fkcolumn="toStockID";
 	
 	// Related Object Properties (one-to-many)
-	property name="stockAdjustmentDeliveryItems" singularname="stockAdjustmentDeliveryItem" cfc="StockAdjustmentDeliveryItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
-	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
+	property name="stockAdjustmentDeliveryItems" singularname="stockAdjustmentDeliveryItem" cfc="Slatwall.model.entity.StockAdjustmentDeliveryItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="Slatwall.model.entity.StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
 	
 	
 	// For use with Adjustment Items interface, get one stock that we will use displaying sku info. 

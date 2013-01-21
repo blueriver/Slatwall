@@ -44,15 +44,15 @@ component displayname="Promotion Account" entityname="SlatwallPromotionAccount" 
 	property name="endDateTime" ormtype="timestamp";
 	
 	// Related Entities
-	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	//property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";   
+	property name="promotion" cfc="Slatwall.model.entity.Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
+	//property name="promotionPeriod" cfc="Slatwall.model.entity.PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";   
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
  
 
 	// ============= START: Bidirectional Helper Methods ===================

@@ -47,32 +47,32 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="estimatedFulfillmentDateTime" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
-	property name="appliedPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="appliedPriceGroupID";
-	property name="orderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemTypeID";
-	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID" cascadeCalculate="true";
-	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID" cascadeCalculate="true";
-	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
-	property name="orderReturn" cfc="OrderReturn" fieldtype="many-to-one" fkcolumn="orderReturnID";
-	property name="referencedOrderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID"; // Used For Returns. This is set when this order is a return.
+	property name="appliedPriceGroup" cfc="Slatwall.model.entity.PriceGroup" fieldtype="many-to-one" fkcolumn="appliedPriceGroupID";
+	property name="orderItemType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="orderItemTypeID";
+	property name="orderItemStatusType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
+	property name="sku" cfc="Slatwall.model.entity.Sku" fieldtype="many-to-one" fkcolumn="skuID" cascadeCalculate="true";
+	property name="stock" cfc="Slatwall.model.entity.Stock" fieldtype="many-to-one" fkcolumn="stockID";
+	property name="order" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID" cascadeCalculate="true";
+	property name="orderFulfillment" cfc="Slatwall.model.entity.OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
+	property name="orderReturn" cfc="Slatwall.model.entity.OrderReturn" fieldtype="many-to-one" fkcolumn="orderReturnID";
+	property name="referencedOrderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID"; // Used For Returns. This is set when this order is a return.
 	
 	// Related Object Properties (one-to-many)
-	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
-	property name="appliedTaxes" singularname="appliedTax" cfc="TaxApplied" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
-	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
-	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
-	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true";
-	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all"; // Used For Returns
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="Slatwall.model.entity.PromotionApplied" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
+	property name="appliedTaxes" singularname="appliedTax" cfc="Slatwall.model.entity.TaxApplied" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
+	property name="attributeValues" singularname="attributeValue" cfc="Slatwall.model.entity.AttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
+	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="Slatwall.model.entity.OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="Slatwall.model.entity.StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true";
+	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all"; // Used For Returns
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
 	property name="discountAmount" persistent="false" formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ;

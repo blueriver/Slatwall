@@ -44,8 +44,8 @@ component displayname="Sku Currency" entityname="SlatwallSkuCurrency" table="Sla
 	property name="listPrice" ormtype="big_decimal" formatType="currency" default="0";
 	
 	// Related Object Properties (many-to-one)
-	property name="currency" cfc="Currency" fieldtype="many-to-one" fkcolumn="currencyCode";
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="currency" cfc="Slatwall.model.entity.Currency" fieldtype="many-to-one" fkcolumn="currencyCode";
+	property name="sku" cfc="Slatwall.model.entity.Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -61,9 +61,9 @@ component displayname="Sku Currency" entityname="SlatwallSkuCurrency" table="Sla
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

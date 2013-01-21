@@ -47,13 +47,13 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	if( fileExists(expandPath("config/custom/configFramework.cfm")) ) {
 		include "config/custom/configFramework.cfm";
 	}
-	include "config/configORM.cfm";
-	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
-		include "config/custom/configORM.cfm";
-	}
 	include "config/configMappings.cfm";
 	if( fileExists(expandPath("config/custom/configMappings.cfm")) ) {
 		include "config/custom/configMappings.cfm";
+	}
+	include "config/configORM.cfm";
+	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
+		include "config/custom/configORM.cfm";
 	}
 	include "config/configCustomTags.cfm";
 	if( fileExists(expandPath("config/custom/configCustomTags.cfm")) ) {
@@ -64,17 +64,18 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	
 	// @hint this method always fires one time, even if the request is coming from an outside application.
 	public void function onEveryRequest() {
-		
+		writeLog(file="Slatwall", text="Application.cfc onEveryRequest");
 		// Confirm Session Setup
 		getBeanFactory().getBean("sessionService").setPropperSession();
 	}
 	
 	// @hint this will fire 1 time if you are running the application.  If the application is bootstraped then it won't run
 	public void function onInternalRequest() {
-		
+		writeLog(file="Slatwall", text="Application.cfc onInternalRequest");
 	}
 	
 	public void function onFirstRequest() {
+		writeLog(file="Slatwall", text="Application.cfc onFirstRequest");
 		// Version
 		var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
 		if( fileExists( versionFile ) ) {
@@ -99,6 +100,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	}
 	
 	public void function onUpdateRequest() {
+		writeLog(file="Slatwall", text="Application.cfc onUpdateRequest");
 		// Reload All Integrations
 		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
 		writeLog(file="Slatwall", text="General Log - Integrations have been updated");

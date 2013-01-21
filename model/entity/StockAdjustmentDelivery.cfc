@@ -45,13 +45,13 @@ component displayname="Stock Adjustment Delivery" entityname="SlatwallStockAdjus
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
-	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
-	property name="stockAdjustmentDeliveryItems" singularname="stockAdjustmentDeliveryItem" cfc="StockAdjustmentDeliveryItem" fieldtype="one-to-many" fkcolumn="stockAdjustmentDeliveryID" cascade="all-delete-orphan" inverse="true";
+	property name="stockAdjustment" cfc="Slatwall.model.entity.StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
+	property name="stockAdjustmentDeliveryItems" singularname="stockAdjustmentDeliveryItem" cfc="Slatwall.model.entity.StockAdjustmentDeliveryItem" fieldtype="one-to-many" fkcolumn="stockAdjustmentDeliveryID" cascade="all-delete-orphan" inverse="true";
 	
 	
 	public any function getTotalQuantityDelivered() {
