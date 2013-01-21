@@ -37,8 +37,11 @@ Notes:
 
 --->
 <cfparam name="rc.orderItem" type="any" />
-<cfparam name="rc.order" type="any" default="#rc.orderItem.getOrder()#" />
 <cfparam name="rc.edit" default="false" />
+
+<cfif isNull(rc.order)>
+	<cfset rc.order = rc.orderItem.getOrder() />
+</cfif>
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.orderItem#" saveAction="admin:order.saveOrderItem" edit="#rc.edit#" >
