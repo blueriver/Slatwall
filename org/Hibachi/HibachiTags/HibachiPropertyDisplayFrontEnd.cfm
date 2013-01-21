@@ -187,8 +187,8 @@ Notes:
 				<cfoutput>
 					<dt class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></dt>
 					<dd class="#attributes.valueClass#">
-						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-						<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
+						<cf_HibachiFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+						<cf_HibachiErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
 					</dd>
 				</cfoutput>
 			<cfelse>
@@ -209,8 +209,8 @@ Notes:
 					<tr>
 						<td class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></td>
 						<td class="#attributes.valueClass#">
-							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-							<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
+							<cf_HibachiFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+							<cf_HibachiErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
 						</td>
 					</tr>
 				</cfoutput>
@@ -233,8 +233,8 @@ Notes:
 				<cfoutput>
 					<span class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></span>
 					<span class="#attributes.valueClass#">
-						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-						<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
+						<cf_HibachiFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+						<cf_HibachiErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
 					</span>
 				</cfoutput>
 			<cfelse>
@@ -252,8 +252,8 @@ Notes:
 		<cfcase value="plain">
 			<cfif attributes.edit>
 				<cfoutput>
-					<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-					<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
+					<cf_HibachiFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+					<cf_HibachiErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
 				</cfoutput>
 			<cfelse>
 				<cfoutput>

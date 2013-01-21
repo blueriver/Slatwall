@@ -44,7 +44,7 @@ Notes:
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<cf_SlatwallErrorDisplay object="#attributes.orderFulfillmentShipping#" errorName="processing" displayType="div">
+		<cf_HibachiErrorDisplay object="#attributes.orderFulfillmentShipping#" errorName="processing" displayType="div">
 		<cfif attributes.edit>
 			<cfif arrayLen(local.methodOptions)>
 				<cfset local.noneSelected = false />

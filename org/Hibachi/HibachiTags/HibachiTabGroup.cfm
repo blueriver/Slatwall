@@ -87,7 +87,7 @@ Notes:
 								<cfoutput>
 									<div class="tab-pane" id="tab#lcase(attributeSet.getAttributeSetCode())#">
 										<div class="row-fluid">
-											<cf_SlatwallAttributeSetDisplay attributeSet="#attributeSet#" entity="#attributes.object#" edit="#request.context.edit#" />
+											<cf_HibachiAttributeSetDisplay attributeSet="#attributeSet#" entity="#attributes.object#" edit="#request.context.edit#" />
 										</div>
 									</div>
 								</cfoutput>
@@ -125,29 +125,29 @@ Notes:
 														<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getPublicFlag(), "yesno")#</td>
 														<td>#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
 														<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
-														<td class="admin1"><cf_SlatwallActionCaller action="admin:comment.editcomment" queryString="commentID=#commentRelationship['comment'].getCommentID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-mini" icon="pencil" iconOnly="true" /></td>
+														<td class="admin1"><cf_HibachiActionCaller action="admin:comment.editcomment" queryString="commentID=#commentRelationship['comment'].getCommentID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-mini" icon="pencil" iconOnly="true" /></td>
 													</cfif>
 												</tr>
 											</cfloop>
 										</table>
 									</cfif>
-									<cf_SlatwallActionCaller action="admin:comment.createcomment" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-inverse" icon="plus icon-white" />
+									<cf_HibachiActionCaller action="admin:comment.createcomment" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-inverse" icon="plus icon-white" />
 								</cfoutput>
 							</div>
 						</cfif>
 						<cfif isObject(attributes.object)>
 							<div <cfif arrayLen(thistag.tabs)>class="tab-pane"<cfelse>class="tab-pane active"</cfif> id="tabSystem">
 								<div class="row-fluid">
-									<cf_SlatwallPropertyList> 
-										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
+									<cf_HibachiPropertyList> 
+										<cf_HibachiPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
 										<cfif request.slatwallScope.setting('globalRemoteIDShowFlag') && attributes.object.hasProperty('remoteID')>
-											<cf_SlatwallPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.slatwallScope.setting('globalRemoteIDEditFlag'), true, false)#" />
+											<cf_HibachiPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && request.slatwallScope.setting('globalRemoteIDEditFlag'), true, false)#" />
 										</cfif>
-										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdDateTime" />
-										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="createdByAccount" />
-										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedDateTime" />
-										<cf_SlatwallPropertyDisplay object="#attributes.object#" property="modifiedByAccount" />
-									</cf_SlatwallPropertyList>
+										<cf_HibachiPropertyDisplay object="#attributes.object#" property="createdDateTime" />
+										<cf_HibachiPropertyDisplay object="#attributes.object#" property="createdByAccount" />
+										<cf_HibachiPropertyDisplay object="#attributes.object#" property="modifiedDateTime" />
+										<cf_HibachiPropertyDisplay object="#attributes.object#" property="modifiedByAccount" />
+									</cf_HibachiPropertyList>
 								</div>
 							</div>
 						</cfif>

@@ -234,7 +234,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			
 			return newEntityName;
 		} else {
-			var newEntityMeta = getService("hibachiService").getEntityObject( variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc ).getThisMetaData();
+			var newEntityMeta = getService("hibachiService").getEntityObject( listLast(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc, ".") ).getThisMetaData();
 		
 			// Figure out the newEntityName
 			if(structKeyExists(newEntityMeta, "entityName")) {

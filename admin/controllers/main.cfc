@@ -69,6 +69,8 @@ component extends="BaseController" output=false accessors=true {
 	this.secureMethods=listAppend(this.secureMethods, 'log');
 	
 	public void function default(required struct rc) {
+		rc.pagetitle = "Dashboard";
+		rc.fw = getFW();
 		
 		rc.productSmartList = getProductService().getProductSmartList();
 		rc.productSmartList.addOrder("modifiedDateTime|DESC");

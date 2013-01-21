@@ -70,12 +70,12 @@ Notes:
 						<td>
 							<cfif thisSetting.settingDetails.settingInherited>
 								<cfif !structCount(thisSetting.settingDetails.settingRelationships)>
-									<cf_SlatwallActionCaller action="admin:setting.settings" text="#request.slatwallScope.rbKey('define.global')#"/>
+									<cf_HibachiActionCaller action="admin:setting.settings" text="#request.slatwallScope.rbKey('define.global')#"/>
 								<cfelse>
 									<cfif structCount(thisSetting.settingDetails.settingRelationships) eq 1>
 										<cfif structKeyList(thisSetting.settingDetails.settingRelationships) eq "productTypeID">
 											<cfset local.productType = request.slatwallScope.getService("productService").getProductType(thisSetting.settingDetails.settingRelationships.productTypeID) />
-											<cf_SlatwallActionCaller action="admin:product.detailProductType" text="#local.productType.getSimpleRepresentation()#" queryString="productTypeID=#thisSetting.settingDetails.settingRelationships.productTypeID#">
+											<cf_HibachiActionCaller action="admin:product.detailProductType" text="#local.productType.getSimpleRepresentation()#" queryString="productTypeID=#thisSetting.settingDetails.settingRelationships.productTypeID#">
 										</cfif>
 									</cfif>
 								</cfif>
@@ -87,15 +87,15 @@ Notes:
 					<td class="admin admin1">
 						<cfif thisSetting.settingDetails.settingInherited>
 							<cfif isObject(thisSetting.settingObject)>
-								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_HibachiActionCaller action="admin:setting.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							<cfelse>
-								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_HibachiActionCaller action="admin:setting.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							</cfif>
 						<cfelse>
 							<cfif isObject(thisSetting.settingObject)>
-								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_HibachiActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							<cfelse>
-								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_HibachiActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							</cfif>
 						</cfif>
 					</td>

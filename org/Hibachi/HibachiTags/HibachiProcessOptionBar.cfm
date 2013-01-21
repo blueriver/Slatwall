@@ -84,7 +84,7 @@ Notes:
 	<cfoutput>
 		<div class="row-fluid">
 			<cfif arrayLen(dataOptions)>
-				<cf_SlatwallPropertyList divclass="#divclass#">
+				<cf_HibachiPropertyList divclass="#divclass#">
 					<cfif sections gt 1>
 						<h4>Process Options</h4>
 						<br />
@@ -94,45 +94,45 @@ Notes:
 						<cfif right(hint, 8) eq "_missing">
 							<cfset hint = "" />
 						</cfif>
-						<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.#option.data#" fieldtype="#option.fieldtype#" value="#option.value#" valueOptions="#option.valueOptions#" title="#request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#" )#" hint="#hint#">
+						<cf_HibachiFieldDisplay edit="true" fieldname="processOptions.#option.data#" fieldtype="#option.fieldtype#" value="#option.value#" valueOptions="#option.valueOptions#" title="#request.slatwallScope.rbKey( replace(request.context.slatAction, ':', '.') & ".processOption.#option.data#" )#" hint="#hint#">
 					</cfloop>
-				</cf_SlatwallPropertyList>
+				</cf_HibachiPropertyList>
 			</cfif>
 			<cfif arrayLen(printEmailOptions)>
-				<cf_SlatwallPropertyList divclass="#divclass#">
+				<cf_HibachiPropertyList divclass="#divclass#">
 					<cfif sections gt 1>
 						<h4>Email / Print Options</h4>
 						<br />
 					</cfif>
 					<cfloop array="#printEmailOptions#" index="option">
 						<cfif len(option.print)>
-							<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.print.#option.print#" fieldtype="yesno" value="#option.value#" title="#request.slatwallScope.rbKey('define.print')# #request.slatwallScope.rbKey('print.#option.print#')#">
+							<cf_HibachiFieldDisplay edit="true" fieldname="processOptions.print.#option.print#" fieldtype="yesno" value="#option.value#" title="#request.slatwallScope.rbKey('define.print')# #request.slatwallScope.rbKey('print.#option.print#')#">
 						</cfif>
 						<cfif len(option.email)>
-							<cf_SlatwallFieldDisplay edit="true" fieldname="processOptions.email.#option.email#" fieldtype="yesno" value="#option.value#" title="#request.slatwallScope.rbKey('define.email')# #request.slatwallScope.rbKey('email.#option.email#')#">
+							<cf_HibachiFieldDisplay edit="true" fieldname="processOptions.email.#option.email#" fieldtype="yesno" value="#option.value#" title="#request.slatwallScope.rbKey('define.email')# #request.slatwallScope.rbKey('email.#option.email#')#">
 						</cfif>
 					</cfloop>
-				</cf_SlatwallPropertyList>
+				</cf_HibachiPropertyList>
 			</cfif>
 			<cfif len(attributes.dataCollectionPropertyIdentifier)>
-				<cf_SlatwallPropertyList divclass="#divclass#">
+				<cf_HibachiPropertyList divclass="#divclass#">
 					<cfif sections gt 1>
 						<h4>Data Collection</h4>
 						<br />
 					</cfif>
-					<cf_SlatwallFieldDisplay edit="true" fieldname="dataCollector" fieldtype="text" title="Scan" fieldclass="firstfocus">
+					<cf_HibachiFieldDisplay edit="true" fieldname="dataCollector" fieldtype="text" title="Scan" fieldclass="firstfocus">
 					<button class="btn">Upload Data File</button>
-				</cf_SlatwallPropertyList>
+				</cf_HibachiPropertyList>
 			</cfif>
 			<cfif attributes.allowComment>
-				<cf_SlatwallPropertyList divclass="#divclass#">
+				<cf_HibachiPropertyList divclass="#divclass#">
 					<cfif sections gt 1>
 						<h4>Optional Comment</h4>
 						<br />
 					</cfif>
-					<cf_SlatwallFieldDisplay edit="true" fieldname="processComment.publicFlag" fieldtype="yesno" value="0" title="#request.slatwallScope.rbKey('entity.comment.publicFlag')#">
-					<cf_SlatwallFieldDisplay edit="true" fieldname="processComment.comment" fieldClass="processComment" fieldtype="textarea" value="" title="#request.slatwallScope.rbKey('entity.comment.comment')#">		
-				</cf_SlatwallPropertyList>
+					<cf_HibachiFieldDisplay edit="true" fieldname="processComment.publicFlag" fieldtype="yesno" value="0" title="#request.slatwallScope.rbKey('entity.comment.publicFlag')#">
+					<cf_HibachiFieldDisplay edit="true" fieldname="processComment.comment" fieldClass="processComment" fieldtype="textarea" value="" title="#request.slatwallScope.rbKey('entity.comment.comment')#">		
+				</cf_HibachiPropertyList>
 			</cfif>
 		</div>
 		<hr />

@@ -216,4 +216,23 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	public void function setValue(required string key, required any value) {
 		variables[ arguments.key ] = arguments.value;
 	}
+	
+	
+	
+	public any function getSlatwallRootPath() {
+		return "";
+	}
+	
+	public string function getSlatwallRootDirectory() {
+		return expandPath("/Slatwall");
+	}
+	
+	public any function getSlatwallRootURL() {
+		return "";
+	}
+	
+	public any function secureDisplay() {
+		return true;
+	}
+	
 }

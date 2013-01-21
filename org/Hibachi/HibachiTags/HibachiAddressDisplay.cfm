@@ -66,32 +66,32 @@ Notes:
 			<cfif attributes.edit>
 				
 				<cfif attributes.showCountry>
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#countryCode" property="countryCode" fieldType="select" edit="true" />
+					<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#countryCode" property="countryCode" fieldType="select" edit="true" />
 				</cfif>
 				<cfif attributes.showName>
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#name" property="name" edit="true" />
+					<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#name" property="name" edit="true" />
 				</cfif>
 				<cfif attributes.showCompany>
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#company" property="company" edit="true" />
+					<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#company" property="company" edit="true" />
 				</cfif>
 				<cfif attributes.address.getCountry().getStreetAddressShowFlag() and attributes.showStreetAddress>
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#streetAddress" property="streetAddress" edit="true" />
+					<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#streetAddress" property="streetAddress" edit="true" />
 				</cfif>
 				<cfif attributes.address.getCountry().getStreet2AddressShowFlag() and attributes.showStreet2Address>
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#street2Address" property="street2Address" edit="true" />
+					<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#street2Address" property="street2Address" edit="true" />
 				</cfif>
 				<cfif attributes.address.getCountry().getCityShowFlag() and attributes.showCity>
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#city" property="city" edit="true" />
+					<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#city" property="city" edit="true" />
 				</cfif>
 				<cfif attributes.address.getCountry().getStateCodeShowFlag() and attributes.showState>
 					<cfif arrayLen(attributes.address.getStateCodeOptions()) gt 1>
-						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" fieldType="select" edit="true" />
+						<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" fieldType="select" edit="true" />
 					<cfelse>
-						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" fieldType="text" edit="true" />
+						<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" fieldType="text" edit="true" />
 					</cfif>
 				</cfif>
 				<cfif attributes.address.getCountry().getPostalCodeShowFlag() and attributes.showPostalCode>
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#postalCode" property="postalCode" edit="#attributes.edit#" />
+					<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#postalCode" property="postalCode" edit="#attributes.edit#" />
 				</cfif>
 				<input type="hidden" name="#attributes.fieldNamePrefix#addressID" value="#attributes.address.getAddressID()#" />
 				

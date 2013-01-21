@@ -48,7 +48,7 @@ Notes:
 		<cfset local.attributeSmartList.addFilter('activeFlag', 1) />
 	</cfsilent>
 	<cfoutput>
-		<cf_SlatwallPropertyList>
+		<cf_HibachiPropertyList>
 			<cfloop array="#local.attributeSmartList.getRecords()#" index="attribute">
 				<cfif attributes.edit>
 					<cfset request.context.attributeValueIndex++ />
@@ -56,8 +56,8 @@ Notes:
 					<input type="hidden" name="attributeValues[#request.context.attributeValueIndex#].attributeValueID" value="#attributes.entity.getAttributeValue(attribute.getAttributeID(), true).getAttributeValueID()#" />
 					<input type="hidden" name="attributeValues[#request.context.attributeValueIndex#].attribute.attributeID" value="#attribute.getAttributeID()#" />
 				</cfif>
-				<cf_SlatwallFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="attributeValues[#request.context.attributeValueIndex#].attributeValue" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#attributes.entity.getAttributeValue(attribute.getAttributeID())#" valueOptions="#attribute.getAttributeOptionsOptions()#" />
+				<cf_HibachiFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="attributeValues[#request.context.attributeValueIndex#].attributeValue" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#attributes.entity.getAttributeValue(attribute.getAttributeID())#" valueOptions="#attribute.getAttributeOptionsOptions()#" />
 			</cfloop>
-		</cf_SlatwallPropertyList>
+		</cf_HibachiPropertyList>
 	</cfoutput>
 </cfif>

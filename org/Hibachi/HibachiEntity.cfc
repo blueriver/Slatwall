@@ -682,7 +682,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		}
 		
 		// These are more complicated options that should not be called during application setup
-		if(getSlatwallScope().hasApplicationValue("initialized") && getSlatwallScope().getApplicationValue("initialized")) {
+		if(getHibachiScope().hasApplicationValue("initialized") && getHibachiScope().getApplicationValue("initialized")) {
 		
 			// Call the calculatedProperties update
 			updateCalculatedProperties();
