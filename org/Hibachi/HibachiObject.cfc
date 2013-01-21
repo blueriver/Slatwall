@@ -205,7 +205,7 @@ component accessors="true" output="false" persistent="false" {
 	// @hint  helper function for returning the Validate This Facade Object
 	public any function getValidateThis() {
 		if( !hasApplicationValue("validateThis") ) {
-			setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = expandPath('/Slatwall/com/validation/'),injectResultIntoBO = true,defaultFailureMessagePrefix = ""}) );
+			setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = expandPath('/Slatwall/model/validation/'),injectResultIntoBO = true,defaultFailureMessagePrefix = ""}) );
 		}
 		return getApplicationValue("validateThis");
 	}
@@ -291,7 +291,7 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint facade method to get values from the slatwall application scope
 	public any function getApplicationValue(required any key) {
-		writeLog(file="Slatwall", text="GETTING[#getHibachiInstanceApplicationScopeKey()#]: #arguments.key#");
+		writeLog(file="Slatwall", text="GETTING-#getHibachiInstanceApplicationScopeKey()#: #arguments.key#");
 		if( structKeyExists(application, getHibachiInstanceApplicationScopeKey()) && structKeyExists(application[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
 			return application[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ];
 		}
@@ -301,7 +301,11 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint facade method to set values in the slatwall application scope 
 	public void function setApplicationValue(required any key, required any value) {
-		writeLog(file="Slatwall", text="SETTING[#getHibachiInstanceApplicationScopeKey()#]: #arguments.key# - #arguments.value#");
+		if(isSimpleValue(arguments.value)) {
+			writeLog(file="Slatwall", text="SETTING-#getHibachiInstanceApplicationScopeKey()#: #arguments.key# - #arguments.value#");
+		} else {
+			writeLog(file="Slatwall", text="SETTING-#getHibachiInstanceApplicationScopeKey()#: #arguments.key# - complex");	
+		}
 		lock name="application_#getHibachiInstanceApplicationScopeKey()#_#arguments.key#" timeout="10" {
 			if(!structKeyExists(application, getHibachiInstanceApplicationScopeKey())) {
 				application[ getHibachiInstanceApplicationScopeKey() ] = {};

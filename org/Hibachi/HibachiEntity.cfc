@@ -634,19 +634,19 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		}
 		
 		// These are more complicated options that should not be called during application setup
-		if(getSlatwallScope().hasApplicationValue("initialized") && getSlatwallScope().getApplicationValue("initialized")) {
+		if(getHibachiScope().hasApplicationValue("initialized") && getHibachiScope().getApplicationValue("initialized")) {
 			
 			// Call the calculatedProperties update
 			updateCalculatedProperties();
 			
 			// Set createdByAccount
-			if(structKeyExists(this,"setCreatedByAccount") && !getSlatwallScope().getCurrentAccount().isNew() && len(getSlatwallScope().getCurrentAccount().getAllPermissions()) ){
-				setCreatedByAccount( getSlatwallScope().getCurrentAccount() );	
+			if(structKeyExists(this,"setCreatedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && len(getHibachiScope().getCurrentAccount().getAllPermissions()) ){
+				setCreatedByAccount( getHibachiScope().getCurrentAccount() );	
 			}
 			
 			// Set modifiedByAccount
-			if(structKeyExists(this,"setModifiedByAccount") && !getSlatwallScope().getCurrentAccount().isNew() && len(getSlatwallScope().getCurrentAccount().getAllPermissions()) ){
-				setModifiedByAccount(getSlatwallScope().getCurrentAccount());
+			if(structKeyExists(this,"setModifiedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && len(getHibachiScope().getCurrentAccount().getAllPermissions()) ){
+				setModifiedByAccount(getHibachiScope().getCurrentAccount());
 			}
 			
 			// Setup the first sortOrder
@@ -688,8 +688,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			updateCalculatedProperties();
 		
 			// Set modifiedByAccount
-			if(structKeyExists(this,"setModifiedByAccount") && !getSlatwallScope().getCurrentAccount().isNew() && len(getSlatwallScope().getCurrentAccount().getAllPermissions()) ){
-				setModifiedByAccount(getSlatwallScope().getCurrentAccount());
+			if(structKeyExists(this,"setModifiedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && len(getSlatwallScope().getCurrentAccount().getAllPermissions()) ){
+				setModifiedByAccount(getHibachiScope().getCurrentAccount());
 			}
 		}
 	}

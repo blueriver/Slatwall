@@ -1,7 +1,6 @@
 component extends="FW1.framework" {
 	
-	
-	/*
+/*
 	
 	// ======= START: ENVIORNMENT CONFIGURATION =======
 
@@ -158,7 +157,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupGlobalRequest() {
-		request["#variables.framework.hibachi.applicationKey#Scope"] = createObject("component", "#variables.framework.hibachi.applicationKey#.model.hibachi.#variables.framework.hibachi.applicationKey#Scope").init();
+		request["#variables.framework.hibachi.applicationKey#Scope"] = createObject("component", "#variables.framework.hibachi.applicationKey#.model.hibachi.Scope").init();
 		
 		// Verify that the application is setup
 		verifyApplicationSetup();
@@ -171,7 +170,7 @@ component extends="FW1.framework" {
 		setupGlobalRequest();
 		
 		// Setup structured Data if a request context exists meaning that a full action was called
-		getBeanFaction().getBean("FormUtilities").buildFormCollections(request.context);
+		getBeanFactory().getBean("FormUtilities").buildFormCollections(request.context);
 		
 		// Setup a $ in the request context, and the slatwallScope shortcut
 		request.context.$ = {};
@@ -458,13 +457,6 @@ component extends="FW1.framework" {
 		return request["#variables.framework.hibachi.applicationKey#Scope"];
 	}
 	
-	public any function getHibachiInstanceApplicationScopeKey() {
-		var currentDiretory = replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all");
-		if(right(currentDiretory, 13) neq "/org/Hibachi/") {
-			currentDiretory &= "org/Hibachi/";
-		}
-		return hash(lcase(currentDiretory));
-	}
 	// @hint setups an application scope value that will always be consistent
 	public any function getHibachiInstanceApplicationScopeKey() {
 		var metaData = getMetaData( this );

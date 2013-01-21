@@ -86,7 +86,7 @@ component extends="BaseService" accessors="true" {
 	
 	public struct function getResourceBundle(required string locale="en_us") {
 		if(!structKeyExists(variables.resourceBundles, arguments.locale)) {
-			var javaRB = new Slatwall.org.javaRB.javaRB();
+			var javaRB = new Slatwall.org.Hibachi.JavaRB.JavaRB();
 			
 			variables.resourceBundles[ arguments.locale ] = {};
 			

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="Hibachi.HibachiObject" {
+component extends="Slatwall.org.Hibachi.HibachiObject" {
 
 	public any function init() {
 		return this;

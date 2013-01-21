@@ -86,7 +86,7 @@
 				arguments.entityName = "Slatwall#arguments.entityName#";
 			}
 			
-			var smartList = new Slatwall.model.transient.SmartList(argumentCollection=arguments);
+			var smartList = new Slatwall.model.hibachi.SmartList(argumentCollection=arguments);
 	
 			return smartList;
 		}

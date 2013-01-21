@@ -47,6 +47,10 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	if( fileExists(expandPath("config/custom/configFramework.cfm")) ) {
 		include "config/custom/configFramework.cfm";
 	}
+	include "config/configORM.cfm";
+	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
+		include "config/custom/configORM.cfm";
+	}
 	include "config/configMappings.cfm";
 	if( fileExists(expandPath("config/custom/configMappings.cfm")) ) {
 		include "config/custom/configMappings.cfm";
@@ -54,10 +58,6 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	include "config/configCustomTags.cfm";
 	if( fileExists(expandPath("config/custom/configCustomTags.cfm")) ) {
 		include "config/custom/configCustomTags.cfm";
-	}
-	include "config/configORM.cfm";
-	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
-		include "config/custom/configORM.cfm";
 	}
 
 	// ===================================== HIBACHI HOOKS

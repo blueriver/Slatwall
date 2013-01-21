@@ -168,7 +168,7 @@
 			}
 				
 			// Setup ormHasErrors because it didn't pass validation
-			getSlatwallScope().setORMHasErrors( true );
+			getHibachiScope().setORMHasErrors( true );
 	
 			return false;
 		}
@@ -192,7 +192,7 @@
 			}
 				
 			// Setup ormHasErrors because it didn't pass validation
-			getSlatwallScope().setORMHasErrors( true );
+			getHibachiScope().setORMHasErrors( true );
 	
 			return false;
 		}
@@ -219,7 +219,7 @@
 	        if(!arguments.entity.hasErrors()) {
 	            arguments.entity = getHibachiDAO().save(target=arguments.entity);
 	        } else {
-	            getSlatwallScope().setORMHasErrors( true );
+	            getHibachiScope().setORMHasErrors( true );
 	        }
 	
 	        // Return the entity
