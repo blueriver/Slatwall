@@ -52,7 +52,7 @@ Notes:
 	</cf_SlatwallDetailHeader>
 	
 	<cf_SlatwallTabGroup object="#rc.taxCategory#">
-		<cf_SlatwallTab view="admin:setting/taxcategorytabs/rates" />
+		<cf_SlatwallTab view="admin:crud/taxcategorytabs/rates" />
 	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>

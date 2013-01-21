@@ -66,16 +66,16 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		<cf_SlatwallTabGroup object="#rc.product#" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:product/producttabs/skus" />
-			<cf_SlatwallTab view="admin:product/producttabs/productdescription" />
-			<cf_SlatwallTab view="admin:product/producttabs/productpages" />
-			<cf_SlatwallTab view="admin:product/producttabs/productcategories" />
-			<cf_SlatwallTab view="admin:product/producttabs/alternateimages" />
-			<cf_SlatwallTab view="admin:product/producttabs/productreviews" />
-			<cf_SlatwallTab view="admin:product/producttabs/relatedproducts" />
-			<cf_SlatwallTab view="admin:product/producttabs/vendors" />
-			<cf_SlatwallTab view="admin:product/producttabs/productsettings" />
-			<cf_SlatwallTab view="admin:product/producttabs/skusettings" />
+			<cf_SlatwallTab view="admin:crud/producttabs/skus" />
+			<cf_SlatwallTab view="admin:crud/producttabs/productdescription" />
+			<cf_SlatwallTab view="admin:crud/producttabs/productpages" />
+			<cf_SlatwallTab view="admin:crud/producttabs/productcategories" />
+			<cf_SlatwallTab view="admin:crud/producttabs/alternateimages" />
+			<cf_SlatwallTab view="admin:crud/producttabs/productreviews" />
+			<cf_SlatwallTab view="admin:crud/producttabs/relatedproducts" />
+			<cf_SlatwallTab view="admin:crud/producttabs/vendors" />
+			<cf_SlatwallTab view="admin:crud/producttabs/productsettings" />
+			<cf_SlatwallTab view="admin:crud/producttabs/skusettings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

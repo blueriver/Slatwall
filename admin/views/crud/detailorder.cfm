@@ -118,18 +118,18 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.order#" allowComments="true" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:order/ordertabs/orderitems" count="#rc.order.getOrderItemsCount()#" />
-			<cf_SlatwallTab view="admin:order/ordertabs/orderpayments" count="#rc.order.getOrderPaymentsCount()#" />
+			<cf_SlatwallTab view="admin:crud/ordertabs/orderitems" count="#rc.order.getOrderItemsCount()#" />
+			<cf_SlatwallTab view="admin:crud/ordertabs/orderpayments" count="#rc.order.getOrderPaymentsCount()#" />
 			<cfif rc.order.getOrderType().getSystemCode() eq "otSalesOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
-				<cf_SlatwallTab view="admin:order/ordertabs/orderfulfillments" count="#rc.order.getOrderFulfillmentsCount()#" />
-				<cf_SlatwallTab view="admin:order/ordertabs/orderdeliveries" count="#rc.order.getOrderDeliveriesCount()#" />
+				<cf_SlatwallTab view="admin:crud/ordertabs/orderfulfillments" count="#rc.order.getOrderFulfillmentsCount()#" />
+				<cf_SlatwallTab view="admin:crud/ordertabs/orderdeliveries" count="#rc.order.getOrderDeliveriesCount()#" />
 			</cfif>
 			<cfif rc.order.getOrderType().getSystemCode() eq "otReturnOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
-				<cf_SlatwallTab view="admin:order/ordertabs/orderreturns" count="#rc.order.getOrderReturnsCount()#" />
-				<cf_SlatwallTab view="admin:order/ordertabs/stockreceivers" count="#rc.order.getStockReceiversCount()#" />
+				<cf_SlatwallTab view="admin:crud/ordertabs/orderreturns" count="#rc.order.getOrderReturnsCount()#" />
+				<cf_SlatwallTab view="admin:crud/ordertabs/stockreceivers" count="#rc.order.getStockReceiversCount()#" />
 			</cfif>
-			<cf_SlatwallTab view="admin:order/ordertabs/promotions" count="#rc.order.getPromotionCodesCount()#" />
-			<cf_SlatwallTab view="admin:order/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
+			<cf_SlatwallTab view="admin:crud/ordertabs/promotions" count="#rc.order.getPromotionCodesCount()#" />
+			<cf_SlatwallTab view="admin:crud/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

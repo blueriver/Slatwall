@@ -72,7 +72,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.shippingMethodRate#">
-			<cf_SlatwallTab view="admin:setting/shippingmethodratetabs/shippingmethodratesettings" />
+			<cf_SlatwallTab view="admin:crud/shippingmethodratetabs/shippingmethodratesettings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

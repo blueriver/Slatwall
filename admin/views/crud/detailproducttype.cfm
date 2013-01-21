@@ -58,12 +58,12 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.productType#">
-			<cf_SlatwallTab view="admin:product/producttypetabs/producttypedescription" />
+			<cf_SlatwallTab view="admin:crud/producttypetabs/producttypedescription" />
 			<!---<cf_SlatwallTab view="admin:product/producttypetabs/attributesets" />--->
-			<cf_SlatwallTab view="admin:product/producttypetabs/products" />
-			<cf_SlatwallTab view="admin:product/producttypetabs/producttypesettings" />
-			<cf_SlatwallTab view="admin:product/producttypetabs/productsettings" />
-			<cf_SlatwallTab view="admin:product/producttypetabs/skusettings" />
+			<cf_SlatwallTab view="admin:crud/producttypetabs/products" />
+			<cf_SlatwallTab view="admin:crud/producttypetabs/producttypesettings" />
+			<cf_SlatwallTab view="admin:crud/producttypetabs/productsettings" />
+			<cf_SlatwallTab view="admin:crud/producttypetabs/skusettings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

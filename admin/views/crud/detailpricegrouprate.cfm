@@ -60,9 +60,9 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.pricegrouprate#">
-			<cf_SlatwallTab view="admin:pricing/pricegroupratetabs/producttypes" />
-			<cf_SlatwallTab view="admin:pricing/pricegroupratetabs/products" />
-			<cf_SlatwallTab view="admin:pricing/pricegroupratetabs/skus" />
+			<cf_SlatwallTab view="admin:crud/pricegroupratetabs/producttypes" />
+			<cf_SlatwallTab view="admin:crud/pricegroupratetabs/products" />
+			<cf_SlatwallTab view="admin:crud/pricegroupratetabs/skus" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

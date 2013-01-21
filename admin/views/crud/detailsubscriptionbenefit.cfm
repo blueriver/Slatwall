@@ -52,9 +52,9 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.subscriptionBenefit#">
-			<cf_SlatwallTab view="admin:product/subscriptionbenefittabs/categories" />
-			<cf_SlatwallTab view="admin:product/subscriptionbenefittabs/contents" />
-			<cf_SlatwallTab view="admin:product/subscriptionbenefittabs/pricegroups" />
+			<cf_SlatwallTab view="admin:crud/subscriptionbenefittabs/categories" />
+			<cf_SlatwallTab view="admin:crud/subscriptionbenefittabs/contents" />
+			<cf_SlatwallTab view="admin:crud/subscriptionbenefittabs/pricegroups" />
 		</cf_SlatwallTabGroup>
 
 		

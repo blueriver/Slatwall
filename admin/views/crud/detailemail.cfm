@@ -52,7 +52,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.email#">
-			<cf_SlatwallTab view="admin:setting/emailtabs/emailsettings" />
+			<cf_SlatwallTab view="admin:crud/emailtabs/emailsettings" />
 		</cf_SlatwallTabGroup>
 
 	</cf_SlatwallDetailForm>

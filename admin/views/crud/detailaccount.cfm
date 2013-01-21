@@ -74,15 +74,15 @@ Notes:
 	
 	
 	<cf_SlatwallTabGroup object="#rc.account#" allowCustomAttributes="true">
-		<cf_SlatwallTab view="admin:account/accounttabs/addresses" />
-		<cf_SlatwallTab view="admin:account/accounttabs/orders" />
-		<cf_SlatwallTab view="admin:account/accounttabs/paymentmethods" />
-		<cf_SlatwallTab view="admin:account/accounttabs/subscriptionusage" />
-		<cf_SlatwallTab view="admin:account/accounttabs/pricegroups" />
-		<cf_SlatwallTab view="admin:account/accounttabs/productreviews" />
-		<cf_SlatwallTab view="admin:account/accounttabs/accountpayments" />
-		<cf_SlatwallTab view="admin:account/accounttabs/permissions" />
-		<cf_SlatwallTab view="admin:account/accounttabs/accountsettings" />
+		<cf_SlatwallTab view="admin:crud/accounttabs/addresses" />
+		<cf_SlatwallTab view="admin:crud/accounttabs/orders" />
+		<cf_SlatwallTab view="admin:crud/accounttabs/paymentmethods" />
+		<cf_SlatwallTab view="admin:crud/accounttabs/subscriptionusage" />
+		<cf_SlatwallTab view="admin:crud/accounttabs/pricegroups" />
+		<cf_SlatwallTab view="admin:crud/accounttabs/productreviews" />
+		<cf_SlatwallTab view="admin:crud/accounttabs/accountpayments" />
+		<cf_SlatwallTab view="admin:crud/accounttabs/permissions" />
+		<cf_SlatwallTab view="admin:crud/accounttabs/accountsettings" />
 	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>

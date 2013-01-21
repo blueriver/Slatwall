@@ -64,10 +64,10 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.promotion#">
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionperiods" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotioncodes" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotionsummary" />
-			<cf_SlatwallTab view="admin:pricing/promotiontabs/promotiondescription" />
+			<cf_SlatwallTab view="admin:crud/promotiontabs/promotionperiods" />
+			<cf_SlatwallTab view="admin:crud/promotiontabs/promotioncodes" />
+			<cf_SlatwallTab view="admin:crud/promotiontabs/promotionsummary" />
+			<cf_SlatwallTab view="admin:crud/promotiontabs/promotiondescription" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

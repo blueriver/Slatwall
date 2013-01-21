@@ -57,9 +57,9 @@ Notes:
 	</cf_SlatwallDetailHeader>
 	
 	<cf_SlatwallTabGroup object="#rc.vendor#" allowCustomAttributes="true">
-		<cf_SlatwallTab view="admin:vendor/vendortabs/vendoraddresses" />
-		<cf_SlatwallTab view="admin:vendor/vendortabs/vendorbrands" />
-		<cf_SlatwallTab view="admin:vendor/vendortabs/vendororders" />
+		<cf_SlatwallTab view="admin:crud/vendortabs/vendoraddresses" />
+		<cf_SlatwallTab view="admin:crud/vendortabs/vendorbrands" />
+		<cf_SlatwallTab view="admin:crud/vendortabs/vendororders" />
 	</cf_SlatwallTabGroup>
 	
 </cf_SlatwallDetailForm>

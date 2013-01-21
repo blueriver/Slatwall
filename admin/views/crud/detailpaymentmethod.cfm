@@ -64,7 +64,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cfif not rc.paymentMethod.isNew()>
-			<cfoutput>#view("admin:setting/paymentmethodtypes/#lcase(rc.paymentMethod.getPaymentMethodType())#")#</cfoutput>
+			<cfoutput>#view("admin:crud/paymentmethodtypes/#lcase(rc.paymentMethod.getPaymentMethodType())#")#</cfoutput>
 		</cfif>
 	</cf_SlatwallDetailForm>
 </cfoutput>

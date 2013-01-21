@@ -66,9 +66,9 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.shippingMethod#">
-			<cf_SlatwallTab view="admin:setting/shippingmethodtabs/shippingmethodrates" />
-			<cf_SlatwallTab view="admin:setting/shippingmethodtabs/shippingmethodsettings" />
-			<cf_SlatwallTab view="admin:setting/shippingmethodtabs/shippingmethodratesettings" />
+			<cf_SlatwallTab view="admin:crud/shippingmethodtabs/shippingmethodrates" />
+			<cf_SlatwallTab view="admin:crud/shippingmethodtabs/shippingmethodsettings" />
+			<cf_SlatwallTab view="admin:crud/shippingmethodtabs/shippingmethodratesettings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

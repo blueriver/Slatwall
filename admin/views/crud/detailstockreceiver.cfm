@@ -53,7 +53,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.stockReceiver#">
-			<cf_SlatwallTab view="admin:warehouse/stockreceivertabs/stockreceiveritems" />
+			<cf_SlatwallTab view="admin:crud/stockreceivertabs/stockreceiveritems" />
 		</cf_SlatwallTabGroup>
 	</cf_SlatwallDetailForm>
 </cfoutput>

@@ -54,8 +54,8 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.optiongroup#">
-			<cf_SlatwallTab view="admin:product/optiongrouptabs/options" />
-			<cf_SlatwallTab view="admin:product/optiongrouptabs/description" />
+			<cf_SlatwallTab view="admin:crud/optiongrouptabs/options" />
+			<cf_SlatwallTab view="admin:crud/optiongrouptabs/description" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

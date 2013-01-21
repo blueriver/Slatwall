@@ -68,7 +68,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.orderPayment#" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:order/orderpaymenttabs/paymenttransactions" />
+			<cf_SlatwallTab view="admin:crud/orderpaymenttabs/paymenttransactions" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

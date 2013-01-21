@@ -13,6 +13,9 @@ component output="false" accessors="true" extends="HibachiController" {
 		var sectionName = getFW().getSection(arguments.rc.slatAction);
 		var itemName = getFW().getItem(arguments.rc.slatAction);
 		
+		arguments.rc.edit = false;
+		arguments.rc.fw = getFW();
+		
 		arguments.rc.itemEntityName = "";
 		arguments.rc.listAction = arguments.rc.slatAction;
 		arguments.rc.saveAction = arguments.rc.slatAction;
