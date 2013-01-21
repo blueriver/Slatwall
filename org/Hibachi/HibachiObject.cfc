@@ -210,23 +210,6 @@ component accessors="true" output="false" persistent="false" {
 		return getApplicationValue("validateThis");
 	}
 	
-	// @hint  helper function for returning cfstatic
-	public any function getCFStatic() {
-		if( !hasApplicationValue("cfstatic") ) {
-			
-			setApplicationValue("cfstatic", createObject("component", "Slatwall.org.cfstatic.CfStatic").init(
-				staticDirectory = "#getSlatwallRootDirectory()#/assets/",
-				staticUrl = "#getSlatwallRootPath()#/assets/",
-				minifyMode = 'package',
-				checkforupdates = true
-				)
-			);
-			
-		}
-		
-		return getApplicationValue("cfstatic");
-	}
-	
 	// @hint  helper function to return the RB Key from RB Factory in any component
 	public string function rbKey(required string key, string locale="en_us") {
 		return getRBFactory().getRBKey(arguments.key, arguments.locale);

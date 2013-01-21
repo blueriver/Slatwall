@@ -47,7 +47,11 @@ Notes:
 		<link rel="icon" href="#request.slatwallScope.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 		<link rel="shortcut icon" href="#request.slatwallScope.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		#request.slatwallScope.getCFStatic().renderIncludes("css")#
+		
+		<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/assets/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
+		<link href="/assets/css/global.css" rel="stylesheet">
+		
 		<script type="text/javascript">
 			var slatwall = {
 				dateFormat : '#request.slatwallScope.setting("globalDateFormat")#'
@@ -258,7 +262,15 @@ Notes:
 				<a href="##" class="btn btn-primary"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.yes')#</a>
 			</div>
 		</div>
-		#request.slatwallScope.getCFStatic().renderIncludes("js")#
+		
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-ui-1.8.20.custom.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-ui-timepicker-addon-0.9.9.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-validate-1.9.0.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/jquery-typewatch-2.0.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/assets/js/global.js"></script>
+		
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/ckfinder/ckfinder.js"></script>
