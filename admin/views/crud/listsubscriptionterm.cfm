@@ -43,8 +43,8 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.subscriptionTermSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.subscriptionTermSmartList#"
-						recordDetailAction="admin:product.detailsubscriptionterm"
-						recordEditAction="admin:product.editsubscriptionterm">
+						recordDetailAction="admin:crud.detailsubscriptionterm"
+						recordEditAction="admin:crud.editsubscriptionterm">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionTermName" search="true" />
 </cf_SlatwallListingDisplay>
 

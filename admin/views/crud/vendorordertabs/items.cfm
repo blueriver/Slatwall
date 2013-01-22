@@ -39,12 +39,12 @@ Notes:
 <cfparam name="rc.vendorOrder" type="any"/>
 
 <cf_slatwalllistingdisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#" 
-                           recordeditaction="admin:vendor.editVendorOrderItem" 
+                           recordeditaction="admin:crud.editVendorOrderItem" 
                            recordeditmodal="true" 
-						   recorddetailaction="admin:vendor.detailvendororderitem"
+						   recorddetailaction="admin:crud.detailvendororderitem"
 						   recorddetailmodal="true"
-                           recorddeleteaction="admin:vendor.deleteVendorOrderItem" 
-                           recorddeletequerystring="returnaction=admin:vendor.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
+                           recorddeleteaction="admin:crud.deleteVendorOrderItem" 
+                           recorddeletequerystring="returnaction=admin:crud.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
 	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
 	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
 	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.skucode" search="true" />
@@ -58,4 +58,4 @@ Notes:
 	
 </cf_slatwalllistingdisplay>
 
-<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" class="btn btn-inverse" icon="plus icon-white" />
+<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:crud.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" class="btn btn-inverse" icon="plus icon-white" />

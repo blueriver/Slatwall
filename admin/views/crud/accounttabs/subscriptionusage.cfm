@@ -39,8 +39,8 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#"
-						   recordEditAction="admin:account.editsubscriptionUsage"
-						   recordEditQueryString="returnAction=admin:account.detailaccount&accountID=#rc.account.getAccountID()#">
+						   recordEditAction="admin:crud.editsubscriptionUsage"
+						   recordEditQueryString="returnAction=admin:crud.detailaccount&accountID=#rc.account.getAccountID()#">
 
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />

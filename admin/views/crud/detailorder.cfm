@@ -53,25 +53,25 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
-			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&returnAction=admin:order.detailorder" type="list" />
+			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&returnAction=admin:crud.detailorder" type="list" />
 			<!--- Add Order Item --->
 			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
-				<cf_SlatwallActionCaller action="admin:order.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
+				<cf_SlatwallActionCaller action="admin:crud.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
 			</cfif>
 			<!--- Add Order Payment --->
 			<cfif listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
 				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()>
 					<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-						<cf_SlatwallActionCaller type="list" text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCharge" modal=true />
+						<cf_SlatwallActionCaller type="list" text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:crud.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCharge" modal=true />
 					</cfloop>
 				</cfif>
 			</cfif>
-			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="addPromotionCode" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="closeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:order.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
+			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="addPromotionCode" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="closeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
@@ -79,14 +79,14 @@ Notes:
 				<cfif rc.edit>
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,fullName,company,emailAddress,phoneNumber,address.simpleRepresentation" edit="true">
 				<cfelseif !isNull(rc.order.getAccount())>
-					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="fullName" valuelink="?slatAction=admin:account.detailaccount&accountID=#rc.order.getAccount().getAccountID()#">
+					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="fullName" valuelink="?slatAction=admin:crud.detailaccount&accountID=#rc.order.getAccount().getAccountID()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress" valuelink="mailto:#rc.order.getAccount().getEmailAddress()#">
 					<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="phoneNumber">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderStatusType">
 				<cfif !isNull(rc.order.getReferencedOrder())>
-					<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencedOrder" valuelink="?slatAction=admin:order.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="referencedOrder" valuelink="?slatAction=admin:crud.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
 				</cfif>
 				<cfif !isNull(rc.order.getOrderOpenDateTime())>
 					<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">

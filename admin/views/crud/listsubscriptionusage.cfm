@@ -43,8 +43,8 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.subscriptionUsageSmartList#" createAction="" />
 
 <cf_SlatwallListingDisplay smartList="#rc.subscriptionUsageSmartList#"
-						   recordDetailAction="admin:account.detailsubscriptionUsage"
-						   recordEditAction="admin:account.editsubscriptionUsage">
+						   recordDetailAction="admin:crud.detailsubscriptionUsage"
+						   recordEditAction="admin:crud.editsubscriptionUsage">
 
 	<cf_SlatwallListingColumn propertyIdentifier="account.firstName" search="true" sort="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="account.lastName" search="true" sort="true" />

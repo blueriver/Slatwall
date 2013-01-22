@@ -42,12 +42,12 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.product#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.product#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:main.createimage" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:product.detailproduct" type="list" modal=true />
+			<cf_SlatwallActionCaller action="admin:main.createimage" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:crud.detailproduct" type="list" modal=true />
 			<li class="divider"></li>
-			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="updateSkus" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="addOptionGroup" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="addOption" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="addSubscriptionTerm" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:crud.processproduct" processContext="updateSkus" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:crud.processproduct" processContext="addOptionGroup" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:crud.processproduct" processContext="addOption" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:crud.processproduct" processContext="addSubscriptionTerm" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>

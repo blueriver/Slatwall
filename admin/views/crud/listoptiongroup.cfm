@@ -43,8 +43,8 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.optionGroupSmartList#" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.optionGroupSmartList#" 
-							   recordDetailAction="admin:product.detailoptiongroup"
-							   recordEditAction="admin:product.editoptiongroup"
+							   recordDetailAction="admin:crud.detailoptiongroup"
+							   recordEditAction="admin:crud.editoptiongroup"
 							   sortProperty="sortOrder">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="optionGroupName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="optionGroupCode" search="true" />

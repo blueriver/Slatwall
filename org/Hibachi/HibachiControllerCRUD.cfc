@@ -191,7 +191,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		// SUCCESS
 		if (deleteOK) {
 			// Show the Generica Action Success Message
-			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#_success" ) , "success");
+			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.delete_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ), "success");
 			
 			// Render or Redirect a Success
 			renderOrRedirectSuccess( defaultAction=arguments.rc.crudActionDetails.listAction, maintainQueryString=true, rc=arguments.rc);
@@ -199,8 +199,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		// FAILURE
 		} else {
 			// Add the Generic Action Failure Message
-			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#_error" ) , "error");
-		
+			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.error_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ), "error");
+			
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
 			
@@ -231,7 +231,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		// SUCCESS
 		if(!arguments.rc[ arguments.entityName ].hasErrors()) {
 			// Show the Generica Action Success Message
-			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#_success" ) , "success");
+			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.save_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ) , "success");
 			
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
@@ -242,8 +242,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		// FAILURE
 		} else {
 			// Add the Generic Action Failure Message
-			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#_error" ) , "error");
-
+			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.save_error" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ) , "error");
+			
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
 			
@@ -438,7 +438,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Lastly if nothing was defined then we just do a redirect to the defaultAction
 		} else {
-			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
+			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.defaultAction#" );
+			this.invokeMethod(arguments.rc.defaultAction, {rc=arguments.rc});
 			
 		}
 	}

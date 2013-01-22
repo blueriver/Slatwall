@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.account.getOrdersSmartList()#"
-		recordDetailAction="admin:order.detailorder"
+		recordDetailAction="admin:crud.detailorder"
 		recordDetailQueryString="accountID=#rc.account.getAccountID()#">
 
 	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />

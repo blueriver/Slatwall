@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.stockAdjustment.getStockReceiversSmartList()#"
-							   recorddetailaction="admin:vendor.detailStockReceiver"
+							   recorddetailaction="admin:crud.detailStockReceiver"
 							   recorddetailmodal="true" 
 							   recorddetailquerystring="returnaction=admin:warehouse.detailStockAdjustment&stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#">
 			

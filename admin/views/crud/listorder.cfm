@@ -40,10 +40,10 @@ Notes:
 <cfparam name="rc.orderSmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.orderSmartList#" createaction="admin:order.createorder" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.orderSmartList#" createaction="admin:crud.createorder" />
 		
 	<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
-								recordDetailAction="admin:order.detailorder">
+								recordDetailAction="admin:crud.detailorder">
 		<cf_SlatwallListingColumn propertyIdentifier="orderNumber" search="true" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.company" search="true"/>
 		<cf_SlatwallListingColumn propertyIdentifier="account.firstName" search="true" />

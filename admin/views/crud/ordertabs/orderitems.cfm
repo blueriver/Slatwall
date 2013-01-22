@@ -50,10 +50,10 @@ Notes:
 	<cfif local.saleList.getRecordsCount() gt 0>
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderitems.saleItems')#</h4>
 		<cf_SlatwallListingDisplay smartList="#local.saleList#"
-								   recordDetailAction="admin:order.detailorderitem"
-								   recordDetailQueryString="returnAction=admin:order.detailOrder&orderID=#rc.order.getOrderID()#"
-								   recordEditAction="admin:order.editorderitem"
-								   recordEditQueryString="returnAction=admin:order.detailOrder&orderID=#rc.order.getOrderID()#">
+								   recordDetailAction="admin:crud.detailorderitem"
+								   recordDetailQueryString="returnAction=admin:crud.detailOrder&orderID=#rc.order.getOrderID()#"
+								   recordEditAction="admin:crud.editorderitem"
+								   recordEditQueryString="returnAction=admin:crud.detailOrder&orderID=#rc.order.getOrderID()#">
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
 			<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
 			<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
@@ -69,8 +69,8 @@ Notes:
 	<cfif local.returnList.getRecordsCount() gt 0>
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderitems.returnItems')#</h4>
 		<cf_SlatwallListingDisplay smartList="#local.returnList#"
-								   recordDetailAction="admin:order.detailorderitem"
-								   recordEditAction="admin:order.editorderitem">
+								   recordDetailAction="admin:crud.detailorderitem"
+								   recordEditAction="admin:crud.editorderitem">
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
 			<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
 			<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
@@ -83,5 +83,5 @@ Notes:
 		</cf_SlatwallListingDisplay>
 	</cfif>
 	
-	<cf_SlatwallActionCaller action="admin:order.createorderitem" class="btn btn-inverse" icon="plus icon-white" queryString="orderID=#rc.order.getOrderID()#" modal=true />
+	<cf_SlatwallActionCaller action="admin:crud.createorderitem" class="btn btn-inverse" icon="plus icon-white" queryString="orderID=#rc.order.getOrderID()#" modal=true />
 </cfoutput>

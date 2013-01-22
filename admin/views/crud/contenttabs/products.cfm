@@ -40,8 +40,8 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.content.getListingProductsSmartList()#"
-							   recordeditaction="admin:product.editproduct"
-							   recorddetailaction="admin:product.detailproduct">
+							   recordeditaction="admin:crud.editproduct"
+							   recorddetailaction="admin:crud.detailproduct">
 		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
 		<cf_SlatwallListingColumn propertyIdentifier="productCode" />

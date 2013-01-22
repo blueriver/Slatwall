@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 	
 	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderDeliveriesSmartList()#"
-			recordDetailAction="admin:order.detailorderdelivery"
+			recordDetailAction="admin:crud.detailorderdelivery"
 			recordDetailModal="true">
 			
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" />

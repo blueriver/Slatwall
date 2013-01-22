@@ -75,7 +75,7 @@ Notes:
 									<cfif structCount(thisSetting.settingDetails.settingRelationships) eq 1>
 										<cfif structKeyList(thisSetting.settingDetails.settingRelationships) eq "productTypeID">
 											<cfset local.productType = request.slatwallScope.getService("productService").getProductType(thisSetting.settingDetails.settingRelationships.productTypeID) />
-											<cf_SlatwallActionCaller action="admin:product.detailProductType" text="#local.productType.getSimpleRepresentation()#" queryString="productTypeID=#thisSetting.settingDetails.settingRelationships.productTypeID#">
+											<cf_SlatwallActionCaller action="admin:crud.detailProductType" text="#local.productType.getSimpleRepresentation()#" queryString="productTypeID=#thisSetting.settingDetails.settingRelationships.productTypeID#">
 										</cfif>
 									</cfif>
 								</cfif>

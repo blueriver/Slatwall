@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfparam name="rc.returnAction" type="string" default="admin:product.detailproduct&productID=#rc.productID#" />
+<cfparam name="rc.returnAction" type="string" default="admin:crud.detailproduct&productID=#rc.productID#" />
 <cfparam name="rc.processProductSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 

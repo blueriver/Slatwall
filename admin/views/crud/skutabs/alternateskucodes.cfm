@@ -40,12 +40,12 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.sku.getAlternateSkuCodesSmartList()#"
-			recordEditAction="admin:product.editalternateskucode"
+			recordEditAction="admin:crud.editalternateskucode"
 			recordEditModal="true">
 			
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="alternateSkuCode" />
 		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:product.createalternateskucode" class="btn btn-primary" queryString="SkuID=#rc.sku.getSkuID()#" modal="true" />
+	<cf_SlatwallActionCaller action="admin:crud.createalternateskucode" class="btn btn-primary" queryString="SkuID=#rc.sku.getSkuID()#" modal="true" />
 </cfoutput>

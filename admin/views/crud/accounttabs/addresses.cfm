@@ -39,11 +39,11 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#"
-		recordEditAction="admin:account.editaccountaddress"
+		recordEditAction="admin:crud.editaccountaddress"
 		recordEditQueryString="accountID=#rc.account.getAccountID()#"
 		recordEditModal=true
-		recordDeleteAction="admin:account.deleteaccountaddress"
-		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:account.detailaccount">
+		recordDeleteAction="admin:crud.deleteaccountaddress"
+		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:crud.detailaccount">
 			
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountAddressName" />
 	<cf_SlatwallListingColumn propertyIdentifier="address.name" />
@@ -54,5 +54,5 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="address.postalCode" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:account.createaccountaddress" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+<cf_SlatwallActionCaller action="admin:crud.createaccountaddress" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getAccountID()#" modal=true />
 

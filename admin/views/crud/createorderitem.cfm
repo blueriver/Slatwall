@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderItem#" edit="true" saveaction="admin:order.addOrderItem">
+	<cf_SlatwallDetailForm object="#rc.orderItem#" edit="true" saveaction="admin:crud.addOrderItem">
 		
 		<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
 		

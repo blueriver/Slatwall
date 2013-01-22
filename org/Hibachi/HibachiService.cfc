@@ -174,27 +174,7 @@
 		}
 		
 		public boolean function process(required any entity, required string processContext=""){
-			
-			// If the entity Passes validation
-			if(arguments.entity.isDeletable()) {
-				
-				// Remove any Many-to-Many relationships
-				arguments.entity.removeAllManyToManyRelationships();
-				
-				getService("settingService").removeAllEntityRelatedSettings( entity=arguments.entity );
-				
-				// Call delete in the DAO
-				getHibachiDAO().delete(target=arguments.entity);
-				
-				// Return that the delete was sucessful
-				return true;
-				
-			}
-				
-			// Setup ormHasErrors because it didn't pass validation
-			getHibachiScope().setORMHasErrors( true );
-	
-			return false;
+			return arguments.entity;
 		}
 		
 		

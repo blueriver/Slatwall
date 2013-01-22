@@ -64,11 +64,11 @@ Notes:
 				<td>#local.currencyCode#</td>
 				<td>
 					<cfif local.currency.getCurrencyCode() eq rc.sku.setting('skuCurrency')>
-						<cf_SlatwallActionCaller action="admin:product.editSkuCurrency" class="btn btn-mini" icon="pencil" icononly="true" modal="true" disabled="true" />
+						<cf_SlatwallActionCaller action="admin:crud.editSkuCurrency" class="btn btn-mini" icon="pencil" icononly="true" modal="true" disabled="true" />
 					<cfelseif rc.sku.getCurrencyDetails()[ local.currency.getCurrencyCode() ].converted>
-						<cf_SlatwallActionCaller action="admin:product.createSkuCurrency" querystring="currencyCode=#local.currencyCode#&skuID=#rc.sku.getSkuID()#&returnAction=admin:product.detailsku" class="btn btn-mini" icon="pencil" icononly="true" modal="true" />
+						<cf_SlatwallActionCaller action="admin:crud.createSkuCurrency" querystring="currencyCode=#local.currencyCode#&skuID=#rc.sku.getSkuID()#&returnAction=admin:crud.detailsku" class="btn btn-mini" icon="pencil" icononly="true" modal="true" />
 					<cfelse>
-						<cf_SlatwallActionCaller action="admin:product.editSkuCurrency" querystring="skuCurrencyID=#rc.sku.getCurrencyDetails()[ local.currency.getCurrencyCode() ].skuCurrencyID#&currencyCode=#local.currencyCode#&skuID=#rc.sku.getSkuID()#&returnAction=admin:product.detailsku" class="btn btn-mini" icon="pencil" icononly="true" modal="true" />
+						<cf_SlatwallActionCaller action="admin:crud.editSkuCurrency" querystring="skuCurrencyID=#rc.sku.getCurrencyDetails()[ local.currency.getCurrencyCode() ].skuCurrencyID#&currencyCode=#local.currencyCode#&skuID=#rc.sku.getSkuID()#&returnAction=admin:crud.detailsku" class="btn btn-mini" icon="pencil" icononly="true" modal="true" />
 					</cfif>
 				</td>
 			</tr>

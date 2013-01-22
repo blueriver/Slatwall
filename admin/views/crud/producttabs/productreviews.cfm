@@ -39,9 +39,9 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.product.getProductReviewsSmartList()#"
-						   recorddetailaction="admin:product.detailproductreview"
+						   recorddetailaction="admin:crud.detailproductreview"
 						   recorddetailmodal="true"
-						   recordeditaction="admin:product.editproductreview"
+						   recordeditaction="admin:crud.editproductreview"
 						   recordeditmodal="true">
 	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="review" />

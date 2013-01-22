@@ -45,7 +45,7 @@ Notes:
 							   recordDetailAction="admin:main.detailImage"
 							   recordDetailModal="true"
 							   recordEditAction="admin:main.editImage"
-							   recordEditQueryString="productID=#rc.product.getProductID()#&returnAction=admin:product.detailproduct"
+							   recordEditQueryString="productID=#rc.product.getProductID()#&returnAction=admin:crud.detailproduct"
 							   recordEditModal="true"
 							   recordDeleteAction="admin:main.deleteImage"
 							   recorddeletequerystring="returnAction=product.editproduct&productID=#rc.product.getProductID()###tabalternateimages">
@@ -55,5 +55,5 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="imageType.type" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:main.createimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:product.detailproduct" modal=true />
+	<cf_SlatwallActionCaller action="admin:main.createimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:crud.detailproduct" modal=true />
 </cfoutput>

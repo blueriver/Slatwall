@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#" backaction="admin:account.detailaccount" backquerystring="accountID=#rc.accountPayment.getAccount().getAccountID()#"></cf_SlatwallActionBar>
+		<cf_SlatwallActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#" backaction="admin:crud.detailaccount" backquerystring="accountID=#rc.accountPayment.getAccount().getAccountID()#"></cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divClass="span6">

@@ -41,12 +41,12 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:order.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
-			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="chargePreAuthorization" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="authorizeAndCharge" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="authorize" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="credit" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:order.processorderpayment" processContext="offlineTransaction" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+		<cf_SlatwallActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:crud.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="chargePreAuthorization" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="authorizeAndCharge" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="authorize" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="credit" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="offlineTransaction" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>

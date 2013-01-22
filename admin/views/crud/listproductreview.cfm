@@ -42,8 +42,8 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.productReviewSmartList#" createAction="" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#"
-								recordDetailAction="admin:product.detailproductreview"
-								recordEditAction="admin:product.editproductreview">
+								recordDetailAction="admin:crud.detailproductreview"
+								recordEditAction="admin:crud.editproductreview">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="reviewTitle" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="reviewerName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="rating" filter="true" />

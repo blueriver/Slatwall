@@ -172,7 +172,7 @@ Notes:
 						<div class="pull-right">
 							<ul class="nav">
 								<cf_HibachiActionCallerDropdown title="" icon="user icon-white" dropdownclass="pull-right" type="nav">
-									<cf_HibachiActionCaller action="admin:account.detailaccount" querystring="accountID=#$.slatwall.account('accountID')#" type="list">
+									<cf_HibachiActionCaller action="admin:crud.detailaccount" querystring="accountID=#$.slatwall.account('accountID')#" type="list">
 									<cf_HibachiActionCaller action="admin:main.logout" type="list">
 								</cf_HibachiActionCallerDropdown>
 								<li class="divider-vertical"></li>

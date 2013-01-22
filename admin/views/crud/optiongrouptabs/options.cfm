@@ -41,10 +41,10 @@ Notes:
 <cfoutput>
 
 	<cf_slatwalllistingdisplay smartlist="#rc.optionGroup.getOptionsSmartList()#" 
-	                           recordeditaction="admin:product.editoption" 
+	                           recordeditaction="admin:crud.editoption" 
 							   recordeditmodal=true 
-	                           recorddeleteaction="admin:product.deleteoption"
-							   recorddeletequerystring="returnaction=admin:product.detailoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#"
+	                           recorddeleteaction="admin:crud.deleteoption"
+							   recorddeletequerystring="returnaction=admin:crud.detailoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#"
 							   sortproperty="sortOrder"
 							   sortContextIDColumn="optionGroupID"
 							   sortContextIDValue="#rc.optionGroup.getOptionGroupID()#">
@@ -52,7 +52,7 @@ Notes:
 		<cf_slatwalllistingcolumn propertyidentifier="optionCode"/>
 	</cf_slatwalllistingdisplay>
 
-	<cf_slatwallactioncaller action="admin:product.createoption" 
+	<cf_slatwallactioncaller action="admin:crud.createoption" 
 	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" 
 	                         class="btn btn-inverse" icon="plus icon-white" modal=true/>
 </cfoutput>

@@ -47,7 +47,7 @@ Notes:
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="true">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="true">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="true" createAction="admin:product.createbrand">
+				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="true" createAction="admin:crud.createbrand">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="true" valueOptions="#rc.product.getProductTypeOptions( rc.baseProductType )#">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="true">
 				<cf_SlatwallPropertyDisplay object="#rc.product#" property="listPrice" edit="true">

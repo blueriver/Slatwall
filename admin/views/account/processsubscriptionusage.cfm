@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfparam name="rc.returnAction" type="string" default="admin:account.listsubscriptionusage" />
+<cfparam name="rc.returnAction" type="string" default="admin:crud.listsubscriptionusage" />
 <cfparam name="rc.processSubscriptionUsageSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 <cfset rc.processContextOptions = [

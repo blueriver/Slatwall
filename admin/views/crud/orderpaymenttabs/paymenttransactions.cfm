@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.orderPayment.getPaymentTransactionsSmartList()#"
-			recordDetailAction="admin:order.detailpaymenttransaction"
+			recordDetailAction="admin:crud.detailpaymenttransaction"
 			recordDetailModal="true">
 		
 		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />		

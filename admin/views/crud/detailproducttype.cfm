@@ -59,7 +59,7 @@ Notes:
 		
 		<cf_SlatwallTabGroup object="#rc.productType#">
 			<cf_SlatwallTab view="admin:crud/producttypetabs/producttypedescription" />
-			<!---<cf_SlatwallTab view="admin:product/producttypetabs/attributesets" />--->
+			<!---<cf_SlatwallTab view="admin:crud/producttypetabs/attributesets" />--->
 			<cf_SlatwallTab view="admin:crud/producttypetabs/products" />
 			<cf_SlatwallTab view="admin:crud/producttypetabs/producttypesettings" />
 			<cf_SlatwallTab view="admin:crud/producttypetabs/productsettings" />

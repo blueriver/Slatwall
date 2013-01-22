@@ -41,7 +41,7 @@ Notes:
 
 <cf_SlatwallDetailForm object="#rc.vendor#" edit="#rc.edit#">
 	<cf_SlatwallActionBar type="detail" object="#rc.vendor#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:vendor.createvendoraddress" queryString="vendorID=#rc.vendor.getVendorID()#" type="list" modal=true />
+		<cf_SlatwallActionCaller action="admin:crud.createvendoraddress" queryString="vendorID=#rc.vendor.getVendorID()#" type="list" modal=true />
 	</cf_SlatwallActionBar>
 	
 	<cf_SlatwallDetailHeader>

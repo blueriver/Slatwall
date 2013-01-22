@@ -46,8 +46,8 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.orderFulfillmentSmartList#" createAction="" />
 
 <cf_SlatwallListingDisplay smartList="#rc.orderFulfillmentSmartList#"
-		recorddetailaction="admin:order.detailorderfulfillment"
-		recordeditaction="admin:order.editorderfulfillment">
+		recorddetailaction="admin:crud.detailorderfulfillment"
+		recordeditaction="admin:crud.editorderfulfillment">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" sort="false" />
 	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
 	<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />

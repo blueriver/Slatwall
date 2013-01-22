@@ -60,7 +60,7 @@ component extends="BaseController" output=false accessors=true {
 	this.secureMethods=listAppend(this.secureMethods, '**subscriptionBenefit');
 	
 	public void function default(required struct rc) {
-		getFW().redirect(action="admin:product.listproduct");
+		getFW().redirect(action="admin:crud.listproduct");
 	}
 	
 	public void function createMerchandiseProduct(required struct rc) {
@@ -68,12 +68,12 @@ component extends="BaseController" output=false accessors=true {
 		rc.baseProductType = "merchandise";
 		
 		rc.pageTitle = replace(rbKey('admin.define.create'), '${itemEntityName}', rbKey('entity.product')); 
-		rc.listAction = "admin:product.listproduct"; 
-		rc.saveAction = "admin:product.saveproduct";
-		rc.cancelAction = "admin:product.listproduct";
+		rc.listAction = "admin:crud.listproduct"; 
+		rc.saveAction = "admin:crud.saveproduct";
+		rc.cancelAction = "admin:crud.listproduct";
 		
 		rc.edit = true;
-		getFW().setView("admin:product.createproduct");
+		getFW().setView("admin:crud.createproduct");
 	}
 	
 	public void function createSubscriptionProduct(required struct rc) {
@@ -81,12 +81,12 @@ component extends="BaseController" output=false accessors=true {
 		rc.baseProductType = "subscription";
 		
 		rc.pageTitle = replace(rbKey('admin.define.create'), '${itemEntityName}', rbKey('entity.product')); 
-		rc.listAction = "admin:product.listproduct"; 
-		rc.saveAction = "admin:product.saveproduct";
-		rc.cancelAction = "admin:product.listproduct";
+		rc.listAction = "admin:crud.listproduct"; 
+		rc.saveAction = "admin:crud.saveproduct";
+		rc.cancelAction = "admin:crud.listproduct";
 				
 		rc.edit = true;
-		getFW().setView("admin:product.createproduct");
+		getFW().setView("admin:crud.createproduct");
 	}
 	
 	public void function createContentAccessProduct(required struct rc) {
@@ -94,48 +94,48 @@ component extends="BaseController" output=false accessors=true {
 		rc.baseProductType = "contentAccess";
 				
 		rc.pageTitle = replace(rbKey('admin.define.create'), '${itemEntityName}', rbKey('entity.product')); 
-		rc.listAction = "admin:product.listproduct"; 
-		rc.saveAction = "admin:product.saveproduct";
-		rc.cancelAction = "admin:product.listproduct";
+		rc.listAction = "admin:crud.listproduct"; 
+		rc.saveAction = "admin:crud.saveproduct";
+		rc.cancelAction = "admin:crud.listproduct";
 		
 		rc.edit = true;
-		getFW().setView("admin:product.createproduct");
+		getFW().setView("admin:crud.createproduct");
 	}
 	
 	public void function createMerchandiseProductType(required struct rc) {
 		rc.producttype = getProductService().newProductType();
 		rc.baseProductType = "merchandise";
 		
-		rc.listAction = "admin:product.listproducttype"; 
-		rc.saveAction = "admin:product.saveproducttype";
-		rc.cancelAction = "admin:product.listproducttype";
+		rc.listAction = "admin:crud.listproducttype"; 
+		rc.saveAction = "admin:crud.saveproducttype";
+		rc.cancelAction = "admin:crud.listproducttype";
 		
 		rc.edit = true;
-		getFW().setView("admin:product.detailproducttype");
+		getFW().setView("admin:crud.detailproducttype");
 	}
 	
 	public void function createSubscriptionProductType(required struct rc) {
 		rc.producttype = getProductService().newProductType();
 		rc.baseProductType = "subscription";
 		
-		rc.listAction = "admin:product.listproducttype"; 
-		rc.saveAction = "admin:product.saveproducttype";
-		rc.cancelAction = "admin:product.listproducttype";
+		rc.listAction = "admin:crud.listproducttype"; 
+		rc.saveAction = "admin:crud.saveproducttype";
+		rc.cancelAction = "admin:crud.listproducttype";
 		
 		rc.edit = true;
-		getFW().setView("admin:product.detailproducttype");
+		getFW().setView("admin:crud.detailproducttype");
 	}
 	
 	public void function createContentAccessProductType(required struct rc) {
 		rc.producttype = getProductService().newProductType();
 		rc.baseProductType = "contentAccess";
 		
-		rc.listAction = "admin:product.listproducttype"; 
-		rc.saveAction = "admin:product.saveproducttype";
-		rc.cancelAction = "admin:product.listproducttype";
+		rc.listAction = "admin:crud.listproducttype"; 
+		rc.saveAction = "admin:crud.saveproducttype";
+		rc.cancelAction = "admin:crud.listproducttype";
 		
 		rc.edit = true;
-		getFW().setView("admin:product.detailproducttype");
+		getFW().setView("admin:crud.detailproducttype");
 	}
 	
 	public void function saveSku(required struct rc){

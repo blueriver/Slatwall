@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.optiongroup#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:product.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="list" modal=true />
+			<cf_SlatwallActionCaller action="admin:crud.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="list" modal=true />
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>

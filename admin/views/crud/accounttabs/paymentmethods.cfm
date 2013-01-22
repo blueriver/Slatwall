@@ -39,11 +39,11 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
-		recordEditAction="admin:account.editaccountpaymentmethod"
-		recordEditQueryString="accountID=#rc.account.getAccountID()#&returnAction=admin:account.detailaccount"
+		recordEditAction="admin:crud.editaccountpaymentmethod"
+		recordEditQueryString="accountID=#rc.account.getAccountID()#&returnAction=admin:crud.detailaccount"
 		recordEditModal=true
-		recordDeleteAction="admin:account.deleteaccountpaymentmethod"
-		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:account.detailaccount">
+		recordDeleteAction="admin:crud.deleteaccountpaymentmethod"
+		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:crud.detailaccount">
 			
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
 	<cf_SlatwallListingColumn propertyIdentifier="creditCardType" />
@@ -54,7 +54,7 @@ Notes:
 
 <cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
 	<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-		<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()#" action="admin:account.createaccountpaymentmethod" querystring="accountID=#rc.account.getAccountID()#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&returnAction=admin:account.detailaccount" modal=true />
+		<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()#" action="admin:crud.createaccountpaymentmethod" querystring="accountID=#rc.account.getAccountID()#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&returnAction=admin:crud.detailaccount" modal=true />
 	</cfloop>
 </cf_SlatwallActionCallerDropdown>
 

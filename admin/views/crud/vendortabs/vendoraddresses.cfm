@@ -40,11 +40,11 @@ Notes:
 <cfparam name="rc.vendor" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorAddressesSmartList()#"
-		recordEditAction="admin:vendor.editvendoraddress"
+		recordEditAction="admin:crud.editvendoraddress"
 		recordEditQueryString="vendorID=#rc.vendor.getVendorID()#"
 		recordEditModal=true
-		recordDeleteAction="admin:vendor.deletevendoraddress"
-		recordDeleteQueryString="vendorID=#rc.vendor.getVendorID()#&returnaction=admin:vendor.detailvendor">
+		recordDeleteAction="admin:crud.deletevendoraddress"
+		recordDeleteQueryString="vendorID=#rc.vendor.getVendorID()#&returnaction=admin:crud.detailvendor">
 			
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="address.streetAddress" />
 	<cf_SlatwallListingColumn propertyIdentifier="address.street2Address" />
@@ -54,4 +54,4 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="address.countryCode" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:vendor.createvendoraddress" class="btn btn-inverse" icon="plus icon-white" queryString="vendorID=#rc.vendor.getVendorID()#" modal=true />
+<cf_SlatwallActionCaller action="admin:crud.createvendoraddress" class="btn btn-inverse" icon="plus icon-white" queryString="vendorID=#rc.vendor.getVendorID()#" modal=true />

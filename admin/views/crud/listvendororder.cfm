@@ -43,11 +43,11 @@ Notes:
 </cfsilent>
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:vendor.editvendororder" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:crud.editvendororder" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#"
-							   recordDetailAction="admin:vendor.detailvendororder"
-							   recordEditAction="admin:vendor.editvendororder">
+							   recordDetailAction="admin:crud.detailvendororder"
+							   recordEditAction="admin:crud.editvendororder">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />

@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.vendor" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorOrdersSmartList()#" recordDetailAction="admin:vendor.detailvendororder">
+<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorOrdersSmartList()#" recordDetailAction="admin:crud.detailvendororder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorOrderNumber" />
 	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />

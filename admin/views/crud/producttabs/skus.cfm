@@ -42,11 +42,11 @@ Notes:
 	
 	<cf_SlatwallListingDisplay smartList="#local.skusSmartList#"
 							   edit="#rc.edit#"
-							   recordDetailAction="admin:product.detailsku"
+							   recordDetailAction="admin:crud.detailsku"
 							   recordDetailQueryString="productID=#rc.product.getProductID()#"
-							   recordEditAction="admin:product.editsku"
+							   recordEditAction="admin:crud.editsku"
 							   recordEditQueryString="productID=#rc.product.getProductID()#"
-							   recordDeleteAction="admin:product.deletesku"
+							   recordDeleteAction="admin:crud.deletesku"
 							   recordDeleteQueryString="returnaction=product.editproduct&productID=#rc.product.getProductID()#"
 							   selectFieldName="defaultSku.skuID"
 							   selectValue="#rc.product.getDefaultSku().getSkuID()#"
@@ -69,7 +69,7 @@ Notes:
 		</cfif>
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="addOptionGroup" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
-	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="addOption" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
-	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:product.processproduct" processContext="addSubscriptionTerm" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
+	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:crud.processproduct" processContext="addOptionGroup" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
+	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:crud.processproduct" processContext="addOption" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
+	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:crud.processproduct" processContext="addSubscriptionTerm" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
 </cfoutput>

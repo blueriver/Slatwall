@@ -41,8 +41,8 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.vendorSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.vendorSmartList#"
-						   recordEditAction="admin:vendor.editvendor"
-						   recordDetailAction="admin:vendor.detailvendor">
+						   recordEditAction="admin:crud.editvendor"
+						   recordDetailAction="admin:crud.detailvendor">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="accountNumber" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="vendorWebsite" search="true" />

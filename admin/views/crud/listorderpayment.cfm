@@ -46,7 +46,7 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.orderPaymentSmartList#" createAction="" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.orderPaymentSmartList#"
-							   recorddetailaction="admin:order.detailorderpayment">
+							   recorddetailaction="admin:crud.detailorderpayment">
 		<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="order.account.firstName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="order.account.lastName" search="true" />

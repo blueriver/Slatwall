@@ -61,7 +61,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	this.secureMethods=listAppend(this.secureMethods, 'detailPaymentTransaction');
 	
 	public void function default(required struct rc) {
-		getFW().redirect("admin:order.listorder");
+		getFW().redirect("admin:crud.listorder");
 	}
 	
 	// Order
@@ -79,7 +79,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		arguments.rc.orderSmartList.addOrder("createdDateTime|DESC");
 		arguments.rc.orderSmartList.addInFilter('orderStatusType.systemCode', 'ostNotPlaced');
 		
-		getFW().setView("admin:order.listorder");
+		getFW().setView("admin:crud.listorder");
 	}
 	
 	// Order Item
@@ -109,7 +109,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		// If no errors redirect to success
 		if(!rc.order.hasErrors()) {
-			getFW().redirect(action='admin:order.detailOrder', queryString='orderID=#rc.orderID#&messagekeys=admin.order.saveorder_success');	
+			getFW().redirect(action='admin:crud.detailOrder', queryString='orderID=#rc.orderID#&messagekeys=admin.order.saveorder_success');	
 		}
 		
 		for( var p in arguments.rc.order.getErrors() ) {
@@ -119,8 +119,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 		}
 		
-		getFW().setView(action='admin:order.detailOrder');
-		arguments.rc.slatAction = 'admin:order.detailOrder';
+		getFW().setView(action='admin:crud.detailOrder');
+		arguments.rc.slatAction = 'admin:crud.detailOrder';
 		arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.order'));	
 	}
 

@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.orderReturn#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderReturn#" edit="#rc.edit#" backaction="admin:order.detailorder" backquerystring="orderID=#rc.orderReturn.getOrder().getOrderID()#"></cf_SlatwallActionBar>
+		<cf_SlatwallActionBar type="detail" object="#rc.orderReturn#" edit="#rc.edit#" backaction="admin:crud.detailorder" backquerystring="orderID=#rc.orderReturn.getOrder().getOrderID()#"></cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>

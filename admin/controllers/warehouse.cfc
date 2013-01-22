@@ -59,42 +59,42 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	this.secureMethods=listAppend(this.secureMethods, '*stockReceiverItem');
 	
 	public void function default(required struct rc) {
-		getFW().redirect(action="admin:warehouse.liststockreceiver");
+		getFW().redirect(action="admin:crud.liststockreceiver");
 	}
 	
 	public void function createLocationTransferAdjustment(required struct rc) {
 		rc.stockAdjustment = getStockService().newStockAdjustment();
 		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode('satLocationTransfer') );
 		
-		rc.listAction = "admin:warehouse.liststockadjustment"; 
-		rc.saveAction = "admin:warehouse.savestockadjustment";
-		rc.cancelAction = "admin:warehouse.savestockadjustment";
+		rc.listAction = "admin:crud.liststockadjustment"; 
+		rc.saveAction = "admin:crud.savestockadjustment";
+		rc.cancelAction = "admin:crud.savestockadjustment";
 		
 		rc.edit = true;
-		getFW().setView("admin:warehouse.detailstockadjustment");
+		getFW().setView("admin:crud.detailstockadjustment");
 	}
 	
 	public void function createManualInAdjustment(required struct rc) {
 		rc.stockAdjustment = getStockService().newStockAdjustment();
 		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode('satManualIn') );
 		
-		rc.listAction = "admin:warehouse.liststockadjustment"; 
-		rc.saveAction = "admin:warehouse.savestockadjustment";
-		rc.cancelAction = "admin:warehouse.savestockadjustment";
+		rc.listAction = "admin:crud.liststockadjustment"; 
+		rc.saveAction = "admin:crud.savestockadjustment";
+		rc.cancelAction = "admin:crud.savestockadjustment";
 		
 		rc.edit = true;
-		getFW().setView("admin:warehouse.detailstockadjustment");
+		getFW().setView("admin:crud.detailstockadjustment");
 	}
 	
 	public void function createManualOutAdjustment(required struct rc) {
 		rc.stockAdjustment = getStockService().newStockAdjustment();
 		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode('satManualOut') );
 		
-		rc.listAction = "admin:warehouse.liststockadjustment"; 
-		rc.saveAction = "admin:warehouse.savestockadjustment";
-		rc.cancelAction = "admin:warehouse.savestockadjustment";
+		rc.listAction = "admin:crud.liststockadjustment"; 
+		rc.saveAction = "admin:crud.savestockadjustment";
+		rc.cancelAction = "admin:crud.savestockadjustment";
 		
 		rc.edit = true;
-		getFW().setView("admin:warehouse.detailstockadjustment");
+		getFW().setView("admin:crud.detailstockadjustment");
 	}
 }

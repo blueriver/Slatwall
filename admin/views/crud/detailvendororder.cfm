@@ -42,8 +42,8 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#">
-			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list">
-			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:vendor.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" />
+			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:crud.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list">
+			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:crud.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" />
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>

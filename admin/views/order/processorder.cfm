@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfparam name="rc.returnAction" type="string" default="admin:order.listorder" />
+<cfparam name="rc.returnAction" type="string" default="admin:crud.listorder" />
 <cfparam name="rc.processOrderSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 <cfparam name="rc.processContext" type="string" />

@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.order.getReferencingOrdersSmartList()#" 
-			recordDetailAction="admin:order.detailorder">
+			recordDetailAction="admin:crud.detailorder">
 		<cf_SlatwallListingColumn tdClass="primary" propertyIdentifier="orderNumber" />
 		<cf_SlatwallListingColumn propertyIdentifier="account.fullName" sort="false" />
 		<cf_SlatwallListingColumn propertyIdentifier="orderType.type" />

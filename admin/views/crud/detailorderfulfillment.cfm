@@ -41,8 +41,8 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.orderFulfillment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderFulfillment#" edit="#rc.edit#" backaction="admin:order.detailorder" backquerystring="orderID=#rc.orderFulfillment.getOrder().getOrderID()#">
-			<cf_SlatwallProcessCaller entity="#rc.orderFulfillment#" action="admin:order.processorderfulfillment" processContext="fulfillItems" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" />
+		<cf_SlatwallActionBar type="detail" object="#rc.orderFulfillment#" edit="#rc.edit#" backaction="admin:crud.detailorder" backquerystring="orderID=#rc.orderFulfillment.getOrder().getOrderID()#">
+			<cf_SlatwallProcessCaller entity="#rc.orderFulfillment#" action="admin:crud.processorderfulfillment" processContext="fulfillItems" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" />
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>

@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfparam name="rc.returnAction" type="string" default="admin:vendor.detailvendororder&vendorOrderID=#rc.vendorOrderID#" />
+<cfparam name="rc.returnAction" type="string" default="admin:crud.detailvendororder&vendorOrderID=#rc.vendorOrderID#" />
 <cfparam name="rc.processVendorOrderSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 

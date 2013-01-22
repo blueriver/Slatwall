@@ -51,9 +51,9 @@ Notes:
 	<cfif local.chargeList.getRecordsCount() gt 0>
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderpayments.charges')#</h4>
 		<cf_SlatwallListingDisplay smartList="#local.chargeList#" 
-				recordDetailAction="admin:order.detailorderpayment"
-				recordEditAction="admin:order.editorderpayment"
-				recordProcessAction="admin:order.processorderpayment"
+				recordDetailAction="admin:crud.detailorderpayment"
+				recordEditAction="admin:crud.editorderpayment"
+				recordProcessAction="admin:crud.processorderpayment"
 				recordProcessModal="true">
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
@@ -66,9 +66,9 @@ Notes:
 	<cfif local.creditList.getRecordsCount() gt 0>
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderpayments.credits')#</h4>
 		<cf_SlatwallListingDisplay smartList="#local.creditList#" 
-				recordDetailAction="admin:order.detailorderpayment"
-				recordEditAction="admin:order.editorderpayment"
-				recordProcessAction="admin:order.processorderpayment"
+				recordDetailAction="admin:crud.detailorderpayment"
+				recordEditAction="admin:crud.editorderpayment"
+				recordProcessAction="admin:crud.processorderpayment"
 				recordProcessModal="true">
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
@@ -82,9 +82,9 @@ Notes:
 		<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
 			<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
 				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()> 
-					<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCharge" modal=true />
+					<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:crud.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCharge" modal=true />
 				<cfelse>
-					<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.refund')#" action="admin:order.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCredit" modal=true />
+					<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.refund')#" action="admin:crud.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCredit" modal=true />
 				</cfif>
 			</cfloop>
 		</cf_SlatwallActionCallerDropdown>

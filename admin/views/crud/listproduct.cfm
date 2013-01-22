@@ -39,11 +39,11 @@ Notes:
 <cfparam name="rc.productSmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.productSmartList#" createAction="admin:product.createmerchandiseproduct,admin:product.createsubscriptionproduct,admin:product.createcontentaccessproduct" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.productSmartList#" createAction="admin:crud.createmerchandiseproduct,admin:crud.createsubscriptionproduct,admin:crud.createcontentaccessproduct" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.productSmartList#"
-			recordEditAction="admin:product.editproduct"
-			recorddetailaction="admin:product.detailproduct">
+			recordEditAction="admin:crud.editproduct"
+			recorddetailaction="admin:crud.detailproduct">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" search=true  />
 		<cf_SlatwallListingColumn propertyIdentifier="productCode" search=true />
 		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" filter=true />

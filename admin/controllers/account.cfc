@@ -55,7 +55,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	
 	public void function default(required struct rc) {
-		getFW().redirect(action="admin:account.listaccount");
+		getFW().redirect(action="admin:crud.listaccount");
 	}
 	
 	public void function editPermissionGroup(required struct rc){

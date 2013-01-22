@@ -42,8 +42,8 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.sku#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_SlatwallActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:product.detailproduct" backQueryString="productID=#rc.product.getProductID()#" cancelAction="admin:product.detailsku" />
-		<input type="hidden" name="returnAction" value="admin:product.detailproduct&productID=#rc.product.getProductID()#" />
+		<cf_SlatwallActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:crud.detailproduct" backQueryString="productID=#rc.product.getProductID()#" cancelAction="admin:crud.detailsku" />
+		<input type="hidden" name="returnAction" value="admin:crud.detailproduct&productID=#rc.product.getProductID()#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divclass="span6">

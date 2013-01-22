@@ -55,8 +55,8 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.orderItemSmartList#" createAction="" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.orderItemSmartList#"
-							   recorddetailaction="admin:order.detailorderitem"
-							   recordeditaction="admin:order.editorderitem">
+							   recorddetailaction="admin:crud.detailorderitem"
+							   recordeditaction="admin:crud.editorderitem">
 		<cf_SlatwallListingColumn propertyIdentifier="order.account.firstName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="order.account.lastName" search="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />

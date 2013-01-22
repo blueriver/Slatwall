@@ -45,7 +45,7 @@ Notes:
 		<cf_SlatwallActionBar type="detail" object="#rc.productImage#" edit="#rc.edit#">
 		</cf_SlatwallActionBar>
 		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
-		<input type="hidden" name="returnAction" value="admin:product.editProduct&productID=#rc.product.getProductID()###tabalternateimages" />
+		<input type="hidden" name="returnAction" value="admin:crud.editProduct&productID=#rc.product.getProductID()###tabalternateimages" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageName" edit="#rc.edit#">

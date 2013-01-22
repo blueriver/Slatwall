@@ -41,8 +41,8 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderFulfillmentsSmartList()#"
-							   recordDetailAction="admin:order.detailorderfulfillment"
-							   recordEditAction="admin:order.editorderfulfillment">
+							   recordDetailAction="admin:crud.detailorderfulfillment"
+							   recordEditAction="admin:crud.editorderfulfillment">
 		<cf_SlatwallListingColumn tdClass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" filter=true />
 		<cf_SlatwallListingColumn propertyIdentifier="fulfillmentCharge" />
 		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />

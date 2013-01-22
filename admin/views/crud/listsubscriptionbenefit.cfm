@@ -40,11 +40,11 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.subscriptionBenefitSmartList#" createAction="admin:product.createSubscriptionBenefit" createReturnAction="admin:product.editsubscriptionbenefit" createModal="true" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.subscriptionBenefitSmartList#" createAction="admin:crud.createSubscriptionBenefit" createReturnAction="admin:crud.editsubscriptionbenefit" createModal="true" />
 
 <cf_SlatwallListingDisplay smartList="#rc.subscriptionBenefitSmartList#"
-						   recordDetailAction="admin:product.detailsubscriptionbenefit"
-						   recordEditAction="admin:product.editsubscriptionbenefit">
+						   recordDetailAction="admin:crud.detailsubscriptionbenefit"
+						   recordEditAction="admin:crud.editsubscriptionbenefit">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionBenefitName" search="true" />
 </cf_SlatwallListingDisplay>
 
