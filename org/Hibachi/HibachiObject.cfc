@@ -287,6 +287,9 @@ component accessors="true" output="false" persistent="false" {
 				application[ getHibachiInstanceApplicationScopeKey() ] = {};
 			}
 			application[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ] = arguments.value;
+			if(isSimpleValue(arguments.value) && hasApplicationValue("applicationKey")) {
+				writeLog(file="#getApplicationValue('applicationKey')#", text="General Log - Application Value '#arguments.key#' set as: #arguments.value#");
+			}
 		}
 	}
 	

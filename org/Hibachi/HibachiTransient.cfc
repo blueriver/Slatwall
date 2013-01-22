@@ -41,7 +41,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	}
 	
 	// =========================  END:  ACCESSOR OVERRIDES ==========================================
-	// =============================== START: ERRORS ================================================
+	// ========================== START: ERRORS / MESSAGES ==========================================
 	
 	// @hint Returns a struct of all the errors for this entity
 	public struct function getErrors() {
@@ -111,8 +111,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		return returnString;
 	}
 	
-	// ===============================  END:  ERRORS ================================================
-	// ============================== START: MESSAGES ===============================================
+	// @hint helper method to have these error messages be passed to the current hibachiScope
+	public void function showErrors() {
+		for(var errorName in getErrors()) {
+			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
+				getHibachiScope().showMessage(getErrors()[errorName][i], "error");
+			}
+		}
+	}
 	
 	// @hint Returns a struct of all the messages for this object
 	public struct function getMessages() {
@@ -147,7 +153,25 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		return returnString;
 	}
 	
-	// ==============================  END:  MESSAGES ===============================================
+	// @hint helper method to have these messages be passed to the current hibachiScope
+	public void function showMessages() {
+		for(var messageName in getMessages()) {
+			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
+				getHibachiScope().showMessage(getErrors()[errorName][i], "info");
+			}
+		}
+	}
+	
+	// @hint helper method to have all error messages and regular messages shown
+	public void function showErrorsAndMessages() {
+		for(var messageName in getMessages()) {
+			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
+				getHibachiScope().showMessage(getErrors()[errorName][i], "info");
+			}
+		}
+	}
+	
+	// ==========================  END: ERRORS / MESSAGES ===========================================
 	// ======================= START: POPULATION & VALIDATION =======================================
 	
 	// @hint Public populate method to utilize a struct of data that follows the standard property form format

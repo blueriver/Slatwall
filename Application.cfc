@@ -65,18 +65,16 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	
 	// @hint this method always fires one time, even if the request is coming from an outside application.
 	public void function onEveryRequest() {
-		writeLog(file="Slatwall", text="Application.cfc onEveryRequest");
 		// Confirm Session Setup
 		getBeanFactory().getBean("sessionService").setPropperSession();
 	}
 	
 	// @hint this will fire 1 time if you are running the application.  If the application is bootstraped then it won't run
 	public void function onInternalRequest() {
-		writeLog(file="Slatwall", text="Application.cfc onInternalRequest");
+		
 	}
 	
 	public void function onFirstRequest() {
-		writeLog(file="Slatwall", text="Application.cfc onFirstRequest");
 		// Version
 		var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
 		if( fileExists( versionFile ) ) {
@@ -84,24 +82,18 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		} else {
 			request.slatwallScope.setApplicationValue("version", "unknown");
 		}
-		writeLog(file="Slatwall", text="General Log - Application Value 'version' setup as #request.slatwallScope.getApplicationValue('version')#");
 		
 		// Slatwall Root URL
 		request.slatwallScope.setApplicationValue("slatwallRootURL", variables.framework.baseURL);
-		writeLog(file="Slatwall", text="General Log - Application Value 'slatwallRootURL' setup as #request.slatwallScope.getApplicationValue("slatwallRootURL")#");
 		
 		// Set Datasource
 		request.slatwallScope.setApplicationValue("datasource", this.datasource.name);
-		writeLog(file="Slatwall", text="General Log - Application Value 'datasource' setup as #request.slatwallScope.getApplicationValue("datasource")#");
 		
 		// SET Database Type
 		request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
-		writeLog(file="Slatwall", text="General Log - Application Value 'databaseType' setup as #request.slatwallScope.getApplicationValue("databaseType")#");
-		
 	}
 	
 	public void function onUpdateRequest() {
-		writeLog(file="Slatwall", text="Application.cfc onUpdateRequest");
 		// Reload All Integrations
 		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
 		writeLog(file="Slatwall", text="General Log - Integrations have been updated");

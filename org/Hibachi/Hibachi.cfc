@@ -221,6 +221,7 @@ component extends="FW1.framework" {
 					beanFactory.declareBean("FormUtilities", "#variables.framework.applicationKey#.org.Hibachi.FormUtilities.FormUtilities", true);
 					
 					setBeanFactory( beanFactory );
+					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
 					
 					//========================= END: IOC SETUP ===============================
 					
@@ -238,6 +239,7 @@ component extends="FW1.framework" {
 						getBeanFactory().getBean("hibachiTagService").cfsetting(requesttimeout=360);
 						
 						// Reload ORM
+						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() started");
 						ormReload();
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() was successful");
 							

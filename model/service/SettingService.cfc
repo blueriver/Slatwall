@@ -547,34 +547,34 @@ globalEncryptionKeySize
 			
 			if( listFindNoCase("brandID,contentID,emailID,emailTemplateID,productTypeID,skuID,shippingMethodRateID,paymentMethodID", arguments.entity.getPrimaryIDPropertyName()) ){
 				
-				getDAO().removeAllRelatedSettings(columnName=arguments.entity.getPrimaryIDPropertyName(), columnID=arguments.entity.getPrimaryIDValue());
+				getSettingDAO().removeAllRelatedSettings(columnName=arguments.entity.getPrimaryIDPropertyName(), columnID=arguments.entity.getPrimaryIDValue());
 				
 			} else if ( arguments.entity.getPrimaryIDPropertyName() == "fulfillmetnMethodID" ) {
 				
-				getDAO().removeAllRelatedSettings(columnName="fulfillmetnMethodID", columnID=arguments.entity.getFulfillmentMethodID());
+				getSettingDAO().removeAllRelatedSettings(columnName="fulfillmetnMethodID", columnID=arguments.entity.getFulfillmentMethodID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getShippingMethods()); a++) {
-					getDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodID());
+					getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodID());
 					
 					for(var b=1; b<=arrayLen(arguments.entity.getShippingMethods()[a].getShippingMethodRates()); b++) {
-						getDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodRates()[b].getShippingMethodRateID());
+						getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodRates()[b].getShippingMethodRateID());
 					}
 				}
 				
 			} else if ( arguments.entity.getPrimaryIDPropertyName() == "shippingMethodID" ) {
 				
-				getDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethodID());
+				getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethodID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getShippingMethodRates()); a++) {
-					getDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethodRates()[a].getShippingMethodRateID());
+					getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethodRates()[a].getShippingMethodRateID());
 				}
 			
 			} else if ( arguments.entity.getPrimaryIDPropertyName() == "productID" ) {
 				
-				getDAO().removeAllRelatedSettings(columnName="productID", columnID=arguments.entity.getProductID());
+				getSettingDAO().removeAllRelatedSettings(columnName="productID", columnID=arguments.entity.getProductID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getSkus()); a++) {
-					getDAO().removeAllRelatedSettings(columnName="skuID", columnID=arguments.entity.getSkus()[a].getSkuID());
+					getSettingDAO().removeAllRelatedSettings(columnName="skuID", columnID=arguments.entity.getSkus()[a].getSkuID());
 				}
 				
 			}

@@ -8,7 +8,6 @@ component output="false" accessors="true" extends="HibachiController" {
 	}
 	
 	public void function before( required any rc ) {
-		
 		arguments.rc.edit = false;
 		arguments.rc.fw = getFW();
 		
@@ -135,111 +134,122 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// TODO: Verify Edit Validation
 		
+		// Load the objects for any ID's that were past in
 		loadEntitiesFromRCIDs( arguments.rc );
 		
-		if(!structKeyExists(arguments.rc,arguments.entityName) || !isObject(arguments.rc[arguments.entityName])){
-			getFW().redirect(arguments.rc.crudActionDetails.listAction);
+		// Make sure that the object we are trying to request was set in the RC
+		if(!structKeyExists(arguments.rc, arguments.entityName) || !isObject(arguments.rc[arguments.entityName])){
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
+			getFW().redirect(action=arguments.rc.crudActionDetails.listAction, preserve="messages");
 		}
 		
+		// Setup the values needed for this type of layout
 		arguments.rc.pageTitle = arguments.rc[arguments.entityName].getSimpleRepresentation();
-		
 		arguments.rc.edit = true;
+		
+		// Switch the view to use the same as the detail view
 		getFW().setView(arguments.rc.crudActionDetails.detailAction);
 	}
 	
+	// DETAIL
 	public void function genericDetailMethod(required string entityName, required struct rc) {
+		// TODO: Verify Detail Permission
 		
+		// Load the objects for any ID's that were past in
 		loadEntitiesFromRCIDs( arguments.rc );
 		
+		// Make sure that the object was actually defined
 		if(!structKeyExists(arguments.rc, arguments.entityName) || !isObject(arguments.rc[arguments.entityName])){
-			getFW().redirect(arguments.rc.crudActionDetails.listAction);
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
+			getFW().redirect(action=arguments.rc.crudActionDetails.listAction, preserve="messages");
 		}
 		
+		// Setup the values needed for this type of layout
 		arguments.rc.pageTitle = arguments.rc[arguments.entityName].getSimpleRepresentation();
-		
 		arguments.rc.edit = false;
 	}
 	
+	// DELETE
 	public void function genericDeleteMethod(required string entityName, required struct rc) {
+		
+		// Find the correct service and this object PrimaryID
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
+		// Attempt to find the entity
 		var entity = entityService.invokeMethod( "get#arguments.rc.crudActionDetails.itemEntityName#", {1=arguments.rc[ entityPrimaryID ]} );
 		
+		// If the entity was null, then redirect to the falureAction
 		if(isNull(entity)) {
-			getFW().redirect(action=arguments.rc.crudActionDetails.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
+			getFW().redirect(action=arguments.rc.crudActionDetails.listAction, preserve="messages");
 		}
 		
+		// Check how the delete went
 		var deleteOK = entityService.invokeMethod("delete#arguments.entityName#", {1=entity});
 		
+		// SUCCESS
 		if (deleteOK) {
-			if(structKeyExists(arguments.rc, "returnAction") && arguments.rc.returnAction != "") {
-				redirectToReturnAction( "messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success" );
-			} else {
-				getFW().redirect(action=arguments.rc.crudActionDetails.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success");	
-			}
+			// Show the Generica Action Success Message
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#_success" ) , "success");
+			
+			// Render or Redirect a Success
+			renderOrRedirectSuccess( defaultAction=arguments.rc.crudActionDetails.listAction, maintainQueryString=true, rc=arguments.rc);
+			
+		// FAILURE
+		} else {
+			// Add the Generic Action Failure Message
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#_error" ) , "error");
+		
+			// Show all of the specific messages & error messages for the entity
+			entity.showErrorsAndMessages();
+			
+			// Render or Redirect a faluire
+			renderOrRedirectSuccess( defaultAction=arguments.rc.crudActionDetails.detailAction, maintainQueryString=false, rc=arguments.rc);	
 		}
 		
-		getFW().redirect(action=arguments.rc.crudActionDetails.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
 	}
 	
-	
+	// SAVE
 	public void function genericSaveMethod(required string entityName, required struct rc) {
+		
+		// Find the correct service and this object PrimaryID
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
+		// Attempt to find the entity
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc[ entityPrimaryID ], 2=true} );
+		
+		// Call the save method on the entity, and then populate it back into the RC
 		arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=entity, 2=arguments.rc} );
 		
-		// If OK, then check for processOptions
-		if(!arguments.rc[ arguments.entityName ].hasErrors() && structKeyExists(arguments.rc, "process") && isBoolean(arguments.rc.process) && arguments.rc.process) {
-			param name="arguments.rc.processOptions" default="#structNew()#";
-			param name="arguments.rc.processContext" default="process";
-			
-			processData = arguments.rc;
-			structAppend(processData, arguments.rc.processOptions, false);
-			
-			arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "process#arguments.entityName#", {1=arguments.rc[ arguments.entityName ], 2=processData, 3=arguments.rc.processContext} );
-			
-			if(arguments.rc[ arguments.entityName ].hasErrors()) {
-				// Add the error message to the top of the page
-				entity.showErrorMessages();	
-			}
+		// If the entity was saved OK, then check for process=1 and a processContext in the RC
+		if(!arguments.rc[ arguments.entityName ].hasErrors() && structKeyExists(arguments.rc, "process") && isBoolean(arguments.rc.process) && arguments.rc.process && structKeyExists(arguments.rc, "processContext")) {
+			arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "process#arguments.entityName#", {1=arguments.rc[ arguments.entityName ], 2=arguments.rc, 3=arguments.rc.processContext} );
 		}
 		
-		// If still OK then check what to do next
+		// SUCCESS
 		if(!arguments.rc[ arguments.entityName ].hasErrors()) {
+			// Show the Generica Action Success Message
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#_success" ) , "success");
 			
-			if(structKeyExists(arguments.rc, "returnAction")) {
-				redirectToReturnAction( "messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success&#entityPrimaryID#=#arguments.rc[ arguments.entityName ].getPrimaryIDValue()#" );
-			} else {
-				getFW().redirect(action=arguments.rc.crudActionDetails.detailAction, querystring="#entityPrimaryID#=#arguments.rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success");	
-			}
+			// Show all of the specific messages & error messages for the entity
+			entity.showErrorsAndMessages();
 			
-		// If Errors
+			// Render or Redirect a Success
+			renderOrRedirectSuccess( defaultAction=arguments.rc.crudActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
+			
+		// FAILURE
 		} else {
+			// Add the Generic Action Failure Message
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#_error" ) , "error");
+
+			// Show all of the specific messages & error messages for the entity
+			entity.showErrorsAndMessages();
 			
-			arguments.rc.edit = true;
-			getFW().setView(action=arguments.rc.crudActionDetails.detailAction);
-			getHibachiScope().showMessageKey("#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
+			// Render or Redirect a faluire
+			renderOrRedirectSuccess( defaultAction=arguments.rc.crudActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
 			
-			for( var p in arguments.rc[ arguments.entityName ].getErrors() ) {
-				local.thisErrorArray = arguments.rc[ arguments.entityName ].getErrors()[p];
-				for(var i=1; i<=arrayLen(local.thisErrorArray); i++) {
-					getHibachiScope().showMessage(local.thisErrorArray[i], "error");
-				}
-			}
-			
-			if(arguments.rc[ arguments.entityName ].isNew()) {
-				arguments.rc.crudActionDetails.thisAction = arguments.rc.crudActionDetails.createAction;
-				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));	
-			} else {
-				arguments.rc.crudActionDetails.thisAction = arguments.rc.crudActionDetails.editAction;
-				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));	
-			}
-			
-			arguments.rc.edit = true;
-			loadEntitiesFromRCIDs( arguments.rc );
 		}
 	}
 	
@@ -386,6 +396,53 @@ component output="false" accessors="true" extends="HibachiController" {
 			writedump(e);abort;
 		}
 	}
+	
+	private void function renderOrRedirectSuccess( required string defaultAction, required boolean maintainQueryString, required struct rc ) {
+		param name="arguments.rc.fRedirectQS" default="";
+		
+		// First look for a sRedirectURL in the rc, and do a redirectExact on that
+		if(structKeyExists(arguments.rc, "sRedirectURL")) {
+			getFW().redirectExact( url=arguments.rc.sRedirectURL );
+		
+		// Next look for a sRedirectAction in the rc, and do a redirect on that
+		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
+			getFW().redirect( action=arguments.rc.sRedirectAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
+			
+		// Next look for a sRenderCrudAction in the rc, set the view to that, and then call the controller for that action
+		} else if (structKeyExists(arguments.rc, "sRenderCrudAction")) {
+			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.sRenderCrudAction#" );
+			this.invokeMethod(arguments.rc.sRenderCrudAction, {rc=arguments.rc});
+		
+		// Lastly if nothing was defined then we just do a redirect to the defaultAction
+		} else {
+			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
+			
+		}
+	}
+	
+	private void function renderOrRedirectFailure( required string defaultAction, required boolean maintainQueryString, required struct rc ) {
+		param name="arguments.rc.fRedirectQS" default="";
+		 
+		// First look for a fRedirectURL in the rc, and do a redirectExact on that
+		if(structKeyExists(arguments.rc, "fRedirectURL")) {
+			getFW().redirectExact( url=arguments.rc.rRedirectURL );
+		
+		// Next look for a fRedirectAction in the rc, and do a redirect on that
+		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
+			getFW().redirect( action=arguments.rc.fRedirectAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
+			
+		// Next look for a fRenderCrudAction in the rc, set the view to that, and then call the controller for that action
+		} else if (structKeyExists(arguments.rc, "fRenderCrudAction")) {
+			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.fRenderCrudAction#" );
+			this.invokeMethod(arguments.rc.fRenderCrudAction, {rc=arguments.rc});
+		
+		// Lastly if nothing was defined then we just do a redirect to the defaultAction
+		} else {
+			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
+			
+		}
+	}
+	
 	
 	/*
 	private void function redirectToReturnAction(string additionalQueryString="") {
