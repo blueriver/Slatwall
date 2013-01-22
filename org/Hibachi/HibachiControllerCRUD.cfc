@@ -98,49 +98,61 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 	}
 	
+	// LIST
 	public void function genericListMethod(required string entityName, required struct rc) {
 		// TODO: Verify List Permission
 		
+		// Find the correct service
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
-		arguments.rc["#arguments.entityName#smartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=arguments.rc} );
 		
+		// Place the standard smartList in the rc
+		arguments.rc["#arguments.entityName#SmartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=arguments.rc} );
 	}
 	
-	
+	// CREATE
 	public void function genericCreateMethod(required string entityName, required struct rc) {
 		// TODO: Verify Create Permission
 		
+		// Find the correct service
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
-		arguments.rc["#arguments.entityName#"] = entityService.invokeMethod( "new#arguments.entityName#" );
 		
+		// Load the objects for any ID's that were past in
 		loadEntitiesFromRCIDs( arguments.rc );
 		
+		// Call the new method on that service to inject an object into the RC
+		arguments.rc["#arguments.entityName#"] = entityService.invokeMethod( "new#arguments.entityName#" );
+		
+		// Set the edit to true
 		arguments.rc.edit = true;
-		getFW().setView(arguments.rc.detailAction);
+		
+		// Set the view to the correct one
+		getFW().setView(arguments.rc.crudActionDetails.detailAction);
 	}
 	
+	// EDIT
 	public void function genericEditMethod(required string entityName, required struct rc) {
 		// TODO: Verify Edit Permission
+		
 		// TODO: Verify Edit Validation
 		
 		loadEntitiesFromRCIDs( arguments.rc );
 		
 		if(!structKeyExists(arguments.rc,arguments.entityName) || !isObject(arguments.rc[arguments.entityName])){
-			getFW().redirect(arguments.rc.listAction);
+			getFW().redirect(arguments.rc.crudActionDetails.listAction);
 		}
 		
 		arguments.rc.pageTitle = arguments.rc[arguments.entityName].getSimpleRepresentation();
 		
 		arguments.rc.edit = true;
-		getFW().setView(arguments.rc.detailAction);
+		getFW().setView(arguments.rc.crudActionDetails.detailAction);
 	}
 	
 	public void function genericDetailMethod(required string entityName, required struct rc) {
 		
 		loadEntitiesFromRCIDs( arguments.rc );
 		
-		if(!structKeyExists(arguments.rc,arguments.entityName) || !isObject(arguments.rc[arguments.entityName])){
-			getFW().redirect(arguments.rc.listAction);
+		if(!structKeyExists(arguments.rc, arguments.entityName) || !isObject(arguments.rc[arguments.entityName])){
+			getFW().redirect(arguments.rc.crudActionDetails.listAction);
 		}
 		
 		arguments.rc.pageTitle = arguments.rc[arguments.entityName].getSimpleRepresentation();
@@ -155,7 +167,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		var entity = entityService.invokeMethod( "get#arguments.rc.crudActionDetails.itemEntityName#", {1=arguments.rc[ entityPrimaryID ]} );
 		
 		if(isNull(entity)) {
-			getFW().redirect(action=arguments.rc.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
+			getFW().redirect(action=arguments.rc.crudActionDetails.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
 		}
 		
 		var deleteOK = entityService.invokeMethod("delete#arguments.entityName#", {1=entity});
@@ -164,11 +176,11 @@ component output="false" accessors="true" extends="HibachiController" {
 			if(structKeyExists(arguments.rc, "returnAction") && arguments.rc.returnAction != "") {
 				redirectToReturnAction( "messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success" );
 			} else {
-				getFW().redirect(action=arguments.rc.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success");	
+				getFW().redirect(action=arguments.rc.crudActionDetails.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success");	
 			}
 		}
 		
-		getFW().redirect(action=arguments.rc.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
+		getFW().redirect(action=arguments.rc.crudActionDetails.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
 	}
 	
 	
@@ -201,28 +213,28 @@ component output="false" accessors="true" extends="HibachiController" {
 			if(structKeyExists(arguments.rc, "returnAction")) {
 				redirectToReturnAction( "messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success&#entityPrimaryID#=#arguments.rc[ arguments.entityName ].getPrimaryIDValue()#" );
 			} else {
-				getFW().redirect(action=arguments.rc.detailAction, querystring="#entityPrimaryID#=#arguments.rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success");	
+				getFW().redirect(action=arguments.rc.crudActionDetails.detailAction, querystring="#entityPrimaryID#=#arguments.rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success");	
 			}
 			
 		// If Errors
 		} else {
 			
 			arguments.rc.edit = true;
-			getFW().setView(action=arguments.rc.detailAction);
-			showMessageKey("#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
+			getFW().setView(action=arguments.rc.crudActionDetails.detailAction);
+			getHibachiScope().showMessageKey("#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
 			
 			for( var p in arguments.rc[ arguments.entityName ].getErrors() ) {
 				local.thisErrorArray = arguments.rc[ arguments.entityName ].getErrors()[p];
 				for(var i=1; i<=arrayLen(local.thisErrorArray); i++) {
-					showMessage(local.thisErrorArray[i], "error");
+					getHibachiScope().showMessage(local.thisErrorArray[i], "error");
 				}
 			}
 			
 			if(arguments.rc[ arguments.entityName ].isNew()) {
-				arguments.rc.crudActionDetails.thisAction = arguments.rc.createAction;
+				arguments.rc.crudActionDetails.thisAction = arguments.rc.crudActionDetails.createAction;
 				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));	
 			} else {
-				arguments.rc.crudActionDetails.thisAction = arguments.rc.editAction;
+				arguments.rc.crudActionDetails.thisAction = arguments.rc.crudActionDetails.editAction;
 				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));	
 			}
 			
@@ -344,7 +356,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 			// If there are no records then redirect to the list action
 			if(!arguments.rc[ "process#arguments.entityName#SmartList" ].getRecordsCount()) {
-				getFW().redirect(action=arguments.rc.listaction);
+				getFW().redirect(action=arguments.rc.crudActionDetails.listAction);
 			} else if (arguments.rc[ "process#arguments.entityName#SmartList" ].getRecordsCount() gt 1) {
 				arguments.rc.multiProcess = true;
 			}

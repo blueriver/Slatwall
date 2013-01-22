@@ -81,12 +81,12 @@
 								</cfif>
 								<div class="btn-group">
 									<cfif attributes.edit>
-										<cfif not attributes.object.isNew()><cf_HibachiActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
+										<cfif not attributes.object.isNew()><cf_HibachiActionCaller action="#request.context.crudActionDetails.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
 										<cf_HibachiActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#request.slatwallScope.rbKey('define.cancel')#" class="btn btn-inverse" icon="remove icon-white">
-										<cf_HibachiActionCaller action="#request.context.saveAction#" text="#request.slatwallScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
+										<cf_HibachiActionCaller action="#request.context.crudActionDetails.saveAction#" text="#request.slatwallScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
 									<cfelse>
-										<cfif attributes.showdelete><cf_HibachiActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
-										<cfif attributes.showedit><cf_HibachiActionCaller action="#request.context.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true" disabled="#attributes.object.isNotEditable()#"></cfif>
+										<cfif attributes.showdelete><cf_HibachiActionCaller action="#request.context.crudActionDetails.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#attributes.backAction#&#attributes.backQueryString#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#"></cfif>
+										<cfif attributes.showedit><cf_HibachiActionCaller action="#request.context.crudActionDetails.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true" disabled="#attributes.object.isNotEditable()#"></cfif>
 									</cfif>
 								</div>
 							<!--- Process --->

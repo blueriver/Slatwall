@@ -43,8 +43,8 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.brandSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.brandSmartList#"
-						recordDetailAction="admin:product.detailbrand"
-						recordEditAction="admin:product.editbrand">
+						recordDetailAction="admin:crud.detailbrand"
+						recordEditAction="admin:crud.editbrand">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="brandName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="brandWebsite" sort="false" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
