@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.attribute#" saveAction="admin:setting.saveattribute" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.attributeOption#" edit="#rc.edit#" backAction="admin:setting.detailAttribute" backQueryString="attributeID=#rc.attribute.getAttributeID()#" />
+	<cf_HibachiCrudDetailForm object="#rc.attribute#" saveAction="admin:setting.saveattribute" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.attributeOption#" edit="#rc.edit#" backAction="admin:setting.detailAttribute" backQueryString="attributeID=#rc.attribute.getAttributeID()#" />
 		<input type="hidden" name="attributeOptions[1].attributeOptionID" value="#rc.attributeOption.getAttributeOptionID()#" />
 
 		<cf_SlatwallDetailHeader>
@@ -52,5 +52,5 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

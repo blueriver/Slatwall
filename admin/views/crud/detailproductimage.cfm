@@ -41,9 +41,9 @@ Notes:
 <cfparam name="rc.edit" type="boolean" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.productImage#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_SlatwallActionBar type="detail" object="#rc.productImage#" edit="#rc.edit#">
-		</cf_SlatwallActionBar>
+	<cf_HibachiCrudDetailForm object="#rc.productImage#" edit="#rc.edit#" enctype="multipart/form-data">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.productImage#" edit="#rc.edit#">
+		</cf_HibachiCrudActionBar>
 		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
 		<input type="hidden" name="returnAction" value="admin:crud.editProduct&productID=#rc.product.getProductID()###tabalternateimages" />
 		<cf_SlatwallDetailHeader>
@@ -65,6 +65,6 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 
 </cfoutput>

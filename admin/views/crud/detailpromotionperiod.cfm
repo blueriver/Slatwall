@@ -47,12 +47,12 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.promotionperiod#"
+	<cf_HibachiCrudDetailForm object="#rc.promotionperiod#"
 						   saveAction="admin:crud.savepromotionperiod"
 						   saveActionQueryString="promotionID=#rc.promotion.getPromotionID()#"
 						   edit="#rc.edit#">
 						   	   
-		<cf_SlatwallActionBar type="detail" object="#rc.promotionPeriod#" edit="#rc.edit#"
+		<cf_HibachiCrudActionBar type="detail" object="#rc.promotionPeriod#" edit="#rc.edit#"
 							  backAction="admin:crud.detailpromotion"
 							  backQueryString="promotionID=#rc.promotion.getPromotionID()#"
 							  cancelAction="admin:crud.detailpromotion"
@@ -69,7 +69,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 	
 	<cf_SlatwallTabGroup object="#rc.promotionperiod#">
 			<cf_SlatwallTab view="admin:crud/promotionperiodtabs/promotionrewards" />

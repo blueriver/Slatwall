@@ -51,8 +51,8 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.order#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
+	<cf_HibachiCrudDetailForm object="#rc.order#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
 			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&returnAction=admin:crud.detailorder" type="list" />
 			<!--- Add Order Item --->
 			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
@@ -72,7 +72,7 @@ Notes:
 			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="closeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller action="admin:crud.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
-		</cf_SlatwallActionBar>
+		</cf_HibachiCrudActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divclass="span4">
@@ -132,6 +132,6 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 
 </cfoutput>

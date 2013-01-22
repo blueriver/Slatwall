@@ -40,10 +40,10 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderFulfillment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderFulfillment#" edit="#rc.edit#" backaction="admin:crud.detailorder" backquerystring="orderID=#rc.orderFulfillment.getOrder().getOrderID()#">
+	<cf_HibachiCrudDetailForm object="#rc.orderFulfillment#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.orderFulfillment#" edit="#rc.edit#" backaction="admin:crud.detailorder" backquerystring="orderID=#rc.orderFulfillment.getOrder().getOrderID()#">
 			<cf_SlatwallProcessCaller entity="#rc.orderFulfillment#" action="admin:crud.processorderfulfillment" processContext="fulfillItems" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" />
-		</cf_SlatwallActionBar>
+		</cf_HibachiCrudActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divClass="span6">
@@ -66,5 +66,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/orderfulfillmenttabs/orderfulfillmentitems">
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

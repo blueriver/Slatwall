@@ -50,8 +50,8 @@ Notes:
 <cfset local.qualifierType = rc.promotionQualifier.getQualifierType() />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.promotionQualifier#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.promotionQualifier#" edit="#rc.edit#" 
+	<cf_HibachiCrudDetailForm object="#rc.promotionQualifier#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.promotionQualifier#" edit="#rc.edit#" 
 							  cancelAction="admin:crud.detailpromotionperiod"
 							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" 
 							  backAction="admin:crud.detailpromotionperiod" 
@@ -96,5 +96,5 @@ Notes:
 			</cfif>
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

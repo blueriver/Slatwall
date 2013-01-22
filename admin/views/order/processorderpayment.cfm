@@ -67,7 +67,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallProcessForm>
-		<cf_SlatwallActionBar type="process" />
+		<cf_HibachiCrudActionBar type="process" />
 		
 		<input type="hidden" name="orderPaymentID" value="#local.orderPayment.getOrderPaymentID()#" />
 			

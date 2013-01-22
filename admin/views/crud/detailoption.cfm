@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.option#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_SlatwallActionBar type="detail" object="#rc.option#" edit="#rc.edit#" />
+	<cf_HibachiCrudDetailForm object="#rc.option#" edit="#rc.edit#" enctype="multipart/form-data">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.option#" edit="#rc.edit#" />
 		<input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 		<input type="hidden" name="returnAction" value="admin:crud.editoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#" />
 		
@@ -71,5 +71,5 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

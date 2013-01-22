@@ -48,7 +48,7 @@ Notes:
 </cfsilent>
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
+	<cf_HibachiCrudDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
 		
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
@@ -99,5 +99,5 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />	
 		</cfif>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.subscriptionBenefit#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.subscriptionBenefit#" edit="#rc.edit#" />
+	<cf_HibachiCrudDetailForm object="#rc.subscriptionBenefit#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.subscriptionBenefit#" edit="#rc.edit#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -58,6 +58,6 @@ Notes:
 		</cf_SlatwallTabGroup>
 
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>
 

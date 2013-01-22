@@ -42,9 +42,9 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" saveActionQueryString="accountID=#rc.account.getAccountID()#">
+	<cf_HibachiCrudDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" saveActionQueryString="accountID=#rc.account.getAccountID()#">
 		
-		<cf_SlatwallActionBar type="detail" object="#rc.accountPaymentMethod#" />
+		<cf_HibachiCrudActionBar type="detail" object="#rc.accountPaymentMethod#" />
 		
 		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
@@ -62,7 +62,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>
 
 

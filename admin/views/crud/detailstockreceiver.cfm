@@ -41,9 +41,9 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.stockReceiver#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.stockReceiver#" edit="#rc.edit#">
-		</cf_SlatwallActionBar>
+	<cf_HibachiCrudDetailForm object="#rc.stockReceiver#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.stockReceiver#" edit="#rc.edit#">
+		</cf_HibachiCrudActionBar>
 			
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -55,5 +55,5 @@ Notes:
 		<cf_SlatwallTabGroup object="#rc.stockReceiver#">
 			<cf_SlatwallTab view="admin:crud/stockreceivertabs/stockreceiveritems" />
 		</cf_SlatwallTabGroup>
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

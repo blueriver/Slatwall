@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.promotioncode#" saveAction="admin:crud.savepromotioncode" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:crud.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+	<cf_HibachiCrudDetailForm object="#rc.promotioncode#" saveAction="admin:crud.savepromotioncode" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:crud.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
 		
 		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
@@ -58,5 +58,5 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -1,4 +1,5 @@
 <!--- Place Application Specific ORM Settings Here --->
+<cfset this.ormsettings.cfclocation = [ "/Slatwall/model/entity", "/Slatwall/integrationServices" ] />
 <cftry>
 	<cfdbinfo datasource="#this.datasource.name#" type="Version" name="dbVersion">
 	<cfcatch>

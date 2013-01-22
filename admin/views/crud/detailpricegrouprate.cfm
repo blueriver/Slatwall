@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.pricegrouprate#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.pricegrouprate#" edit="#rc.edit#" 
+	<cf_HibachiCrudDetailForm object="#rc.pricegrouprate#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.pricegrouprate#" edit="#rc.edit#" 
 							  cancelAction="admin:crud.detailpricegroup"
 							  cancelQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" 
 							  backAction="admin:crud.detailpricegroup" 
@@ -65,5 +65,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/pricegroupratetabs/skus" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

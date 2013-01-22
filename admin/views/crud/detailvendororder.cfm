@@ -40,11 +40,11 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#">
+	<cf_HibachiCrudDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#">
 			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:crud.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list">
 			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:crud.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" />
-		</cf_SlatwallActionBar>
+		</cf_HibachiCrudActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -60,5 +60,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/vendorordertabs/stockreceivers" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

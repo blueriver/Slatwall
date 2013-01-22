@@ -18,6 +18,13 @@ component output="false" accessors="true" extends="HibachiController" {
 		arguments.rc.crudActionDetails.sectionName = getFW().getSection( arguments.rc.crudActionDetails.thisAction );
 		arguments.rc.crudActionDetails.itemName = getFW().getItem( arguments.rc.crudActionDetails.thisAction );
 		
+		arguments.rc.crudActionDetails.sRedirectURL = "";
+		arguments.rc.crudActionDetails.sRedirectAction = "";
+		arguments.rc.crudActionDetails.sRenderCrudAction = "";
+		arguments.rc.crudActionDetails.fRedirectURL = "";
+		arguments.rc.crudActionDetails.fRedirectAction = "";
+		arguments.rc.crudActionDetails.fRenderCrudAction = "";
+		
 		arguments.rc.crudActionDetails.itemEntityName = "";
 		arguments.rc.crudActionDetails.cancelAction = arguments.rc.crudActionDetails.thisAction;
 		arguments.rc.crudActionDetails.createAction = arguments.rc.crudActionDetails.thisAction;
@@ -26,6 +33,10 @@ component output="false" accessors="true" extends="HibachiController" {
 		arguments.rc.crudActionDetails.editAction = arguments.rc.crudActionDetails.thisAction;
 		arguments.rc.crudActionDetails.exportAction = arguments.rc.crudActionDetails.thisAction;
 		arguments.rc.crudActionDetails.listAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.multiPreProcessAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.multiProcessAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.preProcessAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.processAction = arguments.rc.crudActionDetails.thisAction;
 		arguments.rc.crudActionDetails.saveAction = arguments.rc.crudActionDetails.thisAction;
 		
 		if(left(arguments.rc.crudActionDetails.itemName, 4) == "list") {
@@ -47,18 +58,21 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 		
 		if(arguments.rc.crudActionDetails.itemEntityName != "") {
-			arguments.rc.crudActionDetails.listAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.list#arguments.rc.crudActionDetails.itemEntityName#"; 
-			arguments.rc.crudActionDetails.saveAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.save#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.createAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.create#arguments.rc.crudActionDetails.itemEntityName#";
 			arguments.rc.crudActionDetails.detailAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.detail#arguments.rc.crudActionDetails.itemEntityName#";		
 			arguments.rc.crudActionDetails.deleteAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.delete#arguments.rc.crudActionDetails.itemEntityName#";
 			arguments.rc.crudActionDetails.editAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.edit#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.createAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.create#arguments.rc.crudActionDetails.itemEntityName#";
 			arguments.rc.crudActionDetails.exportAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.export#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.exportAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.preprocess#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.exportAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.preprocess#arguments.rc.crudActionDetails.itemEntityName#"; 
+			arguments.rc.crudActionDetails.listAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.list#arguments.rc.crudActionDetails.itemEntityName#"; 
+			arguments.rc.crudActionDetails.multiPreProcessAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.multipreprocess#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.multiProcessAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.multiprocess#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.preProcessAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.preprocess#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.processAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.process#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.saveAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.save#arguments.rc.crudActionDetails.itemEntityName#";
 		}
 		
 		arguments.rc.pageTitle = rbKey(replace(arguments.rc.crudActionDetails.thisAction,':','.','all'));
+		
 		if(right(arguments.rc.pageTitle, 8) eq "_missing") {
 			if(left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 4) eq "list") {
 				arguments.rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
@@ -112,6 +126,16 @@ component output="false" accessors="true" extends="HibachiController" {
 	public void function genericCreateMethod(required string entityName, required struct rc) {
 		// TODO: Verify Create Permission
 		
+		// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
+		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
+		if(!hasSuccess) {
+			arguments.rc.crudActionDetails.sRenderCrudAction = arguments.rc.crudActionDetails.detailAction;
+		}
+		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
+		if(!hasFaliure) {
+			arguments.rc.crudActionDetails.fRenderCrudAction = arguments.rc.crudActionDetails.createAction;
+		}
+		
 		// Find the correct service
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
@@ -141,6 +165,16 @@ component output="false" accessors="true" extends="HibachiController" {
 		if(!structKeyExists(arguments.rc, arguments.entityName) || !isObject(arguments.rc[arguments.entityName])){
 			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
 			getFW().redirect(action=arguments.rc.crudActionDetails.listAction, preserve="messages");
+		}
+		
+		// Check for any redirect / render values that were passed in to be used by the edit form, otherwise set them to a default
+		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
+		if(!hasSuccess) {
+			arguments.rc.crudActionDetails.sRenderCrudAction = arguments.rc.crudActionDetails.detailAction;
+		}
+		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
+		if(!hasFaliure) {
+			arguments.rc.crudActionDetails.fRenderCrudAction = arguments.rc.crudActionDetails.editAction;
 		}
 		
 		// Setup the values needed for this type of layout
@@ -190,6 +224,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// SUCCESS
 		if (deleteOK) {
+			writeLog(file="Slatwall", text="Success");
 			// Show the Generica Action Success Message
 			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.delete_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ), "success");
 			
@@ -198,6 +233,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 		// FAILURE
 		} else {
+			writeLog(file="Slatwall", text="Failure");
 			// Add the Generic Action Failure Message
 			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.error_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ), "error");
 			
@@ -248,10 +284,11 @@ component output="false" accessors="true" extends="HibachiController" {
 			entity.showErrorsAndMessages();
 			
 			// Render or Redirect a faluire
-			renderOrRedirectSuccess( defaultAction=arguments.rc.crudActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
+			renderOrRedirectFailure( defaultAction="edit#arguments.rc.crudActionDetails.itemEntityName#", maintainQueryString=true, rc=arguments.rc);
 			
 		}
 	}
+	
 	
 	public void function genericPreProcessMethod(required string entityName, required struct rc) {
 		
@@ -380,6 +417,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		entityService.invokeMethod("export#arguments.entityName#");
 	}
 	
+	// ============================= PRIVATE HELPER METHODS
+	
 	private void function loadEntitiesFromRCIDs(required struct rc) {
 		try{
 			for(var key in arguments.rc) {
@@ -397,30 +436,65 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 	}
 	
+	private boolean function populateRenderAndRedirectSuccessValues(required struct rc) {
+		var hasValue = false;
+		if(structKeyExists(arguments.rc, "sRedirectURL")) {
+			arguments.rc.crudActionDetails.sRedirectURL = arguments.rc.sRedirectURL;
+		}
+		if(structKeyExists(arguments.rc, "sRedirectAction")) {
+			arguments.rc.crudActionDetails.sRedirectAction = arguments.rc.sRedirectAction;
+		}
+		if(structKeyExists(arguments.rc, "sRenderCrudAction")) {
+			arguments.rc.crudActionDetails.sRenderCrudAction = arguments.rc.sRenderCrudAction;
+		}
+		return hasValue;
+	}
+	private boolean function populateRenderAndRedirectFailureValues(required struct rc) {
+		var hasValue = false;
+		if(structKeyExists(arguments.rc, "fRedirectURL")) {
+			arguments.rc.crudActionDetails.fRedirectURL = arguments.rc.fRedirectURL;
+		}
+		if(structKeyExists(arguments.rc, "fRedirectAction")) {
+			arguments.rc.crudActionDetails.fRedirectAction = arguments.rc.fRedirectAction;
+		}
+		if(structKeyExists(arguments.rc, "fRenderCrudAction")) {
+			arguments.rc.crudActionDetails.fRenderCrudAction = arguments.rc.fRenderCrudAction;
+		}
+		return hasValue;
+	}
+	
 	private void function renderOrRedirectSuccess( required string defaultAction, required boolean maintainQueryString, required struct rc ) {
-		param name="arguments.rc.fRedirectQS" default="";
+		param name="arguments.rc.sRedirectQS" default="";
 		
 		// First look for a sRedirectURL in the rc, and do a redirectExact on that
 		if(structKeyExists(arguments.rc, "sRedirectURL")) {
+			writeLog(file="Slatwall", text="Success A");
 			getFW().redirectExact( url=arguments.rc.sRedirectURL );
 		
 		// Next look for a sRedirectAction in the rc, and do a redirect on that
 		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
-			getFW().redirect( action=arguments.rc.sRedirectAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
+			writeLog(file="Slatwall", text="Success B");
+			getFW().redirect( action=arguments.rc.sRedirectAction, preserve="messages", queryString=arguments.rc.sRedirectQS );
 			
 		// Next look for a sRenderCrudAction in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "sRenderCrudAction")) {
+			writeLog(file="Slatwall", text="Success C");
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.sRenderCrudAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.rc.sRenderCrudAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.rc.sRenderCrudAction, {rc=arguments.rc});
 		
-		// Lastly if nothing was defined then we just do a redirect to the defaultAction
-		} else {
+		// If nothing was defined then we just do a redirect to the defaultAction, if it is just a single value then render otherwise do a redirect
+		} else if (listLen(arguments.defaultAction, ".") eq 1) {
+			writeLog(file="Slatwall", text="Success D");
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.defaultAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.defaultAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});
+			
+		} else {
+			writeLog(file="Slatwall", text="Success E");
+			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.sRedirectQS );
 			
 		}
 	}
@@ -430,25 +504,33 @@ component output="false" accessors="true" extends="HibachiController" {
 		 
 		// First look for a fRedirectURL in the rc, and do a redirectExact on that
 		if(structKeyExists(arguments.rc, "fRedirectURL")) {
+			writeLog(file="Slatwall", text="Failure A");
 			getFW().redirectExact( url=arguments.rc.rRedirectURL );
 		
 		// Next look for a fRedirectAction in the rc, and do a redirect on that
 		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
+			writeLog(file="Slatwall", text="Failure B");
 			getFW().redirect( action=arguments.rc.fRedirectAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
 			
 		// Next look for a fRenderCrudAction in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "fRenderCrudAction")) {
+			writeLog(file="Slatwall", text="Failure C");
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.fRenderCrudAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.rc.fRenderCrudAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.rc.fRenderCrudAction, {rc=arguments.rc});
 		
 		// Lastly if nothing was defined then we just do a redirect to the defaultAction
-		} else {
+		} else if (listLen(arguments.defaultAction, ".") eq 1) {
+			writeLog(file="Slatwall", text="Failure D");
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.defaultAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.defaultAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});
+			
+		} else {
+			writeLog(file="Slatwall", text="Failure E");
+			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
 			
 		}
 	}

@@ -40,10 +40,10 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.task#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.task#">
+	<cf_HibachiCrudDetailForm object="#rc.task#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.task#">
                 <cf_SlatwallActionCaller action="admin:setting.processtask" querystring="taskID=#rc.task.getTaskID()#" type="list" icon="cog" modal="true" >
-        </cf_SlatwallActionBar>    
+        </cf_HibachiCrudActionBar>    
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -61,5 +61,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/tasktabs/taskhistory" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

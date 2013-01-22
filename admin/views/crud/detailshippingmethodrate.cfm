@@ -46,8 +46,8 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.shippingMethodRate#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.shippingMethodRate#" edit="#rc.edit#" backAction="admin:setting.detailShippingMethod" backQueryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"></cf_SlatwallActionBar>
+	<cf_HibachiCrudDetailForm object="#rc.shippingMethodRate#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.shippingMethodRate#" edit="#rc.edit#" backAction="admin:setting.detailShippingMethod" backQueryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"></cf_HibachiCrudActionBar>
 		
 		<cfif rc.edit>
 			<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.shippingMethod.getShippingMethodID()#" />
@@ -75,5 +75,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/shippingmethodratetabs/shippingmethodratesettings" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

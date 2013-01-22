@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.promotionSmartList#" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.promotionSmartList#" />
 
 <cfset rc.promotionSmartList.addOrder("promotionName|ASC") />
 

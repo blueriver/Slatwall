@@ -50,7 +50,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallProcessForm>
 		
-		<cf_SlatwallActionBar type="process" />
+		<cf_HibachiCrudActionBar type="process" />
 		
 		<cf_SlatwallFieldDisplay fieldName="processcontext" title="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processContext')#" fieldType="select" valueOptions="#rc.processContextOptions#" value="#rc.processcontext#" edit="true" />
 		

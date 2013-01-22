@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderItem#" saveAction="admin:crud.saveOrderItem" edit="#rc.edit#" >
-		<cf_SlatwallActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:crud.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
+	<cf_HibachiCrudDetailForm object="#rc.orderItem#" saveAction="admin:crud.saveOrderItem" edit="#rc.edit#" >
+		<cf_HibachiCrudActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:crud.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
 		
 		<input type="hidden" name="orderItemID" value="#rc.orderItem.getOrderItemID()#" />
 		
@@ -83,5 +83,5 @@ Notes:
 			</cfif>
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.sku#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_SlatwallActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:crud.detailproduct" backQueryString="productID=#rc.product.getProductID()#" cancelAction="admin:crud.detailsku" />
+	<cf_HibachiCrudDetailForm object="#rc.sku#" edit="#rc.edit#" enctype="multipart/form-data">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:crud.detailproduct" backQueryString="productID=#rc.product.getProductID()#" cancelAction="admin:crud.detailsku" />
 		<input type="hidden" name="returnAction" value="admin:crud.detailproduct&productID=#rc.product.getProductID()#" />
 		
 		<cf_SlatwallDetailHeader>
@@ -90,5 +90,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/skutabs/skusettings" />
 		</cf_SlatwallTabGroup>
 
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

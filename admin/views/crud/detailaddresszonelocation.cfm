@@ -41,9 +41,9 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.addressZone#" saveAction="admin:setting.saveaddresszone" edit="#rc.edit#">
+	<cf_HibachiCrudDetailForm object="#rc.addressZone#" saveAction="admin:setting.saveaddresszone" edit="#rc.edit#">
 		
 		<cf_SlatwallAddressDisplay address="#rc.addressZoneLocation#" fieldNamePrefix="addressZoneLocations[1]." edit="#rc.edit#" showName="false" showCompany="false" showStreetAddress="false" showStreet2Address="false">
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -44,8 +44,8 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.promotion#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" />
+	<cf_HibachiCrudDetailForm object="#rc.promotion#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -70,5 +70,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/promotiontabs/promotiondescription" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

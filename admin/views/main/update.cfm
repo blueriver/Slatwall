@@ -50,7 +50,7 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallActionBar type="none"></cf_SlatwallActionBar>
+	<cf_HibachiCrudActionBar type="none"></cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallPropertyList divClass="span12">
 		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentVersion')#" value="#rc.currentVersion#" />

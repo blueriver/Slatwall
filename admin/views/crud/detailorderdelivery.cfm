@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderDelivery#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderDelivery#" edit="#rc.edit#"></cf_SlatwallActionBar>
+	<cf_HibachiCrudDetailForm object="#rc.orderDelivery#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.orderDelivery#" edit="#rc.edit#"></cf_HibachiCrudActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -57,5 +57,5 @@ Notes:
 			<cf_SlatwallListingColumn propertyIdentifier="quantity" />
 		</cf_SlatwallListingDisplay>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -39,10 +39,10 @@ Notes:
 <cfparam name="rc.addressZone" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<cf_SlatwallDetailForm object="#rc.addressZone#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.addressZone#" edit="#rc.edit#">
+<cf_HibachiCrudDetailForm object="#rc.addressZone#" edit="#rc.edit#">
+	<cf_HibachiCrudActionBar type="detail" object="#rc.addressZone#" edit="#rc.edit#">
 		<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" type="list" modal=true />
-	</cf_SlatwallActionBar>
+	</cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList>
@@ -54,4 +54,4 @@ Notes:
 		<cf_SlatwallTab view="admin:crud/addresszonetabs/locations" />
 	</cf_SlatwallTabGroup>
 	
-</cf_SlatwallDetailForm>
+</cf_HibachiCrudDetailForm>

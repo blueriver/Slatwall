@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderItem#" edit="true" saveaction="admin:crud.addOrderItem">
+	<cf_HibachiCrudDetailForm object="#rc.orderItem#" edit="true" saveaction="admin:crud.addOrderItem">
 		
 		<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
 		
@@ -105,7 +105,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>
 <script type="text/javascript">
 	jQuery(document).ready(function(e){

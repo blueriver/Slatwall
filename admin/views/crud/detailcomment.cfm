@@ -53,8 +53,8 @@ Notes:
 </cfloop>
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.comment#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString###tabComments">
-		<cf_SlatwallActionBar type="detail" object="#rc.comment#" />
+	<cf_HibachiCrudDetailForm object="#rc.comment#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString###tabComments">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.comment#" />
 		
 		<!--- Only Runs if new --->
 		<Cfif rc.comment.isNew()>#local.hiddenKeyFields#</cfif>
@@ -71,5 +71,5 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

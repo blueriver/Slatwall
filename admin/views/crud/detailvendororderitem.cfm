@@ -43,7 +43,7 @@ Notes:
 <cfoutput>
 	
 	
-	<cf_SlatwallDetailForm object="#rc.vendorOrderItem#" edit="#rc.edit#">
+	<cf_HibachiCrudDetailForm object="#rc.vendorOrderItem#" edit="#rc.edit#">
 		<input type="hidden" name="vendorOrder.vendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
 		<input type="hidden" name="returnAction" value="admin:crud.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" />
 
@@ -56,5 +56,5 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

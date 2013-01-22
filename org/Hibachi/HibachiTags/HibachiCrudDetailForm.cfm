@@ -42,12 +42,12 @@ Notes:
 	<cfparam name="attributes.saveActionQueryString" type="string" default="" />
 	<cfparam name="attributes.edit" type="boolean" default="false" />
 	<cfparam name="attributes.enctype" type="string" default="application/x-www-form-urlencoded">
-	<cfparam name="attributes.sRedirectURL" type="string" default="">
-	<cfparam name="attributes.sRedirectAction" type="string" default="">
-	<cfparam name="attributes.sRenderCrudAction" type="string" default="#request.context.crudActionDetails.detailaction#">
-	<cfparam name="attributes.fRedirectURL" type="string" default="">
-	<cfparam name="attributes.fRedirectAction" type="string" default="">
-	<cfparam name="attributes.fRenderCrudAction" type="string" default="#request.context.crudActionDetails.detailaction#">
+	<cfparam name="attributes.sRedirectURL" type="string" default="#request.context.crudActionDetails.sRedirectURL#">
+	<cfparam name="attributes.sRedirectAction" type="string" default="#request.context.crudActionDetails.sRedirectAction#">
+	<cfparam name="attributes.sRenderCrudAction" type="string" default="#request.context.crudActionDetails.sRenderCrudAction#">
+	<cfparam name="attributes.fRedirectURL" type="string" default="#request.context.crudActionDetails.fRedirectURL#">
+	<cfparam name="attributes.fRedirectAction" type="string" default="#request.context.crudActionDetails.fRedirectAction#">
+	<cfparam name="attributes.fRenderCrudAction" type="string" default="#request.context.crudActionDetails.fRenderCrudAction#">
 	
 	<cfoutput>
 		<cfif attributes.edit>

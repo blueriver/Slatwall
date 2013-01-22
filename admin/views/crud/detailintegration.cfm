@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.integration#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.integration#" deleteAction="" />
+	<cf_HibachiCrudDetailForm object="#rc.integration#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.integration#" deleteAction="" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -62,5 +62,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/integrationtabs/settings" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

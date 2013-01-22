@@ -39,10 +39,10 @@ Notes:
 <cfparam name="rc.taxCategory" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<cf_SlatwallDetailForm object="#rc.taxCategory#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.taxCategory#" edit="#rc.edit#">
+<cf_HibachiCrudDetailForm object="#rc.taxCategory#" edit="#rc.edit#">
+	<cf_HibachiCrudActionBar type="detail" object="#rc.taxCategory#" edit="#rc.edit#">
 		<cf_SlatwallActionCaller action="admin:setting.createtaxcategoryrate" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" type="list" modal=true />
-	</cf_SlatwallActionBar>
+	</cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList>
@@ -55,4 +55,4 @@ Notes:
 		<cf_SlatwallTab view="admin:crud/taxcategorytabs/rates" />
 	</cf_SlatwallTabGroup>
 	
-</cf_SlatwallDetailForm>
+</cf_HibachiCrudDetailForm>

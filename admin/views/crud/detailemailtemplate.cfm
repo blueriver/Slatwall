@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.emailTemplate#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.emailTemplate#" />
+	<cf_HibachiCrudDetailForm object="#rc.emailTemplate#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.emailTemplate#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -55,5 +55,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/emailtemplatetabs/emailsettings">
 		</cf_SlatwallTabGroup>
 
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

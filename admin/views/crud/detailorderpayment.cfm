@@ -40,14 +40,14 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:crud.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
+	<cf_HibachiCrudDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:crud.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="chargePreAuthorization" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="authorizeAndCharge" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="authorize" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="credit" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:crud.processorderpayment" processContext="offlineTransaction" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-		</cf_SlatwallActionBar>
+		</cf_HibachiCrudActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divClass="span6">
@@ -71,5 +71,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/orderpaymenttabs/paymenttransactions" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

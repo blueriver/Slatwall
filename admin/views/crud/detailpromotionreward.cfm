@@ -51,8 +51,8 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" 
+	<cf_HibachiCrudDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" 
 							  cancelAction="admin:crud.detailpromotionperiod"
 							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" 
 							  backAction="admin:crud.detailpromotionperiod" 
@@ -93,5 +93,5 @@ Notes:
 			</cfif>
 		</cf_SlatwallTabGroup>
 
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

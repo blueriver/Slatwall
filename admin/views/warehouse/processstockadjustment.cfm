@@ -44,7 +44,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallProcessForm>
 		
-		<cf_SlatwallActionBar type="process" />
+		<cf_HibachiCrudActionBar type="process" />
 		
 		<cfswitch expression="#rc.processcontext#" >
 			<cfcase value="addItems">

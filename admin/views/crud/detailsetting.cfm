@@ -61,8 +61,8 @@ Notes:
 <cfset rc.setting.setSettingName(rc.settingName) />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.setting#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString#">
-		<cf_SlatwallActionBar type="detail" object="#rc.setting#" />
+	<cf_HibachiCrudDetailForm object="#rc.setting#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.setting#" />
 		
 		<input type="hidden" name="settingName" value="#rc.settingName#" />
 		#local.hiddenKeyFields#
@@ -79,5 +79,5 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:setting.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&returnAction=#request.context.returnAction#&#local.returnActionQueryString#" class="btn btn-danger" />
 			</cfif>
 		</cf_SlatwallDetailHeader>
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

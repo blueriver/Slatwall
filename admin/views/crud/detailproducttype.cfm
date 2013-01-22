@@ -41,9 +41,9 @@ Notes:
 <cfparam name="rc.edit" default="false" >
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.productType#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.productType#" edit="#rc.edit#">
-		</cf_SlatwallActionBar>
+	<cf_HibachiCrudDetailForm object="#rc.productType#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.productType#" edit="#rc.edit#">
+		</cf_HibachiCrudActionBar>
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="activeFlag" edit="#rc.edit#">
@@ -66,6 +66,6 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/producttypetabs/skusettings" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 
 </cfoutput>

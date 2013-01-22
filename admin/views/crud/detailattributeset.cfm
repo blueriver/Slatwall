@@ -41,10 +41,10 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallDetailForm object="#rc.attributeSet#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.attributeSet#" edit="#rc.edit#">
+<cf_HibachiCrudDetailForm object="#rc.attributeSet#" edit="#rc.edit#">
+	<cf_HibachiCrudActionBar type="detail" object="#rc.attributeSet#" edit="#rc.edit#">
 		<cf_SlatwallActionCaller action="admin:setting.createattribute" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" type="list" modal=true />
-	</cf_SlatwallActionBar>
+	</cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList divclass="span6">
@@ -77,6 +77,6 @@ Notes:
 		</cfif>
 	</cf_SlatwallTabGroup>
 	
-</cf_SlatwallDetailForm>
+</cf_HibachiCrudDetailForm>
 
 </cfoutput>

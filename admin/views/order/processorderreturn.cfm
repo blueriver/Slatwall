@@ -42,7 +42,7 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallProcessForm>
-		<cf_SlatwallActionBar type="process" />
+		<cf_HibachiCrudActionBar type="process" />
 		
 		<cf_SlatwallProcessOptionBar>
 			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />

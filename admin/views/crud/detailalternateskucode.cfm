@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.alternateSkuCode#" edit="#rc.edit#" saveaction="admin:crud.savesku">
+	<cf_HibachiCrudDetailForm object="#rc.alternateSkuCode#" edit="#rc.edit#" saveaction="admin:crud.savesku">
 		
 		<input type="hidden" name="skuID" value="#rc.sku.getSkuID()#" />
 		<input type="hidden" name="alternateSkuCodes[1].alternateSkuCodeID" value="#rc.alternateSkuCode.getAlternateSkuCodeID()#" />
@@ -54,5 +54,5 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

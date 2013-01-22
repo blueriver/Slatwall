@@ -54,8 +54,8 @@ Notes:
 </cfif>	
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.image#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_SlatwallActionBar type="detail" object="#rc.image#" edit="#rc.edit#"></cf_SlatwallActionBar>
+	<cf_HibachiCrudDetailForm object="#rc.image#" edit="#rc.edit#" enctype="multipart/form-data">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.image#" edit="#rc.edit#"></cf_HibachiCrudActionBar>
 		
 		<input type="hidden" name="directory" value="#rc.directory#" />
 		<input type="hidden" name="product.productID" value="#rc.productID#" />
@@ -78,6 +78,6 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 
 </cfoutput>

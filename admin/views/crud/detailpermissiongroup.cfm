@@ -44,8 +44,8 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#"></cf_SlatwallActionBar>
+	<cf_HibachiCrudDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#"></cf_HibachiCrudActionBar>
 		
 		<input type="hidden" name="permissions" value="#rc.permissionGroup.getPermissions()#">
 		
@@ -79,5 +79,5 @@ Notes:
 				</cfloop>
 			</cf_SlatwallTabGroup>
 		</cfif>
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

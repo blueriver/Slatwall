@@ -40,10 +40,10 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.optiongroup#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#">
+	<cf_HibachiCrudDetailForm object="#rc.optiongroup#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#">
 			<cf_SlatwallActionCaller action="admin:crud.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="list" modal=true />
-		</cf_SlatwallActionBar>
+		</cf_HibachiCrudActionBar>
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
@@ -58,5 +58,5 @@ Notes:
 			<cf_SlatwallTab view="admin:crud/optiongrouptabs/description" />
 		</cf_SlatwallTabGroup>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>

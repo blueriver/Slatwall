@@ -39,12 +39,12 @@ Notes:
 <cfparam name="rc.fulfillmentMethod" type="any" />
 <cfparam name="rc.edit" type="boolean" default="false" />
 
-<cf_SlatwallDetailForm object="#rc.fulfillmentMethod#" edit="#rc.edit#">
-	<cf_SlatwallActionBar type="detail" object="#rc.fulfillmentMethod#" edit="#rc.edit#">
+<cf_HibachiCrudDetailForm object="#rc.fulfillmentMethod#" edit="#rc.edit#">
+	<cf_HibachiCrudActionBar type="detail" object="#rc.fulfillmentMethod#" edit="#rc.edit#">
 		<cfif rc.fulfillmentMethod.getFulfillmentMethodType() eq "shipping">
 			<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" type="list" />
 		</cfif>
-	</cf_SlatwallActionBar>
+	</cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallDetailHeader>
 		<cf_SlatwallPropertyList>
@@ -61,4 +61,4 @@ Notes:
 		<cf_SlatwallTab view="admin:crud/fulfillmentmethodtabs/fulfillmentsettings">
 	</cf_SlatwallTabGroup>
 
-</cf_SlatwallDetailForm>
+</cf_HibachiCrudDetailForm>

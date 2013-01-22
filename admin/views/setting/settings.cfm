@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallActionBar type="static"></cf_SlatwallActionBar>
+	<cf_HibachiCrudActionBar type="static"></cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallTabGroup>
 		<cf_SlatwallTab view="admin:setting/settingtabs/global" />

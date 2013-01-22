@@ -43,7 +43,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#">
+	<cf_HibachiCrudDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#">
 		<input type="hidden" name="returnaction" value="admin:warehouse.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentItem.getStockAdjustment().getStockAdjustmentID()#"	 />
 		
 		<cf_SlatwallDetailHeader>
@@ -52,6 +52,6 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>
 

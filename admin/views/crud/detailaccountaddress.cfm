@@ -41,12 +41,12 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.account#" saveAction="admin:crud.saveaccount" edit="#rc.edit#">
+	<cf_HibachiCrudDetailForm object="#rc.account#" saveAction="admin:crud.saveaccount" edit="#rc.edit#">
 		<input type="hidden" name="accountAddresses[1].accountAddressID" value="#rc.accountAddress.getAccountAddressID()#" />
 		<cf_SlatwallPropertyDisplay object="#rc.accountAddress#" fieldname="accountAddresses[1].accountAddressName" property="accountAddressName" edit="#rc.edit#">
 		<cf_SlatwallAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="accountAddresses[1].address." edit="#rc.edit#">
 		
-	</cf_SlatwallDetailForm>
+	</cf_HibachiCrudDetailForm>
 </cfoutput>
 
 
