@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.vendorSmartList" type="any" />
 
-<cf_SlatwallActionBar type="listing" object="#rc.vendorSmartList#" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.vendorSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.vendorSmartList#"
 						   recordEditAction="admin:vendor.editvendor"

@@ -44,7 +44,7 @@ Notes:
 
 <cfset rc.promotionSmartList.addOrder("promotionName|ASC") />
 
-<cf_SlatwallListingDisplay smartList="#rc.promotionSmartList#"
+<cf_HibachiCrudActionBar smartList="#rc.promotionSmartList#"
 						   recorddetailaction="admin:pricing.detailpromotion"
 						   recordEditAction="admin:pricing.editpromotion">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" />

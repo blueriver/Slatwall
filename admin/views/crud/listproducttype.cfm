@@ -41,7 +41,7 @@ Notes:
 <cfset rc.productTypeSmartList.addOrder("productTypeName|ASC") />
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.productTypeSmartList#" showrecordsperpage="false" createAction="admin:product.createmerchandiseproducttype,admin:product.createsubscriptionproducttype,admin:product.createcontentaccessproducttype" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.productTypeSmartList#" showrecordsperpage="false" createAction="admin:product.createmerchandiseproducttype,admin:product.createsubscriptionproducttype,admin:product.createcontentaccessproducttype" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.productTypeSmartList#" 
 								recordEditAction="admin:product.editproducttype"

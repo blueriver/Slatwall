@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.taxCategorySmartList#" rc="#rc#" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.taxCategorySmartList#" rc="#rc#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.taxCategorySmartList#" rc="#rc#"
 						   recordEditAction="admin:setting.editTaxCategory"

@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.subscriptionTermSmartList#" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.subscriptionTermSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.subscriptionTermSmartList#"
 						recordDetailAction="admin:product.detailsubscriptionterm"

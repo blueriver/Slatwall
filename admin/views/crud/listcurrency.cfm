@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.currencySmartList" type="any" />
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.currencySmartList#" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.currencySmartList#" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.currencySmartList#"
 							   recordDetailAction="admin:setting.detailcurrency"

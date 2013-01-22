@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.subscriptionBenefitSmartList#" createAction="admin:product.createSubscriptionBenefit" createReturnAction="admin:product.editsubscriptionbenefit" createModal="true" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.subscriptionBenefitSmartList#" createAction="admin:product.createSubscriptionBenefit" createReturnAction="admin:product.editsubscriptionbenefit" createModal="true" />
 
 <cf_SlatwallListingDisplay smartList="#rc.subscriptionBenefitSmartList#"
 						   recordDetailAction="admin:product.detailsubscriptionbenefit"

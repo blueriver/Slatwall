@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.emailTemplateSmartList#" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.emailTemplateSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.emailTemplateSmartList#"
 						   recordDetailAction="admin:setting.detailemailTemplate"

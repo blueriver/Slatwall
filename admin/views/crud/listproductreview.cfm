@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.productReviewSmartList" type="any" />
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.productReviewSmartList#" createAction="" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.productReviewSmartList#" createAction="" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#"
 								recordDetailAction="admin:product.detailproductreview"

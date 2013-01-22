@@ -38,14 +38,14 @@ Notes:
 --->
 <cfparam name="rc.paymentMethodSmartList" type="any" />
 
-<cf_SlatwallActionBar type="listing" object="#rc.paymentMethodSmartList#" createAction="">
+<cf_HibachiCrudActionBar type="listing" object="#rc.paymentMethodSmartList#" createAction="">
 	<cf_SlatwallActionCaller action="admin:setting.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.cash')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=cash" />
 	<cf_SlatwallActionCaller action="admin:setting.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.check')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=check" />
 	<cf_SlatwallActionCaller action="admin:setting.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.creditCard')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=creditCard" />
 	<cf_SlatwallActionCaller action="admin:setting.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.external')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=external" />
 	<cf_SlatwallActionCaller action="admin:setting.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.giftCard')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=giftCard" />
 	<cf_SlatwallActionCaller action="admin:setting.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.termPayment')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=termPayment" />
-</cf_SlatwallActionBar>
+</cf_HibachiCrudActionBar>
 
 <cf_SlatwallListingDisplay smartList="#rc.paymentMethodSmartList#"
 						   recordDetailAction="admin:setting.detailpaymentmethod"

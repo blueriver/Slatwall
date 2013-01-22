@@ -43,7 +43,7 @@ Notes:
 </cfsilent>
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:vendor.editvendororder" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:vendor.editvendororder" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#"
 							   recordDetailAction="admin:vendor.detailvendororder"

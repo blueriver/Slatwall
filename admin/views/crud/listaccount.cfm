@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.accountSmartList#" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.accountSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.accountSmartList#"
 						   recordEditAction="admin:account.editaccount"

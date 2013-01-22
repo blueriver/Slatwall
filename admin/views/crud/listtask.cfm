@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 
-	<cf_slatwallactionbar type="listing" object="#rc.taskSmartList#" createmodal="false"/>
+	<cf_HibachiCrudActionBar type="listing" object="#rc.taskSmartList#" createmodal="false"/>
 
 	<cf_slatwalllistingdisplay smartlist="#rc.taskSmartList#" 
 	                           recordeditaction="admin:setting.edittask" 

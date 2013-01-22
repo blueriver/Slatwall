@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.attributeSetSmartList" type="any" />
 
-<cf_SlatwallActionBar type="listing" object="#rc.attributeSetSmartList#" createmodal="true" createReturnAction="admin:setting.detailattributeset" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.attributeSetSmartList#" createmodal="true" createReturnAction="admin:setting.detailattributeset" />
 
 <cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#"
 						   recordDetailAction="admin:setting.detailattributeset"

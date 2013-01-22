@@ -42,7 +42,7 @@ Notes:
 <cfset rc.vendorOrderItemSmartList.addOrder("vendorOrder.createdDateTime|DESC") />
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.vendorOrderItemSmartList#" createAction="" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.vendorOrderItemSmartList#" createAction="" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.vendorOrderItemSmartList#"
 							   recorddetailaction="admin:order.detailvendororderitem"

@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-	<cf_SlatwallActionBar type="listing" object="#rc.settingSmartList#" createAction="" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.settingSmartList#" createAction="" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.settingSmartList#"
 							   recordDeleteAction="admin:setting.deleteSetting">

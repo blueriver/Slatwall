@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.subscriptionUsageSmartList#" createAction="" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.subscriptionUsageSmartList#" createAction="" />
 
 <cf_SlatwallListingDisplay smartList="#rc.subscriptionUsageSmartList#"
 						   recordDetailAction="admin:account.detailsubscriptionUsage"

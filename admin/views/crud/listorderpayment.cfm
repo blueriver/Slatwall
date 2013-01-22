@@ -43,7 +43,7 @@ Notes:
 <cfset rc.orderPaymentSmartList.addInFilter("order.orderStatusType.systemCode", "ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceld") />
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.orderPaymentSmartList#" createAction="" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.orderPaymentSmartList#" createAction="" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.orderPaymentSmartList#"
 							   recorddetailaction="admin:order.detailorderpayment">

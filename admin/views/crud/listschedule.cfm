@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 
-	<cf_slatwallactionbar type="listing" object="#rc.scheduleSmartList#" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.scheduleSmartList#" />
 
 	<cf_slatwalllistingdisplay smartlist="#rc.scheduleSmartList#" 
 	                           recordeditaction="admin:setting.editschedule" 

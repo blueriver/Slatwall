@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.permissionGroupSmartList#" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.permissionGroupSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.permissionGroupSmartList#" recordDetailAction="admin:account.detailpermissiongroup" recordEditAction="admin:account.editpermissiongroup">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="permissionGroupName" search="true" />

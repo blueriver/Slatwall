@@ -9,64 +9,68 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	public void function before( required any rc ) {
 		
-		var subsystemName = getFW().getSubsystem(arguments.rc.slatAction);
-		var sectionName = getFW().getSection(arguments.rc.slatAction);
-		var itemName = getFW().getItem(arguments.rc.slatAction);
-		
 		arguments.rc.edit = false;
 		arguments.rc.fw = getFW();
 		
-		arguments.rc.itemEntityName = "";
-		arguments.rc.listAction = arguments.rc.slatAction;
-		arguments.rc.saveAction = arguments.rc.slatAction;
-		arguments.rc.detailAction = arguments.rc.slatAction;
-		arguments.rc.deleteAction = arguments.rc.slatAction;
-		arguments.rc.editAction = arguments.rc.slatAction;
-		arguments.rc.createAction = arguments.rc.slatAction;
-		arguments.rc.cancelAction = arguments.rc.slatAction;
-		arguments.rc.exportAction = arguments.rc.slatAction;
+		// Setup a Private structure in the RC that can't be overridden by the form scope
+		arguments.rc.crudActionDetails = {};
+		arguments.rc.crudActionDetails.thisAction = arguments.rc[ getFW().getConfig()[ "action" ] ];
+		arguments.rc.crudActionDetails.subsystemName = getFW().getSubsystem( arguments.rc.crudActionDetails.thisAction );
+		arguments.rc.crudActionDetails.sectionName = getFW().getSection( arguments.rc.crudActionDetails.thisAction );
+		arguments.rc.crudActionDetails.itemName = getFW().getItem( arguments.rc.crudActionDetails.thisAction );
 		
-		if(left(itemName, 4) == "list") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-4);
-		} else if (left(itemName, 4) == "edit") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-4);
-		} else if (left(itemName, 4) == "save") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-4);
-		} else if (left(itemName, 6) == "detail") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
-		} else if (left(itemName, 6) == "delete") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
-		} else if (left(itemName, 6) == "create") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
-		} else if (left(itemName, 7) == "process") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-7);
-		} else if (left(itemName, 6) == "export") {
-			arguments.rc.itemEntityName = right(itemName, len(itemName)-6);
+		arguments.rc.crudActionDetails.itemEntityName = "";
+		arguments.rc.crudActionDetails.cancelAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.createAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.deleteAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.detailAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.editAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.exportAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.listAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.crudActionDetails.saveAction = arguments.rc.crudActionDetails.thisAction;
+		
+		if(left(arguments.rc.crudActionDetails.itemName, 4) == "list") {
+			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-4);
+		} else if (left(arguments.rc.crudActionDetails.itemName, 4) == "edit") {
+			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-4);
+		} else if (left(arguments.rc.crudActionDetails.itemName, 4) == "save") {
+			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-4);
+		} else if (left(arguments.rc.crudActionDetails.itemName, 6) == "detail") {
+			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-6);
+		} else if (left(arguments.rc.crudActionDetails.itemName, 6) == "delete") {
+			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-6);
+		} else if (left(arguments.rc.crudActionDetails.itemName, 6) == "create") {
+			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-6);
+		} else if (left(arguments.rc.crudActionDetails.itemName, 7) == "process") {
+			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-7);
+		} else if (left(arguments.rc.crudActionDetails.itemName, 6) == "export") {
+			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-6);
 		}
 		
-		if(arguments.rc.itemEntityName != "") {
-			arguments.rc.listAction = "#subsystemName#:#sectionName#.list#arguments.rc.itemEntityName#"; 
-			arguments.rc.saveAction = "#subsystemName#:#sectionName#.save#arguments.rc.itemEntityName#";
-			arguments.rc.detailAction = "#subsystemName#:#sectionName#.detail#arguments.rc.itemEntityName#";		
-			arguments.rc.deleteAction = "#subsystemName#:#sectionName#.delete#arguments.rc.itemEntityName#";
-			arguments.rc.editAction = "#subsystemName#:#sectionName#.edit#arguments.rc.itemEntityName#";
-			arguments.rc.createAction = "#subsystemName#:#sectionName#.create#arguments.rc.itemEntityName#";
-			arguments.rc.cancelAction = "#subsystemName#:#sectionName#.list#arguments.rc.itemEntityName#";
-			arguments.rc.exportAction = "#subsystemName#:#sectionName#.export#arguments.rc.itemEntityName#"; 
+		if(arguments.rc.crudActionDetails.itemEntityName != "") {
+			arguments.rc.crudActionDetails.listAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.list#arguments.rc.crudActionDetails.itemEntityName#"; 
+			arguments.rc.crudActionDetails.saveAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.save#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.detailAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.detail#arguments.rc.crudActionDetails.itemEntityName#";		
+			arguments.rc.crudActionDetails.deleteAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.delete#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.editAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.edit#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.createAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.create#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.exportAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.export#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.exportAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.preprocess#arguments.rc.crudActionDetails.itemEntityName#";
+			arguments.rc.crudActionDetails.exportAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.preprocess#arguments.rc.crudActionDetails.itemEntityName#"; 
 		}
 		
-		arguments.rc.pageTitle = rbKey(replace(arguments.rc.slatAction,':','.','all'));
+		arguments.rc.pageTitle = rbKey(replace(arguments.rc.crudActionDetails.thisAction,':','.','all'));
 		if(right(arguments.rc.pageTitle, 8) eq "_missing") {
-			if(left(listLast(arguments.rc.slatAction, "."), 4) eq "list") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.slatAction, "."), 4) eq "edit") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.slatAction, "."), 6) eq "create") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.slatAction, "."), 6) eq "detail") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.slatAction, "."), 7) eq "process") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.process'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));
+			if(left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 4) eq "list") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 4) eq "edit") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 6) eq "create") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 6) eq "detail") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 7) eq "process") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.process'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
 			}
 		}
 	}
@@ -75,21 +79,21 @@ component output="false" accessors="true" extends="HibachiController" {
 	public void function onMissingMethod(string missingMethodName, struct missingMethodArguments) {
 		if(structKeyExists(arguments, "missingMethodName")) {
 			if( left(arguments.missingMethodName, 4) == "list" ) {
-				genericListMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericListMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 4) == "edit" ) {
-				genericEditMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericEditMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 4) == "save" ) {
-				genericSaveMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericSaveMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "detail" ) {
-				genericDetailMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericDetailMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "delete" ) {
-				genericDeleteMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericDeleteMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "create" ) {
-				genericCreateMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericCreateMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 7) == "process" ) {
-				genericProcessMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericProcessMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "export" ) {
-				genericExportMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericExportMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			}
 		}
 	}
@@ -148,23 +152,23 @@ component output="false" accessors="true" extends="HibachiController" {
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
-		var entity = entityService.invokeMethod( "get#arguments.rc.itemEntityName#", {1=arguments.rc[ entityPrimaryID ]} );
+		var entity = entityService.invokeMethod( "get#arguments.rc.crudActionDetails.itemEntityName#", {1=arguments.rc[ entityPrimaryID ]} );
 		
 		if(isNull(entity)) {
-			getFW().redirect(action=arguments.rc.listAction, querystring="messagekeys=#replace(arguments.rc.slatAction, ':', '.', 'all')#_error");
+			getFW().redirect(action=arguments.rc.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
 		}
 		
 		var deleteOK = entityService.invokeMethod("delete#arguments.entityName#", {1=entity});
 		
 		if (deleteOK) {
 			if(structKeyExists(arguments.rc, "returnAction") && arguments.rc.returnAction != "") {
-				redirectToReturnAction( "messagekeys=#replace(arguments.rc.slatAction, ':', '.', 'all')#_success" );
+				redirectToReturnAction( "messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success" );
 			} else {
-				getFW().redirect(action=arguments.rc.listAction, querystring="messagekeys=#replace(arguments.rc.slatAction, ':', '.', 'all')#_success");	
+				getFW().redirect(action=arguments.rc.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success");	
 			}
 		}
 		
-		getFW().redirect(action=arguments.rc.listAction, querystring="messagekeys=#replace(arguments.rc.slatAction, ':', '.', 'all')#_error");
+		getFW().redirect(action=arguments.rc.listAction, querystring="messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
 	}
 	
 	
@@ -195,9 +199,9 @@ component output="false" accessors="true" extends="HibachiController" {
 		if(!arguments.rc[ arguments.entityName ].hasErrors()) {
 			
 			if(structKeyExists(arguments.rc, "returnAction")) {
-				redirectToReturnAction( "messagekeys=#replace(arguments.rc.slatAction, ':', '.', 'all')#_success&#entityPrimaryID#=#arguments.rc[ arguments.entityName ].getPrimaryIDValue()#" );
+				redirectToReturnAction( "messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success&#entityPrimaryID#=#arguments.rc[ arguments.entityName ].getPrimaryIDValue()#" );
 			} else {
-				getFW().redirect(action=arguments.rc.detailAction, querystring="#entityPrimaryID#=#arguments.rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(arguments.rc.slatAction, ':', '.', 'all')#_success");	
+				getFW().redirect(action=arguments.rc.detailAction, querystring="#entityPrimaryID#=#arguments.rc[ arguments.entityName ].getPrimaryIDValue()#&messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success");	
 			}
 			
 		// If Errors
@@ -205,7 +209,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 			arguments.rc.edit = true;
 			getFW().setView(action=arguments.rc.detailAction);
-			showMessageKey("#replace(arguments.rc.slatAction, ':', '.', 'all')#_error");
+			showMessageKey("#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_error");
 			
 			for( var p in arguments.rc[ arguments.entityName ].getErrors() ) {
 				local.thisErrorArray = arguments.rc[ arguments.entityName ].getErrors()[p];
@@ -215,11 +219,11 @@ component output="false" accessors="true" extends="HibachiController" {
 			}
 			
 			if(arguments.rc[ arguments.entityName ].isNew()) {
-				arguments.rc.slatAction = arguments.rc.createAction;
-				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));	
+				arguments.rc.crudActionDetails.thisAction = arguments.rc.createAction;
+				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));	
 			} else {
-				arguments.rc.slatAction = arguments.rc.editAction;
-				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.itemEntityName#'));	
+				arguments.rc.crudActionDetails.thisAction = arguments.rc.editAction;
+				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));	
 			}
 			
 			arguments.rc.edit = true;
@@ -229,10 +233,12 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	public void function genericPreProcessMethod(required string entityName, required struct rc) {
 		
+		loadEntitiesFromRCIDs( arguments.rc );
+		
+		getFW().setView("#getSubsystem()#:#getSubsystem()#");
 	}
 	
 	public void function genericProcessMethod(required string entityName, required struct rc) {
-		param name="arguments.rc.edit" default="false";
 		param name="arguments.rc.processContext" default="process";
 		param name="arguments.rc.multiProcess" default="false";
 		param name="arguments.rc.processOptions" default="#{}#";
@@ -245,7 +251,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		getFW().setLayout( "admin:process.default" );
 		
 		if(len(arguments.rc.processContext) && arguments.rc.processContext != "process") {
-			arguments.rc.pageTitle = rbKey( "admin.#getFW().getSection(arguments.rc.slatAction)#.process#arguments.entityName#.#arguments.rc.processContext#" );
+			arguments.rc.pageTitle = rbKey( "admin.#getFW().getSection(arguments.rc.crudActionDetails.thisAction)#.process#arguments.entityName#.#arguments.rc.processContext#" );
 		}
 		
 		// If we are actually posting the process form, then this logic gets calls the process method for each record
@@ -318,7 +324,7 @@ component output="false" accessors="true" extends="HibachiController" {
 					arguments.rc.multiProcess = true;
 				}
 			} else {
-				redirectToReturnAction( "messagekeys=#replace(arguments.rc.slatAction, ':', '.', 'all')#_success" );
+				redirectToReturnAction( "messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success" );
 			}
 			
 		
@@ -369,6 +375,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 	}
 	
+	/*
 	private void function redirectToReturnAction(string additionalQueryString="") {
 		var raArray = listToArray(request.context.returnAction, chr(35));
 		var qs = buildReturnActionQueryString( arguments.additionalQueryString );
@@ -391,4 +398,5 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 		return queryString;
 	}
+	*/
 }

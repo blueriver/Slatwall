@@ -40,7 +40,7 @@ Notes:
 <cfset rc.integrationSmartList.addFilter('installedFlag', 1) />
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.integrationSmartList#" createAction="" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.integrationSmartList#" createAction="" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.integrationSmartList#" recordDetailAction="admin:integration.detailintegration" recordEditAction="admin:integration.editintegration">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="integrationName" search="true" />

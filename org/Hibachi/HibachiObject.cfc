@@ -179,7 +179,7 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint gets a bean out of whatever the fw1 bean factory is
 	public any function getBean(required string beanName) {
-		return application.slatwallfw1.factory.getBean( arguments.beanName );
+		return application.slatwall.factory.getBean( arguments.beanName );
 	}
 	
 	// @hint returns an application scope cached version of the service
@@ -240,7 +240,7 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint  helper function for returning the slatwallScope from the request scope
 	public any function getHibachiScope() {
-		var test = getApplicationValue("hibachiApplicationKey");
+		var test = getApplicationValue("applicationKey");
 		
 		return request[ "slatwallScope" ];
 	}

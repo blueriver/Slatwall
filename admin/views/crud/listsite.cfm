@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.siteSmartList" type="any" />
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.siteSmartList#" createmodal="true" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.siteSmartList#" createmodal="true" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.siteSmartList#"
 							   recordEditAction="admin:setting.editSite"

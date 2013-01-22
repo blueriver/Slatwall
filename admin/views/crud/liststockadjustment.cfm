@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.stockAdjustmentSmartList" type="any"/>
 
 <cfoutput>
-	<cf_slatwallActionBar type="listing" object="#rc.stockAdjustmentSmartList#" createAction="admin:warehouse.createlocationtransferadjustment,admin:warehouse.createmanualinadjustment,admin:warehouse.createmanualoutadjustment" createModal="true" createReturnAction="admin:warehouse.detailStockAdjustment" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.stockAdjustmentSmartList#" createAction="admin:warehouse.createlocationtransferadjustment,admin:warehouse.createmanualinadjustment,admin:warehouse.createmanualoutadjustment" createModal="true" createReturnAction="admin:warehouse.detailStockAdjustment" />
 
 	<cf_slatwalllistingdisplay smartlist="#rc.stockAdjustmentSmartList#" 
 	                          recordeditaction="admin:warehouse.editstockadjustment"

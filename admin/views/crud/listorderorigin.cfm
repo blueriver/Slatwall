@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.orderOriginSmartList#" createModal="true" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.orderOriginSmartList#" createModal="true" />
 
 <cf_SlatwallListingDisplay smartList="#rc.orderOriginSmartList#"
 		recordEditAction="admin:setting.editorderorigin"

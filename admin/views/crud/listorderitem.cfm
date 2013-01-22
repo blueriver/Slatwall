@@ -52,7 +52,7 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.orderItemSmartList#" createAction="" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.orderItemSmartList#" createAction="" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.orderItemSmartList#"
 							   recorddetailaction="admin:order.detailorderitem"

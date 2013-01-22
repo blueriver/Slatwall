@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.fulfillmentMethodSmartList" type="any" />
 
-<cf_SlatwallActionBar type="listing" object="#rc.fulfillmentMethodSmartList#" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.fulfillmentMethodSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethodSmartList#"
 		recordEditAction="admin:setting.editfulfillmentmethod"

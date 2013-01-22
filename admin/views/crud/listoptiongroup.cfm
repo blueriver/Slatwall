@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-	<cf_SlatwallActionBar type="listing" object="#rc.optionGroupSmartList#" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.optionGroupSmartList#" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.optionGroupSmartList#" 
 							   recordDetailAction="admin:product.detailoptiongroup"

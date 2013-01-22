@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.addresszoneSmartList" type="any" />
 
-<cf_SlatwallActionBar type="listing" object="#rc.addresszoneSmartList#" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.addresszoneSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.addresszoneSmartList#"
 						   recordDetailAction="admin:setting.detailaddresszone"

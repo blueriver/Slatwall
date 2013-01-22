@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.productSmartList" type="any" />
 
 <cfoutput>
-	<cf_SlatwallActionBar type="listing" object="#rc.productSmartList#" createAction="admin:product.createmerchandiseproduct,admin:product.createsubscriptionproduct,admin:product.createcontentaccessproduct" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.productSmartList#" createAction="admin:product.createmerchandiseproduct,admin:product.createsubscriptionproduct,admin:product.createcontentaccessproduct" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.productSmartList#"
 			recordEditAction="admin:product.editproduct"
