@@ -38,29 +38,6 @@ Notes:
 */
 component extends="org.Hibachi.Hibachi" output="false" {
 
-	/*
-	include "config/configApplication.cfm";
-	if( fileExists(expandPath("config/custom/configApplication.cfm")) ) {
-		include "config/custom/configApplication.cfm";
-	}
-	include "config/configFramework.cfm";
-	if( fileExists(expandPath("config/custom/configFramework.cfm")) ) {
-		include "config/custom/configFramework.cfm";
-	}
-	include "config/configMappings.cfm";
-	if( fileExists(expandPath("config/custom/configMappings.cfm")) ) {
-		include "config/custom/configMappings.cfm";
-	}
-	include "config/configORM.cfm";
-	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
-		include "config/custom/configORM.cfm";
-	}
-	include "config/configCustomTags.cfm";
-	if( fileExists(expandPath("config/custom/configCustomTags.cfm")) ) {
-		include "config/custom/configCustomTags.cfm";
-	}
-	*/
-	
 	// ===================================== HIBACHI HOOKS
 	
 	// @hint this method always fires one time, even if the request is coming from an outside application.
