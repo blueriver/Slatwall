@@ -53,9 +53,9 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" 
-							  cancelAction="admin:pricing.detailpromotionperiod"
+							  cancelAction="admin:crud.detailpromotionperiod"
 							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" 
-							  backAction="admin:pricing.detailpromotionperiod" 
+							  backAction="admin:crud.detailpromotionperiod" 
 							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>

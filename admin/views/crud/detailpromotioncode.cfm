@@ -41,13 +41,13 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm object="#rc.promotioncode#" saveAction="admin:pricing.savepromotioncode" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:pricing.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+	<cf_SlatwallDetailForm object="#rc.promotioncode#" saveAction="admin:crud.savepromotioncode" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:crud.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
 		
 		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
 		
-		<input type="hidden" name="returnAction" value="admin:pricing.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes" />
+		<input type="hidden" name="returnAction" value="admin:crud.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes" />
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>
 				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="promotioncode" edit="#rc.edit#">

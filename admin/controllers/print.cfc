@@ -40,9 +40,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	property name="orderService";
 
-	this.publicMethods='';
-	this.secureMethods='';
-	
 	public void function default(required struct rc) {
 		param name="rc.returnAction" default="admin:main.default";
 		param name="rc.returnQueryString" default="";
@@ -71,7 +68,5 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		getFW().setView("frontend:print.packingslip");
 	}
-	
-	
 
 }

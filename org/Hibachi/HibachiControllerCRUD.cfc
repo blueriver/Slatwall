@@ -13,7 +13,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Setup a Private structure in the RC that can't be overridden by the form scope
 		arguments.rc.crudActionDetails = {};
-		arguments.rc.crudActionDetails.thisAction = arguments.rc[ getFW().getConfig()[ "action" ] ];
+		arguments.rc.crudActionDetails.thisAction = arguments.rc[ getFW().getAction() ];
 		arguments.rc.crudActionDetails.subsystemName = getFW().getSubsystem( arguments.rc.crudActionDetails.thisAction );
 		arguments.rc.crudActionDetails.sectionName = getFW().getSection( arguments.rc.crudActionDetails.thisAction );
 		arguments.rc.crudActionDetails.itemName = getFW().getItem( arguments.rc.crudActionDetails.thisAction );
@@ -411,11 +411,16 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Next look for a sRenderCrudAction in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "sRenderCrudAction")) {
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.sRenderCrudAction#" );
+			arguments.rc[ getFW().getAction() ] = arguments.rc.sRenderCrudAction;
+			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.rc.sRenderCrudAction, {rc=arguments.rc});
 		
 		// Lastly if nothing was defined then we just do a redirect to the defaultAction
 		} else {
-			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
+			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.defaultAction#" );
+			arguments.rc[ getFW().getAction() ] = arguments.defaultAction;
+			this.invokeMethod("before", {rc=arguments.rc});
+			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});
 			
 		}
 	}
@@ -434,12 +439,16 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Next look for a fRenderCrudAction in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "fRenderCrudAction")) {
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.fRenderCrudAction#" );
+			arguments.rc[ getFW().getAction() ] = arguments.rc.fRenderCrudAction;
+			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.rc.fRenderCrudAction, {rc=arguments.rc});
 		
 		// Lastly if nothing was defined then we just do a redirect to the defaultAction
 		} else {
-			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.defaultAction#" );
-			this.invokeMethod(arguments.rc.defaultAction, {rc=arguments.rc});
+			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.defaultAction#" );
+			arguments.rc[ getFW().getAction() ] = arguments.defaultAction;
+			this.invokeMethod("before", {rc=arguments.rc});
+			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});
 			
 		}
 	}

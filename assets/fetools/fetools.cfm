@@ -23,11 +23,11 @@
 		<cfif local.permissionService.secureDisplay('admin:crud.listproductreview')>
 			<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:crud.listproductreview">#request.slatwallScope.rbKey('entity.productreview_plural')#</a></li>	
 		</cfif> 
-		<cfif local.permissionService.secureDisplay('admin:pricing.listpromotion')>
-			<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:pricing.listpromotion">#request.slatwallScope.rbKey('entity.promotion_plural')#</a></li>
+		<cfif local.permissionService.secureDisplay('admin:crud.listpromotion')>
+			<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:crud.listpromotion">#request.slatwallScope.rbKey('entity.promotion_plural')#</a></li>
 		</cfif>
-		<cfif local.permissionService.secureDisplay('admin:pricing.listpricegroup')>
-			<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:pricing.listpricegroup">#request.slatwallScope.rbKey('entity.pricegroup_plural')#</a></li>
+		<cfif local.permissionService.secureDisplay('admin:crud.listpricegroup')>
+			<li><a href="#request.slatwallScope.getSlatwallRootURL()#/?slatAction=admin:crud.listpricegroup">#request.slatwallScope.rbKey('entity.pricegroup_plural')#</a></li>
 		</cfif>
 	</cfoutput>
 </cfsavecontent>

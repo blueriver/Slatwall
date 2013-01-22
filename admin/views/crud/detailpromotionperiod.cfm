@@ -48,14 +48,14 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.promotionperiod#"
-						   saveAction="admin:pricing.savepromotionperiod"
+						   saveAction="admin:crud.savepromotionperiod"
 						   saveActionQueryString="promotionID=#rc.promotion.getPromotionID()#"
 						   edit="#rc.edit#">
 						   	   
 		<cf_SlatwallActionBar type="detail" object="#rc.promotionPeriod#" edit="#rc.edit#"
-							  backAction="admin:pricing.detailpromotion"
+							  backAction="admin:crud.detailpromotion"
 							  backQueryString="promotionID=#rc.promotion.getPromotionID()#"
-							  cancelAction="admin:pricing.detailpromotion"
+							  cancelAction="admin:crud.detailpromotion"
 							  cancelQueryString="promotionID=#rc.promotion.getPromotionID()#"/>
 							  	  
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />

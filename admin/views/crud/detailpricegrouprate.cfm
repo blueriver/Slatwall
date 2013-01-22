@@ -43,9 +43,9 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.pricegrouprate#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.pricegrouprate#" edit="#rc.edit#" 
-							  cancelAction="admin:pricing.detailpricegroup"
+							  cancelAction="admin:crud.detailpricegroup"
 							  cancelQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" 
-							  backAction="admin:pricing.detailpricegroup" 
+							  backAction="admin:crud.detailpricegroup" 
 							  backQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
 		<cf_SlatwallDetailHeader>
 			

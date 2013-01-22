@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:pricing.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" modal="true" />
+			<cf_SlatwallActionCaller action="admin:crud.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" modal="true" />
 		</cf_SlatwallActionBar>
 		
 		<cf_SlatwallDetailHeader>

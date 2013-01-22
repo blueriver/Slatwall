@@ -41,10 +41,10 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.promotion.getPromotionPeriodsSmartList()#"
-							   recordEditAction="admin:pricing.editPromotionperiod"
-							   recorddetailaction="admin:pricing.detailpromotionperiod"
-							   recordDeleteAction="admin:pricing.deletepromotionperiod"
-							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
+							   recordEditAction="admin:crud.editPromotionperiod"
+							   recorddetailaction="admin:crud.detailpromotionperiod"
+							   recordDeleteAction="admin:crud.deletepromotionperiod"
+							   recordDeleteQueryString="returnAction=admin:crud.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
 		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
 		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
 		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" />
@@ -52,5 +52,5 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:pricing.createpromotionperiod" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" />
+	<cf_SlatwallActionCaller action="admin:crud.createpromotionperiod" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" />
 </cfoutput>

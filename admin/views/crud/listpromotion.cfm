@@ -45,8 +45,8 @@ Notes:
 <cfset rc.promotionSmartList.addOrder("promotionName|ASC") />
 
 <cf_HibachiCrudActionBar smartList="#rc.promotionSmartList#"
-						   recorddetailaction="admin:pricing.detailpromotion"
-						   recordEditAction="admin:pricing.editpromotion">
+						   recorddetailaction="admin:crud.detailpromotion"
+						   recordEditAction="admin:crud.editpromotion">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" range="true" />

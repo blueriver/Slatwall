@@ -52,9 +52,9 @@ Notes:
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.promotionQualifier#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.promotionQualifier#" edit="#rc.edit#" 
-							  cancelAction="admin:pricing.detailpromotionperiod"
+							  cancelAction="admin:crud.detailpromotionperiod"
 							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" 
-							  backAction="admin:pricing.detailpromotionperiod" 
+							  backAction="admin:crud.detailpromotionperiod" 
 							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" />
 		
 		<input type="hidden" name="qualifierType" value="#rc.qualifierType#" />
@@ -87,7 +87,7 @@ Notes:
 				<cf_SlatwallTab view="admin:crud/promotionqualifiertabs/skus" />
 				<cf_SlatwallTab view="admin:crud/promotionqualifiertabs/brands" />
 				<cfif rc.qualifierType eq "merchandise">
-					<cf_SlatwallTab view="admin:pricing/promotionqualifiertabs/options" />
+					<cf_SlatwallTab view="admin:crud/promotionqualifiertabs/options" />
 				</cfif>
 			<cfelseif rc.qualifierType eq "fulfillment">
 				<cf_SlatwallTab view="admin:crud/promotionqualifiertabs/fulfillmentMethods" />

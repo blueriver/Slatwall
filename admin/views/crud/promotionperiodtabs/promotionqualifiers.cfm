@@ -42,21 +42,21 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.promotionperiod.getPromotionQualifiersSmartList()#"
-							   recordEditAction="admin:pricing.editpromotionqualifier"
+							   recordEditAction="admin:crud.editpromotionqualifier"
 							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
-							   recorddetailaction="admin:pricing.detailpromotionqualifier"
-							   recordDeleteAction="admin:pricing.deletepromotionqualifier"
-							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
+							   recorddetailaction="admin:crud.detailpromotionqualifier"
+							   recordDeleteAction="admin:crud.deletepromotionqualifier"
+							   recordDeleteQueryString="returnAction=admin:crud.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="qualifierType" filter="true" />
 	</cf_SlatwallListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>
 		<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" buttonClass="btn-inverse">
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiermerchandise')#" action="admin:pricing.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=merchandise" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiersubscription')#" action="admin:pricing.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=subscription" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiercontentaccess')#" action="admin:pricing.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=contentAccess" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierfulfillment')#" action="admin:pricing.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=fulfillment" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierorder')#" action="admin:pricing.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=order" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiermerchandise')#" action="admin:crud.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=merchandise" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiersubscription')#" action="admin:crud.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=subscription" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiercontentaccess')#" action="admin:crud.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=contentAccess" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierfulfillment')#" action="admin:crud.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=fulfillment" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierorder')#" action="admin:crud.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=order" modal="true" />
 		</cf_SlatwallActionCallerDropdown>
 	</cfif>
 	

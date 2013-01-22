@@ -42,11 +42,11 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.promotionperiod.getPromotionRewardsSmartList()#"
-							   recordEditAction="admin:pricing.editpromotionreward"
+							   recordEditAction="admin:crud.editpromotionreward"
 							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
-							   recorddetailaction="admin:pricing.detailpromotionreward"
-							   recordDeleteAction="admin:pricing.deletepromotionreward"
-							   recordDeleteQueryString="returnAction=admin:pricing.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
+							   recorddetailaction="admin:crud.detailpromotionreward"
+							   recordDeleteAction="admin:crud.deletepromotionreward"
+							   recordDeleteQueryString="returnAction=admin:crud.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
 		<cf_SlatwallListingColumn propertyIdentifier="rewardType" tdclass="primary" filter="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="amountType" filter="true" />
 		<cf_SlatwallListingColumn propertyIdentifier="amount" range="true" />
@@ -57,11 +57,11 @@ Notes:
 	
 	<cfif !rc.promotionperiod.isExpired()>
 		<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" buttonClass="btn-inverse">
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardmerchandise')#" action="admin:pricing.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=merchandise" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardsubscription')#" action="admin:pricing.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=subscription" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardcontentaccess')#" action="admin:pricing.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=contentAccess" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardfulfillment')#" action="admin:pricing.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=fulfillment" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardorder')#" action="admin:pricing.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=order" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardmerchandise')#" action="admin:crud.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=merchandise" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardsubscription')#" action="admin:crud.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=subscription" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardcontentaccess')#" action="admin:crud.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=contentAccess" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardfulfillment')#" action="admin:crud.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=fulfillment" modal="true" />
+			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionrewardorder')#" action="admin:crud.createpromotionreward" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&rewardType=order" modal="true" />
 		</cf_SlatwallActionCallerDropdown>
 	</cfif>
 

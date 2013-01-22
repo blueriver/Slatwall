@@ -42,7 +42,7 @@ Notes:
 <cfparam name="rc.vendorOrderSmartList" type="any" />
 
 <cfoutput>
-	<cf_SlatwallMessageDisplay />
+	<cf_HibachiMessageDisplay />
 	
 	<div class="row-fluid">
 		<div class="span6">
