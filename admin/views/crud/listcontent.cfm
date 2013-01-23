@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.contentSmartList#" createAction="" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.contentSmartList#" showCreate="false" />
 
 <cf_SlatwallListingDisplay smartList="#rc.contentSmartList#"
 						   recordDetailAction="admin:setting.detailcontent"

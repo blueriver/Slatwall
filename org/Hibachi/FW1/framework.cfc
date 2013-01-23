@@ -971,7 +971,6 @@ component {
 	 * - getBean(name) - returns the named bean
 	 */
 	public void function setBeanFactory( any beanFactory ) {
-
 		application[ variables.framework.applicationKey ].factory = beanFactory;
 
 	}

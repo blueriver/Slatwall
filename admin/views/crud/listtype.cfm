@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-	<cf_HibachiCrudActionBar type="listing" object="#rc.typeSmartList#" createAction="" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.typeSmartList#" showCreate="false" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.typeSmartList#" recordEditAction="admin:setting.edittype" recordEditQueryString="returnAction=admin:setting.listtype" parentPropertyName="parentType" childPropertyName="childTypes" recordEditModal=true>
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="type" />

@@ -1,4 +1,4 @@
-<cfcomponent output="false" extends="Hibachi.HibachiObject">
+<cfcomponent output="false" extends="Slatwall.model.dao.BaseDAO">
 	
 	<cffunction name="updateProducts">
 		

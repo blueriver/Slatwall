@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.measurementUnitSmartList#" createAction="" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.measurementUnitSmartList#" showCreate="false" />
 
 <cf_SlatwallListingDisplay smartList="#rc.measurementUnitSmartList#" recordDetailAction="admin:setting.detailmeasurementunit" recordDetailModal="true">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="unitName" search="true" />

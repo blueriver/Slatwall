@@ -701,7 +701,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 	
 	public string function getBaseEntityPrimaryAliase() {
-		return "#variables.entities[ getBaseEntityName() ].entityAlias#.#application.slatwallfw1.factory.getBean('hibachiService').getPrimaryIDPropertyNameByEntityName(getBaseEntityName())#";
+		return "#variables.entities[ getBaseEntityName() ].entityAlias#.#application.slatwall.factory.getBean('hibachiService').getPrimaryIDPropertyNameByEntityName(getBaseEntityName())#";
 	}
 	
 	public string function getHQLOrder(boolean supressOrderBy=false) {

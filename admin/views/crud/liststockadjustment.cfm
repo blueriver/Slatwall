@@ -39,8 +39,12 @@ Notes:
 <cfparam name="rc.stockAdjustmentSmartList" type="any"/>
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.stockAdjustmentSmartList#" createAction="admin:warehouse.createlocationtransferadjustment,admin:warehouse.createmanualinadjustment,admin:warehouse.createmanualoutadjustment" createModal="true" createReturnAction="admin:warehouse.detailStockAdjustment" />
-
+	<cf_HibachiCrudActionBar type="listing" object="#rc.stockAdjustmentSmartList#">
+		<cf_HibachiActionCaller action="admin:crud.createstockadjustment" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.locationtransfer')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satLocationTransfer" createModal="true" />
+		<cf_HibachiActionCaller action="admin:crud.createstockadjustment" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.manualin')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satManualIn" createModal="true" />
+		<cf_HibachiActionCaller action="admin:crud.createstockadjustment" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.manualout')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satManualOut" createModal="true" />
+	</cf_HibachiCrudActionBar>
+	
 	<cf_slatwalllistingdisplay smartlist="#rc.stockAdjustmentSmartList#" 
 	                          recordeditaction="admin:warehouse.editstockadjustment"
 							  recorddetailaction="admin:warehouse.detailstockadjustment">

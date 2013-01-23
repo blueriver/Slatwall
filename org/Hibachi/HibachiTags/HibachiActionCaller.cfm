@@ -38,9 +38,9 @@ Notes:
 --->
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.action" type="string" />
+	<cfparam name="attributes.text" type="string" default="">
 	<cfparam name="attributes.type" type="string" default="link">
 	<cfparam name="attributes.queryString" type="string" default="" />
-	<cfparam name="attributes.text" type="string" default="">
 	<cfparam name="attributes.title" type="string" default="">
 	<cfparam name="attributes.class" type="string" default="">
 	<cfparam name="attributes.icon" type="string" default="">

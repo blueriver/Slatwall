@@ -67,7 +67,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.product = getProductService().newProduct();
 		rc.baseProductType = "merchandise";
 		
-		rc.pageTitle = replace(rbKey('admin.define.create'), '${itemEntityName}', rbKey('entity.product')); 
+		rc.pageTitle = replace(rc.$.slatwall.rbKey('admin.define.create'), '${itemEntityName}', rc.$.slatwall.rbKey('entity.product')); 
 		rc.listAction = "admin:crud.listproduct"; 
 		rc.saveAction = "admin:crud.saveproduct";
 		rc.cancelAction = "admin:crud.listproduct";
@@ -80,7 +80,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.product = getProductService().newProduct();
 		rc.baseProductType = "subscription";
 		
-		rc.pageTitle = replace(rbKey('admin.define.create'), '${itemEntityName}', rbKey('entity.product')); 
+		rc.pageTitle = replace(rc.$.slatwall.rbKey('admin.define.create'), '${itemEntityName}', rc.$.slatwall.rbKey('entity.product')); 
 		rc.listAction = "admin:crud.listproduct"; 
 		rc.saveAction = "admin:crud.saveproduct";
 		rc.cancelAction = "admin:crud.listproduct";
@@ -93,7 +93,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.product = getProductService().newProduct();
 		rc.baseProductType = "contentAccess";
 				
-		rc.pageTitle = replace(rbKey('admin.define.create'), '${itemEntityName}', rbKey('entity.product')); 
+		rc.pageTitle = replace(rc.$.slatwall.rbKey('admin.define.create'), '${itemEntityName}', rc.$.slatwall.rbKey('entity.product')); 
 		rc.listAction = "admin:crud.listproduct"; 
 		rc.saveAction = "admin:crud.saveproduct";
 		rc.cancelAction = "admin:crud.listproduct";

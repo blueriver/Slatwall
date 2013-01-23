@@ -1,10 +1,11 @@
 component output="false" accessors="true" extends="HibachiTransient" {
 
 	property name="ormHasErrors";
+	property name="rbLocale";
 	
-
 	public any function init() {
-		setORMHasErrors(false);
+		setORMHasErrors( false );
+		setRBLocale( "en_us" );
 		
 		return super.init();
 	}
@@ -37,5 +38,11 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		
 		arrayAppend(request.context.messages, arguments);
 	}
+	
+	// @hint  helper function to return the RB Key from RB Factory in any component
+	public string function rbKey(required string key) {
+		return getService("hibachiRBService").getRBKey(arguments.key, getRBLocale());
+	}
+	
 	
 }

@@ -48,7 +48,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public struct function getResourceBundle(required string locale="en_us") {
 		if(!structKeyExists(variables.resourceBundles, arguments.locale)) {
-			var javaRB = new Slatwall.org.javaRB.javaRB();
+			var javaRB = new JavaRB.JavaRB();
 			
 			variables.resourceBundles[ arguments.locale ] = {};
 			

@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.paymentMethodSmartList" type="any" />
 
-<cf_HibachiCrudActionBar type="listing" object="#rc.paymentMethodSmartList#" createAction="">
+<cf_HibachiCrudActionBar type="listing" object="#rc.paymentMethodSmartList#" showCreate="false">
 	<cf_SlatwallActionCaller action="admin:setting.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.cash')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=cash" />
 	<cf_SlatwallActionCaller action="admin:setting.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.check')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=check" />
 	<cf_SlatwallActionCaller action="admin:setting.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.creditCard')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=creditCard" />

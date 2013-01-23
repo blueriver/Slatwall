@@ -46,19 +46,18 @@
 
 								<cfif len(attributes.createAction) or len(thistag.generatedcontent)>
 									<div class="btn-group">
-										<cfif listLen(attributes.createAction) eq 1>
+										<!--- If there is something inside of the actionBar, then render a dropdown --->
+										<cfif len(trim(thistag.generatedcontent))>
+											<cf_HibachiActionCallerDropdown title="#request.slatwallScope.rbKey('define.add')#" icon="plus" dropdownClass="pull-right">
+												#thistag.generatedcontent#
+											</cf_HibachiActionCallerDropdown>
+										<!--- Otherwise as long as there is a len on the createAction, and showCreate is set to true then we just render a singel button and not dropdown --->
+										<cfelseif len(attributes.createAction) and attributes.showCreate>
 											<cfif attributes.createModal>
 												<cf_HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white" modal="true">
 											<cfelse>
 												<cf_HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white">
 											</cfif>
-										<cfelse>
-											<cf_HibachiActionCallerDropdown title="#request.slatwallScope.rbKey('define.add')#" icon="plus" dropdownClass="pull-right">
-												<cfloop list="#attributes.createAction#" index="action">
-													<cf_HibachiActionCaller action="#action#" type="list" queryString="#attributes.createQueryString#" modal="#attributes.createModal#" /> 
-												</cfloop>
-												#thistag.generatedcontent#
-											</cf_HibachiActionCallerDropdown>
 										</cfif>
 									</div>
 								</cfif>

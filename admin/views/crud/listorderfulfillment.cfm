@@ -43,7 +43,7 @@ Notes:
 	<cfset rc.orderFulfillmentSmartList.addOrder('order.orderOpenDateTime|desc') />
 </cfsilent>
 
-<cf_HibachiCrudActionBar type="listing" object="#rc.orderFulfillmentSmartList#" createAction="" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.orderFulfillmentSmartList#" showCreate="false" />
 
 <cf_SlatwallListingDisplay smartList="#rc.orderFulfillmentSmartList#"
 		recorddetailaction="admin:crud.detailorderfulfillment"

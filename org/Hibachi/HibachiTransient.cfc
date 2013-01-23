@@ -716,6 +716,22 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		return getApplicationValue("classPropertyStructCache_#getClassFullname()#");
 	}
 	
+	// @help private method only used by populate
+	private void function _setProperty( required any name, any value ) {
+		
+		// If a value was passed in, set it
+		if( structKeyExists(arguments, 'value') ) {
+			// Defined the setter method
+			var theMethod = this["set" & arguments.name];
+			
+			// Call Setter
+			theMethod(arguments.value);
+		} else {
+			// Remove the key from variables, represents setting as NULL for persistent entities
+			structDelete(variables, arguments.name);
+		}
+	}
+	
 	// ====================  END: APPLICATION CACHED META VALUES ====================================
 	// ==================== START: INTERNALLY CACHED META VALUES ====================================
 	

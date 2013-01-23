@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.orderSmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.orderSmartList#" createaction="admin:crud.createorder" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.orderSmartList#" />
 		
 	<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
 								recordDetailAction="admin:crud.detailorder">

@@ -41,7 +41,11 @@ Notes:
 <cfset rc.productTypeSmartList.addOrder("productTypeName|ASC") />
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.productTypeSmartList#" showrecordsperpage="false" createAction="admin:crud.createmerchandiseproducttype,admin:crud.createsubscriptionproducttype,admin:crud.createcontentaccessproducttype" />
+	<cf_HibachiCrudActionBar type="listing" object="#rc.productTypeSmartList#">
+		<cf_HibachiActionCaller action="admin:crud.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.contentAccess')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=contentAccess" />
+		<cf_HibachiActionCaller action="admin:crud.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.merchandise')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=merchandise" />
+		<cf_HibachiActionCaller action="admin:crud.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.subscription')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=subscription" />
+	</cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallListingDisplay smartList="#rc.productTypeSmartList#" 
 								recordEditAction="admin:crud.editproducttype"

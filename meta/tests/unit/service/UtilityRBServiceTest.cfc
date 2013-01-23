@@ -41,7 +41,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	public void function setUp() {
 		super.setup();
 		
-		variables.service = request.slatwallScope.getService("utilityRBService");
+		variables.service = request.slatwallScope.getService("hibachiRBService");
 	}
 	
 	// getRBKey()
