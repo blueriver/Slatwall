@@ -37,17 +37,12 @@ Notes:
 
 --->
 <cfparam name="rc.orderItem" type="any" />
+<cfparam name="rc.order" type="any" default="#rc.orderItem.getOrder()#" />
 <cfparam name="rc.edit" default="false" />
-
-<cfif isNull(rc.order)>
-	<cfset rc.order = rc.orderItem.getOrder() />
-</cfif>
 
 <cfoutput>
 	<cf_SlatwallDetailForm object="#rc.orderItem#" saveAction="admin:order.saveOrderItem" edit="#rc.edit#" >
 		<cf_SlatwallActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:order.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
-		
-		<input type="hidden" name="orderItemID" value="#rc.orderItem.getOrderItemID()#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divclass="span4">

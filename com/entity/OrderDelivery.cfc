@@ -48,6 +48,7 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
+	property name="paymentTransaction" cfc="PaymentTransaction" fieldtype="many-to-one" fkcolumn="paymentTransactionID";
 	
 	// Related Object Properties (One-To-Many)
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all-delete-orphan" inverse="true";
