@@ -224,7 +224,6 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// SUCCESS
 		if (deleteOK) {
-			writeLog(file="Slatwall", text="Success");
 			// Show the Generica Action Success Message
 			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.delete_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ), "success");
 			
@@ -233,7 +232,6 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 		// FAILURE
 		} else {
-			writeLog(file="Slatwall", text="Failure");
 			// Add the Generic Action Failure Message
 			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.error_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ), "error");
 			
@@ -330,7 +328,7 @@ component output="false" accessors="true" extends="HibachiController" {
 					structAppend(arguments.rc.processRecords[i], arguments.rc.processOptions, false);
 					var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc.processRecords[i][ entityPrimaryID ], 2=true} );
 					
-					logSlatwall("Process Called: Enity - #arguments.entityName#, EntityID - #arguments.rc.processRecords[i][ entityPrimaryID ]#, processContext - #arguments.rc.processContext# ");
+					logHibachi("Process Called: Enity - #arguments.entityName#, EntityID - #arguments.rc.processRecords[i][ entityPrimaryID ]#, processContext - #arguments.rc.processContext# ");
 					
 					entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=arguments.rc.processRecords[i], 3=arguments.rc.processContext} );
 					
@@ -468,17 +466,14 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// First look for a sRedirectURL in the rc, and do a redirectExact on that
 		if(structKeyExists(arguments.rc, "sRedirectURL")) {
-			writeLog(file="Slatwall", text="Success A");
 			getFW().redirectExact( url=arguments.rc.sRedirectURL );
 		
 		// Next look for a sRedirectAction in the rc, and do a redirect on that
 		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
-			writeLog(file="Slatwall", text="Success B");
 			getFW().redirect( action=arguments.rc.sRedirectAction, preserve="messages", queryString=arguments.rc.sRedirectQS );
 			
 		// Next look for a sRenderCrudAction in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "sRenderCrudAction")) {
-			writeLog(file="Slatwall", text="Success C");
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.sRenderCrudAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.rc.sRenderCrudAction;
 			this.invokeMethod("before", {rc=arguments.rc});
@@ -486,14 +481,12 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// If nothing was defined then we just do a redirect to the defaultAction, if it is just a single value then render otherwise do a redirect
 		} else if (listLen(arguments.defaultAction, ".") eq 1) {
-			writeLog(file="Slatwall", text="Success D");
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.defaultAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.defaultAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});
 			
 		} else {
-			writeLog(file="Slatwall", text="Success E");
 			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.sRedirectQS );
 			
 		}
@@ -504,17 +497,14 @@ component output="false" accessors="true" extends="HibachiController" {
 		 
 		// First look for a fRedirectURL in the rc, and do a redirectExact on that
 		if(structKeyExists(arguments.rc, "fRedirectURL")) {
-			writeLog(file="Slatwall", text="Failure A");
 			getFW().redirectExact( url=arguments.rc.rRedirectURL );
 		
 		// Next look for a fRedirectAction in the rc, and do a redirect on that
 		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
-			writeLog(file="Slatwall", text="Failure B");
 			getFW().redirect( action=arguments.rc.fRedirectAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
 			
 		// Next look for a fRenderCrudAction in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "fRenderCrudAction")) {
-			writeLog(file="Slatwall", text="Failure C");
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.fRenderCrudAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.rc.fRenderCrudAction;
 			this.invokeMethod("before", {rc=arguments.rc});
@@ -522,14 +512,12 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Lastly if nothing was defined then we just do a redirect to the defaultAction
 		} else if (listLen(arguments.defaultAction, ".") eq 1) {
-			writeLog(file="Slatwall", text="Failure D");
 			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.defaultAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.defaultAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});
 			
 		} else {
-			writeLog(file="Slatwall", text="Failure E");
 			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
 			
 		}

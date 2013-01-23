@@ -40,7 +40,7 @@ component extends="BaseService" accessors="true" output="false" {
 
 	property name="accountService" type="any";
 	property name="orderService" type="any";
-	property name="utilityTagService" type="any";
+	property name="hibachiTagService" type="any";
 	
 	public void function setValue(required string property, required any value) {
 		if(!arguments.property == "sessionID") {
@@ -130,7 +130,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// Save session ID in the session Scope & cookie scope for next request
 		session.slatwall.sessionID = currentSession.getSessionID();
-		getUtilityTagService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
+		getHibachiTagService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
 	}
 	
 	public string function loginAccount(required any account, required any accountAuthentication) {

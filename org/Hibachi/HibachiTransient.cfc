@@ -489,7 +489,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			return "";
 		// This is a simple value, so now lets try to actually format the value
 		} else if (isSimpleValue(arguments.value)) {
-			return formatValue(value=arguments.value, formatType=arguments.formatType);
+			return getService("hibachiUtilityService").formatValue(value=arguments.value, formatType=arguments.formatType);
 		}
 		
 		// If the value has not yet been returned, then it is because the value was complex

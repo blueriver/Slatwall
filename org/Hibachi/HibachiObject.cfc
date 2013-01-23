@@ -35,9 +35,7 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint  helper function for returning the slatwallScope from the request scope
 	public any function getHibachiScope() {
-		var test = getApplicationValue("applicationKey");
-		writeLog(file="Slatwall", text="TEST: #test#");
-		return request[ "slatwallScope" ];
+		return request[ "#getApplicationValue("applicationKey")#Scope" ];
 	}
 	
 	// ==========================  END: FRAMEWORK ACCESS ============================================
@@ -167,7 +165,4 @@ component accessors="true" output="false" persistent="false" {
 	}
 	
 	// ========================= START: APPLICATION VAUES ===========================================
-	
-	
-	
 }

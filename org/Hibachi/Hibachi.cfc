@@ -157,7 +157,7 @@ component extends="FW1.framework" {
 		// Setup structured Data if a request context exists meaning that a full action was called
 		getBeanFactory().getBean("_FormUtilities").buildFormCollections(request.context);
 		
-		// Setup a $ in the request context, and the slatwallScope shortcut
+		// Setup a $ in the request context, and the hibachiScope shortcut
 		request.context.$ = {};
 		request.context.$[ variables.framework.applicationKey ] = request[ "#variables.framework.applicationKey#Scope" ];
 		
@@ -188,8 +188,12 @@ component extends="FW1.framework" {
 				if(!getHibachiScope().hasApplicationValue("initialized") || !getHibachiScope().getApplicationValue("initialized")) {
 					
 					// Application Setup Started
-					reloadApplication();
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Setup Started");
+					
+					// Clear out application cache
+					application[ getHibachiInstanceApplicationScopeKey() ] = {};
+					application[ getHibachiInstanceApplicationScopeKey() ].initialized = false;
+					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Cache Cleared");
 					
 					// Setup the fw1ApplicationKey in the application scope to use it later
 					getHibachiScope().setApplicationValue("applicationKey", variables.framework.applicationKey);
@@ -212,17 +216,19 @@ component extends="FW1.framework" {
 						transients=["transient", "entity", "process", "hibachi"]
 					});
 					
+					bf.addBean("applicationKey", variables.framework.applicationKey);
+					
 					bf.declareBean("hibachiDAO", "#variables.framework.applicationKey#.org.Hibachi.HibachiDAO", true);
 					bf.declareBean("hibachiService", "#variables.framework.applicationKey#.org.Hibachi.HibachiService", true);
 					
 					if(!bf.containsBean("hibachiAuthenticationService")) {
 						bf.declareBean("hibachiAuthenticationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiAuthenticationService", true);	
 					}
-					if(!bf.containsBean("hibachiRBService")) {
-						bf.declareBean("hibachiRBService", "#variables.framework.applicationKey#.org.Hibachi.HibachiRBService", true);	
-					}
 					if(!bf.containsBean("hibachiEventService")) {
 						bf.declareBean("hibachiEventService", "#variables.framework.applicationKey#.org.Hibachi.HibachiEventService", true);	
+					}
+					if(!bf.containsBean("hibachiRBService")) {
+						bf.declareBean("hibachiRBService", "#variables.framework.applicationKey#.org.Hibachi.HibachiRBService", true);	
 					}
 					if(!bf.containsBean("hibachiTagService")) {
 						bf.declareBean("hibachiTagService", "#variables.framework.applicationKey#.org.Hibachi.HibachiTagService", true);	
@@ -230,10 +236,13 @@ component extends="FW1.framework" {
 					if(!bf.containsBean("hibachiLogService")) {
 						bf.declareBean("hibachiLogService", "#variables.framework.applicationKey#.org.Hibachi.HibachiLogService", true);	
 					}
+					if(!bf.containsBean("hibachiUtilityService")) {
+						bf.declareBean("hibachiUtilityService", "#variables.framework.applicationKey#.org.Hibachi.HibachiUtilityService", true);	
+					}
 					
 					bf.declareBean("_FormUtilities", "#variables.framework.applicationKey#.org.Hibachi.FormUtilities.FormUtilities", true);
 					
-					setBeanFactory( bf );
+					super.setBeanFactory( bf );
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
 					
 					//========================= END: IOC SETUP ===============================

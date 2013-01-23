@@ -1,10 +1,12 @@
 <cfcomponent output="false" accessors="true" extends="HibachiObject">
 	
+	<cfproperty name="applicationKey" type="string" />
+	
 	<cfscript>
 		public any function get( required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
-			// Adds the Slatwall Prefix to the entityName when needed.
-			if(left(arguments.entityName,8) != "Slatwall") {
-				arguments.entityName = "Slatwall#arguments.entityName#";
+			// Adds the Applicatoin Prefix to the entityName when needed.
+			if(left(arguments.entityName, len(getApplicationKey()) ) != getApplicationKey()) {
+				arguments.entityName = "#getApplicationKey()##arguments.entityName#";
 			}
 			
 			if ( isSimpleValue( idOrFilter ) && len( idOrFilter ) ) {
@@ -24,9 +26,9 @@
 		}
 	
 		public any function list( string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
-			// Adds the Slatwall Prefix to the entityName when needed.
-			if(left(arguments.entityName,8) != "Slatwall") {
-				arguments.entityName = "Slatwall#arguments.entityName#";
+			// Adds the Applicatoin Prefix to the entityName when needed.
+			if(left(arguments.entityName, len(getApplicationKey()) ) != getApplicationKey()) {
+				arguments.entityName = "#getApplicationKey()##arguments.entityName#";
 			}
 			
 			return entityLoad( entityName, filterCriteria, sortOrder, options );
@@ -34,9 +36,9 @@
 	
 	
 		public any function new( required string entityName ) {
-			// Adds the Slatwall Prefix to the entityName when needed.
-			if(left(arguments.entityName,8) != "Slatwall") {
-				arguments.entityName = "Slatwall#arguments.entityName#";
+			// Adds the Applicatoin Prefix to the entityName when needed.
+			if(left(arguments.entityName, len(getApplicationKey()) ) != getApplicationKey()) {
+				arguments.entityName = "#getApplicationKey()##arguments.entityName#";
 			}
 			
 			return entityNew( entityName );
@@ -59,10 +61,11 @@
 		}
 		
 		public any function count(required any entityName) {
-			// Adds the Slatwall Prefix to the entityName when needed.
-			if(left(arguments.entityName,8) != "Slatwall") {
-				arguments.entityName = "Slatwall#arguments.entityName#";
+			// Adds the Applicatoin Prefix to the entityName when needed.
+			if(left(arguments.entityName, len(getApplicationKey()) ) != getApplicationKey()) {
+				arguments.entityName = "#getApplicationKey()##arguments.entityName#";
 			}
+			
 			return ormExecuteQuery("SELECT count(*) FROM #arguments.entityName#",true);
 		}
 		
@@ -81,9 +84,9 @@
 	    }
 	    
 	    public any function getSmartList(required string entityName, struct data={}){
-			// Adds the Slatwall Prefix to the entityName when needed.
-			if(left(arguments.entityName,8) != "Slatwall") {
-				arguments.entityName = "Slatwall#arguments.entityName#";
+			// Adds the Applicatoin Prefix to the entityName when needed.
+			if(left(arguments.entityName, len(getApplicationKey()) ) != getApplicationKey()) {
+				arguments.entityName = "#getApplicationKey()##arguments.entityName#";
 			}
 			
 			var smartList = new Slatwall.model.hibachi.SmartList(argumentCollection=arguments);
@@ -92,9 +95,14 @@
 		}
 		
 		public any function getExportQuery(required string entityName) {
+			// Adds the Applicatoin Prefix to the entityName when needed.
+			if(left(arguments.entityName, len(getApplicationKey()) ) != getApplicationKey()) {
+				arguments.entityName = "#getApplicationKey()##arguments.entityName#";
+			}
+			
 			var qry = new query();
 			qry.setName("exportQry");
-			var result = qry.execute(sql="SELECT * FROM Slatwall#arguments.entityName#"); 
+			var result = qry.execute(sql="SELECT * FROM #arguments.entityName#"); 
 	    	exportQry = result.getResult(); 
 			return exportQry;
 		}
