@@ -971,7 +971,6 @@ component {
 	 * - getBean(name) - returns the named bean
 	 */
 	public void function setBeanFactory( any beanFactory ) {
-		writeLog( file="Slatwall", text="FW1 Application Key: #variables.framework.applicationKey#" );
 		application[ variables.framework.applicationKey ].factory = beanFactory;
 
 	}

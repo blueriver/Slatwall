@@ -46,12 +46,13 @@ globalEncryptionKeySize
 	
 	<cfproperty name="contentService" type="any" />
 	<cfproperty name="currencyService" type="any" />
+	<cfproperty name="hibachiUtilityService" type="any" />
 	<cfproperty name="integrationService" type="any" />
+	<cfproperty name="locationService" type="any" />
 	<cfproperty name="measurementUnitService" type="any" />
 	<cfproperty name="paymentService" type="any" />
 	<cfproperty name="siteService" type="any" />
 	<cfproperty name="taxService" type="any" />
-	<cfproperty name="locationService" type="any" />
 	
 	<!--- Used For Caching --->
 	<cfproperty name="allSettingsQuery" type="query" />
@@ -495,7 +496,7 @@ globalEncryptionKeySize
 			if(!disableFormatting) {
 				// First we look for a formatType in the meta data
 				if( structKeyExists(getSettingMetaData(arguments.settingName), "formatType") ) {
-					settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, getSettingMetaData(arguments.settingName).formatType);
+					settingDetails.settingValueFormatted = getHibachiUtilityService().formatValue(settingDetails.settingValue, getSettingMetaData(arguments.settingName).formatType);
 				// Now we are looking at different fieldTypes
 				} else if( structKeyExists(getSettingMetaData(arguments.settingName), "fieldType") ) {
 					// Listing Multiselect
@@ -530,7 +531,7 @@ globalEncryptionKeySize
 							settingDetails.settingValueFormatted = "";
 						}
 					} else {
-						settingDetails.settingValueFormatted = this.formatValue(settingDetails.settingValue, getSettingMetaData(arguments.settingName).fieldType);	
+						settingDetails.settingValueFormatted = getHibachiUtilityService().formatValue(settingDetails.settingValue, getSettingMetaData(arguments.settingName).fieldType);	
 					}
 				// This is the no deffinition case
 				} else {
