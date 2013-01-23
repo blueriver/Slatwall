@@ -70,7 +70,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	public void function default(required struct rc) {
 		rc.pagetitle = "Dashboard";
-		rc.fw = getFW();
 		
 		rc.productSmartList = getProductService().getProductSmartList();
 		rc.productSmartList.addOrder("modifiedDateTime|DESC");

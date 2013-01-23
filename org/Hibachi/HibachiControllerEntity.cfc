@@ -1,15 +1,9 @@
 component output="false" accessors="true" extends="HibachiController" {
 	
-	property name="fw" type="any";
 	property name="hibachiService" type="any";
-	
-	public void function init( required any fw ) {
-		setFW(arguments.fw);
-	}
 	
 	public void function before( required any rc ) {
 		arguments.rc.edit = false;
-		arguments.rc.fw = getFW();
 		
 		// Setup a Private structure in the RC that can't be overridden by the form scope
 		arguments.rc.crudActionDetails = {};

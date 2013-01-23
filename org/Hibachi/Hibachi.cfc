@@ -158,6 +158,8 @@ component extends="FW1.framework" {
 		getBeanFactory().getBean("_FormUtilities").buildFormCollections(request.context);
 		
 		// Setup a $ in the request context, and the hibachiScope shortcut
+		
+		request.context.fw = this;
 		request.context.$ = {};
 		request.context.$[ variables.framework.applicationKey ] = request[ "#variables.framework.applicationKey#Scope" ];
 		
@@ -197,9 +199,6 @@ component extends="FW1.framework" {
 					
 					// Setup the fw1ApplicationKey in the application scope to use it later
 					getHibachiScope().setApplicationValue("applicationKey", variables.framework.applicationKey);
-					
-					// Place the entire application in the application scope so that we can introspect these values later
-					getHibachiScope().setApplicationValue("application", this);
 					
 					// =================== Required Application Setup ===================
 					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()

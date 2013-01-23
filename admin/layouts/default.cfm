@@ -112,7 +112,7 @@ Notes:
 								</cfif>
 							</cfloop>
 						</cf_HibachiActionCallerDropdown>
-						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.setting_nav')#" icon="cog icon-white" type="nav">
+						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.settings_nav')#" icon="cog icon-white" type="nav">
 							<cfsavecontent variable="local.settingGroupOne">
 								<cf_HibachiActionCaller action="admin:setting.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listattributeset" type="list" divideAfter="true">
