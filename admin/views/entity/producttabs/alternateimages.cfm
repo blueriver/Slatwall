@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,25 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.product" type="any" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
+<cfoutput>
+	<cfset local.images = rc.product.getProductImages() />
 	
-	this.publicMethods='';
+	<cf_SlatwallListingDisplay smartList="#rc.product.getProductImagesSmartList()#"
+							   recordDetailAction="admin:main.detailImage"
+							   recordDetailModal="true"
+							   recordEditAction="admin:main.editImage"
+							   recordEditQueryString="productID=#rc.product.getProductID()#&returnAction=admin:entity.detailproduct"
+							   recordEditModal="true"
+							   recordDeleteAction="admin:main.deleteImage"
+							   recorddeletequerystring="returnAction=product.editproduct&productID=#rc.product.getProductID()###tabalternateimages">
+				
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="imageName" />
+		<cf_SlatwallListingColumn propertyIdentifier="imageDescription" />
+		<cf_SlatwallListingColumn propertyIdentifier="imageType.type" />
+	</cf_SlatwallListingDisplay>
 	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
-
-}
+	<cf_SlatwallActionCaller action="admin:main.createimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:entity.detailproduct" modal=true />
+</cfoutput>

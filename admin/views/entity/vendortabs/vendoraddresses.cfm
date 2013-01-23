@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,23 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+<cfparam name="rc.vendor" type="any" />
 
-}
+<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorAddressesSmartList()#"
+		recordEditAction="admin:entity.editvendoraddress"
+		recordEditQueryString="vendorID=#rc.vendor.getVendorID()#"
+		recordEditModal=true
+		recordDeleteAction="admin:entity.deletevendoraddress"
+		recordDeleteQueryString="vendorID=#rc.vendor.getVendorID()#&returnaction=admin:entity.detailvendor">
+			
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="address.streetAddress" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.street2Address" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.city" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.stateCode" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.postalCode" />
+	<cf_SlatwallListingColumn propertyIdentifier="address.countryCode" />
+</cf_SlatwallListingDisplay>
+
+<cf_SlatwallActionCaller action="admin:entity.createvendoraddress" class="btn btn-inverse" icon="plus icon-white" queryString="vendorID=#rc.vendor.getVendorID()#" modal=true />

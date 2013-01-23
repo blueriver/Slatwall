@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,17 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.vendorOrder" type="any"/>
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
+<cf_slatwalllistingdisplay smartlist="#rc.$.slatwall.getService('VendorOrderService').getStockReceiverSmartList(rc.vendorOrder.getVendorOrderID())#" 
+                           recorddetailaction="admin:entity.detailStockReceiver"
+						   recorddetailmodal="true" 
+                           recorddetailquerystring="returnaction=admin:entity.detailvendororder&vendorOrderID=#rc.VendorOrder.getVendorOrderID()#">
 	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="createdDateTime"/>
+	<cf_slatwalllistingcolumn propertyidentifier="boxCount"/>
+	<cf_slatwalllistingcolumn propertyidentifier="packingSlipNumber"/>
+</cf_slatwalllistingdisplay>
 
-}
+<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" class="btn btn-inverse" icon="plus icon-white" />

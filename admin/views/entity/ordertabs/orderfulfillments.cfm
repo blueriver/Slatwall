@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+	
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -35,33 +35,19 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.order" type="any" />
+<cfparam name="rc.edit" type="boolean" /> 
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
-
-}
+<cfoutput>
+	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderFulfillmentsSmartList()#"
+							   recordDetailAction="admin:entity.detailorderfulfillment"
+							   recordEditAction="admin:entity.editorderfulfillment">
+		<cf_SlatwallListingColumn tdClass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" filter=true />
+		<cf_SlatwallListingColumn propertyIdentifier="fulfillmentCharge" />
+		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
+		<cf_SlatwallListingColumn propertyIdentifier="chargeAfterDiscount" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
+		<cf_SlatwallListingColumn propertyIdentifier="quantityUndelivered" />
+	</cf_SlatwallListingDisplay>
+</cfoutput>

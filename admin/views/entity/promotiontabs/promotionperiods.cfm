@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,22 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.promotion" type="any">
+<cfparam name="rc.edit" type="boolean">
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
+<cfoutput>
+	<cf_SlatwallListingDisplay smartList="#rc.promotion.getPromotionPeriodsSmartList()#"
+							   recordEditAction="admin:entity.editPromotionperiod"
+							   recorddetailaction="admin:entity.detailpromotionperiod"
+							   recordDeleteAction="admin:entity.deletepromotionperiod"
+							   recordDeleteQueryString="returnAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
+		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
+		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" />
+		<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
+	</cf_SlatwallListingDisplay>
 	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
-
-}
+	<cf_SlatwallActionCaller action="admin:entity.createpromotionperiod" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" />
+</cfoutput>

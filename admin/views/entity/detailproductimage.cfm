@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,36 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.productImage" type="any" />
+<cfparam name="rc.product" type="any" default="#rc.productImage.getProduct()#"/>
+<cfparam name="rc.edit" type="boolean" default="false" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+<cfoutput>
+	<cf_HibachiCrudDetailForm object="#rc.productImage#" edit="#rc.edit#" enctype="multipart/form-data">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.productImage#" edit="#rc.edit#">
+		</cf_HibachiCrudActionBar>
+		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
+		<input type="hidden" name="returnAction" value="admin:entity.editProduct&productID=#rc.product.getProductID()###tabalternateimages" />
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageDescription" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageType" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageFile" edit="#rc.edit#" fieldtype="file">
+				
+				<div class="control-group">
+					<label class="control-label">&nbsp;</label>
+					<div class="controls">
+						<cfif len(trim(rc.productImage.getImageFile()))>
+							<img src="#rc.productImage.getResizedImagePath(width="200",height="200")#" border="0" /><br />
+							<input type="checkbox" name="deleteImage" value="1" /> Delete
+						</cfif>	
+					</div>
+				</div>
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+	</cf_HibachiCrudDetailForm>
 
-}
+</cfoutput>

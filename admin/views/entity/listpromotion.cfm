@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,23 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.promotionSmartList" type="any" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
+<cfoutput>
 	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+<cf_HibachiCrudActionBar type="listing" object="#rc.promotionSmartList#" />
 
-}
+<cfset rc.promotionSmartList.addOrder("promotionName|ASC") />
+
+<cf_HibachiCrudActionBar smartList="#rc.promotionSmartList#"
+						   recorddetailaction="admin:entity.detailpromotion"
+						   recordEditAction="admin:entity.editpromotion">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" range="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
+</cf_SlatwallListingDisplay>
+
+</cfoutput>

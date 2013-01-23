@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,13 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.vendor" type="any" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorOrdersSmartList()#" recordDetailAction="admin:entity.detailvendororder">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorOrderNumber" />
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
+	<cf_SlatwallListingColumn propertyIdentifier="total" range="true" />
+</cf_SlatwallListingDisplay>
 
-}

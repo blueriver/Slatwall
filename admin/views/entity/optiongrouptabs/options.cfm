@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,24 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.optionGroup" type="any"/>
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+<cfoutput>
 
-}
+	<cf_slatwalllistingdisplay smartlist="#rc.optionGroup.getOptionsSmartList()#" 
+	                           recordeditaction="admin:entity.editoption" 
+							   recordeditmodal=true 
+	                           recorddeleteaction="admin:entity.deleteoption"
+							   recorddeletequerystring="returnaction=admin:entity.detailoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#"
+							   sortproperty="sortOrder"
+							   sortContextIDColumn="optionGroupID"
+							   sortContextIDValue="#rc.optionGroup.getOptionGroupID()#">
+		<cf_slatwalllistingcolumn propertyidentifier="optionName" tdclass="primary"/>
+		<cf_slatwalllistingcolumn propertyidentifier="optionCode"/>
+	</cf_slatwalllistingdisplay>
+
+	<cf_slatwallactioncaller action="admin:entity.createoption" 
+	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" 
+	                         class="btn btn-inverse" icon="plus icon-white" modal=true/>
+</cfoutput>

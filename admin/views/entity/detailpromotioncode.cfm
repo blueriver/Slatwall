@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,28 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.promotionCode" type="any">
+<cfparam name="rc.promotion" type="any" default="#rc.promotionCode.getPromotion()#">
+<cfparam name="rc.edit" type="boolean">
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+<cfoutput>
+	<cf_HibachiCrudDetailForm object="#rc.promotioncode#" saveAction="admin:entity.savepromotioncode" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:entity.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+		
+		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />
+		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
+		
+		<input type="hidden" name="returnAction" value="admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes" />
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="promotioncode" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="startDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="endDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumAccountUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
 
-}
+	</cf_HibachiCrudDetailForm>
+</cfoutput>

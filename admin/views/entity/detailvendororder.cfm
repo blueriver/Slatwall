@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,30 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.vendorOrder" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
-
-}
+<cfoutput>
+	<cf_HibachiCrudDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#">
+			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list">
+			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" />
+		</cf_HibachiCrudActionBar>
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallPropertyList>
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="#rc.vendorOrder.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="#rc.vendorOrder.isNew()#">
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="estimatedReceivalDateTime" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="billToLocation" edit="#rc.edit#">
+			</cf_SlatwallPropertyList>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup object="#rc.vendorOrder#" allowComments="true" allowCustomAttributes="true">
+			<cf_SlatwallTab view="admin:crud/vendorordertabs/items" />
+			<cf_SlatwallTab view="admin:crud/vendorordertabs/stockreceivers" />
+		</cf_SlatwallTabGroup>
+		
+	</cf_HibachiCrudDetailForm>
+</cfoutput>

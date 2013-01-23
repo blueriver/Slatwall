@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,26 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.account" type="any" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+<cf_SlatwallListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
+		recordEditAction="admin:entity.editaccountpaymentmethod"
+		recordEditQueryString="accountID=#rc.account.getAccountID()#&returnAction=admin:entity.detailaccount"
+		recordEditModal=true
+		recordDeleteAction="admin:entity.deleteaccountpaymentmethod"
+		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:entity.detailaccount">
+			
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
+	<cf_SlatwallListingColumn propertyIdentifier="creditCardType" />
+	<cf_SlatwallListingColumn propertyIdentifier="creditCardLastFour" />
+	<cf_SlatwallListingColumn propertyIdentifier="expirationMonth" />
+	<cf_SlatwallListingColumn propertyIdentifier="expirationYear" />
+</cf_SlatwallListingDisplay>
 
-}
+<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
+	<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
+		<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()#" action="admin:entity.createaccountpaymentmethod" querystring="accountID=#rc.account.getAccountID()#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&returnAction=admin:entity.detailaccount" modal=true />
+	</cfloop>
+</cf_SlatwallActionCallerDropdown>
+

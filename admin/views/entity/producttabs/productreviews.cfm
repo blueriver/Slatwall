@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,15 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.product" type="any" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
-
-}
+<cf_SlatwallListingDisplay smartList="#rc.product.getProductReviewsSmartList()#"
+						   recorddetailaction="admin:entity.detailproductreview"
+						   recorddetailmodal="true"
+						   recordeditaction="admin:entity.editproductreview"
+						   recordeditmodal="true">
+	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="review" />
+	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
+</cf_SlatwallListingDisplay>

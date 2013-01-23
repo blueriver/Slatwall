@@ -76,6 +76,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			} catch (any e) {
 				// No RB File Found
 			}
+			
 		}
 		
 		return variables.resourceBundles[ arguments.locale ];

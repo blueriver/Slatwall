@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,24 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.vendorOrderSmartList" type="any" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+<cfsilent>
+	<cfset rc.vendorOrderSmartList.addOrder("createdDateTime|DESC") />
+</cfsilent>
 
-}
+<cfoutput>
+	<cf_HibachiCrudActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:entity.editvendororder" />
+	
+	<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#"
+							   recordDetailAction="admin:entity.detailvendororder"
+							   recordEditAction="admin:entity.editvendororder">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="estimatedReceivalDateTime" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="total" sort="false" />
+	</cf_SlatwallListingDisplay>
+</cfoutput>

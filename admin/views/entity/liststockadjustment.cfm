@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,24 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.stockAdjustmentSmartList" type="any"/>
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
+<cfoutput>
+	<cf_HibachiCrudActionBar type="listing" object="#rc.stockAdjustmentSmartList#">
+		<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.locationtransfer')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satLocationTransfer" createModal="true" />
+		<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.manualin')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satManualIn" createModal="true" />
+		<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.manualout')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satManualOut" createModal="true" />
+	</cf_HibachiCrudActionBar>
 	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+	<cf_slatwalllistingdisplay smartlist="#rc.stockAdjustmentSmartList#" 
+	                          recordeditaction="admin:warehouse.editstockadjustment"
+							  recorddetailaction="admin:warehouse.detailstockadjustment">
+		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stockAdjustmentType.type"/>
+		<cf_slatwalllistingcolumn propertyidentifier="stockAdjustmentStatusType.type" filter=true/>
+		<cf_slatwalllistingcolumn propertyidentifier="fromLocation.locationName" filter=true/>
+		<cf_slatwalllistingcolumn propertyidentifier="toLocation.locationName" filter=true/>
+		<cf_slatwalllistingcolumn propertyidentifier="createdDateTime" range=true/>
+	</cf_slatwalllistingdisplay>
 
-}
+</cfoutput>

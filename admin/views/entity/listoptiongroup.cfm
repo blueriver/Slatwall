@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -35,33 +35,19 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
+<cfparam name="rc.optionGroupSmartList" type="any" />
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
+<cfoutput>
 	
-	this.publicMethods='';
+	<cf_HibachiCrudActionBar type="listing" object="#rc.optionGroupSmartList#" />
 	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
+	<cf_SlatwallListingDisplay smartList="#rc.optionGroupSmartList#" 
+							   recordDetailAction="admin:entity.detailoptiongroup"
+							   recordEditAction="admin:entity.editoptiongroup"
+							   sortProperty="sortOrder">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="optionGroupName" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="optionGroupCode" search="true" />
+	</cf_SlatwallListingDisplay>
 	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
-
-}
+</cfoutput>

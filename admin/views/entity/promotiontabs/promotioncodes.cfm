@@ -1,4 +1,4 @@
-/*
+﻿<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,33 +35,24 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
 
-	// fw1 Auto-Injected Service Properties
-	property name="commentService" type="any";
-	property name="orderService" type="any";
-	
-	this.publicMethods='';
-	
-	this.anyAdminMethods='';
-	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
-	
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
-	
-    public void function link(required struct rc) {
-    	param name="rc.entity";
-    	param name="rc.property";
-    	param name="rc.value";
-    	
-    	switch(rc.entity) {
-    		case "order": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
-    			getFW().redirect(action="admin:entity.detailorder", queryString="orderID=#order.getOrderID()###tabComments");
-    			break;
-    		}
-    	}
-    }
+<cfparam name="rc.promotion" type="any">
+<cfparam name="rc.edit" type="boolean">
 
-}
+<cfoutput>
+
+	<cf_SlatwallListingDisplay smartList="#rc.promotion.getPromotionCodesSmartList()#"
+							   recordEditAction="admin:entity.editpromotioncode"
+							   recordEditModal="true"
+							   recordDeleteAction="admin:entity.deletepromotioncode"
+							   recordDeleteQueryString="returnAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionCode" search="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" range="true" />
+		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" range="true" />
+	</cf_SlatwallListingDisplay>
+	
+	<cf_SlatwallActionCaller action="admin:entity.createpromotioncode" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" modal="true" />
+</cfoutput>
