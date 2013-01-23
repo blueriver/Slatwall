@@ -34,19 +34,19 @@ component output="false" accessors="true" extends="HibachiService" {
 				}
 				
 				// Otherwsie use the global currencyLocal
-				return LSCurrencyFormat(arguments.value, setting("globalCurrencyType"), setting("globalCurrencyLocale"));
+				return LSCurrencyFormat(arguments.value, getService("settingService").getSettingValue("globalCurrencyType"), getService("settingService").getSettingValue("globalCurrencyLocale"));
 			}
 			case "datetime": {
-				return dateFormat(arguments.value, setting("globalDateFormat")) & " " & TimeFormat(value, setting("globalTimeFormat"));
+				return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat")) & " " & TimeFormat(value, getService("settingService").getSettingValue("globalTimeFormat"));
 			}
 			case "date": {
-				return dateFormat(arguments.value, setting("globalDateFormat"));
+				return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat"));
 			}
 			case "time": {
-				return timeFormat(arguments.value, setting("globalTimeFormat"));
+				return timeFormat(arguments.value, getService("settingService").getSettingValue("globalTimeFormat"));
 			}
 			case "weight": {
-				return arguments.value & " " & setting("globalWeightUnitCode");
+				return arguments.value & " " & getService("settingService").getSettingValue("globalWeightUnitCode");
 			}
 			case "pixels": {
 				return arguments.value & "px";
