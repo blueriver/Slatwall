@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+component persistent="false" accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiController" {
 
 	property name="accountService" type="any";
 	property name="brandService" type="any";

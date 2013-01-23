@@ -1,3 +1,3 @@
-component extends="Hibachi.HibachiControllerREST" {
+component extends="Slatwall.org.Hibachi.HibachiControllerREST" {
 	
 }

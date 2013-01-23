@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiController" {
 
 	// fw1 Auto-Injected Service Properties
 	property name="commentService" type="any";

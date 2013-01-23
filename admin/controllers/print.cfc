@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiController" {
 
 	property name="orderService";
 
