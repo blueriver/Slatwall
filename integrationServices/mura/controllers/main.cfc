@@ -1,4 +1,4 @@
-component extends="Slatwall.admin.controllers.BaseController" output="false" accessors="true"  {
+component extends="Slatwall.org.Hibachi.HibachiController" output="false" accessors="true"  {
 
 	property name="utilityFileService" type="any";
 

@@ -1,4 +1,4 @@
-component extends="Slatwall.admin.controllers.BaseController" persistent="false" accessors="true" output="false" {
+component extends="Slatwall.org.Hibachi.HibachiController" persistent="false" accessors="true" output="false" {
 
 	property name="productService" type="any";
 	property name="skuService" type="any";

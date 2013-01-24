@@ -39,7 +39,7 @@ Notes:
 
 component accessors="true" output="false" displayname="USPS" implements="Slatwall.integrationServices.AuthenticationInterface" extends="Slatwall.integrationServices.BaseAuthentication" {
 
-	public boolean function verifySessionLogin( required any session ) {
+	public boolean function verifySessionLogin( ) {
 		if(!structKeyExists(session, "mura") || !structKeyExists(session.mura, "isLoggedIn") || !structKeyExists(session.mura, "userID") || !session.mura.isLoggedIn || session.mura.userID != arguments.session.getAccountAuthentication().getIntegrationAccountID() ) {
 			return false;
 		}

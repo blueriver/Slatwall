@@ -1,4 +1,4 @@
-component extends="Slatwall.admin.controllers.BaseController" {
+component extends="Slatwall.org.Hibachi.HibachiController" {
 
 		
 }

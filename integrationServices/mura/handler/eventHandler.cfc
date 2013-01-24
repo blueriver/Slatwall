@@ -1,4 +1,4 @@
-component extends="mura.plugin.pluginGenericEventHandler" {
+component {
 
 // Plugin Install Settings
 	// Account Sync Type 														['none'|'all'|'admin only'|'public only']
