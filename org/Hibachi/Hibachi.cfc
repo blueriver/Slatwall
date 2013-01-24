@@ -236,11 +236,8 @@ component extends="FW1.framework" {
 					onFirstRequest();
 					
 					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
-					if(!fileExists(expandPath('config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+					if(!fileExists(expandPath('/#variables.framework.applicationKey#/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - Full Update Initiated");
-						
-						// Write File
-						fileWrite(expandPath('/#variables.framework.applicationKey#/config/lastFullUpdate.txt.cfm'), now());
 						
 						// Set the request timeout to 360
 						getBeanFactory().getBean("hibachiTagService").cfsetting(requesttimeout=360);
@@ -250,7 +247,10 @@ component extends="FW1.framework" {
 						ormReload();
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() was successful");
 							
-						onUpdateRequest();						
+						onUpdateRequest();
+						
+						// Write File
+						fileWrite(expandPath('/#variables.framework.applicationKey#/config/lastFullUpdate.txt.cfm'), now());				
 					}
 					// ========================== END: FULL UPDATE ==============================
 					

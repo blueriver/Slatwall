@@ -41,6 +41,7 @@ component displayname="Site" entityname="SlatwallSite" table="SlatwallSite" pers
 	// Persistent Properties
 	property name="siteID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="siteName" ormtype="string";
+	property name="cmsSiteID" ormtype="string";
 	
 	
 	// Related Object Properties (many-to-one)

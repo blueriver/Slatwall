@@ -9,9 +9,10 @@
 		var populatedSiteIDs = getPluginConfig().getCustomSetting("populatedSiteIDs");
 		
 		for(var i=1; i<=assignedSitesQuery.recordCount; i++) {
-			var cmsSiteID = assignedSites["siteid"][i];
-			var cmsSiteName = assignedSites["siteName"][i];
-			var cmsThemeName = assignedSites["theme"][i];
+			var cmsSiteID = assignedSitesQuery["siteid"][i];
+			var siteDetails = $.getBean("settingsBean").loadBy(siteID=cmsSiteID);
+			var cmsSiteName = siteDetails.getSite();
+			var cmsThemeName = siteDetails.getTheme();
 			
 			// First lets verify that this site exists on the Slatwall site
 			var slatwallSite = getSlatwallScope().getService("siteService").getSiteByCMSSiteID( cmsSiteID, true );
@@ -23,11 +24,11 @@
 			}
 			
 			// If the plugin is set to create default pages, and this siteID has not been populated then we need to populate it with pages & templates
-			if(getPluginConfig().getSetting("createDefaultPages") && !listFindNoCase(populatedSites, cmsSiteID)) {
+			if(getPluginConfig().getSetting("createDefaultPages") && !listFindNoCase(populatedSiteIDs, cmsSiteID)) {
 				
 				// Copy views over to the template directory
 				var slatwallTemplatePath = getDirectoryFromPath(expandPath("/Slatwall/public/views/templates")); 
-				var muraTemplatePath = getDirectoryFromPath(expandPath("/muraWRM/#siteID#/includes/themes/#themeName#/templates"));
+				var muraTemplatePath = getDirectoryFromPath(expandPath("/muraWRM/#cmsSiteID#/includes/themes/#cmsThemeName#/templates"));
 				getSlatwallScope().getService("utilityFileService").duplicateDirectory(source=slatwallTemplatePath, destination=muraTemplatePath, overwrite=false, recurse=true, copyContentExclusionList=".svn,.git");
 				
 				// Create the necessary pages
@@ -42,7 +43,7 @@
 				var brandTemplateCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Brand Template", filename="brand-template", template="slatwall-brand.cfm", isNav="0" );
 				
 				// Now that it has been populated we can add the siteID to the populated site id's list
-				getPluginConfig().setCustomSetting("populatedSiteIDs", listAppend(populatedSiteIDs, siteID));
+				getPluginConfig().setCustomSetting("populatedSiteIDs", listAppend(populatedSiteIDs, cmsSiteID));
 			}
 			
 			// Sync all missing content for the siteID
@@ -152,9 +153,9 @@
 		
 		<cfset var thisPage = $.getBean("contentManager").getActiveContentByFilename(filename=arguments.filename, siteid=arguments.muraSiteID) />
 		<cfif thisPage.getIsNew()>
-			<cfset thisPage.setDisplayTitle(arguments.pageTitle) />
-			<cfset thisPage.setHTMLTitle(arguments.pageTitle) />
-			<cfset thisPage.setMenuTitle(arguments.pageTitle) />
+			<cfset thisPage.setDisplayTitle(arguments.pageName) />
+			<cfset thisPage.setHTMLTitle(arguments.pageName) />
+			<cfset thisPage.setMenuTitle(arguments.pageName) />
 			<cfset thisPage.setIsNav(arguments.isNav) />
 			<cfset thisPage.setActive(1) />
 			<cfset thisPage.setApproved(1) />
