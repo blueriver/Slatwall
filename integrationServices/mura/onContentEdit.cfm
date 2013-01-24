@@ -271,7 +271,7 @@ $(document).ready(function(){
 
 		$.ajax({
 			type: 'get',
-			url: '#request.slatwallScope.getSlatwallRootURL()#',
+			url: '#request.slatwallScope.getBaseURL()#',
 			data: postData,
 			dataType: 'json',
 			beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },

@@ -45,7 +45,7 @@ Notes:
 		
 		<!--- jQuery & Slatwall are the only two Javascript includes required for Slatwall to function properly.  You can either reference the slatwall --->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script src="#$.slatwall.getSlatwallRootURL()#/assets/js/jquery-slatwall.min.js"></script>
+		<script src="#$.slatwall.getBaseURL()#/assets/js/jquery-slatwall.min.js"></script>
 		
 		<!--- AngularJS is required for some of the ajax type of functions on this page.  You can remove AngularJS but you will need to do you own AJAX using the Slatwall jQuery plugin --->
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
@@ -60,7 +60,7 @@ Notes:
 				<div class="navbar-inner">
 					<div class="container">
 						<div class="nav-collapse">
-							<a class="brand" href="<cfoutput>#$.slatwall.getSlatwallRootURL()#</cfoutput>">Slatwall Admin</a>
+							<a class="brand" href="<cfoutput>#$.slatwall.getBaseURL()#</cfoutput>">Slatwall Admin</a>
 							<ul class="nav">
 								<li><a href="?slatAction=frontend:page.slatwall-checkout">Checkout</a></li>
 								<li><a href="?slatAction=frontend:page.slatwall-productlisting">Product List</a></li>

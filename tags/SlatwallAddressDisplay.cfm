@@ -127,7 +127,7 @@ Notes:
 							
 							jQuery.ajax({
 								type: 'get',
-								url: '#request.slatwallScope.getSlatwallRootURL()#/api/index.cfm/display/addressDisplay/',
+								url: '#request.slatwallScope.getBaseURL()#/api/index.cfm/display/addressDisplay/',
 								data: addressData,
 								dataType: "json",
 								context: document.body,

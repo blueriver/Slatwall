@@ -27,6 +27,7 @@ component extends="FW1.framework" {
 	variables.framework=structNew();
 	variables.framework.applicationKey = 'Hibachi';
 	variables.framework.action = 'action';
+	variables.framework.baseURL = replace(replace(replace( getDirectoryFromPath(getCurrentTemplatePath()) , expandPath('/'), '/' ), '\', '/', 'all'),'/org/Hibachi/','');
 	variables.framework.usingSubsystems = true;
 	variables.framework.defaultSubsystem = 'admin';
 	variables.framework.defaultSection = 'main';
@@ -199,6 +200,9 @@ component extends="FW1.framework" {
 					
 					// Setup the fw1ApplicationKey in the application scope to use it later
 					getHibachiScope().setApplicationValue("applicationKey", variables.framework.applicationKey);
+					
+					// Setup the baseURL
+					getHibachiScope().setApplicationValue("baseURL", variables.framework.baseURL);
 					
 					// =================== Required Application Setup ===================
 					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()

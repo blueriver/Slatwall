@@ -217,24 +217,13 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		variables[ arguments.key ] = arguments.value;
 	}
 	
-	
-	
-	public any function getSlatwallRootPath() {
-		return "";
-	}
-	
 	public string function getSlatwallRootDirectory() {
 		return expandPath("/Slatwall");
 	}
 	
-	public any function getSlatwallRootURL() {
-		return "";
-	}
-	
-	public any function secureDisplay() {
+	public any function secureDisplay( string action, string entityName, string ) {
 		return true;
 	}
-	
 	
 	// @hint helper function to return a Setting
 	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
@@ -246,5 +235,14 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		return getService("settingService").getSettingDetails(settingName=arguments.settingName, object=this, filterEntities=arguments.filterEntities);
 	}
 	
+	// ========================== Deprecated ================= * DO NOT UES!!!!!
+	public any function getSlatwallRootURL() {
+		return getBaseURL();
+	}
+	
+	// Deprecated
+	public any function getSlatwallRootPath() {
+		return getBaseURL();
+	}
 	
 }

@@ -44,19 +44,19 @@ Notes:
 		<meta charset="utf-8">
 		<title>#rc.pageTitle# &##124; Slatwall</title>
 		
-		<link rel="icon" href="#request.slatwallScope.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
-		<link rel="shortcut icon" href="#request.slatwallScope.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
+		<link rel="icon" href="#request.slatwallScope.getBaseURL()#/assets/images/favicon.png" type="image/png" />
+		<link rel="shortcut icon" href="#request.slatwallScope.getBaseURL()#/assets/images/favicon.png" type="image/png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
-		<link href="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/css/bootstrap.min.css" rel="stylesheet">
-		<link href="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
-		<link href="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/css/global.css" rel="stylesheet">
+		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
+		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/global.css" rel="stylesheet">
 		
 		<script type="text/javascript">
 			var slatwall = {
 				dateFormat : '#request.slatwallScope.setting("globalDateFormat")#'
 				,timeFormat : '#request.slatwallScope.setting("globalTimeFormat")#'
-				,rootURL : '#request.slatwallScope.getSlatwallRootURL()#'
+				,rootURL : '#request.slatwallScope.getBaseURL()#'
 			};
 		</script>
 	</head>
@@ -66,10 +66,10 @@ Notes:
 				<div class="container-fluid">
 					<ul class="nav">
 						<!---
-						<a href="#application.configBean.getContext()#/admin" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/mura.logo.png" style="width:25px;heigh:26px;" title="Mura" /></a>
+						<a href="#application.configBean.getContext()#/admin" class="brand"><img src="#request.slatwallScope.getBaseURL()#/assets/images/mura.logo.png" style="width:25px;heigh:26px;" title="Mura" /></a>
 						<li class="divider-vertical"></li>
 						--->
-						<a href="#buildURL(action='admin:main.default')#" class="brand brand-two"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
+						<a href="#buildURL(action='admin:main.default')#" class="brand brand-two"><img src="#request.slatwallScope.getBaseURL()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
 						<li class="divider-vertical"></li>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.products_nav')#" icon="tags icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.listproduct" type="list">
@@ -263,17 +263,17 @@ Notes:
 			</div>
 		</div>
 		
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-1.7.1.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-ui-1.8.20.custom.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-ui-timepicker-addon-0.9.9.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-validate-1.9.0.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-hashchange-1.3.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-typewatch-2.0.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/global.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/ckeditor/ckeditor.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/ckeditor/adapters/jquery.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/ckfinder/ckfinder.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-ui-1.8.20.custom.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-ui-timepicker-addon-0.9.9.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-validate-1.9.0.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-hashchange-1.3.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-typewatch-2.0.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/global.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/ckeditor/ckeditor.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/ckeditor/adapters/jquery.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/ckfinder/ckfinder.js"></script>
 	</body>
 </html>
 </cfoutput>

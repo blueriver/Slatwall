@@ -52,7 +52,7 @@ component displayname="Image Service" persistent="false" extends="BaseService" o
 			} else if ( fileExists(expandPath(setting('globalMissingImagePath'))) ) {
 				arguments.imagePath = setting('globalMissingImagePath');
 			} else {
-				arguments.imagePath = "#getSlatwallRootPath()#/assets/images/missingimage.jpg";	
+				arguments.imagePath = "#getBaseURL()#/assets/images/missingimage.jpg";	
 			}
 		}
 		

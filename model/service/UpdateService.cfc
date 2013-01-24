@@ -93,9 +93,9 @@ Notes:
 					<cfif findNoCase("database/",script.getScriptPath())>
 						<cfset var dbSpecificFileName = replaceNoCase(script.getScriptPath(),".cfm",".#getApplicationValue("databaseType")#.cfm") />
 						<cfif fileExists("#getSlatwallRootDirectory()#/config/scripts/#dbSpecificFileName#")>
-							<cfinclude template="#getSlatwallRootPath()#/config/scripts/#dbSpecificFileName#" />
+							<cfinclude template="#getSlatwallScope().getBaseURL()#/config/scripts/#dbSpecificFileName#" />
 						<cfelseif fileExists("#getSlatwallRootDirectory()#/config/scripts/#script.getScriptPath()#")>
-							<cfinclude template="#getSlatwallRootPath()#/config/scripts/#script.getScriptPath()#" />
+							<cfinclude template="#getSlatwallScope().getBaseURL()#/config/scripts/#script.getScriptPath()#" />
 						<cfelse>
 							<cfthrow message="update script file doesn't exist" />
 						</cfif>
