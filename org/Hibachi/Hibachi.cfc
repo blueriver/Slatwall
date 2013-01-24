@@ -163,6 +163,8 @@ component extends="FW1.framework" {
 		request.context.fw = this;
 		request.context.$ = {};
 		request.context.$[ variables.framework.applicationKey ] = request[ "#variables.framework.applicationKey#Scope" ];
+		request.context.pagetitle = request.context.$[ variables.framework.applicationKey ].rbKey( request.context[ getAction() ] );
+		request.context.edit = false;
 		
 		// Check to see if any message keys were passed via the URL
 		if(structKeyExists(request.context, "messageKeys")) {

@@ -69,7 +69,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	this.secureMethods=listAppend(this.secureMethods, 'log');
 	
 	public void function default(required struct rc) {
-		rc.pagetitle = "Dashboard";
+		rc.pagetitle = rc.$.slatwall.rbKey('admin.main.dashboad');
 		
 		rc.productSmartList = getProductService().getProductSmartList();
 		rc.productSmartList.addOrder("modifiedDateTime|DESC");
