@@ -114,7 +114,7 @@ Notes:
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.settings_nav')#" icon="cog icon-white" type="nav">
 							<cfsavecontent variable="local.settingGroupOne">
-								<cf_HibachiActionCaller action="admin:setting.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
+								<cf_HibachiActionCaller action="admin:entity.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listattributeset" type="list" divideAfter="true">
 							</cfsavecontent>
 							<cfif len(local.settingGroupOne)>
@@ -267,6 +267,7 @@ Notes:
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-ui-1.8.20.custom.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-ui-timepicker-addon-0.9.9.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-validate-1.9.0.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-hashchange-1.3.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/jquery-typewatch-2.0.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getSlatwallRootPath()#/org/Hibachi/HibachiAssets/js/global.js"></script>

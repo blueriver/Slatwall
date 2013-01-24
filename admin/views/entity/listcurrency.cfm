@@ -42,9 +42,9 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.currencySmartList#" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.currencySmartList#"
-							   recordDetailAction="admin:setting.detailcurrency"
+							   recordDetailAction="admin:entity.detailcurrency"
 							   recordDetailModal="true"
-							   recordEditAction="admin:setting.editcurrency"
+							   recordEditAction="admin:entity.editcurrency"
 							   recordEditModal="true">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="currencyName" />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />

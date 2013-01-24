@@ -41,12 +41,12 @@ Notes:
 <cfoutput>
 
 	<cf_SlatwallListingDisplay smartList="#rc.attributeSet.getAttributesSmartList()#" 
-							   recordEditAction="admin:setting.editattribute" 
+							   recordEditAction="admin:entity.editattribute" 
 							   recordEditQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
-							   recordDetailAction="admin:setting.detailattribute"
+							   recordDetailAction="admin:entity.detailattribute"
 							   recordDetailQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
-							   recordDeleteAction="admin:setting.deleteattribute"
-							   recordDeleteQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#&returnAction=admin:setting.detailattributeset"
+							   recordDeleteAction="admin:entity.deleteattribute"
+							   recordDeleteQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#&returnAction=admin:entity.detailattributeset"
 							   sortProperty="sortOrder"
 							   sortContextID="attributeSetID"
 							   sortContextIDValue="#rc.attributeSet.getAttributeSetID()#">
@@ -57,6 +57,6 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="attributeType.type" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:setting.createattribute" class="btn btn-inverse" icon="plus icon-white" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
+	<cf_SlatwallActionCaller action="admin:entity.createattribute" class="btn btn-inverse" icon="plus icon-white" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
 	
 </cfoutput>

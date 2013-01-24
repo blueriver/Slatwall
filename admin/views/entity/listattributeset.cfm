@@ -38,11 +38,11 @@ Notes:
 --->
 <cfparam name="rc.attributeSetSmartList" type="any" />
 
-<cf_HibachiCrudActionBar type="listing" object="#rc.attributeSetSmartList#" createmodal="true" createReturnAction="admin:setting.detailattributeset" />
+<cf_HibachiCrudActionBar type="listing" object="#rc.attributeSetSmartList#" createmodal="true" createReturnAction="admin:entity.detailattributeset" />
 
 <cf_SlatwallListingDisplay smartList="#rc.attributeSetSmartList#"
-						   recordDetailAction="admin:setting.detailattributeset"
-						   recordEditAction="admin:setting.editattributeset"
+						   recordDetailAction="admin:entity.detailattributeset"
+						   recordEditAction="admin:entity.editattributeset"
 						   sortProperty="sortOrder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeSetName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="attributeSetType.type" filter="true" />

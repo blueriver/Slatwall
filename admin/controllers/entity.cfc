@@ -36,7 +36,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		rc.addressZone = getAddressService().getAddressZone( rc.addressZoneID );
 		rc.edit=true;
 		
-		getFW().setView("admin:setting.detailaddresszonelocation");
+		getFW().setView("admin:entity.detailaddresszonelocation");
 	}
 	
 	public void function deleteAddressZoneLocation(required struct rc) {
@@ -48,14 +48,14 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		
 		rc.addressZone.removeAddressZoneLocation( rc.addressZoneLocation );
 		
-		getFW().redirect(action="admin:setting.detailaddresszone", queryString="addressZoneID=#rc.addressZoneID#&messageKeys=admin.setting.deleteaddresszonelocation_success");
+		getFW().redirect(action="admin:entity.detailaddresszone", queryString="addressZoneID=#rc.addressZoneID#&messageKeys=admin.setting.deleteaddresszonelocation_success");
 	}
 	
 	// Country
 	public void function editCountry(required struct rc) {
 		rc.country = getAddressService().getCountry(rc.countryCode);
 		rc.edit = true;
-		getFW().setView("admin:setting.detailcountry");
+		getFW().setView("admin:entity.detailcountry");
 	}
 	
 	public void function detailCountry(required struct rc) {
@@ -67,7 +67,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	public void function editCurrency(required struct rc) {
 		rc.currency = getCurrencyService().getCurrency(rc.currencyCode);
 		rc.edit = true;
-		getFW().setView("admin:setting.detailcurrency");
+		getFW().setView("admin:entity.detailcurrency");
 	}
 	
 	public void function detailCurrency(required struct rc) {
@@ -78,7 +78,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	public void function editMeasurementUnit(required struct rc) {
 		rc.measurementUnit = getMeasurementUnitService().getMeasurementUnit(rc.unitCode);
 		rc.edit = true;
-		getFW().setView("admin:setting.detailmeasurementunit");
+		getFW().setView("admin:entity.detailmeasurementunit");
 	}
 	
 	public void function detailMeasurementUnit(required struct rc) {

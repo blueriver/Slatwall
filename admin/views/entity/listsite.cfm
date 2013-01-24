@@ -42,9 +42,9 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.siteSmartList#" createmodal="true" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.siteSmartList#"
-							   recordEditAction="admin:setting.editSite"
+							   recordEditAction="admin:entity.editSite"
 							   recordEditModal="true"
-							   recordDetailAction="admin:setting.detailSite"
+							   recordDetailAction="admin:entity.detailSite"
 							   recordDetailModal="true">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="siteName" />
 	</cf_SlatwallListingDisplay>

@@ -62,7 +62,7 @@ component accessors="true" output="false" persistent="false" {
 	}
 		
 	// @help Public Method to invoke any method in the object, If the method is not defined it calls onMissingMethod
-	public any function invokeMethod(required string methodName, struct methodArguments={}, boolean testing=false) {
+	public any function invokeMethod(required string methodName, struct methodArguments={}) {
 		if(structKeyExists(this, arguments.methodName)) {
 			var theMethod = this[ arguments.methodName ];
 			return theMethod(argumentCollection = methodArguments);

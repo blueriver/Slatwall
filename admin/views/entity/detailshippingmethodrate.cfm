@@ -47,7 +47,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiCrudDetailForm object="#rc.shippingMethodRate#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.shippingMethodRate#" edit="#rc.edit#" backAction="admin:setting.detailShippingMethod" backQueryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"></cf_HibachiCrudActionBar>
+		<cf_HibachiCrudActionBar type="detail" object="#rc.shippingMethodRate#" edit="#rc.edit#" backAction="admin:entity.detailShippingMethod" backQueryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"></cf_HibachiCrudActionBar>
 		
 		<cfif rc.edit>
 			<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.shippingMethod.getShippingMethodID()#" />

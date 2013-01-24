@@ -43,8 +43,8 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.contentSmartList#" showCreate="false" />
 
 <cf_SlatwallListingDisplay smartList="#rc.contentSmartList#"
-						   recordDetailAction="admin:setting.detailcontent"
-						   recordEditAction="admin:setting.editcontent">
+						   recordDetailAction="admin:entity.detailcontent"
+						   recordEditAction="admin:entity.editcontent">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="templateFlag" filter="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="allowPurchaseFlag" filter="true" />

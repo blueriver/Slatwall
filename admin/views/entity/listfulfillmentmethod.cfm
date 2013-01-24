@@ -41,8 +41,8 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.fulfillmentMethodSmartList#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethodSmartList#"
-		recordEditAction="admin:setting.editfulfillmentmethod"
-		recordDetailAction="admin:setting.detailfulfillmentmethod"
+		recordEditAction="admin:entity.editfulfillmentmethod"
+		recordDetailAction="admin:entity.detailfulfillmentmethod"
 		sortProperty="sortOrder">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethodType" filter="true" />

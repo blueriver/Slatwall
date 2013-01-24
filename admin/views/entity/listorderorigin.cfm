@@ -43,9 +43,9 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.orderOriginSmartList#" createModal="true" />
 
 <cf_SlatwallListingDisplay smartList="#rc.orderOriginSmartList#"
-		recordEditAction="admin:setting.editorderorigin"
-		recordEditQueryString="returnAction=admin:setting.listorderorigin"
-		recordDeleteAction="admin:setting.deleteorderorigin"
+		recordEditAction="admin:entity.editorderorigin"
+		recordEditQueryString="returnAction=admin:entity.listorderorigin"
+		recordDeleteAction="admin:entity.deleteorderorigin"
 		recordEditModal="true">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderOriginName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="orderOriginType" filter="true" />

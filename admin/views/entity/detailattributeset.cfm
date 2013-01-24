@@ -43,7 +43,7 @@ Notes:
 	
 <cf_HibachiCrudDetailForm object="#rc.attributeSet#" edit="#rc.edit#">
 	<cf_HibachiCrudActionBar type="detail" object="#rc.attributeSet#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:setting.createattribute" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" type="list" modal=true />
+		<cf_SlatwallActionCaller action="admin:entity.createattribute" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" type="list" modal=true />
 	</cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallDetailHeader>

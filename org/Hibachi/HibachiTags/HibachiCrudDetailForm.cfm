@@ -6,10 +6,10 @@
 	<cfparam name="attributes.enctype" type="string" default="application/x-www-form-urlencoded">
 	<cfparam name="attributes.sRedirectURL" type="string" default="#request.context.entityActionDetails.sRedirectURL#">
 	<cfparam name="attributes.sRedirectAction" type="string" default="#request.context.entityActionDetails.sRedirectAction#">
-	<cfparam name="attributes.sRenderCrudAction" type="string" default="#request.context.entityActionDetails.sRenderCrudAction#">
+	<cfparam name="attributes.sRenderItem" type="string" default="#request.context.entityActionDetails.sRenderItem#">
 	<cfparam name="attributes.fRedirectURL" type="string" default="#request.context.entityActionDetails.fRedirectURL#">
 	<cfparam name="attributes.fRedirectAction" type="string" default="#request.context.entityActionDetails.fRedirectAction#">
-	<cfparam name="attributes.fRenderCrudAction" type="string" default="#request.context.entityActionDetails.fRenderCrudAction#">
+	<cfparam name="attributes.fRenderItem" type="string" default="#request.context.entityActionDetails.fRenderItem#">
 	
 	<cfoutput>
 		<cfif attributes.edit>
@@ -22,10 +22,10 @@
 			<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
 			<cfif len(attributes.sRedirectURL)><input type="hidden" name="sRedirectURL" value="#attributes.sRedirectURL#" /></cfif>
 			<cfif len(attributes.sRedirectAction)><input type="hidden" name="sRedirectAction" value="#attributes.sRedirectAction#" /></cfif>
-			<cfif len(attributes.sRenderCrudAction)><input type="hidden" name="sRenderCrudAction" value="#attributes.sRenderCrudAction#" /></cfif>
+			<cfif len(attributes.sRenderItem)><input type="hidden" name="sRenderItem" value="#attributes.sRenderItem#" /></cfif>
 			<cfif len(attributes.fRedirectURL)><input type="hidden" name="fRedirectURL" value="#attributes.fRedirectURL#" /></cfif>
 			<cfif len(attributes.fRedirectAction)><input type="hidden" name="fRedirectAction" value="#attributes.fRedirectAction#" /></cfif>
-			<cfif len(attributes.fRenderCrudAction)><input type="hidden" name="fRenderCrudAction" value="#attributes.fRenderCrudAction#" /></cfif>
+			<cfif len(attributes.fRenderItem)><input type="hidden" name="fRenderItem" value="#attributes.fRenderItem#" /></cfif>
 		</cfif>
 		<cfif structKeyExists(request.context, "modal") and request.context.modal>
 			<div class="modal-header">

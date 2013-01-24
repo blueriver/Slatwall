@@ -14,10 +14,10 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		arguments.rc.entityActionDetails.sRedirectURL = "";
 		arguments.rc.entityActionDetails.sRedirectAction = "";
-		arguments.rc.entityActionDetails.sRenderCrudAction = "";
+		arguments.rc.entityActionDetails.sRenderItem = "";
 		arguments.rc.entityActionDetails.fRedirectURL = "";
 		arguments.rc.entityActionDetails.fRedirectAction = "";
-		arguments.rc.entityActionDetails.fRenderCrudAction = "";
+		arguments.rc.entityActionDetails.fRenderItem = "";
 		
 		arguments.rc.entityActionDetails.itemEntityName = "";
 		arguments.rc.entityActionDetails.cancelAction = arguments.rc.entityActionDetails.thisAction;
@@ -111,6 +111,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		// TODO: Verify List Permission
 		
 		// Find the correct service
+		writeLog(file="Slatwall", text=arguments.entityName);
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		// Place the standard smartList in the rc
@@ -124,11 +125,11 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
 		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
 		if(!hasSuccess) {
-			arguments.rc.entityActionDetails.sRenderCrudAction = arguments.rc.entityActionDetails.detailAction;
+			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.entityActionDetails.detailAction;
 		}
 		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
 		if(!hasFaliure) {
-			arguments.rc.entityActionDetails.fRenderCrudAction = arguments.rc.entityActionDetails.createAction;
+			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.entityActionDetails.createAction;
 		}
 		
 		// Find the correct service
@@ -165,11 +166,15 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Check for any redirect / render values that were passed in to be used by the edit form, otherwise set them to a default
 		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
 		if(!hasSuccess) {
-			arguments.rc.entityActionDetails.sRenderCrudAction = arguments.rc.entityActionDetails.detailAction;
+			if(structKeyExists(arguments.rc, "modal") && arguments.rc.modal) {
+				arguments.rc.entityActionDetails.sRenderItem = listLast(arguments.rc.entityActionDetails.listAction,".");	
+			} else {
+				arguments.rc.entityActionDetails.sRenderItem = listLast(arguments.rc.entityActionDetails.detailAction,".");
+			}
 		}
 		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
 		if(!hasFaliure) {
-			arguments.rc.entityActionDetails.fRenderCrudAction = arguments.rc.entityActionDetails.editAction;
+			arguments.rc.entityActionDetails.fRenderItem = listLast(arguments.rc.entityActionDetails.editAction,".");
 		}
 		
 		// Setup the values needed for this type of layout
@@ -437,8 +442,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		if(structKeyExists(arguments.rc, "sRedirectAction")) {
 			arguments.rc.entityActionDetails.sRedirectAction = arguments.rc.sRedirectAction;
 		}
-		if(structKeyExists(arguments.rc, "sRenderCrudAction")) {
-			arguments.rc.entityActionDetails.sRenderCrudAction = arguments.rc.sRenderCrudAction;
+		if(structKeyExists(arguments.rc, "sRenderItem")) {
+			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.sRenderItem;
 		}
 		return hasValue;
 	}
@@ -450,8 +455,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		if(structKeyExists(arguments.rc, "fRedirectAction")) {
 			arguments.rc.entityActionDetails.fRedirectAction = arguments.rc.fRedirectAction;
 		}
-		if(structKeyExists(arguments.rc, "fRenderCrudAction")) {
-			arguments.rc.entityActionDetails.fRenderCrudAction = arguments.rc.fRenderCrudAction;
+		if(structKeyExists(arguments.rc, "fRenderItem")) {
+			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.fRenderItem;
 		}
 		return hasValue;
 	}
@@ -467,12 +472,12 @@ component output="false" accessors="true" extends="HibachiController" {
 		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
 			getFW().redirect( action=arguments.rc.sRedirectAction, preserve="messages", queryString=arguments.rc.sRedirectQS );
 			
-		// Next look for a sRenderCrudAction in the rc, set the view to that, and then call the controller for that action
-		} else if (structKeyExists(arguments.rc, "sRenderCrudAction")) {
-			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.sRenderCrudAction#" );
-			arguments.rc[ getFW().getAction() ] = arguments.rc.sRenderCrudAction;
+		// Next look for a sRenderItem in the rc, set the view to that, and then call the controller for that action
+		} else if (structKeyExists(arguments.rc, "sRenderItem")) {
+			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.sRenderItem#" );
+			arguments.rc[ getFW().getAction() ] = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.sRenderItem#";
 			this.invokeMethod("before", {rc=arguments.rc});
-			this.invokeMethod(arguments.rc.sRenderCrudAction, {rc=arguments.rc});
+			this.invokeMethod(arguments.rc.sRenderItem, {rc=arguments.rc});
 		
 		// If nothing was defined then we just do a redirect to the defaultAction, if it is just a single value then render otherwise do a redirect
 		} else if (listLen(arguments.defaultAction, ".") eq 1) {
@@ -498,12 +503,12 @@ component output="false" accessors="true" extends="HibachiController" {
 		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
 			getFW().redirect( action=arguments.rc.fRedirectAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
 			
-		// Next look for a fRenderCrudAction in the rc, set the view to that, and then call the controller for that action
-		} else if (structKeyExists(arguments.rc, "fRenderCrudAction")) {
-			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.fRenderCrudAction#" );
-			arguments.rc[ getFW().getAction() ] = arguments.rc.fRenderCrudAction;
+		// Next look for a fRenderItem in the rc, set the view to that, and then call the controller for that action
+		} else if (structKeyExists(arguments.rc, "fRenderItem")) {
+			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.fRenderItem#" );
+			arguments.rc[ getFW().getAction() ] = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.fRenderItem#";
 			this.invokeMethod("before", {rc=arguments.rc});
-			this.invokeMethod(arguments.rc.fRenderCrudAction, {rc=arguments.rc});
+			this.invokeMethod(arguments.rc.fRenderItem, {rc=arguments.rc});
 		
 		// Lastly if nothing was defined then we just do a redirect to the defaultAction
 		} else if (listLen(arguments.defaultAction, ".") eq 1) {

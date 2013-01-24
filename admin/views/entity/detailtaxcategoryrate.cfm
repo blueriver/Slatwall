@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.taxCategoryRate" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_HibachiCrudDetailForm object="#rc.taxCategory#" saveAction="admin:setting.savetaxcategory" edit="#rc.edit#">
+<cf_HibachiCrudDetailForm object="#rc.taxCategory#" saveAction="admin:entity.savetaxcategory" edit="#rc.edit#">
 	
 	<cfoutput><input type="hidden" name="taxcategoryrates[1].taxcategoryrateid" value="#rc.taxCategoryRate.getTaxCategoryRateID()#" /></cfoutput>
 	

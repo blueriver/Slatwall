@@ -87,15 +87,15 @@ Notes:
 					<td class="admin admin1">
 						<cfif thisSetting.settingDetails.settingInherited>
 							<cfif isObject(thisSetting.settingObject)>
-								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_SlatwallActionCaller action="admin:entity.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							<cfelse>
-								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_SlatwallActionCaller action="admin:entity.editsetting" queryString="settingID=&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							</cfif>
 						<cfelse>
 							<cfif isObject(thisSetting.settingObject)>
-								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_SlatwallActionCaller action="admin:entity.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							<cfelse>
-								<cf_SlatwallActionCaller action="admin:setting.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_SlatwallActionCaller action="admin:entity.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&returnAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							</cfif>
 						</cfif>
 					</td>

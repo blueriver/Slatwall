@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.settingSmartList#" showCreate="false" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.settingSmartList#"
-							   recordDeleteAction="admin:setting.deleteSetting">
+							   recordDeleteAction="admin:entity.deleteSetting">
 		<cf_SlatwallListingColumn propertyIdentifier="settingName" filter="true" />
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="settingValue" sort="false" />
 		<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />

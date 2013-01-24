@@ -43,10 +43,10 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.categorySmartList#" showCreate="false" />
 
 <cf_SlatwallListingDisplay smartList="#rc.categorySmartList#"
-						   recordDetailAction="admin:setting.detailcategory"
+						   recordDetailAction="admin:entity.detailcategory"
 						   recordDetailModal="true"
-						   recordEditAction="admin:setting.editcategory"
-						   recordEditQueryString="returnAction=admin:setting.listcategory"
+						   recordEditAction="admin:entity.editcategory"
+						   recordEditQueryString="returnAction=admin:entity.listcategory"
 						   recordEditModal="true">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="categoryName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="restrictAccessFlag" filter="true" />

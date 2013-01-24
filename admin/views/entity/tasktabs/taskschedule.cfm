@@ -39,11 +39,11 @@ Notes:
 <cfparam name="rc.task" type="any"/>
 
 <cf_slatwalllistingdisplay smartlist="#rc.task.getTaskSchedulesSmartList()#" 
-                        recordeditaction="admin:setting.editTaskSchedule" recordeditmodal="true" 
+                        recordeditaction="admin:entity.editTaskSchedule" recordeditmodal="true" 
                         recordeditquerystring="taskID=#rc.task.getTaskID()#" 
-                        recorddeleteaction="admin:setting.deleteTaskSchedule"
+                        recorddeleteaction="admin:entity.deleteTaskSchedule"
 						recorddeletequerystring="returnAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule"
-                        recordprocessaction="admin:setting.processtaskschedule"
+                        recordprocessaction="admin:entity.processtaskschedule"
                         recordprocessmodal="true">
 	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="startDateTime"/>
 	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="endDateTime"/>
@@ -51,5 +51,5 @@ Notes:
 	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
 </cf_slatwalllistingdisplay>
 
-<cf_slatwallactioncaller action="admin:setting.createTaskSchedule" class="btn btn-inverse" icon="plus icon-white" 
+<cf_slatwallactioncaller action="admin:entity.createTaskSchedule" class="btn btn-inverse" icon="plus icon-white" 
                       querystring="taskID=#rc.task.getTaskID()#" modal=true/>

@@ -42,7 +42,7 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.locationSmartList#" createModal="true" />
 
-<cf_SlatwallListingDisplay smartList="#rc.locationSmartList#" recordEditAction="admin:setting.editlocation" recordEditQueryString="returnAction=admin:setting.listlocation" recordEditModal="true" recordDeleteAction="admin:setting.deletelocation">
+<cf_SlatwallListingDisplay smartList="#rc.locationSmartList#" recordEditAction="admin:entity.editlocation" recordEditQueryString="returnAction=admin:entity.listlocation" recordEditModal="true" recordDeleteAction="admin:entity.deletelocation">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="locationName" search="true" />
 </cf_SlatwallListingDisplay>
 

@@ -44,7 +44,7 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.taskschedule#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.taskschedule#" />
 		<input type="hidden" name="task.taskID" value="#rc.task.getTaskID()#"/>
-		<input type="hidden" name="returnAction" value="admin:setting.edittask&taskID=#rc.task.getTaskID()###tabtaskschedule" />
+		<input type="hidden" name="returnAction" value="admin:entity.edittask&taskID=#rc.task.getTaskID()###tabtaskschedule" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList>

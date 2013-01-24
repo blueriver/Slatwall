@@ -39,10 +39,14 @@ Notes:
 <cfparam name="rc.typeSmartList" type="any" />
 
 <cfoutput>
-	
 	<cf_HibachiCrudActionBar type="listing" object="#rc.typeSmartList#" showCreate="false" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.typeSmartList#" recordEditAction="admin:setting.edittype" recordEditQueryString="returnAction=admin:setting.listtype" parentPropertyName="parentType" childPropertyName="childTypes" recordEditModal=true>
+	<cf_SlatwallListingDisplay smartList="#rc.typeSmartList#"
+							   recordDetailModal=true
+							   recordDetailAction="admin:entity.detailtype"
+							   recordEditModal=true
+							   recordEditAction="admin:entity.edittype"
+							   parentPropertyName="parentType">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="type" />
 	</cf_SlatwallListingDisplay>
 

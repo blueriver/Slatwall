@@ -43,18 +43,18 @@ Notes:
 		</ul>
 		<h2>Delete All Orders</h2>
 		<form method="post">
-			<input type="hidden" name="slatAction" value="admin:setting.deleteallorders" />
+			<input type="hidden" name="slatAction" value="admin:entity.deleteallorders" />
 			<p>This will delete Orders, Carts and all other related data like Payments & Deliveries<br />Only Click this button if you are 100% sure that you want to remove all orders.</p>
 			<br />
 			<br />
 			<input type="hidden" name="confirmDelete" value="" />
 			Confirm Delete: <input type="checkbox" name="confirmDelete" value="1" />
-			<cf_SlatwallActionCaller action="admin:setting.deleteallorders" type="submit" class="button" confirmRequired="true">
+			<cf_SlatwallActionCaller action="admin:entity.deleteallorders" type="submit" class="button" confirmRequired="true">
 		</form>
 		<hr />
 		<h2>Delete All Products (and Orders)</h2>
 		<form method="post">
-			<input type="hidden" name="slatAction" value="admin:setting.deleteallproducts" />
+			<input type="hidden" name="slatAction" value="admin:entity.deleteallproducts" />
 			<p>Only Click this button if you are 100% sure that you want to remove all products. <br />This will delete, Orders, Carts, Products, Stock, Skus, Attribute Values, ect.</p>
 			<ul>
 				<li>Delete Brands: <input type="checkbox" name="deleteBrands" value="1" /></li>
@@ -65,17 +65,17 @@ Notes:
 			<br />
 			<input type="hidden" name="confirmDelete" value="" />
 			Confirm Delete: <input type="checkbox" name="confirmDelete" value="1" />
-			<cf_SlatwallActionCaller action="admin:setting.deleteallproducts" type="submit" class="button" confirmRequired="true">
+			<cf_SlatwallActionCaller action="admin:entity.deleteallproducts" type="submit" class="button" confirmRequired="true">
 		</form>
 		<hr />
 		<h2>Import Data From Bundle</h2>
 		<form method="post">
-			<input type="hidden" name="slatAction" value="admin:setting.importbundledata" />
+			<input type="hidden" name="slatAction" value="admin:entity.importbundledata" />
 			<p>Clicking this option will delete all Slatwall Data, and re-import it from a bundle.</p>
 			<br />
 			<input type="hidden" name="confirmImport" value="" />
 			Confirm Import: <input type="checkbox" name="confirmImport" value="1" />
-			<cf_SlatwallActionCaller action="admin:setting.importbundledata" type="submit" class="button" confirmRequired="true">
+			<cf_SlatwallActionCaller action="admin:entity.importbundledata" type="submit" class="button" confirmRequired="true">
 		</form>
 		<hr />
 	</div>

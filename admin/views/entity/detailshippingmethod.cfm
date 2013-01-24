@@ -46,12 +46,12 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiCrudDetailForm object="#rc.shippingMethod#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.shippingMethod#" edit="#rc.edit#" backAction="admin:setting.detailfulfillmentMethod" backQueryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#">
+		<cf_HibachiCrudActionBar type="detail" object="#rc.shippingMethod#" edit="#rc.edit#" backAction="admin:entity.detailfulfillmentMethod" backQueryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#">
 			<cfset local.integrationOptions = rc.shippingMethod.getShippingMethodRateIntegrationOptions()>
 			<cfloop array="#local.integrationOptions#" index="local.integration">
-				<cf_SlatwallActionCaller text="#request.slatwallScope.rbKey('define.add')# #local.integration['name']# #request.slatwallScope.rbKey('define.rate')#" action="admin:setting.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#&integrationID=#local.integration['value']#" modal="true" />
+				<cf_SlatwallActionCaller text="#request.slatwallScope.rbKey('define.add')# #local.integration['name']# #request.slatwallScope.rbKey('define.rate')#" action="admin:entity.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#&integrationID=#local.integration['value']#" modal="true" />
 			</cfloop>
-			<cf_SlatwallActionCaller text="#request.slatwallScope.rbKey('define.add')# #request.slatwallScope.rbKey('define.manual')# #request.slatwallScope.rbKey('define.rate')#" action="admin:setting.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" modal="true" />
+			<cf_SlatwallActionCaller text="#request.slatwallScope.rbKey('define.add')# #request.slatwallScope.rbKey('define.manual')# #request.slatwallScope.rbKey('define.rate')#" action="admin:entity.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" modal="true" />
 		</cf_HibachiCrudActionBar>
 		
 		<cfif rc.edit>

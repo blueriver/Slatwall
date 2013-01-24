@@ -43,9 +43,9 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.scheduleSmartList#" />
 
 	<cf_slatwalllistingdisplay smartlist="#rc.scheduleSmartList#" 
-	                           recordeditaction="admin:setting.editschedule" 
-	                           recordeditquerystring="returnAction=admin:setting.listschedule" 
-	                           recordeditmodal="false" recorddeleteaction="admin:setting.deleteschedule">
+	                           recordeditaction="admin:entity.editschedule" 
+	                           recordeditquerystring="returnAction=admin:entity.listschedule" 
+	                           recordeditmodal="false" recorddeleteaction="admin:entity.deleteschedule">
 		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="scheduleName" search="true" />
 	</cf_slatwalllistingdisplay>
 

@@ -55,7 +55,7 @@ Notes:
 			</cf_SlatwallPropertyList>
 			
 			<cfif !rc.skuCurrency.isNew()>
-				<cf_SlatwallActionCaller action="admin:setting.deleteskucurrency" queryString="skuCurrencyID=#rc.skuCurrency.getSkuCurrencyID()#&returnAction=#request.context.returnAction#&skuID=#rc.skuID#" class="btn btn-danger" />
+				<cf_SlatwallActionCaller action="admin:entity.deleteskucurrency" queryString="skuCurrencyID=#rc.skuCurrency.getSkuCurrencyID()#&returnAction=#request.context.returnAction#&skuID=#rc.skuID#" class="btn btn-danger" />
 			</cfif>
 		</cf_SlatwallDetailHeader>
 		

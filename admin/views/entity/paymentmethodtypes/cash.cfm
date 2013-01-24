@@ -39,5 +39,5 @@ Notes:
 <cfparam name="rc.paymentMethod" type="any" />
 
 <cf_SlatwallTabGroup object="#rc.paymentMethod#">
-	<cf_SlatwallTab view="admin:setting/paymentmethodtypes/cashtabs/settings" />
+	<cf_SlatwallTab view="admin:entity/paymentmethodtypes/cashtabs/settings" />
 </cf_SlatwallTabGroup>

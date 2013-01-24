@@ -40,10 +40,10 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#"
-			recordEditAction="admin:setting.editaddresszonelocation"
+			recordEditAction="admin:entity.editaddresszonelocation"
 			recordEditQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#"
 			recordEditModal=true
-			recordDeleteAction="admin:setting.deleteaddresszonelocation"
+			recordDeleteAction="admin:entity.deleteaddresszonelocation"
 			recordDeleteQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#">
 			
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryCode" />
@@ -53,4 +53,4 @@ Notes:
 	</cf_SlatwallListingDisplay>
 </cfoutput>
 
-<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" class="btn btn-inverse" icon="plus icon-white" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
+<cf_SlatwallActionCaller action="admin:entity.createaddresszonelocation" class="btn btn-inverse" icon="plus icon-white" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />

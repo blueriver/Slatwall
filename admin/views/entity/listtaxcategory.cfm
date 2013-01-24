@@ -43,8 +43,8 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.taxCategorySmartList#" rc="#rc#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.taxCategorySmartList#" rc="#rc#"
-						   recordEditAction="admin:setting.editTaxCategory"
-						   recordDetailAction="admin:setting.detailTaxCategory">
+						   recordEditAction="admin:entity.editTaxCategory"
+						   recordDetailAction="admin:entity.detailTaxCategory">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="taxCategoryName" search="true" />
 	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_SlatwallListingDisplay>

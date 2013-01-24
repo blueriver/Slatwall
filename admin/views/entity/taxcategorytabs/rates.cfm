@@ -39,17 +39,17 @@ Notes:
 <cfparam name="rc.taxCategory" type="any" />
 
 <cf_SlatwallListingDisplay smartList="#rc.taxCategory.getTaxCategoryRatesSmartList()#"
-						   recordEditAction="admin:setting.edittaxcategoryrate"
+						   recordEditAction="admin:entity.edittaxcategoryrate"
 						   recordEditQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#"
 						   recordEditModal=true
-						   recordDetailAction="admin:setting.detailtaxcategoryrate"
+						   recordDetailAction="admin:entity.detailtaxcategoryrate"
 						   recordDetailQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#"
 						   recordDetailModal=true
-						   recordDeleteAction="admin:setting.deletetaxcategoryrate"
-						   recordDeleteQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#&returnAction=admin:setting.detailtaxcategory">
+						   recordDeleteAction="admin:entity.deletetaxcategoryrate"
+						   recordDeleteQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#&returnAction=admin:entity.detailtaxcategory">
 		
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="taxRate" />
 	<cf_SlatwallListingColumn propertyIdentifier="addressZone.addressZoneName" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:setting.createtaxcategoryrate" class="btn btn-inverse" icon="plus icon-white" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" modal=true />
+<cf_SlatwallActionCaller action="admin:entity.createtaxcategoryrate" class="btn btn-inverse" icon="plus icon-white" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" modal=true />

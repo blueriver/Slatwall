@@ -42,9 +42,9 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.paymentTermSmartList#" createmodal="true" />
 	
 	<cf_SlatwallListingDisplay smartList="#rc.paymentTermSmartList#"
-							   recordEditAction="admin:setting.editpaymentTerm"
+							   recordEditAction="admin:entity.editpaymentTerm"
 							   recordEditModal="true"
-							   recordDetailAction="admin:setting.detailpaymentTerm"
+							   recordDetailAction="admin:entity.detailpaymentTerm"
 							   recordDetailModal="true">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentTermName" />
 	</cf_SlatwallListingDisplay>

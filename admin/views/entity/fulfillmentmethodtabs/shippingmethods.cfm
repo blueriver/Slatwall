@@ -40,8 +40,8 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethod.getShippingMethodsSmartList()#" 
-							   recordEditAction="admin:setting.editshippingmethod" 
-							   recordDetailAction="admin:setting.detailshippingmethod"
+							   recordEditAction="admin:entity.editshippingmethod" 
+							   recordDetailAction="admin:entity.detailshippingmethod"
 							   sortproperty="sortOrder"
 							   sortContextIDColumn="fulfillmentMethodID"
 							   sortContextIDValue="#rc.fulfillmentMethod.getFulfillmentMethodID()#">
@@ -51,5 +51,5 @@ Notes:
 		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" class="btn btn-inverse" icon="plus icon-white" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
+	<cf_SlatwallActionCaller action="admin:entity.createshippingmethod" class="btn btn-inverse" icon="plus icon-white" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
 </cfoutput>

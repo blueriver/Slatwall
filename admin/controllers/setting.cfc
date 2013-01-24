@@ -60,13 +60,13 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	this.secureMethods=listAppend(this.secureMethods, 'settings');
 	
 	public void function default() {
-		getFW().redirect(action="admin:setting.listsetting");
+		getFW().redirect(action="admin:entity.listsetting");
 	}
 	
 	public void function editSetting(required struct rc) {
 		rc.setting = getSettingService().getSetting(rc.settingID, true);
 		rc.edit = true;
-		getFW().setView("admin:setting.detailsetting");
+		getFW().setView("admin:entity.detailsetting");
 	}
 	
 }

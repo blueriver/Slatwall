@@ -52,11 +52,11 @@ Notes:
 	<cfelseif listFindNoCase( "atCheckBoxGroup,atMultiSelect,atRadioGroup,atSelect",rc.attribute.getAttributeType().getSystemCode() )>
 		
 		<cf_SlatwallListingDisplay smartList="#rc.attribute.getAttributeOptionsSmartList()#"
-								   recordEditAction="admin:setting.editattributeoption" 
+								   recordEditAction="admin:entity.editattributeoption" 
 								   recordEditQueryString="attributeID=#rc.attribute.getAttributeID()#"
 								   recordEditModal="true"
-								   recordDeleteAction="admin:setting.deleteattributeoption"
-								   recordDeleteQueryString="attributeID=#rc.attribute.getAttributeID()#&returnAction=admin:setting.detailAttribute"
+								   recordDeleteAction="admin:entity.deleteattributeoption"
+								   recordDeleteQueryString="attributeID=#rc.attribute.getAttributeID()#&returnAction=admin:entity.detailAttribute"
 								   sortProperty="sortOrder"
 								   sortContextIDColumn="attributeID"
 								   sortContextIDValue="#rc.attribute.getAttributeID()#">
@@ -64,7 +64,7 @@ Notes:
 			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeOptionLabel" /> 
 		</cf_SlatwallListingDisplay>
 		
-		<cf_SlatwallActionCaller action="admin:setting.createattributeoption" class="btn btn-inverse" icon="plus icon-white" queryString="attributeid=#rc.attribute.getAttributeID()#" modal=true />
+		<cf_SlatwallActionCaller action="admin:entity.createattributeoption" class="btn btn-inverse" icon="plus icon-white" queryString="attributeid=#rc.attribute.getAttributeID()#" modal=true />
 	</cfif>
 	
 </cfoutput>

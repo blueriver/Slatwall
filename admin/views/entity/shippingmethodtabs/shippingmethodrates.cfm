@@ -40,10 +40,10 @@ Notes:
 
 <cfoutput>
 	<cf_SlatwallListingDisplay smartList="#rc.shippingMethod.getShippingMethodRatesSmartList()#"
-							   recordEditAction="admin:setting.editshippingmethodrate"
-							   recordDeleteAction="admin:setting.deleteshippingmethodrate"
-							   recordDetailAction="admin:setting.detailshippingmethodrate"
-							   recorddeletequerystring="returnAction=admin:setting.detailshippingmethod&shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"
+							   recordEditAction="admin:entity.editshippingmethodrate"
+							   recordDeleteAction="admin:entity.deleteshippingmethodrate"
+							   recordDetailAction="admin:entity.detailshippingmethodrate"
+							   recorddeletequerystring="returnAction=admin:entity.detailshippingmethod&shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"
 							   sortProperty="sortOrder"
 							   sortContextIDColumn="shippingMethodID"
 							   sortContextIDValue="#rc.shippingMethod.getShippingMethodID()#">
@@ -57,8 +57,8 @@ Notes:
 	<cf_SlatwallActionCallerDropdown title="#request.slatwallScope.rbKey('define.add')# #request.slatwallScope.rbKey('entity.shippingmethodrate')#" icon="plus" buttonClass="btn-inverse">
 		<cfset local.integrationOptions = rc.shippingMethod.getShippingMethodRateIntegrationOptions()>
 		<cfloop array="#local.integrationOptions#" index="local.integration">
-			<cf_SlatwallActionCaller text="#local.integration['name']# #request.slatwallScope.rbKey('define.rate')#" action="admin:setting.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#&integrationID=#local.integration['value']#" modal="true" />
+			<cf_SlatwallActionCaller text="#local.integration['name']# #request.slatwallScope.rbKey('define.rate')#" action="admin:entity.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#&integrationID=#local.integration['value']#" modal="true" />
 		</cfloop>
-		<cf_SlatwallActionCaller action="admin:setting.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" modal="true" />
+		<cf_SlatwallActionCaller action="admin:entity.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" modal="true" />
 	</cf_SlatwallActionCallerDropdown>
 </cfoutput>

@@ -41,7 +41,7 @@ Notes:
 
 <cf_HibachiCrudDetailForm object="#rc.addressZone#" edit="#rc.edit#">
 	<cf_HibachiCrudActionBar type="detail" object="#rc.addressZone#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:setting.createaddresszonelocation" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" type="list" modal=true />
+		<cf_SlatwallActionCaller action="admin:entity.createaddresszonelocation" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" type="list" modal=true />
 	</cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallDetailHeader>

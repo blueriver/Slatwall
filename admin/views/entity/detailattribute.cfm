@@ -47,7 +47,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudDetailForm object="#rc.attribute#" edit="#rc.edit#">
 		
-		<cf_HibachiCrudActionBar type="detail" object="#rc.attribute#" edit="#rc.edit#" backAction="admin:setting.detailAttributeSet" backQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
+		<cf_HibachiCrudActionBar type="detail" object="#rc.attribute#" edit="#rc.edit#" backAction="admin:entity.detailAttributeSet" backQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
 		
 		<cfif rc.edit>
 			<input type="hidden" name="attributeSet.attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />

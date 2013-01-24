@@ -43,9 +43,9 @@ Notes:
 	<cf_HibachiCrudActionBar type="listing" object="#rc.taskSmartList#" createmodal="false"/>
 
 	<cf_slatwalllistingdisplay smartlist="#rc.taskSmartList#" 
-	                           recordeditaction="admin:setting.edittask" 
-	                           recordeditquerystring="returnAction=admin:setting.listtask" 
-	                           recordeditmodal="false" recorddeleteaction="admin:setting.deletetask">
+	                           recordeditaction="admin:entity.edittask" 
+	                           recordeditquerystring="returnAction=admin:entity.listtask" 
+	                           recordeditmodal="false" recorddeleteaction="admin:entity.deletetask">
 		
 		
 		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="taskName" search="true" />

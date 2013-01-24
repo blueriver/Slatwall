@@ -43,9 +43,9 @@ Notes:
 <cf_HibachiCrudActionBar type="listing" object="#rc.emailSmartList#" createModal="true" />
 
 <cf_SlatwallListingDisplay smartList="#rc.emailSmartList#"
-						   recordDetailAction="admin:setting.detailemail"
-						   recordEditAction="admin:setting.editemail"
-						   recordEditQueryString="returnAction=admin:setting.listemail">
+						   recordDetailAction="admin:entity.detailemail"
+						   recordEditAction="admin:entity.editemail"
+						   recordEditQueryString="returnAction=admin:entity.listemail">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="emailName" search="true" />
 </cf_SlatwallListingDisplay>
 

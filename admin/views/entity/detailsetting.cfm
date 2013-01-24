@@ -76,7 +76,7 @@ Notes:
 				</cfif>
 			</cf_SlatwallPropertyList>
 			<cfif !rc.setting.isNew() and local.hasRelationshipKey>
-				<cf_SlatwallActionCaller action="admin:setting.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&returnAction=#request.context.returnAction#&#local.returnActionQueryString#" class="btn btn-danger" />
+				<cf_SlatwallActionCaller action="admin:entity.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&returnAction=#request.context.returnAction#&#local.returnActionQueryString#" class="btn btn-danger" />
 			</cfif>
 		</cf_SlatwallDetailHeader>
 	</cf_HibachiCrudDetailForm>
