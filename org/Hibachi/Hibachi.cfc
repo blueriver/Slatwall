@@ -123,7 +123,6 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupGlobalRequest() {
-		writeLog(file="Slatwall", text="Global Request: #variables.framework.applicationKey#");
 		request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.hibachi.Scope").init();
 		
 		// Verify that the application is setup
