@@ -111,7 +111,6 @@ component output="false" accessors="true" extends="HibachiController" {
 		// TODO: Verify List Permission
 		
 		// Find the correct service
-		writeLog(file="Slatwall", text=arguments.entityName);
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		// Place the standard smartList in the rc
