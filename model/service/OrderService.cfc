@@ -1095,6 +1095,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge}, "chargePreAuthorization");
 											if(!orderPayment.hasErrors()) {
 												totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
+												
+												// Set the new payment transaction into the orderDelivery for later use
+												var pts = orderPayment.getPaymentTransactions();
+												orderDelivery.setPaymentTransaction( pts[arrayLen(pts)] );
 											} else {
 												structDelete(orderPayment.getErrors(), "processing");
 											}
@@ -1109,6 +1113,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 											orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge}, "authorizeAndCharge");
 											if(!orderPayment.hasErrors()) {
 												totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
+												
+												// Set the new payment transaction into the orderDelivery for later use
+												var pts = orderPayment.getPaymentTransactions();
+												orderDelivery.setPaymentTransaction( pts[arrayLen(pts)] );
 											} else {
 												structDelete(orderPayment.getErrors(), "processing");
 											}

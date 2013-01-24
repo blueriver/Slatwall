@@ -44,8 +44,6 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.orderItem#" saveAction="admin:entity.saveOrderItem" edit="#rc.edit#" >
 		<cf_HibachiCrudActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:entity.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
 		
-		<input type="hidden" name="orderItemID" value="#rc.orderItem.getOrderItemID()#" />
-		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallPropertyList divclass="span4">
 				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="orderItemStatusType" edit="false" />

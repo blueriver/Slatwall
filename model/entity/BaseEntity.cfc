@@ -38,6 +38,37 @@ Notes:
 */
 component output="false" accessors="true" persistent="false" extends="Slatwall.org.Hibachi.HibachiEntity" {
 
+	// @hint Override the populate method to look for custom attributes
+	public any function populate( required struct data={} ) {
+		
+		// Call the super populate to do all the standard logic
+		super.populate(argumentcollection=arguments);
+		
+		// Get the assigned attributes
+		var assignedAttributeSets = getAssignedAttributeSetSmartList().getRecords();
+		
+		var attributeType = replace(getEntityName(),"Slatwall","");
+		attributeType = lcase(left(attributeType, 1)) & right(attributeType, len(attributeType)-1);
+					
+		// Loop over attribute sets
+		for(var ats=1; ats<=arrayLen(assignedAttributeSets); ats++) {
+			var attributes = assignedAttributeSets.getAttributes();
+			
+			for(var at=1; at<=arrayLen(attributes); at++) {
+				if(structKeyExists(arguments.data, attributes[at].getAttributeCode())) {
+					var av = getAttributeValue(at.getAttributeCode, true);
+					av.setAttributeValue( data[ attributes[at].getAttributeCode() ]);
+					av.setAttribute(at);
+					av.setAttributeType(attributeType);
+					av.invokeMethod("set#attributeType#", {1=this});			
+				}
+			}
+		}
+		
+		// Return this object
+		return this;
+	}
+
 	// @hint helper function to return a Setting
 	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
 		return getService("settingService").getSettingValue(settingName=arguments.settingName, object=this, filterEntities=arguments.filterEntities, formatValue=arguments.formatValue);
