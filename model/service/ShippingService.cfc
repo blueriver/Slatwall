@@ -85,15 +85,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				ratesRequestBean.populateShippingItemsWithOrderFulfillmentItems( arguments.orderFulfillment.getOrderFulfillmentItems() );
 				ratesRequestBean.populateShipToWithAddress( arguments.orderFulfillment.getAddress() );
 				
-				logSlatwall('#integrations[i].getIntegrationName()# Shipping Integration Rates Request - Started');
+				logHibachi('#integrations[i].getIntegrationName()# Shipping Integration Rates Request - Started');
 				// Inside of a try/catch call the 'getRates' method of the integraion
 				try {
 					responseBeans[ integrations[i].getIntegrationID() ] = integrationShippingAPI.getRates( ratesRequestBean );
 				} catch(any e) {
-					logSlatwall('An error occured with the #integrations[i].getIntegrationName()# integration when trying to call getRates()', true);
-					logSlatwallException(e);
+					logHibachi('An error occured with the #integrations[i].getIntegrationName()# integration when trying to call getRates()', true);
+					logHibachiException(e);
 				}
-				logSlatwall('#integrations[i].getIntegrationName()# Shipping Integration Rates Request - Finished');
+				logHibachi('#integrations[i].getIntegrationName()# Shipping Integration Rates Request - Finished');
 			}
 			
 			// Loop over the shippingMethods again, and loop over each of the rates to find the quote in the response bean.

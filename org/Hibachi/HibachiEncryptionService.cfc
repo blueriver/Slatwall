@@ -15,7 +15,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		try {
 			return decrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));	
 		} catch (any e) {
-			logSlatwall("There was an error decrypting a value from the database.  This is usually because Slatwall cannot find the Encryption key used to encrypt the data.  Verify that you have a key file in the location specified in the advanced settings of the admin.", true);
+			logHibachi("There was an error decrypting a value from the database.  This is usually because Slatwall cannot find the Encryption key used to encrypt the data.  Verify that you have a key file in the location specified in the advanced settings of the admin.", true);
 			return "";
 		}
 	}

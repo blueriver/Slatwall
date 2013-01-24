@@ -82,29 +82,29 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	}
 	
 	public void function setupIntegration() {
-		logSlatwall("Setting Service - verifyMuraRequirements - Started", true);
+		logHibachi("Setting Service - verifyMuraRequirements - Started", true);
 		verifyMuraFrontendViews();
 		verifyMuraRequiredPages();
 		pullMuraCategory();
-		logSlatwall("Setting Service - verifyMuraRequirements - Finished", true);
+		logHibachi("Setting Service - verifyMuraRequirements - Finished", true);
 	}
 	
 	private void function verifyMuraFrontendViews() {
-		logSlatwall("Setting Service - verifyMuraFrontendViews - Started", true);
+		logHibachi("Setting Service - verifyMuraFrontendViews - Started", true);
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			logSlatwall("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
+			logHibachi("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
 			
 			var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
 			var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#assignedSites["siteID"][i]#/includes/display_objects/custom/slatwall/"));
 			
 			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}
-		logSlatwall("Setting Service - verifyMuraFrontendViews - Finished", true);
+		logHibachi("Setting Service - verifyMuraFrontendViews - Finished", true);
 	}
 
 	private void function verifyMuraRequiredPages() {
-		logSlatwall("Setting Service - verifyMuraRequiredPages - Started", true);
+		logHibachi("Setting Service - verifyMuraRequiredPages - Started", true);
 		
 		var requiredMuraPages = [
 			{settingName="globalPageShoppingCart",settingValue="shopping-cart",title="Shopping Cart",fileName="shopping-cart",isNav="1",isLocked="1"},
@@ -120,7 +120,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			logSlatwall("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#", true);
+			logHibachi("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#", true);
 			var thisSiteID = assignedSites["siteID"][i];
 			
 			for(var page in requiredMuraPages) {
@@ -134,7 +134,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 				ormflush();
 			}
 		}
-		logSlatwall("Setting Service - verifyMuraRequiredPages - Finished", true);
+		logHibachi("Setting Service - verifyMuraRequiredPages - Finished", true);
 	}
 	
 	private void function createSetting(required struct page,required any siteID) {
@@ -179,10 +179,10 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	}
 	
 	private void function pullMuraCategory() {
-		logSlatwall("Setting Service - pullMuraCategory - Started", true);
+		logHibachi("Setting Service - pullMuraCategory - Started", true);
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			logSlatwall("Pull mura category For Site ID: #assignedSites["siteID"][i]#");
+			logHibachi("Pull mura category For Site ID: #assignedSites["siteID"][i]#");
 			
 			var categoryQuery = getCategoryManager().getCategoriesBySiteID(siteID=assignedSites["siteID"][i]);
 			for(var j=1; j<=categoryQuery.recordcount; j++) {
@@ -195,7 +195,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 				}
 			}
 		}
-		logSlatwall("Setting Service - pullMuraCategory - Finished", true);
+		logHibachi("Setting Service - pullMuraCategory - Finished", true);
 	}
 
 	public any function getPluginConfig() {

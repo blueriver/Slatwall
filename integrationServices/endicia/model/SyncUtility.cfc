@@ -114,7 +114,7 @@
 			</cfif>
 
 			<cfcatch>
-				<cfset logSlatwallException(cfcatch) />
+				<cfset logHibachiException(cfcatch) />
 				<cfset responseBean.addError("ftp", "There was an error connecting to the sync ftp server.  Please check your setting credentials and try again") />
 			</cfcatch>
 		</cftry>

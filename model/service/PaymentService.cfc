@@ -226,9 +226,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		try {
 			
 			// Get Response Bean from provider service
-			logSlatwall("Payment Processing Request - Started", true);
+			logHibachi("Payment Processing Request - Started", true);
 			var response = providerService.processCreditCard(requestBean);
-			logSlatwall("Payment Processing Request - Finished", true);
+			logHibachi("Payment Processing Request - Finished", true);
 			
 			// Populate the Credit Card Transaction with the details of this process
 			transaction.setProviderTransactionID(response.getTransactionID());
@@ -254,7 +254,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			arguments.payment.addError('processing', "An Unexpected Error Ocurred", true);
 			
 			// Log the exception
-			logSlatwallException(e);
+			logHibachiException(e);
 			
 			rethrow;
 		}

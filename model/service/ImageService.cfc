@@ -142,7 +142,7 @@ component displayname="Image Service" persistent="false" extends="BaseService" o
 				}
 				catch(any e) {
 					// log the error
-					logSlatwallException(e);
+					logHibachiException(e);
 				}
 			}
 		}

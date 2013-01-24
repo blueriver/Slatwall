@@ -714,7 +714,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								// Do a flush so that the order is commited to the DB
 								getHibachiDAO().flushORMSession();
 							
-								logSlatwall(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
+								logHibachi(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
 							
 								// Send out the e-mail
 								if(!structKeyExists(arguments.data,"doNotSendOrderConfirmationEmail") || !arguments.data.doNotSendOrderConfirmationEmail) {

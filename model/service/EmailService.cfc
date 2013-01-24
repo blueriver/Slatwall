@@ -42,7 +42,7 @@ Notes:
 		<cfargument name="eventName" type="string" required="true" />
 		<cfargument name="entity" type="any" required="true" />
 		
-		<cfset logSlatwall("Email sending event triggered. eventName: #arguments.eventName#, entityName: #arguments.entity.getEntityName()#, entityID: #arguments.entity.getPrimaryIDValue()#") />
+		<cfset logHibachi("Email sending event triggered. eventName: #arguments.eventName#, entityName: #arguments.entity.getEntityName()#, entityID: #arguments.entity.getPrimaryIDValue()#") />
 		
 		<cfset emailsToSend = this.listEmail({eventName=arguments.eventName}) />
 		
@@ -57,7 +57,7 @@ Notes:
 		<cfargument name="email" type="any" required="true" />
 		<cfargument name="entity" type="any" required="true" />
 		
-		<cfset logSlatwall("Send email triggerd for emailID: #arguments.email.getEmailID()#") />
+		<cfset logHibachi("Send email triggerd for emailID: #arguments.email.getEmailID()#") />
 		
 		<!--- Setup Scope so that it can be used by includes --->
 		<cfset var $ = request.context.$ />
@@ -135,11 +135,11 @@ Notes:
 				</cfmailpart>
 			</cfmail>
 			
-			<cfset logSlatwall("Email Sent to SMTP Server") />
+			<cfset logHibachi("Email Sent to SMTP Server") />
 			
 			<cfcatch>
-				<cfset logSlatwall("There was an unexpected error while attempting to send this email") />
-				<cfset logSlatwallException(cfcatch) />
+				<cfset logHibachi("There was an unexpected error while attempting to send this email") />
+				<cfset logHibachiException(cfcatch) />
 			</cfcatch>
 			
 		</cftry>

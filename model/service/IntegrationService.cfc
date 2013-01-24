@@ -118,7 +118,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function updateIntegrationsFromDirectory() {
-		logSlatwall("Update Integrations Started");
+		logHibachi("Update Integrations Started");
 		var dirList = directoryList( expandPath("/Slatwall/integrationServices") );
 		var integrationList = this.listIntegration();
 		var installedIntegrationList = "";
@@ -214,7 +214,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					// Call Entity Save so that any new integrations get persisted
 					getHibachiDAO().save(integration);
 					
-					logSlatwall("The following integration has been register: #integrationPackage#");
+					logHibachi("The following integration has been register: #integrationPackage#");
 				}
 			}
 		}

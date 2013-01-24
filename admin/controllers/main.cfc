@@ -126,7 +126,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		param name="rc.branchType" default="standard";
 		
 		if(rc.process) {
-			logSlatwall("Update Called", true);
+			logHibachi("Update Called", true);
 			
 			if(rc.branchType eq "standard") {
 				getUpdateService().update(branch=rc.updateBranch);	
@@ -134,7 +134,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 				getUpdateService().update(branch=rc.customBranch);
 			}
 			
-			logSlatwall("Update Finished, Now Calling Reload", true);
+			logHibachi("Update Finished, Now Calling Reload", true);
 			getFW().redirect(action="admin:main.update", queryString="reload=1&messageKeys=admin.main.update_success");
 		}
 		

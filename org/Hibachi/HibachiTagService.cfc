@@ -46,7 +46,7 @@
 				#arguments.body#
 			</cfmail>
 			<cfcatch type="any">
-				<cfset logSlatwallException(cfcatch) />
+				<cfset logHibachiException(cfcatch) />
 			</cfcatch>
 		</cftry>
 
