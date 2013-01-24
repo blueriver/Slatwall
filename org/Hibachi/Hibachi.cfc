@@ -11,13 +11,9 @@ component extends="FW1.framework" {
 	this.datasource.name = "hibachi";
 	
 	// Allow For Application Config
-	if( fileExists(expandPath("config/configApplication.cfm")) ) {
-		include "../../config/configApplication.cfm";
-	}
+	try{include "../../config/configApplication.cfm";}catch(any e){}
 	// Allow For Instance Config
-	if( fileExists(expandPath("config/custom/configApplication.cfm")) ) {
-		include "../../config/custom/configApplication.cfm";
-	}
+	try{include "../../config/custom/configApplication.cfm";}catch(any e){}
 	
 	// =============== configFramework
 	
@@ -60,14 +56,10 @@ component extends="FW1.framework" {
 	variables.framework.hibachi.fullUpdatePassword = "true";
 	
 	// Allow For Application Config
-	if( fileExists(expandPath("config/configFramework.cfm")) ) {
-		include "../../config/configFramework.cfm";
-	}
-	
+	try{include "../../config/configFramework.cfm";}catch(any e){}
 	// Allow For Instance Config
-	if( fileExists(expandPath("config/custom/configFramework.cfm")) ) {
-		include "../../config/custom/configFramework.cfm";
-	}
+	try{include "../../config/custom/configFramework.cfm";}catch(any e){}
+	
 	
 	// =============== configMappings
 	
@@ -75,14 +67,10 @@ component extends="FW1.framework" {
 	this.mappings[ "/#variables.framework.applicationKey#" ] = replace(replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all"), "/org/Hibachi/", "/");
 	
 	// Allow For Application Config 
-	if( fileExists(expandPath("config/configMappings.cfm")) ) {
-		include "../../config/configMappings.cfm";
-	}
-	
+	try{include "../../config/configMappings.cfm";}catch(any e){}
 	// Allow For Instance Config
-	if( fileExists(expandPath("config/custom/configMappings.cfm")) ) {
-		include "../../config/custom/configMappings.cfm";
-	}
+	try{include "../../config/custom/configMappings.cfm";}catch(any e){}
+	
 	
 	// =============== configCustomTags
 	
@@ -90,13 +78,9 @@ component extends="FW1.framework" {
 	this.customtagpaths = this.mappings[ "/#variables.framework.applicationKey#" ] & "/org/Hibachi/HibachiTags";
 	
 	// Allow For Application Config 
-	if( fileExists(expandPath("config/configCustomTags.cfm")) ) {
-		include "../../config/configCustomTags.cfm";
-	}
+	try{include "../../config/configCustomTags.cfm";}catch(any e){}
 	// Allow For Instance Config
-	if( fileExists(expandPath("config/custom/configCustomTags.cfm")) ) {
-		include "../../config/custom/configCustomTags.cfm";
-	}
+	try{include "../../config/custom/configCustomTags.cfm";}catch(any e){}
 	
 	// =============== configORM
 	
@@ -114,14 +98,10 @@ component extends="FW1.framework" {
 	this.ormSettings.autogenmap = true;
 	this.ormSettings.logsql = false;
 	
-	// Allow For Application Config
-	if( fileExists(expandPath("config/configORM.cfm")) ) {
-		include "../../config/configORM.cfm";
-	}
+	// Allow For Application Config 
+	try{include "../../config/configORM.cfm";}catch(any e){}
 	// Allow For Instance Config
-	if( fileExists(expandPath("config/custom/configORM.cfm")) ) {
-		include "../../config/custom/configORM.cfm";
-	}
+	try{include "../../config/custom/configORM.cfm";}catch(any e){}
 	
 	// Make Sure that the required values end up in the application scope so that we can get them from somewhere else
 	
@@ -143,6 +123,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupGlobalRequest() {
+		writeLog(file="Slatwall", text="Global Request: #variables.framework.applicationKey#");
 		request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.hibachi.Scope").init();
 		
 		// Verify that the application is setup
@@ -217,7 +198,7 @@ component extends="FW1.framework" {
 					
 					//========================= IOC SETUP ====================================
 					
-					var bf = new org.Hibachi.DI1.ioc("/#variables.framework.applicationKey#/model", {
+					var bf = new DI1.ioc("/#variables.framework.applicationKey#/model", {
 						transients=["transient", "entity", "process", "hibachi"]
 					});
 					
@@ -260,7 +241,7 @@ component extends="FW1.framework" {
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - Full Update Initiated");
 						
 						// Write File
-						fileWrite(expandPath('config/lastFullUpdate.txt.cfm'), now());
+						fileWrite(expandPath('/#variables.framework.applicationKey#/config/lastFullUpdate.txt.cfm'), now());
 						
 						// Set the request timeout to 360
 						getBeanFactory().getBean("hibachiTagService").cfsetting(requesttimeout=360);
