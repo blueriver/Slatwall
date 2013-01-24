@@ -227,7 +227,7 @@ component extends="FW1.framework" {
 					
 					bf.declareBean("_FormUtilities", "#variables.framework.applicationKey#.org.Hibachi.FormUtilities.FormUtilities", true);
 					
-					super.setBeanFactory( bf );
+					setBeanFactory( bf );
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
 					
 					//========================= END: IOC SETUP ===============================

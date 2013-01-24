@@ -180,16 +180,16 @@
 				tcontent.contentID,
 				tcontent.parentID,
 				tcontent.menuTitle
+			FROM
+				tcontent
 			WHERE
-				tcontent.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1" />
+				tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
 			  AND
-			  	tcontent.type <> <cfqueryparam cfsqltype="cf_sql_varchar" value="Module" />
+			  	tcontent.type NOT IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="Module,Plugin" list="true" />)
 			  AND
-			  	tcontent.type <> <cfqueryparam cfsqltype="cf_sql_varchar" value="Plugin" />
-			  AND
-				NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID AND siteID )
+				NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID AND SlatwallContent.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" />)
 			ORDER BY
-				LEN(tcontent.path)
+				LENGTH(tcontent.path)
 		</cfquery>
 		
 		<cfset var allParentsFound = true />
@@ -254,7 +254,7 @@
 		
 		<!--- Move Recursively through the entire site tree --->
 		<cfif !allParentsFound>
-			<cfset syncMuraContent(argumentcollection=arguments) />
+			<!--- <cfset syncMuraContent(argumentcollection=arguments) /> --->
 		</cfif>
 	</cffunction>
 	

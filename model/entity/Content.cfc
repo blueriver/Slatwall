@@ -53,6 +53,7 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="templateFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
+	property name="site" cfc="Slatwall.model.entity.Site" fieldtype="many-to-one" fkcolumn="siteID";
 	property name="parentContent" cfc="Slatwall.model.entity.Content" fieldtype="many-to-one" fkcolumn="parentContentID";
 	
 	// Related Object Properties (one-to-many)

@@ -43,9 +43,7 @@ Notes:
 	
 	<cf_SlatwallListingDisplay smartList="#rc.siteSmartList#"
 							   recordEditAction="admin:entity.editSite"
-							   recordEditModal="true"
-							   recordDetailAction="admin:entity.detailSite"
-							   recordDetailModal="true">
+							   recordDetailAction="admin:entity.detailSite">
 		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="siteName" />
 	</cf_SlatwallListingDisplay>
 </cfoutput>
