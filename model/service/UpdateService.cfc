@@ -48,7 +48,7 @@ Notes:
 		
 		<cftry>
 			<cfset var downloadURL = "https://github.com/ten24/Slatwall/zipball/#arguments.branch#" />	
-			<cfset var slatwallRootPath = getSlatwallRootDirectory() />
+			<cfset var slatwallRootPath = expandPath("/Slatwall") />
 			<cfset var downloadFileName = "slatwall.zip" />
 			<cfset var deleteDestinationContentExclusionList = "/integrationServices,/config/custom" />
 			<cfset var copyContentExclusionList = "Meta" />

@@ -44,9 +44,4 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		return getService("hibachiRBService").getRBKey(arguments.key, getRBLocale());
 	}
 	
-	public string function getBaseURL() {
-		return getApplicationValue("baseURL");
-	}
-	
-	
 }

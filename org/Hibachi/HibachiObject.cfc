@@ -33,9 +33,14 @@ component accessors="true" output="false" persistent="false" {
 		return "ram:///#getHibachiInstanceApplicationScopeKey()#";
 	}
 	
-	// @hint  helper function for returning the slatwallScope from the request scope
+	// @hint helper function for returning the slatwallScope from the request scope
 	public any function getHibachiScope() {
 		return request[ "#getApplicationValue("applicationKey")#Scope" ];
+	}
+	
+	// @hint helper function to get the applications baseURL
+	public string function getBaseURL() {
+		return getApplicationValue("baseURL");
 	}
 	
 	// ==========================  END: FRAMEWORK ACCESS ============================================
