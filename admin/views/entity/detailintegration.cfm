@@ -59,7 +59,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.integration#">
-			<cf_SlatwallTab view="admin:crud/integrationtabs/settings" />
+			<cf_SlatwallTab view="admin:entity/integrationtabs/settings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

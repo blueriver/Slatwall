@@ -50,9 +50,9 @@ Notes:
 		</cf_SlatwallDetailHeader>
 
 		<cf_SlatwallTabGroup object="#rc.emailTemplate#">
-			<cf_SlatwallTab view="admin:crud/emailtemplatetabs/htmlbody">
-			<cf_SlatwallTab view="admin:crud/emailtemplatetabs/textbody">
-			<cf_SlatwallTab view="admin:crud/emailtemplatetabs/emailsettings">
+			<cf_SlatwallTab view="admin:entity/emailtemplatetabs/htmlbody">
+			<cf_SlatwallTab view="admin:entity/emailtemplatetabs/textbody">
+			<cf_SlatwallTab view="admin:entity/emailtemplatetabs/emailsettings">
 		</cf_SlatwallTabGroup>
 
 	</cf_HibachiCrudDetailForm>

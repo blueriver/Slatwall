@@ -70,10 +70,10 @@ Notes:
 	</cf_SlatwallDetailHeader>
 	
 	<cf_SlatwallTabGroup object="#rc.attributeSet#">
-		<cf_SlatwallTab view="admin:crud/attributesettabs/attributes" />
-		<cf_SlatwallTab view="admin:crud/attributesettabs/description" />
+		<cf_SlatwallTab view="admin:entity/attributesettabs/attributes" />
+		<cf_SlatwallTab view="admin:entity/attributesettabs/description" />
 		<cfif not rc.attributeSet.getGlobalFlag()>
-			<cf_SlatwallTab view="admin:crud/attributesettabs/producttypes" />
+			<cf_SlatwallTab view="admin:entity/attributesettabs/producttypes" />
 		</cfif>
 	</cf_SlatwallTabGroup>
 	

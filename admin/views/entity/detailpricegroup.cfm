@@ -55,7 +55,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.priceGroup#">
-			<cf_SlatwallTab view="admin:crud/pricegrouptabs/pricegrouprates" />
+			<cf_SlatwallTab view="admin:entity/pricegrouptabs/pricegrouprates" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

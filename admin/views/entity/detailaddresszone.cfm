@@ -51,7 +51,7 @@ Notes:
 	</cf_SlatwallDetailHeader>
 	
 	<cf_SlatwallTabGroup object="#rc.addressZone#">
-		<cf_SlatwallTab view="admin:crud/addresszonetabs/locations" />
+		<cf_SlatwallTab view="admin:entity/addresszonetabs/locations" />
 	</cf_SlatwallTabGroup>
 	
 </cf_HibachiCrudDetailForm>

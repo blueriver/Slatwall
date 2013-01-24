@@ -63,7 +63,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.orderFulfillment#">
-			<cf_SlatwallTab view="admin:crud/orderfulfillmenttabs/orderfulfillmentitems">
+			<cf_SlatwallTab view="admin:entity/orderfulfillmenttabs/orderfulfillmentitems">
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

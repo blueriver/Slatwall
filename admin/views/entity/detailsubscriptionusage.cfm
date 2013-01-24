@@ -61,9 +61,9 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.subscriptionUsage#">
-			<!---<cf_SlatwallTab view="admin:crud/subscriptionusagetabs/usagebenifits">
-			<cf_SlatwallTab view="admin:crud/subscriptionusagetabs/renewalusagebenefits">--->
-			<cf_SlatwallTab view="admin:crud/subscriptionusagetabs/orderitems">
+			<!---<cf_SlatwallTab view="admin:entity/subscriptionusagetabs/usagebenifits">
+			<cf_SlatwallTab view="admin:entity/subscriptionusagetabs/renewalusagebenefits">--->
+			<cf_SlatwallTab view="admin:entity/subscriptionusagetabs/orderitems">
 		</cf_SlatwallTabGroup>
 
 	</cf_HibachiCrudDetailForm>

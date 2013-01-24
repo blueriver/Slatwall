@@ -58,12 +58,12 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.productType#">
-			<cf_SlatwallTab view="admin:crud/producttypetabs/producttypedescription" />
-			<!---<cf_SlatwallTab view="admin:crud/producttypetabs/attributesets" />--->
-			<cf_SlatwallTab view="admin:crud/producttypetabs/products" />
-			<cf_SlatwallTab view="admin:crud/producttypetabs/producttypesettings" />
-			<cf_SlatwallTab view="admin:crud/producttypetabs/productsettings" />
-			<cf_SlatwallTab view="admin:crud/producttypetabs/skusettings" />
+			<cf_SlatwallTab view="admin:entity/producttypetabs/producttypedescription" />
+			<!---<cf_SlatwallTab view="admin:entity/producttypetabs/attributesets" />--->
+			<cf_SlatwallTab view="admin:entity/producttypetabs/products" />
+			<cf_SlatwallTab view="admin:entity/producttypetabs/producttypesettings" />
+			<cf_SlatwallTab view="admin:entity/producttypetabs/productsettings" />
+			<cf_SlatwallTab view="admin:entity/producttypetabs/skusettings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

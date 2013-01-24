@@ -74,15 +74,15 @@ Notes:
 	
 	
 	<cf_SlatwallTabGroup object="#rc.account#" allowCustomAttributes="true">
-		<cf_SlatwallTab view="admin:crud/accounttabs/addresses" />
-		<cf_SlatwallTab view="admin:crud/accounttabs/orders" />
-		<cf_SlatwallTab view="admin:crud/accounttabs/paymentmethods" />
-		<cf_SlatwallTab view="admin:crud/accounttabs/subscriptionusage" />
-		<cf_SlatwallTab view="admin:crud/accounttabs/pricegroups" />
-		<cf_SlatwallTab view="admin:crud/accounttabs/productreviews" />
-		<cf_SlatwallTab view="admin:crud/accounttabs/accountpayments" />
-		<cf_SlatwallTab view="admin:crud/accounttabs/permissions" />
-		<cf_SlatwallTab view="admin:crud/accounttabs/accountsettings" />
+		<cf_SlatwallTab view="admin:entity/accounttabs/addresses" />
+		<cf_SlatwallTab view="admin:entity/accounttabs/orders" />
+		<cf_SlatwallTab view="admin:entity/accounttabs/paymentmethods" />
+		<cf_SlatwallTab view="admin:entity/accounttabs/subscriptionusage" />
+		<cf_SlatwallTab view="admin:entity/accounttabs/pricegroups" />
+		<cf_SlatwallTab view="admin:entity/accounttabs/productreviews" />
+		<cf_SlatwallTab view="admin:entity/accounttabs/accountpayments" />
+		<cf_SlatwallTab view="admin:entity/accounttabs/permissions" />
+		<cf_SlatwallTab view="admin:entity/accounttabs/accountsettings" />
 	</cf_SlatwallTabGroup>
 	
 </cf_HibachiCrudDetailForm>

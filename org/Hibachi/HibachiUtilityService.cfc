@@ -25,6 +25,7 @@ component output="false" accessors="true" extends="HibachiService" {
 				}
 			}
 			case "currency": {
+				/*
 				// Check to see if this object has a currencyCode
 				if( this.hasProperty("currencyCode") && !isNull(getCurrencyCode()) && len(getCurrencyCode()) eq 3 ) {
 					
@@ -32,7 +33,7 @@ component output="false" accessors="true" extends="HibachiService" {
 					
 					return currency.getCurrencySymbol() & LSNumberFormat(arguments.value, ',.__');
 				}
-				
+				*/
 				// Otherwsie use the global currencyLocal
 				return LSCurrencyFormat(arguments.value, getService("settingService").getSettingValue("globalCurrencyType"), getService("settingService").getSettingValue("globalCurrencyLocale"));
 			}

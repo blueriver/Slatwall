@@ -63,8 +63,8 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.stockAdjustment#" allowComments="true">
-			<cf_SlatwallTab view="admin:crud/stockadjustments/products" />
-			<cf_SlatwallTab view="admin:crud/stockadjustments/stockreceivers" />
+			<cf_SlatwallTab view="admin:entity/stockadjustments/products" />
+			<cf_SlatwallTab view="admin:entity/stockadjustments/stockreceivers" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

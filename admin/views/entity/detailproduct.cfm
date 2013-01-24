@@ -66,16 +66,16 @@ Notes:
 			</cf_SlatwallPropertyList>
 		</cf_SlatwallDetailHeader>
 		<cf_SlatwallTabGroup object="#rc.product#" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:crud/producttabs/skus" />
-			<cf_SlatwallTab view="admin:crud/producttabs/productdescription" />
-			<cf_SlatwallTab view="admin:crud/producttabs/productpages" />
-			<cf_SlatwallTab view="admin:crud/producttabs/productcategories" />
-			<cf_SlatwallTab view="admin:crud/producttabs/alternateimages" />
-			<cf_SlatwallTab view="admin:crud/producttabs/productreviews" />
-			<cf_SlatwallTab view="admin:crud/producttabs/relatedproducts" />
-			<cf_SlatwallTab view="admin:crud/producttabs/vendors" />
-			<cf_SlatwallTab view="admin:crud/producttabs/productsettings" />
-			<cf_SlatwallTab view="admin:crud/producttabs/skusettings" />
+			<cf_SlatwallTab view="admin:entity/producttabs/skus" />
+			<cf_SlatwallTab view="admin:entity/producttabs/productdescription" />
+			<cf_SlatwallTab view="admin:entity/producttabs/productpages" />
+			<cf_SlatwallTab view="admin:entity/producttabs/productcategories" />
+			<cf_SlatwallTab view="admin:entity/producttabs/alternateimages" />
+			<cf_SlatwallTab view="admin:entity/producttabs/productreviews" />
+			<cf_SlatwallTab view="admin:entity/producttabs/relatedproducts" />
+			<cf_SlatwallTab view="admin:entity/producttabs/vendors" />
+			<cf_SlatwallTab view="admin:entity/producttabs/productsettings" />
+			<cf_SlatwallTab view="admin:entity/producttabs/skusettings" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

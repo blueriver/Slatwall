@@ -54,8 +54,8 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.optiongroup#">
-			<cf_SlatwallTab view="admin:crud/optiongrouptabs/options" />
-			<cf_SlatwallTab view="admin:crud/optiongrouptabs/description" />
+			<cf_SlatwallTab view="admin:entity/optiongrouptabs/options" />
+			<cf_SlatwallTab view="admin:entity/optiongrouptabs/description" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

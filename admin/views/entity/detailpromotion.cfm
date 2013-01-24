@@ -64,10 +64,10 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.promotion#">
-			<cf_SlatwallTab view="admin:crud/promotiontabs/promotionperiods" />
-			<cf_SlatwallTab view="admin:crud/promotiontabs/promotioncodes" />
-			<cf_SlatwallTab view="admin:crud/promotiontabs/promotionsummary" />
-			<cf_SlatwallTab view="admin:crud/promotiontabs/promotiondescription" />
+			<cf_SlatwallTab view="admin:entity/promotiontabs/promotionperiods" />
+			<cf_SlatwallTab view="admin:entity/promotiontabs/promotioncodes" />
+			<cf_SlatwallTab view="admin:entity/promotiontabs/promotionsummary" />
+			<cf_SlatwallTab view="admin:entity/promotiontabs/promotiondescription" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

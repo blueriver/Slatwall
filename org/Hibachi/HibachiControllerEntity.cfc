@@ -6,78 +6,79 @@ component output="false" accessors="true" extends="HibachiController" {
 		arguments.rc.edit = false;
 		
 		// Setup a Private structure in the RC that can't be overridden by the form scope
-		arguments.rc.crudActionDetails = {};
-		arguments.rc.crudActionDetails.thisAction = arguments.rc[ getFW().getAction() ];
-		arguments.rc.crudActionDetails.subsystemName = getFW().getSubsystem( arguments.rc.crudActionDetails.thisAction );
-		arguments.rc.crudActionDetails.sectionName = getFW().getSection( arguments.rc.crudActionDetails.thisAction );
-		arguments.rc.crudActionDetails.itemName = getFW().getItem( arguments.rc.crudActionDetails.thisAction );
+		arguments.rc.entityActionDetails = {};
+		arguments.rc.entityActionDetails.thisAction = arguments.rc[ getFW().getAction() ];
+		arguments.rc.entityActionDetails.subsystemName = getFW().getSubsystem( arguments.rc.entityActionDetails.thisAction );
+		arguments.rc.entityActionDetails.sectionName = getFW().getSection( arguments.rc.entityActionDetails.thisAction );
+		arguments.rc.entityActionDetails.itemName = getFW().getItem( arguments.rc.entityActionDetails.thisAction );
 		
-		arguments.rc.crudActionDetails.sRedirectURL = "";
-		arguments.rc.crudActionDetails.sRedirectAction = "";
-		arguments.rc.crudActionDetails.sRenderCrudAction = "";
-		arguments.rc.crudActionDetails.fRedirectURL = "";
-		arguments.rc.crudActionDetails.fRedirectAction = "";
-		arguments.rc.crudActionDetails.fRenderCrudAction = "";
+		arguments.rc.entityActionDetails.sRedirectURL = "";
+		arguments.rc.entityActionDetails.sRedirectAction = "";
+		arguments.rc.entityActionDetails.sRenderCrudAction = "";
+		arguments.rc.entityActionDetails.fRedirectURL = "";
+		arguments.rc.entityActionDetails.fRedirectAction = "";
+		arguments.rc.entityActionDetails.fRenderCrudAction = "";
 		
-		arguments.rc.crudActionDetails.itemEntityName = "";
-		arguments.rc.crudActionDetails.cancelAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.createAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.deleteAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.detailAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.editAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.exportAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.listAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.multiPreProcessAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.multiProcessAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.preProcessAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.processAction = arguments.rc.crudActionDetails.thisAction;
-		arguments.rc.crudActionDetails.saveAction = arguments.rc.crudActionDetails.thisAction;
+		arguments.rc.entityActionDetails.itemEntityName = "";
+		arguments.rc.entityActionDetails.cancelAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.createAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.deleteAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.detailAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.editAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.exportAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.listAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.multiPreProcessAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.multiProcessAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.preProcessAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.processAction = arguments.rc.entityActionDetails.thisAction;
+		arguments.rc.entityActionDetails.saveAction = arguments.rc.entityActionDetails.thisAction;
 		
-		if(left(arguments.rc.crudActionDetails.itemName, 4) == "list") {
-			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-4);
-		} else if (left(arguments.rc.crudActionDetails.itemName, 4) == "edit") {
-			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-4);
-		} else if (left(arguments.rc.crudActionDetails.itemName, 4) == "save") {
-			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-4);
-		} else if (left(arguments.rc.crudActionDetails.itemName, 6) == "detail") {
-			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-6);
-		} else if (left(arguments.rc.crudActionDetails.itemName, 6) == "delete") {
-			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-6);
-		} else if (left(arguments.rc.crudActionDetails.itemName, 6) == "create") {
-			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-6);
-		} else if (left(arguments.rc.crudActionDetails.itemName, 7) == "process") {
-			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-7);
-		} else if (left(arguments.rc.crudActionDetails.itemName, 6) == "export") {
-			arguments.rc.crudActionDetails.itemEntityName = right(arguments.rc.crudActionDetails.itemName, len(arguments.rc.crudActionDetails.itemName)-6);
+		if(left(arguments.rc.entityActionDetails.itemName, 4) == "list") {
+			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-4);
+		} else if (left(arguments.rc.entityActionDetails.itemName, 4) == "edit") {
+			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-4);
+		} else if (left(arguments.rc.entityActionDetails.itemName, 4) == "save") {
+			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-4);
+		} else if (left(arguments.rc.entityActionDetails.itemName, 6) == "detail") {
+			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-6);
+		} else if (left(arguments.rc.entityActionDetails.itemName, 6) == "delete") {
+			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-6);
+		} else if (left(arguments.rc.entityActionDetails.itemName, 6) == "create") {
+			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-6);
+		} else if (left(arguments.rc.entityActionDetails.itemName, 7) == "process") {
+			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-7);
+		} else if (left(arguments.rc.entityActionDetails.itemName, 6) == "export") {
+			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-6);
 		}
 		
-		if(arguments.rc.crudActionDetails.itemEntityName != "") {
-			arguments.rc.crudActionDetails.createAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.create#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.detailAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.detail#arguments.rc.crudActionDetails.itemEntityName#";		
-			arguments.rc.crudActionDetails.deleteAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.delete#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.editAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.edit#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.exportAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.export#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.listAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.list#arguments.rc.crudActionDetails.itemEntityName#"; 
-			arguments.rc.crudActionDetails.multiPreProcessAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.multipreprocess#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.multiProcessAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.multiprocess#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.preProcessAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.preprocess#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.processAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.process#arguments.rc.crudActionDetails.itemEntityName#";
-			arguments.rc.crudActionDetails.saveAction = "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.save#arguments.rc.crudActionDetails.itemEntityName#";
+		if(arguments.rc.entityActionDetails.itemEntityName != "") {
+			arguments.rc.entityActionDetails.cancelAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.detail#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.createAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.create#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.detailAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.detail#arguments.rc.entityActionDetails.itemEntityName#";		
+			arguments.rc.entityActionDetails.deleteAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.delete#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.editAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.edit#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.exportAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.export#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.listAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.list#arguments.rc.entityActionDetails.itemEntityName#"; 
+			arguments.rc.entityActionDetails.multiPreProcessAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.multipreprocess#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.multiProcessAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.multiprocess#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.preProcessAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.preprocess#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.processAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.process#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.saveAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.save#arguments.rc.entityActionDetails.itemEntityName#";
 		}
 		
-		arguments.rc.pageTitle = rbKey(replace(arguments.rc.crudActionDetails.thisAction,':','.','all'));
+		arguments.rc.pageTitle = rbKey(replace(arguments.rc.entityActionDetails.thisAction,':','.','all'));
 		
 		if(right(arguments.rc.pageTitle, 8) eq "_missing") {
-			if(left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 4) eq "list") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 4) eq "edit") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 6) eq "create") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 6) eq "detail") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.crudActionDetails.thisAction, "."), 7) eq "process") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.process'), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'));
+			if(left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 4) eq "list") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 4) eq "edit") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 6) eq "create") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 6) eq "detail") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
+			} else if (left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 7) eq "process") {
+				arguments.rc.pageTitle = replace(rbKey('admin.define.process'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
 			}
 		}
 	}
@@ -86,21 +87,21 @@ component output="false" accessors="true" extends="HibachiController" {
 	public void function onMissingMethod(string missingMethodName, struct missingMethodArguments) {
 		if(structKeyExists(arguments, "missingMethodName")) {
 			if( left(arguments.missingMethodName, 4) == "list" ) {
-				genericListMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericListMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 4) == "edit" ) {
-				genericEditMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericEditMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 4) == "save" ) {
-				genericSaveMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericSaveMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "detail" ) {
-				genericDetailMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericDetailMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "delete" ) {
-				genericDeleteMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericDeleteMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "create" ) {
-				genericCreateMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericCreateMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 7) == "process" ) {
-				genericProcessMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericProcessMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "export" ) {
-				genericExportMethod(entityName=arguments.missingMethodArguments.rc.crudActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
+				genericExportMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			}
 		}
 	}
@@ -123,11 +124,11 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
 		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
 		if(!hasSuccess) {
-			arguments.rc.crudActionDetails.sRenderCrudAction = arguments.rc.crudActionDetails.detailAction;
+			arguments.rc.entityActionDetails.sRenderCrudAction = arguments.rc.entityActionDetails.detailAction;
 		}
 		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
 		if(!hasFaliure) {
-			arguments.rc.crudActionDetails.fRenderCrudAction = arguments.rc.crudActionDetails.createAction;
+			arguments.rc.entityActionDetails.fRenderCrudAction = arguments.rc.entityActionDetails.createAction;
 		}
 		
 		// Find the correct service
@@ -143,7 +144,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		arguments.rc.edit = true;
 		
 		// Set the view to the correct one
-		getFW().setView(arguments.rc.crudActionDetails.detailAction);
+		getFW().setView(arguments.rc.entityActionDetails.detailAction);
 	}
 	
 	// EDIT
@@ -157,18 +158,18 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Make sure that the object we are trying to request was set in the RC
 		if(!structKeyExists(arguments.rc, arguments.entityName) || !isObject(arguments.rc[arguments.entityName])){
-			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
-			getFW().redirect(action=arguments.rc.crudActionDetails.listAction, preserve="messages");
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.entityActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
+			getFW().redirect(action=arguments.rc.entityActionDetails.listAction, preserve="messages");
 		}
 		
 		// Check for any redirect / render values that were passed in to be used by the edit form, otherwise set them to a default
 		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
 		if(!hasSuccess) {
-			arguments.rc.crudActionDetails.sRenderCrudAction = arguments.rc.crudActionDetails.detailAction;
+			arguments.rc.entityActionDetails.sRenderCrudAction = arguments.rc.entityActionDetails.detailAction;
 		}
 		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
 		if(!hasFaliure) {
-			arguments.rc.crudActionDetails.fRenderCrudAction = arguments.rc.crudActionDetails.editAction;
+			arguments.rc.entityActionDetails.fRenderCrudAction = arguments.rc.entityActionDetails.editAction;
 		}
 		
 		// Setup the values needed for this type of layout
@@ -176,7 +177,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		arguments.rc.edit = true;
 		
 		// Switch the view to use the same as the detail view
-		getFW().setView(arguments.rc.crudActionDetails.detailAction);
+		getFW().setView(arguments.rc.entityActionDetails.detailAction);
 	}
 	
 	// DETAIL
@@ -188,8 +189,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Make sure that the object was actually defined
 		if(!structKeyExists(arguments.rc, arguments.entityName) || !isObject(arguments.rc[arguments.entityName])){
-			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
-			getFW().redirect(action=arguments.rc.crudActionDetails.listAction, preserve="messages");
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.entityActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
+			getFW().redirect(action=arguments.rc.entityActionDetails.listAction, preserve="messages");
 		}
 		
 		// Setup the values needed for this type of layout
@@ -205,12 +206,12 @@ component output="false" accessors="true" extends="HibachiController" {
 		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
 		// Attempt to find the entity
-		var entity = entityService.invokeMethod( "get#arguments.rc.crudActionDetails.itemEntityName#", {1=arguments.rc[ entityPrimaryID ]} );
+		var entity = entityService.invokeMethod( "get#arguments.rc.entityActionDetails.itemEntityName#", {1=arguments.rc[ entityPrimaryID ]} );
 		
 		// If the entity was null, then redirect to the falureAction
 		if(isNull(entity)) {
-			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.crudActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
-			getFW().redirect(action=arguments.rc.crudActionDetails.listAction, preserve="messages");
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#replace(arguments.rc.entityActionDetails.thisAction, ":", ".", "all")#.notfound" ) , "error");
+			getFW().redirect(action=arguments.rc.entityActionDetails.listAction, preserve="messages");
 		}
 		
 		// Check how the delete went
@@ -219,21 +220,21 @@ component output="false" accessors="true" extends="HibachiController" {
 		// SUCCESS
 		if (deleteOK) {
 			// Show the Generica Action Success Message
-			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.delete_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ), "success");
+			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.delete_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'), "all" ), "success");
 			
 			// Render or Redirect a Success
-			renderOrRedirectSuccess( defaultAction=arguments.rc.crudActionDetails.listAction, maintainQueryString=true, rc=arguments.rc);
+			renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.listAction, maintainQueryString=true, rc=arguments.rc);
 			
 		// FAILURE
 		} else {
 			// Add the Generic Action Failure Message
-			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.error_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ), "error");
+			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.error_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'), "all" ), "error");
 			
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
 			
 			// Render or Redirect a faluire
-			renderOrRedirectSuccess( defaultAction=arguments.rc.crudActionDetails.detailAction, maintainQueryString=false, rc=arguments.rc);	
+			renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=false, rc=arguments.rc);	
 		}
 		
 	}
@@ -259,24 +260,24 @@ component output="false" accessors="true" extends="HibachiController" {
 		// SUCCESS
 		if(!arguments.rc[ arguments.entityName ].hasErrors()) {
 			// Show the Generica Action Success Message
-			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.save_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ) , "success");
+			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.save_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'), "all" ) , "success");
 			
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
 			
 			// Render or Redirect a Success
-			renderOrRedirectSuccess( defaultAction=arguments.rc.crudActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
+			renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
 			
 		// FAILURE
 		} else {
 			// Add the Generic Action Failure Message
-			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.crudActionDetails.subsystemName#.#arguments.rc.crudActionDetails.sectionName#.save_error" ), "${itemEntityName}", rbKey('entity.#arguments.rc.crudActionDetails.itemEntityName#'), "all" ) , "error");
+			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.save_error" ), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'), "all" ) , "error");
 			
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
 			
 			// Render or Redirect a faluire
-			renderOrRedirectFailure( defaultAction="edit#arguments.rc.crudActionDetails.itemEntityName#", maintainQueryString=true, rc=arguments.rc);
+			renderOrRedirectFailure( defaultAction="edit#arguments.rc.entityActionDetails.itemEntityName#", maintainQueryString=true, rc=arguments.rc);
 			
 		}
 	}
@@ -302,7 +303,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		getFW().setLayout( "admin:process.default" );
 		
 		if(len(arguments.rc.processContext) && arguments.rc.processContext != "process") {
-			arguments.rc.pageTitle = rbKey( "admin.#getFW().getSection(arguments.rc.crudActionDetails.thisAction)#.process#arguments.entityName#.#arguments.rc.processContext#" );
+			arguments.rc.pageTitle = rbKey( "admin.#getFW().getSection(arguments.rc.entityActionDetails.thisAction)#.process#arguments.entityName#.#arguments.rc.processContext#" );
 		}
 		
 		// If we are actually posting the process form, then this logic gets calls the process method for each record
@@ -375,7 +376,7 @@ component output="false" accessors="true" extends="HibachiController" {
 					arguments.rc.multiProcess = true;
 				}
 			} else {
-				redirectToReturnAction( "messagekeys=#replace(arguments.rc.crudActionDetails.thisAction, ':', '.', 'all')#_success" );
+				redirectToReturnAction( "messagekeys=#replace(arguments.rc.entityActionDetails.thisAction, ':', '.', 'all')#_success" );
 			}
 			
 		
@@ -395,7 +396,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 			// If there are no records then redirect to the list action
 			if(!arguments.rc[ "process#arguments.entityName#SmartList" ].getRecordsCount()) {
-				getFW().redirect(action=arguments.rc.crudActionDetails.listAction);
+				getFW().redirect(action=arguments.rc.entityActionDetails.listAction);
 			} else if (arguments.rc[ "process#arguments.entityName#SmartList" ].getRecordsCount() gt 1) {
 				arguments.rc.multiProcess = true;
 			}
@@ -431,26 +432,26 @@ component output="false" accessors="true" extends="HibachiController" {
 	private boolean function populateRenderAndRedirectSuccessValues(required struct rc) {
 		var hasValue = false;
 		if(structKeyExists(arguments.rc, "sRedirectURL")) {
-			arguments.rc.crudActionDetails.sRedirectURL = arguments.rc.sRedirectURL;
+			arguments.rc.entityActionDetails.sRedirectURL = arguments.rc.sRedirectURL;
 		}
 		if(structKeyExists(arguments.rc, "sRedirectAction")) {
-			arguments.rc.crudActionDetails.sRedirectAction = arguments.rc.sRedirectAction;
+			arguments.rc.entityActionDetails.sRedirectAction = arguments.rc.sRedirectAction;
 		}
 		if(structKeyExists(arguments.rc, "sRenderCrudAction")) {
-			arguments.rc.crudActionDetails.sRenderCrudAction = arguments.rc.sRenderCrudAction;
+			arguments.rc.entityActionDetails.sRenderCrudAction = arguments.rc.sRenderCrudAction;
 		}
 		return hasValue;
 	}
 	private boolean function populateRenderAndRedirectFailureValues(required struct rc) {
 		var hasValue = false;
 		if(structKeyExists(arguments.rc, "fRedirectURL")) {
-			arguments.rc.crudActionDetails.fRedirectURL = arguments.rc.fRedirectURL;
+			arguments.rc.entityActionDetails.fRedirectURL = arguments.rc.fRedirectURL;
 		}
 		if(structKeyExists(arguments.rc, "fRedirectAction")) {
-			arguments.rc.crudActionDetails.fRedirectAction = arguments.rc.fRedirectAction;
+			arguments.rc.entityActionDetails.fRedirectAction = arguments.rc.fRedirectAction;
 		}
 		if(structKeyExists(arguments.rc, "fRenderCrudAction")) {
-			arguments.rc.crudActionDetails.fRenderCrudAction = arguments.rc.fRenderCrudAction;
+			arguments.rc.entityActionDetails.fRenderCrudAction = arguments.rc.fRenderCrudAction;
 		}
 		return hasValue;
 	}
@@ -468,14 +469,14 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 		// Next look for a sRenderCrudAction in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "sRenderCrudAction")) {
-			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.sRenderCrudAction#" );
+			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.sRenderCrudAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.rc.sRenderCrudAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.rc.sRenderCrudAction, {rc=arguments.rc});
 		
 		// If nothing was defined then we just do a redirect to the defaultAction, if it is just a single value then render otherwise do a redirect
 		} else if (listLen(arguments.defaultAction, ".") eq 1) {
-			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.defaultAction#" );
+			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.defaultAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.defaultAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});
@@ -499,14 +500,14 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 		// Next look for a fRenderCrudAction in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "fRenderCrudAction")) {
-			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.rc.fRenderCrudAction#" );
+			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.fRenderCrudAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.rc.fRenderCrudAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.rc.fRenderCrudAction, {rc=arguments.rc});
 		
 		// Lastly if nothing was defined then we just do a redirect to the defaultAction
 		} else if (listLen(arguments.defaultAction, ".") eq 1) {
-			getFW().setView( "#arguments.rc.crudActionDetails.subsystemName#:#arguments.rc.crudActionDetails.sectionName#.#arguments.defaultAction#" );
+			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.defaultAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.defaultAction;
 			this.invokeMethod("before", {rc=arguments.rc});
 			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});

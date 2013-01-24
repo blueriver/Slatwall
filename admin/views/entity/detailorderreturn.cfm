@@ -50,7 +50,7 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.orderReturn#">
-			<cf_SlatwallTab view="admin:crud/orderreturntabs/orderreturnitems">
+			<cf_SlatwallTab view="admin:entity/orderreturntabs/orderreturnitems">
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

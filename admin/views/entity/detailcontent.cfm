@@ -56,9 +56,9 @@ Notes:
 
 	<cf_SlatwallTabGroup object="#rc.content#">
 		<cfif rc.content.setting('contentProductListingFlag')>
-			<cf_SlatwallTab view="admin:crud/contenttabs/products">
+			<cf_SlatwallTab view="admin:entity/contenttabs/products">
 		</cfif>
-		<cf_SlatwallTab view="admin:crud/contenttabs/settings">
+		<cf_SlatwallTab view="admin:entity/contenttabs/settings">
 	</cf_SlatwallTabGroup>
 
 	</cf_HibachiCrudDetailForm>

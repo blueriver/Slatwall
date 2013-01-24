@@ -67,9 +67,9 @@ Notes:
 
 		<cf_SlatwallTabGroup object="#rc.attribute#">
 			<cfif not rc.attribute.isNew() and listFindNoCase( "atText,atPassword,atCheckBoxGroup,atMultiSelect,atRadioGroup,atSelect",rc.attribute.getAttributeType().getSystemCode() )>
-				<cf_SlatwallTab view="admin:crud/attributetabs/attributeoptions" />
+				<cf_SlatwallTab view="admin:entity/attributetabs/attributeoptions" />
 			</cfif>
-			<cf_SlatwallTab view="admin:crud/attributetabs/description" />
+			<cf_SlatwallTab view="admin:entity/attributetabs/description" />
 		</cf_SlatwallTabGroup>
 
 	</cf_HibachiCrudDetailForm>

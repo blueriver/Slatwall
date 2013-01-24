@@ -56,9 +56,9 @@ Notes:
 	
 	<cf_SlatwallTabGroup object="#rc.fulfillmentMethod#">
 		<cfif rc.fulfillmentMethod.getFulfillmentMethodType() eq "shipping">
-			<cf_SlatwallTab view="admin:crud/fulfillmentmethodtabs/shippingmethods">	
+			<cf_SlatwallTab view="admin:entity/fulfillmentmethodtabs/shippingmethods">	
 		</cfif>
-		<cf_SlatwallTab view="admin:crud/fulfillmentmethodtabs/fulfillmentsettings">
+		<cf_SlatwallTab view="admin:entity/fulfillmentmethodtabs/fulfillmentsettings">
 	</cf_SlatwallTabGroup>
 
 </cf_HibachiCrudDetailForm>

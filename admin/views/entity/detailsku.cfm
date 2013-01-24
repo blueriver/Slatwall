@@ -78,16 +78,16 @@ Notes:
 
 		<cf_SlatwallTabGroup object="#rc.sku#" allowCustomAttributes="true">
 			<cfif rc.product.getBaseProductType() EQ "subscription">
-				<cf_SlatwallTab view="admin:crud/skutabs/subscription" />
+				<cf_SlatwallTab view="admin:entity/skutabs/subscription" />
 			<cfelseif rc.product.getBaseProductType() EQ "contentaccess">
-				<cf_SlatwallTab view="admin:crud/skutabs/accesscontents" />
+				<cf_SlatwallTab view="admin:entity/skutabs/accesscontents" />
 			<cfelse>
-				<cf_SlatwallTab view="admin:crud/skutabs/inventory" />
-				<cf_SlatwallTab view="admin:crud/skutabs/options" />
+				<cf_SlatwallTab view="admin:entity/skutabs/inventory" />
+				<cf_SlatwallTab view="admin:entity/skutabs/options" />
 			</cfif>
-			<cf_SlatwallTab view="admin:crud/skutabs/currencies" />
-			<cf_SlatwallTab view="admin:crud/skutabs/alternateskucodes" />
-			<cf_SlatwallTab view="admin:crud/skutabs/skusettings" />
+			<cf_SlatwallTab view="admin:entity/skutabs/currencies" />
+			<cf_SlatwallTab view="admin:entity/skutabs/alternateskucodes" />
+			<cf_SlatwallTab view="admin:entity/skutabs/skusettings" />
 		</cf_SlatwallTabGroup>
 
 	</cf_HibachiCrudDetailForm>

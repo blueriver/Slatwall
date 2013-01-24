@@ -11,15 +11,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="skuService" type="any";
 	property name="subscriptionService" type="any";
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// Account Payment
 	public any function createAccountPayment( required struct rc ) {
 		param name="rc.accountID" type="string" default="";

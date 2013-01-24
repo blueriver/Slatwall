@@ -57,8 +57,8 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup object="#rc.task#">
-			<cf_SlatwallTab view="admin:crud/tasktabs/taskschedule" />
-			<cf_SlatwallTab view="admin:crud/tasktabs/taskhistory" />
+			<cf_SlatwallTab view="admin:entity/tasktabs/taskschedule" />
+			<cf_SlatwallTab view="admin:entity/tasktabs/taskhistory" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_HibachiCrudDetailForm>

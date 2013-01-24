@@ -79,17 +79,17 @@ Notes:
 		
 		<cf_SlatwallTabGroup object="#rc.promotionreward#">
 			<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.rewardType)>
-				<cf_SlatwallTab view="admin:crud/promotionrewardtabs/producttypes" />
-				<cf_SlatwallTab view="admin:crud/promotionrewardtabs/products" />
-				<cf_SlatwallTab view="admin:crud/promotionrewardtabs/skus" />
-				<cf_SlatwallTab view="admin:crud/promotionrewardtabs/brands" />
+				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/producttypes" />
+				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/products" />
+				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/skus" />
+				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/brands" />
 				<cfif rc.rewardType eq "merchandise">
-					<cf_SlatwallTab view="admin:crud/promotionrewardtabs/options" />
+					<cf_SlatwallTab view="admin:entity/promotionrewardtabs/options" />
 				</cfif>
 			<cfelseif rc.rewardType eq "fulfillment">
-				<cf_SlatwallTab view="admin:crud/promotionrewardtabs/fulfillmentMethods" />
-				<cf_SlatwallTab view="admin:crud/promotionrewardtabs/shippingMethods" />
-				<cf_SlatwallTab view="admin:crud/promotionrewardtabs/shippingAddressZones" />
+				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/fulfillmentMethods" />
+				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/shippingMethods" />
+				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/shippingAddressZones" />
 			</cfif>
 		</cf_SlatwallTabGroup>
 

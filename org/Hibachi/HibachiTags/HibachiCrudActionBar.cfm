@@ -5,13 +5,13 @@
 	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
 	
 	<cfparam name="attributes.createModal" type="boolean" default="false" />
-	<cfparam name="attributes.createAction" type="string" default="#request.context.crudActionDetails.createAction#" />
+	<cfparam name="attributes.createAction" type="string" default="#request.context.entityActionDetails.createAction#" />
 	<cfparam name="attributes.createQueryString" type="string" default="" />
 	
-	<cfparam name="attributes.backAction" type="string" default="#request.context.crudActionDetails.listAction#" />
+	<cfparam name="attributes.backAction" type="string" default="#request.context.entityActionDetails.listAction#" />
 	<cfparam name="attributes.backQueryString" type="string" default="" />
 	
-	<cfparam name="attributes.cancelAction" type="string" default="#request.context.crudActionDetails.cancelAction#" />
+	<cfparam name="attributes.cancelAction" type="string" default="#request.context.entityActionDetails.cancelAction#" />
 	<cfparam name="attributes.cancelQueryString" type="string" default="" />
 	
 	<cfparam name="attributes.showcreate" type="boolean" default="true" />
@@ -32,14 +32,14 @@
 								<cfparam name="request.context.keywords" default="" />
 								
 								<form name="search" class="action-bar-search btn-group" action="/plugins/Slatwall/" method="get">
-									<input type="hidden" name="slatAction" value="#request.context.crudActionDetails.thisAction#" />
+									<input type="hidden" name="slatAction" value="#request.context.entityActionDetails.thisAction#" />
 									<input type="text" name="keywords" value="#request.context.keywords#" placeholder="#request.slatwallScope.rbKey('define.search')# #attributes.pageTitle#" data-tableid="LD#replace(attributes.object.getSavedStateID(),'-','','all')#">
 								</form>
 								
 								<div class="btn-group">
 									<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #request.slatwallScope.rbKey('define.actions')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">
-										<cf_HibachiActionCaller action="#request.context.crudActionDetails.exportAction#" text="#request.slatwallScope.rbKey('define.exportlist')#" type="list">
+										<cf_HibachiActionCaller action="#request.context.entityActionDetails.exportAction#" text="#request.slatwallScope.rbKey('define.exportlist')#" type="list">
 										<!---#thistag.generatedcontent#--->
 									</ul>
 								</div>
@@ -79,16 +79,16 @@
 								<div class="btn-group">
 									<cfif attributes.edit>
 										<cfif not attributes.object.isNew() and attributes.showdelete>
-											<cf_HibachiActionCaller action="#request.context.crudActionDetails.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">
+											<cf_HibachiActionCaller action="#request.context.entityActionDetails.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">
 										</cfif>
 										<cf_HibachiActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#request.slatwallScope.rbKey('define.cancel')#" class="btn btn-inverse" icon="remove icon-white">
-										<cf_HibachiActionCaller action="#request.context.crudActionDetails.saveAction#" text="#request.slatwallScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
+										<cf_HibachiActionCaller action="#request.context.entityActionDetails.saveAction#" text="#request.slatwallScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
 									<cfelse>
 										<cfif attributes.showdelete>
-											<cf_HibachiActionCaller action="#request.context.crudActionDetails.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">
+											<cf_HibachiActionCaller action="#request.context.entityActionDetails.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.delete')#" class="btn btn-inverse" icon="trash icon-white" confirm="true" disabled="#attributes.object.isNotDeletable()#">
 										</cfif>
 										<cfif attributes.showedit>
-											<cf_HibachiActionCaller action="#request.context.crudActionDetails.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true" disabled="#attributes.object.isNotEditable()#">
+											<cf_HibachiActionCaller action="#request.context.entityActionDetails.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.slatwallScope.rbKey('define.edit')#" class="btn btn-primary" icon="pencil icon-white" submit="true" disabled="#attributes.object.isNotEditable()#">
 										</cfif>
 									</cfif>
 								</div>

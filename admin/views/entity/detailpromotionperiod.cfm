@@ -72,8 +72,8 @@ Notes:
 	</cf_HibachiCrudDetailForm>
 	
 	<cf_SlatwallTabGroup object="#rc.promotionperiod#">
-			<cf_SlatwallTab view="admin:crud/promotionperiodtabs/promotionrewards" />
-			<cf_SlatwallTab view="admin:crud/promotionperiodtabs/promotionqualifiers" />
+			<cf_SlatwallTab view="admin:entity/promotionperiodtabs/promotionrewards" />
+			<cf_SlatwallTab view="admin:entity/promotionperiodtabs/promotionqualifiers" />
 	</cf_SlatwallTabGroup>
 	
 </cfoutput>

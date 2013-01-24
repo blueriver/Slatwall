@@ -1,15 +1,15 @@
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.object" type="any" />
-	<cfparam name="attributes.saveAction" type="string" default="#request.context.crudActionDetails.saveaction#" />
+	<cfparam name="attributes.saveAction" type="string" default="#request.context.entityActionDetails.saveaction#" />
 	<cfparam name="attributes.saveActionQueryString" type="string" default="" />
 	<cfparam name="attributes.edit" type="boolean" default="false" />
 	<cfparam name="attributes.enctype" type="string" default="application/x-www-form-urlencoded">
-	<cfparam name="attributes.sRedirectURL" type="string" default="#request.context.crudActionDetails.sRedirectURL#">
-	<cfparam name="attributes.sRedirectAction" type="string" default="#request.context.crudActionDetails.sRedirectAction#">
-	<cfparam name="attributes.sRenderCrudAction" type="string" default="#request.context.crudActionDetails.sRenderCrudAction#">
-	<cfparam name="attributes.fRedirectURL" type="string" default="#request.context.crudActionDetails.fRedirectURL#">
-	<cfparam name="attributes.fRedirectAction" type="string" default="#request.context.crudActionDetails.fRedirectAction#">
-	<cfparam name="attributes.fRenderCrudAction" type="string" default="#request.context.crudActionDetails.fRenderCrudAction#">
+	<cfparam name="attributes.sRedirectURL" type="string" default="#request.context.entityActionDetails.sRedirectURL#">
+	<cfparam name="attributes.sRedirectAction" type="string" default="#request.context.entityActionDetails.sRedirectAction#">
+	<cfparam name="attributes.sRenderCrudAction" type="string" default="#request.context.entityActionDetails.sRenderCrudAction#">
+	<cfparam name="attributes.fRedirectURL" type="string" default="#request.context.entityActionDetails.fRedirectURL#">
+	<cfparam name="attributes.fRedirectAction" type="string" default="#request.context.entityActionDetails.fRedirectAction#">
+	<cfparam name="attributes.fRenderCrudAction" type="string" default="#request.context.entityActionDetails.fRenderCrudAction#">
 	
 	<cfoutput>
 		<cfif attributes.edit>
