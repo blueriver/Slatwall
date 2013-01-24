@@ -180,7 +180,7 @@
 				tcontent.parentID,
 				tcontent.menuTitle
 			WHERE
-				tcontent.active = <cfqueryparm cfsqltype="cf_sql_integer" value="1" />
+				tcontent.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1" />
 			  AND
 			  	tcontent.type <> <cfqueryparam cfsqltype="cf_sql_varchar" value="Module" />
 			  AND
