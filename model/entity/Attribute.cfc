@@ -53,19 +53,19 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="decryptValueInAdminFlag" ormtype="boolean";
 	
 	// Related Object Properties (Many-To-One)
-	property name="attributeSet" cfc="Slatwall.model.entity.AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
-	property name="attributeType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
-	property name="validationType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
+	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
+	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
+	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
 
 	// Related Object Properties (One-To-Many)
-	property name="attributeOptions" singularname="attributeOption" cfc="Slatwall.model.entity.AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
-	property name="attributeValues" singularname="attributeValue" cfc="Slatwall.model.entity.AttributeValue" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all-delete-orphan";
+	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all-delete-orphan";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="attributeTypeOptions" persistent="false";

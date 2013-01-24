@@ -42,20 +42,20 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	property name="stockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties (many-to-one)
-	property name="location" fieldtype="many-to-one" fkcolumn="locationID" cfc="Slatwall.model.entity.Location";
-	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Slatwall.model.entity.Sku" cascadeCalculated="true"; // We always want sku when we get a stock
+	property name="location" fieldtype="many-to-one" fkcolumn="locationID" cfc="Location";
+	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku" cascadeCalculated="true"; // We always want sku when we get a stock
 	
 	// Related Object Properties (one-to-many). Including this property to allow HQL to do  stock -> vendorOrderItem lookups
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="Slatwall.model.entity.VendorOrderItem" fieldtype="one-to-many" fkcolumn="stockID" inverse="true";
+	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="stockID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
 	

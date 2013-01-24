@@ -46,21 +46,21 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="activeFlag" ormtype="boolean" default="1";
 	
 	// Related Object Properties (many-to-one)
-	property name="defaultImage" cfc="Slatwall.model.entity.Image" fieldtype="many-to-one" fkcolumn="defaultImageID";
+	property name="defaultImage" cfc="Image" fieldtype="many-to-one" fkcolumn="defaultImageID";
 	
 	// Related Object Properties (one-to-many)
-	property name="promotionPeriods" singularname="promotionPeriod" cfc="Slatwall.model.entity.PromotionPeriod" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
-	property name="promotionCodes" singularname="promotionCode" cfc="Slatwall.model.entity.PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
-	property name="appliedPromotions" singularname="appliedPromotion" cfc="Slatwall.model.entity.PromotionApplied" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all" inverse="true";
+	property name="promotionPeriods" singularname="promotionPeriod" cfc="PromotionPeriod" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-persistent properties
 	property name="currentFlag" type="boolean" persistent="false"; 

@@ -49,12 +49,12 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	property name="shippingIntegrationMethod" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="shippingIntegration" cfc="Slatwall.model.entity.Integration" fieldtype="many-to-one" fkcolumn="shippingIntegrationID";
-	property name="shippingMethod" cfc="Slatwall.model.entity.ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="addressZone" cfc="Slatwall.model.entity.AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
+	property name="shippingIntegration" cfc="Integration" fieldtype="many-to-one" fkcolumn="shippingIntegrationID";
+	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 	
 	// Related Object Properties (one-to-many)
-	property name="shippingMethodOptions" singularname="shippingMethodOption" cfc="Slatwall.model.entity.ShippingMethodOption" type="array" fieldtype="one-to-many" fkcolumn="shippingMethodRateID" cascade="all-delete-orphan" inverse="true";
+	property name="shippingMethodOptions" singularname="shippingMethodOption" cfc="ShippingMethodOption" type="array" fieldtype="one-to-many" fkcolumn="shippingMethodRateID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 	
@@ -65,9 +65,9 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
 	property name="shippingIntegrationMethodOptions" type="array" persistent="false";

@@ -46,20 +46,20 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	property name="maximumAccountUseCount" ormtype="integer" notnull="false" formatType="custom";
 	
 	// Related Object Properties (many-to-one)
-	property name="promotion" cfc="Slatwall.model.entity.Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Related Object Properties (one-to-many)   
-	property name="promotionRewards" singularname="promotionReward" cfc="Slatwall.model.entity.PromotionReward" fieldtype="one-to-many" fkcolumn="promotionPeriodID" cascade="all-delete-orphan" inverse="true";
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="Slatwall.model.entity.PromotionQualifier" fieldtype="one-to-many" fkcolumn="promotionPeriodID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionPeriodID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="one-to-many" fkcolumn="promotionPeriodID" cascade="all-delete-orphan" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
  	// Non-persistent properties
 	property name="currentFlag" type="boolean" persistent="false"; 

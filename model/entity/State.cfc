@@ -45,7 +45,7 @@ component displayname="State" entityname="SlatwallState" table="SlatwallState" p
 	property name="stateName" ormtype="string";
 	
 	// Related Object Properties
-	property name="country" cfc="Slatwall.model.entity.Country" fieldtype="many-to-one" fkcolumn="countryCode" insert="false" update="false";
+	property name="country" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode" insert="false" update="false";
 
 
 	// ============ START: Non-Persistent Property Methods =================

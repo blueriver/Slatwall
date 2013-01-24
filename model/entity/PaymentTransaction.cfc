@@ -54,8 +54,8 @@ component displayname="Payment Transaction" entityname="SlatwallPaymentTransacti
 	property name="message" ormtype="string";  				// @hint this is a pipe and tilda delimited list of any messages that came back in the response.
 	
 	// Related Object Properties (many-to-one)
-	property name="accountPayment" cfc="Slatwall.model.entity.AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
-	property name="orderPayment" cfc="Slatwall.model.entity.OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
+	property name="accountPayment" cfc="AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
+	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -68,9 +68,9 @@ component displayname="Payment Transaction" entityname="SlatwallPaymentTransacti
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

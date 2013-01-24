@@ -45,8 +45,8 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 	property name="systemCode" ormtype="string";
 	
 	// Related Object Properties
-	property name="parentType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="parentTypeID";
-	property name="childTypes" singularname="childType" type="array" cfc="Slatwall.model.entity.Type" fieldtype="one-to-many" fkcolumn="parentTypeID" cascade="all" inverse="true";
+	property name="parentType" cfc="Type" fieldtype="many-to-one" fkcolumn="parentTypeID";
+	property name="childTypes" singularname="childType" type="array" cfc="Type" fieldtype="one-to-many" fkcolumn="parentTypeID" cascade="all" inverse="true";
 	
 	public any function getChildTypes() {
 		if(!isDefined('variables.childTypes')) {

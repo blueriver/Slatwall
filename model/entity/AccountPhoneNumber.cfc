@@ -43,14 +43,14 @@ component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNum
 	property name="phoneNumber" type="string";
 	
 	// Related Object Properties (Many-To-One)
-	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountPhoneType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
 	public string function getPhoneType() {

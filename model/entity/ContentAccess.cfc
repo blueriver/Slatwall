@@ -42,10 +42,10 @@ component displayname="Content Access" entityname="SlatwallContentAccess" table=
 	property name="contentAccessID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties (many-to-one)
-	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="content" cfc="Slatwall.model.entity.Content" fieldtype="many-to-one" fkcolumn="contentID";
-	property name="accountContentAccess" cfc="Slatwall.model.entity.AccountContentAccess" fieldtype="many-to-one" fkcolumn="accountContentAccessID";
-	property name="subscriptionUsageBenefit" cfc="Slatwall.model.entity.SubscriptionUsageBenefit" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="content" cfc="Content" fieldtype="many-to-one" fkcolumn="contentID";
+	property name="accountContentAccess" cfc="AccountContentAccess" fieldtype="many-to-one" fkcolumn="accountContentAccessID";
+	property name="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitID";
 	
 	// Related Object Properties (one-to-many)
 	

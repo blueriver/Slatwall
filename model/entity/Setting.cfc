@@ -47,24 +47,24 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="cmsContentID" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="brand" cfc="Slatwall.model.entity.Brand" fieldtype="many-to-one" fkcolumn="brandID";
-	property name="content" cfc="Slatwall.model.entity.Content" fieldtype="many-to-one" fkcolumn="contentID";
-	property name="fulfillmentMethod" cfc="Slatwall.model.entity.FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID"; 
-	property name="product" cfc="Slatwall.model.entity.Product" fieldtype="many-to-one" fkcolumn="productID" cascadeCalculate="true";
-	property name="productType" cfc="Slatwall.model.entity.ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
-	property name="sku" cfc="Slatwall.model.entity.Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="shippingMethod" cfc="Slatwall.model.entity.ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="shippingMethodRate" cfc="Slatwall.model.entity.ShippingMethodRate" fieldtype="many-to-one" fkcolumn="shippingMethodRateID";
-	property name="paymentMethod" cfc="Slatwall.model.entity.PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
-	property name="email" cfc="Slatwall.model.entity.Email" fieldtype="many-to-one" fkcolumn="emailID";
-	property name="emailTemplate" cfc="Slatwall.model.entity.EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="content" cfc="Content" fieldtype="many-to-one" fkcolumn="contentID";
+	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID"; 
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" cascadeCalculate="true";
+	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="many-to-one" fkcolumn="shippingMethodRateID";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
+	property name="email" cfc="Email" fieldtype="many-to-one" fkcolumn="emailID";
+	property name="emailTemplate" cfc="EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 
 	public struct function getSettingMetaData() {
 		return getService("settingService").getSettingMetaData(settingName=getSettingName());

@@ -46,23 +46,23 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	property name="priceGroupCode" ormtype="string";
 	
 	// Related Object Properties (Many-To-One)
-	property name="parentPriceGroup" cfc="Slatwall.model.entity.PriceGroup" fieldtype="many-to-one" fkcolumn="parentPriceGroupID" nullRBKey="define.none";
+	property name="parentPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="parentPriceGroupID" nullRBKey="define.none";
 	
 	// Related Object Properties (One-To-Many)
-	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="Slatwall.model.entity.PriceGroup" fieldtype="one-to-many" fkcolumn="parentPriceGroupID" inverse="true";
-	property name="priceGroupRates" singularname="priceGroupRate" cfc="Slatwall.model.entity.PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" cascade="all-delete-orphan" inverse="true";    
+	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="PriceGroup" fieldtype="one-to-many" fkcolumn="parentPriceGroupID" inverse="true";
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" cascade="all-delete-orphan" inverse="true";    
 	
 	// Related Object Properties (many-to-many - invers)
-	property name="accounts" singularname="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="accountID" inverse="true";
-	property name="subscriptionBenefits" singularname="subscriptionBenefit" cfc="Slatwall.model.entity.SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="subscriptionBenefitID" inverse="true";
-	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="Slatwall.model.entity.SubscriptionUsageBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="subscriptionUsageBenefitID" inverse="true";
-	property name="promotionRewards" singularname="promotionReward" cfc="Slatwall.model.entity.PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardEligiblePriceGroup" fkcolumn="priceGroupID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="accountID" inverse="true";
+	property name="subscriptionBenefits" singularname="subscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="subscriptionBenefitID" inverse="true";
+	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="subscriptionUsageBenefitID" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardEligiblePriceGroup" fkcolumn="priceGroupID" inversejoincolumn="promotionRewardID" inverse="true";
 
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="parentPriceGroupOptions" persistent="false";

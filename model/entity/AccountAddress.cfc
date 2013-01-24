@@ -43,17 +43,17 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 	property name="accountAddressName" ormtype="string" hint="Nickname for this account Address"; 
 	
 	// Related Object Properties
-	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="address" cfc="Slatwall.model.entity.Address" fieldtype="many-to-one" fkcolumn="addressID" cascade="all";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID" cascade="all";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

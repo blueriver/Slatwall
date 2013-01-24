@@ -45,24 +45,24 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Object Properties (Many-To-One)
-	property name="billToLocation" cfc="Slatwall.model.entity.Location" fieldtype="many-to-one" fkcolumn="locationID";
-	property name="vendor" cfc="Slatwall.model.entity.Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="vendorOrderType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
-	property name="vendorOrderStatusType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="vendorOrderStatusTypeID";
+	property name="billToLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
+	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
+	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
+	property name="vendorOrderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderStatusTypeID";
 	
 	// Related Object Properties (One-To-Many)
-	property name="attributeValues" singularname="attributeValue" cfc="Slatwall.model.entity.AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderID" cascade="all-delete-orphan" inverse="true";
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="Slatwall.model.entity.VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all";
-	property name="stockReceivers" singularname="stockReceiver" cfc="Slatwall.model.entity.StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderID" cascade="all-delete-orphan" inverse="true";
+	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all";
+	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
 	property name="total" persistent="false" formatType="currency"; 

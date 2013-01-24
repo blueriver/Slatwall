@@ -43,10 +43,10 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	property name="locationName" ormtype="string";
 	
 	// Related Object Properties (Many-to-One)
-	property name="primaryAddress" cfc="Slatwall.model.entity.LocationAddress" fieldtype="many-to-one" fkcolumn="locationAddressID";
+	property name="primaryAddress" cfc="LocationAddress" fieldtype="many-to-one" fkcolumn="locationAddressID";
 	
 	// Related Object Properties (One-to-Many)
-	property name="locationAddresses" singularname="locationAddress" cfc="Slatwall.model.entity.LocationAddress" type="array" fieldtype="one-to-many" fkcolumn="locationID" cascade="all-delete-orphan" inverse="true";
+	property name="locationAddresses" singularname="locationAddress" cfc="LocationAddress" type="array" fieldtype="one-to-many" fkcolumn="locationID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (Many-to-Many)
 	
@@ -55,9 +55,9 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public boolean function isDeletable() {
 		return !(getService("LocationService").isLocationBeingUsed(this) || getService("LocationService").getLocationCount() == 1);

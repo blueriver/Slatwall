@@ -44,16 +44,16 @@ component displayname="Tax Category" entityname="SlatwallTaxCategory" table="Sla
 	property name="taxCategoryName" ormtype="string";
 	
 	// Related Object Properties (one-to-many)
-	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="Slatwall.model.entity.TaxCategoryRate" type="array" fieldtype="one-to-many" fkcolumn="taxCategoryID" inverse="true" cascade="all-delete-orphan";
+	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" type="array" fieldtype="one-to-many" fkcolumn="taxCategoryID" inverse="true" cascade="all-delete-orphan";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
 	

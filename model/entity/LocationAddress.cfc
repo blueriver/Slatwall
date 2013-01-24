@@ -42,8 +42,8 @@ component displayname="Location Address" entityname="SlatwallLocationAddress" ta
 	property name="locationAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties (many-to-one)
-	property name="location" cfc="Slatwall.model.entity.Location" fieldtype="many-to-one" fkcolumn="locationID";
-	property name="address" cfc="Slatwall.model.entity.Address" fieldtype="many-to-one" fkcolumn="addressID";
+	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
+	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -54,9 +54,9 @@ component displayname="Location Address" entityname="SlatwallLocationAddress" ta
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

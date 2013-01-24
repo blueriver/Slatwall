@@ -50,8 +50,8 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	property name="shipToCity" ormtype="string";
 
 	// Related Object Properties (many-To-one)
-	property name="shippingMethodRate" cfc="Slatwall.model.entity.ShippingMethodRate" fieldtype="many-to-one" fkcolumn="shippingMethodRateID";
-	property name="orderFulfillment" cfc="Slatwall.model.entity.OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
+	property name="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="many-to-one" fkcolumn="shippingMethodRateID";
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -61,7 +61,7 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Non-Persistent Properties
 	property name="discountAmountDetails" persistent="false";

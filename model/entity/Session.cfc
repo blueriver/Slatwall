@@ -44,9 +44,9 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	property name="lastRequestDateTime" ormtype="timestamp";
 	
 	// Related Entities
-	property name="account" type="any" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountAuthentication" cfc="Slatwall.model.entity.AccountAuthentication" fieldtype="many-to-one" fkcolumn="accountAuthenticationID";
-	property name="order" type="any" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="account" type="any" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountAuthentication" cfc="AccountAuthentication" fieldtype="many-to-one" fkcolumn="accountAuthenticationID";
+	property name="order" type="any" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

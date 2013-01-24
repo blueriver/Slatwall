@@ -50,13 +50,13 @@ component displayname="Term" entityname="SlatwallTerm" table="SlatwallTerm" pers
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
-	property name="paymentTerms" singularname="paymentTerm" cfc="Slatwall.model.entity.PaymentTerm" type="array" fieldtype="one-to-many" fkcolumn="termID" cascade="all" inverse="true" lazy="extra"; 															// Extra Lazy because it is only used for validation
-	property name="initialSubscriptionTerms" singularname="initialSubscriptionTerm" cfc="Slatwall.model.entity.SubscriptionTerm" type="array" fieldtype="one-to-many" fkcolumn="initialTermID" cascade="all" inverse="true" lazy="extra"; 						// Extra Lazy because it is only used for validation
-	property name="renewalSubscriptionTerms" singularname="renewalSubscriptionTerm" cfc="Slatwall.model.entity.SubscriptionTerm" type="array" fieldtype="one-to-many" fkcolumn="renewalTermID" cascade="all" inverse="true" lazy="extra"; 						// Extra Lazy because it is only used for validation
-	property name="gracePeriodSubscriptionTerms" singularname="gracePeriodSubscriptionTerm" cfc="Slatwall.model.entity.SubscriptionTerm" type="array" fieldtype="one-to-many" fkcolumn="gracePeriodTermID" cascade="all" inverse="true" lazy="extra"; 			// Extra Lazy because it is only used for validation
-	property name="initialSubscriptionUsageTerms" singularname="initialSubscriptionUsageTerm" cfc="Slatwall.model.entity.SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="initialTermID" cascade="all" inverse="true" lazy="extra";				// Extra Lazy because it is only used for validation
-	property name="renewalSubscriptionUsageTerms" singularname="renewalSubscriptionUsageTerm" cfc="Slatwall.model.entity.SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="renewalTermID" cascade="all" inverse="true" lazy="extra";				// Extra Lazy because it is only used for validation
-	property name="gracePeriodSubscriptionUsageTerms" singularname="gracePeriodSubscriptionUsageTerm" cfc="Slatwall.model.entity.SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="gracePeriodTermID" cascade="all" inverse="true" lazy="extra";	// Extra Lazy because it is only used for validation
+	property name="paymentTerms" singularname="paymentTerm" cfc="PaymentTerm" type="array" fieldtype="one-to-many" fkcolumn="termID" cascade="all" inverse="true" lazy="extra"; 															// Extra Lazy because it is only used for validation
+	property name="initialSubscriptionTerms" singularname="initialSubscriptionTerm" cfc="SubscriptionTerm" type="array" fieldtype="one-to-many" fkcolumn="initialTermID" cascade="all" inverse="true" lazy="extra"; 						// Extra Lazy because it is only used for validation
+	property name="renewalSubscriptionTerms" singularname="renewalSubscriptionTerm" cfc="SubscriptionTerm" type="array" fieldtype="one-to-many" fkcolumn="renewalTermID" cascade="all" inverse="true" lazy="extra"; 						// Extra Lazy because it is only used for validation
+	property name="gracePeriodSubscriptionTerms" singularname="gracePeriodSubscriptionTerm" cfc="SubscriptionTerm" type="array" fieldtype="one-to-many" fkcolumn="gracePeriodTermID" cascade="all" inverse="true" lazy="extra"; 			// Extra Lazy because it is only used for validation
+	property name="initialSubscriptionUsageTerms" singularname="initialSubscriptionUsageTerm" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="initialTermID" cascade="all" inverse="true" lazy="extra";				// Extra Lazy because it is only used for validation
+	property name="renewalSubscriptionUsageTerms" singularname="renewalSubscriptionUsageTerm" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="renewalTermID" cascade="all" inverse="true" lazy="extra";				// Extra Lazy because it is only used for validation
+	property name="gracePeriodSubscriptionUsageTerms" singularname="gracePeriodSubscriptionUsageTerm" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="gracePeriodTermID" cascade="all" inverse="true" lazy="extra";	// Extra Lazy because it is only used for validation
 	
 	// Related Object Properties (many-to-many)
 	
@@ -65,9 +65,9 @@ component displayname="Term" entityname="SlatwallTerm" table="SlatwallTerm" pers
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

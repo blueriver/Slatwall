@@ -43,30 +43,30 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	property name="maxUseCount" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="subscriptionBenefit" cfc="Slatwall.model.entity.SubscriptionBenefit" fieldtype="many-to-one" fkcolumn="subscriptionBenefitID";
-	property name="subscriptionUsage" cfc="Slatwall.model.entity.SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" inverse="true";
-	property name="renewalSubscriptionUsage" cfc="Slatwall.model.entity.SubscriptionUsage" fieldtype="many-to-one" fkcolumn="renewalSubscriptionUsageID" inverse="true";
-	property name="accessType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="accessTypeID";
+	property name="subscriptionBenefit" cfc="SubscriptionBenefit" fieldtype="many-to-one" fkcolumn="subscriptionBenefitID";
+	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" inverse="true";
+	property name="renewalSubscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="renewalSubscriptionUsageID" inverse="true";
+	property name="accessType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessTypeID";
 	
 	// Related Object Properties (one-to-many)
 	
 	// Related Object Properties (many-to-many)
-	property name="priceGroups" singularname="priceGroup" cfc="Slatwall.model.entity.PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="priceGroupID";
-	property name="promotions" singularname="promotion" cfc="Slatwall.model.entity.Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPromotion" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="promotionID";
-	property name="categories" singularname="category" cfc="Slatwall.model.entity.Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID";
-	property name="contents" singularname="content" cfc="Slatwall.model.entity.Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID";
+	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="priceGroupID";
+	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPromotion" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="promotionID";
+	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID";
+	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID";
 	
-	property name="excludedCategories" singularname="excludedCategory" cfc="Slatwall.model.entity.Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID";
-	property name="excludedContents" singularname="excludedContent" cfc="Slatwall.model.entity.Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID";
+	property name="excludedCategories" singularname="excludedCategory" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID";
+	property name="excludedContents" singularname="excludedContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitExcludedContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

@@ -43,21 +43,21 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	property name="quantity" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="orderDelivery" cfc="Slatwall.model.entity.OrderDelivery" fieldtype="many-to-one" fkcolumn="orderDeliveryID";
-	property name="orderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cascadeCalculate="true";
-	property name="stock" cfc="Slatwall.model.entity.Stock" fieldtype="many-to-one" fkcolumn="stockID" cascadeCalculate="true";
+	property name="orderDelivery" cfc="OrderDelivery" fieldtype="many-to-one" fkcolumn="orderDeliveryID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cascadeCalculate="true";
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID" cascadeCalculate="true";
 	
 	// Related Object Properties (one-to-many)
-	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderDeliveryItemID" inverse="true" cascade="all"; // Used For Returns
+	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderDeliveryItemID" inverse="true" cascade="all"; // Used For Returns
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="quantityReturned" persistent="false";

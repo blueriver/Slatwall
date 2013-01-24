@@ -43,14 +43,14 @@ component displayname="Alternate Sku Code" entityname="SlatwallAlternateSkuCode"
 	property name="alternateSkuCode" ormtype="string";
 	
 	// Related Object Properties (Many-To-One)
-	property name="alternateSkuCodeType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
-	property name="sku" cfc="Slatwall.model.entity.Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
 	// ============ START: Non-Persistent Property Methods =================

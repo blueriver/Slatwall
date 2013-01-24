@@ -47,15 +47,15 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	property name="directory" ormtype="string";
 	
 	// Related entity properties (many-to-one)
-	property name="imageType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="imageTypeID" systemCode="itProduct";
-	property name="product" cfc="Slatwall.model.entity.Product" fieldtype="many-to-one" fkcolumn="productID";
-	property name="promotion" cfc="Slatwall.model.entity.Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID" systemCode="itProduct";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public string function getImagePath() {
 		return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/#getDirectory()#/#getImageFile()#";

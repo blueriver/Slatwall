@@ -46,7 +46,7 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
-	property name="commentRelationships" singularname="commentRelationship" cfc="Slatwall.model.entity.CommentRelationship" type="array" fieldtype="one-to-many" fkcolumn="commentID" inverse="true" cascade="all-delete-orphan";
+	property name="commentRelationships" singularname="commentRelationship" cfc="CommentRelationship" type="array" fieldtype="one-to-many" fkcolumn="commentID" inverse="true" cascade="all-delete-orphan";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -55,7 +55,7 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Non-Persistent Properties
 	property name="primaryRelationship" persistent="false";

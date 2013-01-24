@@ -46,32 +46,32 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="company" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	
 	// Related Object Properties (many-to-one)
-	property name="primaryEmailAddress" cfc="Slatwall.model.entity.AccountEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
-	property name="primaryPhoneNumber" cfc="Slatwall.model.entity.AccountPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
-	property name="primaryAddress" cfc="Slatwall.model.entity.AccountAddress" fieldtype="many-to-one" fkcolumn="primaryAddressID";
-	property name="primaryAccountPaymentMethod" cfc="Slatwall.model.entity.AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="primaryAccountPaymentMethodID";
+	property name="primaryEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
+	property name="primaryPhoneNumber" cfc="AccountPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
+	property name="primaryAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="primaryAddressID";
+	property name="primaryAccountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="primaryAccountPaymentMethodID";
 	
 	// Related Object Properties (one-to-many)
-	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Slatwall.model.entity.AccountAddress" inverse="true" cascade="all-delete-orphan";
-	property name="accountAuthentications" singularname="accountAuthentication" cfc="Slatwall.model.entity.AccountAuthentication" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
-	property name="accountContentAccesses" singularname="accountContentAccess" cfc="Slatwall.model.entity.AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
-	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="Slatwall.model.entity.AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
-	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="Slatwall.model.entity.AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
-	property name="accountPayments" singularname="accountPayment" cfc="Slatwall.model.entity.AccountPayment" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all" inverse="true";
-	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="Slatwall.model.entity.AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
-	property name="attributeValues" singularname="attributeValue" cfc="Slatwall.model.entity.AttributeValue" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
-	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Slatwall.model.entity.Order" inverse="true" orderby="orderOpenDateTime desc";
-	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Slatwall.model.entity.ProductReview" inverse="true";
-	property name="subscriptionUsageBenefitAccounts" singularname="subscriptionUsageBenefitAccount" cfc="Slatwall.model.entity.SubscriptionUsageBenefitAccount" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
-	property name="subscriptionUsages" singularname="subscriptionUsage" cfc="Slatwall.model.entity.SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
-	property name="termAccountOrderPayments" singularname="termAccountOrderPayment" cfc="Slatwall.model.entity.OrderPayment" type="array" fieldtype="one-to-many" fkcolumn="termPaymentAccountID" cascade="all" inverse="true";
+	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
+	property name="accountAuthentications" singularname="accountAuthentication" cfc="AccountAuthentication" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
+	property name="accountContentAccesses" singularname="accountContentAccess" cfc="AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
+	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
+	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
+	property name="accountPayments" singularname="accountPayment" cfc="AccountPayment" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all" inverse="true";
+	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
+	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
+	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
+	property name="subscriptionUsageBenefitAccounts" singularname="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
+	property name="subscriptionUsages" singularname="subscriptionUsage" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
+	property name="termAccountOrderPayments" singularname="termAccountOrderPayment" cfc="OrderPayment" type="array" fieldtype="one-to-many" fkcolumn="termPaymentAccountID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="priceGroups" singularname="priceGroup" cfc="Slatwall.model.entity.PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
-	property name="permissionGroups" singularname="permissionGroup" cfc="Slatwall.model.entity.PermissionGroup" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="accountID" inversejoincolumn="permissionGroupID";
+	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
+	property name="permissionGroups" singularname="permissionGroup" cfc="PermissionGroup" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="accountID" inversejoincolumn="permissionGroupID";
 
 	// Related Object Properties (many-to-many - inverse)
-	property name="promotionCodes" singularname="promotionCode" cfc="Slatwall.model.entity.PromotionCode" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionCodeAccount" fkcolumn="accountID" inversejoincolumn="promotionCodeID" inverse="true";
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionCodeAccount" fkcolumn="accountID" inversejoincolumn="promotionCodeID" inverse="true";
 
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -81,9 +81,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
 	property name="adminIcon" persistent="false";

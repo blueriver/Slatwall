@@ -45,26 +45,26 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="sortOrder" ormtype="integer" sortContext="fulfillmentMethod";
 	
 	// Related Object Properties (many-to-one)
-	property name="fulfillmentMethod" cfc="Slatwall.model.entity.FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
+	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	
 	// Related Object Properties (one-to-many)
-	property name="shippingMethodRates" singularname="shippingMethodRate" cfc="Slatwall.model.entity.ShippingMethodRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
-	property name="orderFulfillments" singularname="orderFulfillment" cfc="Slatwall.model.entity.OrderFulfillment" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" lazy="extra";
+	property name="shippingMethodRates" singularname="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" lazy="extra";
 	
 	// Related Object Properties (many-to-many - owner)
 	
 	// Related Object Properties (many-to-many - inverse)
-	property name="promotionRewards" singularname="promotionReward" cfc="Slatwall.model.entity.PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="Slatwall.model.entity.PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionQualifierID" inverse="true";
 
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 
 

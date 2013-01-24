@@ -44,16 +44,16 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Object Properties (many-to-one)
-	property name="accountAddress" cfc="Slatwall.model.entity.AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
-	property name="fulfillmentMethod" cfc="Slatwall.model.entity.FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
-	property name="order" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="shippingAddress" cfc="Slatwall.model.entity.Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
-	property name="shippingMethod" cfc="Slatwall.model.entity.ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="accountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
+	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
+	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
 	// Related Object Properties (one-to-many)
-	property name="orderFulfillmentItems" singularname="orderFulfillmentItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
-	property name="appliedPromotions" singularname="appliedPromotion" cfc="Slatwall.model.entity.PromotionApplied" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
-	property name="fulfillmentShippingMethodOptions" singularname="fulfillmentShippingMethodOption" cfc="Slatwall.model.entity.ShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
+	property name="orderFulfillmentItems" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
+	property name="fulfillmentShippingMethodOptions" singularname="fulfillmentShippingMethodOption" cfc="ShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
 
 	// Related Object Properties (many-to-many - owner)
 
@@ -64,9 +64,9 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="fulfillmentMethodType" type="numeric" persistent="false";

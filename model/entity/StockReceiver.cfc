@@ -46,18 +46,18 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	property name="receiverType" ormtype="string" formatType="rbKey" notnull="true";
 	
 	// Related Object Properties (many-to-one)
-	property name="order" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="stockAdjustment" cfc="Slatwall.model.entity.StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
-	property name="vendorOrder" cfc="Slatwall.model.entity.VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
+	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	
 	// Related Object Properties (one-to-many)
-	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="Slatwall.model.entity.StockReceiverItem" fieldtype="one-to-many" fkcolumn="stockReceiverID" cascade="all-delete-orphan" inverse="true";
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" fieldtype="one-to-many" fkcolumn="stockReceiverID" cascade="all-delete-orphan" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

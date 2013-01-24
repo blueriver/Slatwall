@@ -49,25 +49,25 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="calculatedTotal" ormtype="big_decimal";
 	
 	// Related Object Properties (many-to-one)
-	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="referencedOrder" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="referencedOrderID";	// Points at the "parent" (NOT return) order.
-	property name="orderType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="orderTypeID";
-	property name="orderStatusType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
-	property name="orderOrigin" cfc="Slatwall.model.entity.OrderOrigin" fieldtype="many-to-one" fkcolumn="orderOriginID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="referencedOrder" cfc="Order" fieldtype="many-to-one" fkcolumn="referencedOrderID";	// Points at the "parent" (NOT return) order.
+	property name="orderType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderTypeID";
+	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
+	property name="orderOrigin" cfc="OrderOrigin" fieldtype="many-to-one" fkcolumn="orderOriginID";
 	
 	// Related Object Properties (one-To-many)
-	property name="attributeValues" singularname="attributeValue" cfc="Slatwall.model.entity.AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderItems" singularname="orderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="appliedPromotions" singularname="appliedPromotion" cfc="Slatwall.model.entity.PromotionApplied" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderDeliveries" singularname="orderDelivery" cfc="Slatwall.model.entity.OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
-	property name="orderFulfillments" singularname="orderFulfillment" cfc="Slatwall.model.entity.OrderFulfillment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderPayments" singularname="orderPayment" cfc="Slatwall.model.entity.OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderReturns" singularname="orderReturn" cfc="Slatwall.model.entity.OrderReturn" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="stockReceivers" singularname="stockReceiver" cfc="Slatwall.model.entity.StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="referencingOrders" singularname="referencingOrder" cfc="Slatwall.model.entity.Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderReturns" singularname="orderReturn" cfc="OrderReturn" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-To-many - owner)
-	property name="promotionCodes" singularname="promotionCode" cfc="Slatwall.model.entity.PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
 	
 	// Related Object Properties (many-to-many - inverse)
 	
@@ -76,9 +76,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
 	property name="discountTotal" persistent="false" formatType="currency";

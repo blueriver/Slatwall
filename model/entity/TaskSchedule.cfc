@@ -47,8 +47,8 @@ component displayname="Task Schedule" entityname="SlatwallTaskSchedule" table="S
 	property name="successEmailList" ormtype="string" ;
 	
 	// Related Object Properties (many-to-one)
-	property name="schedule" cfc="Slatwall.model.entity.Schedule" fieldtype="many-to-one" fkcolumn="scheduleID";
-	property name="task" cfc="Slatwall.model.entity.Task" fieldtype="many-to-one" fkcolumn="taskID";
+	property name="schedule" cfc="Schedule" fieldtype="many-to-one" fkcolumn="scheduleID";
+	property name="task" cfc="Task" fieldtype="many-to-one" fkcolumn="taskID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -61,9 +61,9 @@ component displayname="Task Schedule" entityname="SlatwallTaskSchedule" table="S
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

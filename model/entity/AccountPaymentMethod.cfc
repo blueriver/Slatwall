@@ -50,9 +50,9 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="paymentMethod" cfc="Slatwall.model.entity.PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
-	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="billingAddress" cfc="Slatwall.model.entity.Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -63,9 +63,9 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="creditCardNumber" persistent="false";

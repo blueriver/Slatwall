@@ -55,37 +55,37 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="calculatedTitle" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="brand" cfc="Slatwall.model.entity.Brand" fieldtype="many-to-one" fkcolumn="brandID";
-	property name="productType" cfc="Slatwall.model.entity.ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
-	property name="defaultSku" cfc="Slatwall.model.entity.Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID" cascade="delete";
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID" cascade="delete";
 	
 	// Related Object Properties (one-to-many)
-	property name="skus" type="array" cfc="Slatwall.model.entity.Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="productImages" type="array" cfc="Slatwall.model.entity.Image" singularname="productImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="attributeValues" singularname="attributeValue" cfc="Slatwall.model.entity.AttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="productReviews" singlularname="productReview" cfc="Slatwall.model.entity.ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productImages" type="array" cfc="Image" singularname="productImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="listingPages" singularname="listingPage" cfc="Slatwall.model.entity.Content" fieldtype="many-to-many" linktable="SlatwallProductListingPage" fkcolumn="productID" inversejoincolumn="contentID";
-	property name="categories" singularname="category" cfc="Slatwall.model.entity.Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID";
-	property name="relatedProducts" singularname="relatedProduct" cfc="Slatwall.model.entity.Product" type="array" fieldtype="many-to-many" linktable="SlatwallRelatedProduct" fkcolumn="productID" inversejoincolumn="relatedProductID";
+	property name="listingPages" singularname="listingPage" cfc="Content" fieldtype="many-to-many" linktable="SlatwallProductListingPage" fkcolumn="productID" inversejoincolumn="contentID";
+	property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID";
+	property name="relatedProducts" singularname="relatedProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallRelatedProduct" fkcolumn="productID" inversejoincolumn="relatedProductID";
 	
 	// Related Object Properties (many-to-many - inverse)
-	property name="promotionRewards" singularname="promotionReward" cfc="Slatwall.model.entity.PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="Slatwall.model.entity.PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="Slatwall.model.entity.PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="Slatwall.model.entity.PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="priceGroupRates" singularname="priceGroupRate" cfc="Slatwall.model.entity.PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
-	property name="vendors" singularname="vendor" cfc="Slatwall.model.entity.Vendor" type="array" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="productID" inversejoincolumn="vendorID" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
+	property name="vendors" singularname="vendor" cfc="Vendor" type="array" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="productID" inversejoincolumn="vendorID" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="brandName" type="string" persistent="false";

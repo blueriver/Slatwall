@@ -45,19 +45,19 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Entities
-	property name="promotion" cfc="Slatwall.model.entity.Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
-	property name="orderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cascadeCalculated="true";
-	property name="orderFulfillment" cfc="Slatwall.model.entity.OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderfulfillmentID";
-	property name="order" cfc="Slatwall.model.entity.Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cascadeCalculated="true";
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderfulfillmentID";
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

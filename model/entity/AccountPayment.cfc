@@ -53,15 +53,15 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="providerToken" ormType="string";
 
 	// Related Object Properties (many-to-one)
-	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountPaymentMethod" cfc="Slatwall.model.entity.AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
-	property name="accountPaymentType" cfc="Slatwall.model.entity.Type" fieldtype="many-to-one" fkcolumn="accountPaymentTypeID";
-	property name="billingAddress" cfc="Slatwall.model.entity.Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
-	property name="paymentMethod" cfc="Slatwall.model.entity.PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
+	property name="accountPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPaymentTypeID";
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
 	
 	// Related Object Properties (one-to-many)
-	property name="attributeValues" singularname="attributeValue" cfc="Slatwall.model.entity.AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="accountPaymentID" cascade="all-delete-orphan" inverse="true";
-	property name="paymentTransactions" singularname="paymentTransaction" cfc="Slatwall.model.entity.PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountPaymentID" cascade="all" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="accountPaymentID" cascade="all-delete-orphan" inverse="true";
+	property name="paymentTransactions" singularname="paymentTransaction" cfc="PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountPaymentID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -72,9 +72,9 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="amountAuthorized" persistent="false" type="numeric" formatType="currency";

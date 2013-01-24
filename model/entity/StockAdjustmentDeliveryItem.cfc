@@ -43,13 +43,13 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 	property name="quantity" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="stockAdjustmentDelivery" cfc="Slatwall.model.entity.StockAdjustmentDelivery" fieldtype="many-to-one" fkcolumn="stockAdjustmentDeliveryID";
-	property name="stockAdjustmentItem" cfc="Slatwall.model.entity.StockAdjustmentItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentItemID";
-	property name="stock" cfc="Slatwall.model.entity.Stock" fieldtype="many-to-one" fkcolumn="stockID";
+	property name="stockAdjustmentDelivery" cfc="StockAdjustmentDelivery" fieldtype="many-to-one" fkcolumn="stockAdjustmentDeliveryID";
+	property name="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentItemID";
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 
 	// ============ START: Non-Persistent Property Methods =================
 	

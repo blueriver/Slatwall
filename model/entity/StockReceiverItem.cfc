@@ -46,14 +46,14 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Related Object Properties (many-to-one)
-	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Slatwall.model.entity.Stock" cascadeCalculate="true";
-	property name="stockReceiver" fieldtype="many-to-one" fkcolumn="stockReceiverID" cfc="Slatwall.model.entity.StockReceiver";
-	property name="orderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
-	property name="vendorOrderItem" cfc="Slatwall.model.entity.VendorOrderItem" fieldtype="many-to-one" fkcolumn="vendorOrderItemID";
-	property name="stockAdjustmentItem" cfc="Slatwall.model.entity.StockAdjustmentItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentItemID";
+	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock" cascadeCalculate="true";
+	property name="stockReceiver" fieldtype="many-to-one" fkcolumn="stockReceiverID" cfc="StockReceiver";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="vendorOrderItem" cfc="VendorOrderItem" fieldtype="many-to-one" fkcolumn="vendorOrderItemID";
+	property name="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentItemID";
 	
 	private boolean function hasOneAndOnlyOneRelatedItem() {
     	var relationshipCount = 0;

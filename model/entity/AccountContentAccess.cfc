@@ -42,22 +42,22 @@ component displayname="Account Content Access" entityname="SlatwallAccountConten
 	property name="accountContentAccessID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties (Many-to-One)
-	property name="orderItem" cfc="Slatwall.model.entity.OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
-	property name="account" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	// Related Object Properties (One-to-Many)
 	
 	// Related Object Properties (Many-to-Many)
-	property name="accessContents" singularname="accessContent" cfc="Slatwall.model.entity.Content" type="array" fieldtype="many-to-many" linktable="SlatwallAccountContentAccessContent" fkcolumn="accountContentAccessID" inversejoincolumn="contentID";
+	property name="accessContents" singularname="accessContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallAccountContentAccessContent" fkcolumn="accountContentAccessID" inversejoincolumn="contentID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 

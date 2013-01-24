@@ -42,8 +42,8 @@ component displayname="Vendor Address" entityname="SlatwallVendorAddress" table=
 	property name="vendorAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 		
 	// Related Object Properties
-	property name="vendor" cfc="Slatwall.model.entity.Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="address" cfc="Slatwall.model.entity.Address" fieldtype="many-to-one" fkcolumn="addressID" cascade="all";
+	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
+	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID" cascade="all";
 
 
 	

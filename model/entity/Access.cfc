@@ -43,9 +43,9 @@ component displayname="Access" entityname="SlatwallAccess" table="SlatwallAccess
 	property name="accessCode" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="subscriptionUsage" cfc="Slatwall.model.entity.SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";
-	property name="subscriptionUsageBenefit" cfc="Slatwall.model.entity.SubscriptionUsageBenefit" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitID";
-	property name="subscriptionUsageBenefitAccount" cfc="Slatwall.model.entity.SubscriptionUsageBenefitAccount" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitAccountID";
+	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";
+	property name="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitID";
+	property name="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitAccountID";
 		
 	// Related Object Properties (one-to-many)
 	
@@ -56,9 +56,9 @@ component displayname="Access" entityname="SlatwallAccess" table="SlatwallAccess
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Slatwall.model.entity.Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 
