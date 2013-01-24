@@ -91,7 +91,7 @@ component accessors="true" output="false" persistent="false" {
 		return getThisMetaData().fullname;
 	}
 	
-	private string function createHibachiUUID() {
+	public string function createHibachiUUID() {
 		return replace(lcase(createUUID()), '-', '', 'all');
 	}
 	

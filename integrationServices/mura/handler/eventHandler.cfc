@@ -21,6 +21,7 @@
 			if(slatwallSite.isNew()) {
 				slatwallSite.setSiteName( cmsSiteName );
 				getSlatwallScope().getService("siteService").saveSite( slatwallSite );
+				ormFlush();
 			}
 			
 			// If the plugin is set to create default pages, and this siteID has not been populated then we need to populate it with pages & templates
@@ -174,7 +175,9 @@
 		<cfargument name="slatwallSite" type="any" required="true" />
 		<cfargument name="muraSiteID" type="string" required="true" />
 		
+		<cfset var parentMappingCache = {} />
 		<cfset var missingContentQuery = "" />
+		
 		<cfquery name="missingContentQuery">
 			SELECT
 				tcontent.contentID,
@@ -198,7 +201,7 @@
 			<cfset var rs = "" />
 			
 			<!--- Creating Home Page --->
-			<cfif !len(missingContentQuery.parentID)>
+			<cfif missingContentQuery.parentID eq "00000000000000000000000000000000END">
 				<cfset var newContentID = getSlatwallScope().createHibachiUUID() />
 				<cfquery name="rs">
 					INSERT INTO SlatwallContent (
@@ -219,13 +222,20 @@
 				</cfquery>
 			<!--- Creating Internal Page, or resetting if parent can't be found --->	
 			<cfelse>
-				<cfset var parentContentQuery = "" />
 				
-				<cfquery name="parentContentQuery">
-					SELECT contentID, contentIDPath FROM SlatwallContent WHERE cmsContentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.parentID#" /> 
-				</cfquery>
+				<cfif not structKeyExists(parentMappingCache, missingContentQuery.parentID)>
+					<cfset var parentContentQuery = "" />
+					<cfquery name="parentContentQuery">
+						SELECT contentID, contentIDPath FROM SlatwallContent WHERE cmsContentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.parentID#" /> 
+					</cfquery>
+					<cfif parentContentQuery.recordCount>
+						<cfset parentMappingCache[ missingContentQuery.parentID ] = {} />
+						<cfset parentMappingCache[ missingContentQuery.parentID ].contentID = parentContentQuery.contentID />
+						<cfset parentMappingCache[ missingContentQuery.parentID ].contentIDPath = parentContentQuery.contentIDPath />
+					</cfif>
+				</cfif>
 				
-				<cfif !len(missingContentQuery.parentID)>
+				<cfif structKeyExists(parentMappingCache,  missingContentQuery.parentID)>
 					<cfset var newContentID = getSlatwallScope().createHibachiUUID() />
 					<cfquery name="rs">
 						INSERT INTO SlatwallContent (
@@ -238,8 +248,8 @@
 							title
 						) VALUES (
 							<cfqueryparam cfsqltype="cf_sql_varchar" value="#newContentID#" />,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#parentContentQuery.contentIDPath#,#newContentID#" />,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#parentContentQuery.contentID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#parentMappingCache[ missingContentQuery.parentID ].contentIDPath#,#newContentID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#parentMappingCache[ missingContentQuery.parentID ].contentID#" />,
 							<cfqueryparam cfsqltype="cf_sql_bit" value="1" />,
 							<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" />,
 							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.contentID#" />,

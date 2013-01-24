@@ -46,6 +46,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.o
 	property name="promotionService" type="any";
 	property name="vendorService" type="any";
 	property name="vendorOrderService" type="any";
+	property name="hibachiService" type="any";
 	
 	this.publicMethods='';
 	
@@ -63,8 +64,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.o
 	public void function updateListingDisplay(required struct rc) {
 		try {
 			
-			var entityService = getUtilityORMService().getServiceByEntityName( entityName=rc.entityName );
-			var smartList = entityService.invokeMethod( "get#getUtilityORMService().getProperlyCasedShortEntityName( rc.entityName )#SmartList", {1=rc} );
+			var entityService = getHibachiService().getServiceByEntityName( entityName=rc.entityName );
+			var smartList = entityService.invokeMethod( "get#getHibachiService().getProperlyCasedShortEntityName( rc.entityName )#SmartList", {1=rc} );
 			
 			var smartListPageRecords = smartList.getPageRecords();
 			var piArray = listToArray(rc.propertyIdentifiers);

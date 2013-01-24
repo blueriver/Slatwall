@@ -1,14 +1,3 @@
-/**
- * @depends /jquery-1.7.1.min.js
- * @depends /jquery-ui-1.8.20.custom.min.js
- * @depends /jquery-ui-timepicker-addon-0.9.9.js
- * @depends /jquery-validate-1.9.0.min.js
- * @depends /jquery-typewatch-2.0.js
- * @depends /jquery-hashchange-1.3.min.js
- * @depends /bootstrap.min.js
- * 
- */
-
 var listingUpdateCache = {
 	onHold: false,
 	tableID: "",
@@ -815,7 +804,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 }
 
 function addLoadingDiv( elementID ) {
-	var loadingDiv = '<div id="loading' + elementID + '" style="position:absolute;float:left;text-align:center;background-color:#FFFFFF;opacity:.9;z-index:900;"><img src="' + slatwall.rootURL + '/assets/images/loading.gif" title="loading" /></div>';
+	var loadingDiv = '<div id="loading' + elementID + '" style="position:absolute;float:left;text-align:center;background-color:#FFFFFF;opacity:.9;z-index:900;"><img src="' + slatwall.rootURL + '/org/Hibachi/HibachiAssets/images/loading.gif" title="loading" /></div>';
 	jQuery('#' + elementID).before(loadingDiv);
 	jQuery('#loading' + elementID).width(jQuery('#' + elementID).width() + 2);
 	jQuery('#loading' + elementID).height(jQuery('#' + elementID).height() + 2);

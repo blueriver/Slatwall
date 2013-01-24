@@ -240,7 +240,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		return getBaseURL();
 	}
 	
-	// Deprecated
 	public any function getSlatwallRootPath() {
 		return getBaseURL();
 	}
