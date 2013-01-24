@@ -80,13 +80,73 @@ component {
 	// onDeleteContent
 	
 	
+	public void function verifySetup( required any $, required any config ) {
+		writeLog(file="Slatwall", text="Mura Integration - verifySetup() called");
+	}
 	
+	public void function onSiteRequestStart(required any $) {
+		// Call the Slatwall Event Handler that gets the request setup
+		getSlatwallFW1Application().setupGlobalRequest();
+		
+		// Setup the newly create slatwallScope into the muraScope
+		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+		
+		writeLog(file="Slatwall", text="Mura Integration - onSiteRequestStart() called");
+	}
 	
+	public void function onSiteRequestEnd(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onSiteRequestEnd() called");
+	}
 	
+	public void function onAdminModuleNav(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onAdminModuleNav() called");
+	}
 	
+	public void function onRenderStart(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onRenderStart() called");
+	}
 	
+	public void function onRenderEnd(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onRenderEnd() called");
+	}
 	
+	public void function onAfterCategorySave(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onAfterCategorySave() called");
+	}
 	
+	public void function onAfterCategoryDelete(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onAfterCategoryDelete() called");
+	}
+	
+	public void function onContentEdit(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onContentEdit() called");
+	}
+	
+	public void function onAfterContentSave(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onAfterContentSave() called");
+	}
+	
+	public void function onAfterContentDelete(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onAfterContentDelete() called");
+	}
+	
+	// ========================== Private Helper Methods ==============================
+	
+	// Helper Method for doAction()
+	private string function doAction(required any action) {
+		if(!structKeyExists(url, "$")) {
+			url.$ = request.muraScope;
+		}
+		return getSlatwallFW1Application().doAction(arguments.action);
+	}
+	
+	// Helper method to get the Slatwall Application
+	private any function getSlatwallFW1Application() {
+		if(!structKeyExists(variables, "slatwallApplication")) {
+			variables.slatwallApplication = createObject("component", "Slatwall.Application");
+		}
+		return variables.slatwallApplication;
+	}
 	
 	
 	/*
@@ -158,7 +218,6 @@ component {
 				$.content().setTitle( $.slatwall.getCurrentBrand().getBrandName() );
 				$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getBrandName() );
 			}
-
 		}
 	}
 	
@@ -291,25 +350,10 @@ component {
 		endSlatwallAdminRequest($);
 	}
 	
+	*/
 	
-	// ========================== Private Helper Methods ==============================
 	
-	// Helper Method for doAction()
-	private string function doAction(required any action) {
-		if(!structKeyExists(url, "$")) {
-			url.$ = request.muraScope;
-		}
-		return getSlatwallFW1Application().doAction(arguments.action);
-	}
-	
-	// Helper method to get the Slatwall Application
-	private any function getSlatwallFW1Application() {
-		if(!structKeyExists(request, "slatwallFW1Application")) {
-			request.slatwallFW1Application = createObject("component", "Slatwall.Application");
-		}
-		return request.slatwallFW1Application;
-	}
-	
+	/*
 	// For admin request start, we call the Slatwall Event Handler that gets the request setup
 	private void function startSlatwallAdminRequest(required any $) {
 		if(!structKeyExists(request, "slatwallScope")) {
