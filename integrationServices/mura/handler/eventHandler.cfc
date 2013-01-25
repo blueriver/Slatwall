@@ -3,8 +3,6 @@
 	
 	// This method is explicitly called during application reload from the conntector plugins onApplicationLoad() event
 	public void function verifySetup( required any $ ) {
-		writeLog(file="Slatwall", text="Mura Integration - verifySetup() called");
-		
 		var assignedSitesQuery = getPluginConfig().getAssignedSites();
 		var populatedSiteIDs = getPluginConfig().getCustomSetting("populatedSiteIDs");
 		
@@ -61,24 +59,20 @@
 	}
 	
 	
-	// ========================== EVENT HOOKS =================================
+	// ========================== FRONTENT EVENT HOOKS =================================
 	
 	public void function onSiteRequestStart(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onSiteRequestStart() called");
 		// Call the Slatwall Event Handler that gets the request setup
-		getSlatwallFW1Application().setupGlobalRequest();
+		getSlatwallApplication().setupGlobalRequest();
 		
 		// Setup the newly create slatwallScope into the muraScope
 		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
-		
-		writeLog(file="Slatwall", text="Mura Integration - onSiteRequestStart() called");
 	}
 	
 	public void function onSiteRequestEnd(required any $) {
 		writeLog(file="Slatwall", text="Mura Integration - onSiteRequestEnd() called");
-	}
-	
-	public void function onAdminModuleNav(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onAdminModuleNav() called");
+		getSlatwallApplication().endHibachiLifecycle();
 	}
 	
 	public void function onRenderStart(required any $) {
@@ -89,16 +83,19 @@
 		writeLog(file="Slatwall", text="Mura Integration - onRenderEnd() called");
 	}
 	
+	// ========================== ADMIN EVENT HOOKS =================================
+	
+	public string function onContentTabBasicBottomRender(required any $) {
+		writeLog(file="Slatwall", text="Mura Integration - onContentTabBasicBottomRender()");
+		return "<div>This is my content</div>";
+	}
+	
 	public void function onAfterCategorySave(required any $) {
 		writeLog(file="Slatwall", text="Mura Integration - onAfterCategorySave() called");
 	}
 	
 	public void function onAfterCategoryDelete(required any $) {
 		writeLog(file="Slatwall", text="Mura Integration - onAfterCategoryDelete() called");
-	}
-	
-	public void function onContentEdit(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onContentEdit() called");
 	}
 	
 	public void function onAfterContentSave(required any $) {
@@ -118,11 +115,11 @@
 		if(!structKeyExists(url, "$")) {
 			url.$ = request.muraScope;
 		}
-		return getSlatwallFW1Application().doAction(arguments.action);
+		return getSlatwallApplication().doAction(arguments.action);
 	}
 	
 	// Helper method to get the Slatwall Application
-	private any function getSlatwallFW1Application() {
+	private any function getSlatwallApplication() {
 		if(!structKeyExists(variables, "slatwallApplication")) {
 			variables.slatwallApplication = createObject("component", "Slatwall.Application");
 		}
@@ -140,6 +137,22 @@
 			variables.pluginConfig = application.pluginManager.getConfig("slatwall-mura");
 		}
 		return variables.pluginConfig;
+	}
+	
+	// For admin request start, we call the Slatwall Event Handler that gets the request setup
+	private void function startSlatwallAdminRequest(required any $) {
+		if(!structKeyExists(request, "slatwallScope")) {
+			// Call the Slatwall Event Handler that gets the request setup
+			getSlatwallApplication().setupGlobalRequest();
+					
+			// Setup the newly create slatwallScope into the muraScope
+			arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+		}
+	}
+	
+	// For admin request end, we call the endLifecycle
+	private void function endSlatwallAdminRequest(required any $) {
+		getSlatwallApplication().endSlatwallLifecycle();
 	}
 	
 	</cfscript>
@@ -366,6 +379,115 @@
 		<cfargument name="accountSyncType" type="string" required="true" />
 		<cfargument name="superUserSyncFlag" type="boolean" required="true" />
 		
+		<cfif arguments.accountSyncType neq "none">
+			<cfset var missingUsersQuery = "" />
+			<cfquery name="missingUsersQuery">
+				SELECT
+					UserID,
+					S2,
+					Fname,
+					Lname,
+					Email,
+					Company,
+					MobilePhone,
+					isPublic
+				FROM
+					tusers
+				WHERE
+					NOT EXISTS( SELECT cmsAccountID FROM SlatwallAccount WHERE SlatwallAccount.cmsAccountID = tusers.userID )
+				  AND
+					tusers.type = <cfqueryparam cfsqltype="cf_sql_integer" value="2" />
+				<cfif arguments.accountSyncType eq "systemUserOnly">
+					AND tusers.isPublic = <cfqueryparam cfsqltype="cf_sql_integer" value="0" /> 
+				<cfelseif arguments.accountSyncType eq "siteUserOnly">
+					AND tusers.isPublic = <cfqueryparam cfsqltype="cf_sql_integer" value="1" />
+				</cfif>
+			</cfquery>
+			
+			<cfset var muraIntegrationQuery = "" />
+			<cfquery name="muraIntegrationQuery">
+				SELECT integrationID FROM SlatwallIntegration WHERE integrationPackage = <cfqueryparam cfsqltype="cf_sql_varchar" value="mura" />
+			</cfquery>
+			
+			<cfloop query="missingUsersQuery">
+				
+				<cfset var rs = "" />
+				<cfset var newAccountID = getSlatwallScope().createHibachiUUID() />
+				
+				<!--- Create Account --->
+				<cfquery name="rs">
+					INSERT INTO SlatwallAccount (
+						accountID,
+						firstName,
+						lastName,
+						company,
+						cmsAccountID
+					) VALUES (
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Fname#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Lname#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Company#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />
+					)
+				</cfquery>
+				
+				<!--- Create Email --->
+				<cfif len(missingUserQuery.Email)>
+					<cfquery name="rs">
+						INSERT INTO SlatwallAccountEmailAddress (
+							accountEmailAddressID,
+							accountID,
+							emailAddress
+						) VALUES (
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#getSlatwallScope().createHibachiUUID()#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Email#" />
+						)
+					</cfquery>
+				</cfif>
+				
+				<!--- Create Phone --->
+				<cfif len(missingUserQuery.MobilePhone)>
+					<cfquery name="rs">
+						INSERT INTO SlatwallAccountPhoneNumber (
+							accountPhoneNumberID,
+							accountID,
+							phoneNumber
+						) VALUES (
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#getSlatwallScope().createHibachiUUID()#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.MobilePhone#" />
+						)
+					</cfquery>
+				</cfif>
+				
+				<!--- Create Authentication --->
+				<cfquery name="rs">
+					INSERT INTO SlatwallAccountAuthentication (
+						accountAuthenticationID,
+						accountID,
+						integrationID,
+						integrationAccessToken
+					) VALUES (
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#getSlatwallScope().createHibachiUUID()#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#muraIntegrationQuery.integrationID#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />
+					)
+				</cfquery>
+				<!---
+						UserID,
+						S2,
+						Fname,
+						Lname,
+						Email,
+						Company,
+						MobilePhone,
+						isPublic
+				--->
+			</cfloop>
+			
+		</cfif>
 		
 	</cffunction>
 </cfcomponent>
@@ -456,7 +578,7 @@
 	public void function onSiteRequestStart(required any $) {
 		
 		// Call the Slatwall Event Handler that gets the request setup
-		getSlatwallFW1Application().setupGlobalRequest();
+		getSlatwallApplication().setupGlobalRequest();
 		
 		// Setup the newly create slatwallScope into the muraScope
 		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
@@ -526,7 +648,7 @@
 	
 	// At the end of a frontend request, we call the endLifecycle
 	public any function onSiteRequestEnd(required any $) {
-		getSlatwallFW1Application().endSlatwallLifecycle();
+		getSlatwallApplication().endSlatwallLifecycle();
 	}
 	
 	// display slatwall link in mura left nav
@@ -653,29 +775,7 @@
 		endSlatwallAdminRequest($);
 	}
 	
-	// For admin request start, we call the Slatwall Event Handler that gets the request setup
-	private void function startSlatwallAdminRequest(required any $) {
-		if(!structKeyExists(request, "slatwallScope")) {
-			// Call the Slatwall Event Handler that gets the request setup
-			getSlatwallFW1Application().setupGlobalRequest();
-					
-			// Setup the newly create slatwallScope into the muraScope
-			arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
-		
-			// Setup structured Data 
-			var structuredData = request.slatwallScope.getService("utilityFormService").buildFormCollections($.getEvent().getAllValues());
-			if(structCount(structuredData)) {
-				for(var key in structuredData) {
-					$.event(key,structuredData[key]);
-				}
-			}
-		}
-	}
 	
-	// For admin request end, we call the endLifecycle
-	private void function endSlatwallAdminRequest(required any $) {
-		getSlatwallFW1Application().endSlatwallLifecycle();
-	}
 	
 	// Helper method to do our access check
 	private void function checkAccess(required any $) {

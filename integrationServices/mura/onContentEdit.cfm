@@ -36,6 +36,10 @@
 Notes:
 
 --->
+
+Content Edit Here
+
+<!---
 <cfset request.slatwallScope.getService("settingService").clearAllSettingsQuery() />
 <cfset slatwallContent = request.slatwallScope.getService("contentService").getContentByCmsContentID($.content("contentID"), true) />
 
@@ -298,3 +302,4 @@ $(document).ready(function(){
 });
 </script>
 </cfoutput>
+--->

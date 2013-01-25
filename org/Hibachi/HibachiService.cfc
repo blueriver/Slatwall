@@ -1,6 +1,7 @@
 <cfcomponent accessors="true" extends="HibachiObject">
 	
 	<cfproperty name="hibachiDAO" type="any">
+	<cfproperty name="attributeService" type="any">
 	
 	<!--- Variables Scope Used For Caching --->
 	<cfset variables.entityORMMetaDataObjects = {} />
