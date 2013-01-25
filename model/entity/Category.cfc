@@ -43,11 +43,11 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 	property name="categoryIDPath" ormtype="string";
 	property name="categoryName" ormtype="string";
 	property name="cmsCategoryID" ormtype="string";
-	property name="cmsSiteID" ormtype="string";
 	property name="restrictAccessFlag" ormtype="boolean";
 	property name="allowProductAssignmentFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
+	property name="site" cfc="Site" fieldtype="many-to-one" fkcolumn="siteID";
 	property name="parentCategory" cfc="Category" fieldtype="many-to-one" fkcolumn="parentCategoryID";
 	
 	// Related Object Properties (one-to-many)

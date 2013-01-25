@@ -21,6 +21,7 @@
 			if(slatwallSite.isNew()) {
 				slatwallSite.setSiteName( cmsSiteName );
 				getSlatwallScope().getService("siteService").saveSite( slatwallSite );
+				slatwallSite.setCMSSiteID( cmsSiteID );
 				ormFlush();
 			}
 			
@@ -190,7 +191,7 @@
 			  AND
 			  	tcontent.type NOT IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="Module,Plugin" list="true" />)
 			  AND
-				NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID AND SlatwallContent.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" />)
+				NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
 			ORDER BY
 				LENGTH(tcontent.path)
 		</cfquery>
@@ -264,7 +265,7 @@
 		
 		<!--- Move Recursively through the entire site tree --->
 		<cfif !allParentsFound>
-			<!--- <cfset syncMuraContent(argumentcollection=arguments) /> --->
+			<cfset syncMuraContent(argumentcollection=arguments) />
 		</cfif>
 	</cffunction>
 	
@@ -273,7 +274,89 @@
 		<cfargument name="slatwallSite" type="any" required="true" />
 		<cfargument name="muraSiteID" type="string" required="true" />
 		
+		<cfset var parentMappingCache = {} />
+		<cfset var missingCategoryQuery = "" />
 		
+		<cfquery name="missingCategoryQuery">
+			SELECT
+				tcontentcategories.categoryID,
+				tcontentcategories.parentID,
+				tcontentcategories.name
+			FROM
+				tcontentcategories
+			WHERE
+				NOT EXISTS( SELECT categoryID FROM SlatwallCategory WHERE SlatwallCategory.cmsCategoryID = tcontentcategories.categoryID )
+			ORDER BY
+				LENGTH(tcontentcategories.path)
+		</cfquery>
+		
+		<cfset var allParentsFound = true />
+		<cfloop query="missingCategoryQuery">
+			
+			<cfset var rs = "" />
+			
+			<!--- Creating Home Page --->
+			<cfif !len(missingCategoryQuery.parentID)>
+				<cfset var newCategoryID = getSlatwallScope().createHibachiUUID() />
+				<cfquery name="rs">
+					INSERT INTO SlatwallCategory (
+						categoryID,
+						categoryIDPath,
+						siteID,
+						cmsCategoryID,
+						categoryName
+					) VALUES (
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newCategoryID#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newCategoryID#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingCategoryQuery.categoryID#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingCategoryQuery.name#" />
+					)
+				</cfquery>
+			<!--- Creating Internal Page, or resetting if parent can't be found --->	
+			<cfelse>
+				
+				<cfif not structKeyExists(parentMappingCache, missingCategoryQuery.parentID)>
+					<cfset var parentCategoryQuery = "" />
+					<cfquery name="parentCategoryQuery">
+						SELECT categoryID, categoryIDPath FROM SlatwallCategory WHERE cmsCategoryID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingCategoryQuery.parentID#" /> 
+					</cfquery>
+					<cfif parentCategoryQuery.recordCount>
+						<cfset parentMappingCache[ missingCategoryQuery.parentID ] = {} />
+						<cfset parentMappingCache[ missingCategoryQuery.parentID ].categoryID = parentCategoryQuery.categoryID />
+						<cfset parentMappingCache[ missingCategoryQuery.parentID ].categoryIDPath = parentCategoryQuery.categoryIDPath />
+					</cfif>
+				</cfif>
+				
+				<cfif structKeyExists(parentMappingCache,  missingCategoryQuery.parentID)>
+					<cfset var newCategoryID = getSlatwallScope().createHibachiUUID() />
+					<cfquery name="rs">
+						INSERT INTO SlatwallCategory (
+							categoryID,
+							categoryIDPath,
+							parentCategoryID,
+							siteID,
+							cmsCategoryID,
+							categoryName
+						) VALUES (
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#newCategoryID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#parentMappingCache[ missingCategoryQuery.parentID ].categoryIDPath#,#newCategoryID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#parentMappingCache[ missingCategoryQuery.parentID ].categoryID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingCategoryQuery.categoryID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingCategoryQuery.name#" />
+						)
+					</cfquery>
+				<cfelse>
+					<cfset allParentsFound = false />
+				</cfif>
+			</cfif>
+		</cfloop>
+		
+		<!--- Move Recursively through the entire site tree --->
+		<cfif !allParentsFound>
+			<cfset syncMuraCategories(argumentcollection=arguments) />
+		</cfif>
 	</cffunction>
 	
 	<cffunction name="syncMuraAccounts">
