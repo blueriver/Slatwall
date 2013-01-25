@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Access" entityname="SlatwallAccess" table="SlatwallAccess" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Access" entityname="SlatwallAccess" table="SlatwallAccess" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="" {
 	
 	// Persistent Properties
 	property name="accessID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

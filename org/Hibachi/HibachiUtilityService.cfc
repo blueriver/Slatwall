@@ -58,11 +58,6 @@ component output="false" accessors="true" extends="HibachiService" {
 			case "url": {
 				return '<a href="#arguments.value#" target="_blank">' & arguments.value & '</a>';
 			}
-			/*
-			case "email": {
-				return '<a href="mailto:#arguments.value#" target="_blank">' & arguments.value & '</a>';
-			}
-			*/
 		}
 		
 		return arguments.value;

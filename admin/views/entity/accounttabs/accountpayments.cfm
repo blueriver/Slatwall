@@ -51,15 +51,15 @@ Notes:
 		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('define.charge')#" icon="plus" buttonClass="btn-inverse">
+	<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('define.charge')#" icon="plus" buttonClass="btn-inverse">
 		<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-				<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:entity.createaccountpayment" querystring="accountID=#rc.accountID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&accountPaymentTypeSystemCode=aptCharge" modal=true />
+				<cf_HibachiActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:entity.createaccountpayment" querystring="accountID=#rc.accountID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&accountPaymentTypeSystemCode=aptCharge" modal=true />
 		</cfloop>
-	</cf_SlatwallActionCallerDropdown><br />
-	<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('define.credit')#" icon="plus" buttonClass="btn-inverse">
+	</cf_HibachiActionCallerDropdown><br />
+	<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('define.credit')#" icon="plus" buttonClass="btn-inverse">
 		<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-				<cf_SlatwallActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.refund')#" action="admin:entity.createaccountpayment" querystring="accountID=#rc.accountID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&accountPaymentTypeSystemCode=aptCredit" modal=true />
+				<cf_HibachiActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.refund')#" action="admin:entity.createaccountpayment" querystring="accountID=#rc.accountID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&accountPaymentTypeSystemCode=aptCredit" modal=true />
 		</cfloop>
-	</cf_SlatwallActionCallerDropdown>
+	</cf_HibachiActionCallerDropdown>
 	
 </cfoutput>

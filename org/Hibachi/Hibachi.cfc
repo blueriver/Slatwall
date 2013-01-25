@@ -203,9 +203,12 @@ component extends="FW1.framework" {
 					
 					bf.addBean("applicationKey", variables.framework.applicationKey);
 					
-					bf.declareBean("hibachiDAO", "#variables.framework.applicationKey#.org.Hibachi.HibachiDAO", true);
-					bf.declareBean("hibachiService", "#variables.framework.applicationKey#.org.Hibachi.HibachiService", true);
-					
+					if(!bf.containsBean("hibachiDAO")) {
+						bf.declareBean("hibachiDAO", "#variables.framework.applicationKey#.org.Hibachi.HibachiDAO", true);	
+					}
+					if(!bf.containsBean("hibachiService")) {
+						bf.declareBean("hibachiService", "#variables.framework.applicationKey#.org.Hibachi.HibachiService", true);	
+					}
 					if(!bf.containsBean("hibachiAuthenticationService")) {
 						bf.declareBean("hibachiAuthenticationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiAuthenticationService", true);	
 					}
