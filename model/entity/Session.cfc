@@ -49,8 +49,8 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	property name="order" type="any" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	
 	// Audit properties
-	property name="createdDateTime" hb_editable="false" ormtype="timestamp";
-	property name="modifiedDateTime" hb_editable="false" ormtype="timestamp";
+	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
+	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	
 	// Non-Persistent Properties
 	property name="requestAccount" type="any" persistent="false"; 

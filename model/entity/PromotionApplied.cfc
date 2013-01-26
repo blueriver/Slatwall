@@ -54,10 +54,10 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
-	property name="createdDateTime" hb_editable="false" ormtype="timestamp";
-	property name="createdByAccount" hb_editable="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" hb_editable="false" ormtype="timestamp";
-	property name="modifiedByAccount" hb_editable="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
+	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
+	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

@@ -44,8 +44,8 @@ component displayname="Inventory" entityname="SlatwallInventory" table="Slatwall
 	property name="quantityOut" ormtype="integer";
 	
 	// Audit properties
-	property name="createdDateTime" hb_editable="false" ormtype="timestamp";
-	property name="createdByAccount" hb_editable="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
+	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 
 	// Related Object Properties (many-to-one)
 	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";

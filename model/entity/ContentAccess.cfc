@@ -55,7 +55,7 @@ component displayname="Content Access" entityname="SlatwallContentAccess" table=
 	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
-	property name="createdDateTime" hb_editable="false" ormtype="timestamp";
+	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	
 	// Non-Persistent Properties
 
