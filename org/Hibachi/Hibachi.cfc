@@ -136,7 +136,7 @@ component extends="FW1.framework" {
 		setupGlobalRequest();
 		
 		// Setup structured Data if a request context exists meaning that a full action was called
-		getBeanFactory().getBean("_FormUtilities").buildFormCollections(request.context);
+		getBeanFactory().getBean("hibachiUtilityService").buildFormCollections(request.context);
 		
 		// Setup a $ in the request context, and the hibachiScope shortcut
 		
@@ -227,8 +227,6 @@ component extends="FW1.framework" {
 					if(!bf.containsBean("hibachiUtilityService")) {
 						bf.declareBean("hibachiUtilityService", "#variables.framework.applicationKey#.org.Hibachi.HibachiUtilityService", true);	
 					}
-					
-					bf.declareBean("_FormUtilities", "#variables.framework.applicationKey#.org.Hibachi.FormUtilities.FormUtilities", true);
 					
 					setBeanFactory( bf );
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
@@ -374,7 +372,7 @@ component extends="FW1.framework" {
 		request.context[ variables.framework.action ] = arguments.action;
 		
 		// Do structured data just like a normal request
-		getBeanFactory().getBean("_FormUtilities").buildFormCollections(request.context);
+		getBeanFactory().getBean("hibachiUtilityService").buildFormCollections(request.context);
 		
 		// Get Action Details
 		var subsystem = getSubsystem( arguments.action );
