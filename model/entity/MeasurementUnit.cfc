@@ -42,7 +42,7 @@ Notes:
 	
 	
 */
-component displayname="Measurement Unit" entityname="SlatwallMeasurementUnit" table="SlatwallMeasurementUnit" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Measurement Unit" entityname="SlatwallMeasurementUnit" table="SlatwallMeasurementUnit" persistent="true" accessors="true" extends="BaseEntity" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="unitCode" ormtype="string" fieldtype="id" unique="true" generated="never";

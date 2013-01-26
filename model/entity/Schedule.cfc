@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSchedule" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSchedule" persistent="true" accessors="true" extends="BaseEntity" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="scheduleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

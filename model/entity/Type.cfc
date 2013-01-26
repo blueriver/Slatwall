@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Type" entityname="SlatwallType" table="SlatwallType" persistent="true" accessors="true" output="true" extends="BaseEntity" {
+component displayname="Type" entityname="SlatwallType" table="SlatwallType" persistent="true" accessors="true" output="true" extends="BaseEntity" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="typeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

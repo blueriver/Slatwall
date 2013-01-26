@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Payment Term" entityname="SlatwallPaymentTerm" table="SlatwallPaymentTerm" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Payment Term" entityname="SlatwallPaymentTerm" table="SlatwallPaymentTerm" persistent="true" accessors="true" extends="BaseEntity" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="paymentTermID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

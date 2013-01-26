@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Site" entityname="SlatwallSite" table="SlatwallSite" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Site" entityname="SlatwallSite" table="SlatwallSite" persistent="true" accessors="true" extends="BaseEntity" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="siteID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

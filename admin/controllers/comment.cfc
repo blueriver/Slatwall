@@ -47,6 +47,7 @@ component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiC
 	this.anyAdminMethods='';
 	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
 	
+	this.secureMethods='';
 	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
 	this.secureMethods=listAppend(this.secureMethods, 'editComment');
 	

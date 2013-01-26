@@ -1,6 +1,6 @@
-﻿/*
+/*
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,29 +36,34 @@
 Notes:
 
 */
-component displayname="Access" entityname="SlatwallAccess" table="SlatwallAccess" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="" {
+component displayname="Permission" entityname="SlatwallPermission" table="SlatwallPermission" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="accessID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="accessCode" ormtype="string";
+	property name="permissionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="action" ormtype="string";
+	property name="entityName" ormtype="string";
+	property name="propertyName" ormtype="string";
+	property name="allowCreateFlag" ormtype="boolean";
+	property name="allowReadFlag" ormtype="boolean";
+	property name="allowUpdateFlag" ormtype="boolean";
+	property name="allowDeleteFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
-	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";
-	property name="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitID";
-	property name="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitAccountID";
-		
+	
 	// Related Object Properties (one-to-many)
 	
-	// Related Object Properties (many-to-many)
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
-	property name="createdDateTime" hb_editable="false" ormtype="timestamp";
-	property name="createdByAccount" hb_editable="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" hb_editable="false" ormtype="timestamp";
-	property name="modifiedByAccount" hb_editable="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 
@@ -75,28 +80,13 @@ component displayname="Access" entityname="SlatwallAccess" table="SlatwallAccess
 
 	// =============== START: Custom Validation Methods ====================
 	
-	public boolean function hasUsageOrUsageBenefitOrUsageBenefitAccount() {
-		if(!isNull(getSubscriptionUsage()) || !isNull(getSubscriptionUsageBenefit()) || !isNull(getsubscriptionUsageBenefitAccount())) {
-			return true;
-		}
-		return false;
-	}
-	
 	// ===============  END: Custom Validation Methods =====================
 	
 	// =============== START: Custom Formatting Methods ====================
 	
 	// ===============  END: Custom Formatting Methods =====================
-	
-	// ============== START: Overridden Implicet Getters ===================
-	
-	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
-	
-	public string function getSimpleRepresentationPropertyName() {
-		return "accessCode";
-	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

@@ -12,6 +12,12 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="subscriptionService" type="any";
 	property name="permissionService" type="any";
 	
+	this.publicMethods='';
+	
+	this.anyAdminMethods='';
+	
+	this.secureMethods='';
+	
 	// Account Payment
 	public any function createAccountPayment( required struct rc ) {
 		param name="rc.accountID" type="string" default="";
@@ -201,19 +207,22 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	// Permission Group
 	public void function editPermissionGroup(required struct rc){
-		rc.permissions = getPermissionService().getPermissions();
-		
+		//rc.permissions = getPermissionService().getPermissions();
+		rc.entityPermissionDetails = createObject("Slatwall.org.Hibachi.HibachiAuthenticationService").getEntityPermissionDetails();
+
 		super.genericEditMethod('PermissionGroup',rc);
 	}
 	
 	public void function createPermissionGroup(required struct rc){
-		rc.permissions = getPermissionService().getPermissions();
+		//rc.permissions = getPermissionService().getPermissions();
+		rc.entityPermissionDetails = createObject("Slatwall.org.Hibachi.HibachiAuthenticationService").getEntityPermissionDetails();
 		
 		super.genericCreateMethod('PermissionGroup',rc);
 	}
 	 
 	public void function detailPermissionGroup(required struct rc){
-		rc.permissions = getPermissionService().getPermissions();
+		//rc.permissions = getPermissionService().getPermissions();
+		rc.entityPermissionDetails = createObject("Slatwall.org.Hibachi.HibachiAuthenticationService").getEntityPermissionDetails();
 		
 		super.genericDetailMethod('PermissionGroup',rc);
 	}

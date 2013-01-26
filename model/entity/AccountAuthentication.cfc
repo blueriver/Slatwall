@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Account Authentication" entityname="SlatwallAccountAuthentication" table="SlatwallAccountAuthentication" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Account Authentication" entityname="SlatwallAccountAuthentication" table="SlatwallAccountAuthentication" persistent="true" accessors="true" extends="BaseEntity" hb_permission="account.accountAuthentications" {
 	
 	// Persistent Properties
 	property name="accountAuthenticationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

@@ -1,16 +1,47 @@
 component output="false" accessors="true" extends="HibachiService" {
 
+	property name="hibachiSessionService" type="any";
+
 	public boolean function authenticateAction() {
 			
 	}
 	
-	public boolean function authenticateReadEntity() {
+	public boolean function authenticateEntity(required string crud, required string entityName) {
+		var entityPermissions = getEntityPermissionDetails();
+		
+		// If the entity does not have the ability to have permissions set, then return false
+		if(!structKeyExists(entityPermissions, arguments.entityName)) {
+			return false;
+		}
+		
+		// If this is an entity
+		
+		
+		
+		
+		// If for some reason not of the above were meet then just return false
+		return false;
+	}
+	
+	public boolean function authenticateEntityProperty(required string crud, required string entityName, required string propertyName) {
 		
 	}
 	
-	public boolean function authenticateWriteEntity() {
+	public boolean function authenticateEntityByPermissionGroup(required string crud, required string entityName, required any permissionGroup) {
 		
 	}
+	
+	public boolean function authenticateEntityPropertyByPermissionGroup(required string crud, required string entityName, required string propertyName, required any permissionGroup) {
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public boolean function authenticateEntityPropertyRead( required any entity, required string propertyName ) {
 		
@@ -28,6 +59,83 @@ component output="false" accessors="true" extends="HibachiService" {
 	private array function getAnyAdminActions() {
 		
 	}
+	
+	public struct function getEntityPermissionDetails() {
+		var entityDirectoryArray = directoryList(expandPath('/Slatwall/model/entity'));
+		var entityPermissionDetails = {};
+		for(var e=1; e<=arrayLen(entityDirectoryArray); e++) {
+			if(listLast(entityDirectoryArray[e], '.') eq 'cfc') {
+				var entityName = listFirst(listLast(replace(entityDirectoryArray[e], '\', '/', 'all'), '/'), '.');
+				var entityMetaData = createObject('component', 'Slatwall.model.entity.#entityName#').getThisMetaData();
+				
+				if(structKeyExists(entityMetaData, "hb_permission") && (entityMetaData.hb_permission eq "this" || getHasPropertyByEntityNameAndPropertyIdentifier(entityName=entityName, propertyIdentifier=entityMetaData.hb_permission))) {
+					entityPermissionDetails[ entityName ] = {};
+					entityPermissionDetails[ entityName ].properties = {};
+					entityPermissionDetails[ entityName ].mtmproperties = {};
+					entityPermissionDetails[ entityName ].mtoproperties = {};
+					entityPermissionDetails[ entityName ].otmproperties = {};
+					if(entityMetaData.hb_permission neq "this") {
+						entityPermissionDetails[ entityName ].inheritPermissionEntityName = getLastEntityNameInPropertyIdentifier(entityName=entityName, propertyIdentifier=entityMetaData.hb_permission);
+						entityPermissionDetails[ entityName ].inheritPermissionPropertyName = listLast(entityMetaData.hb_permission, ".");	
+					}
+					for(var p=1; p<=arrayLen(entityMetaData.properties); p++) {
+						if( (!structKeyExists(entityMetaData.properties[p], "fieldtype") || entityMetaData.properties[p].fieldtype neq "ID")
+							&& (!structKeyExists(entityMetaData.properties[p], "persistent") || entityMetaData.properties[p].persistent)
+							&& (!structKeyExists(entityMetaData.properties[p], "hb_editable") || entityMetaData.properties[p].hb_editable)) {
+
+							if(structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "many-to-one") {
+								entityPermissionDetails[ entityName ].mtoproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
+							} else if (structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "one-to-many") {
+								entityPermissionDetails[ entityName ].otmproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
+							} else if (structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "many-to-many") {
+								entityPermissionDetails[ entityName ].mtmproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
+							} else {
+								entityPermissionDetails[ entityName ].properties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];	
+							}
+						}
+					}
+					structSort(entityPermissionDetails[ entityName ].properties, "text", "ASC", "name");
+				}
+			}
+		}
+		return entityPermissionDetails;
+	}
+	
+	
+	/*
+<cfdirectory action="list" directory="##" name="entities">
+
+<cfdump var="#entities#" />
+<cfloop query="entities">
+	<cfif listLast(entities.name, ".") eq "cfc">
+		<cfset thisEntity = createObject("component", "Slatwall.model.entity.#listFirst(entities.name, ".")#") />
+		<cfdump var="#thisEntity.getThisMetaData()#" abort />
+	</cfif>
+</cfloop>
+
+}
+	
+	
+	
+	
+	
+	
+	
+account.properties.activeFlag
+account.properties.
+	
+	
+	*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	public struct function getPermissions(){
