@@ -83,5 +83,5 @@ Notes:
 		</cf_SlatwallListingDisplay>
 	</cfif>
 	
-	<cf_SlatwallActionCaller action="admin:entity.createorderitem" class="btn btn-inverse" icon="plus icon-white" queryString="orderID=#rc.order.getOrderID()#" modal=true />
+	<cf_HibachiActionCaller action="admin:entity.createorderitem" class="btn btn-inverse" icon="plus icon-white" queryString="orderID=#rc.order.getOrderID()#" modal=true />
 </cfoutput>

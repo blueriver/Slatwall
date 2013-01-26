@@ -58,6 +58,6 @@ Notes:
 		
 		<cfset attributes.queryString = listAppend(attributes.queryString, "processContext=#attributes.processContext#", "&") />
 		
-		<cf_SlatwallActionCaller attributecollection="#attributes#" />	
+		<cf_HibachiActionCaller attributecollection="#attributes#" />	
 	</cfif>
 </cfif>

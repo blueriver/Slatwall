@@ -41,7 +41,7 @@ Notes:
 
 <cf_HibachiCrudDetailForm object="#rc.vendor#" edit="#rc.edit#">
 	<cf_HibachiCrudActionBar type="detail" object="#rc.vendor#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:entity.createvendoraddress" queryString="vendorID=#rc.vendor.getVendorID()#" type="list" modal=true />
+		<cf_HibachiActionCaller action="admin:entity.createvendoraddress" queryString="vendorID=#rc.vendor.getVendorID()#" type="list" modal=true />
 	</cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallDetailHeader>

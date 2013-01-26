@@ -51,13 +51,13 @@ Notes:
 	</cf_SlatwallListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>
-		<cf_SlatwallActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" buttonClass="btn-inverse">
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiermerchandise')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=merchandise" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiersubscription')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=subscription" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiercontentaccess')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=contentAccess" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierfulfillment')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=fulfillment" modal="true" />
-			<cf_SlatwallActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierorder')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=order" modal="true" />
-		</cf_SlatwallActionCallerDropdown>
+		<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" buttonClass="btn-inverse">
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiermerchandise')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=merchandise" modal="true" />
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiersubscription')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=subscription" modal="true" />
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiercontentaccess')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=contentAccess" modal="true" />
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierfulfillment')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=fulfillment" modal="true" />
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierorder')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=order" modal="true" />
+		</cf_HibachiActionCallerDropdown>
 	</cfif>
 	
 </cfoutput>

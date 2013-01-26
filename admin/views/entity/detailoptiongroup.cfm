@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudDetailForm object="#rc.optiongroup#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:entity.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="list" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="list" modal=true />
 		</cf_HibachiCrudActionBar>
 		
 		<cf_SlatwallDetailHeader>

@@ -125,13 +125,13 @@ Notes:
 														<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getPublicFlag(), "yesno")#</td>
 														<td>#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
 														<td>#request.slatwallScope.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
-														<td class="admin1"><cf_SlatwallActionCaller action="admin:comment.editcomment" queryString="commentID=#commentRelationship['comment'].getCommentID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-mini" icon="pencil" iconOnly="true" /></td>
+														<td class="admin1"><cf_HibachiActionCaller action="admin:comment.editcomment" queryString="commentID=#commentRelationship['comment'].getCommentID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-mini" icon="pencil" iconOnly="true" /></td>
 													</cfif>
 												</tr>
 											</cfloop>
 										</table>
 									</cfif>
-									<cf_SlatwallActionCaller action="admin:comment.createcomment" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-inverse" icon="plus icon-white" />
+									<cf_HibachiActionCaller action="admin:comment.createcomment" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&returnAction=#request.context.detailAction#" modal="true" class="btn btn-inverse" icon="plus icon-white" />
 								</cfoutput>
 							</div>
 						</cfif>

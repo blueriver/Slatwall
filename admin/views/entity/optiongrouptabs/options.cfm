@@ -52,7 +52,7 @@ Notes:
 		<cf_slatwalllistingcolumn propertyidentifier="optionCode"/>
 	</cf_slatwalllistingdisplay>
 
-	<cf_slatwallactioncaller action="admin:entity.createoption" 
+	<cf_HibachiActionCaller action="admin:entity.createoption" 
 	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" 
 	                         class="btn btn-inverse" icon="plus icon-white" modal=true/>
 </cfoutput>

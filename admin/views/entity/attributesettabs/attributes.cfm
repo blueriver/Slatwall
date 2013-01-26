@@ -57,6 +57,6 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="attributeType.type" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:entity.createattribute" class="btn btn-inverse" icon="plus icon-white" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
+	<cf_HibachiActionCaller action="admin:entity.createattribute" class="btn btn-inverse" icon="plus icon-white" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
 	
 </cfoutput>

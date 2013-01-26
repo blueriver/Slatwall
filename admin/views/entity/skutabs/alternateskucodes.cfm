@@ -47,5 +47,5 @@ Notes:
 		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:entity.createalternateskucode" class="btn btn-primary" queryString="SkuID=#rc.sku.getSkuID()#" modal="true" />
+	<cf_HibachiActionCaller action="admin:entity.createalternateskucode" class="btn btn-primary" queryString="SkuID=#rc.sku.getSkuID()#" modal="true" />
 </cfoutput>

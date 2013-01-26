@@ -41,7 +41,7 @@ Notes:
 
 <cf_HibachiCrudDetailForm object="#rc.taxCategory#" edit="#rc.edit#">
 	<cf_HibachiCrudActionBar type="detail" object="#rc.taxCategory#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:entity.createtaxcategoryrate" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" type="list" modal=true />
+		<cf_HibachiActionCaller action="admin:entity.createtaxcategoryrate" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" type="list" modal=true />
 	</cf_HibachiCrudActionBar>
 	
 	<cf_SlatwallDetailHeader>

@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudDetailForm object="#rc.task#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.task#">
-                <cf_SlatwallActionCaller action="admin:entity.processtask" querystring="taskID=#rc.task.getTaskID()#" type="list" icon="cog" modal="true" >
+                <cf_HibachiActionCaller action="admin:entity.processtask" querystring="taskID=#rc.task.getTaskID()#" type="list" icon="cog" modal="true" >
         </cf_HibachiCrudActionBar>    
 		
 		<cf_SlatwallDetailHeader>

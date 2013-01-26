@@ -53,4 +53,4 @@ Notes:
 	</cf_SlatwallListingDisplay>
 </cfoutput>
 
-<cf_SlatwallActionCaller action="admin:entity.createaddresszonelocation" class="btn btn-inverse" icon="plus icon-white" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
+<cf_HibachiActionCaller action="admin:entity.createaddresszonelocation" class="btn btn-inverse" icon="plus icon-white" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />

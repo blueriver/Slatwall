@@ -52,5 +52,5 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:entity.createpromotionperiod" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" />
+	<cf_HibachiActionCaller action="admin:entity.createpromotionperiod" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" />
 </cfoutput>

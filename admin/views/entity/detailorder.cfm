@@ -56,13 +56,13 @@ Notes:
 			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&returnAction=admin:entity.detailorder" type="list" />
 			<!--- Add Order Item --->
 			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
-				<cf_SlatwallActionCaller action="admin:entity.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
+				<cf_HibachiActionCaller action="admin:entity.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
 			</cfif>
 			<!--- Add Order Payment --->
 			<cfif listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
 				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()>
 					<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-						<cf_SlatwallActionCaller type="list" text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:entity.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCharge" modal=true />
+						<cf_HibachiActionCaller type="list" text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:entity.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCharge" modal=true />
 					</cfloop>
 				</cfif>
 			</cfif>

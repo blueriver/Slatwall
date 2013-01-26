@@ -1,4 +1,5 @@
 <cfif thisTag.executionMode is "start">
+	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
 	<cfparam name="attributes.object" type="any" />
 	<cfparam name="attributes.saveAction" type="string" default="#request.context.entityActionDetails.saveaction#" />
 	<cfparam name="attributes.saveActionQueryString" type="string" default="" />
@@ -42,8 +43,8 @@
 			<div class="modal-footer">
 				<cfif attributes.edit>
 					<div class="btn-group">
-						<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #request.slatwallScope.rbKey('define.cancel')#</a>
-						<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.save')#</button>
+						<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #attributes.hibachiScope.rbKey('define.cancel')#</a>
+						<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #attributes.hibachiScope.rbKey('define.save')#</button>
 					</div>
 				</cfif>
 			</div>

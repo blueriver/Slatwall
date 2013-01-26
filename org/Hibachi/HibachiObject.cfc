@@ -120,6 +120,10 @@ component accessors="true" output="false" persistent="false" {
 		return getHibachiScope().rbKey(arguments.key);
 	}
 	
+	public string function buildURL() {
+		return getApplicationValue("application").buildURL(argumentcollection=arguments);
+	}
+	
 	// =========================  END:  DELIGATION HELPERS ==========================================
 	// ========================= START: APPLICATION VAUES ===========================================
 	

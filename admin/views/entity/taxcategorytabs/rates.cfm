@@ -52,4 +52,4 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="addressZone.addressZoneName" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:entity.createtaxcategoryrate" class="btn btn-inverse" icon="plus icon-white" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" modal=true />
+<cf_HibachiActionCaller action="admin:entity.createtaxcategoryrate" class="btn btn-inverse" icon="plus icon-white" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" modal=true />

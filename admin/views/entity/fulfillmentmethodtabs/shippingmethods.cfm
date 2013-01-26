@@ -51,5 +51,5 @@ Notes:
 		
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:entity.createshippingmethod" class="btn btn-inverse" icon="plus icon-white" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
+	<cf_HibachiActionCaller action="admin:entity.createshippingmethod" class="btn btn-inverse" icon="plus icon-white" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
 </cfoutput>

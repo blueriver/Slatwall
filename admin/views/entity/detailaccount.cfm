@@ -41,7 +41,7 @@ Notes:
 
 <cf_HibachiCrudDetailForm object="#rc.account#" edit="#rc.edit#">
 	<cf_HibachiCrudActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
-		<cf_SlatwallActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
+		<cf_HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
 	</cf_HibachiCrudActionBar>
 	
 	<cfif rc.account.isNew()>

@@ -42,7 +42,7 @@ Notes:
 <cf_HibachiCrudDetailForm object="#rc.fulfillmentMethod#" edit="#rc.edit#">
 	<cf_HibachiCrudActionBar type="detail" object="#rc.fulfillmentMethod#" edit="#rc.edit#">
 		<cfif rc.fulfillmentMethod.getFulfillmentMethodType() eq "shipping">
-			<cf_SlatwallActionCaller action="admin:entity.createshippingmethod" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" type="list" />
+			<cf_HibachiActionCaller action="admin:entity.createshippingmethod" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" type="list" />
 		</cfif>
 	</cf_HibachiCrudActionBar>
 	

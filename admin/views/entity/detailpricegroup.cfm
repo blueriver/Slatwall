@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
-			<cf_SlatwallActionCaller action="admin:entity.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" modal="true" />
+			<cf_HibachiActionCaller action="admin:entity.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" modal="true" />
 		</cf_HibachiCrudActionBar>
 		
 		<cf_SlatwallDetailHeader>

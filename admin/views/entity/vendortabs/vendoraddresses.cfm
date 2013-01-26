@@ -54,4 +54,4 @@ Notes:
 	<cf_SlatwallListingColumn propertyIdentifier="address.countryCode" />
 </cf_SlatwallListingDisplay>
 
-<cf_SlatwallActionCaller action="admin:entity.createvendoraddress" class="btn btn-inverse" icon="plus icon-white" queryString="vendorID=#rc.vendor.getVendorID()#" modal=true />
+<cf_HibachiActionCaller action="admin:entity.createvendoraddress" class="btn btn-inverse" icon="plus icon-white" queryString="vendorID=#rc.vendor.getVendorID()#" modal=true />

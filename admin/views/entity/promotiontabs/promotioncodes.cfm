@@ -54,5 +54,5 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" range="true" />
 	</cf_SlatwallListingDisplay>
 	
-	<cf_SlatwallActionCaller action="admin:entity.createpromotioncode" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" modal="true" />
+	<cf_HibachiActionCaller action="admin:entity.createpromotioncode" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" modal="true" />
 </cfoutput>
