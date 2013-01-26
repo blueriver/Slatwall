@@ -10,6 +10,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="promotionService" type="any";
 	property name="skuService" type="any";
 	property name="subscriptionService" type="any";
+	property name="permissionService" type="any";
 	
 	// Account Payment
 	public any function createAccountPayment( required struct rc ) {
