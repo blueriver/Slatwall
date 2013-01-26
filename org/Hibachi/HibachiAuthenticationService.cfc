@@ -3,7 +3,52 @@ component output="false" accessors="true" extends="HibachiService" {
 	property name="hibachiSessionService" type="any";
 
 	public boolean function authenticateAction() {
-		return true;
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = getSlatwallScope().getCurrentAccount();
+		}
+		
+		// Check if the user is a super admin, if true no need to worry about security
+		if( findNoCase("*", arguments.account.getAllPermissions()) ) {
+			return true;
+		}
+		
+		var subsystemName = listFirst( arguments.action, ":" );
+		var sectionName = listFirst( listLast(arguments.action, ":"), "." );
+		var itemName = listLast( arguments.action, "." );
+		
+		// Verify that there is a subsystem and section setup for that action
+		if( !structKeyExists(getPermissions(), subsystemName) || !structKeyExists(getPermissions()[ subsystemName ], sectionName) ) {
+			return false;
+		}
+		
+		//check if the page is public, if public no need to worry about security
+		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].publicMethods, itemName)){
+			return true;
+		}	
+		
+		// Look for the anyAdmin methods next to see if this is an anyAdmin method, and this user is some type of admin
+		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].anyAdminMethods, itemName) && len(arguments.account.getAllPermissions())) {
+			return true;
+		}
+		
+		// Check if the acount has access to a secure method
+		if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(arguments.action, ".", "", "all"), ":", "", "all")) ) {
+			return true;
+		}
+		
+		// If this is a save method, then we can check create and edit
+		if(left(listLast(arguments.action, "."),4) eq "save") {
+			var createAction = replace(arguments.action, '.save', '.create');
+			var editAction = replace(arguments.action, '.save', '.edit');
+			if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(createAction, ".", "", "all"), ":", "", "all")) ) {
+				return true;
+			}
+			if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(editAction, ".", "", "all"), ":", "", "all")) ) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public boolean function authenticateEntity(required string crud, required string entityName) {
@@ -81,7 +126,8 @@ component output="false" accessors="true" extends="HibachiService" {
 					for(var p=1; p<=arrayLen(entityMetaData.properties); p++) {
 						if( (!structKeyExists(entityMetaData.properties[p], "fieldtype") || entityMetaData.properties[p].fieldtype neq "ID")
 							&& (!structKeyExists(entityMetaData.properties[p], "persistent") || entityMetaData.properties[p].persistent)
-							&& (!structKeyExists(entityMetaData.properties[p], "hb_editable") || entityMetaData.properties[p].hb_editable)) {
+							&& (!structKeyExists(entityMetaData.properties[p], "hb_editable") || entityMetaData.properties[p].hb_editable)
+							&& !listFindNoCase("createdByAccount,createdDateTime,modifiedByAccount,modifiedDateTime", entityMetaData.properties[p].name)) {
 
 							if(structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "many-to-one") {
 								entityPermissionDetails[ entityName ].mtoproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
@@ -102,44 +148,14 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	
-	/*
-<cfdirectory action="list" directory="##" name="entities">
-
-<cfdump var="#entities#" />
-<cfloop query="entities">
-	<cfif listLast(entities.name, ".") eq "cfc">
-		<cfset thisEntity = createObject("component", "Slatwall.model.entity.#listFirst(entities.name, ".")#") />
-		<cfdump var="#thisEntity.getThisMetaData()#" abort />
-	</cfif>
-</cfloop>
-
-}
+	public void function clearActionPermissions(){
+		if(structKeyExists(variables, "actionPermissions")) {
+			structDelete(variables, "actionPermissions");
+		}
+	}
 	
-	
-	
-	
-	
-	
-	
-account.properties.activeFlag
-account.properties.
-	
-	
-	*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public struct function getPermissions(){
-		if(!structKeyExists(variables, "permissions")){
+	public struct function getActionPermissions(){
+		if(!structKeyExists(variables, "actionPermissions")){
 			var allPermissions={
 				admin={}
 			};
@@ -250,9 +266,9 @@ account.properties.
 				}
 			}
 			
-			variables.permissions = allPermissions;
+			variables.actionPermissions = allPermissions;
 		}
-		return variables.permissions;
+		return variables.actionPermissions;
 	}
 }
 

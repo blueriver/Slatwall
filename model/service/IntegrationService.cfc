@@ -38,9 +38,6 @@ Notes:
 */
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 
-	property name="permissionService" type="any";
-	property name="hibachiUtilityService" type="any";
-	
 	// Place holder properties that get populated lazily
 	property name="settings" type="any";
 	
@@ -52,7 +49,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if( structKeyExists(variables, "activeFW1Subsystems") ) {
 			structDelete(variables, "activeFW1Subsystems");
 		}
-		getPermissionService().clearPermissionCache();
+		getHibachiAuthenticationService().clearActionPermissions();
 		return super.save(argumentCollection=arguments);
 	}
 	

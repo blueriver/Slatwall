@@ -1,8 +1,15 @@
 <cfcomponent accessors="true" extends="HibachiObject">
 	
+	<!--- Import all of the Hibachi services and DAO's --->
 	<cfproperty name="hibachiDAO" type="any">
-	<cfproperty name="attributeService" type="any">
+	<cfproperty name="hibachiAuthenticationService" type="any">
+	<cfproperty name="hibachiEventService" type="any">
+	<cfproperty name="hibachiRBService" type="any">
+	<cfproperty name="hibachiTagService" type="any">
 	<cfproperty name="hibachiUtilityService" type="any">
+	
+	<!--- TODO: FIX THIS --->
+	<cfproperty name="attributeService" type="any">
 	
 	<!--- Variables Scope Used For Caching --->
 	<cfset variables.entityORMMetaDataObjects = {} />
