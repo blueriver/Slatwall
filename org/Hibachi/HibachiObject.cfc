@@ -109,11 +109,11 @@ component accessors="true" output="false" persistent="false" {
 	}
 	
 	public void function logHibachi(required string message, boolean generalLog=false){
-		getService("hibachiLogService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
+		getService("hibachiUtilityService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
 	}
 	
 	public void function logHibachiException(required any exception){
-		getService("hibachiLogService").logException(exception=arguments.exception);		
+		getService("hibachiUtilityService").logException(exception=arguments.exception);		
 	}
 	
 	public string function rbKey(required string key) {
@@ -122,6 +122,10 @@ component accessors="true" output="false" persistent="false" {
 	
 	public string function buildURL() {
 		return getApplicationValue("application").buildURL(argumentcollection=arguments);
+	}
+	
+	public any function formatValue() {
+		return getService("hibachiUtilityService").formatValue(argumentcollection=arguments);
 	}
 	
 	// =========================  END:  DELIGATION HELPERS ==========================================

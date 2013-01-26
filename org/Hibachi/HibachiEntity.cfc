@@ -542,6 +542,17 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	
 	}
 	
+	// @hint returns the count of a given property
+	public numeric function getPropertyCount( required string propertyName ) {
+		var cacheKey = "#arguments.propertyName#Count";
+			
+		if(!structKeyExists(variables, cacheKey)) {
+			variables[ cacheKey ] = arrayLen(variables[ arguments.propertyName ]);
+		}
+		
+		return variables[ cacheKey ];
+	}
+	
 	
 	
 	// @hint Generic abstract dynamic ORM methods by convention via onMissingMethod.
@@ -584,7 +595,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		// getXXXCount()		Where XXX is a one-to-many or many-to-many property where we want to get the count of that property
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 5) == "Count") {
 			
-			return arrayLen(variables[ left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-8) ]);
+			return getPropertyCount( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-8) );
 			
 		// getXXX() 			Where XXX is either and attributeID or attributeCode
 		} else if (left(arguments.missingMethodName, 3) == "get" && structKeyExists(variables, "getAttributeValue") && hasProperty("attributeValues")) {

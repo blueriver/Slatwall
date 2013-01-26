@@ -1558,7 +1558,7 @@ component {
 
 	}
 
-	private string function parseViewOrLayoutPath( string path, string type ) {
+	public string function parseViewOrLayoutPath( string path, string type ) {
 
 		var pathInfo = { };
 		var subsystem = getSubsystem( path );

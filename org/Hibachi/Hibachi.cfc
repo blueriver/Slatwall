@@ -224,9 +224,6 @@ component extends="FW1.framework" {
 					if(!bf.containsBean("hibachiTagService")) {
 						bf.declareBean("hibachiTagService", "#variables.framework.applicationKey#.org.Hibachi.HibachiTagService", true);	
 					}
-					if(!bf.containsBean("hibachiLogService")) {
-						bf.declareBean("hibachiLogService", "#variables.framework.applicationKey#.org.Hibachi.HibachiLogService", true);	
-					}
 					if(!bf.containsBean("hibachiUtilityService")) {
 						bf.declareBean("hibachiUtilityService", "#variables.framework.applicationKey#.org.Hibachi.HibachiUtilityService", true);	
 					}

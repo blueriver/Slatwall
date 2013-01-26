@@ -181,5 +181,5 @@
 	</cfsilent>
 	
 	
-	<cf_SlatwallFieldDisplay attributecollection="#attributes#" />
+	<cf_HibachiFieldDisplay attributecollection="#attributes#" />
 </cfif>
