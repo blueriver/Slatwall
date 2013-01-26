@@ -38,8 +38,6 @@ Notes:
 --->
 <cfcomponent extends="BaseService" accessors="true">
 	
-	<cfproperty name="hibachiUtilityService" type="any" />
-	
 	<cffunction name="update">
 		<cfargument name="branch" type="string" default="master">
 		

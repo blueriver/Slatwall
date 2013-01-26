@@ -47,15 +47,13 @@ component extends="BaseService" accessors="true" {
 	property name="contentService" type="any";
 	property name="skuService" type="any";
 	property name="subscriptionService" type="any";
-	property name="hibachiUtilityService" type="any";
-	property name="utilityTagService" type="any";
 	property name="optionService" type="any";
 	
 	
 	// ===================== START: Logical Methods ===========================
 	
 	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
-		getUtilityTagService().cfSetting(requesttimeout="3600"); 
+		getHibachiTagService().cfSetting(requesttimeout="3600"); 
 		getProductDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
 	}
 	

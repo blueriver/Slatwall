@@ -42,8 +42,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	property name="addressService" type="any";
 	property name="roundingRuleService" type="any";
-	property name="hibachiUtilityService" type="any";
-
+	
 		
 	// ----------------- START: Apply Promotion Logic ------------------------- 
 	public void function updateOrderAmountsWithPromotions(required any order) {

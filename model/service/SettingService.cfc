@@ -46,7 +46,6 @@ globalEncryptionKeySize
 	
 	<cfproperty name="contentService" type="any" />
 	<cfproperty name="currencyService" type="any" />
-	<cfproperty name="hibachiUtilityService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="locationService" type="any" />
 	<cfproperty name="measurementUnitService" type="any" />

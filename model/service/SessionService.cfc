@@ -40,7 +40,6 @@ component extends="BaseService" accessors="true" output="false" {
 
 	property name="accountService" type="any";
 	property name="orderService" type="any";
-	property name="hibachiTagService" type="any";
 	
 	public void function setValue(required string property, required any value) {
 		if(!arguments.property == "sessionID") {
