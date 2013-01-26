@@ -47,23 +47,23 @@ Notes:
 							  cancelQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" 
 							  backAction="admin:entity.detailpricegroup" 
 							  backQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-		<cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
 			
-			<cf_SlatwallPropertyList>
+			<cf_HibachiPropertyList>
 				<input type="hidden" name="pricegroup.pricegroupID" value="#rc.pricegroup.getPricegroupID()#" />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amountType" fieldType="select" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="amount" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="roundingRule" edit="#rc.edit#" displayVisible="amountType:percentageOff" />
-				<!---<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="globalFlag" edit="#rc.edit#" />--->
-			</cf_SlatwallPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="amountType" fieldType="select" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="amount" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="roundingRule" edit="#rc.edit#" displayVisible="amountType:percentageOff" />
+				<!---<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="globalFlag" edit="#rc.edit#" />--->
+			</cf_HibachiPropertyList>
 			
-		</cf_SlatwallDetailHeader>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.pricegrouprate#">
-			<cf_SlatwallTab view="admin:entity/pricegroupratetabs/producttypes" />
-			<cf_SlatwallTab view="admin:entity/pricegroupratetabs/products" />
-			<cf_SlatwallTab view="admin:entity/pricegroupratetabs/skus" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.pricegrouprate#">
+			<cf_HibachiTab view="admin:entity/pricegroupratetabs/producttypes" />
+			<cf_HibachiTab view="admin:entity/pricegroupratetabs/products" />
+			<cf_HibachiTab view="admin:entity/pricegroupratetabs/skus" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

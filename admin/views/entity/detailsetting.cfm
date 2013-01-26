@@ -67,17 +67,17 @@ Notes:
 		<input type="hidden" name="settingName" value="#rc.settingName#" />
 		#local.hiddenKeyFields#
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
 				<cfif not rc.setting.isNew() and structKeyExists(rc.setting.getSettingMetaData(), "encryptValue")>
-					<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" data-emptyvalue="********">
+					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" data-emptyvalue="********">
 				<cfelse>
-					<cf_SlatwallPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
 				</cfif>
-			</cf_SlatwallPropertyList>
+			</cf_HibachiPropertyList>
 			<cfif !rc.setting.isNew() and local.hasRelationshipKey>
 				<cf_HibachiActionCaller action="admin:entity.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&returnAction=#request.context.returnAction#&#local.returnActionQueryString#" class="btn btn-danger" />
 			</cfif>
-		</cf_SlatwallDetailHeader>
+		</cf_HibachiDetailHeader>
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

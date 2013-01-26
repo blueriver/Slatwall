@@ -44,15 +44,15 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createtaxcategoryrate" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" type="list" modal=true />
 	</cf_HibachiCrudActionBar>
 	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.taxCategory#" property="activeFlag" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#">
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
+	<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.taxCategory#" property="activeFlag" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#">
+		</cf_HibachiPropertyList>
+	</cf_HibachiDetailHeader>
 	
-	<cf_SlatwallTabGroup object="#rc.taxCategory#">
-		<cf_SlatwallTab view="admin:entity/taxcategorytabs/rates" />
-	</cf_SlatwallTabGroup>
+	<cf_HibachiTabGroup object="#rc.taxCategory#">
+		<cf_HibachiTab view="admin:entity/taxcategorytabs/rates" />
+	</cf_HibachiTabGroup>
 	
 </cf_HibachiCrudDetailForm>

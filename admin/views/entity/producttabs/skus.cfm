@@ -40,7 +40,7 @@ Notes:
 	<cfset local.skusSmartList = rc.product.getSkusSmartList() />
 	<cfset local.skusSmartList.joinRelatedProperty("SlatwallSku", "options", "left", true) />
 	
-	<cf_SlatwallListingDisplay smartList="#local.skusSmartList#"
+	<cf_HibachiListingDisplay smartList="#local.skusSmartList#"
 							   edit="#rc.edit#"
 							   recordDetailAction="admin:entity.detailsku"
 							   recordDetailQueryString="productID=#rc.product.getProductID()#"
@@ -51,23 +51,23 @@ Notes:
 							   selectFieldName="defaultSku.skuID"
 							   selectValue="#rc.product.getDefaultSku().getSkuID()#"
 							   selectTitle="#$.slatwall.rbKey('define.default')#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="skuCode" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode" />
 		<cfif rc.product.getBaseProductType() eq "merchandise">
 			<cfloop collection="#rc.product.getOptionGroupsStruct()#" item="local.optionGroup">
-				<cf_SlatwallListingColumn propertyIdentifier="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupID()#" title="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupName()#" sort="false" />
+				<cf_HibachiListingColumn propertyIdentifier="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupID()#" title="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupName()#" sort="false" />
 			</cfloop>
 		<cfelseif  rc.product.getProductType().getBaseProductType() eq "subscription">
-			<cf_SlatwallListingColumn propertyIdentifier="subscriptionTerm.subscriptionTermName" />
+			<cf_HibachiListingColumn propertyIdentifier="subscriptionTerm.subscriptionTermName" />
 		<cfelseif rc.product.getProductType().getBaseProductType() eq "contentAccess">
 			<!--- Sumit says nothing is ok --->
 		</cfif>
-		<cf_SlatwallListingColumn propertyIdentifier="imageFile" />
+		<cf_HibachiListingColumn propertyIdentifier="imageFile" />
 		<cfif isNull(rc.product.getDefaultSku().getUserDefinedPriceFlag()) || !rc.product.getDefaultSku().getUserDefinedPriceFlag()>
-			<cf_SlatwallListingColumn propertyIdentifier="listPrice" range="true" />
-			<cf_SlatwallListingColumn propertyIdentifier="price" range="true" />
-			<cf_SlatwallListingColumn propertyIdentifier="salePrice" sort="false" />
+			<cf_HibachiListingColumn propertyIdentifier="listPrice" range="true" />
+			<cf_HibachiListingColumn propertyIdentifier="price" range="true" />
+			<cf_HibachiListingColumn propertyIdentifier="salePrice" sort="false" />
 		</cfif>
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 	
 	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addOptionGroup" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
 	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addOption" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />

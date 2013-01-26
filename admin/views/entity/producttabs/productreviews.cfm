@@ -38,12 +38,12 @@ Notes:
 --->
 <cfparam name="rc.product" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.product.getProductReviewsSmartList()#"
+<cf_HibachiListingDisplay smartList="#rc.product.getProductReviewsSmartList()#"
 						   recorddetailaction="admin:entity.detailproductreview"
 						   recorddetailmodal="true"
 						   recordeditaction="admin:entity.editproductreview"
 						   recordeditmodal="true">
-	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="review" />
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="review" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+</cf_HibachiListingDisplay>

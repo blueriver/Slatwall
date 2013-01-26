@@ -45,16 +45,16 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.orderPaymentSmartList#" showCreate="false" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.orderPaymentSmartList#"
+	<cf_HibachiListingDisplay smartList="#rc.orderPaymentSmartList#"
 							   recorddetailaction="admin:entity.detailorderpayment">
-		<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="order.account.firstName" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="order.account.lastName" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
-		<cf_SlatwallListingColumn propertyIdentifier="orderPaymentType.type" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="amount" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" sort="false" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" sort="false" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="order.account.firstName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="order.account.lastName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" range="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_HibachiListingColumn propertyIdentifier="orderPaymentType.type" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="amountReceived" sort="false" />
+		<cf_HibachiListingColumn propertyIdentifier="amountCredited" sort="false" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

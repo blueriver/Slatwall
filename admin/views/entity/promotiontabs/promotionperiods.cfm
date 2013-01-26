@@ -40,17 +40,17 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.promotion.getPromotionPeriodsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.promotion.getPromotionPeriodsSmartList()#"
 							   recordEditAction="admin:entity.editPromotionperiod"
 							   recorddetailaction="admin:entity.detailpromotionperiod"
 							   recordDeleteAction="admin:entity.deletepromotionperiod"
 							   recordDeleteQueryString="returnAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
-		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
-		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" />
-		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" />
-		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" />
-		<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
+		<cf_HibachiListingColumn propertyIdentifier="endDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumUseCount" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumAccountUseCount" />
+		<cf_HibachiListingColumn propertyIdentifier="currentFlag" sort="false" />
+	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createpromotionperiod" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" />
 </cfoutput>

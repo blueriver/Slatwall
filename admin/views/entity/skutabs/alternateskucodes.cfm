@@ -39,13 +39,13 @@ Notes:
 <cfparam name="rc.sku" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.sku.getAlternateSkuCodesSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.sku.getAlternateSkuCodesSmartList()#"
 			recordEditAction="admin:entity.editalternateskucode"
 			recordEditModal="true">
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="alternateSkuCode" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="alternateSkuCode" />
 		
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createalternateskucode" class="btn btn-primary" queryString="SkuID=#rc.sku.getSkuID()#" modal="true" />
 </cfoutput>

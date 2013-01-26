@@ -38,21 +38,21 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#"
+<cf_HibachiListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#"
 		recordEditAction="admin:entity.editaccountaddress"
 		recordEditQueryString="accountID=#rc.account.getAccountID()#"
 		recordEditModal=true
 		recordDeleteAction="admin:entity.deleteaccountaddress"
 		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:entity.detailaccount">
 			
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountAddressName" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.name" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.streetAddress" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.street2Address" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.city" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.stateCode" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.postalCode" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountAddressName" />
+	<cf_HibachiListingColumn propertyIdentifier="address.name" />
+	<cf_HibachiListingColumn propertyIdentifier="address.streetAddress" />
+	<cf_HibachiListingColumn propertyIdentifier="address.street2Address" />
+	<cf_HibachiListingColumn propertyIdentifier="address.city" />
+	<cf_HibachiListingColumn propertyIdentifier="address.stateCode" />
+	<cf_HibachiListingColumn propertyIdentifier="address.postalCode" />
+</cf_HibachiListingDisplay>
 
 <cf_HibachiActionCaller action="admin:entity.createaccountaddress" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getAccountID()#" modal=true />
 

@@ -50,33 +50,33 @@ Notes:
 			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addSubscriptionTerm" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
 		</cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divClass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="publishedFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#" valueLink="#rc.product.getProductURL()#">
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divClass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="#rc.edit#">
-				<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('define.qats.full')#" value="#rc.product.getQuantity('QATS')#">
-				<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('define.qiats.full')#" value="#rc.product.getQuantity('QIATS')#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
-		<cf_SlatwallTabGroup object="#rc.product#" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:entity/producttabs/skus" />
-			<cf_SlatwallTab view="admin:entity/producttabs/productdescription" />
-			<cf_SlatwallTab view="admin:entity/producttabs/productpages" />
-			<cf_SlatwallTab view="admin:entity/producttabs/productcategories" />
-			<cf_SlatwallTab view="admin:entity/producttabs/alternateimages" />
-			<cf_SlatwallTab view="admin:entity/producttabs/productreviews" />
-			<cf_SlatwallTab view="admin:entity/producttabs/relatedproducts" />
-			<cf_SlatwallTab view="admin:entity/producttabs/vendors" />
-			<cf_SlatwallTab view="admin:entity/producttabs/productsettings" />
-			<cf_SlatwallTab view="admin:entity/producttabs/skusettings" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList divClass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="publishedFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="productName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="productCode" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#" valueLink="#rc.product.getProductURL()#">
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="brand" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="productType" edit="#rc.edit#">
+				<cf_HibachiFieldDisplay title="#$.slatwall.rbKey('define.qats.full')#" value="#rc.product.getQuantity('QATS')#">
+				<cf_HibachiFieldDisplay title="#$.slatwall.rbKey('define.qiats.full')#" value="#rc.product.getQuantity('QIATS')#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
+		<cf_HibachiTabGroup object="#rc.product#" allowCustomAttributes="true">
+			<cf_HibachiTab view="admin:entity/producttabs/skus" />
+			<cf_HibachiTab view="admin:entity/producttabs/productdescription" />
+			<cf_HibachiTab view="admin:entity/producttabs/productpages" />
+			<cf_HibachiTab view="admin:entity/producttabs/productcategories" />
+			<cf_HibachiTab view="admin:entity/producttabs/alternateimages" />
+			<cf_HibachiTab view="admin:entity/producttabs/productreviews" />
+			<cf_HibachiTab view="admin:entity/producttabs/relatedproducts" />
+			<cf_HibachiTab view="admin:entity/producttabs/vendors" />
+			<cf_HibachiTab view="admin:entity/producttabs/productsettings" />
+			<cf_HibachiTab view="admin:entity/producttabs/skusettings" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 

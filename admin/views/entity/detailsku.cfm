@@ -45,50 +45,50 @@ Notes:
 		<cf_HibachiCrudActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:entity.detailproduct" backQueryString="productID=#rc.product.getProductID()#" cancelAction="admin:entity.detailsku" />
 		<input type="hidden" name="returnAction" value="admin:entity.detailproduct&productID=#rc.product.getProductID()#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divclass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="userDefinedPriceFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="price" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="listPrice" edit="#rc.edit#">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList divclass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.sku#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.sku#" property="userDefinedPriceFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.sku#" property="price" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.sku#" property="listPrice" edit="#rc.edit#">
 				<cfif rc.product.getBaseProductType() EQ "subscription">
-					<cf_SlatwallPropertyDisplay object="#rc.sku#" property="renewalPrice" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.sku#" property="renewalPrice" edit="#rc.edit#">
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.sku#" property="skuCode" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.sku#" property="skuCode" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
 			
-			<cf_SlatwallPropertyList divclass="span6">
+			<cf_HibachiPropertyList divclass="span6">
 				<cfif rc.edit>
 					<div class="image pull-right">
 						<img src="#rc.sku.getResizedImagePath(width="150", height="150")#" border="0" width="150px" height="150px" /><br />
 						<cfif rc.sku.getImageExistsFlag()>
-							<cf_SlatwallFieldDisplay fieldType="yesno" title="Delete Current Image" fieldname="deleteImage" edit="true" />
+							<cf_HibachiFieldDisplay fieldType="yesno" title="Delete Current Image" fieldname="deleteImage" edit="true" />
 						</cfif>
-						<cf_SlatwallFieldDisplay fieldType="file" title="Upload New Image" fieldname="imageFileUpload" edit="true" />
-						<cf_SlatwallFieldDisplay fieldType="radiogroup" title="Image Name" fieldname="imageExclusive" edit="true" valueOptions="#[{name=" Default Naming Convention<br />", value=0},{name=" Make Image Unique to Sku", value=1}]#" />
+						<cf_HibachiFieldDisplay fieldType="file" title="Upload New Image" fieldname="imageFileUpload" edit="true" />
+						<cf_HibachiFieldDisplay fieldType="radiogroup" title="Image Name" fieldname="imageExclusive" edit="true" valueOptions="#[{name=" Default Naming Convention<br />", value=0},{name=" Make Image Unique to Sku", value=1}]#" />
 					</div>
 				<cfelse>
 					<div class="image pull-right">
 						<img src="#rc.sku.getResizedImagePath(width="150", height="150")#" border="0" width="150px" height="150px" /><br />
 					</div>
 				</cfif>
-			</cf_SlatwallPropertyList>
+			</cf_HibachiPropertyList>
 			
-		</cf_SlatwallDetailHeader>
+		</cf_HibachiDetailHeader>
 
-		<cf_SlatwallTabGroup object="#rc.sku#" allowCustomAttributes="true">
+		<cf_HibachiTabGroup object="#rc.sku#" allowCustomAttributes="true">
 			<cfif rc.product.getBaseProductType() EQ "subscription">
-				<cf_SlatwallTab view="admin:entity/skutabs/subscription" />
+				<cf_HibachiTab view="admin:entity/skutabs/subscription" />
 			<cfelseif rc.product.getBaseProductType() EQ "contentaccess">
-				<cf_SlatwallTab view="admin:entity/skutabs/accesscontents" />
+				<cf_HibachiTab view="admin:entity/skutabs/accesscontents" />
 			<cfelse>
-				<cf_SlatwallTab view="admin:entity/skutabs/inventory" />
-				<cf_SlatwallTab view="admin:entity/skutabs/options" />
+				<cf_HibachiTab view="admin:entity/skutabs/inventory" />
+				<cf_HibachiTab view="admin:entity/skutabs/options" />
 			</cfif>
-			<cf_SlatwallTab view="admin:entity/skutabs/currencies" />
-			<cf_SlatwallTab view="admin:entity/skutabs/alternateskucodes" />
-			<cf_SlatwallTab view="admin:entity/skutabs/skusettings" />
-		</cf_SlatwallTabGroup>
+			<cf_HibachiTab view="admin:entity/skutabs/currencies" />
+			<cf_HibachiTab view="admin:entity/skutabs/alternateskucodes" />
+			<cf_HibachiTab view="admin:entity/skutabs/skusettings" />
+		</cf_HibachiTabGroup>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

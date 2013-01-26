@@ -44,22 +44,22 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createvendoraddress" queryString="vendorID=#rc.vendor.getVendorID()#" type="list" modal=true />
 	</cf_HibachiCrudActionBar>
 	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="vendorName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="accountNumber" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="vendorWebsite" edit="#rc.edit#">
+	<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.vendor#" property="vendorName" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.vendor#" property="accountNumber" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.vendor#" property="vendorWebsite" edit="#rc.edit#">
 			
 			<input type="hidden" name="primaryEmailAddress.vendorEmailAddressID" value="#rc.Vendor.getPrimaryEmailAddress().getVendorEmailAddressID()#" />
-			<cf_SlatwallPropertyDisplay object="#rc.Vendor.getPrimaryEmailAddress()#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
+			<cf_HibachiPropertyDisplay object="#rc.Vendor.getPrimaryEmailAddress()#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
 			
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
+		</cf_HibachiPropertyList>
+	</cf_HibachiDetailHeader>
 	
-	<cf_SlatwallTabGroup object="#rc.vendor#" allowCustomAttributes="true">
-		<cf_SlatwallTab view="admin:entity/vendortabs/vendoraddresses" />
-		<cf_SlatwallTab view="admin:entity/vendortabs/vendorbrands" />
-		<cf_SlatwallTab view="admin:entity/vendortabs/vendororders" />
-	</cf_SlatwallTabGroup>
+	<cf_HibachiTabGroup object="#rc.vendor#" allowCustomAttributes="true">
+		<cf_HibachiTab view="admin:entity/vendortabs/vendoraddresses" />
+		<cf_HibachiTab view="admin:entity/vendortabs/vendorbrands" />
+		<cf_HibachiTab view="admin:entity/vendortabs/vendororders" />
+	</cf_HibachiTabGroup>
 	
 </cf_HibachiCrudDetailForm>

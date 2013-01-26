@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.category#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.category#" edit="#rc.edit#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.category#" property="categoryName">
-				<cf_SlatwallPropertyDisplay object="#rc.category#" property="restrictAccessFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.category#" property="allowProductAssignmentFlag" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.category#" property="categoryName">
+				<cf_HibachiPropertyDisplay object="#rc.category#" property="restrictAccessFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.category#" property="allowProductAssignmentFlag" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

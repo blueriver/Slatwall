@@ -43,21 +43,21 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.schedule#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.schedule#" edit="#rc.edit#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="scheduleName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="recuringType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfWeekToRun" edit="#rc.edit#" displayVisible="recuringType:weekly">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="daysOfMonthToRun" edit="#rc.edit#" displayVisible="recuringType:monthly">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyInterval" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyStartTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.schedule#" property="frequencyEndTime" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="scheduleName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="recuringType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="daysOfWeekToRun" edit="#rc.edit#" displayVisible="recuringType:weekly">
+				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="daysOfMonthToRun" edit="#rc.edit#" displayVisible="recuringType:monthly">
+				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="frequencyInterval" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="frequencyStartTime" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="frequencyEndTime" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.schedule#">
+		<cf_HibachiTabGroup object="#rc.schedule#">
 			
-		</cf_SlatwallTabGroup>
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

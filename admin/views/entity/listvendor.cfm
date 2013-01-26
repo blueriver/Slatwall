@@ -40,11 +40,11 @@ Notes:
 
 <cf_HibachiCrudActionBar type="listing" object="#rc.vendorSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.vendorSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.vendorSmartList#"
 						   recordEditAction="admin:entity.editvendor"
 						   recordDetailAction="admin:entity.detailvendor">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendorName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="accountNumber" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="vendorWebsite" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="vendorName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="accountNumber" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="vendorWebsite" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
+</cf_HibachiListingDisplay>

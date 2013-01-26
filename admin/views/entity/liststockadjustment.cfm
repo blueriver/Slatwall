@@ -45,14 +45,14 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.manualout')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satManualOut" createModal="true" />
 	</cf_HibachiCrudActionBar>
 	
-	<cf_slatwalllistingdisplay smartlist="#rc.stockAdjustmentSmartList#" 
+	<cf_HibachiListingDisplay smartlist="#rc.stockAdjustmentSmartList#" 
 	                          recordeditaction="admin:warehouse.editstockadjustment"
 							  recorddetailaction="admin:warehouse.detailstockadjustment">
-		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stockAdjustmentType.type"/>
-		<cf_slatwalllistingcolumn propertyidentifier="stockAdjustmentStatusType.type" filter=true/>
-		<cf_slatwalllistingcolumn propertyidentifier="fromLocation.locationName" filter=true/>
-		<cf_slatwalllistingcolumn propertyidentifier="toLocation.locationName" filter=true/>
-		<cf_slatwalllistingcolumn propertyidentifier="createdDateTime" range=true/>
-	</cf_slatwalllistingdisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stockAdjustmentType.type"/>
+		<cf_HibachiListingColumn propertyidentifier="stockAdjustmentStatusType.type" filter=true/>
+		<cf_HibachiListingColumn propertyidentifier="fromLocation.locationName" filter=true/>
+		<cf_HibachiListingColumn propertyidentifier="toLocation.locationName" filter=true/>
+		<cf_HibachiListingColumn propertyidentifier="createdDateTime" range=true/>
+	</cf_HibachiListingDisplay>
 
 </cfoutput>

@@ -40,6 +40,6 @@ Notes:
 
 <cf_HibachiCrudActionBar type="listing" object="#rc.countrySmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.countrySmartList#" recordEditAction="admin:entity.editcountry">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryName" search="true" />
-</cf_SlatwallListingDisplay>
+<cf_HibachiListingDisplay smartList="#rc.countrySmartList#" recordEditAction="admin:entity.editcountry">
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="countryName" search="true" />
+</cf_HibachiListingDisplay>

@@ -39,4 +39,4 @@ Notes:
 <cfparam name="rc.emailTemplate" type="any" />
 
 
-<cf_SlatwallPropertyDisplay object="#rc.emailTemplate#" property="emailBodyText" edit="#rc.edit#" fieldtype="textarea" displaytype="plain">
+<cf_HibachiPropertyDisplay object="#rc.emailTemplate#" property="emailBodyText" edit="#rc.edit#" fieldtype="textarea" displaytype="plain">

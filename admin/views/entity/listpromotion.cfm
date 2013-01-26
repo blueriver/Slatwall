@@ -47,11 +47,11 @@ Notes:
 <cf_HibachiCrudActionBar smartList="#rc.promotionSmartList#"
 						   recorddetailaction="admin:entity.detailpromotion"
 						   recordEditAction="admin:entity.editpromotion">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" range="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="currentFlag" sort="false" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" range="true" />
+	<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" range="true" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="currentFlag" sort="false" />
+</cf_HibachiListingDisplay>
 
 </cfoutput>

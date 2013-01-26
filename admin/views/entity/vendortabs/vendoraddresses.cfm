@@ -39,19 +39,19 @@ Notes:
 
 <cfparam name="rc.vendor" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.vendor.getVendorAddressesSmartList()#"
+<cf_HibachiListingDisplay smartList="#rc.vendor.getVendorAddressesSmartList()#"
 		recordEditAction="admin:entity.editvendoraddress"
 		recordEditQueryString="vendorID=#rc.vendor.getVendorID()#"
 		recordEditModal=true
 		recordDeleteAction="admin:entity.deletevendoraddress"
 		recordDeleteQueryString="vendorID=#rc.vendor.getVendorID()#&returnaction=admin:entity.detailvendor">
 			
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="address.streetAddress" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.street2Address" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.city" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.stateCode" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.postalCode" />
-	<cf_SlatwallListingColumn propertyIdentifier="address.countryCode" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="address.streetAddress" />
+	<cf_HibachiListingColumn propertyIdentifier="address.street2Address" />
+	<cf_HibachiListingColumn propertyIdentifier="address.city" />
+	<cf_HibachiListingColumn propertyIdentifier="address.stateCode" />
+	<cf_HibachiListingColumn propertyIdentifier="address.postalCode" />
+	<cf_HibachiListingColumn propertyIdentifier="address.countryCode" />
+</cf_HibachiListingDisplay>
 
 <cf_HibachiActionCaller action="admin:entity.createvendoraddress" class="btn btn-inverse" icon="plus icon-white" queryString="vendorID=#rc.vendor.getVendorID()#" modal=true />

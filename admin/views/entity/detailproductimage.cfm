@@ -46,12 +46,12 @@ Notes:
 		</cf_HibachiCrudActionBar>
 		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
 		<input type="hidden" name="returnAction" value="admin:entity.editProduct&productID=#rc.product.getProductID()###tabalternateimages" />
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageDescription" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.productImage#" property="imageFile" edit="#rc.edit#" fieldtype="file">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.productImage#" property="imageName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.productImage#" property="imageDescription" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.productImage#" property="imageType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.productImage#" property="imageFile" edit="#rc.edit#" fieldtype="file">
 				
 				<div class="control-group">
 					<label class="control-label">&nbsp;</label>
@@ -62,8 +62,8 @@ Notes:
 						</cfif>	
 					</div>
 				</div>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 

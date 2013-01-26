@@ -47,10 +47,10 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.subscription')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=subscription" />
 	</cf_HibachiCrudActionBar>
 	
-	<cf_SlatwallListingDisplay smartList="#rc.productTypeSmartList#" 
+	<cf_HibachiListingDisplay smartList="#rc.productTypeSmartList#" 
 								recordEditAction="admin:entity.editproducttype"
 								recordDetailAction="admin:entity.detailproducttype">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productTypeName" sort="false" />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" sort="false" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productTypeName" sort="false" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" sort="false" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

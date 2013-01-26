@@ -42,16 +42,16 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.accountSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.accountSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.accountSmartList#"
 						   recordEditAction="admin:entity.editaccount"
 						   recordDetailAction="admin:entity.detailaccount">
-	<cf_SlatwallListingColumn propertyIdentifier="firstName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="lastName" search="true" />
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="company" />
-	<cf_SlatwallListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="guestAccountFlag" sort="false" />
+	<cf_HibachiListingColumn propertyIdentifier="firstName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="lastName" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="company" />
+	<cf_HibachiListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="guestAccountFlag" sort="false" />
 	
-</cf_SlatwallListingDisplay>
+</cf_HibachiListingDisplay>
 
 </cfoutput>

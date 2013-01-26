@@ -45,21 +45,21 @@ Notes:
                 <cf_HibachiActionCaller action="admin:entity.processtask" querystring="taskID=#rc.task.getTaskID()#" type="list" icon="cog" modal="true" >
         </cf_HibachiCrudActionBar>    
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskMethod" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="taskUrl" edit="#rc.edit#" displayVisible="taskMethod:url">
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="runningFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.task#" property="timeout" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.task#" property="taskName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.task#" property="taskMethod" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.task#" property="taskUrl" edit="#rc.edit#" displayVisible="taskMethod:url">
+				<cf_HibachiPropertyDisplay object="#rc.task#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.task#" property="runningFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.task#" property="timeout" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.task#">
-			<cf_SlatwallTab view="admin:entity/tasktabs/taskschedule" />
-			<cf_SlatwallTab view="admin:entity/tasktabs/taskhistory" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.task#">
+			<cf_HibachiTab view="admin:entity/tasktabs/taskschedule" />
+			<cf_HibachiTab view="admin:entity/tasktabs/taskhistory" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -40,11 +40,11 @@ Notes:
 
 <cf_HibachiCrudActionBar type="listing" object="#rc.fulfillmentMethodSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethodSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.fulfillmentMethodSmartList#"
 		recordEditAction="admin:entity.editfulfillmentmethod"
 		recordDetailAction="admin:entity.detailfulfillmentmethod"
 		sortProperty="sortOrder">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethodType" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="fulfillmentMethodType" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
+</cf_HibachiListingDisplay>

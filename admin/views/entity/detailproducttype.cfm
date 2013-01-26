@@ -44,27 +44,27 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.productType#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.productType#" edit="#rc.edit#">
 		</cf_HibachiCrudActionBar>
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="activeFlag" edit="#rc.edit#">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.productType#" property="activeFlag" edit="#rc.edit#">
 				<cfif isNull(rc.productType.getSystemCode()) or !len(rc.productType.getSystemCode())>
-					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" edit="#rc.edit#" valueOptions="#rc.productType.getParentProductTypeOptions(rc.baseProductType)#">
+					<cf_HibachiPropertyDisplay object="#rc.productType#" property="parentProductType" edit="#rc.edit#" valueOptions="#rc.productType.getParentProductTypeOptions(rc.baseProductType)#">
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#">
 				<cfif not rc.productType.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="urlTitle" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.productType#" property="urlTitle" edit="#rc.edit#">
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.productType#">
-			<cf_SlatwallTab view="admin:entity/producttypetabs/producttypedescription" />
-			<!---<cf_SlatwallTab view="admin:entity/producttypetabs/attributesets" />--->
-			<cf_SlatwallTab view="admin:entity/producttypetabs/products" />
-			<cf_SlatwallTab view="admin:entity/producttypetabs/producttypesettings" />
-			<cf_SlatwallTab view="admin:entity/producttypetabs/productsettings" />
-			<cf_SlatwallTab view="admin:entity/producttypetabs/skusettings" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.productType#">
+			<cf_HibachiTab view="admin:entity/producttypetabs/producttypedescription" />
+			<!---<cf_HibachiTab view="admin:entity/producttypetabs/attributesets" />--->
+			<cf_HibachiTab view="admin:entity/producttypetabs/products" />
+			<cf_HibachiTab view="admin:entity/producttypetabs/producttypesettings" />
+			<cf_HibachiTab view="admin:entity/producttypetabs/productsettings" />
+			<cf_HibachiTab view="admin:entity/producttypetabs/skusettings" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 

@@ -38,24 +38,24 @@ Notes:
 --->
 <cfparam name="rc.vendorOrder" type="any"/>
 
-<cf_slatwalllistingdisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#" 
+<cf_HibachiListingDisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#" 
                            recordeditaction="admin:entity.editVendorOrderItem" 
                            recordeditmodal="true" 
 						   recorddetailaction="admin:entity.detailvendororderitem"
 						   recorddetailmodal="true"
                            recorddeleteaction="admin:entity.deleteVendorOrderItem" 
                            recorddeletequerystring="returnaction=admin:entity.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
-	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
-	<cf_slatwalllistingcolumn propertyidentifier="stock.sku.skucode" search="true" />
-	<cf_slatwalllistingcolumn propertyidentifier="stock.location.locationName" filter="true" search="true" />
-	<cf_slatwalllistingcolumn propertyidentifier="quantity" range="true" />
-	<cf_slatwalllistingcolumn propertyidentifier="quantityReceived" sort="false" />
-	<cf_slatwalllistingcolumn propertyidentifier="quantityUnreceived" sort="false" />
-	<cf_slatwalllistingcolumn propertyidentifier="cost" range="true" />
-	<cf_slatwalllistingcolumn propertyidentifier="extendedCost" sort="false" />
-	<cf_slatwalllistingcolumn propertyidentifier="estimatedReceivalDateTime" range="true" />
+	<cf_HibachiListingColumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
+	<cf_HibachiListingColumn propertyidentifier="stock.sku.skucode" search="true" />
+	<cf_HibachiListingColumn propertyidentifier="stock.location.locationName" filter="true" search="true" />
+	<cf_HibachiListingColumn propertyidentifier="quantity" range="true" />
+	<cf_HibachiListingColumn propertyidentifier="quantityReceived" sort="false" />
+	<cf_HibachiListingColumn propertyidentifier="quantityUnreceived" sort="false" />
+	<cf_HibachiListingColumn propertyidentifier="cost" range="true" />
+	<cf_HibachiListingColumn propertyidentifier="extendedCost" sort="false" />
+	<cf_HibachiListingColumn propertyidentifier="estimatedReceivalDateTime" range="true" />
 	
-</cf_slatwalllistingdisplay>
+</cf_HibachiListingDisplay>
 
 <cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" class="btn btn-inverse" icon="plus icon-white" />

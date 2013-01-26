@@ -44,10 +44,10 @@ Notes:
 <cfoutput>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.promotionreward.skus')#</h4>
-		<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="skus" edit="#rc.edit#" displayType="plain" />
+		<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="skus" edit="#rc.edit#" displayType="plain" />
 	</div>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.promotionreward.excludedskus')#</h4>
-		<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="excludedSkus" edit="#rc.edit#" displayType="plain" />
+		<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="excludedSkus" edit="#rc.edit#" displayType="plain" />
 	</div>
 </cfoutput>

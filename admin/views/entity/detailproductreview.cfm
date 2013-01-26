@@ -43,17 +43,17 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.productReview#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.productReview#" edit="#rc.edit#"></cf_HibachiCrudActionBar>
 
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.productReview#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.productReview#" property="reviewTitle" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.productReview#" property="review" edit="#rc.edit#" fieldType="textarea">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.productReview#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.productReview#" property="reviewTitle" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.productReview#" property="review" edit="#rc.edit#" fieldType="textarea">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
-		<cf_SlatwallTabGroup object="#rc.productReview#">
-			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.productReview#">
+			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->
+		</cf_HibachiTabGroup>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

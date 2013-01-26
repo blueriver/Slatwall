@@ -61,12 +61,12 @@ Notes:
 		<input type="hidden" name="product.productID" value="#rc.productID#" />
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotionID#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageFile" edit="#rc.edit#" fieldtype="file">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.image#" property="imageName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.image#" property="imageDescription" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.image#" property="imageType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.image#" property="imageFile" edit="#rc.edit#" fieldtype="file">
 				<cfif not rc.image.isNew()>
 					<div class="control-group">
 						<label class="control-label">&nbsp;</label>
@@ -75,8 +75,8 @@ Notes:
 						</div>
 					</div>
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 

@@ -45,14 +45,14 @@ Notes:
 		
 		<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divClass="span6">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList divClass="span6">
 				<div style="height:350px;">
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="skuID" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,product.productName,product.productType.productTypeName,skuCode,price" edit="true">
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" fieldname="quantity" property="quantity" edit="true" value="1">
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" fieldname="skuID" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,product.productName,product.productType.productTypeName,skuCode,price" edit="true">
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" fieldname="quantity" property="quantity" edit="true" value="1">
 				</div>
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divClass="span6">
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
 				<cfset local.orderFulfillmentSmartList = rc.order.getOrderFulfillmentsSmartList() />
 				<cfset local.existingFulfillmentSelected = false />
 				<div class="control-group">
@@ -92,18 +92,18 @@ Notes:
 							</select>
 						</div>
 					</div>
-					<cf_SlatwallPropertyDisplay object="#local.newOrderFulfillment#" property="fulfillmentCharge" fieldName="orderFulfillment.fulfillmentCharge" edit="true" />
+					<cf_HibachiPropertyDisplay object="#local.newOrderFulfillment#" property="fulfillmentCharge" fieldName="orderFulfillment.fulfillmentCharge" edit="true" />
 					<div class="fulfillmentDetails" data-showtype="shipping" <cfif local.fulfillmentMethodTypeSelected neq "shipping">style="display:none;"</cfif>>
 						<cfset shippingMethodOptionsSL = $.slatwall.getService("shippingService").getShippingMethodSmartList() />
 						<cfset shippingMethodOptionsSL.addFilter('activeFlag', 1) />
 						<cfset shippingMethodOptionsSL.addSelect('shippingMethodName', 'name') />
 						<cfset shippingMethodOptionsSL.addSelect('shippingMethodID', 'value') />
-						<cf_SlatwallPropertyDisplay object="#local.newOrderFulfillment#" property="shippingMethod" fieldName="orderFulfillment.shippingMethod.shippingMethodID" valueOptions="#shippingMethodOptionsSL.getRecords()#" edit="true" />
+						<cf_HibachiPropertyDisplay object="#local.newOrderFulfillment#" property="shippingMethod" fieldName="orderFulfillment.shippingMethod.shippingMethodID" valueOptions="#shippingMethodOptionsSL.getRecords()#" edit="true" />
 						<cf_SlatwallAddressDisplay address="#$.slatwall.getService('addressService').newAddress()#" fieldnameprefix="orderFulfillment.shippingAddress." edit="true" />
 					</div>
 				</div>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

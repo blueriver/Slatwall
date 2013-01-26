@@ -42,13 +42,13 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.stockReceiverSmartList#" showCreate="false" />
 
-<cf_SlatwallListingDisplay smartList="#rc.stockReceiverSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.stockReceiverSmartList#"
 						   recordDetailAction="admin:warehouse.detailstockreceiver"
 						   recordEditAction="admin:warehouse.editstockreceiver">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="packingSlipNumber" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="boxCount" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="receiverType" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="packingSlipNumber" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="boxCount" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="receiverType" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+</cf_HibachiListingDisplay>
 
 </cfoutput>

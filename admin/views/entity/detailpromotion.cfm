@@ -47,28 +47,28 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.promotion#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#">
 				<cfif rc.promotion.isNew()>
 					<hr />
 					<h4>#$.slatwall.rbKey('admin.pricing.detailpromotion.initialperiod')#</h4><br />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].startDateTime" property="startDateTime" edit="#rc.edit#">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].endDateTime" property="endDateTime" edit="#rc.edit#">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].maximumUseCount" property="maximumUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].maximumAccountUseCount" property="maximumAccountUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+					<cf_HibachiPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].startDateTime" property="startDateTime" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].endDateTime" property="endDateTime" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].maximumUseCount" property="maximumUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+					<cf_HibachiPropertyDisplay object="#rc.promotionPeriod#" fieldName="promotionPeriods[1].maximumAccountUseCount" property="maximumAccountUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
 					<input type="hidden" name="promotionPeriods[1].promotionPeriodID" value="#rc.promotionPeriod.getPromotionPeriodID()#" />
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.promotion#">
-			<cf_SlatwallTab view="admin:entity/promotiontabs/promotionperiods" />
-			<cf_SlatwallTab view="admin:entity/promotiontabs/promotioncodes" />
-			<cf_SlatwallTab view="admin:entity/promotiontabs/promotionsummary" />
-			<cf_SlatwallTab view="admin:entity/promotiontabs/promotiondescription" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.promotion#">
+			<cf_HibachiTab view="admin:entity/promotiontabs/promotionperiods" />
+			<cf_HibachiTab view="admin:entity/promotiontabs/promotioncodes" />
+			<cf_HibachiTab view="admin:entity/promotiontabs/promotionsummary" />
+			<cf_HibachiTab view="admin:entity/promotiontabs/promotiondescription" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

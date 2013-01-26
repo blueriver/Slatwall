@@ -41,9 +41,9 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.siteSmartList#" createmodal="true" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.siteSmartList#"
+	<cf_HibachiListingDisplay smartList="#rc.siteSmartList#"
 							   recordEditAction="admin:entity.editSite"
 							   recordDetailAction="admin:entity.detailSite">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="siteName" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="siteName" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

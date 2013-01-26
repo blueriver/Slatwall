@@ -38,4 +38,4 @@ Notes:
 --->
 <cfparam name="rc.emailTemplate" type="any" />
 
-<cf_SlatwallPropertyDisplay object="#rc.emailTemplate#" property="emailBodyHTML" edit="#rc.edit#" fieldtype="wysiwyg" displaytype="plain">
+<cf_HibachiPropertyDisplay object="#rc.emailTemplate#" property="emailBodyHTML" edit="#rc.edit#" fieldtype="wysiwyg" displaytype="plain">

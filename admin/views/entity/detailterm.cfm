@@ -43,19 +43,19 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.Term#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.Term#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termHours" edit="#rc.edit && rc.term.isNew()#">
-				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termDays" edit="#rc.edit && rc.term.isNew()#">
-				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termMonths" edit="#rc.edit && rc.term.isNew()#">
-				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termYears" edit="#rc.edit && rc.term.isNew()#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.Term#" property="termName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.Term#" property="termHours" edit="#rc.edit && rc.term.isNew()#">
+				<cf_HibachiPropertyDisplay object="#rc.Term#" property="termDays" edit="#rc.edit && rc.term.isNew()#">
+				<cf_HibachiPropertyDisplay object="#rc.Term#" property="termMonths" edit="#rc.edit && rc.term.isNew()#">
+				<cf_HibachiPropertyDisplay object="#rc.Term#" property="termYears" edit="#rc.edit && rc.term.isNew()#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.term#">
+		<cf_HibachiTabGroup object="#rc.term#">
 			
-		</cf_SlatwallTabGroup>
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

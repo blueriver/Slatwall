@@ -39,12 +39,12 @@ Notes:
 <cfparam name="rc.subscriptionUsage" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.subscriptionUsage.getRenewalSubscriptionUsageBenefitsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.subscriptionUsage.getRenewalSubscriptionUsageBenefitsSmartList()#"
 			recordEditAction="admin:entity.editrenewalsubscriptionusagebenefits">
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionUsageBenefitID" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionUsageBenefitID" />
 		
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createrenewalsubscriptionusagebenefits" class="btn btn-inverse" icon="plus icon-white" queryString="SubscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" />
 </cfoutput>

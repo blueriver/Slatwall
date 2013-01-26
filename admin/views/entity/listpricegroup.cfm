@@ -42,13 +42,13 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.priceGroupSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.priceGroupSmartList#" 
+<cf_HibachiListingDisplay smartList="#rc.priceGroupSmartList#" 
 							recordDetailAction="admin:entity.detailpricegroup"
 							recordEditAction="admin:entity.editpricegroup">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
-	<cf_SlatwallListingColumn propertyIdentifier="priceGroupCode" />
-	<!---<cf_SlatwallListingColumn propertyIdentifier="inheritsFrom" />--->
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
+	<cf_HibachiListingColumn propertyIdentifier="priceGroupCode" />
+	<!---<cf_HibachiListingColumn propertyIdentifier="inheritsFrom" />--->
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+</cf_HibachiListingDisplay>
 
 </cfoutput>

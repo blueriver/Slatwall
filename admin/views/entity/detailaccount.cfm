@@ -45,44 +45,44 @@ Notes:
 	</cf_HibachiCrudActionBar>
 	
 	<cfif rc.account.isNew()>
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" fieldnameprefix="primaryEmailAddress." edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="phoneNumber" fieldnameprefix="primaryPhoneNumber." edit="#rc.edit#">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="emailAddress" fieldnameprefix="primaryEmailAddress." edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="phoneNumber" fieldnameprefix="primaryPhoneNumber." edit="#rc.edit#">
 				<input type="hidden" name="primaryAddress.accountAddressName" value="Primary Address" />
 				<cf_SlatwallAddressDisplay address="#rc.account.getPrimaryAddress().getAddress()#" showName="false" showCompany="false" fieldnameprefix="primaryAddress.address." />
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 	<cfelse>
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divclass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">			
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divclass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList divclass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="emailAddress" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">			
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divclass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 	</cfif>
 	
 	
-	<cf_SlatwallTabGroup object="#rc.account#" allowCustomAttributes="true">
-		<cf_SlatwallTab view="admin:entity/accounttabs/addresses" />
-		<cf_SlatwallTab view="admin:entity/accounttabs/orders" />
-		<cf_SlatwallTab view="admin:entity/accounttabs/paymentmethods" />
-		<cf_SlatwallTab view="admin:entity/accounttabs/subscriptionusage" />
-		<cf_SlatwallTab view="admin:entity/accounttabs/pricegroups" />
-		<cf_SlatwallTab view="admin:entity/accounttabs/productreviews" />
-		<cf_SlatwallTab view="admin:entity/accounttabs/accountpayments" />
-		<cf_SlatwallTab view="admin:entity/accounttabs/permissions" />
-		<cf_SlatwallTab view="admin:entity/accounttabs/accountsettings" />
-	</cf_SlatwallTabGroup>
+	<cf_HibachiTabGroup object="#rc.account#" allowCustomAttributes="true">
+		<cf_HibachiTab view="admin:entity/accounttabs/addresses" />
+		<cf_HibachiTab view="admin:entity/accounttabs/orders" />
+		<cf_HibachiTab view="admin:entity/accounttabs/paymentmethods" />
+		<cf_HibachiTab view="admin:entity/accounttabs/subscriptionusage" />
+		<cf_HibachiTab view="admin:entity/accounttabs/pricegroups" />
+		<cf_HibachiTab view="admin:entity/accounttabs/productreviews" />
+		<cf_HibachiTab view="admin:entity/accounttabs/accountpayments" />
+		<cf_HibachiTab view="admin:entity/accounttabs/permissions" />
+		<cf_HibachiTab view="admin:entity/accounttabs/accountsettings" />
+	</cf_HibachiTabGroup>
 	
 </cf_HibachiCrudDetailForm>

@@ -39,12 +39,12 @@ Notes:
 <cfparam name="rc.content" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.content.getListingProductsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.content.getListingProductsSmartList()#"
 							   recordeditaction="admin:entity.editproduct"
 							   recorddetailaction="admin:entity.detailproduct">
-		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
-		<cf_SlatwallListingColumn propertyIdentifier="productCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn propertyIdentifier="brand.brandName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" />
+		<cf_HibachiListingColumn propertyIdentifier="productCode" />
+		<cf_HibachiListingColumn propertyIdentifier="productType.productTypeName" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

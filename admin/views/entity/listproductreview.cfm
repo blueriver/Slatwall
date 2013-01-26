@@ -41,15 +41,15 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.productReviewSmartList#" showCreate="false" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#"
+	<cf_HibachiListingDisplay smartList="#rc.productReviewSmartList#"
 								recordDetailAction="admin:entity.detailproductreview"
 								recordEditAction="admin:entity.editproductreview">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="reviewTitle" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="reviewerName" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="rating" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="product.productName" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="reviewTitle" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="reviewerName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="rating" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="product.productName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter=true />
+	</cf_HibachiListingDisplay>
 
 </cfoutput>

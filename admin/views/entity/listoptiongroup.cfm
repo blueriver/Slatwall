@@ -42,12 +42,12 @@ Notes:
 	
 	<cf_HibachiCrudActionBar type="listing" object="#rc.optionGroupSmartList#" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.optionGroupSmartList#" 
+	<cf_HibachiListingDisplay smartList="#rc.optionGroupSmartList#" 
 							   recordDetailAction="admin:entity.detailoptiongroup"
 							   recordEditAction="admin:entity.editoptiongroup"
 							   sortProperty="sortOrder">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="optionGroupName" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="optionGroupCode" search="true" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="optionGroupName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="optionGroupCode" search="true" />
+	</cf_HibachiListingDisplay>
 	
 </cfoutput>

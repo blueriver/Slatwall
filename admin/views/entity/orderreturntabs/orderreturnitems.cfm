@@ -39,12 +39,12 @@ Notes:
 <cfparam name="rc.orderReturn" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.orderReturn.getOrderReturnItemsSmartList()#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
-		<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantityReceived" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantityUnreceived" />
-	</cf_SlatwallListingDisplay>
+	<cf_HibachiListingDisplay smartList="#rc.orderReturn.getOrderReturnItemsSmartList()#">
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
+		<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
+		<cf_HibachiListingColumn propertyIdentifier="orderItemStatusType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="quantity" />
+		<cf_HibachiListingColumn propertyIdentifier="quantityReceived" />
+		<cf_HibachiListingColumn propertyIdentifier="quantityUnreceived" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

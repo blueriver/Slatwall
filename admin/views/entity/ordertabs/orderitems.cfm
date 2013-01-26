@@ -49,38 +49,38 @@ Notes:
 <cfoutput>
 	<cfif local.saleList.getRecordsCount() gt 0>
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderitems.saleItems')#</h4>
-		<cf_SlatwallListingDisplay smartList="#local.saleList#"
+		<cf_HibachiListingDisplay smartList="#local.saleList#"
 								   recordDetailAction="admin:entity.detailorderitem"
 								   recordDetailQueryString="returnAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#"
 								   recordEditAction="admin:entity.editorderitem"
 								   recordEditQueryString="returnAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#">
-			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
-			<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
-			<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
-			<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
-			<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-			<cf_SlatwallListingColumn propertyIdentifier="price" />
-			<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
-			<cf_SlatwallListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
-			<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
-		</cf_SlatwallListingDisplay>
+			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
+			<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
+			<cf_HibachiListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
+			<cf_HibachiListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
+			<cf_HibachiListingColumn propertyIdentifier="quantity" />
+			<cf_HibachiListingColumn propertyIdentifier="price" />
+			<cf_HibachiListingColumn propertyIdentifier="discountAmount" />
+			<cf_HibachiListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
+			<cf_HibachiListingColumn propertyIdentifier="quantityDelivered" />
+		</cf_HibachiListingDisplay>
 	</cfif>
 	
 	<cfif local.returnList.getRecordsCount() gt 0>
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderitems.returnItems')#</h4>
-		<cf_SlatwallListingDisplay smartList="#local.returnList#"
+		<cf_HibachiListingDisplay smartList="#local.returnList#"
 								   recordDetailAction="admin:entity.detailorderitem"
 								   recordEditAction="admin:entity.editorderitem">
-			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
-			<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
-			<cf_SlatwallListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
-			<cf_SlatwallListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
-			<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-			<cf_SlatwallListingColumn propertyIdentifier="price" />
-			<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
-			<cf_SlatwallListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
-			<cf_SlatwallListingColumn propertyIdentifier="quantityReceived" />
-		</cf_SlatwallListingDisplay>
+			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
+			<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
+			<cf_HibachiListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
+			<cf_HibachiListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
+			<cf_HibachiListingColumn propertyIdentifier="quantity" />
+			<cf_HibachiListingColumn propertyIdentifier="price" />
+			<cf_HibachiListingColumn propertyIdentifier="discountAmount" />
+			<cf_HibachiListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
+			<cf_HibachiListingColumn propertyIdentifier="quantityReceived" />
+		</cf_HibachiListingDisplay>
 	</cfif>
 	
 	<cf_HibachiActionCaller action="admin:entity.createorderitem" class="btn btn-inverse" icon="plus icon-white" queryString="orderID=#rc.order.getOrderID()#" modal=true />

@@ -41,19 +41,19 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.promotionperiod.getPromotionRewardsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.promotionperiod.getPromotionRewardsSmartList()#"
 							   recordEditAction="admin:entity.editpromotionreward"
 							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
 							   recorddetailaction="admin:entity.detailpromotionreward"
 							   recordDeleteAction="admin:entity.deletepromotionreward"
 							   recordDeleteQueryString="returnAction=admin:entity.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
-		<cf_SlatwallListingColumn propertyIdentifier="rewardType" tdclass="primary" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountType" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="amount" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="maximumUsePerOrder" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="maximumUsePerItem" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="maximumUsePerQualification" filter="true" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn propertyIdentifier="rewardType" tdclass="primary" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="amountType" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerOrder" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerItem" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerQualification" filter="true" />
+	</cf_HibachiListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>
 		<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" buttonClass="btn-inverse">

@@ -38,15 +38,15 @@ Notes:
 --->
 <cfoutput>
 
-	<cf_SlatwallListingDisplay smartList="#rc.productType.getProductsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.productType.getProductsSmartList()#"
 							   recordEditAction="admin:entity.editproduct"
 							   recordDetailAction="admin:entity.detailproduct">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
-		<cf_SlatwallListingColumn propertyIdentifier="productCode" search=true />
-		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="price" range=true />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" />
+		<cf_HibachiListingColumn propertyIdentifier="productCode" search=true />
+		<cf_HibachiListingColumn propertyIdentifier="brand.brandName" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="publishedFlag" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="price" range=true />
+	</cf_HibachiListingDisplay>
 	
 </cfoutput>

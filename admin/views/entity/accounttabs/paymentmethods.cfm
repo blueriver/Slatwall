@@ -38,19 +38,19 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
+<cf_HibachiListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
 		recordEditAction="admin:entity.editaccountpaymentmethod"
 		recordEditQueryString="accountID=#rc.account.getAccountID()#&returnAction=admin:entity.detailaccount"
 		recordEditModal=true
 		recordDeleteAction="admin:entity.deleteaccountpaymentmethod"
 		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:entity.detailaccount">
 			
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
-	<cf_SlatwallListingColumn propertyIdentifier="creditCardType" />
-	<cf_SlatwallListingColumn propertyIdentifier="creditCardLastFour" />
-	<cf_SlatwallListingColumn propertyIdentifier="expirationMonth" />
-	<cf_SlatwallListingColumn propertyIdentifier="expirationYear" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
+	<cf_HibachiListingColumn propertyIdentifier="creditCardType" />
+	<cf_HibachiListingColumn propertyIdentifier="creditCardLastFour" />
+	<cf_HibachiListingColumn propertyIdentifier="expirationMonth" />
+	<cf_HibachiListingColumn propertyIdentifier="expirationYear" />
+</cf_HibachiListingDisplay>
 
 <cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
 	<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">

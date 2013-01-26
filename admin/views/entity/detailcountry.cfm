@@ -43,36 +43,36 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.country#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.country#" edit="#rc.edit#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="countryCode" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="countryName" edit="#rc.edit#">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="countryCode" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="countryName" edit="#rc.edit#">
 				<hr />
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="streetAddressShowFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="streetAddressRequiredFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="streetAddressLabel" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="streetAddressShowFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="streetAddressRequiredFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="streetAddressLabel" edit="#rc.edit#">
 				<hr />
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="street2AddressShowFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="street2AddressRequiredFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="street2AddressLabel" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="street2AddressShowFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="street2AddressRequiredFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="street2AddressLabel" edit="#rc.edit#">
 				<hr />
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="localityShowFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="localityRequiredFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="localityLabel" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="localityShowFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="localityRequiredFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="localityLabel" edit="#rc.edit#">
 				<hr />
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="cityShowFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="cityRequiredFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="cityLabel" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="cityShowFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="cityRequiredFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="cityLabel" edit="#rc.edit#">
 				<hr />
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="stateCodeShowFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="stateCodeRequiredFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="stateCodeLabel" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="stateCodeShowFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="stateCodeRequiredFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="stateCodeLabel" edit="#rc.edit#">
 				<hr />
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="postalCodeShowFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="postalCodeRequiredFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.country#" property="postalCodeLabel" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="postalCodeShowFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="postalCodeRequiredFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="postalCodeLabel" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

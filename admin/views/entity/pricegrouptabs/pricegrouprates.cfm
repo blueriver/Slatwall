@@ -38,13 +38,13 @@ Notes:
 --->
 <cfparam name="rc.priceGroup" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.priceGroup.getPriceGroupRatesSmartList()#"
+<cf_HibachiListingDisplay smartList="#rc.priceGroup.getPriceGroupRatesSmartList()#"
 						   recordDetailAction="admin:entity.detailpricegrouprate"
 						   recordEditAction="admin:entity.editpricegrouprate">
-	<cf_SlatwallListingColumn propertyIdentifier="amount" />
-	<cf_SlatwallListingColumn propertyIdentifier="amountType" />
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="appliesTo" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn propertyIdentifier="amount" />
+	<cf_HibachiListingColumn propertyIdentifier="amountType" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="appliesTo" />
+</cf_HibachiListingDisplay>
 
 <cf_HibachiActionCaller action="admin:entity.createpricegrouprate" class="btn btn-inverse" icon="plus icon-white" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" modal="true" />
 	

@@ -43,20 +43,20 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.currency#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.currency#" edit="#rc.edit#"></cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="currencyCode">
-				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="currencyName">
-				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="currencySymbol" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.currency#" property="formattedExample">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.currency#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.currency#" property="currencyCode">
+				<cf_HibachiPropertyDisplay object="#rc.currency#" property="currencyName">
+				<cf_HibachiPropertyDisplay object="#rc.currency#" property="currencySymbol" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.currency#" property="formattedExample">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 		<!---
-		<cf_SlatwallTabGroup object="#rc.currency#">
-			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.currency#">
+			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->
+		</cf_HibachiTabGroup>
 		--->
 		
 	</cf_HibachiCrudDetailForm>

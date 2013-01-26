@@ -45,17 +45,17 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createproduct" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.subscription')# #rc.$.slatwall.rbKey('entity.product')#" querystring="baseProductType=subscription" />
 	</cf_HibachiCrudActionBar>
 	
-	<cf_SlatwallListingDisplay smartList="#rc.productSmartList#"
+	<cf_HibachiListingDisplay smartList="#rc.productSmartList#"
 			recordEditAction="admin:entity.editproduct"
 			recorddetailaction="admin:entity.detailproduct">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" search=true  />
-		<cf_SlatwallListingColumn propertyIdentifier="productCode" search=true />
-		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="defaultSku.price" range=true />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="calculatedQATS" range=true />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" search=true  />
+		<cf_HibachiListingColumn propertyIdentifier="productCode" search=true />
+		<cf_HibachiListingColumn propertyIdentifier="productType.productTypeName" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="brand.brandName" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="defaultSku.price" range=true />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="publishedFlag" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range=true />
+	</cf_HibachiListingDisplay>
 	
 </cfoutput>

@@ -44,17 +44,17 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.vendorOrderItemSmartList#" showCreate="false" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.vendorOrderItemSmartList#"
+	<cf_HibachiListingDisplay smartList="#rc.vendorOrderItemSmartList#"
 							   recorddetailaction="admin:entity.detailvendororderitem"
 							   recorddetailmodal="true"
 							   recordeditaction="admin:entity.editvendororderitem"
 							   recordeditmodal="true">
-		<cf_SlatwallListingColumn propertyIdentifier="vendorOrder.vendor.vendorName" search="true" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="vendorOrder.vendorOrderNumber" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="vendorOrder.vendorOrderStatusType.type" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="stock.sku.product.brand.brandName" range="true" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.calculatedTitle" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="stock.sku.skuCode" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantity" range="true" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn propertyIdentifier="vendorOrder.vendor.vendorName" search="true" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="vendorOrder.vendorOrderNumber" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="vendorOrder.vendorOrderStatusType.type" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="stock.sku.product.brand.brandName" range="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.calculatedTitle" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="stock.sku.skuCode" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="quantity" range="true" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

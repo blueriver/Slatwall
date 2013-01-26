@@ -52,7 +52,7 @@ Notes:
 		
 		<cf_HibachiCrudActionBar type="process" />
 		
-		<cf_SlatwallFieldDisplay fieldName="processcontext" title="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processContext')#" fieldType="select" valueOptions="#rc.processContextOptions#" value="#rc.processcontext#" edit="true" />
+		<cf_HibachiFieldDisplay fieldName="processcontext" title="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processContext')#" fieldType="select" valueOptions="#rc.processContextOptions#" value="#rc.processcontext#" edit="true" />
 		
 		<cf_SlatwallProcessListing processSmartList="#rc.processSubscriptionUsageSmartList#">
 			<cf_SlatwallProcessColumn propertyIdentifier="subscriptionOrderItemName" />

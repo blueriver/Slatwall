@@ -43,25 +43,25 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#" backaction="admin:entity.detailaccount" backquerystring="accountID=#rc.accountPayment.getAccount().getAccountID()#"></cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divClass="span6">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList divClass="span6">
 				<cfif rc.accountPayment.getPaymentMethodType() eq "creditCard">
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="creditCardType" />
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="expirationMonth" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="expirationYear" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="creditCardType" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="expirationMonth" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="expirationYear" edit="#rc.edit#" />
 				</cfif>
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divClass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="amount" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="amountReceived" />
-				<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="amountCredited" />
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="amount" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="amountReceived" />
+				<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="amountCredited" />
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.accountPayment#">
-			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.accountPayment#">
+			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

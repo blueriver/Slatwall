@@ -39,16 +39,16 @@ Notes:
 <cfparam name="rc.orderPayment" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.orderPayment.getPaymentTransactionsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.orderPayment.getPaymentTransactionsSmartList()#"
 			recordDetailAction="admin:entity.detailpaymenttransaction"
 			recordDetailModal="true">
 		
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />		
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="transactionType" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountAuthorized" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />		
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="transactionType" />
+		<cf_HibachiListingColumn propertyIdentifier="amountAuthorized" />
+		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
+		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
 		
 		
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 </cfoutput>

@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 	<cfset local.images = rc.product.getProductImages() />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.product.getProductImagesSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.product.getProductImagesSmartList()#"
 							   recordDetailAction="admin:main.detailImage"
 							   recordDetailModal="true"
 							   recordEditAction="admin:main.editImage"
@@ -50,10 +50,10 @@ Notes:
 							   recordDeleteAction="admin:main.deleteImage"
 							   recorddeletequerystring="returnAction=product.editproduct&productID=#rc.product.getProductID()###tabalternateimages">
 				
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="imageName" />
-		<cf_SlatwallListingColumn propertyIdentifier="imageDescription" />
-		<cf_SlatwallListingColumn propertyIdentifier="imageType.type" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="imageName" />
+		<cf_HibachiListingColumn propertyIdentifier="imageDescription" />
+		<cf_HibachiListingColumn propertyIdentifier="imageType.type" />
+	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:main.createimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:entity.detailproduct" modal=true />
 </cfoutput>

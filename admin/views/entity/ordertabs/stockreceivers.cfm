@@ -40,10 +40,10 @@ Notes:
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getStockReceiversSmartList()#" 
+	<cf_HibachiListingDisplay smartList="#rc.order.getStockReceiversSmartList()#" 
 			recordDetailAction="admin:warehouse.detailstockreceiver">
-		<cf_SlatwallListingColumn tdClass="primary" propertyIdentifier="packingSlipNumber" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="boxCount" />
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdClass="primary" propertyIdentifier="packingSlipNumber" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="boxCount" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

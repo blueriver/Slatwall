@@ -47,11 +47,11 @@ Notes:
 	<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.termPayment')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=termPayment" />
 </cf_HibachiCrudActionBar>
 
-<cf_SlatwallListingDisplay smartList="#rc.paymentMethodSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.paymentMethodSmartList#"
 						   recordDetailAction="admin:entity.detailpaymentmethod"
 						   recordEditAction="admin:entity.editpaymentmethod"
 						   sortProperty="sortOrder">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethodName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="paymentMethodType" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethodName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="paymentMethodType" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
+</cf_HibachiListingDisplay>

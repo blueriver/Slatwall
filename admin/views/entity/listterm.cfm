@@ -42,13 +42,13 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.termSmartList#" createModal="true" />
 
-<cf_SlatwallListingDisplay smartList="#rc.termSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.termSmartList#"
 						   recordEditAction="admin:entity.editterm"
 						   recordEditQueryString="returnAction=admin:entity.listterm"
 						   recordEditModal="true"
 						   recordDeleteAction="admin:entity.deleteterm"
 						   sortProperty="sortOrder">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="termName" search="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="termName" search="true" />
+</cf_HibachiListingDisplay>
 
 </cfoutput>

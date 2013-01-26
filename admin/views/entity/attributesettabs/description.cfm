@@ -36,4 +36,4 @@
 Notes:
 
 --->
-<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">

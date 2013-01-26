@@ -42,17 +42,17 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.orderSmartList#" />
 		
-	<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
+	<cf_HibachiListingDisplay smartList="#rc.orderSmartList#" 
 								recordDetailAction="admin:entity.detailorder">
-		<cf_SlatwallListingColumn propertyIdentifier="orderNumber" search="true" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.company" search="true"/>
-		<cf_SlatwallListingColumn propertyIdentifier="account.firstName" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="account.lastName" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="orderType.type" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="orderOrigin.orderOriginName" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime"  range=true />
-		<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime"  range=true />
-		<cf_SlatwallListingColumn propertyIdentifier="calculatedTotal" range=true />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn propertyIdentifier="orderNumber" search="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.company" search="true"/>
+		<cf_HibachiListingColumn propertyIdentifier="account.firstName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="account.lastName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="orderType.type" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="orderOrigin.orderOriginName" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime"  range=true />
+		<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime"  range=true />
+		<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" range=true />
+	</cf_HibachiListingDisplay>
 </cfoutput>

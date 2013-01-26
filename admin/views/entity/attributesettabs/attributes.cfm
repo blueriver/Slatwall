@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 
-	<cf_SlatwallListingDisplay smartList="#rc.attributeSet.getAttributesSmartList()#" 
+	<cf_HibachiListingDisplay smartList="#rc.attributeSet.getAttributesSmartList()#" 
 							   recordEditAction="admin:entity.editattribute" 
 							   recordEditQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
 							   recordDetailAction="admin:entity.detailattribute"
@@ -51,11 +51,11 @@ Notes:
 							   sortContextID="attributeSetID"
 							   sortContextIDValue="#rc.attributeSet.getAttributeSetID()#">
 							      
-		<cf_SlatwallListingColumn propertyIdentifier="attributeCode" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeName" />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="attributeType.type" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn propertyIdentifier="attributeCode" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="attributeName" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="attributeType.type" />
+	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createattribute" class="btn btn-inverse" icon="plus icon-white" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
 	

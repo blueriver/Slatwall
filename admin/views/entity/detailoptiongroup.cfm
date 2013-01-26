@@ -45,18 +45,18 @@ Notes:
 			<cf_HibachiActionCaller action="admin:entity.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="list" modal=true />
 		</cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="optionGroupName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="optionGroupCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.optiongroup#" property="imageGroupFlag" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.optiongroup#" property="optionGroupName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.optiongroup#" property="optionGroupCode" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.optiongroup#" property="imageGroupFlag" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.optiongroup#">
-			<cf_SlatwallTab view="admin:entity/optiongrouptabs/options" />
-			<cf_SlatwallTab view="admin:entity/optiongrouptabs/description" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.optiongroup#">
+			<cf_HibachiTab view="admin:entity/optiongrouptabs/options" />
+			<cf_HibachiTab view="admin:entity/optiongrouptabs/description" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

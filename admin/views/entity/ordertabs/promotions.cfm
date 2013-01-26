@@ -39,11 +39,11 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getPromotionCodesSmartList()#">
+	<cf_HibachiListingDisplay smartList="#rc.order.getPromotionCodesSmartList()#">
 			
-		<cf_SlatwallListingColumn propertyIdentifier="promotionCode" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotion.promotionName" />
+		<cf_HibachiListingColumn propertyIdentifier="promotionCode" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotion.promotionName" />
 		
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 	
 </cfoutput>

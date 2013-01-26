@@ -40,13 +40,13 @@ Notes:
 
 <cfoutput>
 	
-	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderDeliveriesSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.order.getOrderDeliveriesSmartList()#"
 			recordDetailAction="admin:entity.detailorderdelivery"
 			recordDetailModal="true">
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" />
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" />
-		<cf_SlatwallListingColumn propertyIdentifier="totalQuantityDelivered" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="totalQuantityDelivered" />
 		
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 </cfoutput>

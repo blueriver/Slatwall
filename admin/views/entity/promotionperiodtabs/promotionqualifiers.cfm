@@ -41,14 +41,14 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.promotionperiod.getPromotionQualifiersSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.promotionperiod.getPromotionQualifiersSmartList()#"
 							   recordEditAction="admin:entity.editpromotionqualifier"
 							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
 							   recorddetailaction="admin:entity.detailpromotionqualifier"
 							   recordDeleteAction="admin:entity.deletepromotionqualifier"
 							   recordDeleteQueryString="returnAction=admin:entity.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="qualifierType" filter="true" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="qualifierType" filter="true" />
+	</cf_HibachiListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>
 		<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" buttonClass="btn-inverse">

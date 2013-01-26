@@ -39,4 +39,4 @@ Notes:
 <cfparam name="rc.product" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_SlatwallPropertyDisplay object="#rc.product#" property="listingPages" edit="#rc.edit#" displayType="plain">
+<cf_HibachiPropertyDisplay object="#rc.product#" property="listingPages" edit="#rc.edit#" displayType="plain">

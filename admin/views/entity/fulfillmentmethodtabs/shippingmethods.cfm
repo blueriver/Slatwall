@@ -39,17 +39,17 @@ Notes:
 <cfparam name="rc.fulfillmentMethod" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.fulfillmentMethod.getShippingMethodsSmartList()#" 
+	<cf_HibachiListingDisplay smartList="#rc.fulfillmentMethod.getShippingMethodsSmartList()#" 
 							   recordEditAction="admin:entity.editshippingmethod" 
 							   recordDetailAction="admin:entity.detailshippingmethod"
 							   sortproperty="sortOrder"
 							   sortContextIDColumn="fulfillmentMethodID"
 							   sortContextIDValue="#rc.fulfillmentMethod.getFulfillmentMethodID()#">
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="shippingMethodName" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="activeFlag" filter="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="shippingMethodName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="activeFlag" filter="true" />
 		
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createshippingmethod" class="btn btn-inverse" icon="plus icon-white" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
 </cfoutput>

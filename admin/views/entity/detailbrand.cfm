@@ -43,22 +43,22 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.brand#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.brand#" edit="#rc.edit#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandWebsite" edit="#rc.edit#">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.Brand#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.Brand#" property="brandWebsite" edit="#rc.edit#">
 				<cfif not rc.brand.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="urlTitle" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.Brand#" property="urlTitle" edit="#rc.edit#">
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.brand#" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:entity/brandtabs/products" />
-			<cf_SlatwallTab view="admin:entity/brandtabs/vendors" />
-			<cf_SlatwallTab view="admin:entity/brandtabs/brandsettings" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.brand#" allowCustomAttributes="true">
+			<cf_HibachiTab view="admin:entity/brandtabs/products" />
+			<cf_HibachiTab view="admin:entity/brandtabs/vendors" />
+			<cf_HibachiTab view="admin:entity/brandtabs/brandsettings" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

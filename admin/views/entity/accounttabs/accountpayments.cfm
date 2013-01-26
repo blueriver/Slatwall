@@ -39,17 +39,17 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.account.getAccountPaymentsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.account.getAccountPaymentsSmartList()#"
 							   recordDetailAction="admin:entity.detailaccountpayment"
 							   recordEditAction="admin:entity.editaccountpayment">
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
-		<cf_SlatwallListingColumn propertyIdentifier="accountPaymentType.type" />
-		<cf_SlatwallListingColumn propertyIdentifier="amount" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountReceived" />
-		<cf_SlatwallListingColumn propertyIdentifier="amountCredited" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_HibachiListingColumn propertyIdentifier="accountPaymentType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" />
+		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
+		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
 		
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('define.charge')#" icon="plus" buttonClass="btn-inverse">
 		<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">

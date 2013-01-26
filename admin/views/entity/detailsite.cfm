@@ -43,15 +43,15 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.site#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.site#" edit="#rc.edit#"></cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.site#" property="siteName" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.site#" property="siteName" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.site#">
-			<!--- <cf_SlatwallTab view="admin:section/tabsfolder/view" /> --->
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.site#">
+			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

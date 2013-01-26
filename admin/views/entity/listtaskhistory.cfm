@@ -45,12 +45,12 @@ Notes:
 
 <cfoutput>
 
-	<cf_slatwalllistingdisplay smartlist="#rc.taskHistorySmartList#" >
-		<cf_slatwalllistingcolumn propertyidentifier="startTime" />
-		<cf_slatwalllistingcolumn propertyidentifier="endTime" />
-		<cf_slatwalllistingcolumn propertyidentifier="task.taskName" tdclass="primary" search="true" />
-		<cf_slatwalllistingcolumn propertyidentifier="successFlag" filter="true" />
-		<cf_slatwalllistingcolumn propertyidentifier="response" />
-	</cf_slatwalllistingdisplay>
+	<cf_HibachiListingDisplay smartlist="#rc.taskHistorySmartList#" >
+		<cf_HibachiListingColumn propertyidentifier="startTime" />
+		<cf_HibachiListingColumn propertyidentifier="endTime" />
+		<cf_HibachiListingColumn propertyidentifier="task.taskName" tdclass="primary" search="true" />
+		<cf_HibachiListingColumn propertyidentifier="successFlag" filter="true" />
+		<cf_HibachiListingColumn propertyidentifier="response" />
+	</cf_HibachiListingDisplay>
 
 </cfoutput>

@@ -46,15 +46,15 @@ Notes:
 		<input type="hidden" name="task.taskID" value="#rc.task.getTaskID()#"/>
 		<input type="hidden" name="returnAction" value="admin:entity.edittask&taskID=#rc.task.getTaskID()###tabtaskschedule" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="schedule" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="startDateTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="endDateTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="successEmailList" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.taskschedule#" property="failureEmailList" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.taskschedule#" property="schedule" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.taskschedule#" property="startDateTime" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.taskschedule#" property="endDateTime" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.taskschedule#" property="successEmailList" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.taskschedule#" property="failureEmailList" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

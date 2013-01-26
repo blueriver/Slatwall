@@ -42,5 +42,5 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallPropertyDisplay object="#rc.promotionReward#" property="shippingAddressZones" edit="#rc.edit#" displaytype="plain" />
+	<cf_HibachiPropertyDisplay object="#rc.promotionReward#" property="shippingAddressZones" edit="#rc.edit#" displaytype="plain" />
 </cfoutput>

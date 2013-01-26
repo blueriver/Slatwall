@@ -45,15 +45,15 @@ Notes:
 		<cf_HibachiCrudActionBar type="detail" object="#rc.stockReceiver#" edit="#rc.edit#">
 		</cf_HibachiCrudActionBar>
 			
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.stockReceiver#" property="packingSlipNumber" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.stockReceiver#" property="boxCount" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.stockReceiver#" property="packingSlipNumber" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.stockReceiver#" property="boxCount" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.stockReceiver#">
-			<cf_SlatwallTab view="admin:entity/stockreceivertabs/stockreceiveritems" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.stockReceiver#">
+			<cf_HibachiTab view="admin:entity/stockreceivertabs/stockreceiveritems" />
+		</cf_HibachiTabGroup>
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

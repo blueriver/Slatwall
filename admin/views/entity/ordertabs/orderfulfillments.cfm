@@ -40,14 +40,14 @@ Notes:
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderFulfillmentsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.order.getOrderFulfillmentsSmartList()#"
 							   recordDetailAction="admin:entity.detailorderfulfillment"
 							   recordEditAction="admin:entity.editorderfulfillment">
-		<cf_SlatwallListingColumn tdClass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" filter=true />
-		<cf_SlatwallListingColumn propertyIdentifier="fulfillmentCharge" />
-		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
-		<cf_SlatwallListingColumn propertyIdentifier="chargeAfterDiscount" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantityDelivered" />
-		<cf_SlatwallListingColumn propertyIdentifier="quantityUndelivered" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdClass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" filter=true />
+		<cf_HibachiListingColumn propertyIdentifier="fulfillmentCharge" />
+		<cf_HibachiListingColumn propertyIdentifier="discountAmount" />
+		<cf_HibachiListingColumn propertyIdentifier="chargeAfterDiscount" />
+		<cf_HibachiListingColumn propertyIdentifier="quantityDelivered" />
+		<cf_HibachiListingColumn propertyIdentifier="quantityUndelivered" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

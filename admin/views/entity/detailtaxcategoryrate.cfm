@@ -44,13 +44,13 @@ Notes:
 	
 	<cfoutput><input type="hidden" name="taxcategoryrates[1].taxcategoryrateid" value="#rc.taxCategoryRate.getTaxCategoryRateID()#" /></cfoutput>
 	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.taxCategoryRate#" fieldname="taxcategoryrates[1].taxRate" property="taxrate" edit="#rc.edit#">
+	<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.taxCategoryRate#" fieldname="taxcategoryrates[1].taxRate" property="taxrate" edit="#rc.edit#">
 			
 			<cfset rc.taxCategoryRate.getAddressZoneOptions()[1]["name"] = request.slatwallScope.rbKey('define.all') />
-			<cf_SlatwallPropertyDisplay object="#rc.taxCategoryRate#" fieldname="taxcategoryrates[1].addressZone.addressZoneID" property="addressZone" edit="#rc.edit#">
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
+			<cf_HibachiPropertyDisplay object="#rc.taxCategoryRate#" fieldname="taxcategoryrates[1].addressZone.addressZoneID" property="addressZone" edit="#rc.edit#">
+		</cf_HibachiPropertyList>
+	</cf_HibachiDetailHeader>
 	
 </cf_HibachiCrudDetailForm>

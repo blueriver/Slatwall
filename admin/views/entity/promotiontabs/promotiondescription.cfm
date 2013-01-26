@@ -37,6 +37,6 @@ Notes:
 
 --->
 
-<cf_SlatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg" displaytype="plain">
-</cf_SlatwallPropertyList>
+<cf_HibachiPropertyList>
+	<cf_HibachiPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg" displaytype="plain">
+</cf_HibachiPropertyList>

@@ -43,12 +43,12 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.Type#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.Type#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.Type#" property="systemCode" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.Type#" property="type" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.Type#" property="systemCode" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.Type#" property="type" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

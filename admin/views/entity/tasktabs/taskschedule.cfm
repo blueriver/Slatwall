@@ -38,18 +38,18 @@ Notes:
 --->
 <cfparam name="rc.task" type="any"/>
 
-<cf_slatwalllistingdisplay smartlist="#rc.task.getTaskSchedulesSmartList()#" 
+<cf_HibachiListingDisplay smartlist="#rc.task.getTaskSchedulesSmartList()#" 
                         recordeditaction="admin:entity.editTaskSchedule" recordeditmodal="true" 
                         recordeditquerystring="taskID=#rc.task.getTaskID()#" 
                         recorddeleteaction="admin:entity.deleteTaskSchedule"
 						recorddeletequerystring="returnAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule"
                         recordprocessaction="admin:entity.processtaskschedule"
                         recordprocessmodal="true">
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="startDateTime"/>
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="endDateTime"/>
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="schedule.schedulename"/>
-	<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
-</cf_slatwalllistingdisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="startDateTime"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="endDateTime"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="schedule.schedulename"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
+</cf_HibachiListingDisplay>
 
 <cf_HibachiActionCaller action="admin:entity.createTaskSchedule" class="btn btn-inverse" icon="plus icon-white" 
                       querystring="taskID=#rc.task.getTaskID()#" modal=true/>

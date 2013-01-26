@@ -46,12 +46,12 @@ Notes:
 		<input type="hidden" name="skuID" value="#rc.sku.getSkuID()#" />
 		<input type="hidden" name="alternateSkuCodes[1].alternateSkuCodeID" value="#rc.alternateSkuCode.getAlternateSkuCodeID()#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.alternateSkuCode#" fieldName="alternateSkuCodes[1].alternateSkuCode" property="alternateSkuCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.alternateSkuCode#" fieldName="alternateSkuCodes[1].alternateSkuCodeType.typeID" property="alternateSkuCodeType" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.alternateSkuCode#" fieldName="alternateSkuCodes[1].alternateSkuCode" property="alternateSkuCode" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.alternateSkuCode#" fieldName="alternateSkuCodes[1].alternateSkuCodeType.typeID" property="alternateSkuCodeType" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 		
 	</cf_HibachiCrudDetailForm>

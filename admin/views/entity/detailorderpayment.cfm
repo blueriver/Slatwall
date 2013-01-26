@@ -49,27 +49,27 @@ Notes:
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="offlineTransaction" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 		</cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divClass="span6">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList divClass="span6">
 				<cfif rc.orderPayment.getPaymentMethodType() eq "creditCard">
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="creditCardType" />
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="creditCardType" />
+					<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="expirationMonth" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="expirationYear" edit="#rc.edit#" />
 				<cfelseif rc.orderPayment.getPaymentMethodType() eq "termPayment">
-					<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="termPaymentAccount" edit="false" />
+					<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="termPaymentAccount" edit="false" />
 				</cfif>
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divClass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountReceived" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amountCredited" />
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amountReceived" />
+				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amountCredited" />
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.orderPayment#" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:entity/orderpaymenttabs/paymenttransactions" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.orderPayment#" allowCustomAttributes="true">
+			<cf_HibachiTab view="admin:entity/orderpaymenttabs/paymenttransactions" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -46,19 +46,19 @@ Notes:
 		</cfif>
 	</cf_HibachiCrudActionBar>
 	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="activeFlag" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodType" edit="#rc.fulfillmentMethod.isNew()#">
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
+	<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.fulfillmentMethod#" property="activeFlag" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodName" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodType" edit="#rc.fulfillmentMethod.isNew()#">
+		</cf_HibachiPropertyList>
+	</cf_HibachiDetailHeader>
 	
-	<cf_SlatwallTabGroup object="#rc.fulfillmentMethod#">
+	<cf_HibachiTabGroup object="#rc.fulfillmentMethod#">
 		<cfif rc.fulfillmentMethod.getFulfillmentMethodType() eq "shipping">
-			<cf_SlatwallTab view="admin:entity/fulfillmentmethodtabs/shippingmethods">	
+			<cf_HibachiTab view="admin:entity/fulfillmentmethodtabs/shippingmethods">	
 		</cfif>
-		<cf_SlatwallTab view="admin:entity/fulfillmentmethodtabs/fulfillmentsettings">
-	</cf_SlatwallTabGroup>
+		<cf_HibachiTab view="admin:entity/fulfillmentmethodtabs/fulfillmentsettings">
+	</cf_HibachiTabGroup>
 
 </cf_HibachiCrudDetailForm>

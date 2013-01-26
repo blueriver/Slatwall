@@ -42,14 +42,14 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.orderOriginSmartList#" createModal="true" />
 
-<cf_SlatwallListingDisplay smartList="#rc.orderOriginSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.orderOriginSmartList#"
 		recordEditAction="admin:entity.editorderorigin"
 		recordEditQueryString="returnAction=admin:entity.listorderorigin"
 		recordDeleteAction="admin:entity.deleteorderorigin"
 		recordEditModal="true">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderOriginName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderOriginType" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="activeFlag" filter="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderOriginName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="orderOriginType" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
+</cf_HibachiListingDisplay>
 
 </cfoutput>

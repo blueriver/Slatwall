@@ -40,5 +40,5 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="fulfillmentMethods" edit="#rc.edit#" displaytype="plain" />
+	<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="fulfillmentMethods" edit="#rc.edit#" displaytype="plain" />
 </cfoutput>

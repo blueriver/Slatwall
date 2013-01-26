@@ -42,12 +42,12 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.contentSmartList#" showCreate="false" />
 
-<cf_SlatwallListingDisplay smartList="#rc.contentSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.contentSmartList#"
 						   recordDetailAction="admin:entity.detailcontent"
 						   recordEditAction="admin:entity.editcontent">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="templateFlag" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="allowPurchaseFlag" filter="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="title" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="templateFlag" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="allowPurchaseFlag" filter="true" />
+</cf_HibachiListingDisplay>
 
 </cfoutput>

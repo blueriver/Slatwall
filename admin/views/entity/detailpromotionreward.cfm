@@ -57,41 +57,41 @@ Notes:
 							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" 
 							  backAction="admin:entity.detailpromotionperiod" 
 							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" />
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
 				<input type="hidden" name="rewardType" value="#rc.rewardType#" />
 				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 				
-				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amountType" fieldType="select" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="roundingRule" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="amountType" fieldType="select" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="roundingRule" edit="#rc.edit#" />
 				
 				<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.rewardType)>
 					<cfif rc.rewardType eq "subscription">
-						<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="applicableTerm" edit="#rc.edit#" />
+						<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="applicableTerm" edit="#rc.edit#" />
 					</cfif>
-					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerOrder" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerItem" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerQualification" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerOrder" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerItem" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerQualification" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.promotionreward#">
+		<cf_HibachiTabGroup object="#rc.promotionreward#">
 			<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.rewardType)>
-				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/producttypes" />
-				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/products" />
-				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/skus" />
-				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/brands" />
+				<cf_HibachiTab view="admin:entity/promotionrewardtabs/producttypes" />
+				<cf_HibachiTab view="admin:entity/promotionrewardtabs/products" />
+				<cf_HibachiTab view="admin:entity/promotionrewardtabs/skus" />
+				<cf_HibachiTab view="admin:entity/promotionrewardtabs/brands" />
 				<cfif rc.rewardType eq "merchandise">
-					<cf_SlatwallTab view="admin:entity/promotionrewardtabs/options" />
+					<cf_HibachiTab view="admin:entity/promotionrewardtabs/options" />
 				</cfif>
 			<cfelseif rc.rewardType eq "fulfillment">
-				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/fulfillmentMethods" />
-				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/shippingMethods" />
-				<cf_SlatwallTab view="admin:entity/promotionrewardtabs/shippingAddressZones" />
+				<cf_HibachiTab view="admin:entity/promotionrewardtabs/fulfillmentMethods" />
+				<cf_HibachiTab view="admin:entity/promotionrewardtabs/shippingMethods" />
+				<cf_HibachiTab view="admin:entity/promotionrewardtabs/shippingAddressZones" />
 			</cfif>
-		</cf_SlatwallTabGroup>
+		</cf_HibachiTabGroup>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

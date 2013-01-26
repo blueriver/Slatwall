@@ -42,11 +42,11 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.integrationSmartList#" showCreate="false" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.integrationSmartList#" recordDetailAction="admin:integration.detailintegration" recordEditAction="admin:integration.editintegration">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="integrationName" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="fw1ActiveFlag" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="paymentActiveFlag" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="shippingActiveFlag" filter="true" />
-	</cf_SlatwallListingDisplay>
+	<cf_HibachiListingDisplay smartList="#rc.integrationSmartList#" recordDetailAction="admin:integration.detailintegration" recordEditAction="admin:integration.editintegration">
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="integrationName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="fw1ActiveFlag" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="paymentActiveFlag" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="shippingActiveFlag" filter="true" />
+	</cf_HibachiListingDisplay>
 
 </cfoutput>

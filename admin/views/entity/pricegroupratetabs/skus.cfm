@@ -39,4 +39,4 @@ Notes:
 <cfparam name="rc.priceGroupRate" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<cf_SlatwallPropertyDisplay object="#rc.pricegrouprate#" property="skus" edit="#rc.edit#" displaytype="plain" />
+<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="skus" edit="#rc.edit#" displaytype="plain" />

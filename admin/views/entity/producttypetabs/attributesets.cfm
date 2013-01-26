@@ -40,5 +40,5 @@ Notes:
 <cfparam name="rc.edit" default="false" >
 
 <cfoutput>
-	<cf_SlatwallPropertyDisplay object="#rc.productType#" property="attributeSets" edit="#rc.edit#" displayType="plain" />
+	<cf_HibachiPropertyDisplay object="#rc.productType#" property="attributeSets" edit="#rc.edit#" displayType="plain" />
 </cfoutput>

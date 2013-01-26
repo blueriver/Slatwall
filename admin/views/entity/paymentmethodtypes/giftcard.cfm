@@ -38,6 +38,6 @@ Notes:
 --->
 <cfparam name="rc.paymentMethod" type="any" />
 
-<cf_SlatwallTabGroup object="#rc.paymentMethod#">
-	<cf_SlatwallTab view="admin:entity/paymentmethodtypes/giftcardtabs/settings" />
-</cf_SlatwallTabGroup>
+<cf_HibachiTabGroup object="#rc.paymentMethod#">
+	<cf_HibachiTab view="admin:entity/paymentmethodtypes/giftcardtabs/settings" />
+</cf_HibachiTabGroup>

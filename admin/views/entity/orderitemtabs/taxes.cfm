@@ -39,10 +39,10 @@ Notes:
 <cfparam name="rc.orderItem" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.orderItem.getAppliedTaxesSmartList()#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="taxCategoryRate.taxCategory.taxCategoryName" />
-		<cf_SlatwallListingColumn propertyIdentifier="taxCategoryRate.addressZone.addressZoneName" />
-		<cf_SlatwallListingColumn propertyIdentifier="taxRate" />
-		<cf_SlatwallListingColumn propertyIdentifier="taxAmount" />
-	</cf_SlatwallListingDisplay>
+	<cf_HibachiListingDisplay smartList="#rc.orderItem.getAppliedTaxesSmartList()#">
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="taxCategoryRate.taxCategory.taxCategoryName" />
+		<cf_HibachiListingColumn propertyIdentifier="taxCategoryRate.addressZone.addressZoneName" />
+		<cf_HibachiListingColumn propertyIdentifier="taxRate" />
+		<cf_HibachiListingColumn propertyIdentifier="taxAmount" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

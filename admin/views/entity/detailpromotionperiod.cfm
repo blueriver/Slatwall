@@ -60,20 +60,20 @@ Notes:
 							  	  
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
 
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="startdatetime" edit="#rc.edit#" fieldclass="noautofocus">
-				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="enddatetime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumusecount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotionperiod#" property="maximumaccountusecount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.promotionperiod#" property="startdatetime" edit="#rc.edit#" fieldclass="noautofocus">
+				<cf_HibachiPropertyDisplay object="#rc.promotionperiod#" property="enddatetime" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.promotionperiod#" property="maximumusecount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+				<cf_HibachiPropertyDisplay object="#rc.promotionperiod#" property="maximumaccountusecount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
 	</cf_HibachiCrudDetailForm>
 	
-	<cf_SlatwallTabGroup object="#rc.promotionperiod#">
-			<cf_SlatwallTab view="admin:entity/promotionperiodtabs/promotionrewards" />
-			<cf_SlatwallTab view="admin:entity/promotionperiodtabs/promotionqualifiers" />
-	</cf_SlatwallTabGroup>
+	<cf_HibachiTabGroup object="#rc.promotionperiod#">
+			<cf_HibachiTab view="admin:entity/promotionperiodtabs/promotionrewards" />
+			<cf_HibachiTab view="admin:entity/promotionperiodtabs/promotionqualifiers" />
+	</cf_HibachiTabGroup>
 	
 </cfoutput>

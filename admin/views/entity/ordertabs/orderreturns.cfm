@@ -40,16 +40,16 @@ Notes:
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getOrderReturnsSmartList()#" 
+	<cf_HibachiListingDisplay smartList="#rc.order.getOrderReturnsSmartList()#" 
 			recordDetailAction="admin:entity.detailorderreturn"
 			recordProcessAction="admin:entity.processorderreturn"
 			recordProcessContext="receiveReturn"
 			recordProcessModal="true">
-		<cf_SlatwallListingColumn tdClass="primary" propertyIdentifier="returnLocation.locationName" filter=true />
+		<cf_HibachiListingColumn tdClass="primary" propertyIdentifier="returnLocation.locationName" filter=true />
 		<!---
-		<cf_SlatwallListingColumn propertyIdentifier="fulfillmentCharge" />
-		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
-		<cf_SlatwallListingColumn propertyIdentifier="chargeAfterDiscount" />
+		<cf_HibachiListingColumn propertyIdentifier="fulfillmentCharge" />
+		<cf_HibachiListingColumn propertyIdentifier="discountAmount" />
+		<cf_HibachiListingColumn propertyIdentifier="chargeAfterDiscount" />
 		--->
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 </cfoutput>

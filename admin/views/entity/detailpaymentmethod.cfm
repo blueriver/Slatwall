@@ -50,18 +50,18 @@ Notes:
 	
 		<input type="hidden" name="paymentMethodType" value="#rc.paymentMethod.getPaymentMethodType()#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
 				<cfif rc.paymentMethod.getPaymentMethodType() neq "cash" and rc.paymentMethod.getPaymentMethodType() neq "termPayment">
-					<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="paymentIntegration" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="paymentIntegration" edit="#rc.edit#">
 				</cfif>
 				<cfif rc.paymentMethod.getPaymentMethodType() eq "creditCard">
-					<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="allowSaveFlag" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="allowSaveFlag" edit="#rc.edit#">
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 		<cfif not rc.paymentMethod.isNew()>
 			<cfoutput>#view("admin:entity/paymentmethodtypes/#lcase(rc.paymentMethod.getPaymentMethodType())#")#</cfoutput>

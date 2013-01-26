@@ -38,13 +38,13 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getOrdersSmartList()#"
+<cf_HibachiListingDisplay smartList="#rc.account.getOrdersSmartList()#"
 		recordDetailAction="admin:entity.detailorder"
 		recordDetailQueryString="accountID=#rc.account.getAccountID()#">
 
-	<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" range="true" />
-	<cf_SlatwallListingColumn tdclass="primary"  propertyIdentifier="account.fullName" />
-	<cf_SlatwallListingColumn propertyIdentifier="orderStatusType.type" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="total" range="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn propertyIdentifier="orderNumber" />
+	<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" range="true" />
+	<cf_HibachiListingColumn tdclass="primary"  propertyIdentifier="account.fullName" />
+	<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="total" range="true" />
+</cf_HibachiListingDisplay>

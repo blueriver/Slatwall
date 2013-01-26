@@ -1,42 +1,7 @@
-<!---
-
-    Slatwall - An Open Source eCommerce Platform
-    Copyright (C) 2011 ten24, LLC
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
-    Linking this library statically or dynamically with other modules is
-    making a combined work based on this library.  Thus, the terms and
-    conditions of the GNU General Public License cover the whole
-    combination.
- 
-    As a special exception, the copyright holders of this library give you
-    permission to link this library with independent modules to produce an
-    executable, regardless of the license terms of these independent
-    modules, and to copy and distribute the resulting executable under
-    terms of your choice, provided that you also meet, for each linked
-    independent module, the terms and conditions of the license of that
-    module.  An independent module is a module which is not derived from
-    or based on this library.  If you modify this library, you may extend
-    this exception to your version of the library, but you are not
-    obligated to do so.  If you do not wish to do so, delete this
-    exception statement from your version.
-
-Notes:
-
---->
 <cfif thisTag.executionMode eq "end">
+	<!--- Implicit --->
+	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />	
+	
 	<!--- Required --->
 	<cfparam name="attributes.smartList" type="any" />
 	<cfparam name="attributes.edit" type="boolean" default="false" />
@@ -89,7 +54,7 @@ Notes:
 
 	<cfsilent>
 		<cfif isSimpleValue(attributes.smartList)>
-			<cfset attributes.smartList = request.slatwallScope.getService("utilityORMService").getServiceByEntityName( attributes.smartList ).invokeMethod("get#attributes.smartList#SmartList") />
+			<cfset attributes.smartList = attributes.hibachiScope.getService("hibachiService").getServiceByEntityName( attributes.smartList ).invokeMethod("get#attributes.smartList#SmartList") />
 		</cfif>
 		
 		<!--- Setup the example entity --->
@@ -269,13 +234,13 @@ Notes:
 										<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
 										<ul class="dropdown-menu nav">
 											<cfif column.sort>
-												<li class="nav-header">#request.slatwallScope.rbKey('define.sort')#</li>
+												<li class="nav-header">#attributes.hibachiScope.rbKey('define.sort')#</li>
 												<li><a href="##" class="listing-sort" data-sortdirection="ASC"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
 												<li><a href="##" class="listing-sort" data-sortdirection="DESC"><i class="icon-arrow-up"></i> Sort Decending</a></li>
 											</cfif>
 											<cfif column.search>
 												<li class="divider"></li>
-												<li class="nav-header">#request.slatwallScope.rbKey('define.search')#</li>
+												<li class="nav-header">#attributes.hibachiScope.rbKey('define.search')#</li>
 												<li class="search-filter"><input type="text" class="listing-search span2" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
 											</cfif>
 											<cfif column.range>
@@ -287,13 +252,13 @@ Notes:
 													</cfif>
 												</cfsilent>
 												<li class="divider"></li>
-												<li class="nav-header">#request.slatwallScope.rbKey('define.range')#</li>
+												<li class="nav-header">#attributes.hibachiScope.rbKey('define.range')#</li>
 												<li class="range-filter"><label for="">From</label><input type="text" class="#local.rangeClass# range-filter-lower span2" name="R:#column.propertyIdentifier#" value="" /></li>
 												<li class="range-filter"><label for="">To</label><input type="text" class="#local.rangeClass# range-filter-upper span2" name="R:#column.propertyIdentifier#" value="" /></li>
 											</cfif>
 											<cfif column.filter>
 												<li class="divider"></li>
-												<li class="nav-header">#request.slatwallScope.rbKey('define.filter')#</li>
+												<li class="nav-header">#attributes.hibachiScope.rbKey('define.filter')#</li>
 												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
 												<div class="filter-scroll">
 													<input type="hidden" name="F:#column.propertyIdentifier#" value="#attributes.smartList.getFilters(column.propertyIdentifier)#" />
@@ -347,10 +312,10 @@ Notes:
 									<!---
 									<cfif attributes.recordProcessAction neq "">
 										<cfif attributes.recordProcessContext eq "process">
-											<cf_HibachiActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#request.slatwallScope.rbKey('define.process')#" disabled="#record.isNotProcessable()#" modal="#attributes.recordProcessModal#" />
+											<cf_HibachiActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#attributes.hibachiScope.rbKey('define.process')#" disabled="#record.isNotProcessable()#" modal="#attributes.recordProcessModal#" />
 										<cfelse>
 											<cfset attributes.recordProcessQueryString = "processContext=#attributes.recordProcessContext#&#attributes.recordProcessQueryString#" />
-											<cf_HibachiActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#request.slatwallScope.rbKey(replace(attributes.recordProcessAction,':','.') & '.#attributes.recordProcessContext#_nav')#" disabled="#record.isNotProcessable( attributes.recordProcessContext )#" modal="#attributes.recordProcessModal#" />
+											<cf_HibachiActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#attributes.hibachiScope.rbKey(replace(attributes.recordProcessAction,':','.') & '.#attributes.recordProcessContext#_nav')#" disabled="#record.isNotProcessable( attributes.recordProcessContext )#" modal="#attributes.recordProcessModal#" />
 										</cfif>
 									</cfif>
 									--->
@@ -388,7 +353,7 @@ Notes:
 			<cfif attributes.smartList.getTotalPages() gt 1>
 				<div class="pagination" data-tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#">
 					<ul>
-						<li><a href="##" class="paging-show-toggle">#request.slatwallScope.rbKey('define.show')# <span class="details">(#attributes.smartList.getPageRecordsStart()# - #attributes.smartList.getPageRecordsEnd()# #lcase(request.slatwallScope.rbKey('define.of'))# #attributes.smartList.getRecordsCount()#)</span></a></li>
+						<li><a href="##" class="paging-show-toggle">#attributes.hibachiScope.rbKey('define.show')# <span class="details">(#attributes.smartList.getPageRecordsStart()# - #attributes.smartList.getPageRecordsEnd()# #lcase(attributes.hibachiScope.rbKey('define.of'))# #attributes.smartList.getRecordsCount()#)</span></a></li>
 						<li><a href="##" class="show-option" data-show="10">10</a></li>
 						<li><a href="##" class="show-option" data-show="25">25</a></li>
 						<li><a href="##" class="show-option" data-show="50">50</a></li>
@@ -420,7 +385,7 @@ Notes:
 				</div>
 			</cfif>
 		<cfelse>
-			<p><em>#replace(request.slatwallScope.rbKey("entity.define.norecords"), "${entityNamePlural}", request.slatwallScope.rbKey("entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '', 'all')#_plural"))#</em></p>
+			<p><em>#replace(attributes.hibachiScope.rbKey("entity.define.norecords"), "${entityNamePlural}", attributes.hibachiScope.rbKey("entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '', 'all')#_plural"))#</em></p>
 		</cfif>
 	</cfoutput>
 </cfif>

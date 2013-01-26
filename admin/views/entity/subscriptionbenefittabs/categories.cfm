@@ -42,10 +42,10 @@ Notes:
 <cfoutput>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.categories')#</h4>
-		<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categories" edit="#rc.edit#" displaytype="plain" />
+		<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="categories" edit="#rc.edit#" displaytype="plain" />
 	</div>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.excludedcategories')#</h4>
-		<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="excludedcategories" edit="#rc.edit#" displaytype="plain" />	
+		<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="excludedcategories" edit="#rc.edit#" displaytype="plain" />	
 	</div>
 </cfoutput>

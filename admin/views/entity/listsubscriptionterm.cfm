@@ -42,10 +42,10 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.subscriptionTermSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.subscriptionTermSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.subscriptionTermSmartList#"
 						recordDetailAction="admin:entity.detailsubscriptionterm"
 						recordEditAction="admin:entity.editsubscriptionterm">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionTermName" search="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionTermName" search="true" />
+</cf_HibachiListingDisplay>
 
 </cfoutput>

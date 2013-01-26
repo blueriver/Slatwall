@@ -42,15 +42,15 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.categorySmartList#" showCreate="false" />
 
-<cf_SlatwallListingDisplay smartList="#rc.categorySmartList#"
+<cf_HibachiListingDisplay smartList="#rc.categorySmartList#"
 						   recordDetailAction="admin:entity.detailcategory"
 						   recordDetailModal="true"
 						   recordEditAction="admin:entity.editcategory"
 						   recordEditQueryString="returnAction=admin:entity.listcategory"
 						   recordEditModal="true">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="categoryName" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="restrictAccessFlag" filter="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="allowProductAssignmentFlag" filter="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="categoryName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="restrictAccessFlag" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="allowProductAssignmentFlag" filter="true" />
+</cf_HibachiListingDisplay>
 
 </cfoutput>

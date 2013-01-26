@@ -58,18 +58,18 @@ Notes:
 			<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
 		</cfif>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.shippingMethod#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.shippingMethod#">
-			<cf_SlatwallTab view="admin:entity/shippingmethodtabs/shippingmethodrates" />
-			<cf_SlatwallTab view="admin:entity/shippingmethodtabs/shippingmethodsettings" />
-			<cf_SlatwallTab view="admin:entity/shippingmethodtabs/shippingmethodratesettings" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.shippingMethod#">
+			<cf_HibachiTab view="admin:entity/shippingmethodtabs/shippingmethodrates" />
+			<cf_HibachiTab view="admin:entity/shippingmethodtabs/shippingmethodsettings" />
+			<cf_HibachiTab view="admin:entity/shippingmethodtabs/shippingmethodratesettings" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -42,20 +42,20 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudDetailForm object="#rc.taskhistory#" edit="#rc.edit#">
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.taskhistory#" property="task" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.taskhistory#" property="successFlag" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.taskhistory#" property="message" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.taskhistory#" property="startTime" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.taskhistory#" property="endTime" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.taskhistory.getTask().getSchedule()#" property="scheduleName" edit="false">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.taskhistory#" property="task" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.taskhistory#" property="successFlag" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.taskhistory#" property="message" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.taskhistory#" property="startTime" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.taskhistory#" property="endTime" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.taskhistory.getTask().getSchedule()#" property="scheduleName" edit="false">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.taskhistory#">
+		<cf_HibachiTabGroup object="#rc.taskhistory#">
 			
-		</cf_SlatwallTabGroup>
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

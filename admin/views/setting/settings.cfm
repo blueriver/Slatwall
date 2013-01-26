@@ -39,18 +39,18 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="static"></cf_HibachiCrudActionBar>
 	
-	<cf_SlatwallTabGroup>
-		<cf_SlatwallTab view="admin:setting/settingtabs/global" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globaladvanced" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/globalpage" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/account" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/brand" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/producttype" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/product" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/sku" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethod" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/shippingmethodrate" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/fulfillmentmethod" />
-		<cf_SlatwallTab view="admin:setting/settingtabs/email" />
-	</cf_SlatwallTabGroup>
+	<cf_HibachiTabGroup>
+		<cf_HibachiTab view="admin:setting/settingtabs/global" />
+		<cf_HibachiTab view="admin:setting/settingtabs/globaladvanced" />
+		<cf_HibachiTab view="admin:setting/settingtabs/globalpage" />
+		<cf_HibachiTab view="admin:setting/settingtabs/account" />
+		<cf_HibachiTab view="admin:setting/settingtabs/brand" />
+		<cf_HibachiTab view="admin:setting/settingtabs/producttype" />
+		<cf_HibachiTab view="admin:setting/settingtabs/product" />
+		<cf_HibachiTab view="admin:setting/settingtabs/sku" />
+		<cf_HibachiTab view="admin:setting/settingtabs/shippingmethod" />
+		<cf_HibachiTab view="admin:setting/settingtabs/shippingmethodrate" />
+		<cf_HibachiTab view="admin:setting/settingtabs/fulfillmentmethod" />
+		<cf_HibachiTab view="admin:setting/settingtabs/email" />
+	</cf_HibachiTabGroup>
 </cfoutput>

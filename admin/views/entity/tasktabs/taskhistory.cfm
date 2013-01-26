@@ -43,11 +43,11 @@ Notes:
 </cfif>	
 
 <cfoutput>
-	<cf_slatwalllistingdisplay smartlist="#rc.task.gettaskhistorySmartList()#">
-		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="createdDateTime"/>
-		<cf_slatwalllistingcolumn propertyidentifier="successFlag"/>
-		<cf_slatwalllistingcolumn propertyidentifier="response"/>
-		<cf_slatwalllistingcolumn propertyidentifier="startTime"/>
-		<cf_slatwalllistingcolumn propertyidentifier="endTime"/>
-	</cf_slatwalllistingdisplay>
+	<cf_HibachiListingDisplay smartlist="#rc.task.gettaskhistorySmartList()#">
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime"/>
+		<cf_HibachiListingColumn propertyidentifier="successFlag"/>
+		<cf_HibachiListingColumn propertyidentifier="response"/>
+		<cf_HibachiListingColumn propertyidentifier="startTime"/>
+		<cf_HibachiListingColumn propertyidentifier="endTime"/>
+	</cf_HibachiListingDisplay>
 </cfoutput>

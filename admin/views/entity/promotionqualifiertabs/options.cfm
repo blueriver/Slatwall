@@ -42,10 +42,10 @@ Notes:
 <cfoutput>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.promotionQualifier.options')#</h4>
-		<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="options" edit="#rc.edit#" displaytype="plain" />
+		<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="options" edit="#rc.edit#" displaytype="plain" />
 	</div>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.promotionQualifier.excludedoptions')#</h4>
-		<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="excludedOptions" edit="#rc.edit#" displaytype="plain" />		
+		<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="excludedOptions" edit="#rc.edit#" displaytype="plain" />		
 	</div>
 </cfoutput>

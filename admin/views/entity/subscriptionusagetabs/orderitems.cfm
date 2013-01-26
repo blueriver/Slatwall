@@ -39,10 +39,10 @@ Notes:
 <cfparam name="rc.subscriptionUsage" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.subscriptionUsage.getSubscriptionOrderItemsSmartList()#">
+	<cf_HibachiListingDisplay smartList="#rc.subscriptionUsage.getSubscriptionOrderItemsSmartList()#">
 			
-		<cf_SlatwallListingColumn propertyIdentifier="orderItem.order.orderNumber" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="orderItem.sku.product.productName" />
+		<cf_HibachiListingColumn propertyIdentifier="orderItem.order.orderNumber" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderItem.sku.product.productName" />
 		
-	</cf_SlatwallListingDisplay>
+	</cf_HibachiListingDisplay>
 </cfoutput>

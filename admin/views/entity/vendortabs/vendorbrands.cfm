@@ -38,6 +38,6 @@ Notes:
 --->
 <cfparam name="rc.vendor" type="any" />
 
-<cf_slatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.vendor#" property="brands" edit="#rc.edit#" displayType="plain"/>
-</cf_slatwallPropertyList>
+<cf_HibachiPropertyList>
+	<cf_HibachiPropertyDisplay object="#rc.vendor#" property="brands" edit="#rc.edit#" displayType="plain"/>
+</cf_HibachiPropertyList>

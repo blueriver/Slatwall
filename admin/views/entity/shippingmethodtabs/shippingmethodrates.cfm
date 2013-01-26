@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.shippingMethod" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.shippingMethod.getShippingMethodRatesSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.shippingMethod.getShippingMethodRatesSmartList()#"
 							   recordEditAction="admin:entity.editshippingmethodrate"
 							   recordDeleteAction="admin:entity.deleteshippingmethodrate"
 							   recordDetailAction="admin:entity.detailshippingmethodrate"
@@ -47,12 +47,12 @@ Notes:
 							   sortProperty="sortOrder"
 							   sortContextIDColumn="shippingMethodID"
 							   sortContextIDValue="#rc.shippingMethod.getShippingMethodID()#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyidentifier="shippingMethodRateName" />
-		<cf_SlatwallListingColumn propertyidentifier="addressZone.addressZoneName" />
-		<cf_SlatwallListingColumn propertyidentifier="shipmentWeightRange" />
-		<cf_SlatwallListingColumn propertyidentifier="shipmentItemPriceRange" />
-		<cf_SlatwallListingColumn propertyidentifier="defaultAmount" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="shippingMethodRateName" />
+		<cf_HibachiListingColumn propertyidentifier="addressZone.addressZoneName" />
+		<cf_HibachiListingColumn propertyidentifier="shipmentWeightRange" />
+		<cf_HibachiListingColumn propertyidentifier="shipmentItemPriceRange" />
+		<cf_HibachiListingColumn propertyidentifier="defaultAmount" />
+	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCallerDropdown title="#request.slatwallScope.rbKey('define.add')# #request.slatwallScope.rbKey('entity.shippingmethodrate')#" icon="plus" buttonClass="btn-inverse">
 		<cfset local.integrationOptions = rc.shippingMethod.getShippingMethodRateIntegrationOptions()>

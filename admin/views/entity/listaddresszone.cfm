@@ -40,8 +40,8 @@ Notes:
 
 <cf_HibachiCrudActionBar type="listing" object="#rc.addresszoneSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.addresszoneSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.addresszoneSmartList#"
 						   recordDetailAction="admin:entity.detailaddresszone"
 						   recordEditAction="admin:entity.editaddresszone">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="addresszoneName" search="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="addresszoneName" search="true" />
+</cf_HibachiListingDisplay>

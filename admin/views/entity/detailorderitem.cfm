@@ -44,42 +44,42 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.orderItem#" saveAction="admin:entity.saveOrderItem" edit="#rc.edit#" >
 		<cf_HibachiCrudActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:entity.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divclass="span4">
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="orderItemStatusType" edit="false" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="sku" edit="#rc.orderItem.isNew()#">
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="skuPrice" edit="false" />
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divclass="span4">
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantity" edit="#rc.edit#" />
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList divclass="span4">
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="orderItemStatusType" edit="false" />
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="sku" edit="#rc.orderItem.isNew()#">
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="skuPrice" edit="false" />
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divclass="span4">
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantity" edit="#rc.edit#" />
 				<cfif rc.orderItem.getOrderItemType().getSystemCode() eq "oitSale">
-					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantityDelivered" edit="false" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityDelivered" edit="false" />
 					<hr />
-					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantityUndelivered" edit="false" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityUndelivered" edit="false" />
 				<cfelse>
-					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantityReceived" edit="false" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityReceived" edit="false" />
 					<hr />
-					<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="quantityUnreceived" edit="false" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityUnreceived" edit="false" />
 				</cfif>
-			</cf_SlatwallPropertyList>	
-			<cf_SlatwallPropertyList divclass="span4">
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="price" edit="false" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="extendedPrice" edit="#rc.edit#" />
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="discountAmount" edit="false" />
+			</cf_HibachiPropertyList>	
+			<cf_HibachiPropertyList divclass="span4">
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="price" edit="false" />
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="extendedPrice" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="discountAmount" edit="false" />
 				<hr />
-				<cf_SlatwallPropertyDisplay object="#rc.orderItem#" property="extendedPriceAfterDiscount" edit="false" />
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="extendedPriceAfterDiscount" edit="false" />
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.orderItem#" allowComments="true" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:entity/orderitemtabs/taxes" />
-			<cf_SlatwallTab view="admin:entity/orderitemtabs/promotions" />
+		<cf_HibachiTabGroup object="#rc.orderItem#" allowComments="true" allowCustomAttributes="true">
+			<cf_HibachiTab view="admin:entity/orderitemtabs/taxes" />
+			<cf_HibachiTab view="admin:entity/orderitemtabs/promotions" />
 			<cfif rc.orderItem.getOrderItemType().getSystemCode() eq "oitSale">
-				<cf_SlatwallTab view="admin:entity/orderitemtabs/deliveryitems" />
+				<cf_HibachiTab view="admin:entity/orderitemtabs/deliveryitems" />
 			<cfelse>
-				<cf_SlatwallTab view="admin:entity/orderitemtabs/stockReceiverItems" />
+				<cf_HibachiTab view="admin:entity/orderitemtabs/stockReceiverItems" />
 			</cfif>
-		</cf_SlatwallTabGroup>
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

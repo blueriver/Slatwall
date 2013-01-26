@@ -43,24 +43,24 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.integration#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.integration#" deleteAction="" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.integration#" property="integrationPackage" edit="false">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.integration#" property="integrationPackage" edit="false">
 				<cfif rc.integration.getFW1ReadyFlag()>
-					<cf_SlatwallPropertyDisplay object="#rc.integration#" property="fw1ActiveFlag" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.integration#" property="fw1ActiveFlag" edit="#rc.edit#" />
 				</cfif>
 				<cfif rc.integration.getShippingReadyFlag()>
-					<cf_SlatwallPropertyDisplay object="#rc.integration#" property="shippingActiveFlag" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.integration#" property="shippingActiveFlag" edit="#rc.edit#" />
 				</cfif>
 				<cfif rc.integration.getPaymentReadyFlag()>
-					<cf_SlatwallPropertyDisplay object="#rc.integration#" property="paymentActiveFlag" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.integration#" property="paymentActiveFlag" edit="#rc.edit#" />
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.integration#">
-			<cf_SlatwallTab view="admin:entity/integrationtabs/settings" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.integration#">
+			<cf_HibachiTab view="admin:entity/integrationtabs/settings" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

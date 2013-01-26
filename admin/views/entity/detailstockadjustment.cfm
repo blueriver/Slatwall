@@ -46,26 +46,26 @@ Notes:
 			<cf_SlatwallProcessCaller entity="#rc.stockAdjustment#" action="admin:warehouse.processStockAdjustment" processContext="addItems" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#" type="list" modal=true />
 		</cf_HibachiCrudActionBar>
 					
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
 				<cfif rc.edit>
 					<input type="hidden" name="stockAdjustmentType.typeID" value="#rc.stockadjustment.getStockAdjustmentType().getTypeID()#" />
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="stockAdjustmentType" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="stockAdjustmentStatusType" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.stockAdjustment#" property="stockAdjustmentType" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.stockAdjustment#" property="stockAdjustmentStatusType" edit="false">
 				<cfif listFindNoCase("satLocationTransfer,satManualOut", rc.stockAdjustment.getStockAdjustmentType().getSystemCode())>
-					<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="fromLocation" edit="#rc.stockAdjustment.isNew()#">
+					<cf_HibachiPropertyDisplay object="#rc.stockAdjustment#" property="fromLocation" edit="#rc.stockAdjustment.isNew()#">
 				</cfif>
 				<cfif listFindNoCase("satLocationTransfer,satManualIn", rc.stockAdjustment.getStockAdjustmentType().getSystemCode())>
-					<cf_SlatwallPropertyDisplay object="#rc.stockAdjustment#" property="toLocation" edit="#rc.stockAdjustment.isNew()#">
+					<cf_HibachiPropertyDisplay object="#rc.stockAdjustment#" property="toLocation" edit="#rc.stockAdjustment.isNew()#">
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.stockAdjustment#" allowComments="true">
-			<cf_SlatwallTab view="admin:entity/stockadjustments/products" />
-			<cf_SlatwallTab view="admin:entity/stockadjustments/stockreceivers" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.stockAdjustment#" allowComments="true">
+			<cf_HibachiTab view="admin:entity/stockadjustments/products" />
+			<cf_HibachiTab view="admin:entity/stockadjustments/stockreceivers" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

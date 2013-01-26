@@ -46,19 +46,19 @@ Notes:
 			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" />
 		</cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="#rc.vendorOrder.isNew()#">
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="#rc.vendorOrder.isNew()#">
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="estimatedReceivalDateTime" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="billToLocation" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="#rc.vendorOrder.isNew()#">
+				<cf_HibachiPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="#rc.vendorOrder.isNew()#">
+				<cf_HibachiPropertyDisplay object="#rc.vendorOrder#" property="estimatedReceivalDateTime" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.vendorOrder#" property="billToLocation" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.vendorOrder#" allowComments="true" allowCustomAttributes="true">
-			<cf_SlatwallTab view="admin:entity/vendorordertabs/items" />
-			<cf_SlatwallTab view="admin:entity/vendorordertabs/stockreceivers" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.vendorOrder#" allowComments="true" allowCustomAttributes="true">
+			<cf_HibachiTab view="admin:entity/vendorordertabs/items" />
+			<cf_HibachiTab view="admin:entity/vendorordertabs/stockreceivers" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

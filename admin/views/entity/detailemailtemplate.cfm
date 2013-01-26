@@ -43,17 +43,17 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.emailTemplate#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.emailTemplate#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.emailTemplate#" property="emailTemplateName" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.emailTemplate#" property="emailTemplateName" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
-		<cf_SlatwallTabGroup object="#rc.emailTemplate#">
-			<cf_SlatwallTab view="admin:entity/emailtemplatetabs/htmlbody">
-			<cf_SlatwallTab view="admin:entity/emailtemplatetabs/textbody">
-			<cf_SlatwallTab view="admin:entity/emailtemplatetabs/emailsettings">
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.emailTemplate#">
+			<cf_HibachiTab view="admin:entity/emailtemplatetabs/htmlbody">
+			<cf_HibachiTab view="admin:entity/emailtemplatetabs/textbody">
+			<cf_HibachiTab view="admin:entity/emailtemplatetabs/emailsettings">
+		</cf_HibachiTabGroup>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

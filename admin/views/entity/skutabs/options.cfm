@@ -42,11 +42,11 @@ Notes:
 <cfset skuValues = rc.sku.getOptionsValueStruct() />
 
 <cfoutput>
-	<cf_slatwallPropertyList>
+	<cf_HibachiPropertyList>
 		<cfset count=1/>
 		<cfloop collection="#skuOptions#" item="option" >
-			<cf_SlatwallFieldDisplay fieldName="options" title="#option#" value="#skuValues[option]#" valueoptions="#skuOptions[option]#" fieldtype="select" edit="#rc.edit#">
+			<cf_HibachiFieldDisplay fieldName="options" title="#option#" value="#skuValues[option]#" valueoptions="#skuOptions[option]#" fieldtype="select" edit="#rc.edit#">
 			<cfset count++ />
 		</cfloop>
-	</cf_slatwallPropertyList>
+	</cf_HibachiPropertyList>
 </cfoutput>

@@ -43,6 +43,6 @@ Notes:
 </cfloop>
 
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getPriceGroupsOptionsSmartList()#" multiselectFieldName="priceGroups" multiselectValues="#selectedPriceGroupIDs#" edit="#rc.edit#">
-	<cf_SlatwallListingColumn propertyIdentifier="priceGroupName" tdclass="primary" />
-</cf_SlatwallListingDisplay>
+<cf_HibachiListingDisplay smartList="#rc.account.getPriceGroupsOptionsSmartList()#" multiselectFieldName="priceGroups" multiselectValues="#selectedPriceGroupIDs#" edit="#rc.edit#">
+	<cf_HibachiListingColumn propertyIdentifier="priceGroupName" tdclass="primary" />
+</cf_HibachiListingDisplay>

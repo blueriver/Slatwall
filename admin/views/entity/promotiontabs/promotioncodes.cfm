@@ -42,17 +42,17 @@ Notes:
 
 <cfoutput>
 
-	<cf_SlatwallListingDisplay smartList="#rc.promotion.getPromotionCodesSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.promotion.getPromotionCodesSmartList()#"
 							   recordEditAction="admin:entity.editpromotioncode"
 							   recordEditModal="true"
 							   recordDeleteAction="admin:entity.deletepromotioncode"
 							   recordDeleteQueryString="returnAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotionCode" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="startDateTime" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="endDateTime" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="maximumUseCount" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="maximumAccountUseCount" range="true" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotionCode" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="startDateTime" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="endDateTime" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumUseCount" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumAccountUseCount" range="true" />
+	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createpromotioncode" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" modal="true" />
 </cfoutput>

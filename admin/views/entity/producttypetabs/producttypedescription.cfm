@@ -39,6 +39,6 @@ Notes:
 <cfparam name="rc.productType" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_SlatwallPropertyList>
-	<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
-</cf_SlatwallPropertyList>
+<cf_HibachiPropertyList>
+	<cf_HibachiPropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+</cf_HibachiPropertyList>

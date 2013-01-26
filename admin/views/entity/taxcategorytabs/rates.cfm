@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.taxCategory" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.taxCategory.getTaxCategoryRatesSmartList()#"
+<cf_HibachiListingDisplay smartList="#rc.taxCategory.getTaxCategoryRatesSmartList()#"
 						   recordEditAction="admin:entity.edittaxcategoryrate"
 						   recordEditQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#"
 						   recordEditModal=true
@@ -48,8 +48,8 @@ Notes:
 						   recordDeleteAction="admin:entity.deletetaxcategoryrate"
 						   recordDeleteQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#&returnAction=admin:entity.detailtaxcategory">
 		
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="taxRate" />
-	<cf_SlatwallListingColumn propertyIdentifier="addressZone.addressZoneName" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="taxRate" />
+	<cf_HibachiListingColumn propertyIdentifier="addressZone.addressZoneName" />
+</cf_HibachiListingDisplay>
 
 <cf_HibachiActionCaller action="admin:entity.createtaxcategoryrate" class="btn btn-inverse" icon="plus icon-white" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" modal=true />

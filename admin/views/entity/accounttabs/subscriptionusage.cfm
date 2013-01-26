@@ -38,14 +38,14 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#"
+<cf_HibachiListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#"
 						   recordEditAction="admin:entity.editsubscriptionUsage"
 						   recordEditQueryString="returnAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#">
 
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
-	<cf_SlatwallListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
-	<cf_SlatwallListingColumn propertyIdentifier="nextBillDate" />
-	<cf_SlatwallListingColumn propertyIdentifier="expirationDate" />
-	<cf_SlatwallListingColumn propertyIdentifier="renewalPrice" />
-	<cf_SlatwallListingColumn propertyIdentifier="autoPayFlag" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
+	<cf_HibachiListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
+	<cf_HibachiListingColumn propertyIdentifier="nextBillDate" />
+	<cf_HibachiListingColumn propertyIdentifier="expirationDate" />
+	<cf_HibachiListingColumn propertyIdentifier="renewalPrice" />
+	<cf_HibachiListingColumn propertyIdentifier="autoPayFlag" />
+</cf_HibachiListingDisplay>

@@ -46,11 +46,11 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#">
 		<input type="hidden" name="returnaction" value="admin:warehouse.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentItem.getStockAdjustment().getStockAdjustmentID()#"	 />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.stockAdjustmentItem#" property="quantity" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.stockAdjustmentItem#" property="quantity" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

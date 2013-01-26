@@ -45,14 +45,14 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:entity.editvendororder" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#"
+	<cf_HibachiListingDisplay smartList="#rc.vendorOrderSmartList#"
 							   recordDetailAction="admin:entity.detailvendororder"
 							   recordEditAction="admin:entity.editvendororder">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" search="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="estimatedReceivalDateTime" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="createdDateTime" range="true" />
-		<cf_SlatwallListingColumn propertyIdentifier="total" sort="false" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="vendorOrderNumber" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="estimatedReceivalDateTime" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="total" sort="false" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

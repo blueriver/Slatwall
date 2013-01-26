@@ -43,23 +43,23 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.content#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.content#" edit="#rc.edit#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="title">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="cmsContentID" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="templateFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="disableProductAssignmentFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.content#" property="allowPurchaseFlag" edit="false">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.content#" property="title">
+				<cf_HibachiPropertyDisplay object="#rc.content#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.content#" property="cmsContentID" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.content#" property="templateFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.content#" property="disableProductAssignmentFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.content#" property="allowPurchaseFlag" edit="false">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
-	<cf_SlatwallTabGroup object="#rc.content#">
+	<cf_HibachiTabGroup object="#rc.content#">
 		<cfif rc.content.setting('contentProductListingFlag')>
-			<cf_SlatwallTab view="admin:entity/contenttabs/products">
+			<cf_HibachiTab view="admin:entity/contenttabs/products">
 		</cfif>
-		<cf_SlatwallTab view="admin:entity/contenttabs/settings">
-	</cf_SlatwallTabGroup>
+		<cf_HibachiTab view="admin:entity/contenttabs/settings">
+	</cf_HibachiTabGroup>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

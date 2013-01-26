@@ -39,18 +39,18 @@ Notes:
 <cfparam name="rc.addressZone" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.addressZone.getAddressZoneLocationsSmartList()#"
 			recordEditAction="admin:entity.editaddresszonelocation"
 			recordEditQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#"
 			recordEditModal=true
 			recordDeleteAction="admin:entity.deleteaddresszonelocation"
 			recordDeleteQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#">
 			
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="countryCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="stateCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="city" />
-		<cf_SlatwallListingColumn propertyIdentifier="postalCode" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="countryCode" />
+		<cf_HibachiListingColumn propertyIdentifier="stateCode" />
+		<cf_HibachiListingColumn propertyIdentifier="city" />
+		<cf_HibachiListingColumn propertyIdentifier="postalCode" />
+	</cf_HibachiListingDisplay>
 </cfoutput>
 
 <cf_HibachiActionCaller action="admin:entity.createaddresszonelocation" class="btn btn-inverse" icon="plus icon-white" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />

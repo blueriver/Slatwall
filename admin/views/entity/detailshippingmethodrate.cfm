@@ -56,24 +56,24 @@ Notes:
 			</cfif>
 		</cfif>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
 				<cfif isObject(rc.integration)>
-					<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegration" edit="false" value="#rc.integration.getIntegrationName()#">
-					<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegrationMethod" edit="#rc.edit#" fieldtype="select" valueOptions="#rc.integration.getShippingMethodOptions(rc.integration.getIntegrationID())#">
+					<cf_HibachiPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegration" edit="false" value="#rc.integration.getIntegrationName()#">
+					<cf_HibachiPropertyDisplay object="#rc.shippingMethodRate#" property="shippingIntegrationMethod" edit="#rc.edit#" fieldtype="select" valueOptions="#rc.integration.getShippingMethodOptions(rc.integration.getIntegrationID())#">
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="addressZone" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minimumShipmentWeight" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="maximumShipmentWeight" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="minimumShipmentItemPrice" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="maximumShipmentItemPrice" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.shippingMethodRate#" property="defaultAmount" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+				<cf_HibachiPropertyDisplay object="#rc.shippingMethodRate#" property="addressZone" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.shippingMethodRate#" property="minimumShipmentWeight" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.shippingMethodRate#" property="maximumShipmentWeight" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.shippingMethodRate#" property="minimumShipmentItemPrice" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.shippingMethodRate#" property="maximumShipmentItemPrice" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.shippingMethodRate#" property="defaultAmount" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.shippingMethodRate#">
-			<cf_SlatwallTab view="admin:entity/shippingmethodratetabs/shippingmethodratesettings" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.shippingMethodRate#">
+			<cf_HibachiTab view="admin:entity/shippingmethodratetabs/shippingmethodratesettings" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

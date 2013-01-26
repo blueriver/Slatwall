@@ -41,14 +41,14 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.currencySmartList#" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.currencySmartList#"
+	<cf_HibachiListingDisplay smartList="#rc.currencySmartList#"
 							   recordDetailAction="admin:entity.detailcurrency"
 							   recordDetailModal="true"
 							   recordEditAction="admin:entity.editcurrency"
 							   recordEditModal="true">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="currencyName" />
-		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
-		<cf_SlatwallListingColumn propertyIdentifier="currencyCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="formattedExample" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="currencyName" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="currencyCode" />
+		<cf_HibachiListingColumn propertyIdentifier="formattedExample" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

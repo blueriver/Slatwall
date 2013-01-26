@@ -48,15 +48,15 @@ Notes:
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
 		
 		<input type="hidden" name="returnAction" value="admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes" />
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="promotioncode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="startDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="endDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
-				<cf_SlatwallPropertyDisplay object="#rc.promotioncode#" property="maximumAccountUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="promotioncode" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="startDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="endDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="maximumUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="maximumAccountUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

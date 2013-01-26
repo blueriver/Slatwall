@@ -43,15 +43,15 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.orderReturn#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.orderReturn#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.orderReturn.getOrder().getOrderID()#"></cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.orderReturn#" property="returnLocation" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.orderReturn#" property="returnLocation" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.orderReturn#">
-			<cf_SlatwallTab view="admin:entity/orderreturntabs/orderreturnitems">
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.orderReturn#">
+			<cf_HibachiTab view="admin:entity/orderreturntabs/orderreturnitems">
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

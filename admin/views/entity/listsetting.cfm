@@ -42,13 +42,13 @@ Notes:
 	
 	<cf_HibachiCrudActionBar type="listing" object="#rc.settingSmartList#" showCreate="false" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.settingSmartList#"
+	<cf_HibachiListingDisplay smartList="#rc.settingSmartList#"
 							   recordDeleteAction="admin:entity.deleteSetting">
-		<cf_SlatwallListingColumn propertyIdentifier="settingName" filter="true" />
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="settingValue" sort="false" />
-		<cf_SlatwallListingColumn propertyIdentifier="sku.skuCode" />
-		<cf_SlatwallListingColumn propertyIdentifier="product.productName" />
-		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn propertyIdentifier="settingName" filter="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="settingValue" sort="false" />
+		<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
+		<cf_HibachiListingColumn propertyIdentifier="product.productName" />
+		<cf_HibachiListingColumn propertyIdentifier="productType.productTypeName" />
+	</cf_HibachiListingDisplay>
 
 </cfoutput>

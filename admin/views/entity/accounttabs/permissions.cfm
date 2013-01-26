@@ -37,5 +37,5 @@ Notes:
 
 --->
 
-<cf_Slatwallpropertydisplay object="#rc.account#" property="permissionGroups" edit="#rc.edit#" displaytype="plain" />
+<cf_HibachiPropertyDisplay object="#rc.account#" property="permissionGroups" edit="#rc.edit#" displaytype="plain" />
 

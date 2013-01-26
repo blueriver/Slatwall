@@ -60,41 +60,41 @@ Notes:
 		<input type="hidden" name="qualifierType" value="#rc.qualifierType#" />
 		<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
 				<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.qualifierType)>
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumItemQuantity" edit="#rc.edit#" data-emptyvalue="0" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumItemQuantity" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumItemPrice" edit="#rc.edit#" data-emptyvalue="0" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumItemPrice" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="rewardMatchingType" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="minimumItemQuantity" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="maximumItemQuantity" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="minimumItemPrice" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="maximumItemPrice" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="rewardMatchingType" edit="#rc.edit#" />
 				<cfelseif rc.qualifierType eq "fulfillment">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumFulfillmentWeight" edit="#rc.edit#" data-emptyvalue="0" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumFulfillmentWeight" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="minimumFulfillmentWeight" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="maximumFulfillmentWeight" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
 				<cfelseif rc.qualifierType eq "order">
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumOrderQuantity" edit="#rc.edit#" data-emptyvalue="0" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumOrderQuantity" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="minimumOrderSubtotal" edit="#rc.edit#" data-emptyvalue="0" />
-					<cf_SlatwallPropertyDisplay object="#rc.promotionQualifier#" property="maximumOrderSubtotal" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="minimumOrderQuantity" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="maximumOrderQuantity" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="minimumOrderSubtotal" edit="#rc.edit#" data-emptyvalue="0" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="maximumOrderSubtotal" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.promotionQualifier#">
+		<cf_HibachiTabGroup object="#rc.promotionQualifier#">
 			<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.qualifierType)>
-				<cf_SlatwallTab view="admin:entity/promotionqualifiertabs/producttypes" />
-				<cf_SlatwallTab view="admin:entity/promotionqualifiertabs/products" />
-				<cf_SlatwallTab view="admin:entity/promotionqualifiertabs/skus" />
-				<cf_SlatwallTab view="admin:entity/promotionqualifiertabs/brands" />
+				<cf_HibachiTab view="admin:entity/promotionqualifiertabs/producttypes" />
+				<cf_HibachiTab view="admin:entity/promotionqualifiertabs/products" />
+				<cf_HibachiTab view="admin:entity/promotionqualifiertabs/skus" />
+				<cf_HibachiTab view="admin:entity/promotionqualifiertabs/brands" />
 				<cfif rc.qualifierType eq "merchandise">
-					<cf_SlatwallTab view="admin:entity/promotionqualifiertabs/options" />
+					<cf_HibachiTab view="admin:entity/promotionqualifiertabs/options" />
 				</cfif>
 			<cfelseif rc.qualifierType eq "fulfillment">
-				<cf_SlatwallTab view="admin:entity/promotionqualifiertabs/fulfillmentMethods" />
-				<cf_SlatwallTab view="admin:entity/promotionqualifiertabs/shippingMethods" />
-				<cf_SlatwallTab view="admin:entity/promotionqualifiertabs/shippingAddressZones" />
+				<cf_HibachiTab view="admin:entity/promotionqualifiertabs/fulfillmentMethods" />
+				<cf_HibachiTab view="admin:entity/promotionqualifiertabs/shippingMethods" />
+				<cf_HibachiTab view="admin:entity/promotionqualifiertabs/shippingAddressZones" />
 			</cfif>
-		</cf_SlatwallTabGroup>
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

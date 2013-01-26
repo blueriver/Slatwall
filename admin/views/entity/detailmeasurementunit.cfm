@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.measurementUnit#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.measurementUnit#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.measurementUnit#" property="unitCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.measurementUnit#" property="unitName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.measurementUnit#" property="measurementType" edit="#rc.measurementUnit.isNew()#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.measurementUnit#" property="unitCode" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.measurementUnit#" property="unitName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.measurementUnit#" property="measurementType" edit="#rc.measurementUnit.isNew()#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

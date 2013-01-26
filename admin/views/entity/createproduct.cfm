@@ -43,26 +43,26 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.product#" edit="true">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.product#" edit="true"></cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="true">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="true">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="true">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="true" valueOptions="#rc.product.getProductTypeOptions( rc.baseProductType )#">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="true">
-				<cf_SlatwallPropertyDisplay object="#rc.product#" property="listPrice" edit="true">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="productName" edit="true">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="productCode" edit="true">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="brand" edit="true">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="productType" edit="true" valueOptions="#rc.product.getProductTypeOptions( rc.baseProductType )#">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="price" edit="true">
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="listPrice" edit="true">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 		<cfif rc.baseProductType eq "merchandise">
 			<div class="row-fluid">
 				<cfset optionsSmartList = $.slatwall.getService("optionService").getOptionSmartList() />
 				<cfset optionsSmartList.addOrder("optionGroup.sortOrder|ASC") />
 				<cfif optionsSmartList.getRecordsCount()>
-					<cf_SlatwallListingDisplay smartList="#optionsSmartList#" multiselectfieldname="options" edit="true">
-						<cf_SlatwallListingColumn propertyIdentifier="optionGroup.optionGroupName" filter=true />
-						<cf_SlatwallListingColumn propertyIdentifier="optionName" tdclass="primary" />
-					</cf_SlatwallListingDisplay>
+					<cf_HibachiListingDisplay smartList="#optionsSmartList#" multiselectfieldname="options" edit="true">
+						<cf_HibachiListingColumn propertyIdentifier="optionGroup.optionGroupName" filter=true />
+						<cf_HibachiListingColumn propertyIdentifier="optionName" tdclass="primary" />
+					</cf_HibachiListingDisplay>
 				</cfif>
 			</div>
 		<cfelseif rc.baseProductType eq "subscription">
@@ -71,33 +71,33 @@ Notes:
 					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectsubscriptionbenifits')#</h5>
 					<br />
 					<cf_SlatwallErrorDisplay object="#rc.product#" errorName="subscriptionBenefits" />
-					<cf_SlatwallListingDisplay smartList="SubscriptionBenefit" multiselectFieldName="subscriptionBenefits" edit="true">
-						<cf_SlatwallListingColumn propertyIdentifier="subscriptionBenefitName" tdclass="primary" />
-					</cf_SlatwallListingDisplay>
+					<cf_HibachiListingDisplay smartList="SubscriptionBenefit" multiselectFieldName="subscriptionBenefits" edit="true">
+						<cf_HibachiListingColumn propertyIdentifier="subscriptionBenefitName" tdclass="primary" />
+					</cf_HibachiListingDisplay>
 					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectrenewalsubscriptionbenifits')#</h5>
 					<br />
 					<cf_SlatwallErrorDisplay object="#rc.product#" errorName="renewalsubscriptionBenefits" />
-					<cf_SlatwallListingDisplay smartList="SubscriptionBenefit" multiselectFieldName="renewalSubscriptionBenefits" edit="true">
-						<cf_SlatwallListingColumn propertyIdentifier="subscriptionBenefitName" tdclass="primary" />
-					</cf_SlatwallListingDisplay>
+					<cf_HibachiListingDisplay smartList="SubscriptionBenefit" multiselectFieldName="renewalSubscriptionBenefits" edit="true">
+						<cf_HibachiListingColumn propertyIdentifier="subscriptionBenefitName" tdclass="primary" />
+					</cf_HibachiListingDisplay>
 				</div>
 				<div class="span6">
 					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectsubscriptionterms')#</h5>
 					<br />
 					<cf_SlatwallErrorDisplay object="#rc.product#" errorName="subscriptionTerms" />
-					<cf_SlatwallListingDisplay smartList="SubscriptionTerm" multiselectFieldName="subscriptionTerms" edit="true">
-						<cf_SlatwallListingColumn propertyIdentifier="subscriptionTermName" tdclass="primary" />
-					</cf_SlatwallListingDisplay>
+					<cf_HibachiListingDisplay smartList="SubscriptionTerm" multiselectFieldName="subscriptionTerms" edit="true">
+						<cf_HibachiListingColumn propertyIdentifier="subscriptionTermName" tdclass="primary" />
+					</cf_HibachiListingDisplay>
 				</div>
 			</div>
 		<cfelseif rc.baseProductType eq "contentAccess">
 			<cfset contentAccessList = $.slatwall.getService("contentService").getContentSmartList() />
 			<cfset contentAccessList.addFilter("allowPurchaseFlag", 1) />
 			<cf_SlatwallErrorDisplay object="#rc.product#" errorName="accessContents" />
-			<cf_SlatwallFieldDisplay fieldType="yesno" fieldName="bundleContentAccess" value="0" title="Would you like to bundle all pages selected into a single sku?" edit="true" />
-			<cf_SlatwallListingDisplay smartList="#contentAccessList#" multiselectFieldName="accessContents" edit="true">
-				<cf_SlatwallListingColumn propertyIdentifier="title" tdclass="primary" />
-			</cf_SlatwallListingDisplay>
+			<cf_HibachiFieldDisplay fieldType="yesno" fieldName="bundleContentAccess" value="0" title="Would you like to bundle all pages selected into a single sku?" edit="true" />
+			<cf_HibachiListingDisplay smartList="#contentAccessList#" multiselectFieldName="accessContents" edit="true">
+				<cf_HibachiListingColumn propertyIdentifier="title" tdclass="primary" />
+			</cf_HibachiListingDisplay>
 		</cfif>
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

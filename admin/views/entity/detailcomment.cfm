@@ -59,17 +59,17 @@ Notes:
 		<!--- Only Runs if new --->
 		<Cfif rc.comment.isNew()>#local.hiddenKeyFields#</cfif>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.comment#" property="publicFlag" edit="#rc.edit#">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.comment#" property="publicFlag" edit="#rc.edit#">
 				<cfif !rc.comment.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.comment#" property="createdDateTime">
-					<cf_SlatwallPropertyDisplay object="#rc.comment#" property="createdByAccount">
+					<cf_HibachiPropertyDisplay object="#rc.comment#" property="createdDateTime">
+					<cf_HibachiPropertyDisplay object="#rc.comment#" property="createdByAccount">
 				</cfif>
 				<hr />
-				<cf_SlatwallPropertyDisplay object="#rc.comment#" property="comment" displaytype="plain" edit="#rc.comment.isNew()#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+				<cf_HibachiPropertyDisplay object="#rc.comment#" property="comment" displaytype="plain" edit="#rc.comment.isNew()#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

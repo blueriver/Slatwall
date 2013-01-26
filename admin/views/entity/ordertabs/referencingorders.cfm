@@ -40,11 +40,11 @@ Notes:
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.order.getReferencingOrdersSmartList()#" 
+	<cf_HibachiListingDisplay smartList="#rc.order.getReferencingOrdersSmartList()#" 
 			recordDetailAction="admin:entity.detailorder">
-		<cf_SlatwallListingColumn tdClass="primary" propertyIdentifier="orderNumber" />
-		<cf_SlatwallListingColumn propertyIdentifier="account.fullName" sort="false" />
-		<cf_SlatwallListingColumn propertyIdentifier="orderType.type" />
-		<cf_SlatwallListingColumn propertyIdentifier="calculatedTotal" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdClass="primary" propertyIdentifier="orderNumber" />
+		<cf_HibachiListingColumn propertyIdentifier="account.fullName" sort="false" />
+		<cf_HibachiListingColumn propertyIdentifier="orderType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

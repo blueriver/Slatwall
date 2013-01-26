@@ -44,14 +44,14 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createaddresszonelocation" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" type="list" modal=true />
 	</cf_HibachiCrudActionBar>
 	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#">
-		</cf_SlatwallPropertyList>
-	</cf_SlatwallDetailHeader>
+	<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#">
+		</cf_HibachiPropertyList>
+	</cf_HibachiDetailHeader>
 	
-	<cf_SlatwallTabGroup object="#rc.addressZone#">
-		<cf_SlatwallTab view="admin:entity/addresszonetabs/locations" />
-	</cf_SlatwallTabGroup>
+	<cf_HibachiTabGroup object="#rc.addressZone#">
+		<cf_HibachiTab view="admin:entity/addresszonetabs/locations" />
+	</cf_HibachiTabGroup>
 	
 </cf_HibachiCrudDetailForm>

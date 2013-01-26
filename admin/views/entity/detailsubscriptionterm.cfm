@@ -43,19 +43,19 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.subscriptionTerm#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.subscriptionTerm#" edit="#rc.edit#" />
 
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionTermName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="initialTerm" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="renewalTerm" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="gracePeriodTerm" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="allowProrateFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="autoRenewFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="autoPayFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="autoRetryPaymentDays" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="renewalReminderDays" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionTermName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="initialTerm" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="renewalTerm" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="gracePeriodTerm" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="allowProrateFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="autoRenewFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="autoPayFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="autoRetryPaymentDays" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="renewalReminderDays" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -47,43 +47,43 @@ Notes:
 	<div class="row-fluid">
 		<div class="span6">
 			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.neworders")#</h4>
-			<cf_SlatwallListingDisplay smartList="#rc.orderSmartList#" 
+			<cf_HibachiListingDisplay smartList="#rc.orderSmartList#" 
 					recordDetailAction="admin:entity.detailorder">
-				<cf_SlatwallListingColumn propertyIdentifier="orderNumber" />
-				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
-				<cf_SlatwallListingColumn propertyIdentifier="orderOpenDateTime" />
-			</cf_SlatwallListingDisplay>
+				<cf_HibachiListingColumn propertyIdentifier="orderNumber" />
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
+				<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" />
+			</cf_HibachiListingDisplay>
 		</div>
 		<div class="span6">
 			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductupdates")#</h4>
-			<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" 
+			<cf_HibachiListingDisplay smartList="#rc.productSmartList#" 
 					recordDetailAction="admin:entity.detailproduct">
-				<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" />
-				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
-				<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" />
-				<cf_SlatwallListingColumn propertyIdentifier="modifiedByAccount.fullname" />
-			</cf_SlatwallListingDisplay>
+				<cf_HibachiListingColumn propertyIdentifier="brand.brandName" />
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" />
+				<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" />
+				<cf_HibachiListingColumn propertyIdentifier="modifiedByAccount.fullname" />
+			</cf_HibachiListingDisplay>
 		</div>
 	</div>
 	<div class="row-fluid">
 		<div class="span6">
 			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentvendororderupdates")#</h4>
-			<cf_SlatwallListingDisplay smartList="#rc.vendorOrderSmartList#" 
+			<cf_HibachiListingDisplay smartList="#rc.vendorOrderSmartList#" 
 					recordDetailAction="admin:entity.detailvendororder">
-				<cf_SlatwallListingColumn propertyIdentifier="vendorOrderNumber" />
-				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" />
-				<cf_SlatwallListingColumn propertyIdentifier="modifiedDateTime" />
-				<cf_SlatwallListingColumn propertyIdentifier="modifiedByAccount.fullname" />
-			</cf_SlatwallListingDisplay>
+				<cf_HibachiListingColumn propertyIdentifier="vendorOrderNumber" />
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" />
+				<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" />
+				<cf_HibachiListingColumn propertyIdentifier="modifiedByAccount.fullname" />
+			</cf_HibachiListingDisplay>
 		</div>
 		<div class="span6">
 			<h4>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductreviews")#</h4>
-			<cf_SlatwallListingDisplay smartList="#rc.productReviewSmartList#" 
+			<cf_HibachiListingDisplay smartList="#rc.productReviewSmartList#" 
 					recordDetailAction="admin:entity.detailproductreview">
-				<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="product.calculatedTitle" />
-				<cf_SlatwallListingColumn propertyIdentifier="reviewerName" />
-				<cf_SlatwallListingColumn propertyIdentifier="reviewTitle" />
-			</cf_SlatwallListingDisplay>
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.calculatedTitle" />
+				<cf_HibachiListingColumn propertyIdentifier="reviewerName" />
+				<cf_HibachiListingColumn propertyIdentifier="reviewTitle" />
+			</cf_HibachiListingDisplay>
 		</div>
 	</div>
 </cfoutput>

@@ -41,11 +41,11 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.paymentTermSmartList#" createmodal="true" />
 	
-	<cf_SlatwallListingDisplay smartList="#rc.paymentTermSmartList#"
+	<cf_HibachiListingDisplay smartList="#rc.paymentTermSmartList#"
 							   recordEditAction="admin:entity.editpaymentTerm"
 							   recordEditModal="true"
 							   recordDetailAction="admin:entity.detailpaymentTerm"
 							   recordDetailModal="true">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="paymentTermName" />
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentTermName" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

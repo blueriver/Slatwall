@@ -38,11 +38,11 @@ Notes:
 --->
 <cfparam name="rc.sku" type="any" />
 
-<cf_SlatwallDetailHeader>
-	<cf_SlatwallPropertyList>
-		<cf_SlatwallPropertyDisplay object="#rc.sku#" property="subscriptionTerm" edit="false">
-		<cf_SlatwallPropertyDisplay object="#rc.sku#" property="subscriptionBenefits" edit="#rc.edit#" displayType="plain">
-		<cf_SlatwallPropertyDisplay object="#rc.sku#" property="renewalSubscriptionBenefits" title="#$.slatwall.rbKey('define.renewalSubscriptionBenefits')#" edit="#rc.edit#" displayType="plain">
-	</cf_SlatwallPropertyList>
-</cf_SlatwallDetailHeader>
+<cf_HibachiDetailHeader>
+	<cf_HibachiPropertyList>
+		<cf_HibachiPropertyDisplay object="#rc.sku#" property="subscriptionTerm" edit="false">
+		<cf_HibachiPropertyDisplay object="#rc.sku#" property="subscriptionBenefits" edit="#rc.edit#" displayType="plain">
+		<cf_HibachiPropertyDisplay object="#rc.sku#" property="renewalSubscriptionBenefits" title="#$.slatwall.rbKey('define.renewalSubscriptionBenefits')#" edit="#rc.edit#" displayType="plain">
+	</cf_HibachiPropertyList>
+</cf_HibachiDetailHeader>
 			

@@ -39,13 +39,13 @@ Notes:
 <cfparam name="rc.stockAdjustment" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.stockAdjustment.getStockReceiversSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.stockAdjustment.getStockReceiversSmartList()#"
 							   recorddetailaction="admin:entity.detailStockReceiver"
 							   recorddetailmodal="true" 
 							   recorddetailquerystring="returnaction=admin:warehouse.detailStockAdjustment&stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#">
 			
-		<cf_slatwalllistingcolumn tdclass="primary" propertyidentifier="createdDateTime"/>
-		<cf_slatwalllistingcolumn propertyidentifier="boxCount"/>
-		<cf_slatwalllistingcolumn propertyidentifier="packingSlipNumber"/>
-	</cf_SlatwallListingDisplay>
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime"/>
+		<cf_HibachiListingColumn propertyidentifier="boxCount"/>
+		<cf_HibachiListingColumn propertyidentifier="packingSlipNumber"/>
+	</cf_HibachiListingDisplay>
 </cfoutput>

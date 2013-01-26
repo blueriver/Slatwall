@@ -43,19 +43,19 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.subscriptionBenefit#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.subscriptionBenefit#" edit="#rc.edit#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="subscriptionBenefitName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="accessType" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="maxUseCount" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="subscriptionBenefitName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="accessType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="maxUseCount" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.subscriptionBenefit#">
-			<cf_SlatwallTab view="admin:entity/subscriptionbenefittabs/categories" />
-			<cf_SlatwallTab view="admin:entity/subscriptionbenefittabs/contents" />
-			<cf_SlatwallTab view="admin:entity/subscriptionbenefittabs/pricegroups" />
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.subscriptionBenefit#">
+			<cf_HibachiTab view="admin:entity/subscriptionbenefittabs/categories" />
+			<cf_HibachiTab view="admin:entity/subscriptionbenefittabs/contents" />
+			<cf_HibachiTab view="admin:entity/subscriptionbenefittabs/pricegroups" />
+		</cf_HibachiTabGroup>
 
 		
 	</cf_HibachiCrudDetailForm>

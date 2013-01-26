@@ -64,39 +64,39 @@ Notes:
 			
 			<input type="hidden" name="process" value="1" />
 			
-			<cf_SlatwallDetailHeader>
-				<cf_SlatwallPropertyList>
+			<cf_HibachiDetailHeader>
+				<cf_HibachiPropertyList>
 					<cfif rc.accountPaymentTypeSystemCode eq "aptCharge">
-						<cf_SlatwallFieldDisplay fieldname="processContext" title="#$.slatwall.rbKey('admin.order.createorderpayment.transactionType')#" fieldtype="select" valueOptions="#[{value='authorizeAndCharge', name=$.slatwall.rbKey('define.authorizeAndCharge')}, {value='authorize', name=$.slatwall.rbKey('define.authorize')}]#" edit="true">
+						<cf_HibachiFieldDisplay fieldname="processContext" title="#$.slatwall.rbKey('admin.order.createorderpayment.transactionType')#" fieldtype="select" valueOptions="#[{value='authorizeAndCharge', name=$.slatwall.rbKey('define.authorizeAndCharge')}, {value='authorize', name=$.slatwall.rbKey('define.authorize')}]#" edit="true">
 					<cfelse>
-						<cf_SlatwallFieldDisplay fieldname="processContext" title="#$.slatwall.rbKey('admin.order.createorderpayment.transactionType')#" fieldtype="select" valueOptions="#[{value='credit', name=$.slatwall.rbKey('define.credit')}]#" edit="true">
+						<cf_HibachiFieldDisplay fieldname="processContext" title="#$.slatwall.rbKey('admin.order.createorderpayment.transactionType')#" fieldtype="select" valueOptions="#[{value='credit', name=$.slatwall.rbKey('define.credit')}]#" edit="true">
 					</cfif>
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
-				</cf_SlatwallPropertyList>
-			</cf_SlatwallDetailHeader>
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
+				</cf_HibachiPropertyList>
+			</cf_HibachiDetailHeader>
 			
-			<cf_SlatwallDetailHeader>
-				<cf_SlatwallPropertyList divClass="span6">
+			<cf_HibachiDetailHeader>
+				<cf_HibachiPropertyList divClass="span6">
 					<cf_SlatwallAddressDisplay address="#$.slatwall.getService("addressService").newAddress()#" fieldnameprefix="billingAddress." edit="#rc.edit#" />
-				</cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyList divClass="span6">
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="creditCardNumber" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="expirationMonth" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="expirationYear" edit="#rc.edit#" />
-					<cf_SlatwallPropertyDisplay object="#rc.accountPayment#" property="securityCode" edit="#rc.edit#" />
-				</cf_SlatwallPropertyList>
-			</cf_SlatwallDetailHeader>
+				</cf_HibachiPropertyList>
+				<cf_HibachiPropertyList divClass="span6">
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="creditCardNumber" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="expirationMonth" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="expirationYear" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="securityCode" edit="#rc.edit#" />
+				</cf_HibachiPropertyList>
+			</cf_HibachiDetailHeader>
 			
 		<!--- Check --->
 		<cfelseif rc.paymentMethod.getPaymentMethodType() eq "check">
-			<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
+			<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
 		<!--- Cash --->
 		<cfelseif rc.paymentMethod.getPaymentMethodType() eq "cash">	
-			<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
+			<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
 		<!--- ??? --->
 		<cfelse>
-			<cf_SlatwallPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />	
+			<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />	
 		</cfif>
 		
 	</cf_HibachiCrudDetailForm>

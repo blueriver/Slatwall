@@ -53,24 +53,24 @@ Notes:
 			<input type="hidden" name="attributeSet.attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />
 		</cfif>
 
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="requiredFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeHint" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="defaultValue" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeType" valueDefault="444df2a5a9088e72342c0b5eaf731c64" edit="#rc.edit and rc.attribute.isNew()#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.attribute#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.attribute#" property="requiredFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.attribute#" property="attributeName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.attribute#" property="attributeCode" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.attribute#" property="attributeHint" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.attribute#" property="defaultValue" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.attribute#" property="attributeType" valueDefault="444df2a5a9088e72342c0b5eaf731c64" edit="#rc.edit and rc.attribute.isNew()#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
-		<cf_SlatwallTabGroup object="#rc.attribute#">
+		<cf_HibachiTabGroup object="#rc.attribute#">
 			<cfif not rc.attribute.isNew() and listFindNoCase( "atText,atPassword,atCheckBoxGroup,atMultiSelect,atRadioGroup,atSelect",rc.attribute.getAttributeType().getSystemCode() )>
-				<cf_SlatwallTab view="admin:entity/attributetabs/attributeoptions" />
+				<cf_HibachiTab view="admin:entity/attributetabs/attributeoptions" />
 			</cfif>
-			<cf_SlatwallTab view="admin:entity/attributetabs/description" />
-		</cf_SlatwallTabGroup>
+			<cf_HibachiTab view="admin:entity/attributetabs/description" />
+		</cf_HibachiTabGroup>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

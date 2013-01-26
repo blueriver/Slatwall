@@ -45,12 +45,12 @@ Notes:
 		<cf_HibachiCrudActionBar type="detail" object="#rc.attributeOption#" edit="#rc.edit#" backAction="admin:entity.detailAttribute" backQueryString="attributeID=#rc.attribute.getAttributeID()#" />
 		<input type="hidden" name="attributeOptions[1].attributeOptionID" value="#rc.attributeOption.getAttributeOptionID()#" />
 
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.attributeOption#" property="attributeOptionLabel" fieldName="attributeOptions[1].attributeOptionLabel" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.attributeOption#" property="attributeOptionValue" fieldName="attributeOptions[1].attributeOptionValue" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.attributeOption#" property="attributeOptionLabel" fieldName="attributeOptions[1].attributeOptionLabel" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.attributeOption#" property="attributeOptionValue" fieldName="attributeOptions[1].attributeOptionValue" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

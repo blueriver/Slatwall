@@ -41,17 +41,17 @@ Notes:
 
 <cfoutput>
 	<cfif rc.attribute.getAttributeType().getSystemCode() eq "atText">
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationMessage" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationRegex" edit="#rc.edit#">	
-		</cf_SlatwallPropertyList>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.attribute#" property="validationMessage" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.attribute#" property="validationRegex" edit="#rc.edit#">	
+		</cf_HibachiPropertyList>
 	<cfelseif rc.attribute.getAttributeType().getSystemCode() eq "atPassword">
-		<cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="decryptValueInAdminFlag" edit="#rc.edit#">
-		</cf_SlatwallPropertyList>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.attribute#" property="decryptValueInAdminFlag" edit="#rc.edit#">
+		</cf_HibachiPropertyList>
 	<cfelseif listFindNoCase( "atCheckBoxGroup,atMultiSelect,atRadioGroup,atSelect",rc.attribute.getAttributeType().getSystemCode() )>
 		
-		<cf_SlatwallListingDisplay smartList="#rc.attribute.getAttributeOptionsSmartList()#"
+		<cf_HibachiListingDisplay smartList="#rc.attribute.getAttributeOptionsSmartList()#"
 								   recordEditAction="admin:entity.editattributeoption" 
 								   recordEditQueryString="attributeID=#rc.attribute.getAttributeID()#"
 								   recordEditModal="true"
@@ -60,9 +60,9 @@ Notes:
 								   sortProperty="sortOrder"
 								   sortContextIDColumn="attributeID"
 								   sortContextIDValue="#rc.attribute.getAttributeID()#">
-			<cf_SlatwallListingColumn propertyIdentifier="attributeOptionValue" /> 
-			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="attributeOptionLabel" /> 
-		</cf_SlatwallListingDisplay>
+			<cf_HibachiListingColumn propertyIdentifier="attributeOptionValue" /> 
+			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="attributeOptionLabel" /> 
+		</cf_HibachiListingDisplay>
 		
 		<cf_HibachiActionCaller action="admin:entity.createattributeoption" class="btn btn-inverse" icon="plus icon-white" queryString="attributeid=#rc.attribute.getAttributeID()#" modal=true />
 	</cfif>

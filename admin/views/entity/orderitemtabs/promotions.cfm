@@ -39,8 +39,8 @@ Notes:
 <cfparam name="rc.orderItem" type="any" />
 
 <cfoutput>
-	<cf_SlatwallListingDisplay smartList="#rc.orderItem.getAppliedPromotionsSmartList()#">
-		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="promotion.promotionName" />
-		<cf_SlatwallListingColumn propertyIdentifier="discountAmount" />
-	</cf_SlatwallListingDisplay>
+	<cf_HibachiListingDisplay smartList="#rc.orderItem.getAppliedPromotionsSmartList()#">
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotion.promotionName" />
+		<cf_HibachiListingColumn propertyIdentifier="discountAmount" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

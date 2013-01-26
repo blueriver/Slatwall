@@ -47,14 +47,14 @@ Notes:
 		<input type="hidden" name="vendorOrder.vendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
 		<input type="hidden" name="returnAction" value="admin:entity.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" />
 
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrderItem.getStock().getLocation()#" property="locationName" edit="false">
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrderItem#" property="quantity" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrderItem#" property="cost" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.vendorOrderItem#" property="estimatedReceivalDateTime" edit="#rc.edit#">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.vendorOrderItem.getStock().getLocation()#" property="locationName" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.vendorOrderItem#" property="quantity" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.vendorOrderItem#" property="cost" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.vendorOrderItem#" property="estimatedReceivalDateTime" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

@@ -46,13 +46,13 @@ Notes:
 		<input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 		<input type="hidden" name="returnAction" value="admin:entity.editoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionCode" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionDescription" edit="#rc.edit#">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionCode" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionDescription" edit="#rc.edit#">
 			
-				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionImage" edit="#rc.edit#" fieldtype="file">
+				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionImage" edit="#rc.edit#" fieldtype="file">
 
 				<cfif len(trim(rc.option.getOptionImage()))>
 					<cfif rc.edit>
@@ -68,8 +68,8 @@ Notes:
 						<dd class="value"><img src="#rc.option.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /></dd>
 					</cfif>	
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

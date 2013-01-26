@@ -43,19 +43,19 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.orderDelivery#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.orderDelivery#" edit="#rc.edit#"></cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="createdDateTime">
-				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="fulfillmentMethod">
-				<cf_SlatwallPropertyDisplay object="#rc.orderDelivery#" property="trackingNumber">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="createdDateTime">
+				<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="fulfillmentMethod">
+				<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="trackingNumber">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallListingDisplay smartList="#rc.orderDelivery.getOrderDeliveryItemsSmartList()#">
-			<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.title" />
-			<cf_SlatwallListingColumn propertyIdentifier="stock.sku.skuCode" />
-			<cf_SlatwallListingColumn propertyIdentifier="quantity" />
-		</cf_SlatwallListingDisplay>
+		<cf_HibachiListingDisplay smartList="#rc.orderDelivery.getOrderDeliveryItemsSmartList()#">
+			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.title" />
+			<cf_HibachiListingColumn propertyIdentifier="stock.sku.skuCode" />
+			<cf_HibachiListingColumn propertyIdentifier="quantity" />
+		</cf_HibachiListingDisplay>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

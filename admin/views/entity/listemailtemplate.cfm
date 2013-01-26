@@ -42,11 +42,11 @@ Notes:
 	
 <cf_HibachiCrudActionBar type="listing" object="#rc.emailTemplateSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.emailTemplateSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.emailTemplateSmartList#"
 						   recordDetailAction="admin:entity.detailemailTemplate"
 						   recordEditAction="admin:entity.editemailTemplate"
 						   recordEditQueryString="returnAction=admin:entity.listemailTemplate">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="emailTemplateName" search="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailTemplateName" search="true" />
+</cf_HibachiListingDisplay>
 
 </cfoutput>

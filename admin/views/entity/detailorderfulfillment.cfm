@@ -45,26 +45,26 @@ Notes:
 			<cf_SlatwallProcessCaller entity="#rc.orderFulfillment#" action="admin:entity.processorderfulfillment" processContext="fulfillItems" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" />
 		</cf_HibachiCrudActionBar>
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList divClass="span6">
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList divClass="span6">
 				<cfif !isNull(rc.orderFulfillment.getAddress())>
 					<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" fieldnameprefix="shippingAddress." edit="#rc.edit#">
 				</cfif>
 				<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "auto">
 					<!--- TODO: Add Fulfill From Location --->
 				</cfif>
-			</cf_SlatwallPropertyList>
-			<cf_SlatwallPropertyList divClass="span6">
-				<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="fulfillmentCharge" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="fulfillmentCharge" edit="#rc.edit#">
 				<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-					<cf_SlatwallPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="false">
+					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="false">
 				</cfif>
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
-		<cf_SlatwallTabGroup object="#rc.orderFulfillment#">
-			<cf_SlatwallTab view="admin:entity/orderfulfillmenttabs/orderfulfillmentitems">
-		</cf_SlatwallTabGroup>
+		<cf_HibachiTabGroup object="#rc.orderFulfillment#">
+			<cf_HibachiTab view="admin:entity/orderfulfillmenttabs/orderfulfillmentitems">
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>

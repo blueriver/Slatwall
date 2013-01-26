@@ -50,15 +50,15 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_SlatwallPropertyList divClass="span12">
-		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentVersion')#" value="#rc.currentVersion#" />
+	<cf_HibachiPropertyList divClass="span12">
+		<cf_HibachiFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentVersion')#" value="#rc.currentVersion#" />
 		<cfif rc.currentBranch eq 'master'>
-			<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentReleaseType')#" value="#$.slatwall.rbKey('admin.main.update.stable')#" />
+			<cf_HibachiFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentReleaseType')#" value="#$.slatwall.rbKey('admin.main.update.stable')#" />
 		<cfelse>
-			<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentReleaseType')#" value="#$.slatwall.rbKey('admin.main.update.bleedingEdge')#" />
+			<cf_HibachiFieldDisplay title="#$.slatwall.rbKey('admin.main.update.currentReleaseType')#" value="#$.slatwall.rbKey('admin.main.update.bleedingEdge')#" />
 		</cfif>
-		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.availableStableVersion')#" value="#rc.availableMasterVersion#" />
-		<cf_SlatwallFieldDisplay title="#$.slatwall.rbKey('admin.main.update.availableBleedingEdgeVersion')#" value="#rc.availableDevelopVersion#" />
+		<cf_HibachiFieldDisplay title="#$.slatwall.rbKey('admin.main.update.availableStableVersion')#" value="#rc.availableMasterVersion#" />
+		<cf_HibachiFieldDisplay title="#$.slatwall.rbKey('admin.main.update.availableBleedingEdgeVersion')#" value="#rc.availableDevelopVersion#" />
 		<hr />
 		<form method="post">
 			<input type="hidden" name="slatAction" value="admin:main.update" />
@@ -72,5 +72,5 @@ Notes:
 			
 			<button class="btn adminmainupdate btn-primary" title="#$.slatwall.rbKey('admin.main.update_title')#" type="submit">#$.slatwall.rbKey('admin.main.update_title')#</button>
 		</form>
-	</cf_SlatwallPropertyList>
+	</cf_HibachiPropertyList>
 </cfoutput>

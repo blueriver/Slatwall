@@ -45,11 +45,11 @@ Notes:
 
 <cf_HibachiCrudActionBar type="listing" object="#rc.orderFulfillmentSmartList#" showCreate="false" />
 
-<cf_SlatwallListingDisplay smartList="#rc.orderFulfillmentSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.orderFulfillmentSmartList#"
 		recorddetailaction="admin:entity.detailorderfulfillment"
 		recordeditaction="admin:entity.editorderfulfillment">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" sort="false" />
-	<cf_SlatwallListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
-	<cf_SlatwallListingColumn propertyIdentifier="order.orderNumber" search="true" />
-	<cf_SlatwallListingColumn propertyIdentifier="order.orderOpenDateTime" range="true" />
-</cf_SlatwallListingDisplay>
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" sort="false" />
+	<cf_HibachiListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" filter=true />
+	<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="order.orderOpenDateTime" range="true" />
+</cf_HibachiListingDisplay>

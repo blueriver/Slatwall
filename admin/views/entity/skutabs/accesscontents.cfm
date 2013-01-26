@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.sku" type="any" />
 
-<cf_SlatwallListingDisplay smartList="#rc.sku.getAccessContentsSmartList()#">
-	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="title" />
-</cf_SlatwallListingDisplay>
+<cf_HibachiListingDisplay smartList="#rc.sku.getAccessContentsSmartList()#">
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="title" />
+</cf_HibachiListingDisplay>
 			

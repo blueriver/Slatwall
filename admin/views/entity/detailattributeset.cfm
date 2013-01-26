@@ -46,36 +46,36 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createattribute" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" type="list" modal=true />
 	</cf_HibachiCrudActionBar>
 	
-	<cf_SlatwallDetailHeader>
-		<cf_SlatwallPropertyList divclass="span6">
-			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="activeFlag" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetType" edit="#rc.attributeSet.isNew()#">
-			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetCode" edit="#rc.edit#">
-		</cf_SlatwallPropertyList>
+	<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyList divclass="span6">
+			<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="activeFlag" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="attributeSetType" edit="#rc.attributeSet.isNew()#">
+			<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="attributeSetName" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="attributeSetCode" edit="#rc.edit#">
+		</cf_HibachiPropertyList>
 		
 		<cfif rc.attributeSet.isNew()>
 			<input type="hidden" name="globalFlag" value="1" />
 		<cfelse>
-			<cf_SlatwallPropertyList divclass="span6">
+			<cf_HibachiPropertyList divclass="span6">
 				<cfset local.canEditGlobal = listFind( "astProduct,astOrderItem", rc.attributeSet.getAttributeSetType().getSystemCode() ) && rc.edit />
-				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#local.canEditGlobal#">
+				<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#local.canEditGlobal#">
 				<cfif listFind( "astOrderItem", rc.attributeSet.getAttributeSetType().getSystemCode() )>
-					<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="requiredFlag" edit="#rc.edit#">
-					<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="accountSaveFlag" edit="#rc.edit#">
-					<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="additionalCharge" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="requiredFlag" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="accountSaveFlag" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="additionalCharge" edit="#rc.edit#">
 				</cfif>
-			</cf_SlatwallPropertyList>
+			</cf_HibachiPropertyList>
 		</cfif>
-	</cf_SlatwallDetailHeader>
+	</cf_HibachiDetailHeader>
 	
-	<cf_SlatwallTabGroup object="#rc.attributeSet#">
-		<cf_SlatwallTab view="admin:entity/attributesettabs/attributes" />
-		<cf_SlatwallTab view="admin:entity/attributesettabs/description" />
+	<cf_HibachiTabGroup object="#rc.attributeSet#">
+		<cf_HibachiTab view="admin:entity/attributesettabs/attributes" />
+		<cf_HibachiTab view="admin:entity/attributesettabs/description" />
 		<cfif not rc.attributeSet.getGlobalFlag()>
-			<cf_SlatwallTab view="admin:entity/attributesettabs/producttypes" />
+			<cf_HibachiTab view="admin:entity/attributesettabs/producttypes" />
 		</cfif>
-	</cf_SlatwallTabGroup>
+	</cf_HibachiTabGroup>
 	
 </cf_HibachiCrudDetailForm>
 

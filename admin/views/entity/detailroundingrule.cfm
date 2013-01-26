@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiCrudDetailForm object="#rc.roundingRule#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.roundingRule#" />
 		
-		<cf_SlatwallDetailHeader>
-			<cf_SlatwallPropertyList>
-				<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleName" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleExpression" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleDirection" edit="#rc.edit#" fieldType="select">
-			</cf_SlatwallPropertyList>
-		</cf_SlatwallDetailHeader>
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.roundingRule#" property="roundingRuleName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.roundingRule#" property="roundingRuleExpression" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.roundingRule#" property="roundingRuleDirection" edit="#rc.edit#" fieldType="select">
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
 		
 	</cf_HibachiCrudDetailForm>
 </cfoutput>
