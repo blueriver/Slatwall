@@ -38,7 +38,7 @@ Notes:
 --->
 <cfcomponent extends="BaseService" accessors="true">
 	
-	<cfproperty name="utilityFileService" type="any" />
+	<cfproperty name="hibachiUtilityService" type="any" />
 	
 	<cffunction name="update">
 		<cfargument name="branch" type="string" default="master">
@@ -64,7 +64,7 @@ Notes:
 			<cfzip action="unzip" destination="#getTempDirectory()#" file="#getTempDirectory()##downloadFileName#" >
 			<cfzip action="list" file="#getTempDirectory()##downloadFileName#" name="dirList" >
 			<cfset var sourcePath = getTempDirectory() & "#listFirst(dirList.name[1],'/')#" />
-			<cfset getUtilityFileService().duplicateDirectory(source=sourcePath, destination=slatwallRootPath, overwrite=true, recurse=true, copyContentExclusionList=copyContentExclusionList, deleteDestinationContent=true, deleteDestinationContentExclusionList=deleteDestinationContentExclusionList ) />
+			<cfset getHibachiUtilityService().duplicateDirectory(source=sourcePath, destination=slatwallRootPath, overwrite=true, recurse=true, copyContentExclusionList=copyContentExclusionList, deleteDestinationContent=true, deleteDestinationContentExclusionList=deleteDestinationContentExclusionList ) />
 			
 			<!--- if there is any error during update, restore the old files and throw the error --->
 			<cfcatch type="any">

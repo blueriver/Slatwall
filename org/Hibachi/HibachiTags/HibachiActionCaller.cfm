@@ -109,12 +109,12 @@
 		<cfset attributes.class &= " modalload" />
 	</cfif>
 	
-	<cfif not attributes.hibachiScope.secureDisplay(action=attributes.action)>
+	<cfif not attributes.hibachiScope.authenticateAction(action=attributes.action)>
 		<cfset attributes.class &= " disabled" />
 	</cfif>
 
 
-	<cfif attributes.hibachiScope.secureDisplay(action=attributes.action) || (attributes.type eq "link" && attributes.iconOnly)>
+	<cfif attributes.hibachiScope.authenticateAction(action=attributes.action) || (attributes.type eq "link" && attributes.iconOnly)>
 		<cfif attributes.type eq "link">
 			<cfoutput><a title="#attributes.title#" class="#attributes.class#" href="#attributes.hibachiScope.buildURL(action=attributes.action,querystring=attributes.querystring)#"<cfif attributes.modal && not attributes.disabled> data-toggle="modal" data-target="##adminModal"</cfif><cfif attributes.disabled> data-disabled="#attributes.disabledtext#"<cfelseif attributes.confirm> data-confirm="#attributes.confirmtext#"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
 		<cfelseif attributes.type eq "list">

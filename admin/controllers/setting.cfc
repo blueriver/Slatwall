@@ -47,7 +47,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="scheduleService" type="any";
 	property name="settingService" type="any";
 	property name="updateService" type="any";
-	property name="utilityFileService" type="any";
+	property name="hibachiUtilityService" type="any";
 	
 	this.publicMethods='';
 	

@@ -47,7 +47,7 @@ component extends="BaseService" accessors="true" {
 	property name="contentService" type="any";
 	property name="skuService" type="any";
 	property name="subscriptionService" type="any";
-	property name="utilityFileService" type="any";
+	property name="hibachiUtilityService" type="any";
 	property name="utilityTagService" type="any";
 	property name="optionService" type="any";
 	

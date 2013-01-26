@@ -51,10 +51,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="shippingService";
 	property name="sessionService";
 	property name="taxService";
-	property name="utilityFormService";
-	property name="utilityTagService";
-	property name="utilityService";
-	property name="utilityEmailService";
 	property name="stockService";
 	property name="subscriptionService";
 	property name="typeService";

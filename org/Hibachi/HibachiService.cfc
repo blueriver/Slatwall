@@ -2,6 +2,7 @@
 	
 	<cfproperty name="hibachiDAO" type="any">
 	<cfproperty name="attributeService" type="any">
+	<cfproperty name="hibachiUtilityService" type="any">
 	
 	<!--- Variables Scope Used For Caching --->
 	<cfset variables.entityORMMetaDataObjects = {} />
@@ -247,7 +248,7 @@
 			}
 	
 			// Open / Download File
-			getUtilityFileService().downloadFile(fileNameWithExt,filePath,"application/#arguments.fileType#",true);
+			getHibachiUtilityService().downloadFile(fileNameWithExt,filePath,"application/#arguments.fileType#",true);
 		}
 			
 			    

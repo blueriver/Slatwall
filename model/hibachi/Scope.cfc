@@ -221,7 +221,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		return expandPath("/Slatwall");
 	}
 	
-	public any function secureDisplay( string action, string entityName, string ) {
+	public any function authenticateAction( string action, string entityName, string ) {
 		return true;
 	}
 	

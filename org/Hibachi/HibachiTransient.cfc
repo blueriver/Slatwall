@@ -692,7 +692,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			
 			// Also add any extended data
 			if(structKeyExists(metaData, "extends") && structKeyExists(metaData.extends, "properties")) {
-				metaProperties = getService("utilityService").arrayConcat(metaData.extends.properties, metaProperties);
+				metaProperties = getService("hibachiUtilityService").arrayConcat(metaData.extends.properties, metaProperties);
 			}
 			
 			setApplicationValue("classPropertyCache_#getClassFullname()#", metaProperties);
@@ -748,7 +748,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint helper function to pass this entity along with a template to the string replace function
 	public string function stringReplace( required string templateString, boolean formatValues=false ) {
-		return getService("utilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues);
+		return getService("hibachiUtilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues);
 	}
 	
 	

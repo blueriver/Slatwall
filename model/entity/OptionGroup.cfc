@@ -68,7 +68,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 		if(!structKeyExists(arguments,"orderby")) {
 			return variables.Options;
 		} else {
-			return getService("utilityService").sortObjectArray(variables.Options,arguments.orderby,arguments.sortType,arguments.direction);
+			return getService("hibachiUtilityService").sortObjectArray(variables.Options,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
     

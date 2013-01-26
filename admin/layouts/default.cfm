@@ -69,7 +69,11 @@ Notes:
 						<a href="#application.configBean.getContext()#/admin" class="brand"><img src="#request.slatwallScope.getBaseURL()#/assets/images/mura.logo.png" style="width:25px;heigh:26px;" title="Mura" /></a>
 						<li class="divider-vertical"></li>
 						--->
-						<a href="#buildURL(action='admin:main.default')#" class="brand brand-two"><img src="#request.slatwallScope.getBaseURL()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
+						<cfset homeLink = request.slatwallScope.getBaseURL() />
+						<cfif not len(homeLink)>
+							<cfset homeLink = "/" />
+						</cfif>
+						<a href="#homeLink#" class="brand brand-two"><img src="#request.slatwallScope.getBaseURL()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
 						<li class="divider-vertical"></li>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.products_nav')#" icon="tags icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.listproduct" type="list">
@@ -105,7 +109,7 @@ Notes:
 							<cf_HibachiActionCaller action="admin:entity.listintegration" type="list">
 							<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
 							<cfloop array="#local.integrationSubsystems#" index="local.intsys">
-								<cfif request.slatwallScope.secureDisplay('#local.intsys.subsystem#:main.default')>
+								<cfif request.slatwallScope.authenticateAction('#local.intsys.subsystem#:main.default')>
 									<li>
 										<a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a>
 									</li>

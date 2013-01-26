@@ -39,7 +39,7 @@ Notes:
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="permissionService" type="any";
-	property name="utilityService" type="any";
+	property name="hibachiUtilityService" type="any";
 	
 	// Place holder properties that get populated lazily
 	property name="settings" type="any";
@@ -256,7 +256,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					arrayDeleteAt(newXML.beans.XmlChildren, utilityORMServicePosNewXml);
 				}
 				// import all the custom beans to coldspring
-				var importedBeans = getUtilityService().xmlImport(arguments.originalXML,newXML.XmlRoot.XmlChildren);
+				var importedBeans = getHibachiUtilityService().xmlImport(arguments.originalXML,newXML.XmlRoot.XmlChildren);
 				for(var node in importedBeans) {
 					arrayAppend(arguments.originalXML.XmlRoot.XmlChildren,node);
 				}

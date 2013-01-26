@@ -101,11 +101,11 @@ component accessors="true" output="false" persistent="false" {
 	// ========================= START: DELIGATION HELPERS ==========================================
 	
 	public string function encryptValue(string value) {
-		return getService("hibachiEncryptionService").encryptValue(argumentcollection=arguments);
+		return getService("hibachiUtilityService").encryptValue(argumentcollection=arguments);
 	}
 	
 	public string function decryptValue(string value) {
-		return getService("hibachiEncryptionService").decryptValue(argumentcollection=arguments);
+		return getService("hibachiUtilityService").decryptValue(argumentcollection=arguments);
 	}
 	
 	public void function logHibachi(required string message, boolean generalLog=false){

@@ -3,7 +3,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	property name="hibachiSessionService" type="any";
 
 	public boolean function authenticateAction() {
-			
+		return true;
 	}
 	
 	public boolean function authenticateEntity(required string crud, required string entityName) {

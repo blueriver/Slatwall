@@ -99,7 +99,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 			var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
 			var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#assignedSites["siteID"][i]#/includes/display_objects/custom/slatwall/"));
 			
-			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
+			getService("hibachiUtilityService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}
 		logHibachi("Setting Service - verifyMuraFrontendViews - Finished", true);
 	}

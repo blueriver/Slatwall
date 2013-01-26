@@ -44,4 +44,8 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		return getService("hibachiRBService").getRBKey(arguments.key, getRBLocale());
 	}
 	
+	public boolean function authenticateAction() {
+		return getService("hibachiAuthenticationService").authenticateAction(  );
+	}
+	
 }

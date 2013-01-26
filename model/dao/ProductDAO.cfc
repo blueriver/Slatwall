@@ -387,7 +387,7 @@ Notes:
 				dataQuery.execute();
 			} else {
 				if(arguments.tableName == "SlatwallProduct"){
-					var fileName = getService("utilityFileService").filterFileName(arguments.data['product_productName'][arguments.rowNumber]);
+					var fileName = getService("hibachiUtilityService").filterFileName(arguments.data['product_productName'][arguments.rowNumber]);
 					/* check if the fileName (product url) already exists*/
 					dataQuery.setSql("
 						SELECT productID FROM SlatwallProduct WHERE urlTitle = '#fileName#';

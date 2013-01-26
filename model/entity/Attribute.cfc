@@ -76,7 +76,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		if(!structKeyExists(arguments,"orderby")) {
 			return variables.AttributeOptions;
 		} else {
-			return getService("utilityService").sortObjectArray(variables.AttributeOptions,arguments.orderby,arguments.sortType,arguments.direction);
+			return getService("hibachiUtilityService").sortObjectArray(variables.AttributeOptions,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
 

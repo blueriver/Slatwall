@@ -1,6 +1,6 @@
 component extends="Slatwall.org.Hibachi.HibachiController" output="false" accessors="true"  {
 
-	property name="utilityFileService" type="any";
+	property name="hibachiUtilityService" type="any";
 
 	this.secureMethods="default,updateviews";
 	
@@ -8,7 +8,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
 		var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#rc.siteid#/includes/display_objects/custom/slatwall/"));
 
-		getUtilityFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
+		gethibachiUtilityService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
 		getFW().redirect(action="admin:main");
 	}
 	

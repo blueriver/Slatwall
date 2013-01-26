@@ -46,7 +46,7 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="permissions" type="struct";
 	
 	// Uses the current mura user to check security against a given action
-	public boolean function secureDisplay(required string action, any account) {
+	public boolean function authenticateAction(required string action, any account) {
 		if(!structKeyExists(arguments, "account")) {
 			arguments.account = getSlatwallScope().getCurrentAccount();
 		}

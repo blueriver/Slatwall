@@ -42,7 +42,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	property name="addressService" type="any";
 	property name="roundingRuleService" type="any";
-	property name="utilityService" type="any";
+	property name="hibachiUtilityService" type="any";
 
 		
 	// ----------------- START: Apply Promotion Logic ------------------------- 
@@ -791,7 +791,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	// ----------------- END: Apply Promotion Logic -------------------------
 	
 	public struct function getSalePriceDetailsForProductSkus(required string productID) {
-		var priceDetails = getUtilityService().queryToStructOfStructures(getPromotionDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID), "skuID");
+		var priceDetails = getHibachiUtilityService().queryToStructOfStructures(getPromotionDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID), "skuID");
 		for(var key in priceDetails) {
 			if(priceDetails[key].roundingRuleID != "") {
 				priceDetails[key].salePrice = getRoundingRuleService().roundValueByRoundingRuleID(value=priceDetails[key].salePrice, roundingRuleID=priceDetails[key].roundingRuleID);

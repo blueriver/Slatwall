@@ -25,7 +25,7 @@ function CheckAuthentication()
 	//user logs in your system.
 	
 	request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
-	return request.slatwallScope.getService("permissionService").secureDisplay('admin:main.ckfinder');
+	return request.slatwallScope.getService("permissionService").authenticateAction('admin:main.ckfinder');
 	
 }
 

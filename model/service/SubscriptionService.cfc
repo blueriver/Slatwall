@@ -44,7 +44,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
 	property name="emailService" type="any";
-	property name="utilityEmailService" type="any";
 	
 	public boolean function createSubscriptionUsageBenefitAccountByAccess(required any access, required any account) {
 		var subscriptionUsageBenefitAccountCreated = false;
