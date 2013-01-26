@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Category" entityname="SlatwallCategory" table="SlatwallCategory" persistent="true" accessors="true" extends="BaseEntity" parentPropertyName="parentCategory" hb_permission="this" {
+component displayname="Category" entityname="SlatwallCategory" table="SlatwallCategory" persistent="true" accessors="true" extends="BaseEntity" parentPropertyName="parentCategory" hb_serviceName="contentService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="categoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
