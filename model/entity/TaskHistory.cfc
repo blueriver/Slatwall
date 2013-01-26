@@ -57,7 +57,7 @@ component displayname="Task History" entityname="SlatwallTaskHistory" table="Sla
 	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
-	property name="createdDateTime" ormtype="timestamp";
+	property name="createdDateTime" hb_editable="false" ormtype="timestamp";
 	
 	// Non-Persistent Properties
 

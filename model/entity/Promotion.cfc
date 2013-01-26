@@ -57,10 +57,10 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	property name="createdDateTime" hb_editable="false" ormtype="timestamp";
+	property name="createdByAccount" hb_editable="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" hb_editable="false" ormtype="timestamp";
+	property name="modifiedByAccount" hb_editable="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-persistent properties
 	property name="currentFlag" type="boolean" persistent="false"; 
