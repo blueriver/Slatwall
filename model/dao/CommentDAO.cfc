@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO" output="false">
+<cfcomponent extends="HibachiDAO" output="false">
 	
 	<cffunction name="getRelatedCommentsForEntity" returntype="Array" access="public">
 		<cfargument name="primaryIDPropertyName" type="string" required="true" />

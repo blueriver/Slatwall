@@ -41,8 +41,10 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	// Persistent Properties
 	property name="permissionGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="permissionGroupName" ormtype="string";
-	property name="permissions" ormtype="string" length="8000";
 	
+	// Related Object Properties (one-to-many)
+	property name="permissions" singularname="permission" cfc="Permission" type="array" fieldtype="one-to-many" fkcolumn="permissionID" cascade="all-delete-orphan" inverse="true";
+
 	// Related Object Properties (many-to-many - inverse)
 	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="permissionGroupID" inversejoincolumn="accountID" inverse="true";
 
@@ -58,6 +60,14 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Permissions (one-to-many)    
+	public void function addPermission(required any permission) {    
+		arguments.permission.setPermissionGroup( this );    
+	}    
+	public void function removePermission(required any permission) {    
+		arguments.permission.removePermissionGroup( this );    
+	}
 	
 	// Accounts (many-to-many - inverse)
 	public void function addAccount(required any account) {
@@ -82,13 +92,6 @@ component displayname="PermissionGroup" entityname="SlatwallPermissionGroup" tab
 	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
-	
-	public any function isDeletable() {
-		if(!isNull(getPermissions()) && getPermissions() eq "*") {
-			return false;
-		}
-		return super.isDeletable();
-	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

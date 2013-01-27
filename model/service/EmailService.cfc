@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseService" persistent="false" accessors="true" output="false">
+<cfcomponent extends="HibachiService" persistent="false" accessors="true" output="false">
 	
 	<cffunction name="sendEmailByEvent">
 		<cfargument name="eventName" type="string" required="true" />

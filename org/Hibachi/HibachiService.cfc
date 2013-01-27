@@ -12,125 +12,13 @@
 	<cfproperty name="attributeService" type="any">
 	
 	<!--- Variables Scope Used For Caching --->
+	<cfset variables.entitiesMetaData = {} />
 	<cfset variables.entityORMMetaDataObjects = {} />
 	<cfset variables.entityObjects = {} />
 	<cfset variables.entityHasProperty = {} />
 	<cfset variables.entityHasAttribute = {} />
-	<cfset variables.entityServiceMapping = {} />
-	
-	<cfset variables.entityServiceMapping["Access"] = "accessService" />
-	<cfset variables.entityServiceMapping["Account"] = "accountService" />
-	<cfset variables.entityServiceMapping["AccountAddress"] = "accountService" />
-	<cfset variables.entityServiceMapping["AccountAuthentication"] = "accountService" />
-	<cfset variables.entityServiceMapping["AccountContentAccess"] = "accountService" />
-	<cfset variables.entityServiceMapping["AccountEmailAddress"] = "accountService" />
-	<cfset variables.entityServiceMapping["AccountPayment"] = "accountService" />
-	<cfset variables.entityServiceMapping["AccountPaymentMethod"] = "accountService" />
-	<cfset variables.entityServiceMapping["AccountPhoneNumber"] = "accountService" />
-	<cfset variables.entityServiceMapping["AccountRelationship"] = "accountService" />
-	<cfset variables.entityServiceMapping["Address"] = "addressService" />
-	<cfset variables.entityServiceMapping["AddressZone"] = "addressService" />
-	<cfset variables.entityServiceMapping["AlternateSkuCode"] = "skuService" />
-	<cfset variables.entityServiceMapping["Attribute"] = "attributeService" />
-	<cfset variables.entityServiceMapping["AttributeOption"] = "attributeService" />
-	<cfset variables.entityServiceMapping["AttributeSet"] = "attributeService" />
-	<cfset variables.entityServiceMapping["AttributeValue"] = "attributeService" />
-	<cfset variables.entityServiceMapping["Brand"] = "brandService" />
-	<cfset variables.entityServiceMapping["Category"] = "contentService" />
-	<cfset variables.entityServiceMapping["Comment"] = "commentService" />
-	<cfset variables.entityServiceMapping["CommentRelationship"] = "commentService" />
-	<cfset variables.entityServiceMapping["Content"] = "contentService" />
-	<cfset variables.entityServiceMapping["ContentAccess"] = "accessService" />
-	<cfset variables.entityServiceMapping["Country"] = "addressService" />
-	<cfset variables.entityServiceMapping["Currency"] = "currencyService" />
-	<cfset variables.entityServiceMapping["Email"] = "emailService" />
-	<cfset variables.entityServiceMapping["EmailTemplate"] = "emailService" />
-	<cfset variables.entityServiceMapping["FulfillmentMethod"] = "fulfillmentService" />
-	<cfset variables.entityServiceMapping["Image"] = "imageService" />
-	<cfset variables.entityServiceMapping["Integration"] = "integrationService" />
-	<cfset variables.entityServiceMapping["Inventory"] = "inventoryService" />
-	<cfset variables.entityServiceMapping["Location"] = "locationService" />
-	<cfset variables.entityServiceMapping["LocationAddress"] = "locationService" />
-	<cfset variables.entityServiceMapping["MeasurementUnit"] = "measurementUnitService" />
-	<cfset variables.entityServiceMapping["Option"] = "optionService" />
-	<cfset variables.entityServiceMapping["OptionGroup"] = "optionService" />
-	<cfset variables.entityServiceMapping["Order"] = "orderService" />
-	<cfset variables.entityServiceMapping["OrderDelivery"] = "orderService" />
-	<cfset variables.entityServiceMapping["OrderDeliveryItem"] = "orderService" />
-	<cfset variables.entityServiceMapping["OrderFulfillment"] = "orderService" />
-	<cfset variables.entityServiceMapping["OrderItem"] = "orderService" />
-	<cfset variables.entityServiceMapping["OrderItemAppliedTax"] = "taxService" />
-	<cfset variables.entityServiceMapping["OrderOrigin"] = "settingService" />
-	<cfset variables.entityServiceMapping["OrderPayment"] = "orderService" />
-	<cfset variables.entityServiceMapping["OrderReturn"] = "orderService" />
-	<cfset variables.entityServiceMapping["PaymentMethod"] = "paymentService" />
-	<cfset variables.entityServiceMapping["PaymentTerm"] = "paymentService" />
-	<cfset variables.entityServiceMapping["PaymentTransaction"] = "paymentService" />
-	<cfset variables.entityServiceMapping["PermissionGroup"] = "accountService" />
-	<cfset variables.entityServiceMapping["PostalCode"] = "addressService" />
-	<cfset variables.entityServiceMapping["PriceGroup"] = "priceGroupService" />
-	<cfset variables.entityServiceMapping["PriceGroupRate"] = "priceGroupService" />
-	<cfset variables.entityServiceMapping["Product"] = "productService" />
-	<cfset variables.entityServiceMapping["ProductImage"] = "imageService" />
-	<cfset variables.entityServiceMapping["ProductReview"] = "productService" />
-	<cfset variables.entityServiceMapping["ProductType"] = "productService" />
-	<cfset variables.entityServiceMapping["Promotion"] = "promotionService" />
-	<cfset variables.entityServiceMapping["PromotionApplied"] = "promotionService" />
-	<cfset variables.entityServiceMapping["PromotionCode"] = "promotionService" />
-	<cfset variables.entityServiceMapping["PromotionImage"] = "promotionService" />
-	<cfset variables.entityServiceMapping["PromotionPeriod"] = "promotionService" />
-	<cfset variables.entityServiceMapping["PromotionQualifier"] = "promotionService" />
-	<cfset variables.entityServiceMapping["PromotionReward"] = "promotionService" />
-	<cfset variables.entityServiceMapping["RoundingRule"] = "roundingRuleService" />
-	<cfset variables.entityServiceMapping["Schedule"] = "scheduleService" />
-	<cfset variables.entityServiceMapping["Session"] = "sessionService" />
-	<cfset variables.entityServiceMapping["Setting"] = "settingService" />
-	<cfset variables.entityServiceMapping["ShippingMethod"] = "shippingService" />
-	<cfset variables.entityServiceMapping["ShippingMethodOption"] = "shippingService" />
-	<cfset variables.entityServiceMapping["ShippingMethodRate"] = "shippingService" />
-	<cfset variables.entityServiceMapping["Site"] = "siteService" />
-	<cfset variables.entityServiceMapping["Sku"] = "skuService" />
-	<cfset variables.entityServiceMapping["SkuCurrency"] = "skuService" />
-	<cfset variables.entityServiceMapping["State"] = "addressService" />
-	<cfset variables.entityServiceMapping["Stock"] = "stockService" />
-	<cfset variables.entityServiceMapping["StockAdjustment"] = "stockService" />
-	<cfset variables.entityServiceMapping["StockAdjustmentDelivery"] = "stockService" />
-	<cfset variables.entityServiceMapping["StockAdjustmentDeliveryItem"] = "stockService" />
-	<cfset variables.entityServiceMapping["StockAdjustmentItem"] = "stockService" />
-	<cfset variables.entityServiceMapping["StockHold"] = "stockService" />
-	<cfset variables.entityServiceMapping["StockReceiver"] = "stockService" />
-	<cfset variables.entityServiceMapping["StockReceiverItem"] = "stockService" />
-	<cfset variables.entityServiceMapping["SubscriptionBenefit"] = "subscriptionService" />
-	<cfset variables.entityServiceMapping["SubscriptionOrderItem"] = "subscriptionService" />
-	<cfset variables.entityServiceMapping["SubscriptionStatus"] = "subscriptionService" />
-	<cfset variables.entityServiceMapping["SubscriptionTerm"] = "subscriptionService" />
-	<cfset variables.entityServiceMapping["SubscriptionUsage"] = "subscriptionService" />
-	<cfset variables.entityServiceMapping["SubscriptionUsageBenefit"] = "subscriptionService" />
-	<cfset variables.entityServiceMapping["SubscriptionUsageBenefitAccount"] = "subscriptionService" />
-	<cfset variables.entityServiceMapping["Task"] = "scheduleService" />
-	<cfset variables.entityServiceMapping["TaskHistory"] = "scheduleService" />
-	<cfset variables.entityServiceMapping["TaskSchedule"] = "scheduleService" />
-	<cfset variables.entityServiceMapping["TaxApplied"] = "taxService" />
-	<cfset variables.entityServiceMapping["TaxCategory"] = "taxService" />
-	<cfset variables.entityServiceMapping["TaxCategoryRate"] = "taxService" />
-	<cfset variables.entityServiceMapping["Term"] = "termService" />
-	<cfset variables.entityServiceMapping["Type"] = "typeService" />
-	<cfset variables.entityServiceMapping["UpdateScript"] = "updateService" />
-	<cfset variables.entityServiceMapping["Vendor"] = "vendorService" />
-	<cfset variables.entityServiceMapping["VendorAccount"] = "vendorService" />
-	<cfset variables.entityServiceMapping["VendorAddress"] = "vendorService" />
-	<cfset variables.entityServiceMapping["VendorEmailAddress"] = "vendorService" />
-	<cfset variables.entityServiceMapping["VendorOrder"] = "vendorOrderService" />
-	<cfset variables.entityServiceMapping["VendorOrderItem"] = "vendorOrderService" />
-	<cfset variables.entityServiceMapping["VendorPhoneNumber"] = "vendorService" />
-	<cfset variables.entityServiceMapping["VendorSkuStock"] = "vendorService" />
-	
 	
 	<cfscript>
-		public struct function getEntityServiceMapping() {
-			return variables.entityServiceMapping;
-		}
-		
 		public any function get(required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
 			return getHibachiDAO().get(argumentcollection=arguments);
 		}
@@ -229,7 +117,7 @@
 				arguments.fileName = createUUID() ;
 			}
 			var fileNameWithExt = arguments.fileName & "." & arguments.fileType ;
-			var filePath = getSlatwallVFSRootDirectory() & "/" & fileNameWithExt ;
+			var filePath = getVirtualFileSystemPath() & "/" & fileNameWithExt ;
 			if(isQuery(data) && !structKeyExists(arguments,"columns")){
 				arguments.columns = arguments.data.columnList;
 			}
@@ -619,27 +507,28 @@
 		// @hint returns the correct service on a given entityName.  This is very useful for creating abstract code
 		public any function getServiceByEntityName( required string entityName ) {
 			
-			// This removes the Slatwall Prefix to the entityName when needed.
-			if(left(arguments.entityName, 8) == "Slatwall") {
+			// This removes the Application Prefix to the entityName when needed.
+			if(left(arguments.entityName, len(getApplicationValue('applicationKey'))) == getApplicationValue('applicationKey')) {
 				arguments.entityName = right(arguments.entityName, len(arguments.entityName) - 8);
 			}
 			
-			if(structKeyExists(getEntityServiceMapping(), arguments.entityName)) {
-				return getService( getEntityServiceMapping()[ arguments.entityName ] );
+			if(structKeyExists(getEntitiesMetaData(), arguments.entityName) && structKeyExists(getEntitiesMetaData()[arguments.entityName], "hb_serviceName")) {
+				return getService( getEntitiesMetaData()[ arguments.entityName ].hb_serviceName );
 			}
 			
-			throw("You have requested the service for the entity of '#arguments.entityName#' and that entity was not defined in the coldspring config.xml so please add it, and the appropriate service it should use.")
+			// By default just return the base hibachi service
+			return getService("hibachiService");
 		}
 		
 		// ======================= START: Entity Name Helper Methods ==============================
 		
 		public string function getProperlyCasedShortEntityName( required string entityName ) {
-			if(left(arguments.entityName, 8) == "Slatwall") {
+			if(left(arguments.entityName, len(getApplicationValue('applicationKey'))) == getApplicationValue('applicationKey')) {
 				arguments.entityName = right(arguments.entityName, len(arguments.entityName)-8);
 			}
 			
-			if( structKeyExists(getEntityServiceMapping(), arguments.entityName) ) {
-				var keyList = structKeyList(getEntityServiceMapping());
+			if( structKeyExists(getEntitiesMetaData(), arguments.entityName) ) {
+				var keyList = structKeyList(getEntitiesMetaData());
 				var keyIndex = listFindNoCase(keyList, arguments.entityName);
 				return listGetAt(keyList, keyIndex);
 			}
@@ -648,16 +537,34 @@
 		}
 		
 		public string function getProperlyCasedFullEntityName( required string entityName ) {
-			return "Slatwall#getProperlyCasedShortEntityName( arguments.entityName )#";
+			return "#getApplicationValue('applicationKey')##getProperlyCasedShortEntityName( arguments.entityName )#";
 		}
 		
 		public string function getProperlyCasedFullClassNameByEntityName( required string entityName ) {
-			return "Slatwall.model.entity.#replace(getProperlyCasedFullEntityName( arguments.entityName ), 'Slatwall', '')#";
+			return "#getApplicationValue('applicationKey')#.model.entity.#getProperlyCasedShortEntityName( arguments.entityName )#";
 		}
 		
 		// =======================  END: Entity Name Helper Methods ===============================
 		
 		// ===================== START: Cached Entity Meta Data Methods ===========================
+		
+		public any function getEntitiesMetaData() {
+			if(!structCount(variables.entitiesMetaData)) {
+				var entityDirectoryArray = directoryList(expandPath('/#getApplicationValue('applicationKey')#/model/entity'));
+				for(var e=1; e<=arrayLen(entityDirectoryArray); e++) {
+					if(listLast(entityDirectoryArray[e], '.') eq 'cfc') {
+						var entityShortName = listFirst(listLast(replace(entityDirectoryArray[e], '\', '/', 'all'), '/'), '.');
+						var entityMetaData = createObject('component', '#getApplicationValue('applicationKey')#.model.entity.#entityShortName#').getThisMetaData();
+						
+						if(structKeyExists(entityMetaData, "persistent") && entityMetaData.persistent) {
+							 variables.entitiesMetaData[ entityShortName ] = entityMetaData;
+						}
+					}
+				}
+			}
+			
+			return variables.entitiesMetaData;
+		}
 		
 		// @hint returns the entity meta data object that is used by a lot of the helper methods below
 		public any function getEntityORMMetaDataObject( required string entityName ) {
@@ -706,6 +613,8 @@
 			// Pull the meta data from the object (which in turn will cache it in the application for the next time)
 			return getEntityObject( arguments.entityName ).getPropertiesStruct(); 
 		}
+		
+		
 		
 		// =====================  END: Cached Entity Meta Data Methods ============================
 		

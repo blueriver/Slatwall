@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" accessors="true" output="false" {
+component extends="HibachiService" persistent="false" accessors="true" output="false" {
 
 	property name="skuDAO" type="any";
 	

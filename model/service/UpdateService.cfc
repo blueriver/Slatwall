@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseService" accessors="true">
+<cfcomponent extends="HibachiService" accessors="true">
 	
 	<cffunction name="update">
 		<cfargument name="branch" type="string" default="master">

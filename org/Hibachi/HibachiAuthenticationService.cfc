@@ -2,13 +2,14 @@ component output="false" accessors="true" extends="HibachiService" {
 
 	property name="hibachiSessionService" type="any";
 
-	public boolean function authenticateAction() {
+	public boolean function authenticateAction(required string action, required any account) {
+		return true;
 		if(!structKeyExists(arguments, "account")) {
-			arguments.account = getSlatwallScope().getCurrentAccount();
+			arguments.account = getHibachiScope().getCurrentAccount();
 		}
 		
 		// Check if the user is a super admin, if true no need to worry about security
-		if( findNoCase("*", arguments.account.getAllPermissions()) ) {
+		if( arguments.account.getSuperUserFlag() ) {
 			return true;
 		}
 		
@@ -17,15 +18,15 @@ component output="false" accessors="true" extends="HibachiService" {
 		var itemName = listLast( arguments.action, "." );
 		
 		// Verify that there is a subsystem and section setup for that action
-		if( !structKeyExists(getPermissions(), subsystemName) || !structKeyExists(getPermissions()[ subsystemName ], sectionName) ) {
+		if( !structKeyExists(getActionPermissions(), subsystemName) || !structKeyExists(getActionPermissions()[ subsystemName ], sectionName) ) {
 			return false;
 		}
 		
 		//check if the page is public, if public no need to worry about security
-		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].publicMethods, itemName)){
+		if(listFindNocase(getActionPermissions()[ subsystemName ][ sectionName ].publicMethods, itemName)){
 			return true;
 		}	
-		
+		/*
 		// Look for the anyAdmin methods next to see if this is an anyAdmin method, and this user is some type of admin
 		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].anyAdminMethods, itemName) && len(arguments.account.getAllPermissions())) {
 			return true;
@@ -47,11 +48,12 @@ component output="false" accessors="true" extends="HibachiService" {
 				return true;
 			}
 		}
+		*/
 		
 		return false;
 	}
 	
-	public boolean function authenticateEntity(required string crud, required string entityName) {
+	public boolean function authenticateEntity(required string crudType, required string entityName) {
 		var entityPermissions = getEntityPermissionDetails();
 		
 		// If the entity does not have the ability to have permissions set, then return false
@@ -106,6 +108,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	public struct function getEntityPermissionDetails() {
+		
 		var entityDirectoryArray = directoryList(expandPath('/Slatwall/model/entity'));
 		var entityPermissionDetails = {};
 		for(var e=1; e<=arrayLen(entityDirectoryArray); e++) {

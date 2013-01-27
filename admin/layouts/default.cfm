@@ -165,7 +165,7 @@ Notes:
 								<li class="divider"></li>
 							</cfif>
 							<cf_HibachiActionCaller action="admin:main.update" type="list">
-							<cfif findNoCase("*", $.slatwall.getCurrentAccount().getAllPermissions())>
+							<cfif $.slatwall.getCurrentAccount().getSuperUserFlag()>
 								<cf_HibachiActionCaller action="admin:main.default" querystring="reload=true&update=true" type="list" text="Reload Slatwall (Full Update)">
 								<cf_HibachiActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
 							</cfif>

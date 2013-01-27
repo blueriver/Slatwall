@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseDAO" accessors="true" {
+component extends="HibachiDAO" accessors="true" {
 
 	//@hint for caching product types as a tree-sorted query
     public query function getProductTypeQuery() {

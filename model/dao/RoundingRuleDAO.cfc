@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	
 	<cffunction name="getRoundingRuleQuery">
 		<cfargument name="roundingRuleID" type="string" required="true" />

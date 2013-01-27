@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	
 	<cfproperty name="nextOptionGroupSortOrder" type="numeric" />
 	

@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	<cffunction name="getDueTasks" access="public" returntype="Query" >
 		<cfargument name="maxCount" required="true" type="numeric" >
 		

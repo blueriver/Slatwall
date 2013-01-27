@@ -40,7 +40,7 @@ globalEncryptionKeySize
 
 
 --->
-<cfcomponent extends="BaseService" output="false" accessors="true">
+<cfcomponent extends="HibachiService" output="false" accessors="true">
 
 	<cfproperty name="settingDAO" type="any" />
 	

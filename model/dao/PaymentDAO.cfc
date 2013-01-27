@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO" output="false">
+<cfcomponent extends="HibachiDAO" output="false">
 	
 	<cffunction name="isDuplicatePaymentTransaction" access="public" returntype="boolean" output="false">
 		<cfargument name="paymentID" type="string" required="true" />

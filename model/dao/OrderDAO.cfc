@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	
 	<cffunction name="getOrderItemExportQuery" access="public" returntype="Query">
 		<cfset var rs = "" />

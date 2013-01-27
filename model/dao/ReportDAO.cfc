@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	
 	<cffunction name="getOrderReport" returntype="Query" access="public">
 		<cfargument name="startDate" default="" />

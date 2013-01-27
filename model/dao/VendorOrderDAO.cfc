@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseDAO" {
+component extends="HibachiDAO" {
 
 	public any function isProductInVendorOrder(productId, vendorOrderId) {
 		var params = [arguments.productId, arguments.vendorOrderId];				

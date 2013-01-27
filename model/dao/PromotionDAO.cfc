@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	
 	<cffunction name="getActivePromotionRewards" returntype="Array" access="public">
 		<cfargument name="rewardTypeList" required="true" type="string" />

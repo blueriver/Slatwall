@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component  extends="BaseService" accessors="true" {
+component  extends="HibachiService" accessors="true" {
 	
 	// ===================== START: Logical Methods ===========================
 	

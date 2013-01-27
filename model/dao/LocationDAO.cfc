@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseDAO" {
+component extends="HibachiDAO" {
 
 	public boolean function isLocationBeingUsed(required any location) {
 		// Check for stock using this location

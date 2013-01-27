@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	
 	<cffunction name="getUnusedProductOptions" returntype="any" access="public">
 		<cfargument name="productID" type="string" required="true" />

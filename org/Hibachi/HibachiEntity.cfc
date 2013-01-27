@@ -651,12 +651,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			updateCalculatedProperties();
 			
 			// Set createdByAccount
-			if(structKeyExists(this,"setCreatedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && len(getHibachiScope().getCurrentAccount().getAllPermissions()) ){
+			if(structKeyExists(this,"setCreatedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && getHibachiScope().getCurrentAccount().getAdminAccountFlag() ){
 				setCreatedByAccount( getHibachiScope().getCurrentAccount() );	
 			}
 			
 			// Set modifiedByAccount
-			if(structKeyExists(this,"setModifiedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && len(getHibachiScope().getCurrentAccount().getAllPermissions()) ){
+			if(structKeyExists(this,"setModifiedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && getHibachiScope().getCurrentAccount().getAdminAccountFlag() ){
 				setModifiedByAccount(getHibachiScope().getCurrentAccount());
 			}
 			
@@ -699,7 +699,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			updateCalculatedProperties();
 		
 			// Set modifiedByAccount
-			if(structKeyExists(this,"setModifiedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && len(getSlatwallScope().getCurrentAccount().getAllPermissions()) ){
+			if(structKeyExists(this,"setModifiedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && getSlatwallScope().getCurrentAccount().getAdminAccountFlag() ){
 				setModifiedByAccount(getHibachiScope().getCurrentAccount());
 			}
 		}

@@ -36,7 +36,7 @@
 Notes:
 2/
 */
-component extends="BaseService" output="false" {
+component extends="HibachiService" output="false" {
 
 	// ===================== START: Logical Methods ===========================
 	

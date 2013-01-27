@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseService" output="false" accessors="true"{
+component extends="HibachiService" output="false" accessors="true"{
 			
 	property name="taskDAO" type="any";
 	

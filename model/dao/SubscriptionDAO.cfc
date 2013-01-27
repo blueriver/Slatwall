@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	
 	<cffunction name="getSubscriptionCurrentStatus">
 		<cfargument name="subscriptionUsageID" type="any" required="true" />

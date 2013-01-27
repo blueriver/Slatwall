@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent accessors="true" extends="BaseDAO">
+<cfcomponent accessors="true" extends="HibachiDAO">
 	
 	<cfscript>
 		public array function getAttributeSets(required array attributeSetTypeCode,required array productTypeIDs){

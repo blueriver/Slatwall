@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseDAO" {
+component extends="HibachiDAO" {
 	public array function getProductsForVendor(required any vendorID) {
 		var params = [arguments.vendorId];
 		var hql = " SELECT p

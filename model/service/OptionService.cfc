@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseService" accessors="true" {
+component extends="HibachiService" accessors="true" {
 
 	property name="optionDAO" type="any";
 

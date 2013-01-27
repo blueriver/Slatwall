@@ -49,6 +49,7 @@ component displayname="Permission" entityname="SlatwallPermission" table="Slatwa
 	property name="allowDeleteFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
+	property name="permissionGroup" cfc="PermissionGroup" fieldtype="many-to-one" fkcolumn="permissionGroupID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -75,6 +76,24 @@ component displayname="Permission" entityname="SlatwallPermission" table="Slatwa
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Permission Group (many-to-one)    
+	public void function setPermissionGroup(required any permissionGroup) {    
+		variables.permissionGroup = arguments.permissionGroup;    
+		if(isNew() or !arguments.permissionGroup.hasPermission( this )) {    
+			arrayAppend(arguments.permissionGroup.getPermissions(), this);    
+		}    
+	}    
+	public void function removePermissionGroup(any permissionGroup) {    
+		if(!structKeyExists(arguments, "permissionGroup")) {    
+			arguments.permissionGroup = variables.permissionGroup;    
+		}    
+		var index = arrayFind(arguments.permissionGroup.getPermissions(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.permissionGroup.getPermissions(), index);    
+		}    
+		structDelete(variables, "permissionGroup");    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

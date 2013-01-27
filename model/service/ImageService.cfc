@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Image Service" persistent="false" extends="BaseService" output="false" accessors="true" {
+component displayname="Image Service" persistent="false" extends="HibachiService" output="false" accessors="true" {
 
 	property name="utilityTagService" type="any";
 		

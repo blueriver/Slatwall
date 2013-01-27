@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component  extends="BaseService" accessors="true" {
+component  extends="HibachiService" accessors="true" {
 
 	// Cached in Application Scope
 	property name="europeanCentralBankRates" type="struct";

@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	
 	<cffunction name="getInternalAccountAuthenticationsByEmailAddress" returntype="any" access="public">
 		<cfargument name="emailAddress" required="true" type="string" />

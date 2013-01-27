@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseService" accessors="true" output="false" {
+component extends="HibachiService" accessors="true" output="false" {
 	
 	property name="vendorDAO" type="any";
 	

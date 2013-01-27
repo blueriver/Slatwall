@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" accessors="true" output="false" {
+component extends="HibachiService" persistent="false" accessors="true" output="false" {
 
 	public boolean function hasAccess(required any cmsContentID) {
 		// set request scope variable to specify if the access was granted because of subscription or purchase

@@ -88,6 +88,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Non Persistent
 	property name="adminIcon" persistent="false";
+	property name="adminAccountFlag" persistent="false" formatType="yesno"; 
 	property name="guestAccountFlag" persistent="false" formatType="yesno";
 	property name="fullName" persistent="false";
 	property name="emailAddress" persistent="false" formatType="email";
@@ -100,6 +101,20 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="termAccountBalance" persistent="false" formattype="currency";
 	property name="gravatarURL" persistent="false";
 	
+
+	public boolean function getAdminAccountFlag() {
+		if(getSuperUserFlag() || arrayLen(variables.permissionGroups)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function getSuperUserFlag() {
+		if(isNull(variables.superUserFlag)) {
+			variables.superUserFlag = false;
+		}
+		return variables.superUserFlag;
+	}
 
 	public boolean function isGuestAccount() {
 		return isNull(getCmsAccountID());
@@ -115,23 +130,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	public string function getAdminIcon() {
 		return '<img src="#getGravatarURL(55)#" style="width:55px;" />';
-	}
-	
-	public string function getAllPermissions(){
-		var stPermissions = {};
-		var permissionGroups = getPermissionGroups();
-		
-		for(var i=1; i <= arrayLen(permissionGroups); i++){
-			var permissions = permissionGroups[i].getPermissions();
-			
-			if(!isNull(permissions)) {
-				for(var j=1; j<= listlen(permissions); j++){
-					stPermissions[listGetAt(permissions,j)]='';
-				}	
-			}
-		}		
-		
-		return structKeyList(stPermissions);
 	}
 	
 	public boolean function isPriceGroupAssigned(required string  priceGroupId) {

@@ -55,7 +55,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	}
 	
 	public boolean function getLoggedInAsAdminFlag() {
-		if(len(getCurrentAccount().getAllPermissions())) {
+		if(len(getCurrentAccount().getAdminAccountFlag())) {
 			return true;
 		}
 		return false;

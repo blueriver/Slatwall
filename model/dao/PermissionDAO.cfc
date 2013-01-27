@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
+<cfcomponent extends="HibachiDAO">
 	
 	<cffunction name="getMissingUserAccounts" returntype="any" access="public">
 		<cfquery name="accounts">
