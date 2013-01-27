@@ -39,7 +39,7 @@ Notes:
 	
 	orderItem 
 */
-component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent="true" output="false" accessors="true" extends="BaseEntity" {
+component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent="true" output="false" accessors="true" extends="BaseEntity" hb_serviceName="taxService" {
 	
 	// Persistent Properties
 	property name="taxAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

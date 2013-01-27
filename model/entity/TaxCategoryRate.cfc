@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" table="SlatwallTaxCategoryRate" persistent="true" output="false" accessors="true" extends="BaseEntity" {
+component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" table="SlatwallTaxCategoryRate" persistent="true" output="false" accessors="true" extends="BaseEntity" hb_serviceName="taxService" hb_permission="taxCategory.taxCategoryRates" {
 	
 	// Persistent Properties
 	property name="taxCategoryRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

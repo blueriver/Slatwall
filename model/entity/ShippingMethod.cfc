@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Shipping Method" entityname="SlatwallShippingMethod" table="SlatwallShippingMethod" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Shipping Method" entityname="SlatwallShippingMethod" table="SlatwallShippingMethod" persistent=true output=false accessors=true extends="BaseEntity" hb_serviceName="shippingService" hb_permission="fulfillmentMethod.shippingMethods" {
 	
 	// Persistent Properties
 	property name="shippingMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

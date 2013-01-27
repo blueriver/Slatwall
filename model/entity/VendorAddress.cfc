@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Vendor Address" entityname="SlatwallVendorAddress" table="SlatwallVendorAddress" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Vendor Address" entityname="SlatwallVendorAddress" table="SlatwallVendorAddress" persistent="true" accessors="true" output="false" extends="BaseEntity" hb_serviceName="vendorService" hb_permission="vendor.vendorAddresses" {
 	
 	// Persistent Properties
 	property name="vendorAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

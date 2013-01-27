@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Subscription Order Item" entityname="SlatwallSubscriptionOrderItem" table="SlatwallSubscriptionOrderItem" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Subscription Order Item" entityname="SlatwallSubscriptionOrderItem" table="SlatwallSubscriptionOrderItem" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="subscriptionService" {
 	
 	// Persistent Properties
 	property name="subscriptionOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

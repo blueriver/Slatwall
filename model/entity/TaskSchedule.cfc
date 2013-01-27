@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Task Schedule" entityname="SlatwallTaskSchedule" table="SlatwallTaskSchedule" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Task Schedule" entityname="SlatwallTaskSchedule" table="SlatwallTaskSchedule" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="scheduleService" hb_permission="task.taskSchedules" {
 	
 	// Persistent Properties
 	property name="taskScheduleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
