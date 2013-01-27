@@ -18,12 +18,12 @@ component output="false" accessors="true" extends="HibachiService" {
 		var itemName = listLast( arguments.action, "." );
 		
 		// Verify that there is a subsystem and section setup for that action
-		if( !structKeyExists(getActionPermissions(), subsystemName) || !structKeyExists(getActionPermissions()[ subsystemName ], sectionName) ) {
+		if( !structKeyExists(getActionPermissionDetails(), subsystemName) || !structKeyExists(getActionPermissionDetails()[ subsystemName ], sectionName) ) {
 			return false;
 		}
 		
 		//check if the page is public, if public no need to worry about security
-		if(listFindNocase(getActionPermissions()[ subsystemName ][ sectionName ].publicMethods, itemName)){
+		if(listFindNocase(getActionPermissionDetails()[ subsystemName ][ sectionName ].publicMethods, itemName)){
 			return true;
 		}	
 		/*
@@ -157,7 +157,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		}
 	}
 	
-	public struct function getActionPermissions(){
+	public struct function getActionPermissionDetails(){
 		if(!structKeyExists(variables, "actionPermissions")){
 			var allPermissions={
 				admin={}
