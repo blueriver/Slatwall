@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="State" entityname="SlatwallState" table="SlatwallState" persistent="true" extends="BaseEntity" hb_serviceName="addressService" hb_permission="this" {
+component displayname="State" entityname="SlatwallState" table="SlatwallState" persistent="true" extends="HibachiEntity" hb_serviceName="addressService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="stateCode" length="40" ormtype="string" fieldtype="id";

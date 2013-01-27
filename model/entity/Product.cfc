@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Product" entityname="SlatwallProduct" table="SlatwallProduct" persistent="true" extends="BaseEntity" hb_serviceName="productService" hb_permission="this" {
+component displayname="Product" entityname="SlatwallProduct" table="SlatwallProduct" persistent="true" extends="HibachiEntity" hb_serviceName="productService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="productID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

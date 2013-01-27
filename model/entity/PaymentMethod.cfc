@@ -44,7 +44,7 @@ Notes:
 		paymentTerm		
 						
 */
-component displayname="Payment Method" entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="BaseEntity" hb_serviceName="paymentService" hb_permission="this" {
+component displayname="Payment Method" entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="HibachiEntity" hb_serviceName="paymentService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="paymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

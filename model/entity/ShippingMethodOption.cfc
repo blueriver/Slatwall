@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Shipping Method Option" entityname="SlatwallShippingMethodOption" table="SlatwallShippingMethodOption" persistent=true accessors=true output=false extends="BaseEntity" hb_serviceName="shippingService" {
+component displayname="Shipping Method Option" entityname="SlatwallShippingMethodOption" table="SlatwallShippingMethodOption" persistent=true accessors=true output=false extends="HibachiEntity" hb_serviceName="shippingService" {
 
 	// Persistent Properties
 	property name="shippingMethodOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

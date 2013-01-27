@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Postal Code" entityname="SlatwallPostalCode" table="SlatwallPostalCode" persistent="true" extends="BaseEntity" hb_serviceName="addressService" {
+component displayname="Postal Code" entityname="SlatwallPostalCode" table="SlatwallPostalCode" persistent="true" extends="HibachiEntity" hb_serviceName="addressService" {
 	
 	// Persistent Properties
 	property name="postalCode" type="string" fieldtype="id" displayname="Postal Code";

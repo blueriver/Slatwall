@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Comment Relationship" entityname="SlatwallCommentRelationship" table="SlatwallCommentRelationship" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="commentService" {
+component displayname="Comment Relationship" entityname="SlatwallCommentRelationship" table="SlatwallCommentRelationship" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="commentService" {
 	
 	// Persistent Properties
 	property name="commentRelationshipID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Address Zone" entityname="SlatwallAddressZone" table="SlatwallAddressZone" persistent=true output=false accessors=true extends="BaseEntity" hb_serviceName="addressService" hb_permission="this" {
+component displayname="Address Zone" entityname="SlatwallAddressZone" table="SlatwallAddressZone" persistent=true output=false accessors=true extends="HibachiEntity" hb_serviceName="addressService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="addressZoneID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Attribute" entityname="SlatwallAttribute" table="SlatwallAttribute" persistent="true" output="false" accessors="true" extends="BaseEntity" hb_serviceName="attributeService" hb_permission="attributeSet.attributes" {
+component displayname="Attribute" entityname="SlatwallAttribute" table="SlatwallAttribute" persistent="true" output="false" accessors="true" extends="HibachiEntity" hb_serviceName="attributeService" hb_permission="attributeSet.attributes" {
 	
 	// Persistent Properties
 	property name="attributeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

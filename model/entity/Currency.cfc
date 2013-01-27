@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCurrency" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="currencyService" hb_permission="this" {
+component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCurrency" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="currencyService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="currencyCode" ormtype="string" fieldtype="id" unique="true" generated="never";

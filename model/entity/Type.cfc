@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Type" entityname="SlatwallType" table="SlatwallType" persistent="true" accessors="true" output="true" extends="BaseEntity" hb_serviceName="settingService" hb_permission="this" hb_parentPropertyName="parentType" {
+component displayname="Type" entityname="SlatwallType" table="SlatwallType" persistent="true" accessors="true" output="true" extends="HibachiEntity" hb_serviceName="settingService" hb_permission="this" hb_parentPropertyName="parentType" {
 	
 	// Persistent Properties
 	property name="typeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

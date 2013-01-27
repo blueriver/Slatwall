@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Content Access" entityname="SlatwallContentAccess" table="SlatwallContentAccess" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="contentService" {
+component displayname="Content Access" entityname="SlatwallContentAccess" table="SlatwallContentAccess" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="contentService" {
 	
 	// Persistent Properties
 	property name="contentAccessID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Vendor Phone" entityname="SlatwallVendorPhoneNumber" table="SlatwallVendorPhoneNumber" persistent="true" extends="BaseEntity" hb_serviceName="vendorService" hb_permission="vendor.vendorPhoneNumbers" {
+component displayname="Vendor Phone" entityname="SlatwallVendorPhoneNumber" table="SlatwallVendorPhoneNumber" persistent="true" extends="HibachiEntity" hb_serviceName="vendorService" hb_permission="vendor.vendorPhoneNumbers" {
 	
 	// Persistent Properties
 	property name="vendorPhoneNumberID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

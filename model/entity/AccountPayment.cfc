@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Account Payment" entityname="SlatwallAccountPayment" table="SlatwallAccountPayment" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="accountService" hb_permission="account.accountPayment" {
+component displayname="Account Payment" entityname="SlatwallAccountPayment" table="SlatwallAccountPayment" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="accountService" hb_permission="account.accountPayment" {
 	
 	// Persistent Properties
 	property name="accountPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

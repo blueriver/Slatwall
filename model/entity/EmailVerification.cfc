@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Email Verification" entityname="SlatwallEmailVerification" table="SlatwallEmailVerification" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Email Verification" entityname="SlatwallEmailVerification" table="SlatwallEmailVerification" persistent="true" accessors="true" extends="HibachiEntity" {
 	
 	// Persistent Properties
 	property name="emailVerificationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

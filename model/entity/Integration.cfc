@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Integration" entityname="SlatwallIntegration" table="SlatwallIntegration" persistent=true output=false accessors=true extends="BaseEntity" hb_serviceName="integrationService" hb_permission="this" {
+component displayname="Integration" entityname="SlatwallIntegration" table="SlatwallIntegration" persistent=true output=false accessors=true extends="HibachiEntity" hb_serviceName="integrationService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="integrationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

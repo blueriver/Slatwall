@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="emailService" hb_permission="emailTemplate.emails" {
+component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="emailService" hb_permission="emailTemplate.emails" {
 	
 	// Persistent Properties
 	property name="emailID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
