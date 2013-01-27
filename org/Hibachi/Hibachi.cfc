@@ -241,7 +241,7 @@ component extends="FW1.framework" {
 						bf.declareBean("hibachiError", "#variables.framework.applicationKey#.org.Hibachi.HibachiError", false);
 					}
 					if(!bf.containsBean("hibachiMessage")) {
-						bf.declareBean("hibachiSmartList", "#variables.framework.applicationKey#.org.Hibachi.HibachiMessage", false);
+						bf.declareBean("hibachiMessage", "#variables.framework.applicationKey#.org.Hibachi.HibachiMessage", false);
 					}
 					
 					
