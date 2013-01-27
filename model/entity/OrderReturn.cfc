@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order Return" entityname="SlatwallOrderReturn" table="SlatwallOrderReturn" persistent=true accessors=true output=false extends="BaseEntity" {
+component displayname="Order Return" entityname="SlatwallOrderReturn" table="SlatwallOrderReturn" persistent=true accessors=true output=false extends="BaseEntity" hb_serviceName="orderService" hb_permission="order.orderReturns" {
 	
 	// Persistent Properties
 	property name="orderReturnID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

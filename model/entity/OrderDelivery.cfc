@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table="SlatwallOrderDelivery" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table="SlatwallOrderDelivery" persistent="true" accessors="true" output="false" extends="BaseEntity" hb_serviceName="orderService" hb_permission="order.orderDelivery" {
 	
 	// Persistent Properties
 	property name="orderDeliveryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

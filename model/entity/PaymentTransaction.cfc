@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Payment Transaction" entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransaction" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Payment Transaction" entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransaction" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="paymentService" {
 	
 	// Persistent Properties
 	property name="paymentTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Price Group" entityname="SlatwallPriceGroup" table="SlatwallPriceGroup" persistent=true output=false accessors=true extends="BaseEntity" hb_permission="this" {
+component displayname="Price Group" entityname="SlatwallPriceGroup" table="SlatwallPriceGroup" persistent=true output=false accessors=true extends="BaseEntity" hb_serviceName="priceGroupService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="priceGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

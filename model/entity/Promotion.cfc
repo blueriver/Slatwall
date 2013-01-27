@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Promotion" entityname="SlatwallPromotion" table="SlatwallPromotion" persistent="true" extends="BaseEntity" hb_permission="this" {
+component displayname="Promotion" entityname="SlatwallPromotion" table="SlatwallPromotion" persistent="true" extends="BaseEntity" hb_serviceName="promotionService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="promotionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

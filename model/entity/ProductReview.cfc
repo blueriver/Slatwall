@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Product Review" entityname="SlatwallProductReview" table="SlatwallProductReview" persistent="true" output="false" accessors="true" extends="BaseEntity" {
+component displayname="Product Review" entityname="SlatwallProductReview" table="SlatwallProductReview" persistent="true" output="false" accessors="true" extends="BaseEntity" hb_serviceName="productService" hb_permission="product.productReviews" {
 
 	// Persistent Properties
 	property name="productReviewID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

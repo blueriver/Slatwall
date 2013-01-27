@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Permission" entityname="SlatwallPermission" table="SlatwallPermission" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Permission" entityname="SlatwallPermission" table="SlatwallPermission" persistent="true" accessors="true" extends="BaseEntity" hb_serviceName="accountService" hb_permission="permissionGroup.permissions" {
 	
 	// Persistent Properties
 	property name="permissionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

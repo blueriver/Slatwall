@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" persistent="true" extends="BaseEntity" {
+component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" persistent="true" extends="BaseEntity" hb_serviceName="imageService" {
 			
 	// Persistent Properties
 	property name="imageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
