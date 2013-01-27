@@ -123,7 +123,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupGlobalRequest() {
-		request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.hibachi.Scope").init();
+		request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.transient.HibachiScope").init();
 		
 		// Verify that the application is setup
 		verifyApplicationSetup();
@@ -206,6 +206,8 @@ component extends="FW1.framework" {
 					
 					bf.addBean("applicationKey", variables.framework.applicationKey);
 					
+					
+					// If the default singleton beans were not found in the model, add a reference to the core one in hibachi
 					if(!bf.containsBean("hibachiDAO")) {
 						bf.declareBean("hibachiDAO", "#variables.framework.applicationKey#.org.Hibachi.HibachiDAO", true);	
 					}
@@ -227,6 +229,21 @@ component extends="FW1.framework" {
 					if(!bf.containsBean("hibachiUtilityService")) {
 						bf.declareBean("hibachiUtilityService", "#variables.framework.applicationKey#.org.Hibachi.HibachiUtilityService", true);	
 					}
+					
+					// If the default transient beans were not found in the model, add a reference to the core one in hibachi
+					if(!bf.containsBean("hibachiScope")) {
+						bf.declareBean("hibachiScope", "#variables.framework.applicationKey#.org.Hibachi.HibachiScope", false);
+					}
+					if(!bf.containsBean("hibachiSmartList")) {
+						bf.declareBean("hibachiSmartList", "#variables.framework.applicationKey#.org.Hibachi.HibachiSmartList", false);
+					}
+					if(!bf.containsBean("hibachiError")) {
+						bf.declareBean("hibachiError", "#variables.framework.applicationKey#.org.Hibachi.HibachiError", false);
+					}
+					if(!bf.containsBean("hibachiMessage")) {
+						bf.declareBean("hibachiSmartList", "#variables.framework.applicationKey#.org.Hibachi.HibachiMessage", false);
+					}
+					
 					
 					setBeanFactory( bf );
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");

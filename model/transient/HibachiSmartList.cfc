@@ -53,7 +53,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	variables.rangeDelimiter = "^";
 	variables.dataKeyDelimiter = ":";
 	
-	public any function init(required string entityName, struct data, numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL="") {
+	public any function setup(required string entityName, struct data, numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL="") {
 		// Make sure that the containers for smart list saved states are in place
 		param name="session.entitySmartList" type="struct" default="#structNew()#";
 		param name="session.entitySmartList.savedStates" type="array" default="#arrayNew(1)#";

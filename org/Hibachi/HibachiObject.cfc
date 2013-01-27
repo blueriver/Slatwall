@@ -7,6 +7,7 @@ component accessors="true" output="false" persistent="false" {
 	
 	// ========================== START: FRAMEWORK ACCESS ===========================================
 	
+	
 	// @hint gets a bean out of whatever the fw1 bean factory is
 	public any function getBean(required string beanName) {
 		return application[ getApplicationValue('applicationKey') ].factory.getBean( arguments.beanName );
@@ -18,6 +19,11 @@ component accessors="true" output="false" persistent="false" {
 			setApplicationValue("service_#arguments.serviceName#", getBean(arguments.serviceName) );
 		}
 		return getApplicationValue("service_#arguments.serviceName#");
+	}
+	
+	// @hint returns a new transient bean
+	public any function getTransient(required string transientName) {
+		return getBean(arguments.transientName);
 	}
 	
 	// @hint  helper function for returning the Validate This Facade Object

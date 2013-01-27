@@ -36,7 +36,7 @@
 Notes:
 
 */
-component accessors="true" displayname="ResponseBean" hint="bean to encapsulate response from service layer" extends="BaseTransient" {
+component accessors="true" displayname="ResponseBean" hint="bean to encapsulate response from service layer" extends="HibachiTransient" {
 	
 	property name="data" type="any";
 	property name="statusCode" type="string";

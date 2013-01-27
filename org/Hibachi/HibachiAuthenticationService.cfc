@@ -109,12 +109,12 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public struct function getEntityPermissionDetails() {
 		
-		var entityDirectoryArray = directoryList(expandPath('/Slatwall/model/entity'));
+		var entityDirectoryArray = directoryList(expandPath('/#getApplicationValue('applicationKey')#/model/entity'));
 		var entityPermissionDetails = {};
 		for(var e=1; e<=arrayLen(entityDirectoryArray); e++) {
 			if(listLast(entityDirectoryArray[e], '.') eq 'cfc') {
 				var entityName = listFirst(listLast(replace(entityDirectoryArray[e], '\', '/', 'all'), '/'), '.');
-				var entityMetaData = createObject('component', 'Slatwall.model.entity.#entityName#').getThisMetaData();
+				var entityMetaData = createObject('component', '#getApplicationValue('applicationKey')#.model.entity.#entityName#').getThisMetaData();
 				
 				if(structKeyExists(entityMetaData, "hb_permission") && (entityMetaData.hb_permission eq "this" || getHasPropertyByEntityNameAndPropertyIdentifier(entityName=entityName, propertyIdentifier=entityMetaData.hb_permission))) {
 					entityPermissionDetails[ entityName ] = {};
@@ -164,11 +164,11 @@ component output="false" accessors="true" extends="HibachiService" {
 			};
 			
 			// Setup Admin Permissions
-			var adminDirectoryList = directoryList( expandPath("/Slatwall/admin/controllers"), false, "path", "*.cfc" );
+			var adminDirectoryList = directoryList( expandPath("/#getApplicationValue('applicationKey')#/admin/controllers"), false, "path", "*.cfc" );
 			for(var i=1; i <= arrayLen(adminDirectoryList); i++){
 				
 				var section = listFirst(listLast(adminDirectoryList[i],"/\"),".");
-				var obj = createObject('component','Slatwall.admin.controllers.' & section);
+				var obj = createObject('component','#getApplicationValue('applicationKey')#.admin.controllers.' & section);
 				
 				allPermissions.admin[ section ] = {
 					publicMethods = "",
@@ -233,11 +233,11 @@ component output="false" accessors="true" extends="HibachiService" {
 				
 				allPermissions[ activeFW1Integrations[i].subsystem ] = {};
 				
-				var integrationDirectoryList = directoryList( expandPath("/Slatwall/integrationServices/#activeFW1Integrations[i].subsystem#/controllers"), false, "path", "*.cfc" );
+				var integrationDirectoryList = directoryList( expandPath("/#getApplicationValue('applicationKey')#/integrationServices/#activeFW1Integrations[i].subsystem#/controllers"), false, "path", "*.cfc" );
 				for(var j=1; j <= arrayLen(integrationDirectoryList); j++){
 					
 					var section = listFirst(listLast(integrationDirectoryList[j],"/\"),".");
-					var obj = createObject('component','Slatwall.integrationServices.#activeFW1Integrations[i].subsystem#.controllers.#section#');
+					var obj = createObject('component','#getApplicationValue('applicationKey')#.integrationServices.#activeFW1Integrations[i].subsystem#.controllers.#section#');
 					
 					allPermissions[ activeFW1Integrations[i].subsystem ][ section ] = {
 						publicMethods = "",
@@ -274,40 +274,3 @@ component output="false" accessors="true" extends="HibachiService" {
 		return variables.actionPermissions;
 	}
 }
-
-
-
-/*
-component entityName="SlatwallAccount" hb_permission="inherit:propertyName"	
-component entityName="SlatwallAccount" hb_permission="admin"				
-component entityName="SlatwallAccount" hb_permission="public"				
-component entityName="SlatwallAccount" hb_permission="system"				
-
-hb_nopopulate="true"
-
-
-
-
-
-
-
-Permission Setup				
-	Account (read|write|delete)								Entity					
-		firstName				(read|write)				Field					
-															Non-Persistent Field	
-		accountEmailAddresses	(add|delete)				One-to-Many				
-		primaryEmailAddress		(read|write)										
-		emailAddress			(read)												
-		permissions				(read|write)				Many-to-Many			
-		Permissions				(read|write)				Many-to-Many			
-	Order																			
-																					
-	Product																			
-																					
-
-
-
-
-
-
-*/

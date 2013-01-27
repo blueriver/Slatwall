@@ -19,7 +19,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	// @hint Returns the errorBean object, if one hasn't been setup yet it returns a new one
 	public any function getErrorBean() {
 		if(!structKeyExists(variables, "errorBean")) {
-			variables.errorBean = new Slatwall.model.hibachi.Error();
+			variables.errorBean = getTransient("hibachiError");
 		}
 		return variables.errorBean;
 	}
@@ -27,7 +27,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	// @hint Returns the messageBean object, if one hasn't been setup yet it returns a new one
 	public any function getMessageBean() {
 		if(!structKeyExists(variables, "messageBean")) {
-			variables.messageBean = new Slatwall.model.hibachi.Message(); 
+			variables.messageBean = getTransient("hibachiMessage");; 
 		}
 		return variables.messageBean;
 	}

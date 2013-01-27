@@ -89,7 +89,7 @@
 				arguments.entityName = "#getApplicationKey()##arguments.entityName#";
 			}
 			
-			var smartList = new Slatwall.model.hibachi.SmartList(argumentCollection=arguments);
+			var smartList = getTransient("hibachiSmartList").setup(argumentCollection=arguments);
 	
 			return smartList;
 		}
