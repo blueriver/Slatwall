@@ -414,8 +414,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							} else if (orderRewards and reward.getRewardType() eq "order" ) {
 								
 								
-								var totalDiscountableAmount = arguments.order.getSubtotalAfterItemDiscounts() + arguments.order.fulfillmentChargeAfterDiscountTotal();
-								
+								var totalDiscountableAmount = arguments.order.getSubtotalAfterItemDiscounts() + arguments.order.getFulfillmentChargeAfterDiscountTotal();
+
 								var discountAmount = getDiscountAmount(reward, totalDiscountableAmount, 1);
 											
 								var addNew = false;
