@@ -81,7 +81,7 @@ Notes:
 			</cfif>
 			
 			<!--- Fulfillment Options --->
-			<cfif len(structKeyList(local.fulfillmentMethodSkus)) GT 1>
+			<cfif listLen(structKeyList(local.fulfillmentMethodSkus)) GT 1>
 				<cfset local.fulfillmentMethodSmartList = $.slatwall.getService("fulfillmentService").getFulfillmentMethodSmartList() />
 				<cfset local.fulfillmentMethodSmartList.addInFilter('fulfillmentMethodID', structKeyList(local.fulfillmentMethodSkus)) />
 				<cfset local.fulfillmentMethodSmartList.addOrder('sortOrder|ASC') />
