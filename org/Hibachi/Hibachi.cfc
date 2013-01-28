@@ -201,7 +201,7 @@ component extends="FW1.framework" {
 					//========================= IOC SETUP ====================================
 					
 					var bf = new DI1.ioc("/#variables.framework.applicationKey#/model", {
-						transients=["transient", "entity", "process", "hibachi"]
+						transients=["transient", "entity"]
 					});
 					
 					bf.addBean("applicationKey", variables.framework.applicationKey);
@@ -268,7 +268,7 @@ component extends="FW1.framework" {
 						onUpdateRequest();
 						
 						// Write File
-						fileWrite(expandPath('/#variables.framework.applicationKey#/config/lastFullUpdate.txt.cfm'), now());				
+						fileWrite(expandPath('/#variables.framework.applicationKey#') & 'config/lastFullUpdate.txt.cfm', now());				
 					}
 					// ========================== END: FULL UPDATE ==============================
 					

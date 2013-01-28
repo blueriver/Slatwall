@@ -21,7 +21,7 @@
 			<cfloop array="#entities#" index="entityName">
 				<cfif not structKeyExists(attributes.entityPermissionDetails[entityName], "inheritPermissionEntityName")>
 					<tr>
-						<td class="primary" onClick="$('.permission#lcase(entityName)#').toggle();">#hibachiScope.rbKey('entity.#entityName#')#</td>
+						<td class="primary" onClick="$('.permission#lcase(entityName)#').toggle();"><strong>#hibachiScope.rbKey('entity.#entityName#')#</strong></td>
 						<td><input type="checkbox" name="" value=""></td>
 						<td><input type="checkbox" name="" value=""></td>
 						<td><input type="checkbox" name="" value=""></td>

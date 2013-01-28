@@ -7,10 +7,14 @@ component accessors="true" output="false" persistent="false" {
 	
 	// ========================== START: FRAMEWORK ACCESS ===========================================
 	
+	// @hint gets a bean out of whatever the fw1 bean factory is
+	public any function getBeanFactory() {
+		return application[ getApplicationValue('applicationKey') ].factory;
+	}
 	
 	// @hint gets a bean out of whatever the fw1 bean factory is
 	public any function getBean(required string beanName) {
-		return application[ getApplicationValue('applicationKey') ].factory.getBean( arguments.beanName );
+		return getBeanFactory().getBean( arguments.beanName );
 	}
 	
 	// @hint returns an application scope cached version of the service
