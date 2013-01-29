@@ -5,9 +5,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	property name="assignedAttributeSetSmartList" type="struct" persistent="false";
 	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";
 	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
+	property name="processObjects" type="struct" persistent="false";
 	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
+		variables.processObjects = {};
+		
 		var properties = getProperties();
 		
 		// Loop over all properties
@@ -244,8 +247,16 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	}
 	
 	// @hint this method is defined so that it can be overriden in entities and a different validation context can be applied based on what this entity knows about itself
-	public any function getValidationContext(required string context) {
+	public any function getProcessObject(required string context) {
+		if(!structKeyExists(variables.processObjects, arguments.context)) {
+			variables.processObjects[ arguments.context ] = getTransient("");
+		}
 		return arguments.context;
+	}
+	
+	// @hint this method is defined so that it can be overriden in entities and a different validation context can be applied based on what this entity knows about itself
+	public void function setProcessObject( required any processObject ) {
+		variables.processObjects[ listLast(arguments.processObject.getClassName(), "_") ] = arguments.processObject;
 	}
 	
 	// @hint public method that returns if this entity has persisted to the database yet or not.

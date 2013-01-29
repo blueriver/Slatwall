@@ -80,19 +80,22 @@
 			if(!arguments.entity.hasErrors()) {
 				
 				var dataErrors = false;
-				
 				var invokeArguments = {};
-				invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity; 
-				invokeArguments.data = arguments.data;
 				
 				if(getBeanFactory().containsBean("process#arguments.entity.getClassName()#_#arguments.processContext#")) {
-					invokeArguments.dataObject = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
-					invokeArguments.dataObject.populate( arguments.data );
-					invokeArguments.dataObject.validate();
-					if(!invokeArguments.dataObject.hasErrors()) {
+					invokeArguments.processObject = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
+					invokeArguments.processObject.populate( arguments.data );
+					invokeArguments.processObject.validate();
+					if(!invokeArguments.processObject.hasErrors()) {
 						dataErrors = true;
 					}
+					
+					// Set the processObject into the entity
+					arguments.entity.setProcessObject( invokeArguments.processObject );
 				}
+				
+				invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity; 
+				invokeArguments.data = arguments.data;
 				
 				if(!dataErrors) {
 					this.invokeMethod("process#arguments.entity.getClassName()#_#arguments.processContext#", invokeArguments);	

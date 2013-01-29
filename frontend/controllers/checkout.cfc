@@ -43,8 +43,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
 	property name="settingService" type="any";
-	property name="sessionService" type="any";
 	property name="userUtility" type="any";
+	
+	property name="hibachiSessionService" type="any";
 	
 	public any function init(required any fw) {
 		setUserUtility( getCMSBean("userUtility") );
@@ -170,7 +171,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(!order.hasErrors()) {
 			
 			// Save the order ID temporarily in the session for the confirmation page.  It will be removed by that controller
-			getSessionService().setValue("orderConfirmationID", rc.orderID);
+			getHibachiScope().setSessionValue("orderConfirmationID", rc.orderID);
 			
 			// Redirect to order Confirmation
 			getFW().redirectExact($.createHREF(filename='order-confirmation'), false);

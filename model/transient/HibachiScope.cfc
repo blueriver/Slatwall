@@ -45,29 +45,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	property name="currentProduct";
 	property name="currentProductType";
 	property name="currentProductSmartList";
-	property name="currentSession";
-	
-	public boolean function getLoggedInFlag() {
-		if(!getCurrentAccount().isNew()) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean function getLoggedInAsAdminFlag() {
-		if(len(getCurrentAccount().getAdminAccountFlag())) {
-			return true;
-		}
-		return false;
-	}
-	
-	public any function getCurrentAccount() {
-		return getCurrentSession().getAccount();
-	}
-	
-	public any function getCurrentCart() {
-		return getCurrentSession().getOrder();
-	}
 	
 	public any function getCurrentSite() {
 		if(!structKeyExists(variables, "currentSite")) {
@@ -120,13 +97,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 			}
 		}
 		return variables.currentProductSmartList;
-	}
-	
-	public any function getCurrentSession() {
-		if(!structKeyExists(variables, "currentSession")) {
-			getService("sessionService").setPropperSession();
-		}
-		return variables.currentSession;
 	}
 	
 	// =========== These methods serve as a shorthand
@@ -190,40 +160,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		}
 	}
 	
-	public any function sessionFacade(string property, string value) {
-		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			return getService("sessionService").setValue(arguments.property, arguments.value);
-		} else if (structKeyExists(arguments, "property")) {
-			return getService("sessionService").getValue(arguments.property);
-		} else {
-			return getService("sessionService");	
-		}
-	}
-	
-	// ======== These are just simple methods used to place ramdom values that are stored for the duration of the request ========
-	public boolean function hasValue(required string key) {
-		return structKeyExists(variables, arguments.key);
-	}
-
-	public any function getValue(required string key) {
-		if(hasValue( arguments.key )) {
-			return variables[ arguments.key ]; 
-		}
-		
-		throw("You have requested '#arguments.key#' as a value in the slatwall scope, however that value has not been set in the request.  In the futuer you should check for it's existance with hasValue().");
-	}
-	
-	public void function setValue(required string key, required any value) {
-		variables[ arguments.key ] = arguments.value;
-	}
-	
-	public string function getSlatwallRootDirectory() {
-		return expandPath("/Slatwall");
-	}
-	
-	public any function authenticateAction( string action, string entityName, string ) {
-		return true;
-	}
 	
 	// @hint helper function to return a Setting
 	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
@@ -236,6 +172,30 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	}
 	
 	// ========================== Deprecated ================= * DO NOT UES!!!!!
+	public any function getCurrentSession() {
+		return getSession();
+	}
+	
+	public any function getCurrentAccount() {
+		return getAccount();
+	}
+	
+	public any function getCurrentCart() {
+		return getCurrentSession().getOrder();
+	}
+	
+	public any function sessionFacade(string property, string value) {
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return setSessionValue(arguments.property, arguments.value);
+		} else if (structKeyExists(arguments, "property")) {
+			return getSessionValue(arguments.property);
+		}
+	}
+	
+	public string function getSlatwallRootDirectory() {
+		return expandPath("/Slatwall");
+	}
+	
 	public any function getSlatwallRootURL() {
 		return getBaseURL();
 	}
