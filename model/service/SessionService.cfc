@@ -166,28 +166,29 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: Process Methods ===========================
 	
-	public any function processSession(required any session, struct data={}, processContext="process") {
-		if(arguments.processContext == "authorizeAccount") {
-			param name="arguments.data.emailAddress" default="";
-			param name="arguments.data.password" default="";
-			
-			// Take the email address and get all of the user accounts by primary e-mail address
-			
-			var accountAuthentications = getAccountService().getInternalAccountAuthenticationsByEmailAddress(emailAddress=arguments.data.emailAddress);
-			
-			if(arrayLen(accountAuthentications)) {
-				for(var i=1; i<=arrayLen(accountAuthentications); i++) {
-					// If the password matches what it should be, then set the account in the session and 
-					if(!isNull(accountAuthentications[i].getPassword()) && len(accountAuthentications[i].getPassword()) && accountAuthentications[i].getPassword() == getAccountService().getHashedAndSaltedPassword(password=arguments.data.password, salt=accountAuthentications[i].getAccountAuthenticationID())) {
-						loginAccount( accountAuthentications[i].getAccount(), accountAuthentications[i] );
-						return arguments.session;
-					}
+	private any function processSession_authorizeAccount(required any session, struct data={}, any dataObject) {
+		
+		param name="arguments.data.emailAddress" default="";
+		param name="arguments.data.password" default="";
+		
+		// Take the email address and get all of the user accounts by primary e-mail address
+		
+		var accountAuthentications = getAccountService().getInternalAccountAuthenticationsByEmailAddress(emailAddress=arguments.data.emailAddress);
+		
+		if(arrayLen(accountAuthentications)) {
+			for(var i=1; i<=arrayLen(accountAuthentications); i++) {
+				// If the password matches what it should be, then set the account in the session and 
+				if(!isNull(accountAuthentications[i].getPassword()) && len(accountAuthentications[i].getPassword()) && accountAuthentications[i].getPassword() == getAccountService().getHashedAndSaltedPassword(password=arguments.data.password, salt=accountAuthentications[i].getAccountAuthenticationID())) {
+					loginAccount( accountAuthentications[i].getAccount(), accountAuthentications[i] );
+					return arguments.session;
 				}
-				arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidpassword'), true);
-			} else {
-				arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidemail'), true);
 			}
+			arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidpassword'), true);
+		} else {
+			arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidemail'), true);
 		}
+		
+		
 	}
 	
 	// =====================  END: Process Methods ============================

@@ -81,16 +81,15 @@
 				
 				var dataErrors = false;
 				
-				var invokeArguments = {
-					entity=arguments.entity,
-					data=arguments.data
-				};
+				var invokeArguments = {};
+				invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity; 
+				invokeArguments.data = arguments.data;
 				
 				if(getBeanFactory().containsBean("process#arguments.entity.getClassName()#_#arguments.processContext#")) {
-					invokeArguments.processDataObject = getTransient("process#arguments.entity.getClassName()#_#arguments.processContext#");
-					invokeArguments.processDataObject.populate( arguments.data );
-					invokeArguments.processDataObject.validate();
-					if(!invokeArguments.processDataObject.hasErrors()) {
+					invokeArguments.dataObject = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
+					invokeArguments.dataObject.populate( arguments.data );
+					invokeArguments.dataObject.validate();
+					if(!invokeArguments.dataObject.hasErrors()) {
 						dataErrors = true;
 					}
 				}
