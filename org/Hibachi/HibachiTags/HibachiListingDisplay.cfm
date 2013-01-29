@@ -263,7 +263,7 @@
 												<div class="filter-scroll">
 													<input type="hidden" name="F:#column.propertyIdentifier#" value="#attributes.smartList.getFilters(column.propertyIdentifier)#" />
 													<cfloop array="#filterOptions#" index="filter">
-														<li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#"><i class="slatwall-ui-checkbox"></i> #filter['name']#</a></li>
+														<li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#"><i class="hibachi-ui-checkbox"></i> #filter['name']#</a></li>
 													</cfloop>
 												</div>
 											</cfif>
@@ -282,11 +282,11 @@
 						<tr id="#record.getPrimaryIDValue()#" <cfif thistag.expandable>idPath="#record.getValueByPropertyIdentifier( propertyIdentifier="#thistag.exampleEntity.getPrimaryIDPropertyName()#Path" )#"</cfif>>
 							<!--- Selectable --->
 							<cfif thistag.selectable>
-								<td><a href="##" class="table-action-select#IIF(attributes.edit, DE(""), DE(" disabled"))#" data-idvalue="#record.getPrimaryIDValue()#"><i class="slatwall-ui-radio"></i></a></td>
+								<td><a href="##" class="table-action-select#IIF(attributes.edit, DE(""), DE(" disabled"))#" data-idvalue="#record.getPrimaryIDValue()#"><i class="hibachi-ui-radio"></i></a></td>
 							</cfif>
 							<!--- Multiselectable --->
 							<cfif thistag.multiselectable>
-								<td><a href="##" class="table-action-multiselect#IIF(attributes.edit, DE(""), DE(" disabled"))#" data-idvalue="#record.getPrimaryIDValue()#"><i class="slatwall-ui-checkbox"></i></a></td>
+								<td><a href="##" class="table-action-multiselect#IIF(attributes.edit, DE(""), DE(" disabled"))#" data-idvalue="#record.getPrimaryIDValue()#"><i class="hibachi-ui-checkbox"></i></a></td>
 							</cfif>
 							<!--- Sortable --->
 							<cfif thistag.sortable>
@@ -385,7 +385,7 @@
 				</div>
 			</cfif>
 		<cfelse>
-			<p><em>#replace(attributes.hibachiScope.rbKey("entity.define.norecords"), "${entityNamePlural}", attributes.hibachiScope.rbKey("entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '', 'all')#_plural"))#</em></p>
+			<p><em>#replace(attributes.hibachiScope.rbKey("entity.define.norecords"), "${entityNamePlural}", attributes.hibachiScope.rbKey("entity.#replace(attributes.smartList.getBaseEntityName(), attributes.hibachiScope.getApplicationValue('applicationKey'), '', 'all')#_plural"))#</em></p>
 		</cfif>
 	</cfoutput>
 </cfif>
