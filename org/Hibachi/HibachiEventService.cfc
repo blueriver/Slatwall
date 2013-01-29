@@ -17,8 +17,8 @@ component output="false" update="true" extends="HibachiService" {
 	
 	// before{EntityName}Process_{processContext}
 	// after{EntityName}Process_{processContext}
-	// after{EntityName}Process_{processContext}
-	// after{EntityName}Process_{processContext}
+	// after{EntityName}Process_{processContext}Success
+	// after{EntityName}Process_{processContext}Failure
 	
 	public void function announceEvent() {
 		
