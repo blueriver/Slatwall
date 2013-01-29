@@ -2,12 +2,9 @@ component output="false" accessors="true" extends="HibachiService" {
 
 	property name="hibachiSessionService" type="any";
 
+	// ============================ PUBLIC AUTHENTICATION METHODS =================================
+	
 	public boolean function authenticateAction(required string action, required any account) {
-		return true;
-		if(!structKeyExists(arguments, "account")) {
-			arguments.account = getHibachiScope().getCurrentAccount();
-		}
-		
 		// Check if the user is a super admin, if true no need to worry about security
 		if( arguments.account.getSuperUserFlag() ) {
 			return true;
@@ -17,43 +14,35 @@ component output="false" accessors="true" extends="HibachiService" {
 		var sectionName = listFirst( listLast(arguments.action, ":"), "." );
 		var itemName = listLast( arguments.action, "." );
 		
-		// Verify that there is a subsystem and section setup for that action
-		if( !structKeyExists(getActionPermissionDetails(), subsystemName) || !structKeyExists(getActionPermissionDetails()[ subsystemName ], sectionName) ) {
+		// Check if the subsystem is even defined
+		if(!structKeyExists(getActionPermissionDetails(), subsystemName)) {
+			return true;
+		}
+		
+		// Check if the section is defined
+		if(!structKeyExists(getActionPermissionDetails()[ subsystemName ], sectionName)) {
+			return true;
+		}
+		
+		// Check if the action is public, if public no need to worry about security
+		if(listFindNocase(getActionPermissionDetails()[ subsystemName ][ sectionName ].publicMethods, itemName)){
+			return true;
+		}
+		
+		// Look for the anyAdmin methods next to see if this is an anyAdmin method, and this user is some type of admin
+		if(listFindNocase(getActionPermissionDetails()[ subsystemName ][ sectionName ].anyAdminMethods, itemName) && arguments.account.getAdminAccountFlag()) {
+			return true;
+		}
+		
+		// Check to see if this is a defined admin method
+		if(listFindNocase(getActionPermissionDetails()[ subsystemName ][ sectionName ].secureMethods, itemName)) {
 			return false;
 		}
 		
-		//check if the page is public, if public no need to worry about security
-		if(listFindNocase(getActionPermissionDetails()[ subsystemName ][ sectionName ].publicMethods, itemName)){
-			return true;
-		}	
-		/*
-		// Look for the anyAdmin methods next to see if this is an anyAdmin method, and this user is some type of admin
-		if(listFindNocase(getPermissions()[ subsystemName ][ sectionName ].anyAdminMethods, itemName) && len(arguments.account.getAllPermissions())) {
-			return true;
-		}
-		
-		// Check if the acount has access to a secure method
-		if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(arguments.action, ".", "", "all"), ":", "", "all")) ) {
-			return true;
-		}
-		
-		// If this is a save method, then we can check create and edit
-		if(left(listLast(arguments.action, "."),4) eq "save") {
-			var createAction = replace(arguments.action, '.save', '.create');
-			var editAction = replace(arguments.action, '.save', '.edit');
-			if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(createAction, ".", "", "all"), ":", "", "all")) ) {
-				return true;
-			}
-			if( listFindNoCase(arguments.account.getAllPermissions(), replace(replace(editAction, ".", "", "all"), ":", "", "all")) ) {
-				return true;
-			}
-		}
-		*/
-		
-		return false;
+		return true;
 	}
 	
-	public boolean function authenticateEntity(required string crudType, required string entityName) {
+	public boolean function authenticateEntity(required string crudType, required string entityName, required any account) {
 		var entityPermissions = getEntityPermissionDetails();
 		
 		// If the entity does not have the ability to have permissions set, then return false
@@ -64,51 +53,17 @@ component output="false" accessors="true" extends="HibachiService" {
 		// If this is an entity
 		
 		
-		
-		
 		// If for some reason not of the above were meet then just return false
 		return false;
 	}
 	
-	public boolean function authenticateEntityProperty(required string crud, required string entityName, required string propertyName) {
+	public boolean function authenticateEntityProperty(required string crud, required string entityName, required string propertyName, required any account) {
 		
 	}
 	
-	public boolean function authenticateEntityByPermissionGroup(required string crud, required string entityName, required any permissionGroup) {
-		
-	}
-	
-	public boolean function authenticateEntityPropertyByPermissionGroup(required string crud, required string entityName, required string propertyName, required any permissionGroup) {
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public boolean function authenticateEntityPropertyRead( required any entity, required string propertyName ) {
-		
-	}
-	
-	public boolean function authenticateEntityPropertyWrite( required any entity, required string propertyName ) {
-		arguments.entity.invokeProperty( "authenticate#arguments.propertyName#Write" );
-	}
-	
-	
-	private array function getSecureActions() {
-		
-	}
-	
-	private array function getAnyAdminActions() {
-		
-	}
+	// ================================ PUBLIC META INFO ==========================================
 	
 	public struct function getEntityPermissionDetails() {
-		
 		var entityDirectoryArray = directoryList(expandPath('/#getApplicationValue('applicationKey')#/model/entity'));
 		var entityPermissionDetails = {};
 		for(var e=1; e<=arrayLen(entityDirectoryArray); e++) {
@@ -150,15 +105,8 @@ component output="false" accessors="true" extends="HibachiService" {
 		return entityPermissionDetails;
 	}
 	
-	
-	public void function clearActionPermissions(){
-		if(structKeyExists(variables, "actionPermissions")) {
-			structDelete(variables, "actionPermissions");
-		}
-	}
-	
 	public struct function getActionPermissionDetails(){
-		if(!structKeyExists(variables, "actionPermissions")){
+		if(!structKeyExists(variables, "actionPermissionDetails")){
 			var allPermissions={
 				admin={}
 			};
@@ -174,7 +122,9 @@ component output="false" accessors="true" extends="HibachiService" {
 					publicMethods = "",
 					anyAdminMethods = "",
 					secureMethods = "",
-					securePermissionOptions = []
+					securePermissionOptions = [],
+					entityController = false,
+					apiController = false
 				};
 				
 				if(structKeyExists(obj, 'publicMethods')){
@@ -189,44 +139,30 @@ component output="false" accessors="true" extends="HibachiService" {
 					for(j=1; j <= listLen(allPermissions.admin[ section ].secureMethods); j++){
 						
 						var item = listGetAt(allPermissions.admin[ section ].secureMethods, j);
+						var permissionTitle = rbKey( 'admin.#section#.#item#_permission' );
 						
-						if(left(item, 2) eq '**') {
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.list_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#list#item#"});
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#detail#item#"});
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#create#item#"});
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#edit#item#"});
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-2)#')), value="admin#section#delete#item#"});
-						} else if(left(item, 1) eq '*') {
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#detail#item#"});
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#create#item#"});
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#edit#item#"});
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-1)#')), value="admin#section#delete#item#"});
-						} else {
-							
-							var permissionTitle = rbKey( 'admin.#section#.#item#_permission' );
-							
-							if(right(permissionTitle, 8) eq "_missing") {
-								if(left(item, 4) eq "list") {
-									permissionTitle = replace(rbKey( 'admin.define.list_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-4)#'));
-								} else if (left(item, 6) eq "detail") {
-									permissionTitle = replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
-								} else if (left(item, 6) eq "create") {
-									permissionTitle = replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
-								} else if (left(item, 4) eq "edit") {
-									permissionTitle = replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-4)#'));
-								} else if (left(item, 6) eq "delete") {
-									permissionTitle = replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
-								} else if (left(item, 7) eq "process") {
-									permissionTitle = replace(rbKey( 'admin.define.process_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-7)#'));
-								}
+						if(right(permissionTitle, 8) eq "_missing") {
+							if(left(item, 4) eq "list") {
+								permissionTitle = replace(rbKey( 'admin.define.list_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-4)#'));
+							} else if (left(item, 6) eq "detail") {
+								permissionTitle = replace(rbKey( 'admin.define.detail_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
+							} else if (left(item, 6) eq "create") {
+								permissionTitle = replace(rbKey( 'admin.define.create_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
+							} else if (left(item, 4) eq "edit") {
+								permissionTitle = replace(rbKey( 'admin.define.edit_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-4)#'));
+							} else if (left(item, 6) eq "delete") {
+								permissionTitle = replace(rbKey( 'admin.define.delete_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-6)#'));
+							} else if (left(item, 7) eq "process") {
+								permissionTitle = replace(rbKey( 'admin.define.process_permission'), '${itemEntityName}', rbKey('entity.#right(item, len(item)-7)#'));
 							}
-							
-							arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=permissionTitle, value="admin#section##item#"});
 						}
+						
+						arrayAppend(allPermissions.admin[ section ].securePermissionOptions, {name=permissionTitle, value="admin#section##item#"});
 					}
 				}
 			}
 			
+			/*
 			// Setup Integration Permissions
 			var activeFW1Integrations = getIntegrationService().getActiveFW1Subsystems();
 			for(var i=1; i <= arrayLen(activeFW1Integrations); i++){
@@ -268,9 +204,38 @@ component output="false" accessors="true" extends="HibachiService" {
 					
 				}
 			}
+			*/
 			
 			variables.actionPermissions = allPermissions;
 		}
 		return variables.actionPermissions;
 	}
+	
+	public void function clearEntityPermissionDetails(){
+		if(structKeyExists(variables, "entityPermissionDetails")) {
+			structDelete(variables, "entityPermissionDetails");
+		}
+	}
+	
+	public void function clearActionPermissionDetails(){
+		if(structKeyExists(variables, "actionPermissionDetails")) {
+			structDelete(variables, "actionPermissionDetails");
+		}
+	}
+	
+	// ============================ PRIVATE HELPER FUNCTIONS =======================================
+	
+	private boolean function authenticateActionByPermissionGroup(required string action, required any permissionGroup) {
+		return false;
+	}
+	
+	private boolean function authenticateEntityByPermissionGroup(required string crud, required string entityName, required any permissionGroup) {
+		
+	}
+	
+	private boolean function authenticateEntityPropertyByPermissionGroup(required string crud, required string entityName, required string propertyName, required any permissionGroup) {
+		
+	}
+	
+	
 }

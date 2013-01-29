@@ -53,7 +53,7 @@ Notes:
 		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/global.css" rel="stylesheet">
 		
 		<script type="text/javascript">
-			var slatwall = {
+			var hibachi = {
 				dateFormat : '#request.slatwallScope.setting("globalDateFormat")#'
 				,timeFormat : '#request.slatwallScope.setting("globalTimeFormat")#'
 				,rootURL : '#request.slatwallScope.getBaseURL()#'

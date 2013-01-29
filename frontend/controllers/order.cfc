@@ -40,7 +40,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 	property name="accountService" type="any";
 	property name="orderService" type="any";
-	property name="sessionService" type="any";
+	property name="hibachiSessionService" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.orderID" default="";
@@ -75,7 +75,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		// This pulls the order ID out of the session to find the order, and then removes it so that the confirmation page can't be seen twice.
 		// This is set in session so that we don't have to pass via URL
-		rc.order = getOrderService().getOrder( getSessionService().getValue("orderConfirmationID", ""), true );
+		rc.order = getOrderService().getOrder( getHibachiScope().getSessionValue("orderConfirmationID", ""), true );
 		// TODO: This had to get removed so that the redirectExact will work with HTTPS.
 		//getSessionService().removeValue("orderConfirmationID");
 	}

@@ -37,8 +37,8 @@ function initUIElements( scopeSelector ) {
 	
 	// Datetime Picker
 	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datetimepicker({
-		dateFormat: convertCFMLDateFormat( slatwall.dateFormat ),
-		timeFormat: convertCFMLTimeFormat( slatwall.timeFormat ),
+		dateFormat: convertCFMLDateFormat( hibachi.dateFormat ),
+		timeFormat: convertCFMLTimeFormat( hibachi.timeFormat ),
 		ampm: true,
 		onSelect: function(dateText, inst) {
 			
@@ -62,7 +62,7 @@ function initUIElements( scopeSelector ) {
 	
 	// Date Picker
 	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker({
-		dateFormat: convertCFMLDateFormat( slatwall.dateFormat )
+		dateFormat: convertCFMLDateFormat( hibachi.dateFormat )
 	});
 	
 	// Time Picker
@@ -132,7 +132,7 @@ function initUIElements( scopeSelector ) {
 		if(jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() !== undefined && typeof jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val() === "string" && jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val().length > 0 ) {
 			var hvArr = jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val().split(',');
 			if(hvArr.indexOf(jQuery(v).data('filtervalue')) !== -1) {
-				jQuery(v).children('.slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked').removeClass('slatwall-ui-checkbox');
+				jQuery(v).children('.hibachi-ui-checkbox').addClass('hibachi-ui-checkbox-checked').removeClass('hibachi-ui-checkbox');
 			}
 		}
 	});
@@ -300,10 +300,10 @@ function setupEventHandlers() {
 		var i = jQuery.inArray(jQuery(this).data('filtervalue'), valueArray);
 		if( i > -1 ) {
 			valueArray.splice(i, 1);
-			jQuery(this).children('.slatwall-ui-checkbox-checked').addClass('slatwall-ui-checkbox').removeClass('slatwall-ui-checkbox-checked');
+			jQuery(this).children('.hibachi-ui-checkbox-checked').addClass('hibachi-ui-checkbox').removeClass('hibachi-ui-checkbox-checked');
 		} else {
 			valueArray.push(jQuery(this).data('filtervalue'));
-			jQuery(this).children('.slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked').removeClass('slatwall-ui-checkbox');
+			jQuery(this).children('.hibachi-ui-checkbox').addClass('hibachi-ui-checkbox-checked').removeClass('hibachi-ui-checkbox');
 		}
 		jQuery('input[name="F:' + jQuery(this).closest('th').data('propertyidentifier') + '"]').val(valueArray.join(","));
 		
@@ -536,7 +536,7 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 		// Verify that an update isn't already running
 		if(!textAutocompleteHold(autocompleteField, thisData)) {
 			jQuery.ajax({
-				url: slatwall.rootURL + '/',
+				url: hibachi.rootURL + '/',
 				method: 'post',
 				data: thisData,
 				dataType: 'json',
@@ -653,7 +653,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 		}
 		
 		jQuery.ajax({
-			url: slatwall.rootURL + '/',
+			url: hibachi.rootURL + '/',
 			method: 'post',
 			data: data,
 			dataType: 'json',
@@ -804,7 +804,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 }
 
 function addLoadingDiv( elementID ) {
-	var loadingDiv = '<div id="loading' + elementID + '" style="position:absolute;float:left;text-align:center;background-color:#FFFFFF;opacity:.9;z-index:900;"><img src="' + slatwall.rootURL + '/org/Hibachi/HibachiAssets/images/loading.gif" title="loading" /></div>';
+	var loadingDiv = '<div id="loading' + elementID + '" style="position:absolute;float:left;text-align:center;background-color:#FFFFFF;opacity:.9;z-index:900;"><img src="' + hibachi.rootURL + '/org/Hibachi/HibachiAssets/images/loading.gif" title="loading" /></div>';
 	jQuery('#' + elementID).before(loadingDiv);
 	jQuery('#loading' + elementID).width(jQuery('#' + elementID).width() + 2);
 	jQuery('#loading' + elementID).height(jQuery('#' + elementID).height() + 2);
@@ -915,7 +915,7 @@ function tableApplySort(event, ui) {
 	});
 	
 	jQuery.ajax({
-		url: slatwall.rootURL + '/',
+		url: hibachi.rootURL + '/',
 		async: false,
 		data: data,
 		dataType: 'json',
@@ -1021,7 +1021,7 @@ function updateGlobalSearchResults() {
 		};
 		
 		jQuery.ajax({
-			url: slatwall.rootURL + '/',
+			url: hibachi.rootURL + '/',
 			method: 'post',
 			data: data,
 			dataType: 'json',
@@ -1047,10 +1047,10 @@ function updateGlobalSearchResults() {
 					jQuery('#golbalsr-' + key).html('');
 					var records = result[key]['records'];
 				    for(var r=0; r < records.length; r++) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="' + slatwall.rootURL + '/?slatAction=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
+				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachi.rootURL + '/?slatAction=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
 				    }
 				    if(result[key]['recordCount'] > 10) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="' + slatwall.rootURL + '/?slatAction=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
+				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachi.rootURL + '/?slatAction=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
 				    } else if (result[key]['recordCount'] == 0) {
 				    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
 				    }

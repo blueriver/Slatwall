@@ -41,7 +41,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="paymentDAO" type="any";
 	
 	property name="integrationService" type="any";
-	property name="sessionService" type="any";
 	property name="settingService" type="any";
 	
 	// ===================== START: Logical Methods ===========================

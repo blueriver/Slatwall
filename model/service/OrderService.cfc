@@ -49,7 +49,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="priceGroupService";
 	property name="promotionService";
 	property name="shippingService";
-	property name="sessionService";
 	property name="taxService";
 	property name="stockService";
 	property name="subscriptionService";

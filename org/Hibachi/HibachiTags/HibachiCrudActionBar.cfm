@@ -33,7 +33,7 @@
 							<cfif attributes.type eq "listing" >
 								<cfparam name="request.context.keywords" default="" />
 								
-								<form name="search" class="action-bar-search btn-group" action="/plugins/Slatwall/" method="get">
+								<form name="search" class="action-bar-search btn-group" action="/" method="get">
 									<input type="hidden" name="slatAction" value="#request.context.entityActionDetails.thisAction#" />
 									<input type="text" name="keywords" value="#request.context.keywords#" placeholder="#attributes.hibachiScope.rbKey('define.search')# #attributes.pageTitle#" data-tableid="LD#replace(attributes.object.getSavedStateID(),'-','','all')#">
 								</form>

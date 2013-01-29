@@ -128,6 +128,9 @@ component extends="FW1.framework" {
 		// Verify that the application is setup
 		verifyApplicationSetup();
 		
+		// Verify that the session is setup
+		getBeanFactory().getBean("hibachiSessionService").setPropperSession();
+		
 		// Call the onEveryRequest() Method for the parent Application.cfc
 		onEveryRequest();
 	}
@@ -135,11 +138,15 @@ component extends="FW1.framework" {
 	public void function setupRequest() {
 		setupGlobalRequest();
 		
+		// Verify Authentication before anything happens
+		if(!getBeanFactory().getBean("hibachiAuthenticationService").authenticateAction( action=request.context[ getAction() ], account=request[ "#variables.framework.applicationKey#Scope" ].getAccount() )) {
+			redirect(action="admin:main.login");
+		}
+		
 		// Setup structured Data if a request context exists meaning that a full action was called
 		getBeanFactory().getBean("hibachiUtilityService").buildFormCollections(request.context);
 		
 		// Setup a $ in the request context, and the hibachiScope shortcut
-		
 		request.context.fw = getHibachiScope().getApplicationValue("application");
 		request.context.$ = {};
 		request.context.$[ variables.framework.applicationKey ] = request[ "#variables.framework.applicationKey#Scope" ];
@@ -201,7 +208,7 @@ component extends="FW1.framework" {
 					//========================= IOC SETUP ====================================
 					
 					var bf = new DI1.ioc("/#variables.framework.applicationKey#/model", {
-						transients=["transient", "entity", "process", "hibachi"]
+						transients=["entity", "process", "transient"]
 					});
 					
 					bf.addBean("applicationKey", variables.framework.applicationKey);
@@ -222,6 +229,9 @@ component extends="FW1.framework" {
 					}
 					if(!bf.containsBean("hibachiRBService")) {
 						bf.declareBean("hibachiRBService", "#variables.framework.applicationKey#.org.Hibachi.HibachiRBService", true);	
+					}
+					if(!bf.containsBean("hibachiSessionService")) {
+						bf.declareBean("hibachiSessionService", "#variables.framework.applicationKey#.org.Hibachi.HibachiSessionService", true);	
 					}
 					if(!bf.containsBean("hibachiTagService")) {
 						bf.declareBean("hibachiTagService", "#variables.framework.applicationKey#.org.Hibachi.HibachiTagService", true);	
@@ -268,7 +278,9 @@ component extends="FW1.framework" {
 						onUpdateRequest();
 						
 						// Write File
-						fileWrite(expandPath('/#variables.framework.applicationKey#') & '/config/lastFullUpdate.txt.cfm', now());				
+
+						fileWrite(expandPath('/#variables.framework.applicationKey#') & 'config/lastFullUpdate.txt.cfm', now());				
+
 					}
 					// ========================== END: FULL UPDATE ==============================
 					

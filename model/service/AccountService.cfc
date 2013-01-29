@@ -41,7 +41,6 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="accountDAO" type="any";
 	
 	property name="emailService" type="any";
-	property name="sessionService" type="any";
 	property name="paymentService" type="any";
 	property name="permissionService" type="any";
 	property name="priceGroupService" type="any";
@@ -98,7 +97,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				arguments.account.addPermissionGroup( getPermissionService().getPermissionGroup('4028808a37037dbf01370ed2001f0074'));
 				
 				// Login this use (which will also ensure the data persists)
-				getSessionService().loginAccount(arguments.account, arguments.account.getAccountAuthentications()[1]);
+				getHibachiSessionService().loginAccount(arguments.account, arguments.account.getAccountAuthentications()[1]);
 			}
 		} else {
 			rc.account.addError('invalid', rbKey('validate.account.accountAuthenticationExists'));

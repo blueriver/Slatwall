@@ -42,8 +42,6 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	
 	// @hint this method always fires one time, even if the request is coming from an outside application.
 	public void function onEveryRequest() {
-		// Confirm Session Setup
-		getBeanFactory().getBean("sessionService").setPropperSession();
 		
 	}
 	
@@ -79,9 +77,6 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		// Setup Default Data... Not called on soft reloads.
 		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
 		writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
-		
-		// Confirm Session Setup
-		getBeanFactory().getBean("sessionService").setPropperSession();
 		
 		// Clear the setting cache so that it can be reloaded
 		getBeanFactory().getBean("settingService").clearAllSettingsQuery();

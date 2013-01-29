@@ -34,8 +34,17 @@
 			</tr>
 		</cfloop>
 		<cfloop array="#otmproperties#" index="propertyName">
+			
+				
+			
 			<tr class="hide permission#lcase(attributes.entityName)#" <cfif structKeyExists(subPropertyInheriting, propertyName)>onClick="$('.permission#lcase(subPropertyInheriting[ propertyName ])#').toggle();"</cfif>>
-				<td class="primary"><span class="depth#attributes.depth#" />#attributes.hibachiScope.rbKey('entity.#attributes.entityName#.#propertyName#')#</td>
+				<td class="primary"><span class="depth#attributes.depth#" />
+					<cfif structKeyExists(subPropertyInheriting, propertyName)>
+						<strong>#attributes.hibachiScope.rbKey('entity.#attributes.entityName#.#propertyName#')#</strong>
+					<cfelse>
+						#attributes.hibachiScope.rbKey('entity.#attributes.entityName#.#propertyName#')#
+					</cfif>
+				</td>
 				<td><input type="checkbox" name="" value=""></td>
 				<td><input type="checkbox" name="" value=""></td>
 				<td><input type="checkbox" name="" value=""></td>

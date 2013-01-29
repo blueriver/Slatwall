@@ -40,7 +40,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	property name="priceGroupDAO" type="any";
 	
-	property name="sessionService" type="any";
 	property name="skuService" type="any";
 	property name="productService" type="any";
 	

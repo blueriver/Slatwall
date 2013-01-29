@@ -39,14 +39,16 @@ Notes:
 component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiController" {
 
 	// fw1 Auto-Injected Service Properties
+	property name="accountService" type="any";
 	property name="productService" type="any";
 	property name="orderService" type="any";
 	property name="vendorService" type="any";
 	property name="dataService" type="any";
 	property name="imageService" type="any";
 	property name="permissionService" type="any";
-	property name="sessionService" type="any";
 	property name="updateService" type="any";
+	
+	property name="hibachiSessionService" type="any";
 	
 	this.publicMethods='';
 	this.publicMethods=listAppend(this.publicMethods, 'login');
@@ -169,9 +171,9 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		param name="rc.password" type="string" default="";
 		
 		if(len(rc.emailAddress) || len(rc.password)) {
-			getSessionService().processSession(session=getSlatwallScope().getCurrentSession(), data=rc, processContext="authorizeAccount");
+			getHibachiSessionService().processSession(session=getHibachiScope().getSession(), data=rc, processContext="authorizeAccount");
 			
-			if(getSlatwallScope().getLoggedInFlag()) {
+			if(getHibachiScope().getLoggedInFlag()) {
 				getFW().redirect("admin:main.default");
 			}
 		}
@@ -181,7 +183,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	}
 	
 	public void function logout(required struct rc) {
-		getSessionService().logoutAccount();
+		getHibachiSessionService().logoutAccount();
 		
 		getFW().redirect('admin:main.login');
 	}

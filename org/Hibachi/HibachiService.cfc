@@ -23,6 +23,17 @@
 			return getHibachiDAO().get(argumentcollection=arguments);
 		}
 	
+		public any function getSmartList(string entityName, struct data={}){
+			var smartList = getHibachiDAO().getSmartList(argumentcollection=arguments);
+			
+			if(structKeyExists(arguments.data, "keyword") || structKeyExists(arguments.data, "keywords")) {
+				var example = this.new(arguments.entityName);
+				smartList.addKeywordProperty(propertyIdentifier=example.getSimpleRepresentationPropertyName(), weight=1);
+			}
+			
+			return smartList;
+		}
+		
 		public any function list(required string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
 			return getHibachiDAO().list(argumentcollection=arguments);
 		}
@@ -33,17 +44,6 @@
 	
 		public any function count(required string entityName ) {
 			return getHibachiDAO().count(argumentcollection=arguments);
-		}
-	
-		public any function getSmartList(string entityName, struct data={}){
-			var smartList = getHibachiDAO().getSmartList(argumentcollection=arguments);
-			
-			if(structKeyExists(arguments.data, "keyword") || structKeyExists(arguments.data, "keywords")) {
-				var example = this.new(arguments.entityName);
-				smartList.addKeywordProperty(propertyIdentifier=example.getSimpleRepresentationPropertyName(), weight=1);
-			}
-			
-			return smartList;
 		}
 		
 		public boolean function delete(required any entity){
@@ -70,10 +70,40 @@
 			return false;
 		}
 		
-		public boolean function process(required any entity, required string processContext=""){
+		
+		// @hint default process method
+		public boolean function process(required any entity, struct data={}, string processContext="process"){
+			// Verify the preProcess
+			arguments.entity.validate(context=arguments.processContext);
+			
+			// If we pass validation then create a
+			if(!arguments.entity.hasErrors()) {
+				
+				var dataErrors = false;
+				var invokeArguments = {};
+				
+				if(getBeanFactory().containsBean("process#arguments.entity.getClassName()#_#arguments.processContext#")) {
+					invokeArguments.processObject = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
+					invokeArguments.processObject.populate( arguments.data );
+					invokeArguments.processObject.validate();
+					if(!invokeArguments.processObject.hasErrors()) {
+						dataErrors = true;
+					}
+					
+					// Set the processObject into the entity
+					arguments.entity.setProcessObject( invokeArguments.processObject );
+				}
+				
+				invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity; 
+				invokeArguments.data = arguments.data;
+				
+				if(!dataErrors) {
+					this.invokeMethod("process#arguments.entity.getClassName()#_#arguments.processContext#", invokeArguments);	
+				}
+			}
+			
 			return arguments.entity;
 		}
-		
 		
 		// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
 	    public any function save(required any entity, struct data, string context="save") {
@@ -88,9 +118,10 @@
 	        	// Populate this object
 				arguments.entity.populate(argumentCollection=arguments);
 	
-			    // Validate this object now that it has been populated
-			    arguments.entity.validate(context=arguments.entity.getValidationContext( arguments.context ));
 	        }
+	        
+	        // Validate this object now that it has been populated
+			arguments.entity.validate(context=arguments.context);
 	        
 	        // If the object passed validation then call save in the DAO, otherwise set the errors flag
 	        if(!arguments.entity.hasErrors()) {
@@ -208,6 +239,8 @@
 				return onMissingCountMethod( missingMethodName, missingMethodArguments );
 			} else if ( lCaseMissingMethodName.startsWith( 'export' ) ) {
 				return onMissingExportMethod( missingMethodName, missingMethodArguments );
+			} else if ( lCaseMissingMethodName.startsWith( 'process' ) ) {
+				return onMissingProcessMethod( missingMethodName, missingMethodArguments );
 			}
 
 			return super.onMissingMethod(argumentsCollection=arguments);
@@ -488,6 +521,18 @@
 			} else {
 				return save( entity=missingMethodArguments[1] );
 			}
+		}
+		
+		private function onMissingProcessMethod( required string missingMethodName, required struct missingMethodArguments ) {
+			return process( entity=missingMethodArguments[1], data=missingMethodArguments[2], processContext=missingMethodArguments[3]);
+			
+			/*
+			if ( structKeyExists( missingMethodArguments, '2' ) ) {
+				
+			} else {
+				return save( entity=missingMethodArguments[1] );
+			}
+			*/
 		}
 		
 		/**

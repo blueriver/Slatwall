@@ -8,12 +8,17 @@ component output="false" update="true" extends="HibachiService" {
 	// before{EntityName}Delete
 	// after{EntityName}Delete
 	// after{EntityName}DeleteSuccess
-	// after{EntityName}FailureSuccess
+	// after{EntityName}DeleteFailure
+	
+	// before{EntityName}Process
+	// after{EntityName}Process
+	// after{EntityName}ProcessSuccess
+	// after{EntityName}ProcessFailure
 	
 	// before{EntityName}Process_{processContext}
 	// after{EntityName}Process_{processContext}
-	// after{EntityName}Process_{processContext}
-	// after{EntityName}Process_{processContext}
+	// after{EntityName}Process_{processContext}Success
+	// after{EntityName}Process_{processContext}Failure
 	
 	public void function announceEvent() {
 		
