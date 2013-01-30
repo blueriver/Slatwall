@@ -39,6 +39,32 @@ component output="false" accessors="true" extends="HibachiService" {
 			return false;
 		}
 		
+		// Check to see if the controller is an entity or rest controller, and then verify against the entity itself
+		if(getActionPermissionDetails()[ subsystemName ][ sectionName ].entityController) {
+			if ( left(itemName, 6) == "create" ) {
+				return authenticateEntity(crudType="create", entityName=right(itemName, len(itemName)-6), account=arguments.account);
+			} else if ( left(itemName, 6) == "detail" ) {
+				return authenticateEntity(crudType="read", entityName=right(itemName, len(itemName)-6), account=arguments.account);
+			} else if ( left(itemName, 6) == "delete" ) {
+				return authenticateEntity(crudType="delete", entityName=right(itemName, len(itemName)-6), account=arguments.account);
+			} else if ( left(itemName, 4) == "edit" ) {
+				return authenticateEntity(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+			} else if ( left(itemName, 4) == "list" ) {
+				return authenticateEntity(crudType="read", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+			} else if ( left(itemName, 15) == "multiPreProcess" ) {
+			} else if ( left(itemName, 12) == "multiProcess" ) {
+			} else if ( left(itemName, 10) == "preProcess" ) {	
+			} else if ( left(itemName, 7) == "process" ) {
+			} else if ( left(itemName, 4) == "save" ) {
+				var createOK = authenticateEntity(crudType="create", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+				if(createOK) {
+					return true;	
+				}
+				var updateOK = authenticateEntity(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+				return updateOK;
+			}
+		}
+		
 		return false;
 	}
 	

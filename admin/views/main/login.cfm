@@ -94,21 +94,20 @@ Notes:
 				</form>
 			</div>
 		<cfelse>
+			<cfset initalAdminProcessObject = rc.account.getProcessObject("setupInitialAdmin") />
 			<div class="well" style="width:400px;margin: 0px auto;">
 				<h3>Create Super Administrator Account</h3>
 				<br />
 				<form action="?s=1" class="form-horizontal" method="post">
 					<input type="hidden" name="slatAction" value="admin:main.setupinitialadmin" />
-					<input type="hidden" name="primaryEmailAddress.accountEmailAddressID" value="" />
-					<input type="hidden" name="primaryPhoneNumber.accountPhoneNumberID" value="" />
 					<fieldset class="dl-horizontal">
-						<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="true" />
-						<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="true" />
-						<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="true" />
-						<cf_HibachiPropertyDisplay object="#rc.account#" fieldName="primaryEmailAddress.emailAddress" property="emailAddress" edit="true" />
-						<cf_HibachiPropertyDisplay object="#rc.account#" fieldName="primaryEmailAddress.emailAddressConfirm" property="emailAddressConfirm" edit="true" />
-						<cf_HibachiPropertyDisplay object="#rc.account#" property="password" edit="true" />
-						<cf_HibachiPropertyDisplay object="#rc.account#" property="passwordConfirm" edit="true" />
+						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="firstName" edit="true" />
+						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="lastName" edit="true" />
+						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="company" edit="true" />
+						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" fieldName="emailAddress" property="emailAddress" edit="true" />
+						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" fieldName="emailAddressConfirm" property="emailAddressConfirm" edit="true" />
+						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="password" edit="true" />
+						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="passwordConfirm" edit="true" />
 						<button type="submit" class="btn btn-primary pull-right">Create & Login</button>
 					</fieldset>
 				</form>

@@ -68,11 +68,11 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: Process Methods ===========================
 	
-	public any function processAccount_changePassword(required any account, struct data={}) {
+	private any function processAccount_changePassword(required any account, struct data={}) {
 		// TODO: Add Change Password Logic Here
 	}
 	
-	public any function processAccount_setupInitialAdmin(any account=this.newAccount(), struct data={}) {
+	private any function processAccount_setupInitialAdmin(required any account, struct data={}, any processObject) {
 		
 		var authExists = getAccountAuthenticationExists();
 		
