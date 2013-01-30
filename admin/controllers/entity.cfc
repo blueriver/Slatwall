@@ -242,12 +242,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			rc.promotionPeriod = getPromotionService().newPromotionPeriod();
 		}
 	}
-	// Setting
-	public void function editSetting(required struct rc) {
-		rc.setting = getSettingService().getSetting(rc.settingID, true);
-		rc.edit = true;
-		getFW().setView("admin:entity.detailsetting");
-	}
 	
 	// Sku
 	public void function saveSku(required struct rc){
