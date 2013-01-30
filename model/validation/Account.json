@@ -1,1 +1,9 @@
-{}
+{
+	"contexts":["save","edit","delete"],
+	"properties":{
+		"firstName":	[{"required":true}],
+		"lastName":		[{"required":true}],
+		"orders":		[{"contexts":"delete","max":0}],
+		"cmsAccountID"	[{"method":"hasUniqueOrNullCMSAccountID"}]
+	}
+}
