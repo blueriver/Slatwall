@@ -1,4 +1,4 @@
-component extends="HibachiProcess" {
+component output="false" accessors="true" extends="HibachiProcess" {
 
 	property name="firstName";
 	property name="lastName";

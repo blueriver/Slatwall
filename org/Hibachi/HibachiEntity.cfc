@@ -109,7 +109,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		if(!structKeyExists(variables.processObjects, arguments.context)) {
 			variables.processObjects[ arguments.context ] = getTransient("#getClassName()#_#arguments.context#");
 		}
-		return arguments.context;
+		return variables.processObjects[ arguments.context ];
 	}
 	
 	// @hint this method is defined so that it can be overriden in entities and a different validation context can be applied based on what this entity knows about itself

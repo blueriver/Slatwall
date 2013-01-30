@@ -94,20 +94,22 @@ Notes:
 				</form>
 			</div>
 		<cfelse>
-			<cfset initalAdminProcessObject = rc.account.getProcessObject("setupInitialAdmin") />
 			<div class="well" style="width:400px;margin: 0px auto;">
 				<h3>Create Super Administrator Account</h3>
 				<br />
 				<form action="?s=1" class="form-horizontal" method="post">
-					<input type="hidden" name="slatAction" value="admin:main.setupinitialadmin" />
+					<input type="hidden" name="slatAction" value="admin:main.setupInitialAdmin" />
+					
+					<cfset processObject = rc.account.getProcessObject("setupInitialAdmin") />
+							
 					<fieldset class="dl-horizontal">
-						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="firstName" edit="true" />
-						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="lastName" edit="true" />
-						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="company" edit="true" />
-						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" fieldName="emailAddress" property="emailAddress" edit="true" />
-						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" fieldName="emailAddressConfirm" property="emailAddressConfirm" edit="true" />
-						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="password" edit="true" />
-						<cf_HibachiPropertyDisplay object="#initalAdminProcessObject#" property="passwordConfirm" edit="true" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="firstName" edit="true" title="#$.slatwall.rbKey('entity.account.firstName')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="lastName" edit="true" title="#$.slatwall.rbKey('entity.account.lastName')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="company" edit="true" title="#$.slatwall.rbKey('entity.account.company')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" fieldName="emailAddress" property="emailAddress" edit="true" title="#$.slatwall.rbKey('entity.account.emailAddress')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" fieldName="emailAddressConfirm" property="emailAddressConfirm" edit="true" title="#$.slatwall.rbKey('entity.account.emailAddressConfirm')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="password" edit="true" title="#$.slatwall.rbKey('entity.account.password')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="passwordConfirm" edit="true" title="#$.slatwall.rbKey('entity.account.passwordConfirm')#" />
 						<button type="submit" class="btn btn-primary pull-right">Create & Login</button>
 					</fieldset>
 				</form>

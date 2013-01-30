@@ -5,6 +5,7 @@
 	<cfproperty name="hibachiAuthenticationService" type="any">
 	<cfproperty name="hibachiEventService" type="any">
 	<cfproperty name="hibachiRBService" type="any">
+	<cfproperty name="hibachiSessionService" type="any">
 	<cfproperty name="hibachiTagService" type="any">
 	<cfproperty name="hibachiUtilityService" type="any">
 	
@@ -72,7 +73,7 @@
 		
 		
 		// @hint default process method
-		public boolean function process(required any entity, struct data={}, string processContext="process"){
+		public any function process(required any entity, struct data={}, string processContext="process"){
 			// Verify the preProcess
 			arguments.entity.validate(context=arguments.processContext);
 			
@@ -82,11 +83,11 @@
 				var dataErrors = false;
 				var invokeArguments = {};
 				
-				if(getBeanFactory().containsBean("process#arguments.entity.getClassName()#_#arguments.processContext#")) {
-					invokeArguments.processObject = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
-					invokeArguments.processObject.populate( arguments.data );
-					invokeArguments.processObject.validate();
-					if(!invokeArguments.processObject.hasErrors()) {
+				if(getBeanFactory().containsBean("#arguments.entity.getClassName()#_#arguments.processContext#")) {
+					invokeArguments[ "processObject" ] = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
+					invokeArguments[ "processObject" ].populate( arguments.data );
+					invokeArguments[ "processObject" ].validate( context=arguments.processContext );
+					if(invokeArguments[ "processObject" ].hasErrors()) {
 						dataErrors = true;
 					}
 					
@@ -95,7 +96,7 @@
 				}
 				
 				invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity; 
-				invokeArguments.data = arguments.data;
+				invokeArguments[ "data" ] = arguments.data;
 				
 				if(!dataErrors) {
 					this.invokeMethod("process#arguments.entity.getClassName()#_#arguments.processContext#", invokeArguments);	
@@ -524,15 +525,11 @@
 		}
 		
 		private function onMissingProcessMethod( required string missingMethodName, required struct missingMethodArguments ) {
-			return process( entity=missingMethodArguments[1], data=missingMethodArguments[2], processContext=missingMethodArguments[3]);
-			
-			/*
-			if ( structKeyExists( missingMethodArguments, '2' ) ) {
-				
-			} else {
-				return save( entity=missingMethodArguments[1] );
+			if ( structKeyExists( missingMethodArguments, '3' ) ) {
+				return process( entity=missingMethodArguments[1], data=missingMethodArguments[2], processContext=missingMethodArguments[3]);
+			} else if ( structKeyExists( missingMethodArguments, '2' ) ) {
+				return process( entity=missingMethodArguments[1], processContext=missingMethodArguments[2]);
 			}
-			*/
 		}
 		
 		/**

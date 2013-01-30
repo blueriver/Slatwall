@@ -72,35 +72,35 @@ component extends="HibachiService" accessors="true" output="false" {
 		// TODO: Add Change Password Logic Here
 	}
 	
-	private any function processAccount_setupInitialAdmin(required any account, struct data={}, any processObject) {
+	public any function processAccount_setupInitialAdmin(required any account, required struct data={}, required any processObject) {
 		
-		var authExists = getAccountAuthenticationExists();
+		// Populate the account with the correct values that have been previously validated
+		arguments.account.setFirstName( processObject.getFirstName() );
+		arguments.account.setLastName( processObject.getLastName() );
+		arguments.account.setCompany( processObject.getCompany() );
+		arguments.account.setSuperUserFlag( 1 );
 		
-		if(!authExists) {
-			if(len(arguments.data.password) && arguments.data.password == arguments.data.passwordConfirm) {
-				arguments.account = this.saveAccount(arguments.account, arguments.data);
-			} else {
-				arguments.account.addError('password', rbKey('validate.account.passwordConfirmMismatch'));	
-			}
-			
-			if(!arguments.account.hasErrors()) {
-				var accountAuthentication = this.newAccountAuthentication();
-				accountAuthentication.setAccount( arguments.account );
-				
-				// Put the accountAuthentication into the hibernate scope so that it has an id
-				getHibachiDAO().save(accountAuthentication);
-				
-				// Set the password
-				accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.data.password, accountAuthentication.getAccountAuthenticationID()) );
-				
-				// Add the super-user permission group to this new account
-				arguments.account.addPermissionGroup( getPermissionService().getPermissionGroup('4028808a37037dbf01370ed2001f0074'));
-				
-				// Login this use (which will also ensure the data persists)
-				getHibachiSessionService().loginAccount(arguments.account, arguments.account.getAccountAuthentications()[1]);
-			}
-		} else {
-			rc.account.addError('invalid', rbKey('validate.account.accountAuthenticationExists'));
+		// Setup the email address
+		var accountEmailAddress = this.newAccountEmailAddress();
+		accountEmailAddress.setAccount(arguments.account);
+		accountEmailAddress.setEmailAddress( processObject.getEmailAddress() );
+		
+		// Setup the authentication
+		var accountAuthentication = this.newAccountAuthentication();
+		accountAuthentication.setAccount( arguments.account );
+		
+		// Put the accountAuthentication into the hibernate scope so that it has an id
+		getHibachiDAO().save(accountAuthentication);
+		
+		// Set the password
+		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.data.password, accountAuthentication.getAccountAuthenticationID()) );
+		
+		// Call save on the account now that it is all setup
+		arguments.account = this.saveAccount(arguments.account);
+		
+		// Login the new account
+		if(!arguments.account.hasErrors()) {
+			getHibachiSessionService().loginAccount(account=arguments.account, accountAuthentication=accountAuthentication);	
 		}
 		
 		return arguments.account;

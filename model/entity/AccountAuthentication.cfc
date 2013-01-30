@@ -66,11 +66,15 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
-
+	property name="forceLogoutFlag" persistent="false";
 
 	
+	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function getForceLogoutFlag() {
+		return false;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

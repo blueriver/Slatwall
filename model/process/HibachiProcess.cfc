@@ -1,3 +1,3 @@
-component extends="Slatwall.org.Hibachi.HibachiProcess" {
+component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiProcess" {
 
 }

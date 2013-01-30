@@ -156,9 +156,9 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		param name="rc.password" default="";
 		param name="rc.passwordConfirm" default="";
 		
-		rc.account = getAccountService().processAccount(account=getHibachiScope().getAccount(), data=rc, processContext="setupInitialAdmin");
+		rc.account = getAccountService().processAccount(getHibachiScope().getAccount(), rc, "setupInitialAdmin");
 		
-		if(!rc.account.hasErrors()) {
+		if(!rc.account.getProcessObject("setupInitialAdmin").hasErrors() && !rc.account.hasErrors()) {
 			getFW().redirect('admin:main.default');
 		}
 		
