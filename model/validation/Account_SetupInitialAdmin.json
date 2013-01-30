@@ -1,1 +1,10 @@
-{}
+{
+	"properties":{
+		"firstName":			[{"required":true}],
+		"lastName":				[{"required":true}],
+		"emailAddress":			[{"required":true,"type":"email","matchProperty":"emailAddressConfirm"}],
+		"emailAddressConfirm":	[{"required":true,"type":"email"}],
+		"password":				[{"required":true,"min":4,"matchProperty":"passwordConfirm"}],
+		"passwordConfirm":		[{"required":true}],
+	}
+}
