@@ -278,8 +278,7 @@ component extends="FW1.framework" {
 						onUpdateRequest();
 						
 						// Write File
-
-						fileWrite(expandPath('/#variables.framework.applicationKey#') & 'config/lastFullUpdate.txt.cfm', now());				
+						fileWrite(expandPath('/#variables.framework.applicationKey#') & '/config/lastFullUpdate.txt.cfm', now());				
 
 					}
 					// ========================== END: FULL UPDATE ==============================
