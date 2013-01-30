@@ -73,6 +73,19 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public boolean function getForceLogoutFlag() {
+		/*
+			//if(!isNull(session.getAccountAuthentication().getIntegration()) && !currentSession.getAccountAuthentication().getIntegration().getIntegrationCFC( "authentication" ).verifySessionLogin( currentSession )) {
+				
+			// Check with the auto logout setting of the authentication
+			} else if( listLen(currentSession.getAccountAuthentication().setting('accountAuthenticationAutoLogoutTimespan')) eq 4 ) {
+				var tsArr = listToArray(currentSession.getAccountAuthentication().setting('accountAuthenticationAutoLogoutTimespan'));
+				var autoExpireDateTime = currentSession.getLastRequestDateTime() + createTimeSpan(tsArr[1],tsArr[2],tsArr[3],tsArr[4]);
+				if(autoExpireDateTime lt now()) {
+					logoutAccount();
+				}
+			}
+			*/
+			
 		return false;
 	}
 	
