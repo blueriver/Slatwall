@@ -52,6 +52,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	this.publicMethods='';
 	this.publicMethods=listAppend(this.publicMethods, 'login');
+	this.publicMethods=listAppend(this.publicMethods, 'authorizeLogin');
 	this.publicMethods=listAppend(this.publicMethods, 'logout');
 	this.publicMethods=listAppend(this.publicMethods, 'noaccess');
 	this.publicMethods=listAppend(this.publicMethods, 'error');
@@ -167,19 +168,18 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	}
 	
 	public void function login(required struct rc) {
-		param name="rc.emailAddress" type="string" default="";
-		param name="rc.password" type="string" default="";
+		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
+	}
+	
+	public void function authorizeLogin(required struct rc) {
+		getHibachiSessionService().processSession(getHibachiScope().getSession(), rc, "authorizeAccount");	
 		
-		if(len(rc.emailAddress) || len(rc.password)) {
-			getHibachiSessionService().processSession(session=getHibachiScope().getSession(), data=rc, processContext="authorizeAccount");
-			
-			if(getHibachiScope().getLoggedInFlag()) {
-				getFW().redirect("admin:main.default");
-			}
+		if(getHibachiScope().getLoggedInFlag()) {
+			getFW().redirect("admin:main.default");
 		}
 		
+		getFW().setView("admin:main.login");
 		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
-		rc.account = getAccountService().newAccount();
 	}
 	
 	public void function logout(required struct rc) {
@@ -187,5 +187,4 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		
 		getFW().redirect('admin:main.login');
 	}
-
 }

@@ -250,7 +250,7 @@
 		}
 		
 		private string function getEncryptionKeyLocation() {
-			return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/#getApplicationValue('applicationKey')#/config/custom/');
+			return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/#getApplicationValue('applicationKey')#/custom/config/');
 		}
 		
 		private string function getEncryptionKeyFileName() {

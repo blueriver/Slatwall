@@ -23,23 +23,10 @@ component output="false" accessors="true" extends="HibachiService"  {
 		
 		// Check to see if this session has an accountAuthentication, if it does then we need to verify that the authentication shouldn't be auto logged out
 		if(!isNull(session.getAccountAuthentication())) {
-			
-			//if(!isNull(session.getAccountAuthentication().getIntegration()) && !currentSession.getAccountAuthentication().getIntegration().getIntegrationCFC( "authentication" ).verifySessionLogin( currentSession )) {
-			
 			// If there was an integration, then check the verify method for any custom auto-logout logic
 			if(session.getAccountAuthentication().getForceLogoutFlag()) {
 				logoutAccount();
 			}
-			/*	
-			// Check with the auto logout setting of the authentication
-			} else if( listLen(currentSession.getAccountAuthentication().setting('accountAuthenticationAutoLogoutTimespan')) eq 4 ) {
-				var tsArr = listToArray(currentSession.getAccountAuthentication().setting('accountAuthenticationAutoLogoutTimespan'));
-				var autoExpireDateTime = currentSession.getLastRequestDateTime() + createTimeSpan(tsArr[1],tsArr[2],tsArr[3],tsArr[4]);
-				if(autoExpireDateTime lt now()) {
-					logoutAccount();
-				}
-			}
-			*/
 		}
 		
 		// Update the last request datetime
@@ -78,28 +65,24 @@ component output="false" accessors="true" extends="HibachiService"  {
 	
 	// ===================== START: Process Methods ===========================
 	
-	private any function processSession_authorizeAccount(required any session, struct data={}, any dataObject) {
-		
-		param name="arguments.data.emailAddress" default="";
-		param name="arguments.data.password" default="";
-		
+	public any function processSession_authorizeAccount(required any session, required any processObject) {
 		// Take the email address and get all of the user accounts by primary e-mail address
-		
-		var accountAuthentications = getAccountService().getInternalAccountAuthenticationsByEmailAddress(emailAddress=arguments.data.emailAddress);
+		var accountAuthentications = getAccountService().getInternalAccountAuthenticationsByEmailAddress(emailAddress=arguments.processObject.getEmailAddress());
 		
 		if(arrayLen(accountAuthentications)) {
 			for(var i=1; i<=arrayLen(accountAuthentications); i++) {
 				// If the password matches what it should be, then set the account in the session and 
-				if(!isNull(accountAuthentications[i].getPassword()) && len(accountAuthentications[i].getPassword()) && accountAuthentications[i].getPassword() == getAccountService().getHashedAndSaltedPassword(password=arguments.data.password, salt=accountAuthentications[i].getAccountAuthenticationID())) {
+				if(!isNull(accountAuthentications[i].getPassword()) && len(accountAuthentications[i].getPassword()) && accountAuthentications[i].getPassword() == getAccountService().getHashedAndSaltedPassword(password=arguments.processObject.getPassword(), salt=accountAuthentications[i].getAccountAuthenticationID())) {
 					loginAccount( accountAuthentications[i].getAccount(), accountAuthentications[i] );
 					return arguments.session;
 				}
 			}
-			arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidpassword'), true);
+			arguments.processObject.addError('password', rbKey('validate.session.authorizeAccount.invalidpassword'), true);
 		} else {
-			arguments.session.addError('processing', rbKey('validate.session.authorizeAccount.invalidemail'), true);
+			arguments.processObject.addError('email', rbKey('validate.session.authorizeAccount.invalidemail'), true);
 		}
 		
+		return arguments.session;
 	}
 	
 	// =====================  END: Process Methods ============================

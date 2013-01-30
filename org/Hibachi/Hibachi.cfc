@@ -13,7 +13,7 @@ component extends="FW1.framework" {
 	// Allow For Application Config
 	try{include "../../config/configApplication.cfm";}catch(any e){}
 	// Allow For Instance Config
-	try{include "../../config/custom/configApplication.cfm";}catch(any e){}
+	try{include "../../custom/config/configApplication.cfm";}catch(any e){}
 	
 	// =============== configFramework
 	
@@ -58,7 +58,7 @@ component extends="FW1.framework" {
 	// Allow For Application Config
 	try{include "../../config/configFramework.cfm";}catch(any e){}
 	// Allow For Instance Config
-	try{include "../../config/custom/configFramework.cfm";}catch(any e){}
+	try{include "../../custom/config/configFramework.cfm";}catch(any e){}
 	
 	
 	// =============== configMappings
@@ -80,7 +80,7 @@ component extends="FW1.framework" {
 	// Allow For Application Config 
 	try{include "../../config/configCustomTags.cfm";}catch(any e){}
 	// Allow For Instance Config
-	try{include "../../config/custom/configCustomTags.cfm";}catch(any e){}
+	try{include "../../custom/config/configCustomTags.cfm";}catch(any e){}
 	
 	// =============== configORM
 	
@@ -101,7 +101,7 @@ component extends="FW1.framework" {
 	// Allow For Application Config 
 	try{include "../../config/configORM.cfm";}catch(any e){}
 	// Allow For Instance Config
-	try{include "../../config/custom/configORM.cfm";}catch(any e){}
+	try{include "../../custom/config/configORM.cfm";}catch(any e){}
 	
 	// Make Sure that the required values end up in the application scope so that we can get them from somewhere else
 	

@@ -108,8 +108,6 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	// LIST
 	public void function genericListMethod(required string entityName, required struct rc) {
-		// TODO: Verify List Permission
-		
 		// Find the correct service
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 		
@@ -119,8 +117,6 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	// CREATE
 	public void function genericCreateMethod(required string entityName, required struct rc) {
-		// TODO: Verify Create Permission
-		
 		// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
 		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
 		if(!hasSuccess) {
@@ -149,9 +145,15 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	// EDIT
 	public void function genericEditMethod(required string entityName, required struct rc) {
-		// TODO: Verify Edit Permission
-		
-		// TODO: Verify Edit Validation
+		// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
+		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
+		if(!hasSuccess) {
+			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.entityActionDetails.detailAction;
+		}
+		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
+		if(!hasFaliure) {
+			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.entityActionDetails.createAction;
+		}
 		
 		// Load the objects for any ID's that were past in
 		loadEntitiesFromRCIDs( arguments.rc );
@@ -186,8 +188,6 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	// DETAIL
 	public void function genericDetailMethod(required string entityName, required struct rc) {
-		// TODO: Verify Detail Permission
-		
 		// Load the objects for any ID's that were past in
 		loadEntitiesFromRCIDs( arguments.rc );
 		
@@ -437,12 +437,16 @@ component output="false" accessors="true" extends="HibachiController" {
 		var hasValue = false;
 		if(structKeyExists(arguments.rc, "sRedirectURL")) {
 			arguments.rc.entityActionDetails.sRedirectURL = arguments.rc.sRedirectURL;
-		}
-		if(structKeyExists(arguments.rc, "sRedirectAction")) {
+		} else if(structKeyExists(arguments.rc, "sRedirectAction")) {
 			arguments.rc.entityActionDetails.sRedirectAction = arguments.rc.sRedirectAction;
-		}
-		if(structKeyExists(arguments.rc, "sRenderItem")) {
+		} else if(structKeyExists(arguments.rc, "sRenderItem")) {
 			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.sRenderItem;
+		} else if(structKeyExists(arguments.rc, "redirectURL")) {
+			arguments.rc.entityActionDetails.sRedirectURL = arguments.rc.redirectURL;
+		} else if(structKeyExists(arguments.rc, "redirectAction")) {
+			arguments.rc.entityActionDetails.sRedirectAction = arguments.rc.redirectAction;
+		} else if(structKeyExists(arguments.rc, "renderItem")) {
+			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.renderItem;
 		}
 		return hasValue;
 	}
@@ -450,12 +454,16 @@ component output="false" accessors="true" extends="HibachiController" {
 		var hasValue = false;
 		if(structKeyExists(arguments.rc, "fRedirectURL")) {
 			arguments.rc.entityActionDetails.fRedirectURL = arguments.rc.fRedirectURL;
-		}
-		if(structKeyExists(arguments.rc, "fRedirectAction")) {
+		} else if(structKeyExists(arguments.rc, "fRedirectAction")) {
 			arguments.rc.entityActionDetails.fRedirectAction = arguments.rc.fRedirectAction;
-		}
-		if(structKeyExists(arguments.rc, "fRenderItem")) {
+		} else if(structKeyExists(arguments.rc, "fRenderItem")) {
 			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.fRenderItem;
+		} else if(structKeyExists(arguments.rc, "redirectURL")) {
+			arguments.rc.entityActionDetails.fRedirectURL = arguments.rc.redirectURL;
+		} else if(structKeyExists(arguments.rc, "redirectAction")) {
+			arguments.rc.entityActionDetails.fRedirectAction = arguments.rc.redirectAction;
+		} else if(structKeyExists(arguments.rc, "renderItem")) {
+			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.renderItem;
 		}
 		return hasValue;
 	}

@@ -36,7 +36,6 @@
 Notes:
 
 --->
-<cfparam name="rc.account" type="any" />
 <cfparam name="rc.accountAuthenticationExists" type="boolean" />
 
 <cfoutput>
@@ -52,22 +51,14 @@ Notes:
 					
 				<h3>Login</h3>
 				<br />
-				<cf_SlatwallErrorDisplay object="#$.slatwall.getCurrentSession()#" />
+				<cfset authorizeProcessObject = $.slatwall.getSession().getProcessObject("AuthorizeAccount") />
 				<form action="?s=1" class="form-horizontal" method="post">
-					<input type="hidden" name="slatAction" value="admin:main.login" />
+					<input type="hidden" name="slatAction" value="admin:main.authorizelogin" />
 					<fieldset class="dl-horizontal">
-						<div class="control-group">
-							<label class="control-label" for="emailAddress">Email</label>
-							<div class="controls">
-								<input type="text" name="emailAddress" placeholder="Email">
-							</div>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="password">Password</label>
-							<div class="controls">
-								<input type="password" name="password" placeholder="Password">
-							</div>
-						</div>
+						<fieldset class="dl-horizontal">
+							<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="emailAddress" edit="true" title="#$.slatwall.rbKey('entity.account.emailAddress')#" />
+							<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="password" edit="true" title="#$.slatwall.rbKey('entity.account.password')#" />
+						</fieldset>
 						<button type="submit" class="btn btn-primary pull-right">Login</button>
 					</fieldset>
 				</form>
@@ -75,20 +66,10 @@ Notes:
 				<h3>Login with Mura Account</h3>
 				<br />
 				<form action="?s=1" class="form-horizontal">
-					<input type="hidden" name="slatAction" value="mura:account.login" />
+					<input type="hidden" name="slatAction" value="mura:main.authorizelogin" />
 					<fieldset class="dl-horizontal">
-						<div class="control-group">
-							<label class="control-label" for="username">Username</label>
-							<div class="controls">
-								<input type="text" name="username" placeholder="Username">
-							</div>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="password">Password</label>
-							<div class="controls">
-								<input type="password" name="password" placeholder="Password">
-							</div>
-						</div>
+						<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="emailAddress" edit="true" title="#$.slatwall.rbKey('entity.account.emailAddress')#" />
+						<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="password" edit="true" title="#$.slatwall.rbKey('entity.account.password')#" />
 						<button type="submit" class="btn pull-right">Login w/Mura</button>
 					</fieldset>
 				</form>
@@ -100,7 +81,7 @@ Notes:
 				<form action="?s=1" class="form-horizontal" method="post">
 					<input type="hidden" name="slatAction" value="admin:main.setupInitialAdmin" />
 					
-					<cfset processObject = rc.account.getProcessObject("setupInitialAdmin") />
+					<cfset processObject = $.slatwall.getAccount().getProcessObject("setupInitialAdmin") />
 							
 					<fieldset class="dl-horizontal">
 						<cf_HibachiPropertyDisplay object="#processObject#" property="firstName" edit="true" title="#$.slatwall.rbKey('entity.account.firstName')#" />
