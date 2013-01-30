@@ -163,7 +163,7 @@
 								try {
 									directoryDelete("#arguments.destination##currentDir#",true);	
 								} catch(any e) {
-									writeLog(file="Slatwall", text="Could not delete the directory: #arguments.destination##currentDir# most likely because it is in use by the file system");
+									logHibachi("Could not delete the directory: #arguments.destination##currentDir# most likely because it is in use by the file system", true);
 								}
 							}
 						} else if(destinationDirList.type[i] == "File") {
@@ -174,7 +174,7 @@
 								try {
 									fileDelete("#arguments.destination##currentFile#");	
 								} catch(any e) {
-									writeLog(file="Slatwall", text="Could not delete file: #arguments.destination##currentFile# most likely because it is in use by the file system");
+									logHibachi("Could not delete file: #arguments.destination##currentFile# most likely because it is in use by the file system", true);
 								}
 							}
 						}
@@ -225,7 +225,7 @@
 			try {
 				return decrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));	
 			} catch (any e) {
-				logHibachi("There was an error decrypting a value from the database.  This is usually because Slatwall cannot find the Encryption key used to encrypt the data.  Verify that you have a key file in the location specified in the advanced settings of the admin.", true);
+				logHibachi("There was an error decrypting a value from the database.  This is usually because the application cannot find the Encryption key used to encrypt the data.  Verify that you have a key file in the location specified in the advanced settings of the admin.", true);
 				return "";
 			}
 		}
@@ -250,7 +250,7 @@
 		}
 		
 		private string function getEncryptionKeyLocation() {
-			return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/Slatwall/config/custom/');
+			return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/#getApplicationValue('applicationKey')#/config/custom/');
 		}
 		
 		private string function getEncryptionKeyFileName() {
@@ -272,22 +272,22 @@
 		
 		<!--- All logic in this method is inside of a cftry so that it doesnt cause an exception ---> 
 		<cftry>
-			<cflog file="Slatwall" text="START EXCEPTION" />
+			<cflog file="#getApplicationValue('applicationKey')#" text="START EXCEPTION" />
 			<cfif structKeyExists(arguments.exception, "detail") and isSimpleValue(arguments.exception.detail)>
-				<cflog file="Slatwall" text="#arguments.exception.detail#" />
+				<cflog file="#getApplicationValue('applicationKey')#" text="#arguments.exception.detail#" />
 			</cfif>
 			<cfif structKeyExists(arguments.exception, "errNumber") and isSimpleValue(arguments.exception.errNumber)>
-				<cflog file="Slatwall" text="#arguments.exception.errNumber#" />
+				<cflog file="#getApplicationValue('applicationKey')#" text="#arguments.exception.errNumber#" />
 			</cfif>
 			<cfif structKeyExists(arguments.exception, "message") and isSimpleValue(arguments.exception.message)>
-				<cflog file="Slatwall" text="#arguments.exception.message#" />
+				<cflog file="#getApplicationValue('applicationKey')#" text="#arguments.exception.message#" />
 			</cfif>
 			<cfif structKeyExists(arguments.exception, "stackTrace") and isSimpleValue(arguments.exception.stackTrace)>
-				<cflog file="Slatwall" text="#arguments.exception.stackTrace#" />
+				<cflog file="#getApplicationValue('applicationKey')#" text="#arguments.exception.stackTrace#" />
 			</cfif>
-			<cflog file="Slatwall" text="END EXCEPTION" />
+			<cflog file="#getApplicationValue('applicationKey')#" text="END EXCEPTION" />
 			<cfcatch>
-				<cflog file="Slatwall" text="Log Exception Error" />
+				<cflog file="#getApplicationValue('applicationKey')#" text="Log Exception Error" />
 			</cfcatch>
 		</cftry>   
 	</cffunction>
@@ -326,7 +326,7 @@
 				<cfset arguments.logType = "Information" />
 			</cfif>
 			
-			<cflog file="Slatwall" text="#logText#" type="#arguments.logType#" />
+			<cflog file="#getApplicationValue('applicationKey')#" text="#logText#" type="#arguments.logType#" />
 		</cfif>
 		
 	</cffunction>

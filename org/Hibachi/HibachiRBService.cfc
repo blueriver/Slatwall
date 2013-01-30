@@ -52,9 +52,9 @@ component output="false" accessors="true" extends="HibachiService" {
 			
 			variables.resourceBundles[ arguments.locale ] = {};
 			
-			// Get the primary resource bundle for Slatwall
+			// Get the primary resource bundle for
 			try {
-				variables.resourceBundles[ arguments.locale ] = javaRB.getResourceBundle(expandPath("/Slatwall/config/resourceBundles/#arguments.locale#.properties"));
+				variables.resourceBundles[ arguments.locale ] = javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/config/resourceBundles/#arguments.locale#.properties"));
 			} catch (any e) {
 				// No RB File Found
 			}
@@ -64,7 +64,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			var activeFW1Integrations = getIntegrationService().getActiveFW1Subsystems();
 			for(var i=1; i<=arrayLen(activeFW1Integrations); i++) {
 				try {
-					structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/Slatwall/integrationServices/#activeFW1Integrations[i].subsystem#/config/resourceBundles/#arguments.locale#.properties")), true);
+					structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/integrationServices/#activeFW1Integrations[i].subsystem#/config/resourceBundles/#arguments.locale#.properties")), true);
 				} catch (any e) {
 					// No RB File Found
 				}	
@@ -72,7 +72,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			
 			// Get whatever resource bundle is in the custom config directory
 			try {
-				structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/Slatwall/config/custom/resourceBundles/#arguments.locale#.properties")), true);
+				structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/config/custom/resourceBundles/#arguments.locale#.properties")), true);
 			} catch (any e) {
 				// No RB File Found
 			}

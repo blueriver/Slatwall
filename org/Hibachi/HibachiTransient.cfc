@@ -217,13 +217,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 					var manyToOneStructData = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name
-					var primaryIDPropertyName = getService( "hibachiService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
+					var primaryIDPropertyName = getService( "hibachiService" ).getPrimaryIDPropertyNameByEntityName( "#getApplicationValue('applicationKey')##listLast(currentProperty.cfc,'.')#" );
 					
 					// If the primaryID exists then we can set the relationship
 					if(structKeyExists(manyToOneStructData, primaryIDPropertyName)) {
 						
 						// set the service to use to get the specific entity
-						var entityService = getService( "hibachiService" ).getServiceByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
+						var entityService = getService( "hibachiService" ).getServiceByEntityName( "#getApplicationValue('applicationKey')##listLast(currentProperty.cfc,'.')#" );
 						
 						// If there were additional values in the data, then we will get the entity by the primaryID and populate / validate by calling save in its service.
 						if(structCount(manyToOneStructData) gt 1) {
@@ -270,7 +270,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 					var oneToManyArrayData = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name for the related object
-					var primaryIDPropertyName = getService( "hibachiService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
+					var primaryIDPropertyName = getService( "hibachiService" ).getPrimaryIDPropertyNameByEntityName( "#getApplicationValue('applicationKey')##listLast(currentProperty.cfc,'.')#" );
 					
 					// Loop over the array of objects in the data... Then load, populate, and validate each one
 					for(var a=1; a<=arrayLen(oneToManyArrayData); a++) {
@@ -279,7 +279,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 						if(structKeyExists(oneToManyArrayData[a], primaryIDPropertyName) && (!structKeyExists(arguments.data, "populateSubProperties") || arguments.data.populateSubProperties)) {
 							
 							// set the service to use to get the specific entity
-							var entityService = getService( "hibachiService" ).getServiceByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
+							var entityService = getService( "hibachiService" ).getServiceByEntityName( "#getApplicationValue('applicationKey')##listLast(currentProperty.cfc,'.')#" );
 							
 							// Load the specific entity, and if one doesn't exist yet then return a new entity
 							var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=oneToManyArrayData[a][primaryIDPropertyName],2=true});
@@ -307,7 +307,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 					var manyToManyIDList = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name
-					var primaryIDPropertyName = getService( "hibachiService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
+					var primaryIDPropertyName = getService( "hibachiService" ).getPrimaryIDPropertyNameByEntityName( "#getApplicationValue('applicationKey')##listLast(currentProperty.cfc,'.')#" );
 					
 					// Get all of the existing related entities
 					var existingRelatedEntities = invokeMethod("get#currentProperty.name#");
@@ -338,7 +338,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 					for(var n=1; n<=listLen( manyToManyIDList ); n++) {
 						
 						// set the service to use to get the specific entity
-						var entityService = getService( "hibachiService" ).getServiceByEntityName( "Slatwall#listLast(currentProperty.cfc,'.')#" );
+						var entityService = getService( "hibachiService" ).getServiceByEntityName( "#getApplicationValue('applicationKey')##listLast(currentProperty.cfc,'.')#" );
 							
 						// set the id of this entity into a local variable
 						var thisEntityID = listGetAt(manyToManyIDList, n);
@@ -476,7 +476,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		if(arguments.formatType eq "custom") {
 			return this.invokeMethod("get#arguments.propertyName#Formatted");	
 		} else if(arguments.formatType eq "rbKey") {
-			return rbKey('entity.#replace(getEntityName(),"Slatwall","")#.#arguments.propertyName#.#arguments.value#');
+			return rbKey('entity.#replace(getEntityName(),getApplicationValue('applicationKey'),"")#.#arguments.propertyName#.#arguments.value#');
 		}
 		
 		// This is the null format option
@@ -496,7 +496,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		throw("You cannont convert complex values to formatted Values");
 	}
 	
-	// @hint public method for getting the display format for a given property, this is used a lot by the SlatwallPropertyDisplay
+	// @hint public method for getting the display format for a given property, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyFormatType(required string propertyName) {
 		
 		var propertyMeta = getPropertyMetaData( arguments.propertyName );
@@ -556,12 +556,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		return validationClass;
 	}
 	
-	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
+	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
 		return rbKey("entity.#getClassName()#.#arguments.propertyName#");
 	}
 	
-	// @hint public method for getting the title hint to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
+	// @hint public method for getting the title hint to be used for a property from the rbFactory, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyHint(required string propertyName) {
 		var exactMatch = rbKey("entity.#getClassName()#.#arguments.propertyName#_hint");
 		if(right(exactMatch, 8) != "_missing") {
@@ -573,7 +573,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	// @hint public method to get the rbKey value for a property in a subentity
 	public string function getTitleByPropertyIdentifier( required string propertyIdentifier ) {
 		if(find(".", arguments.propertyIdentifier)) {
-			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc,'.')#");
+			var exampleEntity = entityNew("#getApplicationValue('applicationKey')##listLast(getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc,'.')#");
 			return exampleEntity.getTitleByPropertyIdentifier( replace(arguments.propertyIdentifier, "#listFirst(arguments.propertyIdentifier, '.')#.", '') );
 		}
 		return getPropertyTitle( arguments.propertyIdentifier );
@@ -582,13 +582,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	// @hint public method to get the rbKey value for a property in a subentity
 	public string function getFieldTypeByPropertyIdentifier( required string propertyIdentifier ) {
 		if(find(".", arguments.propertyIdentifier)) {
-			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc,'.')#");
+			var exampleEntity = entityNew("#getApplicationValue('applicationKey')##listLast(getPropertyMetaData( listFirst(arguments.propertyIdentifier, '.') ).cfc,'.')#");
 			return exampleEntity.getFieldTypeByPropertyIdentifier( replace(arguments.propertyIdentifier, "#listFirst(arguments.propertyIdentifier, '.')#.", '') );
 		}
 		return getPropertyFieldType( arguments.propertyIdentifier );
 	}
 	
-	// @hint public method for returning the name of the field for this property, this is used a lot by the SlatwallPropertyDisplay
+	// @hint public method for returning the name of the field for this property, this is used a lot by the PropertyDisplay
 	public string function getPropertyFieldName(required string propertyName) {
 		
 		// Get the Meta Data for the property
@@ -597,7 +597,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		// If this is a relational property, and the relationship is many-to-one, then return the propertyName and propertyName of primaryID
 		if( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-one" ) {
 			
-			var primaryIDPropertyName = getService( "hibachiService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#listLast(propertyMeta.cfc,'.')#" );
+			var primaryIDPropertyName = getService( "hibachiService" ).getPrimaryIDPropertyNameByEntityName( "#getApplicationValue('applicationKey')##listLast(propertyMeta.cfc,'.')#" );
 			return "#arguments.propertyName#.#primaryIDPropertyName#";
 		}
 		
@@ -605,7 +605,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		return arguments.propertyName;
 	}
 	
-	// @hint public method for inspecting the property of a given object and determining the most appropriate field type for that property, this is used a lot by the SlatwallPropertyDisplay
+	// @hint public method for inspecting the property of a given object and determining the most appropriate field type for that property, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyFieldType(required string propertyName) {
 		
 		// Get the Meta Data for the property

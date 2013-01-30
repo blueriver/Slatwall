@@ -81,7 +81,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	}
 	
 	public any function duplicate() {
-		var newEntity = getService("hibachiService").getServiceByEntityName(getEntityName()).invokeMethod("new#replace(getEntityName(),'Slatwall','')#");
+		var newEntity = getService("hibachiService").getServiceByEntityName(getEntityName()).invokeMethod("new#replace(getEntityName(),getApplicationValue('applicationKey'),'')#");
 		var properties = getProperties();
 		for(var p=1; p<=arrayLen(properties); p++) {
 			if( properties[p].name != getPrimaryIDPropertyName() && (!structKeyExists(properties[p], "fieldType") || ( properties[p].fieldType != "one-to-many" && properties[p].fieldType != "many-to-many")) ) {
@@ -227,7 +227,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		
 	}
 	
-	// @hint public method that returns the full entityName as "Slatwallxxx"
+	// @hint public method that returns the full entityName
 	public string function getEntityName(){
 		return getMetaData(this).entityname;
 	}
@@ -303,7 +303,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			
 			var smartList = getPropertyOptionsSmartList( arguments.propertyName );
 			
-			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
+			var exampleEntity = entityNew("#getApplicationValue('applicationKey')##listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
 			
 			smartList.addSelect(propertyIdentifier=exampleEntity.getSimpleRepresentationPropertyName(), alias="name");
 			smartList.addSelect(propertyIdentifier=exampleEntity.getPrimaryIDPropertyName(), alias="value"); 
@@ -356,7 +356,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			var smartList = entityService.invokeMethod("get#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#SmartList");
 			
 			// Create an example entity so that we can read the meta data
-			var exampleEntity = entityNew("Slatwall#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
+			var exampleEntity = entityNew("#getApplicationValue('applicationKey')##listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
 			
 			// If its a one-to-many, then add filter
 			if(getPropertyMetaData( arguments.propertyName ).fieldtype == "one-to-many") {
@@ -555,7 +555,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			updateCalculatedProperties();
 		
 			// Set modifiedByAccount
-			if(structKeyExists(this,"setModifiedByAccount") && !getHibachiScope().getCurrentAccount().isNew() && getSlatwallScope().getCurrentAccount().getAdminAccountFlag() ){
+			if(structKeyExists(this,"setModifiedByAccount") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
 				setModifiedByAccount(getHibachiScope().getCurrentAccount());
 			}
 		}

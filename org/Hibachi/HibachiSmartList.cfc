@@ -205,7 +205,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 				addEntity(
 					entityName=newEntityName,
 					entityAlias=newEntityAlias,
-					entityFullName="Slatwall.model.entity.AttributeValue",
+					entityFullName="#getApplicationValue('applicationKey')#.model.entity.AttributeValue",
 					entityProperties=getPropertiesStructFromEntityMeta(newEntityMeta),
 					parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
 					parentRelatedProperty="attributeValues",
@@ -683,7 +683,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	}
 	
 	public string function getBaseEntityPrimaryAliase() {
-		return "#variables.entities[ getBaseEntityName() ].entityAlias#.#application.slatwall.factory.getBean('hibachiService').getPrimaryIDPropertyNameByEntityName(getBaseEntityName())#";
+		return "#variables.entities[ getBaseEntityName() ].entityAlias#.#getService("hibachiService").getPrimaryIDPropertyNameByEntityName(getBaseEntityName())#";
 	}
 	
 	public string function getHQLOrder(boolean supressOrderBy=false) {

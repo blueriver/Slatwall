@@ -50,7 +50,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 			return variables[ arguments.key ]; 
 		}
 		
-		throw("You have requested '#arguments.key#' as a value in the slatwall scope, however that value has not been set in the request.  In the futuer you should check for it's existance with hasValue().");
+		throw("You have requested '#arguments.key#' as a value in the #getApplicationValue('applicationKey')# scope, however that value has not been set in the request.  In the futuer you should check for it's existance with hasValue().");
 	}
 	
 	public void function setValue(required string key, required any value) {

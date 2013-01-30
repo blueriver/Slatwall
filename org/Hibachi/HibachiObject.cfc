@@ -33,7 +33,7 @@ component accessors="true" output="false" persistent="false" {
 	// @hint  helper function for returning the Validate This Facade Object
 	public any function getValidateThis() {
 		if( !hasApplicationValue("validateThis") ) {
-			setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = expandPath('/Slatwall/model/validation/'),injectResultIntoBO = true,defaultFailureMessagePrefix = ""}) );
+			setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = expandPath('/#getApplicationValue('applicationKey')#/model/validation/'),injectResultIntoBO = true,defaultFailureMessagePrefix = ""}) );
 		}
 		return getApplicationValue("validateThis");
 	}
@@ -43,7 +43,7 @@ component accessors="true" output="false" persistent="false" {
 		return "ram:///#getHibachiInstanceApplicationScopeKey()#";
 	}
 	
-	// @hint helper function for returning the slatwallScope from the request scope
+	// @hint helper function for returning the hibachiScope from the request scope
 	public any function getHibachiScope() {
 		return request[ "#getApplicationValue("applicationKey")#Scope" ];
 	}
@@ -155,7 +155,7 @@ component accessors="true" output="false" persistent="false" {
 		return appKey;
 	}
 	
-	// @hint facade method to check the slatwall application scope for a value
+	// @hint facade method to check the application scope for a value
 	public boolean function hasApplicationValue(required any key) {
 		if( structKeyExists(application, getHibachiInstanceApplicationScopeKey()) && structKeyExists(application[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
 			return true;
@@ -164,16 +164,16 @@ component accessors="true" output="false" persistent="false" {
 		return false;
 	}
 	
-	// @hint facade method to get values from the slatwall application scope
+	// @hint facade method to get values from the application scope
 	public any function getApplicationValue(required any key) {
 		if( structKeyExists(application, getHibachiInstanceApplicationScopeKey()) && structKeyExists(application[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
 			return application[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ];
 		}
 		
-		throw("You have requested a value for '#arguments.key#' from the core slatwall application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
+		throw("You have requested a value for '#arguments.key#' from the core hibachi application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
 	}
 	
-	// @hint facade method to set values in the slatwall application scope 
+	// @hint facade method to set values in the application scope 
 	public void function setApplicationValue(required any key, required any value) {
 		lock name="application_#getHibachiInstanceApplicationScopeKey()#_#arguments.key#" timeout="10" {
 			if(!structKeyExists(application, getHibachiInstanceApplicationScopeKey())) {
@@ -187,7 +187,7 @@ component accessors="true" output="false" persistent="false" {
 		}
 	}
 	
-	// @hint facade method to check the slatwall application scope for a value
+	// @hint facade method to check the application scope for a value
 	public boolean function hasSessionValue(required any key) {
 		if( structKeyExists(session, getHibachiInstanceApplicationScopeKey()) && structKeyExists(session[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
 			return true;
@@ -196,16 +196,16 @@ component accessors="true" output="false" persistent="false" {
 		return false;
 	}
 	
-	// @hint facade method to get values from the slatwall application scope
+	// @hint facade method to get values from the application scope
 	public any function getSessionValue(required any key) {
 		if( structKeyExists(session, getHibachiInstanceApplicationScopeKey()) && structKeyExists(session[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
 			return session[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ];
 		}
 		
-		throw("You have requested a value for '#arguments.key#' from the core slatwall application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
+		throw("You have requested a value for '#arguments.key#' from the core application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
 	}
 	
-	// @hint facade method to set values in the slatwall application scope 
+	// @hint facade method to set values in the application scope 
 	public void function setSessionValue(required any key, required any value) {
 		lock name="session_#getHibachiInstanceApplicationScopeKey()#_#arguments.key#" timeout="10" {
 			if(!structKeyExists(session, getHibachiInstanceApplicationScopeKey())) {
