@@ -8,6 +8,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="paymentService" type="any";
 	property name="productService" type="any";
 	property name="promotionService" type="any";
+	property name="settingService" type="any";
 	property name="skuService" type="any";
 	property name="subscriptionService" type="any";
 	property name="permissionService" type="any";
@@ -240,6 +241,12 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		if( rc.promotion.isNew() ) {
 			rc.promotionPeriod = getPromotionService().newPromotionPeriod();
 		}
+	}
+	// Setting
+	public void function editSetting(required struct rc) {
+		rc.setting = getSettingService().getSetting(rc.settingID, true);
+		rc.edit = true;
+		getFW().setView("admin:entity.detailsetting");
 	}
 	
 	// Sku
