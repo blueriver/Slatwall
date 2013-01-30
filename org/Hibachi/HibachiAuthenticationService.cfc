@@ -23,7 +23,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		if(!structKeyExists(getActionPermissionDetails()[ subsystemName ], sectionName)) {
 			return true;
 		}
-		
+
 		// Check if the action is public, if public no need to worry about security
 		if(listFindNocase(getActionPermissionDetails()[ subsystemName ][ sectionName ].publicMethods, itemName)){
 			return true;
@@ -39,7 +39,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			return false;
 		}
 		
-		return true;
+		return false;
 	}
 	
 	public boolean function authenticateEntity(required string crudType, required string entityName, required any account) {

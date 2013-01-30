@@ -148,7 +148,7 @@ Notes:
 							<cfsavecontent variable="local.toolGroupOne">
 								<cf_HibachiActionCaller action="admin:main.about" type="list">
 								<cf_HibachiActionCaller action="admin:main.log" type="list">
-								<cf_HibachiActionCaller action="frontend:page.slatwall-productlisting" text="#$.slatwall.rbKey('admin.frontendexample')#" type="list">
+								<!---<cf_HibachiActionCaller action="frontend:page.slatwall-productlisting" text="#$.slatwall.rbKey('admin.frontendexample')#" type="list">--->
 							</cfsavecontent>
 							<cfif len(local.toolGroupOne)>
 								#local.toolGroupOne#
@@ -170,7 +170,6 @@ Notes:
 								<cf_HibachiActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
 							</cfif>
 						</cf_HibachiActionCallerDropdown>
-						
 					</ul>
 					<cfif $.slatwall.getLoggedInAsAdminFlag()>
 						<div class="pull-right">
