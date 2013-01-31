@@ -250,11 +250,11 @@ component extends="FW1.framework" {
 					if(!bf.containsBean("hibachiSmartList")) {
 						bf.declareBean("hibachiSmartList", "#variables.framework.applicationKey#.org.Hibachi.HibachiSmartList", false);
 					}
-					if(!bf.containsBean("hibachiError")) {
-						bf.declareBean("hibachiError", "#variables.framework.applicationKey#.org.Hibachi.HibachiError", false);
+					if(!bf.containsBean("hibachiErrors")) {
+						bf.declareBean("hibachiErrors", "#variables.framework.applicationKey#.org.Hibachi.HibachiErrors", false);
 					}
-					if(!bf.containsBean("hibachiMessage")) {
-						bf.declareBean("hibachiMessage", "#variables.framework.applicationKey#.org.Hibachi.HibachiMessage", false);
+					if(!bf.containsBean("hibachiMessages")) {
+						bf.declareBean("hibachiMessages", "#variables.framework.applicationKey#.org.Hibachi.HibachiMessages", false);
 					}
 					
 					

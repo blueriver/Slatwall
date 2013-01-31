@@ -127,14 +127,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	
 	// @hint public method to determine if this entity can be deleted
 	public boolean function isDeletable() {
-		
-		var results = getValidateThis().validate(theObject=this, context="delete", injectResultIntoBO="false");
-		
-		if(results.hasErrors()) {
-			return false;	
-		}
-		
-		return true;
+		return getService("hibachiValidationService").validate(object=this, context=arguments.context);
 	}
 	
 	// @hint public helper method that delegates to isDeletable

@@ -1,26 +1,26 @@
 component output="false" accessors="true" persistent="false" extends="HibachiObject" {
 
-	property name="errorBean" type="any" persistent="false";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
-	property name="messageBean" type="any" persistent="false";
+	property name="hibachiErrors" type="any" persistent="false";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
+	property name="hibachiMessages" type="any" persistent="false";
 	property name="populatedSubProperties" type="array" persistent="false";
 	property name="validations" type="struct" persistent="false";
 	
 	// ========================= START: ACCESSOR OVERRIDES ==========================================
 	
 	// @hint Returns the errorBean object, if one hasn't been setup yet it returns a new one
-	public any function getErrorBean() {
-		if(!structKeyExists(variables, "errorBean")) {
-			variables.errorBean = getTransient("hibachiError");
+	public any function getHibachiErrors() {
+		if(!structKeyExists(variables, "hibachiErrors")) {
+			variables.hibachiErrors = getTransient("hibachiErrors");
 		}
-		return variables.errorBean;
+		return variables.hibachiErrors;
 	}
 	
 	// @hint Returns the messageBean object, if one hasn't been setup yet it returns a new one
-	public any function getMessageBean() {
-		if(!structKeyExists(variables, "messageBean")) {
-			variables.messageBean = getTransient("hibachiMessage");; 
+	public any function getHibachiMessages() {
+		if(!structKeyExists(variables, "hibachiMessages")) {
+			variables.hibachiMessages = getTransient("hibachiMessages");; 
 		}
-		return variables.messageBean;
+		return variables.hibachiMessages;
 	}
 	
 	// @hint Returns the populatedSubProperties array, if one hasn't been setup yet it returns a new one
@@ -36,7 +36,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint Returns a struct of all the errors for this entity
 	public struct function getErrors() {
-		return getErrorBean().getErrors();
+		return getHibachiErrors().getErrors();
 	}
 	
 	// @hint Returns the error message of a given error name
@@ -53,7 +53,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		
 	// @hint Returns true if this object has any errors.
 	public boolean function hasErrors() {
-		if(getErrorBean().hasErrors()) {
+		if(getHibachiErrors().hasErrors()) {
 			return true;
 		}
 		
@@ -67,7 +67,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		
 	// @hint helper method to add an error to the error bean	
 	public void function addError( required string errorName, required string errorMessage) {
-		getErrorBean().addError(argumentCollection=arguments);
+		getHibachiErrors().addError(argumentCollection=arguments);
 	}
 	
 	// @hint helper method that returns all error messages as <p> html tags
@@ -94,22 +94,22 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint Returns a struct of all the messages for this object
 	public struct function getMessages() {
-		return getMessageBean().getMessages();
+		return getHibachiMessages().getMessages();
 	}
 	
 	// @hint Returns true if there are any messages
 	public boolean function hasMessages( ) {
-		return getMessageBean().hasMessages();
+		return getHibachiMessages().hasMessages();
 	}
 	
 	// @hint Returns true if a specific message key exists
 	public boolean function hasMessage( required string messageName ) {
-		return getMessageBean().hasMessage( arguments.messageName );
+		return getHibachiMessages().hasMessage( arguments.messageName );
 	}
 	
 	// @hint helper method to add an error to the error bean	
 	public void function addMessage( required string messageName, required string message ) {
-		getMessageBean().addMessage(argumentCollection=arguments);
+		getHibachiMessages().addMessage(argumentCollection=arguments);
 	}
 	
 	// @hint helper method that returns all messages as <p> html tags
@@ -339,15 +339,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	// @hint pubic method to validate this object
 	public any function validate( string context="" ) {
 		
-		// Set up the validation arguments as a mirror of the arguments struct
-		var validationArguments = arguments;
-		
-		// Add this as "theObject" to the validation arguments
-		validationArguments.theObject = this;
-		
-		// Validate This object
-		// TODO: IMPORTANT Fix this validation
-		//getValidateThis().validate( argumentCollection=validationArguments );
+		getService("hibachiValidationService").validate(object=this, context=arguments.context);
 		
 		// Validate each of the objects that are in the populatedSubProperties array, This array has properties added to it during the populate method
 		for(var p=1; p<=arrayLen(getPopulatedSubProperties()); p++) {
@@ -356,34 +348,27 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			var subPropertyValue = invokeMethod("get#getPopulatedSubProperties()[p]#");
 			
 			// If the value is Null then throw an error because the populatedSubProperties array should have never had this propertyName in it
-			if(isNull(subPropertyValue)) {
-				throw("the property name: #getPopulatedSubProperties()[p]# was in the populatedSubProperties array, however it must not have actually been populated because the value is null.  Or the property was populated, but something later set it back to null.");
-			}
-			
-			// If the results are an array, then loop over them
-			if(isArray(subPropertyValue)) {
-				
-				// Loop over each object in the subProperty array and validate it
-				for(var e=1; e<=arrayLen(subPropertyValue); e++ ) {
-				
-					// If after validation that sub object has errors, add a failure to this object
-					if(subPropertyValue[e].hasErrors()) {
-						// TODO: IMPORTANT Fix this validation
-						//getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
+			if(!isNull(subPropertyValue)) {
+				// If the results are an array, then loop over them
+				if(isArray(subPropertyValue)) {
+					
+					// Loop over each object in the subProperty array and validate it
+					for(var e=1; e<=arrayLen(subPropertyValue); e++ ) {
+					
+						// If after validation that sub object has errors, add a failure to this object
+						if(subPropertyValue[e].hasErrors()) {
+							getHibachiErrors().addError(getPopulatedSubProperties()[p], rbKey('validate.#getClassName()#.#getPopulatedSubProperties()[p]#.populate'));
+						}
 					}
-				}	
-			} else if(isObject(subPropertyValue)) {
-				if(subPropertyValue.hasErrors()) {
-					// TODO: IMPORTANT Fix this validation
-					//getVTResult().addFailure( failure={message="The #getPopulatedSubProperties()[p]# property has or more validation errors"},propertyName=getPopulatedSubProperties()[p]);
+				} else if(isObject(subPropertyValue)) {
+					if(subPropertyValue.hasErrors()) {
+						getHibachiErrors().addError(getPopulatedSubProperties()[p], rbKey('validate.#getClassName()#.#getPopulatedSubProperties()[p]#.populate'));
+					}
 				}
 			}
 		}
 		
-		// Return the VTResult object that was populated by ValidateThis
-		// TODO: IMPORTANT Fix this validation
-		// getVTResult();
-		return getErrorBean();
+		return getHibachiErrors();
 	}
 	
 	// =======================  END:  POPULATION & VALIDATION =======================================

@@ -602,8 +602,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		newOrder.setAccount( arguments.newAccount );
 		
 		// Update any errors from the previous account to the new account
-		newOrder.getAccount().getErrorBean( originalOrder.getAccount().getErrorBean() );
-		newOrder.getAccount().getVTResult( originalOrder.getAccount().getVTResult() );
+		newOrder.getAccount().setHibachiErrors( originalOrder.getAccount().getHibachiErrors() );
 		
 		this.saveOrder( newOrder );
 		

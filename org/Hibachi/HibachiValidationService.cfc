@@ -86,7 +86,15 @@ component output="false" accessors="true" extends="HibachiService" {
 		return variables.validationByContextStructs["#arguments.object.getClassName()#-#arguments.context#"];
 	}
 	
-	public boolean function validate(required any object, string context="", boolean setErrors=true) {
+	public any function validate(required any object, string context="", boolean setErrors=true) {
+		// Setup an error bean
+		if(setErrors) {
+			var errorBean = arguments.object.getHibachiErrors();
+		} else {
+			var errorBean = getTransient("hibachiErrors");
+		}
+		
+		// Get the valdiations for this context
 		var contextValidations = getValidationsByContext(object=arguments.object, context=arguments.context);
 		for(var propertyName in contextValidations) {
 			if(arguments.object.hasProperty( propertyName )) {
@@ -95,6 +103,12 @@ component output="false" accessors="true" extends="HibachiService" {
 				}
 			}
 		}
+		
+		// If the setErrors was true, then we can set this error
+		if(setErrors) {
+			var errorBean = arguments.object.getHibachiErrors();
+		}
+		return errorBean;
 	}
 	
 	public boolean function validate_required(required any object, required string propertyName, boolean constraintValue=true) {

@@ -152,7 +152,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function forceItemQuantityUpdate(required struct rc) {
 		
-		getOrderService().forceItemQuantityUpdate(order=rc.$.slatwall.cart(), messageBean=rc.$.slatwall.getMessageBean());
+		getOrderService().forceItemQuantityUpdate(order=rc.$.slatwall.cart(), messageBean=rc.$.slatwall.getHibachiMessages());
 		
 		getFW().setView("frontend:cart.detail");
 	}
