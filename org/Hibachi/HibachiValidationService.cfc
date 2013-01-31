@@ -87,11 +87,22 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	public boolean function validate(required any object, string context="", boolean setErrors=true) {
-		
+		var contextValidations = getValidationsByContext(object=arguments.object, context=arguments.context);
+		for(var propertyName in contextValidations) {
+			if(arguments.object.hasProperty( propertyName )) {
+				for(var constraint in contextValidations[ propertyName ]) {
+					this.invokeMethod("validate_#constraint#", {object=arguments.object, propertyName=propertyName, constraintValue=contextValidations[ propertyName ][ constraint ]});
+				}
+			}
+		}
 	}
 	
 	public boolean function validate_required(required any object, required string propertyName, boolean constraintValue=true) {
-		
+		var value = arguments.object.invokeMethod("get#arguments.property#");
+		if(!isNull(value) && len(value)) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_dataType(required any object, required string propertyName, required any constraintValue) {
