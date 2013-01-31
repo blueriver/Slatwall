@@ -99,7 +99,10 @@ component output="false" accessors="true" extends="HibachiService" {
 		for(var propertyName in contextValidations) {
 			if(arguments.object.hasProperty( propertyName )) {
 				for(var constraint in contextValidations[ propertyName ]) {
-					this.invokeMethod("validate_#constraint#", {object=arguments.object, propertyName=propertyName, constraintValue=contextValidations[ propertyName ][ constraint ]});
+					var isValid = this.invokeMethod("validate_#constraint#", {object=arguments.object, propertyName=propertyName, constraintValue=contextValidations[ propertyName ][ constraint ]});
+					if(!isValid) {
+						errorBean.addError(propertyName, rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#constraint#'));
+					}
 				}
 			}
 		}
@@ -112,7 +115,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	public boolean function validate_required(required any object, required string propertyName, boolean constraintValue=true) {
-		var value = arguments.object.invokeMethod("get#arguments.property#");
+		var value = arguments.object.invokeMethod("get#arguments.propertyName#");
 		if(!isNull(value) && len(value)) {
 			return true;
 		}
@@ -120,7 +123,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	public boolean function validate_dataType(required any object, required string propertyName, required any constraintValue) {
-		var value = arguments.object.invokeMethod("get#arguments.property#");
+		var value = arguments.object.invokeMethod("get#arguments.propertyName#");
 		
 		if(isNull(value)) {
 			return true;
@@ -149,64 +152,69 @@ component output="false" accessors="true" extends="HibachiService" {
 		return false;
 	}
 	
-	public boolean function validate_minValue(required any object, required string propertyName, required any constraintValue) {
-		var value = arguments.object.invokeMethod("get#arguments.property#");
+	public boolean function validate_minValue(required any object, required string propertyName, required numeric constraintValue) {
+		var value = arguments.object.invokeMethod("get#arguments.propertyName#");
 		if(isNull(propertyValue) || (isNumeric(propertyValue) && propertyValue gte arguments.propertyValue) ) {
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean function validate_maxValue(required any object, required string propertyName) {
-		var propertyValue = arguments.object.invokeMethod("get#arguments.property#");
+	public boolean function validate_maxValue(required any object, required string propertyName, required numeric constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
 		if(isNull(propertyValue) || (isNumeric(propertyValue) && propertyValue lte arguments.propertyValue) ) {
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean function validate_minLength(required any object, required string propertyName) {
+	public boolean function validate_minLength(required any object, required string propertyName, required numeric constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_maxLength(required any object, required string propertyName) {
+	public boolean function validate_maxLength(required any object, required string propertyName, required numeric constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_minCollection(required any object, required string propertyName) {
+	public boolean function validate_minCollection(required any object, required string propertyName, required numeric constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_maxCollection(required any object, required string propertyName) {
+	public boolean function validate_maxCollection(required any object, required string propertyName, required numeric constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_method(required any object, required string propertyName) {
+	public boolean function validate_method(required any object, required string propertyName, required string constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_lteProperty(required any object, required string propertyName) {
-		
+	public boolean function validate_lteProperty(required any object, required string propertyName, required string constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_ltProperty(required any object, required string propertyName) {
-		
+	public boolean function validate_ltProperty(required any object, required string propertyName, required string constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_gteProperty(required any object, required string propertyName) {
-		
+	public boolean function validate_gteProperty(required any object, required string propertyName, required string constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_gtProperty(required any object, required string propertyName) {
-		
+	public boolean function validate_gtProperty(required any object, required string propertyName, required string constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_eqProperty(required any object, required string propertyName) {
-		
+	public boolean function validate_eqProperty(required any object, required string propertyName, required string constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	public boolean function validate_neqProperty(required any object, required string propertyName) {
-		
+	public boolean function validate_neqProperty(required any object, required string propertyName, required string constraintValue) {
+		throw("Tell Greg to Impliment this!");
 	}
 	
-	
-	
-	
+	public boolean function validate_inList(required any object, required string propertyName, required string constraintValue) {
+		throw("Tell Greg to Impliment this!");
+	}
 	
 	
 	/*

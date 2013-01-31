@@ -332,7 +332,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	}
 	
 	// @hind public method to see all of the validations for a particular context
-	public array function getValidations( string context="" ) {
+	public struct function getValidations( string context="" ) {
 		return getService("hibachiValidationService").getValidationsByContext( object=this, context=arguments.context);
 	}
 	
@@ -708,6 +708,4 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	public string function stringReplace( required string templateString, boolean formatValues=false ) {
 		return getService("hibachiUtilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues);
 	}
-	
-	
-}
+}	

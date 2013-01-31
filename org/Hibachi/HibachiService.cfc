@@ -87,6 +87,7 @@
 					invokeArguments[ "processObject" ] = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
 					invokeArguments[ "processObject" ].populate( arguments.data );
 					invokeArguments[ "processObject" ].validate( context=arguments.processContext );
+					
 					if(invokeArguments[ "processObject" ].hasErrors()) {
 						dataErrors = true;
 					}

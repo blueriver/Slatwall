@@ -77,9 +77,9 @@ component output="false" accessors="true" extends="HibachiService"  {
 					return arguments.session;
 				}
 			}
-			arguments.processObject.addError('password', rbKey('validate.session.authorizeAccount.invalidpassword'), true);
+			arguments.processObject.addError('password', rbKey('validate.session_authorizeAccount.password.incorrect'));
 		} else {
-			arguments.processObject.addError('email', rbKey('validate.session.authorizeAccount.invalidemail'), true);
+			arguments.processObject.addError('email', rbKey('validate.session_authorizeAccount.email.notfound'));
 		}
 		
 		return arguments.session;

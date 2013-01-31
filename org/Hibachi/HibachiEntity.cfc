@@ -127,7 +127,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	
 	// @hint public method to determine if this entity can be deleted
 	public boolean function isDeletable() {
-		return getService("hibachiValidationService").validate(object=this, context=arguments.context);
+		return getService("hibachiValidationService").validate(object=this, context="delete", setErrors=false).hasErrors();
 	}
 	
 	// @hint public helper method that delegates to isDeletable
@@ -137,13 +137,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	
 	// @hint public method to determine if this entity can be deleted
 	public boolean function isEditable() {
-		var results = getValidateThis().validate(theObject=this, context="edit", injectResultIntoBO="false");
-		
-		if(results.hasErrors()) {
-			return false;	
-		}
-		
-		return true;
+		return getService("hibachiValidationService").validate(object=this, context="edit", setErrors=false).hasErrors();
 	}
 	
 	// @hint public helper method that delegates to isDeletable
@@ -153,13 +147,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	
 	// @hint public method to determine if this entity can be 'processed', by default it returns true by you can override on an entity by entity basis
 	public boolean function isProcessable( string context="process" ) {
-		
-		var results = getValidateThis().validate(theObject=this, context="#arguments.context#", injectResultIntoBO="false");
-		
-		if(results.hasErrors()) {
-			return false;	
-		}
-		return true;
+		return getService("hibachiValidationService").validate(object=this, context=arguments.context, setErrors=false).hasErrors();
 	}
 	
 	// @hint public helper method that delegates to isProcessable
