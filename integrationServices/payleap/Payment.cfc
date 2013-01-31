@@ -37,11 +37,11 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
+component accessors="true" output="false" displayname="PayLeap" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
 	//Global variables
-	variables.liveGatewayAddress = "payflowpro.paypal.com";
-	variables.testGatewayAddress = "pilot-payflowpro.paypal.com";
+	variables.liveGatewayAddress = "secure1.payleap.com/transactservices.svc/ProcessCreditCard";
+	variables.testGatewayAddress = "uat.payleap.com/transactservices.svc/ProcessCreditCard";
 	variables.verbosity = "MEDIUM";
 	variables.timeout = 45;
 	variables.transactionCodes = {};
@@ -52,7 +52,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			authorize="A",
 			authorizeAndCharge="S",
 			chargePreAuthorization="D",
-			credit="C",
+			sale="C",
 			void="V",
 			inquiry="I"
 		};
@@ -83,7 +83,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		}
 		
 		// This is a bit of a hack because PayFlow Pro doesn't allow for second delay capture on an original authroization code.  So if the transactionType is delayed capture, and we have already captured a partial... then we will need to just recharge
-		var forceSale = false;
+	/*	var forceSale = false;
 		if( arguments.requestBean.getTransactionType() eq "chargePreAuthorization" ) {
 			var query = new Query();
 			query.setSQL("SELECT paymentTransactionID FROM SlatwallPaymentTransaction WHERE orderPaymentID = '#arguments.requestBean.getOrderPaymentID()#' AND transactionType = 'chargePreAuthorization' AND authorizationCode IN (SELECT authorizationCode FROM SlatwallPaymentTransaction WHERE providerTransactionID='#requestBean.getProviderTransactionID()#')"); 
@@ -98,7 +98,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			requestData = listAppend(requestData, "TRXTYPE=S", "&");
 		} else {
 			requestData = listAppend(requestData, "TRXTYPE=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#", "&");
-		}
+		}*/
 		// END HACK
 		
 		return requestData;
@@ -106,10 +106,8 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 
 	private string function getLoginNVP(){
 		var loginData = [];
-		arrayAppend(loginData,"USER=#setting('userName')#");
-		arrayAppend(loginData,"PARTNER=#setting('partnerID')#");
-		arrayAppend(loginData,"VENDOR=#setting('vendorID')#");
-		arrayAppend(loginData,"PWD=#setting('password')#");
+		arrayAppend(loginData,"UserName=#setting('userName')#");
+		arrayAppend(loginData,"Password=#setting('password')#");
 		return arrayToList(loginData,"&");
 	}
 	
