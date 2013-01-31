@@ -39,9 +39,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		var errorsStruct = {};
 		
 		// Check the VTResult for any errors
+		/*
 		for(var key in getVTResult().getErrors()) {
 			errorsStruct[key] = getVTResult().getErrors()[key];	
 		}
+		*/
 		
 		// Check the ErrorBean for any errors
 		for(var key in getErrorBean().getErrors()) {
@@ -72,7 +74,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		
 	// @hint Returns true if this object has any errors.
 	public boolean function hasErrors() {
-		if(getVTResult().hasErrors() || getErrorBean().hasErrors()) {
+		if(getErrorBean().hasErrors()) {
 			return true;
 		}
 		
@@ -356,7 +358,9 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			variables.validations = {};
 		}
 		if(!structKeyExists(variables.validations, arguments.context)) {
-			variables.validations[ arguments.context ] = getValidateThis().getValidator(theObject=this).getValidations(Context=arguments.context);
+			variables.validations[ arguments.context ] = [];
+			// TODO: IMPORTANT Fix this validation
+			//getValidateThis().getValidator(theObject=this).getValidations(Context=arguments.context);
 		}
 		return variables.validations[ arguments.context ];
 	}
@@ -371,7 +375,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		validationArguments.theObject = this;
 		
 		// Validate This object
-		getValidateThis().validate( argumentCollection=validationArguments );
+		// TODO: IMPORTANT Fix this validation
+		//getValidateThis().validate( argumentCollection=validationArguments );
 		
 		// Validate each of the objects that are in the populatedSubProperties array, This array has properties added to it during the populate method
 		for(var p=1; p<=arrayLen(getPopulatedSubProperties()); p++) {
@@ -392,18 +397,22 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 				
 					// If after validation that sub object has errors, add a failure to this object
 					if(subPropertyValue[e].hasErrors()) {
-						getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
+						// TODO: IMPORTANT Fix this validation
+						//getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
 					}
 				}	
 			} else if(isObject(subPropertyValue)) {
 				if(subPropertyValue.hasErrors()) {
-					getVTResult().addFailure( failure={message="The #getPopulatedSubProperties()[p]# property has or more validation errors"},propertyName=getPopulatedSubProperties()[p]);
+					// TODO: IMPORTANT Fix this validation
+					//getVTResult().addFailure( failure={message="The #getPopulatedSubProperties()[p]# property has or more validation errors"},propertyName=getPopulatedSubProperties()[p]);
 				}
 			}
 		}
 		
 		// Return the VTResult object that was populated by ValidateThis
-		return getVTResult();
+		// TODO: IMPORTANT Fix this validation
+		// getVTResult();
+		return getErrorBean();
 	}
 	
 	// =======================  END:  POPULATION & VALIDATION =======================================

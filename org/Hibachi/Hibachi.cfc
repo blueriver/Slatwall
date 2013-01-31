@@ -239,6 +239,9 @@ component extends="FW1.framework" {
 					if(!bf.containsBean("hibachiUtilityService")) {
 						bf.declareBean("hibachiUtilityService", "#variables.framework.applicationKey#.org.Hibachi.HibachiUtilityService", true);	
 					}
+					if(!bf.containsBean("hibachiValidationService")) {
+						bf.declareBean("hibachiValidationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiValidationService", true);	
+					}
 					
 					// If the default transient beans were not found in the model, add a reference to the core one in hibachi
 					if(!bf.containsBean("hibachiScope")) {

@@ -1,9 +1,10 @@
 component output="false" accessors="true" extends="HibachiService" {
 	
 	variables.validationStructs = {};
+	variables.validationByContextStructs = {};
 	
 	public struct function getValidationStruct(required any object) {
-		if(!structKeyExists(variables.validationStructs, attributes.object.getClassName())) {
+		if(!structKeyExists(variables.validationStructs, arguments.object.getClassName())) {
 			
 			// Get CORE Validations
 			var coreValidationFile = expandPath('/#getApplicationValue('applicationKey')#/model/validation/#arguments.object.getClassName()#.json'); 
@@ -45,7 +46,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			// Add any additional rules
 			if(structKeyExists(customValidation, "properties")) {
 				for(var key in customValidation.properties) {
-					if(!structKeyExists(valiation.properties, key)) {
+					if(!structKeyExists(validation.properties, key)) {
 						validation.properties[ key ] = customValidation.properties[ key ];
 					} else {
 						for(var r=1; r<=arrayLen(customValidation.properties[ key ]); r++) {
@@ -55,17 +56,34 @@ component output="false" accessors="true" extends="HibachiService" {
 				}
 			}
 			
-			variables.validationStructs[ attributes.object.getClassName() ] = validation;
+			variables.validationStructs[ arguments.object.getClassName() ] = validation;
 		}
 		
-		return variables.validationStructs[ attributes.object.getClassName() ];
+		return variables.validationStructs[ arguments.object.getClassName() ];
 	}
 	
-	public struct function getValidationsByContext(required any object, required string context) {
-		validationStruct = getValidationStruct(object=arguments.object);
-		for(var key in validationStruct) {
-			
+	public struct function getValidationsByContext(required any object, string context="") {
+		if(!structKeyExists(variables.validationByContextStructs, "#arguments.object.getClassName()#-#arguments.context#")) {
+			var contextValidations = {};
+			var validationStruct = getValidationStruct(object=arguments.object);
+			for(var property in validationStruct.properties) {
+				for(var r=1; r<=arrayLen(validationStruct.properties[property]); r++) {
+					var rule = validationStruct.properties[property][r];
+					if(!structKeyExists(rule, "contexts") || listFindNoCase(rule.contexts, arguments.context)) {
+						if(!structKeyExists(contextValidations, property)) {
+							contextValidations[ property ] = {};
+						}
+						for(var constraint in rule) {
+							if(constraint != "contexts") {
+								contextValidations[ property ][ constraint ] = rule[ constraint ];
+							}
+						}
+					}
+				}
+			}
+			variables.validationByContextStructs["#arguments.object.getClassName()#-#arguments.context#"] = contextValidations;
 		}
+		return variables.validationByContextStructs["#arguments.object.getClassName()#-#arguments.context#"];
 	}
 	
 	public boolean function validate(required any object, string context="", boolean setErrors=true) {
