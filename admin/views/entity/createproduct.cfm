@@ -68,13 +68,13 @@ Notes:
 		<cfelseif rc.baseProductType eq "subscription">
 			<div class="row-fluid">
 				<div class="span6">
-					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectsubscriptionbenifits')#</h5>
+					<h5>#$.slatwall.rbKey('admin.entity.createproduct.selectsubscriptionbenefits')#</h5>
 					<br />
 					<cf_SlatwallErrorDisplay object="#rc.product#" errorName="subscriptionBenefits" />
 					<cf_HibachiListingDisplay smartList="SubscriptionBenefit" multiselectFieldName="subscriptionBenefits" edit="true">
 						<cf_HibachiListingColumn propertyIdentifier="subscriptionBenefitName" tdclass="primary" />
 					</cf_HibachiListingDisplay>
-					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectrenewalsubscriptionbenifits')#</h5>
+					<h5>#$.slatwall.rbKey('admin.entity.createproduct.selectrenewalsubscriptionbenifits')#</h5>
 					<br />
 					<cf_SlatwallErrorDisplay object="#rc.product#" errorName="renewalsubscriptionBenefits" />
 					<cf_HibachiListingDisplay smartList="SubscriptionBenefit" multiselectFieldName="renewalSubscriptionBenefits" edit="true">
@@ -82,7 +82,7 @@ Notes:
 					</cf_HibachiListingDisplay>
 				</div>
 				<div class="span6">
-					<h5>#$.slatwall.rbKey('admin.product.createproduct.selectsubscriptionterms')#</h5>
+					<h5>#$.slatwall.rbKey('admin.entity.createproduct.selectsubscriptionterms')#</h5>
 					<br />
 					<cf_SlatwallErrorDisplay object="#rc.product#" errorName="subscriptionTerms" />
 					<cf_HibachiListingDisplay smartList="SubscriptionTerm" multiselectFieldName="subscriptionTerms" edit="true">
