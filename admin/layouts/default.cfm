@@ -148,7 +148,6 @@ Notes:
 							<cfsavecontent variable="local.toolGroupOne">
 								<cf_HibachiActionCaller action="admin:main.about" type="list">
 								<cf_HibachiActionCaller action="admin:main.log" type="list">
-								<!---<cf_HibachiActionCaller action="frontend:page.slatwall-productlisting" text="#$.slatwall.rbKey('admin.frontendexample')#" type="list">--->
 							</cfsavecontent>
 							<cfif len(local.toolGroupOne)>
 								#local.toolGroupOne#
@@ -160,7 +159,7 @@ Notes:
 								<cf_HibachiActionCaller action="admin:entity.listtask" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listtaskhistory" type="list">
 							</cfsavecontent>
-							<cfif len(local.toolGroupTwo)>
+							<cfif len(trim(local.toolGroupTwo))>
 								#local.toolGroupTwo#
 								<li class="divider"></li>
 							</cfif>

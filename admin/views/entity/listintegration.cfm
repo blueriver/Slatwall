@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiCrudActionBar type="listing" object="#rc.integrationSmartList#" showCreate="false" />
 	
-	<cf_HibachiListingDisplay smartList="#rc.integrationSmartList#" recordDetailAction="admin:integration.detailintegration" recordEditAction="admin:integration.editintegration">
+	<cf_HibachiListingDisplay smartList="#rc.integrationSmartList#" recordDetailAction="admin:entity.detailintegration" recordEditAction="admin:entity.editintegration">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="integrationName" search="true" />
 		<cf_HibachiListingColumn propertyIdentifier="fw1ActiveFlag" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="paymentActiveFlag" filter="true" />

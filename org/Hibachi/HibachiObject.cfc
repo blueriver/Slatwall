@@ -5,6 +5,19 @@ component accessors="true" output="false" persistent="false" {
 		return this;
 	}
 	
+	// @help Public method to determine if this is a persistent object
+	public any function isPersistent() {
+		var metaData = getThisMetaData();
+		if(structKeyExists(metaData, "persistent") && metaData.persistent) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function hasProperty(required string propertyName) {
+		return structKeyExists( getPropertiesStruct(), arguments.propertyName );
+	}
+	
 	// ========================== START: FRAMEWORK ACCESS ===========================================
 	
 	// @hint gets a bean out of whatever the fw1 bean factory is
@@ -98,8 +111,17 @@ component accessors="true" output="false" persistent="false" {
 	}
 	
 	// ===========================  END:  UTILITY METHODS ===========================================
+	// ==================== START: INTERNALLY CACHED META VALUES ====================================
 	
+	// @help Public method that caches locally the meta data of this object
+	public any function getThisMetaData(){
+		if(!structKeyExists(variables, "thisMetaData")) {
+			variables.thisMetaData = getMetaData( this );
+		}
+		return variables.thisMetaData;
+	}
 	
+	// ====================  END: INTERNALLY CACHED META VALUES =====================================
 	// ========================= START: DELIGATION HELPERS ==========================================
 	
 	public string function encryptValue(string value) {

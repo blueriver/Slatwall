@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,48 +35,30 @@
 
 Notes:
 
---->
+*/
+component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
+	
+	public any function init() {
+		return this;
+	}
+	
+	public string function getIntegrationTypes() {
+		return "payment";
+	}
+		
+	public string function getDisplayName() {
+		return "PayLeap";
+	}
 
-<cfinterface>
-	
-	<cffunction name="init" access="public" returntype="any">
-	</cffunction>
-	
-	<cffunction name="getRates" access="public" returntype="Slatwall.model.transient.fulfillment.ShippingRatesResponseBean">
-		<cfargument name="requestBean" type="Slatwall.model.transient.fulfillment.ShippingRatesRequestBean" required="true" />
+	public struct function getSettings() {
+		var settings = {
+			vendorID = {fieldType="text", displayName="Vendor ID"},
+			partnerID = {fieldType="text", displayName="Partner ID"},
+			username = {fieldType="text", displayName="User Name"},
+			password = {fieldType="password", displayName="Password", encryptValue=true},
+			liveModeFlag = {fieldType="yesno", displayName="Live Mode", defaultValue="0"}
+		};
 		
-		<!---
-			This method should take in a given order shipment and based
-			upon the items in that shipment as well as the address, it
-			should calculate shipping rates for each of	the methods that
-			are available from this provider 
-		--->
-	</cffunction>
-	
-	<cffunction name="getShippingMethods" access="public" returntype="Struct">
-		
-		<!--- 
-			This method should return a struct where the Key
-			is the method ID, and the value is the legible name.
-			
-			For Example:
-			var methods = {GRND="UPS Ground",2DAY="2nd Day Express"}
-			
-			The keys that are provided by this function should match the keys used for
-			getting rates as well as creating shipments.
-		--->
-	</cffunction>
-	
-	<cffunction name="getTrackingURL" access="public" returntype="string">
-		
-		<!--- 
-			This method should return a string with the providers base tracking URL
-			
-			The string should inclide: ${trackingNumber}
-			That portion of the string will be replaced with the tracking number 
-			
-			For Example:
-			return "http://www.usp.com/tracking/${trackingNumber}/detail";
-		--->
-	</cffunction>
-</cfinterface>
+		return settings;
+	}
+}

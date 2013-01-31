@@ -615,19 +615,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		return "text";
 	}
 	
-	// @help Public method to determine if this is a persistent object
-	public any function isPersistent() {
-		var metaData = getThisMetaData();
-		if(structKeyExists(metaData, "persistent") && metaData.persistent) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean function hasProperty(required string propertyName) {
-		return structKeyExists( getPropertiesStruct(), arguments.propertyName );
-	}
-	
 	// @help public method for getting the meta data of a specific property
 	public struct function getPropertyMetaData( required string propertyName ) {
 		var propertiesStruct = getPropertiesStruct();
@@ -691,17 +678,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	}
 	
 	// ====================  END: APPLICATION CACHED META VALUES ====================================
-	// ==================== START: INTERNALLY CACHED META VALUES ====================================
-	
-	// @help Public method that caches locally the meta data of this object
-	public any function getThisMetaData(){
-		if(!structKeyExists(variables, "thisMetaData")) {
-			variables.thisMetaData = getMetaData( this );
-		}
-		return variables.thisMetaData;
-	}
-	
-	// ====================  END: INTERNALLY CACHED META VALUES =====================================
 	// ========================= START: DELIGATION HELPERS ==========================================
 	
 	// @hint helper function to pass this entity along with a template to the string replace function
