@@ -208,12 +208,12 @@
 		}
 		
 		public string function encryptValue(required string value) {
-			return encrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));
+			return encrypt(arguments.value, getEncryptionKey(), "AES", "Base64");
 		}
 	
 		public string function decryptValue(required string value) {
 			try {
-				return decrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));	
+				return decrypt(arguments.value, getEncryptionKey(), "AES", "Base64");	
 			} catch (any e) {
 				logHibachi("There was an error decrypting a value from the database.  This is usually because the application cannot find the Encryption key used to encrypt the data.  Verify that you have a key file in the location specified in the advanced settings of the admin.", true);
 				return "";
@@ -221,7 +221,7 @@
 		}
 		
 		public string function createEncryptionKey() {
-			var	theKey = generateSecretKey(setting("globalEncryptionAlgorithm"), setting("globalEncryptionKeySize"));
+			var	theKey = generateSecretKey("Base64", "128");
 			storeEncryptionKey(theKey);
 			return theKey;
 		}
@@ -240,7 +240,7 @@
 		}
 		
 		private string function getEncryptionKeyLocation() {
-			return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/#getApplicationValue('applicationKey')#/custom/config/');
+			return expandPath('/#getApplicationValue('applicationKey')#/custom/config/');
 		}
 		
 		private string function getEncryptionKeyFileName() {
@@ -290,34 +290,32 @@
 		<cfargument name="logType" default="Information" /><!--- Information  |  Error  |  Fatal  |  Warning  --->
 		<cfargument name="generalLog" type="boolean" default="false" />
 		
-		<cfif getHibachiScope().setting("globalLogMessages") neq "none" and (getHibachiScope().setting("globalLogMessages") eq "detail" or arguments.generalLog)>
-			<cfif generalLog>
-				<cfset var logText = "General Log" />
-			<cfelse>
-				<cfset var logText = "Detail Log" />
-			</cfif>
-			
-			<cfif arguments.messageType neq "" and isSimpleValue(arguments.messageType)>
-				<cfset logText &= " - #arguments.messageType#" />
-			</cfif>
-			<cfif arguments.messageCode neq "" and isSimpleValue(arguments.messageCode)>
-				<cfset logText &= " - #arguments.messageCode#" />
-			</cfif>
-			<cfif arguments.templatePath neq "" and isSimpleValue(arguments.templatePath)>
-				<cfset logText &= " - #arguments.templatePath#" />
-			</cfif>
-			<cfif arguments.message neq "" and isSimpleValue(arguments.message)>
-				<cfset logText &= " - #arguments.message#" />
-			</cfif>
-			
-			<!--- Verify that the log type was correct --->
-			<cfif not ListFind("Information,Error,Fatal,Warning", arguments.logType)>
-				<cfset logMessage(messageType="Internal Error", messageCode = "500", message="The Log type that was attempted was not valid", logType="Warning") />
-				<cfset arguments.logType = "Information" />
-			</cfif>
-			
-			<cflog file="#getApplicationValue('applicationKey')#" text="#logText#" type="#arguments.logType#" />
+		<cfif generalLog>
+			<cfset var logText = "General Log" />
+		<cfelse>
+			<cfset var logText = "Detail Log" />
 		</cfif>
+		
+		<cfif arguments.messageType neq "" and isSimpleValue(arguments.messageType)>
+			<cfset logText &= " - #arguments.messageType#" />
+		</cfif>
+		<cfif arguments.messageCode neq "" and isSimpleValue(arguments.messageCode)>
+			<cfset logText &= " - #arguments.messageCode#" />
+		</cfif>
+		<cfif arguments.templatePath neq "" and isSimpleValue(arguments.templatePath)>
+			<cfset logText &= " - #arguments.templatePath#" />
+		</cfif>
+		<cfif arguments.message neq "" and isSimpleValue(arguments.message)>
+			<cfset logText &= " - #arguments.message#" />
+		</cfif>
+		
+		<!--- Verify that the log type was correct --->
+		<cfif not ListFind("Information,Error,Fatal,Warning", arguments.logType)>
+			<cfset logMessage(messageType="Internal Error", messageCode = "500", message="The Log type that was attempted was not valid", logType="Warning") />
+			<cfset arguments.logType = "Information" />
+		</cfif>
+		
+		<cflog file="#getApplicationValue('applicationKey')#" text="#logText#" type="#arguments.logType#" />
 		
 	</cffunction>
 	
