@@ -175,8 +175,13 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		getHibachiSessionService().processSession(getHibachiScope().getSession(), rc, "authorizeAccount");	
 		
 		if(getHibachiScope().getLoggedInFlag()) {
-			getFW().redirect("admin:main.default");
+			getFW().redirectExact("admin:main.default");
 		}
+		
+		writeDump("GOT HERE");
+		writeDump(getHibachiScope().getLoggedInFlag());
+		writeDump(top=3, var=getHibachiScope());
+		abort;
 		
 		getFW().setView("admin:main.login");
 		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
