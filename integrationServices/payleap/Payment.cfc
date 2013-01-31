@@ -49,11 +49,11 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 	public any function init(){
 		// Set Defaults
 		variables.transactionCodes = {
-			authorize="A",
-			authorizeAndCharge="S",
-			chargePreAuthorization="D",
-			sale="C",
-			void="V",
+			authorize="Auth",
+			authorizeAndCharge="Sale",
+			chargePreAuthorization="Capture",
+			credit="Return",
+			void="Void",
 			inquiry="I"
 		};
 		
@@ -78,7 +78,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
 		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
 		
-		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
+		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "Capture" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "Return"){
 			requestData = listAppend(requestData,"ORIGID=#requestBean.getProviderTransactionID()#","&");
 		}
 		
@@ -107,6 +107,8 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 	private string function getLoginNVP(){
 		var loginData = [];
 		arrayAppend(loginData,"UserName=#setting('userName')#");
+		arrayAppend(loginData,"PARTNER=#setting('partnerID')#");
+		arrayAppend(loginData,"VENDOR=#setting('vendorID')#");
 		arrayAppend(loginData,"Password=#setting('password')#");
 		return arrayToList(loginData,"&");
 	}
