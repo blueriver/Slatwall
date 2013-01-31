@@ -28,33 +28,23 @@
 		}
 		
 		public any function formatValue_currency( required string value, struct formatDetails={} ) {
-			/*
-			// Check to see if this object has a currencyCode
-			if( this.hasProperty("currencyCode") && !isNull(getCurrencyCode()) && len(getCurrencyCode()) eq 3 ) {
-				
-				var currency = getService("currencyService").getCurrency( getCurrencyCode() );
-				
-				return currency.getCurrencySymbol() & LSNumberFormat(arguments.value, ',.__');
-			}
-			*/
-			// Otherwsie use the global currencyLocal
-			return LSCurrencyFormat(arguments.value, getService("settingService").getSettingValue("globalCurrencyType"), getService("settingService").getSettingValue("globalCurrencyLocale"));
+			return LSCurrencyFormat(arguments.value, "USD", "en_us");
 		}
 		
 		public any function formatValue_datetime( required string value, struct formatDetails={} ) {
-			return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat")) & " " & TimeFormat(value, getService("settingService").getSettingValue("globalTimeFormat"));
+			return dateFormat(arguments.value, "MM/DD/YYYY") & " " & timeFormat(value, "HH:MM");
 		}
 		
 		public any function formatValue_date( required string value, struct formatDetails={} ) {
-			return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat"));
+			return dateFormat(arguments.value, "MM/DD/YYYY");
 		}
 		
 		public any function formatValue_time( required string value, struct formatDetails={} ) {
-			return timeFormat(arguments.value, getService("settingService").getSettingValue("globalTimeFormat"));
+			return timeFormat(value, "HH:MM");
 		}
 		
 		public any function formatValue_weight( required string value, struct formatDetails={} ) {
-			return arguments.value & " " & getService("settingService").getSettingValue("globalWeightUnitCode");
+			return arguments.value & " " & "lbs";
 		}
 		
 		public any function formatValue_pixels( required string value, struct formatDetails={} ) {

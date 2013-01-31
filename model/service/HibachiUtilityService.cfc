@@ -38,7 +38,39 @@ Notes:
 --->
 
 <cfcomponent extends="Slatwall.org.Hibachi.HibachiUtilityService">
-
+	<cfscript>
+		
+		public any function formatValue_currency( required string value, struct formatDetails={} ) {
+			/*
+			TODO: IMPORTANT Fix this currency lookup
+			// Check to see if this object has a currencyCode
+			if( this.hasProperty("currencyCode") && !isNull(getCurrencyCode()) && len(getCurrencyCode()) eq 3 ) {
+				
+				var currency = getService("currencyService").getCurrency( getCurrencyCode() );
+				
+				return currency.getCurrencySymbol() & LSNumberFormat(arguments.value, ',.__');
+			}
+			*/
+			// Otherwsie use the global currencyLocal
+			return LSCurrencyFormat(arguments.value, getService("settingService").getSettingValue("globalCurrencyType"), getService("settingService").getSettingValue("globalCurrencyLocale"));
+		}
+		
+		public any function formatValue_datetime( required string value, struct formatDetails={} ) {
+			return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat")) & " " & TimeFormat(value, getService("settingService").getSettingValue("globalTimeFormat"));
+		}
+		
+		public any function formatValue_date( required string value, struct formatDetails={} ) {
+			return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat"));
+		}
+		
+		public any function formatValue_time( required string value, struct formatDetails={} ) {
+			return timeFormat(arguments.value, getService("settingService").getSettingValue("globalTimeFormat"));
+		}
+		
+		public any function formatValue_weight( required string value, struct formatDetails={} ) {
+			return arguments.value & " " & getService("settingService").getSettingValue("globalWeightUnitCode");
+		}
+	</cfscript>
 	<!---
 	QueryTreeSort takes a query and efficiently (O(n)) resorts it hierarchically (parent-child), adding a Depth column that can then be used when displaying the data.
 	
