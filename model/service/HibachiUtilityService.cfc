@@ -38,7 +38,63 @@ Notes:
 --->
 
 <cfcomponent extends="Slatwall.org.Hibachi.HibachiUtilityService">
-
+	<cfscript>
+		
+		public any function formatValue_currency( required string value, struct formatDetails={} ) {
+			/*
+			TODO: IMPORTANT Fix this currency lookup
+			// Check to see if this object has a currencyCode
+			if( this.hasProperty("currencyCode") && !isNull(getCurrencyCode()) && len(getCurrencyCode()) eq 3 ) {
+				
+				var currency = getService("currencyService").getCurrency( getCurrencyCode() );
+				
+				return currency.getCurrencySymbol() & LSNumberFormat(arguments.value, ',.__');
+			}
+			*/
+			// Otherwsie use the global currencyLocal
+			return LSCurrencyFormat(arguments.value, getService("settingService").getSettingValue("globalCurrencyType"), getService("settingService").getSettingValue("globalCurrencyLocale"));
+		}
+		
+		public any function formatValue_datetime( required string value, struct formatDetails={} ) {
+			return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat")) & " " & TimeFormat(value, getService("settingService").getSettingValue("globalTimeFormat"));
+		}
+		
+		public any function formatValue_date( required string value, struct formatDetails={} ) {
+			return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat"));
+		}
+		
+		public any function formatValue_time( required string value, struct formatDetails={} ) {
+			return timeFormat(arguments.value, getService("settingService").getSettingValue("globalTimeFormat"));
+		}
+		
+		public any function formatValue_weight( required string value, struct formatDetails={} ) {
+			return arguments.value & " " & getService("settingService").getSettingValue("globalWeightUnitCode");
+		}
+		
+		public string function encryptValue(required string value) {
+			return encrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));
+		}
+	
+		public string function decryptValue(required string value) {
+			try {
+				return decrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));	
+			} catch (any e) {
+				logHibachi("There was an error decrypting a value from the database.  This is usually because the application cannot find the Encryption key used to encrypt the data.  Verify that you have a key file in the location specified in the advanced settings of the admin.", true);
+				return "";
+			}
+		}
+		
+		public string function createEncryptionKey() {
+			var	theKey = generateSecretKey(setting("globalEncryptionAlgorithm"), setting("globalEncryptionKeySize"));
+			storeEncryptionKey(theKey);
+			return theKey;
+		}
+		
+		private string function getEncryptionKeyLocation() {
+			return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/#getApplicationValue('applicationKey')#/custom/config/');
+		}
+		
+	</cfscript>
 	<!---
 	QueryTreeSort takes a query and efficiently (O(n)) resorts it hierarchically (parent-child), adding a Depth column that can then be used when displaying the data.
 	
@@ -48,6 +104,46 @@ Notes:
 	@ http://cflib.org/udf/queryTreeSort
 	@ modified by Tony Garcia September 27, 2007
 	--->
+	<cffunction name="logMessage" returntype="void" access="public">
+		<cfargument name="message" default="" />
+		<cfargument name="messageType" default="" />
+		<cfargument name="messageCode" default="" />
+		<cfargument name="templatePath" default="" />
+		<cfargument name="logType" default="Information" /><!--- Information  |  Error  |  Fatal  |  Warning  --->
+		<cfargument name="generalLog" type="boolean" default="false" />
+		
+		<cfif getHibachiScope().setting("globalLogMessages") neq "none" and (getHibachiScope().setting("globalLogMessages") eq "detail" or arguments.generalLog)>
+			<cfif generalLog>
+				<cfset var logText = "General Log" />
+			<cfelse>
+				<cfset var logText = "Detail Log" />
+			</cfif>
+			
+			<cfif arguments.messageType neq "" and isSimpleValue(arguments.messageType)>
+				<cfset logText &= " - #arguments.messageType#" />
+			</cfif>
+			<cfif arguments.messageCode neq "" and isSimpleValue(arguments.messageCode)>
+				<cfset logText &= " - #arguments.messageCode#" />
+			</cfif>
+			<cfif arguments.templatePath neq "" and isSimpleValue(arguments.templatePath)>
+				<cfset logText &= " - #arguments.templatePath#" />
+			</cfif>
+			<cfif arguments.message neq "" and isSimpleValue(arguments.message)>
+				<cfset logText &= " - #arguments.message#" />
+			</cfif>
+			
+			<!--- Verify that the log type was correct --->
+			<cfif not ListFind("Information,Error,Fatal,Warning", arguments.logType)>
+				<cfset logMessage(messageType="Internal Error", messageCode = "500", message="The Log type that was attempted was not valid", logType="Warning") />
+				<cfset arguments.logType = "Information" />
+			</cfif>
+			
+			<cflog file="#getApplicationValue('applicationKey')#" text="#logText#" type="#arguments.logType#" />
+		</cfif>
+		
+	</cffunction>
+	
+	
 	<cffunction name="queryTreeSort" access="public" output="false" returntype="query">
 		<cfargument name="theQuery" type="query" required="true" hint="the query to sort" />
 		<cfargument name="ParentID" type="string" default="ParentID" hint="the name of the column in the table containing the ID of the item's parent" />

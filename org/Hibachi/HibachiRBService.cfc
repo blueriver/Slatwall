@@ -1,7 +1,5 @@
 component output="false" accessors="true" extends="HibachiService" {
 
-	property name="integrationService" type="any";
-
 	variables.resourceBundles = {};
 	variables.instantiaded = now();
 	
@@ -59,7 +57,8 @@ component output="false" accessors="true" extends="HibachiService" {
 				// No RB File Found
 			}
 			
-			
+			/*
+			TODO: IMPORTANT Fix This RB Key Setup
 			// Loop over the active FW/1 subsystems to look for a resource bundle there
 			var activeFW1Integrations = getIntegrationService().getActiveFW1Subsystems();
 			for(var i=1; i<=arrayLen(activeFW1Integrations); i++) {
@@ -69,13 +68,14 @@ component output="false" accessors="true" extends="HibachiService" {
 					// No RB File Found
 				}	
 			}
-			
+			*/
 			// Get whatever resource bundle is in the custom config directory
 			try {
-				structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/config/custom/resourceBundles/#arguments.locale#.properties")), true);
+				structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/custom/config/resourceBundles/#arguments.locale#.properties")), true);
 			} catch (any e) {
 				// No RB File Found
 			}
+			
 			
 		}
 		

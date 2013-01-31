@@ -67,7 +67,7 @@ Notes:
 	You can find detailed information on SmartList and all of the additional API methods at:	
 	http://docs.getSlatwall.com/reference/SmartList
 --->
-<cfinclude template="slatwall-inc/slatwall-header.cfm" />
+<cfinclude template="_slatwall-header.cfm" />
 <cfoutput>
 	<div class="row">
 		<div class="span12">
@@ -99,4 +99,4 @@ Notes:
 		</div>
 	</div>
 </cfoutput>
-<cfinclude template="slatwall-inc/slatwall-footer.cfm" />
+<cfinclude template="_slatwall-footer.cfm" />
