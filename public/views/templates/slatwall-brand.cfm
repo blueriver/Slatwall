@@ -36,7 +36,7 @@
 Notes: 
 	
 --->
-<cfinclude template="slatwall-inc/slatwall-header.cfm" />
+<cfinclude template="_slatwall-header.cfm" />
 <div class="row">
 	<div class="span12">
 		<h2>#$.slatwall.brand().getBrandName()</h2>
@@ -46,4 +46,4 @@ Notes:
 	<div class="span4">Test</div>
 	<div class="span8">Test 2</div>
 </div>
-<cfinclude template="slatwall-inc/slatwall-footer.cfm" />
+<cfinclude template="_slatwall-footer.cfm" />
