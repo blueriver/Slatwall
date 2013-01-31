@@ -36,28 +36,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint Returns a struct of all the errors for this entity
 	public struct function getErrors() {
-		var errorsStruct = {};
-		
-		// Check the VTResult for any errors
-		/*
-		for(var key in getVTResult().getErrors()) {
-			errorsStruct[key] = getVTResult().getErrors()[key];	
-		}
-		*/
-		
-		// Check the ErrorBean for any errors
-		for(var key in getErrorBean().getErrors()) {
-			if(structKeyExists(errorsStruct, key)) {
-				for(var i=1; i<=arrayLen(getErrorBean().getErrors()[key]); i++) {
-					arrayAppend(errorsStruct[key], getErrorBean().getErrors()[key][i]);	
-				}
-			} else {
-				errorsStruct[key] = getErrorBean().getErrors()[key];	
-			}
-		}
-		
-		// Default behavior if this object hasn't been validated is to return a blank struct
-		return errorsStruct;
+		return getErrorBean().getErrors();
 	}
 	
 	// @hint Returns the error message of a given error name
@@ -353,20 +332,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	}
 	
 	// @hind public method to see all of the validations for a particular context
-	public array function getValidations( string context="save") {
-		if(!structKeyExists(variables, "validations")) {
-			variables.validations = {};
-		}
-		if(!structKeyExists(variables.validations, arguments.context)) {
-			variables.validations[ arguments.context ] = [];
-			// TODO: IMPORTANT Fix this validation
-			//getValidateThis().getValidator(theObject=this).getValidations(Context=arguments.context);
-		}
-		return variables.validations[ arguments.context ];
+	public array function getValidations( string context="" ) {
+		return getService("hibachiValidationService").getValidationsByContext( object=this, context=arguments.context);
 	}
 	
 	// @hint pubic method to validate this object
-	public any function validate( string context="save" ) {
+	public any function validate( string context="" ) {
 		
 		// Set up the validation arguments as a mirror of the arguments struct
 		var validationArguments = arguments;
@@ -541,17 +512,19 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		
 		var validations = getValidations(arguments.context);
 		
-		for(var i=1; i<=arrayLen(validations); i++) {
-			if(validations[i].propertyName == arguments.propertyName) {
-				var validationType = validations[i].valtype;
-				
-				if(validationType == "numeric") {
-					validationType = "number";
+		if(structKeyExists(validations, arguments.propertyName)) {
+			for(var constraint in validations[ arguments.propertyName ]) {
+				if(constraint == "required") {
+					listAppend(validationClass, "required", " ");
+				} else if (constraint == "dataType") {
+					if(validations[ arguments.propertyName ][ constraint ] == "numeric") {
+						listAppend(validationClass, "number", " ");
+					} else {
+						listAppend(validationClass, validations[ arguments.propertyName ][ constraint ], " ");
+					}
 				}
-				
-				validationClass = listAppend(validationClass, validationType, " ");		
 			}
-		} 
+		}
 		
 		return validationClass;
 	}
