@@ -146,7 +146,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 	}
 	
 	private any function getResponseBean(required struct rawResponse, required any requestData, required any requestBean){
-		var response = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
+		var response = new Slatwall.model.transient.payment.CreditCardTransactionResponseBean();
 		
 		// Parse The Raw Response Data Into a Struct
 		var responseDataArray = listToArray(rawResponse.fileContent,variables.responseDelimiter,true);

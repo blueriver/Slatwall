@@ -30,12 +30,12 @@
 		return "http://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber=${trackingNumber}";
 	}
 	
-	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
+	public Slatwall.model.transient.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.model.transient.fulfillment.ShippingRatesRequestBean requestBean) {
 		
        	var xmlPacket = "";
        	var xmlResponse = "";
         var httpRequest = new Http();
-		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
+		var ratesResponseBean = new Slatwall.model.transient.fulfillment.ShippingRatesResponseBean();
 
        	/* Slatwall does not track item dimensions, so some values are currently hard coded in the template! */
 		savecontent variable="xmlPacket" {
