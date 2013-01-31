@@ -52,8 +52,8 @@ Notes:
 		<cfreturn "authorize,authorizeAndCharge,chargePreAuthorization,credit,void" />
 	</cffunction>
 		
-	<cffunction name="processCreditCard" returntype="Slatwall.com.utility.payment.CreditCardTransactionResponseBean">
-		<cfargument name="requestBean" type="Slatwall.com.utility.payment.CreditCardTransactionRequestBean" required="true" />
+	<cffunction name="processCreditCard" returntype="Slatwall.model.transient.payment.CreditCardTransactionResponseBean">
+		<cfargument name="requestBean" type="Slatwall.model.transient.payment.CreditCardTransactionRequestBean" required="true" />
 		
 		<cfset var q_auth = queryNew('empty') />
 		
@@ -143,7 +143,7 @@ Notes:
 		</cfswitch>
 		
 		<!--- Setup Response Bean --->
-		<cfset var responseBean = createObject("component", "Slatwall.com.utility.payment.CreditCardTransactionResponseBean").init() />
+		<cfset var responseBean = createObject("component", "Slatwall.model.transient.payment.CreditCardTransactionResponseBean").init() />
 		
 		<cfset responseBean.setData(q_auth) />
 		<cfset responseBean.setTransactionID(q_auth.UMrefNum) />

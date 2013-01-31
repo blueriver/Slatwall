@@ -64,7 +64,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		return "creditCard";
 	}
 	
-	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean){
+	public Slatwall.model.transient.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.model.transient.payment.CreditCardTransactionRequestBean requestBean){
 		var requestData = getRequestData(requestBean);
 		var rawResponse = postRequest(requestData, requestBean.getTransactionID());
 		return getResponseBean(rawResponse, requestData, requestBean);
@@ -201,7 +201,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	}
 	
 	private any function getResponseBean(required struct rawResponse, required any requestData, required any requestBean){
-		var response = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
+		var response = new Slatwall.model.transient.payment.CreditCardTransactionResponseBean();
 		var responseDataArray = listToArray(rawResponse.fileContent,"&");
 		var responseData = {result="",respmsg="",authcode="",pnref="",avsaddr="",avszip="",cvv2match=""};
 		for(var item in responseDataArray){

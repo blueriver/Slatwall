@@ -201,7 +201,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	}
 	
 	private any function getResponseBean(required struct rawResponse, required any requestData, required any requestBean){
-		var response = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
+		var response = new Slatwall.model.transient.payment.CreditCardTransactionResponseBean();
 		var responseDataArray = listToArray(rawResponse.fileContent,"&");
 		var responseData = {result="",respmsg="",authcode="",pnref="",avsaddr="",avszip="",cvv2match=""};
 		for(var item in responseDataArray){

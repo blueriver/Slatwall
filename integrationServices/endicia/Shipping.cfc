@@ -64,7 +64,7 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		return "http://usps.com/Tracking?tracknumber=${trackingNumber}";
 	}
 	
-	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
+	public Slatwall.model.transient.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.model.transient.fulfillment.ShippingRatesRequestBean requestBean) {
 		var totalItemsWeight = 0;
 		var totalItemsValue = 0;
 		
@@ -103,7 +103,7 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
 		
-		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
+		var ratesResponseBean = new Slatwall.model.transient.fulfillment.ShippingRatesResponseBean();
 		ratesResponseBean.setData(xmlResponse);
 		
 		if(isDefined('xmlResponse.Fault')) {

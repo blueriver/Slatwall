@@ -74,8 +74,8 @@ component accessors="true" output="false" displayname="parcel2go" implements="Sl
 		return variables.shippingMethods;
 	}
 	
-	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
-		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
+	public Slatwall.model.transient.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.model.transient.fulfillment.ShippingRatesRequestBean requestBean) {
+		var responseBean = new Slatwall.model.transient.fulfillment.ShippingRatesResponseBean();
 		
 		// Insert Custom Logic Here
 		var totalItemsWeight = 0;
@@ -111,7 +111,7 @@ component accessors="true" output="false" displayname="parcel2go" implements="Sl
 		
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
 		
-		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
+		var responseBean = new Slatwall.model.transient.fulfillment.ShippingRatesResponseBean();
 		responseBean.setData(xmlResponse);
 		
 		if(!isDefined('xmlResponse.Fault')

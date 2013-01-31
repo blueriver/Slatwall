@@ -52,7 +52,7 @@ component accessors="true" output="false" displayname="SagePay" implements="Slat
 		return "creditCard";
 	}
 	
-	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean) {
+	public Slatwall.model.transient.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.model.transient.payment.CreditCardTransactionRequestBean requestBean) {
 		var rawResponse="";
 		var requestData=getRequestData(requestBean);
 		rawResponse=postRequest(requestData);
@@ -142,7 +142,7 @@ component accessors="true" output="false" displayname="SagePay" implements="Slat
 	
 	private any function getResponseBean(required struct rawResponse,required any requestData,required any requestBean) {
 	
-		var response=new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
+		var response=new Slatwall.model.transient.payment.CreditCardTransactionResponseBean();
 		var responseDataArray=listToArray(rawResponse.fileContent,"#chr(13)#");
 		var responseData={};
 		for(var item in responseDataArray) {

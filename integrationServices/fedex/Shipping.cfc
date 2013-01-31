@@ -62,7 +62,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		return "http://www.fedex.com/Tracking?tracknumber_list=${trackingNumber}";
 	}
 	
-	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
+	public Slatwall.model.transient.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.model.transient.fulfillment.ShippingRatesRequestBean requestBean) {
 		
 		// Build Request XML
 		var xmlPacket = "";
@@ -86,7 +86,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
 		
-		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
+		var responseBean = new Slatwall.model.transient.fulfillment.ShippingRatesResponseBean();
 		responseBean.setData(xmlResponse);
 		
 		if(isDefined('xmlResponse.Fault')) {
