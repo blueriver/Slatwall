@@ -85,7 +85,7 @@ Notes:
 						</td>
 					</cfif>
 					<td class="admin admin1">
-						<cfif thisSetting.settingDetails.settingInherited>
+						<cfif thisSetting.settingDetails.settingInherited || !len(thisSetting.settingDetails.settingID)>
 							<cfif isObject(thisSetting.settingObject)>
 								<cf_HibachiActionCaller action="admin:entity.createsetting" queryString="settingID=&redirectAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							<cfelse>

@@ -71,9 +71,11 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	this.secureMethods=listAppend(this.secureMethods, 'update');
 	this.secureMethods=listAppend(this.secureMethods, 'log');
 	
+	public void function before(required struct rc) {
+		rc.pagetitle = rc.$.slatwall.rbKey(replace(rc.slatAction, ':', '.', 'all'));
+	}
+	
 	public void function default(required struct rc) {
-		rc.pagetitle = rc.$.slatwall.rbKey('admin.main.dashboad');
-		
 		rc.productSmartList = getProductService().getProductSmartList();
 		rc.productSmartList.addOrder("modifiedDateTime|DESC");
 		rc.productSmartList.setPageRecordsShow(10);
@@ -90,7 +92,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		rc.vendorOrderSmartList = getVendorService().getVendorOrderSmartList();
 		rc.vendorOrderSmartList.addOrder("modifiedDateTime|DESC");
 		rc.vendorOrderSmartList.setPageRecordsShow(10);
-		
 	}
 
 	public void function saveImage(required struct rc){
