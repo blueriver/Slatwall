@@ -30,14 +30,6 @@ component accessors="true" output="false" persistent="false" {
 		return getBean(arguments.transientName);
 	}
 	
-	// @hint  helper function for returning the Validate This Facade Object
-	public any function getValidateThis() {
-		if( !hasApplicationValue("validateThis") ) {
-			setApplicationValue("validateThis", new ValidateThis.ValidateThis({definitionPath = expandPath('/#getApplicationValue('applicationKey')#/model/validation/'),injectResultIntoBO = true,defaultFailureMessagePrefix = ""}) );
-		}
-		return getApplicationValue("validateThis");
-	}
-	
 	// @hint returns an application specfic virtual filesystem
 	public any function getVirtualFileSystemPath() {
 		return "ram:///#getHibachiInstanceApplicationScopeKey()#";

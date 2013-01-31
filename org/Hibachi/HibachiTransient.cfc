@@ -1,20 +1,11 @@
 component output="false" accessors="true" persistent="false" extends="HibachiObject" {
 
-	property name="vtResult" type="any" persistent="false";								// This propery holds the ValidateThis result bean once it has been set.
 	property name="errorBean" type="any" persistent="false";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
 	property name="messageBean" type="any" persistent="false";
 	property name="populatedSubProperties" type="array" persistent="false";
 	property name="validations" type="struct" persistent="false";
 	
 	// ========================= START: ACCESSOR OVERRIDES ==========================================
-	
-	// @hint Returns the ValidateThis result object, if one hasn't been setup yet it returns a new one
-	public any function getVTResult() {
-		if(!structKeyExists(variables, "vtResult")) {
-			variables.vtResult = getValidateThis().newResult(); 
-		}
-		return variables.vtResult;
-	}
 	
 	// @hint Returns the errorBean object, if one hasn't been setup yet it returns a new one
 	public any function getErrorBean() {
