@@ -41,10 +41,10 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudDetailForm object="#rc.attributeSet#" edit="#rc.edit#">
-	<cf_HibachiCrudActionBar type="detail" object="#rc.attributeSet#" edit="#rc.edit#">
+<cf_HibachiEntityDetailForm object="#rc.attributeSet#" edit="#rc.edit#">
+	<cf_HibachiEntityActionBar type="detail" object="#rc.attributeSet#" edit="#rc.edit#">
 		<cf_HibachiActionCaller action="admin:entity.createattribute" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" type="list" modal=true />
-	</cf_HibachiCrudActionBar>
+	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiDetailHeader>
 		<cf_HibachiPropertyList divclass="span6">
@@ -77,6 +77,6 @@ Notes:
 		</cfif>
 	</cf_HibachiTabGroup>
 	
-</cf_HibachiCrudDetailForm>
+</cf_HibachiEntityDetailForm>
 
 </cfoutput>

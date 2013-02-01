@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.taskhistory#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.taskhistory#" edit="#rc.edit#">
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -57,5 +57,5 @@ Notes:
 			
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

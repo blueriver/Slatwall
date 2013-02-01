@@ -39,10 +39,10 @@ Notes:
 <cfparam name="rc.vendor" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_HibachiCrudDetailForm object="#rc.vendor#" edit="#rc.edit#">
-	<cf_HibachiCrudActionBar type="detail" object="#rc.vendor#" edit="#rc.edit#">
+<cf_HibachiEntityDetailForm object="#rc.vendor#" edit="#rc.edit#">
+	<cf_HibachiEntityActionBar type="detail" object="#rc.vendor#" edit="#rc.edit#">
 		<cf_HibachiActionCaller action="admin:entity.createvendoraddress" queryString="vendorID=#rc.vendor.getVendorID()#" type="list" modal=true />
-	</cf_HibachiCrudActionBar>
+	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiDetailHeader>
 		<cf_HibachiPropertyList>
@@ -62,4 +62,4 @@ Notes:
 		<cf_HibachiTab view="admin:entity/vendortabs/vendororders" />
 	</cf_HibachiTabGroup>
 	
-</cf_HibachiCrudDetailForm>
+</cf_HibachiEntityDetailForm>

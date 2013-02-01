@@ -41,9 +41,9 @@ Notes:
 <cfparam name="rc.edit" default="false" >
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.productType#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.productType#" edit="#rc.edit#">
-		</cf_HibachiCrudActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.productType#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.productType#" edit="#rc.edit#">
+		</cf_HibachiEntityActionBar>
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.productType#" property="activeFlag" edit="#rc.edit#">
@@ -66,6 +66,6 @@ Notes:
 			<cf_HibachiTab view="admin:entity/producttypetabs/skusettings" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 
 </cfoutput>

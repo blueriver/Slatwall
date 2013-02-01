@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.fulfillmentMethodSmartList" type="any" />
 
-<cf_HibachiCrudActionBar type="listing" object="#rc.fulfillmentMethodSmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.fulfillmentMethodSmartList#" />
 
 <cf_HibachiListingDisplay smartList="#rc.fulfillmentMethodSmartList#"
 		recordEditAction="admin:entity.editfulfillmentmethod"

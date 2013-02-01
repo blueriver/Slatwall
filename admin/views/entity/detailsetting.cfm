@@ -60,8 +60,8 @@ Notes:
 <cfset rc.setting.setSettingName(rc.settingName) />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.setting#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.setting#" />
+	<cf_HibachiEntityDetailForm object="#rc.setting#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.setting#" />
 		
 		<input type="hidden" name="settingName" value="#rc.settingName#" />
 		#local.hiddenKeyFields#
@@ -78,5 +78,5 @@ Notes:
 				<cf_HibachiActionCaller action="admin:entity.deletesetting" queryString="settingID=#rc.setting.getSettingID()#" class="btn btn-danger" />
 			</cfif>
 		</cf_HibachiDetailHeader>
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

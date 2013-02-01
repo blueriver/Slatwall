@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.termSmartList#" createModal="true" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.termSmartList#" createModal="true" />
 
 <cf_HibachiListingDisplay smartList="#rc.termSmartList#"
 						   recordEditAction="admin:entity.editterm"

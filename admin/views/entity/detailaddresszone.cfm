@@ -39,10 +39,10 @@ Notes:
 <cfparam name="rc.addressZone" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<cf_HibachiCrudDetailForm object="#rc.addressZone#" edit="#rc.edit#">
-	<cf_HibachiCrudActionBar type="detail" object="#rc.addressZone#" edit="#rc.edit#">
+<cf_HibachiEntityDetailForm object="#rc.addressZone#" edit="#rc.edit#">
+	<cf_HibachiEntityActionBar type="detail" object="#rc.addressZone#" edit="#rc.edit#">
 		<cf_HibachiActionCaller action="admin:entity.createaddresszonelocation" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" type="list" modal=true />
-	</cf_HibachiCrudActionBar>
+	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiDetailHeader>
 		<cf_HibachiPropertyList>
@@ -54,4 +54,4 @@ Notes:
 		<cf_HibachiTab view="admin:entity/addresszonetabs/locations" />
 	</cf_HibachiTabGroup>
 	
-</cf_HibachiCrudDetailForm>
+</cf_HibachiEntityDetailForm>

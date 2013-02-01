@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-	<cf_HibachiCrudActionBar type="listing" object="#rc.optionGroupSmartList#" />
+	<cf_HibachiEntityActionBar type="listing" object="#rc.optionGroupSmartList#" />
 	
 	<cf_HibachiListingDisplay smartList="#rc.optionGroupSmartList#" 
 							   recordDetailAction="admin:entity.detailoptiongroup"

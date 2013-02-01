@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.country#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.country#" edit="#rc.edit#" />
+	<cf_HibachiEntityDetailForm object="#rc.country#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.country#" edit="#rc.edit#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -74,5 +74,5 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.country#" property="postalCodeLabel" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

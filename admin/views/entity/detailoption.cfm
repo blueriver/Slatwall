@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.option#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.option#" edit="#rc.edit#" />
+	<cf_HibachiEntityDetailForm object="#rc.option#" edit="#rc.edit#" enctype="multipart/form-data">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.option#" edit="#rc.edit#" />
 		<input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 		<input type="hidden" name="returnAction" value="admin:entity.editoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#" />
 		
@@ -71,5 +71,5 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

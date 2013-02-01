@@ -42,8 +42,8 @@ Notes:
 <cfparam name="rc.skuID" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.skuCurrency#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.skuCurrency#" edit="#rc.edit#"></cf_HibachiCrudActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.skuCurrency#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.skuCurrency#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
 		<input type="hidden" name="sku.skuID" value="#rc.skuID#" />
 		<input type="hidden" name="currency.currencyCode" value="#rc.currencyCode#" />
@@ -59,5 +59,5 @@ Notes:
 			</cfif>
 		</cf_HibachiDetailHeader>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

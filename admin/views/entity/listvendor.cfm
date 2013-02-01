@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.vendorSmartList" type="any" />
 
-<cf_HibachiCrudActionBar type="listing" object="#rc.vendorSmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.vendorSmartList#" />
 
 <cf_HibachiListingDisplay smartList="#rc.vendorSmartList#"
 						   recordEditAction="admin:entity.editvendor"

@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.sku#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:entity.detailproduct" backQueryString="productID=#rc.product.getProductID()#" cancelAction="admin:entity.detailsku" />
+	<cf_HibachiEntityDetailForm object="#rc.sku#" edit="#rc.edit#" enctype="multipart/form-data">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:entity.detailproduct" backQueryString="productID=#rc.product.getProductID()#" cancelAction="admin:entity.detailsku" />
 		<input type="hidden" name="returnAction" value="admin:entity.detailproduct&productID=#rc.product.getProductID()#" />
 		
 		<cf_HibachiDetailHeader>
@@ -90,5 +90,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/skutabs/skusettings" />
 		</cf_HibachiTabGroup>
 
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

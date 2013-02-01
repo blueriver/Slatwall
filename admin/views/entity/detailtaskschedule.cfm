@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.taskschedule#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.taskschedule#" />
+	<cf_HibachiEntityDetailForm object="#rc.taskschedule#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.taskschedule#" />
 		<input type="hidden" name="task.taskID" value="#rc.task.getTaskID()#"/>
 		<input type="hidden" name="returnAction" value="admin:entity.edittask&taskID=#rc.task.getTaskID()###tabtaskschedule" />
 		
@@ -56,5 +56,5 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

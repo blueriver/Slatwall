@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.emailTemplateSmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.emailTemplateSmartList#" />
 
 <cf_HibachiListingDisplay smartList="#rc.emailTemplateSmartList#"
 						   recordDetailAction="admin:entity.detailemailTemplate"

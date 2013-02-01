@@ -44,8 +44,8 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.promotion#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" />
+	<cf_HibachiEntityDetailForm object="#rc.promotion#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -70,5 +70,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/promotiontabs/promotiondescription" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

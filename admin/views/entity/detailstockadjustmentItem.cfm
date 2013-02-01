@@ -43,7 +43,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#">
 		<input type="hidden" name="returnaction" value="admin:warehouse.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentItem.getStockAdjustment().getStockAdjustmentID()#"	 />
 		
 		<cf_HibachiDetailHeader>
@@ -52,6 +52,6 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>
 

@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 
-	<cf_HibachiCrudActionBar type="listing" object="#rc.scheduleSmartList#" />
+	<cf_HibachiEntityActionBar type="listing" object="#rc.scheduleSmartList#" />
 
 	<cf_HibachiListingDisplay smartlist="#rc.scheduleSmartList#" 
 	                           recordeditaction="admin:entity.editschedule" 

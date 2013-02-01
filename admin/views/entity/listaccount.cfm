@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.accountSmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.accountSmartList#" />
 
 <cf_HibachiListingDisplay smartList="#rc.accountSmartList#"
 						   recordEditAction="admin:entity.editaccount"

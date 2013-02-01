@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.orderReturn#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.orderReturn#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.orderReturn.getOrder().getOrderID()#"></cf_HibachiCrudActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.orderReturn#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.orderReturn#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.orderReturn.getOrder().getOrderID()#"></cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -53,5 +53,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/orderreturntabs/orderreturnitems">
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

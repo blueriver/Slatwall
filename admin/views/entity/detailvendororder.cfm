@@ -40,11 +40,11 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#">
 			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list">
 			<cf_SlatwallProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" />
-		</cf_HibachiCrudActionBar>
+		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -60,5 +60,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/vendorordertabs/stockreceivers" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

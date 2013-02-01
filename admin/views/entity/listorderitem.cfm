@@ -52,7 +52,7 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.orderItemSmartList#" showCreate="false" />
+	<cf_HibachiEntityActionBar type="listing" object="#rc.orderItemSmartList#" showCreate="false" />
 	
 	<cf_HibachiListingDisplay smartList="#rc.orderItemSmartList#"
 							   recorddetailaction="admin:entity.detailorderitem"

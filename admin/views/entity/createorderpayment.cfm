@@ -51,7 +51,7 @@ Notes:
 </cfsilent>
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
 		
 		<input type="hidden" name="order.orderID" value="#rc.order.getOrderID()#" />
 		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
@@ -118,5 +118,5 @@ Notes:
 		</cfif>
 				
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

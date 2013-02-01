@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.paymentTermSmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.paymentTermSmartList#" createmodal="true" />
+	<cf_HibachiEntityActionBar type="listing" object="#rc.paymentTermSmartList#" createmodal="true" />
 	
 	<cf_HibachiListingDisplay smartList="#rc.paymentTermSmartList#"
 							   recordEditAction="admin:entity.editpaymentTerm"

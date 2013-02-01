@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.baseProductType" type="string" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.product#" edit="true">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.product#" edit="true"></cf_HibachiCrudActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.product#" edit="true">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.product#" edit="true"></cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -99,5 +99,5 @@ Notes:
 				<cf_HibachiListingColumn propertyIdentifier="title" tdclass="primary" />
 			</cf_HibachiListingDisplay>
 		</cfif>
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

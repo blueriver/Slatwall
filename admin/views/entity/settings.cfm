@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_HibachiCrudActionBar type="static"></cf_HibachiCrudActionBar>
+	<cf_HibachiEntityActionBar type="static"></cf_HibachiEntityActionBar>
 	
 	<cf_HibachiTabGroup>
 		<cf_HibachiTab view="admin:entity/settingstabs/global" />

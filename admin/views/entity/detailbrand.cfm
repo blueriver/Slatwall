@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.brand#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.brand#" edit="#rc.edit#" />
+	<cf_HibachiEntityDetailForm object="#rc.brand#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.brand#" edit="#rc.edit#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -60,5 +60,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/brandtabs/brandsettings" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

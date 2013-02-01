@@ -39,11 +39,11 @@ Notes:
 <cfparam name="rc.productSmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.productSmartList#">
+	<cf_HibachiEntityActionBar type="listing" object="#rc.productSmartList#">
 		<cf_HibachiActionCaller action="admin:entity.createproduct" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.contentAccess')# #rc.$.slatwall.rbKey('entity.product')#" querystring="baseProductType=contentAccess" />
 		<cf_HibachiActionCaller action="admin:entity.createproduct" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.merchandise')# #rc.$.slatwall.rbKey('entity.product')#" querystring="baseProductType=merchandise" />
 		<cf_HibachiActionCaller action="admin:entity.createproduct" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.subscription')# #rc.$.slatwall.rbKey('entity.product')#" querystring="baseProductType=subscription" />
-	</cf_HibachiCrudActionBar>
+	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiListingDisplay smartList="#rc.productSmartList#"
 			recordEditAction="admin:entity.editproduct"

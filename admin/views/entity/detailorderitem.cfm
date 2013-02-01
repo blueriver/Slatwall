@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.orderItem#" saveAction="admin:entity.saveOrderItem" edit="#rc.edit#" >
-		<cf_HibachiCrudActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:entity.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
+	<cf_HibachiEntityDetailForm object="#rc.orderItem#" saveAction="admin:entity.saveOrderItem" edit="#rc.edit#" >
+		<cf_HibachiEntityActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:entity.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList divclass="span4">
@@ -81,5 +81,5 @@ Notes:
 			</cfif>
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

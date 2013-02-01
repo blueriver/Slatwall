@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.siteSmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.siteSmartList#" createmodal="true" />
+	<cf_HibachiEntityActionBar type="listing" object="#rc.siteSmartList#" createmodal="true" />
 	
 	<cf_HibachiListingDisplay smartList="#rc.siteSmartList#"
 							   recordEditAction="admin:entity.editSite"

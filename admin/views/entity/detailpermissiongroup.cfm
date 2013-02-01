@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#"></cf_HibachiCrudActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
 		<!---<input type="hidden" name="permissions" value="#rc.permissionGroup.getPermissions()#">--->
 		
@@ -77,5 +77,5 @@ Notes:
 			--->
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

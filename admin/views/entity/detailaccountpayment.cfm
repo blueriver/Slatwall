@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#" backaction="admin:entity.detailaccount" backquerystring="accountID=#rc.accountPayment.getAccount().getAccountID()#"></cf_HibachiCrudActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#" backaction="admin:entity.detailaccount" backquerystring="accountID=#rc.accountPayment.getAccount().getAccountID()#"></cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList divClass="span6">
@@ -63,5 +63,5 @@ Notes:
 			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

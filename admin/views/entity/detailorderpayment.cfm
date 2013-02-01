@@ -40,14 +40,14 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
+	<cf_HibachiEntityDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="chargePreAuthorization" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="authorizeAndCharge" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="authorize" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="credit" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_SlatwallProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="offlineTransaction" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-		</cf_HibachiCrudActionBar>
+		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList divClass="span6">
@@ -71,5 +71,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/orderpaymenttabs/paymenttransactions" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>
