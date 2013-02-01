@@ -3,7 +3,7 @@
 	"properties":{
 		"firstName":		[{"required":true}],
 		"lastName":			[{"required":true}],
-		"orders":			[{"contexts":"delete","max":0}],
+		"orders":			[{"contexts":"delete","maxCollection":0}],
 		"cmsAccountID":		[{"method":"hasUniqueOrNullCMSAccountID"}]
 	}
 }

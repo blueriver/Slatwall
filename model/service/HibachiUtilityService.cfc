@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfcomponent extends="Slatwall.org.Hibachi.HibachiUtilityService">
+<cfcomponent output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiUtilityService">
 	
 	<cfproperty name="settingService" type="any" />
 	

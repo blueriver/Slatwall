@@ -11,4 +11,28 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiService" {
 		}
 		return false; 
 	}
+	
+	public boolean function delete(required any entity){
+			
+		// If the entity Passes validation
+		if(arguments.entity.isDeletable()) {
+			
+			// Remove any Many-to-Many relationships
+			arguments.entity.removeAllManyToManyRelationships();
+			
+			getService("settingService").removeAllEntityRelatedSettings( entity=arguments.entity );
+			
+			// Call delete in the DAO
+			getHibachiDAO().delete(target=arguments.entity);
+			
+			// Return that the delete was sucessful
+			return true;
+			
+		}
+			
+		// Setup ormHasErrors because it didn't pass validation
+		getHibachiScope().setORMHasErrors( true );
+
+		return false;
+	}
 }
