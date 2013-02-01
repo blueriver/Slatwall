@@ -203,6 +203,7 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint facade method to check the application scope for a value
 	public boolean function hasSessionValue(required any key) {
+		param name="sessoin" default="#structNew()#";
 		if( structKeyExists(session, getHibachiInstanceApplicationScopeKey()) && structKeyExists(session[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
 			return true;
 		}
