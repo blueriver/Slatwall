@@ -37,11 +37,11 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
+component accessors="true" output="false" displayname="PayLeap" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
 	//Global variables
-	variables.liveGatewayAddress = "payflowpro.paypal.com";
-	variables.testGatewayAddress = "pilot-payflowpro.paypal.com";
+	variables.liveGatewayAddress = "secure1.payleap.com/transactservices.svc/ProcessCreditCard";
+	variables.testGatewayAddress = "uat.payleap.com/transactservices.svc/ProcessCreditCard";
 	variables.verbosity = "MEDIUM";
 	variables.timeout = 45;
 	variables.transactionCodes = {};
@@ -49,12 +49,12 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	public any function init(){
 		// Set Defaults
 		variables.transactionCodes = {
-			authorize="A",
-			authorizeAndCharge="S",
-			chargePreAuthorization="D",
-			credit="C",
-			void="V",
-			inquiry="I"
+			authorize="Auth",
+			authorizeAndCharge="Sale",
+			chargePreAuthorization="Capture",
+			credit="Return",
+			void="Void",
+			inquiry=""
 		};
 		
 		return this;
@@ -78,12 +78,12 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
 		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
 		
-		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
+		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "Capture" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "Return"){
 			requestData = listAppend(requestData,"ORIGID=#requestBean.getProviderTransactionID()#","&");
 		}
 		
 		// This is a bit of a hack because PayFlow Pro doesn't allow for second delay capture on an original authroization code.  So if the transactionType is delayed capture, and we have already captured a partial... then we will need to just recharge
-		var forceSale = false;
+	/*	var forceSale = false;
 		if( arguments.requestBean.getTransactionType() eq "chargePreAuthorization" ) {
 			var query = new Query();
 			query.setSQL("SELECT paymentTransactionID FROM SlatwallPaymentTransaction WHERE orderPaymentID = '#arguments.requestBean.getOrderPaymentID()#' AND transactionType = 'chargePreAuthorization' AND authorizationCode IN (SELECT authorizationCode FROM SlatwallPaymentTransaction WHERE providerTransactionID='#requestBean.getProviderTransactionID()#')"); 
@@ -98,7 +98,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			requestData = listAppend(requestData, "TRXTYPE=S", "&");
 		} else {
 			requestData = listAppend(requestData, "TRXTYPE=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#", "&");
-		}
+		}*/
 		// END HACK
 		
 		return requestData;
@@ -106,10 +106,10 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 
 	private string function getLoginNVP(){
 		var loginData = [];
-		arrayAppend(loginData,"USER=#setting('userName')#");
+		arrayAppend(loginData,"UserName=#setting('userName')#");
 		arrayAppend(loginData,"PARTNER=#setting('partnerID')#");
 		arrayAppend(loginData,"VENDOR=#setting('vendorID')#");
-		arrayAppend(loginData,"PWD=#setting('password')#");
+		arrayAppend(loginData,"Password=Password123");
 		return arrayToList(loginData,"&");
 	}
 	
@@ -117,11 +117,11 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		var paymentData = [];
 		arrayAppend(paymentData,"ACCT[#len(requestBean.getCreditCardNumber())#]=#requestBean.getCreditCardNumber()#");
 		arrayAppend(paymentData,"EXPDATE[4]=#numberFormat(Left(requestBean.getExpirationMonth(),2),'00')##Right(requestBean.getExpirationYear(),2)#");
-		arrayAppend(paymentData,"CVV2[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
+		arrayAppend(paymentData,"CVNUM[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
 		arrayAppend(paymentData,"AMT[#len(requestBean.getTransactionAmount())#]=#requestBean.getTransactionAmount()#");
 		
 		// Try to populate the custom one and two for order payments
-		if(!isNull(requestBean.getOrderPaymentID()) && len(requestBean.getOrderPaymentID())) {
+	/*	if(!isNull(requestBean.getOrderPaymentID()) && len(requestBean.getOrderPaymentID())) {
 			var entity = getService("orderService").getOrderPayment( requestBean.getOrderPaymentID() );
 			var template1 = setting('orderPaymentCommentOneTemplate');
 			var template2 = setting('orderPaymentCommentTwoTemplate');
@@ -130,7 +130,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			var template1 = setting('accountPaymentCommentOneTemplate');
 			var template2 = setting('accountPaymentCommentTwoTemplate');
 		}
-		
+		*/
 		if(!isNull(entity)) {
 			var comment1 = entity.stringReplace(template1);
 			var comment2 = entity.stringReplace(template2);
@@ -152,7 +152,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	private string function getCustomerNVP(required any requestBean){
 		var customerData = [];
 		//arrayAppend(customerData,"CUSTREF[#len(requestBean.getOrderID())#]=#requestBean.getOrderID()#");
-		arrayAppend(customerData,"CUSTCODE[#len(requestBean.getAccountID())#]=#requestBean.getAccountID()#");
+		//arrayAppend(customerData,"CUSTCODE[#len(requestBean.getAccountID())#]=#requestBean.getAccountID()#");
 		arrayAppend(customerData,"FIRSTNAME[#len(requestBean.getAccountFirstName())#]=#requestBean.getAccountFirstName()#");
 		arrayAppend(customerData,"LASTNAME[#len(requestBean.getAccountLastName())#]=#requestBean.getAccountLastName()#");
 		arrayAppend(customerData,"STREET[#len(requestBean.getBillingStreetAddress())#]=#requestBean.getBillingStreetAddress()#");
@@ -168,7 +168,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
-		httpRequest.setUrl(getGatewayURL());
+		httpRequest.setUrl(getGatewayURL() & requestData);
 		httpRequest.setPort(getGatewayPort());
 		httpRequest.setTimeout(variables.timeout);
 		httpRequest.setResolveurl(false);
@@ -185,7 +185,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	}
 	
 	private string function getGatewayURL(){
-		return "https://" & getGatewayAddress() & "/";
+		return "https://" & getGatewayAddress() & "?";
 	}
 	
 	private numeric function getGatewayPort(){
