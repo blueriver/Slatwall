@@ -41,7 +41,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 	
 	//Global variables
 	variables.liveGatewayAddress = "secure1.payleap.com/transactservices.svc/ProcessCreditCard";
-	variables.testGatewayAddress = "uat.payleap.com/transactservices.svc/ProcessCreditCard?";
+	variables.testGatewayAddress = "uat.payleap.com/transactservices.svc/ProcessCreditCard";
 	variables.verbosity = "MEDIUM";
 	variables.timeout = 45;
 	variables.transactionCodes = {};
@@ -54,7 +54,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 			chargePreAuthorization="Capture",
 			credit="Return",
 			void="Void",
-			inquiry="I"
+			inquiry=""
 		};
 		
 		return this;
@@ -168,7 +168,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 		
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
-		httpRequest.setUrl(getGatewayURL());
+		httpRequest.setUrl(getGatewayURL() & requestData);
 		httpRequest.setPort(getGatewayPort());
 		httpRequest.setTimeout(variables.timeout);
 		httpRequest.setResolveurl(false);
@@ -185,7 +185,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 	}
 	
 	private string function getGatewayURL(){
-		return "https://" & getGatewayAddress() & "/";
+		return "https://" & getGatewayAddress() & "?";
 	}
 	
 	private numeric function getGatewayPort(){
