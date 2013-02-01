@@ -167,39 +167,40 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: Delete Overrides ==========================
 	
-	public boolean function deleteAccount(required any account) {
-	
-		// Set the primary fields temporarily in the local scope so we can reset if delete fails
-		var accountID = arguments.account.getAccountID();
-		var primaryEmailAddress = arguments.account.getPrimaryEmailAddress();
-		var primaryPhoneNumber = arguments.account.getPrimaryPhoneNumber();
-		var primaryAddress = arguments.account.getPrimaryAddress();
+	public any function processAccount_setupInitialAdmin(required any account, required struct data={}, required any processObject) {
 		
-		// Remove the primary fields so that we can delete this entity
-		arguments.account.setPrimaryEmailAddress(javaCast("null", ""));
-		arguments.account.setPrimaryPhoneNumber(javaCast("null", ""));
-		arguments.account.setPrimaryAddress(javaCast("null", ""));
-	
-		// Use the base delete method to check validation
-		var deleteOK = super.delete(arguments.account);
-		
-		// If the delete failed, then we just reset the primary fields in account and return false
-		if(deleteOK) {
-			getAccountDAO().removeAccountFromAllSessions( accountID );
-			
-			super.delete(primaryEmailAddress);
-			super.delete(primaryPhoneNumber);
-			super.delete(primaryAddress);
-			
-		} else {
-			arguments.account.setPrimaryEmailAddress(primaryEmailAddress);
-			arguments.account.setPrimaryPhoneNumber(primaryPhoneNumber);
-			arguments.account.setPrimaryAddress(primaryAddress);
-		
-			return false;
+		// Populate the account with the correct values that have been previously validated
+		arguments.account.setFirstName( processObject.getFirstName() );
+		arguments.account.setLastName( processObject.getLastName() );
+		if(!isNull(processObject.getCompany())) {
+			arguments.account.setCompany( processObject.getCompany() );	
 		}
-	
-		return true;
+		arguments.account.setSuperUserFlag( 1 );
+		
+		// Setup the email address
+		var accountEmailAddress = this.newAccountEmailAddress();
+		accountEmailAddress.setAccount(arguments.account);
+		accountEmailAddress.setEmailAddress( processObject.getEmailAddress() );
+		
+		// Setup the authentication
+		var accountAuthentication = this.newAccountAuthentication();
+		accountAuthentication.setAccount( arguments.account );
+		
+		// Put the accountAuthentication into the hibernate scope so that it has an id
+		getHibachiDAO().save(accountAuthentication);
+		
+		// Set the password
+		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.data.password, accountAuthentication.getAccountAuthenticationID()) );
+		
+		// Call save on the account now that it is all setup
+		arguments.account = this.saveAccount(arguments.account);
+		
+		// Login the new account
+		if(!arguments.account.hasErrors()) {
+			getHibachiSessionService().loginAccount(account=arguments.account, accountAuthentication=accountAuthentication);	
+		}
+		
+		return arguments.account;
 	}
 	
 	// =====================  END: Delete Overrides ===========================

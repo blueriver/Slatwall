@@ -42,35 +42,17 @@ Notes:
 	<div style="width:100%;">
 		<cfif rc.accountAuthenticationExists>
 			<div class="well tabable" style="width:400px;margin: 0px auto;">
-				<ul class="">
-					
-				</ul>
-				<ul>
-					
-				</ul>
-					
 				<h3>Login</h3>
 				<br />
-				<cfset authorizeProcessObject = $.slatwall.getSession().getProcessObject("AuthorizeAccount") />
+				<cfset authorizeProcessObject = rc.fw.getHibachiScope().getSession().getProcessObject("AuthorizeAccount") />
 				<form action="?s=1" class="form-horizontal" method="post">
-					<input type="hidden" name="slatAction" value="admin:main.authorizelogin" />
+					<input type="hidden" name="#rc.fw.getAction()#" value="admin:main.authorizelogin" />
 					<fieldset class="dl-horizontal">
 						<fieldset class="dl-horizontal">
-							<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="emailAddress" edit="true" title="#$.slatwall.rbKey('entity.account.emailAddress')#" />
-							<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="password" edit="true" title="#$.slatwall.rbKey('entity.account.password')#" />
+							<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="emailAddress" edit="true" title="#rc.fw.getHibachiScope().rbKey('entity.account.emailAddress')#" />
+							<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="password" edit="true" title="#rc.fw.getHibachiScope().rbKey('entity.account.password')#" />
 						</fieldset>
 						<button type="submit" class="btn btn-primary pull-right">Login</button>
-					</fieldset>
-				</form>
-				<hr />
-				<h3>Login with Mura Account</h3>
-				<br />
-				<form action="?s=1" class="form-horizontal">
-					<input type="hidden" name="slatAction" value="mura:main.authorizelogin" />
-					<fieldset class="dl-horizontal">
-						<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="emailAddress" edit="true" title="#$.slatwall.rbKey('entity.account.emailAddress')#" />
-						<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="password" edit="true" title="#$.slatwall.rbKey('entity.account.password')#" />
-						<button type="submit" class="btn pull-right">Login w/Mura</button>
 					</fieldset>
 				</form>
 			</div>
@@ -79,18 +61,18 @@ Notes:
 				<h3>Create Super Administrator Account</h3>
 				<br />
 				<form action="?s=1" class="form-horizontal" method="post">
-					<input type="hidden" name="slatAction" value="admin:main.setupInitialAdmin" />
+					<input type="hidden" name="#rc.fw.getAction()#" value="admin:main.setupinitialadmin" />
 					
-					<cfset processObject = $.slatwall.getAccount().getProcessObject("setupInitialAdmin") />
+					<cfset processObject = rc.fw.getHibachiScope().getAccount().getProcessObject("setupInitialAdmin") />
 							
 					<fieldset class="dl-horizontal">
-						<cf_HibachiPropertyDisplay object="#processObject#" property="firstName" edit="true" title="#$.slatwall.rbKey('entity.account.firstName')#" />
-						<cf_HibachiPropertyDisplay object="#processObject#" property="lastName" edit="true" title="#$.slatwall.rbKey('entity.account.lastName')#" />
-						<cf_HibachiPropertyDisplay object="#processObject#" property="company" edit="true" title="#$.slatwall.rbKey('entity.account.company')#" />
-						<cf_HibachiPropertyDisplay object="#processObject#" fieldName="emailAddress" property="emailAddress" edit="true" title="#$.slatwall.rbKey('entity.account.emailAddress')#" />
-						<cf_HibachiPropertyDisplay object="#processObject#" fieldName="emailAddressConfirm" property="emailAddressConfirm" edit="true" title="#$.slatwall.rbKey('entity.account.emailAddressConfirm')#" />
-						<cf_HibachiPropertyDisplay object="#processObject#" property="password" edit="true" title="#$.slatwall.rbKey('entity.account.password')#" />
-						<cf_HibachiPropertyDisplay object="#processObject#" property="passwordConfirm" edit="true" title="#$.slatwall.rbKey('entity.account.passwordConfirm')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="firstName" edit="true" title="#rc.fw.getHibachiScope().rbKey('entity.account.firstName')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="lastName" edit="true" title="#rc.fw.getHibachiScope().rbKey('entity.account.lastName')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="company" edit="true" title="#rc.fw.getHibachiScope().rbKey('entity.account.company')#" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="emailAddress" edit="true" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="emailAddressConfirm" edit="true" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="password" edit="true" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="passwordConfirm" edit="true" />
 						<button type="submit" class="btn btn-primary pull-right">Create & Login</button>
 					</fieldset>
 				</form>
