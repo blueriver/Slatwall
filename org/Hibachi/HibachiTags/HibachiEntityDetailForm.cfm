@@ -19,7 +19,7 @@
 			<cfelse>
 				<form method="post" action="?s=1" class="form-horizontal" enctype="#attributes.enctype#">
 			</cfif>
-			<input type="hidden" name="slatAction" value="#attributes.saveaction#" />
+			<input type="hidden" name="#request.context.fw.getAction()#" value="#attributes.saveaction#" />
 			<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
 			<cfif len(attributes.sRedirectURL)><input type="hidden" name="sRedirectURL" value="#attributes.sRedirectURL#" /></cfif>
 			<cfif len(attributes.sRedirectAction)><input type="hidden" name="sRedirectAction" value="#attributes.sRedirectAction#" /></cfif>
