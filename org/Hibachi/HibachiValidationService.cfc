@@ -56,6 +56,8 @@ component output="false" accessors="true" extends="HibachiService" {
 				}
 			}
 			
+			
+			
 			variables.validationStructs[ arguments.object.getClassName() ] = validation;
 		}
 		
@@ -99,7 +101,11 @@ component output="false" accessors="true" extends="HibachiService" {
 		for(var propertyName in contextValidations) {
 			if(arguments.object.hasProperty( propertyName )) {
 				for(var constraint in contextValidations[ propertyName ]) {
-					var isValid = this.invokeMethod("validate_#constraint#", {object=arguments.object, propertyName=propertyName, constraintValue=contextValidations[ propertyName ][ constraint ]});
+					if(!structKeyExists(variables, "validate_#constraint#")) {
+						throw("You have an error in the #arguments.object.getClassName()#.json validation file.  You have a constraint defined in one of your rules as '#constraint#' and that is not a valid constraint");
+					}
+					var isValid = invokeMethod("validate_#constraint#", {object=arguments.object, propertyName=propertyName, constraintValue=contextValidations[ propertyName ][ constraint ]});	
+					
 					if(!isValid) {
 						errorBean.addError(propertyName, rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#constraint#'));
 					}
@@ -109,8 +115,9 @@ component output="false" accessors="true" extends="HibachiService" {
 		
 		// If the setErrors was true, then we can set this error
 		if(setErrors) {
-			var errorBean = arguments.object.getHibachiErrors();
+			arguments.object.setHibachiErrors( errorBean );
 		}
+		
 		return errorBean;
 	}
 	
@@ -154,7 +161,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function validate_minLength(required any object, required string propertyName, required numeric constraintValue) {
 		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
-		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(propertyValue) >= arguments.propertyValue) ) {
+		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(propertyValue) >= arguments.constraintValue) ) {
 			return true;
 		}
 		return false;
@@ -162,7 +169,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function validate_maxLength(required any object, required string propertyName, required numeric constraintValue) {
 		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
-		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(propertyValue) <= arguments.propertyValue) ) {
+		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(propertyValue) <= arguments.constraintValue) ) {
 			return true;
 		}
 		return false;
@@ -170,7 +177,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function validate_minCollection(required any object, required string propertyName, required numeric constraintValue) {
 		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
-		if(isNull(propertyValue) || (isArray(propertyValue) && arrayLen(propertyValue) >= arguments.propertyValue) || (isStruct(propertyValue) && structCount(propertyValue) >= arguments.propertyValue)) {
+		if(isNull(propertyValue) || (isArray(propertyValue) && arrayLen(propertyValue) >= arguments.constraintValue) || (isStruct(propertyValue) && structCount(propertyValue) >= arguments.constraintValue)) {
 			return true;
 		}
 		return false;
@@ -178,7 +185,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function validate_maxCollection(required any object, required string propertyName, required numeric constraintValue) {
 		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
-		if(isNull(propertyValue) || (isArray(propertyValue) && arrayLen(propertyValue) <= arguments.propertyValue) || (isStruct(propertyValue) && structCount(propertyValue) <= arguments.propertyValue)) {
+		if(isNull(propertyValue) || (isArray(propertyValue) && arrayLen(propertyValue) <= arguments.constraintValue) || (isStruct(propertyValue) && structCount(propertyValue) <= arguments.constraintValue)) {
 			return true;
 		}
 		return false;

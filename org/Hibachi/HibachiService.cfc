@@ -8,6 +8,7 @@
 	<cfproperty name="hibachiSessionService" type="any">
 	<cfproperty name="hibachiTagService" type="any">
 	<cfproperty name="hibachiUtilityService" type="any">
+	<cfproperty name="hibachiValidationService" type="any">
 	
 	<!--- TODO: FIX THIS --->
 	<cfproperty name="attributeService" type="any">
@@ -75,7 +76,7 @@
 		// @hint default process method
 		public any function process(required any entity, struct data={}, string processContext="process"){
 			// Verify the preProcess
-			arguments.entity.validate(context=arguments.processContext);
+			arguments.entity.validate( context=arguments.processContext );
 			
 			// If we pass validation then create a
 			if(!arguments.entity.hasErrors()) {

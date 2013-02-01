@@ -321,7 +321,7 @@ component extends="FW1.framework" {
 		}
 		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
-		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
+		if( !listFind("admin,frontend", getSubsystem(request.context[ getAction() ])) && (!structKeyExists(request,"layout") || request.layout)) {
 			setLayout("admin:main");
 		}
 	}
@@ -399,8 +399,8 @@ component extends="FW1.framework" {
 			request.context.$[ variables.framework.applicationKey ] = request[ "#variables.framework.applicationKey#Scope" ];
 		}
 		
-		// Add the slatAction to the RC Scope
-		request.context[ variables.framework.action ] = arguments.action;
+		// Add the action to the RC Scope
+		request.context[ getAction() ] = arguments.action;
 		
 		// Do structured data just like a normal request
 		getBeanFactory().getBean("hibachiUtilityService").buildFormCollections(request.context);
