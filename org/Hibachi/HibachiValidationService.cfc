@@ -125,28 +125,12 @@ component output="false" accessors="true" extends="HibachiService" {
 	public boolean function validate_dataType(required any object, required string propertyName, required any constraintValue) {
 		var value = arguments.object.invokeMethod("get#arguments.propertyName#");
 		
-		if(isNull(value)) {
-			return true;
-		} else if(arguments.constraintValue eq "email") {
-			return true;
-		} else if (arguments.constraintValue eq "url") {
-			return true;
-		} else if (arguments.constraintValue eq "numeric" && isNumeric(value)) {
-			return true;
-		} else if (arguments.constraintValue eq "array" && isArray(value)) {
-			return true;
-		} else if (arguments.constraintValue eq "boolean" && isBoolean(value)) {
-			return true;
-		} else if (arguments.constraintValue eq "date" && isDate(value)) {
-			return true;
-		} else if (arguments.constraintValue eq "json" && isJSON(value)) {
-			return true;
-		} else if (arguments.constraintValue eq "object" && isObject(value)) {
-			return true;
-		} else if (arguments.constraintValue eq "query" && isQuery(value)) {
-			return true;
-		} else if (arguments.constraintValue eq "query" && isSimpleValue(value)) {
-			return true;
+		if(listFindNoCase("any,array,binary,boolean,component,creditCard,date,time,email,eurodate,float,numeric,guid,integer,query,range,regex,regular_expression,ssn,social_security_number,string,telephone,url,uuid,usdate,zipcode",arguments.constraintValue)) {
+			if(isNull(value) || isValid("email", value)) {
+				return true;
+			}
+		} else {
+			throw("The validation file: #arguments.object.getClassName()#.json has an incorrect dataType constraint value of '#arguments.constraintValue#' for one of it's properties.  Valid values are: any,array,binary,boolean,component,creditCard,date,time,email,eurodate,float,numeric,guid,integer,query,range,regex,regular_expression,ssn,social_security_number,string,telephone,url,uuid,usdate,zipcode");
 		}
 		
 		return false;
@@ -154,7 +138,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function validate_minValue(required any object, required string propertyName, required numeric constraintValue) {
 		var value = arguments.object.invokeMethod("get#arguments.propertyName#");
-		if(isNull(propertyValue) || (isNumeric(propertyValue) && propertyValue gte arguments.propertyValue) ) {
+		if(isNull(propertyValue) || (isNumeric(propertyValue) && propertyValue >= arguments.propertyValue) ) {
 			return true;
 		}
 		return false;
@@ -162,96 +146,108 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function validate_maxValue(required any object, required string propertyName, required numeric constraintValue) {
 		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
-		if(isNull(propertyValue) || (isNumeric(propertyValue) && propertyValue lte arguments.propertyValue) ) {
+		if(isNull(propertyValue) || (isNumeric(propertyValue) && propertyValue <= arguments.propertyValue) ) {
 			return true;
 		}
 		return false;
 	}
 	
 	public boolean function validate_minLength(required any object, required string propertyName, required numeric constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(propertyValue) >= arguments.propertyValue) ) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_maxLength(required any object, required string propertyName, required numeric constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(propertyValue) <= arguments.propertyValue) ) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_minCollection(required any object, required string propertyName, required numeric constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(isNull(propertyValue) || (isArray(propertyValue) && arrayLen(propertyValue) >= arguments.propertyValue) || (isStruct(propertyValue) && structCount(propertyValue) >= arguments.propertyValue)) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_maxCollection(required any object, required string propertyName, required numeric constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(isNull(propertyValue) || (isArray(propertyValue) && arrayLen(propertyValue) <= arguments.propertyValue) || (isStruct(propertyValue) && structCount(propertyValue) <= arguments.propertyValue)) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_method(required any object, required string propertyName, required string constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		return arguments.object.invokeMethod(arguments.constraintValue);
 	}
 	
 	public boolean function validate_lteProperty(required any object, required string propertyName, required string constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		var compairPropertyValue =  arguments.object.invokeMethod("get#arguments.constraintValue#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue <= compairPropertyValue) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_ltProperty(required any object, required string propertyName, required string constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		var compairPropertyValue =  arguments.object.invokeMethod("get#arguments.constraintValue#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue < compairPropertyValue) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_gteProperty(required any object, required string propertyName, required string constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		var compairPropertyValue =  arguments.object.invokeMethod("get#arguments.constraintValue#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue >= compairPropertyValue) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_gtProperty(required any object, required string propertyName, required string constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		var compairPropertyValue =  arguments.object.invokeMethod("get#arguments.constraintValue#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue > compairPropertyValue) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_eqProperty(required any object, required string propertyName, required string constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		var compairPropertyValue =  arguments.object.invokeMethod("get#arguments.constraintValue#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue == compairPropertyValue) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_neqProperty(required any object, required string propertyName, required string constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		var compairPropertyValue =  arguments.object.invokeMethod("get#arguments.constraintValue#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue != compairPropertyValue) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_inList(required any object, required string propertyName, required string constraintValue) {
-		throw("Tell Greg to Impliment this!");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(!isNull(propertyValue) && listFindNoCase(arguments.constraintValue, propertyValue)) {
+			return true;
+		}
+		return false;
 	}
-	
-	
-	/*
-	Required	Boolean	Whether the property must have a non-null value
-	
-	IsValid *	String	Validates that the value is of a certain format type. Our included types are: 
-	ssn,email,url,alpha,boolean,date,usdate,eurodate,numeric,GUID,UUID,integer,string,telephone,zipcode,ipaddress,creditcard,binary,
-	component,query,struct,json,xml
-	
-	Size	Numeric or Range	The size or length of the value which can be a struct, string, array, or query. The value can be a single numeric value or our cool ranges. 
-	Ex: size=4, size=6..8, size=-5..0
-	
-	Range	Range	Range is a range of values the property value should exist in. Ex: range=1..10, range=6..8
-	
-	Regex	Regular Expression	The regular expression to try and match the value with for validation. This is a no case regex check.
-	
-	SameAs	Property Name	Makes sure the value of the constraint is the same as the value of another property in the object. This is a case sensitive check.
-	
-	SameAsNoCase	Property Name	Makes sure the value of the constraint is the same as the value of another property in the object with no case sensitivity.
-	
-	InList	List	A list of values that the property value must exist in
-	
-	Discrete	String	Do discrete math in the property value. The valid values are: eq,neq,lt,lte,gt,gte. Example: discrete="eq:4" or discrete="lte:10"
-	
-	Method	Method Name	The name of a method to call in the target object for validation. The function must return boolean.
-	
-	Min	Numeric	The value must be greater than or equal to this minimum value
-	
-	Max	Numeric	The value must be less than or equal to this maximum value
-	
-	Validator	Instantiation Path	You can also build your own validators instead of our internal ones. This value will be the instantiation path to the validator and method.
-	Example: validator="com.user.UserService.isUsernameCool". com.user.UserService is the path to the component and isUsernameCool
-	is the method that will return a boolean.
-	
-	Numeric	Any	Whether the value is a numeric value. This constraint uses the built in function isNumeric under the hood.
-	
-	Unique	Boolean	I will determine if the value already exists in the database. This constraint works with ORM to determine if the property value is a duplicate.
-	
-	*/
+
 }
