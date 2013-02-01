@@ -41,7 +41,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 	
 	//Global variables
 	variables.liveGatewayAddress = "secure1.payleap.com/transactservices.svc/ProcessCreditCard";
-	variables.testGatewayAddress = "uat.payleap.com/transactservices.svc/ProcessCreditCard";
+	variables.testGatewayAddress = "uat.payleap.com/transactservices.svc/ProcessCreditCard?";
 	variables.verbosity = "MEDIUM";
 	variables.timeout = 45;
 	variables.transactionCodes = {};
