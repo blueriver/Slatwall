@@ -36,7 +36,4 @@
 Notes:
 
 --->
-<cfoutput>
-	THIS IS MODAL
-	#body#
-	</cfoutput>
+<cfoutput>#body#</cfoutput>
