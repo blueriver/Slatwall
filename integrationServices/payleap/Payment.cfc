@@ -109,7 +109,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 		arrayAppend(loginData,"UserName=#setting('userName')#");
 		arrayAppend(loginData,"PARTNER=#setting('partnerID')#");
 		arrayAppend(loginData,"VENDOR=#setting('vendorID')#");
-		arrayAppend(loginData,"Password=#setting('password')#");
+		arrayAppend(loginData,"Password=Password123");
 		return arrayToList(loginData,"&");
 	}
 	
@@ -117,11 +117,11 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 		var paymentData = [];
 		arrayAppend(paymentData,"ACCT[#len(requestBean.getCreditCardNumber())#]=#requestBean.getCreditCardNumber()#");
 		arrayAppend(paymentData,"EXPDATE[4]=#numberFormat(Left(requestBean.getExpirationMonth(),2),'00')##Right(requestBean.getExpirationYear(),2)#");
-		arrayAppend(paymentData,"CVV2[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
+		arrayAppend(paymentData,"CVNUM[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
 		arrayAppend(paymentData,"AMT[#len(requestBean.getTransactionAmount())#]=#requestBean.getTransactionAmount()#");
 		
 		// Try to populate the custom one and two for order payments
-		if(!isNull(requestBean.getOrderPaymentID()) && len(requestBean.getOrderPaymentID())) {
+	/*	if(!isNull(requestBean.getOrderPaymentID()) && len(requestBean.getOrderPaymentID())) {
 			var entity = getService("orderService").getOrderPayment( requestBean.getOrderPaymentID() );
 			var template1 = setting('orderPaymentCommentOneTemplate');
 			var template2 = setting('orderPaymentCommentTwoTemplate');
@@ -130,7 +130,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 			var template1 = setting('accountPaymentCommentOneTemplate');
 			var template2 = setting('accountPaymentCommentTwoTemplate');
 		}
-		
+		*/
 		if(!isNull(entity)) {
 			var comment1 = entity.stringReplace(template1);
 			var comment2 = entity.stringReplace(template2);
@@ -152,7 +152,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 	private string function getCustomerNVP(required any requestBean){
 		var customerData = [];
 		//arrayAppend(customerData,"CUSTREF[#len(requestBean.getOrderID())#]=#requestBean.getOrderID()#");
-		arrayAppend(customerData,"CUSTCODE[#len(requestBean.getAccountID())#]=#requestBean.getAccountID()#");
+		//arrayAppend(customerData,"CUSTCODE[#len(requestBean.getAccountID())#]=#requestBean.getAccountID()#");
 		arrayAppend(customerData,"FIRSTNAME[#len(requestBean.getAccountFirstName())#]=#requestBean.getAccountFirstName()#");
 		arrayAppend(customerData,"LASTNAME[#len(requestBean.getAccountLastName())#]=#requestBean.getAccountLastName()#");
 		arrayAppend(customerData,"STREET[#len(requestBean.getBillingStreetAddress())#]=#requestBean.getBillingStreetAddress()#");

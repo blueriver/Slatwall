@@ -4,10 +4,11 @@
 
 <cfset creditCardRequestBean.settransactionType("authorize") />
 
+<cfset creditCardRequestBean.setCreditCardNumber("411111111111111111") />
+
 <cfset creditCardRequestBean.settransactionID(createuuid()) />
 
 <cfset response = rc.integration.getIntegrationCFC("payment").processCreditCard(creditCardRequestBean) />
 
 <cfdump var="#response#" />
 
-<!---creditcard# 411111111111111111 --->
