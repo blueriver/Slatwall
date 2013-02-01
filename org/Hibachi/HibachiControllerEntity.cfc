@@ -52,7 +52,11 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 		
 		if(arguments.rc.entityActionDetails.itemEntityName != "") {
-			arguments.rc.entityActionDetails.cancelAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.detail#arguments.rc.entityActionDetails.itemEntityName#";
+			if(left(arguments.rc.entityActionDetails.itemName, 6) == "create") {
+				arguments.rc.entityActionDetails.cancelAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.list#arguments.rc.entityActionDetails.itemEntityName#";	
+			} else {
+				arguments.rc.entityActionDetails.cancelAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.detail#arguments.rc.entityActionDetails.itemEntityName#";
+			}
 			arguments.rc.entityActionDetails.createAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.create#arguments.rc.entityActionDetails.itemEntityName#";
 			arguments.rc.entityActionDetails.detailAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.detail#arguments.rc.entityActionDetails.itemEntityName#";		
 			arguments.rc.entityActionDetails.deleteAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.delete#arguments.rc.entityActionDetails.itemEntityName#";
@@ -85,6 +89,7 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	// Implicit onMissingMethod() to handle standard CRUD
 	public void function onMissingMethod(string missingMethodName, struct missingMethodArguments) {
+		
 		if(structKeyExists(arguments, "missingMethodName")) {
 			if( left(arguments.missingMethodName, 4) == "list" ) {
 				genericListMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
@@ -437,16 +442,22 @@ component output="false" accessors="true" extends="HibachiController" {
 		var hasValue = false;
 		if(structKeyExists(arguments.rc, "sRedirectURL")) {
 			arguments.rc.entityActionDetails.sRedirectURL = arguments.rc.sRedirectURL;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "sRedirectAction")) {
 			arguments.rc.entityActionDetails.sRedirectAction = arguments.rc.sRedirectAction;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "sRenderItem")) {
 			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.sRenderItem;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "redirectURL")) {
 			arguments.rc.entityActionDetails.sRedirectURL = arguments.rc.redirectURL;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "redirectAction")) {
 			arguments.rc.entityActionDetails.sRedirectAction = arguments.rc.redirectAction;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "renderItem")) {
 			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.renderItem;
+			hasValue = true;
 		}
 		return hasValue;
 	}
@@ -454,16 +465,22 @@ component output="false" accessors="true" extends="HibachiController" {
 		var hasValue = false;
 		if(structKeyExists(arguments.rc, "fRedirectURL")) {
 			arguments.rc.entityActionDetails.fRedirectURL = arguments.rc.fRedirectURL;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "fRedirectAction")) {
 			arguments.rc.entityActionDetails.fRedirectAction = arguments.rc.fRedirectAction;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "fRenderItem")) {
 			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.fRenderItem;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "redirectURL")) {
 			arguments.rc.entityActionDetails.fRedirectURL = arguments.rc.redirectURL;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "redirectAction")) {
 			arguments.rc.entityActionDetails.fRedirectAction = arguments.rc.redirectAction;
+			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "renderItem")) {
 			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.renderItem;
+			hasValue = true;
 		}
 		return hasValue;
 	}

@@ -40,7 +40,6 @@ Notes:
 <cfparam name="rc.settingName" type="string">
 <cfparam name="rc.edit" type="boolean">
 
-<cfset local.returnActionQueryString = "" />
 <cfset local.hiddenKeyFields = "" />
 <cfset local.hasRelationshipKey = false />
 
@@ -61,7 +60,7 @@ Notes:
 <cfset rc.setting.setSettingName(rc.settingName) />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.setting#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString#">
+	<cf_HibachiCrudDetailForm object="#rc.setting#" edit="#rc.edit#">
 		<cf_HibachiCrudActionBar type="detail" object="#rc.setting#" />
 		
 		<input type="hidden" name="settingName" value="#rc.settingName#" />
@@ -76,7 +75,7 @@ Notes:
 				</cfif>
 			</cf_HibachiPropertyList>
 			<cfif !rc.setting.isNew() and local.hasRelationshipKey>
-				<cf_HibachiActionCaller action="admin:entity.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&returnAction=#request.context.returnAction#&#local.returnActionQueryString#" class="btn btn-danger" />
+				<cf_HibachiActionCaller action="admin:entity.deletesetting" queryString="settingID=#rc.setting.getSettingID()#" class="btn btn-danger" />
 			</cfif>
 		</cf_HibachiDetailHeader>
 	</cf_HibachiCrudDetailForm>
