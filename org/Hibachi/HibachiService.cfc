@@ -553,7 +553,7 @@
 			
 			// This removes the Application Prefix to the entityName when needed.
 			if(left(arguments.entityName, len(getApplicationValue('applicationKey'))) == getApplicationValue('applicationKey')) {
-				arguments.entityName = right(arguments.entityName, len(arguments.entityName) - 8);
+				arguments.entityName = right(arguments.entityName, len(arguments.entityName) - len(getApplicationValue('applicationKey')));
 			}
 			
 			if(structKeyExists(getEntitiesMetaData(), arguments.entityName) && structKeyExists(getEntitiesMetaData()[arguments.entityName], "hb_serviceName")) {
@@ -568,7 +568,7 @@
 		
 		public string function getProperlyCasedShortEntityName( required string entityName ) {
 			if(left(arguments.entityName, len(getApplicationValue('applicationKey'))) == getApplicationValue('applicationKey')) {
-				arguments.entityName = right(arguments.entityName, len(arguments.entityName)-8);
+				arguments.entityName = right(arguments.entityName, len(arguments.entityName)-len(getApplicationValue('applicationKey')));
 			}
 			
 			if( structKeyExists(getEntitiesMetaData(), arguments.entityName) ) {
