@@ -38,6 +38,9 @@ Notes:
 --->
 
 <cfcomponent extends="Slatwall.org.Hibachi.HibachiUtilityService">
+	
+	<cfproperty name="settingService" type="any" />
+	
 	<cfscript>
 		
 		public any function formatValue_currency( required string value, struct formatDetails={} ) {
@@ -52,32 +55,32 @@ Notes:
 			}
 			*/
 			// Otherwsie use the global currencyLocal
-			return LSCurrencyFormat(arguments.value, getService("settingService").getSettingValue("globalCurrencyType"), getService("settingService").getSettingValue("globalCurrencyLocale"));
+			return LSCurrencyFormat(arguments.value, getSettingService().getSettingValue("globalCurrencyType"), getSettingService().getSettingValue("globalCurrencyLocale"));
 		}
 		
 		public any function formatValue_datetime( required string value, struct formatDetails={} ) {
-			return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat")) & " " & TimeFormat(value, getService("settingService").getSettingValue("globalTimeFormat"));
+			return dateFormat(arguments.value, getSettingService().getSettingValue("globalDateFormat")) & " " & TimeFormat(value, getSettingService().getSettingValue("globalTimeFormat"));
 		}
 		
 		public any function formatValue_date( required string value, struct formatDetails={} ) {
-			return dateFormat(arguments.value, getService("settingService").getSettingValue("globalDateFormat"));
+			return dateFormat(arguments.value, getSettingService().getSettingValue("globalDateFormat"));
 		}
 		
 		public any function formatValue_time( required string value, struct formatDetails={} ) {
-			return timeFormat(arguments.value, getService("settingService").getSettingValue("globalTimeFormat"));
+			return timeFormat(arguments.value, getSettingService().getSettingValue("globalTimeFormat"));
 		}
 		
 		public any function formatValue_weight( required string value, struct formatDetails={} ) {
-			return arguments.value & " " & getService("settingService").getSettingValue("globalWeightUnitCode");
+			return arguments.value & " " & getSettingService().getSettingValue("globalWeightUnitCode");
 		}
 		
 		public string function encryptValue(required string value) {
-			return encrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));
+			return encrypt(arguments.value, getEncryptionKey(), getSettingService().getSettingValue("globalEncryptionAlgorithm"), getSettingService().getSettingValue("globalEncryptionEncoding"));
 		}
 	
 		public string function decryptValue(required string value) {
 			try {
-				return decrypt(arguments.value, getEncryptionKey(), setting("globalEncryptionAlgorithm"), setting("globalEncryptionEncoding"));	
+				return decrypt(arguments.value, getEncryptionKey(), getSettingService().getSettingValue("globalEncryptionAlgorithm"), getSettingService().getSettingValue("globalEncryptionEncoding"));	
 			} catch (any e) {
 				logHibachi("There was an error decrypting a value from the database.  This is usually because the application cannot find the Encryption key used to encrypt the data.  Verify that you have a key file in the location specified in the advanced settings of the admin.", true);
 				return "";
@@ -85,13 +88,13 @@ Notes:
 		}
 		
 		public string function createEncryptionKey() {
-			var	theKey = generateSecretKey(setting("globalEncryptionAlgorithm"), setting("globalEncryptionKeySize"));
+			var	theKey = generateSecretKey(getSettingService().getSettingValue("globalEncryptionAlgorithm"), getSettingService().getSettingValue("globalEncryptionKeySize"));
 			storeEncryptionKey(theKey);
 			return theKey;
 		}
 		
 		private string function getEncryptionKeyLocation() {
-			return setting("globalEncryptionKeyLocation") NEQ "" ? setting("globalEncryptionKeyLocation") : expandPath('/#getApplicationValue('applicationKey')#/custom/config/');
+			return setting("globalEncryptionKeyLocation") NEQ "" ? getSettingService().getSettingValue("globalEncryptionKeyLocation") : expandPath('/#getApplicationValue('applicationKey')#/custom/config/');
 		}
 		
 	</cfscript>
