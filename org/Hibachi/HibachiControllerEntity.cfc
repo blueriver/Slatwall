@@ -12,13 +12,17 @@ component output="false" accessors="true" extends="HibachiController" {
 		arguments.rc.entityActionDetails.sectionName = getFW().getSection( arguments.rc.entityActionDetails.thisAction );
 		arguments.rc.entityActionDetails.itemName = getFW().getItem( arguments.rc.entityActionDetails.thisAction );
 		
+		// Setup EntityActionDetails with default redirect / render values
 		arguments.rc.entityActionDetails.sRedirectURL = "";
 		arguments.rc.entityActionDetails.sRedirectAction = "";
 		arguments.rc.entityActionDetails.sRenderItem = "";
+		arguments.rc.entityActionDetails.sRedirectQS = "";
 		arguments.rc.entityActionDetails.fRedirectURL = "";
 		arguments.rc.entityActionDetails.fRedirectAction = "";
 		arguments.rc.entityActionDetails.fRenderItem = "";
+		arguments.rc.entityActionDetails.fRedirectQS = "";
 		
+		// Setup EntityActionDetails with all next actions set to this action
 		arguments.rc.entityActionDetails.itemEntityName = "";
 		arguments.rc.entityActionDetails.cancelAction = arguments.rc.entityActionDetails.thisAction;
 		arguments.rc.entityActionDetails.createAction = arguments.rc.entityActionDetails.thisAction;
@@ -33,6 +37,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		arguments.rc.entityActionDetails.processAction = arguments.rc.entityActionDetails.thisAction;
 		arguments.rc.entityActionDetails.saveAction = arguments.rc.entityActionDetails.thisAction;
 		
+		// Setup EntityActionDetails with the correct itemEntityName
 		if(left(arguments.rc.entityActionDetails.itemName, 4) == "list") {
 			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-4);
 		} else if (left(arguments.rc.entityActionDetails.itemName, 4) == "edit") {
@@ -51,6 +56,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-6);
 		}
 		
+		// Setup EntityActionDetails with correct actions
 		if(arguments.rc.entityActionDetails.itemEntityName != "") {
 			if(left(arguments.rc.entityActionDetails.itemName, 6) == "create") {
 				arguments.rc.entityActionDetails.cancelAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.list#arguments.rc.entityActionDetails.itemEntityName#";	
@@ -70,6 +76,37 @@ component output="false" accessors="true" extends="HibachiController" {
 			arguments.rc.entityActionDetails.saveAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.save#arguments.rc.entityActionDetails.itemEntityName#";
 		}
 		
+		// Setup RC with generic redirect/render info
+		// redirectURL
+		if(structKeyExists(arguments.rc, "redirectURL") && !structKeyExists(arguments.rc, "sRedirectURL")) {
+			arguments.rc.sRedirectURL = arguments.rc.redirectURL;
+		}
+		if(structKeyExists(arguments.rc, "redirectURL") && !structKeyExists(arguments.rc, "fRedirectURL")) {
+			arguments.rc.fRedirectURL = arguments.rc.redirectURL;
+		}
+		// redirectAction
+		if(structKeyExists(arguments.rc, "redirectAction") && !structKeyExists(arguments.rc, "sRedirectAction")) {
+			arguments.rc.sRedirectAction = arguments.rc.redirectAction;
+		}
+		if(structKeyExists(arguments.rc, "redirectAction") && !structKeyExists(arguments.rc, "fRedirectAction")) {
+			arguments.rc.fRedirectAction = arguments.rc.redirectAction;
+		}
+		// renderItem
+		if(structKeyExists(arguments.rc, "renderItem") && !structKeyExists(arguments.rc, "sRenderItem")) {
+			arguments.rc.renderItem = arguments.rc.renderItem;
+		}
+		if(structKeyExists(arguments.rc, "renderItem") && !structKeyExists(arguments.rc, "fRenderItem")) {
+			arguments.rc.fRenderItem = arguments.rc.renderItem;
+		}
+		// redirectQS
+		if(structKeyExists(arguments.rc, "redirectQS") && !structKeyExists(arguments.rc, "sRedirectQS")) {
+			arguments.rc.sRedirectQS = arguments.rc.redirectQS;
+		}
+		if(structKeyExists(arguments.rc, "redirectQS") && !structKeyExists(arguments.rc, "fRedirectQS")) {
+			arguments.rc.fRedirectQS = arguments.rc.redirectQS;
+		}
+		
+		// Setup the page Title in the RC
 		arguments.rc.pageTitle = rbKey(replace(arguments.rc.entityActionDetails.thisAction,':','.','all'));
 		
 		if(right(arguments.rc.pageTitle, 8) eq "_missing") {
@@ -131,6 +168,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		if(!hasFaliure) {
 			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.entityActionDetails.createAction;
 		}
+		populateRedirectQS( arguments.rc );
 		
 		// Find the correct service
 		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
@@ -159,6 +197,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		if(!hasFaliure) {
 			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.entityActionDetails.createAction;
 		}
+		populateRedirectQS( arguments.rc );
 		
 		// Load the objects for any ID's that were past in
 		loadEntitiesFromRCIDs( arguments.rc );
@@ -243,7 +282,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			entity.showErrorsAndMessages();
 			
 			// Render or Redirect a faluire
-			renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=false, rc=arguments.rc);	
+			renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);	
 		}
 		
 	}
@@ -438,6 +477,19 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 	}
 	
+	public boolean function populateRedirectQS(required struct rc) {
+		var hasValue = false;
+		if(structKeyExists(arguments.rc, "sRedirectQS")) {
+			arguments.rc.entityActionDetails.sRedirectQS = arguments.rc.sRedirectQS;
+			hasValue = true;
+		}
+		if(structKeyExists(arguments.rc, "fRedirectQS")) {
+			arguments.rc.entityActionDetails.fRedirectQS = arguments.rc.fRedirectQS;
+			hasValue = true;
+		}
+		return hasValue;
+	}
+	
 	private boolean function populateRenderAndRedirectSuccessValues(required struct rc) {
 		var hasValue = false;
 		if(structKeyExists(arguments.rc, "sRedirectURL")) {
@@ -448,15 +500,6 @@ component output="false" accessors="true" extends="HibachiController" {
 			hasValue = true;
 		} else if(structKeyExists(arguments.rc, "sRenderItem")) {
 			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.sRenderItem;
-			hasValue = true;
-		} else if(structKeyExists(arguments.rc, "redirectURL")) {
-			arguments.rc.entityActionDetails.sRedirectURL = arguments.rc.redirectURL;
-			hasValue = true;
-		} else if(structKeyExists(arguments.rc, "redirectAction")) {
-			arguments.rc.entityActionDetails.sRedirectAction = arguments.rc.redirectAction;
-			hasValue = true;
-		} else if(structKeyExists(arguments.rc, "renderItem")) {
-			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.renderItem;
 			hasValue = true;
 		}
 		return hasValue;
@@ -472,15 +515,6 @@ component output="false" accessors="true" extends="HibachiController" {
 		} else if(structKeyExists(arguments.rc, "fRenderItem")) {
 			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.fRenderItem;
 			hasValue = true;
-		} else if(structKeyExists(arguments.rc, "redirectURL")) {
-			arguments.rc.entityActionDetails.fRedirectURL = arguments.rc.redirectURL;
-			hasValue = true;
-		} else if(structKeyExists(arguments.rc, "redirectAction")) {
-			arguments.rc.entityActionDetails.fRedirectAction = arguments.rc.redirectAction;
-			hasValue = true;
-		} else if(structKeyExists(arguments.rc, "renderItem")) {
-			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.renderItem;
-			hasValue = true;
 		}
 		return hasValue;
 	}
@@ -494,7 +528,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Next look for a sRedirectAction in the rc, and do a redirect on that
 		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
-			getFW().redirect( action=arguments.rc.sRedirectAction, preserve="messages", queryString=arguments.rc.sRedirectQS );
+			getFW().redirect( action=arguments.rc.sRedirectAction, preserve="messages", queryString=buildRedirectQueryString(arguments.rc.sRedirectQS, arguments.maintainQueryString) );
 			
 		// Next look for a sRenderItem in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "sRenderItem")) {
@@ -511,21 +545,21 @@ component output="false" accessors="true" extends="HibachiController" {
 			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});
 			
 		} else {
-			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.sRedirectQS );
+			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=buildRedirectQueryString(arguments.rc.sRedirectQS, arguments.maintainQueryString) );
 			
 		}
 	}
 	
 	private void function renderOrRedirectFailure( required string defaultAction, required boolean maintainQueryString, required struct rc ) {
 		param name="arguments.rc.fRedirectQS" default="";
-		 
+		
 		// First look for a fRedirectURL in the rc, and do a redirectExact on that
 		if(structKeyExists(arguments.rc, "fRedirectURL")) {
 			getFW().redirectExact( url=arguments.rc.rRedirectURL );
 		
 		// Next look for a fRedirectAction in the rc, and do a redirect on that
 		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
-			getFW().redirect( action=arguments.rc.fRedirectAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
+			getFW().redirect( action=arguments.rc.fRedirectAction, preserve="messages", queryString=buildRedirectQueryString(arguments.rc.fRedirectQS, arguments.maintainQueryString) );
 			
 		// Next look for a fRenderItem in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "fRenderItem")) {
@@ -542,11 +576,22 @@ component output="false" accessors="true" extends="HibachiController" {
 			this.invokeMethod(arguments.defaultAction, {rc=arguments.rc});
 			
 		} else {
-			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=arguments.rc.fRedirectQS );
+			getFW().redirect( action=arguments.defaultAction, preserve="messages", queryString=buildRedirectQueryString(arguments.rc.fRedirectQS, arguments.maintainQueryString) );
 			
 		}
 	}
 	
+	private string function buildRedirectQueryString( required string queryString, required boolean maintainQueryString ) {
+		if(arguments.maintainQueryString) {
+			for(var key in url) {
+				if(key != getFW().getAction()) {
+					arguments.queryString = listAppend(arguments.queryString, "#key#=#url[key]#", "&");
+				}
+			}
+		}
+		
+		return arguments.queryString;
+	}
 	
 	/*
 	private void function redirectToReturnAction(string additionalQueryString="") {
