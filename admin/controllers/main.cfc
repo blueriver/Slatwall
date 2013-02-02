@@ -161,7 +161,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		rc.account = getAccountService().processAccount(getHibachiScope().getAccount(), rc, "setupInitialAdmin");
 		
 		if(!rc.account.getProcessObject("setupInitialAdmin").hasErrors() && !rc.account.hasErrors()) {
-			getFW().redirect('admin:main.default');
+			getFW().redirect(action='admin:main.default', queryString="s=1");
 		}
 		
 		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
