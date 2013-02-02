@@ -313,7 +313,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		genericCreateMethod(entityName="StockAdjustment", rc=arguments.rc);
 		
 		// Set the type correctly
-		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode(rc.stockAdjustmentType) );
+		rc.stockAdjustment.setStockAdjustmentType( getSettingService().getTypeBySystemCode(rc.stockAdjustmentType) );
 	}
 	
 	// Task

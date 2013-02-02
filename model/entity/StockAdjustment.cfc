@@ -163,14 +163,14 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 
 	public any function getStockAdjustmentType() {
 		if( !structKeyExists(variables, "stockAdjustmentType") ) {
-			variables.stockAdjustmentType = getService("typeService").getTypeBySystemCode("satLocationTransfer");
+			variables.stockAdjustmentType = getService("settingService").getTypeBySystemCode("satLocationTransfer");
 		}
 		return variables.stockAdjustmentType;
 	}
 	
 	public any function getStockAdjustmentStatusType() {
 		if( !structKeyExists(variables, "stockAdjustmentStatusType") ) {
-			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode("sastNew");
+			variables.stockAdjustmentStatusType = getService("settingService").getTypeBySystemCode("sastNew");
 		}
 		return variables.stockAdjustmentStatusType;
 	}

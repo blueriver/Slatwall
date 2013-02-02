@@ -42,12 +42,12 @@ Notes:
 <cfset rc.orderItemSmartList.addOrder("order.orderOpenDateTime|DESC") />
 
 <cfif not len(rc.orderItemSmartList.getFilters("order.orderStatusType.type")) >
-	<cfset local.defaultStatusFilter = $.slatwall.getService('typeService').getTypeBySystemCode("ostNew").getType() />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostNew").getType()) />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostProcessing").getType()) />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostOnHold").getType()) />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostClosed").getType()) />
-	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('typeService').getTypeBySystemCode("ostCanceled").getType()) />
+	<cfset local.defaultStatusFilter = $.slatwall.getService('settingService').getTypeBySystemCode("ostNew").getType() />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('settingService').getTypeBySystemCode("ostNew").getType()) />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('settingService').getTypeBySystemCode("ostProcessing").getType()) />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('settingService').getTypeBySystemCode("ostOnHold").getType()) />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('settingService').getTypeBySystemCode("ostClosed").getType()) />
+	<cfset local.defaultStatusFilter = listAppend(local.defaultStatusFilter, $.slatwall.getService('settingService').getTypeBySystemCode("ostCanceled").getType()) />
 	<cfset rc.orderItemSmartList.addFilter('order.orderStatusType.type', local.defaultStatusFilter) />
 </cfif>
 

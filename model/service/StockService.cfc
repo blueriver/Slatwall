@@ -41,7 +41,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="commentService" type="any";
 	property name="locationService" type="any";
 	property name="skuService" type="any";
-	property name="typeService" type="any";
+	property name="settingService" type="any";
 	
 	public any function getStockBySkuAndLocation(required any sku, required any location){
 		var stock = getSkuDAO().getStockBySkuAndLocation(argumentCollection=arguments);
@@ -316,7 +316,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			
 			
 			// Set the status to closed
-			arguments.stockAdjustment.setStockAdjustmentStatusType( getTypeService().getTypeBySystemCode("sastClosed") );
+			arguments.stockAdjustment.setStockAdjustmentStatusType( getSettingService().getTypeBySystemCode("sastClosed") );
 		}
 		
 		return arguments.stockAdjustment;

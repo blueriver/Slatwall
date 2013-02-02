@@ -368,14 +368,14 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	public any function getOrderItemType() {
 		if( !structKeyExists(variables, "orderItemType") ) {
-			variables.orderItemType = getService("typeService").getTypeBySystemCode("oitSale");
+			variables.orderItemType = getService("settingService").getTypeBySystemCode("oitSale");
 		}
 		return variables.orderItemType;
 	}
 	
 	public any function getOrderItemStatusType() {
 		if( !structKeyExists(variables, "orderItemStatusType") ) {
-			variables.orderItemStatusType = getService("typeService").getTypeBySystemCode("oistNew");
+			variables.orderItemStatusType = getService("settingService").getTypeBySystemCode("oistNew");
 		}
 		return variables.orderItemStatusType;
 	}
