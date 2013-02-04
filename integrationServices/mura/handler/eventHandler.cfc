@@ -53,7 +53,7 @@
 				syncMuraCategories( $=arguments.$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID );
 				
 				// Sync all missing accounts
-				syncMuraAccounts( $=arguments.$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID, accountSyncType=getPluginConfig().getSetting("accountSyncType"), superUserSyncFlag=getPluginConfig().getSetting("superUserSyncFlag") );
+				syncMuraAccounts( accountSyncType=getPluginConfig().getSetting("accountSyncType"), superUserSyncFlag=getPluginConfig().getSetting("superUserSyncFlag") );
 				
 			}
 		}
@@ -62,24 +62,29 @@
 		// ========================== FRONTENT EVENT HOOKS =================================
 		
 		public void function onSiteRequestStart(required any $) {
-			writeLog(file="Slatwall", text="Mura Integration - onSiteRequestStart() called");
 			// Call the Slatwall Event Handler that gets the request setup
 			getSlatwallApplication().setupGlobalRequest();
 			
 			// Setup the newly create slatwallScope into the muraScope
 			arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 			
-			// Check to see if the current mura user is logged in, and if we should automatically login the slatwall account
-			if(getPluginConfig().getSetting("accountSyncType") != "none" && !$.slatwall.getAccount().getLoggedInFlag() && $.currentUser().isLoggedIn()) {
-				/*
-				if(getPluginConfig().getSetting("accountSyncType") == "all") {
-					loginMuraAccount($);
-				} else if (getPluginConfig().getSetting("accountSyncType") == "systemUserOnly") {
-					loginMuraAccount($);
-				} else if (getPluginConfig().getSetting("accountSyncType") == "siteUserOnly") {
-					loginMuraAccount($);
-				}
-				*/
+			// Check to see if the current mura user is logged in (or logged out), and if we should automatically login/logout the slatwall account
+			if( getPluginConfig().getSetting("accountSyncType") != "none"
+					&& !$.slatwall.getLoggedInFlag()
+					&& $.currentUser().isLoggedIn()
+					&& (
+						getPluginConfig().getSetting("accountSyncType") == "all"
+						|| (getPluginConfig().getSetting("accountSyncType") == "systemUserOnly" && $.currentUser().getUserBean().getType() eq 2) 
+						|| (getPluginConfig().getSetting("accountSyncType") == "siteUserOnly" && $.currentUser().getUserBean().getType() eq 1)
+					)) {
+						
+				loginCurrentMuraUser($);
+			} else if ($.slatwall.getLoggedInFlag()
+					&& !$.currentUser().isLoggedIn()
+					&& !isNull($.slatwall.getSession().getAccountAuthentication().getIntegration())
+					&& $.slatwall.getSession().getAccountAuthentication().getIntegration().getIntegrationPackage() eq "mura") {
+						
+				logoutCurrentMuraUser($);
 			}
 		}
 		
@@ -386,11 +391,9 @@
 	</cffunction>
 	
 	<cffunction name="syncMuraAccounts">
-		<cfargument name="$" type="any" required="true" />
-		<cfargument name="slatwallSite" type="any" required="true" />
-		<cfargument name="muraSiteID" type="string" required="true" />
 		<cfargument name="accountSyncType" type="string" required="true" />
 		<cfargument name="superUserSyncFlag" type="boolean" required="true" />
+		<cfargument name="muraUserID" type="string" />
 		
 		<cfif arguments.accountSyncType neq "none">
 			<cfset var missingUsersQuery = "" />
@@ -407,13 +410,17 @@
 				FROM
 					tusers
 				WHERE
-					NOT EXISTS( SELECT cmsAccountID FROM SlatwallAccount WHERE SlatwallAccount.cmsAccountID = tusers.userID )
-				  AND
 					tusers.type = <cfqueryparam cfsqltype="cf_sql_integer" value="2" />
 				<cfif arguments.accountSyncType eq "systemUserOnly">
 					AND tusers.isPublic = <cfqueryparam cfsqltype="cf_sql_integer" value="0" /> 
 				<cfelseif arguments.accountSyncType eq "siteUserOnly">
 					AND tusers.isPublic = <cfqueryparam cfsqltype="cf_sql_integer" value="1" />
+				</cfif>
+				
+				<cfif structKeyExists(arguments, "userID") and len(arguments.muraUserID)>
+					AND tusers.userID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.muraUserID#" />
+				<cfelse>
+					AND NOT EXISTS( SELECT cmsAccountID FROM SlatwallAccount WHERE SlatwallAccount.cmsAccountID = tusers.userID )
 				</cfif>
 			</cfquery>
 			
@@ -490,24 +497,40 @@
 					) VALUES (
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#getSlatwallScope().createHibachiUUID()#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#muraIntegrationQuery.integrationID#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#getMuraIntegrationID()#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />
 					)
 				</cfquery>
-				<!---
-						UserID,
-						S2,
-						Fname,
-						Lname,
-						Email,
-						Company,
-						MobilePhone,
-						isPublic
-				--->
 			</cfloop>
-			
 		</cfif>
+	</cffunction>
+	
+	<cffunction name="loginCurrentMuraUser">
+		<cfargument name="$" />
 		
+		<cfset syncMuraAccounts(accountSyncType="all", superUserSyncFlag=getPluginConfig().getSetting("superUserSyncFlag"), muraUserID=$.currentUser('userID')) />
+		<cfset var account = $.slatwall.getService("accountService").getAccountByCMSAccountID($.currentUser('userID')) />
+		<cfset var accountAuth = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa WHERE aa.integration.integrationID = ? AND aa.account.accountID = ?", [getMuraIntegrationID(), account.getAccountID()]) />
+		<cfif !isNull(account) && arrayLen(accountAuth)>
+			<cfset $.slatwall.getService("hibachiSessionService").loginAccount(account=account, accountAuthentication=accountAuth[1]) />
+		</cfif>
+	</cffunction>
+	
+	<cffunction name="logoutCurrentMuraUser">
+		<cfargument name="$" />
+		
+		<cfset $.slatwall.getService("hibachiSessionService").logoutAccount() />
+	</cffunction>
+	
+	<cffunction name="getMuraIntegrationID">
+		<cfif not structKeyExists(variables, "muraIntegrationID")>
+			<cfset var muraIntegrationQuery = "" />
+			<cfquery name="muraIntegrationQuery">
+				SELECT integrationID FROM SlatwallIntegration WHERE integrationPackage = <cfqueryparam cfsqltype="cf_sql_varchar" value="mura" />
+			</cfquery>
+			<cfset variables.muraIntegrationID = muraIntegrationQuery.integrationID />
+		</cfif>
+		<cfreturn variables.muraIntegrationID />
 	</cffunction>
 </cfcomponent>
 
