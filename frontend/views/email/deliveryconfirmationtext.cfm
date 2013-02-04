@@ -36,20 +36,30 @@
 Notes:
 
 --->
-<cfparam name="orderDelivery" type="any" />
+<cfparam name="$" type="any" />
+<cfparam name="orderFulfillment" type="any" />
+
+<!--- Currently setup to only send the most recent delivery confirmation --->
+<cfset local.orderDeliveries = orderFulfillment.getOrder().getOrderDeliveries() />
+<cfset local.orderDelivery = local.orderDeliveries[1] />
+<cfloop array="#local.orderDeliveries#" index="local.thisOrderDelivery" >
+	<cfif local.orderDelivery.getCreatedDateTime() LT local.thisOrderDelivery.getCreatedDateTime()>
+		<cfset local.orderDelivery = local.thisOrderDelivery />
+	</cfif>
+</cfloop>
 
 <cfoutput>
-Order Number: #orderDelivery.getOrder().getOrderNumber()#
-Order Placed: #DateFormat(orderDelivery.getOrder().getOrderOpenDateTime(), "DD/MM/YYYY")# - #TimeFormat(orderDelivery.getOrder().getOrderOpenDateTime(), "short")#
-Customer: #orderDelivery.getOrder().getAccount().getFirstName()# #orderDelivery.getOrder().getAccount().getLastName()#
+Order Number: #local.orderDelivery.getOrder().getOrderNumber()#
+Order Placed: #DateFormat(local.orderDelivery.getOrder().getOrderOpenDateTime(), "DD/MM/YYYY")# - #TimeFormat(local.orderDelivery.getOrder().getOrderOpenDateTime(), "short")#
+Customer: #local.orderDelivery.getOrder().getAccount().getFirstName()# #local.orderDelivery.getOrder().getAccount().getLastName()#
 
-<cfif !isNull(orderDelivery.getTrackingNumber()) && len(orderDelivery.getTrackingNumber())>
-Tracking: #orderDelivery.getTrackingNumber()#
+<cfif !isNull(local.orderDelivery.getTrackingNumber()) && len(local.orderDelivery.getTrackingNumber())>
+Tracking: #local.orderDelivery.getTrackingNumber()#
 </cfif>
 
 Items:
 ===========================================================================
-<cfloop array="#orderDelivery.getOrderDeliveryItems()#" index="deliveryItem">
+<cfloop array="#local.orderDelivery.getOrderDeliveryItems()#" index="deliveryItem">
 #deliveryItem.getOrderItem().getSku().getProduct().getTitle()#
 <cfif len(deliveryItem.getOrderItem().getSku().displayOptions())>#deliveryItem.getOrderItem().getSku().displayOptions()#</cfif>
 #deliveryItem.getOrderItem().getFormattedValue('price', 'currency')# | #NumberFormat(deliveryItem.getOrderItem().getQuantity())# | #deliveryItem.getOrderItem().getFormattedValue('extendedPrice', 'currency')#
