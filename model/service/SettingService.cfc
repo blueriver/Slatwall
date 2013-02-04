@@ -48,7 +48,7 @@ globalEncryptionKeySize
 	<cfproperty name="currencyService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="locationService" type="any" />
-	<cfproperty name="measurementUnitService" type="any" />
+	<cfproperty name="measurementService" type="any" />
 	<cfproperty name="paymentService" type="any" />
 	<cfproperty name="siteService" type="any" />
 	<cfproperty name="taxService" type="any" />
@@ -263,7 +263,7 @@ globalEncryptionKeySize
 					arrayPrepend(options, {name='Internal', value='internal'});
 					return options;
 				case "globalWeightUnitCode": case "skuShippingWeightUnitCode":
-					var optionSL = getMeasurementUnitService().getMeasurementUnitSmartList();
+					var optionSL = getMeasurementService().getMeasurementUnitSmartList();
 					optionSL.addFilter('measurementType', 'weight');
 					optionSL.addSelect('unitName', 'name');
 					optionSL.addSelect('unitCode', 'value');

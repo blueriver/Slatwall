@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.typeSmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.typeSmartList#" showCreate="false" />
+	<cf_HibachiEntityActionBar type="listing" object="#rc.typeSmartList#" showCreate="false" />
 	
 	<cf_HibachiListingDisplay smartList="#rc.typeSmartList#"
 							   recordDetailModal=true

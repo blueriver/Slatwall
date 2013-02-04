@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.subscriptionBenefit#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.subscriptionBenefit#" edit="#rc.edit#" />
+	<cf_HibachiEntityDetailForm object="#rc.subscriptionBenefit#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.subscriptionBenefit#" edit="#rc.edit#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -58,6 +58,6 @@ Notes:
 		</cf_HibachiTabGroup>
 
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>
 

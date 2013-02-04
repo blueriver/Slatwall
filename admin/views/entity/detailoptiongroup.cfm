@@ -40,10 +40,10 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.optiongroup#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.optiongroup#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#">
 			<cf_HibachiActionCaller action="admin:entity.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="list" modal=true />
-		</cf_HibachiCrudActionBar>
+		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -58,5 +58,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/optiongrouptabs/description" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

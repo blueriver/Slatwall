@@ -41,8 +41,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.promotioncode#" saveAction="admin:entity.savepromotioncode" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:entity.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
+	<cf_HibachiEntityDetailForm object="#rc.promotioncode#" saveAction="admin:entity.savepromotioncode" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" backAction="admin:entity.detailpromotion" backQueryString="promotionID=#rc.promotion.getPromotionID()#" />
 		
 		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
@@ -58,5 +58,5 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

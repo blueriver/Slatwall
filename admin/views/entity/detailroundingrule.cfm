@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.roundingRule#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.roundingRule#" />
+	<cf_HibachiEntityDetailForm object="#rc.roundingRule#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.roundingRule#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -51,5 +51,5 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

@@ -621,14 +621,14 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	public any function getOrderStatusType() {
 		if(isNull(variables.orderStatusType)) {
-			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');
+			variables.orderStatusType = getService("settingService").getTypeBySystemCode('ostNotPlaced');
 		}
 		return variables.orderStatusType;
 	}
 	
 	public any function getOrderType() {
 		if(isNull(variables.orderType)) {
-			variables.orderType = getService("typeService").getTypeBySystemCode('otSalesOrder');
+			variables.orderType = getService("settingService").getTypeBySystemCode('otSalesOrder');
 		}
 		return variables.orderType;
 	}

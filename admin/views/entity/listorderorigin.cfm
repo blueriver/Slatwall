@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.orderOriginSmartList#" createModal="true" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.orderOriginSmartList#" createModal="true" />
 
 <cf_HibachiListingDisplay smartList="#rc.orderOriginSmartList#"
 		recordEditAction="admin:entity.editorderorigin"

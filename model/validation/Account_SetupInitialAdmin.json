@@ -2,9 +2,9 @@
 	"properties":{
 		"firstName":			[{"required":true}],
 		"lastName":				[{"required":true}],
-		"emailAddress":			[{"required":true,"type":"email","matchProperty":"emailAddressConfirm"}],
-		"emailAddressConfirm":	[{"required":true,"type":"email"}],
-		"password":				[{"required":true,"min":4,"matchProperty":"passwordConfirm"}],
-		"passwordConfirm":		[{"required":true}],
+		"emailAddress":			[{"required":true,"dataType":"email","eqProperty":"emailAddressConfirm"}],
+		"emailAddressConfirm":	[{"required":true,"dataType":"email"}],
+		"password":				[{"required":true,"minLength":6,"eqProperty":"passwordConfirm"}],
+		"passwordConfirm":		[{"required":true}]
 	}
 }

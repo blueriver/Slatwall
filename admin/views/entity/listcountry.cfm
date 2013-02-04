@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.countrySmartList" type="any" />
 
-<cf_HibachiCrudActionBar type="listing" object="#rc.countrySmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.countrySmartList#" />
 
 <cf_HibachiListingDisplay smartList="#rc.countrySmartList#" recordEditAction="admin:entity.editcountry">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="countryName" search="true" />

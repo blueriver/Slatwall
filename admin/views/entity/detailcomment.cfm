@@ -53,8 +53,8 @@ Notes:
 </cfloop>
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.comment#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString###tabComments">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.comment#" />
+	<cf_HibachiEntityDetailForm object="#rc.comment#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString###tabComments">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.comment#" />
 		
 		<!--- Only Runs if new --->
 		<Cfif rc.comment.isNew()>#local.hiddenKeyFields#</cfif>
@@ -71,5 +71,5 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

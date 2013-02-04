@@ -74,7 +74,7 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	
     public array function getAccessTypeOptions() {
 		if(!structKeyExists(variables, "accessTypeOptions")) {
-			var smartList = getService("typeService").getTypeSmartList();
+			var smartList = getService("settingService").getTypeSmartList();
 			smartList.addSelect(propertyIdentifier="type", alias="name");
 			smartList.addSelect(propertyIdentifier="typeID", alias="value");
 			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="subscriptionAccessType");

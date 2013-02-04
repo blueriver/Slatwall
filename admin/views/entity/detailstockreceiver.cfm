@@ -41,9 +41,9 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.stockReceiver#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.stockReceiver#" edit="#rc.edit#">
-		</cf_HibachiCrudActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.stockReceiver#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.stockReceiver#" edit="#rc.edit#">
+		</cf_HibachiEntityActionBar>
 			
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -55,5 +55,5 @@ Notes:
 		<cf_HibachiTabGroup object="#rc.stockReceiver#">
 			<cf_HibachiTab view="admin:entity/stockreceivertabs/stockreceiveritems" />
 		</cf_HibachiTabGroup>
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

@@ -56,8 +56,6 @@
 				// Remove any Many-to-Many relationships
 				arguments.entity.removeAllManyToManyRelationships();
 				
-				getService("settingService").removeAllEntityRelatedSettings( entity=arguments.entity );
-				
 				// Call delete in the DAO
 				getHibachiDAO().delete(target=arguments.entity);
 				

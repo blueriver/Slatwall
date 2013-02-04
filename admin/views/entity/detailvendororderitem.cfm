@@ -43,7 +43,7 @@ Notes:
 <cfoutput>
 	
 	
-	<cf_HibachiCrudDetailForm object="#rc.vendorOrderItem#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.vendorOrderItem#" edit="#rc.edit#">
 		<input type="hidden" name="vendorOrder.vendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
 		<input type="hidden" name="returnAction" value="admin:entity.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" />
 
@@ -56,5 +56,5 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

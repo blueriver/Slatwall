@@ -36,8 +36,7 @@
 Notes:
 
 --->
-
-<cfcomponent extends="Slatwall.org.Hibachi.HibachiUtilityService" accessors="true">
+<cfcomponent output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiUtilityService">
 	
 	<cfproperty name="settingService" type="any" />
 	
@@ -94,7 +93,7 @@ Notes:
 		}
 		
 		private string function getEncryptionKeyLocation() {
-			return setting("globalEncryptionKeyLocation") NEQ "" ? getSettingService().getSettingValue("globalEncryptionKeyLocation") : expandPath('/#getApplicationValue('applicationKey')#/custom/config/');
+			return getSettingService().getSettingValue("globalEncryptionKeyLocation") NEQ "" ? getSettingService().getSettingValue("globalEncryptionKeyLocation") : expandPath('/#getApplicationValue('applicationKey')#/custom/config/');
 		}
 		
 	</cfscript>

@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.subscriptionTermSmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.subscriptionTermSmartList#" />
 
 <cf_HibachiListingDisplay smartList="#rc.subscriptionTermSmartList#"
 						recordDetailAction="admin:entity.detailsubscriptionterm"

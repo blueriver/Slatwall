@@ -44,7 +44,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallProcessForm>
 		
-		<cf_HibachiCrudActionBar type="process" />
+		<cf_HibachiEntityActionBar type="process" />
 		
 		<input type="hidden" name="productID" value="#rc.processProductSmartList.getRecords()[1].getProductID()#" />
 

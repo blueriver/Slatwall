@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.integration#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.integration#" deleteAction="" />
+	<cf_HibachiEntityDetailForm object="#rc.integration#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.integration#" deleteAction="" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -63,5 +63,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/integrationtabs/paymenttest" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

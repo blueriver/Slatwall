@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.orderItem#" edit="true" saveaction="admin:entity.addOrderItem">
+	<cf_HibachiEntityDetailForm object="#rc.orderItem#" edit="true" saveaction="admin:entity.addOrderItem">
 		
 		<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
 		
@@ -105,7 +105,7 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>
 <script type="text/javascript">
 	jQuery(document).ready(function(e){

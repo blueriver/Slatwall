@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.currencySmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.currencySmartList#" />
+	<cf_HibachiEntityActionBar type="listing" object="#rc.currencySmartList#" />
 	
 	<cf_HibachiListingDisplay smartList="#rc.currencySmartList#"
 							   recordDetailAction="admin:entity.detailcurrency"

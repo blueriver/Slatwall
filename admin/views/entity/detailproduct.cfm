@@ -40,15 +40,15 @@ Notes:
 <cfparam name="rc.edit" type="boolean" default="false" />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.product#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.product#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.product#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.product#" edit="#rc.edit#">
 			<cf_HibachiActionCaller action="admin:main.createimage" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:entity.detailproduct" type="list" modal=true />
 			<li class="divider"></li>
 			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="updateSkus" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addOptionGroup" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addOption" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addSubscriptionTerm" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
-		</cf_HibachiCrudActionBar>
+		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList divClass="span6">
@@ -79,6 +79,6 @@ Notes:
 			<cf_HibachiTab view="admin:entity/producttabs/skusettings" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 
 </cfoutput>

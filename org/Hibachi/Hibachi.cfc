@@ -47,7 +47,7 @@ component extends="FW1.framework" {
 	variables.framework.trace = false;
 	variables.framework.routes = [
 		{ "$GET/api/:entityName/:entityID" = "/admin:api/get/entityName/:entityName/entityID/:entityID"},
-		{ "$GET/api/:entityName/" = "/admin:api/post/entityName/:entityName/"}
+		{ "$GET/api/:entityName/" = "/admin:api/get/entityName/:entityName/"}
 	];
 	
 	// Hibachi Setup

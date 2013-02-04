@@ -39,12 +39,12 @@ Notes:
 <cfparam name="rc.fulfillmentMethod" type="any" />
 <cfparam name="rc.edit" type="boolean" default="false" />
 
-<cf_HibachiCrudDetailForm object="#rc.fulfillmentMethod#" edit="#rc.edit#">
-	<cf_HibachiCrudActionBar type="detail" object="#rc.fulfillmentMethod#" edit="#rc.edit#">
+<cf_HibachiEntityDetailForm object="#rc.fulfillmentMethod#" edit="#rc.edit#">
+	<cf_HibachiEntityActionBar type="detail" object="#rc.fulfillmentMethod#" edit="#rc.edit#">
 		<cfif rc.fulfillmentMethod.getFulfillmentMethodType() eq "shipping">
 			<cf_HibachiActionCaller action="admin:entity.createshippingmethod" queryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#" type="list" />
 		</cfif>
-	</cf_HibachiCrudActionBar>
+	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiDetailHeader>
 		<cf_HibachiPropertyList>
@@ -61,4 +61,4 @@ Notes:
 		<cf_HibachiTab view="admin:entity/fulfillmentmethodtabs/fulfillmentsettings">
 	</cf_HibachiTabGroup>
 
-</cf_HibachiCrudDetailForm>
+</cf_HibachiEntityDetailForm>

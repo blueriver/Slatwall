@@ -77,7 +77,9 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Populate the account with the correct values that have been previously validated
 		arguments.account.setFirstName( processObject.getFirstName() );
 		arguments.account.setLastName( processObject.getLastName() );
-		arguments.account.setCompany( processObject.getCompany() );
+		if(!isNull(processObject.getCompany())) {
+			arguments.account.setCompany( processObject.getCompany() );	
+		}
 		arguments.account.setSuperUserFlag( 1 );
 		
 		// Setup the email address

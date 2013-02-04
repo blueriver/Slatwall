@@ -43,7 +43,7 @@ Notes:
 </cfsilent>
 
 <cfoutput>
-	<cf_HibachiCrudActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:entity.editvendororder" />
+	<cf_HibachiEntityActionBar type="listing" object="#rc.vendorOrderSmartList#" createModal="true" createReturnAction="admin:entity.editvendororder" />
 	
 	<cf_HibachiListingDisplay smartList="#rc.vendorOrderSmartList#"
 							   recordDetailAction="admin:entity.detailvendororder"

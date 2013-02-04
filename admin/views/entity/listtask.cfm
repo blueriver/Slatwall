@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 
-	<cf_HibachiCrudActionBar type="listing" object="#rc.taskSmartList#" createmodal="false"/>
+	<cf_HibachiEntityActionBar type="listing" object="#rc.taskSmartList#" createmodal="false"/>
 
 	<cf_HibachiListingDisplay smartlist="#rc.taskSmartList#" 
 	                           recordeditaction="admin:entity.edittask" 

@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.brandSmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.brandSmartList#" />
 
 <cf_HibachiListingDisplay smartList="#rc.brandSmartList#"
 						recordDetailAction="admin:entity.detailbrand"

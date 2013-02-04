@@ -84,7 +84,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	
 	public array function getAttributeTypeOptions() {
 		if(!structKeyExists(variables, "attributeTypeOptions")) {
-			var smartList = getService("typeService").getTypeSmartList();
+			var smartList = getService("settingService").getTypeSmartList();
 			smartList.addSelect(propertyIdentifier="type", alias="name");
 			smartList.addSelect(propertyIdentifier="typeID", alias="value");
 			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="attributeType"); 
@@ -96,7 +96,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
    
     public array function getValidationTypeOptions() {
 		if(!structKeyExists(variables, "validationTypeOptions")) {
-			var smartList = getService("typeService").getTypeSmartList();
+			var smartList = getService("settingService").getTypeSmartList();
 			smartList.addSelect(propertyIdentifier="type", alias="name");
 			smartList.addSelect(propertyIdentifier="typeID", alias="value");
 			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="validationType"); 

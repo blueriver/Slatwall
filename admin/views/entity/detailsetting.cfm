@@ -40,19 +40,20 @@ Notes:
 <cfparam name="rc.settingName" type="string">
 <cfparam name="rc.edit" type="boolean">
 
-<cfset local.returnActionQueryString = "" />
 <cfset local.hiddenKeyFields = "" />
+<cfset local.redirectQS = "" />
 <cfset local.hasRelationshipKey = false />
 
 <cfloop collection="#rc#" item="local.key" >
 	<cfif local.key neq "settingID" and right(local.key, 2) eq "ID" and isSimpleValue(rc[local.key]) and len(rc[local.key]) gt 30>
 		<cfset local.hasRelationshipKey = true />
-		<cfset local.returnActionQueryString = listAppend(local.returnActionQueryString, '#local.key#=#rc[local.key]#', '&') />
+		<cfset local.redirectQS = listAppend(local.redirectQS, '#local.key#=#rc[local.key]#', '&') />
 		<cfif local.key eq "contentID">
 			<cfset rc.content = $.slatwall.getService("contentService").getContent(rc.contentID) />
 			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="cmsContentID" value="#rc.content.getCMSContentID()#" />', chr(13)) />	
 		<cfelse>
-			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#left(local.key, len(local.key)-2)#.#local.key#" value="#rc[local.key]#" />', chr(13)) />	
+			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#left(local.key, len(local.key)-2)#.#local.key#" value="#rc[local.key]#" />', chr(13)) />
+			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#local.key#" value="#rc[local.key]#" />', chr(13)) />	
 		</cfif>
 	</cfif>
 </cfloop>
@@ -61,8 +62,8 @@ Notes:
 <cfset rc.setting.setSettingName(rc.settingName) />
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.setting#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.setting#" />
+	<cf_HibachiEntityDetailForm object="#rc.setting#" edit="#rc.edit#" fRedirectQS="#local.redirectQS#" sRedirectQS="#local.redirectQS#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.setting#" />
 		
 		<input type="hidden" name="settingName" value="#rc.settingName#" />
 		#local.hiddenKeyFields#
@@ -76,8 +77,9 @@ Notes:
 				</cfif>
 			</cf_HibachiPropertyList>
 			<cfif !rc.setting.isNew() and local.hasRelationshipKey>
-				<cf_HibachiActionCaller action="admin:entity.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&returnAction=#request.context.returnAction#&#local.returnActionQueryString#" class="btn btn-danger" />
+				<!--- &fRedirectQS=#local.redirectQS#&sRedirectAction=#rc.entityActionDetails.sRedirectAction#&fRedirectAction=#rc.entityActionDetails.fRedirectAction# --->
+				<cf_HibachiActionCaller action="admin:entity.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&#local.redirectQS#&redirectAction=#rc.entityActionDetails.sRedirectAction#" class="btn btn-danger" />
 			</cfif>
 		</cf_HibachiDetailHeader>
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

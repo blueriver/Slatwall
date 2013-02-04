@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiCrudActionBar type="listing" object="#rc.stockReceiverSmartList#" showCreate="false" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.stockReceiverSmartList#" showCreate="false" />
 
 <cf_HibachiListingDisplay smartList="#rc.stockReceiverSmartList#"
 						   recordDetailAction="admin:warehouse.detailstockreceiver"

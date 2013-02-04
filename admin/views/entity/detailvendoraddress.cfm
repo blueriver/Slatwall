@@ -41,11 +41,11 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.vendor#" saveAction="admin:entity.savevendor" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.vendor#" saveAction="admin:entity.savevendor" edit="#rc.edit#">
 		<input type="hidden" name="vendorAddresses[1].vendorAddressID" value="#rc.vendorAddress.getVendorAddressID()#" />
 		<cf_SlatwallAddressDisplay address="#rc.vendorAddress.getAddress()#" fieldNamePrefix="vendorAddresses[1].address." showCompany="false" edit="#rc.edit#">
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>
 
 

@@ -47,12 +47,12 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.promotionperiod#"
+	<cf_HibachiEntityDetailForm object="#rc.promotionperiod#"
 						   saveAction="admin:entity.savepromotionperiod"
 						   saveActionQueryString="promotionID=#rc.promotion.getPromotionID()#"
 						   edit="#rc.edit#">
 						   	   
-		<cf_HibachiCrudActionBar type="detail" object="#rc.promotionPeriod#" edit="#rc.edit#"
+		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionPeriod#" edit="#rc.edit#"
 							  backAction="admin:entity.detailpromotion"
 							  backQueryString="promotionID=#rc.promotion.getPromotionID()#"
 							  cancelAction="admin:entity.detailpromotion"
@@ -69,7 +69,7 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 	
 	<cf_HibachiTabGroup object="#rc.promotionperiod#">
 			<cf_HibachiTab view="admin:entity/promotionperiodtabs/promotionrewards" />

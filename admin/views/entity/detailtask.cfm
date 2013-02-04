@@ -40,10 +40,10 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.task#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.task#">
+	<cf_HibachiEntityDetailForm object="#rc.task#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.task#">
                 <cf_HibachiActionCaller action="admin:entity.processtask" querystring="taskID=#rc.task.getTaskID()#" type="list" icon="cog" modal="true" >
-        </cf_HibachiCrudActionBar>    
+        </cf_HibachiEntityActionBar>    
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -61,5 +61,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/tasktabs/taskhistory" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

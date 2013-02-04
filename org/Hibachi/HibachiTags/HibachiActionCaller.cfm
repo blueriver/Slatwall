@@ -59,8 +59,13 @@
 			<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
 				<cfset attributes.text = replace(attributes.hibachiScope.rbKey('admin.define.delete_nav'), "${itemEntityName}", attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
 			</cfif>
-			
+		
 		</cfif>
+		
+		<cfif right(attributes.text, 8) eq "_missing" >
+			<cfset attributes.text = attributes.hibachiScope.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
+		</cfif>
+		
 	</cfif>
 	
 	<cfif attributes.title eq "">

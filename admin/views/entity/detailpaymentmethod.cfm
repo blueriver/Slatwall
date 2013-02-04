@@ -45,8 +45,8 @@ Notes:
 		<cfset rc.paymentMethod.setPaymentMethodType(rc.paymentMethodType) />
 	</cfif>
 	
-	<cf_HibachiCrudDetailForm object="#rc.paymentMethod#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.paymentMethod#" edit="#rc.edit#" />
+	<cf_HibachiEntityDetailForm object="#rc.paymentMethod#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.paymentMethod#" edit="#rc.edit#" />
 	
 		<input type="hidden" name="paymentMethodType" value="#rc.paymentMethod.getPaymentMethodType()#" />
 		
@@ -66,5 +66,5 @@ Notes:
 		<cfif not rc.paymentMethod.isNew()>
 			<cfoutput>#view("admin:entity/paymentmethodtypes/#lcase(rc.paymentMethod.getPaymentMethodType())#")#</cfoutput>
 		</cfif>
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

@@ -48,11 +48,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="paymentService";
 	property name="priceGroupService";
 	property name="promotionService";
+	property name="settingService";
 	property name="shippingService";
-	property name="taxService";
 	property name="stockService";
 	property name="subscriptionService";
-	property name="typeService";
+	property name="taxService";
 	
 	// ===================== START: Logical Methods ===========================
 	
@@ -770,8 +770,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// Create a new return order
 				var returnOrder = this.newOrder();
 				returnOrder.setAccount( arguments.order.getAccount() );
-				returnOrder.setOrderType( getTypeService().getTypeBySystemCode("otReturnOrder") );
-				returnOrder.setOrderStatusType( getTypeService().getTypeBySystemCode("ostNew") );
+				returnOrder.setOrderType( getSettingService().getTypeBySystemCode("otReturnOrder") );
+				returnOrder.setOrderStatusType( getSettingService().getTypeBySystemCode("ostNew") );
 				returnOrder.setReferencedOrder( arguments.order );
 				
 				var returnLocation = getLocationService().getLocation( arguments.data.returnLocationID );
@@ -797,8 +797,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							
 							// Create a new return orderItem
 							var orderItem = this.newOrderItem();
-							orderItem.setOrderItemType( getTypeService().getTypeBySystemCode('oitReturn') );
-							orderItem.setOrderItemStatusType( getTypeService().getTypeBySystemCode('oistNew') );
+							orderItem.setOrderItemType( getSettingService().getTypeBySystemCode('oitReturn') );
+							orderItem.setOrderItemStatusType( getSettingService().getTypeBySystemCode('oistNew') );
 							
 							orderItem.setReferencedOrderItem( originalOrderItem );
 							orderItem.setOrder( returnOrder );
@@ -822,7 +822,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var referencedOrderPayment = this.getOrderPayment(arguments.data.referencedOrderPaymentID);
 				if(!isNull(referencedOrderPayment)) {
 					var newOrderPayment = referencedOrderPayment.duplicate();
-					newOrderPayment.setOrderPaymentType( getTypeService().getTypeBySystemCode('optCredit') );
+					newOrderPayment.setOrderPaymentType( getSettingService().getTypeBySystemCode('optCredit') );
 					newOrderPayment.setReferencedOrderPayment( referencedOrderPayment );
 					newOrderPayment.setAmount( returnOrder.getTotal()*-1 );
 					newOrderPayment.setOrder( returnOrder );
@@ -871,12 +871,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// CONTEXT: placeOnHold
 		} else if (arguments.processContext == "placeOnHold") {
 		
-			arguments.order.setOrderStatusType( getTypeService().getTypeBySystemCode("ostOnHold") );
+			arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostOnHold") );
 		
 		// CONTEXT: takeOffHold	
 		} else if (arguments.processContext == "takeOffHold") {
 			
-			arguments.order.setOrderStatusType( getTypeService().getTypeBySystemCode("ostProcessing") );
+			arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostProcessing") );
 			updateOrderStatus(arguments.order);
 			
 		// CONTEXT: closeOrder
@@ -922,7 +922,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			
 			// Set the status code to canceld
-			arguments.order.setOrderStatusType( getTypeService().getTypeBySystemCode("ostCanceled") );
+			arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostCanceled") );
 			
 		// CONTEXT: cancelOrder
 		} else if (arguments.processContext == "closeOrder") {
@@ -1352,11 +1352,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// We can check to see if all the items have been delivered and the payments have all been received then we can close this order
 			if(arguments.order.getPaymentAmountReceivedTotal() == arguments.order.getTotal() && arguments.order.getQuantityUndelivered() == 0 && arguments.order.getQuantityUnreceived() == 0)	{
-				arguments.order.setOrderStatusType(  getTypeService().getTypeBySystemCode("ostClosed") );
+				arguments.order.setOrderStatusType(  getSettingService().getTypeBySystemCode("ostClosed") );
 				
 			// The default case is just to set it to processing
 			} else {
-				arguments.order.setOrderStatusType(  getTypeService().getTypeBySystemCode("ostProcessing") );
+				arguments.order.setOrderStatusType(  getSettingService().getTypeBySystemCode("ostProcessing") );
 			}
 		}
 		
@@ -1375,15 +1375,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// If the quantityUndelivered is set to 0 then we can mark this as fulfilled
 			if(arguments.orderItem.getQuantityUndelivered() == 0) {
-				arguments.orderItem.setOrderItemStatusType(  getTypeService().getTypeBySystemCode("oistFulfilled") );
+				arguments.orderItem.setOrderItemStatusType(  getSettingService().getTypeBySystemCode("oistFulfilled") );
 				
 			// If the sku is setup to track inventory and the qoh is 0 then we can set the status to 'backordered'
 			} else if(arguments.orderItem.getSku().setting('skuTrackInventoryFlag') && arguments.orderItem.getSku().getQuantity('qoh') == 0) {
-				arguments.orderItem.setOrderItemStatusType(  getTypeService().getTypeBySystemCode("oistBackordered") );
+				arguments.orderItem.setOrderItemStatusType(  getSettingService().getTypeBySystemCode("oistBackordered") );
 					
 			// Otherwise we just set this to 'processing' to show that the item is in limbo
 			} else {
-				arguments.orderItem.setOrderItemStatusType(  getTypeService().getTypeBySystemCode("oistProcessing") );
+				arguments.orderItem.setOrderItemStatusType(  getSettingService().getTypeBySystemCode("oistProcessing") );
 				
 			}
 		}

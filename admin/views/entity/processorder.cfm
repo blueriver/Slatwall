@@ -44,7 +44,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallProcessForm addcomment="true">
 		
-		<cf_HibachiCrudActionBar type="process" />
+		<cf_HibachiEntityActionBar type="process" />
 		
 		<cfif rc.processContext eq "addPromotionCode">
 			

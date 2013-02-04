@@ -395,7 +395,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 
 	public any function getOrderPaymentType() {
 		if( !structKeyExists(variables, "orderPaymentType") ) {
-			variables.orderPaymentType = getService("typeService").getTypeBySystemCode("optCharge");
+			variables.orderPaymentType = getService("settingService").getTypeBySystemCode("optCharge");
 		}
 		return variables.orderPaymentType;
 	}

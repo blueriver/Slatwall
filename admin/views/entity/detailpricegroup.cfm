@@ -40,10 +40,10 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
 			<cf_HibachiActionCaller action="admin:entity.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" modal="true" />
-		</cf_HibachiCrudActionBar>
+		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -58,5 +58,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/pricegrouptabs/pricegrouprates" />
 		</cf_HibachiTabGroup>
 		
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

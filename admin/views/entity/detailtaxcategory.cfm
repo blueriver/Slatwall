@@ -39,10 +39,10 @@ Notes:
 <cfparam name="rc.taxCategory" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<cf_HibachiCrudDetailForm object="#rc.taxCategory#" edit="#rc.edit#">
-	<cf_HibachiCrudActionBar type="detail" object="#rc.taxCategory#" edit="#rc.edit#">
+<cf_HibachiEntityDetailForm object="#rc.taxCategory#" edit="#rc.edit#">
+	<cf_HibachiEntityActionBar type="detail" object="#rc.taxCategory#" edit="#rc.edit#">
 		<cf_HibachiActionCaller action="admin:entity.createtaxcategoryrate" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" type="list" modal=true />
-	</cf_HibachiCrudActionBar>
+	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiDetailHeader>
 		<cf_HibachiPropertyList>
@@ -55,4 +55,4 @@ Notes:
 		<cf_HibachiTab view="admin:entity/taxcategorytabs/rates" />
 	</cf_HibachiTabGroup>
 	
-</cf_HibachiCrudDetailForm>
+</cf_HibachiEntityDetailForm>

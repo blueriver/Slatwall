@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.attributeSetSmartList" type="any" />
 
-<cf_HibachiCrudActionBar type="listing" object="#rc.attributeSetSmartList#" createmodal="true" createReturnAction="admin:entity.detailattributeset" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.attributeSetSmartList#" createmodal="true" createReturnAction="admin:entity.detailattributeset" />
 
 <cf_HibachiListingDisplay smartList="#rc.attributeSetSmartList#"
 						   recordDetailAction="admin:entity.detailattributeset"

@@ -3,6 +3,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="accountService" type="any";
 	property name="imageService" type="any";
 	property name="locationService" type="any";
+	property name="measurementService" type="any";
 	property name="optionService" type="any";
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
@@ -84,13 +85,13 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	// Measurement Unit
 	public void function editMeasurementUnit(required struct rc) {
-		rc.measurementUnit = getMeasurementUnitService().getMeasurementUnit(rc.unitCode);
+		rc.measurementUnit = getMeasurementService().getMeasurementUnit(rc.unitCode);
 		rc.edit = true;
 		getFW().setView("admin:entity.detailmeasurementunit");
 	}
 	
 	public void function detailMeasurementUnit(required struct rc) {
-		rc.measurementUnit = getMeasurementUnitService().getMeasurementUnit(rc.unitCode);
+		rc.measurementUnit = getMeasurementService().getMeasurementUnit(rc.unitCode);
 	}
 	
 	
@@ -313,7 +314,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		genericCreateMethod(entityName="StockAdjustment", rc=arguments.rc);
 		
 		// Set the type correctly
-		rc.stockAdjustment.setStockAdjustmentType( getTypeService().getTypeBySystemCode(rc.stockAdjustmentType) );
+		rc.stockAdjustment.setStockAdjustmentType( getSettingService().getTypeBySystemCode(rc.stockAdjustmentType) );
 	}
 	
 	// Task

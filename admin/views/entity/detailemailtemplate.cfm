@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiCrudDetailForm object="#rc.emailTemplate#" edit="#rc.edit#">
-		<cf_HibachiCrudActionBar type="detail" object="#rc.emailTemplate#" />
+	<cf_HibachiEntityDetailForm object="#rc.emailTemplate#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.emailTemplate#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
@@ -55,5 +55,5 @@ Notes:
 			<cf_HibachiTab view="admin:entity/emailtemplatetabs/emailsettings">
 		</cf_HibachiTabGroup>
 
-	</cf_HibachiCrudDetailForm>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>
