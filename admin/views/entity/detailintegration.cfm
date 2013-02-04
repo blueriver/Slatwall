@@ -60,7 +60,7 @@ Notes:
 		
 		<cf_HibachiTabGroup object="#rc.integration#">
 			<cf_HibachiTab view="admin:entity/integrationtabs/settings" />
-			<cf_HibachiTab view="admin:entity/integrationtabs/paymenttest" />
+			<!--- <cf_HibachiTab view="admin:entity/integrationtabs/paymenttest" /> --->
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>
