@@ -1,0 +1,6 @@
+{
+	"contexts":["save","edit","delete"],
+	"properties":{
+		"accountAddressName":		[{"contexts":"save","required":true}]
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"contexts":["save","edit","delete"],
+	"properties":{
+		"brandName":			[{"contexts":"save","required":true}],
+		"brandWebsite":			[{"contexts":"save","dataType":"url"}],
+		"urlTitle":				[{"contexts":"save","required":true,"method":"hasUniqueURLTitle"}],
+		"products":				[{"contexts":"delete","maxCollection":0}]
+	}
+}
