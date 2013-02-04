@@ -1,160 +1,160 @@
 <cfcomponent>
 	<cfscript>
 	
-	// This method is explicitly called during application reload from the conntector plugins onApplicationLoad() event
-	public void function verifySetup( required any $ ) {
-		var assignedSitesQuery = getPluginConfig().getAssignedSites();
-		var populatedSiteIDs = getPluginConfig().getCustomSetting("populatedSiteIDs");
-		
-		for(var i=1; i<=assignedSitesQuery.recordCount; i++) {
-			var cmsSiteID = assignedSitesQuery["siteid"][i];
-			var siteDetails = $.getBean("settingsBean").loadBy(siteID=cmsSiteID);
-			var cmsSiteName = siteDetails.getSite();
-			var cmsThemeName = siteDetails.getTheme();
+		// This method is explicitly called during application reload from the conntector plugins onApplicationLoad() event
+		public void function verifySetup( required any $ ) {
+			var assignedSitesQuery = getPluginConfig().getAssignedSites();
+			var populatedSiteIDs = getPluginConfig().getCustomSetting("populatedSiteIDs");
 			
-			// First lets verify that this site exists on the Slatwall site
-			var slatwallSite = getSlatwallScope().getService("siteService").getSiteByCMSSiteID( cmsSiteID, true );
-			
-			// If this is a new site, then we can set the site name
-			if(slatwallSite.isNew()) {
-				slatwallSite.setSiteName( cmsSiteName );
-				getSlatwallScope().getService("siteService").saveSite( slatwallSite );
-				slatwallSite.setCMSSiteID( cmsSiteID );
-				ormFlush();
+			for(var i=1; i<=assignedSitesQuery.recordCount; i++) {
+				var cmsSiteID = assignedSitesQuery["siteid"][i];
+				var siteDetails = $.getBean("settingsBean").loadBy(siteID=cmsSiteID);
+				var cmsSiteName = siteDetails.getSite();
+				var cmsThemeName = siteDetails.getTheme();
+				
+				// First lets verify that this site exists on the Slatwall site
+				var slatwallSite = getSlatwallScope().getService("siteService").getSiteByCMSSiteID( cmsSiteID, true );
+				
+				// If this is a new site, then we can set the site name
+				if(slatwallSite.isNew()) {
+					slatwallSite.setSiteName( cmsSiteName );
+					getSlatwallScope().getService("siteService").saveSite( slatwallSite );
+					slatwallSite.setCMSSiteID( cmsSiteID );
+					ormFlush();
+				}
+				
+				// If the plugin is set to create default pages, and this siteID has not been populated then we need to populate it with pages & templates
+				if(getPluginConfig().getSetting("createDefaultPages") && !listFindNoCase(populatedSiteIDs, cmsSiteID)) {
+					
+					// Copy views over to the template directory
+					var slatwallTemplatePath = getDirectoryFromPath(expandPath("/Slatwall/public/views/templates")); 
+					var muraTemplatePath = getDirectoryFromPath(expandPath("/muraWRM/#cmsSiteID#/includes/themes/#cmsThemeName#/templates"));
+					getSlatwallScope().getService("hibachiUtilityService").duplicateDirectory(source=slatwallTemplatePath, destination=muraTemplatePath, overwrite=false, recurse=true, copyContentExclusionList=".svn,.git");
+					
+					// Create the necessary pages
+					var productListingCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Product Listing", filename="product-listing", template="slatwall-productlisting.cfm", isNav="0" );
+					var shoppingCartCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Shopping Cart", filename="shopping-cart", template="slatwall-shoppingcart.cfm", isNav="1" );
+					var orderStatusCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Order Status", filename="order-status", template="slatwall-orderstatus.cfm", isNav="1" );
+					var orderConfirmationCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Order Confirmation", filename="order-confirmation", template="slatwall-orderconfirmation.cfm", isNav="0" );
+					var checkoutCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Checkout", filename="checkout", template="slatwall-checkout.cfm", isNav="1" );
+					var accountCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="My Account", filename="my-account", template="slatwall-account.cfm", isNav="1" );
+					var productTemplateCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Product Template", filename="product-template", template="slatwall-product.cfm", isNav="0" );
+					var productTypeTemplateCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Product Type Template", filename="producttype-template", template="slatwall-producttype.cfm", isNav="0" );
+					var brandTemplateCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Brand Template", filename="brand-template", template="slatwall-brand.cfm", isNav="0" );
+					
+					// Now that it has been populated we can add the siteID to the populated site id's list
+					getPluginConfig().setCustomSetting("populatedSiteIDs", listAppend(populatedSiteIDs, cmsSiteID));
+				}
+				
+				// Sync all missing content for the siteID
+				syncMuraContent( $=arguments.$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID );
+				
+				// Sync all missing categories
+				syncMuraCategories( $=arguments.$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID );
+				
+				// Sync all missing accounts
+				syncMuraAccounts( $=arguments.$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID, accountSyncType=getPluginConfig().getSetting("accountSyncType"), superUserSyncFlag=getPluginConfig().getSetting("superUserSyncFlag") );
+				
 			}
-			
-			// If the plugin is set to create default pages, and this siteID has not been populated then we need to populate it with pages & templates
-			if(getPluginConfig().getSetting("createDefaultPages") && !listFindNoCase(populatedSiteIDs, cmsSiteID)) {
-				
-				// Copy views over to the template directory
-				var slatwallTemplatePath = getDirectoryFromPath(expandPath("/Slatwall/public/views/templates")); 
-				var muraTemplatePath = getDirectoryFromPath(expandPath("/muraWRM/#cmsSiteID#/includes/themes/#cmsThemeName#/templates"));
-				getSlatwallScope().getService("hibachiUtilityService").duplicateDirectory(source=slatwallTemplatePath, destination=muraTemplatePath, overwrite=false, recurse=true, copyContentExclusionList=".svn,.git");
-				
-				// Create the necessary pages
-				var productListingCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Product Listing", filename="product-listing", template="slatwall-productlisting.cfm", isNav="0" );
-				var shoppingCartCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Shopping Cart", filename="shopping-cart", template="slatwall-shoppingcart.cfm", isNav="1" );
-				var orderStatusCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Order Status", filename="order-status", template="slatwall-orderstatus.cfm", isNav="1" );
-				var orderConfirmationCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Order Confirmation", filename="order-confirmation", template="slatwall-orderconfirmation.cfm", isNav="0" );
-				var checkoutCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Checkout", filename="checkout", template="slatwall-checkout.cfm", isNav="1" );
-				var accountCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="My Account", filename="my-account", template="slatwall-account.cfm", isNav="1" );
-				var productTemplateCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Product Template", filename="product-template", template="slatwall-product.cfm", isNav="0" );
-				var productTypeTemplateCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Product Type Template", filename="producttype-template", template="slatwall-producttype.cfm", isNav="0" );
-				var brandTemplateCMSID = createMuraPage( $=arguments.$, muraSiteID=cmsSiteID, pageName="Brand Template", filename="brand-template", template="slatwall-brand.cfm", isNav="0" );
-				
-				// Now that it has been populated we can add the siteID to the populated site id's list
-				getPluginConfig().setCustomSetting("populatedSiteIDs", listAppend(populatedSiteIDs, cmsSiteID));
-			}
-			
-			// Sync all missing content for the siteID
-			syncMuraContent( $=arguments.$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID );
-			
-			// Sync all missing categories
-			syncMuraCategories( $=arguments.$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID );
-			
-			// Sync all missing accounts
-			syncMuraAccounts( $=arguments.$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID, accountSyncType=getPluginConfig().getSetting("accountSyncType"), superUserSyncFlag=getPluginConfig().getSetting("superUserSyncFlag") );
-			
 		}
-	}
-	
-	
-	// ========================== FRONTENT EVENT HOOKS =================================
-	
-	public void function onSiteRequestStart(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onSiteRequestStart() called");
-		// Call the Slatwall Event Handler that gets the request setup
-		getSlatwallApplication().setupGlobalRequest();
 		
-		// Setup the newly create slatwallScope into the muraScope
-		arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
-	}
-	
-	public void function onSiteRequestEnd(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onSiteRequestEnd() called");
-		getSlatwallApplication().endHibachiLifecycle();
-	}
-	
-	public void function onRenderStart(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onRenderStart() called");
-	}
-	
-	public void function onRenderEnd(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onRenderEnd() called");
-	}
-	
-	// ========================== ADMIN EVENT HOOKS =================================
-	
-	public string function onContentTabBasicBottomRender(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onContentTabBasicBottomRender()");
-		return "<div>This is my content</div>";
-	}
-	
-	public void function onAfterCategorySave(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onAfterCategorySave() called");
-	}
-	
-	public void function onAfterCategoryDelete(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onAfterCategoryDelete() called");
-	}
-	
-	public void function onAfterContentSave(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onAfterContentSave() called");
-	}
-	
-	public void function onAfterContentDelete(required any $) {
-		writeLog(file="Slatwall", text="Mura Integration - onAfterContentDelete() called");
-	}
-	
-	
-	
-	// ========================== Private Helper Methods ==============================
-	
-	// Helper Method for doAction()
-	private string function doAction(required any action) {
-		if(!structKeyExists(url, "$")) {
-			url.$ = request.muraScope;
-		}
-		return getSlatwallApplication().doAction(arguments.action);
-	}
-	
-	// Helper method to get the Slatwall Application
-	private any function getSlatwallApplication() {
-		if(!structKeyExists(variables, "slatwallApplication")) {
-			variables.slatwallApplication = createObject("component", "Slatwall.Application");
-		}
-		return variables.slatwallApplication;
-	}
-	
-	// Helper method to get the SlatwallScope
-	private any function getSlatwallScope() {
-		return request.slatwallScope;
-	}
-	
-	// Helper method to return the mura plugin config for the slatwall-mura connector
-	private any function getPluginConfig() {
-		if(!structKeyExists(variables, "pluginConfig")) {
-			variables.pluginConfig = application.pluginManager.getConfig("slatwall-mura");
-		}
-		return variables.pluginConfig;
-	}
-	
-	// For admin request start, we call the Slatwall Event Handler that gets the request setup
-	private void function startSlatwallAdminRequest(required any $) {
-		if(!structKeyExists(request, "slatwallScope")) {
+		
+		// ========================== FRONTENT EVENT HOOKS =================================
+		
+		public void function onSiteRequestStart(required any $) {
+			writeLog(file="Slatwall", text="Mura Integration - onSiteRequestStart() called");
 			// Call the Slatwall Event Handler that gets the request setup
 			getSlatwallApplication().setupGlobalRequest();
-					
+			
 			// Setup the newly create slatwallScope into the muraScope
 			arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 		}
-	}
-	
-	// For admin request end, we call the endLifecycle
-	private void function endSlatwallAdminRequest(required any $) {
-		getSlatwallApplication().endSlatwallLifecycle();
-	}
-	
+		
+		public void function onSiteRequestEnd(required any $) {
+			writeLog(file="Slatwall", text="Mura Integration - onSiteRequestEnd() called");
+			getSlatwallApplication().endHibachiLifecycle();
+		}
+		
+		public void function onRenderStart(required any $) {
+			writeLog(file="Slatwall", text="Mura Integration - onRenderStart() called");
+		}
+		
+		public void function onRenderEnd(required any $) {
+			writeLog(file="Slatwall", text="Mura Integration - onRenderEnd() called");
+		}
+		
+		// ========================== ADMIN EVENT HOOKS =================================
+		
+		public string function onContentTabBasicBottomRender(required any $) {
+			writeLog(file="Slatwall", text="Mura Integration - onContentTabBasicBottomRender()");
+			return "<div>This is my content</div>";
+		}
+		
+		public void function onAfterCategorySave(required any $) {
+			writeLog(file="Slatwall", text="Mura Integration - onAfterCategorySave() called");
+		}
+		
+		public void function onAfterCategoryDelete(required any $) {
+			writeLog(file="Slatwall", text="Mura Integration - onAfterCategoryDelete() called");
+		}
+		
+		public void function onAfterContentSave(required any $) {
+			writeLog(file="Slatwall", text="Mura Integration - onAfterContentSave() called");
+		}
+		
+		public void function onAfterContentDelete(required any $) {
+			writeLog(file="Slatwall", text="Mura Integration - onAfterContentDelete() called");
+		}
+		
+		
+		
+		// ========================== Private Helper Methods ==============================
+		
+		// Helper Method for doAction()
+		private string function doAction(required any action) {
+			if(!structKeyExists(url, "$")) {
+				url.$ = request.muraScope;
+			}
+			return getSlatwallApplication().doAction(arguments.action);
+		}
+		
+		// Helper method to get the Slatwall Application
+		private any function getSlatwallApplication() {
+			if(!structKeyExists(variables, "slatwallApplication")) {
+				variables.slatwallApplication = createObject("component", "Slatwall.Application");
+			}
+			return variables.slatwallApplication;
+		}
+		
+		// Helper method to get the SlatwallScope
+		private any function getSlatwallScope() {
+			return request.slatwallScope;
+		}
+		
+		// Helper method to return the mura plugin config for the slatwall-mura connector
+		private any function getPluginConfig() {
+			if(!structKeyExists(variables, "pluginConfig")) {
+				variables.pluginConfig = application.pluginManager.getConfig("slatwall-mura");
+			}
+			return variables.pluginConfig;
+		}
+		
+		// For admin request start, we call the Slatwall Event Handler that gets the request setup
+		private void function startSlatwallAdminRequest(required any $) {
+			if(!structKeyExists(request, "slatwallScope")) {
+				// Call the Slatwall Event Handler that gets the request setup
+				getSlatwallApplication().setupGlobalRequest();
+						
+				// Setup the newly create slatwallScope into the muraScope
+				arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+			}
+		}
+		
+		// For admin request end, we call the endLifecycle
+		private void function endSlatwallAdminRequest(required any $) {
+			getSlatwallApplication().endSlatwallLifecycle();
+		}
+		
 	</cfscript>
 	
 	<!--- ========================== Private Logic Helpers ============================== --->
@@ -417,17 +417,23 @@
 				<!--- Create Account --->
 				<cfquery name="rs">
 					INSERT INTO SlatwallAccount (
-						accountID,
+						accountID
 						firstName,
 						lastName,
 						company,
-						cmsAccountID
+						cmsAccountID,
+						superAdminFlag
 					) VALUES (
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Fname#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Lname#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Company#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />,
+						<cfif arguments.superUserSyncFlag and missingUsersQuery.s2>
+							<cfqueryparam cfsqltype="cf_sql_bit" value="1" />	
+						<cfelse>
+							<cfqueryparam cfsqltype="cf_sql_bit" value="0" />
+						</cfif>
 					)
 				</cfquery>
 				
