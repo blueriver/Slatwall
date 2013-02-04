@@ -3,6 +3,10 @@
 <cfset creditCardRequestBean.setnameOnCreditCard("Paul John") />
 
 <cfset creditCardRequestBean.settransactionType("authorizeAndCharge") />
+<cfset creditCardRequestBean.settransactionType("authorize") />
+<cfset creditCardRequestBean.settransactionType("chargePreAuthorization") />
+
+<cfset creditCardRequestBean.setProviderTransactionID("77556") />
 
 <cfset creditCardRequestBean.setCreditCardNumber("4111111111111111") />
 

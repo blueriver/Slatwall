@@ -77,13 +77,17 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
 		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
 		
+		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "Return" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "Capture"){
+			requestData = listAppend(requestData,"PNRef=#requestBean.getProviderTransactionID()#","&");
+		}
+		
 		return requestData;
 	}
 
 	private string function getLoginNVP(){
 		var loginData = [];
 		arrayAppend(loginData,"UserName=#setting('userName')#");
-		arrayAppend(loginData,"Password=Password123");
+		arrayAppend(loginData,"Password=#setting('password')#");
 		return arrayToList(loginData,"&");
 	}
 	
@@ -92,7 +96,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 		arrayAppend(paymentData,"CardNum=#requestBean.getCreditCardNumber()#");
 		arrayAppend(paymentData,"ExpDate=#numberFormat(Left(requestBean.getExpirationMonth(),2),'00')##Right(requestBean.getExpirationYear(),2)#");
 		arrayAppend(paymentData,"CVNum=#requestBean.getSecurityCode()#");
-		arrayAppend(paymentData,"TransType=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#");
+		arrayAppend(paymentData,"TransType=#variables.transactionCodes[requestBean.getTransactionType()]#");
 		arrayAppend(paymentData,"Amount=#requestBean.getTransactionAmount()#");
 		
 		return arrayToList(paymentData,"&");
