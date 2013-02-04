@@ -2,13 +2,20 @@
 
 <cfset creditCardRequestBean.setnameOnCreditCard("Paul John") />
 
-<cfset creditCardRequestBean.settransactionType("authorize") />
+<cfset creditCardRequestBean.settransactionType("authorizeAndCharge") />
 
-<cfset creditCardRequestBean.setCreditCardNumber("411111111111111111") />
+<cfset creditCardRequestBean.setCreditCardNumber("4111111111111111") />
+
+<cfset creditCardRequestBean.setTransactionAmount("40") />
+
+<cfset creditCardRequestBean.setExpirationMonth("12") />
+<cfset creditCardRequestBean.setExpirationYear("15") />
 
 <cfset creditCardRequestBean.settransactionID(createuuid()) />
 
 <cfset response = rc.integration.getIntegrationCFC("payment").processCreditCard(creditCardRequestBean) />
-
 <cfdump var="#response#" />
+
+
+
 
