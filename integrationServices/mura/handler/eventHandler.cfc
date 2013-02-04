@@ -68,6 +68,19 @@
 			
 			// Setup the newly create slatwallScope into the muraScope
 			arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
+			
+			// Check to see if the current mura user is logged in, and if we should automatically login the slatwall account
+			if(getPluginConfig().getSetting("accountSyncType") != "none" && !$.slatwall.getAccount().getLoggedInFlag() && $.currentUser().isLoggedIn()) {
+				/*
+				if(getPluginConfig().getSetting("accountSyncType") == "all") {
+					loginMuraAccount($);
+				} else if (getPluginConfig().getSetting("accountSyncType") == "systemUserOnly") {
+					loginMuraAccount($);
+				} else if (getPluginConfig().getSetting("accountSyncType") == "siteUserOnly") {
+					loginMuraAccount($);
+				}
+				*/
+			}
 		}
 		
 		public void function onSiteRequestEnd(required any $) {
@@ -417,12 +430,12 @@
 				<!--- Create Account --->
 				<cfquery name="rs">
 					INSERT INTO SlatwallAccount (
-						accountID
+						accountID,
 						firstName,
 						lastName,
 						company,
 						cmsAccountID,
-						superAdminFlag
+						superUserFlag
 					) VALUES (
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Fname#" />,
@@ -438,7 +451,7 @@
 				</cfquery>
 				
 				<!--- Create Email --->
-				<cfif len(missingUserQuery.Email)>
+				<cfif len(missingUsersQuery.Email)>
 					<cfquery name="rs">
 						INSERT INTO SlatwallAccountEmailAddress (
 							accountEmailAddressID,
@@ -453,7 +466,7 @@
 				</cfif>
 				
 				<!--- Create Phone --->
-				<cfif len(missingUserQuery.MobilePhone)>
+				<cfif len(missingUsersQuery.MobilePhone)>
 					<cfquery name="rs">
 						INSERT INTO SlatwallAccountPhoneNumber (
 							accountPhoneNumberID,
