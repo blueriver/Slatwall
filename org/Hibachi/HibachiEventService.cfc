@@ -1,9 +1,16 @@
 /*
 
+-------------- Explicitly Defined Events ------------------
+
 // onApplicationRequest
 // onApplicationBootstrapRequest
 // onApplicationSetup
 // onApplicationFullUpdate
+
+// onSessionAccountLogin
+// onSessionAccountLogout
+
+-------------- Implicitly Defined Events ------------------
 
 // before{EntityName}Save
 // after{EntityName}Save
