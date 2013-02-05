@@ -50,6 +50,9 @@
 		
 		public boolean function delete(required any entity){
 			
+			// Announce Before Event
+			getHibachiEventService().announceEvent("before#arguments.entity.getEntityName()#Delete", arguments);
+			
 			// If the entity Passes validation
 			if(arguments.entity.isDeletable()) {
 				
@@ -59,29 +62,47 @@
 				// Call delete in the DAO
 				getHibachiDAO().delete(target=arguments.entity);
 				
+				// Announce After Events for Success
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Delete", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#DeleteSuccess", arguments);
+				
 				// Return that the delete was sucessful
 				return true;
 				
 			}
-				
+			
 			// Setup ormHasErrors because it didn't pass validation
 			getHibachiScope().setORMHasErrors( true );
-	
+			
+			// Announce After Events for Failure
+			getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Delete", arguments);
+			getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#DeleteFailure", arguments);
+			
 			return false;
 		}
 		
 		
 		// @hint default process method
 		public any function process(required any entity, struct data={}, string processContext="process"){
+			
+			// Announce Generic Before Event
+			getHibachiEventService().announceEvent("before#arguments.entity.getEntityName()#Process", arguments);
+			
+			// Create the invoke arguments struct
+			var invokeArguments = {};
+			invokeArguments[ "data" ] = arguments.data;
+			invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity;
+			
+			var dataErrors = false;
+			
+			// Announce the processContext specific  event
+			getHibachiEventService().announceEvent("before#arguments.entity.getEntityName()#Process_#arguments.processContext#", invokeArguments);
+			
 			// Verify the preProcess
 			arguments.entity.validate( context=arguments.processContext );
 			
 			// If we pass validation then create a
 			if(!arguments.entity.hasErrors()) {
-				
-				var dataErrors = false;
-				var invokeArguments = {};
-				
 				if(getBeanFactory().containsBean("#arguments.entity.getClassName()#_#arguments.processContext#")) {
 					invokeArguments[ "processObject" ] = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
 					invokeArguments[ "processObject" ].populate( arguments.data );
@@ -95,12 +116,21 @@
 					arguments.entity.setProcessObject( invokeArguments.processObject );
 				}
 				
-				invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity; 
-				invokeArguments[ "data" ] = arguments.data;
 				
 				if(!dataErrors) {
 					this.invokeMethod("process#arguments.entity.getClassName()#_#arguments.processContext#", invokeArguments);	
 				}
+			}
+			
+			// Announce the after events
+			getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Process", arguments);
+			getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Process_#arguments.processContext#", invokeArguments);
+			if(arguments.entity.hasErrors() || dataErrors || (structKeyExists(invokeArguments, "processObject") && invokeArguments.processObject.hasErrors())) {
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#ProcessFailure", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Process_#arguments.processContext#", invokeArguments);
+			} else {
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#ProcessSuccess", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Process_#arguments.processContext#Success", invokeArguments);
 			}
 			
 			return arguments.entity;
@@ -112,6 +142,9 @@
 	    	if(!isObject(arguments.entity) || !arguments.entity.isPersistent()) {
 	    		throw("The entity being passed to this service is not a persistent entity. READ THIS!!!! -> Make sure that you aren't calling the oMM method with named arguments. Also, make sure to check the spelling of your 'fieldname' attributes.");
 	    	}
+	    	
+	    	// Announce Before Event
+	    	getHibachiEventService().announceEvent("before#arguments.entity.getEntityName()#Save", arguments);
 	    	
 			// If data was passed in to this method then populate it with the new data
 	        if(structKeyExists(arguments,"data")){
@@ -127,10 +160,18 @@
 	        // If the object passed validation then call save in the DAO, otherwise set the errors flag
 	        if(!arguments.entity.hasErrors()) {
 	            arguments.entity = getHibachiDAO().save(target=arguments.entity);
+	            
+	            // Announce After Events for Success
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Save", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#SaveSuccess", arguments);
 	        } else {
 	            getHibachiScope().setORMHasErrors( true );
+	            
+	            // Announce After Events for Failure
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Save", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#SaveFailure", arguments);
 	        }
-	
+	        
 	        // Return the entity
 	        return arguments.entity;
 	    }

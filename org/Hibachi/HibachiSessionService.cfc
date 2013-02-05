@@ -48,6 +48,7 @@ component output="false" accessors="true" extends="HibachiService"  {
 		
 		// Make sure that this login is persisted
 		getHibachiDAO().flushORMSession();
+		getHibachiEventService().announceEvent("onSessionAccountLogin");
 	}
 	
 	public void function logoutAccount() {
@@ -55,6 +56,7 @@ component output="false" accessors="true" extends="HibachiService"  {
 		
 		currentSession.removeAccount();
 		currentSession.removeAccountAuthentication();
+		getHibachiEventService().announceEvent("onSessionAccountLogout");
 	}
 	
 	// =====================  END: Logical Methods ============================
