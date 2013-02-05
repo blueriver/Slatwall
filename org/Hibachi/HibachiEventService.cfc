@@ -70,7 +70,7 @@ component output="false" update="true" extends="HibachiService" {
 				try {
 					
 					// Get the object to call the method on
-					var object = variables.registeredEvents[ arguments.eventName ].object;
+					var object = getEventHandler(variables.registeredEvents[ arguments.eventName ][i]);
 					
 					// Stick the Hibachi Scope in with the rest of the event data
 					eventData[ "#getApplicationValue('applicationKey')#Scope" ] = getHibachiScope();

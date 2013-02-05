@@ -1,4 +1,4 @@
-<cfcomponent>
+<cfcomponent extends="Handler">
 	<cfscript>
 	
 		// This method is explicitly called during application reload from the conntector plugins onApplicationLoad() event
@@ -68,7 +68,6 @@
 		}
 		
 		private void function verifyLoginLogout(required any $) {
-			writeLog(file="Slatwall", text="verifyLoginLogout() Called");
 			// Check to see if the current mura user is logged in (or logged out), and if we should automatically login/logout the slatwall account
 			if( getPluginConfig().getSetting("accountSyncType") != "none"
 					&& !getSlatwallScope().getLoggedInFlag()
@@ -78,19 +77,14 @@
 						|| (getPluginConfig().getSetting("accountSyncType") == "systemUserOnly" && $.currentUser().getUserBean().getType() eq 2) 
 						|| (getPluginConfig().getSetting("accountSyncType") == "siteUserOnly" && $.currentUser().getUserBean().getType() eq 1)
 					)) {
-				writeLog(file="Slatwall", text="login() Called");
+			
 				loginCurrentMuraUser($);
 			} else if (getSlatwallScope().getLoggedInFlag()
 					&& !$.currentUser().isLoggedIn()
 					&& !isNull(getSlatwallScope().getSession().getAccountAuthentication().getIntegration())
 					&& getSlatwallScope().getSession().getAccountAuthentication().getIntegration().getIntegrationPackage() eq "mura") {
-				writeLog(file="Slatwall", text="logout() Called");		
+			
 				logoutCurrentMuraUser($);
-			} else {
-				writeLog(file="Slatwall", text="Neither Called");
-				writeLog(file="Slatwall", text="#getSlatwallScope().getLoggedInFlag()#");
-				writeLog(file="Slatwall", text="#$.currentUser().isLoggedIn()#");
-				writeLog(file="Slatwall", text="#isNull(getSlatwallScope().getSession().getAccountAuthentication().getIntegration())#");
 			}
 		}
 		
@@ -227,7 +221,6 @@
 		}
 		
 		public void function onSiteLoginSuccess(required any $) {
-			writeLog(file="Slatwall", text="onSiteLoginSuccess() Called");
 			if(!structKeyExists($, "slatwall")) {
 				startSlatwallAdminRequest($);
 				verifyLoginLogout($=arguments.$);
@@ -238,7 +231,6 @@
 		}
 		
 		public void function onAfterSiteLogout(required any $) {
-			writeLog(file="Slatwall", text="onAfterSiteLogout() Called");
 			if(!structKeyExists($, "slatwall")) {
 				startSlatwallAdminRequest($);
 				verifyLoginLogout($=arguments.$);
@@ -253,28 +245,27 @@
 		// LOGIN / LOGOUT EVENTS
 		
 		public void function onGlobalLoginSuccess(required any $) {
-			writeLog(file="Slatwall", text="onGlobalLoginSuccess() Called");
 			startSlatwallAdminRequest($);
 			verifyLoginLogout($=arguments.$);
 			endSlatwallAdminRequest($);
 		}
 		public void function onAfterGlobalLogout(required any $) {
-			writeLog(file="Slatwall", text="onAfterGlobalLogout() Called");
 			startSlatwallAdminRequest($);
 			verifyLoginLogout($=arguments.$);
 			endSlatwallAdminRequest($);
 		}
 		
 		// RENDERING EVENTS
-		
+		/*
 		public string function onContentTabBasicBottomRender(required any $) {
 			writeLog(file="Slatwall", text="Mura Integration - onContentTabBasicBottomRender()");
 			return "<div>This is my content</div>";
 		}
+		*/
 		
 		public void function onContentEdit(required any $) {
 			startSlatwallAdminRequest($);
-			include "onContentEdit.cfm";
+			writeOutput("EDIT SETTINGS HERE");
 			endSlatwallAdminRequest($);
 		}
 		
@@ -354,51 +345,6 @@
 		}
 		
 		// ========================== Private Helper Methods ==============================
-		
-		// Helper Method for doAction()
-		private string function doAction(required any action) {
-			if(!structKeyExists(url, "$")) {
-				url.$ = request.muraScope;
-			}
-			return getSlatwallApplication().doAction(arguments.action);
-		}
-		
-		// Helper method to get the Slatwall Application
-		private any function getSlatwallApplication() {
-			if(!structKeyExists(variables, "slatwallApplication")) {
-				variables.slatwallApplication = createObject("component", "Slatwall.Application");
-			}
-			return variables.slatwallApplication;
-		}
-		
-		// Helper method to get the SlatwallScope
-		private any function getSlatwallScope() {
-			return request.slatwallScope;
-		}
-		
-		// Helper method to return the mura plugin config for the slatwall-mura connector
-		private any function getPluginConfig() {
-			if(!structKeyExists(variables, "pluginConfig")) {
-				variables.pluginConfig = application.pluginManager.getConfig("slatwall-mura");
-			}
-			return variables.pluginConfig;
-		}
-		
-		// For admin request start, we call the Slatwall Event Handler that gets the request setup
-		private void function startSlatwallAdminRequest(required any $) {
-			if(!structKeyExists(request, "slatwallScope")) {
-				// Call the Slatwall Event Handler that gets the request setup
-				getSlatwallApplication().setupGlobalRequest();
-						
-				// Setup the newly create slatwallScope into the muraScope
-				arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
-			}
-		}
-		
-		// For admin request end, we call the endLifecycle
-		private void function endSlatwallAdminRequest(required any $) {
-			getSlatwallApplication().endHibachiLifecycle();
-		}
 		
 		// Helper method to do our access check
 		private void function checkAccess(required any $) {

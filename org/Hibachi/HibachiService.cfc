@@ -51,7 +51,7 @@
 		public boolean function delete(required any entity){
 			
 			// Announce Before Event
-			getHibachiEventService().announceEvent("before#arguments.entity.getEntityName()#Delete", arguments);
+			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Delete", arguments);
 			
 			// If the entity Passes validation
 			if(arguments.entity.isDeletable()) {
@@ -63,8 +63,8 @@
 				getHibachiDAO().delete(target=arguments.entity);
 				
 				// Announce After Events for Success
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Delete", arguments);
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#DeleteSuccess", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Delete", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#DeleteSuccess", arguments);
 				
 				// Return that the delete was sucessful
 				return true;
@@ -75,8 +75,8 @@
 			getHibachiScope().setORMHasErrors( true );
 			
 			// Announce After Events for Failure
-			getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Delete", arguments);
-			getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#DeleteFailure", arguments);
+			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Delete", arguments);
+			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#DeleteFailure", arguments);
 			
 			return false;
 		}
@@ -86,7 +86,7 @@
 		public any function process(required any entity, struct data={}, string processContext="process"){
 			
 			// Announce Generic Before Event
-			getHibachiEventService().announceEvent("before#arguments.entity.getEntityName()#Process", arguments);
+			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Process", arguments);
 			
 			// Create the invoke arguments struct
 			var invokeArguments = {};
@@ -96,7 +96,7 @@
 			var dataErrors = false;
 			
 			// Announce the processContext specific  event
-			getHibachiEventService().announceEvent("before#arguments.entity.getEntityName()#Process_#arguments.processContext#", invokeArguments);
+			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
 			
 			// Verify the preProcess
 			arguments.entity.validate( context=arguments.processContext );
@@ -123,14 +123,14 @@
 			}
 			
 			// Announce the after events
-			getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Process", arguments);
-			getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Process_#arguments.processContext#", invokeArguments);
+			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process", arguments);
+			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
 			if(arguments.entity.hasErrors() || dataErrors || (structKeyExists(invokeArguments, "processObject") && invokeArguments.processObject.hasErrors())) {
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#ProcessFailure", arguments);
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Process_#arguments.processContext#", invokeArguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#ProcessFailure", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
 			} else {
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#ProcessSuccess", arguments);
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Process_#arguments.processContext#Success", invokeArguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#ProcessSuccess", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#Success", invokeArguments);
 			}
 			
 			return arguments.entity;
@@ -144,7 +144,7 @@
 	    	}
 	    	
 	    	// Announce Before Event
-	    	getHibachiEventService().announceEvent("before#arguments.entity.getEntityName()#Save", arguments);
+	    	getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Save", arguments);
 	    	
 			// If data was passed in to this method then populate it with the new data
 	        if(structKeyExists(arguments,"data")){
@@ -162,14 +162,14 @@
 	            arguments.entity = getHibachiDAO().save(target=arguments.entity);
 	            
 	            // Announce After Events for Success
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Save", arguments);
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#SaveSuccess", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Save", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#SaveSuccess", arguments);
 	        } else {
 	            getHibachiScope().setORMHasErrors( true );
 	            
 	            // Announce After Events for Failure
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#Save", arguments);
-				getHibachiEventService().announceEvent("after#arguments.entity.getEntityName()#SaveFailure", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Save", arguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#SaveFailure", arguments);
 	        }
 	        
 	        // Return the entity
