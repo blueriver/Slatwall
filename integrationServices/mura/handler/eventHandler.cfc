@@ -58,6 +58,34 @@
 			}
 		}
 		
+		private void function verifyLoginLogout(required any $) {
+			writeLog(file="Slatwall", text="verifyLoginLogout() Called");
+			// Check to see if the current mura user is logged in (or logged out), and if we should automatically login/logout the slatwall account
+			if( getPluginConfig().getSetting("accountSyncType") != "none"
+					&& !$.slatwall.getLoggedInFlag()
+					&& $.currentUser().isLoggedIn()
+					&& (
+						getPluginConfig().getSetting("accountSyncType") == "all"
+						|| (getPluginConfig().getSetting("accountSyncType") == "systemUserOnly" && $.currentUser().getUserBean().getType() eq 2) 
+						|| (getPluginConfig().getSetting("accountSyncType") == "siteUserOnly" && $.currentUser().getUserBean().getType() eq 1)
+					)) {
+				writeLog(file="Slatwall", text="login() Called");
+				
+				loginCurrentMuraUser($);
+			} else if ($.slatwall.getLoggedInFlag()
+					&& !$.currentUser().isLoggedIn()
+					&& !isNull($.slatwall.getSession().getAccountAuthentication().getIntegration())
+					&& $.slatwall.getSession().getAccountAuthentication().getIntegration().getIntegrationPackage() eq "mura") {
+				writeLog(file="Slatwall", text="logout() Called");		
+				logoutCurrentMuraUser($);
+			} else {
+				writeLog(file="Slatwall", text="Neither Called");
+				writeLog(file="Slatwall", text="#$.slatwall.getLoggedInFlag()#");
+				writeLog(file="Slatwall", text="#$.currentUser().isLoggedIn()#");
+				writeLog(file="Slatwall", text="#isNull($.slatwall.getSession().getAccountAuthentication().getIntegration())#");
+			}
+		}
+		
 		
 		// ========================== FRONTENT EVENT HOOKS =================================
 		
@@ -68,25 +96,8 @@
 			// Setup the newly create slatwallScope into the muraScope
 			arguments.$.setCustomMuraScopeKey("slatwall", request.slatwallScope);
 			
-			// Check to see if the current mura user is logged in (or logged out), and if we should automatically login/logout the slatwall account
-			if( getPluginConfig().getSetting("accountSyncType") != "none"
-					&& !$.slatwall.getLoggedInFlag()
-					&& $.currentUser().isLoggedIn()
-					&& (
-						getPluginConfig().getSetting("accountSyncType") == "all"
-						|| (getPluginConfig().getSetting("accountSyncType") == "systemUserOnly" && $.currentUser().getUserBean().getType() eq 2) 
-						|| (getPluginConfig().getSetting("accountSyncType") == "siteUserOnly" && $.currentUser().getUserBean().getType() eq 1)
-					)) {
-						
-				loginCurrentMuraUser($);
-			} else if ($.slatwall.getLoggedInFlag()
-					&& !$.currentUser().isLoggedIn()
-					&& !isNull($.slatwall.getSession().getAccountAuthentication().getIntegration())
-					&& $.slatwall.getSession().getAccountAuthentication().getIntegration().getIntegrationPackage() eq "mura") {
-						
-				logoutCurrentMuraUser($);
-			}
-			
+			// Update Login / Logout if needed
+			verifyLoginLogout($=arguments.$);
 			
 			// If we aren't on the homepage we can do our own URL inspection
 			if( len($.event('path')) ) {
@@ -208,7 +219,44 @@
 			}
 		}
 		
+		public void function onSiteLoginSuccess(required any $) {
+			writeLog(file="Slatwall", text="onSiteLoginSuccess() Called");
+			if(!structKeyExists($, "slatwall")) {
+				startSlatwallAdminRequest($);
+				verifyLoginLogout($=arguments.$);
+				endSlatwallAdminRequest($);
+			} else {
+				verifyLoginLogout($=arguments.$);	
+			}
+		}
+		
+		public void function onAfterSiteLogout(required any $) {
+			writeLog(file="Slatwall", text="onAfterSiteLogout() Called");
+			if(!structKeyExists($, "slatwall")) {
+				startSlatwallAdminRequest($);
+				verifyLoginLogout($=arguments.$);
+				endSlatwallAdminRequest($);
+			} else {
+				verifyLoginLogout($=arguments.$);	
+			}
+		}
+		
 		// ========================== ADMIN EVENT HOOKS =================================
+		
+		// LOGIN / LOGOUT EVENTS
+		
+		public void function onGlobalLoginSuccess(required any $) {
+			writeLog(file="Slatwall", text="onGlobalLoginSuccess() Called");
+			startSlatwallAdminRequest($);
+			verifyLoginLogout($=arguments.$);
+			endSlatwallAdminRequest($);
+		}
+		public void function onAfterGlobalLogout(required any $) {
+			writeLog(file="Slatwall", text="onAfterGlobalLogout() Called");
+			startSlatwallAdminRequest($);
+			verifyLoginLogout($=arguments.$);
+			endSlatwallAdminRequest($);
+		}
 		
 		// RENDERING EVENTS
 		
@@ -342,7 +390,7 @@
 		
 		// For admin request end, we call the endLifecycle
 		private void function endSlatwallAdminRequest(required any $) {
-			getSlatwallApplication().endSlatwallLifecycle();
+			getSlatwallApplication().endHibachiLifecycle();
 		}
 		
 		// Helper method to do our access check
