@@ -110,6 +110,9 @@ component extends="FW1.framework" {
 	public any function bootstrap() {
 		setupGlobalRequest();
 		
+		// Announce the applicatoinRequest event
+		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationBootstrapRequest");
+		
 		return request["#variables.framework.applicationKey#Scope"];
 	}
 	
@@ -163,6 +166,9 @@ component extends="FW1.framework" {
 		
 		// Call the onInternalRequest() Method for the parent Application.cfc
 		onInternalRequest();
+		
+		// Announce the applicatoinRequest event
+		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationRequest");
 	}
 	
 	public void function verifyApplicationSetup() {
@@ -266,6 +272,9 @@ component extends="FW1.framework" {
 					// Call the onFirstRequest() Method for the parent Application.cfc
 					onFirstRequest();
 					
+					// Announce the applicationSetup event
+					getHibachiScope().getService("hibachiEventService").announceEvent("onApplicationSetup");
+					
 					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
 					if(!fileExists(expandPath('/#variables.framework.applicationKey#/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - Full Update Initiated");
@@ -282,7 +291,9 @@ component extends="FW1.framework" {
 						
 						// Write File
 						fileWrite(expandPath('/#variables.framework.applicationKey#') & '/config/lastFullUpdate.txt.cfm', now());				
-
+						
+						// Announce the applicationFullUpdate event
+						getHibachiScope().getService("hibachiEventService").announceEvent("onApplicationFullUpdate");
 					}
 					// ========================== END: FULL UPDATE ==============================
 					
