@@ -64,7 +64,7 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	
 	
 	public boolean function getActiveFlag() {
-		return getCustomActive() || getFW1ActiveFlag() || getPaymentActiveFlag() || getShippingActiveFlag();
+		return getCustomActiveFlag() || getFW1ActiveFlag() || getPaymentActiveFlag() || getShippingActiveFlag();
 	}
 	
 	public array function getShippingMethodOptions( ) {
