@@ -42,24 +42,20 @@ component extends="Slatwall.org.Hibachi.HibachiObject" {
 		return this;
 	}
 	
-	public string function getIntegrationTypes() {
-		return "";
-	}
-	
 	public string function getDisplayName() {
 		return "Not Defined";
 	}
 	
-	public boolean function isFW1Subsystem() {
-		return false;
+	public string function getIntegrationTypes() {
+		return "";
 	}
-	
-	public xml function getColdspringXML() {
-		return xmlNew();
-	} 
 	
 	public struct function getSettings() {
 		return {};
 	}
+	
+	public array function getEventHandlers() {
+		return [];
+	} 
 	
 }

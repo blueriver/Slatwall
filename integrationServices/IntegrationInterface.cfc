@@ -40,17 +40,7 @@ Notes:
 <cfinterface>
 	
 	<cffunction name="init" access="public" returntype="any">
-	</cffunction>
-	
-	<cffunction name="getIntegrationTypes" access="public" returntype="string">
-		<!---
-			This method should return a comma seperated list of the integration types
-			that it supports.  Here are the possible integration types:
-			
-			shipping
-			payment
-			data
-		--->
+		
 	</cffunction>
 	
 	<cffunction name="getDisplayName" access="public" returntype="string">
@@ -60,14 +50,26 @@ Notes:
 		--->
 	</cffunction>
 	
-	<cffunction name="isFW1Subsystem" access="public" returntype="boolean">
+	<cffunction name="getIntegrationTypes" access="public" returntype="string">
+		<!---
+			This method should return a comma seperated list of the integration types
+			that it supports.  Here are the possible integration types:
+			
+			shipping		|		When set this integration will be able to be used by shipping methods / rates
+			payment			|		When set this integration will be able to be used by payment methods
+			fw1				|		When set then this integration can have custom views, ect.
+			custom			|		This is defined when all you want to do is hook into events, but no views or anything else.
+		--->
+	</cffunction>
+	
+	<cffunction name="getSettings" access="public" returntype="struct">
 		<!---
 			This method should return true only if there is a /views/main/default.cfm file
 			inside of the integration service
 		--->
 	</cffunction>
 	
-	<cffunction name="getColdspringXML" returntype="xml">
+	<cffunction name="getEventHandlers" returntype="array">
 		<!---
 			This method should return a valid coldspring xml that overrides the default xml
 		--->

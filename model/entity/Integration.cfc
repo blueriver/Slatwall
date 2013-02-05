@@ -59,6 +59,13 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non-persistent properties
+	property name="activeFlag" type="boolean" persistent="false";
+	
+	
+	public boolean function getActiveFlag() {
+		return getCustomActive() || getFW1ActiveFlag() || getPaymentActiveFlag() || getShippingActiveFlag();
+	}
 	
 	public array function getShippingMethodOptions( ) {
 		if(!structKeyExists(variables, "shippingMethodOptions")) {

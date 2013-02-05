@@ -67,13 +67,13 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		
 		// SET Database Type
 		request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
+		
+		// Reload All Integrations
+		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+		writeLog(file="Slatwall", text="General Log - Integrations have been updated");	
 	}
 	
 	public void function onUpdateRequest() {
-		// Reload All Integrations
-		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-		writeLog(file="Slatwall", text="General Log - Integrations have been updated");
-		
 		// Setup Default Data... Not called on soft reloads.
 		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
 		writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
