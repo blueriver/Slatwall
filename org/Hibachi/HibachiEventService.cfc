@@ -105,7 +105,7 @@ component output="false" update="true" extends="HibachiService" {
 		}
 		
 		if(!isNull(object)) {
-			var objectMetaData = getMetaData(arguments.object);
+			var objectMetaData = getMetaData(object);
 			for(var f=1; f<=arrayLen(objectMetaData.functions); f++) {
 				if(!structKeyExists(objectMetaData.functions[f], "access") || objectMetaData.functions[f].access == "public") {
 					registerEvent(eventName=objectMetaData.functions[f].name, object=object, objectFullname=objectFullname);

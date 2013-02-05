@@ -6,12 +6,12 @@
 			var assignedSitesQuery = getPluginConfig().getAssignedSites();
 			var populatedSiteIDs = getPluginConfig().getCustomSetting("populatedSiteIDs");
 			
-			var integration = $.slatwall.getService("integrationService").getIntegrationByIntegrationPackage("mura");
+			var integration = getSlatwallScope().getService("integrationService").getIntegrationByIntegrationPackage("mura");
 			if(!integration.getFW1ActiveFlag()) {
 				integration.setFW1ActiveFlag(1);
-				var ehArr = integration.getIntegtegrationCFC().getEventHandlers();
+				var ehArr = integration.getIntegrationCFC().getEventHandlers();
 				for(var e=1; e<=arrayLen(ehArr); e++) {
-					$.slatwall.getService("hibachiEventService").registerEventHandler(ehErr[e]);
+					getSlatwallScope().getService("hibachiEventService").registerEventHandler(ehArr[e]);
 				}
 			}
 			
@@ -71,7 +71,7 @@
 			writeLog(file="Slatwall", text="verifyLoginLogout() Called");
 			// Check to see if the current mura user is logged in (or logged out), and if we should automatically login/logout the slatwall account
 			if( getPluginConfig().getSetting("accountSyncType") != "none"
-					&& !$.slatwall.getLoggedInFlag()
+					&& !getSlatwallScope().getLoggedInFlag()
 					&& $.currentUser().isLoggedIn()
 					&& (
 						getPluginConfig().getSetting("accountSyncType") == "all"
@@ -80,17 +80,17 @@
 					)) {
 				writeLog(file="Slatwall", text="login() Called");
 				loginCurrentMuraUser($);
-			} else if ($.slatwall.getLoggedInFlag()
+			} else if (getSlatwallScope().getLoggedInFlag()
 					&& !$.currentUser().isLoggedIn()
-					&& !isNull($.slatwall.getSession().getAccountAuthentication().getIntegration())
-					&& $.slatwall.getSession().getAccountAuthentication().getIntegration().getIntegrationPackage() eq "mura") {
+					&& !isNull(getSlatwallScope().getSession().getAccountAuthentication().getIntegration())
+					&& getSlatwallScope().getSession().getAccountAuthentication().getIntegration().getIntegrationPackage() eq "mura") {
 				writeLog(file="Slatwall", text="logout() Called");		
 				logoutCurrentMuraUser($);
 			} else {
 				writeLog(file="Slatwall", text="Neither Called");
-				writeLog(file="Slatwall", text="#$.slatwall.getLoggedInFlag()#");
+				writeLog(file="Slatwall", text="#getSlatwallScope().getLoggedInFlag()#");
 				writeLog(file="Slatwall", text="#$.currentUser().isLoggedIn()#");
-				writeLog(file="Slatwall", text="#isNull($.slatwall.getSession().getAccountAuthentication().getIntegration())#");
+				writeLog(file="Slatwall", text="#isNull(getSlatwallScope().getSession().getAccountAuthentication().getIntegration())#");
 			}
 		}
 		
@@ -113,58 +113,58 @@
 				var brandKeyLocation = 0;
 				var productKeyLocation = 0;
 				var productTypeKeyLocation = 0;
-				if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/")) {
-					brandKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/");
+				if (listFindNoCase($.event('path'), getSlatwallScope().setting('globalURLKeyBrand'), "/")) {
+					brandKeyLocation = listFindNoCase($.event('path'), getSlatwallScope().setting('globalURLKeyBrand'), "/");
 					if(brandKeyLocation < listLen($.event('path'),"/")) {
-						$.slatwall.setCurrentBrand( $.slatwall.getService("brandService").getBrandByURLTitle(listGetAt($.event('path'), brandKeyLocation + 1, "/"), true) );
+						getSlatwallScope().setCurrentBrand( getSlatwallScope().getService("brandService").getBrandByURLTitle(listGetAt($.event('path'), brandKeyLocation + 1, "/"), true) );
 					}
 				}
-				if(listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/")) {
-					productKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/");
+				if(listFindNoCase($.event('path'), getSlatwallScope().setting('globalURLKeyProduct'), "/")) {
+					productKeyLocation = listFindNoCase($.event('path'), getSlatwallScope().setting('globalURLKeyProduct'), "/");
 					if(productKeyLocation < listLen($.event('path'),"/")) {
-						$.slatwall.setCurrentProduct( $.slatwall.getService("productService").getProductByURLTitle(listGetAt($.event('path'), productKeyLocation + 1, "/"), true) );	
+						getSlatwallScope().setCurrentProduct( getSlatwallScope().getService("productService").getProductByURLTitle(listGetAt($.event('path'), productKeyLocation + 1, "/"), true) );	
 					}
 				}
-				if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/")) {
-					productTypeKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/");
+				if (listFindNoCase($.event('path'), getSlatwallScope().setting('globalURLKeyProductType'), "/")) {
+					productTypeKeyLocation = listFindNoCase($.event('path'), getSlatwallScope().setting('globalURLKeyProductType'), "/");
 					if(productTypeKeyLocation < listLen($.event('path'),"/")) {
-						$.slatwall.setCurrentProductType( $.slatwall.getService("productService").getProductTypeByURLTitle(listGetAt($.event('path'), productTypeKeyLocation + 1, "/"), true) );
+						getSlatwallScope().setCurrentProductType( getSlatwallScope().getService("productService").getProductTypeByURLTitle(listGetAt($.event('path'), productTypeKeyLocation + 1, "/"), true) );
 					}
 				}
 				
 				// Setup the proper content node and populate it with our FW/1 view on any keys that might have been found, use whichever key was farthest right
-				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProduct().isNew() && $.slatwall.getCurrentProduct().getActiveFlag() && ($.slatwall.getCurrentProduct().getPublishedFlag() || $.slatwall.getCurrentProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
-					$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProduct().setting('productDisplayTemplate')));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
+				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !getSlatwallScope().getCurrentProduct().isNew() && getSlatwallScope().getCurrentProduct().getActiveFlag() && (getSlatwallScope().getCurrentProduct().getPublishedFlag() || getSlatwallScope().getCurrentProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
+					getSlatwallScope().setCurrentContent(getSlatwallScope().getService("contentService").getContent(getSlatwallScope().getCurrentProduct().setting('productDisplayTemplate')));
+					$.event('contentBean', $.getBean("content").loadBy(contentID=getSlatwallScope().getCurrentContent().getCMSContentID()) );
 					$.content('body', $.content('body') & doAction('frontend:product.detail'));
-					$.content().setTitle( $.slatwall.getCurrentProduct().getTitle() );
-					$.content().setHTMLTitle( $.slatwall.getCurrentProduct().getTitle() );
+					$.content().setTitle( getSlatwallScope().getCurrentProduct().getTitle() );
+					$.content().setHTMLTitle( getSlatwallScope().getCurrentProduct().getTitle() );
 					
 					
 					// Setup CrumbList
 					if(productKeyLocation > 2) {
-						var listingPageFilename = left($.event('path'), find("/#$.slatwall.setting('globalURLKeyProduct')#/", $.event('path'))-1);
+						var listingPageFilename = left($.event('path'), find("/#getSlatwallScope().setting('globalURLKeyProduct')#/", $.event('path'))-1);
 						listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
 						var crumbDataArray = $.getBean("contentManager").getActiveContentByFilename(listingPageFilename, $.event('siteid'), true).getCrumbArray();
 					} else {
 						var crumbDataArray = $.getBean("contentManager").getCrumbList(contentID="00000000000000000000000000000000001", siteID=$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
 					}
-					arrayPrepend(crumbDataArray, $.slatwall.getCurrentProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
+					arrayPrepend(crumbDataArray, getSlatwallScope().getCurrentProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
 					$.event('crumbdata', crumbDataArray);
 					
-				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() ) {
-					$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate')));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
+				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !getSlatwallScope().getCurrentProductType().isNew() && getSlatwallScope().getCurrentProductType().getActiveFlag() ) {
+					getSlatwallScope().setCurrentContent(getSlatwallScope().getService("contentService").getContent(getSlatwallScope().getCurrentProductType().setting('productTypeDisplayTemplate')));
+					$.event('contentBean', $.getBean("content").loadBy(contentID=getSlatwallScope().getCurrentContent().getCMSContentID()) );
 					$.content('body', $.content('body') & doAction('frontend:producttype.detail'));
-					$.content().setTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
-					$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
+					$.content().setTitle( getSlatwallScope().getCurrentProductType().getProductTypeName() );
+					$.content().setHTMLTitle( getSlatwallScope().getCurrentProductType().getProductTypeName() );
 					
-				} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag()  ) {
-					$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate')));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
+				} else if ( brandKeyLocation && !getSlatwallScope().getCurrentBrand().isNew() && getSlatwallScope().getCurrentBrand().getActiveFlag()  ) {
+					getSlatwallScope().setCurrentContent(getSlatwallScope().getService("contentService").getContent(getSlatwallScope().getCurrentBrand().setting('brandDisplayTemplate')));
+					$.event('contentBean', $.getBean("content").loadBy(contentID=getSlatwallScope().getCurrentContent().getCMSContentID()) );
 					$.content('body', $.content('body') & doAction('frontend:brand.detail'));
-					$.content().setTitle( $.slatwall.getCurrentBrand().getBrandName() );
-					$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getBrandName() );
+					$.content().setTitle( getSlatwallScope().getCurrentBrand().getBrandName() );
+					$.content().setHTMLTitle( getSlatwallScope().getCurrentBrand().getBrandName() );
 				}
 			}
 		}
@@ -176,7 +176,7 @@
 		public void function onRenderStart(required any $) {
 			
 			// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
-			$.slatwall.setCurrentContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
+			getSlatwallScope().setCurrentContent( getSlatwallScope().getService("contentService").getContentByCMSContentID($.content('contentID')) );
 			
 			// check if user has access to this page
 			checkAccess($);
@@ -188,34 +188,34 @@
 			// If no slatAction was passed in, then check for keys in mura to determine what page to render
 			} else {
 				// Check to see if the current content is a listing page, so that we add our frontend view to the content body
-				if(isBoolean($.slatwall.getCurrentContent().setting('contentProductListingFlag')) && $.slatwall.getCurrentContent().setting('contentProductListingFlag')) {
+				if(isBoolean(getSlatwallScope().getCurrentContent().setting('contentProductListingFlag')) && getSlatwallScope().getCurrentContent().setting('contentProductListingFlag')) {
 					$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
 				}
 				
 				// Render any of the 'special' pages that might need to be rendered
-				if($.content('filename') == $.slatwall.setting('globalPageShoppingCart')) {
+				if($.content('filename') == getSlatwallScope().setting('globalPageShoppingCart')) {
 					$.content('body', $.content('body') & doAction('frontend:cart.detail'));
-				} else if($.content('filename') == $.slatwall.setting('globalPageOrderStatus')) {
+				} else if($.content('filename') == getSlatwallScope().setting('globalPageOrderStatus')) {
 					$.content('body', $.content('body') & doAction('frontend:order.detail'));
-				} else if($.content('filename') == $.slatwall.setting('globalPageOrderConfirmation')) {
+				} else if($.content('filename') == getSlatwallScope().setting('globalPageOrderConfirmation')) {
 					$.content('body', $.content('body') & doAction('frontend:order.confirmation'));
-				} else if($.content('filename') == $.slatwall.setting('globalPageMyAccount')) {
+				} else if($.content('filename') == getSlatwallScope().setting('globalPageMyAccount')) {
 					// Checks for My-Account page
 					if($.event('showitem') != ""){
 						$.content('body', $.content('body') & doAction('frontend:account.#$.event("showitem")#'));
 					} else {
 						$.content('body', $.content('body') & doAction('frontend:account.detail'));
 					}
-				} else if($.content('filename') == $.slatwall.setting('globalPageCreateAccount')) {
+				} else if($.content('filename') == getSlatwallScope().setting('globalPageCreateAccount')) {
 					$.content('body', $.content('body') & doAction('frontend:account.create'));
-				} else if($.content('filename') == $.slatwall.setting('globalPageCheckout')) {
+				} else if($.content('filename') == getSlatwallScope().setting('globalPageCheckout')) {
 					$.content('body', $.content('body') & doAction('frontend:checkout.detail'));
 				}
 			}
 		}
 		
 		public void function onRenderEnd(required any $) {
-			if(len($.slatwall.getCurrentAccount().getAllPermissions())) {
+			if(len(getSlatwallScope().getCurrentAccount().getAllPermissions())) {
 				// Set up frontend tools
 				var fetools = "";
 				savecontent variable="fetools" {
@@ -285,15 +285,15 @@
 			startSlatwallAdminRequest($);
 					
 			var categoryBean = $.event("categoryBean");
-			var category = $.slatwall.getService("contentService").getCategoryByCmsCategoryID(categoryBean.getCategoryID(),true);
-			var parentCategory = $.slatwall.getService("contentService").getCategoryByCmsCategoryID(categoryBean.getParentID());
+			var category = getSlatwallScope().getService("contentService").getCategoryByCmsCategoryID(categoryBean.getCategoryID(),true);
+			var parentCategory = getSlatwallScope().getService("contentService").getCategoryByCmsCategoryID(categoryBean.getParentID());
 			if(!isNull(parentCategory)) {
 				category.setParentCategory(parentCategory);
 			}
 			category.setCategoryName(categoryBean.getName());
 			category.setCmsSiteID($.event('siteID'));
 			category.setCmsCategoryID(categoryBean.getCategoryID());
-			category = $.slatwall.getService("contentService").saveCategory(category);
+			category = getSlatwallScope().getService("contentService").saveCategory(category);
 			
 			endSlatwallAdminRequest($);
 		}
@@ -301,9 +301,9 @@
 		public void function onAfterCategoryDelete(required any $) {
 			startSlatwallAdminRequest($);
 			
-			var category = $.slatwall.getService("contentService").getCategoryByCmsCategoryID($.event("categoryID"),true);
+			var category = getSlatwallScope().getService("contentService").getCategoryByCmsCategoryID($.event("categoryID"),true);
 			if(!category.isNew() && category.isDeletable()) {
-				$.slatwall.getService("contentService").deleteCategory(category);
+				getSlatwallScope().getService("contentService").deleteCategory(category);
 			}
 			
 			endSlatwallAdminRequest($);
@@ -402,7 +402,7 @@
 		
 		// Helper method to do our access check
 		private void function checkAccess(required any $) {
-			if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'))){
+			if(!getSlatwallScope().getService("accessService").hasAccess($.content('contentID'))){
 				
 				// save the current content to be used on the barrier page
 				$.event("restrictedContent",$.content());
@@ -414,13 +414,13 @@
 				$.content('body', doAction('frontend:account.noaccess'));
 				
 				// get the slatwall content
-				var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
+				var slatwallContent = getSlatwallScope().getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
 				
 				// set slatwallContent in rc to be used on the barrier page
 				$.event("slatwallContent",slatwallContent);
 				
 				// get the barrier page template
-				var restrictedContentTemplate = $.slatwall.getService("contentService").getContent(slatwallContent.getSettingDetails('contentRestrictedContentDisplayTemplate').settingvalue);
+				var restrictedContentTemplate = getSlatwallScope().getService("contentService").getContent(slatwallContent.getSettingDetails('contentRestrictedContentDisplayTemplate').settingvalue);
 				
 				// set the content to the barrier page template
 				if(!isNull(restrictedContentTemplate)) {
@@ -765,17 +765,17 @@
 		<cfargument name="$" />
 		
 		<cfset syncMuraAccounts(accountSyncType="all", superUserSyncFlag=getPluginConfig().getSetting("superUserSyncFlag"), muraUserID=$.currentUser('userID')) />
-		<cfset var account = $.slatwall.getService("accountService").getAccountByCMSAccountID($.currentUser('userID')) />
+		<cfset var account = getSlatwallScope().getService("accountService").getAccountByCMSAccountID($.currentUser('userID')) />
 		<cfset var accountAuth = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa WHERE aa.integration.integrationID = ? AND aa.account.accountID = ?", [getMuraIntegrationID(), account.getAccountID()]) />
 		<cfif !isNull(account) && arrayLen(accountAuth)>
-			<cfset $.slatwall.getService("hibachiSessionService").loginAccount(account=account, accountAuthentication=accountAuth[1]) />
+			<cfset getSlatwallScope().getService("hibachiSessionService").loginAccount(account=account, accountAuthentication=accountAuth[1]) />
 		</cfif>
 	</cffunction>
 	
 	<cffunction name="logoutCurrentMuraUser">
 		<cfargument name="$" />
 		
-		<cfset $.slatwall.getService("hibachiSessionService").logoutAccount() />
+		<cfset getSlatwallScope().getService("hibachiSessionService").logoutAccount() />
 	</cffunction>
 	
 	<cffunction name="getMuraIntegrationID">
@@ -875,17 +875,17 @@
 		for(var settingName in arguments.settingData) {
 			// create new setting if there is data 
 			if(arguments.settingData[settingName] != "") {
-				var setting = $.slatwall.getService("settingService").getSettingBySettingNameANDcmsContentID([settingName,arguments.slatwallContent.getCmsContentID()],true);
+				var setting = getSlatwallScope().getService("settingService").getSettingBySettingNameANDcmsContentID([settingName,arguments.slatwallContent.getCmsContentID()],true);
 				setting.setSettingName(settingName);
 				setting.setSettingValue(arguments.settingData[settingName]);
 				//setting.setContent(arguments.slatwallContent);
 				setting.setcmsContentID(arguments.slatwallContent.getCmsContentID());
-				$.slatwall.getService("settingService").saveSetting(setting);
+				getSlatwallScope().getService("settingService").saveSetting(setting);
 			} else {
 				// if nothing is selected the delete the setting so it can use inherited
-				var setting = $.slatwall.getService("settingService").getSettingBySettingNameANDcmsContentID([settingName,arguments.slatwallContent.getCmsContentID()],true);
+				var setting = getSlatwallScope().getService("settingService").getSettingBySettingNameANDcmsContentID([settingName,arguments.slatwallContent.getCmsContentID()],true);
 				if(!setting.isNew()) {
-					$.slatwall.getService("settingService").deleteSetting(setting);
+					getSlatwallScope().getService("settingService").deleteSetting(setting);
 				}
 			}
 		}
@@ -893,7 +893,7 @@
 	
 	private any function saveSlatwallPage(required any $) {
 		var slatwallData = $.getEvent().getAllValues().slatwallData;
-		var slatwallContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("contentID"),true);
+		var slatwallContent = getSlatwallScope().getService("contentService").getContentByCmsContentID($.content("contentID"),true);
 		slatwallContent.setCmsSiteID($.event('siteID'));
 		slatwallContent.setCmsContentID($.content("contentID"));
 		slatwallContent.setCmsContentIDPath($.content("path"));
@@ -904,11 +904,11 @@
 		if(slatwallData.templateFlag || slatwallData.setting.contentProductListingFlag != "" || contentProductListingFlag.settingValueFormatted || slatwallData.setting.contentRestrictAccessFlag != "" || contentRestrictAccessFlag.settingValueFormatted || slatwallData.setting.contentRestrictedContentDisplayTemplate != "") {
 			createParentSlatwallPage($);
 			// set the parent content
-			var parentContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("parentID"));
+			var parentContent = getSlatwallScope().getService("contentService").getContentByCmsContentID($.content("parentID"));
 			if(!isNull(parentContent)) {
 				slatwallContent.setParentContent(parentContent);
 			}
-			slatwallContent = $.slatwall.getService("contentService").saveContent(slatwallContent,slatwallData);
+			slatwallContent = getSlatwallScope().getService("contentService").saveContent(slatwallContent,slatwallData);
 			// now save all the content settings
 			saveSlatwallSetting($,slatwallData.setting,slatwallContent);
 			return slatwallContent;
@@ -920,7 +920,7 @@
 		var parentCount = arrayLen(contentIDPathArray) - 1;
 		// create all except first (home) and last (the content being saved)
 		for(var i = 2; i < parentCount; i++) {
-			var slatwallContent = $.slatwall.getService("contentService").getContentByCmsContentID(contentIDPathArray[i],true);
+			var slatwallContent = getSlatwallScope().getService("contentService").getContentByCmsContentID(contentIDPathArray[i],true);
 			if(slatwallContent.isNew()) {
 				var muraContent = $.getBean('content').loadBy(contentID=contentIDPathArray[i]) ;
 				slatwallContent.setCmsSiteID(muraContent.getSiteID());
@@ -930,7 +930,7 @@
 				if(!isNull(parentSlatwallContent)) {
 					slatwallContent.setParentContent(parentSlatwallContent);
 				}
-				var parentSlatwallContent = $.slatwall.getService("contentService").saveContent(slatwallContent);
+				var parentSlatwallContent = getSlatwallScope().getService("contentService").saveContent(slatwallContent);
 			}
 		}
 	}
@@ -940,26 +940,26 @@
 		slatwallData.product.accessContents = slatwallContent.getContentID();
 		// if sku is selected, related sku to content
 		if(slatwallData.product.sku.skuID != "") {
-			var sku = $.slatwall.getService("SkuService").getSku(slatwallData.product.sku.skuID, true);
+			var sku = getSlatwallScope().getService("SkuService").getSku(slatwallData.product.sku.skuID, true);
 			sku.addAccessContent(slatwallContent);
 		} else {
-			var product = $.slatwall.getService("ProductService").getProduct(slatwallData.product.productID, true);
+			var product = getSlatwallScope().getService("ProductService").getProduct(slatwallData.product.productID, true);
 			if(product.isNew()){
 				// if new product set up required properties
 				product.setProductName($.content("title"));
 				product.setPublishedFlag($.content("approved"));
-				var productType = $.slatwall.getService("ProductService").getProductTypeBySystemCode("contentAccess");
+				var productType = getSlatwallScope().getService("ProductService").getProductTypeBySystemCode("contentAccess");
 				product.setProductType(productType);
 				product.setProductCode(createUUID());
 				product.setActiveFlag(1);
-				product = $.slatwall.getService("ProductService").saveProduct( product, slatwallData.product );
+				product = getSlatwallScope().getService("ProductService").saveProduct( product, slatwallData.product );
 			} else {
-				var newSku = $.slatwall.getService("SkuService").newSku();
+				var newSku = getSlatwallScope().getService("SkuService").newSku();
 				newSku.setPrice(slatwallData.product.price);
 				newSku.setProduct(product);
 				newSku.setSkuCode(product.getProductCode() & "-#arrayLen(product.getSkus()) + 1#");
 				newSku.addAccessContent( slatwallContent );
-				$.slatwall.getService("SkuService").saveSKU( newSku );
+				getSlatwallScope().getService("SkuService").saveSKU( newSku );
 			}
 		}
 		
@@ -967,23 +967,23 @@
 	
 	// Helper method to go in and delete content skus
 	private void function deleteContentSkus(required any $) {
-		var slatwallContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("contentID"),true);
+		var slatwallContent = getSlatwallScope().getService("contentService").getContentByCmsContentID($.content("contentID"),true);
 		if(!slatwallContent.isNew()) {
 			while(arrayLen(slatwallContent.getSkus())){
 				var thisSku = slatwallContent.getSkus()[1];
 				slatwallContent.removeSku(thisSku);
 			}
-			$.slatwall.getService("contentService").saveContent(slatwallContent);
+			getSlatwallScope().getService("contentService").saveContent(slatwallContent);
 		}
 	}
 
 	// Helper method to go in and delete a content node that was previously saved in Slatwall. 
 	private void function deleteSlatwallPage(required any $) {
-		var slatwallContent = $.slatwall.getService("contentService").getContentByCmsContentID($.content("contentID"),true);
+		var slatwallContent = getSlatwallScope().getService("contentService").getContentByCmsContentID($.content("contentID"),true);
 		// do not delete content form slatwall, only make it inactive
 		if(!slatwallContent.isNew()) {
 			slatwallContent.setActiveFlag(0);
-			$.slatwall.getService("contentService").saveContent(slatwallContent);
+			getSlatwallScope().getService("contentService").saveContent(slatwallContent);
 		}
 	}
 	
