@@ -60,10 +60,10 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-persistent properties
-	property name="activeFlag" type="boolean" persistent="false";
+	property name="enabledFlag" type="boolean" persistent="false";
 	
 	
-	public boolean function getActiveFlag() {
+	public boolean function getEnabledFlag() {
 		return getCustomActiveFlag() || getFW1ActiveFlag() || getPaymentActiveFlag() || getShippingActiveFlag();
 	}
 	

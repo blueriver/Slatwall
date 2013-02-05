@@ -213,7 +213,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					logHibachi("The Integration: #integrationPackage# has been register.");
 					
 					// If this integration is active lets register all of its event handlers
-					if( integration.getActiveFlag() ) {
+					if( integration.getEnabledFlag() ) {
 						for(var e=1; e<=arrayLen(integrationCFC.getEventHandlers()); e++) {
 							getHibachiEventService().registerEventHandler( integrationCFC.getEventHandlers()[e] );
 						}
