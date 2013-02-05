@@ -214,11 +214,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					
 					// If this integration is active lets register all of its event handlers
 					if( integration.getEnabledFlag() ) {
+						logHibachi("The Integration: #integrationPackage# is 'enabled'");
 						for(var e=1; e<=arrayLen(integrationCFC.getEventHandlers()); e++) {
 							getHibachiEventService().registerEventHandler( integrationCFC.getEventHandlers()[e] );
 						}
 						if(arrayLen(integrationCFC.getEventHandlers())) {
-							logHibachi("The Integration: #integrationPackage# has had arrayLen(integrationCFC.getEventHandlers()) eventHandler(s) registered");	
+							logHibachi("The Integration: #integrationPackage# has had #arrayLen(integrationCFC.getEventHandlers())# eventHandler(s) registered");	
 						}
 					}
 				}
