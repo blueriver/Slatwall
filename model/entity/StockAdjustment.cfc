@@ -58,20 +58,14 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="displayName" persistent="false";
-	property name="statusCode" persistent="false";
 	property name="adjustmentSkuOptions" persistent="false";
+	property name="displayName" persistent="false";
+	property name="stockAdjustmentStatusTypeSystemCode" persistent="false";
+	property name="stockAdjustmentTypeSystemCode" persistent="false";
 	
-	public string function getStatusCode() {
-		return getStockAdjustmentStatusType().getSystemCode();
-	}
+	// Deprecated Properties
+	property name="statusCode" persistent="false";		// Use getStockAdjustmentStatusTypeSystemCode()
 	
-	public any function getAdjustmentSkuOptions() {
-		if(!structKeyExists(variables, "adjustmentSkuOptions")) {
-			variables.adjustmentSkuOptions = getService("skuService").listSku({activeFlag=1}); 
-		}
-		return variables.adjustmentSkuOptions;
-	}
 	
 	// For use with Adjustment Items interface, get one location that we will use for stock lookup. 
 	public any function getOneLocation() {
@@ -118,6 +112,10 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 		return getStockAdjustmentStatusType().getSystemCode() == "sastClosed";
 	}
 	
+	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
 	public string function getDisplayName(){
 		var displayName = "#getStockAdjustmentType().getType()#:";
 		if(!isNull(getFromLocation())) {
@@ -132,9 +130,24 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 		return displayName;
 	}
 	
+	public any function getAdjustmentSkuOptions() {
+		if(!structKeyExists(variables, "adjustmentSkuOptions")) {
+			variables.adjustmentSkuOptions = getService("skuService").listSku({activeFlag=1}); 
+		}
+		return variables.adjustmentSkuOptions;
+	}
 	
+	public string function getStockAdjustmentStatusTypeSystemCode() {
+		return getStockAdjustmentStatusType().getSystemCode();
+	}
 	
-	// ============ START: Non-Persistent Property Methods =================
+	public string function getStockAdjustmentTypeSystemCode() {
+		return getStockAdjustmentType().getSystemCode();
+	}
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Stock Adjustment Items (one-to-many)
 	public void function addStockAdjustmentItem(required any stockAdjustmentItem) {
@@ -144,10 +157,6 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	public void function removeStockAdjustmentItem(required any stockAdjustmentItem) {
 	   arguments.stockAdjustmentItem.removeStockAdjustment( this );
 	}
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Stock Receivers (one-to-many)
 	public void function addStockReceiver(required any stockReceiver) {
@@ -192,4 +201,12 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// =================== START: Deprecated Methods  =========================
+	
+	public string function getStatusCode() {
+		return getStockAdjustmentStatusType().getSystemCode();
+	}
+	
+	// ===================  END:  Deprecated Methods  =========================
 }
