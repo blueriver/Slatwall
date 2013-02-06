@@ -76,7 +76,7 @@ component output="false" accessors="true" extends="HibachiService" {
 							contextValidations[ property ] = {};
 						}
 						for(var constraint in rule) {
-							if(constraint != "contexts") {
+							if(constraint != "contexts" && constraint != "conditions") {
 								contextValidations[ property ][ constraint ] = rule[ constraint ];
 							}
 						}
@@ -120,6 +120,8 @@ component output="false" accessors="true" extends="HibachiService" {
 		
 		return errorBean;
 	}
+	
+	// ================================== VALIDATION CONSTRAINT LOGIC ===========================================
 	
 	public boolean function validate_required(required any object, required string propertyName, boolean constraintValue=true) {
 		var value = arguments.object.invokeMethod("get#arguments.propertyName#");
@@ -193,6 +195,54 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function validate_method(required any object, required string propertyName, required string constraintValue) {
 		return arguments.object.invokeMethod(arguments.constraintValue);
+	}
+	
+	public boolean function validate_lte(required any object, required string propertyName, required string constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue <= arguments.constraintValue) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function validate_lt(required any object, required string propertyName, required string constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue < arguments.constraintValue) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function validate_gte(required any object, required string propertyName, required string constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue >= arguments.constraintValue) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function validate_gt(required any object, required string propertyName, required string constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue > arguments.constraintValue) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function validate_eq(required any object, required string propertyName, required string constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue == arguments.constraintValue) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function validate_neq(required any object, required string propertyName, required string constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue != arguments.constraintValue) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean function validate_lteProperty(required any object, required string propertyName, required string constraintValue) {
