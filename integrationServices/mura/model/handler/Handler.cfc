@@ -6,7 +6,7 @@
 		// Helper Method for doAction()
 		public string function doAction(required any action) {
 			if(!structKeyExists(url, "$")) {
-				url.$ = getMuraScope();
+				url.$ = request.muraScope;
 			}
 			return getSlatwallApplication().doAction( arguments.action );
 		}

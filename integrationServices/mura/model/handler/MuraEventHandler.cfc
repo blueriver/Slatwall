@@ -92,6 +92,7 @@
 					$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
 				}
 				
+				/*
 				// Render any of the 'special' pages that might need to be rendered
 				if($.content('filename') == $.slatwall.setting('globalPageShoppingCart')) {
 					$.content('body', $.content('body') & doAction('frontend:cart.detail'));
@@ -111,6 +112,7 @@
 				} else if($.content('filename') == $.slatwall.setting('globalPageCheckout')) {
 					$.content('body', $.content('body') & doAction('frontend:checkout.detail'));
 				}
+				*/
 			}
 		}
 		
