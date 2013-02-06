@@ -128,13 +128,19 @@
 		
 		public void function onSiteLoginSuccess( required any $ ) {
 			verifySlatwallRequest( $=$ );
-			autoLoginLogoutFromSlatwall();
+			
+			// Update Login / Logout if needed
+			autoLoginLogoutFromSlatwall( $=$ );
+			
 			endSlatwallRequest();
 		}
 		
 		public void function onAfterSiteLogout( required any $ ) {
 			verifySlatwallRequest( $=$ );
-			autoLoginLogoutFromSlatwall();
+			
+			// Update Login / Logout if needed
+			autoLoginLogoutFromSlatwall( $=$ );
+			
 			endSlatwallRequest();
 		}
 		
@@ -147,12 +153,18 @@
 		// LOGIN / LOGOUT EVENTS
 		public void function onGlobalLoginSuccess( required any $ ) {
 			verifySlatwallRequest( $=$ );
-			autoLoginLogoutFromSlatwall();
+			
+			// Update Login / Logout if needed
+			autoLoginLogoutFromSlatwall( $=$ );
+			
 			endSlatwallRequest();
 		}
 		public void function onAfterGlobalLogout( required any $ ) {
 			verifySlatwallRequest( $=$ );
-			verifyMuraLoginLogout();
+			
+			// Update Login / Logout if needed
+			autoLoginLogoutFromSlatwall( $=$ );
+			
 			endSlatwallRequest();
 		}
 		
@@ -245,17 +257,17 @@
 		
 		public void function autoLoginLogoutFromSlatwall( required any $ ) {
 			// Check to see if the current mura user is logged in (or logged out), and if we should automatically login/logout the slatwall account
-			if( getMuraPluginConfig().getSetting("accountSyncType") != "none"
+			if( $.slatwall.setting("integrationMuraAccountSyncType") != "none"
 					&& !$.slatwall.getLoggedInFlag()
 					&& $.currentUser().isLoggedIn()
 					&& (
-						getMuraPluginConfig().getSetting("accountSyncType") == "all"
-						|| (getMuraPluginConfig().getSetting("accountSyncType") == "systemUserOnly" && $.currentUser().getUserBean().getType() eq 2) 
-						|| (getMuraPluginConfig().getSetting("accountSyncType") == "siteUserOnly" && $.currentUser().getUserBean().getType() eq 1)
+						$.slatwall.setting("integrationMuraaccountSyncType") == "all"
+						|| ($.slatwall.setting("integrationMuraAccountSyncType") == "systemUserOnly" && $.currentUser().getUserBean().getType() eq 2) 
+						|| ($.slatwall.setting("integrationMuraAccountSyncType") == "siteUserOnly" && $.currentUser().getUserBean().getType() eq 1)
 					)) {
 				
 				// Login Slatwall Account
-				syncMuraAccounts(accountSyncType="all", superUserSyncFlag=getMuraPluginConfig().getSetting("superUserSyncFlag"), muraUserID=$.currentUser('userID'));
+				syncMuraAccounts(accountSyncType="all", superUserSyncFlag=$.slatwall.setting("integrationMuraSuperUserSyncFlag"), muraUserID=$.currentUser('userID'));
 				var account = $.slatwall.getService("accountService").getAccountByCMSAccountID($.currentUser('userID'));
 				var accountAuth = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa WHERE aa.integration.integrationID = ? AND aa.account.accountID = ?", [getMuraIntegrationID(), account.getAccountID()]);
 				if (!isNull(account) && arrayLen(accountAuth)) {
@@ -317,6 +329,14 @@
 				}
 			}
 			
+			// Sync all of the settings defined in the plugin with the integration
+			syncMuraPluginSetting( $=$, settingName="accountSyncType", settingValue=getMuraPluginConfig().getSetting("accountSyncType") );
+			syncMuraPluginSetting( $=$, settingName="createDefaultPages", settingValue=getMuraPluginConfig().getSetting("createDefaultPages") );
+			syncMuraPluginSetting( $=$, settingName="superUserSyncFlag", settingValue=getMuraPluginConfig().getSetting("superUserSyncFlag") );
+			
+			// Clear the setting cache so that these new setting values get pulled in
+			$.slatwall.getService("settingService").clearAllSettingsQuery();
+			
 			for(var i=1; i<=assignedSitesQuery.recordCount; i++) {
 				var cmsSiteID = assignedSitesQuery["siteid"][i];
 				var siteDetails = $.getBean("settingsBean").loadBy(siteID=cmsSiteID);
@@ -368,7 +388,6 @@
 				
 			}
 		}
-		
 		
 	</cfscript>
 	
@@ -701,5 +720,37 @@
 				</cfquery>
 			</cfloop>
 		</cfif>
+	</cffunction>
+	
+	<cffunction name="syncMuraPluginSetting">
+		<cfargument name="$" />
+		<cfargument name="settingName" />
+		<cfargument name="settingValue" />
+		
+		<cfset var rs = "" />
+		<cfset var rs2 = "" />
+		
+		<cfquery name="rs">
+			SELECT settingID, settingValue FROM SlatwallSetting WHERE settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="integrationMura#arguments.settingName#" />
+		</cfquery>
+		
+		<cfif rs.recordCount>
+			<cfquery name="rs2">
+				UPDATE SlatwallSetting SET settingValue = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#" /> WHERE settingID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rs.settingID#" /> 
+			</cfquery>
+		<cfelse>
+			<cfquery name="rs2">
+				INSERT INTO SlatwallSetting (
+					settingID,
+					settingName,
+					settingValue
+				) VALUES (
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
+					 <cfqueryparam cfsqltype="cf_sql_varchar" value="integrationMura#arguments.settingName#" />,
+					 <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#" />
+				) 
+			</cfquery>
+		</cfif>
+
 	</cffunction>
 </cfcomponent>

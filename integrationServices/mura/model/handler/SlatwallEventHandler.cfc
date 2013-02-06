@@ -14,5 +14,12 @@ component extends="handler" {
 			application.serviceFactory.getBean('userUtility').loginByUserID(arguments.slatwallScope.getAccount().getCMSAccountID(), getMuraSiteIDByMuraUserID(arguments.slatwallScope.getAccount().getCMSAccountID()));
 		}
 	}
+	
+	public void function afterSaveSettingSuccess( required any slatwallScope, required any setting ) {
+		if(listFindNoCase("integrationMuraAccountSyncType,integrationMuraCreateDefaultPages,integrationMuraSuperUserSyncFlag", arguments.setting.getSettingName())) {
+			getMuraPluginConfig().setSetting( replace(arguments.setting.getSettingName(), "integrationMura", ""), arguments.setting.getSettingValue() );
+			getMuraPluginConfig().save();
+		}
+	}
 
 }

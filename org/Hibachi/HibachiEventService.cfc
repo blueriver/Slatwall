@@ -66,20 +66,14 @@ component output="false" update="true" extends="HibachiService" {
 			// Loop over all of the different registered events for a given eventName
 			for(var i=1; i<=arrayLen(variables.registeredEvents[ arguments.eventName ]); i++) {
 				
-				// Attempt to setup and call the event
-				try {
-					
-					// Get the object to call the method on
-					var object = getEventHandler(variables.registeredEvents[ arguments.eventName ][i]);
-					
-					// Stick the Hibachi Scope in with the rest of the event data
-					eventData[ "#getApplicationValue('applicationKey')#Scope" ] = getHibachiScope();
-					
-					// Attempt to evaluate this method
-					evaluate("object.#eventName#( argumentscollection=arguments.eventData )");	
-				} catch(any e) {
-					logHibachi("There was an error trying to execute one of the registered events for #arguments.eventName#");
-				}
+				// Get the object to call the method on
+				var object = getEventHandler(variables.registeredEvents[ arguments.eventName ][i]);
+				
+				// Stick the Hibachi Scope in with the rest of the event data
+				arguments.eventData[ "#getApplicationValue('applicationKey')#Scope" ] = getHibachiScope();
+				
+				// Attempt to evaluate this method
+				evaluate("object.#eventName#( argumentCollection=arguments.eventData )");	
 				
 			}
 		}
