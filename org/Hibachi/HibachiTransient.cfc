@@ -627,18 +627,28 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		throw("No property found with name #propertyName# in #getClassName()#");
 	}
 	
+	
+	public boolean function hasProperty(required string propertyName) {
+		return structKeyExists( getPropertiesStruct(), arguments.propertyName );
+	}
+	
 	// =======================  END: PROPERTY INTROSPECTION  ========================================
 	// ==================== START: APPLICATION CACHED META VALUES ===================================
 	
 	public array function getProperties() {
 		if( !getHibachiScope().hasApplicationValue("classPropertyCache_#getClassFullname()#") ) {
 			var metaData = getMetaData(this);
-			var metaProperties = metaData.properties;
-			
-			// Also add any extended data
-			if(structKeyExists(metaData, "extends") && structKeyExists(metaData.extends, "properties")) {
-				metaProperties = getService("hibachiUtilityService").arrayConcat(metaData.extends.properties, metaProperties);
-			}
+			var hasExtends = structKeyExists(metaData, "extends");
+			var metaProperties = [];
+			do {
+				var hasExtends = structKeyExists(metaData, "extends");
+				if(structKeyExists(metaData, "properties")) {
+					metaProperties = getService("hibachiUtilityService").arrayConcat(metaProperties, metaData.properties);	
+				}
+				if(hasExtends) {
+					metaData = metaData.extends;
+				}
+			} while( hasExtends );
 			
 			setApplicationValue("classPropertyCache_#getClassFullname()#", metaProperties);
 		}

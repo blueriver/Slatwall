@@ -61,6 +61,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent Properties
+	property name="simpleRepresentation" persistent="false";
 	property name="country" persistent="false";
 	property name="countryCodeOptions" persistent="false" type="array";
 	property name="stateCodeOptions" persistent="false" type="array";
