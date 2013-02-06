@@ -284,7 +284,12 @@ globalEncryptionKeySize
 				case "fulfillmentMethodAutoLocation" :
 					return getLocationService().getLocationOptions();
 			}
-			throw("You have asked for a select list of a setting named '#arguments.settingName#' and the options for that setting have not been setup yet.  Open the SettingService, and configure options for this setting.")
+			
+			if(structKeyExists(getSettingMetaData(arguments.settingName), "valueOptions")) {
+				return getSettingMetaData(arguments.settingName).valueOptions;
+			}
+							
+			throw("The setting '#arguments.settingName#' doesn't have any valueOptions configured.  Either add them in the setting metadata or in the SettingService.cfc")
 		}
 		
 		public array function getCustomIntegrationOptions() {
@@ -510,7 +515,8 @@ globalEncryptionKeySize
 						}
 					// Select
 					} else if (getSettingMetaData(arguments.settingName).fieldType == "select") {
-						var options = getSettingOptions(arguments.settingName);
+						var options = getSettingOptions(arguments.settingName);	
+						
 						for(var i=1; i<=arrayLen(options); i++) {
 							if(isStruct(options[i])) {
 								if(options[i]['value'] == settingDetails.settingValue) {
