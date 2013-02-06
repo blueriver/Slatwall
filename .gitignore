@@ -12,3 +12,4 @@ thumbs.db
 settings.xml/
 logs/
 WEB-INF
+.rdsTempFiles/
