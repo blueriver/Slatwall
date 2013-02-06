@@ -22,9 +22,9 @@
 		// Helper method to return the mura plugin config for the slatwall-mura connector
 		public any function getMuraPluginConfig() {
 			if(!structKeyExists(variables, "muraPluginConfig")) {
-				variables.pluginConfig = application.pluginManager.getConfig("slatwall-mura");
+				variables.muraPluginConfig = application.pluginManager.getConfig("slatwall-mura");
 			}
-			return variables.pluginConfig;
+			return variables.muraPluginConfig;
 		}
 		
 		// For admin request end, we call the endLifecycle
@@ -63,5 +63,26 @@
 		</cfquery>
 		
 		<cfreturn rs.siteID />
+	</cffunction>
+	
+	<cffunction name="updatePluginSetting">
+		<cfargument name="moduleID" />
+		<cfargument name="settingName" />
+		<cfargument name="settingValue" />
+		
+		<cfset var rs = "" />
+		<cfquery name="rs">
+			UPDATE
+				tpluginsettings
+			SET
+				settingValue = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#"/>
+			WHERE
+				name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#"/>
+			  AND
+			  	moduleID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.moduleID#"/>
+		</cfquery>
+		
+		<!--- Delete the plugin config from variables so that it gets reloaded --->
+		<cfset structDelete(variables, "muraPluginConfig") />
 	</cffunction>
 </cfcomponent>

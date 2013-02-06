@@ -15,10 +15,9 @@ component extends="handler" {
 		}
 	}
 	
-	public void function afterSaveSettingSuccess( required any slatwallScope, required any setting ) {
-		if(listFindNoCase("integrationMuraAccountSyncType,integrationMuraCreateDefaultPages,integrationMuraSuperUserSyncFlag", arguments.setting.getSettingName())) {
-			getMuraPluginConfig().setSetting( replace(arguments.setting.getSettingName(), "integrationMura", ""), arguments.setting.getSettingValue() );
-			getMuraPluginConfig().save();
+	public void function afterSettingSaveSuccess( required any slatwallScope, required any entity ) {
+		if(listFindNoCase("integrationMuraAccountSyncType,integrationMuraCreateDefaultPages,integrationMuraSuperUserSyncFlag", arguments.entity.getSettingName())) {
+			updatePluginSetting(moduleID=getMuraPluginConfig().getModuleID(), settingName=replaceNoCase(arguments.entity.getSettingName(), "integrationmura", ""), settingValue=arguments.entity.getSettingValue());
 		}
 	}
 

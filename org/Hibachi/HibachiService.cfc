@@ -92,6 +92,7 @@
 			var invokeArguments = {};
 			invokeArguments[ "data" ] = arguments.data;
 			invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity;
+			invokeArguments.entity = arguments.entity;
 			
 			var dataErrors = false;
 			
