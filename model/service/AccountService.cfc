@@ -108,6 +108,22 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.account;
 	}
 	
+	public any function processAccountPayment_offlineTransaction(required any account, required struct data={}) {
+		var newPaymentTransaction = getPaymentService().newPaymentTransaction();
+		newPaymentTransaction.setTransactionType( "offline" );
+		newPaymentTransaction.setAccountPayment( arguments.accountPayment );
+		newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
+		
+		if(newPaymentTransaction.hasErrors()) {
+			arguments.accountPayment.addError('processing', rbKey('validate.accountPayment.offlineProcessingError'));	
+		}
+	}
+	
+	public any function processAccountPayment_process(required any account, required struct data={}) {
+		getPaymentService().processPayment(arguments.accountPayment, arguments.processContext, arguments.data.amount);
+	}
+	
+	/*
 	public any function processAccountPayment(required any accountPayment, struct data={}, string processContext="process") {
 		
 		param name="arguments.data.amount" default="0";
@@ -132,6 +148,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		return arguments.accountPayment;
 	}
+	*/
 	
 	// =====================  END: Process Methods ============================
 	
