@@ -123,7 +123,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function validate_required(required any object, required string propertyName, boolean constraintValue=true) {
 		var value = arguments.object.invokeMethod("get#arguments.propertyName#");
-		if(!isNull(value) && len(value)) {
+		if(!isNull(value) && (isObject(value) || (isArray(value) && arrayLen(value)) || (isStruct(value) && structCount(value)) || (isSimpleValue(value) && len(value)))) {
 			return true;
 		}
 		return false;

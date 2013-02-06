@@ -162,11 +162,11 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
 		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
 		if(!hasSuccess) {
-			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.entityActionDetails.detailAction;
+			arguments.rc.entityActionDetails.sRenderItem = "detail#arguments.rc.entityActionDetails.itemEntityName#";
 		}
 		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
 		if(!hasFaliure) {
-			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.entityActionDetails.createAction;
+			arguments.rc.entityActionDetails.fRenderItem = "create#arguments.rc.entityActionDetails.itemEntityName#";
 		}
 		populateRedirectQS( arguments.rc );
 		
@@ -191,11 +191,11 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
 		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
 		if(!hasSuccess) {
-			arguments.rc.entityActionDetails.sRenderItem = arguments.rc.entityActionDetails.detailAction;
+			arguments.rc.entityActionDetails.sRenderItem = "detail#arguments.rc.entityActionDetails.itemEntityName#";
 		}
 		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
 		if(!hasFaliure) {
-			arguments.rc.entityActionDetails.fRenderItem = arguments.rc.entityActionDetails.createAction;
+			arguments.rc.entityActionDetails.fRenderItem = "create#arguments.rc.entityActionDetails.itemEntityName#";
 		}
 		populateRedirectQS( arguments.rc );
 		
