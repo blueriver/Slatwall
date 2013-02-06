@@ -2,6 +2,8 @@
 
 -------------- Explicitly Defined Events ------------------
 
+// onEvent
+
 // onApplicationRequest
 // onApplicationBootstrapRequest
 // onApplicationSetup
@@ -59,6 +61,27 @@ component output="false" update="true" extends="HibachiService" {
 	
 	public void function announceEvent(required string eventName, struct eventData={}) {
 		logHibachi("Event Announced: #arguments.eventName#");
+		
+		// Stick the Hibachi Scope in with the rest of the event data
+		arguments.eventData[ "#getApplicationValue('applicationKey')#Scope" ] = getHibachiScope();
+		
+		// If there is an onEvent registered, then we call that first
+		if(structKeyExists(variables.registeredEvents, "onEvent")) {
+			
+			var onEventData = arguments.eventData;
+			onEventData.eventName = arguments.eventName;
+			
+			// Loop over all of the different registered events for a given eventName
+			for(var i=1; i<=arrayLen(variables.registeredEvents.onEvent); i++) {
+				
+				// Get the object to call the method on
+				var object = getEventHandler(variables.registeredEvents.onEvent[i]);
+				
+				// Call the onEvent Method
+				object.onEvent(argumentcollection=onEventData);	
+				
+			}
+		}
 		
 		// Check to see if there are any events registered
 		if(structKeyExists(variables.registeredEvents, arguments.eventName)) {
