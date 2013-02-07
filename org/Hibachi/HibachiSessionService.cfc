@@ -18,26 +18,26 @@ component output="false" accessors="true" extends="HibachiService"  {
 		}
 		
 		// Load Session
-		var session = this.getSession(getSessionValue('sessionID'), true);
-		getHibachiScope().setSession( session );
+		var sessionEntity = this.getSession(getSessionValue('sessionID'), true);
+		getHibachiScope().setSession( sessionEntity );
 		
 		// Check to see if this session has an accountAuthentication, if it does then we need to verify that the authentication shouldn't be auto logged out
-		if(!isNull(session.getAccountAuthentication())) {
+		if(!isNull(sessionEntity.getAccountAuthentication())) {
 			// If there was an integration, then check the verify method for any custom auto-logout logic
-			if(session.getAccountAuthentication().getForceLogoutFlag()) {
+			if(sessionEntity.getAccountAuthentication().getForceLogoutFlag()) {
 				logoutAccount();
 			}
 		}
 		
 		// Update the last request datetime
-		session.setLastRequestDateTime( now() );
+		sessionEntity.setLastRequestDateTime( now() );
 		
 		// Save the session
-		getHibachiDAO().save(session);
+		getHibachiDAO().save(sessionEntity);
 		
 		// Save session ID in the session Scope & cookie scope for next request
-		setSessionValue('sessionID', session.getSessionID());
-		getHibachiTagService().cfcookie(name="#getApplicationValue('applicationKey')#SessionID", value=session.getSessionID(), expires="never");
+		setSessionValue('sessionID', sessionEntity.getSessionID());
+		getHibachiTagService().cfcookie(name="#getApplicationValue('applicationKey')#SessionID", value=sessionEntity.getSessionID(), expires="never");
 	}
 	
 	public string function loginAccount(required any account, required any accountAuthentication) {
