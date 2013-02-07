@@ -14,10 +14,6 @@ component accessors="true" output="false" persistent="false" {
 		return false;
 	}
 	
-	public boolean function hasProperty(required string propertyName) {
-		return structKeyExists( getPropertiesStruct(), arguments.propertyName );
-	}
-	
 	// ========================== START: FRAMEWORK ACCESS ===========================================
 	
 	// @hint gets a bean out of whatever the fw1 bean factory is

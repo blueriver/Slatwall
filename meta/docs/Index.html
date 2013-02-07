@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Slatwall Documentation</title>
+		
+		<!-- Bootstrap -->
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+		
+		<style>
+			body {
+				padding-top:60px;
+			}
+			body > .navbar {
+				font-size: 13px;
+			}
+			body > .navbar .brand {
+			  padding-right: 0;
+			  padding-left: 0;
+			  margin-left: 20px;
+			  float: right;
+			  font-weight: bold;
+			  color: #000;
+			  text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.125);
+			  -webkit-transition: all .2s linear;
+			     -moz-transition: all .2s linear;
+			          transition: all .2s linear;
+			}
+			body > .navbar .brand:hover {
+			  text-decoration: none;
+			  text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.4);
+			}
+		</style>
+		<!--
+		-->
+		<!-- <link href="css/bootstrap-docs.css" rel="stylesheet" media="screen"> -->
+		<link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"> 
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="#">SlatwallDocs</a>
+					<div class="nav-collapse collapse">
+						<ul class="nav">
+							<li class="active"><a href="#">Developers</a></li>
+							<li><a href="#about">Users</a></li>
+							<li><a href="#about">Google Group</a></li>
+							<li><a href="http://www.ten24web.com/">ten24</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			
+			<!-- GETTING STARTED -->
+			<div class="row">
+				<div class="span3">
+					<ul class="nav nav-tabs nav-stacked" data-spy="affix" data-offset-top="0" data-offset-bottom="0">
+						<li><a href="#getting-started">Getting Started</a></li>
+						<li><a href="#architecture">Architecture</a></li>
+						<li><a href="#integrations">Integrations</a></li>
+						<li><a href="#rest">RESTFul API</a></li>
+					</ul>
+				</div><!--/span-->
+				<div class="span9">
+					<div id="getting-started">
+						<div class="page-header">
+							<h2>Getting Started</h2>
+						</div>
+						<p>Getting Started should have talk about how to download / install, and what you should take into consideration</p>
+						<p>
+							What is Slatwall
+							Getting it Installed
+						</p>
+						<p>
+							<pre>
+							-- Request Objects & Values
+							$.slatwall.getAccount()
+							$.slatwall.account()
+							$.slatwall.account('propertyName')
+							$.slatwall.account('propertyName', 'newValue')
+							$.slatwall.cart()
+							$.slatwall.product()
+							$.slatwall.productList()
+							
+							-- Custom Request Values
+							$.slatwall.setValue('customKey', 'customValue')
+							$.slatwall.getValue('customKey')
+							
+							-- Session Value API
+							$.slatwall.getSessionValue('key')
+							$.slatwall.setSessionValue('key', 'value')
+							
+							-- Application Value API
+							$.slatwall.getApplicationValue('key')
+							$.slatwall.setApplicationValue('key', 'value')
+							
+							-- Model API
+							$.slatwall.getEntity('entityName', 'entityID')
+							$.slatwall.getService('serviceName')
+							$.slatwall.getList()
+							$.slatwall.getSmartList()
+							$.slatwall.getTransient()
+							</pre>
+						</p>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus metus tellus, tristique sit amet molestie eu, aliquam ac est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ullamcorper ipsum at nisi semper eu varius augue porttitor. Donec in risus sit amet felis aliquet sodales. Nulla facilisi. Integer in augue lorem, eget malesuada augue. Aenean tincidunt elementum diam, eget posuere nisi cursus id. Vivamus eleifend, libero a feugiat euismod, ligula odio mollis dui, et posuere sapien nisl nec sapien. Aliquam ullamcorper varius lacus, sit amet elementum augue tempus nec. Nulla sapien nisl, bibendum non iaculis consectetur, hendrerit ac ligula. Cras tincidunt vestibulum odio, at tempus eros suscipit vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In mattis tempor quam ac varius. Ut tempus luctus leo ut mattis. Phasellus malesuada hendrerit orci, vel dictum purus consequat vel.</p>
+						<p>Phasellus et sapien vel neque feugiat vulputate. Donec volutpat fermentum egestas. Maecenas ullamcorper tempor odio vel ultrices. Nulla pellentesque, justo in vehicula elementum, nulla risus feugiat orci, sed tincidunt tellus sem non nunc. Suspendisse potenti. Nam commodo tristique leo, at interdum odio gravida id. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer ac condimentum turpis. Maecenas iaculis nulla eget magna ultricies sit amet semper ligula tincidunt. Cras hendrerit, ligula quis tincidunt faucibus, ligula dui vulputate neque, et molestie sem est vitae eros. Nulla malesuada varius neque. Vivamus felis nunc, porttitor non pulvinar quis, facilisis et felis. Curabitur sed auctor ante. Vestibulum posuere neque mauris, in consectetur nunc. Donec blandit erat id elit adipiscing vestibulum. Suspendisse purus purus, facilisis quis consectetur eget, sagittis vitae dolor.</p>
+						<p>Morbi nunc velit, vestibulum at suscipit ac, tempor eu tortor. Duis fringilla magna in arcu viverra tristique. Vivamus nec semper odio. Pellentesque volutpat pharetra elit, sit amet ullamcorper libero ultricies nec. Vestibulum gravida dolor ac ligula placerat id fermentum lacus eleifend. Proin faucibus aliquet tempus. Nam ullamcorper dui sit amet diam vulputate id tincidunt orci placerat. Fusce pellentesque enim vel ante ultricies consectetur. Duis ut ante arcu. Pellentesque tincidunt gravida orci, at suscipit est molestie vitae. Aenean eget imperdiet elit. Vestibulum varius justo quis enim tempor in consectetur nulla dictum. Fusce ornare volutpat auctor. Maecenas blandit elementum tempor.</p>
+						<p>Integer dictum, lorem in placerat faucibus, lorem nibh tempor turpis, vitae ultricies mi augue vel tortor. Fusce varius mi arcu, eget fringilla justo. Phasellus eget convallis sapien. Donec dictum lobortis libero in molestie. Sed sed ligula justo. Nam pulvinar aliquam pharetra. Suspendisse sit amet nisl nec nisl ornare bibendum. Phasellus augue quam, cursus at congue in, vestibulum a leo. Nulla et varius ligula. Suspendisse potenti. Curabitur vehicula tellus id leo pretium fringilla eu non erat. Mauris orci massa, fermentum eget auctor eu, venenatis et tellus. In hac habitasse platea dictumst.</p>
+						<p>Duis id lorem in mauris lobortis rutrum. Morbi pretium risus non nibh ullamcorper eleifend. Nulla porta consectetur lectus. Donec in felis non erat cursus egestas ornare eget orci. Morbi condimentum fringilla nibh et pulvinar. Pellentesque est massa, dapibus id porta in, imperdiet vehicula nibh. Pellentesque lacus risus, dignissim id porttitor nec, scelerisque at erat. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus et placerat risus. Vivamus convallis, arcu a tempor sodales, ante urna tincidunt nibh, sit amet adipiscing eros odio sit amet sem. Mauris pellentesque diam id enim ultrices vestibulum. Fusce fringilla luctus nisl non lobortis.</p>
+					</div>
+				</div><!--/row-->
+			</div><!--/row-->
+			<hr />
+			<!-- HERE -->
+			<div class="row">
+				<div class="span3" style="height:1px;">
+					<ul class="nav nav-tabs nav-stacked" style="width:270px;" >
+						<li><a href="#getting-started">Getting Started</a></li>
+						<li><a href="#architecture">Architecture</a></li>
+						<li><a href="#integrations">Integrations</a></li>
+						<li><a href="#rest">RESTFul API</a></li>
+						<li><a href="#getting-started">Getting Started</a></li>
+						<li><a href="#architecture">Architecture</a></li>
+						<li><a href="#integrations">Integrations</a></li>
+						<li><a href="#rest">RESTFul API</a></li>
+					</ul>
+				</div><!--/span-->
+				<div class="span9">
+					<!-- GETTING STARTED -->
+					<div id="getting-started">
+						<div class="page-header">
+							<h2>Getting Started</h2>
+						</div>
+						<p>Getting Started should have talk about how to download / install, and what you should take into consideration</p>
+						<p>
+							What is Slatwall
+							Getting it Installed
+							
+						</p>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus metus tellus, tristique sit amet molestie eu, aliquam ac est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ullamcorper ipsum at nisi semper eu varius augue porttitor. Donec in risus sit amet felis aliquet sodales. Nulla facilisi. Integer in augue lorem, eget malesuada augue. Aenean tincidunt elementum diam, eget posuere nisi cursus id. Vivamus eleifend, libero a feugiat euismod, ligula odio mollis dui, et posuere sapien nisl nec sapien. Aliquam ullamcorper varius lacus, sit amet elementum augue tempus nec. Nulla sapien nisl, bibendum non iaculis consectetur, hendrerit ac ligula. Cras tincidunt vestibulum odio, at tempus eros suscipit vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In mattis tempor quam ac varius. Ut tempus luctus leo ut mattis. Phasellus malesuada hendrerit orci, vel dictum purus consequat vel.</p>
+						<p>Phasellus et sapien vel neque feugiat vulputate. Donec volutpat fermentum egestas. Maecenas ullamcorper tempor odio vel ultrices. Nulla pellentesque, justo in vehicula elementum, nulla risus feugiat orci, sed tincidunt tellus sem non nunc. Suspendisse potenti. Nam commodo tristique leo, at interdum odio gravida id. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer ac condimentum turpis. Maecenas iaculis nulla eget magna ultricies sit amet semper ligula tincidunt. Cras hendrerit, ligula quis tincidunt faucibus, ligula dui vulputate neque, et molestie sem est vitae eros. Nulla malesuada varius neque. Vivamus felis nunc, porttitor non pulvinar quis, facilisis et felis. Curabitur sed auctor ante. Vestibulum posuere neque mauris, in consectetur nunc. Donec blandit erat id elit adipiscing vestibulum. Suspendisse purus purus, facilisis quis consectetur eget, sagittis vitae dolor.</p>
+						<p>Morbi nunc velit, vestibulum at suscipit ac, tempor eu tortor. Duis fringilla magna in arcu viverra tristique. Vivamus nec semper odio. Pellentesque volutpat pharetra elit, sit amet ullamcorper libero ultricies nec. Vestibulum gravida dolor ac ligula placerat id fermentum lacus eleifend. Proin faucibus aliquet tempus. Nam ullamcorper dui sit amet diam vulputate id tincidunt orci placerat. Fusce pellentesque enim vel ante ultricies consectetur. Duis ut ante arcu. Pellentesque tincidunt gravida orci, at suscipit est molestie vitae. Aenean eget imperdiet elit. Vestibulum varius justo quis enim tempor in consectetur nulla dictum. Fusce ornare volutpat auctor. Maecenas blandit elementum tempor.</p>
+						<p>Integer dictum, lorem in placerat faucibus, lorem nibh tempor turpis, vitae ultricies mi augue vel tortor. Fusce varius mi arcu, eget fringilla justo. Phasellus eget convallis sapien. Donec dictum lobortis libero in molestie. Sed sed ligula justo. Nam pulvinar aliquam pharetra. Suspendisse sit amet nisl nec nisl ornare bibendum. Phasellus augue quam, cursus at congue in, vestibulum a leo. Nulla et varius ligula. Suspendisse potenti. Curabitur vehicula tellus id leo pretium fringilla eu non erat. Mauris orci massa, fermentum eget auctor eu, venenatis et tellus. In hac habitasse platea dictumst.</p>
+						<p>Duis id lorem in mauris lobortis rutrum. Morbi pretium risus non nibh ullamcorper eleifend. Nulla porta consectetur lectus. Donec in felis non erat cursus egestas ornare eget orci. Morbi condimentum fringilla nibh et pulvinar. Pellentesque est massa, dapibus id porta in, imperdiet vehicula nibh. Pellentesque lacus risus, dignissim id porttitor nec, scelerisque at erat. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus et placerat risus. Vivamus convallis, arcu a tempor sodales, ante urna tincidunt nibh, sit amet adipiscing eros odio sit amet sem. Mauris pellentesque diam id enim ultrices vestibulum. Fusce fringilla luctus nisl non lobortis.</p>
+					</div>
+				</div><!--/row-->
+			</div><!--/row-->
+			<hr>
+			<footer>
+				<p>&copy; ten24 Web Solutions 2013</p>
+			</footer>
+		</div><!--/.fluid-container-->
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+	</body>
+</html>

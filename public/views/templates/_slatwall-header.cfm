@@ -60,9 +60,7 @@ Notes:
 				<div class="navbar-inner">
 					<div class="container">
 						<div class="nav-collapse">
-							<a class="brand" href="<cfoutput>#$.slatwall.getBaseURL()#</cfoutput>">Slatwall Admin</a>
 							<ul class="nav">
-								<li><a href="?slatAction=frontend:page.slatwall-checkout">Checkout</a></li>
 								<li><a href="?slatAction=frontend:page.slatwall-productlisting">Product List</a></li>
 								<li><a href="?slatAction=frontend:page.slatwall-account">Account</a></li>
 								<li><a href="?slatAction=frontend:page.slatwall-shoppingcart">Shopping Cart</a></li>
