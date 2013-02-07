@@ -107,6 +107,7 @@
 				if(getBeanFactory().containsBean("#arguments.entity.getClassName()#_#arguments.processContext#")) {
 					invokeArguments[ "processObject" ] = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
 					invokeArguments[ "processObject" ].populate( arguments.data );
+					invokeArguments[ "processObject" ].invokeMethod("set#arguments.entity.getClassName()#", {1=arguments.entity});
 					invokeArguments[ "processObject" ].validate( context=arguments.processContext );
 					
 					if(invokeArguments[ "processObject" ].hasErrors()) {

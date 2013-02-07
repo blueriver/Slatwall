@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Session" entityname="SlatwallSession" table="SlatwallSession" persistent=true output=false accessors=true extends="HibachiEntity" hb_serviceName="hibachiSessionService" {
+component displayname="Session" entityname="SlatwallSession" table="SlatwallSession" persistent="true" output="false" accessors="true" extends="HibachiEntity" hb_serviceName="hibachiSessionService" {
 	
 	// Persistent Properties
 	property name="sessionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
