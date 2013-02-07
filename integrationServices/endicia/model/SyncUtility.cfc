@@ -1,4 +1,4 @@
-<cfcomponent extends="Slatwall.model.service.BaseService" output="false">
+<cfcomponent extends="Slatwall.model.service.HibachiService" output="false">
 	
 	<cffunction name="syncPush" access="public" returntype="Any" >
 		

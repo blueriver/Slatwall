@@ -1,4 +1,4 @@
-<cfcomponent output="false" extends="Slatwall.model.dao.BaseDAO">
+<cfcomponent output="false" extends="Slatwall.model.dao.HibachiDAO">
 	
 	<cffunction name="updateProducts">
 		

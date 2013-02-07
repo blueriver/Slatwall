@@ -5,10 +5,11 @@
 		
 		<!-- Bootstrap -->
 		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-		
+		<link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
 		<style>
+			
 			body {
-				padding-top:60px;
+				padding-top:40px;
 			}
 			body > .navbar {
 				font-size: 13px;
@@ -29,11 +30,181 @@
 			  text-decoration: none;
 			  text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.4);
 			}
+			/* Sidenav for Docs
+			-------------------------------------------------- */
+			
+			.bs-docs-sidenav {
+			  width: 228px;
+			  margin: 30px 0 0;
+			  padding: 0;
+			  background-color: #fff;
+			  -webkit-border-radius: 6px;
+			     -moz-border-radius: 6px;
+			          border-radius: 6px;
+			  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+			     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+			          box-shadow: 0 1px 4px rgba(0,0,0,.065);
+			}
+			.bs-docs-sidenav > li > a {
+			  display: block;
+			  width: 190px \9;
+			  margin: 0 0 -1px;
+			  padding: 8px 14px;
+			  border: 1px solid #e5e5e5;
+			}
+			.bs-docs-sidenav > li:first-child > a {
+			  -webkit-border-radius: 6px 6px 0 0;
+			     -moz-border-radius: 6px 6px 0 0;
+			          border-radius: 6px 6px 0 0;
+			}
+			.bs-docs-sidenav > li:last-child > a {
+			  -webkit-border-radius: 0 0 6px 6px;
+			     -moz-border-radius: 0 0 6px 6px;
+			          border-radius: 0 0 6px 6px;
+			}
+			.bs-docs-sidenav > .active > a {
+			  position: relative;
+			  z-index: 2;
+			  padding: 9px 15px;
+			  border: 0;
+			  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+			  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+			     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+			          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+			}
+			/* Chevrons */
+			.bs-docs-sidenav .icon-chevron-right {
+			  float: right;
+			  margin-top: 2px;
+			  margin-right: -6px;
+			  opacity: .25;
+			}
+			.bs-docs-sidenav > li > a:hover {
+			  background-color: #f5f5f5;
+			}
+			.bs-docs-sidenav a:hover .icon-chevron-right {
+			  opacity: .5;
+			}
+			.bs-docs-sidenav .active .icon-chevron-right,
+			.bs-docs-sidenav .active a:hover .icon-chevron-right {
+			  background-image: url(../img/glyphicons-halflings-white.png);
+			  opacity: 1;
+			}
+			.bs-docs-sidenav.affix {
+			  top: 40px;
+			}
+			.bs-docs-sidebar {
+				height:100%;
+				background-color:#fff;
+			}
+			.bs-docs-sidenav.affix-bottom {
+			  position: absolute;
+			  top: 0px;
+			  bottom: 270px;
+			}
+			/* Responsive
+			-------------------------------------------------- */
+			
+			/* Desktop large
+			------------------------- */
+			@media (min-width: 1200px) {
+			  .bs-docs-sidenav {
+			    width: 258px;
+			  }
+			  .bs-docs-sidenav > li > a {
+			    width: 230px \9; /* Override the previous IE8-9 hack */
+			  }
+			}
+			
+			/* Desktop
+			------------------------- */
+			@media (max-width: 980px) {
+			  /* Unfloat brand */
+			  body > .navbar-fixed-top .brand {
+			    float: left;
+			    margin-left: 0;
+			    padding-left: 10px;
+			    padding-right: 10px;
+			  }
+			
+			  /* When affixed, space properly */
+			  .bs-docs-sidenav {
+			    top: 0;
+			    width: 218px;
+			    margin-top: 30px;
+			    margin-right: 0;
+			  }
+			}
+			
+			/* Tablet to desktop
+			------------------------- */
+			@media (min-width: 768px) and (max-width: 979px) {
+			  /* Remove any padding from the body */ 
+			  body {
+			    padding-top: 0;
+			  }
+			  /* Adjust sidenav width */
+			  .bs-docs-sidenav {
+			    width: 166px;
+			    margin-bottom: 20px;
+				margin-top: 10px;
+			  }
+			  .bs-docs-sidenav.affix {
+			  	/*
+			    position: static;
+			    width: auto;
+				*/
+			    top: 0;
+			  }
+			}
+			
+			/* Tablet
+			------------------------- */
+			@media (max-width: 767px) {
+			  /* Remove any padding from the body */
+			  body {
+			    padding-top: 0;
+			  }
+			  /* Sidenav */
+			  .bs-docs-sidenav {
+			    width: auto;
+			    margin-bottom: 20px;
+				margin-top: 0px;
+			  }
+			  .bs-docs-sidenav.affix {
+			    position: static;
+			    width: auto;
+			    top: auto;
+			  }
+			
+			}
+			
+			/* Landscape phones
+			------------------------- */
+			@media (max-width: 480px) {
+			  /* Remove padding above jumbotron */
+			  body {
+			    padding-top: 0;
+			  }
+			
+			  /* Do our best to make tables work in narrow viewports */
+			  table code {
+			    white-space: normal;
+			    word-wrap: break-word;
+			    word-break: break-all;
+			  }
+			
+			  
+			  /* Tighten up footer */
+			  .footer {
+			    padding-top: 20px;
+			    padding-bottom: 20px;
+			  }
+			}
 		</style>
 		<!--
 		-->
 		<!-- <link href="css/bootstrap-docs.css" rel="stylesheet" media="screen"> -->
-		<link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"> 
 	</head>
 	<body>
 		<div class="navbar navbar-inverse navbar-fixed-top">
@@ -60,8 +231,8 @@
 			
 			<!-- GETTING STARTED -->
 			<div class="row">
-				<div class="span3">
-					<ul class="nav nav-tabs nav-stacked" data-spy="affix" data-offset-top="0" data-offset-bottom="0">
+				<div class="span3 bs-docs-sidebar">
+					<ul class="nav nav-tabs nav-stacked bs-docs-sidenav" data-spy="affix" data-offset-top="0">
 						<li><a href="#getting-started">Getting Started</a></li>
 						<li><a href="#architecture">Architecture</a></li>
 						<li><a href="#integrations">Integrations</a></li>
@@ -117,23 +288,15 @@
 					</div>
 				</div><!--/row-->
 			</div><!--/row-->
-			<hr />
-			<!-- HERE -->
+			<hr>
 			<div class="row">
-				<div class="span3" style="height:1px;">
-					<ul class="nav nav-tabs nav-stacked" style="width:270px;" >
-						<li><a href="#getting-started">Getting Started</a></li>
-						<li><a href="#architecture">Architecture</a></li>
-						<li><a href="#integrations">Integrations</a></li>
-						<li><a href="#rest">RESTFul API</a></li>
-						<li><a href="#getting-started">Getting Started</a></li>
-						<li><a href="#architecture">Architecture</a></li>
-						<li><a href="#integrations">Integrations</a></li>
-						<li><a href="#rest">RESTFul API</a></li>
+				<div class="span3 bs-docs-sidebar">
+					<ul class="nav nav-tabs nav-stacked bs-docs-sidenav" data-spy="affix" data-offset-top="1000">
+						<li><a href="#getting-started">NAV 2</a></li>
+						<li><a href="#architecture">Nav 3</a></li>
 					</ul>
 				</div><!--/span-->
 				<div class="span9">
-					<!-- GETTING STARTED -->
 					<div id="getting-started">
 						<div class="page-header">
 							<h2>Getting Started</h2>
@@ -142,7 +305,37 @@
 						<p>
 							What is Slatwall
 							Getting it Installed
+						</p>
+						<p>
+							<pre>
+							-- Request Objects & Values
+							$.slatwall.getAccount()
+							$.slatwall.account()
+							$.slatwall.account('propertyName')
+							$.slatwall.account('propertyName', 'newValue')
+							$.slatwall.cart()
+							$.slatwall.product()
+							$.slatwall.productList()
 							
+							-- Custom Request Values
+							$.slatwall.setValue('customKey', 'customValue')
+							$.slatwall.getValue('customKey')
+							
+							-- Session Value API
+							$.slatwall.getSessionValue('key')
+							$.slatwall.setSessionValue('key', 'value')
+							
+							-- Application Value API
+							$.slatwall.getApplicationValue('key')
+							$.slatwall.setApplicationValue('key', 'value')
+							
+							-- Model API
+							$.slatwall.getEntity('entityName', 'entityID')
+							$.slatwall.getService('serviceName')
+							$.slatwall.getList()
+							$.slatwall.getSmartList()
+							$.slatwall.getTransient()
+							</pre>
 						</p>
 						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus metus tellus, tristique sit amet molestie eu, aliquam ac est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ullamcorper ipsum at nisi semper eu varius augue porttitor. Donec in risus sit amet felis aliquet sodales. Nulla facilisi. Integer in augue lorem, eget malesuada augue. Aenean tincidunt elementum diam, eget posuere nisi cursus id. Vivamus eleifend, libero a feugiat euismod, ligula odio mollis dui, et posuere sapien nisl nec sapien. Aliquam ullamcorper varius lacus, sit amet elementum augue tempus nec. Nulla sapien nisl, bibendum non iaculis consectetur, hendrerit ac ligula. Cras tincidunt vestibulum odio, at tempus eros suscipit vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In mattis tempor quam ac varius. Ut tempus luctus leo ut mattis. Phasellus malesuada hendrerit orci, vel dictum purus consequat vel.</p>
 						<p>Phasellus et sapien vel neque feugiat vulputate. Donec volutpat fermentum egestas. Maecenas ullamcorper tempor odio vel ultrices. Nulla pellentesque, justo in vehicula elementum, nulla risus feugiat orci, sed tincidunt tellus sem non nunc. Suspendisse potenti. Nam commodo tristique leo, at interdum odio gravida id. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer ac condimentum turpis. Maecenas iaculis nulla eget magna ultricies sit amet semper ligula tincidunt. Cras hendrerit, ligula quis tincidunt faucibus, ligula dui vulputate neque, et molestie sem est vitae eros. Nulla malesuada varius neque. Vivamus felis nunc, porttitor non pulvinar quis, facilisis et felis. Curabitur sed auctor ante. Vestibulum posuere neque mauris, in consectetur nunc. Donec blandit erat id elit adipiscing vestibulum. Suspendisse purus purus, facilisis quis consectetur eget, sagittis vitae dolor.</p>
@@ -152,12 +345,26 @@
 					</div>
 				</div><!--/row-->
 			</div><!--/row-->
-			<hr>
 			<footer>
 				<p>&copy; ten24 Web Solutions 2013</p>
 			</footer>
 		</div><!--/.fluid-container-->
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
 		<script src="js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(e){
+				var offsetPlus = 0;
+				if ($(window).width() <= 979) {
+					var offsetPlus = 29;
+				}
+				$('[data-spy="affix"]').each(function () {
+					var thisOffsetTop = ($($(this).closest('.row')).offset().top - 40) + offsetPlus;
+					var thisOffsetBot = $(document).height() - $($(this).closest('.row')).height() - $($(this).closest('.row')).offset().top;
+					console.log(thisOffsetBot);
+					$(this).data('offset-top', thisOffsetTop);
+					//$(this).data('offset-bottom', thisOffsetBot);
+				});
+			});
+		</script>
 	</body>
 </html>
