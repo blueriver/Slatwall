@@ -1,0 +1,22 @@
+{
+	"conditions":{
+	    "transactionTypeAuthorize":{
+	        "transactionType":{"eq":"authorize"}
+	    },
+	    "transactionTypeAuthorize":{
+	        "transactionType":{"eq":"authorizeAndCharge"}
+	    }
+	    ,
+	    "transactionTypeAuthorize":{
+	        "transactionType":{"eq":"authorize"}
+	    }
+	    ,
+	    "transactionTypeAuthorize":{
+	        "transactionType":{"eq":"authorize"}
+	    }
+	},
+	"properties":{
+		"amount":				[{"required":true},{"conditions":"transactionTypeAuthorize","lteProperty":"orderPayment.amountUnAuthorized"}],
+		"transactionType":		[{"required":true}]
+	}
+}
