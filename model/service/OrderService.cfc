@@ -629,7 +629,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: Process Methods ===========================
 	
-	// Process: Order CONTEXT: placeOrder
+	// Process Order
 	public any function processOrder_placeOrder(required any order, struct data={}, string processContext="process") {
 		// First we need to lock the session so that this order doesn't get placed twice.
 		lock scope="session" timeout="60" {
@@ -1894,9 +1894,57 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	public any function processOrderPayment_ProcessTransaction(required any orderPayment, required any processObject) {
 		
 		if(arguments.processObject.getTransactionType()=="chargePreAuthorization") {
+			// We can loop over previous transactions for authroization codes to capture the amount we need.
+			var totalCaptured = 0;
 			
+			for(var i=1; i<=arrayLen(arguments.orderPayment.getPaymentTransactions()); i++) {
+				
+				// We can loop over previous transactions for authroization codes to capture the amount we need.
+				var totalCaptured = 0;
+				
+				for(var i=1; i<=arrayLen(arguments.orderPayment.getPaymentTransactions()); i++) {
+					
+					var originalTransaction = arguments.orderPayment.getPaymentTransactions()[i];
+					
+					if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountReceived() ) {
+						
+						var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountReceived();
+						var leftToCapture = arguments.data.amount - totalCaptured;
+						var captureAmount = 0;
+						
+						if(leftToCapture < capturableAmount) {
+							captureAmount = leftToCapture;
+						} else {
+							captureAmount = capturableAmount;
+						}
+						
+						arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
+						
+						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", captureAmount, originalTransaction);
+						
+						if(paymentOK) {
+							totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
+						}
+						
+						// If some payments failed but the total was finally captured, then we can can remove any processing errors
+						if(totalCaptured == arguments.data.amount) {
+							structDelete(arguments.orderPayment.getErrors(), 'processing');
+							break;
+						}
+					}
+				}
+			}
 			
 		} else if (arguments.processObject.getTransactionType()=="offlineTransaction") {
+		
+			var newPaymentTransaction = getPaymentService().newPaymentTransaction();
+			newPaymentTransaction.setTransactionType( "offline" );
+			newPaymentTransaction.setOrderPayment( arguments.orderPayment );
+			newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
+			
+			if(newPaymentTransaction.hasErrors()) {
+				arguments.orderPayment.addError('processing', 'There was an unknown error trying to add an offline transaction for this order payment.');	
+			}
 			
 		} else {
 			// Standard Payment Process
@@ -1904,10 +1952,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		}
 		
+		if(!arguments.orderPayment.hasErrors()) {
+			// Update the Order Status
+			updateOrderStatus( arguments.orderPayment.getOrder() );
+		}
+		
+		return arguments.orderPayment;
+		
 	}	
 	
 	
-	public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
+	/*public any function processOrderPayment(required any orderPayment, struct data={}, string processContext="process") {
 		
 		param name="arguments.data.amount" default="0";
 		
@@ -1983,7 +2038,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		return arguments.orderPayment;
-	}
+	}*/
 
 	// =====================  END: Process Methods ============================
 	

@@ -3,20 +3,26 @@
 	    "transactionTypeAuthorize":{
 	        "transactionType":{"eq":"authorize"}
 	    },
-	    "transactionTypeAuthorize":{
+	    "transactionTypeAuthorizeAndCharge":{
 	        "transactionType":{"eq":"authorizeAndCharge"}
 	    }
 	    ,
-	    "transactionTypeAuthorize":{
-	        "transactionType":{"eq":"authorize"}
+	    "transactionTypeCredit":{
+	        "transactionType":{"eq":"credit"}
 	    }
 	    ,
-	    "transactionTypeAuthorize":{
-	        "transactionType":{"eq":"authorize"}
+	    "transactionTypeChargePreAuthorization":{
+	        "transactionType":{"eq":"chargePreAuthorization"}
 	    }
 	},
 	"properties":{
-		"amount":				[{"required":true},{"conditions":"transactionTypeAuthorize","lteProperty":"orderPayment.amountUnAuthorized"}],
+		"amount":				[
+			{"required":true},
+			{"conditions":"transactionTypeAuthorize","lteProperty":"orderPayment.amountUnAuthorized"},
+			{"conditions":"transactionTypeAuthorizeAndCharge","lteProperty":"orderPayment.getAmountUnreceived"},
+			{"conditions":"transactionTypeCredit","lteProperty":"orderPayment.getAmountUncredited"},
+			{"conditions":"transactionTypeChargePreAuthorization","lteProperty":"orderPayment.getAmountUncaptured"}
+		],
 		"transactionType":		[{"required":true}]
 	}
 }
