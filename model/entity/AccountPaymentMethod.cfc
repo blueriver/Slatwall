@@ -50,9 +50,9 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" hb_nullOptionRBKey="define.select";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" hb_nullOptionRBKey="define.select";
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" hb_nullOptionRBKey="define.select";
 	
 	// Related Object Properties (one-to-many)
 	
