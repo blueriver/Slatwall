@@ -41,21 +41,18 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	// Persistent Properties
 	property name="contentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="contentIDPath" ormtype="string" length="500";
-	property name="activeFlag" ormtype="boolean" default=1;
-	
+	property name="activeFlag" ormtype="boolean";
 	property name="title" ormtype="string";
-	property name="cmsContentID" ormtype="string";
-	property name="cmsContentIDPath" ormtype="string" length="500";
-	property name="cmsSiteID" ormtype="string";
-	
 	property name="allowPurchaseFlag" ormtype="boolean";
-	property name="disableProductAssignmentFlag" ormtype="boolean";
+	property name="productListingPageFlag" ormtype="boolean";
 	
+	// CMS Properties
+	property name="cmsContentID" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	property name="site" cfc="Site" fieldtype="many-to-one" fkcolumn="siteID";
 	property name="parentContent" cfc="Content" fieldtype="many-to-one" fkcolumn="parentContentID";
-	property name="contentTemplateType" cfc="Type" fieldtype="many-to-one" fkcolumn="contentTemplateTypeID" hb_nullOptionKey="define.select";
+	property name="contentTemplateType" cfc="Type" fieldtype="many-to-one" fkcolumn="contentTemplateTypeID" hb_nullOptionRBKey="define.none";
 	
 	// Related Object Properties (one-to-many)
 	property name="childContents" singularname="childContent" cfc="Content" type="array" fieldtype="one-to-many" fkcolumn="parentContentID" cascade="all-delete-orphan" inverse="true";
@@ -74,9 +71,10 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Deprecated Properties
-	property name="templateFlag" ormtype="boolean";		// use templateType instead
-
-
+	property name="disableProductAssignmentFlag" ormtype="boolean";			// no longer needed because the listingPageFlag is defined for all objects
+	property name="templateFlag" ormtype="boolean";							// use contentTemplateType instead
+	property name="cmsSiteID" ormtype="string";
+	property name="cmsContentIDPath" ormtype="string" length="500";
     
 	
 	// ============ START: Non-Persistent Property Methods =================

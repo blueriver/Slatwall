@@ -108,7 +108,7 @@ globalEncryptionKeySize
 			brandMetaKeywordsString = {fieldType="textarea"},
 			
 			// Content
-			contentRestrictAccessFlag = {fieldType="yesno"},
+			contentRestrictAccessFlag = {fieldType="yesno",defaultValue="0"},
 			contentRequirePurchaseFlag = {fieldType="yesno"},
 			contentRequireSubscriptionFlag = {fieldType="yesno"},
 			contentProductListingFlag = {fieldType="yesno"},
@@ -384,6 +384,9 @@ globalEncryptionKeySize
 			
 			if(structKeyExists(getSettingMetaData(arguments.settingName), "defaultValue")) {
 				settingDetails.settingValue = getSettingMetaData(arguments.settingName).defaultValue;
+				if(structKeyExists(arguments, "object") && arguments.object.isPersistent()) {
+					settingDetails.settingInherited = true;
+				}
 			}
 			
 			// If this is a global setting there isn't much we need to do because we already know there aren't any relationships
@@ -393,6 +396,7 @@ globalEncryptionKeySize
 					foundValue = true;
 					settingDetails.settingValue = settingRecord.settingValue;
 					settingDetails.settingID = settingRecord.settingID;
+					settingDetails.settingInherited = false;
 				}
 				
 			// If this is not a global setting, but one with a prefix, then we need to check the relationships
@@ -419,6 +423,7 @@ globalEncryptionKeySize
 						foundValue = true;
 						settingDetails.settingValue = settingRecord.settingValue;
 						settingDetails.settingID = settingRecord.settingID;
+						settingDetails.settingInherited = false;
 					} else {
 						structClear(settingDetails.settingRelationships);
 					}
@@ -492,6 +497,8 @@ globalEncryptionKeySize
 						settingDetails.settingID = settingRecord.settingID;
 						if(structKeyExists(arguments, "object") && arguments.object.isPersistent()) {
 							settingDetails.settingInherited = true;
+						} else {
+							settingDetails.settingInherited = false;	
 						}
 					}
 				}
