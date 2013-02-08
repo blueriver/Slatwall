@@ -109,7 +109,95 @@ component extends="HibachiService" accessors="true" {
 	
 	// ===================== START: Process Methods ===========================
 	
-	public any function processProduct(required any product, struct data={}, string processContext="process") {
+	//Process: Product Context: updateSkus 
+	public any function processProduct_updateSkus(required any product, struct data={}, string processContext="process") {
+		
+		var skus = 	arguments.product.getSkus();
+		if(arrayLen(skus)){
+			for(i=1; i <= arrayLen(skus); i++){
+				// Update Price
+				if(arguments.data.updatePrice) {
+					skus[i].setPrice(arguments.data.price);	
+				}
+				// Update List Price
+				if(arguments.data.updateListPrice) {
+					skus[i].setListPrice(arguments.data.listPrice);	
+				}
+			}
+		}		
+	
+	}
+	
+	//Process: Product Context: addOptionGroup 
+	public any function processProduct_addOptionGroup(required any product, struct data={}, string processContext="process") {
+		
+		var skus = 	arguments.product.getSkus();
+		var options = getOptionService().getOptionGroup(arguments.data.optionGroup).getOptions();
+		
+		if(arrayLen(options)){
+			for(i=1; i <= arrayLen(skus); i++){
+				skus[i].addOption(options[1]);
+			}
+		}
+		
+		updateImageFileNameForProductSkus( arguments.product );		
+	
+	}
+	
+	//Process: Product Context: addOption 
+	public any function processProduct_addOption(required any product, struct data={}, string processContext="process") {
+		
+		var newOption = getOptionService().getOption(arguments.data.option);
+		var newOptionsData = {
+			options = newOption.getOptionID(),
+			price = arguments.product.getDefaultSku().getPrice()
+		};
+		if(!isNull(arguments.product.getDefaultSku().getListPrice())) {
+			newOptionsData.listPrice = arguments.product.getDefaultSku().getListPrice();
+		}
+		
+		// Loop over each of the existing skus
+		for(var s=1; s<=arrayLen(arguments.product.getSkus()); s++) {
+			// Loop over each of the existing options for those skus
+			for(var o=1; o<=arrayLen(arguments.product.getSkus()[s].getOptions()); o++) {
+				// If this option is not of the same option group, and it isn't already in the list, then we can add it to the list
+				if(arguments.product.getSkus()[s].getOptions()[o].getOptionGroup().getOptionGroupID() != newOption.getOptionGroup().getOptionGroupID() && !listFindNoCase(newOptionsData.options, arguments.product.getSkus()[s].getOptions()[o].getOptionID())) {
+					newOptionsData.options = listAppend(newOptionsData.options, arguments.product.getSkus()[s].getOptions()[o].getOptionID());
+				}
+			}
+		}
+		
+		getSkuService().createSkus(arguments.product, newOptionsData);
+		
+		updateImageFileNameForProductSkus( arguments.product );	
+	
+	}
+	
+	//Process: Product Context: addSubscriptionTerm 
+	public any function processProduct_addSubscriptionTerm(required any product, struct data={}, string processContext="process") {
+		
+		var newSubscriptionTerm = getSubscriptionService().getSubscriptionTerm(arguments.data.subscriptionTermID);
+		var newSku = getSkuService().newSku();
+		
+		newSku.setPrice( arguments.data.price );
+		if( arguments.data.listPrice != "" && isNumeric(arguments.data.listPrice)) {
+			newSku.setListPrice( arguments.data.listPrice );	
+		}
+		newSku.setSkuCode( arguments.product.getProductCode() & "-#arrayLen(arguments.product.getSkus()) + 1#");
+		newSku.setSubscriptionTerm( newSubscriptionTerm );
+		for(var b=1; b <= arrayLen( arguments.product.getDefaultSku().getSubscriptionBenefits() ); b++) {
+			newSku.addSubscriptionBenefit( arguments.product.getDefaultSku().getSubscriptionBenefits()[b] );
+		}
+		for(var b=1; b <= arrayLen( arguments.product.getDefaultSku().getRenewalSubscriptionBenefits() ); b++) {
+			newSku.addRenewalSubscriptionBenefit( arguments.product.getDefaultSku().getRenewalSubscriptionBenefits()[b] );
+		}
+		newSku.setProduct( arguments.product );
+		
+		updateImageFileNameForProductSkus( arguments.product );
+	
+	}			
+	
+	/*public any function processProduct(required any product, struct data={}, string processContext="process") {
 		
 		switch(arguments.processContext){
 			case 'updateSkus':
@@ -195,7 +283,7 @@ component extends="HibachiService" accessors="true" {
 			break;
 		}
 		
-	}
+	}*/
 	
 	// =====================  END: Process Methods ============================
 	

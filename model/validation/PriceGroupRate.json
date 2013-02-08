@@ -1,5 +1,10 @@
 {
 	"contexts":["save","edit","delete"],
+	"conditions":{
+	    "isNotGlobal":{
+	        "getGlobalFlag":{"eq":0}
+	    }
+	},
 	"properties":{
 		"priceGroupName":					[{"contexts":"save","required":true}],
 		"priceGroupCode":					[{"contexts":"save","required":true}],
