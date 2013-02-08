@@ -104,6 +104,7 @@ Notes:
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.warehouse_nav')#" icon="barcode icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.liststockreceiver" type="list">
 							<cf_HibachiActionCaller action="admin:entity.liststockadjustment" type="list">
+							<cf_HibachiActionCaller action="admin:entity.listphysical" type="list">
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.integrations_nav')#" icon="random icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.listintegration" type="list">

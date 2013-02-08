@@ -54,10 +54,6 @@ component extends="HibachiService" accessors="true" output="false" {
 				}
 				break;
 			}
-			case "SlatwallStockPhysicalItem": {
-				throw("Impliment ME!");
-				break;
-			}
 			case "SlatwallOrderDeliveryItem": {
 				if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
 					var inventory = this.newInventory();
