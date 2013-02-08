@@ -294,12 +294,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			variables[ cacheKey ] = smartList.getRecords();
 			
 			// If this is a many-to-one related property, then add a 'select' to the top of the list
-			if(getPropertyMetaData( propertyName ).fieldType == "many-to-one" && getPropertyMetaData( propertyName ).cfc != "Type") {
-				if( structKeyExists(getPropertyMetaData( propertyName ), "nullRBKey") ) {
-					arrayPrepend(variables[ cacheKey ], {value="", name=rbKey(getPropertyMetaData( propertyName ).nullRBKey)});
-				} else {
-					arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});	
-				}
+			if(getPropertyMetaData( propertyName ).fieldType == "many-to-one" && structKeyExists(getPropertyMetaData( propertyName ), "hb_nullOptionRBKey")) {
+				arrayPrepend(variables[ cacheKey ], {value="", name=rbKey(getPropertyMetaData( propertyName ).hb_nullOptionRBKey)});
 			}
 		}
 		

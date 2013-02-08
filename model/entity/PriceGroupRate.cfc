@@ -55,7 +55,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 		
 	// Related Object Properties (many-to-one)
 	property name="priceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="priceGroupID";
-	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID" nullRBKey="define.none";
+	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID" hb_nullOptionRBKey="define.none";
 	
 	// Related Object Properties (many-to-many)
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID";

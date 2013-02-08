@@ -50,11 +50,12 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	
 	property name="allowPurchaseFlag" ormtype="boolean";
 	property name="disableProductAssignmentFlag" ormtype="boolean";
-	property name="templateFlag" ormtype="boolean";
+	
 	
 	// Related Object Properties (many-to-one)
 	property name="site" cfc="Site" fieldtype="many-to-one" fkcolumn="siteID";
 	property name="parentContent" cfc="Content" fieldtype="many-to-one" fkcolumn="parentContentID";
+	property name="contentTemplateType" cfc="Type" fieldtype="many-to-one" fkcolumn="contentTemplateTypeID" hb_nullOptionKey="define.select";
 	
 	// Related Object Properties (one-to-many)
 	property name="childContents" singularname="childContent" cfc="Content" type="array" fieldtype="one-to-many" fkcolumn="parentContentID" cascade="all-delete-orphan" inverse="true";
@@ -72,8 +73,8 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Non-Persistent Properties
-
+	// Deprecated Properties
+	property name="templateFlag" ormtype="boolean";		// use templateType instead
 
 
     

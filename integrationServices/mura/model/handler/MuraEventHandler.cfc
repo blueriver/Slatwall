@@ -171,18 +171,26 @@
 		}
 		
 		// RENDERING EVENTS
+		
+		public void function onContentEdit() {
+			verifySlatwallRequest( $=request.muraScope );
+			
+			// Setup the mura scope
+			var $ = request.muraScope;
+			
+			// Place Slatwall content entity in the slatwall scope
+			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.content('contentID'), true ) );
+			
+			include "../../views/muraevent/oncontentedit.cfm";
+			
+			endSlatwallRequest();
+		}
 		/*
 		public string function onContentTabBasicBottomRender(required any $) {
 			writeLog(file="Slatwall", text="Mura Integration - onContentTabBasicBottomRender()");
 			return "<div>This is my content</div>";
 		}
 		*/
-		
-		public void function onContentEdit( required any $ ) {
-			verifySlatwallRequest( $=$ );
-			writeOutput("EDIT SETTINGS HERE");
-			endSlatwallRequest();
-		}
 		
 		
 		// SAVE / DELETE EVENTS

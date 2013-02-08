@@ -38,6 +38,10 @@ Notes:
 */
 component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiScope" {
 
+	// Slatwall specific request properties
+	property name="content" type="any";
+	
+	// Deprecated Properties
 	property name="currentAccount";
 	property name="currentBrand";
 	property name="currentCart";

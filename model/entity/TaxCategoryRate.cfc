@@ -43,7 +43,7 @@ component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" t
 	property name="taxRate" ormtype="float" formatType="percentage";
 	
 	// Related Object Properties
-	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID" nullRBKey="define.all";
+	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID" hb_nullOptionRBKey="define.all";
 	property name="taxCategory" cfc="TaxCategory" fieldtype="many-to-one" fkcolumn="taxCategoryID";
 	
 	// Remote properties
