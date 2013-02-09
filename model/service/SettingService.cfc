@@ -108,12 +108,10 @@ globalEncryptionKeySize
 			brandMetaKeywordsString = {fieldType="textarea"},
 			
 			// Content
-			contentRestrictAccessFlag = {fieldType="yesno",defaultValue="0"},
-			contentRequirePurchaseFlag = {fieldType="yesno"},
-			contentRequireSubscriptionFlag = {fieldType="yesno"},
-			contentProductListingFlag = {fieldType="yesno"},
-			contentDefaultProductsPerPage = {fieldType="text"},
-			contentIncludeChildContentProductsFlag = {fieldType="yesno"},
+			contentRestrictAccessFlag = {fieldType="yesno",defaultValue=0},
+			contentRequirePurchaseFlag = {fieldType="yesno",defaultValue=0},
+			contentRequireSubscriptionFlag = {fieldType="yesno",defaultValue=0},
+			contentIncludeChildContentProductsFlag = {fieldType="yesno",defaultValue=1},
 			contentRestrictedContentDisplayTemplate = {fieldType="select"},
 			contentHTMLTitleString = {fieldType="text"},
 			contentMetaDescriptionString = {fieldType="textarea"},
@@ -321,6 +319,7 @@ globalEncryptionKeySize
 		public any function getAllSettingsQuery() {
 			if(!structKeyExists(variables, "allSettingsQuery")) {
 				variables.allSettingsQuery = getSettingDAO().getAllSettingsQuery();
+				logHibachi("The cached value of variables.AllSettingsQuery in SettingService.cfc was set");
 			}
 			return variables.allSettingsQuery;
 		}
@@ -328,6 +327,7 @@ globalEncryptionKeySize
 		public any function clearAllSettingsQuery() {
 			if(structKeyExists(variables, "allSettingsQuery")) {
 				structDelete(variables, "allSettingsQuery");
+				logHibachi("The cached value of variables.AllSettingsQuery in SettingService.cfc was cleared");
 			}
 			if(structKeyExists(variables, "settingDetailsCache")) {
 				variables.settingDetailsCache = {};
