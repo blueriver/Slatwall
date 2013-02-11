@@ -42,6 +42,9 @@
 	</cfif>
 	<cfset local.contentRequireSubscriptionFlagDetails.parentValueFormatted = $.slatwall.formatValue(local.contentRequireSubscriptionFlagDetails.parentValue, "yesno") />
 	
+	<!--- Setup the local product for this object --->
+	<cfset local.product = $.slatwall.getService( "productService" ).newProduct() />
+	<cfset local.productTypeOptions = local.product.getProductTypeOptions('contentAccess') />
 </cfsilent>
 
 <span id="extendset-container-tabslatwalltop" class="extendset-container"></span>
@@ -159,11 +162,36 @@
 							</cfif>
 						</tbody>
 					</table>
-					<label class="control-label">Add Product</label>
+					<label class="control-label">Create SKU to Sell Content</label>
+					<hr />
+					<label class="control-label">Product Type</label>
 					<div class="controls">
-						<select>
+						<select name="slatwallData.content.sku.product.productType.productTypeID">
+							<cfloop array="#local.productTypeOptions#" index="option">
+								<option value="#option['value']#">#option['name']#</option>
+							</cfloop>
+						</select>
+					</div>
+					<label class="control-label">Product</label>
+					<div class="controls">
+						<select name="slatwallData.content.sku.product.productID">
 							<option value="">New Product</option>
 						</select>
+					</div>
+					<label class="control-label">Sku</label>
+					<div class="controls">
+						<select name="slatwallData.content.sku">
+							<option value="">New Sku</option>
+						</select>
+					</div>
+					<label class="control-label">Price</label>
+					<div class="controls">
+						<input type="text" name="slatwallData.content.price" value="" />
+					</div>
+					<br />
+					<br />
+					<div class="form-actions" style="text-align:left;">
+						<button type="button" class="btn" onclick="document.contentForm.approved.value=1;if(siteManager.ckContent(draftremovalnotice)){submitForm(document.contentForm,'add');}"><i class="icon-check"></i> Add SKU & Publish</button>
 					</div>
 				</div>
 				
@@ -250,6 +278,7 @@
 			</div>
 		</div>
 	</div>
+	#request.slatwallScope.renderJSObject()#
 </cfoutput>
 <script type="text/javascript">
 	$(document).ready(function(e){
@@ -264,6 +293,8 @@
 			updateSlatwallShowHide();
 		});
 	});
+	
+	
 	function updateSlatwallShowHide() {
 		$.each($('input[data-checked-show]:checked'), function(index, value) {
 			$('#' + $(this).data('checked-show') ).removeClass('hide');	
@@ -271,6 +302,31 @@
 		$.each($('input[data-checked-hide]:checked'), function(index, value) {
 			$('#' + $(this).data('checked-hide') ).addClass('hide');
 		});
+		if( ! jQuery('#allowPurchaseDetails').hasClass('hide') ) {
+			updateProductOptions();
+			
+		}
+	}
+	
+	function updateProductOptions() {
+		var ptid = jQuery('select[name="slatwallData.content.sku.product.productType.productTypeID"]').val() || '444df313ec53a08c32d8ae434af5819a';
+		var productSmartList = $.slatwall.getSmartList('Product', {
+			'fk:productType.productTypeIDPath':ptid,
+			'p:show':'all'
+		});
+		console.log( 'hello' );
+		console.log( ptid );
+		console.log( productSmartList );
+	}
+	
+	function updateSkuOptions() {
+		var pid = jQuery('select[name="slatwallData.content.sku.product.productID"]').val() || '';
+		var skuSmartList = $.slatwall.getSmartList('Sku', {
+			'f:product.productID':pid,
+			'p:show':'all'
+		});
+		
+		console.log( skuSmartList );
 	}
 </script>
 <span id="extendset-container-slatwall" class="extendset-container"></span>

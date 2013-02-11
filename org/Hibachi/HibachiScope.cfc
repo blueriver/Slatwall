@@ -18,7 +18,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		config[ 'baseURL' ] = getApplicationValue('baseURL');
 		
 		var returnHTML = '';
-		returnHTML &= '<script type="text/javascript" src="/org/Hibachi/HibachiAssets/js/hibachi-scope.js"></script>';
+		returnHTML &= '<script type="text/javascript" src="#getApplicationValue('baseURL')#/org/Hibachi/HibachiAssets/js/hibachi-scope.js"></script>';
 		returnHTML &= '<script type="text/javascript">(function( $ ){$.#lcase(getApplicationValue('applicationKey'))# = new Hibachi(#serializeJSON(config)#);})( jQuery );</script>';
 		return returnHTML;
 	}

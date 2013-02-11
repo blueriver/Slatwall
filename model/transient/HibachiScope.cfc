@@ -91,9 +91,9 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 			variables.currentProductSmartList.addFilter('activeFlag', 1);
 			variables.currentProductSmartList.addFilter('publishedFlag', 1);
 			variables.currentProductSmartList.addRange('calculatedQATS', '1^');
-			if(isBoolean(getCurrentContent().setting('contentProductListingFlag')) && getCurrentContent().setting('contentProductListingFlag') && isBoolean(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) && getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
+			if(isBoolean(getCurrentContent().getProductListingPageFlag()) && getCurrentContent().setting('contentProductListingFlag') && isBoolean(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) && getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
 				variables.currentProductSmartList.addWhereCondition(" EXISTS(SELECT sc.contentID FROM SlatwallContent sc INNER JOIN sc.listingProducts slp WHERE sc.cmsContentIDPath LIKE '%#getCurrentContent().getCMSContentID()#%' AND slp.productID = aslatwallproduct.productID) ");
-			} else if(isBoolean(getCurrentContent().setting('contentProductListingFlag')) && getCurrentContent().setting('contentProductListingFlag') && !isNull(getCurrentContent().getCMSContentID())) {
+			} else if(isBoolean(getCurrentContent().getProductListingPageFlag()) && getCurrentContent().setting('contentProductListingFlag') && !isNull(getCurrentContent().getCMSContentID())) {
 				variables.currentProductSmartList.addFilter('listingPages.cmsContentID',getCurrentContent().getCMSContentID());
 			}
 			if(!structKeyExists(url, "P:Show") && isNumeric(getCurrentContent().setting('contentDefaultProductsPerPage'))) {

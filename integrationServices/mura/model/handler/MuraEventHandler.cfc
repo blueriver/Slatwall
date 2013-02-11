@@ -88,7 +88,7 @@
 			// If no slatAction was passed in, then check for keys in mura to determine what page to render
 			} else {
 				// Check to see if the current content is a listing page, so that we add our frontend view to the content body
-				if(isBoolean($.slatwall.getCurrentContent().setting('contentProductListingFlag')) && $.slatwall.getCurrentContent().setting('contentProductListingFlag')) {
+				if(isBoolean($.slatwall.getCurrentContent().getProductListingPageFlag()) && $.slatwall.getCurrentContent().getProductListingPageFlag()) {
 					$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
 				}
 				

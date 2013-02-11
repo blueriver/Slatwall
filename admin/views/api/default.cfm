@@ -6,6 +6,7 @@
 				<li><a href="/api/account" target="api">Account ( /api/account )</a></li>
 				<li><a href="/api/brand" target="api">Brand ( /api/brand )</a></li>
 				<li><a href="/api/product" target="api">Product ( /api/product )</a></li>
+				<li><a href="/api/producttype" target="api">Product Type ( /api/producttype )</a></li>
 				<li><a href="/api/measurementunit" target="api">Measurement Unit ( /api/measurementunit )</a></li>
 			</ul>
 		</div>

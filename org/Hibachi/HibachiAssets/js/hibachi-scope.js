@@ -7,7 +7,7 @@
 		var config = {
 			dateFormat : 'MM/DD/YYYY',
 			timeFormat : 'HH:MM',
-			applicationURL : '/',
+			baseURL : '/',
 			applicationKey : 'Hibachi'
 		}
 		
@@ -32,7 +32,7 @@
 				var result = {};
 				
 				$.ajax({
-					url: config.applicationURL + 'api/' + entityName + '/' + entityID + '/',
+					url: config.baseURL + '/index.cfm/api/' + entityName + '/' + entityID + '/',
 					method: 'get',
 					async: doasync,
 					dataType: 'json',
@@ -46,8 +46,6 @@
 			
 			saveEntity : function( entityName, entityID, cbs, cbf ) {
 				
-				
-				
 			},
 			
 			deleteEntity : function( entityName, entityID, cbs, cbf ) {
@@ -58,12 +56,25 @@
 				
 			},
 			
-			getList : function( entityName, cbs, cbf ) {
-				
-			},
-			
 			getSmartList : function( entityName, data, cbs, cbf ) {
 				
+				var doasync = arguments.length > 2;
+				var s = cbs || function(r) {result=r};
+				var f = cbf || s;
+				var result = {};
+				
+				$.ajax({
+					url: config.baseURL + '/index.cfm/api/' + entityName + '/',
+					method: 'get',
+					async: doasync,
+					dataType: 'json',
+					data: data,
+					beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
+					success: s,
+					error: f
+				});
+				
+				return result;
 			}
 			
 		}

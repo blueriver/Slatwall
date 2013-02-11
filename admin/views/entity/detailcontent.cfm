@@ -55,7 +55,7 @@ Notes:
 		</cf_HibachiDetailHeader>
 
 	<cf_HibachiTabGroup object="#rc.content#">
-		<cfif rc.content.setting('contentProductListingFlag')>
+		<cfif rc.content.getProductListingPageFlag()>
 			<cf_HibachiTab view="admin:entity/contenttabs/products">
 		</cfif>
 		<cf_HibachiTab view="admin:entity/contenttabs/settings">
