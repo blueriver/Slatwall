@@ -15,10 +15,6 @@ var globalSearchCache = {
 
 jQuery(document).ready(function() {
 	
-	
-	//console.log( $.slatwall );
-	//$.slatwall('show');
-	
 	setupEventHandlers();
 	
 	initUIElements( 'body' );

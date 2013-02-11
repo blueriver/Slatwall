@@ -308,7 +308,7 @@ component extends="FW1.framework" {
 	public void function setupResponse() {
 		endHibachiLifecycle();
 		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.applicationKey#-AJAX"]) {
+		if(structKeyExists(httpRequestData.headers, "X-Hibachi-AJAX") && isBoolean(httpRequestData.headers["X-Hibachi-AJAX"]) && httpRequestData.headers["X-Hibachi-AJAX"]) {
 			if(structKeyExists(request.context, "fw")) {
 				structDelete(request.context, "fw");
 			}

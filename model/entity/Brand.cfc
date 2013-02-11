@@ -85,11 +85,10 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	}
 	
 	// Products (one-to-many)
-	public void function addProduct(required Product Product) {
-	   arguments.Product.setBrand(this);
+	public void function addProduct(required any product) {
+	   arguments.product.setBrand(this);
 	}
-	
-	public void function removeProduct(required Product Product) {
+	public void function removeProduct(required any product) {
 	   arguments.Product.removeBrand(this);
 	}
 	
