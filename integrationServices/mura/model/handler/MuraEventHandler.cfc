@@ -185,55 +185,90 @@
 			
 			endSlatwallRequest();
 		}
-		/*
-		public string function onContentTabBasicBottomRender(required any $) {
-			writeLog(file="Slatwall", text="Mura Integration - onContentTabBasicBottomRender()");
-			return "<div>This is my content</div>";
-		}
-		*/
 		
-		
-		// SAVE / DELETE EVENTS
+		// SAVE / DELETE EVENTS ===== CATEGORY
 		
 		public void function onAfterCategorySave( required any $ ) {
 			verifySlatwallRequest( $=$ );
-			var categoryBean = $.event("categoryBean");
-			var category = $.slatwall.getService("contentService").getCategoryByCmsCategoryID(categoryBean.getCategoryID(),true);
-			var parentCategory = $.slatwall.getService("contentService").getCategoryByCmsCategoryID(categoryBean.getParentID());
-			if(!isNull(parentCategory)) {
-				category.setParentCategory(parentCategory);
-			}
-			category.setCategoryName(categoryBean.getName());
-			category.setCmsSiteID($.event('siteID'));
-			category.setCmsCategoryID(categoryBean.getCategoryID());
-			category = $.slatwall.getService("contentService").saveCategory(category);
+			
+			var slatwallSite = $.slatwall.getService("siteService").getSiteByCMSSiteID($.event('siteID'));
+			syncMuraCategories($=$, slatwallSite=slatwallSite, muraSiteID=$.event('siteID'));
 			
 			endSlatwallRequest();
 		}
 		
 		public void function onAfterCategoryDelete( required any $ ) {
 			verifySlatwallRequest( $=$ );
-			var category = $.slatwall.getService("contentService").getCategoryByCmsCategoryID($.event("categoryID"),true);
-			if(!category.isNew() && category.isDeletable()) {
-				$.slatwall.getService("contentService").deleteCategory(category);
+			
+			var slatwallCategory = $.slatwall.getService("contentService").getCategoryByCMSCategoryID($.event('categoryID'));
+			if(!isNull(slatwallCategory)) {
+				if(slatwallCategory.isDeletable()) {
+					$.slatwall.getService("contentService").deleteCategory(slatwallCategory);
+				} else {
+					slatwallCategory.setActiveFlag(0);
+				}	
 			}
 			
 			endSlatwallRequest();
 		}
 		
+		// SAVE / DELETE EVENTS ===== CONTENT
 		public void function onAfterContentSave( required any $ ) {
 			verifySlatwallRequest( $=$ );
-			if(!structKeyExists($.getEvent().getAllValues(),"slatwallData")) {
-				return;
-			}
-			var slatwallData = $.getEvent().getAllValues().slatwallData;
-			var slatwallContent = saveSlatwallPage();
-			if(!isNull(slatwallContent) && slatwallData.allowPurchaseFlag) {
-				if(slatwallData.addSku){
-					saveSlatwallProduct(slatwallContent);
+			
+			var data = $.slatwall.getService("hibachiUtilityService").buildFormCollections( form , false );
+			
+			
+			var slatwallSite = $.slatwall.getService("siteService").getSiteByCMSSiteID($.event('siteID'));
+			syncMuraContent($=$, slatwallSite=slatwallSite, muraSiteID=$.event('siteID'));
+			
+			if(structKeyExists(data, "slatwallData") && structKeyExists(data.slatwallData, "content")) {
+				var contentData = data.slatwallData.content;
+				
+				var muraContent = $.event('contentBean');
+				var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentID( muraContent.getContentID() );
+				
+				// Populate Basic Values
+				slatwallContent.setTitle( muraContent.getTitle() );
+				slatwallContent.setSite( slatwallSite );
+				if(structKeyExists(contentData, "productListingPageFlag") && isBoolean(contentData.productListingPageFlag)) {
+					slatwallContent.setProductListingPageFlag( contentData.productListingPageFlag );	
 				}
-			} else {
-				deleteContentSkus();
+				if(structKeyExists(contentData, "allowPurchaseFlag") && isBoolean(contentData.allowPurchaseFlag)) {
+					slatwallContent.setAllowPurchaseFlag( contentData.allowPurchaseFlag );
+				}
+				
+				// Populate Template Type if it Exists
+				if(structKeyExists(contentData, "contentTemplateType") && structKeyExists(contentData.contentTemplateType, "typeID") && len(slatwallData.content.contentTemplateType.typeID)) {
+					var type = $.slatwall.getService("typeService").getType( contentData.contentTemplateType.typeID );
+					slatwallContent.setContentTemplateType( type );
+				} else {
+					slatwallContent.removeContentTemplateType();
+				}
+				
+				$.slatwall.getService("contentService").saveContent(slatwallContent);
+				
+				// Populate Setting Values
+				var settingKeys = ['contentIncludeChildContentProductsFlag','contentRestrictAccessFlag','contentRestrictedContentDisplayTemplate','contentRequirePurchaseFlag','contentRequireSubscriptionFlag'];
+				for(var s=1; s<=arrayLen(settingKeys); s++) {
+					if(structKeyExists(contentData, settingKeys[s]) && len(contentData.settingKeys[s])) {
+						
+					} else {
+						var setting = $.slatwall.getService("settingService").getSettingBySettingName();
+					}
+				}
+				param name="contentData.contentIncludeChildContentProductsFlag" default="";
+				param name="contentData.contentRestrictAccessFlag" default="";
+				param name="contentData.contentRestrictedContentDisplayTemplate" default="";
+				param name="contentData.contentRequirePurchaseFlag" default="";
+				param name="contentData.contentRequireSubscriptionFlag" default="";
+				
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
+				
 			}
 			
 			endSlatwallRequest();
@@ -241,21 +276,32 @@
 		
 		public void function onAfterContentDelete( required any $ ) {
 			verifySlatwallRequest( $=$ );
-			deleteContentSkus();
-			deleteSlatwallPage();
+			
+			var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentID( muraContent.getContentID() );
+			if(!isNull(slatwallContent)) {
+				if(slatwallContent.isDeletable()) {
+					$.slatwall.getService("contentService").deleteContent( slatwallContent );
+				} else {
+					slatwallContent.setActiveFlag(0);
+				}
+			}
 			
 			endSlatwallRequest();
 		}
 		
+		
+		// SAVE / DELETE EVENTS ===== EVENT
 		public void function onAfterUserSave( required any $ ) {
 			verifySlatwallRequest( $=$ );
-			// TODO: Update Slatwall User
+			
+			// TODO: Save Slatwall User
 			
 			endSlatwallRequest();
 		}
 		
 		public void function onAfterUserDelete( required any $ ) {
 			verifySlatwallRequest( $=$ );
+			
 			// TODO: Delete Slatwall User
 			
 			endSlatwallRequest();
@@ -263,7 +309,6 @@
 		
 		
 		// ========================== MANUALLY CALLED MURA =================================
-		
 		
 		public void function autoLoginLogoutFromSlatwall( required any $ ) {
 			// Check to see if the current mura user is logged in (or logged out), and if we should automatically login/logout the slatwall account
@@ -468,14 +513,18 @@
 						activeFlag,
 						siteID,
 						cmsContentID,
-						title
+						title,
+						allowPurchaseFlag,
+						productListingPageFlag
 					) VALUES (
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newContentID#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newContentID#" />,
 						<cfqueryparam cfsqltype="cf_sql_bit" value="1" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.contentID#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.menuTitle#" />
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.menuTitle#" />,
+						<cfqueryparam cfsqltype="cf_sql_bit" value="0" />,
+						<cfqueryparam cfsqltype="cf_sql_bit" value="0" />
 					)
 				</cfquery>
 			<!--- Creating Internal Page, or resetting if parent can't be found --->	
@@ -503,7 +552,9 @@
 							activeFlag,
 							siteID,
 							cmsContentID,
-							title
+							title,
+							allowPurchaseFlag,
+							productListingPageFlag
 						) VALUES (
 							<cfqueryparam cfsqltype="cf_sql_varchar" value="#newContentID#" />,
 							<cfqueryparam cfsqltype="cf_sql_varchar" value="#parentMappingCache[ missingContentQuery.parentID ].contentIDPath#,#newContentID#" />,
@@ -511,7 +562,9 @@
 							<cfqueryparam cfsqltype="cf_sql_bit" value="1" />,
 							<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" />,
 							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.contentID#" />,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.menuTitle#" />
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.menuTitle#" />,
+							<cfqueryparam cfsqltype="cf_sql_bit" value="0" />,
+							<cfqueryparam cfsqltype="cf_sql_bit" value="0" />
 						)
 					</cfquery>
 				<cfelse>
@@ -730,6 +783,49 @@
 				</cfquery>
 			</cfloop>
 		</cfif>
+	</cffunction>
+	
+	<cffunction name="updateSlatwallContentSetting">
+		<cfargument name="$" required="true" />
+		<cfargument name="contentID" required="true" />
+		<cfargument name="settingName" required="true" />
+		<cfargument name="settingValue" default="" />
+		
+		<cfset var rs = "" />
+		
+		<cfif len(arguments.settingValue)>
+			<cfquery name="rs">
+				UPDATE
+					SlatwallSetting
+				SET
+					settingValue = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#" />
+				WHERE
+					contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentID#" /> AND settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#" />
+			</cfquery>
+			<cfif not rsResult.recordCount>
+				<cfquery name="rs">
+					INSERT INTO SlatwallSetting (
+						settingID,
+						settingValue,
+						settingName
+						contentID
+					) VALUES (
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingNane#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentID#" />
+					)
+					SET
+						settingValue = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#" />
+					WHERE
+						contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentID#" /> AND settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#" />
+				</cfquery>
+			</cfif>
+		<cfelse>
+			<cfquery name="rs">
+				DELETE FROM SlatwallSetting WHERE contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentID#" /> AND settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#" />
+			</cfquery>
+		</cfif> 
 	</cffunction>
 	
 	<cffunction name="syncMuraPluginSetting">

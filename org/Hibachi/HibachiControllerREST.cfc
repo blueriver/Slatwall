@@ -14,18 +14,14 @@ component output="false" accessors="true" extends="HibachiController" {
 		if(!structKeyExists(rc, "propertyIdentifiers")) {
 			rc.propertyIdentifiers = "";
 			var entityProperties = getHibachiService().getPropertiesByEntityName( rc.entityName );
-			try {
-				for(var i=1; i<=arrayLen(entityProperties); i++) {
-					if( (!structKeyExists(entityProperties[i], "fieldtype") || entityProperties[i].fieldtype == "ID") && (!structKeyExists(entityProperties[i], "persistent") || entityProperties[i].persistent)) {
-						rc.propertyIdentifiers = listAppend(rc.propertyIdentifiers, entityProperties[i].name);
-					} else if(structKeyExists(entityProperties[i], "fieldtype") && entityProperties[i].fieldType == "many-to-one") {
-						rc.propertyIdentifiers = listAppend(rc.propertyIdentifiers, "#entityProperties[i].name#.#getHibachiService().getPrimaryIDPropertyNameByEntityName(entityProperties[i].cfc)#" );
-					}
+			
+			for(var i=1; i<=arrayLen(entityProperties); i++) {
+				if( (!structKeyExists(entityProperties[i], "fieldtype") || entityProperties[i].fieldtype == "ID") && (!structKeyExists(entityProperties[i], "persistent") || entityProperties[i].persistent)) {
+					rc.propertyIdentifiers = listAppend(rc.propertyIdentifiers, entityProperties[i].name);
+				} else if(structKeyExists(entityProperties[i], "fieldtype") && entityProperties[i].fieldType == "many-to-one") {
+					rc.propertyIdentifiers = listAppend(rc.propertyIdentifiers, "#entityProperties[i].name#.#getHibachiService().getPrimaryIDPropertyNameByEntityName(entityProperties[i].cfc)#" );
 				}
-			} catch(any e) {
-				writeDump(var=entityProperties, top=3);
-				abort;
-			}	
+			}
 		}
 		
 		// Turn the property identifiers into an array
@@ -53,6 +49,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			rc.response[ "currentPage" ] = smartList.getCurrentPage();
 			rc.response[ "totalPages" ] = smartList.getTotalPages();
 			rc.response[ "savedStateID" ] = smartList.getSavedStateID();
+			rc.response[ "hql" ] = smartList.getHQL();
 			rc.response[ "pageRecords" ] = [];
 			
 			var smartListPageRecords = smartList.getPageRecords();

@@ -292,8 +292,13 @@
 		$('input[data-checked-hide]').on('change', function(e) {
 			updateSlatwallShowHide();
 		});
+		$('select[name="slatwallData.content.sku.product.productType.productTypeID"]').on('change', function(e) {
+			updateProductOptions();
+		});
+		$('select[name="slatwallData.content.sku.product.productID"]').on('change', function(e) {
+			updateSkuOptions();
+		});
 	});
-	
 	
 	function updateSlatwallShowHide() {
 		$.each($('input[data-checked-show]:checked'), function(index, value) {
@@ -304,29 +309,41 @@
 		});
 		if( ! jQuery('#allowPurchaseDetails').hasClass('hide') ) {
 			updateProductOptions();
-			
 		}
 	}
 	
 	function updateProductOptions() {
+		
 		var ptid = jQuery('select[name="slatwallData.content.sku.product.productType.productTypeID"]').val() || '444df313ec53a08c32d8ae434af5819a';
+		jQuery('select[name="slatwallData.content.sku.product.productType.productTypeID"]').html('<option value="">New Product</option>');
+		
 		var productSmartList = $.slatwall.getSmartList('Product', {
 			'fk:productType.productTypeIDPath':ptid,
-			'p:show':'all'
+			'p:show':'all',
+			'propertyIdentifiers':'productID,calculatedTitle'
 		});
-		console.log( 'hello' );
-		console.log( ptid );
-		console.log( productSmartList );
+		
+		jQuery.each(productSmartList.pageRecords, function(i,v){
+			jQuery('select[name="slatwallData.content.sku.product.productType.productTypeID"]').append('<option value="' + v['productID'] + '">' + v['calculatedTitle'] + '</option>');
+		});
+		
 	}
 	
 	function updateSkuOptions() {
-		var pid = jQuery('select[name="slatwallData.content.sku.product.productID"]').val() || '';
-		var skuSmartList = $.slatwall.getSmartList('Sku', {
-			'f:product.productID':pid,
-			'p:show':'all'
-		});
 		
-		console.log( skuSmartList );
+		var pid = jQuery('select[name="slatwallData.content.sku.product.productID"]').val() || '';
+		jQuery('select[name="slatwallData.content.sku.product.productID"]').html('<option value="">New Sku</option>');
+		
+		if(pid.length) {
+			var skuSmartList = $.slatwall.getSmartList('Sku', {
+				'f:product.productID':pid,
+				'p:show':'all',
+				'propertyIdentifiers':'skuID,skuCode'
+			});
+			jQuery.each(productSmartList.pageRecords, function(i,v){
+				jQuery('select[name="slatwallData.content.sku.product.productID"]').append('<option value="' + v['skuID'] + '">' + v['skuCode'] + '</option>');
+			});
+		}
 	}
 </script>
 <span id="extendset-container-slatwall" class="extendset-container"></span>

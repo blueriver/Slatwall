@@ -47,19 +47,20 @@ Notes:
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.content#" property="title">
 				<cf_HibachiPropertyDisplay object="#rc.content#" property="activeFlag" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.content#" property="cmsContentID" edit="false">
-				<cf_HibachiPropertyDisplay object="#rc.content#" property="templateFlag" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.content#" property="disableProductAssignmentFlag" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.content#" property="allowPurchaseFlag" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.content#" property="contentTemplateType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.content#" property="allowPurchaseFlag" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 
-	<cf_HibachiTabGroup object="#rc.content#">
-		<cfif rc.content.getProductListingPageFlag()>
-			<cf_HibachiTab view="admin:entity/contenttabs/products">
-		</cfif>
-		<cf_HibachiTab view="admin:entity/contenttabs/settings">
-	</cf_HibachiTabGroup>
+		<cf_HibachiTabGroup object="#rc.content#">
+			
+			<cfif rc.content.getProductListingPageFlag()>
+				<!---<cf_HibachiTab view="admin:entity/contenttabs/products">--->
+			</cfif>
+			<!---
+			<cf_HibachiTab view="admin:entity/contenttabs/settings">
+			--->
+		</cf_HibachiTabGroup>
 
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

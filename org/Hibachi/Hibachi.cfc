@@ -113,7 +113,7 @@ component extends="FW1.framework" {
 		// Announce the applicatoinRequest event
 		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationBootstrapRequest");
 		
-		return request["#variables.framework.applicationKey#Scope"];
+		return getHibachiScope();
 	}
 	
 	public any function reloadApplication() {
@@ -132,7 +132,7 @@ component extends="FW1.framework" {
 		verifyApplicationSetup();
 		
 		// Verify that the session is setup
-		getBeanFactory().getBean("hibachiSessionService").setPropperSession();
+		getHibachiScope().getService("hibachiSessionService").setPropperSession();
 		
 		// Call the onEveryRequest() Method for the parent Application.cfc
 		onEveryRequest();
@@ -142,17 +142,17 @@ component extends="FW1.framework" {
 		setupGlobalRequest();
 		
 		// Verify Authentication before anything happens
-		if(!getBeanFactory().getBean("hibachiAuthenticationService").authenticateAction( action=request.context[ getAction() ], account=request[ "#variables.framework.applicationKey#Scope" ].getAccount() )) {
+		if(!getHibachiScope().getService("hibachiAuthenticationService").authenticateAction( action=request.context[ getAction() ], account=request[ "#variables.framework.applicationKey#Scope" ].getAccount() )) {
 			redirect(action="admin:main.login");
 		}
 		
 		// Setup structured Data if a request context exists meaning that a full action was called
-		getBeanFactory().getBean("hibachiUtilityService").buildFormCollections(request.context);
+		getHibachiScope().getService("hibachiUtilityService").buildFormCollections(request.context);
 		
 		// Setup a $ in the request context, and the hibachiScope shortcut
 		request.context.fw = getHibachiScope().getApplicationValue("application");
 		request.context.$ = {};
-		request.context.$[ variables.framework.applicationKey ] = request[ "#variables.framework.applicationKey#Scope" ];
+		request.context.$[ variables.framework.applicationKey ] = getHibachiScope();
 		request.context.pagetitle = request.context.$[ variables.framework.applicationKey ].rbKey( request.context[ getAction() ] );
 		request.context.edit = false;
 		
@@ -160,7 +160,7 @@ component extends="FW1.framework" {
 		if(structKeyExists(request.context, "messageKeys")) {
 			var messageKeys = listToArray(request.context.messageKeys);
 			for(var i=1; i<=arrayLen(messageKeys); i++) {
-				request[ "#variables.framework.applicationKey#Scope" ].showMessageKey( messageKeys[i] );
+				getHibachiScope().showMessageKey( messageKeys[i] );
 			}
 		}
 		
@@ -280,7 +280,7 @@ component extends="FW1.framework" {
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - Full Update Initiated");
 						
 						// Set the request timeout to 360
-						getBeanFactory().getBean("hibachiTagService").cfsetting(requesttimeout=360);
+						getHibachiScope().getService("hibachiTagService").cfsetting(requesttimeout=360);
 						
 						// Reload ORM
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() started");
@@ -341,9 +341,9 @@ component extends="FW1.framework" {
 	// This handels all of the ORM persistece.
 	public void function endHibachiLifecycle() {
 		if(getHibachiScope().getORMHasErrors()) {
-			getBeanFactory().getBean("hibachiDAO").clearORMSession();
+			getHibachiScope().getService("hibachiDAO").clearORMSession();
 		} else {
-			getBeanFactory().getBean("hibachiDAO").flushORMSession();
+			getHibachiScope().getService("hibachiDAO").flushORMSession();
 		}
 	}
 	
@@ -407,14 +407,14 @@ component extends="FW1.framework" {
 		
 		if(!structKeyExists(request.context, "$")) {
 			request.context.$ = {};
-			request.context.$[ variables.framework.applicationKey ] = request[ "#variables.framework.applicationKey#Scope" ];
+			request.context.$[ variables.framework.applicationKey ] = getHibachiScope();
 		}
 		
 		// Add the action to the RC Scope
 		request.context[ getAction() ] = arguments.action;
 		
 		// Do structured data just like a normal request
-		getBeanFactory().getBean("hibachiUtilityService").buildFormCollections(request.context);
+		getHibachiScope().getService("hibachiUtilityService").buildFormCollections(request.context);
 		
 		// Get Action Details
 		var subsystem = getSubsystem( arguments.action );

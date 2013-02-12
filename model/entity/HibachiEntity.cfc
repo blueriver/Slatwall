@@ -65,7 +65,7 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 					av.setAttributeValue( data[ attributes[at].getAttributeCode() ]);
 					av.setAttribute(at);
 					av.setAttributeType(attributeType);
-					av.invokeMethod("set#attributeType#", {1=this});			
+					av.invokeMethod("set#attributeType#", {1=this});
 				}
 			}
 		}
