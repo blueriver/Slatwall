@@ -142,8 +142,8 @@
 					<table class="table table-striped table-condensed table-bordered mura-table-grid"> 
 						<thead>
 							<tr>
-								<th class="var-width">Product Name</th>
-								<th class="var-width">Price</th>
+								<th class="var-width">#$.slatwall.rbKey('entity.product.title')#</th>
+								<th class="var-width">#$.slatwall.rbKey('entity.define.price')#</th>
 								<th class="actions">&nbsp;</th>
 							</tr>
 						</thead>
@@ -158,14 +158,14 @@
 								</cfloop>
 							<cfelse>
 								<tr>
-									<td id="noFilters" colspan="3" class="noResults">There are currently no products defined to sell this content.</td>
+									<td id="noFilters" colspan="3" class="noResults">#$.slatwall.rbKey('mura.muraevent.oncontentedit.contentSkus.norecords')#</td>
 								</tr>
 							</cfif>
 						</tbody>
 					</table>
-					<label class="control-label">Create SKU to Sell Content</label>
+					<label class="control-label">#$.slatwall.rbKey('mura.muraevent.oncontentedit.createSkuHeader')#</label>
 					<hr />
-					<label class="control-label">Product Type</label>
+					<label class="control-label">#$.slatwall.rbKey('entity.productType')#</label>
 					<div class="controls">
 						<select name="slatwallData.content.addskudetails.productTypeID">
 							<cfloop array="#local.productTypeOptions#" index="option">
@@ -173,19 +173,19 @@
 							</cfloop>
 						</select>
 					</div>
-					<label class="control-label">Product</label>
+					<label class="control-label">#$.slatwall.rbKey('entity.product')#</label>
 					<div class="controls">
 						<select name="slatwallData.content.addskudetails.productID">
-							<option value="">New Product</option>
+							<option value="">#$.slatwall.rbKey('define.new')# #$.slatwall.rbKey('entity.product')#</option>
 						</select>
 					</div>
-					<label class="control-label">Sku</label>
+					<label class="control-label">#$.slatwall.rbKey('entity.sku')#</label>
 					<div class="controls">
 						<select name="slatwallData.content.addskudetails.skuID">
-							<option value="">New Sku</option>
+							<option value="">#$.slatwall.rbKey('define.new')# #$.slatwall.rbKey('entity.sku')#</option>
 						</select>
 					</div>
-					<label class="control-label">Price</label>
+					<label class="control-label">#$.slatwall.rbKey('define.price')#</label>
 					<div class="controls">
 						<input type="text" name="slatwallData.content.addskudetails.price" value="" />
 					</div>

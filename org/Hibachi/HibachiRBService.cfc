@@ -48,35 +48,23 @@ component output="false" accessors="true" extends="HibachiService" {
 		if(!structKeyExists(variables.resourceBundles, arguments.locale)) {
 			var javaRB = new JavaRB.JavaRB();
 			
-			variables.resourceBundles[ arguments.locale ] = {};
+			var thisRB = {};
 			
 			// Get the primary resource bundle for
 			try {
-				variables.resourceBundles[ arguments.locale ] = javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/config/resourceBundles/#arguments.locale#.properties"));
+				thisRB = javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/config/resourceBundles/#arguments.locale#.properties"));
 			} catch (any e) {
 				// No RB File Found
 			}
 			
-			/*
-			TODO: IMPORTANT Fix This RB Key Setup
-			// Loop over the active FW/1 subsystems to look for a resource bundle there
-			var activeFW1Integrations = getIntegrationService().getActiveFW1Subsystems();
-			for(var i=1; i<=arrayLen(activeFW1Integrations); i++) {
-				try {
-					structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/integrationServices/#activeFW1Integrations[i].subsystem#/config/resourceBundles/#arguments.locale#.properties")), true);
-				} catch (any e) {
-					// No RB File Found
-				}	
-			}
-			*/
 			// Get whatever resource bundle is in the custom config directory
 			try {
-				structAppend(variables.resourceBundles[ arguments.locale ], javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/custom/config/resourceBundles/#arguments.locale#.properties")), true);
+				structAppend(thisRB, javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/custom/config/resourceBundles/#arguments.locale#.properties")), true);
 			} catch (any e) {
 				// No RB File Found
 			}
 			
-			
+			variables.resourceBundles[ arguments.locale ] = thisRB;
 		}
 		
 		return variables.resourceBundles[ arguments.locale ];
