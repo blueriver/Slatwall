@@ -1,5 +1,5 @@
 {
-	"contexts":["save","edit","delete","addOrderItems"],
+	"contexts":["save","edit","delete"],
 	"properties":{
 		"stockReceiverItems":						[{"contexts":"delete","maxCollection":0}]
 	}

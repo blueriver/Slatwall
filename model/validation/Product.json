@@ -12,7 +12,7 @@
 		    	{"contexts":"addOptionGroup,addOption","inList":"merchandise"},
 		    	{"contexts":"addSubscriptionTerm","inList":"subscription"}
 		 ]
-		"price":							[{"contexts":"save","dataType":"numeric","inList":"creditCard"}],
+		"price":							[{"contexts":"save","dataType":"numeric"}],
 		"listPrice":						[{"contexts":"save","dataType":"numeric"}]
 	}
 }

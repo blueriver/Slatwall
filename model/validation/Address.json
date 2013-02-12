@@ -1,0 +1,7 @@
+{
+	"contexts":["save","edit","delete"],
+	"properties":{
+		"country":		[{"contexts":"save,full","required":true}],
+		"name":			[{"contexts":"full","required":true}]
+	}
+}

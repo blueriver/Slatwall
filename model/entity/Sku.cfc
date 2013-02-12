@@ -70,6 +70,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
+	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalSku" fkcolumn="skuID" inversejoincolumn="physicalID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -607,6 +608,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		if(thatIndex > 0) {    
 			arrayDeleteAt(arguments.subscriptionBenefit.getSkus(), thatIndex);    
 		}    
+	}
+	
+	// Physicals (many-to-many - inverse)    
+	public void function addPhysical(required any physical) {    
+		arguments.physical.addPhysical( this );    
+	}    
+	public void function removePhysical(required any physical) {    
+		arguments.physical.removePhysical( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

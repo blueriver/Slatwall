@@ -1,6 +1,7 @@
 {
 	"contexts":["save","edit","delete"],
 	"properties":{
+		"optionCode":			[{"contexts":"save","required":true,"method":"hasUniqueOptionCode"}],
 		"optionName":			[{"contexts":"save","required":true}],
 		"optionGroup":			[{"contexts":"save","required":true}],
 		"skus":					[{"contexts":"delete","maxCollection":0}]
