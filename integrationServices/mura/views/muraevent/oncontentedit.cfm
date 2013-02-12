@@ -240,7 +240,7 @@
 	function updateProductOptions() {
 		
 		var ptid = jQuery('select[name="slatwallData.content.addskudetails.productTypeID"]').val() || '444df313ec53a08c32d8ae434af5819a';
-		jQuery('select[name="slatwallData.content.addskudetails.productTypeID"]').html('<option value="">New Product</option>');
+		jQuery('select[name="slatwallData.content.addskudetails.productID"]').html('<option value="">New Product</option>');
 		
 		var productSmartList = $.slatwall.getSmartList('Product', {
 			'fk:productType.productTypeIDPath':ptid,
@@ -249,7 +249,7 @@
 		});
 		
 		jQuery.each(productSmartList.pageRecords, function(i,v){
-			jQuery('select[name="slatwallData.content.addskudetails.productTypeID"]').append('<option value="' + v['productID'] + '">' + v['calculatedTitle'] + '</option>');
+			jQuery('select[name="slatwallData.content.addskudetails.productID"]').append('<option value="' + v['productID'] + '">' + v['calculatedTitle'] + '</option>');
 		});
 		
 	}
@@ -257,7 +257,7 @@
 	function updateSkuOptions() {
 		
 		var pid = jQuery('select[name="slatwallData.content.addskudetails.productID"]').val() || '';
-		jQuery('select[name="slatwallData.content.addskudetails.productID"]').html('<option value="">New Sku</option>');
+		jQuery('select[name="slatwallData.content.addskudetails.skuID"]').html('<option value="">New Sku</option>');
 		
 		if(pid.length) {
 			var skuSmartList = $.slatwall.getSmartList('Sku', {
@@ -266,7 +266,7 @@
 				'propertyIdentifiers':'skuID,skuCode'
 			});
 			jQuery.each(productSmartList.pageRecords, function(i,v){
-				jQuery('select[name="slatwallData.content.addskudetails.productID"]').append('<option value="' + v['skuID'] + '">' + v['skuCode'] + '</option>');
+				jQuery('select[name="slatwallData.content.addskudetails.skuID"]').append('<option value="' + v['skuID'] + '">' + v['skuCode'] + '</option>');
 			});
 		}
 	}

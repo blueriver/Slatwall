@@ -1,7 +1,7 @@
 {
 	"properties":{
 	    "productTypeID":		[{"required":true}],
-		"price":				[{"required":true,"dataType":"numeric"}],
+		"price":				[{"required":true,"dataType":"numeric","minValue":0}],
 		"productCode":			[{"required":true}]
 	}
 }
