@@ -3,8 +3,9 @@
 	// Injected Entity
 	property name="orderPayment";
 	
-	//Data Properties
+	// Data Properties
 	property name="amount";
 	property name="transactionType";
+	
 	
 }

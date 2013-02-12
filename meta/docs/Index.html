@@ -273,11 +273,16 @@
 							$.slatwall.setApplicationValue('key', 'value')
 							
 							-- Model API
-							$.slatwall.getEntity('entityName', 'entityID')
+							$.slatwall.getBean('beanName')
 							$.slatwall.getService('serviceName')
-							$.slatwall.getList()
-							$.slatwall.getSmartList()
-							$.slatwall.getTransient()
+							$.slatwall.getTransient('transientName')
+							
+							$.slatwall.getSmartList('entityName', data)
+							$.slatwall.getEntity('entityName', 'entityID')
+							$.slatwall.saveEntity('entityName', data)
+							$.slatwall.deleteEntity('entityName', data)
+							$.slatwall.processEntity('entityName', data, 'processContext')
+							
 							</pre>
 						</p>
 						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus metus tellus, tristique sit amet molestie eu, aliquam ac est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ullamcorper ipsum at nisi semper eu varius augue porttitor. Donec in risus sit amet felis aliquet sodales. Nulla facilisi. Integer in augue lorem, eget malesuada augue. Aenean tincidunt elementum diam, eget posuere nisi cursus id. Vivamus eleifend, libero a feugiat euismod, ligula odio mollis dui, et posuere sapien nisl nec sapien. Aliquam ullamcorper varius lacus, sit amet elementum augue tempus nec. Nulla sapien nisl, bibendum non iaculis consectetur, hendrerit ac ligula. Cras tincidunt vestibulum odio, at tempus eros suscipit vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In mattis tempor quam ac varius. Ut tempus luctus leo ut mattis. Phasellus malesuada hendrerit orci, vel dictum purus consequat vel.</p>

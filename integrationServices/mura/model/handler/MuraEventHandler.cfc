@@ -180,10 +180,11 @@
 			
 			// Place Slatwall content entity in the slatwall scope
 			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.content('contentID'), true ) );
+			if($.slatwall.getContent().isNew()) {
+				$.slatwall.getContent().setParentContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.event('parentID') ) );
+			}
 			
 			include "../../views/muraevent/oncontentedit.cfm";
-			
-			endSlatwallRequest();
 		}
 		
 		// SAVE / DELETE EVENTS ===== CATEGORY
@@ -218,11 +219,11 @@
 			
 			var data = $.slatwall.getService("hibachiUtilityService").buildFormCollections( form , false );
 			
-			
 			var slatwallSite = $.slatwall.getService("siteService").getSiteByCMSSiteID($.event('siteID'));
 			syncMuraContent($=$, slatwallSite=slatwallSite, muraSiteID=$.event('siteID'));
 			
 			if(structKeyExists(data, "slatwallData") && structKeyExists(data.slatwallData, "content")) {
+				
 				var contentData = data.slatwallData.content;
 				
 				var muraContent = $.event('contentBean');
@@ -240,36 +241,35 @@
 				
 				// Populate Template Type if it Exists
 				if(structKeyExists(contentData, "contentTemplateType") && structKeyExists(contentData.contentTemplateType, "typeID") && len(slatwallData.content.contentTemplateType.typeID)) {
-					var type = $.slatwall.getService("typeService").getType( contentData.contentTemplateType.typeID );
+					var type = $.slatwall.getService("settingService").getType( contentData.contentTemplateType.typeID );
 					slatwallContent.setContentTemplateType( type );
 				} else {
-					slatwallContent.removeContentTemplateType();
+					slatwallContent.setContentTemplateType( javaCast("null","") );
 				}
 				
 				$.slatwall.getService("contentService").saveContent(slatwallContent);
 				
 				// Populate Setting Values
-				var settingKeys = ['contentIncludeChildContentProductsFlag','contentRestrictAccessFlag','contentRestrictedContentDisplayTemplate','contentRequirePurchaseFlag','contentRequireSubscriptionFlag'];
-				for(var s=1; s<=arrayLen(settingKeys); s++) {
-					if(structKeyExists(contentData, settingKeys[s]) && len(contentData.settingKeys[s])) {
-						
-					} else {
-						var setting = $.slatwall.getService("settingService").getSettingBySettingName();
-					}
-				}
 				param name="contentData.contentIncludeChildContentProductsFlag" default="";
 				param name="contentData.contentRestrictAccessFlag" default="";
 				param name="contentData.contentRestrictedContentDisplayTemplate" default="";
 				param name="contentData.contentRequirePurchaseFlag" default="";
 				param name="contentData.contentRequireSubscriptionFlag" default="";
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRestrictAccessFlag", settingValue=contentData.contentRestrictAccessFlag);
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRestrictedContentDisplayTemplate", settingValue=contentData.contentRestrictedContentDisplayTemplate);
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRequirePurchaseFlag", settingValue=contentData.contentRequirePurchaseFlag);
+				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRequireSubscriptionFlag", settingValue=contentData.contentRequireSubscriptionFlag);
 				
-				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
-				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
-				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
-				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
-				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentIncludeChildContentProductsFlag", settingValue=contentData.contentIncludeChildContentProductsFlag);
+				$.slatwall.getService("settingService").clearAllSettingsQuery();
 				
+				// If the "Add Sku" was selected, then we call that process method
+				if(structKeyExists(contentData, "addSku") && contentData.addSku && structKeyExists(contentData, "addSkuDetails")) {
+					contentData.addSkuDetails.productCode = muraContent.getFilename();
+					$.slatwall.getService("contentService").processContent(slatwallContent, contentData.addSkuDetails, "createSku");
+				}
 			}
+			
 			
 			endSlatwallRequest();
 		}
@@ -277,7 +277,7 @@
 		public void function onAfterContentDelete( required any $ ) {
 			verifySlatwallRequest( $=$ );
 			
-			var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentID( muraContent.getContentID() );
+			var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentID( $.event('contentID') );
 			if(!isNull(slatwallContent)) {
 				if(slatwallContent.isDeletable()) {
 					$.slatwall.getService("contentService").deleteContent( slatwallContent );
@@ -792,9 +792,10 @@
 		<cfargument name="settingValue" default="" />
 		
 		<cfset var rs = "" />
+		<cfset var rsResult = "" />
 		
 		<cfif len(arguments.settingValue)>
-			<cfquery name="rs">
+			<cfquery name="rs" result="rsResult">
 				UPDATE
 					SlatwallSetting
 				SET
@@ -807,18 +808,14 @@
 					INSERT INTO SlatwallSetting (
 						settingID,
 						settingValue,
-						settingName
+						settingName,
 						contentID
 					) VALUES (
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingNane#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentID#" />
 					)
-					SET
-						settingValue = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#" />
-					WHERE
-						contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentID#" /> AND settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#" />
 				</cfquery>
 			</cfif>
 		<cfelse>

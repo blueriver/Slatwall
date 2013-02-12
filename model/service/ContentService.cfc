@@ -40,7 +40,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 	property name="contentDAO" type="any";
 	
+	property name="productService" type="any";
 	property name="settingService" type="any";
+	property name="skuService" type="any";
 	
 	public boolean function restrictedContentExists() {
 		return getSettingService().getSettingRecordCount(settingName="contentRestrictAccessFlag", settingValue=1);
@@ -88,6 +90,36 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
+	
+	public any function processContent_createSku(required any content, required any processObject) {
+		
+		var productType = getProductService().getProductType( processObject.getProductID() );
+		if(isNull(productType) || productType.getBaseProductType() != "contentAccess") {
+			var productType = getProductService().getProductType( "444df313ec53a08c32d8ae434af5819a" );
+		}
+		
+		var product = getProductService().getProduct( arguments.data.product.productID, true );
+		if(product.isNew()) {
+			product.setProductType( productType );
+			product.setTitle( arguments.content.getTitle() );
+			product.setProductCode( arguments.content.get() );
+		}
+		
+		var sku = getSkuService().getSku(arguments.data.skuID, true);
+		if(sku.isNew()) {
+			if(isNumeric( arguments.data.price )) {
+				sku.setPrice( arguments.data.price );
+			} else {
+				sku.setPrice(0);
+			}
+			sku.setProduct( product );
+			sku.setSkuCode(  );
+		}
+		
+		
+		getSkuService().saveSku( sku );
+		getSkuService().saveProduct( product );
+	}
 	
 	// =====================  END: Process Methods ============================
 	
