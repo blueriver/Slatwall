@@ -45,12 +45,15 @@ component displayname="" entityname="SlatwallPhysical" table="SlatwallPhysical" 
 	property name="physicalStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="physicalStatusTypeID";
 	
 	// Related Object Properties (one-to-many)
-	
+	property name="physicalCounts" singularname="physicalCount" cfc="PhysicalCount" type="array" fieldtype="one-to-many" fkcolumn="physicalID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="locations" singularname="location" cfc="Location" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalLocation" fkcolumn="physicaID" inversejoincolumn="locationID";
+	property name="locations" singularname="location" cfc="Location" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalLocation" fkcolumn="physicalID" inversejoincolumn="locationID";
 	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProductType" fkcolumn="physicalID" inversejoincolumn="productTypeID";
-
+	property name="product" singularname="product" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProduct" fkcolumn="physicalID" inversejoincolumn="productID";
+	property name="brands" singularname="brand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalBrand" fkcolumn="physicalID" inversejoincolumn="BrandID";
+	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalSku" fkcolumn="physicalID" inversejoincolumn="skuID";
+	
 	// Related Object Properties (many-to-many - inverse)
 	
 	// Remote Properties
@@ -72,6 +75,112 @@ component displayname="" entityname="SlatwallPhysical" table="SlatwallPhysical" 
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Physical Status Type (many-to-one)
+	public void function setPhysicalStatusType(required any physicalStatusType) {
+		variables.physicalStatusType = arguments.physicalStatusType;
+		if(isNew() or !arguments.physicalStatusType.hasPhysical( this )) {
+			arrayAppend(arguments.physicalStatusType.getPhysicals(), this);
+		}
+	}
+	public void function removePhysicalStatusType(any physicalStatusType) {
+		if(!structKeyExists(arguments, "physicalStatusType")) {
+			arguments.physicalStatusType = variables.physicalStatusType;
+		}
+		var index = arrayFind(arguments.physicalStatusType.getPhysicals(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.physicalStatusType.getPhysicals(), index);
+		}
+		structDelete(variables, "physicalStatusType");
+	}
+	
+	// Physical Counts (one-to-many)    
+	public void function addPhysicalCount(required any physicalCount) {    
+		arguments.physicalCount.setPhysical( this );    
+	}    
+	public void function removePhysicalCount(required any physicalCount) {    
+		arguments.physicalCount.removePhysical( this );    
+	}
+	
+	// Locations (many-to-many - owner)
+	public void function addLocation(required any location) {
+		if(arguments.location.isNew() or !hasLocation(arguments.location)) {
+			arrayAppend(variables.locations, arguments.location);
+		}
+		if(isNew() or !arguments.location.hasPhysical( this )) {
+			arrayAppend(arguments.location.getPhysicals(), this);
+		}
+	}
+	public void function removeLocation(required any location) {
+		var thisIndex = arrayFind(variables.locations, arguments.location);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.locations, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.location.getPhysicals(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.location.getPhysicals(), thatIndex);
+		}
+	}
+	
+	// Product (many-to-many - owner)    
+	public void function addProduct(required any product) {    
+		if(arguments.product.isNew() or !hasProduct(arguments.product)) {    
+			arrayAppend(variables.product, arguments.product);    
+		}    
+		if(isNew() or !arguments.product.hasPhysical( this )) {    
+			arrayAppend(arguments.product.getPhysicals(), this);    
+		}    
+	}    
+	public void function removeProduct(required any product) {    
+		var thisIndex = arrayFind(variables.product, arguments.product);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.product, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.product.getPhysicals(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.product.getPhysicals(), thatIndex);    
+		}    
+	}
+	
+	// Brands (many-to-many - owner)    
+	public void function addBrand(required any brand) {    
+		if(arguments.brand.isNew() or !hasBrand(arguments.brand)) {    
+			arrayAppend(variables.brand, arguments.brand);    
+		}    
+		if(isNew() or !arguments.brand.hasPhysical( this )) {    
+			arrayAppend(arguments.brand.getPhysicals(), this);    
+		}    
+	}    
+	public void function removeBrand(required any brand) {    
+		var thisIndex = arrayFind(variables.brand, arguments.brand);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.brand, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.brand.getPhysicals(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.brand.getPhysicals(), thatIndex);    
+		}    
+	}
+	
+	// Skus (many-to-many - owner)    
+	public void function addSku(required any sku) {    
+		if(arguments.sku.isNew() or !hasSku(arguments.sku)) {    
+			arrayAppend(variables.sku, arguments.sku);    
+		}    
+		if(isNew() or !arguments.sku.hasPhysical( this )) {    
+			arrayAppend(arguments.sku.getPhysicals(), this);    
+		}    
+	}    
+	public void function removeSku(required any sku) {    
+		var thisIndex = arrayFind(variables.sku, arguments.sku);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.sku, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.sku.getPhysicals(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.sku.getPhysicals(), thatIndex);    
+		}    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
