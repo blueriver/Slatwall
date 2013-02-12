@@ -48,7 +48,10 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	// Related Object Properties (One-to-Many)
 	property name="locationAddresses" singularname="locationAddress" cfc="LocationAddress" type="array" fieldtype="one-to-many" fkcolumn="locationID" cascade="all-delete-orphan" inverse="true";
 	
-	// Related Object Properties (Many-to-Many)
+	// Related Object Properties (Many-to-Many - owner)
+	
+	// Related Object Properties (many-to-many - inverse)
+	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalLocation" fkcolumn="locationID" inversejoincolumn="physicalID" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -85,6 +88,14 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 		arguments.locationAddress.removeLocation( this );
 	}
 	
+	// Physicals (many-to-many - inverse)    
+	public void function addPhysical(required any physical) {    
+		arguments.physical.addPhysical( this );    
+	}    
+	public void function removePhysical(required any physical) {    
+		arguments.physical.removePhysical( this );    
+	}
+
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
