@@ -185,9 +185,11 @@
 							<option value="">#$.slatwall.rbKey('define.new')# #$.slatwall.rbKey('entity.sku')#</option>
 						</select>
 					</div>
-					<label class="control-label">#$.slatwall.rbKey('define.price')#</label>
-					<div class="controls">
-						<input type="text" name="slatwallData.content.addskudetails.price" value="" />
+					<div id="newSkuDetails">
+						<label class="control-label">#$.slatwall.rbKey('define.price')#</label>
+						<div class="controls">
+							<input type="text" name="slatwallData.content.addskudetails.price" value="" />
+						</div>
 					</div>
 					<br />
 					<br />
@@ -222,6 +224,13 @@
 		});
 		$('select[name="slatwallData.content.addskudetails.productID"]').on('change', function(e) {
 			updateSkuOptions();
+		});
+		$('select[name="slatwallData.content.addskudetails.skuID"]').on('change', function(e){
+			if($(this).val().length) {
+				$('#newSkuDetails').addClass('hide');
+			} else {
+				$('#newSkuDetails').removeClass('hide');
+			}
 		});
 	});
 	
@@ -267,11 +276,11 @@
 			var skuSmartList = $.slatwall.getSmartList('Sku', {
 				'f:product.productID':pid,
 				'p:show':'all',
-				'propertyIdentifiers':'skuID,skuCode'
+				'propertyIdentifiers':'skuID,skuCode,price'
 			});
-			console.log(skuSmartList);
-			jQuery.each(skuSmartList.pageRecords, function(i,v){
-				jQuery('select[name="slatwallData.content.addskudetails.skuID"]').append('<option value="' + v['skuID'] + '">' + v['skuCode'] + '</option>');
+			
+			$.each(skuSmartList.pageRecords, function(i,v){
+				$('select[name="slatwallData.content.addskudetails.skuID"]').append('<option value="' + v['skuID'] + '">' + v['skuCode'] + ' - ' + v['price'] + '</option>');
 			});
 		}
 	}
