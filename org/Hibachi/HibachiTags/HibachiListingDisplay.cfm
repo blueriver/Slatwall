@@ -88,8 +88,8 @@
 		<!--- Look for Hierarchy in example entity --->
 		<cfif not len(attributes.parentPropertyName)>
 			<cfset thistag.entityMetaData = getMetaData(thisTag.exampleEntity) />
-			<cfif structKeyExists(thisTag.entityMetaData, "parentPropertyName")>
-				<cfset attributes.parentPropertyName = thisTag.entityMetaData.parentPropertyName />
+			<cfif structKeyExists(thisTag.entityMetaData, "hb_parentPropertyName")>
+				<cfset attributes.parentPropertyName = thisTag.entityMetaData.hb_parentPropertyName />
 			</cfif>
 		</cfif>
 		
