@@ -1,346 +1,314 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Slatwall Documentation</title>
+<head>
+<title>Slatwall Documentation</title>
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap-docs-slatwall.css" rel="stylesheet" media="screen">
+<link href="css/prettify.css" rel="stylesheet" media="screen">
+</head>
+<body onload="prettyPrint()" data-spy="scroll" data-target="a">
+<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</a>
+<a class="brand" href="#">SlatwallDocs</a>
+<div class="nav-collapse collapse priarynav">
+<ul class="nav">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Developers</a>
+<ul class="dropdown-menu ">
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#frontends">Frontend Development</a></li>
+<li><a href="#integrations">Integrations</a></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+</li>
+<li><a href="http://docs.getslatwall.com/">Users</a></li>
+<li><a href="http://groups.google.com/group/slatwallecommerce">Google Group</a></li>
+<li><a href="http://www.getslatwall.com">getSlatwall.com</a></li>
+<li><a href="http://www.ten24web.com/">Professional Support</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 		
-		<!-- Bootstrap -->
-		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-		<link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
-		<style>
-			
-			body {
-				padding-top:40px;
-			}
-			body > .navbar {
-				font-size: 13px;
-			}
-			body > .navbar .brand {
-			  padding-right: 0;
-			  padding-left: 0;
-			  margin-left: 20px;
-			  float: right;
-			  font-weight: bold;
-			  color: #000;
-			  text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.125);
-			  -webkit-transition: all .2s linear;
-			     -moz-transition: all .2s linear;
-			          transition: all .2s linear;
-			}
-			body > .navbar .brand:hover {
-			  text-decoration: none;
-			  text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.4);
-			}
-			/* Sidenav for Docs
-			-------------------------------------------------- */
-			
-			.bs-docs-sidenav {
-			  width: 228px;
-			  margin: 30px 0 0;
-			  padding: 0;
-			  background-color: #fff;
-			  -webkit-border-radius: 6px;
-			     -moz-border-radius: 6px;
-			          border-radius: 6px;
-			  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-			     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-			          box-shadow: 0 1px 4px rgba(0,0,0,.065);
-			}
-			.bs-docs-sidenav > li > a {
-			  display: block;
-			  width: 190px \9;
-			  margin: 0 0 -1px;
-			  padding: 8px 14px;
-			  border: 1px solid #e5e5e5;
-			}
-			.bs-docs-sidenav > li:first-child > a {
-			  -webkit-border-radius: 6px 6px 0 0;
-			     -moz-border-radius: 6px 6px 0 0;
-			          border-radius: 6px 6px 0 0;
-			}
-			.bs-docs-sidenav > li:last-child > a {
-			  -webkit-border-radius: 0 0 6px 6px;
-			     -moz-border-radius: 0 0 6px 6px;
-			          border-radius: 0 0 6px 6px;
-			}
-			.bs-docs-sidenav > .active > a {
-			  position: relative;
-			  z-index: 2;
-			  padding: 9px 15px;
-			  border: 0;
-			  text-shadow: 0 1px 0 rgba(0,0,0,.15);
-			  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-			     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-			          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-			}
-			/* Chevrons */
-			.bs-docs-sidenav .icon-chevron-right {
-			  float: right;
-			  margin-top: 2px;
-			  margin-right: -6px;
-			  opacity: .25;
-			}
-			.bs-docs-sidenav > li > a:hover {
-			  background-color: #f5f5f5;
-			}
-			.bs-docs-sidenav a:hover .icon-chevron-right {
-			  opacity: .5;
-			}
-			.bs-docs-sidenav .active .icon-chevron-right,
-			.bs-docs-sidenav .active a:hover .icon-chevron-right {
-			  background-image: url(../img/glyphicons-halflings-white.png);
-			  opacity: 1;
-			}
-			.bs-docs-sidenav.affix {
-			  top: 40px;
-			}
-			.bs-docs-sidebar {
-				height:100%;
-				background-color:#fff;
-			}
-			.bs-docs-sidenav.affix-bottom {
-			  position: absolute;
-			  top: 0px;
-			  bottom: 270px;
-			}
-			/* Responsive
-			-------------------------------------------------- */
-			
-			/* Desktop large
-			------------------------- */
-			@media (min-width: 1200px) {
-			  .bs-docs-sidenav {
-			    width: 258px;
-			  }
-			  .bs-docs-sidenav > li > a {
-			    width: 230px \9; /* Override the previous IE8-9 hack */
-			  }
-			}
-			
-			/* Desktop
-			------------------------- */
-			@media (max-width: 980px) {
-			  /* Unfloat brand */
-			  body > .navbar-fixed-top .brand {
-			    float: left;
-			    margin-left: 0;
-			    padding-left: 10px;
-			    padding-right: 10px;
-			  }
-			
-			  /* When affixed, space properly */
-			  .bs-docs-sidenav {
-			    top: 0;
-			    width: 218px;
-			    margin-top: 30px;
-			    margin-right: 0;
-			  }
-			}
-			
-			/* Tablet to desktop
-			------------------------- */
-			@media (min-width: 768px) and (max-width: 979px) {
-			  /* Remove any padding from the body */ 
-			  body {
-			    padding-top: 0;
-			  }
-			  /* Adjust sidenav width */
-			  .bs-docs-sidenav {
-			    width: 166px;
-			    margin-bottom: 20px;
-				margin-top: 10px;
-			  }
-			  .bs-docs-sidenav.affix {
-			  	/*
-			    position: static;
-			    width: auto;
-				*/
-			    top: 0;
-			  }
-			}
-			
-			/* Tablet
-			------------------------- */
-			@media (max-width: 767px) {
-			  /* Remove any padding from the body */
-			  body {
-			    padding-top: 0;
-			  }
-			  /* Sidenav */
-			  .bs-docs-sidenav {
-			    width: auto;
-			    margin-bottom: 20px;
-				margin-top: 0px;
-			  }
-			  .bs-docs-sidenav.affix {
-			    position: static;
-			    width: auto;
-			    top: auto;
-			  }
-			
-			}
-			
-			/* Landscape phones
-			------------------------- */
-			@media (max-width: 480px) {
-			  /* Remove padding above jumbotron */
-			  body {
-			    padding-top: 0;
-			  }
-			
-			  /* Do our best to make tables work in narrow viewports */
-			  table code {
-			    white-space: normal;
-			    word-wrap: break-word;
-			    word-break: break-all;
-			  }
-			
-			  
-			  /* Tighten up footer */
-			  .footer {
-			    padding-top: 20px;
-			    padding-bottom: 20px;
-			  }
-			}
-		</style>
-		<!--
-		-->
-		<!-- <link href="css/bootstrap-docs.css" rel="stylesheet" media="screen"> -->
-	</head>
-	<body>
-		<div class="navbar navbar-inverse navbar-fixed-top">
-			<div class="navbar-inner">
-				<div class="container">
-					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</a>
-					<a class="brand" href="#">SlatwallDocs</a>
-					<div class="nav-collapse collapse">
-						<ul class="nav">
-							<li class="active"><a href="#">Developers</a></li>
-							<li><a href="#about">Users</a></li>
-							<li><a href="#about">Google Group</a></li>
-							<li><a href="http://www.ten24web.com/">ten24</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="container">
-			
-			<!-- GETTING STARTED -->
-			<div class="row">
-				<div class="span3 bs-docs-sidebar">
-					<ul class="nav nav-tabs nav-stacked bs-docs-sidenav" data-spy="affix" data-offset-top="0">
-						<li><a href="#getting-started">Getting Started</a></li>
-						<li><a href="#architecture">Architecture</a></li>
-						<li><a href="#integrations">Integrations</a></li>
-						<li><a href="#rest">RESTFul API</a></li>
-					</ul>
-				</div><!--/span-->
-				<div class="span9">
-					<div id="getting-started">
-						<div class="page-header">
-							<h2>Getting Started</h2>
-						</div>
-						<p>Getting Started should have talk about how to download / install, and what you should take into consideration</p>
-						<p>
-							What is Slatwall
-							Getting it Installed
-						</p>
-						<p>
-							<pre>
-								-- Request Objects & Values
-								$.slatwall.getAccount()
-								$.slatwall.account()
-								$.slatwall.account('propertyName')
-								$.slatwall.account('propertyName', 'newValue')
-								$.slatwall.cart()
-								$.slatwall.product()
-								$.slatwall.productList()
-								
-								-- Custom Request Values
-								$.slatwall.setValue('customKey', 'customValue')
-								$.slatwall.getValue('customKey')
-								
-								-- Session Value API
-								$.slatwall.getSessionValue('key')
-								$.slatwall.setSessionValue('key', 'value')
-								
-								-- Application Value API
-								$.slatwall.getApplicationValue('key')
-								$.slatwall.setApplicationValue('key', 'value')
-								
-								-- Model API
-								$.slatwall.getBean('beanName')
-								$.slatwall.getService('serviceName')
-								$.slatwall.getTransient('transientName')
-								
-								-- Also Available via jQuery
-								$.slatwall.getSmartList('entityName', data)
-								$.slatwall.getEntity('entityName', 'entityID')
-								$.slatwall.saveEntity('entityName', data)
-								$.slatwall.deleteEntity('entityName', data)
-								$.slatwall.processEntity('entityName', data, 'processContext')
-							</pre>
-						</p>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus metus tellus, tristique sit amet molestie eu, aliquam ac est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ullamcorper ipsum at nisi semper eu varius augue porttitor. Donec in risus sit amet felis aliquet sodales. Nulla facilisi. Integer in augue lorem, eget malesuada augue. Aenean tincidunt elementum diam, eget posuere nisi cursus id. Vivamus eleifend, libero a feugiat euismod, ligula odio mollis dui, et posuere sapien nisl nec sapien. Aliquam ullamcorper varius lacus, sit amet elementum augue tempus nec. Nulla sapien nisl, bibendum non iaculis consectetur, hendrerit ac ligula. Cras tincidunt vestibulum odio, at tempus eros suscipit vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In mattis tempor quam ac varius. Ut tempus luctus leo ut mattis. Phasellus malesuada hendrerit orci, vel dictum purus consequat vel.</p>
-						<p>Phasellus et sapien vel neque feugiat vulputate. Donec volutpat fermentum egestas. Maecenas ullamcorper tempor odio vel ultrices. Nulla pellentesque, justo in vehicula elementum, nulla risus feugiat orci, sed tincidunt tellus sem non nunc. Suspendisse potenti. Nam commodo tristique leo, at interdum odio gravida id. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer ac condimentum turpis. Maecenas iaculis nulla eget magna ultricies sit amet semper ligula tincidunt. Cras hendrerit, ligula quis tincidunt faucibus, ligula dui vulputate neque, et molestie sem est vitae eros. Nulla malesuada varius neque. Vivamus felis nunc, porttitor non pulvinar quis, facilisis et felis. Curabitur sed auctor ante. Vestibulum posuere neque mauris, in consectetur nunc. Donec blandit erat id elit adipiscing vestibulum. Suspendisse purus purus, facilisis quis consectetur eget, sagittis vitae dolor.</p>
-						<p>Morbi nunc velit, vestibulum at suscipit ac, tempor eu tortor. Duis fringilla magna in arcu viverra tristique. Vivamus nec semper odio. Pellentesque volutpat pharetra elit, sit amet ullamcorper libero ultricies nec. Vestibulum gravida dolor ac ligula placerat id fermentum lacus eleifend. Proin faucibus aliquet tempus. Nam ullamcorper dui sit amet diam vulputate id tincidunt orci placerat. Fusce pellentesque enim vel ante ultricies consectetur. Duis ut ante arcu. Pellentesque tincidunt gravida orci, at suscipit est molestie vitae. Aenean eget imperdiet elit. Vestibulum varius justo quis enim tempor in consectetur nulla dictum. Fusce ornare volutpat auctor. Maecenas blandit elementum tempor.</p>
-						<p>Integer dictum, lorem in placerat faucibus, lorem nibh tempor turpis, vitae ultricies mi augue vel tortor. Fusce varius mi arcu, eget fringilla justo. Phasellus eget convallis sapien. Donec dictum lobortis libero in molestie. Sed sed ligula justo. Nam pulvinar aliquam pharetra. Suspendisse sit amet nisl nec nisl ornare bibendum. Phasellus augue quam, cursus at congue in, vestibulum a leo. Nulla et varius ligula. Suspendisse potenti. Curabitur vehicula tellus id leo pretium fringilla eu non erat. Mauris orci massa, fermentum eget auctor eu, venenatis et tellus. In hac habitasse platea dictumst.</p>
-						<p>Duis id lorem in mauris lobortis rutrum. Morbi pretium risus non nibh ullamcorper eleifend. Nulla porta consectetur lectus. Donec in felis non erat cursus egestas ornare eget orci. Morbi condimentum fringilla nibh et pulvinar. Pellentesque est massa, dapibus id porta in, imperdiet vehicula nibh. Pellentesque lacus risus, dignissim id porttitor nec, scelerisque at erat. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus et placerat risus. Vivamus convallis, arcu a tempor sodales, ante urna tincidunt nibh, sit amet adipiscing eros odio sit amet sem. Mauris pellentesque diam id enim ultrices vestibulum. Fusce fringilla luctus nisl non lobortis.</p>
-					</div>
-				</div><!--/row-->
-			</div><!--/row-->
-			<hr>
-			<div class="row">
-				<div class="span3 bs-docs-sidebar">
-					<ul class="nav nav-tabs nav-stacked bs-docs-sidenav" data-spy="affix" data-offset-top="1000">
-						<li><a href="#getting-started">NAV 2</a></li>
-						<li><a href="#architecture">Nav 3</a></li>
-					</ul>
-				</div><!--/span-->
-				<div class="span9">
-					<div id="getting-started">
-						<div class="page-header">
-							<h2>Getting Started</h2>
-						</div>
-						<p>Getting Started should have talk about how to download / install, and what you should take into consideration</p>
-						<p>
-							What is Slatwall
-							Getting it Installed
-						</p>
-						<p>
-						</p>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus metus tellus, tristique sit amet molestie eu, aliquam ac est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ullamcorper ipsum at nisi semper eu varius augue porttitor. Donec in risus sit amet felis aliquet sodales. Nulla facilisi. Integer in augue lorem, eget malesuada augue. Aenean tincidunt elementum diam, eget posuere nisi cursus id. Vivamus eleifend, libero a feugiat euismod, ligula odio mollis dui, et posuere sapien nisl nec sapien. Aliquam ullamcorper varius lacus, sit amet elementum augue tempus nec. Nulla sapien nisl, bibendum non iaculis consectetur, hendrerit ac ligula. Cras tincidunt vestibulum odio, at tempus eros suscipit vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In mattis tempor quam ac varius. Ut tempus luctus leo ut mattis. Phasellus malesuada hendrerit orci, vel dictum purus consequat vel.</p>
-						<p>Phasellus et sapien vel neque feugiat vulputate. Donec volutpat fermentum egestas. Maecenas ullamcorper tempor odio vel ultrices. Nulla pellentesque, justo in vehicula elementum, nulla risus feugiat orci, sed tincidunt tellus sem non nunc. Suspendisse potenti. Nam commodo tristique leo, at interdum odio gravida id. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer ac condimentum turpis. Maecenas iaculis nulla eget magna ultricies sit amet semper ligula tincidunt. Cras hendrerit, ligula quis tincidunt faucibus, ligula dui vulputate neque, et molestie sem est vitae eros. Nulla malesuada varius neque. Vivamus felis nunc, porttitor non pulvinar quis, facilisis et felis. Curabitur sed auctor ante. Vestibulum posuere neque mauris, in consectetur nunc. Donec blandit erat id elit adipiscing vestibulum. Suspendisse purus purus, facilisis quis consectetur eget, sagittis vitae dolor.</p>
-						<p>Morbi nunc velit, vestibulum at suscipit ac, tempor eu tortor. Duis fringilla magna in arcu viverra tristique. Vivamus nec semper odio. Pellentesque volutpat pharetra elit, sit amet ullamcorper libero ultricies nec. Vestibulum gravida dolor ac ligula placerat id fermentum lacus eleifend. Proin faucibus aliquet tempus. Nam ullamcorper dui sit amet diam vulputate id tincidunt orci placerat. Fusce pellentesque enim vel ante ultricies consectetur. Duis ut ante arcu. Pellentesque tincidunt gravida orci, at suscipit est molestie vitae. Aenean eget imperdiet elit. Vestibulum varius justo quis enim tempor in consectetur nulla dictum. Fusce ornare volutpat auctor. Maecenas blandit elementum tempor.</p>
-						<p>Integer dictum, lorem in placerat faucibus, lorem nibh tempor turpis, vitae ultricies mi augue vel tortor. Fusce varius mi arcu, eget fringilla justo. Phasellus eget convallis sapien. Donec dictum lobortis libero in molestie. Sed sed ligula justo. Nam pulvinar aliquam pharetra. Suspendisse sit amet nisl nec nisl ornare bibendum. Phasellus augue quam, cursus at congue in, vestibulum a leo. Nulla et varius ligula. Suspendisse potenti. Curabitur vehicula tellus id leo pretium fringilla eu non erat. Mauris orci massa, fermentum eget auctor eu, venenatis et tellus. In hac habitasse platea dictumst.</p>
-						<p>Duis id lorem in mauris lobortis rutrum. Morbi pretium risus non nibh ullamcorper eleifend. Nulla porta consectetur lectus. Donec in felis non erat cursus egestas ornare eget orci. Morbi condimentum fringilla nibh et pulvinar. Pellentesque est massa, dapibus id porta in, imperdiet vehicula nibh. Pellentesque lacus risus, dignissim id porttitor nec, scelerisque at erat. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus et placerat risus. Vivamus convallis, arcu a tempor sodales, ante urna tincidunt nibh, sit amet adipiscing eros odio sit amet sem. Mauris pellentesque diam id enim ultrices vestibulum. Fusce fringilla luctus nisl non lobortis.</p>
-					</div>
-				</div><!--/row-->
-			</div><!--/row-->
-			<footer>
-				<p>&copy; ten24 Web Solutions 2013</p>
-			</footer>
-		</div><!--/.fluid-container-->
-		<script src="http://code.jquery.com/jquery-latest.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function(e){
-				var offsetPlus = 0;
-				if ($(window).width() <= 979) {
-					var offsetPlus = 29;
-				}
-				$('[data-spy="affix"]').each(function () {
-					var thisOffsetTop = ($($(this).closest('.row')).offset().top - 40) + offsetPlus;
-					var thisOffsetBot = $(document).height() - $($(this).closest('.row')).height() - $($(this).closest('.row')).offset().top;
-					console.log(thisOffsetBot);
-					$(this).data('offset-top', thisOffsetTop);
-					//$(this).data('offset-bottom', thisOffsetBot);
-				});
-			});
-		</script>
-	</body>
+<!-- ============== CONTENT START ==================== -->
+
+
+<!-- ============== GETTING STARTED ================== -->
+<header class="jumbotron subhead" id="getting-started">
+<div class="container">
+<h1>Getting started</h1>
+<p class="lead">This section provides basic details about Slatwall & how to get started!</p>
+</div>
+</header>
+<div class="container">
+<div class="row doc-section">
+<div class="span3 bs-docs-sidebar">
+<ul class="nav nav-tabs nav-stacked bs-docs-sidenav" data-spy="affix" data-offset-top="0">
+<li><a href="#getting-started-overview">Overview</a></li>
+<li><a href="#getting-started-install">Download / Install</a></li>
+<li><a href="#getting-started-file-structure">File Structure</a></li>
+</ul>
+</div>
+<div class="span9">
+
+<!-- OVERVIEW -->
+<div id="getting-started-overview">
+<div class="page-header">
+<h2>Overview</h2>
+</div>
+<p>Slatwall is an extreamly powerful and roebust digital commerce management system.</p>
+</div>
+<!-- OVERVIEW END -->
+
+<!-- DOWNLOAD / INSTALL -->
+<div id="getting-started-install">
+<div class="page-header">
+<h2>Download / Install</h2>
+</div>
+<h3>Requirements</h3>
+<ul>
+<li>CFML Server Version: Coldfusion 9.0.1 or Railo 4.0.1.003</li>
+<li>Database Engine: MySQL, Microsoft SQL or Other*</li>
+<li>Operating System: Windows, Mac OSX, Linux</li>
+</ul>
+<small>*Slatwall is built on top of Java's Hibernate.  Theoretically any of the databases that Hibernate supports should work, but as of right now only MS SQL & MySQL are tested with every release. Use other engines at your own risk</small>
+<br />
+<h3>Selecting Install Style</h3>
+<p>You can install Slatwall a handful of different ways.  Selecting the correct option really depends on your situation and how you intend to use Slatwall.  At it's core you can think of Slatwall as your back-office commerce management solution, Slatwall by itself does not have any CMS built in, so if you planing to be building a public faceing eCommerce website we hightly recommend selecting an option that includes a CMS</p>
+<dl class="dl-horizontal">
+	<dt>Standalone</dt>
+	<dd>This is a good option for anyone who already has a CFML engine like Adobe Coldfusion or Railo running on your server, and either don't plan to use a CMS or you plan to impliment a custom CMS that we don't already have an integration built for.</dd>
+</dl>
+<dl class="dl-horizontal">
+	<dt>Integrated w/Mura</dt>
+	<dd>Mura is one of the most powerful Content Management System on the market.  If you plan to roll out a public facing eCommerce site, we highly recommend this option</dd>
+</dl>
+<dl class="dl-horizontal">
+	<dt>Integrated w/Coldbox</dt>
+	<dd>Coldbox is an extreamly flexible Web Application framework.  If you already have a coldbox application, content-box website, or plan to build a custom app ontop of Coldbox, then this is the option for you.</dd>
+</dl>
+<dl class="dl-horizontal">
+	<dt>Railo Extension</dt>
+	<dd>Railo is a free, open source, fast, scalable and reliable CMFL rendering engine.  We have leverage the Railo extension manager so that you can install the Standalone version of Slatwall right from the Railo administrator.</dd>
+</dl>
+<h3>Installing</h3>
+<h5>Standalone</h5>
+<ol>
+	<li>Navigate to <a href="http://www.getslatwall.com/">http://www.getslatwall.com/</a> and click the "Download" link.  If given an option, we recommend the Latest Stable Release</li>
+	<li>The file should be downloaded as a .zip file that you will need to unzip</li>
+	<li>Once the application is unziped, place it into </li>
+</ol>
+
+<p>Installing Slatwall is extreamly easy.</p>
+</div>
+<!-- DOWNLOAD / INSTALL END -->
+
+<!-- FILE STRUCTURE -->
+<div id="getting-started-file-structure">
+<div class="page-header">
+<h2>File Structure</h2>
+</div>
+<table class="table table-bordered table-striped">
+<tr>
+<th>Folder & File</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>admin/<br />&nbsp;&nbsp;controllers/<br />&nbsp;&nbsp;layouts/<br />&nbsp;&nbsp;views/</td>
+<td>Holds the primary administrative web application.  This directory consists of 3 sub-directories; controllers, layouts & views.  The majority of the admin application runs through the /views/entity directory so if you are interested in learning about how we layout our administrative views, this would be a good place to start.<br /><br />It's important to note that this directory is a FW/1 subsystem, and for more information on how FW/1 subsystems work please visit the wiki here: <a href="https://github.com/seancorfield/fw1/wiki">FW/1 Wiki</a></td>
+</tr>
+<tr>
+<td>assets/</td>
+<td>The assets directory holds some of the core CSS & Images for the application</td>
+</tr>
+<tr>
+<td>config/<br />&nbsp;&nbsp;dbdata/<br />&nbsp;&nbsp;resourceBundles/<br />&nbsp;&nbsp;scripts/<br />&nbsp;&nbsp;configxxx.cfm<br />&nbsp;&nbsp;lastFullUpdate.txt.cfm</td>
+<td>The config folder holds all of the data, and setup that Slatwall uses to set itself up.  This folder should never be modified, if you would like to make instance level configuration changes they should be done in the /custom/config direcotry.</td>
+</tr>
+<tr>
+<td class="text-success">custom/</td>
+<td><span class="text-success">This folder is safe to make changes to, and your changes will not get overridden on update.</span></td>
+</tr>
+<tr>
+<td>frontend/</td>
+<td></td>
+</tr>
+<tr>
+<td class="text-success">integrationServices/</td>
+<td><span class="text-success">This folder is safe to make changes to, and your changes will not get overridden on update.</span></td>
+</tr>
+<tr>
+<td class="text-success">meta/</td>
+<td></td>
+</tr>
+<tr>
+<td>model/</td>
+<td></td>
+</tr>
+<tr>
+<td>org/</td>
+<td></td>
+</tr>
+<tr>
+<td>plugin/</td>
+<td></td>
+</tr>
+<tr>
+<td>tags/</td>
+<td></td>
+</tr>
+</table>
+</div>
+<!-- FILE STRUCTURE END -->
+
+</div>
+</div>
+</div>
+<hr />
+<!-- ============== GETTING STARTED END ================== -->
+
+
+<!-- ============== CONFIGURATION ================== -->
+<header class="jumbotron subhead" id="configuration">
+<div class="container">
+<h1>Configuration</h1>
+<p class="lead">There are a lot of buttons to press, and knobs to turn... lets find out what they do.</p>
+</div>
+</header>
+<div class="container">
+<div class="row doc-section">
+<div class="span3 bs-docs-sidebar">
+<ul class="nav nav-tabs nav-stacked bs-docs-sidenav" data-spy="affix" data-offset-top="0">
+<li><a href="#configuration-app-config">Application Configuration</a></li>
+<li><a href="#configuration-settings">Settings</a></li>
+<li><a href="#configuration-custom-attributes">Custom Attributes</a></li>
+<li><a href="#configuration-payment-methods">Payment Methods</a></li>
+<li><a href="#configuration-fulfillment-methods">Fulfillment Methods (shipping)</a></li>
+</ul>
+</div>
+<div class="span9">
+
+<!-- Application Configuration -->
+<div id="configuration-app-config">
+<div class="page-header">
+<h2>Application Configuration</h2>
+</div>
+<p>Content Here.</p>
+</div>
+<!-- Application Configuration END -->
+
+<!-- Settings -->
+<div id="configuration-settings">
+<div class="page-header">
+<h2>Settings</h2>
+</div>
+<p>Content Here.</p>
+</div>
+<!-- Settings -->
+
+<!-- Custom Attributes -->
+<div id="configuration-custom-attributes">
+<div class="page-header">
+<h2>Custom Attributes</h2>
+</div>
+<p>Content Here.</p>
+</div>
+<!-- Custom Attributes -->
+
+</div>
+</div>
+</div>
+<hr />
+
+<!-- ============== CONFIGURATION END ================== -->
+
+
+
+
+
+
+
+
+
+
+<!-- ============== SYSTEM ARCHITECTURE ================== -->
+<header class="jumbotron subhead" id="system-architecture">
+<div class="container">
+<h1>System Architecture</h1>
+<p class="lead">A high level overview of just what exactly is going on.</p>
+</div>
+</header>
+<div class="container">	
+<div class="row">
+<div class="span3 bs-docs-sidebar">
+<ul class="nav nav-tabs nav-stacked bs-docs-sidenav" data-spy="affix" data-offset-top="1000">
+<li><a href="#getting-started">NAV 2</a></li>
+<li><a href="#architecture">Nav 3</a></li>
+</ul>
+</div>
+<div class="span9">
+<div>
+<div class="page-header">
+<h2>Slatwall Scope</h2>
+</div>
+<pre class="prettyprint linenums language-js">
+-- Request Objects & Values
+$.slatwall.getAccount()
+$.slatwall.account()
+$.slatwall.account('propertyName')
+$.slatwall.account('propertyName', 'newValue')
+$.slatwall.cart()
+$.slatwall.product()
+$.slatwall.productList()
+
+-- Custom Request Values
+$.slatwall.setValue('customKey', 'customValue')
+$.slatwall.getValue('customKey')
+
+-- Session Value API
+$.slatwall.getSessionValue('key')
+$.slatwall.setSessionValue('key', 'value')
+
+-- Application Value API
+$.slatwall.getApplicationValue('key')
+$.slatwall.setApplicationValue('key', 'value')
+
+-- Model API
+$.slatwall.getBean('beanName')
+$.slatwall.getService('serviceName')
+$.slatwall.getTransient('transientName')
+
+-- Also Available via jQuery
+$.slatwall.getSmartList('entityName', data)
+$.slatwall.getEntity('entityName', 'entityID')
+$.slatwall.saveEntity('entityName', data)
+$.slatwall.deleteEntity('entityName', data)
+$.slatwall.processEntity('entityName', data, 'processContext')
+</pre>
+</div>
+</div>
+</div>
+
+
+<!-- ============== CONTENT END ==================== -->
+
+<footer>
+<p>&copy; ten24 Web Solutions</p>
+</footer>
+</div><!--/.fluid-container-->
+<script src="//code.jquery.com/jquery-latest.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/prettify.js"></script>
+<script src="js/bootstrap-docs-slatwall.js"></script>
+</body>
 </html>
