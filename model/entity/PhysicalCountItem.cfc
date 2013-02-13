@@ -65,10 +65,14 @@ component entityname="SlatwallPhysicalCountItem" table="SlatwallPhysicalCountIte
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties 
-
+	property name="physicalStatusTypeSystemCode" persistent="false";
 
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public string function getPhysicalStatusTypeSystemCode() {
+		return getPhysicalCount().getPhysicalStatusTypeSystemCode();
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

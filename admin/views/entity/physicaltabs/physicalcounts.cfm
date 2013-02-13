@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,15 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.physicalSmartList" type="any"/>
+<cfparam name="rc.physical" type="any" />
 
 <cfoutput>
-	<cf_HibachiEntityActionBar type="listing" object="#rc.physicalSmartList#"></cf_HibachiEntityActionBar>
-	
-	<cf_HibachiListingDisplay smartlist="#rc.physicalSmartList#" 
-	                          recordeditaction="admin:entity.editphysical"
-							  recorddetailaction="admin:entity.detailphysical">
-		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime" range=true />
+	<cf_HibachiListingDisplay smartList="#rc.physical.getPhysicalCountsSmartList()#" recordDetailAction="admin:entity.detailphysicalcount" recordEditAction="admin:entity.editphysicalcount">
+			
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="location.locationName" />
 	</cf_HibachiListingDisplay>
-
+	
+	<cf_HibachiActionCaller action="admin:entity.createphysicalcount" class="btn btn-inverse" icon="plus icon-white" queryString="physicalID=#rc.physical.getPhysicalID()#" />
 </cfoutput>

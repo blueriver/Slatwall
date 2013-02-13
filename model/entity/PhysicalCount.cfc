@@ -64,11 +64,15 @@ component entityname="SlatwallPhysicalCount" table="SlatwallPhysicalCount" persi
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
+	property name="physicalStatusTypeSystemCode" persistent="false";
 
 
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public string function getPhysicalStatusTypeSystemCode() {
+		return getPhysical().getPhysicalStatusTypeSystemCode();
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
@@ -77,7 +81,7 @@ component entityname="SlatwallPhysicalCount" table="SlatwallPhysicalCount" persi
 	
 	// Physical (many-to-one)    
 	public void function setPhysical(required any physical) {    
-		variables.physical = arguments.physical;    
+		variables.physical = arguments.physical;
 		if(isNew() or !arguments.physical.hasPhysicalCount( this )) {    
 			arrayAppend(arguments.physical.getPhysicalCounts(), this);    
 		}    
@@ -116,6 +120,10 @@ component entityname="SlatwallPhysicalCount" table="SlatwallPhysicalCount" persi
 	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "location";
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

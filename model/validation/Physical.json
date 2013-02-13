@@ -1,0 +1,7 @@
+{
+	"contexts":["save","edit","delete"],
+	"properties":{
+		"locations":							[{"contexts":"save","minCollection":1}],
+		"physicalStatusTypeSystemCode":			[{"contexts":"delete","inList":"pstOpen"}]
+	}
+}

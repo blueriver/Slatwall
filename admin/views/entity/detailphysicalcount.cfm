@@ -36,15 +36,25 @@
 Notes:
 
 --->
-<cfparam name="rc.physicalSmartList" type="any"/>
+<cfparam name="rc.physicalCount" type="any">
+<cfparam name="rc.physical" type="any" default="#rc.physicalCount.getPhysical()#">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityActionBar type="listing" object="#rc.physicalSmartList#"></cf_HibachiEntityActionBar>
-	
-	<cf_HibachiListingDisplay smartlist="#rc.physicalSmartList#" 
-	                          recordeditaction="admin:entity.editphysical"
-							  recorddetailaction="admin:entity.detailphysical">
-		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime" range=true />
-	</cf_HibachiListingDisplay>
-
+	<cf_HibachiEntityDetailForm object="#rc.physicalCount#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.physicalCount#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
+		
+		<input type="hidden" name="physical.physicalID" value="#rc.physical.getPhysicalID()#" />
+		
+		<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.physicalCount#" property="location" edit="#rc.edit#" />
+			</cf_HibachiPropertyList>
+		</cf_HibachiDetailHeader>
+		
+		<cf_HibachiTabGroup object="#rc.physicalCount#">
+			<cf_HibachiTab view="admin:entity/physicalcounttabs/physicalcountitems" text="#$.slatwall.rbKey('entity.physicalCount.physicalCountItems')#" />
+		</cf_HibachiTabGroup>
+		
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

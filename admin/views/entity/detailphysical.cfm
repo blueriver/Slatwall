@@ -51,8 +51,12 @@ Notes:
 		</cf_HibachiDetailHeader>
 		
 		<cf_HibachiTabGroup object="#rc.physical#">
+			<cf_HibachiTab view="admin:entity/physicaltabs/physicalcounts" text="#$.slatwall.rbKey('entity.physical.physicalCounts')#" />
 			<cf_HibachiTab property="locations" />
 			<cf_HibachiTab property="productTypes" />
+			<cf_HibachiTab property="brands" />
+			<cf_HibachiTab property="products" />
+			<cf_HibachiTab property="skus" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

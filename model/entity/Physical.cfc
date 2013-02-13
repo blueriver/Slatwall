@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="" entityname="SlatwallPhysical" table="SlatwallPhysical" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="PhysicalService" hb_permission="this" {
+component entityname="SlatwallPhysical" table="SlatwallPhysical" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="PhysicalService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="physicalID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -66,11 +66,14 @@ component displayname="" entityname="SlatwallPhysical" table="SlatwallPhysical" 
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
-
+	property name="physicalStatusTypeSystemCode" persistent="false";
 
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public string function getPhysicalStatusTypeSystemCode() {
+		return getPhysicalStatusType().getSystemCode();
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

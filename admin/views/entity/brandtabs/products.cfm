@@ -36,6 +36,7 @@
 Notes:
 
 --->
+<cfparam name="rc.brand" default="any" >
 <cfoutput>
 	
 	<cf_HibachiListingDisplay smartList="#rc.brand.getProductsSmartList()#"

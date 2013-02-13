@@ -1,7 +1,7 @@
 {
 	"contexts":["save","edit","delete"],
 	"properties":{
-		"physicals":			[{"contexts":"delete","maxCollection":0}],
-		"locations":			[{"contexts":"delete","maxCollection":0}]
+	    "location":								[{"contexts":"save","required":true}],
+		"physicalStatusTypeSystemCode":			[{"contexts":"delete","inList":"pstOpen"}]
 	}
 }
