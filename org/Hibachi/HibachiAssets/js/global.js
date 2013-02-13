@@ -540,7 +540,7 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 				method: 'post',
 				data: thisData,
 				dataType: 'json',
-				beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
+				beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 				error: function( er ) {
 					console.log( er );
 					alert('An Error Occured');
@@ -657,7 +657,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 			method: 'post',
 			data: data,
 			dataType: 'json',
-			beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
+			beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 			error: function(result) {
 				removeLoadingDiv( tableID );
 				listingUpdateRelease();
@@ -716,7 +716,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							if(jQuery(cv).hasClass('disabled')) {
 								newtd += ' disabled';
 							}
-							newtd += '" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '"><i class="slatwall-ui-checkbox"></i></a></td>';
+							newtd += '" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '"><i class="hibachi-ui-checkbox"></i></a></td>';
 							
 						} else if( jQuery(cv).hasClass('select') ) {
 							
@@ -724,7 +724,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 							if(jQuery(cv).hasClass('disabled')) {
 								newtd += ' disabled';
 							}
-							newtd += '" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '"><i class="slatwall-ui-radio"></i></a></td>';
+							newtd += '" data-idvalue="' + jQuery.trim(rv[ idProperty ]) + '"><i class="hibachi-ui-radio"></i></a></td>';
 								
 								
 						} else if ( jQuery(cv).hasClass('admin') ){
@@ -919,7 +919,7 @@ function tableApplySort(event, ui) {
 		async: false,
 		data: data,
 		dataType: 'json',
-		beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
+		beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 		error: function(r) {
 			alert('Error Updating the Sort Order for this table');
 		}
@@ -934,7 +934,7 @@ function updateMultiselectTableUI( multiselectField ) {
 	
 	if(inputValue !== undefined) {
 		jQuery.each(inputValue.split(','), function(vi, vv) {
-			jQuery(jQuery('table[data-multiselectfield="' + multiselectField  + '"]').find('tr[id=' + vv + '] .slatwall-ui-checkbox').addClass('slatwall-ui-checkbox-checked')).removeClass('slatwall-ui-checkbox');
+			jQuery(jQuery('table[data-multiselectfield="' + multiselectField  + '"]').find('tr[id=' + vv + '] .hibachi-ui-checkbox').addClass('hibachi-ui-checkbox-checked')).removeClass('hibachi-ui-checkbox');
 		});
 	}
 }
@@ -949,12 +949,12 @@ function tableMultiselectClick( toggleLink ) {
 		currentValues.splice(blankIndex, 1);
 	}
 	
-	if( jQuery(toggleLink).children('.slatwall-ui-checkbox-checked').length ) {
+	if( jQuery(toggleLink).children('.hibachi-ui-checkbox-checked').length ) {
 		
-		var icon = jQuery(toggleLink).children('.slatwall-ui-checkbox-checked');
+		var icon = jQuery(toggleLink).children('.hibachi-ui-checkbox-checked');
 		
-		jQuery(icon).removeClass('slatwall-ui-checkbox-checked');
-		jQuery(icon).addClass('slatwall-ui-checkbox');
+		jQuery(icon).removeClass('hibachi-ui-checkbox-checked');
+		jQuery(icon).addClass('hibachi-ui-checkbox');
 		
 		var valueIndex = currentValues.indexOf( jQuery(toggleLink).data('idvalue') );
 		
@@ -962,10 +962,10 @@ function tableMultiselectClick( toggleLink ) {
 		
 	} else {
 		
-		var icon = jQuery(toggleLink).children('.slatwall-ui-checkbox');
+		var icon = jQuery(toggleLink).children('.hibachi-ui-checkbox');
 		
-		jQuery(icon).removeClass('slatwall-ui-checkbox');
-		jQuery(icon).addClass('slatwall-ui-checkbox-checked');
+		jQuery(icon).removeClass('hibachi-ui-checkbox');
+		jQuery(icon).addClass('hibachi-ui-checkbox-checked');
 		
 		currentValues.push( jQuery(toggleLink).data('idvalue') );
 	}
@@ -977,19 +977,19 @@ function updateSelectTableUI( selectField ) {
 	var inputValue = jQuery('input[name="' + selectField + '"]').val();
 	
 	if(inputValue !== undefined) {
-		jQuery('table[data-selectfield="' + selectField  + '"]').find('tr[id=' + inputValue + '] .slatwall-ui-radio').addClass('slatwall-ui-radio-checked').removeClass('slatwall-ui-radio');
+		jQuery('table[data-selectfield="' + selectField  + '"]').find('tr[id=' + inputValue + '] .hibachi-ui-radio').addClass('hibachi-ui-radio-checked').removeClass('hibachi-ui-radio');
 	}
 }
 
 function tableSelectClick( toggleLink ) {
 	
-	if( jQuery(toggleLink).children('.slatwall-ui-radio').length ) {
+	if( jQuery(toggleLink).children('.hibachi-ui-radio').length ) {
 		
 		// Remove old checked icon
-		jQuery( toggleLink ).closest( 'table' ).find('.slatwall-ui-radio-checked').addClass('slatwall-ui-radio').removeClass('slatwall-ui-radio-checked');
+		jQuery( toggleLink ).closest( 'table' ).find('.hibachi-ui-radio-checked').addClass('hibachi-ui-radio').removeClass('hibachi-ui-radio-checked');
 		
 		// Set new checked icon
-		jQuery( toggleLink ).children('.slatwall-ui-radio').addClass('slatwall-ui-radio-checked').removeClass('slatwall-ui-radio');
+		jQuery( toggleLink ).children('.hibachi-ui-radio').addClass('hibachi-ui-radio-checked').removeClass('hibachi-ui-radio');
 		
 		// Update the value
 		jQuery( 'input[name="' + jQuery( toggleLink ).closest( 'table' ).data('selectfield') + '"]' ).val( jQuery( toggleLink ).data( 'idvalue' ) );
@@ -1025,7 +1025,7 @@ function updateGlobalSearchResults() {
 			method: 'post',
 			data: data,
 			dataType: 'json',
-			beforeSend: function (xhr) { xhr.setRequestHeader('X-Slatwall-AJAX', true) },
+			beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 			error: function(result) {
 				removeLoadingDiv( 'search-results' );
 				globalSearchRelease();
