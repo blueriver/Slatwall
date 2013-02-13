@@ -1,8 +1,8 @@
 {
 	"contexts":["save","edit","delete"],
 	"properties":{
-		"paymentTransactionID":		[{"contexts":"delete,edit","maxlength":0}],
+		"paymentTransactionID":		[{"contexts":"delete,edit","maxLength":0}],
 		"orderPayment":				[{"contexts":"save","method":"hasOrderPaymentOrAccountPayment"}],
-		"accountPayment":			[{"contexts":"save","required":true,"method":"hasOrderPaymentOrAccountPayment"}]
+		"accountPayment":			[{"contexts":"save","method":"hasOrderPaymentOrAccountPayment"}]
 	}
 }

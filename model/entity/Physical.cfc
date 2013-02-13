@@ -50,7 +50,7 @@ component displayname="" entityname="SlatwallPhysical" table="SlatwallPhysical" 
 	// Related Object Properties (many-to-many - owner)
 	property name="locations" singularname="location" cfc="Location" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalLocation" fkcolumn="physicalID" inversejoincolumn="locationID";
 	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProductType" fkcolumn="physicalID" inversejoincolumn="productTypeID";
-	property name="product" singularname="product" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProduct" fkcolumn="physicalID" inversejoincolumn="productID";
+	property name="products" singularname="product" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProduct" fkcolumn="physicalID" inversejoincolumn="productID";
 	property name="brands" singularname="brand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalBrand" fkcolumn="physicalID" inversejoincolumn="BrandID";
 	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalSku" fkcolumn="physicalID" inversejoincolumn="skuID";
 	

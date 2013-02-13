@@ -71,7 +71,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="attributeSets" singularname="attributeSet" cfc="AttributeSet" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProductType" fkcolumn="productTypeID" inversejoincolumn="attributeSetID" inverse="true";
-
+	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProductType" fkcolumn="productTypeID" inversejoincolumn="physicalID" inverse="true";
+	
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
 	
@@ -212,6 +213,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
 	public void function removeAttributeSet(required any attributeSet) {
 		arguments.attributeSet.removeProductType( this );
+	}
+	
+	// Physicals (many-to-many - inverse)    
+	public void function addPhysical(required any physical) {    
+		arguments.physical.addPhysical( this );    
+	}    
+	public void function removePhysical(required any physical) {    
+		arguments.physical.removePhysical( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

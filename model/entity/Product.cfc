@@ -77,6 +77,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="vendors" singularname="vendor" cfc="Vendor" type="array" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="productID" inversejoincolumn="vendorID" inverse="true";
+	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProduct" fkcolumn="productID" inversejoincolumn="physicalID" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -757,6 +758,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	public void function removeVendor(required any vendor) {
 		arguments.vendor.removeProduct( this );
+	}
+	
+	// Physicals (many-to-many - inverse)    
+	public void function addPhysical(required any physical) {    
+		arguments.physical.addPhysical( this );    
+	}    
+	public void function removePhysical(required any physical) {    
+		arguments.physical.removePhysical( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

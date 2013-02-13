@@ -21,12 +21,12 @@
 		"amountUnauthorized":	[{"contexts":"authorize","minValue":0.01}],
 		"amountUncaptured":		[{"contexts":"chargePreAuthorization","minValue":0.01}],
 		"amountUnreceived":		[{"contexts":"authorizeAndCharge","minValue":0.01}],
-		"amountUncredited":		[{"contexts":"placeOrder","eqProperty":"paymentAmountTotal"}],
+		"amountUncredited":		[{"contexts":"credit","minValue":0.01"}],
 		"paymentMethodType":	[{"contexts":"chargePreAuthorization,authorizeAndCharge,authorize,credit","inList":"creditCard"}],
 		"orderStatusCode":		[
 		    {"contexts":"chargePreAuthorization,authorizeAndCharge,authorize,credit","inList":"ostNew,ostProcessing,ostOnHold"},
 			{"contexts":"edit","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"}
 		],
-		"termPaymentAccount":	[{"contexts":"save","required":true}]
+		"termPaymentAccount":	[{"contexts":"save","required":true,"condition":"paymentTypeTermPayment"}]
 	}
 }

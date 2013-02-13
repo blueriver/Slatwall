@@ -1,0 +1,6 @@
+{
+	"contexts":["save","edit","delete"],
+	"properties":{
+		"phoneNumber":		[{"contexts":"save","required":true}]
+	}
+}

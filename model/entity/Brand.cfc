@@ -67,7 +67,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID" inverse="true";
-	
+	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalBrand" fkcolumn="brandID" inversejoincolumn="physicalID" inverse="true";
 	
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -132,6 +132,14 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	}    
 	public void function removeVendor(required any vendor) {    
 		arguments.vendor.removeBrand( this );    
+	}
+	
+	// Physicals (many-to-many - inverse)    
+	public void function addPhysical(required any physical) {    
+		arguments.physical.addPhysical( this );    
+	}    
+	public void function removePhysical(required any physical) {    
+		arguments.physical.removePhysical( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
