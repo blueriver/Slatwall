@@ -266,7 +266,7 @@
 				// If the "Add Sku" was selected, then we call that process method
 				if(structKeyExists(contentData, "addSku") && contentData.addSku && structKeyExists(contentData, "addSkuDetails")) {
 					contentData.addSkuDetails.productCode = muraContent.getFilename();
-					$.slatwall.getService("contentService").processContent(slatwallContent, contentData.addSkuDetails, "createSku");
+					slatwallContent = $.slatwall.getService("contentService").processContent(slatwallContent, contentData.addSkuDetails, "createSku");
 				}
 			}
 			
@@ -294,7 +294,7 @@
 		public void function onAfterUserSave( required any $ ) {
 			verifySlatwallRequest( $=$ );
 			
-			// TODO: Save Slatwall User
+			syncMuraAccounts($=$, accountSyncType=$.slatwall.setting('integrationMuraAccountSyncType'), superUserSyncFlag=$.slatwall.setting('superUserSyncFlag'), muraUserID=$.event('userID'));
 			
 			endSlatwallRequest();
 		}
@@ -303,6 +303,14 @@
 			verifySlatwallRequest( $=$ );
 			
 			// TODO: Delete Slatwall User
+			var slatwallAccount = $.slatwall.getService("accountService").getAccountByCMSAccountID( $.event('userID') );
+			if(!isNull(slatwallAccount)) {
+				if(slatwallAccount.isDeletable()) {
+					$.slatwall.getService("accountService").deleteAccount( slatwallAccount );
+				} else {
+					slatwallAccount.setActiveFlag(0);
+				}
+			}
 			
 			endSlatwallRequest();
 		}

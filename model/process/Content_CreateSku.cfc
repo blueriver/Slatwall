@@ -13,8 +13,8 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	public any function init() {
 		setSkuID("");
 		setProductID("");
-		setProductTypeID("");
 		
 		return super.init();	
-	}	
+	}
+	
 }

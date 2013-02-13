@@ -91,34 +91,34 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: Process Methods ===========================
 	
-	public any function processContent_createSku(required any content, required any processObject) {
+	public any function processContent_CreateSku(required any content, required any processObject) {
 		
-		var productType = getProductService().getProductType( processObject.getProductID() );
+		var productType = getProductService().getProductType( arguments.processObject.getProductTypeID() );
 		if(isNull(productType) || productType.getBaseProductType() != "contentAccess") {
 			var productType = getProductService().getProductType( "444df313ec53a08c32d8ae434af5819a" );
 		}
 		
-		var product = getProductService().getProduct( arguments.data.product.productID, true );
+		var product = getProductService().getProduct( nullReplace(arguments.processObject.getProductID(), ""), true );
 		if(product.isNew()) {
 			product.setProductType( productType );
-			product.setTitle( arguments.content.getTitle() );
-			product.setProductCode( arguments.content.get() );
+			product.setProductName( arguments.content.getTitle() );
+			product.setProductCode( arguments.processObject.getProductCode() );
 		}
 		
-		var sku = getSkuService().getSku(arguments.data.skuID, true);
+		var sku = getSkuService().getSku( nullReplace(arguments.processObject.getSkuID(), ""), true);
 		if(sku.isNew()) {
-			if(isNumeric( arguments.data.price )) {
-				sku.setPrice( arguments.data.price );
-			} else {
-				sku.setPrice(0);
-			}
+			sku.setPrice( arguments.processObject.getPrice() );
+			sku.setSkuCode( product.getProductCode() & "-#arrayLen(product.getSkus()) + 1#" );
 			sku.setProduct( product );
-			sku.setSkuCode(  );
+			sku.addAccessContent( arguments.content );
+			if(product.isNew()) {
+				product.setDefaultSku( sku );
+			}
 		}
 		
-		
-		getSkuService().saveSku( sku );
+		var sku = getSkuService().saveSku( sku );
 		getSkuService().saveProduct( product );
+		
 	}
 	
 	// =====================  END: Process Methods ============================

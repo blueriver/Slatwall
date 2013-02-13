@@ -133,7 +133,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		var value = arguments.object.invokeMethod("get#arguments.propertyName#");
 		
 		if(listFindNoCase("any,array,binary,boolean,component,creditCard,date,time,email,eurodate,float,numeric,guid,integer,query,range,regex,regular_expression,ssn,social_security_number,string,telephone,url,uuid,usdate,zipcode",arguments.constraintValue)) {
-			if(isNull(value) || isValid("email", value)) {
+			if(isNull(value) || isValid(arguments.constraintValue, value)) {
 				return true;
 			}
 		} else {
