@@ -111,7 +111,7 @@ component extends="FW1.framework" {
 		setupGlobalRequest();
 		
 		// Announce the applicatoinRequest event
-		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationBootstrapRequest");
+		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationBootstrapRequestStart");
 		
 		return getHibachiScope();
 	}
@@ -167,8 +167,8 @@ component extends="FW1.framework" {
 		// Call the onInternalRequest() Method for the parent Application.cfc
 		onInternalRequest();
 		
-		// Announce the applicatoinRequest event
-		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationRequest");
+		// Announce the applicatoinRequestStart event
+		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationRequestStart");
 	}
 	
 	public void function verifyApplicationSetup() {
@@ -307,6 +307,10 @@ component extends="FW1.framework" {
 	
 	public void function setupResponse() {
 		endHibachiLifecycle();
+		
+		// Announce the applicatoinRequestStart event
+		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationRequestEnd");
+		
 		var httpRequestData = getHTTPRequestData();
 		if(structKeyExists(httpRequestData.headers, "X-Hibachi-AJAX") && isBoolean(httpRequestData.headers["X-Hibachi-AJAX"]) && httpRequestData.headers["X-Hibachi-AJAX"]) {
 			if(structKeyExists(request.context, "fw")) {

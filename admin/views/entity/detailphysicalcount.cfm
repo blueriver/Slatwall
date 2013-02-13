@@ -37,7 +37,6 @@ Notes:
 
 --->
 <cfparam name="rc.physicalCount" type="any">
-<!---<cfdump var="#rc.physicalCount.getPhysical()#" top="3" abort />--->
 <cfparam name="rc.physical" type="any" default="#rc.physicalCount.getPhysical()#">
 <cfparam name="rc.edit" type="boolean">
 
@@ -45,9 +44,10 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.physicalCount#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.physicalCount#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
-		<input type="hidden" name="physical.physicalID" value="#rc.physical.getPhysicalID()#" />
-		
 		<cf_HibachiDetailHeader>
+			<cfif rc.edit>
+				<input type="hidden" name="physical.physicalID" value="#rc.physical.getPhysicalID()#" />
+			</cfif>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.physicalCount#" property="location" edit="#rc.edit#" />
 			</cf_HibachiPropertyList>
