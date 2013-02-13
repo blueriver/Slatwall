@@ -760,12 +760,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		arguments.vendor.removeProduct( this );
 	}
 	
-	// Physicals (many-to-many - inverse)    
-	public void function addPhysical(required any physical) {    
-		arguments.physical.addPhysical( this );    
-	}    
-	public void function removePhysical(required any physical) {    
-		arguments.physical.removePhysical( this );    
+	// Physicals (many-to-many - inverse)
+	public void function addPhysical(required any physical) {
+		arguments.physical.addProduct( this );
+	}
+	public void function removePhysical(required any physical) {
+		arguments.physical.removeProduct( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

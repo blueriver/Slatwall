@@ -48,6 +48,7 @@ component entityname="SlatwallPhysicalCount" table="SlatwallPhysicalCount" persi
 	property name="physical" cfc="Physical" fieldtype="many-to-one" fkcolumn="physicalID";
 	
 	// Related Object Properties (one-to-many)
+	property name="physicalCountItems" singularname="physicalCountItem" cfc="PhysicalCountItem" type="array" fieldtype="one-to-many" fkcolumn="physicalCountID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -73,6 +74,7 @@ component entityname="SlatwallPhysicalCount" table="SlatwallPhysicalCount" persi
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	
 	// Physical (many-to-one)    
 	public void function setPhysical(required any physical) {    
 		variables.physical = arguments.physical;    
@@ -89,6 +91,14 @@ component entityname="SlatwallPhysicalCount" table="SlatwallPhysicalCount" persi
 			arrayDeleteAt(arguments.physical.getPhysicalCounts(), index);    
 		}    
 		structDelete(variables, "physical");    
+	}
+	
+	// Physical Count Items (one-to-many)
+	public void function addPhysicalCountItem(required any physicalCountItem) {
+		arguments.physicalCountItem.setPhysicalCount( this );
+	}
+	public void function removePhysicalCountItem(required any physicalCountItem) {
+		arguments.physicalCountItem.removePhysicalCount( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

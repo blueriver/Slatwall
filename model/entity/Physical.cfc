@@ -76,24 +76,6 @@ component displayname="" entityname="SlatwallPhysical" table="SlatwallPhysical" 
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Physical Status Type (many-to-one)
-	public void function setPhysicalStatusType(required any physicalStatusType) {
-		variables.physicalStatusType = arguments.physicalStatusType;
-		if(isNew() or !arguments.physicalStatusType.hasPhysical( this )) {
-			arrayAppend(arguments.physicalStatusType.getPhysicals(), this);
-		}
-	}
-	public void function removePhysicalStatusType(any physicalStatusType) {
-		if(!structKeyExists(arguments, "physicalStatusType")) {
-			arguments.physicalStatusType = variables.physicalStatusType;
-		}
-		var index = arrayFind(arguments.physicalStatusType.getPhysicals(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.physicalStatusType.getPhysicals(), index);
-		}
-		structDelete(variables, "physicalStatusType");
-	}
-	
 	// Physical Counts (one-to-many)    
 	public void function addPhysicalCount(required any physicalCount) {    
 		arguments.physicalCount.setPhysical( this );    

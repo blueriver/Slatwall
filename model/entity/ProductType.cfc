@@ -217,10 +217,10 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// Physicals (many-to-many - inverse)    
 	public void function addPhysical(required any physical) {    
-		arguments.physical.addPhysical( this );    
+		arguments.physical.addProductType( this );    
 	}    
 	public void function removePhysical(required any physical) {    
-		arguments.physical.removePhysical( this );    
+		arguments.physical.removeProductType( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

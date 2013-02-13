@@ -36,7 +36,7 @@
 Notes:
 
 */
-component entityname="SlatwallPhysicalCountItems" table="SlatwallPhysicalCountItems" persistent="true" accessors="true" extends="HibachiEntity" {
+component entityname="SlatwallPhysicalCountItem" table="SlatwallPhysicalCountItem" persistent="true" accessors="true" extends="HibachiEntity" {
 	
 	// Persistent Properties
 	property name="physicalCountItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -73,6 +73,24 @@ component entityname="SlatwallPhysicalCountItems" table="SlatwallPhysicalCountIt
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Phyiscal Count (many-to-one)
+	public void function setPhysicalCount(required any physicalCount) {
+		variables.physicalCount = arguments.physicalCount;
+		if(isNew() or !arguments.physicalCount.hasPhysicalCountItem( this )) {
+			arrayAppend(arguments.physicalCount.getPhysicalCountItems(), this);
+		}
+	}
+	public void function removePhysicalCount(any physicalCount) {
+		if(!structKeyExists(arguments, "physicalCount")) {
+			arguments.physicalCount = variables.physicalCount;
+		}
+		var index = arrayFind(arguments.physicalCount.getPhysicalCountItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.physicalCount.getPhysicalCountItems(), index);
+		}
+		structDelete(variables, "physicalCount");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

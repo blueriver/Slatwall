@@ -610,12 +610,12 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}    
 	}
 	
-	// Physicals (many-to-many - inverse)    
-	public void function addPhysical(required any physical) {    
-		arguments.physical.addPhysical( this );    
-	}    
-	public void function removePhysical(required any physical) {    
-		arguments.physical.removePhysical( this );    
+	// Physicals (many-to-many - inverse)
+	public void function addPhysical(required any physical) {
+		arguments.physical.addSku( this );
+	}
+	public void function removePhysical(required any physical) {
+		arguments.physical.removeSku( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

@@ -88,12 +88,12 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 		arguments.locationAddress.removeLocation( this );
 	}
 	
-	// Physicals (many-to-many - inverse)    
-	public void function addPhysical(required any physical) {    
-		arguments.physical.addPhysical( this );    
-	}    
-	public void function removePhysical(required any physical) {    
-		arguments.physical.removePhysical( this );    
+	// Physicals (many-to-many - inverse)
+	public void function addPhysical(required any physical) {
+		arguments.physical.addLocation( this );
+	}
+	public void function removePhysical(required any physical) {
+		arguments.physical.removeLocation( this );
 	}
 
 	// =============  END:  Bidirectional Helper Methods ===================
