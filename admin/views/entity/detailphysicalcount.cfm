@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.physicalCount" type="any">
+<!---<cfdump var="#rc.physicalCount.getPhysical()#" top="3" abort />--->
 <cfparam name="rc.physical" type="any" default="#rc.physicalCount.getPhysical()#">
 <cfparam name="rc.edit" type="boolean">
 

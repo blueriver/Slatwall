@@ -207,6 +207,13 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		super.genericSaveMethod('Option',rc);
 	}
 	
+	// Physical
+	public void function createPhysical() {
+		super.genericCreateMethod('Physical', rc);
+		
+		getFW().setView('admin:entity.createphysical');
+	}
+	
 	// Permission Group
 	public void function editPermissionGroup(required struct rc){
 		//rc.permissions = getPermissionService().getPermissions();

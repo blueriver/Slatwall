@@ -36,29 +36,28 @@
 Notes:
 
 --->
-<cfparam name="rc.physical" type="any">
-<cfparam name="rc.edit" type="boolean">
-
-<cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.physical#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.physical#" edit="#rc.edit#">
-			<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" />
-		</cf_HibachiEntityActionBar>
-
-		<cf_HibachiDetailHeader>
-			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.physical#" property="physicalStatusType" edit="false">
-			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+<cfif thisTag.executionMode is "start">
+	<cfparam name="attributes.action" type="any" />
+	<cfparam name="attributes.entity" type="any" />
+	<cfparam name="attributes.processContext" type="string" />
+	
+	<cfparam name="attributes.type" type="string" default="link">
+	<cfparam name="attributes.querystring" type="string" default="" />
+	<cfparam name="attributes.text" type="string" default="">
+	<cfparam name="attributes.title" type="string" default="">
+	<cfparam name="attributes.class" type="string" default="">
+	<cfparam name="attributes.icon" type="string" default="">
+	<cfparam name="attributes.iconOnly" type="boolean" default="false">
+	<cfparam name="attributes.submit" type="boolean" default="false">
+	<cfparam name="attributes.confirm" type="boolean" default="false" />
+	<cfparam name="attributes.disabled" type="boolean" default="false" />
+	<cfparam name="attributes.modal" type="boolean" default="false" />
+	
+	<cfif attributes.entity.isProcessable(attributes.processContext)>
+		<cfset attributes.text = request.slatwallScope.rbKey('#replace(attributes.action, ':', '.', 'all')#.#attributes.processContext#') />
 		
-		<cf_HibachiTabGroup object="#rc.physical#">
-			<cf_HibachiTab view="admin:entity/physicaltabs/physicalcounts" text="#$.slatwall.rbKey('entity.physical.physicalCounts')#" />
-			<cf_HibachiTab property="locations" />
-			<cf_HibachiTab property="productTypes" />
-			<cf_HibachiTab property="brands" />
-			<cf_HibachiTab property="products" />
-			<cf_HibachiTab property="skus" />
-		</cf_HibachiTabGroup>
+		<cfset attributes.queryString = listAppend(attributes.queryString, "processContext=#attributes.processContext#", "&") />
 		
-	</cf_HibachiEntityDetailForm>
-</cfoutput>
+		<cf_HibachiActionCaller attributecollection="#attributes#" />	
+	</cfif>
+</cfif>

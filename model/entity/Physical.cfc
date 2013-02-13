@@ -177,6 +177,17 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" persistent="tru
 	
 	// ===============  END: Custom Formatting Methods =====================
 
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public any function getPhysicalStatusType() {
+		if(isNull(variables.physicalStatusType)) {
+			variables.physicalStatusType = getService("settingService").getTypeBySystemCode('pstOpen');
+		}
+		return variables.physicalStatusType;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentationPropertyName() {

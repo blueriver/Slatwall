@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.physicalSmartList" type="any"/>
 
 <cfoutput>
-	<cf_HibachiEntityActionBar type="listing" object="#rc.physicalSmartList#"></cf_HibachiEntityActionBar>
+	<cf_HibachiEntityActionBar type="listing" object="#rc.physicalSmartList#" createModal="true"></cf_HibachiEntityActionBar>
 	
 	<cf_HibachiListingDisplay smartlist="#rc.physicalSmartList#" 
 	                          recordeditaction="admin:entity.editphysical"

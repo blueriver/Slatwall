@@ -41,24 +41,13 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.physical#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.physical#" edit="#rc.edit#">
-			<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" />
-		</cf_HibachiEntityActionBar>
-
+		<cf_HibachiEntityActionBar type="detail" object="#rc.physical#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
+		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.physical#" property="physicalStatusType" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.physical#" property="locations" edit="true" />
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
-		
-		<cf_HibachiTabGroup object="#rc.physical#">
-			<cf_HibachiTab view="admin:entity/physicaltabs/physicalcounts" text="#$.slatwall.rbKey('entity.physical.physicalCounts')#" />
-			<cf_HibachiTab property="locations" />
-			<cf_HibachiTab property="productTypes" />
-			<cf_HibachiTab property="brands" />
-			<cf_HibachiTab property="products" />
-			<cf_HibachiTab property="skus" />
-		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
