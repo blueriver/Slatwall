@@ -3,6 +3,7 @@ $(document).ready(function(e){
 	$('.priarynav a').click(function(event) {
 		if($(this).attr('href').charAt(0) === '#') {
 			event.preventDefault();
+			window.location.hash = $(this).attr('href');
 		    $($(this).attr('href'))[0].scrollIntoView();
 		    scrollBy(0, -40);
 		}
@@ -11,6 +12,7 @@ $(document).ready(function(e){
 	$('.bs-docs-sidenav a').click(function(event) {
 		if($(this).attr('href').charAt(0) === '#') {
 		    event.preventDefault();
+		    window.location.hash = $(this).attr('href');
 		    $($(this).attr('href'))[0].scrollIntoView();
 		    scrollBy(0, -60);
 		}

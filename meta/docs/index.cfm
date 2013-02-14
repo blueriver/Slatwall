@@ -15,8 +15,13 @@
 <!-- Favicon -->
 <link rel="icon" href="img/favicon.png" type="image/png" />
 <link rel="shortcut icon" href="img/favicon.png" type="image/png" />
+<!-- JS --->
+<script src="//code.jquery.com/jquery-latest.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/prettify.js"></script>
+<script src="js/bootstrap-docs-slatwall.js"></script>
 </head>
-<body onload="prettyPrint()" data-spy="scroll" data-target="a">
+<body onload="prettyPrint();" data-spy="scroll" data-target="a">
 <div class="navbar navbar-inverse navbar-fixed-top">
 <div class="navbar-inner">
 <div class="container">
@@ -119,9 +124,5 @@
 </footer>
 </div>
 
-<script src="//code.jquery.com/jquery-latest.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/prettify.js"></script>
-<script src="js/bootstrap-docs-slatwall.js"></script>
 </body>
 </html>
