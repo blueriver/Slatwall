@@ -109,13 +109,7 @@ Notes:
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.integrations_nav')#" icon="random icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.listintegration" type="list">
 							<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
-							<cfloop array="#local.integrationSubsystems#" index="local.intsys">
-								<cfif request.slatwallScope.authenticateAction('#local.intsys.subsystem#:main.default')>
-									<li>
-										<a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a>
-									</li>
-								</cfif>
-							</cfloop>
+							<cfloop array="#local.integrationSubsystems#" index="local.intsys"><cfif request.slatwallScope.authenticateAction('#local.intsys.subsystem#:main.default')><li><a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a></li></cfif></cfloop>
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.settings_nav')#" icon="cog icon-white" type="nav">
 							<cfsavecontent variable="local.settingGroupOne">
@@ -147,6 +141,10 @@ Notes:
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.tools_nav')#" icon="magnet icon-white" type="nav">
 							<cfsavecontent variable="local.toolGroupOne">
+								<cfif $.slatwall.getCurrentAccount().getAdminAccountFlag()>
+									<li><a title="User Docs" href="#$.slatwall.getApplicationValue('baseURL')#/meta/docs/##user" target="_blank">User Docs</a></li>
+									<li><a title="Developer Docs" href="#$.slatwall.getApplicationValue('baseURL')#/meta/docs/" target="_blank">Developer Docs</a></li>
+								</cfif>
 								<cf_HibachiActionCaller action="admin:main.about" type="list">
 								<cf_HibachiActionCaller action="admin:main.log" type="list">
 							</cfsavecontent>
