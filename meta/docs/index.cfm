@@ -36,7 +36,7 @@
 <li class="dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Developers</a>
 <ul class="dropdown-menu ">
-<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#gs">Getting Started</a></li>
 <li><a href="#configuration">Configuration</a></li>
 <li><a href="#frontend">Frontend Development</a></li>
 <li><a href="#integration">Integration</a></li>
@@ -66,12 +66,12 @@
 <!--------------------- DEVELOPERS --------------------------->
 
 <!-- ============== GETTING STARTED ================== -->
-<cf_docsection sectionID="getting-started" sectionName="Getting Started" sectionTagline="This section provides basic details about Slatwall & how to get started!" sectionType="developer">
-	<cf_docitem itemID="getting-started-overview" itemName="Overview" />
-	<cf_docitem itemID="getting-started-install" itemName="Download / Install" />
-	<cf_docitem itemID="getting-started-update-2" itemName="Updating From Version 2.x" />
-	<cf_docitem itemID="getting-started-file-structure" itemName="File Structure" />
-	<cf_docitem itemID="getting-started-architecture" itemName="System Architecture" />
+<cf_docsection sectionID="gs" sectionName="Getting Started" sectionTagline="This section provides basic details about Slatwall & how to get started!" sectionType="developer">
+	<cf_docitem itemID="gs-overview" itemName="Overview" />
+	<cf_docitem itemID="gs-install" itemName="Download / Install" />
+	<cf_docitem itemID="gs-update-2" itemName="Updating From Version 2.x" />
+	<cf_docitem itemID="gs-file-structure" itemName="File Structure" />
+	<cf_docitem itemID="gs-architecture" itemName="System Architecture" />
 </cf_docsection>
 
 <!-- =============== CONFIGURATION =================== -->
@@ -90,31 +90,48 @@
 </cf_docsection>
 
 <!-- ================ INTEGRATION ==================== -->
-<cf_docsection sectionID="integration" sectionName="Frontend Development" sectionTagline="No platform can fit every business need out of the box, learn how to extend slatwall to fit your needs." sectionType="developer">
+<cf_docsection sectionID="integration" sectionName="Integrations" sectionTagline="No platform can fit every business need out of the box, learn how to extend slatwall to fit your needs." sectionType="developer">
 	<cf_docitem itemID="integration-overview" itemName="Overview" />
 </cf_docsection>
 
 <!-- ================ REFERENCE ====================== -->
 <cf_docsection sectionID="reference" sectionName="Reference" sectionTagline="For when you need to dig a little deeper." sectionType="developer">
-	<cf_docitem itemID="reference-system-architecture" itemName="System Architecture" />
 	<cf_docitem itemID="reference-smart-list" itemName="Smart List" />
 	<cf_docitem itemID="reference-slatwall-scope" itemName="Slatwall Scope" />
 	<cf_docitem itemID="reference-events" itemName="Events" />
 </cf_docsection>
 
 <!--------------------- USERS --------------------------->
+<div id="user"></div>
 
-<!-- ================ REFERENCE ====================== -->
-<cf_docsection sectionID="reference" sectionName="Reference" sectionTagline="For when you need to dig a little deeper." sectionType="developer">
-	
-	<cf_docitem itemID="reference-smart-list" itemName="Smart List" />
-	<cf_docitem itemID="reference-slatwall-scope" itemName="Slatwall Scope" />
-	<cf_docitem itemID="reference-events" itemName="Events" />
-</cf_docsection>
-
-<!-- ============== ADMIN OVERVIEW =================== -->
+<!-- ============== ADMIN =================== -->
 <cf_docsection sectionID="admin" sectionName="Administrator Overview" sectionTagline="You got your login from IT... Now what do you do?" sectionType="user">
 	<cf_docitem itemID="admin-dashboard" itemName="Dashboard" />
+</cf_docsection>
+
+<!-- ============== ACCOUNT =================== -->
+<cf_docsection sectionID="account" sectionName="Accounts" sectionTagline="This guide will provide the base understanding of how accounts work." sectionType="user">
+	<cf_docitem itemID="account-overview" itemName="Overview" />
+</cf_docsection>
+
+<!-- ============== PRODUCT =================== -->
+<cf_docsection sectionID="product" sectionName="Product Management" sectionTagline="Everything about Products, Product Types, Brands, ect." sectionType="user">
+	<cf_docitem itemID="product-overview" itemName="Overview" />
+</cf_docsection>
+
+<!-- ============== PRICING =================== -->
+<cf_docsection sectionID="pricing" sectionName="Pricing & Promotions" sectionTagline="Lets be honest... It's all about getting paid, so you should get a handle on your pricing!" sectionType="user">
+	<cf_docitem itemID="pricing-overview" itemName="Overview" />
+</cf_docsection>
+
+<!-- ============== ORDER =================== -->
+<cf_docsection sectionID="order" sectionName="Order Management" sectionTagline="Now that we are taking orders, lets make sure it doesn't get out of control." sectionType="user">
+	<cf_docitem itemID="order-overview" itemName="Overview" />
+</cf_docsection>
+
+<!-- ============== WAREHOUSE =================== -->
+<cf_docsection sectionID="warehouse" sectionName="Warehouse & Inventory" sectionTagline="Inventory is always moving, learn how to keep an eye on it" sectionType="user">
+	<cf_docitem itemID="warehouse-overview" itemName="Overview" />
 </cf_docsection>
 
 
