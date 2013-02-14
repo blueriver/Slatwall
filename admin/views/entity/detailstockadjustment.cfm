@@ -42,8 +42,8 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.stockAdjustment#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.stockAdjustment#" edit="#rc.edit#">
-			<cf_SlatwallProcessCaller entity="#rc.stockAdjustment#" action="admin:warehouse.processStockAdjustment" processContext="processAdjustment" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#&process=1&returnAction=admin:warehouse.detailStockAdjustment" type="list" />
-			<cf_SlatwallProcessCaller entity="#rc.stockAdjustment#" action="admin:warehouse.processStockAdjustment" processContext="addItems" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#" type="list" modal=true />
+			<cf_SlatwallProcessCaller entity="#rc.stockAdjustment#" action="admin:entity.processStockAdjustment" processContext="processAdjustment" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#&process=1&returnAction=admin:entity.detailStockAdjustment" type="list" />
+			<cf_SlatwallProcessCaller entity="#rc.stockAdjustment#" action="admin:entity.processStockAdjustment" processContext="addItems" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#" type="list" modal=true />
 		</cf_HibachiEntityActionBar>
 					
 		<cf_HibachiDetailHeader>
