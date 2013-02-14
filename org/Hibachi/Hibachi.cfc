@@ -173,12 +173,11 @@ component extends="FW1.framework" {
 	
 	public void function verifyApplicationSetup() {
 		if(structKeyExists(url, variables.framework.reload) && url[variables.framework.reload] == variables.framework.password) {
-			reloadApplication();
+			getHibachiScope().setApplicationValue("initialized", false);
 		}
 		
 		// Check to see if out application stuff is initialized
 		if(!getHibachiScope().hasApplicationValue("initialized") || !getHibachiScope().getApplicationValue("initialized")) {
-			
 			// If not, lock the application until this is finished
 			lock scope="Application" timeout="240"  {
 				
