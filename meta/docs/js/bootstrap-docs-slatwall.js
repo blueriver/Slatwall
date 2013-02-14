@@ -1,20 +1,26 @@
 $(document).ready(function(e){
 	
-	$('.priarynav a').click(function(event) {
-		if($(this).attr('href').charAt(0) === '#') {
-			event.preventDefault();
-			window.location.hash = $(this).attr('href');
-		    $($(this).attr('href'))[0].scrollIntoView();
-		    scrollBy(0, -40);
+	$(window).on('load', function() {
+		var hashArray = window.location.hash.split('#');
+		if(hashArray.length > 1) {
+			subArray = hashArray[1].split('-');
+			if(subArray.length > 1) {
+				scrollBy(0, -60);
+			} else {
+				scrollBy(0, -40);
+			}
 		}
 	});
 	
-	$('.bs-docs-sidenav a').click(function(event) {
-		if($(this).attr('href').charAt(0) === '#') {
-		    event.preventDefault();
-		    window.location.hash = $(this).attr('href');
-		    $($(this).attr('href'))[0].scrollIntoView();
-		    scrollBy(0, -60);
+	$(window).on('hashchange', function() {
+		var hashArray = window.location.hash.split('#');
+		if(hashArray.length > 1) {
+			subArray = hashArray[1].split('-');
+			if(subArray.length > 1) {
+				scrollBy(0, -60);
+			} else {
+				scrollBy(0, -40);
+			}
 		}
 	});
 	

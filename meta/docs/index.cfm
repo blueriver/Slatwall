@@ -34,7 +34,7 @@
 <div class="nav-collapse collapse priarynav">
 <ul class="nav">
 <li class="dropdown">
-<a href="#" class="dropdown-toggle" data-toggle="dropdown">Developers</a>
+<a href="javascript:void;" class="dropdown-toggle" data-toggle="dropdown">Developers</a>
 <ul class="dropdown-menu ">
 <li><a href="#gs">Getting Started</a></li>
 <li><a href="#configuration">Configuration</a></li>
@@ -44,7 +44,7 @@
 </ul>
 </li>
 <li class="dropdown">
-<a href="#" class="dropdown-toggle" data-toggle="dropdown">Users</a>
+<a href="javascript:void;" class="dropdown-toggle" data-toggle="dropdown">Users</a>
 <ul class="dropdown-menu ">
 <li><a href="#admin">Admin Overview</a></li>
 <li><a href="#account">Accounts</a></li>
@@ -54,9 +54,9 @@
 <li><a href="#warehouse">Warehouse & Inventory</a></li>
 </ul>
 </li>
-<li><a href="http://groups.google.com/group/slatwallecommerce">Google Group</a></li>
-<li><a href="http://www.getslatwall.com">getSlatwall.com</a></li>
-<li><a href="http://www.ten24web.com/">Professional Support</a></li>
+<li><a href="http://groups.google.com/group/slatwallecommerce" target="_blank">Google Group</a></li>
+<li><a href="http://www.ten24web.com/" target="_blank">Professional Support</a></li>
+<li><a href="http://www.getslatwall.com" target="_blank">getSlatwall.com</a></li>
 </ul>
 </div>
 </div>
