@@ -9,5 +9,5 @@
 <cfif FindNoCase("MySQL", dbVersion.DATABASE_PRODUCTNAME)>
 	<cfset this.ormSettings.dialect = "MySQL" />
 <cfelseif FindNoCase("Microsoft", dbVersion.DATABASE_PRODUCTNAME)>
-	<cfset this.ormSettings.dialect = "Microsoft" />	
+	<cfset this.ormSettings.dialect = "MicrosoftSQLServer" />	
 </cfif>
