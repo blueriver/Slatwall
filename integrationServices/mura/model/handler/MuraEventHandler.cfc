@@ -499,7 +499,7 @@
 			WHERE
 				tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
 			  AND
-			  	tcontent.type NOT IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="Module,Plugin" list="true" />)
+    			tcontent.path LIKE '00000000000000000000000000000000001%'
 			  AND
 				NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
 			ORDER BY
