@@ -503,7 +503,11 @@
 			  AND
 				NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
 			ORDER BY
-				LENGTH(tcontent.path)
+				<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
+					LENGTH(tcontent.path)
+				<cfelse>
+					LEN(tcontent.path)
+				</cfif>
 		</cfquery>
 		
 		<cfset var allParentsFound = true />
