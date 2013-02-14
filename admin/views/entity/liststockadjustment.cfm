@@ -46,8 +46,8 @@ Notes:
 	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiListingDisplay smartlist="#rc.stockAdjustmentSmartList#" 
-	                          recordeditaction="admin:warehouse.editstockadjustment"
-							  recorddetailaction="admin:warehouse.detailstockadjustment">
+	                          recordeditaction="admin:entity.editstockadjustment"
+							  recorddetailaction="admin:entity.detailstockadjustment">
 		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stockAdjustmentType.type"/>
 		<cf_HibachiListingColumn propertyidentifier="stockAdjustmentStatusType.type" filter=true/>
 		<cf_HibachiListingColumn propertyidentifier="fromLocation.locationName" filter=true/>

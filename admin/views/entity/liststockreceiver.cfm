@@ -43,8 +43,8 @@ Notes:
 <cf_HibachiEntityActionBar type="listing" object="#rc.stockReceiverSmartList#" showCreate="false" />
 
 <cf_HibachiListingDisplay smartList="#rc.stockReceiverSmartList#"
-						   recordDetailAction="admin:warehouse.detailstockreceiver"
-						   recordEditAction="admin:warehouse.editstockreceiver">
+						   recordDetailAction="admin:entity.detailstockreceiver"
+						   recordEditAction="admin:entity.editstockreceiver">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="packingSlipNumber" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="boxCount" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="receiverType" filter="true" />

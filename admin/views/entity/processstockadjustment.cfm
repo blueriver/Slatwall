@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfparam name="rc.returnAction" type="string" default="admin:warehouse.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentID#" />
+<cfparam name="rc.returnAction" type="string" default="admin:entity.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentID#" />
 <cfparam name="rc.processStockAdjustmentSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 
