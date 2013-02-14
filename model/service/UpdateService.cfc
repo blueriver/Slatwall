@@ -49,7 +49,7 @@ Notes:
 			<cfset var slatwallRootPath = expandPath("/Slatwall") />
 			<cfset var downloadFileName = "slatwall.zip" />
 			<cfset var deleteDestinationContentExclusionList = "/integrationServices,/config/custom" />
-			<cfset var copyContentExclusionList = "Meta" />
+			<cfset var copyContentExclusionList = "" />
 			
 			<!--- before we do anything, make a backup --->
 			<cfzip action="zip" file="#getTempDirectory()#slatwall_bak.zip" source="#slatwallRootPath#" recurse="yes" overwrite="yes" />
