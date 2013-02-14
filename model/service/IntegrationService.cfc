@@ -210,6 +210,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					
 					// Call Entity Save so that any new integrations get persisted
 					getHibachiDAO().save( integration );
+					getHibachiDAO().flushORMSession();
 					logHibachi("The Integration: #integrationPackage# has been registerd");
 					
 					// If this integration is active lets register all of its event handlers
