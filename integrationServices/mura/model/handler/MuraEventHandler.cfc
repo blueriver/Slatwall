@@ -610,9 +610,9 @@
 				NOT EXISTS( SELECT categoryID FROM SlatwallCategory WHERE SlatwallCategory.cmsCategoryID = tcontentcategories.categoryID )
 			ORDER BY
 				<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
-					LENGTH(tcontent.path)
+					LENGTH(tcontentcategories.path)
 				<cfelse>
-					LEN(tcontent.path)
+					LEN(tcontentcategories.path)
 				</cfif>
 		</cfquery>
 		
