@@ -99,6 +99,7 @@
 	<cf_docitem itemID="reference-smart-list" itemName="Smart List" />
 	<cf_docitem itemID="reference-slatwall-scope" itemName="Slatwall Scope" />
 	<cf_docitem itemID="reference-events" itemName="Events" />
+	<cf_docitem itemID="reference-changelog" itemName="Change Log" />
 </cf_docsection>
 
 <!--------------------- USERS --------------------------->
@@ -132,6 +133,7 @@
 <!-- ============== WAREHOUSE =================== -->
 <cf_docsection sectionID="warehouse" sectionName="Warehouse & Inventory" sectionTagline="Inventory is always moving, learn how to keep an eye on it" sectionType="user">
 	<cf_docitem itemID="warehouse-overview" itemName="Overview" />
+	<cf_docitem itemID="warehouse-physical" itemName="Physicals" />
 </cf_docsection>
 
 
