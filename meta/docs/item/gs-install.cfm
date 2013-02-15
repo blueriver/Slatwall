@@ -27,20 +27,30 @@
 <h3>Installing</h3>
 <h5>Standalone</h5>
 <ol>
-	<li>Navigate to <a href="http://www.getslatwall.com/">http://www.getslatwall.com/</a> and click the "Download" link.  If given an option, we recommend the Latest Stable Release</li>
+	<li>Navigate to <a href="http://www.getslatwall.com/">http://www.getslatwall.com/</a> and click the "Download" link, and select "Standalone Install".</li>
 	<li>The file should be downloaded as a .zip file that you will need to unzip</li>
 	<li>Once the application is unziped, place it in your web root and configure it to run either via IIS or Apache</li>
 	<li>Create a datasource called 'Slatwall' in your CFIDE or Railo administrator, and point it to a fresh database.</li>
 	<li>Navigate to the site in your browser and follow the steps on the screen.</li>
 </ol>
+<br />
 <h5>Integrated w/Mura</h5>
 <ol>
-	<li>...</li>
+	<li>Navigate to <a href="http://www.getslatwall.com/">http://www.getslatwall.com/</a> and click the "Download" link, and select "Slatwall for Mura".</li>
+	<li>The file that is downloaded will be a.zip file, that can be installed as a plugin into mura.</li>
+	<li>Open your Mura Administrator and Navigate to Settings > Plugins</li>
+	<li>Select the .zip file that you just downloaded and click the "Deploy" link</li>
+	<li>On the next page you will be presented with some settings for how you would like accounts to sync.  By default we set it up so that system users sync with Slatwall but site users do not which means that admins will exist in both systems, but the customer accounts created don't also get created in Mura.</li>
+	<li>On this page you also need to select the sites that you would like to deploy on.  At least 1 site needs to be selected.</li>
+	<li>Once you have all your settings in place, press "Update".  This step may take a couple minutes because the plugin is installing the latest version of Slatwall inside of your mura root.</li>
+	<li>Now that the plugin is installed you can got to Modules > Plugins > Slatwall.</li>
 </ol>
+<br />
 <h5>Integrated w/Coldbox</h5>
 <ol>
 	<li>...</li>
 </ol>
+<br />
 <h5>Railo Extension</h5>
 <ol>
 	<li>...</li>
