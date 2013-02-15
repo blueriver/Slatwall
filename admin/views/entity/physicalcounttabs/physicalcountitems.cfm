@@ -42,6 +42,7 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.physicalCount.getPhysicalCountItemsSmartList()#">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode" />
 		<cf_HibachiListingColumn propertyIdentifier="quantity" />
-	</cf_HibachiListingDisplay>
+	</cf_HibachiListingDisplay>	
 	
+	<cf_SlatwallProcessCaller entity="#rc.physicalCount#" action="admin:entity.preprocessPhysical_addPhysicalCount" processContext="addItems" class="btn btn-inverse" icon="plus icon-white" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal=true />
 </cfoutput>

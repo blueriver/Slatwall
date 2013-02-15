@@ -38,7 +38,7 @@ Notes:
 */
 component extends="HibachiService" accessors="true" output="false" {
 
-	property name="stockService" type="any";
+	property name="physicalService" type="any";
 	
 	// ===================== START: Logical Methods ===========================
 	
@@ -51,7 +51,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	// ===================== START: Process Methods ===========================
 	
 	// Physical 
-	public any function processPhysical_commit(required any stockAdjustment) {
+	public any function processPhysical_commit(required any physicalCount) {
 		
 		// Loop over physical for each location
 			// Create a StockAdjustmentIN and StockAdjustmentOUT
@@ -61,7 +61,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	}
 	
-	public any function processPhysical_addPhysicalCount(required any stockAdjustment, required any processObject) {
+	public any function processPhysical_addPhysicalCount(required any physicalCount, required any processObject) {
 		
 		// Loop over physical for each location
 			// Create a StockAdjustmentIN and StockAdjustmentOUT
@@ -70,6 +70,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 	
 	}
+
 
 	// =====================  END: Process Methods ============================
 	

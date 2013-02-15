@@ -42,7 +42,9 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.physicalCount#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.physicalCount#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
+		<cf_HibachiEntityActionBar type="detail" object="#rc.physicalCount#" edit="#rc.edit#" backAction="admin:entity.detailphysical" backQueryString="physicalID=#rc.physical.getPhysicalID()#">
+			
+		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cfif rc.edit>
