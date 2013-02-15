@@ -1,1 +1,1 @@
-<p>Slatwall is an extreamly powerful and roebust digital commerce management system.</p>
+<p>Slatwall is an extremely powerful and robust digital commerce management system.</p>
