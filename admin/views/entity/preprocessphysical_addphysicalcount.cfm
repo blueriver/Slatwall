@@ -40,15 +40,12 @@ Notes:
 <cfparam name="rc.physical" type="any">
 <cfparam name="rc.processObject" type="any">
 
-<cfparam name="rc.edit" type="boolean" />
-
 <cfoutput>
 	<form action="?s=1" method="post">
-		<input type="hidden" value="admin:entity.processPhysical" name="slatAction" />
-		<input type="hidden" value="addPhysicalCount" name="processContext" />
+		<input type="hidden" name="slatAction" value="admin:entity.processPhysical" />
+		<input type="hidden" name="processContext" value="addPhysicalCount" />
 		
-		<cf_HibachiPropertyList>
-        	<cf_HibachiPropertyDisplay object="#rc.processObject#" property="location" edit="false">
-        </cf_HibachiPropertyList>
+        	<cf_HibachiPropertyDisplay object="#rc.processObject#" property="locationID" edit="true" />
+        
 	</form>
 </cfoutput>

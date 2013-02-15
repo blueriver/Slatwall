@@ -44,5 +44,5 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="location.locationName" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createphysicalcount" class="btn btn-inverse" icon="plus icon-white" queryString="physicalID=#rc.physical.getPhysicalID()#" />
+	<cf_HibachiActionCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" class="btn btn-inverse" icon="plus icon-white" />
 </cfoutput>
