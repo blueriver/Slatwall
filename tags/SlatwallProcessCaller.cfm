@@ -57,6 +57,7 @@ Notes:
 		<cfset attributes.text = request.slatwallScope.rbKey('#replace(attributes.action, ':', '.', 'all')#.#attributes.processContext#') />
 		
 		<cfset attributes.queryString = listAppend(attributes.queryString, "processContext=#attributes.processContext#", "&") />
+		<cfset attributes.queryString = listAppend(attributes.queryString, "#attributes.entity.getPrimaryIDPropertyName()#=#attributes.entity.getPrimaryIDValue()#", "&") />
 		
 		<cf_HibachiActionCaller attributecollection="#attributes#" />	
 	</cfif>

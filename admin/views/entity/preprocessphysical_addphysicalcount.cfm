@@ -37,31 +37,18 @@ Notes:
 
 --->
 
+<cfparam name="rc.physical" type="any">
 <cfparam name="rc.processObject" type="any">
-<cfparam name="rc.returnAction" type="string" default="admin:entity.editPhysicalCount&physicalCountID=#rc.physicalCountID#" />
-<cfparam name="rc.processPhysical_addPhysicalCountSmartList" type="any" default="rc.physicalCount.getPhysicalCountItemsSmartList()"/>
 
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallProcessForm>
+	<form action="?s=1" method="post">
+		<input type="hidden" value="admin:entity.processPhysical" name="slatAction" />
+		<input type="hidden" value="addPhysicalCount" name="processContext" />
 		
-		<cf_HibachiEntityActionBar type="process" />
-		
-		<cfswitch expression="#rc.processcontext#" >
-			<cfcase value="addItems">
-				
-				<cf_SlatwallProcessListing processSmartList="#rc.processPhysical_addPhysicalCountSmartList#">
-					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
-					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
-					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
-					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
-					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
-				</cf_SlatwallProcessListing>
-				
-			</cfcase> 
-				
-		</cfswitch>
-		
-	</cf_SlatwallProcessForm>
+		<cf_HibachiPropertyList>
+        	<cf_HibachiPropertyDisplay object="#rc.processObject#" property="location" edit="false">
+        </cf_HibachiPropertyList>
+	</form>
 </cfoutput>
