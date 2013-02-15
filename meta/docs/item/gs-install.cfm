@@ -44,14 +44,15 @@
 	<li>On this page you also need to select the sites that you would like to deploy on.  At least 1 site needs to be selected.</li>
 	<li>Once you have all your settings in place, press "Update".  This step may take a couple minutes because the plugin is installing the latest version of Slatwall inside of your mura root.</li>
 	<li>Now that the plugin is installed you can got to Modules > Plugins > Slatwall.</li>
+	<li>Optional: Review the <a href="#gs-mura">Mura Integration Overview</a> to learn more about how Slatwall interacts with Mura.</li>
 </ol>
 <br />
 <h5>Integrated w/Coldbox</h5>
 <ol>
-	<li>...</li>
+	<li>Coming Soon...</li>
 </ol>
 <br />
 <h5>Railo Extension</h5>
 <ol>
-	<li>...</li>
+	<li>Coming Soon...</li>
 </ol>

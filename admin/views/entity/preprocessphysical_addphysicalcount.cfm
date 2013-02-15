@@ -36,6 +36,7 @@
 Notes:
 
 --->
+<cfparam name="rc.physical" type="any">
 <cfparam name="rc.processObject" type="any">
 <cfparam name="rc.edit" type="boolean">
 

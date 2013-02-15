@@ -52,6 +52,8 @@ component output="false" accessors="true" extends="HibachiController" {
 			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-6);
 		} else if (left(arguments.rc.entityActionDetails.itemName, 7) == "process") {
 			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-7);
+		} else if (left(arguments.rc.entityActionDetails.itemName, 10) == "preprocess") {
+			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-10);
 		} else if (left(arguments.rc.entityActionDetails.itemName, 6) == "export") {
 			arguments.rc.entityActionDetails.itemEntityName = right(arguments.rc.entityActionDetails.itemName, len(arguments.rc.entityActionDetails.itemName)-6);
 		}
@@ -142,6 +144,8 @@ component output="false" accessors="true" extends="HibachiController" {
 				genericCreateMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 7) == "process" ) {
 				genericProcessMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			} else if ( left(arguments.missingMethodName, 10) == "preprocess" ) {
+				genericPreProcessMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			} else if ( left(arguments.missingMethodName, 6) == "export" ) {
 				genericExportMethod(entityName=arguments.missingMethodArguments.rc.entityActionDetails.itemEntityName, rc=arguments.missingMethodArguments.rc);
 			}
@@ -332,10 +336,11 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	
 	public void function genericPreProcessMethod(required string entityName, required struct rc) {
-		
 		loadEntitiesFromRCIDs( arguments.rc );
 		
-		getFW().setView("#getSubsystem()#:#getSubsystem()#");
+		rc.processObject = arguments.rc[ arguments.entityName ].getProcessObject( arguments.rc.processContext );
+		
+		getFW().setView("#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#_#arguments.rc.processContext#");
 	}
 	
 	public void function genericProcessMethod(required string entityName, required struct rc) {

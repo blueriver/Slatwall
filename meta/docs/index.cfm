@@ -71,7 +71,7 @@
 	<cf_docitem itemID="gs-install" itemName="Download / Install" />
 	<cf_docitem itemID="gs-update-2" itemName="Updating From Version 2.x" />
 	<cf_docitem itemID="gs-file-structure" itemName="File Structure" />
-	<cf_docitem itemID="gs-architecture" itemName="System Architecture" />
+	<cf_docitem itemID="gs-mura" itemName="Mura Integration Overview" />
 </cf_docsection>
 
 <!-- =============== CONFIGURATION =================== -->
