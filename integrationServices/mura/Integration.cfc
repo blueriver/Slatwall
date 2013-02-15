@@ -55,7 +55,13 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 				{name="None",value="none"}
 			]},
 			createDefaultPages = {fieldType="yesno", displayName="Create Default Pages and Templates", hint="If set to 'yes' then the first time the Slatwall is initiated for any site, it will automatically create pages in the site manager as well as the necessary template files in your theme."},
-			superUserSyncFlag = {fieldType="yesno", displayName="Add Mura Super Users to Slatwall Super User Group", hint="If set to 'yes' then any S2 Super User accounts in mura will get added to the super user group in Slatwall.  This setting will only apply if the Account Sync Type is set to 'all' or 'systemUserOnly'."}
+			superUserSyncFlag = {fieldType="yesno", displayName="Add Mura Super Users to Slatwall Super User Group", hint="If set to 'yes' then any S2 Super User accounts in mura will get added to the super user group in Slatwall.  This setting will only apply if the Account Sync Type is set to 'all' or 'systemUserOnly'."},
+			legacyShoppingCart = {fieldType="text", displayName="Legacy Shopping Cart Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
+			legacyOrderStatus = {fieldType="text", displayName="Legacy Order Status Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
+			legacyOrderConfirmation = {fieldType="text", displayName="Legacy Order Confirmation Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
+			legacyMyAccount = {fieldType="text", displayName="Legacy My Account Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
+			legacyCreateAccount = {fieldType="text", displayName="Legacy Create Account Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
+			legacyCheckout = {fieldType="text", displayName="Legacy Checkout Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"}
 		};
 	}
 	

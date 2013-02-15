@@ -75,16 +75,17 @@
 		
 		public void function onRenderStart( required any $ ) {
 			
-			// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
-			$.slatwall.setCurrentContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
-			
-			// check if user has access to this page
-			checkAccess( $=$ );
-					
 			// Check for any slatActions that might have been passed in and render that page as the first
 			if(len($.event('slatAction'))) {
-				$.content('body', $.content('body') & doAction($.event('slatAction')));
 				
+				if(left($.event('slatAction'), 9) eq "frontend:") {
+					$.content('body', $.content('body') & doAction($.event('slatAction')));	
+				} else {
+					
+					// ======= IMPORTANT This is now the primary place that actions get called from =============
+					doAction($.event('slatAction'));
+				}
+
 			// If no slatAction was passed in, then check for keys in mura to determine what page to render
 			} else {
 				// Check to see if the current content is a listing page, so that we add our frontend view to the content body
@@ -92,28 +93,33 @@
 					$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
 				}
 				
-				/*
-				// Render any of the 'special' pages that might need to be rendered
-				if($.content('filename') == $.slatwall.setting('globalPageShoppingCart')) {
+				// ================== LEGACY USE ONLY ===================================
+				// Render any of the 'special'  pages that might need to be rendered
+				if(len($.slatwall.setting('integrationMuraLegacyShippingCart')) && $.slatwall.setting('integrationMuraLegacyShippingCart') == $.content('filename')) {
 					$.content('body', $.content('body') & doAction('frontend:cart.detail'));
-				} else if($.content('filename') == $.slatwall.setting('globalPageOrderStatus')) {
+				} else if(len($.slatwall.setting('integrationMuraLegacyOrderStatus')) && $.slatwall.setting('integrationMuraLegacyOrderStatus') == $.content('filename')) {
 					$.content('body', $.content('body') & doAction('frontend:order.detail'));
-				} else if($.content('filename') == $.slatwall.setting('globalPageOrderConfirmation')) {
+				} else if(len($.slatwall.setting('integrationMuraLegacyOrderConfirmation')) && $.slatwall.setting('integrationMuraLegacyOrderConfirmation') == $.content('filename')) {
 					$.content('body', $.content('body') & doAction('frontend:order.confirmation'));
-				} else if($.content('filename') == $.slatwall.setting('globalPageMyAccount')) {
+				} else if(len($.slatwall.setting('integrationMuraLegacyMyAccount')) && $.slatwall.setting('integrationMuraLegacyMyAccount') == $.content('filename')) {
 					// Checks for My-Account page
 					if($.event('showitem') != ""){
 						$.content('body', $.content('body') & doAction('frontend:account.#$.event("showitem")#'));
 					} else {
 						$.content('body', $.content('body') & doAction('frontend:account.detail'));
 					}
-				} else if($.content('filename') == $.slatwall.setting('globalPageCreateAccount')) {
+				} else if(len($.slatwall.setting('integrationMuraLegacyCreateAccount')) && $.slatwall.setting('integrationMuraLegacyCreateAccount') == $.content('filename')) {
 					$.content('body', $.content('body') & doAction('frontend:account.create'));
-				} else if($.content('filename') == $.slatwall.setting('globalPageCheckout')) {
+				} else if(len($.slatwall.setting('integrationMuraLegacyCheckout')) && $.slatwall.setting('integrationMuraLegacyCheckout') == $.content('filename')) {
 					$.content('body', $.content('body') & doAction('frontend:checkout.detail'));
 				}
-				*/
 			}
+			
+			// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
+			$.slatwall.setCurrentContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
+			
+			// check if user has access to this page
+			checkAccess( $=$ );
 		}
 		
 		public void function onRenderEnd( required any $ ) {

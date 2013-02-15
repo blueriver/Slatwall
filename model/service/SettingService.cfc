@@ -157,12 +157,6 @@ globalEncryptionKeySize
 			globalURLKeyProduct = {fieldType="text"},
 			globalURLKeyProductType = {fieldType="text"},
 			globalWeightUnitCode = {fieldType="select"},
-			globalPageShoppingCart = {fieldType="text"},
-			globalPageOrderStatus = {fieldType="text"},
-			globalPageOrderConfirmation = {fieldType="text"},
-			globalPageMyAccount = {fieldType="text"},
-			globalPageCreateAccount = {fieldType="text"},
-			globalPageCheckout = {fieldType="text"},
 			
 			// Payment Method
 			paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno"},
