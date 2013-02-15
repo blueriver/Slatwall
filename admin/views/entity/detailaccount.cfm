@@ -77,9 +77,6 @@ Notes:
 		<cf_HibachiTab property="orders" />
 		<cf_HibachiTab property="accountPaymentMethods" />
 		<cf_HibachiTab property="permissionGroups" />
-		<cf_SlatwallAdminTabComments object="#rc.account#" />
-		
-		<!---
 		<cf_HibachiTab view="admin:entity/accounttabs/addresses" />
 		<cf_HibachiTab view="admin:entity/accounttabs/orders" />
 		<cf_HibachiTab view="admin:entity/accounttabs/paymentmethods" />
@@ -89,7 +86,7 @@ Notes:
 		<cf_HibachiTab view="admin:entity/accounttabs/accountpayments" />
 		<cf_HibachiTab view="admin:entity/accounttabs/permissions" />
 		<cf_HibachiTab view="admin:entity/accounttabs/accountsettings" />
-		--->
+		<cf_SlatwallAdminTabComments object="#rc.account#" />
 	</cf_HibachiTabGroup>
 	
 </cf_HibachiEntityDetailForm>
