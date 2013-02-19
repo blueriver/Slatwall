@@ -300,7 +300,7 @@
 		public void function onAfterUserSave( required any $ ) {
 			verifySlatwallRequest( $=$ );
 			
-			syncMuraAccounts($=$, accountSyncType=$.slatwall.setting('integrationMuraAccountSyncType'), superUserSyncFlag=$.slatwall.setting('superUserSyncFlag'), muraUserID=$.event('userID'));
+			syncMuraAccounts($=$, accountSyncType=$.slatwall.setting('integrationMuraAccountSyncType'), superUserSyncFlag=$.slatwall.setting('integrationMuraSuperUserSyncFlag'), muraUserID=$.event('userID'));
 			
 			endSlatwallRequest();
 		}
