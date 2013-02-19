@@ -95,7 +95,7 @@
 				
 				// ================== LEGACY USE ONLY ===================================
 				// Render any of the 'special'  pages that might need to be rendered
-				if(len($.slatwall.setting('integrationMuraLegacyShippingCart')) && $.slatwall.setting('integrationMuraLegacyShippingCart') == $.content('filename')) {
+				if(len($.slatwall.setting('integrationMuraLegacyShoppingCart')) && $.slatwall.setting('integrationMuraLegacyShoppingCart') == $.content('filename')) {
 					$.content('body', $.content('body') & doAction('frontend:cart.detail'));
 				} else if(len($.slatwall.setting('integrationMuraLegacyOrderStatus')) && $.slatwall.setting('integrationMuraLegacyOrderStatus') == $.content('filename')) {
 					$.content('body', $.content('body') & doAction('frontend:order.detail'));
