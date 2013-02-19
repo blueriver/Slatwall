@@ -44,7 +44,7 @@ Notes:
 
 <cfset rc.promotionSmartList.addOrder("promotionName|ASC") />
 
-<cf_HibachiEntityActionBar smartList="#rc.promotionSmartList#"
+<cf_HibachiListingDisplay smartList="#rc.promotionSmartList#"
 						   recorddetailaction="admin:entity.detailpromotion"
 						   recordEditAction="admin:entity.editpromotion">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" />
