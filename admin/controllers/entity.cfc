@@ -104,11 +104,13 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.orderSmartList.addOrder("orderOpenDateTime|DESC");
 	}
 	
+	// Order (Carts and quotes)
 	public void function listCartAndQuote(required struct rc) {
 		genericListMethod(entityName="Order", rc=arguments.rc);
 		
 		arguments.rc.orderSmartList.addOrder("createdDateTime|DESC");
 		arguments.rc.orderSmartList.addInFilter('orderStatusType.systemCode', 'ostNotPlaced');
+		arguments.rc.entityActionDetails.createAction="admin:entity.createOrder";
 		
 		getFW().setView("admin:entity.listorder");
 	}
