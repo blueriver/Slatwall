@@ -201,6 +201,12 @@ component extends="FW1.framework" {
 					// Setup the baseURL
 					getHibachiScope().setApplicationValue("baseURL", variables.framework.baseURL);
 					
+					// Setup the reload and update keys / passwords
+					getHibachiScope().setApplicationValue("applicationReloadKey", variables.framework.reload);
+					getHibachiScope().setApplicationValue("applicationReloadPassword", variables.framework.password);
+					getHibachiScope().setApplicationValue("applicationUpdateKey", variables.framework.hibachi.fullUpdateKey);
+					getHibachiScope().setApplicationValue("applicationUpdatePassword", variables.framework.hibachi.fullUpdatePassword);
+				
 					// =================== Required Application Setup ===================
 					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
 					if(!structKeyExists(application, variables.framework.applicationKey)) {
