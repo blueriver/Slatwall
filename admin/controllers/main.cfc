@@ -139,7 +139,8 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			}
 			
 			logHibachi("Update Finished, Now Calling Reload", true);
-			getFW().redirect(action="admin:main.update", queryString="reload=1&messageKeys=admin.main.update_success");
+			rc.$.slatwall.showMessageKey("admin.main.update_success");
+			getFW().redirect(action="admin:main.default", preserve="messages", queryString="#getApplicationValue('applicationReloadKey')#=#getApplicationValue('applicationReloadPassword')#&#getApplicationValue('applicationUpdateKey')#=#getApplicationValue('applicationUpdatePassword')#");
 		}
 		
 		var versions = getUpdateService().getAvailableVersions();
