@@ -40,9 +40,6 @@ Notes:
 	<cf_HibachiEntityActionBar type="static"></cf_HibachiEntityActionBar>
 	
 	<cf_HibachiTabGroup>
-		<cf_HibachiTab view="admin:entity/settingstabs/global" />
-		<cf_HibachiTab view="admin:entity/settingstabs/globaladvanced" />
-		<cf_HibachiTab view="admin:entity/settingstabs/globalpage" />
 		<cf_HibachiTab view="admin:entity/settingstabs/account" />
 		<cf_HibachiTab view="admin:entity/settingstabs/brand" />
 		<cf_HibachiTab view="admin:entity/settingstabs/producttype" />
