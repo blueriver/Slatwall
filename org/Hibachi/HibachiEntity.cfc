@@ -35,8 +35,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 				// Look for any that start with the calculatedXXX naming convention
 				if(left(getProperties()[i].name, 10) == "calculated") {
 					
-					variables[ getProperties()[i].name ] = this.invokeMethod("get#right(getProperties()[i].name, len(getProperties()[i].name)-10)#");
-					
+					var value = this.invokeMethod("get#right(getProperties()[i].name, len(getProperties()[i].name)-10)#");
+					if(!isNull(value)) {
+						variables[ getProperties()[i].name ] = value;	
+					}
+
 				// Then also look for any that have the cascadeCalculate set to true and call updateCalculatedProperties() on that object
 				} else if (structKeyExists(getProperties()[i], "cascadeCalculate") && getProperties()[i].cascadeCalculate) {
 				

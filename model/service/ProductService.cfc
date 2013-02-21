@@ -309,7 +309,7 @@ component extends="HibachiService" accessors="true" {
 		updateImageFileNameForProductSkus( arguments.product );
 		
 		// validate the product
-		arguments.product.validate();
+		arguments.product.validate( context="save" );
 		
 		// If the product passed validation then call save in the DAO, otherwise set the errors flag
         if(!arguments.product.hasErrors()) {

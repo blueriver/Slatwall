@@ -544,7 +544,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	public numeric function getSalePrice() {
+	public any function getSalePrice() {
 		if( structKeyExists(variables,"defaultSku") ) {
 			return getDefaultSku().getSalePrice();
 		} else if (arrayLen(getSkus())) {

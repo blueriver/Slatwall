@@ -14,7 +14,7 @@ component output="false" accessors="true" extends="HibachiService" {
 				if(isJSON( rawCoreJSON )) {
 					validation = deserializeJSON( rawCoreJSON );
 				} else {
-					logHibachi("The Validation File: #coreValidationFile# is not a valid JSON object");
+					throw("The Validation File: #coreValidationFile# is not a valid JSON object");
 				}
 			}
 			
@@ -100,7 +100,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			if(arguments.object.hasProperty( propertyName )) {
 				for(var constraint in contextValidations[ propertyName ]) {
 					if(!structKeyExists(variables, "validate_#constraint#")) {
-						throw("You have an error in the #arguments.object.getClassName()#.json validation file.  You have a constraint defined in one of your rules as '#constraint#' and that is not a valid constraint");
+						throw("You have an error in the #arguments.object.getClassName()#.json validation file.  You have a constraint defined for '#propertyName#' that is called '#constraint#' which is not a valid constraint type");
 					}
 					var isValid = invokeMethod("validate_#constraint#", {object=arguments.object, propertyName=propertyName, constraintValue=contextValidations[ propertyName ][ constraint ]});	
 					

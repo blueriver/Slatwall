@@ -38,10 +38,16 @@ Notes:
 --->
 <cfparam name="rc.product" type="any" />
 <cfparam name="rc.baseProductType" type="string" />
+<cfparam name="rc.edit" type="boolean" default="true" />
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.product#" edit="true">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.product#" edit="true"></cf_HibachiEntityActionBar>
+		
+		<cfif rc.product.isNew() and rc.edit>
+			<!--- Submit the baseProductType as well in case of a validation error --->
+			<input type="hidden" name="baseProductType" value="#rc.baseProductType#" />
+		</cfif>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>

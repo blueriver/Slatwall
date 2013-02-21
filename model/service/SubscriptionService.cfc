@@ -39,6 +39,7 @@ Notes:
 component extends="HibachiService" persistent="false" accessors="true" output="false" {
 
 	property name="orderDAO" type="any";
+	property name="subscriptionDAO" type="any";
 	
 	property name="accessService" type="any";
 	property name="orderService" type="any";
@@ -556,7 +557,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: DAO Passthrough ===========================
 	
 	public array function getUnusedProductSubscriptionTerms( required string productID ){
-		return getHibachiDAO().getUnusedProductSubscriptionTerms( arguments.productID );
+		return getSubscriptionDAO().getUnusedProductSubscriptionTerms( arguments.productID );
 	}
 	
 	// ===================== START: DAO Passthrough ===========================

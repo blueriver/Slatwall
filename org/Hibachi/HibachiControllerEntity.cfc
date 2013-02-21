@@ -181,7 +181,9 @@ component output="false" accessors="true" extends="HibachiController" {
 		loadEntitiesFromRCIDs( arguments.rc );
 		
 		// Call the new method on that service to inject an object into the RC
-		arguments.rc["#arguments.entityName#"] = entityService.invokeMethod( "new#arguments.entityName#" );
+		if(!structKeyExists(rc, arguments.entityName)) {
+			arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "new#arguments.entityName#" );	
+		}
 		
 		// Set the edit to true
 		arguments.rc.edit = true;
