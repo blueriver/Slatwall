@@ -41,7 +41,12 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint returns an application specfic virtual filesystem
 	public any function getVirtualFileSystemPath() {
-		return "ram:///#getHibachiInstanceApplicationScopeKey()#";
+		var vfsDirectory = "ram:///" & getHibachiInstanceApplicationScopeKey();
+		if(!directoryExists( vfsDirectory )) {
+			directoryCreate( vfsDirectory );
+		}
+
+		return vfsDirectory;
 	}
 	
 	// @hint helper function for returning the hibachiScope from the request scope
