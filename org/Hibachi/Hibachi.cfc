@@ -64,7 +64,7 @@ component extends="FW1.framework" {
 	// =============== configMappings
 	
 	// Defaults
-	this.mappings[ "/#variables.framework.applicationKey#" ] = replace(replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all"), "/org/Hibachi/", "/");
+	this.mappings[ "/#variables.framework.applicationKey#" ] = replace(replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all"), "/org/Hibachi/", "");
 	
 	// Allow For Application Config 
 	try{include "../../config/configMappings.cfm";}catch(any e){}
@@ -106,6 +106,10 @@ component extends="FW1.framework" {
 	// Make Sure that the required values end up in the application scope so that we can get them from somewhere else
 	
 	// =======  END: ENVIORNMENT CONFIGURATION  =======
+	
+	writeDump(variables.framework);
+	writeDump(this);
+	abort;
 	
 	public any function bootstrap() {
 		setupGlobalRequest();
