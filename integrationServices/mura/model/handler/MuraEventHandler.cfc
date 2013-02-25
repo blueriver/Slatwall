@@ -1,4 +1,4 @@
-<cfcomponent extends="Handler">
+<cfcomponent extends="Handler" output="false" accessors="true">
 	
 	<cfscript>
 		
@@ -495,26 +495,41 @@
 		<cfset var parentMappingCache = {} />
 		<cfset var missingContentQuery = "" />
 		
-		<cfquery name="missingContentQuery">
-			SELECT
-				tcontent.contentID,
-				tcontent.parentID,
-				tcontent.menuTitle
-			FROM
-				tcontent
-			WHERE
-				tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
-			  AND
-    			tcontent.path LIKE '00000000000000000000000000000000001%'
-			  AND
-				NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
-			ORDER BY
-				<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
-					LENGTH(tcontent.path)
-				<cfelse>
-					LEN(tcontent.path)
-				</cfif>
-		</cfquery>
+		<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
+			<cfquery name="missingContentQuery">
+				SELECT
+					tcontent.contentID,
+					tcontent.parentID,
+					tcontent.menuTitle
+				FROM
+					tcontent
+				WHERE
+					tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
+				  AND
+	    			tcontent.path LIKE '00000000000000000000000000000000001%'
+				  AND
+					NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
+				ORDER BY
+					LENGTH( tcontent.path )
+			</cfquery>
+		<cfelse>
+			<cfquery name="missingContentQuery">
+				SELECT
+					tcontent.contentID,
+					tcontent.parentID,
+					tcontent.menuTitle
+				FROM
+					tcontent
+				WHERE
+					tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
+				  AND
+	    			tcontent.path LIKE '00000000000000000000000000000000001%'
+				  AND
+					NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
+				ORDER BY
+					LEN( tcontent.path )
+			</cfquery>
+		</cfif>
 		
 		<cfset var allParentsFound = true />
 		<cfloop query="missingContentQuery">
@@ -605,22 +620,33 @@
 		<cfset var parentMappingCache = {} />
 		<cfset var missingCategoryQuery = "" />
 		
-		<cfquery name="missingCategoryQuery">
-			SELECT
-				tcontentcategories.categoryID,
-				tcontentcategories.parentID,
-				tcontentcategories.name
-			FROM
-				tcontentcategories
-			WHERE
-				NOT EXISTS( SELECT categoryID FROM SlatwallCategory WHERE SlatwallCategory.cmsCategoryID = tcontentcategories.categoryID )
-			ORDER BY
-				<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
+		<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
+			<cfquery name="missingCategoryQuery">
+				SELECT
+					tcontentcategories.categoryID,
+					tcontentcategories.parentID,
+					tcontentcategories.name
+				FROM
+					tcontentcategories
+				WHERE
+					NOT EXISTS( SELECT categoryID FROM SlatwallCategory WHERE SlatwallCategory.cmsCategoryID = tcontentcategories.categoryID )
+				ORDER BY
 					LENGTH(tcontentcategories.path)
-				<cfelse>
+			</cfquery>
+		<cfelse>
+			<cfquery name="missingCategoryQuery">
+				SELECT
+					tcontentcategories.categoryID,
+					tcontentcategories.parentID,
+					tcontentcategories.name
+				FROM
+					tcontentcategories
+				WHERE
+					NOT EXISTS( SELECT categoryID FROM SlatwallCategory WHERE SlatwallCategory.cmsCategoryID = tcontentcategories.categoryID )
+				ORDER BY
 					LEN(tcontentcategories.path)
-				</cfif>
-		</cfquery>
+			</cfquery>
+		</cfif>
 		
 		<cfset var allParentsFound = true />
 		<cfloop query="missingCategoryQuery">
