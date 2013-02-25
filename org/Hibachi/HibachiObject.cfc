@@ -164,7 +164,7 @@ component accessors="true" output="false" persistent="false" {
 			metaData = metaData.extends;
 		} while( structKeyExists(metaData, "extends") );
 		
-		filePath = lcase(getDirectoryFromPath(filePath));
+		filePath = lcase(getDirectoryFromPath(replace(filePath,"\","/","all")));
 		var appKey = hash(filePath);
 		
 		return appKey;

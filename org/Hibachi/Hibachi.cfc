@@ -107,10 +107,6 @@ component extends="FW1.framework" {
 	
 	// =======  END: ENVIORNMENT CONFIGURATION  =======
 	
-	writeDump(variables.framework);
-	writeDump(this);
-	abort;
-	
 	public any function bootstrap() {
 		setupGlobalRequest();
 		
@@ -514,7 +510,7 @@ component extends="FW1.framework" {
 			metaData = metaData.extends;
 		} while( structKeyExists(metaData, "extends") );
 		
-		filePath = lcase(replaceNoCase(getDirectoryFromPath(filePath), "/fw1/","/","all"));
+		filePath = lcase(replaceNoCase(getDirectoryFromPath(replace(filePath,"\","/","all")), "/fw1/","/","all"));
 		var appKey = hash(filePath);
 		
 		return appKey;
