@@ -55,7 +55,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var fulfillment = orderItem.getOrderFulfillment();
 				
 				// If the method is shipping then apply taxes
-				if(fulfillment.getFulfillmentMethodType() == "shipping") {
+				if(!isNull(fulfillment) && fulfillment.getFulfillmentMethodType() == "shipping") {
 					
 					var taxCategory = this.getTaxCategory(orderItem.getSku().setting('skuTaxCategory'));
 					var address = fulfillment.getAddress();
