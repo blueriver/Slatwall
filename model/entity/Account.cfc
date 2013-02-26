@@ -196,21 +196,33 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Primary Email Address (many-to-one | circular)
-	public void function setPrimaryEmailAddress(required any primaryEmailAddress) {    
-		variables.primaryEmailAddress = arguments.primaryEmailAddress;
-		arguments.primaryEmailAddress.setAccount( this );    
+	public void function setPrimaryEmailAddress( any primaryEmailAddress) {
+		if(structKeyExists(arguments, "primaryEmailAddress")) {
+			variables.primaryEmailAddress = arguments.primaryEmailAddress;
+			arguments.primaryEmailAddress.setAccount( this );
+		} else {
+			structDelete(variables, "primaryEmailAddress");
+		}
 	}
 	
 	// Primary Email Address (many-to-one | circular)
-	public void function setPrimaryPhoneNumber(required any primaryPhoneNumber) {    
-		variables.primaryPhoneNumber = arguments.primaryPhoneNumber;
-		arguments.primaryPhoneNumber.setAccount( this );    
+	public void function setPrimaryPhoneNumber( any primaryPhoneNumber) {
+		if(structKeyExists(arguments, "primaryPhoneNumber")) {
+			variables.primaryPhoneNumber = arguments.primaryPhoneNumber;
+			arguments.primaryPhoneNumber.setAccount( this );
+		} else {
+			structDelete(variables, "primaryPhoneNumber");
+		}   
 	}
 	
 	// Primary Email Address (many-to-one | circular)
-	public void function setPrimaryAddress(required any primaryAddress) {    
-		variables.primaryAddress = arguments.primaryAddress;
-		arguments.primaryAddress.setAccount( this );    
+	public void function setPrimaryAddress( any primaryAddress) {    
+		if(structKeyExists(arguments, "primaryAddress")) {
+			variables.primaryAddress = arguments.primaryAddress;
+			arguments.primaryAddress.setAccount( this );	
+		} else {
+			structDelete(variables, "primaryAddress");
+		}
 	}
 	
 	// Primary Email Address (many-to-one | circular)
