@@ -223,7 +223,7 @@ component extends="FW1.framework" {
 					});
 					
 					bf.addBean("applicationKey", variables.framework.applicationKey);
-					
+					bf.addBean("hibachiInstanceApplicationScopeKey", getHibachiInstanceApplicationScopeKey());
 					
 					// If the default singleton beans were not found in the model, add a reference to the core one in hibachi
 					if(!bf.containsBean("hibachiDAO")) {

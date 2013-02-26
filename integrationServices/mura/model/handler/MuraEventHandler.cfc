@@ -443,7 +443,7 @@
 					var checkoutCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Checkout", filename="checkout", template="slatwall-checkout.cfm", isNav="1" );
 					var accountCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="My Account", filename="my-account", template="slatwall-account.cfm", isNav="1" );
 					var productTemplateCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Product Template", filename="product-template", template="slatwall-product.cfm", isNav="0" );
-					var productTypeTemplateCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Product Type Template", filename="producttype-template", template="slatwall-producttype.cfm", isNav="0" );
+					var productTypeTemplateCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Product Type Template", filename="product-type-template", template="slatwall-producttype.cfm", isNav="0" );
 					var brandTemplateCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Brand Template", filename="brand-template", template="slatwall-brand.cfm", isNav="0" );
 					
 					// Now that it has been populated we can add the siteID to the populated site id's list
