@@ -36,63 +36,7 @@
 Notes:
 
 --->
+<cfparam name="rc.product" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-<!---<cfoutput>
-	<cfif rc.edit>
-		<input type="hidden" name="productCategories" value="" />
-		<input type="hidden" name="productCategoriesFeatured" value="" />
-		<cfif rc.categories.recordCount gt 0>
-			<table id="productCategories" class="listing-grid stripe">
-				<tr>
-					<th></th>
-					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
-					<th>#$.slatwall.rbKey("admin.product.productCategories.isFeatured")#</th>
-				</tr>
-				<cfloop query="rc.categories">
-					<tr>
-						<td>
-							<input type="hidden" name="pcPath_#rc.categories.categoryID#" value="#rc.categories.idPath#">
-							<input type="checkbox" name="productCategories" value="#rc.categories.categoryID#" <cfif listFind(rc.product.getCategoryIDs(), rc.categories.categoryID)> checked="checked"</cfif>/> 
-						</td>
-						<cfset local.thisNest = rc.categories.treeDepth eq 0 ? "neston" : "nest" & rc.categories.treeDepth & "on" />
-						<td class="varWidth">
-							<ul class="#local.thisNest#">
-				                <li class="Category"><label for="#rc.categories.categoryID#">#rc.categories.name#</label></li>
-							</ul> 
-						</td>
-						<td>
-							<input type="checkbox" name="productCategoriesFeatured" value="#rc.categories.categoryID#"<cfif listFind(rc.product.getCategoryIDs(featured="true"),rc.categories.categoryID)> checked="checked"</cfif> /> 
-						</td>
-					</tr>	
-				</cfloop>
-			</table>
-		<cfelse>
-			<p><em>#rc.$.Slatwall.rbKey("categorymanager.nocategories")#</em></p>
-		</cfif>
-	<cfelse>
-		<cfif arrayLen(rc.product.getProductCategories())>
-			<table id="ProductCategories" class="listing-grid stripe">
-				<tr>
-					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
-					<th>#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryPath")#</th>
-					<th>#$.slatwall.rbKey("admin.product.productCategories.isFeatured")#</th>
-				</tr>
-				<cfloop query="rc.categories">
-					<cfif listFindNoCase(rc.product.getCategoryIDs(),rc.categories.categoryID)>
-						<tr>
-							<td class="varWidth">#rc.categories.Name#</td>
-							<td>#listChangeDelims(rc.categories.namePath," &raquo; ")#</td>
-							<td>
-								<cfif listFind(rc.product.getCategoryIDs(featured="true"),rc.categories.categoryID)>
-									<img src="#$.slatwall.getBaseURL()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
-								</cfif>
-							</td>
-						</tr>
-					</cfif>
-				</cfloop>
-			</table>
-		<cfelse>
-			<em>#rc.$.Slatwall.rbKey("admin.product.productCategories.noProductCategoriesAssigned")#</em>
-		</cfif>
-	</cfif>	
-</cfoutput>--->
+<cf_HibachiPropertyDisplay object="#rc.product#" property="categories" edit="#rc.edit#" displayType="plain">
