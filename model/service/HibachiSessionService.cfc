@@ -46,7 +46,7 @@ component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiS
 		// If the current order has an account, and it is different from the one being logged in... then create a copy of the order without any personal information
 		if( !isNull(getHibachiScope().getSession().getOrder().getAccount()) && getHibachiScope().getSession().getOrder().getAccount().getAccountID() != arguments.account.getAccountID()) {
 			
-			var newOrder = getOrderService().duplicateOrderWithNewAccount( currentSession.getOrder(), currentSession.getAccount() ); 
+			var newOrder = getOrderService().duplicateOrderWithNewAccount( getHibachiScope().getSession().getOrder(), getHibachiScope().getSession().getAccount() ); 
 			getHibachiScope().getSession().setOrder( newOrder );
 			
 		// If the current order doesn't have an account, and the current order is not new, then set this account in the current order

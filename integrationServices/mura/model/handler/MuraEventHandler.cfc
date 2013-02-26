@@ -314,7 +314,11 @@
 				if(slatwallAccount.isDeletable()) {
 					$.slatwall.getService("accountService").deleteAccount( slatwallAccount );
 				} else {
-					slatwallAccount.setActiveFlag(0);
+					for(var i=arrayLen(account.getAccountAuthentications()); i>=1; i--) {
+						if(!isNull(account.getAccountAuthentications()[i].getIntegration()) && account.getAccountAuthentications()[i].getIntegration().getIntegrationPackage() eq "mura") {
+							$.slatwall.getService("accountService").deleteAccountAuthentication(account.getAccountAuthentications()[i]);
+						}
+					}
 				}
 			}
 			
