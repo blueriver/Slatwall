@@ -181,7 +181,6 @@ Notes:
 							<form name="search" class="navbar-search" action="/" onSubmit="return false;">
 								<input id="global-search" type="text" name="serach" class="search-query span2" placeholder="Search">
 							</form>
-							
 						</div>
 					</cfif>
 				</div>

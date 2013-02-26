@@ -208,7 +208,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getAlternateImageDirectory() {
-    	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/";	
+    	return getURLFromPath(setting('globalAssetsImageFolderPath')) & '/product/';
     }
     
     public numeric function getProductRating() {

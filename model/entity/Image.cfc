@@ -58,11 +58,11 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public string function getImagePath() {
-		return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/#getDirectory()#/#getImageFile()#";
+		return getImageDirectory() & getImageFile();
 	}
 	
 	public string function getImageDirectory(){
-		return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/#getDirectory()#/";	
+		return '#getURLFromPath(setting('globalAssetsImageFolderPath'))#/#getDirectory()#/';
 	}
 	
 	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {

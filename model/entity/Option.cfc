@@ -66,7 +66,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	   
     public string function getImageDirectory() {
-    	return "#request.muraScope.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
+    	return getURLFromPath(setting('globalAssetsImageFolderPath')) & '/option/';
     }
     
     // Image Management methods

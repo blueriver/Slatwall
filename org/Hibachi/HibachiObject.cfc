@@ -62,6 +62,17 @@ component accessors="true" output="false" persistent="false" {
 		return getApplicationValue("baseURL");
 	}
 	
+	public string function getURLFromPath( required any path ) {
+		// Convert path to use /
+		arguments.path = replace(arguments.path, '\','/','all');
+		
+		// Get the correct URL Root Path
+		var urlRootPath = replace(expandPath('./'), '\','/','all');
+		
+		// Remove the URLRootPath from the rest of the path
+		return replace(arguments.path, urlRootPath, '/');
+	}
+	
 	// ==========================  END: FRAMEWORK ACCESS ============================================
 	// =========================== START: UTILITY METHODS ===========================================
 	

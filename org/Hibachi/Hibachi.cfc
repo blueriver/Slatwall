@@ -201,6 +201,9 @@ component extends="FW1.framework" {
 					// Setup the baseURL
 					getHibachiScope().setApplicationValue("baseURL", variables.framework.baseURL);
 					
+					// Setup the applicationRootMappingPath
+					getHibachiScope().setApplicationValue("applicationRootMappingPath", this.mappings[ "/#variables.framework.applicationKey#" ]);
+					
 					// Setup the reload and update keys / passwords
 					getHibachiScope().setApplicationValue("applicationReloadKey", variables.framework.reload);
 					getHibachiScope().setApplicationValue("applicationReloadPassword", variables.framework.password);

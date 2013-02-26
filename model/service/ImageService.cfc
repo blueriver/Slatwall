@@ -49,10 +49,10 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 		if(!fileExists(expandPath(arguments.imagePath))) {
 			if(structKeyExists(arguments, "missingImagePath") && fileExists(expandPath(arguments.missingImagePath))) {
 				arguments.imagePath = arguments.missingImagePath;
-			} else if ( fileExists(expandPath(setting('globalMissingImagePath'))) ) {
-				arguments.imagePath = setting('globalMissingImagePath');
+			} else if ( fileExists(expandPath(getHibachiScope().setting('globalMissingImagePath'))) ) {
+				arguments.imagePath = getHibachiScope().setting('globalMissingImagePath');
 			} else {
-				arguments.imagePath = "#getBaseURL()#/assets/images/missingimage.jpg";	
+				arguments.imagePath = "#getApplicationValue('baseURL')#/assets/images/missingimage.jpg";	
 			}
 		}
 		
