@@ -639,7 +639,7 @@
 				for(var e=1; e<=arrayLen(entityDirectoryArray); e++) {
 					if(listLast(entityDirectoryArray[e], '.') eq 'cfc') {
 						var entityShortName = listFirst(listLast(replace(entityDirectoryArray[e], '\', '/', 'all'), '/'), '.');
-						var entityMetaData = entityNew(getProperlyCasedFullEntityName( entityShortName )).getThisMetaData();
+						var entityMetaData = createObject('component', '#getApplicationValue('applicationKey')#.model.entity.#entityShortName#').getThisMetaData();
 						
 						if(structKeyExists(entityMetaData, "persistent") && entityMetaData.persistent) {
 							 variables.entitiesMetaData[ entityShortName ] = entityMetaData;
