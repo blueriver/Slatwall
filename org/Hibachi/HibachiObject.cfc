@@ -1,7 +1,10 @@
 component accessors="true" output="false" persistent="false" {
+
+	property name="hibachiInstanceApplicationScopeKey";
 	
 	// Constructor Metod
 	public any function init( ) {
+		getThisMetaData();
 		return this;
 	}
 	
@@ -158,16 +161,19 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint setups an application scope value that will always be consistent
 	private any function getHibachiInstanceApplicationScopeKey() {
-		var metaData = getMetaData( this );
-		do {
-			var filePath = metaData.path;
-			metaData = metaData.extends;
-		} while( structKeyExists(metaData, "extends") );
-		
-		filePath = lcase(getDirectoryFromPath(replace(filePath,"\","/","all")));
-		var appKey = hash(filePath);
-		
-		return appKey;
+		if(!structKeyExists(variables, "hibachiInstanceApplicationScopeKey")) {
+			var metaData = getThisMetaData();
+			do {
+				var filePath = metaData.path;
+				metaData = metaData.extends;
+			} while( structKeyExists(metaData, "extends") );
+			
+			filePath = lcase(getDirectoryFromPath(replace(filePath,"\","/","all")));
+			var appKey = hash(filePath);
+			
+			variables.hibachiInstanceApplicationScopeKey = appKey;	
+		}
+		return variables.hibachiInstanceApplicationScopeKey;
 	}
 	
 	// @hint facade method to check the application scope for a value
