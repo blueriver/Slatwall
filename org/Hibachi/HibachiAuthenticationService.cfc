@@ -16,12 +16,12 @@ component output="false" accessors="true" extends="HibachiService" {
 		
 		// Check if the subsystem is even defined
 		if(!structKeyExists(getActionPermissionDetails(), subsystemName)) {
-			return true;
+			return false;
 		}
 		
 		// Check if the section is defined
 		if(!structKeyExists(getActionPermissionDetails()[ subsystemName ], sectionName)) {
-			return true;
+			return false;
 		}
 
 		// Check if the action is public, if public no need to worry about security
