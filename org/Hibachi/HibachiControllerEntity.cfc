@@ -95,7 +95,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 		// renderItem
 		if(structKeyExists(arguments.rc, "renderItem") && !structKeyExists(arguments.rc, "sRenderItem")) {
-			arguments.rc.renderItem = arguments.rc.renderItem;
+			arguments.rc.sRenderItem = arguments.rc.renderItem;
 		}
 		if(structKeyExists(arguments.rc, "renderItem") && !structKeyExists(arguments.rc, "fRenderItem")) {
 			arguments.rc.fRenderItem = arguments.rc.renderItem;
