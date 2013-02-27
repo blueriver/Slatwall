@@ -68,7 +68,6 @@ Notes:
 		<cf_HibachiTabGroup object="#rc.product#" allowCustomAttributes="true">
 			<cf_HibachiTab property="skus" />
 			<cf_HibachiTab property="productdescription" />
-			
 			<cf_HibachiTab view="admin:entity/producttabs/productpages" />
 			<cf_HibachiTab view="admin:entity/producttabs/productcategories" />
 			<cf_HibachiTab view="admin:entity/producttabs/alternateimages" />
