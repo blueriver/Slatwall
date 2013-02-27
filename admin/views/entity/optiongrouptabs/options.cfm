@@ -41,10 +41,11 @@ Notes:
 <cfoutput>
 
 	<cf_HibachiListingDisplay smartlist="#rc.optionGroup.getOptionsSmartList()#" 
-	                           recordeditaction="admin:entity.editoption" 
+	                           recordeditaction="admin:entity.editoption"
+							   recordeditquerystring="renderItem=detailOptionGroup"
 							   recordeditmodal=true 
 	                           recorddeleteaction="admin:entity.deleteoption"
-							   recorddeletequerystring="returnaction=admin:entity.detailoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#"
+							   recorddeletequerystring="renderItem=detailOptionGroup"
 							   sortproperty="sortOrder"
 							   sortContextIDColumn="optionGroupID"
 							   sortContextIDValue="#rc.optionGroup.getOptionGroupID()#">
@@ -53,6 +54,6 @@ Notes:
 	</cf_HibachiListingDisplay>
 
 	<cf_HibachiActionCaller action="admin:entity.createoption" 
-	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" 
+	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#&renderItem=detailOptionGroup" 
 	                         class="btn btn-inverse" icon="plus icon-white" modal=true/>
 </cfoutput>

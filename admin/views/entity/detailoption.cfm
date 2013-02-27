@@ -44,7 +44,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.option#" edit="#rc.edit#" enctype="multipart/form-data">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.option#" edit="#rc.edit#" />
 		<input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
-		<input type="hidden" name="returnAction" value="admin:entity.editoptiongroup&optionGroupID=#rc.optionGroup.getOptionGroupID()#" />
+		<input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>

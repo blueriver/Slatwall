@@ -89,7 +89,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		}
 		
 		for(var i in arguments.data) {
-			if(isSimpleValue(arguments.data[i])) {
+			if(structKeyExists(arguments.data, i) && isSimpleValue(arguments.data[i])) {
 				if(left(i,2) == "F#variables.dataKeyDelimiter#") {
 					addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
 				} else if(left(i,3) == "FR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
