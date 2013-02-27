@@ -3,7 +3,7 @@
 	"properties":{
 		"brandName":			[{"contexts":"save","required":true}],
 		"brandWebsite":			[{"contexts":"save","dataType":"url"}],
-		"urlTitle":				[{"contexts":"save","required":true,"method":"hasUniqueURLTitle"}],
+		"urlTitle":				[{"contexts":"save","required":true,"unique":true}],
 		"products":				[{"contexts":"delete","maxCollection":0}]
 	}
 }
