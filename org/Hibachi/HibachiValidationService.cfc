@@ -104,8 +104,13 @@ component output="false" accessors="true" extends="HibachiService" {
 					}
 					var isValid = invokeMethod("validate_#constraint#", {object=arguments.object, propertyName=propertyName, constraintValue=contextValidations[ propertyName ][ constraint ]});	
 					
+					// validate.product.productCode.required.true
+					// validate.product.productCode.method.hasUniqueProductCode
+					// validate.product.productCode.minCollection.1
+					// validate.order.statusCode.inList.ostNew,ostProcessing,ostOnHold,ostClosed
+					 
 					if(!isValid) {
-						errorBean.addError(propertyName, rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#constraint#'));
+						errorBean.addError(propertyName, getHibachiScope().rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#constraint#.#contextValidations[ propertyName ][ constraint ]#'));
 					}
 				}
 			}
