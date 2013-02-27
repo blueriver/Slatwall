@@ -104,14 +104,59 @@ component output="false" accessors="true" extends="HibachiService" {
 					}
 					var isValid = invokeMethod("validate_#constraint#", {object=arguments.object, propertyName=propertyName, constraintValue=contextValidations[ propertyName ][ constraint ]});	
 					
-					// validate.product.productCode.required.true
-					// validate.product.productCode.method.hasUniqueProductCode
-					// validate.product.productCode.minCollection.1
-					// validate.order.statusCode.inList.ostNew,ostProcessing,ostOnHold,ostClosed
-					 
 					if(!isValid) {
-						errorBean.addError(propertyName, getHibachiScope().rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#constraint#.#contextValidations[ propertyName ][ constraint ]#'));
+						var replaceTemplateStruct = {
+							constraintValue = contextValidations[ propertyName ][ constraint ],
+							propertyName = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#.#propertyName#'),
+							entityName = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#'),
+							entityName_plural = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#_plural')
+						};
+						if(constraint eq "method") {
+							var errorMessage = getHibachiScope().rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#contextValidations[ propertyName ][ constraint ]#');
+							errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);
+							errorBean.addError(propertyName, errorMessage);
+						} else if (constraint eq "dataType") {
+							var errorMessage = getHibachiScope().rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#constraint#.#contextValidations[ propertyName ][ constraint ]#');
+							errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);
+							errorBean.addError(propertyName, errorMessage);
+						} else {
+							var errorMessage = getHibachiScope().rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#constraint#');
+							errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);
+							errorBean.addError(propertyName, errorMessage);	
+						}
 					}
+					
+					// validate.product.productCode.required.true												The product code field is required
+					// validate.product.productCode.method.hasUniqueProductCode									The product code field is not unique
+					// validate.product.price.dataType.numeric													The value entered was not a valid number 
+					// validate.orderPayment.creditCard.dataType.creditCard										The value entered was not a valid credit card number
+					// validate.account.orders.maxCollection.0													There are orders associated with the account
+					
+					
+					// validate.product.productCode.required.true
+					// validate.product.productCode.define.true
+					// validate.product.define.true
+					// validate.define.true
+					// define.true
+					
+					// validate.account.orders.minCollection
+					// validate.account.define.minCollection
+					// validate.define.minCollection					There are more than ${constraintValue} ${propertyName} for this ${entityName}
+					// define.minCollection
+					
+					
+					// required						validate.product.productCode.required
+					// dataType						validate.product.productCode.dataType.numeric
+					// min/max...					validate.account.orders.minCollection					There are more than ${constraintValue} ${productName} for this ${entityName}
+					// method						validate.product.productCode.hasUniqueProductCode		
+					// evaluate (lte, lt, gt)		validate.product.productCode.lte
+					// compaire (lteProperty)
+					// inList
+					
+					// validate.required					The #rbKey(entity.product.productCode)# field is required
+					// validate.minCollection				There are more than ${constraintValue} ${propertyName} for this ${entityName}
+					// validate.define.email
+					// validate.define.
 				}
 			}
 		}

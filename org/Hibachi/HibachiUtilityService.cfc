@@ -68,7 +68,12 @@
 				var replaceDetails = {};
 				replaceDetails.key = templateKeys[i];
 				try {
-					replaceDetails.value = arguments.object.getValueByPropertyIdentifier(replace(replace(templateKeys[i], "${", ""),"}",""), arguments.formatValues);	
+					var valueKey = replace(replace(templateKeys[i], "${", ""),"}","");
+					if( isStruct(arguments.object) && structKeyExists(arguments.object, valueKey) ) {
+						replaceDetails.value = arguments.object[ valueKey ];
+					} else if (isObject(arguments.object)) {
+						replaceDetails.value = arguments.object.getValueByPropertyIdentifier(valueKey, arguments.formatValues);	
+					}
 				} catch(any e) {
 					writeDump(templateKeys[i]);
 					writeDump(e);
