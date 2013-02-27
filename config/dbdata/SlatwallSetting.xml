@@ -29,7 +29,6 @@
 		<Record settingID="dbb327d2f7588b6eb2652cbfc635564b" settingName="globalEncryptionService" settingValue="internal" />
 		<Record settingID="dbb3279be8c752977fefc8768918e8df" settingName="globalImageExtension" settingValue="jpg" />
 		<Record settingID="dbb327aaf8f644aedaf190b32f3c48e4" settingName="globalLogMessages" settingValue="General" />
-		<Record settingID="dbb3279cee21f040e126e9e499710707" settingName="globalMissingImagePath" settingValue="/plugins/Slatwall/assets/images/missingimage.jpg" />
 		<Record settingID="dbb327a3e256e78458125906a2f8c05a" settingName="globalOrderPlacedEmailFrom" settingValue="info@mySlatwallStore.com" />
 		<Record settingID="dbb327a60fb3a58e2dd6dc93f164d46c" settingName="globalOrderPlacedEmailSubjectString" settingValue="Order Confirmation - Order Number: ${orderNumber}" />
 		<Record settingID="dbb327d4c90cce1f86b1ce56cd44a891" settingName="globalOrderNumberGeneration" settingValue="Internal" />

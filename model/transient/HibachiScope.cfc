@@ -52,7 +52,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	
 	public any function getCurrentSite() {
 		if(!structKeyExists(variables, "currentSite")) {
-			variables.currentSite = getService("siteService").getSite( setting('globalDefaultSite') );
+			variables.currentSite = getService("siteService").newSite();
 		}
 		return variables.currentSite;
 	}
