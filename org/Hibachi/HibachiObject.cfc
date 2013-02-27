@@ -97,7 +97,7 @@ component accessors="true" output="false" persistent="false" {
 	public string function getSimpleValuesSerialized() {
 		var data = {};
 		for(var key in variables) {
-			if( isSimpleValue(variables[key]) ) {
+			if( structKeyExists(variables, key) && isSimpleValue(variables[key]) ) {
 				data[key] = variables[key];
 			}
 		}
