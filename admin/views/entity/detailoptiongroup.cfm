@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.optiongroup#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.optiongroup#" edit="#rc.edit#">
-			<cf_HibachiActionCaller action="admin:entity.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#&redirectAction=admin:entity.detailOptionGroup" type="list" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createoption" queryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#&renderItem=detailOptionGroup" type="list" modal=true />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>

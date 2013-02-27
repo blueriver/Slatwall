@@ -53,6 +53,6 @@ Notes:
 	</cf_HibachiListingDisplay>
 
 	<cf_HibachiActionCaller action="admin:entity.createoption" 
-	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#&redirectAction=admin:entity.detailOptionGroup" 
+	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#&renderItem=detailOptionGroup" 
 	                         class="btn btn-inverse" icon="plus icon-white" modal=true/>
 </cfoutput>

@@ -539,6 +539,9 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 		// Next look for a sRenderItem in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "sRenderItem")) {
+			if(!getHibachiScope().getORMHasErrors()) {
+				getHibachiScope().getDAO("hibachiDAO").flushORMSession();
+			}
 			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.sRenderItem#" );
 			arguments.rc[ getFW().getAction() ] = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.sRenderItem#";
 			this.invokeMethod("before", {rc=arguments.rc});
@@ -546,6 +549,9 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// If nothing was defined then we just do a redirect to the defaultAction, if it is just a single value then render otherwise do a redirect
 		} else if (listLen(arguments.defaultAction, ".") eq 1) {
+			if(!getHibachiScope().getORMHasErrors()) {
+				getHibachiScope().getDAO("hibachiDAO").flushORMSession();
+			}
 			getFW().setView( "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.defaultAction#" );
 			arguments.rc[ getFW().getAction() ] = arguments.defaultAction;
 			this.invokeMethod("before", {rc=arguments.rc});

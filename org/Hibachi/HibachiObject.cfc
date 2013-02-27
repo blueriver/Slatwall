@@ -37,6 +37,14 @@ component accessors="true" output="false" persistent="false" {
 		return getApplicationValue("service_#arguments.serviceName#");
 	}
 	
+	// @hint returns an application scope cached version of the service
+	public any function getDAO(required string daoName) {
+		if( !hasApplicationValue("dao_#arguments.daoName#") ) {
+			setApplicationValue("dao_#arguments.daoName#", getBean(arguments.daoName) );
+		}
+		return getApplicationValue("dao_#arguments.daoName#");
+	}
+	
 	// @hint returns a new transient bean
 	public any function getTransient(required string transientName) {
 		return getBean(arguments.transientName);
