@@ -2,6 +2,7 @@ component extends="handler" {
 
 	public any function confirmMuraScope( required any slatwallScope ) {
 		param name="session.siteID" default="default";
+		param name="request.customMuraScopeKeys" default="#structNew()#";
 		
 		if(!structKeyExists(request, "muraScope")) {
 			request.muraScope = application.serviceFactory.getBean('$'); 
