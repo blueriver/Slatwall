@@ -419,9 +419,14 @@
 				
 				// Check if this is a default site, and there is no setting defined for the globalAssetsImageFolderPath
 				if(cmsSiteID == "default") {
+					
 					var assetSetting = $.slatwall.getService("settingService").getSettingBySettingName("globalAssetsImageFolderPath", true);
 					if(assetSetting.isNew()) {
 						assetSetting.setSettingValue( expandPath('/muraWRM') & '/default/assets/Image/Slatwall' );
+						assetSetting.setSettingName('globalAssetsImageFolderPath');
+						$.slatwall.getService("settingService").saveSetting( assetSetting );
+						ormFlush();
+						$.slatwall.getService("settingService").clearAllSettingsQuery();
 					}
 				}
 				
@@ -834,11 +839,13 @@
 						accountAuthenticationID,
 						accountID,
 						integrationID,
-						integrationAccessToken
+						integrationAccessToken,
+						integrationAccountID
 					) VALUES (
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#getMuraIntegrationID()#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />
 					)
 				</cfquery>

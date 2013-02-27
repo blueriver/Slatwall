@@ -37,15 +37,16 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="USPS" implements="Slatwall.integrationServices.AuthenticationInterface" extends="Slatwall.integrationServices.BaseAuthentication" {
+component accessors="true" output="false" implements="Slatwall.integrationServices.AuthenticationInterface" extends="Slatwall.integrationServices.BaseAuthentication" {
 
-	public boolean function verifySessionLogin( ) {
-		if(!structKeyExists(session, "mura") || !structKeyExists(session.mura, "isLoggedIn") || !structKeyExists(session.mura, "userID") || !session.mura.isLoggedIn || session.mura.userID != arguments.session.getAccountAuthentication().getIntegrationAccountID() ) {
+	public boolean function verifySessionLogin() {
+		if(!structKeyExists(session, "mura") || !structKeyExists(session.mura, "isLoggedIn") || !structKeyExists(session.mura, "userID") || !session.mura.isLoggedIn || session.mura.userID != getHibachiScope().getAccount().getCMSAccountID() ) {
 			return false;
 		}
+		return true;
 	}
-	
-	
+
+	/*
 	public boolean function loginCmsUser(required string username, required string password, required string siteID) {
 		var loginResult = getUserUtility().login(username=arguments.username, password=arguments.password, siteID=arguments.siteID);
 		
@@ -224,7 +225,7 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 			}
 		}
 		
-		/*
+		
 		// If the account doesn't have errors, is new, has and email address and password, has a password passed in, and not supposed to be a guest account. then attempt to setup the username and password in Mura
 		if( !arguments.account.hasErrors() && wasNew && (!isNull(arguments.account.getPrimaryEmailAddress()) || (structKeyExists(arguments.data, "username") && len(arguments.data.username))) && structKeyExists(arguments.data, "password") && (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) ) {
 			
@@ -281,9 +282,7 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 				}
 			}
 		}
-		*/
-		
-		/*
+
 		// If the account isn't new, and it has a cmsAccountID then update the mura user from the account
 		if(!wasNew && !isNull(arguments.account.getCmsAccountID())) {
 			
@@ -321,8 +320,6 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 				getUserUtility().loginByUserID(cmsUser.getUserID(), arguments.siteID);	
 			}
 		}
-		*/
-		
 		
 		// if all validation passed and setup accounts subscription benefits based on access 
 		if(!arguments.account.hasErrors() && !isNull(access)) {
@@ -332,5 +329,7 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 		
 		return arguments.account;
 	}
+	*/
+	
 	
 }

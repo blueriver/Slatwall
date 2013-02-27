@@ -44,6 +44,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	variables.integrationCFCs = {};
 	variables.paymentIntegrationCFCs = {};
 	variables.shippingIntegrationCFCs = {};
+	variables.authenticationIntegrationCFCs = {};
 	
 	public any function saveIntegration() {
 		if( structKeyExists(variables, "activeFW1Subsystems") ) {
