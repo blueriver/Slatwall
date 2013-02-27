@@ -134,6 +134,10 @@
 			}
 		}
 		
+		public void function onSiteRequestEnd( required any $ ) {
+			endSlatwallRequest();
+		}
+		
 		public void function onSiteLoginSuccess( required any $ ) {
 			verifySlatwallRequest( $=$ );
 			
@@ -152,9 +156,6 @@
 			endSlatwallRequest();
 		}
 		
-		public void function onSiteRequestEnd( required any $ ) {
-			endSlatwallRequest();
-		}
 		
 		// ========================== ADMIN EVENT HOOKS =================================
 		

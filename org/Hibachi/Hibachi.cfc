@@ -69,7 +69,7 @@ component extends="FW1.framework" {
 	// Allow For Application Config 
 	try{include "../../config/configMappings.cfm";}catch(any e){}
 	// Allow For Instance Config
-	try{include "../../config/custom/configMappings.cfm";}catch(any e){}
+	try{include "../../custom/config/configMappings.cfm";}catch(any e){}
 	
 	
 	// =============== configCustomTags

@@ -5,7 +5,13 @@ component extends="handler" {
 		if(!isNull(arguments.slatwallScope.getAccount().getCMSAccountID()) && len(arguments.slatwallScope.getAccount().getCMSAccountID())) {
 			param name="session.siteID" default="default";
 			
-			application.serviceFactory.getBean('userUtility').loginByUserID(arguments.slatwallScope.getAccount().getCMSAccountID(), getMuraSiteIDByMuraUserID(arguments.slatwallScope.getAccount().getCMSAccountID()));
+			var $ = application.serviceFactory.getBean('$');
+			
+			$.announceEvent("onBeforeGlobalLogin", $); 
+			$.getBean("userUtility").loginByUserID(arguments.slatwallScope.getAccount().getCMSAccountID(), getMuraSiteIDByMuraUserID(arguments.slatwallScope.getAccount().getCMSAccountID()));
+			$.announceEvent("onAfterGlobalLogin", $);
+			$.announceEvent("onGlobalLoginSuccess", $);
+			
 		}
 	}
 	
