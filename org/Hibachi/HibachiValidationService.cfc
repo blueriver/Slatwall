@@ -108,7 +108,7 @@ component output="false" accessors="true" extends="HibachiService" {
 						var replaceTemplateStruct = {};
 						replaceTemplateStruct.constraintValue = contextValidations[ propertyName ][ constraint ];
 						replaceTemplateStruct.propertyName = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#.#propertyName#');
-						if(arguments.object.isPersistant()) {
+						if(arguments.object.isPersistent()) {
 							replaceTemplateStruct.className = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#');
 						} else {
 							replaceTemplateStruct.className = getHibachiScope().rbKey('processObject.#arguments.object.getClassName()#');
