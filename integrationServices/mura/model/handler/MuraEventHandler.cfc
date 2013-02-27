@@ -419,9 +419,14 @@
 				
 				// Check if this is a default site, and there is no setting defined for the globalAssetsImageFolderPath
 				if(cmsSiteID == "default") {
+					
 					var assetSetting = $.slatwall.getService("settingService").getSettingBySettingName("globalAssetsImageFolderPath", true);
 					if(assetSetting.isNew()) {
 						assetSetting.setSettingValue( expandPath('/muraWRM') & '/default/assets/Image/Slatwall' );
+						assetSetting.setSettingName('globalAssetsImageFolderPath');
+						$.slatwall.getService("settingService").saveSetting( assetSetting );
+						ormFlush();
+						$.slatwall.getService("settingService").clearAllSettingsQuery();
 					}
 				}
 				
