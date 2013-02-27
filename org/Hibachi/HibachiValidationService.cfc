@@ -105,12 +105,15 @@ component output="false" accessors="true" extends="HibachiService" {
 					var isValid = invokeMethod("validate_#constraint#", {object=arguments.object, propertyName=propertyName, constraintValue=contextValidations[ propertyName ][ constraint ]});	
 					
 					if(!isValid) {
-						var replaceTemplateStruct = {
-							constraintValue = contextValidations[ propertyName ][ constraint ],
-							propertyName = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#.#propertyName#'),
-							entityName = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#'),
-							entityName_plural = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#_plural')
-						};
+						var replaceTemplateStruct = {};
+						replaceTemplateStruct.constraintValue = contextValidations[ propertyName ][ constraint ];
+						replaceTemplateStruct.propertyName = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#.#propertyName#');
+						if(arguments.object.isPersistant()) {
+							replaceTemplateStruct.className = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#');
+						} else {
+							replaceTemplateStruct.className = getHibachiScope().rbKey('processObject.#arguments.object.getClassName()#');
+						}
+
 						if(constraint eq "method") {
 							var errorMessage = getHibachiScope().rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#contextValidations[ propertyName ][ constraint ]#');
 							errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);
