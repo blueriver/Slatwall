@@ -839,11 +839,13 @@
 						accountAuthenticationID,
 						accountID,
 						integrationID,
-						integrationAccessToken
+						integrationAccessToken,
+						integrationAccountID
 					) VALUES (
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#getMuraIntegrationID()#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />
 					)
 				</cfquery>

@@ -58,6 +58,13 @@ component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiS
 		getHibachiDAO().flushORMSession();
 	}
 	
+	public void function setPropperSession() {
+		super.setPropperSession();
 		
+		// If the current session account was authenticated by an integration, then check the verifySessionLogin() method to make sure that we should still be logged in
+		if(!isNull(getHibachiScope().getSession().getAccountAuthentication()) && !isNull(getHibachiScope().getSession().getAccountAuthentication().getIntegration()) && !getHibachiScope().getSession().getAccountAuthentication().getIntegration().getIntegrationCFC("authentication").verifySessionLogin()) {
+			logoutAccount();
+		}
+	}
 	
 }
