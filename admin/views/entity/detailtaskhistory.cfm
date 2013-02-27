@@ -41,7 +41,6 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.taskhistory#" edit="#rc.edit#">
-		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.taskhistory#" property="task" edit="false">
