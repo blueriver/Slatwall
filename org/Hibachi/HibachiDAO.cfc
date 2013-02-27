@@ -114,4 +114,24 @@
 		// =====================  END: Private Helper Methods ============================
 		
 	</cfscript>
+	
+	<!--- hint: This method is for doing validation checks to make sure a property value isn't already in use --->
+	<cffunction name="isUniqueProperty">
+		<cfargument name="propertyName" required="true" />
+		<cfargument name="entity" required="true" />
+		
+		<cfset var property = arguments.entity.getPropertyMetaData( arguments.propertyName ).name />  
+		<cfset var entityName = arguments.entity.getEntityName() />
+		<cfset var entityID = arguments.entity.getPrimaryIDValue() />
+		<cfset var entityIDproperty = arguments.entity.getPrimaryIDPropertyName() />
+		<cfset var propertyValue = arguments.entity.getValueByPropertyIdentifier( arguments.propertyName ) />
+		
+		<cfset var results = ormExecuteQuery(" from #entityName# e where e.#property# = :propertyValue and e.#entityIDproperty# != :entityID", {propertyValue=propertyValue, entityID=entityID}) />
+		
+		<cfif arrayLen(results)>
+			<cfreturn false />
+		</cfif>
+		
+		<cfreturn true />		
+	</cffunction>
 </cfcomponent>

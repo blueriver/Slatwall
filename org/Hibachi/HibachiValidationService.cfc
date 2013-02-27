@@ -357,5 +357,17 @@ component output="false" accessors="true" extends="HibachiService" {
 		}
 		return false;
 	}
+	
+	public boolean function validate_unique(required any object, required string propertyName, boolean constraintValue=true) {
+		return getHibachiDAO().isUniqueProperty(propertyName=arguments.propertyName, entity=arguments.object);
+	}
+	
+	public boolean function validate_uniqueOrNull(required any object, required string propertyName, boolean constraintValue=true) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if(isNull(propertyValue)) {
+			return true;
+		}
+		return getHibachiDAO().isUniqueProperty(propertyName=arguments.propertyName, entity=arguments.object);
+	}
 
 }

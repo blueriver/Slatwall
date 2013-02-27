@@ -143,7 +143,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	public boolean function isUniqueProperty( required string propertyName, required any entity ) {
-		return getDataDAO().isUniqueProperty(argumentcollection=arguments);
+		return getHibachiDAO().isUniqueProperty(argumentcollection=arguments);
 	}
 	
 	public any function toBundle(required any bundle, required string tableList) {

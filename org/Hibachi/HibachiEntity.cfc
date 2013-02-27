@@ -254,14 +254,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	
 	// @hint returns true the passed in property has value that is unique, and false if the value for the property is already in the DB
 	public boolean function hasUniqueProperty( required string propertyName ) {
-		return getService("dataService").isUniqueProperty(propertyName=propertyName, entity=this);
+		return getBean("hibachiDAO").isUniqueProperty(propertyName=propertyName, entity=this);
 	}
 	
 	public boolean function hasUniqueOrNullProperty( required string propertyName ) {
 		if(!structKeyExists(variables, arguments.propertyName) || isNull(variables[arguments.propertyName])) {
 			return true;
 		}
-		return getService("dataService").isUniqueProperty(propertyName=propertyName, entity=this);
+		return getBean("hibachiDAO").isUniqueProperty(propertyName=propertyName, entity=this);
 	}
 	
 	// @hint returns true if given property contains any of the entities passed into the entityArray argument. 
