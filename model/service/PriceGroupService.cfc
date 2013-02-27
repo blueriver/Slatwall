@@ -310,8 +310,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// Helper method the delegates
 	public numeric function calculateSkuPriceBasedOnCurrentAccount(required any sku) {
-		if(!isNull(getSlatwallScope().getCurrentSession().getAccount())) {
-			return calculateSkuPriceBasedOnAccount(sku=arguments.sku, account=getSlatwallScope().getCurrentSession().getAccount());	
+		if(getSlatwallScope().getLoggedInFlag()) {
+			return calculateSkuPriceBasedOnAccount(sku=arguments.sku, account=getHibachiScope().getAccount());	
 		} else {
 			return sku.getPrice();
 		}
