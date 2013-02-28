@@ -3,7 +3,7 @@
 	"properties":{
 		"urlTitle":							[{"contexts":"save","required":true,"unique":true}],
 		"productName":						[{"contexts":"save","required":true}],
-		"productCode":						[{"contexts":"save","required":true,"unique":true}],
+		"productCode":						[{"contexts":"save","required":true,"unique":true,"regex":"^[a-zA-Z0-9]+$"}],
 		"productType":						[{"contexts":"save","required":true}],
 		"unusedProductOptions":				[{"contexts":"addOption","minCollection":1}],
 		"unusedProductOptionGroups":		[{"contexts":"addOptionGroup","minCollection":1}],

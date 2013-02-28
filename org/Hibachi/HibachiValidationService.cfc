@@ -369,5 +369,14 @@ component output="false" accessors="true" extends="HibachiService" {
 		}
 		return getHibachiDAO().isUniqueProperty(propertyName=arguments.propertyName, entity=arguments.object);
 	}
+	
+	public boolean function validate_regex(required any object, required string propertyName, required string constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+
+		if(isValid("regex", propertyValue, arguments.constraintValue)) {
+			return true;
+		}
+		return false;
+	}
 
 }
