@@ -43,8 +43,6 @@ Notes:
 		<cf_SlatwallSetting settingName="contentRestrictAccessFlag" settingObject="#rc.content#" />
 		<cf_SlatwallSetting settingName="contentRequirePurchaseFlag" settingObject="#rc.content#" />
 		<cf_SlatwallSetting settingName="contentRequireSubscriptionFlag" settingObject="#rc.content#" />
-		<cf_SlatwallSetting settingName="contentProductListingFlag" settingObject="#rc.content#" />
-		<cf_SlatwallSetting settingName="contentDefaultProductsPerPage" settingObject="#rc.content#" />
 		<cf_SlatwallSetting settingName="contentIncludeChildContentProductsFlag" settingObject="#rc.content#" />
 		<cf_SlatwallSetting settingName="contentRestrictedContentDisplayTemplate" settingObject="#rc.content#" />
 		<cf_SlatwallSetting settingName="contentHTMLTitleString" settingObject="#rc.content#" />

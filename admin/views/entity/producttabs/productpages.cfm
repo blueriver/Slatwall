@@ -39,4 +39,13 @@ Notes:
 <cfparam name="rc.product" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_HibachiPropertyDisplay object="#rc.product#" property="listingPages" edit="#rc.edit#" displayType="plain">
+<cfset selectedListingDisplays = rc.product.getListingPages() />
+<cfset selectedListingPageIDs = "" />
+<cfloop array="#selectedListingDisplays#" index="lp">
+	<cfset selectedListingPageIDs = listAppend(selectedListingPageIDs, lp.getPrimaryIDValue()) />
+</cfloop>
+
+<cf_HibachiListingDisplay smartList="#rc.product.getListingPagesOptionsSmartList()#" multiselectFieldName="listingPages" multiselectValues="#selectedListingPageIDs#" edit="#rc.edit#">
+	<cf_HibachiListingColumn propertyIdentifier="title" tdclass="primary" />
+	<cf_HibachiListingColumn propertyIdentifier="site.siteName" />
+</cf_HibachiListingDisplay>

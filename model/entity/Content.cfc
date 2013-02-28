@@ -129,6 +129,20 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 
 	// ================== START: Overridden Methods ========================
 	
+	public boolean function getAllowPurchaseFlag() {
+		if(isNull(variables.allowPurchaseFlag)) {
+			variables.allowPurchaseFlag = 0;
+		}
+		return variables.allowPurchaseFlag;
+	}
+	
+	public boolean function getProductListingPageFlag() {
+		if(isNull(variables.productListingPageFlag)) {
+			variables.productListingPageFlag = 0;
+		}
+		return variables.productListingPageFlag;
+	}
+	
 	public string function getSimpleRepresentationPropertyName() {
 		return "title";
 	}
