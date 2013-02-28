@@ -97,7 +97,7 @@ Notes:
 			</div>
 		<cfelseif rc.baseProductType eq "contentAccess">
 			<cfset contentAccessList = $.slatwall.getService("contentService").getContentSmartList() />
-			<cfset contentAccessList.addFilter("allowPurchaseFlag", 1) />
+			<!---<cfset contentAccessList.addFilter("allowPurchaseFlag", 1) />--->
 			<cf_SlatwallErrorDisplay object="#rc.product#" errorName="accessContents" />
 			<cf_HibachiFieldDisplay fieldType="yesno" fieldName="bundleContentAccess" value="0" title="Would you like to bundle all pages selected into a single sku?" edit="true" />
 			<cf_HibachiListingDisplay smartList="#contentAccessList#" multiselectFieldName="accessContents" edit="true">

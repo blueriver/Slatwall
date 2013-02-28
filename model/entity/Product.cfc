@@ -132,7 +132,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     public any function getListingPagesOptionsSmartList() {
 		if(!structKeyExists(variables, "listingPagesOptionsSmartList")) {
 			var smartList = getService("contentService").getContentSmartList();
-			smartList.addWhereCondition("exists (FROM SlatwallSetting ss WHERE ss.settingName='contentProductListingFlag' AND ss.settingValue=1 AND ss.cmsContentID = aslatwallcontent.cmsContentID)");
 			smartList.addOrder("title|ASC");
 			variables.listingPagesOptionsSmartList = smartList;
 		}

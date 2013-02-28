@@ -320,7 +320,10 @@
 									</cfif>
 									--->
 									<cfif attributes.recordDeleteAction neq "">
-										<cf_HibachiActionCaller action="#attributes.recordDeleteAction#" queryString="#listPrepend(attributes.recordDeleteQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#record.isNotDeletable()#" confirm="true" />
+										<cfset local.deleteErrors = record.validate(context="delete") />
+										<cfset local.disabled = local.deleteErrors.hasErrors() />
+										<cfset local.disabledText = local.deleteErrors.getAllErrorsHTML() />
+										<cf_HibachiActionCaller action="#attributes.recordDeleteAction#" queryString="#listPrepend(attributes.recordDeleteQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#local.disabled#" disabledText="#local.disabledText#" confirm="true" />
 									</cfif>
 								</td>
 							</cfif>

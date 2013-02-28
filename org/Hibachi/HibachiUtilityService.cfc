@@ -67,6 +67,7 @@
 			for(var i=1; i<=arrayLen(templateKeys); i++) {
 				var replaceDetails = {};
 				replaceDetails.key = templateKeys[i];
+				replaceDetails.value = templateKeys[i];
 				try {
 					var valueKey = replace(replace(templateKeys[i], "${", ""),"}","");
 					if( isStruct(arguments.object) && structKeyExists(arguments.object, valueKey) ) {

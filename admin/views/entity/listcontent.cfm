@@ -46,8 +46,11 @@ Notes:
 						   recordDetailAction="admin:entity.detailcontent"
 						   recordEditAction="admin:entity.editcontent">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="title" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="templateFlag" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="site.siteName" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="contentTemplateType.type" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="allowPurchaseFlag" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="productListingPageFlag" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

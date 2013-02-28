@@ -36,4 +36,17 @@ component output="false" accessors="true" extends="HibachiObject" {
 	public boolean function hasErrors() {
 		return !structIsEmpty(variables.errors) ;
 	}
+	
+	// @hint helper method that returns all error messages as <p> html tags
+	public string function getAllErrorsHTML() {
+		var returnString = "";
+		
+		for(var errorName in getErrors()) {
+			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
+				returnString &= "<p class='error'>" & getErrors()[errorName][i] & "</p>";
+			}
+		}
+		
+		return returnString;
+	}
 }

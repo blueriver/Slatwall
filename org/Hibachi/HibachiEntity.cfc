@@ -439,8 +439,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			return getAttributeValue(right(arguments.missingMethodName, len(arguments.missingMethodName)-3));	
 			
 		}
-				
-		return super.onMissingMethod(argumentCollection=arguments);
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
