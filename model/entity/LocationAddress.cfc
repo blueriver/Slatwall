@@ -43,7 +43,7 @@ component displayname="Location Address" entityname="SlatwallLocationAddress" ta
 	
 	// Related Object Properties (many-to-one)
 	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
-	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
+	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID" hb_populateValidationContext="full";
 	
 	// Related Object Properties (one-to-many)
 	

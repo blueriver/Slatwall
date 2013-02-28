@@ -560,7 +560,9 @@
 	
 	
 		private function onMissingSaveMethod( required string missingMethodName, required struct missingMethodArguments ) {
-			if ( structKeyExists( missingMethodArguments, '2' ) ) {
+			if ( structKeyExists( missingMethodArguments, '3' ) ) {
+				return save( entity=missingMethodArguments[1], data=missingMethodArguments[2], context=missingMethodArguments[3]);
+			} else if ( structKeyExists( missingMethodArguments, '2' ) ) {
 				return save( entity=missingMethodArguments[1], data=missingMethodArguments[2]);
 			} else {
 				return save( entity=missingMethodArguments[1] );
