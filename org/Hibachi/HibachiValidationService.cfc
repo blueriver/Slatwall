@@ -99,7 +99,11 @@ component output="false" accessors="true" extends="HibachiService" {
 		for(var propertyName in contextValidations) {
 			if(arguments.object.hasProperty( propertyName )) {
 				for(var constraint in contextValidations[ propertyName ]) {
-					validateConstraint(object=arguments.object, propertyName=propertyName, constraint={constraintType=constraint, constraintValue=contextValidations[ propertyName ][ constraint ]}, errorBean=errorBean);
+					var thisConstraint = {
+						constraintType=constraint,
+						constraintValue=contextValidations[ propertyName ][ constraint ]
+					};
+					validateConstraint(object=arguments.object, propertyName=propertyName, constraint=thisConstraint, errorBean=errorBean, context=arguments.context);
 				}
 			}
 		}
@@ -112,15 +116,17 @@ component output="false" accessors="true" extends="HibachiService" {
 		return errorBean;
 	}
 	
-	public any function validateConstraint(required any object, required string propertyName, required struct constraint, required any errorBean) {
+	
+	public any function validateConstraint(required any object, required string propertyName, required struct constraint, required any errorBean, required string context) {
 		if(!structKeyExists(variables, "validate_#arguments.constraint.constraintType#")) {
 			throw("You have an error in the #arguments.object.getClassName()#.json validation file.  You have a constraint defined for '#arguments.propertyName#' that is called '#constraint.constraintType#' which is not a valid constraint type");
 		}
+		
 		var isValid = invokeMethod("validate_#arguments.constraint.constraintType#", {object=arguments.object, propertyName=arguments.propertyName, constraintValue=arguments.constraint.constraintValue});	
 					
 		if(!isValid) {
 			var replaceTemplateStruct = {};
-			replaceTemplateStruct.constraintValue = arguments.constraintValue;
+			replaceTemplateStruct.constraintValue = arguments.constraint.constraintValue;
 			replaceTemplateStruct.propertyName = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#.#arguments.propertyName#');
 			if(arguments.object.isPersistent()) {
 				replaceTemplateStruct.className = getHibachiScope().rbKey('entity.#arguments.object.getClassName()#');
@@ -128,11 +134,11 @@ component output="false" accessors="true" extends="HibachiService" {
 				replaceTemplateStruct.className = getHibachiScope().rbKey('processObject.#arguments.object.getClassName()#');
 			}
 
-			if(constraint eq "method") {
+			if(arguments.constraint.constraintType eq "method") {
 				var errorMessage = getHibachiScope().rbKey('validate.#arguments.context#.#arguments.object.getClassName()#.#arguments.propertyName#.#arguments.constraint.constraintValue#');
 				errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);
 				arguments.errorBean.addError(propertyName, errorMessage);
-			} else if (constraint eq "dataType") {
+			} else if (arguments.constraint.constraintType eq "dataType") {
 				var errorMessage = getHibachiScope().rbKey('validate.#arguments.context#.#arguments.object.getClassName()#.#arguments.propertyName#.#arguments.constraint.constraintType#.#arguments.constraint.constraintValue#');
 				errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);
 				arguments.errorBean.addError(propertyName, errorMessage);
@@ -143,6 +149,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			}
 		}
 	}
+	
 	
 	// ================================== VALIDATION CONSTRAINT LOGIC ===========================================
 	
