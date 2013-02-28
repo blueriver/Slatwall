@@ -198,7 +198,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 						var entityService = getService( "hibachiService" ).getServiceByEntityName( "#getApplicationValue('applicationKey')##listLast(currentProperty.cfc,'.')#" );
 						
 						// If there were additional values in the data, then we will get the entity by the primaryID and populate / validate by calling save in its service.
-						if(structCount(manyToOneStructData) gt 1) {
+						if(structCount(manyToOneStructData) gt 1 && (!structKeyExists(currentProperty, "hb_populateEnabled") || currentProperty.hb_populateEnabled eq false) ) {
 							
 							// Load the specifiv entity, if one doesn't exist, this will return a new entity
 							var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
@@ -268,7 +268,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 							this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
 							
 							// If there were additional values in the data array, then we use those values to populate the entity, and validating it aswell.
-							if(structCount(oneToManyArrayData[a]) gt 1) {
+							if(structCount(oneToManyArrayData[a]) gt 1 && (!structKeyExists(currentProperty, "hb_populateEnabled") || currentProperty.hb_populateEnabled eq false)) {
 								// Setup a save validation context so that the sub-property gets validated correctly
 								var saveValidationContext = "save";
 							
