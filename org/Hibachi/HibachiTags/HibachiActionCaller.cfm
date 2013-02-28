@@ -11,6 +11,7 @@
 	<cfparam name="attributes.submit" type="boolean" default="false">
 	<cfparam name="attributes.confirm" type="boolean" default="false" />
 	<cfparam name="attributes.disabled" type="boolean" default="false" />
+	<cfparam name="attributes.disabledtext" type="string" default="" />
 	<cfparam name="attributes.modal" type="boolean" default="false" />
 	
 	<cfset attributes.class = Replace(Replace(attributes.action, ":", "", "all"), ".", "", "all") & " " & attributes.class />
@@ -90,13 +91,8 @@
 	</cfif>
 	
 	<cfif attributes.disabled>
-	    <cfset attributes.disabledtext = attributes.hibachiScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
-		<cfif right(attributes.disabledtext, "8") eq "_missing">
-			<cfif left(listLast(attributes.action, "."), 6) eq "delete">
-				<cfset attributes.disabledtext = replace(attributes.hibachiScope.rbKey("admin.define.delete_disabled"),'${itemEntityName}', attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
-			<cfelseif left(listLast(attributes.action, "."), 4) eq "edit">
-				<cfset attributes.disabledtext = replace(attributes.hibachiScope.rbKey("admin.define.edit_disabled"),'${itemEntityName}', attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
-			</cfif>
+		<cfif not len(attributes.disabledtext)>
+		    <cfset attributes.disabledtext = attributes.hibachiScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
 		</cfif>
 		<cfset attributes.class &= " disabled alert-disabled" />
 		<cfset attributes.confirm = false />

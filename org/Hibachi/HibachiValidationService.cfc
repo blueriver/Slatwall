@@ -115,15 +115,15 @@ component output="false" accessors="true" extends="HibachiService" {
 						}
 
 						if(constraint eq "method") {
-							var errorMessage = getHibachiScope().rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#contextValidations[ propertyName ][ constraint ]#');
+							var errorMessage = getHibachiScope().rbKey('validate.#arguments.context#.#arguments.object.getClassName()#.#propertyName#.#contextValidations[ propertyName ][ constraint ]#');
 							errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);
 							errorBean.addError(propertyName, errorMessage);
 						} else if (constraint eq "dataType") {
-							var errorMessage = getHibachiScope().rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#constraint#.#contextValidations[ propertyName ][ constraint ]#');
+							var errorMessage = getHibachiScope().rbKey('validate.#arguments.context#.#arguments.object.getClassName()#.#propertyName#.#constraint#.#contextValidations[ propertyName ][ constraint ]#');
 							errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);
 							errorBean.addError(propertyName, errorMessage);
 						} else {
-							var errorMessage = getHibachiScope().rbKey('validate.#arguments.object.getClassName()#.#propertyName#.#constraint#');
+							var errorMessage = getHibachiScope().rbKey('validate.#arguments.context#.#arguments.object.getClassName()#.#propertyName#.#constraint#');
 							errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);
 							errorBean.addError(propertyName, errorMessage);	
 						}
