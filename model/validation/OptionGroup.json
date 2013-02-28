@@ -2,7 +2,7 @@
 	"contexts":["save","edit","delete"],
 	"properties":{
 		"optionGroupName":			[{"contexts":"save","required":true}],
-		"optionGroupCode":			[{"contexts":"save","required":true,"method":"hasUniqueOptionGroupCode"}],
+		"optionGroupCode":			[{"contexts":"save","required":true,"unique":true}],
 		"options":					[{"contexts":"delete","maxCollection":0}]
 	}
 }

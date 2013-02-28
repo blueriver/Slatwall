@@ -3,7 +3,7 @@
 	"properties":{
 		"skuID":				[{"contexts":"delete","method":"isNotDefaultSku"}],
 		"stocks":				[{"contexts":"delete","maxCollection":0}],
-		"skuCode":				[{"contexts":"save","required":true,"method":"hasUniqueSkuCode"}],
+		"skuCode":				[{"contexts":"save","required":true,"unique":true}],
 		"options":				[
 		 		{"contexts":"save","method":"hasUniqueOptions"},
 		 		{"contexts":"save","method":"hasOneOptionPerOptionGroup"}

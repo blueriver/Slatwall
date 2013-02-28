@@ -1,9 +1,9 @@
 {
 	"contexts":["save","edit","delete","updateSkus","addOptionGroup","addOption","addSubscriptionTerm"],
 	"properties":{
-		"urlTitle":							[{"contexts":"save","required":true,"method":"hasUniqueURLTitle"}],
+		"urlTitle":							[{"contexts":"save","required":true,"unique":true}],
 		"productName":						[{"contexts":"save","required":true}],
-		"productCode":						[{"contexts":"save","required":true,"method":"hasUniqueProductCode"}],
+		"productCode":						[{"contexts":"save","required":true,"unique":true}],
 		"productType":						[{"contexts":"save","required":true}],
 		"unusedProductOptions":				[{"contexts":"addOption","minCollection":1}],
 		"unusedProductOptionGroups":		[{"contexts":"addOptionGroup","minCollection":1}],
@@ -12,7 +12,6 @@
 		    	{"contexts":"addOptionGroup,addOption","inList":"merchandise"},
 		    	{"contexts":"addSubscriptionTerm","inList":"subscription"}
 		 ],
-		"price":							[{"contexts":"save","dataType":"numeric"}],
-		"listPrice":						[{"contexts":"save","dataType":"numeric"}]
+		"price":							[{"contexts":"save","required":true,"dataType":"numeric"}]
 	}
 }

@@ -2,7 +2,7 @@
 	"contexts":["save","edit","delete"],
 	"properties":{
 		"productTypeName":		[{"contexts":"save","required":true}],
-		"urlTitle":				[{"contexts":"save","required":true,"method":"hasUniqueURLTitle"}],
+		"urlTitle":				[{"contexts":"save","required":true,"unique":true}],
 		"products":				[{"contexts":"delete","maxCollection":0}],
 		"childProductTypes":	[{"contexts":"delete","maxCollection":0}],
 		"systemCode":			[{"contexts":"delete","maxLength":0}]

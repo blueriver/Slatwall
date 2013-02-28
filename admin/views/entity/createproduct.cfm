@@ -56,7 +56,6 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="brand" edit="true">
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="productType" edit="true" valueOptions="#rc.product.getProductTypeOptions( rc.baseProductType )#">
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="price" edit="true">
-				<cf_HibachiPropertyDisplay object="#rc.product#" property="listPrice" edit="true">
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 		

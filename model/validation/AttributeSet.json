@@ -2,7 +2,7 @@
 	"contexts":["save","edit","delete"],
 	"properties":{
 		"attributeSetName":			[{"contexts":"save","required":true}],
-		"attributeSetCode":			[{"contexts":"save","method":"hasUniqueAttributeSetCode"}],
+		"attributeSetCode":			[{"contexts":"save","unique":true}],
 		"attributeSetType":			[{"contexts":"save","required":true}]
 	}
 }
