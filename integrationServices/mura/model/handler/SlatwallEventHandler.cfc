@@ -1,4 +1,18 @@
-component extends="handler" {
+component extends="handler" output="false" accessors="true" {
+
+	property name="assignedSiteIDArray";
+
+	private array function getAssignedSiteIDArray() {
+		if(!structKeyExists(variables, "assignedSiteIDArray")) {
+			var arr = [];
+			var assignedSitesQuery = getMuraPluginConfig().getAssignedSites();
+			for(var i=1; i<=assignedSitesQuery.recordCount; i++) {
+				arrayAppend(arr, assignedSitesQuery["siteid"][i]);
+			}
+			variables.assignedSiteIDArray = arr;
+		}
+		return variables.assignedSiteIDArray;
+	}
 
 	// Helper function meant to be used by events to get a mura scope
 	private any function getMuraScope() {
@@ -25,13 +39,17 @@ component extends="handler" {
 			request.customMuraScopeKeys.slatwall = arguments.slatwallScope;	
 		}
 		
+		
+		// If there was a request.siteID defined, then announce the event against that specific site.  This would typically happen on a Frontend mura request
 		if(structKeyExists(request, "siteID")) {
 			arguments.siteID = request.siteID;
 			application.serviceFactory.getBean('$').init( arguments ).announceEvent("slatwall#arguments.eventName#");
+			
+		// If there was no siteID in the request the event probably originated in the Slatwall admin.  In this situation we need to re-announce to all sites that Slatwall is defined for
 		} else {
-			var assignedSitesQuery = getMuraPluginConfig().getAssignedSites();
-			for(var i=1; i<=assignedSitesQuery.recordCount; i++) {
-				arguments.siteID = assignedSitesQuery["siteid"][i];
+			var asArr = getAssignedSiteIDArray();
+			for(var i=1; i<=arrayLen(asArr); i++) {
+				arguments.siteID = asArr[i];
 				application.serviceFactory.getBean('$').init( arguments ).announceEvent("slatwall#arguments.eventName#");
 			}
 		}
