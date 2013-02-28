@@ -2,6 +2,7 @@ component extends="handler" output="false" accessors="true" {
 
 	property name="assignedSiteIDArray";
 
+	// Cached the assigned sites
 	private array function getAssignedSiteIDArray() {
 		if(!structKeyExists(variables, "assignedSiteIDArray")) {
 			var arr = [];
@@ -13,7 +14,7 @@ component extends="handler" output="false" accessors="true" {
 		}
 		return variables.assignedSiteIDArray;
 	}
-
+	
 	// Helper function meant to be used by events to get a mura scope
 	private any function getMuraScope() {
 		if(structKeyExists(request, "siteID")) {
