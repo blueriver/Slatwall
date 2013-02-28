@@ -372,8 +372,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function validate_regex(required any object, required string propertyName, required string constraintValue) {
 		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
-
-		if(isValid("regex", propertyValue, arguments.constraintValue)) {
+		if(!isNull(propertyValue) && isValid("regex", propertyValue, arguments.constraintValue)) {
 			return true;
 		}
 		return false;
