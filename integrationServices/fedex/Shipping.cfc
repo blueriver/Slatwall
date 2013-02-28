@@ -62,7 +62,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		return "http://www.fedex.com/Tracking?tracknumber_list=${trackingNumber}";
 	}
 	
-	public Slatwall.model.transient.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.model.transient.fulfillment.ShippingRatesRequestBean requestBean) {
+	public Slatwall.model.transient.fulfillment.ShippingRatesResponseBean function getRates(required any requestBean) {
 		
 		// Build Request XML
 		var xmlPacket = "";

@@ -64,7 +64,7 @@ component accessors="true" output="false" displayname="PayLeap" implements="Slat
 		return "creditCard";
 	}
 	
-	public Slatwall.model.transient.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.model.transient.payment.CreditCardTransactionRequestBean requestBean){
+	public Slatwall.model.transient.payment.CreditCardTransactionResponseBean function processCreditCard(required any requestBean){
 		var requestData = getRequestData(requestBean);
 		var rawResponse = postRequest(requestData, requestBean.getTransactionID());
 		return getResponseBean(rawResponse, requestData, requestBean);

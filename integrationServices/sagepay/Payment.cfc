@@ -52,7 +52,7 @@ component accessors="true" output="false" displayname="SagePay" implements="Slat
 		return "creditCard";
 	}
 	
-	public Slatwall.model.transient.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.model.transient.payment.CreditCardTransactionRequestBean requestBean) {
+	public Slatwall.model.transient.payment.CreditCardTransactionResponseBean function processCreditCard(required any requestBean) {
 		var rawResponse="";
 		var requestData=getRequestData(requestBean);
 		rawResponse=postRequest(requestData);

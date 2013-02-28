@@ -64,7 +64,7 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		return "http://usps.com/Tracking?tracknumber=${trackingNumber}";
 	}
 	
-	public Slatwall.model.transient.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.model.transient.fulfillment.ShippingRatesRequestBean requestBean) {
+	public Slatwall.model.transient.fulfillment.ShippingRatesResponseBean function getRates(required any requestBean) {
 		var totalItemsWeight = 0;
 		var totalItemsValue = 0;
 		
