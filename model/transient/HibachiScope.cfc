@@ -38,8 +38,15 @@ Notes:
 */
 component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiScope" {
 
-	// Slatwall specific request properties
+	// Slatwall specific request entity properties
+	property name="brand" type="any";
+	property name="cart" type="any";
 	property name="content" type="any";
+	property name="product" type="any";
+	property name="productType" type="any";
+	
+	// Slatwall specific request smartList properties
+	property name="productSmartList" type="any";
 	
 	// Deprecated Properties
 	property name="currentAccount";
@@ -48,119 +55,67 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	property name="currentContent";
 	property name="currentProduct";
 	property name="currentProductType";
+	
 	property name="currentProductSmartList";
 	
-	public any function getCurrentSite() {
-		if(!structKeyExists(variables, "currentSite")) {
-			variables.currentSite = getService("siteService").newSite();
+	// ================= Entity Helper Methods =====================
+	
+	// Brand
+	public any function getBrand() {
+		if(!structKeyExists(variables, "brand")) {
+			variables.brand = getService("brandService").newBrand();
 		}
-		return variables.currentSite;
+		return variables.brand;
+	}
+
+	// Cart
+	public any function getCart() {
+		return getSession().getOrder();
+	}
+
+	// Content
+	public any function getContent() {
+		if(!structKeyExists(variables, "content")) {
+			variables.content = getService("contentService").newContent();
+		}
+		return variables.content;
 	}
 	
-	public any function getCurrentBrand() {
-		if(!structKeyExists(variables, "currentBrand")) {
-			variables.currentBrand = getService("brandService").newBrand();
+	// Product
+	public any function getProduct() {
+		if(!structKeyExists(variables, "product")) {
+			variables.product = getService("productService").newProduct();
 		}
-		return variables.currentBrand;
+		return variables.product;
 	}
 	
-	public any function getCurrentContent() {
-		if(!structKeyExists(variables, "currentContent")) {
-			variables.currentContent = getService("contentService").newContent();
+	// Product Type
+	public any function getProductType() {
+		if(!structKeyExists(variables, "productType")) {
+			variables.productType = getService("productService").newProductType();
 		}
-		return variables.currentContent;
+		return variables.productType;
 	}
 	
-	public any function getCurrentProduct() {
-		if(!structKeyExists(variables, "currentProduct")) {
-			variables.currentProduct = getService("productService").newProduct();
-		}
-		return variables.currentProduct;
-	}
+	// ================= Smart List Helper Methods =====================
 	
-	public any function getCurrentProductType() {
-		if(!structKeyExists(variables, "currentProductType")) {
-			variables.currentProductType = getService("productService").newProductType();
-		}
-		return variables.currentProductType;
-	}
-	
-	public any function getCurrentProductSmartList() {
-		if(!structKeyExists(variables, "currentProductSmartList")) {
-			variables.currentProductSmartList = getService("productService").getProductSmartList(data=url);
-			variables.currentProductSmartList.addFilter('activeFlag', 1);
-			variables.currentProductSmartList.addFilter('publishedFlag', 1);
-			variables.currentProductSmartList.addRange('calculatedQATS', '1^');
-			if(isBoolean(getCurrentContent().getProductListingPageFlag()) && getCurrentContent().getProductListingPageFlag() && isBoolean(getCurrentContent().setting('contentIncludeChildContentProductsFlag')) && getCurrentContent().setting('contentIncludeChildContentProductsFlag')) {
-				variables.currentProductSmartList.addWhereCondition(" EXISTS(SELECT sc.contentID FROM SlatwallContent sc INNER JOIN sc.listingProducts slp WHERE sc.contentIDPath LIKE '%#getCurrentContent().getContentID()#%' AND slp.productID = aslatwallproduct.productID) ");
-			} else if(isBoolean(getCurrentContent().getProductListingPageFlag()) && getCurrentContent().getProductListingPageFlag()) {
-				variables.currentProductSmartList.addFilter('listingPages.contentID',getCurrentContent().getContentID());
+	// Product Smart List
+	public any function getProductSmartList() {
+		if(!structKeyExists(variables, "productSmartList")) {
+			variables.productSmartList = getService("productService").getProductSmartList(data=url);
+			variables.productSmartList.addFilter('activeFlag', 1);
+			variables.productSmartList.addFilter('publishedFlag', 1);
+			variables.productSmartList.addRange('calculatedQATS', '1^');
+			if(isBoolean(getContent().getProductListingPageFlag()) && getContent().getProductListingPageFlag() && isBoolean(getContent().setting('contentIncludeChildContentProductsFlag')) && getContent().setting('contentIncludeChildContentProductsFlag')) {
+				variables.productSmartList.addWhereCondition(" EXISTS(SELECT sc.contentID FROM SlatwallContent sc INNER JOIN sc.listingProducts slp WHERE sc.contentIDPath LIKE '%#getContent().getContentID()#%' AND slp.productID = aslatwallproduct.productID) ");
+			} else if(isBoolean(getContent().getProductListingPageFlag()) && getContent().getProductListingPageFlag()) {
+				variables.productSmartList.addFilter('listingPages.contentID',getContent().getContentID());
 			}
 		}
-		return variables.currentProductSmartList;
+		return variables.productSmartList;
 	}
 	
-	// =========== These methods serve as a shorthand
-	public any function account(string property, string value) {
-		if(isDefined("arguments.property") && isDefined("arguments.value")) {
-			return evaluate("getCurrentAccount().set#arguments.property#(#arguments.value#)");
-		} else if (isDefined("arguments.property")) {
-			return evaluate("getCurrentAccount().get#arguments.property#()");
-		} else {
-			return getCurrentAccount();	
-		}
-	}
-	
-	public any function cart(string property, string value) {
-		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			return getCurrentCart().invokeMethod("set#arguments.property#", {1=arguments.value});
-		} else if (isDefined("arguments.property")) {
-			return getCurrentCart().invokeMethod("get#arguments.property#", {});
-		} else {
-			return getCurrentCart();	
-		}
-	}
-	
-	public any function product(string property, string value) {
-		if(isDefined("arguments.property") && isDefined("arguments.value")) {
-			return evaluate("getCurrentProduct().set#arguments.property#(#arguments.value#)");
-		} else if (isDefined("arguments.property")) {
-			return evaluate("getCurrentProduct().get#arguments.property#()");
-		} else {
-			return getCurrentProduct();
-		}
-	}
-	
-	public any function productList(string property, string value) {
-		if(isDefined("arguments.property") && isDefined("arguments.value")) {
-			return evaluate("getCurrentProductSmartList().set#arguments.property#(#arguments.value#)");
-		} else if (isDefined("arguments.property")) {
-			return evaluate("getCurrentProductSmartList().get#arguments.property#()");
-		} else {
-			return getCurrentProductSmartList();
-		}
-	}
-	
-	public any function content(string property, string value) {
-		if(isDefined("arguments.property") && isDefined("arguments.value")) {
-			return evaluate("getCurrentContent().set#arguments.property#(#arguments.value#)");
-		} else if (isDefined("arguments.property")) {
-			return evaluate("getCurrentContent().get#arguments.property#()");
-		} else {
-			return getCurrentContent();
-		}
-	}
-	
-	public any function session(string property, string value) {
-		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			return evaluate("getCurrentSession().set#arguments.property#(#arguments.value#)");
-		} else if (structKeyExists(arguments, "property")) {
-			return evaluate("getCurrentSession().get#arguments.property#()");
-		} else {
-			return getCurrentSession();	
-		}
-	}
-	
+	// =================== Setting Access =========================
 	
 	// @hint helper function to return a Setting
 	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
@@ -172,25 +127,58 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		return getService("settingService").getSettingDetails(settingName=arguments.settingName, object=this, filterEntities=arguments.filterEntities);
 	}
 	
-	// ========================== Deprecated ================= * DO NOT UES!!!!!
-	public any function getCurrentSession() {
-		return getSession();
+	// ================== onMissingMethod =========================
+	public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
+		
+		// xxx() will do getXXX() and then either get a property, set a property, or return the entire object
+		if(structKeyExists(variables, "get#arguments.missingMethodName#")) {
+			if( structKeyExists(arguments.missingMethodArguments, "1") && structKeyExists(arguments.missingMethodArguments, "2")) {
+				return this.invokeMethod("get#arguments.missingMethodName#").invokeMethod("set#arguments.missingMethodArguments.1#", {1=arguments.missingMethodArguments.2});
+			} else if ( structKeyExists(arguments.missingMethodArguments, "1") ) {
+				return this.invokeMethod("get#arguments.missingMethodName#").invokeMethod("get#arguments.missingMethodArguments.1#");
+			} else {
+				return this.invokeMethod("get#arguments.missingMethodName#");
+			}
+		}
+		
 	}
+	
+	// ========================== Deprecated ================= * DO NOT UES!!!!!
 	
 	public any function getCurrentAccount() {
 		return getAccount();
 	}
 	
-	public any function getCurrentCart() {
-		return getCurrentSession().getOrder();
+	public any function getCurrentBrand() {
+		return getBrand();
 	}
 	
-	public any function sessionFacade(string property, string value) {
-		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			return setSessionValue(arguments.property, arguments.value);
-		} else if (structKeyExists(arguments, "property")) {
-			return getSessionValue(arguments.property);
-		}
+	public any function getCurrentContent() {
+		return getContent();
+	}
+	
+	public any function getCurrentProduct() {
+		return getProduct();
+	}
+	
+	public any function getCurrentProductType() {
+		return getProductType();
+	}
+	
+	public any function getCurrentSession() {
+		return getSession();
+	}
+	
+	public any function getCurrentCart() {
+		return getCart();
+	}
+	
+	public any function getProductList() {
+		return getProductSmartList();
+	}
+	
+	public any function getCurrentProductSmartList() {
+		return getProductSmartList();
 	}
 	
 	public string function getSlatwallRootDirectory() {
@@ -204,5 +192,14 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	public any function getSlatwallRootPath() {
 		return getBaseURL();
 	}
+	
+	public any function sessionFacade(string property, string value) {
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return setSessionValue(arguments.property, arguments.value);
+		} else if (structKeyExists(arguments, "property")) {
+			return getSessionValue(arguments.property);
+		}
+	}
+	
 	
 }
