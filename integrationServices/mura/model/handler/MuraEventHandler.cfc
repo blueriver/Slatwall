@@ -20,27 +20,27 @@
 				if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/")) {
 					brandKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/");
 					if(brandKeyLocation < listLen($.event('path'),"/")) {
-						$.slatwall.setCurrentBrand( $.slatwall.getService("brandService").getBrandByURLTitle(listGetAt($.event('path'), brandKeyLocation + 1, "/"), true) );
+						$.slatwall.setBrand( $.slatwall.getService("brandService").getBrandByURLTitle(listGetAt($.event('path'), brandKeyLocation + 1, "/"), true) );
 					}
 				}
 				if(listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/")) {
 					productKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/");
 					if(productKeyLocation < listLen($.event('path'),"/")) {
-						$.slatwall.setCurrentProduct( $.slatwall.getService("productService").getProductByURLTitle(listGetAt($.event('path'), productKeyLocation + 1, "/"), true) );	
+						$.slatwall.setProduct( $.slatwall.getService("productService").getProductByURLTitle(listGetAt($.event('path'), productKeyLocation + 1, "/"), true) );	
 					}
 				}
 				if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/")) {
 					productTypeKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/");
 					if(productTypeKeyLocation < listLen($.event('path'),"/")) {
-						$.slatwall.setCurrentProductType( $.slatwall.getService("productService").getProductTypeByURLTitle(listGetAt($.event('path'), productTypeKeyLocation + 1, "/"), true) );
+						$.slatwall.setProductType( $.slatwall.getService("productService").getProductTypeByURLTitle(listGetAt($.event('path'), productTypeKeyLocation + 1, "/"), true) );
 					}
 				}
 				
 				// Setup the proper content node and populate it with our FW/1 view on any keys that might have been found, use whichever key was farthest right
 				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProduct().isNew() && $.slatwall.getCurrentProduct().getActiveFlag() && ($.slatwall.getCurrentProduct().getPublishedFlag() || $.slatwall.getCurrentProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
-					$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProduct().setting('productDisplayTemplate')));
+					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProduct().setting('productDisplayTemplate')));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content('body', $.content('body') & doAction('frontend:product.detail'));
+					//$.content('body', $.content('body') & doAction('frontend:product.detail'));
 					$.content().setTitle( $.slatwall.getCurrentProduct().getTitle() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentProduct().getTitle() );
 					
@@ -57,16 +57,14 @@
 					$.event('crumbdata', crumbDataArray);
 					
 				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() ) {
-					$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate')));
+					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate')));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content('body', $.content('body') & doAction('frontend:producttype.detail'));
 					$.content().setTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
 					
 				} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag()  ) {
-					$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate')));
+					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate')));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content('body', $.content('body') & doAction('frontend:brand.detail'));
 					$.content().setTitle( $.slatwall.getCurrentBrand().getBrandName() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getBrandName() );
 				}
@@ -89,7 +87,7 @@
 			// If no slatAction was passed in, then check for keys in mura to determine what page to render
 			} else {
 				// Check to see if the current content is a listing page, so that we add our frontend view to the content body
-				if(isBoolean($.slatwall.getCurrentContent().getProductListingPageFlag()) && $.slatwall.getCurrentContent().getProductListingPageFlag()) {
+				if(isBoolean($.slatwall.getContent().getProductListingPageFlag()) && $.slatwall.getContent().getProductListingPageFlag()) {
 					$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
 				}
 				
@@ -116,7 +114,7 @@
 			}
 			
 			// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
-			$.slatwall.setCurrentContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
+			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
 			
 			// check if user has access to this page
 			checkAccess( $=$ );

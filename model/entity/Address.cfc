@@ -160,33 +160,39 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	}
 	
 	// This overrides the base validation method to dynamically add rules based on country specific requirements
-	public any function validate() {
+	public any function validate( string context="" ) {
+		
+		// Call the base method validate with any additional arguments passed in
+		super.validate(argumentCollection=arguments);
 		
 		// Get the country of this address
 		var country = getCountry();
 		
-		// Check each of the contries required fields
-		if ( country.getStreetAddressRequiredFlag() ) {
-			getValidateThis().addRule(objectType="Address",propertyName="streetAddress", valType="required", contexts="full,location");
+		var requiredConstraint = {
+			constraintType = "required",
+			constraintValue = true
+		};
+		
+		
+		if ( arguments.context eq "full" && country.getStreetAddressRequiredFlag() ) {
+			getService("hibachiValidationService").validateConstraint(object=this, propertyName="streetAddress", constraint=requiredConstraint, errorBean=getHibachiErrors(), context=arguments.context);
 		}
-		if ( country.getStreet2AddressRequiredFlag() ) {
-			getValidateThis().addRule(objectType="Address",propertyName="street2Address", valType="required", contexts="full,location");
+		if ( arguments.context eq "full" && country.getStreet2AddressRequiredFlag() ) {
+			getService("hibachiValidationService").validateConstraint(object=this, propertyName="street2Address", constraint=requiredConstraint, errorBean=getHibachiErrors(), context=arguments.context);
 		}
-		if ( country.getLocalityRequiredFlag() ) {
-			getValidateThis().addRule(objectType="Address",propertyName="locality", valType="required", contexts="full,location");
+		if ( arguments.context eq "full" && country.getLocalityRequiredFlag() ) {
+			getService("hibachiValidationService").validateConstraint(object=this, propertyName="locality", constraint=requiredConstraint, errorBean=getHibachiErrors(), context=arguments.context);
 		}
-		if ( country.getCityRequiredFlag() ) {
-			getValidateThis().addRule(objectType="Address",propertyName="city", valType="required", contexts="full,location");
+		if ( arguments.context eq "full" && country.getCityRequiredFlag() ) {
+			getService("hibachiValidationService").validateConstraint(object=this, propertyName="city", constraint=requiredConstraint, errorBean=getHibachiErrors(), context=arguments.context);
 		}
-		if ( country.getStateCodeRequiredFlag() ) {
-			getValidateThis().addRule(objectType="Address",propertyName="stateCode", valType="required", contexts="full,location");
+		if ( arguments.context eq "full" && country.getStateCodeRequiredFlag() ) {
+			getService("hibachiValidationService").validateConstraint(object=this, propertyName="stateCode", constraint=requiredConstraint, errorBean=getHibachiErrors(), context=arguments.context);
 		}
-		if ( country.getPostalCodeRequiredFlag() ) {
-			getValidateThis().addRule(objectType="Address",propertyName="postalCode", valType="required", contexts="full,location");
+		if ( arguments.context eq "full" && country.getPostalCodeRequiredFlag() ) {
+			getService("hibachiValidationService").validateConstraint(object=this, propertyName="postalCode", constraint=requiredConstraint, errorBean=getHibachiErrors(), context=arguments.context);
 		}
 		
-		// Call the base method validate with any additional arguments passed in
-		super.validate(argumentCollection=arguments);
 	}
 	
 	// ==================  END:  Overridden Methods ========================

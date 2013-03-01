@@ -225,8 +225,14 @@ globalEncryptionKeySize
 					optionSL.addSelect('paymentTermName', 'name');
 					optionSL.addSelect('paymentTermID', 'value');
 					return optionSL.getRecords();
-				case "brandDisplayTemplate": case "productDisplayTemplate": case "productTypeDisplayTemplate" : case "contentRestrictedContentDisplayTemplate" :
-					return getContentService().getDisplayTemplateOptions();
+				case "brandDisplayTemplate":
+					return getContentService().getDisplayTemplateOptions( "brand" );
+				case "productDisplayTemplate":
+					return getContentService().getDisplayTemplateOptions( "product" );
+				case "productTypeDisplayTemplate":
+					return getContentService().getDisplayTemplateOptions( "productType" );
+				case "contentRestrictedContentDisplayTemplate":
+					return getContentService().getDisplayTemplateOptions( "barrierPage" );
 				case "productImageOptionCodeDelimiter":
 					return ['-','_'];
 				case "globalDefaultSite":
