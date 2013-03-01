@@ -71,21 +71,20 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getContentDAO().getCmsCategoriesByCmsContentID(arguments.cmsContentID);
 	}
 	
-	public array function getDisplayTemplateOptions() {
-		var returnArray = [];
-		var displayTemplates = this.listContent({templateFlag="1"});
-		for(var template in displayTemplates) {
-			arrayAppend(returnArray, {name=template.getTitle(), value=template.getContentID()});
-		}
-		return returnArray;
-	}
-
-	
 	// ===================== START: Logical Methods ===========================
 	
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
+	
+	public array function getDisplayTemplateOptions( required string templateType ) {
+		var returnArray = [];
+		var displayTemplates = getContentDAO().getDisplayTemplates( templateType=arguments.templateType );
+		for(var template in displayTemplates) {
+			arrayAppend(returnArray, {name=template.getTitle(), value=template.getContentID()});
+		}
+		return returnArray;
+	}
 	
 	// ===================== START: DAO Passthrough ===========================
 	

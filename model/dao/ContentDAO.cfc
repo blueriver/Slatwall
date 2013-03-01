@@ -65,4 +65,9 @@ Notes:
 		<cfreturn valueList(returnQuery.categoryID) />
 	</cffunction>
 	
+	<cffunction name="getDisplayTemplates" access="public">
+		<cfargument name="templateType" type="string" />
+		
+		<cfreturn ormExecuteQuery(" FROM SlatwallContent WHERE contentTemplateType.systemCode = ?", ["ctt#arguments.templateType#"]) />
+	</cffunction>
 </cfcomponent>

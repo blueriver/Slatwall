@@ -40,7 +40,7 @@
 				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProduct().isNew() && $.slatwall.getCurrentProduct().getActiveFlag() && ($.slatwall.getCurrentProduct().getPublishedFlag() || $.slatwall.getCurrentProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
 					$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProduct().setting('productDisplayTemplate')));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content('body', $.content('body') & doAction('frontend:product.detail'));
+					//$.content('body', $.content('body') & doAction('frontend:product.detail'));
 					$.content().setTitle( $.slatwall.getCurrentProduct().getTitle() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentProduct().getTitle() );
 					
@@ -59,14 +59,12 @@
 				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() ) {
 					$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate')));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content('body', $.content('body') & doAction('frontend:producttype.detail'));
 					$.content().setTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
 					
 				} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag()  ) {
 					$.slatwall.setCurrentContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate')));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content('body', $.content('body') & doAction('frontend:brand.detail'));
 					$.content().setTitle( $.slatwall.getCurrentBrand().getBrandName() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getBrandName() );
 				}
