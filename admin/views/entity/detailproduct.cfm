@@ -67,13 +67,13 @@ Notes:
 		</cf_HibachiDetailHeader>
 		<cf_HibachiTabGroup object="#rc.product#" allowCustomAttributes="true">
 			<cf_HibachiTab property="skus" />
-			<cf_HibachiTab property="productdescription" />
-			<cf_HibachiTab view="admin:entity/producttabs/productpages" />
-			<cf_HibachiTab view="admin:entity/producttabs/productcategories" />
+			<cf_HibachiTab property="productDescription" />
+			<cf_HibachiTab property="listingPages" />
+			<cf_HibachiTab property="categories" />
+			<cf_HibachiTab property="productReviews" />
+			<cf_HibachiTab property="relatedProducts" />
+			<cf_HibachiTab property="vendors" />
 			<cf_HibachiTab view="admin:entity/producttabs/alternateimages" />
-			<cf_HibachiTab view="admin:entity/producttabs/productreviews" />
-			<cf_HibachiTab view="admin:entity/producttabs/relatedproducts" />
-			<cf_HibachiTab view="admin:entity/producttabs/vendors" />
 			<cf_HibachiTab view="admin:entity/producttabs/productsettings" />
 			<cf_HibachiTab view="admin:entity/producttabs/skusettings" />
 		</cf_HibachiTabGroup>
