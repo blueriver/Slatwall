@@ -77,8 +77,6 @@ Notes:
 		<cf_HibachiTab property="orders" />
 		<cf_HibachiTab property="accountPaymentMethods" />
 		<cf_HibachiTab property="permissionGroups" />
-		<cf_HibachiTab view="admin:entity/accounttabs/addresses" />
-		<cf_HibachiTab view="admin:entity/accounttabs/orders" />
 		<cf_HibachiTab view="admin:entity/accounttabs/paymentmethods" />
 		<cf_HibachiTab view="admin:entity/accounttabs/subscriptionusage" />
 		<cf_HibachiTab view="admin:entity/accounttabs/pricegroups" />
