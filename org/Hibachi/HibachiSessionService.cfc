@@ -21,6 +21,11 @@ component output="false" accessors="true" extends="HibachiService"  {
 		var sessionEntity = this.getSession(getSessionValue('sessionID'), true);
 		getHibachiScope().setSession( sessionEntity );
 		
+		// If the session has an account but no authentication, then remove the account
+		if(isNull(getHibachiScope().getSession().getAccountAuthentication()) && !isNull(getHibachiScope().getSession().getAccount())) {
+			getHibachiScope().setAccount(javaCast("null", ""));
+		}
+		
 		// Check to see if this session has an accountAuthentication, if it does then we need to verify that the authentication shouldn't be auto logged out
 		if(!isNull(sessionEntity.getAccountAuthentication())) {
 			// If there was an integration, then check the verify method for any custom auto-logout logic

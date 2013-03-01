@@ -348,6 +348,7 @@
 				
 			} else if ( $.slatwall.getLoggedInFlag()
 					&& !$.currentUser().isLoggedIn()
+					&& !isNull($.slatwall.getSession().getAccountAuthentication())
 					&& !isNull($.slatwall.getSession().getAccountAuthentication().getIntegration())
 					&& $.slatwall.getSession().getAccountAuthentication().getIntegration().getIntegrationPackage() eq "mura") {
 				
