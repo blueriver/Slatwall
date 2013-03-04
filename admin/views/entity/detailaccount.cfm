@@ -77,12 +77,11 @@ Notes:
 		<cf_HibachiTab property="orders" />
 		<cf_HibachiTab property="accountPaymentMethods" />
 		<cf_HibachiTab property="permissionGroups" />
-		<cf_HibachiTab view="admin:entity/accounttabs/paymentmethods" />
+		<cf_HibachiTab property="priceGroups" />
+		<cf_HibachiTab property="productReviews" />
+		<cf_HibachiTab property="accountPayments" />
+		<!---<cf_HibachiTab view="admin:entity/accounttabs/permissions" />--->
 		<cf_HibachiTab view="admin:entity/accounttabs/subscriptionusage" />
-		<cf_HibachiTab view="admin:entity/accounttabs/pricegroups" />
-		<cf_HibachiTab view="admin:entity/accounttabs/productreviews" />
-		<cf_HibachiTab view="admin:entity/accounttabs/accountpayments" />
-		<cf_HibachiTab view="admin:entity/accounttabs/permissions" />
 		<cf_HibachiTab view="admin:entity/accounttabs/accountsettings" />
 		<cf_SlatwallAdminTabComments object="#rc.account#" />
 	</cf_HibachiTabGroup>
