@@ -8,7 +8,7 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiRBService" {
 			
 			// Call the super, and at this point the structKeyExists, so there is a potential chance that one request might not get all the RB keys in a race condition type of setting.
 			var thisRB = super.getResourceBundle(argumentcollection=arguments);
-			var javaRB = new org.Hibachi.JavaRB.JavaRB();
+			var javaRB = new Slatwall.org.Hibachi.JavaRB.JavaRB();
 			
 			// Loop over the active FW/1 subsystems to look for a resource bundle there
 			var activeFW1Integrations = getIntegrationService().getActiveFW1Subsystems();

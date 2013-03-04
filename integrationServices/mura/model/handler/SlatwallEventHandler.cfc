@@ -36,41 +36,46 @@ component extends="handler" output="false" accessors="true" {
 
 	// Special Function to relay all events called in Slatwall over to mura
 	public void function onEvent( required any slatwallScope, required any eventName ) {
-		if(!structKeyExists(request.customMuraScopeKeys, "slatwall")) {
-			request.customMuraScopeKeys.slatwall = arguments.slatwallScope;	
-		}
-		
-		
-		// If there was a request.siteID defined, then announce the event against that specific site.  This would typically happen on a Frontend mura request
-		if(structKeyExists(request, "siteID")) {
-			arguments.siteID = request.siteID;
-			application.serviceFactory.getBean('$').init( arguments ).announceEvent("slatwall#arguments.eventName#");
+		if(structKeyExists(application,"initialized") && application.initialized) {
+			if(!structKeyExists(request.customMuraScopeKeys, "slatwall")) {
+				request.customMuraScopeKeys.slatwall = arguments.slatwallScope;	
+			}
 			
-		// If there was no siteID in the request the event probably originated in the Slatwall admin.  In this situation we need to re-announce to all sites that Slatwall is defined for
-		} else {
-			var asArr = getAssignedSiteIDArray();
-			for(var i=1; i<=arrayLen(asArr); i++) {
-				arguments.siteID = asArr[i];
+			// If there was a request.siteID defined, then announce the event against that specific site.  This would typically happen on a Frontend mura request
+			if(structKeyExists(request, "siteID")) {
+				arguments.siteID = request.siteID;
 				application.serviceFactory.getBean('$').init( arguments ).announceEvent("slatwall#arguments.eventName#");
+				
+			// If there was no siteID in the request the event probably originated in the Slatwall admin.  In this situation we need to re-announce to all sites that Slatwall is defined for
+			} else {
+				var asArr = getAssignedSiteIDArray();
+				for(var i=1; i<=arrayLen(asArr); i++) {
+					arguments.siteID = asArr[i];
+					application.serviceFactory.getBean('$').init( arguments ).announceEvent("slatwall#arguments.eventName#");
+				}
 			}
 		}
 	}
 
 	// Login to Mura when Slatwall user is logged in
 	public void function onSessionAccountLogin( required any slatwallScope ) {
-		if(!isNull(arguments.slatwallScope.getAccount().getCMSAccountID()) && len(arguments.slatwallScope.getAccount().getCMSAccountID())) {
-			var $ = getMuraScope(argumentCollection=arguments);
-			
-			$.getBean("userUtility").loginByUserID(arguments.slatwallScope.getAccount().getCMSAccountID(), getMuraSiteIDByMuraUserID(arguments.slatwallScope.getAccount().getCMSAccountID()));
-			$.announceEvent("onGlobalLoginSuccess");
+		if(structKeyExists(application,"initialized") && application.initialized) {
+			if(!isNull(arguments.slatwallScope.getAccount().getCMSAccountID()) && len(arguments.slatwallScope.getAccount().getCMSAccountID())) {
+				var $ = getMuraScope(argumentCollection=arguments);
+				
+				$.getBean("userUtility").loginByUserID(arguments.slatwallScope.getAccount().getCMSAccountID(), getMuraSiteIDByMuraUserID(arguments.slatwallScope.getAccount().getCMSAccountID()));
+				$.announceEvent("onGlobalLoginSuccess");
+			}
 		}
 	}
 	
 	// Logout of Mura when Slatwall user is logged out
 	public void function onSessionAccountLogout( required any slatwallScope ) {
-		// Auto Logout of Mura if needed
-		if(structKeyExists(session, "mura") && structKeyExists(session.mura, "isLoggedIn") && session.mura.isLoggedIn) {
-			getMuraScope(argumentCollection=arguments).getBean('loginManager').logout();
+		if(structKeyExists(application,"initialized") && application.initialized) {
+			// Auto Logout of Mura if needed
+			if(structKeyExists(session, "mura") && structKeyExists(session.mura, "isLoggedIn") && session.mura.isLoggedIn) {
+				getMuraScope(argumentCollection=arguments).getBean('loginManager').logout();
+			}
 		}
 	}
 	

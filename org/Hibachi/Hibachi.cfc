@@ -221,58 +221,67 @@ component extends="FW1.framework" {
 					
 					//========================= IOC SETUP ====================================
 					
-					var bf = new DI1.ioc("/#variables.framework.applicationKey#/model", {
+					var coreBF = new DI1.ioc("/#variables.framework.applicationKey#/model", {
 						transients=["entity", "process", "transient"]
 					});
 					
-					bf.addBean("applicationKey", variables.framework.applicationKey);
-					bf.addBean("hibachiInstanceApplicationScopeKey", getHibachiInstanceApplicationScopeKey());
+					coreBF.addBean("applicationKey", variables.framework.applicationKey);
+					coreBF.addBean("hibachiInstanceApplicationScopeKey", getHibachiInstanceApplicationScopeKey());
 					
 					// If the default singleton beans were not found in the model, add a reference to the core one in hibachi
-					if(!bf.containsBean("hibachiDAO")) {
-						bf.declareBean("hibachiDAO", "#variables.framework.applicationKey#.org.Hibachi.HibachiDAO", true);	
+					if(!coreBF.containsBean("hibachiDAO")) {
+						coreBF.declareBean("hibachiDAO", "#variables.framework.applicationKey#.org.Hibachi.HibachiDAO", true);	
 					}
-					if(!bf.containsBean("hibachiService")) {
-						bf.declareBean("hibachiService", "#variables.framework.applicationKey#.org.Hibachi.HibachiService", true);	
+					if(!coreBF.containsBean("hibachiService")) {
+						coreBF.declareBean("hibachiService", "#variables.framework.applicationKey#.org.Hibachi.HibachiService", true);	
 					}
-					if(!bf.containsBean("hibachiAuthenticationService")) {
-						bf.declareBean("hibachiAuthenticationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiAuthenticationService", true);	
+					if(!coreBF.containsBean("hibachiAuthenticationService")) {
+						coreBF.declareBean("hibachiAuthenticationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiAuthenticationService", true);	
 					}
-					if(!bf.containsBean("hibachiEventService")) {
-						bf.declareBean("hibachiEventService", "#variables.framework.applicationKey#.org.Hibachi.HibachiEventService", true);	
+					if(!coreBF.containsBean("hibachiCacheService")) {
+						coreBF.declareBean("hibachiCacheService", "#variables.framework.applicationKey#.org.Hibachi.HibachiCacheService", true);	
 					}
-					if(!bf.containsBean("hibachiRBService")) {
-						bf.declareBean("hibachiRBService", "#variables.framework.applicationKey#.org.Hibachi.HibachiRBService", true);	
+					if(!coreBF.containsBean("hibachiEventService")) {
+						coreBF.declareBean("hibachiEventService", "#variables.framework.applicationKey#.org.Hibachi.HibachiEventService", true);	
 					}
-					if(!bf.containsBean("hibachiSessionService")) {
-						bf.declareBean("hibachiSessionService", "#variables.framework.applicationKey#.org.Hibachi.HibachiSessionService", true);	
+					if(!coreBF.containsBean("hibachiRBService")) {
+						coreBF.declareBean("hibachiRBService", "#variables.framework.applicationKey#.org.Hibachi.HibachiRBService", true);	
 					}
-					if(!bf.containsBean("hibachiTagService")) {
-						bf.declareBean("hibachiTagService", "#variables.framework.applicationKey#.org.Hibachi.HibachiTagService", true);	
+					if(!coreBF.containsBean("hibachiSessionService")) {
+						coreBF.declareBean("hibachiSessionService", "#variables.framework.applicationKey#.org.Hibachi.HibachiSessionService", true);	
 					}
-					if(!bf.containsBean("hibachiUtilityService")) {
-						bf.declareBean("hibachiUtilityService", "#variables.framework.applicationKey#.org.Hibachi.HibachiUtilityService", true);	
+					if(!coreBF.containsBean("hibachiTagService")) {
+						coreBF.declareBean("hibachiTagService", "#variables.framework.applicationKey#.org.Hibachi.HibachiTagService", true);	
 					}
-					if(!bf.containsBean("hibachiValidationService")) {
-						bf.declareBean("hibachiValidationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiValidationService", true);	
+					if(!coreBF.containsBean("hibachiUtilityService")) {
+						coreBF.declareBean("hibachiUtilityService", "#variables.framework.applicationKey#.org.Hibachi.HibachiUtilityService", true);	
+					}
+					if(!coreBF.containsBean("hibachiValidationService")) {
+						coreBF.declareBean("hibachiValidationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiValidationService", true);	
 					}
 					
 					// If the default transient beans were not found in the model, add a reference to the core one in hibachi
-					if(!bf.containsBean("hibachiScope")) {
-						bf.declareBean("hibachiScope", "#variables.framework.applicationKey#.org.Hibachi.HibachiScope", false);
+					if(!coreBF.containsBean("hibachiScope")) {
+						coreBF.declareBean("hibachiScope", "#variables.framework.applicationKey#.org.Hibachi.HibachiScope", false);
 					}
-					if(!bf.containsBean("hibachiSmartList")) {
-						bf.declareBean("hibachiSmartList", "#variables.framework.applicationKey#.org.Hibachi.HibachiSmartList", false);
+					if(!coreBF.containsBean("hibachiSmartList")) {
+						coreBF.declareBean("hibachiSmartList", "#variables.framework.applicationKey#.org.Hibachi.HibachiSmartList", false);
 					}
-					if(!bf.containsBean("hibachiErrors")) {
-						bf.declareBean("hibachiErrors", "#variables.framework.applicationKey#.org.Hibachi.HibachiErrors", false);
+					if(!coreBF.containsBean("hibachiErrors")) {
+						coreBF.declareBean("hibachiErrors", "#variables.framework.applicationKey#.org.Hibachi.HibachiErrors", false);
 					}
-					if(!bf.containsBean("hibachiMessages")) {
-						bf.declareBean("hibachiMessages", "#variables.framework.applicationKey#.org.Hibachi.HibachiMessages", false);
+					if(!coreBF.containsBean("hibachiMessages")) {
+						coreBF.declareBean("hibachiMessages", "#variables.framework.applicationKey#.org.Hibachi.HibachiMessages", false);
 					}
 					
+					// Setup the custom bean factory
+					var customBF = new DI1.ioc("/#variables.framework.applicationKey#/custom/model", {
+						transients=["entity", "process", "transient"]
+					});
 					
-					setBeanFactory( bf );
+					customBF.setParent( coreBF );
+					
+					setBeanFactory( customBF );
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
 					
 					//========================= END: IOC SETUP ===============================

@@ -21,23 +21,22 @@ component output="false" accessors="true" extends="HibachiService"  {
 		var sessionEntity = this.getSession(getSessionValue('sessionID'), true);
 		getHibachiScope().setSession( sessionEntity );
 		
-		// Check to see if this session has an accountAuthentication, if it does then we need to verify that the authentication shouldn't be auto logged out
-		if(!isNull(sessionEntity.getAccountAuthentication())) {
-			// If there was an integration, then check the verify method for any custom auto-logout logic
-			if(sessionEntity.getAccountAuthentication().getForceLogoutFlag()) {
-				logoutAccount();
-			}
-		}
-		
 		// Update the last request datetime
-		sessionEntity.setLastRequestDateTime( now() );
+		getHibachiScope().getSession().setLastRequestDateTime( now() );
 		
 		// Save the session
-		getHibachiDAO().save(sessionEntity);
+		getHibachiDAO().save( getHibachiScope().getSession() );
 		
 		// Save session ID in the session Scope & cookie scope for next request
-		setSessionValue('sessionID', sessionEntity.getSessionID());
-		getHibachiTagService().cfcookie(name="#getApplicationValue('applicationKey')#SessionID", value=sessionEntity.getSessionID(), expires="never");
+		setSessionValue('sessionID', getHibachiScope().getSession().getSessionID());
+		getHibachiTagService().cfcookie(name="#getApplicationValue('applicationKey')#SessionID", value=getHibachiScope().getSession().getSessionID(), expires="never");
+		
+		// If the session has an account but no authentication, then remove the account
+		// Check to see if this session has an accountAuthentication, if it does then we need to verify that the authentication shouldn't be auto logged out
+		// If there was an integration, then check the verify method for any custom auto-logout logic
+		if(	(!isNull(getHibachiScope().getSession().getAccountAuthentication()) && getHibachiScope().getSession().getAccountAuthentication().getForceLogoutFlag()) || (isNull(getHibachiScope().getSession().getAccountAuthentication()) && !isNull(getHibachiScope().getSession().getAccount()))) {
+			logoutAccount();
+		}
 	}
 	
 	public string function loginAccount(required any account, required any accountAuthentication) {
