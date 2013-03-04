@@ -176,7 +176,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	public boolean function validate_minValue(required any object, required string propertyName, required numeric constraintValue) {
-		var value = arguments.object.invokeMethod("get#arguments.propertyName#");
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
 		if(isNull(propertyValue) || (isNumeric(propertyValue) && propertyValue >= arguments.constraintValue) ) {
 			return true;
 		}
