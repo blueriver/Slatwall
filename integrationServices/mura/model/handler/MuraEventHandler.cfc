@@ -328,6 +328,7 @@
 		// ========================== MANUALLY CALLED MURA =================================
 		
 		public void function autoLoginLogoutFromSlatwall( required any $ ) {
+			
 			// Check to see if the current mura user is logged in (or logged out), and if we should automatically login/logout the slatwall account
 			if( $.slatwall.setting("integrationMuraAccountSyncType") != "none"
 					&& !$.slatwall.getLoggedInFlag()
@@ -348,6 +349,7 @@
 				
 			} else if ( $.slatwall.getLoggedInFlag()
 					&& !$.currentUser().isLoggedIn()
+					&& !isNull($.slatwall.getSession().getAccountAuthentication())
 					&& !isNull($.slatwall.getSession().getAccountAuthentication().getIntegration())
 					&& $.slatwall.getSession().getAccountAuthentication().getIntegration().getIntegrationPackage() eq "mura") {
 				
