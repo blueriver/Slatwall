@@ -59,6 +59,7 @@ Notes:
 		
 		<input type="hidden" name="qualifierType" value="#rc.qualifierType#" />
 		<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
+		<input type="hidden" name="promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>

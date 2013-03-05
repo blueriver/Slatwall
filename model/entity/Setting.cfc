@@ -111,6 +111,27 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 		return getService("settingService").getSettingOptionsSmartList(getSettingName());	
 	}
 	
+	// This overrides the base validation method to dynamically add rules based on country specific requirements
+	public any function validate( string context="" ) {
+		
+		// Call the base method validate with any additional arguments passed in
+		super.validate(argumentCollection=arguments);
+		
+		var settingMetaData = getSettingMetaData();
+		
+		if (structKeyExists(settingMetaData,"validate")){
+			for (var constraint in settingMetaData.validate){
+				var constraintDetail = {
+					constraintType = constraint,
+					constraintValue = settingMetaData[constraint]
+				};
+				getService("hibachiValidationService").validateConstraint(object=this, propertyName="settingValue", constraint=constraintDetail, errorBean=getHibachiErrors(), context=arguments.context);
+				
+			}
+		}
+		
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

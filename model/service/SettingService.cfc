@@ -165,7 +165,7 @@ globalEncryptionKeySize
 			
 			// Product
 			productDisplayTemplate = {fieldType="select"},
-			productImageSmallWidth = {fieldType="text", formatType="pixels"},
+			productImageSmallWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric"}},
 			productImageSmallHeight = {fieldType="text", formatType="pixels"},
 			productImageMediumWidth = {fieldType="text", formatType="pixels"},
 			productImageMediumHeight = {fieldType="text", formatType="pixels"},

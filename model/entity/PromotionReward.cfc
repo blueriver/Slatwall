@@ -126,8 +126,8 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	// Promotion Period (many-to-one)
 	public void function setPromotionPeriod(required any promotionPeriod) {
 		variables.promotionPeriod = arguments.promotionPeriod;
-		if(!arguments.promotionPeriod.hasPromotionReward(this)) {
-			arrayAppend(arguments.promotionPeriod.getPromotionRewards(),this);
+		if(isNew() or !arguments.promotionPeriod.hasPromotionReward( this )) {
+			arrayAppend(arguments.promotionPeriod.getPromotionRewards(), this);
 		}
 	}
 	public void function removePromotionPeriod(any promotionPeriod) {
