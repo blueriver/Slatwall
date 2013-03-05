@@ -662,7 +662,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			for(var i=1; i<=arrayLen(properties); i++) {
 				propertiesStruct[ properties[i].name ] = properties[ i ];
 			}
-			
 			setApplicationValue("classPropertyStructCache_#getClassFullname()#", propertiesStruct);
 		}
 		

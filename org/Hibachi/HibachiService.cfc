@@ -691,12 +691,6 @@
 		
 		// @hint returns the properties of a given entity
 		public any function getPropertiesStructByEntityName( required string entityName ) {
-			
-			// First Check the application cache
-			if( hasApplicationValue("classPropertyStructCache_#getProperlyCasedFullClassNameByEntityName( arguments.entityName )#") ) {
-				return getApplicationValue("classPropertyStructCache_#getProperlyCasedFullClassNameByEntityName( arguments.entityName )#");
-			}
-			
 			// Pull the meta data from the object (which in turn will cache it in the application for the next time)
 			return getEntityObject( arguments.entityName ).getPropertiesStruct(); 
 		}
