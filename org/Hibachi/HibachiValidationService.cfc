@@ -285,7 +285,7 @@
 		return false;
 	}
 	
-	public boolean function validate_minList(required any object, required string propertyName, required numeric constraintValue) {
+	public boolean function validate_minList(required any object, required string propertyIdentifier, required numeric constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
 		if((!isNull(propertyValue) && isSimpleValue(propertyValue) && listLen(propertyValue) >= arguments.constraintValue) || (isNull(propertyValue) && arguments.constraintValue == 0)) {
 			return true;
@@ -293,7 +293,7 @@
 		return false;
 	}
 	
-	public boolean function validate_maxList(required any object, required string propertyName, required numeric constraintValue) {
+	public boolean function validate_maxList(required any object, required string propertyIdentifier, required numeric constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
 		if((!isNull(propertyValue) && isSimpleValue(propertyValue) && listLen(propertyValue) <= arguments.constraintValue) || (isNull(propertyValue) && arguments.constraintValue == 0)) {
 			return true;
@@ -301,7 +301,7 @@
 		return false;
 	}
 	
-	public boolean function validate_method(required any object, required string propertyName, required string constraintValue) {
+	public boolean function validate_method(required any object, required string propertyIdentifier, required string constraintValue) {
 		return arguments.object.invokeMethod(arguments.constraintValue);
 	}
 	
@@ -421,7 +421,7 @@
 		return getHibachiDAO().isUniqueProperty(propertyName=listLast(arguments.propertyIdentifier,'._'), entity=uniqueObject);
 	}
 	
-	public boolean function validate_uniqueOrNull(required any object, required string propertyName, boolean constraintValue=true) {
+	public boolean function validate_uniqueOrNull(required any object, required string propertyIdentifier, boolean constraintValue=true) {
 		var uniqueObject = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier );
 		var propertyValue = object.invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
 		if(isNull(propertyValue)) {
@@ -430,7 +430,7 @@
 		return getHibachiDAO().isUniqueProperty(propertyName=listLast(arguments.propertyIdentifier,'._'), entity=uniqueObject);
 	}
 	
-	public boolean function validate_regex(required any object, required string propertyName, required string constraintValue) {
+	public boolean function validate_regex(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
 		if(!isNull(propertyValue) && isValid("regex", propertyValue, arguments.constraintValue)) {
 			return true;
