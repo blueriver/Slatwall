@@ -2,7 +2,7 @@
 	"contexts":["save","edit","delete"],
 	"properties":{
 		"optionGroupName":			[{"contexts":"save","required":true}],
-		"optionGroupCode":			[{"contexts":"save","required":true,"unique":true}],
+		"optionGroupCode":			[{"contexts":"save","required":true,"unique":true,"regex":"^[a-zA-Z0-9-_.|:~^]+$"}],
 		"options":					[{"contexts":"delete","maxCollection":0}]
 	}
 }
