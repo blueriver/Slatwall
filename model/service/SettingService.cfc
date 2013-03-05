@@ -92,130 +92,147 @@ globalEncryptionKeySize
 			accountAuthentication = [ "integration.integrationID" ]
 		};
 		
-		variables.settingMetaData = {
-			// Account
-			accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
-			accountPaymentTerm = {fieldType="select"},
-			accountTermCreditLimit = {fieldType="text", formatType="currency"},
+		public any function getSettingMetaData(required string settingName) {
 			
-			// Account Authentication
-			accountAuthenticationAutoLogoutTimespan = {fieldType="text"},
+			if(!structKeyExists(variables, 'settingMetaData')) {
+				
+				var smd = {
+					
+					// Account
+					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
+					accountEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod", defaultValue=getPaymentService().getAllActivePaymentMethodIDList()},
+					accountPaymentTerm = {fieldType="select"},
+					accountTermCreditLimit = {fieldType="text", formatType="currency"},
+					
+					// Account Authentication
+					accountAuthenticationAutoLogoutTimespan = {fieldType="text"},
+					
+					// Brand
+					brandDisplayTemplate = {fieldType="select"},
+					brandHTMLTitleString = {fieldType="text"},
+					brandMetaDescriptionString = {fieldType="textarea"},
+					brandMetaKeywordsString = {fieldType="textarea"},
+					
+					// Content
+					contentRestrictAccessFlag = {fieldType="yesno",defaultValue=0},
+					contentRequirePurchaseFlag = {fieldType="yesno",defaultValue=0},
+					contentRequireSubscriptionFlag = {fieldType="yesno",defaultValue=0},
+					contentIncludeChildContentProductsFlag = {fieldType="yesno",defaultValue=1},
+					contentRestrictedContentDisplayTemplate = {fieldType="select"},
+					contentHTMLTitleString = {fieldType="text"},
+					contentMetaDescriptionString = {fieldType="textarea"},
+					contentMetaKeywordsString = {fieldType="textarea"},
+					
+					// Email
+					emailFromAddress = {fieldType="text"},
+					emailToAddress = {fieldType="text"},
+					emailCCAddress = {fieldType="text"},
+					emailBCCAddress = {fieldType="text"},
+					emailSubject = {fieldType="text"},
+					
+					// Fulfillment Method
+					fulfillmentMethodEmailFrom = {fieldType="text"},
+					fulfillmentMethodEmailCC = {fieldType="text"},
+					fulfillmentMethodEmailBCC = {fieldType="text"},
+					fulfillmentMethodEmailSubjectString = {fieldType="text"},
+					fulfillmentMethodAutoLocation = {fieldType="select"},
+					fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage"},
+					
+					// Global
+					globalCurrencyLocale = {fieldType="select"},
+					globalCurrencyType = {fieldType="select"},
+					globalDateFormat = {fieldType="text"},
+					globalAssetsImageFolderPath = {fieldType="text", defaultValue=getApplicationValue('applicationRootMappingPath') & '/custom/assets/images'},
+					globalEncryptionAlgorithm = {fieldType="select"},
+					globalEncryptionEncoding = {fieldType="select"},
+					globalEncryptionKeyLocation = {fieldType="text"},
+					globalEncryptionKeySize = {fieldType="select"},
+					globalEncryptionService = {fieldType="select"},
+					globalImageExtension = {fieldType="text"},
+					globalLogMessages = {fieldType="select"},
+					globalMissingImagePath = {fieldType="text", defaultValue=getURLFromPath(getApplicationValue('applicationRootMappingPath')) & '/custom/assets/images/missingimage.jpg'},
+					globalOrderPlacedEmailFrom = {fieldType="text"},
+					globalOrderPlacedEmailCC = {fieldType="text"},
+					globalOrderPlacedEmailBCC = {fieldType="text"},
+					globalOrderPlacedEmailSubjectString = {fieldType="text"},
+					globalOrderNumberGeneration = {fieldType="select"},
+					globalRemoteIDShowFlag = {fieldType="yesno"},
+					globalRemoteIDEditFlag = {fieldType="yesno"},
+					globalTimeFormat = {fieldType="text"},
+					globalURLKeyBrand = {fieldType="text"},
+					globalURLKeyProduct = {fieldType="text"},
+					globalURLKeyProductType = {fieldType="text"},
+					globalWeightUnitCode = {fieldType="select"},
+					
+					// Payment Method
+					paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno"},
+					paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno"},
+					paymentMethodCheckoutTransactionType = {fieldType="select"},
+					
+					// Product
+					productDisplayTemplate = {fieldType="select"},
+					productImageSmallWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric"}},
+					productImageSmallHeight = {fieldType="text", formatType="pixels"},
+					productImageMediumWidth = {fieldType="text", formatType="pixels"},
+					productImageMediumHeight = {fieldType="text", formatType="pixels"},
+					productImageLargeWidth = {fieldType="text", formatType="pixels"},
+					productImageLargeHeight = {fieldType="text", formatType="pixels"},
+					productImageOptionCodeDelimiter = {fieldType="select"},
+					productMissingImagePath = {fieldType="text"},
+					productTitleString = {fieldType="text"},
+					productHTMLTitleString = {fieldType="text"},
+					productMetaDescriptionString = {fieldType="textarea"},
+					productMetaKeywordsString = {fieldType="textarea"},
+					productShowDetailWhenNotPublishedFlag = {fieldType="yesno"},
+					
+					
+					// Product Type
+					productTypeDisplayTemplate = {fieldType="select"},
+					productTypeHTMLTitleString = {fieldType="text"},
+					productTypeMetaDescriptionString = {fieldType="textarea"},
+					productTypeMetaKeywordsString = {fieldType="textarea"},
+					
+					// Sku
+					skuAllowBackorderFlag = {fieldType="yesno"},
+					skuAllowPreorderFlag = {fieldType="yesno"},
+					skuCurrency = {fieldType="select"},
+					skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency"},
+					skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
+					skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
+					skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
+					skuHoldBackQuantity = {fieldType="text"},
+					skuOrderMinimumQuantity = {fieldType="text"},
+					skuOrderMaximumQuantity = {fieldType="text"},
+					skuQATSIncludesQNROROFlag = {fieldType="yesno"},
+					skuQATSIncludesQNROVOFlag = {fieldType="yesno"},
+					skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
+					skuShippingWeight = {fieldType="text"},
+					skuShippingWeightUnitCode = {fieldType="select"},
+					skuTaxCategory = {fieldType="select"},
+					skuTrackInventoryFlag = {fieldType="yesno"},
+					
+					// Shipping Method
+					shippingMethodQualifiedRateSelection = {fieldType="select"},
+					
+					// Shipping Method Rate
+					shippingMethodRateAdjustmentType = {fieldType="select"},
+					shippingMethodRateAdjustmentAmount = {fieldType="text"},
+					shippingMethodRateMinimumAmount = {fieldType="text"},
+					shippingMethodRateMaximumAmount = {fieldType="text"}
+					
+				};
+				
+				variables.settingMetaData = smd;
+			}
 			
-			// Brand
-			brandDisplayTemplate = {fieldType="select"},
-			brandHTMLTitleString = {fieldType="text"},
-			brandMetaDescriptionString = {fieldType="textarea"},
-			brandMetaKeywordsString = {fieldType="textarea"},
+			if(structKeyExists(variables.settingMetaData, arguments.settingName)) {
+				return variables.settingMetaData[ arguments.settingName ];	
+			} else if (structKeyExists(getIntegrationService().getAllSettings(), arguments.settingName)) {
+				return getIntegrationService().getAllSettings()[ arguments.settingName ];
+			}
 			
-			// Content
-			contentRestrictAccessFlag = {fieldType="yesno",defaultValue=0},
-			contentRequirePurchaseFlag = {fieldType="yesno",defaultValue=0},
-			contentRequireSubscriptionFlag = {fieldType="yesno",defaultValue=0},
-			contentIncludeChildContentProductsFlag = {fieldType="yesno",defaultValue=1},
-			contentRestrictedContentDisplayTemplate = {fieldType="select"},
-			contentHTMLTitleString = {fieldType="text"},
-			contentMetaDescriptionString = {fieldType="textarea"},
-			contentMetaKeywordsString = {fieldType="textarea"},
-			
-			// Email
-			emailFromAddress = {fieldType="text"},
-			emailToAddress = {fieldType="text"},
-			emailCCAddress = {fieldType="text"},
-			emailBCCAddress = {fieldType="text"},
-			emailSubject = {fieldType="text"},
-			
-			// Fulfillment Method
-			fulfillmentMethodEmailFrom = {fieldType="text"},
-			fulfillmentMethodEmailCC = {fieldType="text"},
-			fulfillmentMethodEmailBCC = {fieldType="text"},
-			fulfillmentMethodEmailSubjectString = {fieldType="text"},
-			fulfillmentMethodAutoLocation = {fieldType="select"},
-			fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage"},
-			
-			// Global
-			globalCurrencyLocale = {fieldType="select"},
-			globalCurrencyType = {fieldType="select"},
-			globalDateFormat = {fieldType="text"},
-			globalAssetsImageFolderPath = {fieldType="text", defaultValue=getApplicationValue('applicationRootMappingPath') & '/custom/assets/images'},
-			globalEncryptionAlgorithm = {fieldType="select"},
-			globalEncryptionEncoding = {fieldType="select"},
-			globalEncryptionKeyLocation = {fieldType="text"},
-			globalEncryptionKeySize = {fieldType="select"},
-			globalEncryptionService = {fieldType="select"},
-			globalImageExtension = {fieldType="text"},
-			globalLogMessages = {fieldType="select"},
-			globalMissingImagePath = {fieldType="text", defaultValue=getURLFromPath(getApplicationValue('applicationRootMappingPath')) & '/custom/assets/images/missingimage.jpg'},
-			globalOrderPlacedEmailFrom = {fieldType="text"},
-			globalOrderPlacedEmailCC = {fieldType="text"},
-			globalOrderPlacedEmailBCC = {fieldType="text"},
-			globalOrderPlacedEmailSubjectString = {fieldType="text"},
-			globalOrderNumberGeneration = {fieldType="select"},
-			globalRemoteIDShowFlag = {fieldType="yesno"},
-			globalRemoteIDEditFlag = {fieldType="yesno"},
-			globalTimeFormat = {fieldType="text"},
-			globalURLKeyBrand = {fieldType="text"},
-			globalURLKeyProduct = {fieldType="text"},
-			globalURLKeyProductType = {fieldType="text"},
-			globalWeightUnitCode = {fieldType="select"},
-			
-			// Payment Method
-			paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno"},
-			paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno"},
-			paymentMethodCheckoutTransactionType = {fieldType="select"},
-			
-			// Product
-			productDisplayTemplate = {fieldType="select"},
-			productImageSmallWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric"}},
-			productImageSmallHeight = {fieldType="text", formatType="pixels"},
-			productImageMediumWidth = {fieldType="text", formatType="pixels"},
-			productImageMediumHeight = {fieldType="text", formatType="pixels"},
-			productImageLargeWidth = {fieldType="text", formatType="pixels"},
-			productImageLargeHeight = {fieldType="text", formatType="pixels"},
-			productImageOptionCodeDelimiter = {fieldType="select"},
-			productMissingImagePath = {fieldType="text"},
-			productTitleString = {fieldType="text"},
-			productHTMLTitleString = {fieldType="text"},
-			productMetaDescriptionString = {fieldType="textarea"},
-			productMetaKeywordsString = {fieldType="textarea"},
-			productShowDetailWhenNotPublishedFlag = {fieldType="yesno"},
-			
-			
-			// Product Type
-			productTypeDisplayTemplate = {fieldType="select"},
-			productTypeHTMLTitleString = {fieldType="text"},
-			productTypeMetaDescriptionString = {fieldType="textarea"},
-			productTypeMetaKeywordsString = {fieldType="textarea"},
-			
-			// Sku
-			skuAllowBackorderFlag = {fieldType="yesno"},
-			skuAllowPreorderFlag = {fieldType="yesno"},
-			skuCurrency = {fieldType="select"},
-			skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency"},
-			skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
-			skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
-			skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
-			skuHoldBackQuantity = {fieldType="text"},
-			skuOrderMinimumQuantity = {fieldType="text"},
-			skuOrderMaximumQuantity = {fieldType="text"},
-			skuQATSIncludesQNROROFlag = {fieldType="yesno"},
-			skuQATSIncludesQNROVOFlag = {fieldType="yesno"},
-			skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
-			skuShippingWeight = {fieldType="text"},
-			skuShippingWeightUnitCode = {fieldType="select"},
-			skuTaxCategory = {fieldType="select"},
-			skuTrackInventoryFlag = {fieldType="yesno"},
-			
-			// Shipping Method
-			shippingMethodQualifiedRateSelection = {fieldType="select"},
-			
-			// Shipping Method Rate
-			shippingMethodRateAdjustmentType = {fieldType="select"},
-			shippingMethodRateAdjustmentAmount = {fieldType="text"},
-			shippingMethodRateMinimumAmount = {fieldType="text"},
-			shippingMethodRateMaximumAmount = {fieldType="text"}
-			
-			
-		};
+			throw("You have asked for a setting '#arguments.settingName#' which has no meta information. Make sure that you either add this setting to the settingService or your integration.");
+		}
 		
 		public array function getSettingOptions(required string settingName) {
 			switch(arguments.settingName) {
@@ -306,15 +323,7 @@ globalEncryptionKeySize
 			return getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#SmartList");
 		}
 		
-		public any function getSettingMetaData(required string settingName) {
-			if(structKeyExists(variables.settingMetaData, arguments.settingName)) {
-				return variables.settingMetaData[ arguments.settingName ];	
-			} else if (structKeyExists(getIntegrationService().getAllSettings(), arguments.settingName)) {
-				return getIntegrationService().getAllSettings()[ arguments.settingName ];
-			}
-			
-			throw("You have asked for a setting '#arguments.settingName#' which has no meta information. Make sure that you either add this setting to the settingService or your integration.");
-		}
+		
 		
 		public any function getAllSettingsQuery() {
 			if(!structKeyExists(variables, "allSettingsQuery")) {

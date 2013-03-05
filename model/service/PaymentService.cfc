@@ -123,6 +123,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return 'Invalid';
 	}
 	
+	public string function getAllActivePaymentMethodIDList() {
+		var returnList = "";
+		var apmSL = this.getPaymentMethodSmartList();
+		apmSL.addFilter('activeFlag', 1);
+		apmSL.addSelect('paymentMethodID', 'paymentMethodID');
+		var records = apmSL.getRecords();
+		for(var i=1; i<=arrayLen(records); i++) {
+			returnList = listAppend(returnList, records[i]['paymentMethodID']);
+		}
+		return returnList;
+	}
+	
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
