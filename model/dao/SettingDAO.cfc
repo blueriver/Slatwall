@@ -56,11 +56,13 @@ Notes:
 		<cfargument name="columnID" type="string" />
 		
 		<cfset var rs = "" />
+		<cfset var rsResult = "" />
 		
-		<cfquery name="rs">
+		<cfquery name="rs" result="rsResult">
 			DELETE FROM SlatwallSetting WHERE #columnName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.columnID#">
 		</cfquery>
 		
+		<cfreturn rsResult.recordCount />
 	</cffunction>
 	
 </cfcomponent>

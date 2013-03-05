@@ -59,7 +59,7 @@ component extends="HibachiService" output="false" accessors="true"{
 				task.setRunningFlag(true);
 				taskHistory.setStartTime(now());
 				
-				ormFlush();
+				getHibachiDAO().flushORMSession();
 		
 				try{
 					if( task.getTaskMethod() == "url") {
@@ -88,7 +88,7 @@ component extends="HibachiService" output="false" accessors="true"{
 				}
 				
 				save(taskHistory);
-				ormFlush();
+				getHibachiDAO().flushORMSession();
 			}	
 			
         } 

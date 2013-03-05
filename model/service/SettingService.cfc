@@ -323,8 +323,6 @@ globalEncryptionKeySize
 			return getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#SmartList");
 		}
 		
-		
-		
 		public any function getAllSettingsQuery() {
 			if(!structKeyExists(variables, "allSettingsQuery")) {
 				variables.allSettingsQuery = getSettingDAO().getAllSettingsQuery();
@@ -333,25 +331,12 @@ globalEncryptionKeySize
 			return variables.allSettingsQuery;
 		}
 		
-		public any function clearAllSettingsQuery() {
-			if(structKeyExists(variables, "allSettingsQuery")) {
-				structDelete(variables, "allSettingsQuery");
-				logHibachi("The cached value of variables.AllSettingsQuery in SettingService.cfc was cleared");
-			}
-			if(structKeyExists(variables, "settingDetailsCache")) {
-				variables.settingDetailsCache = {};
-			}
+		public any function clearAllSettingsCache() {
+			structDelete(variables, "allSettingsQuery");
+			variables.settingDetailsCache = {};
+			writeLog(file="Slatwall", text="General Log - All settings cache was cleared");
 		}
 		
-		public any function saveSetting(required any entity, struct data={}) {
-			if(structKeyExists(arguments.data, "settingName") && structKeyExists(arguments.data, "settingValue")) {
-				var metaData = getSettingMetaData(arguments.data.settingName);
-				if(structKeyExists(metaData, "encryptValue") && metaData.encryptValue == true) {
-					arguments.data.settingValue = encryptValue(arguments.data.settingValue);
-				}
-			}
-			return super.save(argumentcollection=arguments);
-		}
 		
 		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
 			
@@ -567,41 +552,45 @@ globalEncryptionKeySize
 		
 		public void function removeAllEntityRelatedSettings(required any entity) {
 			
+			var settingsRemoved = 0;
+			
 			if( listFindNoCase("brandID,contentID,emailID,emailTemplateID,productTypeID,skuID,shippingMethodRateID,paymentMethodID", arguments.entity.getPrimaryIDPropertyName()) ){
 				
-				getSettingDAO().removeAllRelatedSettings(columnName=arguments.entity.getPrimaryIDPropertyName(), columnID=arguments.entity.getPrimaryIDValue());
+				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName=arguments.entity.getPrimaryIDPropertyName(), columnID=arguments.entity.getPrimaryIDValue());
 				
 			} else if ( arguments.entity.getPrimaryIDPropertyName() == "fulfillmetnMethodID" ) {
 				
-				getSettingDAO().removeAllRelatedSettings(columnName="fulfillmetnMethodID", columnID=arguments.entity.getFulfillmentMethodID());
+				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName="fulfillmetnMethodID", columnID=arguments.entity.getFulfillmentMethodID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getShippingMethods()); a++) {
-					getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodID());
+					settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodID());
 					
 					for(var b=1; b<=arrayLen(arguments.entity.getShippingMethods()[a].getShippingMethodRates()); b++) {
-						getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodRates()[b].getShippingMethodRateID());
+						settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodRates()[b].getShippingMethodRateID());
 					}
 				}
 				
 			} else if ( arguments.entity.getPrimaryIDPropertyName() == "shippingMethodID" ) {
 				
-				getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethodID());
+				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethodID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getShippingMethodRates()); a++) {
-					getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethodRates()[a].getShippingMethodRateID());
+					settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethodRates()[a].getShippingMethodRateID());
 				}
 			
 			} else if ( arguments.entity.getPrimaryIDPropertyName() == "productID" ) {
 				
-				getSettingDAO().removeAllRelatedSettings(columnName="productID", columnID=arguments.entity.getProductID());
+				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName="productID", columnID=arguments.entity.getProductID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getSkus()); a++) {
-					getSettingDAO().removeAllRelatedSettings(columnName="skuID", columnID=arguments.entity.getSkus()[a].getSkuID());
+					settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="skuID", columnID=arguments.entity.getSkus()[a].getSkuID());
 				}
 				
 			}
 			
-			clearAllSettingsQuery();
+			if(settingsRemoved gt 0) {
+				clearAllSettingsCache();
+			}
 		}
 		
 	</cfscript>
@@ -751,8 +740,50 @@ globalEncryptionKeySize
 	<!--- ====================== START: Status Methods =========================== --->
 	
 	<!--- ======================  END: Status Methods ============================ --->
+
+	<!--- ===================== START: Delete Overrides ========================== --->
+		
+	<cfscript>
+		public boolean function deleteSetting(required any entity) {
+			
+			var deleteResult = super.delete(argumentcollection=arguments); 
+			
+			// If there aren't any errors then flush, and clear cache
+			if(deleteResult && !getHibachiScope().getORMHasErrors()) {
+				getHibachiDAO().flushORMSession();
+				clearAllSettingsCache();
+			}
+			
+			return deleteResult;
+		}
+	</cfscript>
+	
+	<!--- =====================  END: Delete Overrides =========================== --->
 	
 	<!--- ====================== START: Save Overrides =========================== --->
+		
+	<cfscript>
+		public any function saveSetting(required any entity, struct data={}) {
+			
+			// Check for values that need to be encrypted
+			if(structKeyExists(arguments.data, "settingName") && structKeyExists(arguments.data, "settingValue")) {
+				var metaData = getSettingMetaData(arguments.data.settingName);
+				if(structKeyExists(metaData, "encryptValue") && metaData.encryptValue == true) {
+					arguments.data.settingValue = encryptValue(arguments.data.settingValue);
+				}
+			}
+			
+			// Call the default save logic
+			arguments.entity = super.save(argumentcollection=arguments);
+			
+			// If there aren't any errors then flush, and clear cache
+			if(!getHibachiScope().getORMHasErrors()) {
+				getHibachiDAO().flushORMSession();
+				clearAllSettingsCache();
+			}
+			return super.save(argumentcollection=arguments);
+		}
+	</cfscript>
 	
 	<!--- ======================  END: Save Overrides ============================ --->
 	

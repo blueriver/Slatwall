@@ -38,8 +38,8 @@ Notes:
 --->
 <cfoutput>
 	<cf_SlatwallSettingTable>
-		<cf_SlatwallSetting settingName="accountEligiblePaymentTerms" />
 		<cf_SlatwallSetting settingName="accountEligiblePaymentMethods" />
+		<cf_SlatwallSetting settingName="accountEligiblePaymentTerms" />
 		<cf_SlatwallSetting settingName="accountPaymentTerm" />
 		<cf_SlatwallSetting settingName="accountTermCreditLimit" />
 	</cf_SlatwallSettingTable>

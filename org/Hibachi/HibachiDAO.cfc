@@ -74,9 +74,9 @@
 	    }
 	    
 	    public void function flushORMSession() {
-	    	ormFlush();	
+	    	ormFlush();
 	    	// flush again to persist any changes done during ORM Event handler
-			ormFlush();	
+			ormFlush();
 	    }
 	    
 	    public void function clearORMSession() {
