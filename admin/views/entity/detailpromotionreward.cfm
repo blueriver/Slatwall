@@ -36,8 +36,8 @@
 Notes:
 
 --->
-<cfparam name="rc.promotionreward" type="any">
-<cfparam name="rc.promotionperiod" type="any" default="#rc.promotionreward.getPromotionPeriod()#" />
+<cfparam name="rc.promotionReward" type="any">
+<cfparam name="rc.promotionPeriod" type="any" default="#rc.promotionReward.getPromotionPeriod()#">
 <cfparam name="rc.rewardType" type="string" default="#rc.promotionReward.getRewardType()#">
 <cfparam name="rc.edit" type="boolean">
 
@@ -53,14 +53,15 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" 
-							  cancelAction="admin:entity.detailpromotionperiod"
+							  cancelAction="admin:entity.detailpromotionreward"
 							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" 
-							  backAction="admin:entity.detailpromotionperiod" 
+							  backAction="admin:entity.detailpromotionreward" 
 							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" />
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
 				<input type="hidden" name="rewardType" value="#rc.rewardType#" />
 				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
+				<input type="hidden" name="promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 				
 				<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="amountType" fieldType="select" edit="#rc.edit#" />
 				<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" />

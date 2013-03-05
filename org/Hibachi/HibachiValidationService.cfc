@@ -223,6 +223,22 @@ component output="false" accessors="true" extends="HibachiService" {
 		return false;
 	}
 	
+	public boolean function validate_minList(required any object, required string propertyName, required numeric constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if((!isNull(propertyValue) && isSimpleValue(propertyValue) && listLen(propertyValue) >= arguments.constraintValue) || (isNull(propertyValue) && arguments.constraintValue == 0)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function validate_maxList(required any object, required string propertyName, required numeric constraintValue) {
+		var propertyValue = arguments.object.invokeMethod("get#arguments.propertyName#");
+		if((!isNull(propertyValue) && isSimpleValue(propertyValue) && listLen(propertyValue) <= arguments.constraintValue) || (isNull(propertyValue) && arguments.constraintValue == 0)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean function validate_method(required any object, required string propertyName, required string constraintValue) {
 		return arguments.object.invokeMethod(arguments.constraintValue);
 	}
