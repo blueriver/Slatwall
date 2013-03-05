@@ -52,6 +52,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var paymentMethodSmartList = this.getPaymentMethodSmartList();
 		paymentMethodSmartList.addFilter('activeFlag', 1);
 		paymentMethodSmartList.addOrder('sortOrder|ASC');
+		if(!isNull(arguments.order.getAccount())) {
+			paymentMethodSmartList.addInFilter('paymentMethodID', arguments.order.getAccount().setting('accountEligiblePaymentMethods'));	
+		}
 		var activePaymentMethods = paymentMethodSmartList.getRecords();
 		
 		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {

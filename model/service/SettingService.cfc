@@ -99,8 +99,8 @@ globalEncryptionKeySize
 				var smd = {
 					
 					// Account
-					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
 					accountEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod", defaultValue=getPaymentService().getAllActivePaymentMethodIDList()},
+					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
 					accountPaymentTerm = {fieldType="select"},
 					accountTermCreditLimit = {fieldType="text", formatType="currency"},
 					
