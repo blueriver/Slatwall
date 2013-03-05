@@ -391,48 +391,30 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint Public method to retrieve a value based on a propertyIdentifier string format
 	public any function getValueByPropertyIdentifier(required string propertyIdentifier, boolean formatValue=false) {
-		var value = javaCast("null", "");
-		var newValue = "";
-		var arrayValue = arrayNew(1);
-		var pa = listToArray(arguments.propertyIdentifier, "._");
+		var object = getLastObjectByPropertyIdentifier( propertyIdentifier=arguments.propertyIdentifier );
+		var propertyName = listLast(arguments.propertyIdentifier,'._');
 		
-		for(var i=1; i<=arrayLen(pa); i++) {
-			if(isNull(value)) {
-				value = evaluate("this.get#pa[i]#()");
-				if(isNull(value)) {
-					if(arguments.formatValue) {
-						return getFormattedValue(pa[i]);
-					}
-					return "";
-				}
-				if(isSimpleValue(value) && arguments.formatValue) {
-					value = getFormattedValue(pa[i]);
-				}
-			} else if(isArray(value)) {
-				for(var ii=1; ii<=arrayLen(value); ii++) {
-					arrayAppend(arrayValue, value[ii].getValueByPropertyIdentifier(pa[i], arguments.formatValue));
-				}
-				return arrayValue;
-			} else {
-				newValue = evaluate("value.get#pa[i]#()");
-				if(isNull(newValue)) {
-					if(arguments.formatValue) {
-						return value.getFormattedValue(pa[i]);
-					}
-					return "";
-				}
-				if(isSimpleValue(newValue) && arguments.formatValue) {
-					value = value.getFormattedValue(pa[i]);
-				} else {
-					value = newValue;
-				}
-			}	
-		}
-		if(isNull(value)) {
-			return "";
+		if(!isNull(object) && !isSimpleValue(object)) {
+			if(arguments.formatValue) {
+				return object.getFormattedValue( propertyName );
+			}
+			var rawValue = object.invokeMethod("get#propertyName#");
+			if(!isNull(rawValue)) {
+				return rawValue;	
+			}
 		}
 		
-		return value;
+		return "";
+	}
+	
+	public any function getLastObjectByPropertyIdentifier(required string propertyIdentifier) {
+		if(listLen(arguments.propertyIdentifier, "._") eq 1) {
+			return this;
+		}
+		var object = invokeMethod("get#listFirst(arguments.propertyIdentifier, '._')#");
+		if(!isNull(object) && isObject(object)) {
+			return object.getLastObjectByPropertyIdentifier(listDeleteAt(arguments.propertyIdentifier, 1, "._"));
+		}
 	}
 
 	public any function getFormattedValue(required string propertyName, string formatType ) {
@@ -513,14 +495,15 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		var validations = getValidations(arguments.context);
 		
 		if(structKeyExists(validations, arguments.propertyName)) {
-			for(var constraint in validations[ arguments.propertyName ]) {
-				if(constraint == "required") {
+			for(var i=1; i<=arrayLen(validations[ arguments.propertyName ]); i++) {
+				var constraintDetails = validations[ arguments.propertyName ][i];
+				if(constraintDetails.constraintType == "required") {
 					listAppend(validationClass, "required", " ");
-				} else if (constraint == "dataType") {
-					if(validations[ arguments.propertyName ][ constraint ] == "numeric") {
+				} else if (constraintDetails.constraintType == "dataType") {
+					if(constraintDetails.constraintValue == "numeric") {
 						listAppend(validationClass, "number", " ");
 					} else {
-						listAppend(validationClass, validations[ arguments.propertyName ][ constraint ], " ");
+						listAppend(validationClass, constraintDetails.constraintValue, " ");
 					}
 				}
 			}

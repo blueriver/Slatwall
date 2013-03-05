@@ -159,6 +159,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		return simpleRepresentation;
 	}
 	
+	/*
 	// This overrides the base validation method to dynamically add rules based on country specific requirements
 	public any function validate( string context="" ) {
 		
@@ -194,6 +195,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		}
 		
 	}
+	*/
 	
 	// ==================  END:  Overridden Methods ========================
 		
