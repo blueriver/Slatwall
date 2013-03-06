@@ -71,9 +71,9 @@ Notes:
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
 				<cfif not rc.setting.isNew() and structKeyExists(rc.setting.getSettingMetaData(), "encryptValue")>
-					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" data-emptyvalue="********">
+					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" data-emptyvalue="********" displayType="plain">
 				<cfelse>
-					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" displayType="plain">
 				</cfif>
 			</cf_HibachiPropertyList>
 			<cfif !rc.setting.isNew() and local.hasRelationshipKey>

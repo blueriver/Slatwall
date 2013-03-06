@@ -75,6 +75,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// Define the maximum amount
 				var maximumAmount = paymentMethodMaxAmount[ activePaymentMethods[i].getPaymentMethodID() ];
 				
+				var maxOrderPercentage = activePaymentMethods[i].setting('paymentMethodMaximumOrderTotalPercentageAmount');
+				var maxAmountViaOrderPercentage = arguments.order.getTotal() * (maxOrderPercentage / 100);
+				if(maxOrderPercentage lt 100 && maximumAmount > maxAmountViaOrderPercentage) {
+					maximumAmount = maxAmountViaOrderPercentage;
+				}
+				
 				// If this is a termPayment type, then we need to check the account on the order to verify the max that it can use.
 				if(activePaymentMethods[i].getPaymentMethodType() eq "termPayment") {
 					

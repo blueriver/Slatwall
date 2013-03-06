@@ -165,9 +165,10 @@ globalEncryptionKeySize
 					globalWeightUnitCode = {fieldType="select"},
 					
 					// Payment Method
-					paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno"},
-					paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno"},
-					paymentMethodCheckoutTransactionType = {fieldType="select"},
+					paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno", defaultValue=0},
+					paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno", defaultValue=0},
+					paymentMethodCheckoutTransactionType = {fieldType="select", defaultValue="none"},
+					paymentMethodMaximumOrderTotalPercentageAmount = {fieldType="text", defaultValue=100, formatType="percentage", validate={dataType="numeric", minValue=0, maxValue=100}},
 					
 					// Product
 					productDisplayTemplate = {fieldType="select"},
