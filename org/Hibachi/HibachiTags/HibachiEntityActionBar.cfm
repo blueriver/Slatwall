@@ -3,7 +3,7 @@
 	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
 	
 	<!--- Core settings --->
-	<cfparam name="attributes.type" type="string" />
+	<cfparam name="attributes.type" type="string" default="" />
 	<cfparam name="attributes.object" type="any" default="" />
 	<cfparam name="attributes.pageTitle" type="string" default="" />
 	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
@@ -28,6 +28,10 @@
 	<cfparam name="attributes.deleteAction" type="string" default="#request.context.entityActionDetails.deleteAction#" />
 	<cfparam name="attributes.deleteQueryString" type="string" default="" />
 	
+	<!--- Process Specific Values --->
+	<cfparam name="attributes.processAction" type="string" default="">
+	<cfparam name="attributes.processContext" type="string" default="">
+	
 <cfelse>
 	<cfif not structKeyExists(request.context, "modal") or not request.context.modal>
 		<cfoutput>
@@ -43,7 +47,7 @@
 					<div class="span8">
 						<div class="btn-toolbar">
 							
-							<!--- Listing --->
+							<!--- ================ Listing =================== --->
 							<cfif attributes.type eq "listing" >
 								<cfparam name="request.context.keywords" default="" />
 								
@@ -83,7 +87,7 @@
 									</div>
 								</cfif>
 								
-							<!--- Detail --->
+							<!--- ================ Detail ===================== --->
 							<cfelseif attributes.type eq "detail">
 								
 								<!--- Detail: Back Button --->
@@ -102,7 +106,15 @@
 								</cfif>
 								
 								<!--- Detail: Additional Button Groups --->
-								
+								<cfif structKeyExists(thistag, "buttonGroups") && arrayLen(thistag.buttonGroups)>
+									<cfloop array="#thisTag.buttonGroups#" index="buttonGroup">
+										<cfif structKeyExists(buttonGroup, "generatedContent") && len(buttonGroup.generatedContent)>
+											<div class="btn-group">
+												#buttonGroup.generatedContent#
+											</div>
+										</cfif>
+									</cfloop>
+								</cfif>
 								
 								<!--- Detail: CRUD Buttons --->
 								<div class="btn-group">
@@ -142,10 +154,18 @@
 									</cfif>
 								</div>
 								
-							<!--- Process --->
-							<cfelseif attributes.type eq "process">
+							<!--- ================= Process =================== --->
+							<cfelseif attributes.type eq "preprocess">
+								
+								<cfif !len(attributes.processContext) and structKeyExists(request.context, "processContext")>
+									<cfset attributes.processContext = request.context.processContext />
+								</cfif>
+								<cfif !len(attributes.processAction) and structKeyExists(request.context.entityActionDetails, "processAction")>
+									<cfset attributes.processAction = request.context.entityActionDetails.processAction />
+								</cfif>
+								
 								<div class="btn-group">
-									<button type="submit" class="btn btn-primary"><i class="icon-cog icon-white"></i> #attributes.hibachiScope.rbKey('define.process')#</button>
+									<button type="submit" class="btn btn-primary">#attributes.hibachiScope.rbKey( "#replace(attributes.processAction, ':', '.', 'all')#.#attributes.processContext#" )#</button>
 								</div>
 							</cfif>
 							

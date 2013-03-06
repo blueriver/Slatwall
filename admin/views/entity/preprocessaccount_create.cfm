@@ -42,7 +42,7 @@ Notes:
 
 <cf_HibachiEntityProcessForm entity="#rc.account#" edit="#rc.edit#">
 	
-	<cf_HibachiEntityActionBar type="process" object="#rc.account#" edit="#rc.edit#">
+	<cf_HibachiEntityActionBar type="preprocess" object="#rc.account#">
 	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiPropertyList>
