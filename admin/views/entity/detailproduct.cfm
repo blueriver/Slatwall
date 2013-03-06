@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.product#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.product#" edit="#rc.edit#">
-			<cf_HibachiActionCaller action="admin:main.createimage" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:entity.detailproduct" type="list" modal=true />
+			<cf_HibachiActionCaller action="admin:main.createimage" queryString="productID=#rc.product.getProductID()#&directory=product&redirectAction=admin:entity.detailproduct" type="list" modal=true />
 			<li class="divider"></li>
 			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="updateSkus" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />
 			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addOptionGroup" querystring="productID=#rc.product.getProductID()#" type="list" modal="true" />

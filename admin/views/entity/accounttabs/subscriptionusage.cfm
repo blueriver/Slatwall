@@ -40,7 +40,7 @@ Notes:
 
 <cf_HibachiListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#"
 						   recordEditAction="admin:entity.editsubscriptionUsage"
-						   recordEditQueryString="returnAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#">
+						   recordEditQueryString="redirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#">
 
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
 	<cf_HibachiListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />

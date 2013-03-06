@@ -42,9 +42,9 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.subscriptionUsage#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.subscriptionUsage#">
-			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.renewSubscription_nav')#" queryString="process=1&processContext=manualRenew&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&returnAction=admin:entity.detailsubscriptionusage" type="list" />
-			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.cancelSubscription_nav')#" queryString="process=1&processContext=cancel&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&returnAction=admin:entity.detailsubscriptionusage" type="list" />
-			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.updateSubscription_nav')#" queryString="process=1&processContext=update&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&returnAction=admin:entity.detailsubscriptionusage" type="list" />
+			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.renewSubscription_nav')#" queryString="process=1&processContext=manualRenew&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&redirectAction=admin:entity.detailsubscriptionusage" type="list" />
+			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.cancelSubscription_nav')#" queryString="process=1&processContext=cancel&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&redirectAction=admin:entity.detailsubscriptionusage" type="list" />
+			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.updateSubscription_nav')#" queryString="process=1&processContext=update&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&redirectAction=admin:entity.detailsubscriptionusage" type="list" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>

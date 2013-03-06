@@ -44,7 +44,7 @@ Notes:
 						   recorddetailaction="admin:entity.detailvendororderitem"
 						   recorddetailmodal="true"
                            recorddeleteaction="admin:entity.deleteVendorOrderItem" 
-                           recorddeletequerystring="returnaction=admin:entity.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
+                           recorddeletequerystring="redirectAction=admin:entity.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
 	<cf_HibachiListingColumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
 	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
 	<cf_HibachiListingColumn propertyidentifier="stock.sku.skucode" search="true" />

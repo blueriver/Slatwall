@@ -42,7 +42,7 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.stockAdjustment.getStockReceiversSmartList()#"
 							   recorddetailaction="admin:entity.detailStockReceiver"
 							   recorddetailmodal="true" 
-							   recorddetailquerystring="returnaction=admin:warehouse.detailStockAdjustment&stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#">
+							   recorddetailquerystring="redirectAction=admin:warehouse.detailStockAdjustment&stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#">
 			
 		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime"/>
 		<cf_HibachiListingColumn propertyidentifier="boxCount"/>

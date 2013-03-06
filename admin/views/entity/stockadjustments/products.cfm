@@ -40,10 +40,10 @@ Notes:
 
 <cf_HibachiListingDisplay smartList="#rc.stockAdjustment.getstockAdjustmentItemsSmartList()#"
 						   recorddeleteaction="admin:warehouse.deleteStockAdjustmentItem"
-						   recorddeletequerystring="returnaction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#"
+						   recorddeletequerystring="redirectAction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#"
 						   recordeditmodal="true"
 						   recordeditaction="admin:warehouse.editStockAdjustmentItem"
-						   recordeditquerystring="returnaction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#">
+						   recordeditquerystring="redirectAction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#">
 						   	   
 	<cfif listFindNoCase("satLocationTransfer,satManualOut", rc.stockAdjustment.getStockAdjustmentType().getSystemCode())>
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="fromstock.sku.skucode" />

@@ -45,15 +45,15 @@ Notes:
 							   recordDetailAction="admin:main.detailImage"
 							   recordDetailModal="true"
 							   recordEditAction="admin:main.editImage"
-							   recordEditQueryString="productID=#rc.product.getProductID()#&returnAction=admin:entity.detailproduct"
+							   recordEditQueryString="productID=#rc.product.getProductID()#&redirectAction=admin:entity.detailproduct"
 							   recordEditModal="true"
 							   recordDeleteAction="admin:main.deleteImage"
-							   recorddeletequerystring="returnAction=product.editproduct&productID=#rc.product.getProductID()###tabalternateimages">
+							   recorddeletequerystring="redirectAction=product.editproduct&productID=#rc.product.getProductID()###tabalternateimages">
 				
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="imageName" />
 		<cf_HibachiListingColumn propertyIdentifier="imageDescription" />
 		<cf_HibachiListingColumn propertyIdentifier="imageType.type" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:main.createimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#&directory=product&returnAction=admin:entity.detailproduct" modal=true />
+	<cf_HibachiActionCaller action="admin:main.createimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#&directory=product&redirectAction=admin:entity.detailproduct" modal=true />
 </cfoutput>

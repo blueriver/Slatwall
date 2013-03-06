@@ -52,8 +52,8 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.promotionQualifier#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionQualifier#" edit="#rc.edit#" 
-							  cancelAction="admin:entity.detailpromotionperiod"
-							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" 
+							  cancelAction="admin:entity.detailPromotionQualifier"
+							  cancelQueryString="promotionperiodID=#rc.promotionQualifier.getpromotionperiodID()#" 
 							  backAction="admin:entity.detailpromotionperiod" 
 							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionqualifiers" />
 		

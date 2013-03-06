@@ -41,7 +41,7 @@ Notes:
 <cf_HibachiListingDisplay smartlist="#rc.$.slatwall.getService('VendorOrderService').getStockReceiverSmartList(rc.vendorOrder.getVendorOrderID())#" 
                            recorddetailaction="admin:entity.detailStockReceiver"
 						   recorddetailmodal="true" 
-                           recorddetailquerystring="returnaction=admin:entity.detailvendororder&vendorOrderID=#rc.VendorOrder.getVendorOrderID()#">
+                           recorddetailquerystring="redirectAction=admin:entity.detailvendororder&vendorOrderID=#rc.VendorOrder.getVendorOrderID()#">
 	
 	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime"/>
 	<cf_HibachiListingColumn propertyidentifier="boxCount"/>

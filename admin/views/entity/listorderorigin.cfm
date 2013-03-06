@@ -44,7 +44,7 @@ Notes:
 
 <cf_HibachiListingDisplay smartList="#rc.orderOriginSmartList#"
 		recordEditAction="admin:entity.editorderorigin"
-		recordEditQueryString="returnAction=admin:entity.listorderorigin"
+		recordEditQueryString="redirectAction=admin:entity.listorderorigin"
 		recordDeleteAction="admin:entity.deleteorderorigin"
 		recordEditModal="true">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderOriginName" search="true" />

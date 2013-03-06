@@ -42,7 +42,7 @@ Notes:
                         recordeditaction="admin:entity.editTaskSchedule" recordeditmodal="true" 
                         recordeditquerystring="taskID=#rc.task.getTaskID()#" 
                         recorddeleteaction="admin:entity.deleteTaskSchedule"
-						recorddeletequerystring="returnAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule"
+						recorddeletequerystring="redirectAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule"
                         recordprocessaction="admin:entity.processtaskschedule"
                         recordprocessmodal="true">
 	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="startDateTime"/>

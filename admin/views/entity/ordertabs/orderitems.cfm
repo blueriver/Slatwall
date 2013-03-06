@@ -51,9 +51,9 @@ Notes:
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderitems.saleItems')#</h4>
 		<cf_HibachiListingDisplay smartList="#local.saleList#"
 								   recordDetailAction="admin:entity.detailorderitem"
-								   recordDetailQueryString="returnAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#"
+								   recordDetailQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#"
 								   recordEditAction="admin:entity.editorderitem"
-								   recordEditQueryString="returnAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#">
+								   recordEditQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#">
 			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
 			<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
 			<cf_HibachiListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />

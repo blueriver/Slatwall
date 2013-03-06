@@ -43,7 +43,7 @@ Notes:
 							   recordEditAction="admin:entity.editshippingmethodrate"
 							   recordDeleteAction="admin:entity.deleteshippingmethodrate"
 							   recordDetailAction="admin:entity.detailshippingmethodrate"
-							   recorddeletequerystring="returnAction=admin:entity.detailshippingmethod&shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"
+							   recorddeletequerystring="redirectAction=admin:entity.detailshippingmethod&shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"
 							   sortProperty="sortOrder"
 							   sortContextIDColumn="shippingMethodID"
 							   sortContextIDValue="#rc.shippingMethod.getShippingMethodID()#">
