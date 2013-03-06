@@ -37,9 +37,27 @@ Notes:
 
 --->
 <cfparam name="rc.account" type="any" />
+<cfparam name="rc.processObject" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
 <cf_HibachiEntityProcessForm entity="#rc.account#" edit="#rc.edit#">
+	
+	<cf_HibachiEntityActionBar type="process" object="#rc.account#" edit="#rc.edit#">
+	</cf_HibachiEntityActionBar>
+	
+	<cf_HibachiPropertyList>
+		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="firstName" title="#$.slatwall.rbKey('entity.account.firstName')#" edit="#rc.edit#">
+		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="lastName" title="#$.slatwall.rbKey('entity.account.lastName')#" edit="#rc.edit#">
+		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddress" edit="#rc.edit#">
+		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddressConfirm" edit="#rc.edit#">
+		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthentication" edit="#rc.edit#" fieldType="yesno">
+		<cf_HibachiDisplayToggle selector="input[name=createAuthentication]">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="password" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="passwordConfirm" edit="#rc.edit#">
+		</cf_HibachiDisplayToggle>
+	</cf_HibachiPropertyList>
+	
+	<!---
 	<cf_HibachiEntityActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
 		<cf_HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
 	</cf_HibachiEntityActionBar>
@@ -71,5 +89,5 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiDetailHeader>
 	</cfif>
-	
-</cf_HibachiEntityDetailForm>
+	--->
+</cf_HibachiEntityProcessForm>

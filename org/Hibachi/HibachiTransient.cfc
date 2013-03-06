@@ -514,14 +514,22 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
-		return rbKey("entity.#getClassName()#.#arguments.propertyName#");
+		if(isPersistent()) {
+			return rbKey("entity.#getClassName()#.#arguments.propertyName#");	
+		}
+		
+		return rbKey("processObject.#getClassName()#.#arguments.propertyName#");	
 	}
 	
 	// @hint public method for getting the title hint to be used for a property from the rbFactory, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyHint(required string propertyName) {
-		var exactMatch = rbKey("entity.#getClassName()#.#arguments.propertyName#_hint");
-		if(right(exactMatch, 8) != "_missing") {
-			return exactMatch;
+		if(isPersistent()) {
+			var keyValue = rbKey("entity.#getClassName()#.#arguments.propertyName#");	
+		} else {
+			var keyValue = rbKey("processObject.#getClassName()#.#arguments.propertyName#_hint");
+		}
+		if(right(keyValue, 8) != "_missing") {
+			return keyValue;
 		}
 		return "";
 	}

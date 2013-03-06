@@ -112,16 +112,19 @@ component output="false" accessors="true" extends="HibachiController" {
 		arguments.rc.pageTitle = rbKey(replace(arguments.rc.entityActionDetails.thisAction,':','.','all'));
 		
 		if(right(arguments.rc.pageTitle, 8) eq "_missing") {
+			var replaceData = {
+				entityName=getHibachiScope().rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'),
+				itemEntityName=getHibachiScope().rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#')
+			};
+			
 			if(left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 4) eq "list") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.list'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
+				arguments.rc.pageTitle = getHibachiScope().rbKey('admin.define.list', replaceData);
 			} else if (left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 4) eq "edit") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.edit'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
+				arguments.rc.pageTitle = getHibachiScope().rbKey('admin.define.edit', replaceData);
 			} else if (left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 6) eq "create") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.create'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
+				arguments.rc.pageTitle = getHibachiScope().rbKey('admin.define.create', replaceData);
 			} else if (left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 6) eq "detail") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.detail'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
-			} else if (left(listLast(arguments.rc.entityActionDetails.thisAction, "."), 7) eq "process") {
-				arguments.rc.pageTitle = replace(rbKey('admin.define.process'), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'));
+				arguments.rc.pageTitle = getHibachiScope().rbKey('admin.define.detail', replaceData);
 			}
 		}
 	}
@@ -350,6 +353,12 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Setup the processObject in the RC so that we can use it for our form
 		rc.processObject = arguments.rc[ arguments.entityName ].getProcessObject( arguments.rc.processContext );
+		
+		// Set rc.edit to true because all property displays should be taking inputs
+		rc.edit = true;
+		
+		// Set the page title to the correct rbKey
+		rc.pageTitle = rbKey( "#replace(arguments.rc.entityActionDetails.thisAction,':','.','all')#.#rc.processContext#" );
 		
 		// Set the view correctly to use the context specific preProcess view
 		getFW().setView("#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#_#arguments.rc.processContext#");
