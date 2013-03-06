@@ -338,10 +338,20 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	// PRE-PROCESS
 	public void function genericPreProcessMethod(required string entityName, required struct rc) {
+		
+		// Load up any ID's that were passed in
 		loadEntitiesFromRCIDs( arguments.rc );
 		
+		// If the entityName object is now not in the rc because there was no ID, then we need to place a new one in the rc
+		if(!structKeyExists(rc, arguments.entityName) || !isObject(rc[ arguments.entityName ]) || !rc[ arguments.entityName ].getClassName() != arguments.entityName) {
+			var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
+			rc[ arguments.entityName ] = entityService.invokeMethod("new#arguments.entityName#");
+		}
+		
+		// Setup the processObject in the RC so that we can use it for our form
 		rc.processObject = arguments.rc[ arguments.entityName ].getProcessObject( arguments.rc.processContext );
 		
+		// Set the view correctly to use the context specific preProcess view
 		getFW().setView("#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#_#arguments.rc.processContext#");
 	}
 	
