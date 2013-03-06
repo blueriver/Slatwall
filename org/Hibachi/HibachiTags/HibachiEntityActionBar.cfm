@@ -6,6 +6,13 @@
 	<cfparam name="attributes.pageTitle" type="string" default="#request.context.pageTitle#" />
 	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
 	
+	<!--- Action Callers (top buttons) --->
+	<cfparam name="attributes.showcancel" type="boolean" default="true" />
+	<cfparam name="attributes.showcreate" type="boolean" default="true" />
+	<cfparam name="attributes.showedit" type="boolean" default="true" />
+	<cfparam name="attributes.showdelete" type="boolean" default="true" />
+	
+	<!--- Old Action Callers Methodologies (top buttons) --->
 	<cfparam name="attributes.createModal" type="boolean" default="false" />
 	<cfparam name="attributes.createAction" type="string" default="#request.context.entityActionDetails.createAction#" />
 	<cfparam name="attributes.createQueryString" type="string" default="" />
@@ -19,15 +26,13 @@
 	<cfparam name="attributes.deleteAction" type="string" default="#request.context.entityActionDetails.deleteAction#" />
 	<cfparam name="attributes.deleteQueryString" type="string" default="" />
 	
-	<cfparam name="attributes.showcreate" type="boolean" default="true" />
-	<cfparam name="attributes.showedit" type="boolean" default="true" />
-	<cfparam name="attributes.showdelete" type="boolean" default="true" />
 <cfelse>
 	<cfif not structKeyExists(request.context, "modal") or not request.context.modal>
 		<cfoutput>
 			<div class="actionnav well well-small">
 				<div class="row-fluid">
 					<div class="span4">
+						<!--- Page Title --->
 						<h1>#attributes.pageTitle#</h1>
 					</div>
 					<div class="span8">
@@ -36,28 +41,26 @@
 							<cfif attributes.type eq "listing" >
 								<cfparam name="request.context.keywords" default="" />
 								
+								<!--- Listing: Search --->
 								<form name="search" class="action-bar-search btn-group" action="/" method="get">
 									<input type="hidden" name="slatAction" value="#request.context.entityActionDetails.thisAction#" />
 									<input type="text" name="keywords" value="#request.context.keywords#" placeholder="#attributes.hibachiScope.rbKey('define.search')# #attributes.pageTitle#" data-tableid="LD#replace(attributes.object.getSavedStateID(),'-','','all')#">
 								</form>
 								
+								<!--- Listing: Actions --->
 								<div class="btn-group">
 									<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #attributes.hibachiScope.rbKey('define.actions')# <span class="caret"></span></button>
 									<ul class="dropdown-menu">
 										<cf_HibachiActionCaller action="#request.context.entityActionDetails.exportAction#" text="#attributes.hibachiScope.rbKey('define.exportlist')#" type="list">
-										<!---#thistag.generatedcontent#--->
 									</ul>
 								</div>
-
-								<cfif len(attributes.createAction) or len(thistag.generatedcontent)>
+								
+								<!--- Listing: Create --->
+								<cfif attributes.showCreate>
 									<div class="btn-group">
-										<!--- If there is something inside of the actionBar, then render a dropdown --->
-										<cfif len(trim(thistag.generatedcontent))>
-											<cf_HibachiActionCallerDropdown title="#attributes.hibachiScope.rbKey('define.add')#" icon="plus" dropdownClass="pull-right">
-												#thistag.generatedcontent#
-											</cf_HibachiActionCallerDropdown>
-										<!--- Otherwise as long as there is a len on the createAction, and showCreate is set to true then we just render a singel button and not dropdown --->
-										<cfelseif len(attributes.createAction) and attributes.showCreate>
+										<cfif structKeyExists(thistag, "createActions") && arrayLen(thistag.createActions) && structKeyExists(thistag.createActions[1], "generatedContent") && len(thistag.createActions[1].generatedContent)>
+											#thistag.createActions[1].generatedContent#
+										<cfelse>
 											<cfif attributes.createModal>
 												<cf_HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white" modal="true">
 											<cfelse>

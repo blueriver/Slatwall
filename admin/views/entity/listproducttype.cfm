@@ -42,9 +42,16 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityActionBar type="listing" object="#rc.productTypeSmartList#">
-		<cf_HibachiActionCaller action="admin:entity.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.contentAccess')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=contentAccess" />
-		<cf_HibachiActionCaller action="admin:entity.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.merchandise')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=merchandise" />
-		<cf_HibachiActionCaller action="admin:entity.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.subscription')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=subscription" />
+		
+		<!--- Create --->
+		<cf_HibachiEntityActionBarCreate>
+			<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" dropdownClass="pull-right">
+				<cf_HibachiActionCaller action="admin:entity.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.contentAccess')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=contentAccess" />
+				<cf_HibachiActionCaller action="admin:entity.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.merchandise')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=merchandise" />
+				<cf_HibachiActionCaller action="admin:entity.createproducttype" text="#rc.$.slatwall.rbKey('define.create')# #rc.$.slatwall.rbKey('define.subscription')# #rc.$.slatwall.rbKey('entity.producttype')#" querystring="baseProductType=subscription" />
+			</cf_HibachiActionCallerDropdown>
+		</cf_HibachiEntityActionBarCreate>
+		
 	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiListingDisplay smartList="#rc.productTypeSmartList#" 

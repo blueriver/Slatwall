@@ -72,17 +72,4 @@ Notes:
 		</cf_HibachiDetailHeader>
 	</cfif>
 	
-	<cf_HibachiTabGroup object="#rc.account#" allowCustomAttributes="true">
-		<cf_HibachiTab property="accountAddresses" />
-		<cf_HibachiTab property="orders" />
-		<cf_HibachiTab property="accountPaymentMethods" />
-		<cf_HibachiTab property="permissionGroups" />
-		<cf_HibachiTab property="priceGroups" />
-		<cf_HibachiTab property="productReviews" />
-		<cf_HibachiTab property="accountPayments" />
-		<cf_HibachiTab view="admin:entity/accounttabs/subscriptionusage" />
-		<cf_HibachiTab view="admin:entity/accounttabs/accountsettings" />
-		<cf_SlatwallAdminTabComments object="#rc.account#" />
-	</cf_HibachiTabGroup>
-	
 </cf_HibachiEntityDetailForm>

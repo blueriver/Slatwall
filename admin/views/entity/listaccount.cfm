@@ -40,11 +40,16 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiEntityActionBar type="listing" object="#rc.accountSmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.accountSmartList#">
+	<cf_HibachiEntityActionBarCreate>
+		<cf_HibachiProcessCaller action="admin:entity.preprocessaccount" entity="account" processContext="create" class="btn btn-primary" icon="plus icon-white" text="#$.slatwall.rbKey('define.create')# #$.slatwall.rbKey('entity.account')#" />
+	</cf_HibachiEntityActionBarCreate>
+</cf_HibachiEntityActionBar>
 
 <cf_HibachiListingDisplay smartList="#rc.accountSmartList#"
 						   recordEditAction="admin:entity.editaccount"
 						   recordDetailAction="admin:entity.detailaccount">
+						      
 	<cf_HibachiListingColumn propertyIdentifier="firstName" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="lastName" search="true" />
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="company" />

@@ -38,13 +38,20 @@ Notes:
 --->
 <cfparam name="rc.paymentMethodSmartList" type="any" />
 
-<cf_HibachiEntityActionBar type="listing" object="#rc.paymentMethodSmartList#" showCreate="false">
-	<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.cash')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=cash" />
-	<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.check')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=check" />
-	<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.creditCard')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=creditCard" />
-	<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.external')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=external" />
-	<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.giftCard')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=giftCard" />
-	<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.termPayment')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=termPayment" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.paymentMethodSmartList#">
+	
+	<!--- Create --->
+	<cf_HibachiEntityActionBarCreate>
+		<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" dropdownClass="pull-right">
+			<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.cash')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=cash" />
+			<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.check')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=check" />
+			<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.creditCard')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=creditCard" />
+			<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.external')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=external" />
+			<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.giftCard')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=giftCard" />
+			<cf_HibachiActionCaller action="admin:entity.createpaymentmethod" type="list" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.paymentMethod.paymentMethodType.termPayment')# #$.slatwall.rbKey('entity.paymentMethod')#" queryString="paymentMethodType=termPayment" />
+		</cf_HibachiActionCallerDropdown>
+	</cf_HibachiEntityActionBarCreate>
+	
 </cf_HibachiEntityActionBar>
 
 <cf_HibachiListingDisplay smartList="#rc.paymentMethodSmartList#"

@@ -336,7 +336,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 	}
 	
-	
+	// PRE-PROCESS
 	public void function genericPreProcessMethod(required string entityName, required struct rc) {
 		loadEntitiesFromRCIDs( arguments.rc );
 		
@@ -345,6 +345,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		getFW().setView("#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#_#arguments.rc.processContext#");
 	}
 	
+	// PROCESS
 	public void function genericProcessMethod(required string entityName, required struct rc) {
 		param name="arguments.rc.processContext" default="process";
 		param name="arguments.rc.multiProcess" default="false";

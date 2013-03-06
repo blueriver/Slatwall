@@ -102,8 +102,12 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	// ========================== HELPER DELIGATION METHODS ===============================
 	
 	// @hint helper function to return the RB Key from RB Factory in any component
-	public string function rbKey(required string key) {
-		return getService("hibachiRBService").getRBKey(arguments.key, getRBLocale());
+	public string function rbKey(required string key, struct replaceStringData) {
+		var keyValue = getService("hibachiRBService").getRBKey(arguments.key, getRBLocale());
+		if(structKeyExists(arguments, "stringReplaceData") && findNoCase("${", keyValue)) {
+			keyValue = getService("hibachiRBService").replaceStringTemplate(keyValue, arguments.replaceStringData);
+		}
+		return keyValue;
 	}
 	
 	public boolean function authenticateAction( required string action ) {
