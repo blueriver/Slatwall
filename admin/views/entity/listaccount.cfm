@@ -40,10 +40,13 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiEntityActionBar type="listing" object="#rc.accountSmartList#">
-	<cf_HibachiEntityActionBarCreate>
+<cf_HibachiEntityActionBar type="listing" object="#rc.accountSmartList#" showCreate="false">
+	
+	<!--- Create --->
+	<cf_HibachiEntityActionBarButtonGroup>
 		<cf_HibachiProcessCaller action="admin:entity.preprocessaccount" entity="account" processContext="create" class="btn btn-primary" icon="plus icon-white" text="#$.slatwall.rbKey('define.create')# #$.slatwall.rbKey('entity.account')#" />
-	</cf_HibachiEntityActionBarCreate>
+	</cf_HibachiEntityActionBarButtonGroup>
+	
 </cf_HibachiEntityActionBar>
 
 <cf_HibachiListingDisplay smartList="#rc.accountSmartList#"
