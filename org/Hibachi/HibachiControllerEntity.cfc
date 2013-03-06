@@ -288,7 +288,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			entity.showErrorsAndMessages();
 			
 			// Render or Redirect a faluire
-			renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);	
+			renderOrRedirectFailure( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);	
 		}
 		
 	}
@@ -568,10 +568,10 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// First look for a fRedirectURL in the rc, and do a redirectExact on that
 		if(structKeyExists(arguments.rc, "fRedirectURL")) {
-			getFW().redirectExact( url=arguments.rc.rRedirectURL );
+			getFW().redirectExact( url=arguments.rc.fRedirectURL );
 		
 		// Next look for a fRedirectAction in the rc, and do a redirect on that
-		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
+		} else if (structKeyExists(arguments.rc, "fRedirectAction")) {
 			getFW().redirect( action=arguments.rc.fRedirectAction, preserve="messages", queryString=buildRedirectQueryString(arguments.rc.fRedirectQS, arguments.maintainQueryString) );
 			
 		// Next look for a fRenderItem in the rc, set the view to that, and then call the controller for that action

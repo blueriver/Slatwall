@@ -54,9 +54,9 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" 
 							  cancelAction="admin:entity.detailpromotionreward"
-							  cancelQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" 
-							  backAction="admin:entity.detailpromotionreward" 
-							  backQueryString="promotionperiodID=#rc.promotionperiod.getpromotionperiodID()###tabpromotionrewards" />
+							  cancelQueryString="promotionRewardID=#rc.promotionReward.getPromotionRewardID()#" 
+							  backAction="admin:entity.detailpromotionperiod" 
+							  backQueryString="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()###tabPromotionRewards" />
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
 				<input type="hidden" name="rewardType" value="#rc.rewardType#" />

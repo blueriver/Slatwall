@@ -44,7 +44,7 @@ Notes:
 							   recordEditAction="admin:entity.editPromotionperiod"
 							   recorddetailaction="admin:entity.detailpromotionperiod"
 							   recordDeleteAction="admin:entity.deletepromotionperiod"
-							   recordDeleteQueryString="returnAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
+							   recordDeleteQueryString="redirectAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
 		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
 		<cf_HibachiListingColumn propertyIdentifier="endDateTime" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUseCount" />
