@@ -46,7 +46,7 @@ Notes:
 							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
 							   recorddetailaction="admin:entity.detailpromotionqualifier"
 							   recordDeleteAction="admin:entity.deletepromotionqualifier"
-							   recordDeleteQueryString="returnAction=admin:entity.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
+							   recordDeleteQueryString="redirectAction=admin:entity.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="qualifierType" filter="true" />
 	</cf_HibachiListingDisplay>
 	

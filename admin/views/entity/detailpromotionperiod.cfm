@@ -55,8 +55,8 @@ Notes:
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionPeriod#" edit="#rc.edit#"
 							  backAction="admin:entity.detailpromotion"
 							  backQueryString="promotionID=#rc.promotion.getPromotionID()#"
-							  cancelAction="admin:entity.detailpromotion"
-							  cancelQueryString="promotionID=#rc.promotion.getPromotionID()#"/>
+							  cancelAction="admin:entity.detailpromotionperiod"
+							  cancelQueryString="promotionID=#rc.promotionPeriod.getPromotionID()#"/>
 							  	  
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
 

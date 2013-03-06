@@ -44,7 +44,7 @@ Notes:
 		recordEditQueryString="vendorID=#rc.vendor.getVendorID()#"
 		recordEditModal=true
 		recordDeleteAction="admin:entity.deletevendoraddress"
-		recordDeleteQueryString="vendorID=#rc.vendor.getVendorID()#&returnaction=admin:entity.detailvendor">
+		recordDeleteQueryString="vendorID=#rc.vendor.getVendorID()#&redirectAction=admin:entity.detailvendor">
 			
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="address.streetAddress" />
 	<cf_HibachiListingColumn propertyIdentifier="address.street2Address" />

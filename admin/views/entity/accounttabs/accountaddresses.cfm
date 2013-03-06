@@ -43,7 +43,7 @@ Notes:
 		recordEditQueryString="accountID=#rc.account.getAccountID()#"
 		recordEditModal=true
 		recordDeleteAction="admin:entity.deleteaccountaddress"
-		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&returnaction=admin:entity.detailaccount">
+		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount">
 			
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountAddressName" />
 	<cf_HibachiListingColumn propertyIdentifier="address.name" />

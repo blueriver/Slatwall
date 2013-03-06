@@ -42,7 +42,7 @@ Notes:
 	
 <cf_HibachiEntityActionBar type="listing" object="#rc.roundingruleSmartList#" createModal="true" />
 
-<cf_HibachiListingDisplay smartList="#rc.roundingruleSmartList#" rc="#rc#" recordEditAction="admin:entity.editroundingrule" recordEditQueryString="returnAction=admin:entity.listroundingrule" recordEditModal="true" recordDeleteAction="admin:entity.deleteroundingrule">
+<cf_HibachiListingDisplay smartList="#rc.roundingruleSmartList#" rc="#rc#" recordEditAction="admin:entity.editroundingrule" recordEditQueryString="redirectAction=admin:entity.listroundingrule" recordEditModal="true" recordDeleteAction="admin:entity.deleteroundingrule">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="roundingruleName" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="roundingRuleExpression" />
 	<cf_HibachiListingColumn propertyIdentifier="roundingRuleDirection" filter="true" />

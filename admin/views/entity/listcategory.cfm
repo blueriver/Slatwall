@@ -46,7 +46,7 @@ Notes:
 						   recordDetailAction="admin:entity.detailcategory"
 						   recordDetailModal="true"
 						   recordEditAction="admin:entity.editcategory"
-						   recordEditQueryString="returnAction=admin:entity.listcategory"
+						   recordEditQueryString="redirectAction=admin:entity.listcategory"
 						   recordEditModal="true">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="categoryName" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="restrictAccessFlag" filter="true" />

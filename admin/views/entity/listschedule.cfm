@@ -44,7 +44,7 @@ Notes:
 
 	<cf_HibachiListingDisplay smartlist="#rc.scheduleSmartList#" 
 	                           recordeditaction="admin:entity.editschedule" 
-	                           recordeditquerystring="returnAction=admin:entity.listschedule" 
+	                           recordeditquerystring="redirectAction=admin:entity.listschedule" 
 	                           recordeditmodal="false" recorddeleteaction="admin:entity.deleteschedule">
 		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="scheduleName" search="true" />
 	</cf_HibachiListingDisplay>

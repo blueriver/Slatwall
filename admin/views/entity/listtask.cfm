@@ -44,7 +44,7 @@ Notes:
 
 	<cf_HibachiListingDisplay smartlist="#rc.taskSmartList#" 
 	                           recordeditaction="admin:entity.edittask" 
-	                           recordeditquerystring="returnAction=admin:entity.listtask" 
+	                           recordeditquerystring="redirectAction=admin:entity.listtask" 
 	                           recordeditmodal="false" recorddeleteaction="admin:entity.deletetask">
 		
 		

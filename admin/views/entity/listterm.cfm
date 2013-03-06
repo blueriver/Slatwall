@@ -44,7 +44,7 @@ Notes:
 
 <cf_HibachiListingDisplay smartList="#rc.termSmartList#"
 						   recordEditAction="admin:entity.editterm"
-						   recordEditQueryString="returnAction=admin:entity.listterm"
+						   recordEditQueryString="redirectAction=admin:entity.listterm"
 						   recordEditModal="true"
 						   recordDeleteAction="admin:entity.deleteterm"
 						   sortProperty="sortOrder">
