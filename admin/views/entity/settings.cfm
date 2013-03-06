@@ -50,6 +50,7 @@ Notes:
 		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethod" />
 		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethodrate" />
 		<cf_HibachiTab view="admin:entity/settingstabs/fulfillmentmethod" />
+		<cf_HibachiTab view="admin:entity/settingstabs/paymentmethod" />
 		<cf_HibachiTab view="admin:entity/settingstabs/email" />
 	</cf_HibachiTabGroup>
 </cfoutput>

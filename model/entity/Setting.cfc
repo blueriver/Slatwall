@@ -80,6 +80,10 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentation() {
+		return getHibachiScope().rbKey('setting.#getSettingName()#');
+	}
+	
 	public string function getPropertyFieldType(required string propertyName) {
 		if(propertyName == "settingValue") {
 			return getService("settingService").getSettingMetaData(getSettingName()).fieldType;	
@@ -128,8 +132,7 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 					constraintType = constraint,
 					constraintValue = settingMetaData.validate[constraint]
 				};
-				
-				getService("hibachiValidationService").validateConstraint(object=this, propertyIdentifier=settingName, constraintDetails=constraintDetail, errorBean=getHibachiErrors(), context=arguments.context);
+				getService("hibachiValidationService").validateConstraint(object=this, propertyIdentifier="settingValue", constraintDetails=constraintDetail, errorBean=getHibachiErrors(), context=arguments.context);
 				
 			}
 		}
@@ -140,17 +143,6 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	
 	// =================== START: ORM Event Hooks  =========================
 	
-	public void function preInsert() {
-		getService("settingService").clearAllSettingsQuery();
-	}
-	
-	public void function preUpdate(struct oldData) {
-		getService("settingService").clearAllSettingsQuery();
-	}
-	
-	public void function preDelete() {
-		getService("settingService").clearAllSettingsQuery();
-	}
-	
 	// ===================  END:  ORM Event Hooks  =========================
+
 }

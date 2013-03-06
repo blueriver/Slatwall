@@ -266,7 +266,7 @@
 				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRequirePurchaseFlag", settingValue=contentData.contentRequirePurchaseFlag);
 				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRequireSubscriptionFlag", settingValue=contentData.contentRequireSubscriptionFlag);
 				
-				$.slatwall.getService("settingService").clearAllSettingsQuery();
+				$.slatwall.getService("settingService").clearAllSettingsCache();
 				
 				// If the "Add Sku" was selected, then we call that process method
 				if(structKeyExists(contentData, "addSku") && contentData.addSku && structKeyExists(contentData, "addSkuDetails")) {
@@ -409,7 +409,7 @@
 			syncMuraPluginSetting( $=$, settingName="superUserSyncFlag", settingValue=getMuraPluginConfig().getSetting("superUserSyncFlag") );
 			
 			// Clear the setting cache so that these new setting values get pulled in
-			$.slatwall.getService("settingService").clearAllSettingsQuery();
+			$.slatwall.getService("settingService").clearAllSettingsCache();
 			
 			for(var i=1; i<=assignedSitesQuery.recordCount; i++) {
 				var cmsSiteID = assignedSitesQuery["siteid"][i];
@@ -425,8 +425,6 @@
 						assetSetting.setSettingValue( expandPath('/muraWRM') & '/default/assets/Image/Slatwall' );
 						assetSetting.setSettingName('globalAssetsImageFolderPath');
 						$.slatwall.getService("settingService").saveSetting( assetSetting );
-						ormFlush();
-						$.slatwall.getService("settingService").clearAllSettingsQuery();
 					}
 				}
 				
@@ -438,7 +436,7 @@
 					slatwallSite.setSiteName( cmsSiteName );
 					$.slatwall.getService("siteService").saveSite( slatwallSite );
 					slatwallSite.setCMSSiteID( cmsSiteID );
-					ormFlush();
+					$.slatwall.getDAO("hibachiDAO").flushORMSession();
 				}
 				
 				// If the plugin is set to create default pages, and this siteID has not been populated then we need to populate it with pages & templates

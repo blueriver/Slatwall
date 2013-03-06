@@ -38,9 +38,9 @@ Notes:
 --->
 <cfoutput>
 	<cf_SlatwallSettingTable>
-		<cf_SlatwallSetting settingName="accountEligiblePaymentMethods" />
-		<cf_SlatwallSetting settingName="accountEligiblePaymentTerms" />
-		<cf_SlatwallSetting settingName="accountPaymentTerm" />
-		<cf_SlatwallSetting settingName="accountTermCreditLimit" />
+		<cf_SlatwallSetting settingName="paymentMethodStoreCreditCardNumberWithOrder" />
+		<cf_SlatwallSetting settingName="paymentMethodStoreCreditCardNumberWithAccount" />
+		<cf_SlatwallSetting settingName="paymentMethodCheckoutTransactionType" />
+		<cf_SlatwallSetting settingName="paymentMethodMaximumOrderTotalPercentageAmount" />
 	</cf_SlatwallSettingTable>
 </cfoutput>

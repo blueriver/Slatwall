@@ -52,6 +52,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var paymentMethodSmartList = this.getPaymentMethodSmartList();
 		paymentMethodSmartList.addFilter('activeFlag', 1);
 		paymentMethodSmartList.addOrder('sortOrder|ASC');
+		if(!isNull(arguments.order.getAccount())) {
+			paymentMethodSmartList.addInFilter('paymentMethodID', arguments.order.getAccount().setting('accountEligiblePaymentMethods'));	
+		}
 		var activePaymentMethods = paymentMethodSmartList.getRecords();
 		
 		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
@@ -71,6 +74,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				
 				// Define the maximum amount
 				var maximumAmount = paymentMethodMaxAmount[ activePaymentMethods[i].getPaymentMethodID() ];
+				
+				var maxOrderPercentage = activePaymentMethods[i].setting('paymentMethodMaximumOrderTotalPercentageAmount');
+				var maxAmountViaOrderPercentage = arguments.order.getTotal() * (maxOrderPercentage / 100);
+				if(maxOrderPercentage lt 100 && maximumAmount > maxAmountViaOrderPercentage) {
+					maximumAmount = maxAmountViaOrderPercentage;
+				}
 				
 				// If this is a termPayment type, then we need to check the account on the order to verify the max that it can use.
 				if(activePaymentMethods[i].getPaymentMethodType() eq "termPayment") {
@@ -121,6 +130,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		return 'Invalid';
+	}
+	
+	public string function getAllActivePaymentMethodIDList() {
+		var returnList = "";
+		var apmSL = this.getPaymentMethodSmartList();
+		apmSL.addFilter('activeFlag', 1);
+		apmSL.addSelect('paymentMethodID', 'paymentMethodID');
+		var records = apmSL.getRecords();
+		for(var i=1; i<=arrayLen(records); i++) {
+			returnList = listAppend(returnList, records[i]['paymentMethodID']);
+		}
+		return returnList;
 	}
 	
 	// =====================  END: Logical Methods ============================

@@ -92,130 +92,148 @@ globalEncryptionKeySize
 			accountAuthentication = [ "integration.integrationID" ]
 		};
 		
-		variables.settingMetaData = {
-			// Account
-			accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
-			accountPaymentTerm = {fieldType="select"},
-			accountTermCreditLimit = {fieldType="text", formatType="currency"},
+		public any function getSettingMetaData(required string settingName) {
 			
-			// Account Authentication
-			accountAuthenticationAutoLogoutTimespan = {fieldType="text"},
+			if(!structKeyExists(variables, 'settingMetaData')) {
+				
+				var smd = {
+					
+					// Account
+					accountEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod", defaultValue=getPaymentService().getAllActivePaymentMethodIDList()},
+					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
+					accountPaymentTerm = {fieldType="select"},
+					accountTermCreditLimit = {fieldType="text", formatType="currency"},
+					
+					// Account Authentication
+					accountAuthenticationAutoLogoutTimespan = {fieldType="text"},
+					
+					// Brand
+					brandDisplayTemplate = {fieldType="select"},
+					brandHTMLTitleString = {fieldType="text"},
+					brandMetaDescriptionString = {fieldType="textarea"},
+					brandMetaKeywordsString = {fieldType="textarea"},
+					
+					// Content
+					contentRestrictAccessFlag = {fieldType="yesno",defaultValue=0},
+					contentRequirePurchaseFlag = {fieldType="yesno",defaultValue=0},
+					contentRequireSubscriptionFlag = {fieldType="yesno",defaultValue=0},
+					contentIncludeChildContentProductsFlag = {fieldType="yesno",defaultValue=1},
+					contentRestrictedContentDisplayTemplate = {fieldType="select"},
+					contentHTMLTitleString = {fieldType="text"},
+					contentMetaDescriptionString = {fieldType="textarea"},
+					contentMetaKeywordsString = {fieldType="textarea"},
+					
+					// Email
+					emailFromAddress = {fieldType="text"},
+					emailToAddress = {fieldType="text"},
+					emailCCAddress = {fieldType="text"},
+					emailBCCAddress = {fieldType="text"},
+					emailSubject = {fieldType="text"},
+					
+					// Fulfillment Method
+					fulfillmentMethodEmailFrom = {fieldType="text"},
+					fulfillmentMethodEmailCC = {fieldType="text"},
+					fulfillmentMethodEmailBCC = {fieldType="text"},
+					fulfillmentMethodEmailSubjectString = {fieldType="text"},
+					fulfillmentMethodAutoLocation = {fieldType="select"},
+					fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage"},
+					
+					// Global
+					globalCurrencyLocale = {fieldType="select"},
+					globalCurrencyType = {fieldType="select"},
+					globalDateFormat = {fieldType="text"},
+					globalAssetsImageFolderPath = {fieldType="text", defaultValue=getApplicationValue('applicationRootMappingPath') & '/custom/assets/images'},
+					globalEncryptionAlgorithm = {fieldType="select"},
+					globalEncryptionEncoding = {fieldType="select"},
+					globalEncryptionKeyLocation = {fieldType="text"},
+					globalEncryptionKeySize = {fieldType="select"},
+					globalEncryptionService = {fieldType="select"},
+					globalImageExtension = {fieldType="text"},
+					globalLogMessages = {fieldType="select"},
+					globalMissingImagePath = {fieldType="text", defaultValue=getURLFromPath(getApplicationValue('applicationRootMappingPath')) & '/custom/assets/images/missingimage.jpg'},
+					globalOrderPlacedEmailFrom = {fieldType="text"},
+					globalOrderPlacedEmailCC = {fieldType="text"},
+					globalOrderPlacedEmailBCC = {fieldType="text"},
+					globalOrderPlacedEmailSubjectString = {fieldType="text"},
+					globalOrderNumberGeneration = {fieldType="select"},
+					globalRemoteIDShowFlag = {fieldType="yesno"},
+					globalRemoteIDEditFlag = {fieldType="yesno"},
+					globalTimeFormat = {fieldType="text"},
+					globalURLKeyBrand = {fieldType="text"},
+					globalURLKeyProduct = {fieldType="text"},
+					globalURLKeyProductType = {fieldType="text"},
+					globalWeightUnitCode = {fieldType="select"},
+					
+					// Payment Method
+					paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno", defaultValue=0},
+					paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno", defaultValue=0},
+					paymentMethodCheckoutTransactionType = {fieldType="select", defaultValue="none"},
+					paymentMethodMaximumOrderTotalPercentageAmount = {fieldType="text", defaultValue=100, formatType="percentage", validate={dataType="numeric", minValue=0, maxValue=100}},
+					
+					// Product
+					productDisplayTemplate = {fieldType="select"},
+					productImageSmallWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric"}},
+					productImageSmallHeight = {fieldType="text", formatType="pixels"},
+					productImageMediumWidth = {fieldType="text", formatType="pixels"},
+					productImageMediumHeight = {fieldType="text", formatType="pixels"},
+					productImageLargeWidth = {fieldType="text", formatType="pixels"},
+					productImageLargeHeight = {fieldType="text", formatType="pixels"},
+					productImageOptionCodeDelimiter = {fieldType="select"},
+					productMissingImagePath = {fieldType="text"},
+					productTitleString = {fieldType="text"},
+					productHTMLTitleString = {fieldType="text"},
+					productMetaDescriptionString = {fieldType="textarea"},
+					productMetaKeywordsString = {fieldType="textarea"},
+					productShowDetailWhenNotPublishedFlag = {fieldType="yesno"},
+					
+					
+					// Product Type
+					productTypeDisplayTemplate = {fieldType="select"},
+					productTypeHTMLTitleString = {fieldType="text"},
+					productTypeMetaDescriptionString = {fieldType="textarea"},
+					productTypeMetaKeywordsString = {fieldType="textarea"},
+					
+					// Sku
+					skuAllowBackorderFlag = {fieldType="yesno"},
+					skuAllowPreorderFlag = {fieldType="yesno"},
+					skuCurrency = {fieldType="select"},
+					skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency"},
+					skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
+					skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
+					skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
+					skuHoldBackQuantity = {fieldType="text"},
+					skuOrderMinimumQuantity = {fieldType="text"},
+					skuOrderMaximumQuantity = {fieldType="text"},
+					skuQATSIncludesQNROROFlag = {fieldType="yesno"},
+					skuQATSIncludesQNROVOFlag = {fieldType="yesno"},
+					skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
+					skuShippingWeight = {fieldType="text"},
+					skuShippingWeightUnitCode = {fieldType="select"},
+					skuTaxCategory = {fieldType="select"},
+					skuTrackInventoryFlag = {fieldType="yesno"},
+					
+					// Shipping Method
+					shippingMethodQualifiedRateSelection = {fieldType="select"},
+					
+					// Shipping Method Rate
+					shippingMethodRateAdjustmentType = {fieldType="select"},
+					shippingMethodRateAdjustmentAmount = {fieldType="text"},
+					shippingMethodRateMinimumAmount = {fieldType="text"},
+					shippingMethodRateMaximumAmount = {fieldType="text"}
+					
+				};
+				
+				variables.settingMetaData = smd;
+			}
 			
-			// Brand
-			brandDisplayTemplate = {fieldType="select"},
-			brandHTMLTitleString = {fieldType="text"},
-			brandMetaDescriptionString = {fieldType="textarea"},
-			brandMetaKeywordsString = {fieldType="textarea"},
+			if(structKeyExists(variables.settingMetaData, arguments.settingName)) {
+				return variables.settingMetaData[ arguments.settingName ];	
+			} else if (structKeyExists(getIntegrationService().getAllSettings(), arguments.settingName)) {
+				return getIntegrationService().getAllSettings()[ arguments.settingName ];
+			}
 			
-			// Content
-			contentRestrictAccessFlag = {fieldType="yesno",defaultValue=0},
-			contentRequirePurchaseFlag = {fieldType="yesno",defaultValue=0},
-			contentRequireSubscriptionFlag = {fieldType="yesno",defaultValue=0},
-			contentIncludeChildContentProductsFlag = {fieldType="yesno",defaultValue=1},
-			contentRestrictedContentDisplayTemplate = {fieldType="select"},
-			contentHTMLTitleString = {fieldType="text"},
-			contentMetaDescriptionString = {fieldType="textarea"},
-			contentMetaKeywordsString = {fieldType="textarea"},
-			
-			// Email
-			emailFromAddress = {fieldType="text"},
-			emailToAddress = {fieldType="text"},
-			emailCCAddress = {fieldType="text"},
-			emailBCCAddress = {fieldType="text"},
-			emailSubject = {fieldType="text"},
-			
-			// Fulfillment Method
-			fulfillmentMethodEmailFrom = {fieldType="text"},
-			fulfillmentMethodEmailCC = {fieldType="text"},
-			fulfillmentMethodEmailBCC = {fieldType="text"},
-			fulfillmentMethodEmailSubjectString = {fieldType="text"},
-			fulfillmentMethodAutoLocation = {fieldType="select"},
-			fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage"},
-			
-			// Global
-			globalCurrencyLocale = {fieldType="select"},
-			globalCurrencyType = {fieldType="select"},
-			globalDateFormat = {fieldType="text"},
-			globalAssetsImageFolderPath = {fieldType="text", defaultValue=getApplicationValue('applicationRootMappingPath') & '/custom/assets/images'},
-			globalEncryptionAlgorithm = {fieldType="select"},
-			globalEncryptionEncoding = {fieldType="select"},
-			globalEncryptionKeyLocation = {fieldType="text"},
-			globalEncryptionKeySize = {fieldType="select"},
-			globalEncryptionService = {fieldType="select"},
-			globalImageExtension = {fieldType="text"},
-			globalLogMessages = {fieldType="select"},
-			globalMissingImagePath = {fieldType="text", defaultValue=getURLFromPath(getApplicationValue('applicationRootMappingPath')) & '/custom/assets/images/missingimage.jpg'},
-			globalOrderPlacedEmailFrom = {fieldType="text"},
-			globalOrderPlacedEmailCC = {fieldType="text"},
-			globalOrderPlacedEmailBCC = {fieldType="text"},
-			globalOrderPlacedEmailSubjectString = {fieldType="text"},
-			globalOrderNumberGeneration = {fieldType="select"},
-			globalRemoteIDShowFlag = {fieldType="yesno"},
-			globalRemoteIDEditFlag = {fieldType="yesno"},
-			globalTimeFormat = {fieldType="text"},
-			globalURLKeyBrand = {fieldType="text"},
-			globalURLKeyProduct = {fieldType="text"},
-			globalURLKeyProductType = {fieldType="text"},
-			globalWeightUnitCode = {fieldType="select"},
-			
-			// Payment Method
-			paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno"},
-			paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno"},
-			paymentMethodCheckoutTransactionType = {fieldType="select"},
-			
-			// Product
-			productDisplayTemplate = {fieldType="select"},
-			productImageSmallWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric"}},
-			productImageSmallHeight = {fieldType="text", formatType="pixels"},
-			productImageMediumWidth = {fieldType="text", formatType="pixels"},
-			productImageMediumHeight = {fieldType="text", formatType="pixels"},
-			productImageLargeWidth = {fieldType="text", formatType="pixels"},
-			productImageLargeHeight = {fieldType="text", formatType="pixels"},
-			productImageOptionCodeDelimiter = {fieldType="select"},
-			productMissingImagePath = {fieldType="text"},
-			productTitleString = {fieldType="text"},
-			productHTMLTitleString = {fieldType="text"},
-			productMetaDescriptionString = {fieldType="textarea"},
-			productMetaKeywordsString = {fieldType="textarea"},
-			productShowDetailWhenNotPublishedFlag = {fieldType="yesno"},
-			
-			
-			// Product Type
-			productTypeDisplayTemplate = {fieldType="select"},
-			productTypeHTMLTitleString = {fieldType="text"},
-			productTypeMetaDescriptionString = {fieldType="textarea"},
-			productTypeMetaKeywordsString = {fieldType="textarea"},
-			
-			// Sku
-			skuAllowBackorderFlag = {fieldType="yesno"},
-			skuAllowPreorderFlag = {fieldType="yesno"},
-			skuCurrency = {fieldType="select"},
-			skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency"},
-			skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
-			skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
-			skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
-			skuHoldBackQuantity = {fieldType="text"},
-			skuOrderMinimumQuantity = {fieldType="text"},
-			skuOrderMaximumQuantity = {fieldType="text"},
-			skuQATSIncludesQNROROFlag = {fieldType="yesno"},
-			skuQATSIncludesQNROVOFlag = {fieldType="yesno"},
-			skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
-			skuShippingWeight = {fieldType="text"},
-			skuShippingWeightUnitCode = {fieldType="select"},
-			skuTaxCategory = {fieldType="select"},
-			skuTrackInventoryFlag = {fieldType="yesno"},
-			
-			// Shipping Method
-			shippingMethodQualifiedRateSelection = {fieldType="select"},
-			
-			// Shipping Method Rate
-			shippingMethodRateAdjustmentType = {fieldType="select"},
-			shippingMethodRateAdjustmentAmount = {fieldType="text"},
-			shippingMethodRateMinimumAmount = {fieldType="text"},
-			shippingMethodRateMaximumAmount = {fieldType="text"}
-			
-			
-		};
+			throw("You have asked for a setting '#arguments.settingName#' which has no meta information. Make sure that you either add this setting to the settingService or your integration.");
+		}
 		
 		public array function getSettingOptions(required string settingName) {
 			switch(arguments.settingName) {
@@ -306,16 +324,6 @@ globalEncryptionKeySize
 			return getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#SmartList");
 		}
 		
-		public any function getSettingMetaData(required string settingName) {
-			if(structKeyExists(variables.settingMetaData, arguments.settingName)) {
-				return variables.settingMetaData[ arguments.settingName ];	
-			} else if (structKeyExists(getIntegrationService().getAllSettings(), arguments.settingName)) {
-				return getIntegrationService().getAllSettings()[ arguments.settingName ];
-			}
-			
-			throw("You have asked for a setting '#arguments.settingName#' which has no meta information. Make sure that you either add this setting to the settingService or your integration.");
-		}
-		
 		public any function getAllSettingsQuery() {
 			if(!structKeyExists(variables, "allSettingsQuery")) {
 				variables.allSettingsQuery = getSettingDAO().getAllSettingsQuery();
@@ -324,25 +332,12 @@ globalEncryptionKeySize
 			return variables.allSettingsQuery;
 		}
 		
-		public any function clearAllSettingsQuery() {
-			if(structKeyExists(variables, "allSettingsQuery")) {
-				structDelete(variables, "allSettingsQuery");
-				logHibachi("The cached value of variables.AllSettingsQuery in SettingService.cfc was cleared");
-			}
-			if(structKeyExists(variables, "settingDetailsCache")) {
-				variables.settingDetailsCache = {};
-			}
+		public any function clearAllSettingsCache() {
+			structDelete(variables, "allSettingsQuery");
+			variables.settingDetailsCache = {};
+			writeLog(file="Slatwall", text="General Log - All settings cache was cleared");
 		}
 		
-		public any function saveSetting(required any entity, struct data={}) {
-			if(structKeyExists(arguments.data, "settingName") && structKeyExists(arguments.data, "settingValue")) {
-				var metaData = getSettingMetaData(arguments.data.settingName);
-				if(structKeyExists(metaData, "encryptValue") && metaData.encryptValue == true) {
-					arguments.data.settingValue = encryptValue(arguments.data.settingValue);
-				}
-			}
-			return super.save(argumentcollection=arguments);
-		}
 		
 		public any function getSettingValue(required string settingName, any object, array filterEntities, formatValue=false) {
 			
@@ -558,41 +553,45 @@ globalEncryptionKeySize
 		
 		public void function removeAllEntityRelatedSettings(required any entity) {
 			
+			var settingsRemoved = 0;
+			
 			if( listFindNoCase("brandID,contentID,emailID,emailTemplateID,productTypeID,skuID,shippingMethodRateID,paymentMethodID", arguments.entity.getPrimaryIDPropertyName()) ){
 				
-				getSettingDAO().removeAllRelatedSettings(columnName=arguments.entity.getPrimaryIDPropertyName(), columnID=arguments.entity.getPrimaryIDValue());
+				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName=arguments.entity.getPrimaryIDPropertyName(), columnID=arguments.entity.getPrimaryIDValue());
 				
 			} else if ( arguments.entity.getPrimaryIDPropertyName() == "fulfillmetnMethodID" ) {
 				
-				getSettingDAO().removeAllRelatedSettings(columnName="fulfillmetnMethodID", columnID=arguments.entity.getFulfillmentMethodID());
+				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName="fulfillmetnMethodID", columnID=arguments.entity.getFulfillmentMethodID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getShippingMethods()); a++) {
-					getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodID());
+					settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodID());
 					
 					for(var b=1; b<=arrayLen(arguments.entity.getShippingMethods()[a].getShippingMethodRates()); b++) {
-						getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodRates()[b].getShippingMethodRateID());
+						settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodRates()[b].getShippingMethodRateID());
 					}
 				}
 				
 			} else if ( arguments.entity.getPrimaryIDPropertyName() == "shippingMethodID" ) {
 				
-				getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethodID());
+				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethodID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getShippingMethodRates()); a++) {
-					getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethodRates()[a].getShippingMethodRateID());
+					settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethodRates()[a].getShippingMethodRateID());
 				}
 			
 			} else if ( arguments.entity.getPrimaryIDPropertyName() == "productID" ) {
 				
-				getSettingDAO().removeAllRelatedSettings(columnName="productID", columnID=arguments.entity.getProductID());
+				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName="productID", columnID=arguments.entity.getProductID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getSkus()); a++) {
-					getSettingDAO().removeAllRelatedSettings(columnName="skuID", columnID=arguments.entity.getSkus()[a].getSkuID());
+					settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="skuID", columnID=arguments.entity.getSkus()[a].getSkuID());
 				}
 				
 			}
 			
-			clearAllSettingsQuery();
+			if(settingsRemoved gt 0) {
+				clearAllSettingsCache();
+			}
 		}
 		
 	</cfscript>
@@ -742,8 +741,50 @@ globalEncryptionKeySize
 	<!--- ====================== START: Status Methods =========================== --->
 	
 	<!--- ======================  END: Status Methods ============================ --->
+
+	<!--- ===================== START: Delete Overrides ========================== --->
+		
+	<cfscript>
+		public boolean function deleteSetting(required any entity) {
+			
+			var deleteResult = super.delete(argumentcollection=arguments); 
+			
+			// If there aren't any errors then flush, and clear cache
+			if(deleteResult && !getHibachiScope().getORMHasErrors()) {
+				getHibachiDAO().flushORMSession();
+				clearAllSettingsCache();
+			}
+			
+			return deleteResult;
+		}
+	</cfscript>
+	
+	<!--- =====================  END: Delete Overrides =========================== --->
 	
 	<!--- ====================== START: Save Overrides =========================== --->
+		
+	<cfscript>
+		public any function saveSetting(required any entity, struct data={}) {
+			
+			// Check for values that need to be encrypted
+			if(structKeyExists(arguments.data, "settingName") && structKeyExists(arguments.data, "settingValue")) {
+				var metaData = getSettingMetaData(arguments.data.settingName);
+				if(structKeyExists(metaData, "encryptValue") && metaData.encryptValue == true) {
+					arguments.data.settingValue = encryptValue(arguments.data.settingValue);
+				}
+			}
+			
+			// Call the default save logic
+			arguments.entity = super.save(argumentcollection=arguments);
+			
+			// If there aren't any errors then flush, and clear cache
+			if(!getHibachiScope().getORMHasErrors()) {
+				getHibachiDAO().flushORMSession();
+				clearAllSettingsCache();
+			}
+			return super.save(argumentcollection=arguments);
+		}
+	</cfscript>
 	
 	<!--- ======================  END: Save Overrides ============================ --->
 	

@@ -79,7 +79,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		writeLog(file="Slatwall", text="General Log - Default Data Has Been Confirmed");
 		
 		// Clear the setting cache so that it can be reloaded
-		getBeanFactory().getBean("settingService").clearAllSettingsQuery();
+		getBeanFactory().getBean("settingService").clearAllSettingsCache();
 		writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared");
 		
 		// Run Scripts
