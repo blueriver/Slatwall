@@ -172,12 +172,12 @@ globalEncryptionKeySize
 					
 					// Product
 					productDisplayTemplate = {fieldType="select"},
-					productImageSmallWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric"}},
-					productImageSmallHeight = {fieldType="text", formatType="pixels"},
-					productImageMediumWidth = {fieldType="text", formatType="pixels"},
-					productImageMediumHeight = {fieldType="text", formatType="pixels"},
-					productImageLargeWidth = {fieldType="text", formatType="pixels"},
-					productImageLargeHeight = {fieldType="text", formatType="pixels"},
+					productImageSmallWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageSmallHeight = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageMediumWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageMediumHeight = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageLargeWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageLargeHeight = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
 					productImageOptionCodeDelimiter = {fieldType="select"},
 					productMissingImagePath = {fieldType="text"},
 					productTitleString = {fieldType="text"},
