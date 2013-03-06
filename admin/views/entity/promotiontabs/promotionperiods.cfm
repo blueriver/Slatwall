@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.promotion.getPromotionPeriodsSmartList()#"
-							   recordEditAction="admin:entity.editPromotionperiod"
+							   recordEditAction="admin:entity.editPromotionPeriod"
 							   recorddetailaction="admin:entity.detailpromotionperiod"
 							   recordDeleteAction="admin:entity.deletepromotionperiod"
 							   recordDeleteQueryString="redirectAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
@@ -52,5 +52,5 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="currentFlag" sort="false" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createpromotionperiod" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" />
+	<cf_HibachiActionCaller action="admin:entity.createpromotionperiod" class="btn btn-inverse" icon="plus icon-white" queryString="promotionID=#rc.promotion.getPromotionID()#" modal="true"  />
 </cfoutput>
