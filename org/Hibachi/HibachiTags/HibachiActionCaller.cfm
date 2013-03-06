@@ -96,14 +96,12 @@
 		</cfif>
 		<cfset attributes.class &= " disabled alert-disabled" />
 		<cfset attributes.confirm = false />
-	<cfelse>
-		<cfif attributes.confirm>
-			<cfset attributes.confirmtext = attributes.hibachiScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
-			<cfif right(attributes.confirmtext, "8") eq "_missing">
-				<cfset attributes.confirmtext = replace(attributes.hibachiScope.rbKey("admin.define.delete_confirm"),'${itemEntityName}', attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
-			</cfif>
-			<cfset attributes.class &= " alert-confirm" />
+	<cfelseif attributes.confirm>
+		<cfset attributes.confirmtext = attributes.hibachiScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
+		<cfif right(attributes.confirmtext, "8") eq "_missing">
+			<cfset attributes.confirmtext = replace(attributes.hibachiScope.rbKey("admin.define.delete_confirm"),'${itemEntityName}', attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
 		</cfif>
+		<cfset attributes.class &= " alert-confirm" />
 	</cfif>
 	
 	<cfif attributes.modal && not attributes.disabled>

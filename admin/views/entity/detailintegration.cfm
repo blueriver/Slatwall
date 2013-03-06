@@ -41,7 +41,8 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.integration#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.integration#" deleteAction="" />
+		
+		<cf_HibachiEntityActionBar type="detail" object="#rc.integration#" showDelete="false" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
