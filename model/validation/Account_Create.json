@@ -1,7 +1,7 @@
 {
 	"conditions":{
 	    "savePasswordSelected":{
-	        "createAuthentication":{"eq":"true"}
+	        "createAuthenticationFlag":{"eq":1}
 	    }
 	},
 	"properties":{

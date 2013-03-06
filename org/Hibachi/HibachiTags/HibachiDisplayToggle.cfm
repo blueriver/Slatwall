@@ -8,7 +8,13 @@
 	
 	<cfparam name="attributes.loadVisible" type="boolean" default="false" />
 	
-	<div class="hibachi-display-toggle">
+	<cfset class="hibachi-display-toggle" />
+	<cfif !attributes.loadVisible>
+		<cfset class &= " hide" />
+	</cfif>
+	<cfset id = createUUID() />
+	
+	<cfoutput><div id="#id#" class="#class#" data-hibachi-selector="#attributes.selector#" data-hibachi-show-values="#attributes.showValues#" data-hibachi-hide-values="#attributes.hideValues#"></cfoutput>
 <cfelse>
 	</div>
 </cfif>

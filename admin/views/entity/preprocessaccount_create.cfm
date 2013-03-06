@@ -50,44 +50,11 @@ Notes:
 		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="lastName" title="#$.slatwall.rbKey('entity.account.lastName')#" edit="#rc.edit#">
 		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddress" edit="#rc.edit#">
 		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddressConfirm" edit="#rc.edit#">
-		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthentication" edit="#rc.edit#" fieldType="yesno">
-		<cf_HibachiDisplayToggle selector="input[name=createAuthentication]">
+		<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthenticationFlag" edit="#rc.edit#" fieldType="yesno">
+		<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']" loadVisible="#rc.processObject.getCreateAuthenticationFlag()#">
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="password" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="passwordConfirm" edit="#rc.edit#">
 		</cf_HibachiDisplayToggle>
 	</cf_HibachiPropertyList>
 	
-	<!---
-	<cf_HibachiEntityActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
-		<cf_HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
-	</cf_HibachiEntityActionBar>
-	
-	<cfif rc.account.isNew()>
-		<cf_HibachiDetailHeader>
-			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="emailAddress" fieldnameprefix="primaryEmailAddress." edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="phoneNumber" fieldnameprefix="primaryPhoneNumber." edit="#rc.edit#">
-				<input type="hidden" name="primaryAddress.accountAddressName" value="Primary Address" />
-				<cf_SlatwallAddressDisplay address="#rc.account.getPrimaryAddress().getAddress()#" showName="false" showCompany="false" fieldnameprefix="primaryAddress.address." />
-			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
-	<cfelse>
-		<cf_HibachiDetailHeader>
-			<cf_HibachiPropertyList divclass="span6">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="emailAddress" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">			
-			</cf_HibachiPropertyList>
-			<cf_HibachiPropertyList divclass="span6">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
-			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
-	</cfif>
-	--->
 </cf_HibachiEntityProcessForm>

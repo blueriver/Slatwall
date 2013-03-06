@@ -10,15 +10,15 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="phoneNumber";
 	property name="emailAddress";
 	property name="emailAddressConfirm";
-	property name="createAuthentication";
+	property name="createAuthenticationFlag";
 	property name="password";
 	property name="passwordConfirm";
 	
-	public boolean function getCreateAuthentication() {
-		if(!structKeyExists(variables, "createAuthentication")) {
-			variables.createAuthentication = 1;
+	public boolean function getCreateAuthenticationFlag() {
+		if(!structKeyExists(variables, "createAuthenticationFlag")) {
+			variables.createAuthenticationFlag = 1;
 		}
-		return variables.createAuthentication;
+		return variables.createAuthenticationFlag;
 	}
 	
 }
