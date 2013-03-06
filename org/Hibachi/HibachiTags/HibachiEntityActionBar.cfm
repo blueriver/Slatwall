@@ -61,17 +61,24 @@
 									</ul>
 								</div>
 								
+								<!--- Listing: Button Groups --->
+								<cfif structKeyExists(thistag, "buttonGroups") && arrayLen(thistag.buttonGroups)>
+									<cfloop array="#thisTag.buttonGroups#" index="buttonGroup">
+										<cfif structKeyExists(buttonGroup, "generatedContent") && len(buttonGroup.generatedContent)>
+											<div class="btn-group">
+												#buttonGroup.generatedContent#
+											</div>
+										</cfif>
+									</cfloop>
+								</cfif>
+								
 								<!--- Listing: Create --->
 								<cfif attributes.showCreate>
 									<div class="btn-group">
-										<cfif structKeyExists(thistag, "createActions") && arrayLen(thistag.createActions) && structKeyExists(thistag.createActions[1], "generatedContent") && len(thistag.createActions[1].generatedContent)>
-											#thistag.createActions[1].generatedContent#
+										<cfif attributes.createModal>
+											<cf_HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white" modal="true">
 										<cfelse>
-											<cfif attributes.createModal>
-												<cf_HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white" modal="true">
-											<cfelse>
-												<cf_HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white">
-											</cfif>
+											<cf_HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white">
 										</cfif>
 									</div>
 								</cfif>
@@ -93,6 +100,9 @@
 										</ul>
 									</div>
 								</cfif>
+								
+								<!--- Detail: Additional Button Groups --->
+								
 								
 								<!--- Detail: CRUD Buttons --->
 								<div class="btn-group">
