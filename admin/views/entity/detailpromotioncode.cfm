@@ -47,7 +47,7 @@ Notes:
 		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
 		
-		<input type="hidden" name="returnAction" value="admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes" />
+		<input type="hidden" name="redirectAction" value="admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes" />
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="promotioncode" edit="#rc.edit#">
