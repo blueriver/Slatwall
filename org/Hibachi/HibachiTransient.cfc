@@ -526,10 +526,15 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint public method for getting the title hint to be used for a property from the rbFactory, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyHint(required string propertyName) {
-		if(isPersistent()) {
-			var keyValue = rbKey("entity.#getClassName()#.#arguments.propertyName#");	
-		} else {
+		var propertyMetaData = getPropertyMetaData( arguments.propertyName );
+		if(structKeyExists(propertyMetaData, "hb_rbKey")) {
+			var keyValue = rbKey("#propertyMetaData.hb_rbKey#_hint");
+		} else if (isPersistent()) {
+			var keyValue = rbKey("entity.#getClassName()#.#arguments.propertyName#_hint");
+		} else if (isProcessObject()) {
 			var keyValue = rbKey("processObject.#getClassName()#.#arguments.propertyName#_hint");
+		} else {
+			var keyValue = rbKey("object.#getClassName()#.#arguments.propertyName#_hint");
 		}
 		if(right(keyValue, 8) != "_missing") {
 			return keyValue;

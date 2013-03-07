@@ -39,11 +39,15 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_HibachiListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#"
-		recordEditAction="admin:entity.editaccountaddress"
-		recordEditQueryString="accountID=#rc.account.getAccountID()#"
-		recordEditModal=true
-		recordDeleteAction="admin:entity.deleteaccountaddress"
-		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount">
+						  recordEditAction="admin:entity.editaccountaddress"
+						  recordEditQueryString="accountID=#rc.account.getAccountID()#"
+						  recordEditModal=true
+						  recordDeleteAction="admin:entity.deleteaccountaddress"
+						  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
+						  selectFieldName="primaryAddress.accountAddressID"
+						  selectValue="#rc.account.getPrimaryAddress().getAddressID()#"
+						  selectTitle="#$.slatwall.rbKey('define.default')#"
+						  edit="#rc.edit#">
 			
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountAddressName" />
 	<cf_HibachiListingColumn propertyIdentifier="address.name" />

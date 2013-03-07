@@ -41,10 +41,13 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.accountAddress#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.accountAddress#" edit="#rc.edit#" sRenderItem="detailaccount">
 		
 		<!--- Hidden field to allow rc.account to be set on invalid submit --->
 		<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
+		
+		<!--- Hidden field to attach this to the account --->
+		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 		
 		<cf_HibachiPropertyDisplay object="#rc.accountAddress#" property="accountAddressName" edit="#rc.edit#">
 		<cf_SlatwallAdminAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="address." edit="#rc.edit#">
