@@ -45,8 +45,8 @@ Notes:
 						  recordDeleteAction="admin:entity.deleteaccountaddress"
 						  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
 						  selectFieldName="primaryAddress.accountAddressID"
-						  selectValue="#rc.account.getPrimaryAddress().getAddressID()#"
-						  selectTitle="#$.slatwall.rbKey('define.default')#"
+						  selectValue="#rc.account.getPrimaryAddress().getAccountAddressID()#"
+						  selectTitle="#$.slatwall.rbKey('define.primary')#"
 						  edit="#rc.edit#">
 			
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountAddressName" />
