@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfparam name="rc.returnAction" type="string" default="admin:entity.listorderfulfillment" />
+<cfparam name="rc.redirectAction" type="string" default="admin:entity.listorderfulfillment" />
 <cfparam name="rc.processOrderFulfillmentSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 

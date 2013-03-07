@@ -53,7 +53,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
-			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&returnAction=admin:entity.detailorder" type="list" />
+			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&redirectAction=admin:entity.detailorder" type="list" />
 			<!--- Add Order Item --->
 			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
 				<cf_HibachiActionCaller action="admin:entity.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />

@@ -45,7 +45,7 @@ Notes:
 	
 	<cf_HibachiEntityDetailForm object="#rc.vendorOrderItem#" edit="#rc.edit#">
 		<input type="hidden" name="vendorOrder.vendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
-		<input type="hidden" name="returnAction" value="admin:entity.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" />
+		<input type="hidden" name="redirectAction" value="admin:entity.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" />
 
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>
