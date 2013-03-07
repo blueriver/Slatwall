@@ -44,33 +44,18 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
 	</cf_HibachiEntityActionBar>
 	
-	<cfif rc.account.isNew()>
-		<cf_HibachiDetailHeader>
-			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="emailAddress" fieldnameprefix="primaryEmailAddress." edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="phoneNumber" fieldnameprefix="primaryPhoneNumber." edit="#rc.edit#">
-				<input type="hidden" name="primaryAddress.accountAddressName" value="Primary Address" />
-				<cf_SlatwallAddressDisplay address="#rc.account.getPrimaryAddress().getAddress()#" showName="false" showCompany="false" fieldnameprefix="primaryAddress.address." />
-			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
-	<cfelse>
-		<cf_HibachiDetailHeader>
-			<cf_HibachiPropertyList divclass="span6">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="emailAddress" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#">			
-			</cf_HibachiPropertyList>
-			<cf_HibachiPropertyList divclass="span6">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
-				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
-			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
-	</cfif>
+	<cf_HibachiPropertyRow>
+		<cf_HibachiPropertyList divclass="span6">
+			<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.account#" property="emailAddress">
+		</cf_HibachiPropertyList>
+		<cf_HibachiPropertyList divclass="span6">
+			<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
+			<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
+		</cf_HibachiPropertyList>
+	</cf_HibachiPropertyRow>
 	
 	<cf_HibachiTabGroup object="#rc.account#" allowCustomAttributes="true">
 		<cf_HibachiTab property="accountAddresses" />

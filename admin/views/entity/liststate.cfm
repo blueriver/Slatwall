@@ -36,32 +36,16 @@
 Notes:
 
 --->
-<cfparam name="rc.accountAddress" type="any">
-<cfparam name="rc.account" type="any" default="#rc.accountAddress.getAccount()#">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.stateSmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.accountAddress#" edit="#rc.edit#">
-		
-		<!--- Hidden field to allow rc.account to be set on invalid submit --->
-		<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
-		
-		<cf_HibachiPropertyDisplay object="#rc.accountAddress#" property="accountAddressName" edit="#rc.edit#">
-		<cf_SlatwallAdminAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="address." edit="#rc.edit#">
-	</cf_HibachiEntityDetailForm>
+	
+<cf_HibachiEntityActionBar type="listing" object="#rc.stateSmartList#" showCreate="false" />
+
+<cf_HibachiListingDisplay smartList="#rc.stateSmartList#">
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stateName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="stateCode" search="true" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="country.countryName" filter="true" />
+</cf_HibachiListingDisplay>
+
 </cfoutput>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
