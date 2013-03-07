@@ -1,7 +1,7 @@
 component accessors="true" output="false" persistent="false" {
 
-	property name="hibachiInstanceApplicationScopeKey";
-	
+	property name="hibachiInstanceApplicationScopeKey" type="string";
+
 	// Constructor Metod
 	public any function init( ) {
 		getThisMetaData();
@@ -102,7 +102,7 @@ component accessors="true" output="false" persistent="false" {
 	public string function getSimpleValuesSerialized() {
 		var data = {};
 		for(var key in variables) {
-			if( structKeyExists(variables, key) && isSimpleValue(variables[key]) ) {
+			if( key != "hibachiInstanceApplicationScopeKey" && structKeyExists(variables, key) && isSimpleValue(variables[key]) ) {
 				data[key] = variables[key];
 			}
 		}

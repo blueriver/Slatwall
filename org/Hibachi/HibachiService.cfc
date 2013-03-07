@@ -712,10 +712,8 @@
 		public string function getPrimaryIDPropertyNameByEntityName( required string entityName ) {
 			var idColumnNames = getIdentifierColumnNamesByEntityName( arguments.entityName );
 			
-			if( arrayLen(idColumnNames) == 1) {
+			if( arrayLen(idColumnNames)) {
 				return idColumnNames[1];
-			} else {
-				throw("There is not a single primary ID property for the entity: #arguments.entityName#");
 			}
 		}
 		
