@@ -44,7 +44,7 @@ Notes:
 	
 	<!--- Create --->
 	<cf_HibachiEntityActionBarButtonGroup>
-		<cf_HibachiProcessCaller action="admin:entity.preprocessaccount" entity="account" processContext="create" class="btn btn-primary" icon="plus icon-white" text="#$.slatwall.rbKey('define.create')# #$.slatwall.rbKey('entity.account')#" />
+		<cf_HibachiProcessCaller action="admin:entity.preprocessaccount" entity="account" processContext="create" class="btn btn-primary" icon="plus icon-white" text="#$.slatwall.rbKey('define.create')# #$.slatwall.rbKey('entity.account')#" modal="true" />
 	</cf_HibachiEntityActionBarButtonGroup>
 	
 </cf_HibachiEntityActionBar>

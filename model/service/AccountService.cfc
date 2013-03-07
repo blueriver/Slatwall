@@ -68,8 +68,14 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: Process Methods ===========================
 	
-	private any function processAccount_changePassword(required any account, struct data={}) {
+	public any function processAccount_changePassword(required any account, struct data={}) {
 		// TODO: Add Change Password Logic Here
+		throw("Impliment Me!");
+	}
+	
+	public any function processAccount_create(required any account, required any processObject) {
+		// TODO: Add Change Password Logic Here
+		throw("Got Here!");
 	}
 	
 	public any function processAccount_setupInitialAdmin(required any account, required struct data={}, required any processObject) {

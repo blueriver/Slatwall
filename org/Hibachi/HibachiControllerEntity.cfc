@@ -341,12 +341,22 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	// PRE-PROCESS
 	public void function genericPreProcessMethod(required string entityName, required struct rc) {
+		// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
+		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
+		if(!hasSuccess) {
+			arguments.rc.entityActionDetails.sRenderItem = "detail#arguments.rc.entityActionDetails.itemEntityName#";
+		}
+		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
+		if(!hasFaliure) {
+			arguments.rc.entityActionDetails.fRenderItem = "preprocess#arguments.rc.entityActionDetails.itemEntityName#";
+		}
+		populateRedirectQS( arguments.rc );
 		
 		// Load up any ID's that were passed in
 		loadEntitiesFromRCIDs( arguments.rc );
 		
 		// If the entityName object is now not in the rc because there was no ID, then we need to place a new one in the rc
-		if(!structKeyExists(rc, arguments.entityName) || !isObject(rc[ arguments.entityName ]) || !rc[ arguments.entityName ].getClassName() != arguments.entityName) {
+		if(!structKeyExists(rc, arguments.entityName) || !isObject(rc[ arguments.entityName ]) || lcase(rc[ arguments.entityName ].getClassName()) != lcase(arguments.entityName)) {
 			var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 			rc[ arguments.entityName ] = entityService.invokeMethod("new#arguments.entityName#");
 		}
@@ -366,6 +376,48 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	// PROCESS
 	public void function genericProcessMethod(required string entityName, required struct rc) {
+		
+		// Find the correct service and this object PrimaryID
+		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		
+		// Attempt to find the entity
+		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc[ entityPrimaryID ], 2=true} );
+		
+		// Call the process method on the entity, and then populate it back into the RC
+		arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=arguments.rc, 3=arguments.rc.processContext} );
+		
+		// Setup the message string replace data to be used by the generic rbKeys
+		var mesageReplaceData = {
+			itemEntityName = getHibachiScope().rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'),
+			entityName = getHibachiScope().rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#')
+		};
+		
+		// SUCCESS
+		if(!arguments.rc[ arguments.entityName ].hasErrors()) {
+			// Show the Generica Action Success Message
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.process_success", mesageReplaceData ), "success");
+			
+			// Show all of the specific messages & error messages for the entity
+			entity.showErrorsAndMessages();
+			
+			// Render or Redirect a Success
+			renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
+			
+		// FAILURE
+		} else {
+			// Add the Generic Action Failure Message
+			getHibachiScope().showMessage( getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.process_error", mesageReplaceData ), "error");
+			
+			// Show all of the specific messages & error messages for the entity
+			entity.showErrorsAndMessages();
+			
+			// Render or Redirect a faluire
+			renderOrRedirectFailure( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
+			
+		}
+		/*
+		
 		param name="arguments.rc.processContext" default="process";
 		param name="arguments.rc.multiProcess" default="false";
 		param name="arguments.rc.processOptions" default="#{}#";
@@ -476,6 +528,7 @@ component output="false" accessors="true" extends="HibachiController" {
 				arguments.rc.multiProcess = true;
 			}
 		}
+		*/
 	}
 	
 	public void function genericExportMethod(required string entityName, required struct rc) {

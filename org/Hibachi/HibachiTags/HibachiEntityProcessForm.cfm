@@ -41,14 +41,14 @@
 <cfelse>
 	<cfoutput>
 		
-			<!--- Additional Model Header --->
+			<!--- Additional Model Footer --->
 			<cfif structKeyExists(request.context, "modal") and request.context.modal>
 				</div>
 				<div class="modal-footer">
 					<cfif attributes.edit>
 						<div class="btn-group">
 							<a href="##" class="btn btn-inverse" data-dismiss="modal"><i class="icon-remove icon-white"></i> #attributes.hibachiScope.rbKey('define.cancel')#</a>
-							<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #attributes.hibachiScope.rbKey('define.save')#</button>
+							<button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> #attributes.hibachiScope.rbKey( "#replace(attributes.processAction, ':', '.', 'all')#.#attributes.processContext#" )#</button>
 						</div>
 					</cfif>
 				</div>

@@ -110,12 +110,13 @@
 					invokeArguments[ "processObject" ].invokeMethod("set#arguments.entity.getClassName()#", {1=arguments.entity});
 					invokeArguments[ "processObject" ].validate( context=arguments.processContext );
 					
-					if(invokeArguments[ "processObject" ].hasErrors()) {
-						dataErrors = true;
-					}
-					
 					// Set the processObject into the entity
 					arguments.entity.setProcessObject( invokeArguments.processObject );
+					
+					if(invokeArguments[ "processObject" ].hasErrors()) {
+						dataErrors = true;
+						arguments.entity.addError('processObject', arguments.processContext);
+					}
 				}
 				
 				
@@ -129,7 +130,7 @@
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
 			if(arguments.entity.hasErrors() || dataErrors || (structKeyExists(invokeArguments, "processObject") && invokeArguments.processObject.hasErrors())) {
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#ProcessFailure", arguments);
-				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
+				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#Failure", invokeArguments);
 			} else {
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#ProcessSuccess", arguments);
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#Success", invokeArguments);
