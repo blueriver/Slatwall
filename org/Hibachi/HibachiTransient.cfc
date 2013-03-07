@@ -514,11 +514,15 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
-		if(isPersistent()) {
+		var propertyMetaData = getPropertyMetaData( arguments.propertyName );
+		if(structKeyExists(propertyMetaData, "hb_rbKey")) {
+			return rbKey(propertyMetaData.hb_rbKey);
+		} else if (isPersistent()) {
 			return rbKey("entity.#getClassName()#.#arguments.propertyName#");	
+		} else if (isProcessObject()) {
+			return rbKey("processObject.#getClassName()#.#arguments.propertyName#");
 		}
-		
-		return rbKey("processObject.#getClassName()#.#arguments.propertyName#");	
+		return rbKey("object.#getClassName()#.#arguments.propertyName#");	
 	}
 	
 	// @hint public method for getting the title hint to be used for a property from the rbFactory, this is used a lot by the HibachiPropertyDisplay

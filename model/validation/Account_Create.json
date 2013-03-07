@@ -7,7 +7,6 @@
 	"properties":{
 		"firstName":			[{"required":true}],
 		"lastName":				[{"required":true}],
-		"company":				[{"required":true}],
 		"emailAddress":			[{"required":true,"dataType":"email","eqProperty":"emailAddressConfirm"}],
 		"emailAddressConfirm":	[{"required":true,"dataType":"email"}],
 		"password":				[{"conditions":"savePasswordSelected","required":true,"minLength":6,"eqProperty":"passwordConfirm"}],

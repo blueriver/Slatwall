@@ -181,22 +181,22 @@
 			throw("You have an error in the #arguments.object.getClassName()#.json validation file.  You have a constraint defined for '#arguments.propertyIdentifier#' that is called '#arguments.constraintDetails.constraintType#' which is not a valid constraint type");
 		}
 		
-		
 		var isValid = invokeMethod("validate_#arguments.constraintDetails.constraintType#", {object=arguments.object, propertyIdentifier=arguments.propertyIdentifier, constraintValue=arguments.constraintDetails.constraintValue});	
 					
 		if(!isValid) {
-			var replaceTemplateStruct = {};
 			var thisPropertyName = listLast(arguments.propertyIdentifier, '._');
+			
+			var replaceTemplateStruct = {};
+			replaceTemplateStruct.propertyName = arguments.object.getPropertyTitle(thisPropertyName);
 			if(arguments.object.isPersistent()) {
 				var thisClassName = getLastEntityNameInPropertyIdentifier( arguments.object.getClassName(), arguments.propertyIdentifier);
 				replaceTemplateStruct.className = getHibachiScope().rbKey('entity.#thisClassName#');
-				replaceTemplateStruct.propertyName = getHibachiScope().rbKey('entity.#thisClassName#.#thisPropertyName#');
 			} else {
 				var thisClassName = arguments.object.getClassName();
 				replaceTemplateStruct.className = getHibachiScope().rbKey('processObject.#thisClassName#');
-				replaceTemplateStruct.propertyName = getHibachiScope().rbKey('processObject.#thisClassName#.#thisPropertyName#');
 			}
 			replaceTemplateStruct.constraintValue = arguments.constraintDetails.constraintValue;
+			
 			if(arguments.constraintDetails.constraintType eq "method") {
 				var errorMessage = getHibachiScope().rbKey('validate.#arguments.context#.#thisClassName#.#thisPropertyName#.#arguments.constraintDetails.constraintValue#');
 				errorMessage = getHibachiUtilityService().replaceStringTemplate(errorMessage, replaceTemplateStruct);

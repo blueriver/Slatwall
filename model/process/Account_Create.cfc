@@ -4,9 +4,9 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="account";
 
 	// Data Properties
-	property name="firstName";
-	property name="lastName";
-	property name="company";
+	property name="firstName" hb_rbKey="entity.account.firstName";
+	property name="lastName" hb_rbKey="entity.account.lastName";
+	property name="company" hb_rbKey="entity.account.company";
 	property name="phoneNumber";
 	property name="emailAddress";
 	property name="emailAddressConfirm";

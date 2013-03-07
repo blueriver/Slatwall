@@ -8,12 +8,17 @@ component accessors="true" output="false" persistent="false" {
 		return this;
 	}
 	
-	// @help Public method to determine if this is a persistent object
+	// @help Public method to determine if this is a persistent object (an entity)
 	public any function isPersistent() {
 		var metaData = getThisMetaData();
 		if(structKeyExists(metaData, "persistent") && metaData.persistent) {
 			return true;
 		}
+		return false;
+	}
+	
+	// @help Public method to determine if this is a processObject.  This is overridden in the HibachiProcess.cfc
+	public any function isProcessObject() {
 		return false;
 	}
 	
