@@ -393,7 +393,7 @@
 	public boolean function validate_eqProperty(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
 		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#arguments.constraintValue#");
-		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue == compairPropertyValue) {
+		if((isNull(propertyValue) && isNull(compairPropertyValue)) || (!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue == compairPropertyValue)) {
 			return true;
 		}
 		return false;
