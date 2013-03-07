@@ -36,29 +36,34 @@
 Notes:
 
 --->
-<cfparam name="rc.account" type="any" />
-<cfparam name="rc.processObject" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.accountPhoneNumber" type="any">
+<cfparam name="rc.account" type="any" default="#rc.accountPhoneNumber.getAccount()#">
+<cfparam name="rc.edit" type="boolean">
 
-<cf_HibachiEntityProcessForm entity="#rc.account#" edit="#rc.edit#">
-	
-	<cf_HibachiEntityActionBar type="preprocess" object="#rc.account#">
-	</cf_HibachiEntityActionBar>
-	
-	<cf_HibachiPropertyRow>
-		<cf_HibachiPropertyList>
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="firstName" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="lastName" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="company" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="phoneNumber" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddress" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddressConfirm" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthenticationFlag" edit="#rc.edit#" fieldType="yesno">
-			<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']" loadVisible="#rc.processObject.getCreateAuthenticationFlag()#">
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="password" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="passwordConfirm" edit="#rc.edit#">
-			</cf_HibachiDisplayToggle>
-		</cf_HibachiPropertyList>
-	</cf_HibachiPropertyRow>
-	
-</cf_HibachiEntityProcessForm>
+<cfoutput>
+	<cf_HibachiEntityDetailForm object="#rc.accountPhoneNumber#" edit="#rc.edit#" sRenderItem="detailaccount">
+		
+		<!--- Hidden field to allow rc.account to be set on invalid submit --->
+		<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
+		
+		<!--- Hidden field to attach this to the account --->
+		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
+		
+		<cf_HibachiPropertyDisplay object="#rc.accountPhoneNumber#" property="phoneNumber" edit="#rc.edit#">
+	</cf_HibachiEntityDetailForm>
+</cfoutput>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

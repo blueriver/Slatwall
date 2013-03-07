@@ -42,6 +42,9 @@ Notes:
 <cf_HibachiEntityDetailForm object="#rc.account#" edit="#rc.edit#">
 	<cf_HibachiEntityActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
 		<cf_HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
+		<cf_HibachiActionCaller action="admin:entity.createaccountemailaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
+		<cf_HibachiActionCaller action="admin:entity.createaccountphonenumber" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
+		<cf_HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
 	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiPropertyRow>
@@ -58,7 +61,7 @@ Notes:
 	</cf_HibachiPropertyRow>
 	
 	<cf_HibachiTabGroup object="#rc.account#" allowCustomAttributes="true">
-		<cf_HibachiTab property="accountAddresses" />
+		<cf_HibachiTab view="admin:entity/accounttabs/contactdetails" />
 		<cf_HibachiTab property="orders" />
 		<cf_HibachiTab property="accountPaymentMethods" />
 		<cf_HibachiTab property="permissionGroups" />
