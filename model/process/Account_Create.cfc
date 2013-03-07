@@ -10,13 +10,13 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="phoneNumber";
 	property name="emailAddress";
 	property name="emailAddressConfirm";
-	property name="createAuthenticationFlag";
+	property name="createAuthenticationFlag" hb_sessionDefault="1";
 	property name="password";
 	property name="passwordConfirm";
 	
 	public boolean function getCreateAuthenticationFlag() {
 		if(!structKeyExists(variables, "createAuthenticationFlag")) {
-			variables.createAuthenticationFlag = 1;
+			variables.createAuthenticationFlag = getPropertySessionDefault("createAuthenticationFlag");
 		}
 		return variables.createAuthenticationFlag;
 	}

@@ -173,13 +173,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 						// If the value isn't blank, or we can't set to null... then we just set the value.
 						} else {
 							
-							// Before setting the value, we want to check for any confirmXXX keys that may have been passed in
-							if(!structKeyExists(arguments.data, "confirm#currentProperty.name#") || (arguments.data[ "confirm#currentProperty.name#" ] == arguments.data[ currentProperty.name ])) {
-								_setProperty(currentProperty.name, trim(arguments.data[ currentProperty.name ]));	
-							} else {
-								addError(currentProperty.name, rbKey('define.notconfirmed'));
-							}
+							_setProperty(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
 							
+							// if this property has a sessionDefault defined for it, then we should update that value with what was used
+							if(structKeyExists(currentProperty, "hb_sessionDefault")) {
+								setPropertySessionDefault(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
+							}
 						}
 					
 				// (MANY-TO-ONE) Do this logic if this property is a many-to-one relationship, and the data passed in is of type struct
@@ -637,6 +636,19 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		throw("No property found with name #propertyName# in #getClassName()#");
 	}
 	
+	// this method allows for default values to be pulled at the session level so that forms re-use the last selection by a user
+	public any function getPropertySessionDefault( required string propertyName ) {
+		if(!hasSessionValue("propertySessionDefault_#getClassName()#_#arguments.propertyName#")) {
+			var propertyMeta = getPropertyMetaData( propertyName=arguments.propertyName );
+			setSessionValue("propertySessionDefault_#getClassName()#_#arguments.propertyName#", propertyMeta.hb_sessionDefault);
+		}
+		return getSessionValue("propertySessionDefault_#getClassName()#_#arguments.propertyName#");
+	}
+	
+	// this method allows for default values to be stored at the session level so that forms re-use the last selection by a user
+	public any function setPropertySessionDefault( required string propertyName, required any defaultValue ) {
+		setSessionValue("propertySessionDefault_#getClassName()#_#arguments.propertyName#", arguments.defaultValue);
+	}
 	
 	public boolean function hasProperty(required string propertyName) {
 		return structKeyExists( getPropertiesStruct(), arguments.propertyName );
