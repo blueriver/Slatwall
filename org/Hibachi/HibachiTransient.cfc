@@ -584,8 +584,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		var propertyMeta = getPropertyMetaData( arguments.propertyName );
 		
 		// Check to see if there is a meta data called 'formFieldType'
-		if( structKeyExists(propertyMeta, "formFieldType") ) {
-			return propertyMeta.formFieldType;
+		if( structKeyExists(propertyMeta, "hb_formFieldType") ) {
+			return propertyMeta.hb_formFieldType;
 		}
 		
 		// If this isn't a Relationship property then run the lookup on ormType then type.

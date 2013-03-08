@@ -41,7 +41,7 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	// Persistent Properties
 	property name="fulfillmentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="fulfillmentMethodName" ormtype="string";
-	property name="fulfillmentMethodType" ormtype="string" formFieldType="select";
+	property name="fulfillmentMethodType" ormtype="string" hb_formFieldType="select";
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";
 	

@@ -52,7 +52,7 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="maximumItemPrice" ormtype="big_decimal" formatType="custom";
 	property name="minimumFulfillmentWeight" ormtype="big_decimal" formatType="custom";
 	property name="maximumFulfillmentWeight" ormtype="big_decimal" formatType="custom";
-	property name="rewardMatchingType" ormtype="string" formatType="rbKey" formFieldType="select";
+	property name="rewardMatchingType" ormtype="string" formatType="rbKey" hb_formFieldType="select";
 	
 	// Related Entities (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";

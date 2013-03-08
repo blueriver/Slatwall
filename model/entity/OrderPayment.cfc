@@ -48,8 +48,8 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
-	property name="expirationMonth" ormType="string" formfieldType="select";
-	property name="expirationYear" ormType="string" formfieldType="select";
+	property name="expirationMonth" ormType="string" hb_formfieldType="select";
+	property name="expirationYear" ormType="string" hb_formfieldType="select";
 	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (many-to-one)

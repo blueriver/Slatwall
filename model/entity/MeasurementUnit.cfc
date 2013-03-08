@@ -46,7 +46,7 @@ component displayname="Measurement Unit" entityname="SlatwallMeasurementUnit" ta
 	
 	// Persistent Properties
 	property name="unitCode" ormtype="string" fieldtype="id" unique="true" generated="never";
-	property name="measurementType" ormtype="string" formFieldType="select";
+	property name="measurementType" ormtype="string" hb_formFieldType="select";
 	property name="unitName" ormtype="string";
 	property name="conversionRatio" ormtype="float";
 

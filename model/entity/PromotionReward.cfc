@@ -49,9 +49,9 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormType="big_decimal" formatType="custom";
-	property name="amountType" ormType="string" formFieldType="select" formatType="custom";
-	property name="rewardType" ormType="string" formFieldType="select" formatType="custom";
-	property name="applicableTerm" ormType="string" formFieldType="select" formatType="custom";
+	property name="amountType" ormType="string" hb_formFieldType="select" formatType="custom";
+	property name="rewardType" ormType="string" hb_formFieldType="select" formatType="custom";
+	property name="applicableTerm" ormType="string" hb_formFieldType="select" formatType="custom";
 	property name="maximumUsePerOrder" ormType="integer" formatType="custom";
 	property name="maximumUsePerItem" ormtype="integer" formatType="custom";
 	property name="maximumUsePerQualification" ormtype="integer" formatType="custom";

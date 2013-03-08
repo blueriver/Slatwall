@@ -42,7 +42,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="priceGroupRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="globalFlag" ormType="boolean" default="false";
 	property name="amount" ormType="big_decimal" formatType="custom";
-	property name="amountType" ormType="string" formFieldType="select";
+	property name="amountType" ormType="string" hb_formFieldType="select";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
