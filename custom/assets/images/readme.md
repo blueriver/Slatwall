@@ -1,1 +1,0 @@
-This is the default location for all images to be stored like Products images, ect.
