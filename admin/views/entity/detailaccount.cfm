@@ -39,6 +39,10 @@ Notes:
 <cfparam name="rc.account" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
+<!--- Set up the order / carts smart lists --->
+<cfset rc.ordersPlacedSmartList = rc.account.getOrdersPlacedSmartList() />
+<cfset rc.ordersNotPlacedSmartList = rc.account.getOrdersNotPlacedSmartList() />
+
 <cf_HibachiEntityDetailForm object="#rc.account#" edit="#rc.edit#">
 	<cf_HibachiEntityActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
 		<cf_HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
@@ -63,7 +67,8 @@ Notes:
 		<cf_HibachiTab view="admin:entity/accounttabs/contactdetails" />
 		<cf_HibachiTab property="accountPaymentMethods" />
 		<cf_HibachiTab property="priceGroups" />
-		<cf_HibachiTab property="orders" />
+		<cf_HibachiTab property="orders" count="#rc.ordersPlacedSmartList.getRecordsCount()#" />
+		<cf_HibachiTab view="admin:entity/accounttabs/cartsandquotes" count="#rc.ordersNotPlacedSmartList.getRecordsCount()#" />
 		<cf_HibachiTab property="accountPayments" />
 		<cf_HibachiTab property="productReviews" />
 		<cf_HibachiTab view="admin:entity/accounttabs/subscriptionusage" />

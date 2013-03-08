@@ -70,7 +70,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#street2Address" property="street2Address" edit="#attributes.edit#" fieldClass="slatwall-address-street2Address" />	
 			</cfif>
 			<cfif attributes.address.getCountry().getCityShowFlag() and attributes.showCity>
-				<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#city" property="city" edit="true" fieldClass="slatwall-address-city" />	
+				<cf_HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#city" property="city" edit="#attributes.edit#" fieldClass="slatwall-address-city" />	
 			</cfif>
 			<cfif attributes.address.getCountry().getStateCodeShowFlag() and attributes.showState>
 				<cfif arrayLen(attributes.address.getStateCodeOptions()) gt 1>

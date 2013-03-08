@@ -23,8 +23,8 @@
 						<cfset tab.text = attributes.hibachiScope.rbKey('entity.#attributes.object.getClassName()#.#tab.property#') />
 					</cfif>
 					
-					<cfif structKeyExists(propertyMetaData, "fieldtype") and listFindNoCase("many-to-one,one-to-many,many-to-many", propertyMetaData.fieldtype)>
-						<cfset tab.count = attributes.object.getPropertyCount( tab.property ) />
+					<cfif not len(tab.count) and structKeyExists(propertyMetaData, "fieldtype") and listFindNoCase("many-to-one,one-to-many,many-to-many", propertyMetaData.fieldtype)>
+						<cfset thisCount = attributes.object.getPropertyCount( tab.property ) />
 					</cfif>
 				</cfif>
 				
@@ -57,7 +57,7 @@
 				<div class="tabsLeft">
 					<ul class="nav nav-tabs">
 						<cfloop array="#thistag.tabs#" index="tab">
-							<cfoutput><li <cfif activeTab eq tab.tabid>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#<cfif tab.count> <span class="badge">#tab.count#</span></cfif></a></li></cfoutput>
+							<cfoutput><li <cfif activeTab eq tab.tabid>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#<cfif len(tab.count) and tab.count gt 0> <span class="badge">#tab.count#</span></cfif></a></li></cfoutput>
 						</cfloop>
 						<!---
 						<cfif isObject(attributes.object) && attributes.allowCustomAttributes>

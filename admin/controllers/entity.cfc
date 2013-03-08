@@ -102,7 +102,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		genericListMethod(entityName="Order", rc=arguments.rc);
 		
 		arguments.rc.orderSmartList.addInFilter('orderStatusType.systemCode', 'ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled');
-		
 		arguments.rc.orderSmartList.addOrder("orderOpenDateTime|DESC");
 	}
 	
@@ -110,10 +109,10 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	public void function listCartAndQuote(required struct rc) {
 		genericListMethod(entityName="Order", rc=arguments.rc);
 		
-		arguments.rc.orderSmartList.addOrder("createdDateTime|DESC");
 		arguments.rc.orderSmartList.addInFilter('orderStatusType.systemCode', 'ostNotPlaced');
-		arguments.rc.entityActionDetails.createAction="admin:entity.createOrder";
+		arguments.rc.orderSmartList.addOrder("createdDateTime|DESC");
 		
+		arguments.rc.entityActionDetails.createAction="admin:entity.createOrder";
 		getFW().setView("admin:entity.listorder");
 	}
 	

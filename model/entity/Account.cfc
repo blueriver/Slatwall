@@ -100,6 +100,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="termAccountAvailableCredit" persistent="false" formattype="currency";
 	property name="termAccountBalance" persistent="false" formattype="currency";
 	property name="gravatarURL" persistent="false";
+	property name="ordersPlacedSmartList" persistent="false";
+	property name="ordersNotPlacedSmartList" persistent="false";
 	
 
 	public boolean function getAdminAccountFlag() {
@@ -190,6 +192,31 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		
 		return termAccountBalance;
 	}
+	
+	public any function getOrdersPlacedSmartList() {
+		if(!structKeyExists(variables, "ordersPlacedSmartList")) {
+			var osl = getService("orderService").getOrderSmartList();
+			osl.addFilter('account.accountID', getAccountID());
+			osl.addInFilter('orderStatusType.systemCode', 'ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled');
+			osl.addOrder("orderOpenDateTime|DESC");
+			
+			variables.ordersPlacedSmartList = osl;
+		}
+		return variables.ordersPlacedSmartList;	
+	}
+	
+	public any function getOrdersNotPlacedSmartList() {
+		if(!structKeyExists(variables, "ordersNotPlacedSmartList")) {
+			var osl = getService("orderService").getOrderSmartList();
+			osl.addFilter('account.accountID', getAccountID());
+			osl.addInFilter('orderStatusType.systemCode', 'ostNotPlaced');
+			osl.addOrder("lastModifiedDateTime|DESC");
+			
+			variables.ordersNotPlacedSmartList = osl;
+		}
+		return variables.ordersNotPlacedSmartList;	
+	}
+	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	

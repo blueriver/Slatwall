@@ -37,10 +37,11 @@ Notes:
 
 --->
 <cfparam name="rc.account" type="any" />
+<cfparam name="rc.ordersPlacedSmartList" type="any" />
 
-<cf_HibachiListingDisplay smartList="#rc.account.getOrdersSmartList()#"
-		recordDetailAction="admin:entity.detailorder"
-		recordDetailQueryString="accountID=#rc.account.getAccountID()#">
+<cf_HibachiListingDisplay smartList="#rc.ordersPlacedSmartList#"
+						  recordDetailAction="admin:entity.detailorder"
+						  recordDetailQueryString="accountID=#rc.account.getAccountID()#">
 
 	<cf_HibachiListingColumn propertyIdentifier="orderNumber" />
 	<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" range="true" />
