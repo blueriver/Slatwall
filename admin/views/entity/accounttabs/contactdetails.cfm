@@ -50,24 +50,30 @@ Notes:
 									  edit="#rc.edit#">
 						
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailAddress" />
+				<cf_HibachiListingColumn propertyIdentifier="verifiedFlag" />
 			</cf_HibachiListingDisplay>
 			
-			<cf_HibachiActionCaller action="admin:entity.createaccountemailaddress" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createaccountemailaddress" class="btn" icon="plus" queryString="accountID=#rc.account.getAccountID()#" modal=true />
 		</cf_HibachiPropertyList>
 		
 		<!--- Phone Numbers --->
 		<cf_HibachiPropertyList divClass="span6">
 			<h4>#$.slatwall.rbKey('entity.accountPhoneNumber_plural')#</h4>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountPhoneNumbersSmartList()#"
+									  recordEditAction="admin:entity.editaccountphonenumber"
+									  recordEditQueryString="accountID=#rc.account.getAccountID()#"
+									  recordEditModal=true
 									  selectFieldName="primaryPhoneNumber.accountPhoneNumberID"
 									  selectValue="#rc.account.getPrimaryPhoneNumber().getAccountPhoneNumberID()#"
 									  selectTitle="#$.slatwall.rbKey('define.primary')#"
 									  edit="#rc.edit#">
 						
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="phoneNumber" />
+				<cf_HibachiListingColumn propertyIdentifier="accountPhoneType.type" />
+				
 			</cf_HibachiListingDisplay>
 			
-			<cf_HibachiActionCaller action="admin:entity.createaccountphonenumber" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createaccountphonenumber" class="btn" icon="plus" queryString="accountID=#rc.account.getAccountID()#" modal=true />
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	<hr />
@@ -95,7 +101,7 @@ Notes:
 				<cf_HibachiListingColumn propertyIdentifier="address.postalCode" />
 			</cf_HibachiListingDisplay>
 			
-			<cf_HibachiActionCaller action="admin:entity.createaccountaddress" class="btn btn-inverse" icon="plus icon-white" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createaccountaddress" class="btn" icon="plus" queryString="accountID=#rc.account.getAccountID()#" modal=true />
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 </cfoutput>

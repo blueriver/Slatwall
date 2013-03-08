@@ -50,6 +50,7 @@ Notes:
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 		
 		<cf_HibachiPropertyDisplay object="#rc.accountPhoneNumber#" property="phoneNumber" edit="#rc.edit#">
+		<cf_HibachiPropertyDisplay object="#rc.accountPhoneNumber#" property="accountPhoneType" edit="#rc.edit#">
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
 

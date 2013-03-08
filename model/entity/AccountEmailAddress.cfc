@@ -81,6 +81,13 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 
 	// ================== START: Overridden Methods ========================
 	
+	public any function getVerifiedFlag() {
+		if(!structKeyExists(variables, "verifiedFlag")) {
+			variables.verifiedFlag = 0;
+		}
+		return variables.verifiedFlag;
+	}
+	
 	public string function getSimpleRepresentationPropertyName() {
 		return "emailAddress";
 	}
