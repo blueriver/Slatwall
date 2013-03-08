@@ -95,10 +95,23 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		if ( arguments.subsystem eq '' ) {
 			return '';
 		}
-		if ( !listFind('admin,frontend', arguments.subsystem) ) {
+		if ( !listFindNoCase('admin,frontend,public', arguments.subsystem) ) {
 			return 'integrationServices/' & arguments.subsystem & '/';
 		}
 		return arguments.subsystem & '/';
+	}
+	
+	// Allows for custom views to be created for the admin, frontend or public subsystems
+	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
+		
+		if(listFindNoCase("admin,frontend,public", arguments.pathInfo.subsystem)){
+			var customFullPath = "/custom" & arguments.fullPath;
+			if(fileExists(expandPath(customFullPath))) {
+				arguments.fullPath = customFullPath;
+			}
+		}
+		
+		return arguments.fullPath;
 	}
 	
 	// ===================================== END: FW1 HOOKS
@@ -109,39 +122,5 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		endHibachiLifecycle();
 		location(request.muraScope.createHREF(filename=request.slatwallScope.setting(arguments.settingName), queryString=arguments.queryString), false);
 	}
-	
-	/*
-	// This is used to setup the frontend path to pull from the siteid directory or the theme directory if the file exists
-	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
-		
-		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
-			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
-			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
-			
-			if(fileExists(expandPath(themeView))) {
-				arguments.fullPath = themeView;	
-			} else if (fileExists(expandPath(siteView))) {
-				arguments.fullPath = siteView;
-			}
-			
-		}
-		
-		return arguments.fullPath;
-	}
-	*/
-	
-	/*
-	public string function buildURL( string action = '', string path = '', any queryString = '' ) {
-		if(len(arguments.queryString)) {
-			arguments.queryString = "&#arguments.queryString#";
-		}
-		if(findNoCase(":", arguments.action)) {
-			return "#variables.framework.baseURL#?slatAction=#arguments.action##arguments.queryString#";	
-		}
-		return "#variables.framework.baseURL#?slatAction=admin:#arguments.action##arguments.queryString#";
-	}
-	*/
-	
-	
 	
 }
