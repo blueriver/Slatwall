@@ -44,7 +44,7 @@ component displayname="Vendor Account" entityname="SlatwallVendorAccount" table=
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="roleType" cfc="Type" fieldtype="many-to-one" fkcolumn="roleTypeID";
+	property name="roleType" cfc="Type" fieldtype="many-to-one" fkcolumn="roleTypeID" hb_optionsSmartListData="f:parentType.systemCode=roleType";
 	
 	
 	// ============ START: Non-Persistent Property Methods =================

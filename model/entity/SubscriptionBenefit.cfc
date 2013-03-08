@@ -44,7 +44,7 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	property name="maxUseCount" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="accessType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessTypeID";
+	property name="accessType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessTypeID" hb_optionsSmartListData="f:parentType.systemCode=accessType";
 	
 	// Related Object Properties (one-to-many)
 	

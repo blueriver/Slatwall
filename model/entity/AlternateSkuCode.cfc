@@ -43,7 +43,7 @@ component displayname="Alternate Sku Code" entityname="SlatwallAlternateSkuCode"
 	property name="alternateSkuCode" ormtype="string";
 	
 	// Related Object Properties (Many-To-One)
-	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
+	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID" hb_optionsSmartListData="f:parentType.systemCode=alternateSkuCodeType";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	
 	// Audit properties

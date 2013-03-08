@@ -47,8 +47,8 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	// Related Object Properties (Many-To-One)
 	property name="billToLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
-	property name="vendorOrderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderStatusTypeID";
+	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID" hb_optionsSmartListData="f:parentType.systemCode=vendorOrderType";
+	property name="vendorOrderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderStatusTypeID" hb_optionsSmartListData="f:parentType.systemCode=vendorOrderStatusType";
 	
 	// Related Object Properties (One-To-Many)
 	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderID" cascade="all-delete-orphan" inverse="true";

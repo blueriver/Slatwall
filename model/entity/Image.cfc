@@ -47,7 +47,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	property name="directory" ormtype="string";
 	
 	// Related entity properties (many-to-one)
-	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID" systemCode="itProduct";
+	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID" hb_optionsSmartListData="f:parentType.systemCode=imageType";
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
