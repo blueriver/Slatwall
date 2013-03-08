@@ -3,8 +3,8 @@
 	
 	<cfparam name="attributes.selector" type="string" />
 	
-	<cfparam name="attributes.hideValues" type="string" default="0">
 	<cfparam name="attributes.showValues" type="string" default="1">
+	<cfparam name="attributes.hideValues" type="string" default="">
 	
 	<cfparam name="attributes.loadVisible" type="boolean" default="false" />
 	

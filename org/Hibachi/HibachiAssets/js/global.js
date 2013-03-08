@@ -100,8 +100,10 @@ function initUIElements( scopeSelector ) {
 				var selectedValue = jQuery(this).children(":selected").data(bindData.valueAttribute);
 			}
 			if( jQuery( '#' + bindData.id ).hasClass('hide') && bindData.showValues.toString().indexOf( selectedValue ) > -1 ) {
+				console.log('had show value');
 				jQuery( '#' + bindData.id ).removeClass('hide');
-			} else if ( !jQuery( '#' + bindData.id ).hasClass('hide') && bindData.hideValues.toString().indexOf( selectedValue ) > -1 ) {
+			} else if ( !jQuery( '#' + bindData.id ).hasClass('hide') && bindData.showValues.toString().indexOf( selectedValue ) === -1 ) {
+				console.log('needed to be hidden');
 				jQuery( '#' + bindData.id ).addClass('hide');
 			}
 		});

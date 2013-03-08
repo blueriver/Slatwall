@@ -50,7 +50,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="primaryEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
 	property name="primaryPhoneNumber" cfc="AccountPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
 	property name="primaryAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="primaryAddressID";
-	property name="primaryAccountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="primaryAccountPaymentMethodID";
+	property name="primaryPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="primaryPaymentMethodID";
 	
 	// Related Object Properties (one-to-many)
 	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
@@ -226,9 +226,13 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	// Primary Email Address (many-to-one | circular)
-	public void function setPrimaryAccountPaymentMethod(required any primaryAccountPaymentMethod) {    
-		variables.primaryAccountPaymentMethod = arguments.primaryAccountPaymentMethod;
-		arguments.primaryAccountPaymentMethod.setAccount( this );    
+	public void function setPrimaryAccountPaymentMethod(required any primaryPaymentMethod) {
+		if(structKeyExists(arguments, "primaryPaymentMethod")) {
+			variables.primaryPaymentMethod = arguments.primaryPaymentMethod;
+			arguments.primaryPaymentMethod.setAccount( this );	
+		} else {
+			structDelete(variables, "primaryPaymentMethod");
+		}
 	}
 	
 	// Account Addresses (one-to-many)
@@ -429,9 +433,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
-	public any function getPrimaryAccountPaymentMethod() {
-		if(!isNull(variables.primaryAccountPaymentMethod)) {
-			return variables.primaryAccountPaymentMethod;
+	public any function getPrimaryPaymentMethod() {
+		if(!isNull(variables.primaryPaymentMethod)) {
+			return variables.primaryPaymentMethod;
 		} else if (arrayLen(getAccountPaymentMethods())) {
 			return getAccountPaymentMethods()[1];
 		} else {

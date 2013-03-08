@@ -44,12 +44,18 @@ Notes:
 		<cf_HibachiPropertyList divClass="span6">
 			<h4>#$.slatwall.rbKey('entity.accountEmailAddress_plural')#</h4>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountEmailAddressesSmartList()#"
+									  recordEditAction="admin:entity.editaccountemailaddress"
+									  recordEditQueryString="accountID=#rc.account.getAccountID()#"
+									  recordEditModal=true
+									  recordDeleteAction="admin:entity.deleteaccountemailaddress"
+									  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
 									  selectFieldName="primaryEmailAddress.accountEmailAddressID"
 									  selectValue="#rc.account.getPrimaryEmailAddress().getAccountEmailAddressID()#"
 									  selectTitle="#$.slatwall.rbKey('define.primary')#"
 									  edit="#rc.edit#">
 						
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailAddress" />
+				<cf_HibachiListingColumn propertyIdentifier="accountEmailType.type" />
 				<cf_HibachiListingColumn propertyIdentifier="verifiedFlag" />
 			</cf_HibachiListingDisplay>
 			
@@ -63,6 +69,8 @@ Notes:
 									  recordEditAction="admin:entity.editaccountphonenumber"
 									  recordEditQueryString="accountID=#rc.account.getAccountID()#"
 									  recordEditModal=true
+									  recordDeleteAction="admin:entity.deleteaccountphonenumber"
+									  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
 									  selectFieldName="primaryPhoneNumber.accountPhoneNumberID"
 									  selectValue="#rc.account.getPrimaryPhoneNumber().getAccountPhoneNumberID()#"
 									  selectTitle="#$.slatwall.rbKey('define.primary')#"

@@ -45,6 +45,7 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	
 	// Related Object Properties (Many-To-One)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountEmailType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountEmailTypeID" hb_optionsNullRBKey="define.select" hb_optionsSmartListData="f:parentType.systemCode=accountEmailType";
 	
 	// Audit Properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";

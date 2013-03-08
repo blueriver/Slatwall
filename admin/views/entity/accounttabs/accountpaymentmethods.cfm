@@ -43,7 +43,11 @@ Notes:
 						  recordEditQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
 						  recordEditModal=true
 						  recordDeleteAction="admin:entity.deleteaccountpaymentmethod"
-						  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount">
+						  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
+						  selectFieldName="primaryPaymentMethod.accountPaymentMethodID"
+						  selectValue="#rc.account.getPrimaryPaymentMethod().getAccountPaymentMethodID()#"
+						  selectTitle="#$.slatwall.rbKey('define.primary')#"
+						  edit="#rc.edit#">
 			
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
 	<cf_HibachiListingColumn propertyIdentifier="creditCardType" />

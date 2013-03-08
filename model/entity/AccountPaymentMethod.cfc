@@ -41,8 +41,11 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	// Persistent Properties
 	property name="accountPaymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="accountPaymentMethodName" ormType="string";
-	property name="nameOnCreditCard" ormType="string";
+	property name="giftCardNumberEncrypted" ormType="string";
+	property name="bankRoutingNumberEncrypted" ormType="string";
+	property name="bankAccountNumberEncrypted" ormType="string";
 	property name="creditCardNumberEncrypted" ormType="string";
+	property name="nameOnCreditCard" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string" formfieldType="select";
@@ -50,7 +53,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" hb_optionsNullRBKey="define.select" hb_optionsAdditionalProperties="paymentMethodType" hb_optionsSmartListData="f:activeFlag=1";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" hb_optionsNullRBKey="define.select" hb_optionsAdditionalProperties="paymentMethodType" hb_optionsSmartListData="f:activeFlag=1&f:paymentMethodType=creditCard,termPayment,check,giftCard";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" hb_optionsNullRBKey="define.select";
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" hb_optionsNullRBKey="define.select";
 	
@@ -69,6 +72,9 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	// Non-Persistent Properties
 	property name="creditCardNumber" persistent="false";
+	property name="giftCardNumber" persistent="false";
+	property name="bankRoutingNumber" persistent="false";
+	property name="bankAccountNumber" persistent="false";
 
 	
 	public string function getPaymentMethodType() {
@@ -175,8 +181,16 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	}
 	
 	public string function getCreditCardNumber() {
-		return decryptValue(getCreditCardNumberEncrypted());
+		if(!structKeyExists(variables,"creditCardNumber")) {
+			if(nullReplace(getCreditCardNumberEncrypted(), "") NEQ "") {
+				variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
+			} else {	
+				variables.creditCardNumber = "";
+			}
+		}
+		return variables.creditCardNumber;
 	}
+	
 	
 	public string function getSimpleRepresentation() {
 		if(getPaymentMethodType() == "creditCard") {
