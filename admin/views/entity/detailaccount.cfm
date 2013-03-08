@@ -42,6 +42,9 @@ Notes:
 <cf_HibachiEntityDetailForm object="#rc.account#" edit="#rc.edit#">
 	<cf_HibachiEntityActionBar type="detail" object="#rc.account#" edit="#rc.edit#">
 		<cf_HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
+		<cf_HibachiActionCaller action="admin:entity.createaccountemailaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
+		<cf_HibachiActionCaller action="admin:entity.createaccountphonenumber" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
+		<cf_HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#" type="list" modal=true />
 	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiPropertyRow>
@@ -49,7 +52,6 @@ Notes:
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.account#" property="emailAddress">
 		</cf_HibachiPropertyList>
 		<cf_HibachiPropertyList divclass="span6">
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
@@ -58,14 +60,14 @@ Notes:
 	</cf_HibachiPropertyRow>
 	
 	<cf_HibachiTabGroup object="#rc.account#" allowCustomAttributes="true">
-		<cf_HibachiTab property="accountAddresses" />
-		<cf_HibachiTab property="orders" />
+		<cf_HibachiTab view="admin:entity/accounttabs/contactdetails" />
 		<cf_HibachiTab property="accountPaymentMethods" />
-		<cf_HibachiTab property="permissionGroups" />
 		<cf_HibachiTab property="priceGroups" />
-		<cf_HibachiTab property="productReviews" />
+		<cf_HibachiTab property="orders" />
 		<cf_HibachiTab property="accountPayments" />
+		<cf_HibachiTab property="productReviews" />
 		<cf_HibachiTab view="admin:entity/accounttabs/subscriptionusage" />
+		<cf_HibachiTab property="permissionGroups" />
 		<cf_HibachiTab view="admin:entity/accounttabs/accountsettings" />
 		<cf_SlatwallAdminTabComments object="#rc.account#" />
 	</cf_HibachiTabGroup>

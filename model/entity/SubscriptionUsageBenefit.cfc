@@ -46,7 +46,7 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	property name="subscriptionBenefit" cfc="SubscriptionBenefit" fieldtype="many-to-one" fkcolumn="subscriptionBenefitID";
 	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" inverse="true";
 	property name="renewalSubscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="renewalSubscriptionUsageID" inverse="true";
-	property name="accessType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessTypeID";
+	property name="accessType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessTypeID" hb_optionsSmartListData="f:parentType.systemCode=accessType";
 	
 	// Related Object Properties (one-to-many)
 	

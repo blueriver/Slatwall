@@ -48,8 +48,8 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// Related Object Properties (many-to-one)
 	property name="appliedPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="appliedPriceGroupID";
-	property name="orderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemTypeID";
-	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
+	property name="orderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemTypeID" hb_optionsSmartListData="f:parentType.systemCode=orderItemType";
+	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID" hb_optionsSmartListData="f:parentType.systemCode=orderItemStatusType";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID" cascadeCalculate="true";
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID" cascadeCalculate="true";

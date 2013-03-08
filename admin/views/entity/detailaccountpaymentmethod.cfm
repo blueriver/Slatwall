@@ -37,32 +37,30 @@ Notes:
 
 --->
 <cfparam name="rc.accountPaymentMethod" type="any">
-<cfparam name="rc.paymentMethod" type="any" default="#rc.accountPaymentMethod.getPaymentMethod()#">
 <cfparam name="rc.account" type="any" default="#rc.accountPaymentMethod.getAccount()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" saveActionQueryString="accountID=#rc.account.getAccountID()#">
+	<cf_HibachiEntityDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" sRenderItem="detailaccount">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPaymentMethod#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
-		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPaymentMethod#" />
+		<!--- Hidden field to allow rc.account to be set on invalid submit --->
+		<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
 		
-		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
+		<!--- Hidden field to attach this to the account --->
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 		
-		<cf_HibachiDetailHeader>
-			<cf_HibachiPropertyList>
-				<cfif rc.paymentMethod.getPaymentMethodType() eq "creditCard">
-					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="accountPaymentMethodName" edit="#rc.edit#">
-					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="nameOnCreditCard" edit="#rc.edit#" />
-					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="creditCardNumber" edit="#rc.edit#" />
-					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationMonth" edit="#rc.edit#" />
-					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationYear" edit="#rc.edit#" />
-					<cf_SlatwallAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="billingaddress." edit="#rc.edit#">
-				</cfif>
-			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
-
+		<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="paymentMethod" edit="#rc.edit#">
+		
+		<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']">
+			<!---
+			<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="nameOnCreditCard" edit="#rc.edit#" />
+			<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="creditCardNumber" edit="#rc.edit#" />
+			<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationMonth" edit="#rc.edit#" />
+			<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationYear" edit="#rc.edit#" />
+			<cf_SlatwallAdminAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="billingaddress." edit="#rc.edit#">	
+			--->
+		</cf_HibachiDisplayToggle>
+		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
-
-

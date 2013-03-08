@@ -51,7 +51,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" systemCode="attributeSetType" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
+	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hb_optionsSmartListData="f:parentType.systemCode=attributeSetType";
 	
 	// Related Object Properties (one-to-many)
 	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";

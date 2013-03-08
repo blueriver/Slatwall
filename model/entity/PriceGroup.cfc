@@ -46,7 +46,7 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	property name="priceGroupCode" ormtype="string";
 	
 	// Related Object Properties (Many-To-One)
-	property name="parentPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="parentPriceGroupID" hb_nullOptionRBKey="define.none";
+	property name="parentPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="parentPriceGroupID" hb_optionsNullRBKey="define.none";
 	
 	// Related Object Properties (One-To-Many)
 	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="PriceGroup" fieldtype="one-to-many" fkcolumn="parentPriceGroupID" inverse="true";

@@ -21,6 +21,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	this.secureMethods='';
 	
 	// Account Payment
+	/*
 	public any function createAccountPayment( required struct rc ) {
 		param name="rc.accountID" type="string" default="";
 		param name="rc.paymentMethodID" type="string" default="";
@@ -31,6 +32,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		
 		rc.edit = true;
 	}
+	*/
 	
 	// Address Zone Location
 	public void function createAddressZoneLocation(required struct rc) {

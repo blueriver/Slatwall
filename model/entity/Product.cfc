@@ -55,7 +55,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="calculatedTitle" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID" hb_nullOptionRBKey="define.none";
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID" hb_optionsNullRBKey="define.none";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID" cascade="delete";
 	
