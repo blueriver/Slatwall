@@ -287,18 +287,32 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			
 			var smartList = getPropertyOptionsSmartList( arguments.propertyName );
 			
-			var exampleEntity = entityNew("#getApplicationValue('applicationKey')##listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
+			var propertyMeta = getPropertyMetaData( propertyName );
 			
-			smartList.addSelect(propertyIdentifier=exampleEntity.getSimpleRepresentationPropertyName(), alias="name");
-			smartList.addSelect(propertyIdentifier=exampleEntity.getPrimaryIDPropertyName(), alias="value"); 
+			if(structKeyExists(propertyMeta, "hb_optionsNameProperty")) {
+				smartList.addSelect(propertyIdentifier=propertyMeta.hb_optionsNameProperty, alias="value");
+			} else {
+				var exampleEntity = entityNew("#getApplicationValue('applicationKey')##listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
+				smartList.addSelect(propertyIdentifier=exampleEntity.getSimpleRepresentationPropertyName(), alias="name");
+			}
+			if(structKeyExists(propertyMeta, "hb_optionsValueProperty")) {
+				smartList.addSelect(propertyIdentifier=propertyMeta.hb_optionsValueProperty, alias="value");
+			} else {
+				smartList.addSelect(propertyIdentifier=getService("hibachiService").getPrimaryIDPropertyNameByEntityName(listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')), alias="value");
+			}
 			
-			smartList.addOrder("#exampleEntity.getSimpleRepresentationPropertyName()#|ASC");
+			if(structKeyExists(propertyMeta, "hb_optionsAdditionalProperties")) {
+				var additionalPropertiesArray = listToArray(propertyMeta.hb_optionsAdditionalProperties);
+				for(var p=1; p<=arrayLen(additionalPropertiesArray); p++) {
+					smartList.addSelect(propertyIdentifier=additionalPropertiesArray[p], alias=replace(additionalPropertiesArray[p],".","_","all"));
+				}
+			}
 			
 			variables[ cacheKey ] = smartList.getRecords();
 			
 			// If this is a many-to-one related property, then add a 'select' to the top of the list
-			if(getPropertyMetaData( propertyName ).fieldType == "many-to-one" && structKeyExists(getPropertyMetaData( propertyName ), "hb_nullOptionRBKey")) {
-				arrayPrepend(variables[ cacheKey ], {value="", name=rbKey(getPropertyMetaData( propertyName ).hb_nullOptionRBKey)});
+			if(getPropertyMetaData( propertyName ).fieldType == "many-to-one" && structKeyExists(getPropertyMetaData( propertyName ), "hb_optionsNullRBKey")) {
+				arrayPrepend(variables[ cacheKey ], {value="", name=rbKey(getPropertyMetaData( propertyName ).hb_optionsNullRBKey)});
 			}
 		}
 		
@@ -311,15 +325,15 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		var cacheKey = "#arguments.propertyName#OptionsSmartList";
 		
 		if(!structKeyExists(variables, cacheKey)) {
+			
+			var propertyMeta = getPropertyMetaData( arguments.propertyName );
 			var entityService = getService("hibachiService").getServiceByEntityName( listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.') );
+			
 			variables[ cacheKey ] = entityService.invokeMethod("get#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#SmartList");
-			// If the cfc is "Type" then we should be looking for a parentTypeSystemCode in the metaData
-			if(getPropertyMetaData( arguments.propertyName ).cfc == "Type") {
-				if(structKeyExists(getPropertyMetaData( arguments.propertyName ), "systemCode")) {
-					variables[ cacheKey ].addFilter('parentType.systemCode', getPropertyMetaData( arguments.propertyName ).systemCode);
-				} else {
-					variables[ cacheKey ].addFilter('parentType.systemCode', arguments.propertyName);
-				}
+			
+			// If there was an hb_optionsSmartListData defined, then we can now apply that data to this smart list
+			if(structKeyExists(propertyMeta, "hb_optionsSmartListData")) {
+				variables[ cacheKey ].applyData( propertyMeta.hb_optionsSmartListData );
 			}
 		}
 		

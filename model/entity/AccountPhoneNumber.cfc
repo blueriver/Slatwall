@@ -43,7 +43,7 @@ component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNum
 	property name="phoneNumber" type="string";
 	
 	// Related Object Properties (Many-To-One)
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" hb_nullOptionRBKey="define.select";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" hb_optionsNullRBKey="define.select";
 	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
 	
 	// Audit properties
