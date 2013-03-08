@@ -51,16 +51,20 @@ Notes:
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 		
 		<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="paymentMethod" edit="#rc.edit#">
-		
-		<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']">
-			<!---
+		<hr />
+		<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard">
+			<h4>#$.slatwall.rbKey('admin.entity.detailsAccountPaymentMethod.creditCardDetials')#</h4>
 			<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="nameOnCreditCard" edit="#rc.edit#" />
-			<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="creditCardNumber" edit="#rc.edit#" />
+			<!---<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="creditCardNumber" edit="#rc.edit#" />--->
 			<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationMonth" edit="#rc.edit#" />
 			<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationYear" edit="#rc.edit#" />
+			<hr />
+			<h4>#$.slatwall.rbKey('entity.accountpaymentmethod.billingaddress')#</h4>
 			<cf_SlatwallAdminAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="billingaddress." edit="#rc.edit#">	
-			--->
 		</cf_HibachiDisplayToggle>
-		
+		<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="termPayment">
+			<h4>#$.slatwall.rbKey('admin.entity.detailsAccountPaymentMethod.termPaymentDetials')#</h4>
+			
+		</cf_HibachiDisplayToggle>
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

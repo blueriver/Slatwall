@@ -90,14 +90,18 @@ function initUIElements( scopeSelector ) {
 		var bindData = {
 			showValues : jQuery(this).data('hibachi-show-values'),
 			hideValues : jQuery(this).data('hibachi-hide-values'),
+			valueAttribute : jQuery(this).data('hibachi-value-attribute'),
 			id : jQuery(this).attr('id')
 		}
-		console.log('get it');
+		
 		jQuery( jQuery(this).data('hibachi-selector') ).on('change', bindData, function(e) {
-			console.log('wait what?');
-			if( jQuery( '#' + bindData.id ).hasClass('hide') && bindData.showValues.toString().indexOf( jQuery(this).val() ) > -1 ) {
+			var selectedValue = jQuery(this).val();
+			if(bindData.valueAttribute.length) {
+				var selectedValue = jQuery(this).children(":selected").data(bindData.valueAttribute);
+			}
+			if( jQuery( '#' + bindData.id ).hasClass('hide') && bindData.showValues.toString().indexOf( selectedValue ) > -1 ) {
 				jQuery( '#' + bindData.id ).removeClass('hide');
-			} else if ( !jQuery( '#' + bindData.id ).hasClass('hide') && bindData.hideValues.toString().indexOf( jQuery(this).val() ) > -1 ) {
+			} else if ( !jQuery( '#' + bindData.id ).hasClass('hide') && bindData.hideValues.toString().indexOf( selectedValue ) > -1 ) {
 				jQuery( '#' + bindData.id ).addClass('hide');
 			}
 		});
