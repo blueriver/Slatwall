@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfparam name="rc.returnAction" type="string" default="admin:entity.liststockreceiver" />
+<cfparam name="rc.redirectAction" type="string" default="admin:entity.liststockreceiver" />
 <cfparam name="rc.processStockReceiverSmartList" type="any" />
 <cfparam name="rc.multiProcess" type="boolean" />
 

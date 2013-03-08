@@ -44,7 +44,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.taskschedule#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.taskschedule#" />
 		<input type="hidden" name="task.taskID" value="#rc.task.getTaskID()#"/>
-		<input type="hidden" name="returnAction" value="admin:entity.edittask&taskID=#rc.task.getTaskID()###tabtaskschedule" />
+		<input type="hidden" name="redirectAction" value="admin:entity.edittask&taskID=#rc.task.getTaskID()###tabtaskschedule" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>

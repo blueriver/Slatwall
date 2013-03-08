@@ -69,7 +69,7 @@ Notes:
 		</cfif>
 	</cf_HibachiListingDisplay>
 	
-	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addOptionGroup" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
-	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addOption" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
-	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.processproduct" processContext="addSubscriptionTerm" querystring="productID=#rc.product.getProductID()#" class="btn btn-inverse" icon="plus icon-white" modal="true" />
+	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addOptionGroup" class="btn btn-inverse" icon="plus icon-white" modal="true" />
+	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addOption" class="btn btn-inverse" icon="plus icon-white" modal="true" />
+	<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addSubscriptionTerm" class="btn btn-inverse" icon="plus icon-white" modal="true" />
 </cfoutput>

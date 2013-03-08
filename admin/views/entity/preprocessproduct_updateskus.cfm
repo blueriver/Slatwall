@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -36,30 +36,26 @@
 Notes:
 
 --->
+<cfparam name="rc.product" type="any" />
+<cfparam name="rc.processObject" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentID#" />
-<cfparam name="rc.processStockAdjustmentSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
-
-<cfoutput>
-	<cf_SlatwallProcessForm>
-		
-		<cf_HibachiEntityActionBar type="process" />
-		
-		<cfswitch expression="#rc.processcontext#" >
-			<cfcase value="addItems">
-				
-				<cf_SlatwallProcessListing processSmartList="#rc.processStockAdjustmentSmartList#" processRecordsProperty="adjustmentSkuOptions">
-					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
-					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
-					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
-					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
-					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
-				</cf_SlatwallProcessListing>
-				
-			</cfcase> 
-				
-		</cfswitch>
-		
-	</cf_SlatwallProcessForm>
-</cfoutput>
+<cf_HibachiEntityProcessForm entity="#rc.product#" edit="#rc.edit#">
+	
+	<cf_HibachiEntityActionBar type="preprocess" object="#rc.product#">
+	</cf_HibachiEntityActionBar>
+	
+	<cf_HibachiPropertyRow>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="updatePriceFlag" fieldType="yesno" edit="#rc.edit#">
+			<cf_HibachiDisplayToggle selector="input[name='updatePriceFlag']" loadVisible="#rc.processObject.getUpdatePriceFlag()#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="price" edit="#rc.edit#">
+			</cf_HibachiDisplayToggle>
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="updateListPriceFlag" fieldType="yesno" edit="#rc.edit#">
+			<cf_HibachiDisplayToggle selector="input[name='updateListPriceFlag']" loadVisible="#rc.processObject.getUpdateListPriceFlag()#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="listPrice" edit="#rc.edit#">
+			</cf_HibachiDisplayToggle>
+		</cf_HibachiPropertyList>
+	</cf_HibachiPropertyRow>
+	
+</cf_HibachiEntityProcessForm>

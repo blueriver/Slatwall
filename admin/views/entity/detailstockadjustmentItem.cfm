@@ -44,7 +44,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#">
-		<input type="hidden" name="returnaction" value="admin:entity.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentItem.getStockAdjustment().getStockAdjustmentID()#"	 />
+		<input type="hidden" name="redirectAction" value="admin:entity.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentItem.getStockAdjustment().getStockAdjustmentID()#"	 />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList>

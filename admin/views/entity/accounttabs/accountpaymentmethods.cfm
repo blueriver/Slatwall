@@ -48,7 +48,6 @@ Notes:
 						  selectValue="#rc.account.getPrimaryPaymentMethod().getAccountPaymentMethodID()#"
 						  selectTitle="#$.slatwall.rbKey('define.primary')#"
 						  edit="#rc.edit#">
-			
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
 	<cf_HibachiListingColumn propertyIdentifier="creditCardType" />
 	<cf_HibachiListingColumn propertyIdentifier="creditCardLastFour" />
@@ -57,3 +56,4 @@ Notes:
 </cf_HibachiListingDisplay>
 
 <cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="accountID=#rc.account.getAccountID()#" modal=true />
+

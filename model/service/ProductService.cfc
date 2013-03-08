@@ -110,18 +110,18 @@ component extends="HibachiService" accessors="true" {
 	// ===================== START: Process Methods ===========================
 	
 	//Process: Product Context: updateSkus 
-	public any function processProduct_updateSkus(required any product, struct data={}, string processContext="process") {
-		
+	public any function processProduct_updateSkus(required any product, required any processObject) {
+
 		var skus = 	arguments.product.getSkus();
 		if(arrayLen(skus)){
 			for(i=1; i <= arrayLen(skus); i++){
 				// Update Price
-				if(arguments.data.updatePrice) {
-					skus[i].setPrice(arguments.data.price);	
+				if(arguments.processObject.getUpdatePriceFlag()) {
+					skus[i].setPrice(arguments.processObject.getPrice());	
 				}
 				// Update List Price
-				if(arguments.data.updateListPrice) {
-					skus[i].setListPrice(arguments.data.listPrice);	
+				if(arguments.processObject.getUpdateListPriceFlag()) {
+					skus[i].setListPrice(arguments.processObject.getListPrice());	
 				}
 			}
 		}		
@@ -129,10 +129,10 @@ component extends="HibachiService" accessors="true" {
 	}
 	
 	//Process: Product Context: addOptionGroup 
-	public any function processProduct_addOptionGroup(required any product, struct data={}, string processContext="process") {
+	public any function processProduct_addOptionGroup(required any product, required any processObject) {
 		
 		var skus = 	arguments.product.getSkus();
-		var options = getOptionService().getOptionGroup(arguments.data.optionGroup).getOptions();
+		var options = getOptionService().getOptionGroup(arguments.processObject.getOptionGroup()).getOptions();
 		
 		if(arrayLen(options)){
 			for(i=1; i <= arrayLen(skus); i++){
@@ -145,9 +145,9 @@ component extends="HibachiService" accessors="true" {
 	}
 	
 	//Process: Product Context: addOption 
-	public any function processProduct_addOption(required any product, struct data={}, string processContext="process") {
+	public any function processProduct_addOption(required any product, required any processObject) {
 		
-		var newOption = getOptionService().getOption(arguments.data.option);
+		var newOption = getOptionService().getOption(arguments.processObject.getOption());
 		var newOptionsData = {
 			options = newOption.getOptionID(),
 			price = arguments.product.getDefaultSku().getPrice()
@@ -174,13 +174,13 @@ component extends="HibachiService" accessors="true" {
 	}
 	
 	//Process: Product Context: addSubscriptionTerm 
-	public any function processProduct_addSubscriptionTerm(required any product, struct data={}, string processContext="process") {
+	public any function processProduct_addSubscriptionTerm(required any product, required any processObject) {
 		
-		var newSubscriptionTerm = getSubscriptionService().getSubscriptionTerm(arguments.data.subscriptionTermID);
+		var newSubscriptionTerm = getSubscriptionService().getSubscriptionTerm(arguments.processObject.getSubscriptionTermID());
 		var newSku = getSkuService().newSku();
 		
-		newSku.setPrice( arguments.data.price );
-		if( arguments.data.listPrice != "" && isNumeric(arguments.data.listPrice)) {
+		newSku.setPrice( arguments.processObject.getPrice() );
+		if( arguments.processObject.getListPrice() != "" && isNumeric(arguments.processObject.getListPrice() )) {
 			newSku.setListPrice( arguments.data.listPrice );	
 		}
 		newSku.setSkuCode( arguments.product.getProductCode() & "-#arrayLen(arguments.product.getSkus()) + 1#");
