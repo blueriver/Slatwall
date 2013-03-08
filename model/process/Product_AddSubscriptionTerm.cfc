@@ -4,6 +4,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="product";
 
 	// Data Properties
-	property name="optionGroup";
-	
+	property name="subscriptionTermID";
+	property name="price";
+	property name="listPrice";
 }

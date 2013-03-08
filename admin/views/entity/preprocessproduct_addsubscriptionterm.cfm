@@ -47,14 +47,9 @@ Notes:
 	
 	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList>
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="updatePriceFlag" fieldType="yesno" edit="#rc.edit#">
-			<cf_HibachiDisplayToggle selector="input[name='updatePriceFlag']" loadVisible="#rc.processObject.getUpdatePriceFlag()#">
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="price" edit="#rc.edit#">
-			</cf_HibachiDisplayToggle>
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="updateListPriceFlag" fieldType="yesno" edit="#rc.edit#">
-			<cf_HibachiDisplayToggle selector="input[name='updateListPriceFlag']" loadVisible="#rc.processObject.getUpdateListPriceFlag()#">
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="listPrice" edit="#rc.edit#">
-			</cf_HibachiDisplayToggle>
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="subscriptionTermID" fieldType="select" valueOptions="#rc.product.getUnusedProductSubscriptionTerms()#" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="price" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="listPrice" edit="#rc.edit#">
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	
