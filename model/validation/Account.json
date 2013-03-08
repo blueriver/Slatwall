@@ -1,10 +1,11 @@
 {
-	"contexts":["save","edit","delete"],
+	"contexts":["save","edit","delete","createPassword"],
 	"properties":{
-		"firstName":					[{"contexts":"save","required":true}],
-		"lastName":						[{"contexts":"save","required":true}],
-		"emailAddress":					[{"contexts":"save","dataType":"email"}],
-		"orders":						[{"contexts":"delete","maxCollection":0}],
-		"cmsAccountID":					[{"contexts":"save","uniqueOrNull":true}]
+		"firstName":							[{"contexts":"save","required":true}],
+		"lastName":								[{"contexts":"save","required":true}],
+		"emailAddress":							[{"contexts":"save","dataType":"email"}],
+		"orders":								[{"contexts":"delete","maxCollection":0}],
+		"cmsAccountID":							[{"contexts":"save","uniqueOrNull":true}],
+		"slatwallAuthenticationExistsFlag":		[{"contexts":"createPassword","eq":false},{"contexts":"changePassword","eq":true}]
 	}
 }

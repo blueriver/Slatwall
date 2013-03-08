@@ -44,10 +44,10 @@ Notes:
 		<cf_HibachiEntityActionBar type="detail" object="#rc.product#" edit="#rc.edit#">
 			<cf_HibachiActionCaller action="admin:main.createimage" queryString="productID=#rc.product.getProductID()#&directory=product&redirectAction=admin:entity.detailproduct" type="list" modal=true />
 			<li class="divider"></li>
-			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="updateSkus" modal="true" />
-			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addOptionGroup" modal="true" />
-			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addOption" modal="true" />
-			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addSubscriptionTerm" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="updateSkus" type="list" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addOptionGroup" type="list" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addOption" type="list" modal="true" />
+			<cf_SlatwallProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addSubscriptionTerm" type="list" modal="true" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>

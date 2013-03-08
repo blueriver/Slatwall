@@ -87,23 +87,34 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
-	property name="adminIcon" persistent="false";
-	property name="adminAccountFlag" persistent="false" formatType="yesno"; 
-	property name="guestAccountFlag" persistent="false" formatType="yesno";
-	property name="fullName" persistent="false";
-	property name="emailAddress" persistent="false" formatType="email";
-	property name="emailAddressConfirm" persistent="false" formatType="email";
-	property name="phoneNumber" persistent="false";
 	property name="address" persistent="false";
-	property name="password" persistent="false";
-	property name="passwordConfirm" persistent="false";
-	property name="termAccountAvailableCredit" persistent="false" formattype="currency";
-	property name="termAccountBalance" persistent="false" formattype="currency";
-	property name="gravatarURL" persistent="false";
+	property name="adminIcon" persistent="false";
+	property name="adminAccountFlag" persistent="false" formatType="yesno";
+	property name="emailAddress" persistent="false" formatType="email";
+	property name="fullName" persistent="false";
+	property name="gravatarURL" persistent="false"; 
+	property name="guestAccountFlag" persistent="false" formatType="yesno";
 	property name="ordersPlacedSmartList" persistent="false";
 	property name="ordersNotPlacedSmartList" persistent="false";
+	property name="phoneNumber" persistent="false";
+	property name="slatwallAuthenticationExistsFlag" persistent="false";
+	property name="termAccountAvailableCredit" persistent="false" formattype="currency";
+	property name="termAccountBalance" persistent="false" formattype="currency";
 	
-
+	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
+		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
+	}
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getAddress() {
+		return getPrimaryAddress().getAddress();
+	}
+	
+	public string function getAdminIcon() {
+		return '<img src="#getGravatarURL(55)#" style="width:55px;" />';
+	}
+	
 	public boolean function getAdminAccountFlag() {
 		if(getSuperUserFlag() || arrayLen(variables.permissionGroups)) {
 			return true;
@@ -111,15 +122,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return false;
 	}
 	
-	public boolean function getSuperUserFlag() {
-		if(isNull(variables.superUserFlag)) {
-			variables.superUserFlag = false;
-		}
-		return variables.superUserFlag;
+	public string function getEmailAddress() {
+		return getPrimaryEmailAddress().getEmailAddress();
 	}
-
-	public boolean function isGuestAccount() {
-		return isNull(getCmsAccountID());
+	
+	public string function getFullName() {
+		return "#getFirstName()# #getLastName()#";
 	}
 	
 	public string function getGravatarURL(numeric size=80) {
@@ -130,35 +138,53 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
-	public string function getAdminIcon() {
-		return '<img src="#getGravatarURL(55)#" style="width:55px;" />';
-	}
-	
-	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
-		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
-	}
-	
-	// ============ START: Non-Persistent Property Methods =================
-	
 	public boolean function getGuestAccountFlag() {
-		return isNull(getCmsAccountID());
+		return !arrayLen(getAccountAuthentications());
 	}
+	
+	public any function getOrdersPlacedSmartList() {
+		if(!structKeyExists(variables, "ordersPlacedSmartList")) {
+			var osl = getService("orderService").getOrderSmartList();
+			osl.addFilter('account.accountID', getAccountID());
+			osl.addInFilter('orderStatusType.systemCode', 'ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled');
+			osl.addOrder("orderOpenDateTime|DESC");
+			
+			variables.ordersPlacedSmartList = osl;
+		}
+		return variables.ordersPlacedSmartList;	
+	}
+	
+	public any function getOrdersNotPlacedSmartList() {
+		if(!structKeyExists(variables, "ordersNotPlacedSmartList")) {
+			var osl = getService("orderService").getOrderSmartList();
+			osl.addFilter('account.accountID', getAccountID());
+			osl.addInFilter('orderStatusType.systemCode', 'ostNotPlaced');
+			osl.addOrder("lastModifiedDateTime|DESC");
+			
+			variables.ordersNotPlacedSmartList = osl;
+		}
+		return variables.ordersNotPlacedSmartList;	
+	}
+	
 	
 	public string function getPhoneNumber() {
 		return getPrimaryPhoneNumber().getPhoneNumber();
 	}
 	
-	public string function getEmailAddress() {
-		return getPrimaryEmailAddress().getEmailAddress();
+	public boolean function getSlatwallAuthenticationExistsFlag() {
+		if(!structKeyExists(variables, "slatwallAuthenticationExistsFlag")) {
+			variables.slatwallAuthenticationExistsFlag = false;
+			var authArray = getAccountAuthentications();
+			for(var a=1; a<=arrayLen(authArray); a++) {
+				if(isNull(authArray[a].getIntegration())) {
+					variables.slatwallAuthenticationExistsFlag = true;
+					break;
+				}
+			}
+		}
+		return variables.slatwallAuthenticationExistsFlag;
 	}
 	
-	public any function getAddress() {
-		return getPrimaryAddress().getAddress();
-	}
-	
-	public string function getFullName() {
-		return "#getFirstName()# #getLastName()#";
-	}
 	
 	public any function getPaymentMethodOptionsSmartList() {
 		if(!structKeyExists(variables, "paymentMethodOptionsSmartList")) {
@@ -192,31 +218,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		
 		return termAccountBalance;
 	}
-	
-	public any function getOrdersPlacedSmartList() {
-		if(!structKeyExists(variables, "ordersPlacedSmartList")) {
-			var osl = getService("orderService").getOrderSmartList();
-			osl.addFilter('account.accountID', getAccountID());
-			osl.addInFilter('orderStatusType.systemCode', 'ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled');
-			osl.addOrder("orderOpenDateTime|DESC");
-			
-			variables.ordersPlacedSmartList = osl;
-		}
-		return variables.ordersPlacedSmartList;	
-	}
-	
-	public any function getOrdersNotPlacedSmartList() {
-		if(!structKeyExists(variables, "ordersNotPlacedSmartList")) {
-			var osl = getService("orderService").getOrderSmartList();
-			osl.addFilter('account.accountID', getAccountID());
-			osl.addInFilter('orderStatusType.systemCode', 'ostNotPlaced');
-			osl.addOrder("lastModifiedDateTime|DESC");
-			
-			variables.ordersNotPlacedSmartList = osl;
-		}
-		return variables.ordersNotPlacedSmartList;	
-	}
-	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
@@ -470,6 +471,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
+	public boolean function getSuperUserFlag() {
+		if(isNull(variables.superUserFlag)) {
+			variables.superUserFlag = false;
+		}
+		return variables.superUserFlag;
+	}
+	
+	
 	
 	// ==================  END:  Overridden Methods ========================
 	
@@ -481,6 +490,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	public array function getAttributeSets(array attributeSetTypeCode){
 		return getAssignedAttributeSetSmartList().getRecords();
+	}
+	
+	public boolean function isGuestAccount() {
+		return getGuestAccountFlag();
 	}
 	
 	// ==================  END:  Deprecated Methods ========================

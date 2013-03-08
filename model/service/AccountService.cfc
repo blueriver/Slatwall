@@ -68,9 +68,26 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: Process Methods ===========================
 	
-	public any function processAccount_changePassword(required any account, struct data={}) {
-		// TODO: Add Change Password Logic Here
-		throw("Impliment Me!");
+	public any function processAccount_createPassword(required any account, required any processObject) {
+		var accountAuthentication = this.newAccountAuthentication();
+		accountAuthentication.setAccount( arguments.account );
+	
+		// Put the accountAuthentication into the hibernate scope so that it has an id which will allow the hash / salting below to work
+		getHibachiDAO().save(accountAuthentication);
+	
+		// Set the password
+		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
+	}
+	
+	public any function processAccount_changePassword(required any account, required any processObject) {
+		var authArray = arguments.account.getAccountAuthentications();
+		for(var i=1; i<=arrayLen(authArray); i++) {
+			// Find the non-integration authentication
+			if(isNull(authArray[i].getIntegration())) {
+				// Set the password
+				authArray[i].setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), authArray[i].getAccountAuthenticationID()) );		
+			}
+		}
 	}
 	
 	public any function processAccount_create(required any account, required any processObject) {
@@ -107,7 +124,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			getHibachiDAO().save(accountAuthentication);
 		
 			// Set the password
-			accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.data.password, accountAuthentication.getAccountAuthenticationID()) );	
+			accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
 		}
 		
 		// Call save on the account now that it is all setup
