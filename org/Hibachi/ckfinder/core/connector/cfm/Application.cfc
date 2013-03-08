@@ -12,17 +12,14 @@
 
 <cfcomponent displayname="Application" output="false" hint="Pre-page processing for the application">
 
-	<!---
-	Run the pseudo constructor to set up default
-	data structures.
-	--->
-	<cfinclude template="../../../../../../../config/applicationSettings.cfm">
-	<cfinclude template="../../../../../../../config/mappings.cfm">
-	<cfinclude template="../../../../../../../plugins/mappings.cfm">
+	<cfinclude template="../../../../../../config/configApplication.cfm" />
+	<cftry><cfinclude template="../../../../../../custom/config/configApplication.cfm" /><cfcatch></cfcatch></cftry>
+	
 	<cfscript>
-	THIS.mappings["/CKFinder_Connector"] = mapPrefix & BaseDir & "/plugins/Slatwall/org/ckfinder/core/connector/cfm/";
+		this.sessionManagement = true;
+		THIS.mappings["/CKFinder_Connector"] = expandPath(getDirectoryFromPath(getCurrentTemplatePath()));
 	</cfscript>
-
+	
 	<!--- Include the CFC creation proxy. --->
 	<cfinclude template="createcfc.udf.cfm" />
 
@@ -53,5 +50,4 @@
 		<cfset APPLICATION.CFVersion = Left(SERVER.COLDFUSION.PRODUCTVERSION,Find(",",SERVER.COLDFUSION.PRODUCTVERSION)-1) />
 		<cfreturn true />
 	</cffunction>
-
 </cfcomponent>

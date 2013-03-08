@@ -141,6 +141,8 @@ component extends="FW1.framework" {
 	public void function setupRequest() {
 		setupGlobalRequest();
 		
+		application[ "#variables.framework.applicationKey#Bootstrap" ] = this.bootstrap;
+		
 		// Verify Authentication before anything happens
 		if(!getHibachiScope().getService("hibachiAuthenticationService").authenticateAction( action=request.context[ getAction() ], account=request[ "#variables.framework.applicationKey#Scope" ].getAccount() )) {
 			redirect(action="admin:main.login");

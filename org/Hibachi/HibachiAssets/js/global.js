@@ -74,7 +74,7 @@ function initUIElements( scopeSelector ) {
 	// Wysiwyg
 	jQuery.each(jQuery( '.wysiwyg' ), function(i, v){
 		var editor = CKEDITOR.replace( v );
-		CKFinder.setupCKEditor( editor, 'org/ckfinder/' ) ;
+		CKFinder.setupCKEditor( editor, 'org/Hibachi/ckfinder/' );
 	});
 	
 	// Tooltips

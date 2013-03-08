@@ -43,8 +43,8 @@ Notes:
 <div class="modal-body" style="padding:0px;">
 	<div style="width:900px;">
 		<cfscript>
-			ckfinder = createObject( "component", "Slatwall.org.ckfinder.ckfinder" ) ;
-			ckfinder.BasePath = "/plugins/Slatwall/org/ckfinder" ;
+			ckfinder = createObject( "component", "Slatwall.org.Hibachi.ckfinder.ckfinder" ) ;
+			ckfinder.BasePath = "/org/Hibachi/ckfinder" ;
 			ckfinder.SelectFunction = 'ShowFileInfo' ;
 			ckfinder.Height = 460;
 			ckfinder.Width = 900;

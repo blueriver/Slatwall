@@ -24,6 +24,10 @@
 				}
 			},
 			
+			getConfig : function( ) {
+				return config;
+			},
+			
 			getEntity : function( entityName, entityID, cbs, cbf ) {
 				
 				var doasync = arguments.length > 2;
@@ -81,8 +85,8 @@
 		
 		// Define Public API Methods
 		this.setConfig = methods.setConfig;
+		this.getConfig = methods.getConfig;
 		this.getEntity = methods.getEntity;
-		this.getSmartList = methods.getSmartList;
 		this.getSmartList = methods.getSmartList;
 		this.onError = methods.onError;
 	}
