@@ -38,13 +38,17 @@ Notes:
 */
 component extends="HibachiService" accessors="true" output="false" {
 
+	// Injected Services
 	property name="commentService" type="any";
 	property name="locationService" type="any";
 	property name="skuService" type="any";
 	property name="settingService" type="any";
 	
+	// Inject DAO's
+	property name="stockDAO" type="any";
+	
 	public any function getStockBySkuAndLocation(required any sku, required any location){
-		var stock = getSkuDAO().getStockBySkuAndLocation(argumentCollection=arguments);
+		var stock = getStockDAO().getStockBySkuAndLocation(argumentCollection=arguments);
 		
 		if(isNull(stock)) {
 			
@@ -68,7 +72,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	public any function getStockAdjustmentItemForSku(required any sku, required any stockAdjustment){
-		var stockAdjustmentItem = getSkuDAO().getStockAdjustmentItemForSku(arguments.sku, arguments.stockAdjustment);
+		var stockAdjustmentItem = getStockDAO().getStockAdjustmentItemForSku(arguments.sku, arguments.stockAdjustment);
 		
 		if(isNull(stockAdjustmentItem)) {
 			stockAdjustmentItem = this.newStockAdjustmentItem();
@@ -78,7 +82,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	public any function getEstimatedReceivalDetails(required string productID) {
-		return createEstimatedReceivalDataStruct( getSkuDAO().getEstimatedReceival(arguments.productID) );
+		return createEstimatedReceivalDataStruct( getStockDAO().getEstimatedReceival(arguments.productID) );
 	}
 	
 	private struct function createEstimatedReceivalDataStruct(required array receivalArray) {
