@@ -57,7 +57,8 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 					
 		// Loop over attribute sets
 		for(var ats=1; ats<=arrayLen(assignedAttributeSets); ats++) {
-			var attributes = assignedAttributeSets.getAttributes();
+			
+			var attributes = assignedAttributeSets[ats].getAttributes();
 			
 			for(var at=1; at<=arrayLen(attributes); at++) {
 				if(structKeyExists(arguments.data, attributes[at].getAttributeCode())) {
