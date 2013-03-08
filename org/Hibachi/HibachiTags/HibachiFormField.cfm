@@ -84,6 +84,17 @@
 				<input name="#attributes.fieldName#" type="hidden" value="" />
 				<select name="#attributes.fieldName#" class="#attributes.fieldClass# multiselect" multiple="multiple" #attributes.fieldAttributes#>
 					<cfloop array="#attributes.valueOptions#" index="option">
+						<cfset thisOptionName = "" />
+						<cfset thisOptionValue = "" />
+						<cfset thisOptionData = "" />
+						<cfif isSimpleValue(option)>
+							<cfset thisOptionName = option />
+							<cfset thisOptionValue = option />
+						<cfelse>
+							<cfloop collection="#option#" item="key">
+								<cfdump var="#key#" abort />
+							</cfloop>
+						</cfif>
 						<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
 						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
 						<option value="#thisOptionValue#" <cfif listFindNoCase(attributes.value, thisOptionValue)> selected="selected"</cfif>>#thisOptionName#</option>
@@ -121,9 +132,24 @@
 			<cfoutput>
 				<select name="#attributes.fieldName#" class="#attributes.fieldClass#" #attributes.fieldAttributes#>
 					<cfloop array="#attributes.valueOptions#" index="option">
-						<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
-						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
-						<option value="#thisOptionValue#" <cfif attributes.value EQ thisOptionValue> selected="selected"</cfif>>#thisOptionName#</option>
+						<cfset thisOptionName = "" />
+						<cfset thisOptionValue = "" />
+						<cfset thisOptionData = "" />
+						<cfif isSimpleValue(option)>
+							<cfset thisOptionName = option />
+							<cfset thisOptionValue = option />
+						<cfelse>
+							<cfloop collection="#option#" item="key">
+								<cfif key eq "name">
+									<cfset thisOptionName = option[ key ] />
+								<cfelseif key eq "value">
+									<cfset thisOptionValue = option[ key ] />
+								<cfelse>
+									<cfset thisOptionData = listAppend(thisOptionData, 'data-#replace(lcase(key), '_', '-', 'all')#="#option[key]#"', ' ') />
+								</cfif>
+							</cfloop>
+						</cfif>
+						<option value="#thisOptionValue#" #thisOptionData#<cfif attributes.value EQ thisOptionValue> selected="selected"</cfif>>#thisOptionName#</option>
 					</cfloop>
 				</select>
 			</cfoutput>

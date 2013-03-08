@@ -39,11 +39,11 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_HibachiListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
-		recordEditAction="admin:entity.editaccountpaymentmethod"
-		recordEditQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
-		recordEditModal=true
-		recordDeleteAction="admin:entity.deleteaccountpaymentmethod"
-		recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount">
+						  recordEditAction="admin:entity.editaccountpaymentmethod"
+						  recordEditQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
+						  recordEditModal=true
+						  recordDeleteAction="admin:entity.deleteaccountpaymentmethod"
+						  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount">
 			
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
 	<cf_HibachiListingColumn propertyIdentifier="creditCardType" />
@@ -52,9 +52,4 @@ Notes:
 	<cf_HibachiListingColumn propertyIdentifier="expirationYear" />
 </cf_HibachiListingDisplay>
 
-<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
-	<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-		<cf_HibachiActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()#" action="admin:entity.createaccountpaymentmethod" querystring="accountID=#rc.account.getAccountID()#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&returnAction=admin:entity.detailaccount" modal=true />
-	</cfloop>
-</cf_HibachiActionCallerDropdown>
-
+<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="accountID=#rc.account.getAccountID()#" modal=true />
