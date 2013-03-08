@@ -42,6 +42,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.accountEmailAddress#" edit="#rc.edit#" sRenderItem="detailaccount">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.accountEmailAddress#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
 		<!--- Hidden field to allow rc.account to be set on invalid submit --->
 		<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />

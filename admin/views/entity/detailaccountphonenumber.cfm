@@ -42,6 +42,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.accountPhoneNumber#" edit="#rc.edit#" sRenderItem="detailaccount">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPhoneNumber#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
 		<!--- Hidden field to allow rc.account to be set on invalid submit --->
 		<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
@@ -53,18 +54,3 @@ Notes:
 		<cf_HibachiPropertyDisplay object="#rc.accountPhoneNumber#" property="accountPhoneType" edit="#rc.edit#">
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
