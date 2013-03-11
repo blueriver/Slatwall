@@ -40,13 +40,11 @@ component displayname="Vendor Address" entityname="SlatwallVendorAddress" table=
 	
 	// Persistent Properties
 	property name="vendorAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-		
+	
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID" cascade="all";
 
-
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -81,6 +79,11 @@ component displayname="Vendor Address" entityname="SlatwallVendorAddress" table=
 		}
 		return getService("addressService").newAddress();
 	}
+	
+	public string function getSimpleRepresentation() {
+		return getVendor().getVendorName();
+	}
+	
 	
 	// ==================  END:  Overridden Methods ========================
 

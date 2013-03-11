@@ -36,17 +36,21 @@
 Notes:
 
 --->
-<cfparam name="rc.vendor" type="any">
 <cfparam name="rc.vendorAddress" type="any">
+<cfparam name="rc.vendor" type="any" default="#rc.vendorAddress.getVendor()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.vendor#" saveAction="admin:entity.savevendor" edit="#rc.edit#">
-		<input type="hidden" name="vendorAddresses[1].vendorAddressID" value="#rc.vendorAddress.getVendorAddressID()#" />
-		<cf_SlatwallAddressDisplay address="#rc.vendorAddress.getAddress()#" fieldNamePrefix="vendorAddresses[1].address." showCompany="false" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.vendorAddress#" edit="#rc.edit#" sRenderItem="detailvendor">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.vendorAddress#" edit="#rc.edit#" backAction="admin:entity.detailVendor" backQueryString="attributeID=#rc.vendor.getVendorID()#"></cf_HibachiEntityActionBar>
+			
+		<input type="hidden" name="vendor.vendorID" value="#rc.vendor.getVendorID()#" />
+		<input type="hidden" name="vendorID" value="#rc.vendor.getVendorID()#" />
 		
+		<cf_SlatwallAdminAddressDisplay address="#rc.vendorAddress.getAddress()#" fieldNamePrefix="address." showCompany="false" edit="#rc.edit#">
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
+
 
 
 
