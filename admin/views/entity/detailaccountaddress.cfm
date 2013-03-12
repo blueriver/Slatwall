@@ -42,7 +42,12 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.accountAddress#" edit="#rc.edit#" sRenderItem="detailaccount">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.accountAddress#" edit="#rc.edit#" backAction="admin:entity.detailAccount" backQueryString="accountID=#rc.account.getAccountID()#"></cf_HibachiEntityActionBar>
+		<cf_HibachiEntityActionBar type="detail" object="#rc.accountAddress#" edit="#rc.edit#" 
+					backAction="admin:entity.detailAccount" 
+					backQueryString="accountID=#rc.account.getAccountID()#"
+					cancelAction="admin:entity.detailAccount"
+					cancelQueryString="accountID=#rc.account.getAccountID()#">
+		</cf_HibachiEntityActionBar>
 		
 		<!--- Hidden field to allow rc.account to be set on invalid submit --->
 		<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />

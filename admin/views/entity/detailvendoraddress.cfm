@@ -42,7 +42,13 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.vendorAddress#" edit="#rc.edit#" sRenderItem="detailvendor">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.vendorAddress#" edit="#rc.edit#" backAction="admin:entity.detailVendor" backQueryString="attributeID=#rc.vendor.getVendorID()#"></cf_HibachiEntityActionBar>
+		<cf_HibachiEntityActionBar type="detail" object="#rc.vendorAddress#" edit="#rc.edit#" 
+								   backAction="admin:entity.detailVendor" 
+								   backQueryString="vendorID=#rc.vendor.getVendorID()#"
+								   cancelAction="admin:entity.detailVendor"
+								   cancelQueryString="vendorID=#rc.vendor.getVendorID()#">
+								   	   
+		</cf_HibachiEntityActionBar>
 			
 		<input type="hidden" name="vendor.vendorID" value="#rc.vendor.getVendorID()#" />
 		<input type="hidden" name="vendorID" value="#rc.vendor.getVendorID()#" />
