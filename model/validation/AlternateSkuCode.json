@@ -1,0 +1,6 @@
+{
+	"contexts":["save","edit","delete"],
+	"properties":{
+		"alternateSkuCode":		[{"contexts":"save","required":true}]
+	}
+}

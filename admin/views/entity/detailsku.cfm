@@ -42,7 +42,11 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.sku#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" backAction="admin:entity.detailproduct" backQueryString="productID=#rc.product.getProductID()#" cancelAction="admin:entity.detailsku" deleteQueryString="redirectAction=admin:entity.detailProduct&productID=#rc.product.getProductID()#" />
+		<cf_HibachiEntityActionBar type="detail" object="#rc.sku#" edit="#rc.edit#" 
+					backAction="admin:entity.detailproduct" 
+					backQueryString="productID=#rc.product.getProductID()#" 
+					cancelAction="admin:entity.detailsku" 
+					deleteQueryString="redirectAction=admin:entity.detailProduct&productID=#rc.product.getProductID()#" />
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList divclass="span6">
