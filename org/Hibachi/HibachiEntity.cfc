@@ -118,7 +118,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	
 	// @hint this method is defined so that it can be overriden in entities and a different validation context can be applied based on what this entity knows about itself
 	public void function setProcessObject( required any processObject ) {
-		arguments.processObject.invokeMethod("set#getClassName()#", this);
+		arguments.processObject.invokeMethod("set#this.getClassName()#", {1=this});
 		variables.processObjects[ listLast(arguments.processObject.getClassName(), "_") ] = arguments.processObject;
 	}
 	

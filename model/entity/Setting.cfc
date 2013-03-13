@@ -123,9 +123,6 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 		
 		var settingMetaData = getSettingMetaData();
 		
-		//writedump(var=getSettingName());
-		//abort;
-		
 		if (structKeyExists(settingMetaData,"validate")){
 			for (var constraint in settingMetaData.validate){
 				var constraintDetail = {
@@ -137,6 +134,30 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 			}
 		}
 		
+	}
+	
+	// @hint public method for returning the validation class of a property
+	public string function getPropertyValidationClass( required string propertyName, string context="save" ) {
+		
+		// Call the base method first
+		var validationClass = super.getPropertyValidationClass(argumentCollection=arguments);
+		
+		var settingMetaData = getSettingMetaData();
+		if (structKeyExists(settingMetaData,"validate")){
+			for (var constraint in settingMetaData.validate){
+				if(constraint == "required") {
+					validationClass = listAppend(validationClass, "required", " ");
+				} else if (constraint == "dataType") {
+					if(settingMetaData.validate[constraint] == "numeric") {
+						validationClass = listAppend(validationClass, "number", " ");
+					} else {
+						validationClass = listAppend(validationClass, settingMetaData.validate[constraint], " ");
+					}
+				}
+			}
+		}
+		
+		return validationClass;
 	}
 	
 	// ==================  END:  Overridden Methods ========================

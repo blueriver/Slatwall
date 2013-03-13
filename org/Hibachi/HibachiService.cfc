@@ -591,14 +591,23 @@
 			
 			export(data=exportQry);
 		}
-	
+		
+		// @hint returns the correct service on a given entityName.  This is very useful for creating abstract code
+		public boolean function getEntityNameIsValidFlag( required string entityName ) {
+			
+			// Use the short version of the entityName
+			if(len(getProperlyCasedShortEntityName(arguments.entityName, true))){
+				return true;
+			}
+			
+			return false;
+		}
+		
 		// @hint returns the correct service on a given entityName.  This is very useful for creating abstract code
 		public any function getServiceByEntityName( required string entityName ) {
 			
-			// This removes the Application Prefix to the entityName when needed.
-			if(left(arguments.entityName, len(getApplicationValue('applicationKey'))) == getApplicationValue('applicationKey')) {
-				arguments.entityName = right(arguments.entityName, len(arguments.entityName) - len(getApplicationValue('applicationKey')));
-			}
+			// Use the short version of the entityName
+			arguments.entityName = getProperlyCasedShortEntityName(arguments.entityName);
 			
 			if(structKeyExists(getEntitiesMetaData(), arguments.entityName) && structKeyExists(getEntitiesMetaData()[arguments.entityName], "hb_serviceName")) {
 				return getService( getEntitiesMetaData()[ arguments.entityName ].hb_serviceName );
@@ -610,7 +619,7 @@
 		
 		// ======================= START: Entity Name Helper Methods ==============================
 		
-		public string function getProperlyCasedShortEntityName( required string entityName ) {
+		public string function getProperlyCasedShortEntityName( required string entityName, boolean returnBlankIfNotFound=false ) {
 			if(left(arguments.entityName, len(getApplicationValue('applicationKey'))) == getApplicationValue('applicationKey')) {
 				arguments.entityName = right(arguments.entityName, len(arguments.entityName)-len(getApplicationValue('applicationKey')));
 			}
@@ -619,6 +628,10 @@
 				var keyList = structKeyList(getEntitiesMetaData());
 				var keyIndex = listFindNoCase(keyList, arguments.entityName);
 				return listGetAt(keyList, keyIndex);
+			}
+			
+			if(arguments.returnBlankIfNotFound) {
+				return "";
 			}
 			
 			throw("The entity name that you have requested: #arguments.entityname# is not in the ORM Library of entity names that is setup in coldsrping.  Please add #arguments.entityname# to the list of entity mappings in coldspring.");
@@ -725,11 +738,6 @@
 		// @hint leverages the getEntityHasPropertyByEntityName() by traverses a propertyIdentifier first using getLastEntityNameInPropertyIdentifier()
 		public boolean function getHasPropertyByEntityNameAndPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
 			return getEntityHasPropertyByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), propertyName=listLast(arguments.propertyIdentifier, "._") );
-		}
-		
-		// @hint leverages the getEntityHasAttributeByEntityName() by traverses a propertyIdentifier first using getLastEntityNameInPropertyIdentifier()
-		public boolean function getHasAttributeByEntityNameAndPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
-			return getEntityHasAttributeByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), attributeCode=listLast(arguments.propertyIdentifier, "._") );
 		}
 		
 		// @hint traverses a propertyIdentifier to find the last entityName in the list... this is then used by the hasProperty and hasAttribute methods()

@@ -630,7 +630,57 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: Process Methods ===========================
 	
-	// Process Order
+	
+	public any function processOrder_create(required any order, required any processObject, required struct data={}) {
+		// Setup Account
+		if(arguments.processObject.getNewAccountFlag()) {
+			var account = getAccountService().processAccount(getAccountService().newAccount(), arguments.data, "create");
+		} else {
+			var account = getAccountService().getAccount(processObject.getAccountID());
+		}
+		arguments.order.setAccount(account);
+		
+		// Setup the Order Origin
+		if( len(arguments.processObject.getOrderOriginID()) ) {
+			arguments.order.setOrderOrigin( getSettingService().getOrderOrigin(arguments.processObject.getOrderOriginID()) );
+		}
+		
+		// Determine the order type
+		var orderType = getSettingService().getType( processObject.getOrderTypeID() );
+		
+		// If the order type is sales or exchange then setup the first fulfillment
+		if(listFindNoCase("otSalesOrder,otExchangeOrder", orderType.getSystemCode())) {
+			
+			// Setup the first order fulfillment
+			var orderFulfillment = this.newOrderFulfillment();
+			var fulfillmentMethod = getFulfillmentService().getFulfillmentMethod(processObject.getFulfillmentMethodID());
+			
+			// Set the fulfillment method
+			orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
+			
+			// If this order fulfillment is shipping then set the account address as the
+			if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping" && !arguments.order.getAccount().getPrimaryAddress().isNew()) {
+				orderFulfillment.setAccountAddress( order.getAccount().getPrimaryAddress() );
+			}
+			
+			orderFulfillment.setOrder( arguments.order );
+		}
+		
+		// If the order type is a return or exchange then setup the first order return
+		if (listFindNoCase("otReturnOrder,otExchangeOrder", orderType.getSystemCode())) {
+			
+			// Setup the first order fulfillment
+			var orderReturn = this.newOrderReturn();
+			
+			orderReturn.setOrder( arguments.order );
+		}
+		
+		// Save the order
+		arguments.order = this.saveOrder(arguments.order);
+		
+		return arguments.order;
+	}
+	
 	public any function processOrder_placeOrder(required any order, struct data={}, string processContext="process") {
 		// First we need to lock the session so that this order doesn't get placed twice.
 		lock scope="session" timeout="60" {
