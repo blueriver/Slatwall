@@ -64,7 +64,7 @@ Notes:
 			
 			<input type="hidden" name="process" value="1" />
 			
-			<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyRow>
 				<cf_HibachiPropertyList>
 					<cfif rc.accountPaymentTypeSystemCode eq "aptCharge">
 						<cf_HibachiFieldDisplay fieldname="processContext" title="#$.slatwall.rbKey('admin.order.createorderpayment.transactionType')#" fieldtype="select" valueOptions="#[{value='authorizeAndCharge', name=$.slatwall.rbKey('define.authorizeAndCharge')}, {value='authorize', name=$.slatwall.rbKey('define.authorize')}]#" edit="true">
@@ -73,9 +73,9 @@ Notes:
 					</cfif>
 					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="amount" edit="#rc.edit#" value="#local.amount#" />
 				</cf_HibachiPropertyList>
-			</cf_HibachiDetailHeader>
+			</cf_HibachiPropertyRow>
 			
-			<cf_HibachiDetailHeader>
+			<cf_HibachiPropertyRow>
 				<cf_HibachiPropertyList divClass="span6">
 					<cf_SlatwallAddressDisplay address="#$.slatwall.getService("addressService").newAddress()#" fieldnameprefix="billingAddress." edit="#rc.edit#" />
 				</cf_HibachiPropertyList>
@@ -86,7 +86,7 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="expirationYear" edit="#rc.edit#" />
 					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="securityCode" edit="#rc.edit#" />
 				</cf_HibachiPropertyList>
-			</cf_HibachiDetailHeader>
+			</cf_HibachiPropertyRow>
 			
 		<!--- Check --->
 		<cfelseif rc.paymentMethod.getPaymentMethodType() eq "check">

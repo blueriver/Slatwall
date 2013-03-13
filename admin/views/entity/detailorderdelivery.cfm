@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.orderDelivery#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.orderDelivery#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="createdDateTime">
 				<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="fulfillmentMethod">
 				<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="trackingNumber">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiListingDisplay smartList="#rc.orderDelivery.getOrderDeliveryItemsSmartList()#">
 			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.title" />

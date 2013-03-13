@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.schedule#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.schedule#" edit="#rc.edit#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="scheduleName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="recuringType" edit="#rc.edit#">
@@ -53,7 +53,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="frequencyStartTime" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="frequencyEndTime" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.schedule#">
 			

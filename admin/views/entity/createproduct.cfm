@@ -49,7 +49,7 @@ Notes:
 			<input type="hidden" name="baseProductType" value="#rc.baseProductType#" />
 		</cfif>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="productName" edit="true">
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="productCode" edit="true">
@@ -57,7 +57,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="productType" edit="true" valueOptions="#rc.product.getProductTypeOptions( rc.baseProductType )#">
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="price" edit="true">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cfif rc.baseProductType eq "merchandise">
 			<div class="row-fluid">

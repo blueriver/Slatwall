@@ -47,7 +47,7 @@ Notes:
 			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.updateSubscription_nav')#" queryString="process=1&processContext=update&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&redirectAction=admin:entity.detailsubscriptionusage" type="list" />
 		</cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="currentStatusType" edit="false">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="autoRenewFlag" edit="#rc.edit#">
@@ -58,7 +58,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="gracePeriodTerm" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="accountPaymentMethod" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.subscriptionUsage#">
 			<!---<cf_HibachiTab view="admin:entity/subscriptionusagetabs/usagebenifits">

@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.country#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.country#" edit="#rc.edit#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.country#" property="countryCode" edit="false">
 				<cf_HibachiPropertyDisplay object="#rc.country#" property="activeFlag" edit="#rc.edit#">
@@ -73,6 +73,6 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.country#" property="postalCodeRequiredFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.country#" property="postalCodeLabel" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

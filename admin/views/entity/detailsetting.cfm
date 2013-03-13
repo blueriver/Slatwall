@@ -68,7 +68,7 @@ Notes:
 		<input type="hidden" name="settingName" value="#rc.settingName#" />
 		#local.hiddenKeyFields#
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cfif not rc.setting.isNew() and structKeyExists(rc.setting.getSettingMetaData(), "encryptValue")>
 					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" data-emptyvalue="********" displayType="plain">
@@ -80,6 +80,6 @@ Notes:
 				<!--- &fRedirectQS=#local.redirectQS#&sRedirectAction=#rc.entityActionDetails.sRedirectAction#&fRedirectAction=#rc.entityActionDetails.fRedirectAction# --->
 				<cf_HibachiActionCaller action="admin:entity.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&#local.redirectQS#&redirectAction=#rc.entityActionDetails.sRedirectAction#" class="btn btn-danger" />
 			</cfif>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

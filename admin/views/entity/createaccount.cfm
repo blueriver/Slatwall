@@ -45,7 +45,7 @@ Notes:
 	</cf_HibachiEntityActionBar>
 	
 	<cfif rc.account.isNew()>
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
@@ -55,9 +55,9 @@ Notes:
 				<input type="hidden" name="primaryAddress.accountAddressName" value="Primary Address" />
 				<cf_SlatwallAddressDisplay address="#rc.account.getPrimaryAddress().getAddress()#" showName="false" showCompany="false" fieldnameprefix="primaryAddress.address." />
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 	<cfelse>
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divclass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
@@ -69,7 +69,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
 				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 	</cfif>
 	
 </cf_HibachiEntityDetailForm>

@@ -45,7 +45,7 @@ Notes:
 			<cf_HibachiProcessCaller entity="#rc.orderFulfillment#" action="admin:entity.processorderfulfillment" processContext="fulfillItems" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" />
 		</cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divClass="span6">
 				<cfif !isNull(rc.orderFulfillment.getAddress())>
 					<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" fieldnameprefix="shippingAddress." edit="#rc.edit#">
@@ -60,7 +60,7 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="false">
 				</cfif>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.orderFulfillment#">
 			<cf_HibachiTab view="admin:entity/orderfulfillmenttabs/orderfulfillmentitems">

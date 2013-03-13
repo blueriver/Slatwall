@@ -45,12 +45,12 @@ Notes:
 		<cf_HibachiEntityActionBar type="detail" object="#rc.stockReceiver#" edit="#rc.edit#">
 		</cf_HibachiEntityActionBar>
 			
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.stockReceiver#" property="packingSlipNumber" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.stockReceiver#" property="boxCount" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.stockReceiver#">
 			<cf_HibachiTab view="admin:entity/stockreceivertabs/stockreceiveritems" />

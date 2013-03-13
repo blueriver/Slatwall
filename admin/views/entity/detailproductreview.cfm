@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.productReview#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.productReview#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.productReview#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.productReview#" property="reviewTitle" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.productReview#" property="review" edit="#rc.edit#" fieldType="textarea">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 
 		<cf_HibachiTabGroup object="#rc.productReview#">
 			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->

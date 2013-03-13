@@ -50,7 +50,7 @@ Notes:
 	
 		<input type="hidden" name="paymentMethodType" value="#rc.paymentMethod.getPaymentMethodType()#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
@@ -61,7 +61,7 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="allowSaveFlag" edit="#rc.edit#">
 				</cfif>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cfif not rc.paymentMethod.isNew()>
 			<cfoutput>#view("admin:entity/paymentmethodtypes/#lcase(rc.paymentMethod.getPaymentMethodType())#")#</cfoutput>

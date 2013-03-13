@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.content#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.content#" edit="#rc.edit#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.content#" property="title">
 				<cf_HibachiPropertyDisplay object="#rc.content#" property="activeFlag" edit="#rc.edit#">
@@ -51,7 +51,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.content#" property="productListingPageFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.content#" property="allowPurchaseFlag" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 
 		<cf_HibachiTabGroup object="#rc.content#">
 			

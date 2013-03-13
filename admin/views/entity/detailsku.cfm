@@ -48,7 +48,7 @@ Notes:
 					cancelAction="admin:entity.detailsku" 
 					deleteQueryString="redirectAction=admin:entity.detailProduct&productID=#rc.product.getProductID()#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divclass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.sku#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.sku#" property="userDefinedPriceFlag" edit="#rc.edit#">
@@ -77,7 +77,7 @@ Notes:
 				</cfif>
 			</cf_HibachiPropertyList>
 			
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 
 		<cf_HibachiTabGroup object="#rc.sku#" allowCustomAttributes="true">
 			<cfif rc.product.getBaseProductType() EQ "subscription">

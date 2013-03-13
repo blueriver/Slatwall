@@ -46,7 +46,7 @@ Notes:
 		<input type="hidden" name="task.taskID" value="#rc.task.getTaskID()#"/>
 		<input type="hidden" name="redirectAction" value="admin:entity.edittask&taskID=#rc.task.getTaskID()###tabtaskschedule" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.taskschedule#" property="schedule" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.taskschedule#" property="startDateTime" edit="#rc.edit#">
@@ -54,7 +54,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.taskschedule#" property="successEmailList" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.taskschedule#" property="failureEmailList" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

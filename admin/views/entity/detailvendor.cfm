@@ -44,7 +44,7 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createvendoraddress" queryString="vendorID=#rc.vendor.getVendorID()#" type="list" modal=true />
 	</cf_HibachiEntityActionBar>
 	
-	<cf_HibachiDetailHeader>
+	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList>
 			<cf_HibachiPropertyDisplay object="#rc.vendor#" property="vendorName" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.vendor#" property="accountNumber" edit="#rc.edit#">
@@ -54,7 +54,7 @@ Notes:
 			<cf_HibachiPropertyDisplay object="#rc.Vendor.getPrimaryEmailAddress()#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
 			
 		</cf_HibachiPropertyList>
-	</cf_HibachiDetailHeader>
+	</cf_HibachiPropertyRow>
 	
 	<cf_HibachiTabGroup object="#rc.vendor#" allowCustomAttributes="true">
 		<cf_HibachiTab view="admin:entity/vendortabs/vendoraddresses" />

@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.category#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.category#" edit="#rc.edit#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.category#" property="categoryName">
 				<cf_HibachiPropertyDisplay object="#rc.category#" property="restrictAccessFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.category#" property="allowProductAssignmentFlag" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

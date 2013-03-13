@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.roundingRule#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.roundingRule#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.roundingRule#" property="roundingRuleName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.roundingRule#" property="roundingRuleExpression" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.roundingRule#" property="roundingRuleDirection" edit="#rc.edit#" fieldType="select">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

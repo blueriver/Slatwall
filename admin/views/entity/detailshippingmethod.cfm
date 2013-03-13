@@ -58,12 +58,12 @@ Notes:
 			<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
 		</cfif>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.shippingMethod#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.shippingMethod#">
 			<cf_HibachiTab view="admin:entity/shippingmethodtabs/shippingmethodrates" />

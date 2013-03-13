@@ -45,7 +45,7 @@ Notes:
 		
 		<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divClass="span6">
 				<div style="height:350px;">
 				<cf_HibachiPropertyDisplay object="#rc.orderItem#" fieldname="skuID" property="sku" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,product.productName,product.productType.productTypeName,skuCode,price" edit="true">
@@ -103,7 +103,7 @@ Notes:
 					</div>
 				</div>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

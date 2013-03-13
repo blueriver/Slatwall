@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.paymentTransaction#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.paymentTransaction#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="transactionType">
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="providerTransactionID">
@@ -55,7 +55,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="statusCode">
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="message">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

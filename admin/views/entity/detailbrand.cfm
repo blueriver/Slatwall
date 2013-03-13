@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.brand#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.brand#" edit="#rc.edit#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.Brand#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#">
@@ -52,7 +52,7 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.Brand#" property="urlTitle" edit="#rc.edit#">
 				</cfif>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.brand#" allowCustomAttributes="true">
 			<cf_HibachiTab property="products" text="#$.slatwall.rbkey('entity.brand.products')#" />

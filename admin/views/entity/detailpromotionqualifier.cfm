@@ -61,7 +61,7 @@ Notes:
 		<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 		<input type="hidden" name="promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.qualifierType)>
 					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="minimumItemQuantity" edit="#rc.edit#" data-emptyvalue="0" />
@@ -79,7 +79,7 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="maximumOrderSubtotal" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
 				</cfif>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.promotionQualifier#">
 			<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.qualifierType)>

@@ -46,13 +46,13 @@ Notes:
 		</cfif>
 	</cf_HibachiEntityActionBar>
 	
-	<cf_HibachiDetailHeader>
+	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList>
 			<cf_HibachiPropertyDisplay object="#rc.fulfillmentMethod#" property="activeFlag" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodName" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.fulfillmentMethod#" property="fulfillmentMethodType" edit="#rc.fulfillmentMethod.isNew()#">
 		</cf_HibachiPropertyList>
-	</cf_HibachiDetailHeader>
+	</cf_HibachiPropertyRow>
 	
 	<cf_HibachiTabGroup object="#rc.fulfillmentMethod#">
 		<cfif rc.fulfillmentMethod.getFulfillmentMethodType() eq "shipping">

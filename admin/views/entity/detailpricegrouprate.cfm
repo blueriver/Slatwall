@@ -47,7 +47,7 @@ Notes:
 							  cancelQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" 
 							  backAction="admin:entity.detailpricegroup" 
 							  backQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			
 			<cf_HibachiPropertyList>
 				<input type="hidden" name="pricegroup.pricegroupID" value="#rc.pricegroup.getPricegroupID()#" />
@@ -57,7 +57,7 @@ Notes:
 				<!---<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="globalFlag" edit="#rc.edit#" />--->
 			</cf_HibachiPropertyList>
 			
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.pricegrouprate#">
 			<cf_HibachiTab view="admin:entity/pricegroupratetabs/producttypes" />

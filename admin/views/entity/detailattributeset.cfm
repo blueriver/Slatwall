@@ -46,7 +46,7 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createattribute" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" type="list" modal=true />
 	</cf_HibachiEntityActionBar>
 	
-	<cf_HibachiDetailHeader>
+	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList divclass="span6">
 			<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="activeFlag" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.attributeSet#" property="attributeSetType" edit="#rc.attributeSet.isNew()#">
@@ -67,7 +67,7 @@ Notes:
 				</cfif>
 			</cf_HibachiPropertyList>
 		</cfif>
-	</cf_HibachiDetailHeader>
+	</cf_HibachiPropertyRow>
 	
 	<cf_HibachiTabGroup object="#rc.attributeSet#">
 		<cf_HibachiTab view="admin:entity/attributesettabs/attributes" />

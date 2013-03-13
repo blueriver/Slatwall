@@ -45,11 +45,11 @@ Notes:
 		
 		<!---<input type="hidden" name="permissions" value="#rc.permissionGroup.getPermissions()#">--->
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.permissionGroup#" property="permissionGroupName" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		
 		<cf_HibachiTabGroup object="#rc.permissionGroup#">

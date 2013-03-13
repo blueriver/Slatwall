@@ -43,11 +43,11 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.emailTemplate#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.emailTemplate#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.emailTemplate#" property="emailTemplateName" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 
 		<cf_HibachiTabGroup object="#rc.emailTemplate#">
 			<cf_HibachiTab view="admin:entity/emailtemplatetabs/htmlbody">

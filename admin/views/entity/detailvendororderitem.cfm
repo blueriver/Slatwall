@@ -47,14 +47,14 @@ Notes:
 		<input type="hidden" name="vendorOrder.vendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
 		<input type="hidden" name="redirectAction" value="admin:entity.editVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" />
 
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.vendorOrderItem.getStock().getLocation()#" property="locationName" edit="false">
 				<cf_HibachiPropertyDisplay object="#rc.vendorOrderItem#" property="quantity" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.vendorOrderItem#" property="cost" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.vendorOrderItem#" property="estimatedReceivalDateTime" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

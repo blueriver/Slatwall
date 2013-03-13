@@ -48,7 +48,7 @@ Notes:
 		<input type="hidden" name="sku.skuID" value="#rc.skuID#" />
 		<input type="hidden" name="currency.currencyCode" value="#rc.currencyCode#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.skuCurrency#" property="price" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.skuCurrency#" property="listPrice" edit="#rc.edit#">
@@ -57,7 +57,7 @@ Notes:
 			<cfif !rc.skuCurrency.isNew()>
 				<cf_HibachiActionCaller action="admin:entity.deleteskucurrency" queryString="skuCurrencyID=#rc.skuCurrency.getSkuCurrencyID()#&redirectAction=#request.context.returnAction#&skuID=#rc.skuID#" class="btn btn-danger" />
 			</cfif>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

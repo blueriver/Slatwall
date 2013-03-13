@@ -58,14 +58,14 @@ Notes:
 		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />					  	  
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
 
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.promotionperiod#" property="startdatetime" edit="#rc.edit#" fieldclass="noautofocus">
 				<cf_HibachiPropertyDisplay object="#rc.promotionperiod#" property="enddatetime" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.promotionperiod#" property="maximumusecount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
 				<cf_HibachiPropertyDisplay object="#rc.promotionperiod#" property="maximumaccountusecount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 
 	</cf_HibachiEntityDetailForm>
 	

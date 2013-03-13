@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.subscriptionBenefit#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.subscriptionBenefit#" edit="#rc.edit#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="subscriptionBenefitName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="accessType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="maxUseCount" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.subscriptionBenefit#">
 			<cf_HibachiTab view="admin:entity/subscriptionbenefittabs/categories" />
