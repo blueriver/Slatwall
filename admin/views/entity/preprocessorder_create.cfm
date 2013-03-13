@@ -47,6 +47,8 @@ Notes:
 	
 	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderTypeID" edit="#rc.edit#">
+			<hr />
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="newAccountFlag" edit="#rc.edit#" fieldType="yesno">
 			<cf_HibachiDisplayToggle selector="input[name='newAccountFlag']" loadVisible="#rc.processObject.getNewAccountFlag()#">	
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="firstName" edit="#rc.edit#">

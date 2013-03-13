@@ -4,6 +4,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="order";
 
 	// Data Properties
+	property name="orderTypeID" hb_rbKey="entity.order.orderType" hb_formFieldType="select";
 	property name="newAccountFlag";
 	property name="accountID" hb_rbKey="entity.account" hb_formFieldType="textautocomplete" cfc="Account";
 	property name="firstName" hb_rbKey="entity.account.firstName";
@@ -21,17 +22,15 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// Cached Properties
 	property name="fulfillmentMethodIDOptions";
 	
-	public array function getFulfillmentMethodIDOptions() {
-		if(!structKeyExists(variables, "fulfillmentMethodIDOptions")) {
-			var fmSL = getService("fulfillmentService").getFulfillmentMethodSmartList();
-			fmSL.addFilter('activeFlag', 1);
-			
-			fmSL.addSelect('fulfillmentMethodID', 'value');
-			fmSL.addSelect('fulfillmentMethodName', 'name');
-			
-			variables.fulfillmentMethodIDOptions = fmSL.getRecords();
+	public string function getOrderTypeID() {
+		if(!structKeyExists(variables, "orderTypeID")) {
+			variables.orderTypeID = getService("settingService").getTypeBySystemCode("otSalesOrder").getTypeID();
 		}
-		return variables.fulfillmentMethodIDOptions;
+		return variables.orderTypeID;
+	}
+	
+	public array function getOrderTypeIDOptions() {
+		return getOrder().getOrderTypeOptions();
 	}
 	
 	public array function getOrderOriginIDOptions() {
@@ -47,9 +46,21 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	
 	public boolean function getCreateAuthenticationFlag() {
 		if(!structKeyExists(variables, "createAuthenticationFlag")) {
-			variables.createAuthenticationFlag = 1;
+			variables.createAuthenticationFlag = 0;
 		}
 		return variables.createAuthenticationFlag;
 	}
 	
+	public array function getFulfillmentMethodIDOptions() {
+		if(!structKeyExists(variables, "fulfillmentMethodIDOptions")) {
+			var fmSL = getService("fulfillmentService").getFulfillmentMethodSmartList();
+			fmSL.addFilter('activeFlag', 1);
+			
+			fmSL.addSelect('fulfillmentMethodID', 'value');
+			fmSL.addSelect('fulfillmentMethodName', 'name');
+			
+			variables.fulfillmentMethodIDOptions = fmSL.getRecords();
+		}
+		return variables.fulfillmentMethodIDOptions;
+	}
 }

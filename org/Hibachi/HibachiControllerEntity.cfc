@@ -547,10 +547,12 @@ component output="false" accessors="true" extends="HibachiController" {
 			for(var key in arguments.rc) {
 				if(!find('.',key) && right(key, 2) == "ID" && len(arguments.rc[key]) == "32") {
 					var entityName = left(key, len(key)-2);
-					var entityService = getHibachiService().getServiceByEntityName( entityName=entityName );
-					var entity = entityService.invokeMethod("get#entityName#", {1=arguments.rc[key]});
-					if(!isNull(entity)) {
-						arguments.rc[ entityName ] = entity;
+					if(getHibachiService().getEntityNameIsValidFlag(entityName)) {
+						var entityService = getHibachiService().getServiceByEntityName( entityName=entityName );
+						var entity = entityService.invokeMethod("get#entityName#", {1=arguments.rc[key]});
+						if(!isNull(entity)) {
+							arguments.rc[ entityName ] = entity;
+						}
 					}
 				}
 			}
