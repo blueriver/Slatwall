@@ -53,7 +53,7 @@ Notes:
 </cfloop>
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.comment#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString###tabComments">
+	<cf_HibachiEntityDetailForm object="#rc.comment#" edit="#rc.edit#" saveActionQueryString="#local.returnActionQueryString#" saveActionHash="tabComments">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.comment#" />
 		
 		<!--- Only Runs if new --->

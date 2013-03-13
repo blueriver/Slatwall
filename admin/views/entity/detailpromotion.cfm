@@ -47,7 +47,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.promotion#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#">
@@ -61,7 +61,7 @@ Notes:
 					<input type="hidden" name="promotionPeriods[1].promotionPeriodID" value="#rc.promotionPeriod.getPromotionPeriodID()#" />
 				</cfif>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.promotion#">
 			<cf_HibachiTab view="admin:entity/promotiontabs/promotionperiods" />

@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.orderItem#" saveAction="admin:entity.saveOrderItem" edit="#rc.edit#" >
+	<cf_HibachiEntityDetailForm object="#rc.orderItem#" sRenderItem="detailOrder" edit="#rc.edit#" >
 		<cf_HibachiEntityActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:entity.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
 		
 		<cf_HibachiDetailHeader>
