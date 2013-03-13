@@ -39,10 +39,12 @@ Notes:
 <cfparam name="rc.physical" type="any" />
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.physical.getPhysicalCountsSmartList()#" recordDetailAction="admin:entity.detailphysicalcount" recordEditAction="admin:entity.editphysicalcount">
+	<cf_HibachiListingDisplay smartList="#rc.physical.getPhysicalCountsSmartList()#" 
+								recordDetailAction="admin:entity.detailphysicalcount" 
+							  	recordEditAction="admin:entity.editphysicalcount">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
 		<cf_HibachiListingColumn propertyIdentifier="location.locationName" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" class="btn btn-inverse" icon="plus icon-white" />
+	<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" class="btn btn-inverse" icon="plus icon-white" modal="true" />
 </cfoutput>
