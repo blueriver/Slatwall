@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.processObject" type="any">
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_HibachiEntityProcessForm entity="#rc.physical#" edit="#rc.edit#">
+<cf_HibachiEntityProcessForm entity="#rc.physical#" edit="#rc.edit#" enctype="multipart/form-data">
 
 	<cf_HibachiEntityActionBar type="preprocess" object="#rc.physical#" >
 	</cf_HibachiEntityActionBar>
@@ -49,6 +49,8 @@ Notes:
 	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList>
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="locationID" edit="#rc.edit#" />
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="countPostDateTime" edit="#rc.edit#" />
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="countFile" edit="#rc.edit#" />
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	

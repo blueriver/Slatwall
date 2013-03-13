@@ -51,7 +51,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	// ===================== START: Process Methods ===========================
 	
 	// Physical 
-	public any function processPhysical_commit(required any physicalCount) {
+	public any function processPhysical_commit(required any physical) {
 		
 		// Loop over physical for each location
 			// Create a StockAdjustmentIN and StockAdjustmentOUT
@@ -61,14 +61,33 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	}
 	
-	public any function processPhysical_addPhysicalCount(required any physicalCount, required any processObject) {
+	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {
 		
-		// Loop over physical for each location
-			// Create a StockAdjustmentIN and StockAdjustmentOUT
-			// call getStockService().processStockAdjustment(stockAdjustment=stockAdjustmentIN, processContext="processAdjustment")
-			// call getStockService().processStockAdjustment(stockAdjustment=stockAdjustmentOUT, processContext="processAdjustment")
+		// Create a new Physical count
+		var physicalCount = this.newPhysicalCount();
 		
-	
+		// Set the physical for this count
+		physicalCount.setPhysical( arguments.physical );
+		
+		// Set the count post date time
+		physicalCount.setCountPostDateTime( arguments.processObject.getCountPostDateTime() );
+		
+		// Upload to temp directory
+		var documentData = fileUpload(getTempDirectory(),'countFile','','makeUnique');
+		
+		// Read the File from temp directory
+		
+		// loop over the records in the file we just read
+		
+			// create a PhysicalCountItem for each row in the file
+			
+			// save each physicalcountitem by calling this.savePhysicalCountItem()
+			
+		// Save the physicalCount with this.savePhysicalCount()
+		
+		// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhyscialCountID()}.txt
+		
+		// return the physical that came in from the arguments scope.
 	}
 
 

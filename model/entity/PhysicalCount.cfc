@@ -40,6 +40,7 @@ component entityname="SlatwallPhysicalCount" table="SlatwallPhysicalCount" persi
 	
 	// Persistent Properties
 	property name="physicalCountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="countPostDateTime" ormtype="timestamp";
 
 	// Calculated Properties
 
