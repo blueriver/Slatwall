@@ -37,20 +37,24 @@ Notes:
 
 --->
 <cfparam name="rc.attributeOption" type="any">
-<cfparam name="rc.attribute" type="any" default="#rc.attributeoption.getAttribute()#">
+<cfparam name="rc.attribute" type="any" default="#rc.attributeOption.getAttribute()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.attribute#" saveAction="admin:entity.saveattribute" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.attributeOption#" edit="#rc.edit#" backAction="admin:entity.detailAttribute" backQueryString="attributeID=#rc.attribute.getAttributeID()#" />
-		<input type="hidden" name="attributeOptions[1].attributeOptionID" value="#rc.attributeOption.getAttributeOptionID()#" />
+	<cf_HibachiEntityDetailForm object="#rc.attributeOption#" sRenderItem="detailAttribute" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.attributeOption#" edit="#rc.edit#" 
+									backAction="admin:entity.detailAttribute" 
+								    backQueryString="attributeID=#rc.attribute.getAttributeID()#" 
+								    cancelAction="admin:entity.detailAttribute"
+									cancelQueryString="attributeID=#rc.attribute.getAttributeID()#" />
+		
+		<!--- Hidden field to allow rc.attribute to be set on invalid submit --->
+		<input type="hidden" name="attributeID" value="#rc.attribute.getAttributeID()#" />
+		
+		<!--- Hidden field to attach this to the attribute --->
+		<input type="hidden" name="attribute.attributeID" value="#rc.attribute.getAttributeID()#" />
 
-		<cf_HibachiDetailHeader>
-			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.attributeOption#" property="attributeOptionLabel" fieldName="attributeOptions[1].attributeOptionLabel" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.attributeOption#" property="attributeOptionValue" fieldName="attributeOptions[1].attributeOptionValue" edit="#rc.edit#">
-			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
-
+		<cf_HibachiPropertyDisplay object="#rc.attributeOption#" property="attributeOptionLabel" edit="#rc.edit#">
+		<cf_HibachiPropertyDisplay object="#rc.attributeOption#" property="attributeOptionValue" edit="#rc.edit#">
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
