@@ -40,10 +40,15 @@ Notes:
 <cfparam name="rc.orderSmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiEntityActionBar type="listing" object="#rc.orderSmartList#" />
-		
+	<cf_HibachiEntityActionBar type="listing" object="#rc.orderSmartList#" showCreate="false">
+		<!--- Create --->
+		<cf_HibachiEntityActionBarButtonGroup>
+			<cf_HibachiProcessCaller action="admin:entity.preprocessorder" entity="order" processContext="create" class="btn btn-primary" icon="plus icon-white" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.order')#" modal="true" />
+		</cf_HibachiEntityActionBarButtonGroup>
+	</cf_HibachiEntityActionBar>
+	
 	<cf_HibachiListingDisplay smartList="#rc.orderSmartList#" 
-								recordDetailAction="admin:entity.detailorder">
+							  recordDetailAction="admin:entity.detailorder">
 		<cf_HibachiListingColumn propertyIdentifier="orderNumber" search="true" />
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.company" search="true"/>
 		<cf_HibachiListingColumn propertyIdentifier="account.firstName" search="true" />

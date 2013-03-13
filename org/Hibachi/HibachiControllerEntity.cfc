@@ -364,6 +364,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Setup the processObject in the RC so that we can use it for our form
 		rc.processObject = arguments.rc[ arguments.entityName ].getProcessObject( arguments.rc.processContext );
 		
+		
+		
 		// Set rc.edit to true because all property displays should be taking inputs
 		rc.edit = true;
 		

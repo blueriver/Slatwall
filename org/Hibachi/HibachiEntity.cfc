@@ -111,12 +111,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	public any function getProcessObject(required string context) {
 		if(!structKeyExists(variables.processObjects, arguments.context)) {
 			variables.processObjects[ arguments.context ] = getTransient("#getClassName()#_#arguments.context#");
+			variables.processObjects[ arguments.context ].invokeMethod("set#getClassName()#", {1=this});
 		}
 		return variables.processObjects[ arguments.context ];
 	}
 	
 	// @hint this method is defined so that it can be overriden in entities and a different validation context can be applied based on what this entity knows about itself
 	public void function setProcessObject( required any processObject ) {
+		arguments.processObject.invokeMethod("set#getClassName()#", this);
 		variables.processObjects[ listLast(arguments.processObject.getClassName(), "_") ] = arguments.processObject;
 	}
 	
