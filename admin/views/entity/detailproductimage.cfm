@@ -46,7 +46,7 @@ Notes:
 		</cf_HibachiEntityActionBar>
 		<input type="hidden" name="product.productID" value="#rc.product.getProductID()#" />
 		<input type="hidden" name="redirectAction" value="admin:entity.editProduct&productID=#rc.product.getProductID()###tabalternateimages" />
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.productImage#" property="imageName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.productImage#" property="imageDescription" edit="#rc.edit#">
@@ -63,7 +63,7 @@ Notes:
 					</div>
 				</div>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 

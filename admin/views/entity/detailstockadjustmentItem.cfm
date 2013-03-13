@@ -46,11 +46,11 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#">
 		<input type="hidden" name="redirectAction" value="admin:entity.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentItem.getStockAdjustment().getStockAdjustmentID()#"	 />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.stockAdjustmentItem#" property="quantity" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

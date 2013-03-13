@@ -44,7 +44,7 @@ Notes:
 		
 		<cf_HibachiEntityActionBar type="detail" object="#rc.integration#" showDelete="false" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.integration#" property="integrationPackage" edit="false">
 				<cfif rc.integration.getFW1ReadyFlag()>
@@ -57,7 +57,7 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.integration#" property="paymentActiveFlag" edit="#rc.edit#" />
 				</cfif>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.integration#">
 			<cf_HibachiTab view="admin:entity/integrationtabs/settings" />

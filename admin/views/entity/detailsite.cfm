@@ -43,11 +43,11 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.site#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.site#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.site#" property="siteName" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.site#">
 			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->

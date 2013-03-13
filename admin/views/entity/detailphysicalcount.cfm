@@ -46,14 +46,14 @@ Notes:
 			
 		</cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cfif rc.edit>
 				<input type="hidden" name="physical.physicalID" value="#rc.physical.getPhysicalID()#" />
 			</cfif>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.physicalCount#" property="location" edit="#rc.edit#" />
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.physicalCount#">
 			<cf_HibachiTab view="admin:entity/physicalcounttabs/physicalcountitems" text="#$.slatwall.rbKey('entity.physicalCount.physicalCountItems')#" />

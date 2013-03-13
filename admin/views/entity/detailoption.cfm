@@ -46,7 +46,7 @@ Notes:
 		<input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 		<input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionCode" edit="#rc.edit#">
@@ -69,7 +69,7 @@ Notes:
 					</cfif>	
 				</cfif>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

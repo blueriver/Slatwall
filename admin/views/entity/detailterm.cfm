@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.Term#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.Term#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.Term#" property="termName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.Term#" property="termHours" edit="#rc.edit && rc.term.isNew()#">
@@ -51,7 +51,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.Term#" property="termMonths" edit="#rc.edit && rc.term.isNew()#">
 				<cf_HibachiPropertyDisplay object="#rc.Term#" property="termYears" edit="#rc.edit && rc.term.isNew()#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.term#">
 			

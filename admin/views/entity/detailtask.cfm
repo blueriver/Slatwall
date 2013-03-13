@@ -45,7 +45,7 @@ Notes:
                 <cf_HibachiActionCaller action="admin:entity.processtask" querystring="taskID=#rc.task.getTaskID()#" type="list" icon="cog" modal="true" >
         </cf_HibachiEntityActionBar>    
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.task#" property="taskName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.task#" property="taskMethod" edit="#rc.edit#">
@@ -54,7 +54,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.task#" property="runningFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.task#" property="timeout" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.task#">
 			<cf_HibachiTab view="admin:entity/tasktabs/taskschedule" />

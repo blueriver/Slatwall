@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.currency#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.currency#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.currency#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.currency#" property="currencyCode">
@@ -51,7 +51,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.currency#" property="currencySymbol" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.currency#" property="formattedExample">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<!---
 		<cf_HibachiTabGroup object="#rc.currency#">

@@ -59,7 +59,7 @@ Notes:
 		<!--- Only Runs if new --->
 		<Cfif rc.comment.isNew()>#local.hiddenKeyFields#</cfif>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.comment#" property="publicFlag" edit="#rc.edit#">
 				<cfif !rc.comment.isNew()>
@@ -69,7 +69,7 @@ Notes:
 				<hr />
 				<cf_HibachiPropertyDisplay object="#rc.comment#" property="comment" displaytype="plain" edit="#rc.comment.isNew()#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.measurementUnit#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.measurementUnit#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.measurementUnit#" property="unitCode" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.measurementUnit#" property="unitName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.measurementUnit#" property="measurementType" edit="#rc.measurementUnit.isNew()#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

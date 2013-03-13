@@ -74,7 +74,7 @@ Notes:
 			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
 		</cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divclass="span4">
 				<cfif rc.edit>
 					<cf_HibachiPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,fullName,company,emailAddress,phoneNumber,address.simpleRepresentation" edit="true">
@@ -115,7 +115,7 @@ Notes:
 						<cf_HibachiPropertyDisplay object="#rc.order#" property="total">
 				</cf_HibachiPropertyList>
 			</cfif>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.order#" allowComments="true" allowCustomAttributes="true">
 			<cf_HibachiTab view="admin:entity/ordertabs/orderitems" count="#rc.order.getOrderItemsCount()#" />

@@ -49,7 +49,7 @@ Notes:
 			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="offlineTransaction" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 		</cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divClass="span6">
 				<cfif rc.orderPayment.getPaymentMethodType() eq "creditCard">
 					<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
@@ -65,7 +65,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amountReceived" />
 				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amountCredited" />
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.orderPayment#" allowCustomAttributes="true">
 			<cf_HibachiTab view="admin:entity/orderpaymenttabs/paymenttransactions" />

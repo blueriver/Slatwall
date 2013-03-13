@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divClass="span6">
 				<cfif rc.accountPayment.getPaymentMethodType() eq "creditCard">
 					<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="nameOnCreditCard" edit="#rc.edit#" />
@@ -57,7 +57,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="amountReceived" />
 				<cf_HibachiPropertyDisplay object="#rc.accountPayment#" property="amountCredited" />
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.accountPayment#">
 			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->

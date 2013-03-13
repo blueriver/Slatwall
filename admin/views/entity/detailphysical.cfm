@@ -45,11 +45,11 @@ Notes:
 			<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" />
 		</cf_HibachiEntityActionBar>
 
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.physical#" property="physicalStatusType" edit="false">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.physical#">
 			<cf_HibachiTab view="admin:entity/physicaltabs/physicalcounts" text="#$.slatwall.rbKey('entity.physical.physicalCounts')#" />

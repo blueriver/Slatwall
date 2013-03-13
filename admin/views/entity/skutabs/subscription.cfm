@@ -38,11 +38,11 @@ Notes:
 --->
 <cfparam name="rc.sku" type="any" />
 
-<cf_HibachiDetailHeader>
+<cf_HibachiPropertyRow>
 	<cf_HibachiPropertyList>
 		<cf_HibachiPropertyDisplay object="#rc.sku#" property="subscriptionTerm" edit="false">
 		<cf_HibachiPropertyDisplay object="#rc.sku#" property="subscriptionBenefits" edit="#rc.edit#" displayType="plain">
 		<cf_HibachiPropertyDisplay object="#rc.sku#" property="renewalSubscriptionBenefits" title="#$.slatwall.rbKey('define.renewalSubscriptionBenefits')#" edit="#rc.edit#" displayType="plain">
 	</cf_HibachiPropertyList>
-</cf_HibachiDetailHeader>
+</cf_HibachiPropertyRow>
 			

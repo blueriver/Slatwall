@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.taskhistory#" edit="#rc.edit#">
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.taskhistory#" property="task" edit="false">
 				<cf_HibachiPropertyDisplay object="#rc.taskhistory#" property="successFlag" edit="false">
@@ -50,7 +50,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.taskhistory#" property="endTime" edit="false">
 				<cf_HibachiPropertyDisplay object="#rc.taskhistory.getTask().getSchedule()#" property="scheduleName" edit="false">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.taskhistory#">
 			

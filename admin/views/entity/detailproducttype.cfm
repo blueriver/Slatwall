@@ -43,7 +43,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.productType#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.productType#" edit="#rc.edit#" />
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.productType#" property="activeFlag" edit="#rc.edit#">
 				<cfif isNull(rc.productType.getSystemCode()) or !len(rc.productType.getSystemCode())>
@@ -54,7 +54,7 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.productType#" property="urlTitle" edit="#rc.edit#">
 				</cfif>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.productType#">
 			<cf_HibachiTab view="admin:entity/producttypetabs/producttypedescription" />

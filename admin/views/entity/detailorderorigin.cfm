@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.orderOrigin#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.orderOrigin#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.orderOrigin#" property="orderOriginName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.orderOrigin#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.orderOrigin#" property="orderOriginType" edit="#rc.orderOrigin.isNew()#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

@@ -44,7 +44,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.orderItem#" sRenderItem="detailOrder" edit="#rc.edit#" >
 		<cf_HibachiEntityActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:entity.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divclass="span4">
 				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="orderItemStatusType" edit="false" />
 				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="sku" edit="#rc.orderItem.isNew()#">
@@ -69,7 +69,7 @@ Notes:
 				<hr />
 				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="extendedPriceAfterDiscount" edit="false" />
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.orderItem#" allowComments="true" allowCustomAttributes="true">
 			<cf_HibachiTab view="admin:entity/orderitemtabs/taxes" />

@@ -44,12 +44,12 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createtaxcategoryrate" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" type="list" modal=true />
 	</cf_HibachiEntityActionBar>
 	
-	<cf_HibachiDetailHeader>
+	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList>
 			<cf_HibachiPropertyDisplay object="#rc.taxCategory#" property="activeFlag" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#">
 		</cf_HibachiPropertyList>
-	</cf_HibachiDetailHeader>
+	</cf_HibachiPropertyRow>
 	
 	<cf_HibachiTabGroup object="#rc.taxCategory#">
 		<cf_HibachiTab view="admin:entity/taxcategorytabs/rates" />

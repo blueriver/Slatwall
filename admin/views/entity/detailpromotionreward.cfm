@@ -57,7 +57,7 @@ Notes:
 							  cancelQueryString="promotionRewardID=#rc.promotionReward.getPromotionRewardID()#" 
 							  backAction="admin:entity.detailpromotionperiod" 
 							  backQueryString="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()###tabPromotionRewards" />
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<input type="hidden" name="rewardType" value="#rc.rewardType#" />
 				<input type="hidden" name="promotionperiod.promotionperiodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
@@ -76,7 +76,7 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerQualification" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
 				</cfif>
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.promotionreward#">
 			<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.rewardType)>

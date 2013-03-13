@@ -43,11 +43,11 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.orderReturn#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.orderReturn#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.orderReturn.getOrder().getOrderID()#"></cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.orderReturn#" property="returnLocation" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.orderReturn#">
 			<cf_HibachiTab view="admin:entity/orderreturntabs/orderreturnitems">

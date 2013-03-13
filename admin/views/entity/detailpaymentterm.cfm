@@ -43,13 +43,13 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.paymentTerm#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.paymentTerm#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
-		<cf_HibachiDetailHeader>
+		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.paymentTerm#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.paymentTerm#" property="paymentTermName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.paymentTerm#" property="term" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiDetailHeader>
+		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.paymentTerm#">
 			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->

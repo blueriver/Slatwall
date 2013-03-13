@@ -44,11 +44,11 @@ Notes:
 		<cf_HibachiActionCaller action="admin:entity.createaddresszonelocation" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" type="list" modal=true />
 	</cf_HibachiEntityActionBar>
 	
-	<cf_HibachiDetailHeader>
+	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList>
 			<cf_HibachiPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#">
 		</cf_HibachiPropertyList>
-	</cf_HibachiDetailHeader>
+	</cf_HibachiPropertyRow>
 	
 	<cf_HibachiTabGroup object="#rc.addressZone#">
 		<cf_HibachiTab view="admin:entity/addresszonetabs/locations" />
