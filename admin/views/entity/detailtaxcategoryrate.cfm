@@ -36,21 +36,26 @@
 Notes:
 
 --->
-<cfparam name="rc.taxCategory" type="any" />
 <cfparam name="rc.taxCategoryRate" type="any" />
+<cfparam name="rc.taxCategory" type="any" default="#rc.taxCategoryRate.getTaxCategoryID()#" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_HibachiEntityDetailForm object="#rc.taxCategory#" saveAction="admin:entity.savetaxcategory" edit="#rc.edit#">
-	
-	<cfoutput><input type="hidden" name="taxcategoryrates[1].taxcategoryrateid" value="#rc.taxCategoryRate.getTaxCategoryRateID()#" /></cfoutput>
-	
-	<cf_HibachiDetailHeader>
-		<cf_HibachiPropertyList>
-			<cf_HibachiPropertyDisplay object="#rc.taxCategoryRate#" fieldname="taxcategoryrates[1].taxRate" property="taxrate" edit="#rc.edit#">
-			
-			<cfset rc.taxCategoryRate.getAddressZoneOptions()[1]["name"] = request.slatwallScope.rbKey('define.all') />
-			<cf_HibachiPropertyDisplay object="#rc.taxCategoryRate#" fieldname="taxcategoryrates[1].addressZone.addressZoneID" property="addressZone" edit="#rc.edit#">
-		</cf_HibachiPropertyList>
-	</cf_HibachiDetailHeader>
-	
-</cf_HibachiEntityDetailForm>
+<cfoutput>
+	<cf_HibachiEntityDetailForm object="#rc.taxCategoryRate#" srenderItem="detailtaxCategory" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.taxCategoryRate#" edit="#rc.edit#" 
+						backAction="admin:entity.detailtaxCategory" 
+						backQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#"
+						cancelAction="admin:entity.detailtaxCategory"
+						cancelQueryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" />
+		
+		<input type="hidden" name="taxCategoryID" value="#rc.taxCategory.getTaxCategoryID()#" />
+		
+		<input type="hidden" name="taxCategory.taxCategoryID" value="#rc.taxCategory.getTaxCategoryID()#" />
+
+		<cf_HibachiPropertyDisplay object="#rc.taxCategoryRate#"  property="taxRate" edit="#rc.edit#">
+		
+		<cfset rc.taxCategoryRate.getAddressZoneOptions()[1]["name"] = request.slatwallScope.rbKey('define.all') />
+		<cf_HibachiPropertyDisplay object="#rc.taxCategoryRate#"  property="addressZone" edit="#rc.edit#">
+
+	</cf_HibachiEntityDetailForm>
+</cfoutput>
