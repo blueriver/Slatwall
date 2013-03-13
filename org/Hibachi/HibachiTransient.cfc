@@ -496,14 +496,16 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		if(structKeyExists(validations, arguments.propertyName)) {
 			for(var i=1; i<=arrayLen(validations[ arguments.propertyName ]); i++) {
 				var constraintDetails = validations[ arguments.propertyName ][i];
-				if(constraintDetails.constraintType == "required") {
-					validationClass = listAppend(validationClass, "required", " ");
-				} else if (constraintDetails.constraintType == "dataType") {
-					if(constraintDetails.constraintValue == "numeric") {
-						validationClass = listAppend(validationClass, "number", " ");
-					} else {
-						validationClass = listAppend(validationClass, constraintDetails.constraintValue, " ");
-					}
+				if(!structKeyExists(constraintDetails, "conditions")) {
+					if(constraintDetails.constraintType == "required") {
+						validationClass = listAppend(validationClass, "required", " ");
+					} else if (constraintDetails.constraintType == "dataType") {
+						if(constraintDetails.constraintValue == "numeric") {
+							validationClass = listAppend(validationClass, "number", " ");
+						} else {
+							validationClass = listAppend(validationClass, constraintDetails.constraintValue, " ");
+						}
+					}	
 				}
 			}
 		}
