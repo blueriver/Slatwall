@@ -36,14 +36,27 @@
 Notes:
 
 --->
-<cfparam name="rc.addressZone" type="any">
+
 <cfparam name="rc.addressZoneLocation" type="any">
+<cfparam name="rc.addressZone" type="any" default="#rc.addressZoneLocation.getAddressZone()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.addressZone#" saveAction="admin:entity.saveaddresszone" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.addressZone#" sRenderItem="detailAddressZone" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.addressZoneLocation#" edit="#rc.edit#" 
+					backAction="admin:entity.detailAddressZone" 
+					backQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#"
+					cancelAction="admin:entity.detailAddressZone"
+					cancelQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#">
+		</cf_HibachiEntityActionBar>
 		
-		<cf_SlatwallAddressDisplay address="#rc.addressZoneLocation#" fieldNamePrefix="addressZoneLocations[1]." edit="#rc.edit#" showName="false" showCompany="false" showStreetAddress="false" showStreet2Address="false">
+		<!--- Hidden field to allow rc.addressZone to be set on invalid submit --->
+		<input type="hidden" name="addressZoneID" value="#rc.addressZone.getAddressZoneID()#" />
+		
+		<!--- Hidden field to attach this to the addressZone --->
+		<input type="hidden" name="addressZone.addressZoneID" value="#rc.addressZone.getAddressZoneID()#" />
+		
+		<cf_SlatwallAddressDisplay address="#rc.addressZoneLocation#" fieldNamePrefix="addressZoneLocation." edit="#rc.edit#" showName="false" showCompany="false" showStreetAddress="false" showStreet2Address="false">
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

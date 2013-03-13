@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#" backaction="admin:entity.detailaccount" backquerystring="accountID=#rc.accountPayment.getAccount().getAccountID()#"></cf_HibachiEntityActionBar>
+		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
 			<cf_HibachiPropertyList divClass="span6">

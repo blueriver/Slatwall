@@ -3,6 +3,7 @@
 	<cfparam name="attributes.object" type="any" />
 	<cfparam name="attributes.saveAction" type="string" default="#request.context.entityActionDetails.saveaction#" />
 	<cfparam name="attributes.saveActionQueryString" type="string" default="" />
+	<cfparam name="attributes.saveActionHash" type="string" default="" />
 	<cfparam name="attributes.edit" type="boolean" default="false" />
 	<cfparam name="attributes.enctype" type="string" default="application/x-www-form-urlencoded">
 	<cfparam name="attributes.sRedirectURL" type="string" default="#request.context.entityActionDetails.sRedirectURL#">
@@ -13,14 +14,20 @@
 	<cfparam name="attributes.fRenderItem" type="string" default="#request.context.entityActionDetails.fRenderItem#">
 	<cfparam name="attributes.sRedirectQS" type="string" default="#request.context.entityActionDetails.sRedirectQS#">
 	<cfparam name="attributes.fRedirectQS" type="string" default="#request.context.entityActionDetails.fRedirectQS#">
-
+	
+	<cfset formAction = "?s=1" />
+	
+	<cfif len(attributes.saveActionQueryString)>
+		<cfset formAction &= "&#attributes.saveActionQueryString#" />
+	</cfif>
+	
+	<cfif len(attributes.saveActionHash)>
+		<cfset formAction &= "###attributes.saveActionHash#" />
+	</cfif>
+	
 	<cfoutput>
-		<cfif attributes.edit>
-			<cfif len(attributes.saveActionQueryString)>
-				<form method="post" action="?s=1&#attributes.saveActionQueryString#" class="form-horizontal" enctype="#attributes.enctype#">
-			<cfelse>
-				<form method="post" action="?s=1" class="form-horizontal" enctype="#attributes.enctype#">
-			</cfif>
+		<cfif attributes.edit>			
+			<form method="post" action="#formAction#" class="form-horizontal" enctype="#attributes.enctype#">
 			<input type="hidden" name="#request.context.fw.getAction()#" value="#attributes.saveaction#" />
 			<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
 			<cfif len(attributes.sRedirectURL)><input type="hidden" name="sRedirectURL" value="#attributes.sRedirectURL#" /></cfif>

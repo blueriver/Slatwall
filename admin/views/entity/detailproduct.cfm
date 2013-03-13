@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean" default="false" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.product#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.product#" edit="#rc.edit#" sRedirectAction="admin:entity.detailProduct" sRedirectQS="productID=#rc.product.getProductID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.product#" edit="#rc.edit#">
 			<cf_HibachiActionCaller action="admin:main.createimage" queryString="productID=#rc.product.getProductID()#&directory=product&redirectAction=admin:entity.detailproduct" type="list" modal=true />
 			<li class="divider"></li>

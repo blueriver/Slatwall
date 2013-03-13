@@ -42,6 +42,7 @@ Notes:
 
 <cf_HibachiListingDisplay smartList="#rc.addresszoneSmartList#"
 						   recordDetailAction="admin:entity.detailaddresszone"
-						   recordEditAction="admin:entity.editaddresszone">
+						   recordEditAction="admin:entity.editaddresszone"
+						   recordDeleteAction="admin:entity.deleteaddresszone">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="addresszoneName" search="true" />
 </cf_HibachiListingDisplay>

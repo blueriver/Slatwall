@@ -13,6 +13,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="skuService" type="any";
 	property name="subscriptionService" type="any";
 	property name="permissionService" type="any";
+	property name="addressService" type="any";
 	
 	this.publicMethods='';
 	

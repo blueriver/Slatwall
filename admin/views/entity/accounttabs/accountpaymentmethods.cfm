@@ -38,22 +38,21 @@ Notes:
 --->
 <cfparam name="rc.account" type="any" />
 
-<cf_HibachiListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
-						  recordDetailAction="admin:entity.detailaccountpaymentmethod"
-						  recordDetailModal=true
-						  recordEditAction="admin:entity.editaccountpaymentmethod"
-						  recordEditQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
-						  recordEditModal=true
-						  recordDeleteAction="admin:entity.deleteaccountpaymentmethod"
-						  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
-						  selectFieldName="primaryPaymentMethod.accountPaymentMethodID"
-						  selectValue="#rc.account.getPrimaryPaymentMethod().getAccountPaymentMethodID()#"
-						  selectTitle="#$.slatwall.rbKey('define.primary')#"
-						  edit="#rc.edit#">
-						    
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
-	<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" filter="true" />
-</cf_HibachiListingDisplay>
-
-<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="accountID=#rc.account.getAccountID()#" modal=true />
-
+<cfoutput>
+	<cf_HibachiListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
+							  recordEditAction="admin:entity.editaccountpaymentmethod"
+							  recordEditQueryString="accountID=#rc.account.getAccountID()#"
+							  recordEditModal=true
+							  recordDeleteAction="admin:entity.deleteaccountpaymentmethod"
+							  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount##tabaccountPaymentMethods"
+							  selectFieldName="primaryPaymentMethod.accountPaymentMethodID"
+							  selectValue="#rc.account.getPrimaryPaymentMethod().getAccountPaymentMethodID()#"
+							  selectTitle="#$.slatwall.rbKey('define.primary')#"
+							  edit="#rc.edit#">
+							    
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" />
+		<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" filter="true" />
+	</cf_HibachiListingDisplay>
+	
+	<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="accountID=#rc.account.getAccountID()#" modal=true />
+</cfoutput>

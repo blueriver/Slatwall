@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.alternateSkuCode#" edit="#rc.edit#" sRenderItem="detailsku">
+	<cf_HibachiEntityDetailForm object="#rc.alternateSkuCode#" edit="#rc.edit#" sRenderItem="detailsku" saveActionHash="tabalternateskucodes">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.alternateSkuCode#" edit="#rc.edit#" 
 					backAction="admin:entity.detailSku" 
 					backQueryString="skuID=#rc.sku.getSkuID()#"
