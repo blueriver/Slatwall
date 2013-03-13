@@ -44,5 +44,5 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="quantity" />
 	</cf_HibachiListingDisplay>	
 	
-	<cf_SlatwallProcessCaller entity="#rc.physicalCount#" action="admin:entity.preprocessPhysical_addPhysicalCount" processContext="addItems" class="btn btn-inverse" icon="plus icon-white" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal=true />
+	<cf_HibachiProcessCaller entity="#rc.physicalCount#" action="admin:entity.preprocessPhysical_addPhysicalCount" processContext="addItems" class="btn btn-inverse" icon="plus icon-white" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal=true />
 </cfoutput>

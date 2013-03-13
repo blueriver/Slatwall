@@ -53,7 +53,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
-			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&redirectAction=admin:entity.detailorder" type="list" />
+			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&redirectAction=admin:entity.detailorder" type="list" />
 			<!--- Add Order Item --->
 			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
 				<cf_HibachiActionCaller action="admin:entity.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
@@ -66,12 +66,12 @@ Notes:
 					</cfloop>
 				</cfif>
 			</cfif>
-			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="addPromotionCode" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="closeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_SlatwallProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
+			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="addPromotionCode" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="closeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiDetailHeader>
