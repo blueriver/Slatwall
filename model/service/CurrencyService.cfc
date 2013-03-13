@@ -47,6 +47,7 @@ component  extends="HibachiService" accessors="true" {
 	public array function getCurrencyOptions() {
 		var csl = this.getCurrencySmartList();
 		
+		csl.addFilter('activeFlag', 1);
 		csl.addSelect(propertyIdentifier="currencyName", alias="name");
 		csl.addSelect(propertyIdentifier="currencyCode", alias="value");
 		

@@ -5,6 +5,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Data Properties
 	property name="orderTypeID" hb_rbKey="entity.order.orderType" hb_formFieldType="select";
+	property name="currencyCode" hb_rbKey="entity.currency" hb_formFieldType="select";
 	property name="newAccountFlag";
 	property name="accountID" hb_rbKey="entity.account" hb_formFieldType="textautocomplete" cfc="Account";
 	property name="firstName" hb_rbKey="entity.account.firstName";
@@ -27,6 +28,10 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			variables.orderTypeID = getService("settingService").getTypeBySystemCode("otSalesOrder").getTypeID();
 		}
 		return variables.orderTypeID;
+	}
+	
+	public array function getCurrencyCodeOptions() {
+		return getService("currencyService").getCurrencyOptions();
 	}
 	
 	public array function getOrderTypeIDOptions() {

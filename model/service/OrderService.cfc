@@ -645,6 +645,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.order.setOrderOrigin( getSettingService().getOrderOrigin(arguments.processObject.getOrderOriginID()) );
 		}
 		
+		// Setup the Currency Code
+		arguments.order.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+		
 		// Determine the order type
 		var orderType = getSettingService().getType( processObject.getOrderTypeID() );
 		
