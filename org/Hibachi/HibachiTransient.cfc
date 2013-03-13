@@ -497,12 +497,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			for(var i=1; i<=arrayLen(validations[ arguments.propertyName ]); i++) {
 				var constraintDetails = validations[ arguments.propertyName ][i];
 				if(constraintDetails.constraintType == "required") {
-					listAppend(validationClass, "required", " ");
+					validationClass = listAppend(validationClass, "required", " ");
 				} else if (constraintDetails.constraintType == "dataType") {
 					if(constraintDetails.constraintValue == "numeric") {
-						listAppend(validationClass, "number", " ");
+						validationClass = listAppend(validationClass, "number", " ");
 					} else {
-						listAppend(validationClass, constraintDetails.constraintValue, " ");
+						validationClass = listAppend(validationClass, constraintDetails.constraintValue, " ");
 					}
 				}
 			}
