@@ -66,6 +66,8 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Create a new Physical count
 		var physicalCount = this.newPhysicalCount();
 		
+		var tempDir = getTempDirectory();
+		
 		// Set the physical for this count
 		physicalCount.setPhysical( arguments.physical );
 		
@@ -76,42 +78,46 @@ component extends="HibachiService" accessors="true" output="false" {
 		physicalCount.setCountPostDateTime( arguments.processObject.getCountPostDateTime() );
 		
 		// Upload to temp directory
-		var documentData = fileUpload(getTempDirectory(),'countFile','','makeUnique');
+		var documentData = fileUpload( tempDir,'countFile','','makeUnique' );
+		var fileName = documentData.serverFile;
 		
 		// Read the File from temp directory 
-		fileObj = FileOpen( "#getTempDirectory()##documentData.SERVERFILE#", "read" ); 
+		fileObj = fileOpen( "#tempDir##fileName#", "read" ); 
 		
 		// loop over the records in the file we just read
-		while(NOT FileIsEOF( fileObj )) 
+		while(!fileIsEof( fileObj )) 
 		{ 
-			x = FileReadLine( fileObj ); 
+			var fileRow = fileReadLine( fileObj ); 
 			
 			var physicalCountItem = this.newPhysicalCountItem();
 			physicalCountItem.setPhysicalCount( physicalCount );
 			
-			For (i=1;i LTE ListLen(x); i=i+1){
+			for(var i=1; i<=listLen(fileRow); i=i+1){
 			
 				// create a PhysicalCountItem for each row in the file
-				physicalCountItem.setSkuCode( ListGetAt(x, 1) );
-				physicalCountItem.setquantity( ListGetAt(x, 2) );
+				physicalCountItem.setSkuCode( listGetAt( fileRow, 1 ) );
+				physicalCountItem.setquantity( listGetAt( fileRow, 2 ) );
 			}
 
 			// save each physicalcountitem 
-			this.savePhysicalCountItem(physicalCountItem); 
+			this.savePhysicalCountItem( physicalCountItem ); 
 		} 
 		fileClose( fileObj ); 
 		
 		// Save the physicalCount 
-		this.savePhysicalCount(physicalCount);
+		this.savePhysicalCount( physicalCount );
+		
+		//get the assets folder from the global assets folder
+		var assetsFileFolderPath = getHibachiScope().setting('globalAssetsFileFolderPath');
+		
+		//create the folder if it does not exist 
+		if(!directoryExists("#assetsFileFolderPath#/physicalcounts/")) {
+			directoryCreate("#assetsFileFolderPath#/physicalcounts/");
+		}
 		
 		// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhyscialCountID()}.txt
-		/*
-		if(!directoryExists()) {
-			directoryCreate();
-		}
-		*/
-		//filemove( "#getTempDirectory()##documentData.SERVERFILE#", "#getHibachiScope().setting('globalAssetsFileFolderPath')#/physicalcounts/#physicalCount.getPhyscialCountID()#.txt");
-		
+		filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhyscialCountID()#.txt");
+
 		// return the physical that came in from the arguments scope.
 		return arguments.physical;
 	}

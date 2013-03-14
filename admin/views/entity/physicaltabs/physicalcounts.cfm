@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.physical.getPhysicalCountsSmartList()#" 
-								recordDetailAction="admin:entity.detailphysicalcount" 
+								recordDetailAction="admin:entity.detailphysicalcount"
 							  	recordEditAction="admin:entity.editphysicalcount">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
 		<cf_HibachiListingColumn propertyIdentifier="location.locationName" />
