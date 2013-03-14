@@ -75,19 +75,37 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Upload to temp directory
 		var documentData = fileUpload(getTempDirectory(),'countFile','','makeUnique');
 		
-		// Read the File from temp directory
+		// Read the File from temp directory 
+		fileObj = FileOpen( "#getTempDirectory()##documentData.SERVERFILE#", "read" ); 
 		
 		// loop over the records in the file we just read
+		while(NOT FileIsEOF( fileObj )) 
+		{ 
+			x = FileReadLine( fileObj ); 
+			
+			var physicalCountItem = this.newPhysicalCountItem();
+			physicalCountItem.setPhysicalCount( physicalCount );
+			
+			For (i=1;i LTE ListLen(x); i=i+1){
+			
+				// create a PhysicalCountItem for each row in the file
+				physicalCountItem.setSkuCode( ListGetAt(x, 1) );
+				physicalCountItem.setquantity( ListGetAt(x, 2) );
+			}
+
+			// save each physicalcountitem 
+			this.savePhysicalCountItem(physicalCountItem); 
+		} 
+		fileClose( fileObj ); 
 		
-			// create a PhysicalCountItem for each row in the file
-			
-			// save each physicalcountitem by calling this.savePhysicalCountItem()
-			
-		// Save the physicalCount with this.savePhysicalCount()
+		// Save the physicalCount 
+		this.savePhysicalCount(physicalCount);
 		
 		// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhyscialCountID()}.txt
+		//filemove( "#getTempDirectory()##documentData.SERVERFILE#", "/custom/assets/files/physicalcounts/#physicalCount.getPhyscialCountID()#.txt");
 		
 		// return the physical that came in from the arguments scope.
+		return arguments.physical;
 	}
 
 
