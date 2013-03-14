@@ -62,11 +62,11 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {
-
-		var tempDir = getTempDirectory();
 		
 		// Create a new Physical count
 		var physicalCount = this.newPhysicalCount();
+		
+		var tempDir = getTempDirectory();
 		
 		// Set the physical for this count
 		physicalCount.setPhysical( arguments.physical );

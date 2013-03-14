@@ -42,14 +42,16 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.physicalCount#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.physicalCount#" edit="#rc.edit#" backAction="admin:entity.detailphysical" backQueryString="physicalID=#rc.physical.getPhysicalID()#">
-			
-		</cf_HibachiEntityActionBar>
+		<cf_HibachiEntityActionBar type="detail" object="#rc.physicalCount#" edit="#rc.edit#" 
+									backAction="admin:entity.detailPhysical" 
+								    backQueryString="physicalID=#rc.physical.getPhysicalID()#"
+									cancelAction="admin:entity.detailPhysicalCount"
+									cancelQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" />
+									
+		<input type="hidden" name="physicalID" value="#rc.physical.getPhysicalID()#" />
+		<input type="hidden" name="physical.physicalID" value="#rc.physical.getPhysicalID()#" />
 		
 		<cf_HibachiPropertyRow>
-			<cfif rc.edit>
-				<input type="hidden" name="physical.physicalID" value="#rc.physical.getPhysicalID()#" />
-			</cfif>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.physicalCount#" property="location" edit="#rc.edit#" />
 			</cf_HibachiPropertyList>

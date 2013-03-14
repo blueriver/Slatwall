@@ -41,8 +41,6 @@ Notes:
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.physical.getPhysicalCountsSmartList()#" 
 								recordDetailAction="admin:entity.detailphysicalcount"
-							  	recordDeleteAction="admin:entity.deletephysicalcount" 
-							  	recordDeleteQueryString="redirectAction=admin:admin:entity.detailphysical&physicalID=#rc.physical.getPhysicalID()#" 
 							  	recordEditAction="admin:entity.editphysicalcount">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
 		<cf_HibachiListingColumn propertyIdentifier="location.locationName" />
