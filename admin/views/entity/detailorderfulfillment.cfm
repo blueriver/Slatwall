@@ -48,7 +48,7 @@ Notes:
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divClass="span6">
 				<cfif !isNull(rc.orderFulfillment.getAddress())>
-					<cf_SlatwallAddressDisplay address="#rc.orderFulfillment.getAddress()#" fieldnameprefix="shippingAddress." edit="#rc.edit#">
+					<cf_SlatwallAdminAddressDisplay address="#rc.orderFulfillment.getAddress()#" fieldnameprefix="shippingAddress." edit="#rc.edit#">
 				</cfif>
 				<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "auto">
 					<!--- TODO: Add Fulfill From Location --->
