@@ -116,7 +116,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		}
 		
 		// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhyscialCountID()}.txt
-		filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhyscialCountID()#.txt");
+		filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt");
 
 		// return the physical that came in from the arguments scope.
 		return arguments.physical;
