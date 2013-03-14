@@ -45,10 +45,10 @@ Notes:
 		<cf_HibachiEntityActionBar type="detail" object="#rc.physicalCount#" edit="#rc.edit#" 
 									backAction="admin:entity.detailPhysical" 
 								    backQueryString="physicalID=#rc.physical.getPhysicalID()#"
+								    deleteQueryString="redirectAction=admin:entity.detailPhysical&physicalID=#rc.physical.getPhysicalID()#"
 									cancelAction="admin:entity.detailPhysicalCount"
 									cancelQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" />
 									
-		<input type="hidden" name="physicalID" value="#rc.physical.getPhysicalID()#" />
 		<input type="hidden" name="physical.physicalID" value="#rc.physical.getPhysicalID()#" />
 		
 		<cf_HibachiPropertyRow>
