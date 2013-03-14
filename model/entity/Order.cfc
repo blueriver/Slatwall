@@ -81,6 +81,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
+	property name="addOrderItemSkuOptionsSmartList" persistent="false" formatType="currency";
 	property name="discountTotal" persistent="false" formatType="currency";
 	property name="itemDiscountAmountTotal" persistent="false" formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency";
@@ -99,6 +100,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="quantityUndelivered" persistent="false";
 	property name="quantityReceived" persistent="false";
 	property name="quantityUnreceived" persistent="false";
+	property name="returnItemSmartList" persistent="false";
+	property name="saleItemSmartList" persistent="false";
 	property name="subTotal" persistent="false" formatType="currency";
 	property name="subTotalAfterItemDiscounts" persistent="false" formatType="currency";
 	property name="taxTotal" persistent="false" formatType="currency";
@@ -208,6 +211,17 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
     
 	// ============ START: Non-Persistent Property Methods =================
+	public any function getAddOrderItemSkuOptionsSmartList() {
+		if(!structKeyExists(variables, "addOrderItemSkuOptionsSmartList")) {
+			variables.addOrderItemSkuOptionsSmartList = getService("skuService").getSkuSmartList();
+			variables.addOrderItemSkuOptionsSmartList.addFilter('activeFlag', 1);
+			variables.addOrderItemSkuOptionsSmartList.addFilter('product.activeFlag', 1);
+			variables.addOrderItemSkuOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'productType');
+			variables.addOrderItemSkuOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'brand');
+		}
+		return variables.addOrderItemSkuOptionsSmartList;
+	}
+	
 	public numeric function getDiscountTotal() {
 		return precisionEvaluate(getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal());
 		
@@ -389,6 +403,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return precisionEvaluate(amountDelivered - getPaymentAmountReceivedTotal());
 	}
 	
+	
+	
 	public numeric function getTotalQuantity() {
 		var totalQuantity = 0;
 		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
@@ -440,6 +456,24 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	public numeric function getQuantityUnreceived() {
 		return this.getTotalReturnQuantity() - this.getQuantityReceived();
+	}
+	
+	public any function getSaleItemSmartList() {
+		if(!structKeyExists(variables, "saleItemSmartList")) {
+			variables.saleItemSmartList = getService("orderService").getOrderItemSmartList();
+			variables.saleItemSmartList.addFilter('order.orderID', getOrderID());
+			variables.saleItemSmartList.addInFilter('orderItemType.systemCode', 'oitSale');
+		}
+		return variables.saleItemSmartList;	
+	}
+	
+	public any function getReturnItemSmartList() {
+		if(!structKeyExists(variables, "saleItemSmartList")) {
+			variables.saleItemSmartList = getService("orderService").getOrderItemSmartList();
+			variables.saleItemSmartList.addFilter('order.orderID', getOrderID());
+			variables.saleItemSmartList.addInFilter('orderItemType.systemCode', 'oitReturn');
+		}
+		return variables.saleItemSmartList;	
 	}
 	
 	public numeric function getSubtotal() {

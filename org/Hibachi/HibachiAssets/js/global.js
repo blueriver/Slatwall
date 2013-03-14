@@ -798,6 +798,12 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 					}
 				});
 				
+				
+				// If there were no page records then add the blank row
+				if(r["pageRecords"].length === 0 && !afterRowID) {
+					jQuery(tableBodySelector).append( '<tr><td colspan="' + jQuery(tableHeadRowSelector).children('th').length + '" style="text-align:center;"><em>' + jQuery('#' + tableID).data('norecordstext') + '</em></td></tr>' );
+				}
+				
 				// Update the paging nav
 				jQuery('div[class="pagination"][data-tableid="' + tableID + '"]').html(buildPagingNav(r["currentPage"], r["totalPages"], r["pageRecordsStart"], r["pageRecordsEnd"], r["recordsCount"]));
 				

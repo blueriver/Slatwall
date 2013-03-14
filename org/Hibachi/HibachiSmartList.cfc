@@ -203,7 +203,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		return propertyStruct;
 	}
 	
-	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="", boolean fetch, boolean isAttribute=false) {
+	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="", boolean fetch=false, boolean isAttribute=false) {
 		if(arguments.isAttribute) {
 			
 			var newEntityMeta = getService("hibachiService").getEntityObject( "AttributeValue" ).getThisMetaData();
@@ -224,7 +224,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 					parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
 					parentRelatedProperty="attributeValues",
 					joinType=arguments.joinType,
-					fetch=false
+					fetch=arguments.fetch
 				);
 			}
 			
