@@ -991,21 +991,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 	
 	// Process: Order CONTEXT: addPromotionCode
-	public any function processOrder_addPromotionCode(required any order, struct data={}, string processContext="process") {
+	public any function processOrder_addPromotionCode(required any order, required any processObject) {
 			
-		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.data.promotionCode);
+		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.processObject.getPromotionCode());
 		
 		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
-			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
 		} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
-			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
 		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
-			arguments.order.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
 		} else {
 			if(!arguments.order.hasPromotionCode( pc )) {
 				arguments.order.addPromotionCode( pc );
+				recalculateOrderAmounts(order=arguments.order);
 			}
-			recalculateOrderAmounts(order=arguments.order);
 		}		
 		
 		return arguments.order;

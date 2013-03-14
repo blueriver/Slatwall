@@ -53,29 +53,21 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
+			<cf_HibachiProcessCaller action="admin:entity.preprocessorder" entity="#rc.order#" processContext="addPromotionCode" type="list" modal="true" />
+			<!---
 			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&redirectAction=admin:entity.detailorder" type="list" />
-			<!--- Add Order Item --->
-			<cfif listFind("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode()) >
-				<cf_HibachiActionCaller action="admin:entity.createorderitem" queryString="orderID=#rc.order.getOrderID()#" type="list" modal=true />
-			</cfif>
-			<!--- Add Order Payment --->
-			<cfif listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
-				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()>
-					<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-						<cf_HibachiActionCaller type="list" text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:entity.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCharge" modal=true />
-					</cfloop>
-				</cfif>
-			</cfif>
-			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="addPromotionCode" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="closeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
 			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
+			--->
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divclass="span4">
+				
+				<!--- Account --->
 				<cfif rc.edit>
 					<cf_HibachiPropertyDisplay object="#rc.order#" property="account" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,fullName,company,emailAddress,phoneNumber,address.simpleRepresentation" edit="true">
 				<cfelseif !isNull(rc.order.getAccount())>
@@ -83,7 +75,10 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress" valuelink="mailto:#rc.order.getAccount().getEmailAddress()#">
 					<cf_HibachiPropertyDisplay object="#rc.order.getAccount()#" property="phoneNumber">
 				</cfif>
+				
+				<!--- Origin --->
 				<cf_HibachiPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
+				
 				<cf_HibachiPropertyDisplay object="#rc.order#" property="orderStatusType">
 				<cfif !isNull(rc.order.getReferencedOrder())>
 					<cf_HibachiPropertyDisplay object="#rc.order#" property="referencedOrder" valuelink="?slatAction=admin:entity.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
@@ -95,26 +90,24 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
 				</cfif>
 			</cf_HibachiPropertyList>
-			<cfif not rc.order.isNew()>
-				<cf_HibachiPropertyList divclass="span4">
-						<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
+			<cf_HibachiPropertyList divclass="span4">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
+					<hr />
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountCreditedTotal">
+					<cfif arrayLen(rc.order.getReferencingOrders())>
 						<hr />
-						<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">
-						<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountCreditedTotal">
-						<cfif arrayLen(rc.order.getReferencingOrders())>
-							<hr />
-							<cf_HibachiPropertyDisplay object="#rc.order#" property="referencingPaymentAmountCreditedTotal">
-						</cfif>
-				</cf_HibachiPropertyList>
-				<cf_HibachiPropertyList divclass="span4">
-						<cf_HibachiPropertyDisplay object="#rc.order#" property="subtotal">
-						<cf_HibachiPropertyDisplay object="#rc.order#" property="taxtotal">
-						<cf_HibachiPropertyDisplay object="#rc.order#" property="fulfillmenttotal">
-						<cf_HibachiPropertyDisplay object="#rc.order#" property="discounttotal">
-						<hr />
-						<cf_HibachiPropertyDisplay object="#rc.order#" property="total">
-				</cf_HibachiPropertyList>
-			</cfif>
+						<cf_HibachiPropertyDisplay object="#rc.order#" property="referencingPaymentAmountCreditedTotal">
+					</cfif>
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divclass="span4">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="subtotal">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="taxtotal">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="fulfillmenttotal">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="discounttotal">
+					<hr />
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="total">
+			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.order#" allowComments="true" allowCustomAttributes="true">
@@ -129,7 +122,9 @@ Notes:
 				<cf_HibachiTab view="admin:entity/ordertabs/stockreceivers" count="#rc.order.getStockReceiversCount()#" />
 			</cfif>
 			<cf_HibachiTab view="admin:entity/ordertabs/promotions" count="#rc.order.getPromotionCodesCount()#" />
-			<cf_HibachiTab view="admin:entity/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
+			<cfif rc.order.getReferencingOrdersCount()>
+				<cf_HibachiTab view="admin:entity/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
+			</cfif>
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

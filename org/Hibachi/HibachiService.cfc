@@ -94,41 +94,28 @@
 			invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity;
 			invokeArguments.entity = arguments.entity;
 			
-			var dataErrors = false;
-			
 			// Announce the processContext specific  event
 			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
 			
 			// Verify the preProcess
 			arguments.entity.validate( context=arguments.processContext );
 			
-			// If we pass validation then create a
+			// If we pass preProcess validation then we can try to setup the processObject if the entity has one, and validate that
+			if(!arguments.entity.hasErrors() && arguments.entity.hasProcessObject(arguments.processContext)) {
+				invokeArguments[ "processObject" ] = arguments.entity.getProcessObject(arguments.processContext);
+				invokeArguments[ "processObject" ].populate( arguments.data );
+				invokeArguments[ "processObject" ].validate( context=arguments.processContext );
+			}
+			
+			// if the entity still has no errors then we call call the process method
 			if(!arguments.entity.hasErrors()) {
-				if(getBeanFactory().containsBean("#arguments.entity.getClassName()#_#arguments.processContext#")) {
-					invokeArguments[ "processObject" ] = getTransient("#arguments.entity.getClassName()#_#arguments.processContext#");
-					invokeArguments[ "processObject" ].populate( arguments.data );
-					invokeArguments[ "processObject" ].invokeMethod("set#arguments.entity.getClassName()#", {1=arguments.entity});
-					invokeArguments[ "processObject" ].validate( context=arguments.processContext );
-					
-					// Set the processObject into the entity
-					arguments.entity.setProcessObject( invokeArguments.processObject );
-					
-					if(invokeArguments[ "processObject" ].hasErrors()) {
-						dataErrors = true;
-						arguments.entity.addError('processObject', arguments.processContext);
-					}
-				}
-				
-				
-				if(!dataErrors) {
-					this.invokeMethod("process#arguments.entity.getClassName()#_#arguments.processContext#", invokeArguments);	
-				}
+				this.invokeMethod("process#arguments.entity.getClassName()#_#arguments.processContext#", invokeArguments);
 			}
 			
 			// Announce the after events
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process", arguments);
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
-			if(arguments.entity.hasErrors() || dataErrors || (structKeyExists(invokeArguments, "processObject") && invokeArguments.processObject.hasErrors())) {
+			if(arguments.entity.hasErrors()) {
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#ProcessFailure", arguments);
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#Failure", invokeArguments);
 			} else {

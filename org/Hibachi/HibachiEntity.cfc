@@ -97,7 +97,22 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return newEntity;
 	}
 	
-	
+	// @hint we override this to add error keys check the errors in process objects
+	public struct function getErrors() {
+		
+		// Get the current struct of errors that this object has
+		var originalErrors = super.getErrors();
+		
+		// Inject a generic error for any processObjects that have errors
+		for(var key in variables.processObjects) {
+			if(variables.processObjects[key].hasErrors() && ( !structKeyExists(originalErrors, "processObjects") || !arrayFindNoCase(originalErrors.processObjects, key) ) ) {
+				addError('processObjects', key);
+			}
+		}
+		
+		// Now that any processObject errors have been added we can recall the super.getErrors() method to give all errors
+		return super.getErrors();
+	}
 	
 	// @hint Returns the persistableErrors array, if one hasn't been setup yet it returns a new one
 	public array function getPersistableErrors() {
@@ -120,6 +135,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	public void function setProcessObject( required any processObject ) {
 		arguments.processObject.invokeMethod("set#this.getClassName()#", {1=this});
 		variables.processObjects[ listLast(arguments.processObject.getClassName(), "_") ] = arguments.processObject;
+	}
+	
+	// @hint this method checks to see if there is a process object for a particular context
+	public boolean function hasProcessObject(required string context) {
+		if(getBeanFactory().containsBean("#arguments.entity.getClassName()#_#arguments.processContext#")) {
+			return true;
+		}
+		return false;
 	}
 	
 	// @hint public method that returns if this entity has persisted to the database yet or not.

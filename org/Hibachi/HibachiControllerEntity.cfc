@@ -397,7 +397,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// SUCCESS
 		if(!arguments.rc[ arguments.entityName ].hasErrors()) {
-			// Show the Generica Action Success Message
+			// Show the Generic Action Success Message
 			getHibachiScope().showMessage( getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.process_success", mesageReplaceData ), "success");
 			
 			// Show all of the specific messages & error messages for the entity

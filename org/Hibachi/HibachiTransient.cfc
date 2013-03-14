@@ -53,7 +53,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		
 	// @hint Returns true if this object has any errors.
 	public boolean function hasErrors() {
-		if(getHibachiErrors().hasErrors()) {
+		if(structCount(getErrors())) {
 			return true;
 		}
 		
