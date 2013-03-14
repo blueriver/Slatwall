@@ -96,6 +96,7 @@ Notes:
 				<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" filter="true" />
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.calculatedTitle" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
+				<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
 			</cf_HibachiListingDisplay>
 		</cfif>
 	</cfif>

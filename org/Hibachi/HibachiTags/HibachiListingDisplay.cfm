@@ -20,6 +20,8 @@
 	<cfparam name="attributes.recordProcessQueryString" type="string" default="" />
 	<cfparam name="attributes.recordProcessContext" type="string" default="process" />
 	<cfparam name="attributes.recordProcessModal" type="boolean" default="false" />
+	<cfparam name="attributes.recordSubmitAction" type="string" default="" />
+	<cfparam name="attributes.recordSubmitQueryString" type="string" default="" />
 
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->

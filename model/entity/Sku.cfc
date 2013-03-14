@@ -48,6 +48,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="imageFile" ormtype="string" length="50";
 	property name="userDefinedPriceFlag" ormtype="boolean" default="0";
 	
+	// Calculated Properties
+	property name="calculatedQATS" ormtype="integer";
+	
 	// Related Object Properties (many-to-one)
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product" cascadeCalculated="true";
 	property name="subscriptionTerm" cfc="SubscriptionTerm" fieldtype="many-to-one" fkcolumn="subscriptionTermID";
@@ -83,21 +86,21 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Non-Persistent Properties
 	property name="adminIcon" persistent="false";
-	property name="optionsDisplay" persistent="false";
 	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
 	property name="currencyCode" type="string" persistent="false";
 	property name="currencyDetails" type="struct" persistent="false";
+	property name="defaultFlag" type="boolean" persistent="false";
 	property name="eligibleFulfillmentMethods" type="array" persistent="false";
+	property name="imageExistsFlag" type="boolean" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
+	property name="nextEstimatedAvailableDate" type="string" persistent="false";
+	property name="optionsDisplay" persistent="false";
+	property name="qats" type="numeric" persistent="false";
 	property name="salePriceDetails" type="struct" persistent="false";
 	property name="salePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePriceDiscountType" type="string" persistent="false";
 	property name="salePriceDiscountAmount" type="string" persistent="false";
 	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
-	property name="defaultFlag" type="boolean" persistent="false";
-	property name="imageExistsFlag" type="boolean" persistent="false";
-	property name="nextEstimatedAvailableDate" type="string" persistent="false";
-	
 	
     public boolean function getDefaultFlag() {
     	if(getProduct().getDefaultSku().getSkuID() == getSkuID()) {
@@ -426,6 +429,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			variables.livePrice = prices[1];
 		}
 		return variables.livePrice;
+	}
+	
+	public any function getQATS() {
+		return getQuantity("QATS");
 	}
 	
 	public any function getSalePriceDetails() {
