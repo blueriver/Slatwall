@@ -38,7 +38,7 @@ Notes:
 */
 component extends="HibachiService" accessors="true" output="false" {
 
-	property name="physicalService" type="any";
+	property name="locationService" type="any";
 	
 	// ===================== START: Logical Methods ===========================
 	
@@ -68,6 +68,9 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		// Set the physical for this count
 		physicalCount.setPhysical( arguments.physical );
+		
+		// Set the location for this count
+		physicalCount.setLocation( getLocationService().getLocation( arguments.processObject.getLocationID() ));
 		
 		// Set the count post date time
 		physicalCount.setCountPostDateTime( arguments.processObject.getCountPostDateTime() );
@@ -102,7 +105,10 @@ component extends="HibachiService" accessors="true" output="false" {
 		this.savePhysicalCount(physicalCount);
 		
 		// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhyscialCountID()}.txt
-		//filemove( "#getTempDirectory()##documentData.SERVERFILE#", "/custom/assets/files/physicalcounts/#physicalCount.getPhyscialCountID()#.txt");
+		if(!directoryExists()) {
+			directoryCreate();
+		}
+		//filemove( "#getTempDirectory()##documentData.SERVERFILE#", "#getHibachiScope().setting('globalAssetsFileFolderPath')#/physicalcounts/#physicalCount.getPhyscialCountID()#.txt");
 		
 		// return the physical that came in from the arguments scope.
 		return arguments.physical;

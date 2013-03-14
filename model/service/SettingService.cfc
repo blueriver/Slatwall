@@ -143,6 +143,7 @@ globalEncryptionKeySize
 					globalCurrencyType = {fieldType="select"},
 					globalDateFormat = {fieldType="text"},
 					globalAssetsImageFolderPath = {fieldType="text", defaultValue=getApplicationValue('applicationRootMappingPath') & '/custom/assets/images'},
+					globalAssetsFileFolderPath = {fieldType="text", defaultValue=getApplicationValue('applicationRootMappingPath') & '/custom/assets/files'},
 					globalEncryptionAlgorithm = {fieldType="select"},
 					globalEncryptionEncoding = {fieldType="select"},
 					globalEncryptionKeyLocation = {fieldType="text"},

@@ -139,7 +139,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	
 	// @hint this method checks to see if there is a process object for a particular context
 	public boolean function hasProcessObject(required string context) {
-		if(getBeanFactory().containsBean("#arguments.entity.getClassName()#_#arguments.processContext#")) {
+		if(getBeanFactory().containsBean("#getClassName()#_#arguments.context#")) {
 			return true;
 		}
 		return false;

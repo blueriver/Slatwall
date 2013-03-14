@@ -44,6 +44,7 @@ Notes:
 		<cf_SlatwallSetting settingName="globalLogMessages" />
 		<cf_SlatwallSetting settingName="globalTimeFormat" />
 		<cf_SlatwallSetting settingName="globalAssetsImageFolderPath" />
+		<cf_SlatwallSetting settingName="globalAssetsFileFolderPath" />
 		<cf_SlatwallSetting settingName="globalMissingImagePath" />
 		<cf_SlatwallSetting settingName="globalImageExtension" />
 		<cf_SlatwallSetting settingName="globalOrderNumberGeneration" />
