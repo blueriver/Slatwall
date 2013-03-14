@@ -105,9 +105,11 @@ component extends="HibachiService" accessors="true" output="false" {
 		this.savePhysicalCount(physicalCount);
 		
 		// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhyscialCountID()}.txt
+		/*
 		if(!directoryExists()) {
 			directoryCreate();
 		}
+		*/
 		//filemove( "#getTempDirectory()##documentData.SERVERFILE#", "#getHibachiScope().setting('globalAssetsFileFolderPath')#/physicalcounts/#physicalCount.getPhyscialCountID()#.txt");
 		
 		// return the physical that came in from the arguments scope.
