@@ -98,7 +98,8 @@ Notes:
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.calculatedTitle" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
 				<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
-				<cf_HibachiListingColumn fieldName="orderFulfillmentID" />
+				<cf_HibachiListingColumn title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldName="orderFulfillmentID" fieldType="select" valueOptions="#rc.order.getAddOrderItemOrderFulfillmentOptions()#" />
+				<cf_HibachiListingColumn title="#$.slatwall.rbKey('define.quantity')#" fieldName="quantity" fieldType="text" fieldclass="span1" />
 			</cf_HibachiListingDisplay>
 		</cfif>
 	</cfif>

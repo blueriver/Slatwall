@@ -4,7 +4,7 @@
 	
 	<!--- Required --->
 	<cfparam name="attributes.smartList" type="any" />
-	<cfparam name="attributes.edit" type="boolean" default="false" />
+	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
 	
 	<!--- Admin Actions --->
 	<cfparam name="attributes.recordEditAction" type="string" default="" />
@@ -250,7 +250,7 @@
 								<cfset column.title = thistag.exampleEntity.getTitleByPropertyIdentifier(column.propertyIdentifier) />
 							</cfif>
 						</cfsilent>
-						<th class="data #column.tdClass#" data-propertyIdentifier="#column.propertyIdentifier#">
+						<th class="data #column.tdClass#" <cfif len(column.propertyIdentifier)>data-propertyIdentifier="#column.propertyIdentifier#"<cfelse>data-fieldtype="#column.fieldType#"</cfif>>
 							<cfif not column.search and not column.sort and not column.filter and not column.range>
 								#column.title#
 							<cfelse>
@@ -321,7 +321,15 @@
 							<cfif column.tdclass eq "primary" and thistag.expandable>
 								<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"><i class="icon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 							<cfelse>
-								<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<td class="#column.tdclass#">
+									<cfif len(column.propertyIdentifier)>
+										#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#
+									<cfelse>
+										<cfset column.edit = attributes.edit />
+										<cfset column.displayType = "plain" />
+										<cf_HibachiFieldDisplay attributeCollection="#column#" />
+									</cfif>
+								</td>
 							</cfif>
 						</cfloop>
 						<cfif attributes.administativeCount>

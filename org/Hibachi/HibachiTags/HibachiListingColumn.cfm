@@ -7,5 +7,7 @@
 	<cfparam name="attributes.filter" type="boolean" default="false" />
 	<cfparam name="attributes.range" type="boolean" default="false" />
 	
+	<cfparam name="attributes.fieldType" type="string" default="" />
+	
 	<cfassociate basetag="cf_HibachiListingDisplay" datacollection="columns">
 </cfif>

@@ -42,9 +42,11 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="fulfillmentCharge" ormtype="big_decimal" default=0;
 	property name="currencyCode" ormtype="string" length="3";
+	property name="emailAddress" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	property name="accountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
+	property name="accountEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
@@ -69,18 +71,20 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="accountAddressOptions" type="array" persistent="false";
+	property name="chargeAfterDiscount" type="numeric" persistent="false" formatType="currency";
+	property name="discountAmount" type="numeric" persistent="false" formatType="currency";
 	property name="fulfillmentMethodType" type="numeric" persistent="false";
 	property name="orderStatusCode" type="numeric" persistent="false";
 	property name="quantityUndelivered" type="numeric" persistent="false";
 	property name="quantityDelivered" type="numeric" persistent="false";
+	property name="shippingMethodRate" type="array" persistent="false";
+	property name="shippingMethodOptions" type="array" persistent="false";
 	property name="subtotal" type="numeric" persistent="false" formatType="currency";
+	property name="subtotalAfterDiscounts" type="array" persistent="false";
+	property name="subtotalAfterDiscountsWithTax" type="array" persistent="false";    
 	property name="taxAmount" type="numeric" persistent="false" formatType="currency";
 	property name="totalShippingWeight" type="numeric" persistent="false" formatType="weight";
-	property name="shippingMethodOptions" type="array" persistent="false";
-	property name="shippingMethodRate" type="array" persistent="false";
-	property name="accountAddressOptions" type="array" persistent="false";
-	property name="discountAmount" type="numeric" persistent="false" formatType="currency";
-	property name="chargeAfterDiscount" type="numeric" persistent="false" formatType="currency";
 	
 	public void function removeAccountAddress() {
 		structDelete(variables, "AccountAddress");
@@ -115,12 +119,20 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public any function getFulfillmentMethodType() {
-		return getFulfillmentMethod().getFulfillmentMethodType();
+    public any function getAccountAddressOptions() {
+    	if( !structKeyExists(variables, "accountAddressOptions")) {
+    		var smartList = getService("accountService").getAccountAddressSmartList();
+			smartList.addSelect(propertyIdentifier="accountAddressName", alias="name");
+			smartList.addSelect(propertyIdentifier="accountAddressID", alias="value"); 
+			smartList.addFilter(propertyIdentifier="account_accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
+			smartList.addOrder("accountAddressName|ASC");
+			variables.accountAddressOptions = smartList.getRecords();
+		}
+		return variables.accountAddressOptions;
 	}
 	
-	public any function getOrderStatusCode() {
-		return getOrder().getStatusCode();
+	public numeric function getChargeAfterDiscount() {
+		return precisionEvaluate(getFulfillmentCharge() - getDiscountAmount());
 	}
 	
 	public numeric function getDiscountAmount() {
@@ -131,40 +143,12 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		return discountAmount;
 	}
 	
-	public numeric function getChargeAfterDiscount() {
-		return precisionEvaluate(getFulfillmentCharge() - getDiscountAmount());
+	public any function getFulfillmentMethodType() {
+		return getFulfillmentMethod().getFulfillmentMethodType();
 	}
 	
-	public numeric function getSubtotal() {
-  		if( !structKeyExists(variables,"subtotal") ) {
-	    	variables.subtotal = 0;
-	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
-	    		variables.subtotal = precisionEvaluate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());
-	    	}
-  		}
-    	return variables.subtotal;
-    }
-    
-    public numeric function getSubtotalAfterDiscounts() {
-    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal());
-    }
-    
-    public numeric function getSubtotalAfterDiscountsWithTax() {
-    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal() + getTaxAmount());
-    }
-    
     public numeric function getFulfillmentTotal() {
     	return precisionEvaluate(getSubtotalAfterDiscountsWithTax() + getChargeAfterDiscount());
-    }
-    
-    public numeric function getTaxAmount() {
-    	if( !structkeyExists(variables, "taxAmount") ) {
-    		variables.taxAmount = 0;
-	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
-	    		variables.taxAmount = precisionEvaluate(variables.taxAmount + getOrderFulfillmentItems()[i].getTaxAmount());
-	    	}
-    	}
-    	return variables.taxAmount;
     }
         
    	public numeric function getItemDiscountAmountTotal() {
@@ -177,6 +161,10 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		return variables.itemDiscountAmountTotal;
 	}
     
+	public any function getOrderStatusCode() {
+		return getOrder().getStatusCode();
+	}
+	
 	public numeric function getQuantityUndelivered() {
     	var quantityUndelivered = 0;
 		
@@ -213,7 +201,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	return variables.shippingMethodOptions; 
     }
     
-    public any function getShippingMethodRate() {
+	public any function getShippingMethodRate() {
     	if(!structKeyExists(variables, "shippingMethodRate")) {
     		if(!isNull(getShippingMethod())) {
 	    		for(var i=1; i<=arrayLen(getFulfillmentShippingMethodOptions()); i++) {
@@ -228,18 +216,34 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	}
     }
     
-    public any function getAccountAddressOptions() {
-    	if( !structKeyExists(variables, "accountAddressOptions")) {
-    		var smartList = getService("accountService").getAccountAddressSmartList();
-			smartList.addSelect(propertyIdentifier="accountAddressName", alias="name");
-			smartList.addSelect(propertyIdentifier="accountAddressID", alias="value"); 
-			smartList.addFilter(propertyIdentifier="account_accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
-			smartList.addOrder("accountAddressName|ASC");
-			variables.accountAddressOptions = smartList.getRecords();
-		}
-		return variables.accountAddressOptions;
-	}
-	
+	public numeric function getSubtotal() {
+  		if( !structKeyExists(variables,"subtotal") ) {
+	    	variables.subtotal = 0;
+	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
+	    		variables.subtotal = precisionEvaluate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());
+	    	}
+  		}
+    	return variables.subtotal;
+    }
+    
+    public numeric function getSubtotalAfterDiscounts() {
+    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal());
+    }
+    
+    public numeric function getSubtotalAfterDiscountsWithTax() {
+    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal() + getTaxAmount());
+    }
+    
+    public numeric function getTaxAmount() {
+    	if( !structkeyExists(variables, "taxAmount") ) {
+    		variables.taxAmount = 0;
+	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
+	    		variables.taxAmount = precisionEvaluate(variables.taxAmount + getOrderFulfillmentItems()[i].getTaxAmount());
+	    	}
+    	}
+    	return variables.taxAmount;
+    }
+    
 	public numeric function getTotalShippingWeight() {
     	if( !structKeyExists(variables, "totalShippingWeight") ) {
 	    	variables.totalShippingWeight = 0;
@@ -320,7 +324,21 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentation() {
-		return getOrder().getOrderNumber() & " - " & getFulfillmentMethodType();
+		var rep = "";
+		if(getOrder().getOrderStatusType().getSystemCode() neq "ostNotPlaced") {
+			rep &= "#getOrder().getOrderNumber()# - ";
+		}
+		rep &= "#rbKey('enity.orderFulfillment.orderFulfillmentType.#getFulfillmentMethodType()#')#";
+		if(getFulfillmentMethodType() eq "shipping" && !getAddress().isNew()) {
+			rep &= " - #getAddress().getStreetAddress()#";
+		}
+		if(getFulfillmentMethodType() eq "email" && !getEmailAddress()) {
+			rep &= " - #getEmailAddress()#";
+		}
+		if(getFulfillmentMethodType() eq "email" && !getAccountEmailAddress()) {
+			rep &= " - #getAccountEmailAddress().getEmailAddress()#";
+		}
+		return rep;
 	}
 	
 	// ==================  END:  Overridden Methods ========================
