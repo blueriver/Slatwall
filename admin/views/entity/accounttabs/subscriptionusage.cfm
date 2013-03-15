@@ -42,10 +42,10 @@ Notes:
 						   recordEditAction="admin:entity.editsubscriptionUsage"
 						   recordEditQueryString="redirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#">
 
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
-	<cf_HibachiListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
-	<cf_HibachiListingColumn propertyIdentifier="nextBillDate" />
-	<cf_HibachiListingColumn propertyIdentifier="expirationDate" />
-	<cf_HibachiListingColumn propertyIdentifier="renewalPrice" />
-	<cf_HibachiListingColumn propertyIdentifier="autoPayFlag" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" />
+	<cf_HibachiListingColumn propertyIdentifier="currentStatusType" />
+	<cf_HibachiListingColumn propertyIdentifier="nextBillDate" sort="true" />
+	<cf_HibachiListingColumn propertyIdentifier="expirationDate" sort="true" />
+	<cf_HibachiListingColumn propertyIdentifier="renewalPrice" sort="true" range="true" />
+	<cf_HibachiListingColumn propertyIdentifier="autoPayFlag" sort="true" />
 </cf_HibachiListingDisplay>

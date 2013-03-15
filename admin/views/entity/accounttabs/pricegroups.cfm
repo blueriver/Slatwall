@@ -44,5 +44,5 @@ Notes:
 
 
 <cf_HibachiListingDisplay smartList="#rc.account.getPriceGroupsOptionsSmartList()#" multiselectFieldName="priceGroups" multiselectValues="#selectedPriceGroupIDs#" edit="#rc.edit#">
-	<cf_HibachiListingColumn propertyIdentifier="priceGroupName" tdclass="primary" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="priceGroupName" sort="true" />
 </cf_HibachiListingDisplay>

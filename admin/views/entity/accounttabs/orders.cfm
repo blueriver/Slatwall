@@ -43,9 +43,9 @@ Notes:
 						  recordDetailAction="admin:entity.detailorder"
 						  recordDetailQueryString="accountID=#rc.account.getAccountID()#">
 
-	<cf_HibachiListingColumn propertyIdentifier="orderNumber" />
-	<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" range="true" />
-	<cf_HibachiListingColumn tdclass="primary"  propertyIdentifier="account.fullName" />
-	<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="total" range="true" />
+	<cf_HibachiListingColumn propertyIdentifier="orderNumber" sort="true" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" sort="true" range="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
+	<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" sort="true" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" sort="true" range="true" />
 </cf_HibachiListingDisplay>

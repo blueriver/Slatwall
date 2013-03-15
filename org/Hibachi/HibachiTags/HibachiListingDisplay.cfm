@@ -86,7 +86,6 @@
 			</cfif>
 		</cfif>
 		
-		
 		<!--- Look for Hierarchy in example entity --->
 		<cfif not len(attributes.parentPropertyName)>
 			<cfset thistag.entityMetaData = getMetaData(thisTag.exampleEntity) />
@@ -98,7 +97,6 @@
 		<!--- Setup Hierarchy Expandable --->
 		<cfif len(attributes.parentPropertyName)>
 			<cfset thistag.expandable = true />
-			
 			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
 			
@@ -169,6 +167,14 @@
 		</cfif>
 		--->
 		
+		<!--- Submit Action --->
+		<cfif len(attributes.recordSubmitAction)>
+			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-submitaction="#attributes.recordSubmitAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-submitquerystring="#attributes.recordSubmitQueryString#"', " ") />
+		</cfif>
+		
 		<!--- Setup the primary representation column if no columns were passed in --->
 		<cfif not arrayLen(thistag.columns)>
 			<cfset arrayAppend(thistag.columns, {
@@ -205,6 +211,8 @@
 		<cfif attributes.administativeCount>
 			<cfset thistag.columnCount += 1 />
 		</cfif>
+		<cfif attributes.administativeCount>
+		</cfif>
 	</cfsilent>
 	<cfoutput>
 		<cfif thistag.selectable>
@@ -238,7 +246,7 @@
 					</cfif>
 					<cfloop array="#thistag.columns#" index="column">
 						<cfsilent>
-							<cfif not len(column.title)>
+							<cfif not len(column.title) and len(column.propertyIdentifier)>
 								<cfset column.title = thistag.exampleEntity.getTitleByPropertyIdentifier(column.propertyIdentifier) />
 							</cfif>
 						</cfsilent>
@@ -318,14 +326,18 @@
 						</cfloop>
 						<cfif attributes.administativeCount>
 							<td class="admin admin#attributes.administativeCount#">
-								<cfif attributes.recordDetailAction neq "">
+								<!--- Detail --->
+								<cfif len(attributes.recordDetailAction)>
 									<cf_HibachiActionCaller action="#attributes.recordDetailAction#" queryString="#listPrepend(attributes.recordDetailQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="eye-open" iconOnly="true" modal="#attributes.recordDetailModal#" />
 								</cfif>
-								<cfif attributes.recordEditAction neq "">
+								
+								<!--- Edit --->
+								<cfif len(attributes.recordEditAction)>
 									
 									<cf_HibachiActionCaller action="#attributes.recordEditAction#" queryString="#listPrepend(attributes.recordEditQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="pencil" iconOnly="true" disabled="#record.isNotEditable()#" modal="#attributes.recordEditModal#" />
 								</cfif>
-								<!---
+								
+								<!--- Process
 								<cfif attributes.recordProcessAction neq "">
 									<cfif attributes.recordProcessContext eq "process">
 										<cf_HibachiActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#attributes.hibachiScope.rbKey('define.process')#" disabled="#record.isNotProcessable()#" modal="#attributes.recordProcessModal#" />
@@ -335,11 +347,18 @@
 									</cfif>
 								</cfif>
 								--->
-								<cfif attributes.recordDeleteAction neq "">
+								
+								<!--- Delete --->
+								<cfif len(attributes.recordDeleteAction)>
 									<cfset local.deleteErrors = record.validate(context="delete") />
 									<cfset local.disabled = local.deleteErrors.hasErrors() />
 									<cfset local.disabledText = local.deleteErrors.getAllErrorsHTML() />
 									<cf_HibachiActionCaller action="#attributes.recordDeleteAction#" queryString="#listPrepend(attributes.recordDeleteQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#local.disabled#" disabledText="#local.disabledText#" confirm="true" />
+								</cfif>
+								
+								<!--- Submit --->
+								<cfif len(attributes.recordSubmitAction)>
+									<cf_HibachiActionCaller action="#attributes.recordSubmitAction#" queryString="#listPrepend(attributes.recordSubmitQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" text="#attributes.hibachiScope.rbKey('define.add')#" class="btn btn-mini" icon="plus" />
 								</cfif>
 							</td>
 						</cfif>

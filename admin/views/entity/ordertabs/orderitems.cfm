@@ -90,13 +90,15 @@ Notes:
 			<h4>#$.slatwall.rbKey('define.add')#</h4>
 			<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#"
 									  recordSubmitAction="admin.entity.processOrder"
-									  recordSubmitQueryString="orderID=#rc.order.getOrderID()#">
+									  recordSubmitQueryString="orderID=#rc.order.getOrderID()#&processContext=addSaleOrderItem">
+									    
 				<cf_HibachiListingColumn propertyIdentifier="skuCode" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.productCode" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" filter="true" />
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.calculatedTitle" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
 				<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
+				<cf_HibachiListingColumn fieldName="orderFulfillmentID" />
 			</cf_HibachiListingDisplay>
 		</cfif>
 	</cfif>
