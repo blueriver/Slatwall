@@ -286,8 +286,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
+	public any function getSkuBySkuCode(string skuCode){
+		return getSkuDAO().getSkuBySkuCode(argumentCollection=arguments);
+	}
 	
-	// ===================== START: DAO Passthrough ===========================
+	// =====================  END: DAO Passthrough ============================
 	
 	// ===================== START: Process Methods ===========================
 	

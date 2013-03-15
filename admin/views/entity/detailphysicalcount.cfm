@@ -47,8 +47,9 @@ Notes:
 								    backQueryString="physicalID=#rc.physical.getPhysicalID()#"
 								    deleteQueryString="redirectAction=admin:entity.detailPhysical&physicalID=#rc.physical.getPhysicalID()#"
 									cancelAction="admin:entity.detailPhysicalCount"
-									cancelQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" />
-									
+									cancelQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#">
+		
+		</cf_HibachiEntityActionBar>							
 		<input type="hidden" name="physical.physicalID" value="#rc.physical.getPhysicalID()#" />
 		
 		<cf_HibachiPropertyRow>
@@ -59,6 +60,7 @@ Notes:
 		
 		<cf_HibachiTabGroup object="#rc.physicalCount#">
 			<cf_HibachiTab view="admin:entity/physicalcounttabs/physicalcountitems" text="#$.slatwall.rbKey('entity.physicalCount.physicalCountItems')#" />
+			<cf_HibachiTab view="admin:entity/physicalcounttabs/Discrepancies" text="Discrepancies" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>
