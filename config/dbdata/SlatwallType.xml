@@ -113,6 +113,7 @@
 		<Record typeID="444df2e5cb27169f418279f3f859a4f7" typeIDPath="444df2e4e0ec725f718318de5bd3b973,444df2e5cb27169f418279f3f859a4f7" parentTypeID="444df2e4e0ec725f718318de5bd3b973" type="Location Transfer" systemCode="satLocationTransfer" />
 		<Record typeID="444df2e60db81c12589c9b39346009f2" typeIDPath="444df2e4e0ec725f718318de5bd3b973,444df2e60db81c12589c9b39346009f2" parentTypeID="444df2e4e0ec725f718318de5bd3b973" type="Manual In" systemCode="satManualIn" />
 		<Record typeID="444df2e7dba550b7a24a03acbb37e717" typeIDPath="444df2e4e0ec725f718318de5bd3b973,444df2e7dba550b7a24a03acbb37e717" parentTypeID="444df2e4e0ec725f718318de5bd3b973" type="Manual Out" systemCode="satManualOut" />
+		<Record typeID="5accbf51d91d4c3badc6f22b1caace97" typeIDPath="444df2e4e0ec725f718318de5bd3b973,5accbf51d91d4c3badc6f22b1caace97" parentTypeID="444df2e4e0ec725f718318de5bd3b973" type="Physical Count" systemCode="satPhysicalCount" />
 		
 		<Record typeID="444df2e1afee04d4971094d467a2c619" typeIDPath="444df2e1afee04d4971094d467a2c619" parentTypeID="NULL" type="Stock Adjustment Status Types" systemCode="stockAdjustmentStatusType" />
 		<Record typeID="444df2e2f66ddfaf9c60caf5c76349a6" typeIDPath="444df2e1afee04d4971094d467a2c619,444df2e2f66ddfaf9c60caf5c76349a6" parentTypeID="444df2e1afee04d4971094d467a2c619" type="New" systemCode="sastNew" />
@@ -161,7 +162,7 @@ Below Are UUID's to use... delete after using
 
 
 
-5accbf51d91d4c3badc6f22b1caace97
+
 5accbf52063a5b4e2a73f19f4151cc40
 5accbf53ad1b00392c1053e025e84f5e
 5accbf5409572526d413fd7dc447b937
