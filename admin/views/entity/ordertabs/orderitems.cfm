@@ -89,7 +89,7 @@ Notes:
 		<cfif rc.edit>
 			<h4>#$.slatwall.rbKey('define.add')#</h4>
 			<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#"
-									  recordSubmitAction="admin.entity.processOrder"
+									  recordSubmitAction="admin:entity.processOrder"
 									  recordSubmitQueryString="orderID=#rc.order.getOrderID()#&processContext=addSaleOrderItem">
 									    
 				<cf_HibachiListingColumn propertyIdentifier="skuCode" search="true" />
@@ -99,7 +99,7 @@ Notes:
 				<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
 				<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
 				<cf_HibachiListingColumn title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldName="orderFulfillmentID" fieldType="select" valueOptions="#rc.order.getAddOrderItemOrderFulfillmentOptions()#" />
-				<cf_HibachiListingColumn title="#$.slatwall.rbKey('define.quantity')#" fieldName="quantity" fieldType="text" fieldclass="span1" />
+				<cf_HibachiListingColumn title="#$.slatwall.rbKey('define.quantity')#" fieldName="quantity" fieldType="text" fieldclass="span1" value="1" />
 			</cf_HibachiListingDisplay>
 		</cfif>
 	</cfif>

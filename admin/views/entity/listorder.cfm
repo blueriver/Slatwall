@@ -48,7 +48,8 @@ Notes:
 	</cf_HibachiEntityActionBar>
 	
 	<cf_HibachiListingDisplay smartList="#rc.orderSmartList#" 
-							  recordDetailAction="admin:entity.detailorder">
+							  recordDetailAction="admin:entity.detailorder"
+							  recordEditAction="admin:entity.editorder">
 		<cf_HibachiListingColumn propertyIdentifier="orderNumber" search="true" />
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.company" search="true"/>
 		<cf_HibachiListingColumn propertyIdentifier="account.firstName" search="true" />
