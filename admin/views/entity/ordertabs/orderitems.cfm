@@ -57,9 +57,6 @@ Notes:
 			<cf_HibachiListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
 			<cf_HibachiListingColumn propertyIdentifier="quantityReceived" />
 		</cf_HibachiListingDisplay>
-		<div class="well">
-			Add Here
-		</div>
 	</cfif>
 	
 	<cfif rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
@@ -74,14 +71,15 @@ Notes:
 								  recordDeleteActionQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#"
 								  recordDetailAction="admin:entity.detailorderitem"
 								  recordDetailQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#"
-								  editFieldName="orderItems">
+								  recordEditAction="admin:entity.editorderitem"
+								  recordEditQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#">
 								    
 			<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
 			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.calculatedTitle" />
 			<cf_HibachiListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
 			<cf_HibachiListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
-			<cf_HibachiListingColumn propertyIdentifier="quantity" editable="true" fieldClass="span1" />
-			<cf_HibachiListingColumn propertyIdentifier="price" editable="true" fieldClass="span2" />
+			<cf_HibachiListingColumn propertyIdentifier="quantity" />
+			<cf_HibachiListingColumn propertyIdentifier="price" />
 			<cf_HibachiListingColumn propertyIdentifier="discountAmount" />
 			<cf_HibachiListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
 			<cf_HibachiListingColumn propertyIdentifier="quantityDelivered" />
@@ -110,4 +108,13 @@ Notes:
 			</cf_HibachiListingDisplay>
 		</cfif>
 	</cfif>
+	
+	<!---
+	<cf_HibachiSmartListDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#" edit="#rc.edit#">
+		<cf_HibachiSmartListColumn propertyIdentifier="">
+		<cf_HibachiSmartListPropertyDisplay propertyIdentifier="">
+		<cf_HibachiSmartListActionCaller action="">
+		<cf_HibachiSmartListProcessCaller action="">
+	</cf_HibachiSmartListDisplay>
+	--->
 </cfoutput>
