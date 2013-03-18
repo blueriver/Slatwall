@@ -89,8 +89,10 @@ Notes:
 		<cfif rc.edit>
 			<h4>#$.slatwall.rbKey('define.add')#</h4>
 			<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#"
-									  recordSubmitAction="admin:entity.processOrder"
-									  recordSubmitQueryString="orderID=#rc.order.getOrderID()#&processContext=addSaleOrderItem">
+									  recordProcessAction="admin:entity.processOrder"
+									  recordProcessQueryString="orderID=#rc.order.getOrderID()#"
+									  recordProcessContext="addSaleOrderItem"
+									  recordProcessEntity="#rc.order#">
 									    
 				<cf_HibachiListingColumn propertyIdentifier="skuCode" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.productCode" search="true" />
@@ -98,8 +100,9 @@ Notes:
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.calculatedTitle" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
 				<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
-				<cf_HibachiListingColumn title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldName="orderFulfillmentID" fieldType="select" valueOptions="#rc.order.getAddOrderItemOrderFulfillmentOptions()#" />
-				<cf_HibachiListingColumn title="#$.slatwall.rbKey('define.quantity')#" fieldName="quantity" fieldType="text" fieldclass="span1" value="1" />
+
+				<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" />
+				<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 			</cf_HibachiListingDisplay>
 		</cfif>
 	</cfif>

@@ -18,10 +18,8 @@
 	<cfparam name="attributes.recordDeleteQueryString" type="string" default="" />
 	<cfparam name="attributes.recordProcessAction" type="string" default="" />
 	<cfparam name="attributes.recordProcessQueryString" type="string" default="" />
-	<cfparam name="attributes.recordProcessContext" type="string" default="process" />
-	<cfparam name="attributes.recordProcessModal" type="boolean" default="false" />
-	<cfparam name="attributes.recordSubmitAction" type="string" default="" />
-	<cfparam name="attributes.recordSubmitQueryString" type="string" default="" />
+	<cfparam name="attributes.recordProcessContext" type="string" default="" />
+	<cfparam name="attributes.recordProcessEntity" type="any" default="" />
 
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
@@ -156,24 +154,16 @@
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-deleteaction="#attributes.recordDeleteAction#"', " ") />
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-deletequerystring="#attributes.recordDeleteQueryString#"', " ") />
 		</cfif>
-		<!---
+		
 		<!--- Process --->
 		<cfif len(attributes.recordProcessAction)>
 			<cfset attributes.administativeCount++ />
 			
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processaction="#attributes.recordProcessAction#"', " ") />
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processquerystring="#attributes.recordProcessQueryString#"', " ") />
-			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processmodal="#attributes.recordProcessModal#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processcontext="#attributes.recordProcessContext#"', " ") />
 		</cfif>
-		--->
 		
-		<!--- Submit Action --->
-		<cfif len(attributes.recordSubmitAction)>
-			<cfset attributes.administativeCount++ />
-			
-			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-submitaction="#attributes.recordSubmitAction#"', " ") />
-			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-submitquerystring="#attributes.recordSubmitQueryString#"', " ") />
-		</cfif>
 		
 		<!--- Setup the primary representation column if no columns were passed in --->
 		<cfif not arrayLen(thistag.columns)>
@@ -250,7 +240,7 @@
 								<cfset column.title = thistag.exampleEntity.getTitleByPropertyIdentifier(column.propertyIdentifier) />
 							</cfif>
 						</cfsilent>
-						<th class="data #column.tdClass#" <cfif len(column.propertyIdentifier)>data-propertyIdentifier="#column.propertyIdentifier#"<cfelse>data-fieldtype="#column.fieldType#"</cfif>>
+						<th class="data #column.tdClass#" <cfif len(column.propertyIdentifier)>data-propertyIdentifier="#column.propertyIdentifier#"<cfelseif len(column.processObjectProperty)>data-processobjectproperty="#column.processObjectProperty#"</cfif>>
 							<cfif not column.search and not column.sort and not column.filter and not column.range>
 								#column.title#
 							<cfelse>
@@ -324,10 +314,12 @@
 								<td class="#column.tdclass#">
 									<cfif len(column.propertyIdentifier)>
 										#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#
-									<cfelse>
+									<cfelseif len(column.processObjectProperty)>
+										<cfset column.object = attributes.recordProcessEntity.getProcessObject(attributes.recordProcessContext) />
+										<cfset column.property = column.processObjectProperty />
 										<cfset column.edit = attributes.edit />
 										<cfset column.displayType = "plain" />
-										<cf_HibachiFieldDisplay attributeCollection="#column#" />
+										<cf_HibachiPropertyDisplay attributeCollection="#column#" />
 									</cfif>
 								</td>
 							</cfif>
@@ -341,20 +333,8 @@
 								
 								<!--- Edit --->
 								<cfif len(attributes.recordEditAction)>
-									
 									<cf_HibachiActionCaller action="#attributes.recordEditAction#" queryString="#listPrepend(attributes.recordEditQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="pencil" iconOnly="true" disabled="#record.isNotEditable()#" modal="#attributes.recordEditModal#" />
 								</cfif>
-								
-								<!--- Process
-								<cfif attributes.recordProcessAction neq "">
-									<cfif attributes.recordProcessContext eq "process">
-										<cf_HibachiActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#attributes.hibachiScope.rbKey('define.process')#" disabled="#record.isNotProcessable()#" modal="#attributes.recordProcessModal#" />
-									<cfelse>
-										<cfset attributes.recordProcessQueryString = "processContext=#attributes.recordProcessContext#&#attributes.recordProcessQueryString#" />
-										<cf_HibachiActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#attributes.hibachiScope.rbKey(replace(attributes.recordProcessAction,':','.') & '.#attributes.recordProcessContext#_nav')#" disabled="#record.isNotProcessable( attributes.recordProcessContext )#" modal="#attributes.recordProcessModal#" />
-									</cfif>
-								</cfif>
-								--->
 								
 								<!--- Delete --->
 								<cfif len(attributes.recordDeleteAction)>
@@ -364,9 +344,9 @@
 									<cf_HibachiActionCaller action="#attributes.recordDeleteAction#" queryString="#listPrepend(attributes.recordDeleteQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#local.disabled#" disabledText="#local.disabledText#" confirm="true" />
 								</cfif>
 								
-								<!--- Submit --->
-								<cfif len(attributes.recordSubmitAction)>
-									<cf_HibachiActionCaller action="#attributes.recordSubmitAction#" queryString="#listPrepend(attributes.recordSubmitQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" text="#attributes.hibachiScope.rbKey('define.add')#" class="btn btn-mini" icon="plus" />
+								<!--- Process --->
+								<cfif len(attributes.recordProcessAction)>
+									<cf_HibachiProcessCaller action="#attributes.recordProcessAction#" entity="#attributes.recordProcessEntity#" processContext="#attributes.recordProcessContext#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="plus" />
 								</cfif>
 							</td>
 						</cfif>
