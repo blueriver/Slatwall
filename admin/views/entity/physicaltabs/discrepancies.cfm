@@ -36,7 +36,26 @@
 Notes:
 
 --->
-<cfparam name="rc.physicalCount" type="any" />
+<cfparam name="rc.physical" type="any" />
+
+<cfdump var="#rc.physical.getDiscrepancyQuery()#" />
+<!---
+
+
+Sku Code    |    Location Name    |    Expected     |    Actual     |    Difference
+0981208			San Diego					5				3				-2
+0981208			New York					3				5				 2
+0981209			San Diego					2				1				 1
+
+
+
+
+
+
+
+
+
+
 
 <cfset rc.physicalCountItems = $.slatwall.getService("physicalService").listPhysicalCountItems() />
 
@@ -52,7 +71,7 @@ Notes:
 			<td></td>
 			<td></td>
 		</tr>
-<!---		<cfif arrayLen(rc.locations) gt 1>
+		<cfif arrayLen(rc.locations) gt 1>
 			<cfloop array="#rc.locations#" index="local.location">
 				<tr class="stock">
 					<td>#local.location.getLocationName()#</td>
@@ -60,6 +79,7 @@ Notes:
 					<td>#rc.sku.getQuantity('QIATS', local.location.getLocationID())#</td>
 				</tr>
 			</cfloop>
-		</cfif>--->
+		</cfif>
 	</table>	
 </cfoutput>
+--->

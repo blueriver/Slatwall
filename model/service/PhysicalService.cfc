@@ -38,6 +38,8 @@ Notes:
 */
 component extends="HibachiService" accessors="true" output="false" {
 
+	property name="physicalDAO" type="any";
+	
 	property name="locationService" type="any";
 	property name="skuService" type="any";
 	property name="stockService" type="any";
@@ -47,6 +49,10 @@ component extends="HibachiService" accessors="true" output="false" {
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
+	
+	public query function getPhysicalDiscrepancyQuery() {
+		return getPhysicalDAO().getPhysicalDiscrepancyQuery(argumentCollection=arguments);
+	}
 	
 	// ===================== START: DAO Passthrough ===========================
 	
