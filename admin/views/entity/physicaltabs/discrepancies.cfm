@@ -42,18 +42,26 @@ Notes:
 <!---
 
 
-Sku Code    |    Location Name    |    Expected     |    Actual     |    Difference
-0981208			San Diego					5				3				-2
-0981208			New York					3				5				 2
-0981209			San Diego					2				1				 1
+Sku Code    |    Location Name    |    Discrepancy	
+0981208			San Diego					-2		
+0981208			New York					 2		
+0981209			San Diego					 1		
 
 
 
 
 
-
-
-
+TIME		| System Says | Counting | Picked for Shipping	
+10:00am			1000										
+10:10							100							
+10:20			997								3			
+10:30							300							
+10:40			995								2			
+10:50							595							 (Count finished)
+10:55			889								6			
+============================================================
+11:00 RECONCILE												
+				995				997							
 
 
 

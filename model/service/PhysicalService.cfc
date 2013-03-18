@@ -62,9 +62,14 @@ component extends="HibachiService" accessors="true" output="false" {
 	public any function processPhysical_commit(required any physical) {
 		
 		// Loop over physical for each location
-			// Create a StockAdjustmentIN and StockAdjustmentOUT
+		
+			// Create a PhysicalCount Stock Adjustment
+			// Loop over discrepancy records
+				// If the locationID in the discrepancy record is same as current location loop, then add StockAdjustmentItem
+					// If discrpancy > 0 make it quantityIn otherwise quantityOut
+					
 			// call getStockService().processStockAdjustment(stockAdjustment=stockAdjustmentIN, processContext="processAdjustment")
-			// call getStockService().processStockAdjustment(stockAdjustment=stockAdjustmentOUT, processContext="processAdjustment")
+			
 		
 	
 	}
@@ -115,6 +120,11 @@ component extends="HibachiService" accessors="true" output="false" {
 				
 				// Set the quantity that was verified above
 				physicalCountItem.setQuantity( listGetAt( fileRow, 2 ) );
+				
+				// Check for a countPostDateTime on the record
+				if(listLen(fileRow) >= 3 && isDate(listGetAt(fileRow, 3))) {
+					physicalCountItem.setCountPostDateTime(listGetAt(fileRow, 3));
+				}
 				
 				// Get sku from sku code
 				var sku = getSkuService().getSkuBySkuCode( physicalCountItem.getSkuCode() );
