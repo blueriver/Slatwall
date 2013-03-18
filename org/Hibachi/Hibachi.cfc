@@ -277,13 +277,17 @@ component extends="FW1.framework" {
 					}
 					
 					// Setup the custom bean factory
-					var customBF = new DI1.ioc("/#variables.framework.applicationKey#/custom/model", {
-						transients=["entity", "process", "transient"]
-					});
-					
-					customBF.setParent( coreBF );
-					
-					setBeanFactory( customBF );
+					if(directoryExists(expandPath("/#variables.framework.applicationKey#/custom/model"))) {
+						var customBF = new DI1.ioc("/#variables.framework.applicationKey#/custom/model", {
+							transients=["entity", "process", "transient"]
+						});
+						
+						customBF.setParent( coreBF );
+						
+						setBeanFactory( customBF );
+					} else {
+						setBeanFactory( coreBF );
+					}
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
 					
 					//========================= END: IOC SETUP ===============================

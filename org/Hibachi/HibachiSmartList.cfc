@@ -349,7 +349,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		} 
 	}
 	
-	public void function addWhereCondition(required string condition, struct conditionParams={}) {
+	public void function addWhereCondition(required string condition, struct conditionParams={}, string conditionOperator="AND") {
 		arrayAppend(variables.whereConditions, arguments);
 	}
 	
@@ -686,7 +686,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 						hqlWhere &= " WHERE";
 					}
 				} else {
-					hqlWhere &= " AND";
+					hqlWhere &= " #getWhereConditions()[i].conditionOperator#";
 				}
 				structAppend(variables.hqlParams,getWhereConditions()[i].conditionParams);
 				hqlWhere &= " #getWhereConditions()[i].condition#";
@@ -752,6 +752,10 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			writeDump(e);
 			abort;		
 		}
+	}
+	
+	public void function clearRecordsCount() {
+		structDelete(variables, "recordsCount");
 	}
 	
 	public numeric function getRecordsCount() {
