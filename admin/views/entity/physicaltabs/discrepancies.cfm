@@ -73,17 +73,17 @@ TIME		| System Says | Counting | Picked for Shipping
 			<th style="white-space:normal; vertical-align: text-bottom;">Discrepancy</th>
 		</tr>
 		<cfif discrepancyQuery.recordCount>
-		<cfloop query="discrepancyQuery" >
-		<tr>
-			<td>#discrepancyQuery.skuCode#</td>
-			<td>#discrepancyQuery.locationName#</td>
-			<td>#discrepancyQuery.discrepancy#</td>
-		</tr>
-		</cfloop>
+			<cfloop query="discrepancyQuery" >
+				<tr>
+					<td>#discrepancyQuery.skuCode#</td>
+					<td>#discrepancyQuery.locationName#</td>
+					<td>#discrepancyQuery.discrepancy#</td>
+				</tr>
+			</cfloop>
 		<cfelse>
-		<tr>
-			<td style="text-align:center;" colspan="3">There aren't any Physical Counts Items.</td>
-		</tr>
+			<tr>
+				<td style="text-align:center;" colspan="3">There aren't any Physical Count Items.</td>
+			</tr>
 		</cfif>
 	</table>	
 </cfoutput>

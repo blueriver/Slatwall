@@ -62,14 +62,18 @@ component extends="HibachiService" accessors="true" output="false" {
 	public any function processPhysical_commit(required any physical) {
 		
 		// Loop over physical for each location
-		
+		for(var i=1; i <= ArrayLen(arguments.physical.getLocations()); i++) {
 			// Create a PhysicalCount Stock Adjustment
+			
+			
 			// Loop over discrepancy records
-				// If the locationID in the discrepancy record is same as current location loop, then add StockAdjustmentItem
-					// If discrpancy > 0 make it quantityIn otherwise quantityOut
-					
+			
+			// If the locationID in the discrepancy record is same as current location loop, then add StockAdjustmentItem
+				// If discrpancy > 0 make it quantityIn otherwise quantityOut
+				
 			// call getStockService().processStockAdjustment(stockAdjustment=stockAdjustmentIN, processContext="processAdjustment")
-
+			
+		}
 	}
 	
 	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {
