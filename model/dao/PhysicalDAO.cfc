@@ -78,10 +78,12 @@ Notes:
 			  INNER JOIN
 			  	SlatwallProductType on SlatwallProduct.productTypeID = SlatwallProductType.productTypeID
 			  LEFT JOIN
-			  	SlatwallBrand on SlatwallProduct.brandID = SlatwallProduct.brandID
+			  	SlatwallBrand on SlatwallProduct.brandID = SlatwallBrand.brandID
 			WHERE
 			  <!--- Only get Stock that is supposed to be counted --->
 			  (
+			  		EXISTS(SELECT SlatwallPhysicalLocation.locationID FROM SlatwallPhysicalLocation WHERE SlatwallPhysicalLocation.locationID = SlatwallLocation.locationID AND SlatwallPhysicalLocation.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" /> )
+			  ) AND (
 			    	EXISTS(SELECT SlatwallPhysicalSku.skuID FROM SlatwallPhysicalSku WHERE SlatwallPhysicalSku.skuID=SlatwallSku.skuID AND SlatwallPhysicalSku.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />)
 				  OR
 				  	EXISTS(SELECT SlatwallPhysicalProduct.productID FROM SlatwallPhysicalProduct WHERE SlatwallPhysicalProduct.productID=SlatwallProduct.productID AND SlatwallPhysicalProduct.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />)
