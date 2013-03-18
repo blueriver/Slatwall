@@ -495,6 +495,39 @@ function setupEventHandlers() {
 		var autocompleteField = jQuery(this).closest('.autoselect-container').find('.textautocomplete');
 		jQuery( '#' + jQuery( autocompleteField ).data('sugessionsid') ).parent().hide();
 	});
+	
+	// Hibachi AJAX Submit
+	jQuery('body').on('click', '.hibachi-ajax-submit', function(e) {
+		e.preventDefault();
+		
+		var data = {};
+		
+		// Loop over all input fields and add them the the data
+		jQuery.each(jQuery(this).closest('tr').find('input,select'), function(i, v) {
+			if(!(jQuery(v).attr('name') in data)) {
+				data[ jQuery(v).attr('name') ] = jQuery( this ).val();
+			}
+		});
+		
+		var ajax = {
+			url: hibachi.rootURL + '/' + jQuery(this).attr('href'),
+			method: 'post',
+			data: data,
+			dataType: 'json',
+			beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
+			error: function( r ) {
+				console.log(r);
+			},
+			success: function(r) {
+				console.log(r);
+			}
+		}
+		console.log(ajax);
+		
+		jQuery.ajax(ajax);
+		
+	});
+	
 }
 
 function textAutocompleteHold( autocompleteField, data ) {

@@ -10,6 +10,7 @@
 	<cfparam name="attributes.sort" type="boolean" default="false" />
 	<cfparam name="attributes.filter" type="boolean" default="false" />
 	<cfparam name="attributes.range" type="boolean" default="false" />
+	<cfparam name="attributes.editable" type="boolean" default="false" />
 	
 	<cfassociate basetag="cf_HibachiListingDisplay" datacollection="columns">
 </cfif>

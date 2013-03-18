@@ -20,7 +20,11 @@
 	<cfparam name="attributes.recordProcessQueryString" type="string" default="" />
 	<cfparam name="attributes.recordProcessContext" type="string" default="" />
 	<cfparam name="attributes.recordProcessEntity" type="any" default="" />
+	<cfparam name="attributes.recordProcessUpdateTableID" type="any" default="" />
 
+	<!--- Editable Fieldname --->
+	<cfparam name="attributes.editFieldName" type="string" default="" />
+	
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
 	
@@ -162,6 +166,7 @@
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processaction="#attributes.recordProcessAction#"', " ") />
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processquerystring="#attributes.recordProcessQueryString#"', " ") />
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processcontext="#attributes.recordProcessContext#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processupdatetableid="#attributes.recordProcessUpdateTableID#"', " ") />
 		</cfif>
 		
 		
@@ -174,7 +179,8 @@
 				search = true,
 				sort = true,
 				filter = false,
-				range = false
+				range = false,
+				editable = false
 			}) />
 		</cfif>
 		
@@ -210,6 +216,9 @@
 		</cfif>
 		<cfif thistag.multiselectable>
 			<input type="hidden" name="#attributes.multiselectFieldName#" value="#attributes.multiselectValues#" />
+		</cfif>
+		<cfif len(attributes.recordProcessAction)>
+			<div id="MD#replace(attributes.smartList.getSavedStateID(),'-','','all')#"></div>
 		</cfif>
 		<table id="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" class="#attributes.tableclass#" data-norecordstext="#attributes.hibachiScope.rbKey("entity.#thistag.exampleEntity.getClassName()#.norecords", {entityNamePlural=attributes.hibachiScope.rbKey('entity.#thistag.exampleEntity.getClassName()#_plural')})#" data-savedstateid="#attributes.smartList.getSavedStateID()#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
 			<thead>
@@ -292,8 +301,15 @@
 				</tr>
 			</thead>
 			<tbody <cfif thistag.sortable>class="sortable"</cfif>>
+				<cfset thistag.loopIndex = 0 />
 				<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
+					<cfset thistag.loopIndex++ />
 					<tr id="#record.getPrimaryIDValue()#" <cfif thistag.expandable>idPath="#record.getValueByPropertyIdentifier( propertyIdentifier="#thistag.exampleEntity.getPrimaryIDPropertyName()#Path" )#"</cfif>>
+						<!--- Editable --->
+						<cfif attributes.edit && len(attributes.editFieldName)>
+							<input type="hidden" name="#attributes.editFieldName#[#thistag.loopIndex#].#record.getPrimaryIDPropertyName()#" value="#record.getPrimaryIDValue()#" />	
+						</cfif>
+								
 						<!--- Selectable --->
 						<cfif thistag.selectable>
 							<td><a href="##" class="table-action-select#IIF(attributes.edit, DE(""), DE(" disabled"))#" data-idvalue="#record.getPrimaryIDValue()#"><i class="hibachi-ui-radio"></i></a></td>
@@ -312,8 +328,16 @@
 								<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"><i class="icon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 							<cfelse>
 								<td class="#column.tdclass#">
-									<cfif len(column.propertyIdentifier)>
+									
+									<cfif len(column.propertyIdentifier) && (!column.editable || (column.editable && !attributes.edit))>
 										#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#
+									<cfelseif len(column.propertyIdentifier) && column.editable && attributes.edit>
+										<cfset column.object = record />
+										<cfset column.property = column.propertyIdentifier />
+										<cfset column.edit = true />
+										<cfset column.displayType = "plain" />
+										<cfset column.fieldName = "#attributes.editFieldName#[#thistag.loopIndex#].#column.propertyIdentifier#" />
+										<cf_HibachiPropertyDisplay attributeCollection="#column#" />
 									<cfelseif len(column.processObjectProperty)>
 										<cfset column.object = attributes.recordProcessEntity.getProcessObject(attributes.recordProcessContext) />
 										<cfset column.property = column.processObjectProperty />
@@ -346,7 +370,7 @@
 								
 								<!--- Process --->
 								<cfif len(attributes.recordProcessAction)>
-									<cf_HibachiProcessCaller action="#attributes.recordProcessAction#" entity="#attributes.recordProcessEntity#" processContext="#attributes.recordProcessContext#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="plus" />
+									<cf_HibachiProcessCaller action="#attributes.recordProcessAction#" entity="#attributes.recordProcessEntity#" processContext="#attributes.recordProcessContext#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn hibachi-ajax-submit" icon="plus" />
 								</cfif>
 							</td>
 						</cfif>

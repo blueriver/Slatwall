@@ -50,6 +50,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="promotionService";
 	property name="settingService";
 	property name="shippingService";
+	property name="skuService";
 	property name="stockService";
 	property name="subscriptionService";
 	property name="taxService";
@@ -631,7 +632,22 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: Process Methods ===========================
 	
 	public any function processOrder_addSaleOrderItem(required any order, required any processObject) {
-		throw("Impliment Me!");
+		
+		var sku = getSkuService().getSku(processObject.getSkuID());
+		var orderFulfillment = this.getOrderFulfillment(processObject.getOrderFulfillmentID());
+		var newOrderItem = this.newOrderItem();
+		
+		newOrderItem.setSku( sku );
+		newOrderItem.setOrderFulfillment( orderFulfillment );
+		newOrderItem.setOrder( arguments.order );
+		newOrderItem.setCurrencyCode( arguments.order.getCurrencyCode() );
+		newOrderItem.setQuantity( arguments.processObject.getQuantity() );
+		newOrderItem.setPrice( sku.getPriceByCurrencyCode( newOrderItem.getCurrencyCode() ) );
+		newOrderItem.setSkuPrice( sku.getPriceByCurrencyCode( newOrderItem.getCurrencyCode() ) );
+		
+		recalculateOrderAmounts( arguments.order );
+		
+		return arguments.order;
 	}
 	
 	public any function processOrder_create(required any order, required any processObject, required struct data={}) {
