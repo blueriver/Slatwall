@@ -4,7 +4,7 @@
 	
 	<!--- Required --->
 	<cfparam name="attributes.smartList" type="any" />
-	<cfparam name="attributes.edit" type="boolean" default="false" />
+	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
 	
 	<!--- Admin Actions --->
 	<cfparam name="attributes.recordEditAction" type="string" default="" />
@@ -86,7 +86,6 @@
 			</cfif>
 		</cfif>
 		
-		
 		<!--- Look for Hierarchy in example entity --->
 		<cfif not len(attributes.parentPropertyName)>
 			<cfset thistag.entityMetaData = getMetaData(thisTag.exampleEntity) />
@@ -98,7 +97,6 @@
 		<!--- Setup Hierarchy Expandable --->
 		<cfif len(attributes.parentPropertyName)>
 			<cfset thistag.expandable = true />
-			
 			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-expandable', ' ') />
 			
@@ -169,6 +167,14 @@
 		</cfif>
 		--->
 		
+		<!--- Submit Action --->
+		<cfif len(attributes.recordSubmitAction)>
+			<cfset attributes.administativeCount++ />
+			
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-submitaction="#attributes.recordSubmitAction#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-submitquerystring="#attributes.recordSubmitQueryString#"', " ") />
+		</cfif>
+		
 		<!--- Setup the primary representation column if no columns were passed in --->
 		<cfif not arrayLen(thistag.columns)>
 			<cfset arrayAppend(thistag.columns, {
@@ -205,6 +211,8 @@
 		<cfif attributes.administativeCount>
 			<cfset thistag.columnCount += 1 />
 		</cfif>
+		<cfif attributes.administativeCount>
+		</cfif>
 	</cfsilent>
 	<cfoutput>
 		<cfif thistag.selectable>
@@ -238,11 +246,11 @@
 					</cfif>
 					<cfloop array="#thistag.columns#" index="column">
 						<cfsilent>
-							<cfif not len(column.title)>
+							<cfif not len(column.title) and len(column.propertyIdentifier)>
 								<cfset column.title = thistag.exampleEntity.getTitleByPropertyIdentifier(column.propertyIdentifier) />
 							</cfif>
 						</cfsilent>
-						<th class="data #column.tdClass#" data-propertyIdentifier="#column.propertyIdentifier#">
+						<th class="data #column.tdClass#" <cfif len(column.propertyIdentifier)>data-propertyIdentifier="#column.propertyIdentifier#"<cfelse>data-fieldtype="#column.fieldType#"</cfif>>
 							<cfif not column.search and not column.sort and not column.filter and not column.range>
 								#column.title#
 							<cfelse>
@@ -313,19 +321,31 @@
 							<cfif column.tdclass eq "primary" and thistag.expandable>
 								<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"><i class="icon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 							<cfelse>
-								<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+								<td class="#column.tdclass#">
+									<cfif len(column.propertyIdentifier)>
+										#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#
+									<cfelse>
+										<cfset column.edit = attributes.edit />
+										<cfset column.displayType = "plain" />
+										<cf_HibachiFieldDisplay attributeCollection="#column#" />
+									</cfif>
+								</td>
 							</cfif>
 						</cfloop>
 						<cfif attributes.administativeCount>
 							<td class="admin admin#attributes.administativeCount#">
-								<cfif attributes.recordDetailAction neq "">
+								<!--- Detail --->
+								<cfif len(attributes.recordDetailAction)>
 									<cf_HibachiActionCaller action="#attributes.recordDetailAction#" queryString="#listPrepend(attributes.recordDetailQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="eye-open" iconOnly="true" modal="#attributes.recordDetailModal#" />
 								</cfif>
-								<cfif attributes.recordEditAction neq "">
+								
+								<!--- Edit --->
+								<cfif len(attributes.recordEditAction)>
 									
 									<cf_HibachiActionCaller action="#attributes.recordEditAction#" queryString="#listPrepend(attributes.recordEditQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="pencil" iconOnly="true" disabled="#record.isNotEditable()#" modal="#attributes.recordEditModal#" />
 								</cfif>
-								<!---
+								
+								<!--- Process
 								<cfif attributes.recordProcessAction neq "">
 									<cfif attributes.recordProcessContext eq "process">
 										<cf_HibachiActionCaller action="#attributes.recordProcessAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn btn-mini" icon="cog" text="#attributes.hibachiScope.rbKey('define.process')#" disabled="#record.isNotProcessable()#" modal="#attributes.recordProcessModal#" />
@@ -335,11 +355,18 @@
 									</cfif>
 								</cfif>
 								--->
-								<cfif attributes.recordDeleteAction neq "">
+								
+								<!--- Delete --->
+								<cfif len(attributes.recordDeleteAction)>
 									<cfset local.deleteErrors = record.validate(context="delete") />
 									<cfset local.disabled = local.deleteErrors.hasErrors() />
 									<cfset local.disabledText = local.deleteErrors.getAllErrorsHTML() />
 									<cf_HibachiActionCaller action="#attributes.recordDeleteAction#" queryString="#listPrepend(attributes.recordDeleteQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-mini" icon="trash" iconOnly="true" disabled="#local.disabled#" disabledText="#local.disabledText#" confirm="true" />
+								</cfif>
+								
+								<!--- Submit --->
+								<cfif len(attributes.recordSubmitAction)>
+									<cf_HibachiActionCaller action="#attributes.recordSubmitAction#" queryString="#listPrepend(attributes.recordSubmitQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" text="#attributes.hibachiScope.rbKey('define.add')#" class="btn btn-mini" icon="plus" />
 								</cfif>
 							</td>
 						</cfif>
