@@ -42,6 +42,7 @@ component entityname="SlatwallPhysicalCountItem" table="SlatwallPhysicalCountIte
 	property name="physicalCountItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="quantity" ormtype="integer";
 	property name="skuCode" ormtype="string";
+	property name="countPostDateTime" ormtype="timestamp";
 	 
 	// Calculated Properties
 
