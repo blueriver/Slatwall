@@ -49,8 +49,24 @@ Notes:
 				SlatwallSku.skuCode,
 				SlatwallLocation.locationID,
 				SlatwallLocation.locationName,
-				(SELECT COALESCE(SUM(quantityIn),0) - COALESCE(SUM(quantityOut),0) FROM SlatwallInventory WHERE stockID=SlatwallStock.stockID) as 'Expected',
-				(SELECT COALESCE(SUM(SlatwallPhysicalCountItem.quantity),0) FROM SlatwallPhysicalCountItem INNER JOIN SlatwallPhysicalCount on SlatwallPhysicalCountItem.physicalCountID = SlatwallPhysicalCount.physicalCountID WHERE SlatwallPhysicalCountItem.stockID = SlatwallStock.stockID AND SlatwallPhysicalCount.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />) as 'Actual'
+				(
+				SELECT
+					(COALESCE(SUM(SlatwallInventory.quantityIn),0) - COALESCE(SUM(SlatwallInventory.quantityOut),0) - COALESCE(SUM(SlatwallPhysicalCountItem.quantity),0)) * -1
+				FROM
+				  	SlatwallStock as a
+				  LEFT JOIN
+				    SlatwallInventory on a.stockID = SlatwallInventory.stockID
+				  LEFT JOIN
+				  	SlatwallPhysicalCountItem on a.stockID = SlatwallPhysicalCountItem.stockID
+				  LEFT JOIN
+				  	SlatwallPhysicalCount on SlatwallPhysicalCountItem.physicalCountID = SlatwallPhysicalCount.physicalCountID
+				WHERE
+				  	((SlatwallPhysicalCountItem.countPostDateTime IS NOT NULL AND SlatwallInventory.createdDateTime IS NOT NULL AND SlatwallInventory.createdDateTime <= SlatwallPhysicalCountItem.countPostDateTime) OR SlatwallPhysicalCountItem.countPostDateTime IS NULL OR SlatwallInventory.createdDateTime IS NULL)
+				  AND
+					((SlatwallPhysicalCountItem.countPostDateTime IS NULL AND SlatwallPhysicalCount.countPostDateTime IS NOT NULL AND SlatwallInventory.createdDateTime IS NOT NULL AND SlatwallInventory.createdDateTime <= SlatwallPhysicalCount.countPostDateTime) OR SlatwallPhysicalCount.countPostDateTime IS NULL OR SlatwallInventory.createdDateTime IS NULL)
+				  AND
+				  	a.stockID = SlatwallStock.stockID 
+				) as 'Discrepancy'
 			FROM
 				SlatwallStock
 			  INNER JOIN
