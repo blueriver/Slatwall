@@ -38,6 +38,8 @@ Notes:
 */
 component extends="HibachiService" accessors="true" output="false" {
 
+	property name="physicalDAO" type="any";
+	
 	property name="locationService" type="any";
 	property name="skuService" type="any";
 	property name="stockService" type="any";
@@ -47,6 +49,10 @@ component extends="HibachiService" accessors="true" output="false" {
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
+	
+	public query function getPhysicalDiscrepancyQuery() {
+		return getPhysicalDAO().getPhysicalDiscrepancyQuery(argumentCollection=arguments);
+	}
 	
 	// ===================== START: DAO Passthrough ===========================
 	
@@ -68,8 +74,6 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Create a new Physical count
 		var physicalCount = this.newPhysicalCount();
 		
-		var tempDir = getTempDirectory();
-		
 		// Set the physical for this count
 		physicalCount.setPhysical( arguments.physical );
 		
@@ -79,36 +83,41 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Set the count post date time
 		physicalCount.setCountPostDateTime( arguments.processObject.getCountPostDateTime() );
 		
+		// Get the temp directory
+		var tempDir = getTempDirectory();
+		
 		// Upload to temp directory
 		var documentData = fileUpload( tempDir,'countFile','','makeUnique' );
 		var fileName = documentData.serverFile;
 		
 		// Read the File from temp directory 
-		fileObj = fileOpen( "#tempDir##fileName#", "read" ); 
+		var fileObj = fileOpen( "#tempDir##fileName#", "read" );
+		
+		// Setup a valid entity boolean to be set to true once one line meets requirements
+		var valid = 0; 
+		var rowError = 0;
+		var skuCodeError = 0;
 		
 		// Loop over the records in the file we just read
-		while(!fileIsEof( fileObj )) 
-		{ 
+		while( !fileIsEof( fileObj ) ) {
+			 
 			var fileRow = fileReadLine( fileObj ); 
-			
-			var physicalCountItem = this.newPhysicalCountItem();
-			physicalCountItem.setPhysicalCount( physicalCount );
-			
-			for(var i=1; i<=listLen(fileRow); i=i+1){
-			
+
+			if( listLen(fileRow) >= 2 && isNumeric(listGetAt(fileRow, 2)) ) {
+				valid++;
+				
 				// Create a PhysicalCountItem for each row in the file
+				var physicalCountItem = this.newPhysicalCountItem();
+				physicalCountItem.setPhysicalCount( physicalCount );
+				
+				// Set the original skuCode value
 				physicalCountItem.setSkuCode( listGetAt( fileRow, 1 ) );
 				
-				// Validate if quantity is numeric
-				if( isNumeric(listGetAt( fileRow, 2 ))){
-					physicalCountItem.setquantity( listGetAt( fileRow, 2 ) );
-				}
-				else{
-					physicalCountItem.setquantity( "0" );
-				}
+				// Set the quantity that was verified above
+				physicalCountItem.setQuantity( listGetAt( fileRow, 2 ) );
 				
 				// Get sku from sku code
-				var sku = getSkuService().getSkuBySkuCode( PhysicalCountItem.getSkuCode() );
+				var sku = getSkuService().getSkuBySkuCode( physicalCountItem.getSkuCode() );
 				
 				if( !isNull(sku) ){
 					// Get stock by sku and location
@@ -116,28 +125,60 @@ component extends="HibachiService" accessors="true" output="false" {
 					
 					// Set physical stock from scanned data
 					physicalCountItem.setStock( stock );
+				} else {
+					skuCodeError++;	
 				}
+				
+				// Save each physicalcountitem 
+				this.savePhysicalCountItem( physicalCountItem );
+			} else {
+				rowError++;
 			}
-
-			// Save each physicalcountitem 
-			this.savePhysicalCountItem( physicalCountItem ); 
-		} 
-		fileClose( fileObj ); 
-		
-		// Save the physicalCount 
-		this.savePhysicalCount( physicalCount );
-		
-		// Get the assets folder from the global assets folder
-		var assetsFileFolderPath = getHibachiScope().setting('globalAssetsFileFolderPath');
-		
-		// Create the folder if it does not exist 
-		if(!directoryExists("#assetsFileFolderPath#/physicalcounts/")) {
-			directoryCreate("#assetsFileFolderPath#/physicalcounts/");
 		}
 		
-		// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhysicalCountID()}.txt
-		filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt" );
+		// Close the file object
+		fileClose( fileObj ); 
+		
+		// As long as one count item was created we should save the count and just display a message
+		if(valid) {
+			// Save the physicalCount 
+			this.savePhysicalCount( physicalCount );
+			
+			// Get the assets folder from the global assets folder
+			var assetsFileFolderPath = getHibachiScope().setting('globalAssetsFileFolderPath');
+			
+			// Create the folder if it does not exist 
+			if(!directoryExists("#assetsFileFolderPath#/physicalcounts/")) {
+				directoryCreate("#assetsFileFolderPath#/physicalcounts/");
+			}
+			
+			// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhysicalCountID()}.txt
+			filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt" );
+			
+			// Add info for how many were matched
+			arguments.physical.addMessage('validInfo', 'There were #valid# rows imported sucessfully');
+			// getHibachiScope().rbKey('xxx.yyy.zzz', {valid=valid})
+			
+			// Add message for non-processed rows
+			if(rowError) {
+				arguments.physical.addMessage('rowErrorWarning', 'The file you uploaded had #rowError# invalid rows that could not be imported');	
+			}
+			
+			// Add message for not found sku codes
+			if(skuCodeError) {
+				arguments.physical.addMessage('skuCodeErrorWarning', 'The file you uploaded had #skuCodeError# sku codes that could not be found in the system.  Please verify these codes an map to the correct skus.');
+			}
 
+		// If there were now rows imported then we can add the error message to the processObject
+		} else {
+			// Make sure that nothing is persisted
+			getHibachiScope().setORMHasErrors( true );
+			
+			// Add the count file error to the process object
+			arguments.processObject.addError('countFile', 'The file you uploaded had no valid rows to be imported');
+			
+		}
+		
 		// Return the physical that came in from the arguments scope
 		return arguments.physical;
 	}

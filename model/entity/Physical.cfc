@@ -67,9 +67,17 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" 
 	
 	// Non-Persistent Properties
 	property name="physicalStatusTypeSystemCode" persistent="false";
+	property name="discrepancyQuery" persistent="false";
 
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public query function getDiscrepancyQuery() {
+		if(!structKeyExists(variables, "discrepancyQuery")) {
+			variables.discrepancyQuery = getService("physicalService").getPhysicalDiscrepancyQuery(physicalID=getPhysicalID());
+		}
+		return variables.discrepancyQuery;
+	}
 	
 	public string function getPhysicalStatusTypeSystemCode() {
 		return getPhysicalStatusType().getSystemCode();
@@ -107,19 +115,39 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" 
 		}
 	}
 	
+	// Product Types (many-to-many - owner)
+	public void function addProductType(required any productType) {
+		if(arguments.productType.isNew() or !hasProductType(arguments.productType)) {
+			arrayAppend(variables.productTypes, arguments.productType);
+		}
+		if(isNew() or !arguments.productType.hasPhysical( this )) {
+			arrayAppend(arguments.productType.getPhysicals(), this);
+		}
+	}
+	public void function removeProductType(required any productType) {
+		var thisIndex = arrayFind(variables.productTypes, arguments.productType);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.productTypes, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.productType.getPhysicals(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.productType.getPhysicals(), thatIndex);
+		}
+	}
+	
 	// Product (many-to-many - owner)    
 	public void function addProduct(required any product) {    
 		if(arguments.product.isNew() or !hasProduct(arguments.product)) {    
-			arrayAppend(variables.product, arguments.product);    
+			arrayAppend(variables.products, arguments.product);    
 		}    
 		if(isNew() or !arguments.product.hasPhysical( this )) {    
 			arrayAppend(arguments.product.getPhysicals(), this);    
 		}    
 	}    
 	public void function removeProduct(required any product) {    
-		var thisIndex = arrayFind(variables.product, arguments.product);    
+		var thisIndex = arrayFind(variables.products, arguments.product);    
 		if(thisIndex > 0) {    
-			arrayDeleteAt(variables.product, thisIndex);    
+			arrayDeleteAt(variables.products, thisIndex);    
 		}    
 		var thatIndex = arrayFind(arguments.product.getPhysicals(), this);    
 		if(thatIndex > 0) {    
@@ -130,16 +158,16 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" 
 	// Brands (many-to-many - owner)    
 	public void function addBrand(required any brand) {    
 		if(arguments.brand.isNew() or !hasBrand(arguments.brand)) {    
-			arrayAppend(variables.brand, arguments.brand);    
+			arrayAppend(variables.brands, arguments.brand);    
 		}    
 		if(isNew() or !arguments.brand.hasPhysical( this )) {    
 			arrayAppend(arguments.brand.getPhysicals(), this);    
 		}    
 	}    
 	public void function removeBrand(required any brand) {    
-		var thisIndex = arrayFind(variables.brand, arguments.brand);    
+		var thisIndex = arrayFind(variables.brands, arguments.brand);    
 		if(thisIndex > 0) {    
-			arrayDeleteAt(variables.brand, thisIndex);    
+			arrayDeleteAt(variables.brands, thisIndex);    
 		}    
 		var thatIndex = arrayFind(arguments.brand.getPhysicals(), this);    
 		if(thatIndex > 0) {    
@@ -150,16 +178,16 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" 
 	// Skus (many-to-many - owner)    
 	public void function addSku(required any sku) {    
 		if(arguments.sku.isNew() or !hasSku(arguments.sku)) {    
-			arrayAppend(variables.sku, arguments.sku);    
+			arrayAppend(variables.skus, arguments.sku);    
 		}    
 		if(isNew() or !arguments.sku.hasPhysical( this )) {    
 			arrayAppend(arguments.sku.getPhysicals(), this);    
 		}    
 	}    
 	public void function removeSku(required any sku) {    
-		var thisIndex = arrayFind(variables.sku, arguments.sku);    
+		var thisIndex = arrayFind(variables.skus, arguments.sku);    
 		if(thisIndex > 0) {    
-			arrayDeleteAt(variables.sku, thisIndex);    
+			arrayDeleteAt(variables.skus, thisIndex);    
 		}    
 		var thatIndex = arrayFind(arguments.sku.getPhysicals(), this);    
 		if(thatIndex > 0) {    

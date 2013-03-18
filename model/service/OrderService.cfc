@@ -630,6 +630,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: Process Methods ===========================
 	
+	public any function processOrder_addOrderItem(required any order, required any processObject) {
+		throw("Impliment Me!");
+	}
 	
 	public any function processOrder_create(required any order, required any processObject, required struct data={}) {
 		// Setup Account
@@ -683,6 +686,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		return arguments.order;
 	}
+	
+	
 	
 	public any function processOrder_placeOrder(required any order, struct data={}, string processContext="process") {
 		// First we need to lock the session so that this order doesn't get placed twice.

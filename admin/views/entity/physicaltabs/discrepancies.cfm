@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,29 +36,50 @@
 Notes:
 
 --->
+<cfparam name="rc.physical" type="any" />
 
-<cfparam name="rc.orderSmartList" type="any" />
+<cfdump var="#rc.physical.getDiscrepancyQuery()#" />
+<!---
+
+
+Sku Code    |    Location Name    |    Expected     |    Actual     |    Difference
+0981208			San Diego					5				3				-2
+0981208			New York					3				5				 2
+0981209			San Diego					2				1				 1
+
+
+
+
+
+
+
+
+
+
+
+<cfset rc.physicalCountItems = $.slatwall.getService("physicalService").listPhysicalCountItems() />
 
 <cfoutput>
-	<cf_HibachiEntityActionBar type="listing" object="#rc.orderSmartList#" showCreate="false">
-		<!--- Create --->
-		<cf_HibachiEntityActionBarButtonGroup>
-			<cf_HibachiProcessCaller action="admin:entity.preprocessorder" entity="order" processContext="create" class="btn btn-primary" icon="plus icon-white" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.order')#" modal="true" />
-		</cf_HibachiEntityActionBarButtonGroup>
-	</cf_HibachiEntityActionBar>
-	
-	<cf_HibachiListingDisplay smartList="#rc.orderSmartList#" 
-							  recordDetailAction="admin:entity.detailorder"
-							  recordEditAction="admin:entity.editorder">
-		<cf_HibachiListingColumn propertyIdentifier="orderNumber" search="true" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.company" search="true"/>
-		<cf_HibachiListingColumn propertyIdentifier="account.firstName" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="account.lastName" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="orderType.type" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="orderOrigin.orderOriginName" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="createdDateTime"  range=true />
-		<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime"  range=true />
-		<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" range=true />
-	</cf_HibachiListingDisplay>
+	<table class="table table-striped table-bordered table-condensed">
+		<tr>
+			<th style="white-space:normal; vertical-align: text-bottom;">Sku Code</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">Physical Qty</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">Qty #$.slatwall.rbKey('define.qiats.full')#</th>
+		</tr>
+		<tr class="sku">
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<cfif arrayLen(rc.locations) gt 1>
+			<cfloop array="#rc.locations#" index="local.location">
+				<tr class="stock">
+					<td>#local.location.getLocationName()#</td>
+					<td>#rc.sku.getQuantity('QOH', local.location.getLocationID())#</td>
+					<td>#rc.sku.getQuantity('QIATS', local.location.getLocationID())#</td>
+				</tr>
+			</cfloop>
+		</cfif>
+	</table>	
 </cfoutput>
+--->

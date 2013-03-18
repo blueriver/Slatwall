@@ -60,7 +60,6 @@ Notes:
 		
 		<cf_HibachiTabGroup object="#rc.physicalCount#">
 			<cf_HibachiTab view="admin:entity/physicalcounttabs/physicalcountitems" text="#$.slatwall.rbKey('entity.physicalCount.physicalCountItems')#" />
-			<cf_HibachiTab view="admin:entity/physicalcounttabs/Discrepancies" text="Discrepancies" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

@@ -53,6 +53,7 @@ Notes:
 		
 		<cf_HibachiTabGroup object="#rc.physical#">
 			<cf_HibachiTab view="admin:entity/physicaltabs/physicalcounts" text="#$.slatwall.rbKey('entity.physical.physicalCounts')#" />
+			<cf_HibachiTab view="admin:entity/physicaltabs/discrepancies" />
 			<cf_HibachiTab property="locations" />
 			<cf_HibachiTab property="productTypes" />
 			<cf_HibachiTab property="brands" />

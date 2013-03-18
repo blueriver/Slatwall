@@ -128,19 +128,22 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	// @hint helper method to have these messages be passed to the current hibachiScope
 	public void function showMessages() {
 		for(var messageName in getMessages()) {
-			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
-				getHibachiScope().showMessage(getErrors()[errorName][i], "info");
+			for(var i=1; i<=arrayLen(getMessages()[messageName]); i++) {
+				if(right(messageName, 5) eq "error") {
+					getHibachiScope().showMessage(getMessages()[messageName][i], "error");
+				} else if (right(messageName, 7) eq "warning") {
+					getHibachiScope().showMessage(getMessages()[messageName][i], "warning");
+				} else {
+					getHibachiScope().showMessage(getMessages()[messageName][i], "info");
+				}
 			}
 		}
 	}
 	
 	// @hint helper method to have all error messages and regular messages shown
 	public void function showErrorsAndMessages() {
-		for(var messageName in getMessages()) {
-			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
-				getHibachiScope().showMessage(getErrors()[errorName][i], "info");
-			}
-		}
+		showErrors();
+		showMessages();
 	}
 	
 	// ==========================  END: ERRORS / MESSAGES ===========================================
