@@ -40,7 +40,12 @@ Notes:
 	
 	<cfproperty name="nextOptionGroupSortOrder" type="numeric" />
 	
-	<cfscript>	
+	<cfscript>
+			
+	public any function getSkuBySkuCode( required string skuCode){
+		return ormExecuteQuery( "SELECT ss FROM SlatwallSku ss LEFT JOIN ss.alternateSkuCodes ascs WHERE ss.skuCode = :skuCode OR ascs.alternateSkuCode = :skuCode", {skuCode=arguments.skuCode}, true ); 
+	}
+		
 	// returns product skus which matches ALL options (list of optionIDs) that are passed in
 	public any function getSkusBySelectedOptions(required string selectedOptions, string productID) {
 		var params = [];

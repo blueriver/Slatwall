@@ -38,11 +38,28 @@ Notes:
 --->
 <cfparam name="rc.physicalCount" type="any" />
 
+<cfset rc.physicalCountItems = $.slatwall.getService("physicalService").listPhysicalCountItems() />
+
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.physicalCount.getPhysicalCountItemsSmartList()#">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode"/>
-		<cf_HibachiListingColumn propertyIdentifier="quantity" />
-	</cf_HibachiListingDisplay>	
-	
-	<!---<cf_HibachiProcessCaller entity="#rc.physicalCount#" action="admin:entity.preprocessPhysical_addPhysicalCount" processContext="addItems" class="btn btn-inverse" icon="plus icon-white" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal=true />--->
+	<table class="table table-striped table-bordered table-condensed">
+		<tr>
+			<th style="white-space:normal; vertical-align: text-bottom;">Sku Code</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">Physical Qty</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">Qty #$.slatwall.rbKey('define.qiats.full')#</th>
+		</tr>
+		<tr class="sku">
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+<!---		<cfif arrayLen(rc.locations) gt 1>
+			<cfloop array="#rc.locations#" index="local.location">
+				<tr class="stock">
+					<td>#local.location.getLocationName()#</td>
+					<td>#rc.sku.getQuantity('QOH', local.location.getLocationID())#</td>
+					<td>#rc.sku.getQuantity('QIATS', local.location.getLocationID())#</td>
+				</tr>
+			</cfloop>
+		</cfif>--->
+	</table>	
 </cfoutput>

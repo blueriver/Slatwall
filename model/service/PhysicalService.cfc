@@ -39,6 +39,8 @@ Notes:
 component extends="HibachiService" accessors="true" output="false" {
 
 	property name="locationService" type="any";
+	property name="skuService" type="any";
+	property name="stockService" type="any";
 	
 	// ===================== START: Logical Methods ===========================
 	
@@ -84,7 +86,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Read the File from temp directory 
 		fileObj = fileOpen( "#tempDir##fileName#", "read" ); 
 		
-		// loop over the records in the file we just read
+		// Loop over the records in the file we just read
 		while(!fileIsEof( fileObj )) 
 		{ 
 			var fileRow = fileReadLine( fileObj ); 
@@ -94,12 +96,30 @@ component extends="HibachiService" accessors="true" output="false" {
 			
 			for(var i=1; i<=listLen(fileRow); i=i+1){
 			
-				// create a PhysicalCountItem for each row in the file
+				// Create a PhysicalCountItem for each row in the file
 				physicalCountItem.setSkuCode( listGetAt( fileRow, 1 ) );
-				physicalCountItem.setquantity( listGetAt( fileRow, 2 ) );
+				
+				// Validate if quantity is numeric
+				if( isNumeric(listGetAt( fileRow, 2 ))){
+					physicalCountItem.setquantity( listGetAt( fileRow, 2 ) );
+				}
+				else{
+					physicalCountItem.setquantity( "0" );
+				}
+				
+				// Get sku from sku code
+				var sku = getSkuService().getSkuBySkuCode( PhysicalCountItem.getSkuCode() );
+				
+				if( !isNull(sku) ){
+					// Get stock by sku and location
+					var stock = getStockService().getStockBySkuAndLocation(sku, physicalCount.getLocation());
+					
+					// Set physical stock from scanned data
+					physicalCountItem.setStock( stock );
+				}
 			}
 
-			// save each physicalcountitem 
+			// Save each physicalcountitem 
 			this.savePhysicalCountItem( physicalCountItem ); 
 		} 
 		fileClose( fileObj ); 
@@ -107,18 +127,18 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Save the physicalCount 
 		this.savePhysicalCount( physicalCount );
 		
-		//get the assets folder from the global assets folder
+		// Get the assets folder from the global assets folder
 		var assetsFileFolderPath = getHibachiScope().setting('globalAssetsFileFolderPath');
 		
-		//create the folder if it does not exist 
+		// Create the folder if it does not exist 
 		if(!directoryExists("#assetsFileFolderPath#/physicalcounts/")) {
 			directoryCreate("#assetsFileFolderPath#/physicalcounts/");
 		}
 		
-		// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhyscialCountID()}.txt
-		filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt");
+		// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhysicalCountID()}.txt
+		filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt" );
 
-		// return the physical that came in from the arguments scope.
+		// Return the physical that came in from the arguments scope
 		return arguments.physical;
 	}
 
