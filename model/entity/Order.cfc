@@ -82,7 +82,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Non persistent properties
 	property name="addOrderItemSkuOptionsSmartList" persistent="false" formatType="currency";
-	property name="addOrderItemOrderFulfillmentOptions" persistent="false" formatType="currency";
 	property name="discountTotal" persistent="false" formatType="currency";
 	property name="itemDiscountAmountTotal" persistent="false" formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency";
@@ -222,17 +221,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.addOrderItemSkuOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'brand');
 		}
 		return variables.addOrderItemSkuOptionsSmartList;
-	}
-	
-	public any function getAddOrderItemOrderFulfillmentOptions() {
-		if(!structKeyExists(variables, "addOrderItemOrderFulfillmentOptions")) {
-			variables.addOrderItemOrderFulfillmentOptions = [];
-			var ofArr = getOrderFulfillments();
-			for(var i=1; i<=arrayLen(ofArr); i++) {
-				arrayAppend(variables.addOrderItemOrderFulfillmentOptions, {name=ofArr[i].getSimpleRepresentation(), value=ofArr[i].getOrderFulfillmentID()});
-			}
-		}
-		return variables.addOrderItemOrderFulfillmentOptions;
 	}
 	
 	public numeric function getDiscountTotal() {
