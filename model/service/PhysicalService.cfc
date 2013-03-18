@@ -62,16 +62,18 @@ component extends="HibachiService" accessors="true" output="false" {
 	public any function processPhysical_commit(required any physical) {
 		
 		// Loop over physical for each location
-		
+		for(var i=1; i <= ArrayLen(arguments.physical.getLocations()); i++) {
 			// Create a PhysicalCount Stock Adjustment
+			
+			
 			// Loop over discrepancy records
-				// If the locationID in the discrepancy record is same as current location loop, then add StockAdjustmentItem
-					// If discrpancy > 0 make it quantityIn otherwise quantityOut
-					
+			
+			// If the locationID in the discrepancy record is same as current location loop, then add StockAdjustmentItem
+				// If discrpancy > 0 make it quantityIn otherwise quantityOut
+				
 			// call getStockService().processStockAdjustment(stockAdjustment=stockAdjustmentIN, processContext="processAdjustment")
 			
-		
-	
+		}
 	}
 	
 	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {
@@ -166,17 +168,16 @@ component extends="HibachiService" accessors="true" output="false" {
 			filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt" );
 			
 			// Add info for how many were matched
-			arguments.physical.addMessage('validInfo', 'There were #valid# rows imported sucessfully');
-			// getHibachiScope().rbKey('xxx.yyy.zzz', {valid=valid})
+			arguments.physical.addMessage('validInfo', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.validInfo', {valid=valid}));
 			
 			// Add message for non-processed rows
 			if(rowError) {
-				arguments.physical.addMessage('rowErrorWarning', 'The file you uploaded had #rowError# invalid rows that could not be imported');	
+				arguments.physical.addMessage('rowErrorWarning', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.rowErrorWarning', {rowError=rowError}));	
 			}
 			
 			// Add message for not found sku codes
 			if(skuCodeError) {
-				arguments.physical.addMessage('skuCodeErrorWarning', 'The file you uploaded had #skuCodeError# sku codes that could not be found in the system.  Please verify these codes an map to the correct skus.');
+				arguments.physical.addMessage('skuCodeErrorWarning', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.skuCodeErrorWarning', {skuCodeError=skuCodeError}));
 			}
 
 		// If there were now rows imported then we can add the error message to the processObject
@@ -185,7 +186,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			getHibachiScope().setORMHasErrors( true );
 			
 			// Add the count file error to the process object
-			arguments.processObject.addError('countFile', 'The file you uploaded had no valid rows to be imported');
+			arguments.processObject.addError('countFile', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.countFile'));
 			
 		}
 		
@@ -205,7 +206,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	// ======================  END: Save Overrides ============================
 	
 	// ==================== START: Smart List Overrides =======================
-	
+
 	// ====================  END: Smart List Overrides ========================
 	
 	// ====================== START: Get Overrides ============================

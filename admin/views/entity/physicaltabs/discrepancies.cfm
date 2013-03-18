@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.physical" type="any" />
 
-<cfdump var="#rc.physical.getDiscrepancyQuery()#" />
+<cfset discrepancyQuery = rc.physical.getDiscrepancyQuery() />
 <!---
 
 
@@ -63,31 +63,27 @@ TIME		| System Says | Counting | Picked for Shipping
 11:00 RECONCILE												
 				995				997							
 
-
-
-<cfset rc.physicalCountItems = $.slatwall.getService("physicalService").listPhysicalCountItems() />
+--->
 
 <cfoutput>
 	<table class="table table-striped table-bordered table-condensed">
 		<tr>
 			<th style="white-space:normal; vertical-align: text-bottom;">Sku Code</th>
-			<th style="white-space:normal; vertical-align: text-bottom;">Physical Qty</th>
-			<th style="white-space:normal; vertical-align: text-bottom;">Qty #$.slatwall.rbKey('define.qiats.full')#</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">Location Name</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">Discrepancy</th>
 		</tr>
-		<tr class="sku">
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<cfif arrayLen(rc.locations) gt 1>
-			<cfloop array="#rc.locations#" index="local.location">
-				<tr class="stock">
-					<td>#local.location.getLocationName()#</td>
-					<td>#rc.sku.getQuantity('QOH', local.location.getLocationID())#</td>
-					<td>#rc.sku.getQuantity('QIATS', local.location.getLocationID())#</td>
+		<cfif discrepancyQuery.recordCount>
+			<cfloop query="discrepancyQuery" >
+				<tr>
+					<td>#discrepancyQuery.skuCode#</td>
+					<td>#discrepancyQuery.locationName#</td>
+					<td>#discrepancyQuery.discrepancy#</td>
 				</tr>
 			</cfloop>
+		<cfelse>
+			<tr>
+				<td style="text-align:center;" colspan="3">There aren't any Physical Count Items.</td>
+			</tr>
 		</cfif>
 	</table>	
 </cfoutput>
---->

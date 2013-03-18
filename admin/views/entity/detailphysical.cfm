@@ -43,6 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.physical#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.physical#" edit="#rc.edit#">
 			<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.processphysical" entity="#rc.physical#" processContext="commit" />
 		</cf_HibachiEntityActionBar>
 
 		<cf_HibachiPropertyRow>
