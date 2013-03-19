@@ -502,8 +502,12 @@ function setupEventHandlers() {
 	// Hibachi AJAX Submit
 	jQuery('body').on('click', '.hibachi-ajax-submit', function(e) {
 		e.preventDefault();
-		
+
 		var data = {};
+		var thisTableID = jQuery(this).closest('table').attr('id');
+		var updateTableID = jQuery(this).closest('table').find('th.admin').data('processupdatetableid');
+		
+		addLoadingDiv( updateTableID );
 		
 		// Loop over all input fields and add them the the data
 		jQuery.each(jQuery(this).closest('tr').find('input,select'), function(i, v) {
@@ -519,27 +523,39 @@ function setupEventHandlers() {
 			dataType: 'json',
 			beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 			error: function( r ) {
-				console.log(r);
+				console.log( r );
+				removeLoadingDiv( updateTableID );
+				displayError();
 			},
-			success: function(r) {
-				console.log(r);
-				
-				if(("preProcessView" in r)) {
-					jQuery('#adminModal').html(r.preProcessView);
-					jQuery('#adminModal').modal();
-					initUIElements('#adminModal');
-					jQuery('#adminModal').css({
-						'width': 'auto',
-						'margin-left': function () {
-				            return -(jQuery('#adminModal').width() / 2);
-				        }
-					});
+			success: function( r ) {
+				removeLoadingDiv( updateTableID );
+				if(r.success) {
+					listingDisplayUpdate(updateTableID, {});
+				} else {
+					if(("preProcessView" in r)) {
+						jQuery('#adminModal').html(r.preProcessView);
+						jQuery('#adminModal').modal();
+						initUIElements('#adminModal');
+						jQuery('#adminModal').css({
+							'width': 'auto',
+							'margin-left': function () {
+					            return -(jQuery('#adminModal').width() / 2);
+					        }
+						});
+					}
 				}
+				
+				
 			}
 		});
 		
 	});
 	
+}
+
+function displayError( msg ) {
+	var err = msg || "An Unexpected Error Occured";
+	alert(err);
 }
 
 function textAutocompleteHold( autocompleteField, data ) {

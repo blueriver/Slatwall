@@ -1,7 +1,8 @@
 {
 	"properties":{
 		"skuID":				[{"required":true}],
-		"orderFulfillmentID":	[{"required":true}],
-		"quantity":				[{"required":true,"dataType":"numeric"}]
+		"orderFulfillmentID":	[{"required":true,"minLength":1}],
+		"quantity":				[{"required":true,"dataType":"numeric"}],
+		"price":				[{"required":true,"dataType":"numeric"}]
 	}
 }

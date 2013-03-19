@@ -48,6 +48,24 @@ Notes:
 	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList>
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="quantity" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="price" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderFulfillmentID" edit="#rc.edit#">
+			<cf_HibachiDisplayToggle selector="select[name='orderFulfillmentID']" showValues="" loadVisible="#!len(rc.processObject.getOrderFulfillmentID())#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="fulfillmentMethodID" edit="#rc.edit#">
+				<!--- Shipping Fulfillment Details --->
+				<cf_HibachiDisplayToggle selector="select[name='fulfillmentMethodID']" valueAttribute="fulfillmentmethodtype" showValues="shipping" loadVisible="false">
+					<hr />
+					SHIPPING HERE
+					<!---
+					<h4>#$.slatwall.rbKey('admin.entity.detailsAccountPaymentMethod.creditCardDetials')#</h4>
+					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="nameOnCreditCard" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="creditCardNumber" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationMonth" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationYear" edit="#rc.edit#" />
+					--->
+				</cf_HibachiDisplayToggle>
+			</cf_HibachiDisplayToggle>
+			
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	

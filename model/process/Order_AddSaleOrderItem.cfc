@@ -8,7 +8,9 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Data Properties
 	property name="skuID";
+	property name="price";
 	property name="orderFulfillmentID" hb_formFieldType="select";
+	property name="fulfillmentMethodID" hb_formFieldType="select";
 	property name="quantity";
 	property name="misc";
 	
@@ -19,6 +21,16 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	public any function getSku() {
 		if(!structKeyExists(variables, "sku")) {
 			variables.sku = getService("skuService").getSku(getSkuID());
+		}
+		return variables.sku;
+	}
+	
+	public any function getPrice() {
+		if(!structKeyExists(variables, "price")) {
+			variables.price = 0;
+			if(!structKeyExists(variables, "sku")) {
+				variables.price = getSku().getPriceByCurrencyCode( getOrder().getCurrencyCode() );
+			}
 		}
 		return variables.sku;
 	}
@@ -44,10 +56,22 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return variables.orderFulfillmentIDOptions;
 	}
 	
-	public string function getOrderFulfillmentID() {
-		if(!structKeyExists(variables, "orderFulfillmentID")) {
-			variables.orderFulfillmentID = getOrderFulfillmentIDOptions()[1]["value"];
+	public array function getFulfillmentMethodIDOptions() {
+		if(!structKeyExists(variables, "fulfillmentMethodIDOptions")) {
+			
+			var sl = getService("fulfillmentService").getFulfillmentMethodSmartList();
+			sl.addFilter('activeFlag', 1);
+			if(!isNull(getSkuID()) && !isNull(getSku())) {
+				sl.addInFilter('fulfillmentMethodID', getSku().setting('skuEligibleFulfillmentMethods'));
+			}
+			sl.addSelect('fulfillmentMethodName', 'name');
+			sl.addSelect('fulfillmentMethodID', 'value');
+			sl.addSelect('fulfillmentMethodType', 'fulfillmentMethodType');
+			
+			variables.fulfillmentMethodIDOptions = sl.getRecords();
+			arrayPrepend(variables.fulfillmentMethodIDOptions, {name=rbKey('define.select'), value='', fulfillmentMethodType=''});
 		}
-		return variables.orderFulfillmentID;
+		return variables.fulfillmentMethodIDOptions;
 	}
+
 }

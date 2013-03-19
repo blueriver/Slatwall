@@ -430,6 +430,9 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 			// If there were error then we know that this will require a preprocess first
 			if(errorBean.hasErrors()) {
+				// Tell Hibachi not to flush the ORM Session
+				getHibachiScope().setORMHasErrors(true);
+				
 				// Place the entity in the RC
 				arguments.rc[ arguments.entityName ] = entity;
 				
