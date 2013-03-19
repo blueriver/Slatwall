@@ -1,0 +1,7 @@
+{
+	"properties":{
+		"skuID":				[{"required":true}],
+		"orderFulfillmentID":	[{"required":true}],
+		"quantity":				[{"required":true,"dataType":"numeric"}]
+	}
+}

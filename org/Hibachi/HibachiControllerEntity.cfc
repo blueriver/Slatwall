@@ -364,7 +364,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Setup the processObject in the RC so that we can use it for our form
 		rc.processObject = arguments.rc[ arguments.entityName ].getProcessObject( arguments.rc.processContext );
 		
-		
+		// Populate the processObject with any data that might have come into the RC
+		rc.processObject.populate( rc );
 		
 		// Set rc.edit to true because all property displays should be taking inputs
 		rc.edit = true;
@@ -385,6 +386,40 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Attempt to find the entity
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc[ entityPrimaryID ], 2=true} );
+		
+		// Check to see if this is an AJAX Request, and there is a pre-process object... then call preprocess first
+		var httpRequestData = getHTTPRequestData();
+		if(structKeyExists(httpRequestData.headers, "X-Hibachi-AJAX") && isBoolean(httpRequestData.headers["X-Hibachi-AJAX"]) && httpRequestData.headers["X-Hibachi-AJAX"] && getFW().getBeanFactory().containsBean( "#arguments.entityName#_#arguments.rc.processContext#")) {
+			// Setup the processObject in the RC so that we can use it for our form if needed
+			rc.processObject = entity.getProcessObject( arguments.rc.processContext );
+			
+			// Populate the processObject
+			rc.processObject.populate(arguments.rc);
+			
+			// hibachiValidationService
+			var errorBean = getService("hibachiValidationService").validate(arguments.rc.processObject, arguments.rc.processContext, false);
+			
+			// If there were error then we know that this will require a preprocess first
+			if(errorBean.hasErrors()) {
+				// Place the entity in the RC
+				arguments.rc[ arguments.entityName ] = entity;
+				
+				// Make sure that we indicate modal for the view to render correctly
+				arguments.rc.modal = true;
+				
+				// Set edit to true
+				arguments.rc.edit = true;
+				
+				// Set the page title to the correct rbKey
+				rc.pageTitle = rbKey( "#replace(arguments.rc.entityActionDetails.thisAction,':','.','all')#.#rc.processContext#" );
+				
+				// Setup the response
+				var response = {};
+				response["preProcessView"] = getFW().view( "#replace(arguments.rc.entityActionDetails.preProcessAction,'.','/')#_#arguments.rc.processContext#" );
+				writeOutput( serializeJSON(response) );
+				abort;
+			}
+		}
 		
 		// Call the process method on the entity, and then populate it back into the RC
 		arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=arguments.rc, 3=arguments.rc.processContext} );
@@ -416,121 +451,9 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 			// Render or Redirect a faluire
 			renderOrRedirectFailure( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
-			
-		}
-		/*
-		
-		param name="arguments.rc.processContext" default="process";
-		param name="arguments.rc.multiProcess" default="false";
-		param name="arguments.rc.processOptions" default="#{}#";
-		param name="arguments.rc.additionalData" default="#{}#";
-		
-		var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
-		
-		var entityPrimaryID = getHibachiService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
-		
-		getFW().setLayout( "admin:process.default" );
-		
-		if(len(arguments.rc.processContext) && arguments.rc.processContext != "process") {
-			arguments.rc.pageTitle = rbKey( "admin.#getFW().getSection(arguments.rc.entityActionDetails.thisAction)#.process#arguments.entityName#.#arguments.rc.processContext#" );
 		}
 		
-		// If we are actually posting the process form, then this logic gets calls the process method for each record
-		if(structKeyExists(arguments.rc, "process") && arguments.rc.process) {
-			arguments.rc.errorData = [];
-			var errorEntities = [];
-			
-			// If there weren't any process records passed in, then we will make a sinlge processrecord with the entire rc
-			if(!structKeyExists(arguments.rc, "processRecords") || !isArray(arguments.rc.processRecords)) {
-				arguments.rc.processRecords = [arguments.rc];
-			}
-			
-			for(var i=1; i<=arrayLen(arguments.rc.processRecords); i++) {
-				
-				if(structKeyExists(arguments.rc.processRecords[i], entityPrimaryID)) {
-					
-					structAppend(arguments.rc.processRecords[i], arguments.rc.processOptions, false);
-					var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc.processRecords[i][ entityPrimaryID ], 2=true} );
-					
-					logHibachi("Process Called: Enity - #arguments.entityName#, EntityID - #arguments.rc.processRecords[i][ entityPrimaryID ]#, processContext - #arguments.rc.processContext# ");
-					
-					entity = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=arguments.rc.processRecords[i], 3=arguments.rc.processContext} );
-					
-					// If there were errors, then add to the errored entities
-					if( !isNull(entity) && entity.hasErrors() ) {
-						
-						// Add the error message to the top of the page
-						entity.showErrorMessages();
-						
-						arrayAppend(errorEntities, entity);
-						arrayAppend(arguments.rc.errorData, arguments.rc.processRecords[i]);
-						
-					// If there were not error messages then que and process emails & print options
-					} else if (!isNull(entity)) {
-						
-						// TODO: Sending email needs to get moved out of this loop
-						// We need to persist the records to db before we send out emails
-						// Send out E-mails
-						if(structKeyExists(arguments.rc.processOptions, "email")) {
-							for(var emailEvent in arguments.rc.processOptions.email) {
-								getEmailService().sendEmailByEvent(eventName="process#arguments.entityName#:#emailEvent#", entity=entity);
-							}
-						}
-						
-						// Create any process Comments
-						if(structKeyExists(arguments.rc, "processComment") && isStruct(arguments.rc.processComment) && len(arguments.rc.processComment.comment)) {
-							
-							// Create new Comment
-							var newComment = getCommentService().newComment();
-							
-							// Create Relationship
-							var commentRelationship = {};
-							commentRelationship.commentRelationshipID = "";
-							commentRelationship[ arguments.entityName ] = {};
-							commentRelationship[ arguments.entityName ][ entityPrimaryID ] = entity.getPrimaryIDValue();
-							arguments.rc.processComment.commentRelationships = [];
-							arrayAppend(arguments.rc.processComment.commentRelationships, commentRelationship);
-							
-							// Save new Comment 
-							getCommentService().saveComment(newComment, arguments.rc.processComment);
-						}
-					}
-				}
-			}
-			
-			if(arrayLen(errorEntities)) {
-				arguments.rc[ "process#arguments.entityName#SmartList" ] = entityService.invokeMethod( "get#arguments.entityName#SmartList" );
-				arguments.rc[ "process#arguments.entityName#SmartList" ].setRecords(errorEntities);
-				if(arrayLen(errorEntities) gt 1) {
-					arguments.rc.multiProcess = true;
-				}
-			} else {
-				redirectToReturnAction( "messagekeys=#replace(arguments.rc.entityActionDetails.thisAction, ':', '.', 'all')#_success" );
-			}
-			
 		
-		// IF we are just doing the process setup page, run this logic
-		} else {
-			
-			// Go get the correct type of SmartList
-			arguments.rc[ "process#arguments.entityName#SmartList" ] = entityService.invokeMethod( "get#arguments.entityName#SmartList" );
-			
-			// If no ID was passed in create a smartList with only 1 new entity in it
-			if(!structKeyExists(arguments.rc, entityPrimaryID) || arguments.rc[entityPrimaryID] == "") {
-				var newEntity = entityService.invokeMethod( "new#arguments.entityName#" );
-				arguments.rc[ "process#arguments.entityName#SmartList" ].setRecords([newEntity]);
-			} else {
-				arguments.rc[ "process#arguments.entityName#SmartList" ].addInFilter(entityPrimaryID, arguments.rc[entityPrimaryID]);	
-			}
-			
-			// If there are no records then redirect to the list action
-			if(!arguments.rc[ "process#arguments.entityName#SmartList" ].getRecordsCount()) {
-				getFW().redirect(action=arguments.rc.entityActionDetails.listAction);
-			} else if (arguments.rc[ "process#arguments.entityName#SmartList" ].getRecordsCount() gt 1) {
-				arguments.rc.multiProcess = true;
-			}
-		}
-		*/
 	}
 	
 	public void function genericExportMethod(required string entityName, required struct rc) {

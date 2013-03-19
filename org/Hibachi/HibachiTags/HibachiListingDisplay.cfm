@@ -21,9 +21,6 @@
 	<cfparam name="attributes.recordProcessContext" type="string" default="" />
 	<cfparam name="attributes.recordProcessEntity" type="any" default="" />
 	<cfparam name="attributes.recordProcessUpdateTableID" type="any" default="" />
-
-	<!--- Editable Fieldname --->
-	<cfparam name="attributes.editFieldName" type="string" default="" />
 	
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
@@ -304,12 +301,15 @@
 				<cfset thistag.loopIndex = 0 />
 				<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
 					<cfset thistag.loopIndex++ />
+					<!--- If there is a recordProcessEntity then find the processObject and inject the necessary values --->
+					<cfif isObject(attributes.recordProcessEntity)>
+						<cfset thisRecordProcessObject = "" />
+						<cfset thisRecordProcessObject = attributes.hibachiScope.getTransient("#attributes.recordProcessEntity.getClassName()#_#attributes.recordProcessContext#") />
+						<cfset thisRecordProcessObject.invokeMethod("set#record.getClassName()#", {1=record}) />
+						<cfset thisRecordProcessObject.invokeMethod("set#record.getPrimaryIDPropertyName()#", {1=record.getPrimaryIDValue()}) />
+						<cfset thisRecordProcessObject.invokeMethod("set#attributes.recordProcessEntity.getClassName()#", {1=attributes.recordProcessEntity}) />
+					</cfif>
 					<tr id="#record.getPrimaryIDValue()#" <cfif thistag.expandable>idPath="#record.getValueByPropertyIdentifier( propertyIdentifier="#thistag.exampleEntity.getPrimaryIDPropertyName()#Path" )#"</cfif>>
-						<!--- Editable --->
-						<cfif attributes.edit && len(attributes.editFieldName)>
-							<input type="hidden" name="#attributes.editFieldName#[#thistag.loopIndex#].#record.getPrimaryIDPropertyName()#" value="#record.getPrimaryIDValue()#" />	
-						</cfif>
-								
 						<!--- Selectable --->
 						<cfif thistag.selectable>
 							<td><a href="##" class="table-action-select#IIF(attributes.edit, DE(""), DE(" disabled"))#" data-idvalue="#record.getPrimaryIDValue()#"><i class="hibachi-ui-radio"></i></a></td>
@@ -328,22 +328,15 @@
 								<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"><i class="icon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 							<cfelse>
 								<td class="#column.tdclass#">
-									
-									<cfif len(column.propertyIdentifier) && (!column.editable || (column.editable && !attributes.edit))>
+									<cfif len(column.propertyIdentifier)>
 										#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#
-									<cfelseif len(column.propertyIdentifier) && column.editable && attributes.edit>
-										<cfset column.object = record />
-										<cfset column.property = column.propertyIdentifier />
-										<cfset column.edit = true />
-										<cfset column.displayType = "plain" />
-										<cfset column.fieldName = "#attributes.editFieldName#[#thistag.loopIndex#].#column.propertyIdentifier#" />
-										<cf_HibachiPropertyDisplay attributeCollection="#column#" />
 									<cfelseif len(column.processObjectProperty)>
-										<cfset column.object = attributes.recordProcessEntity.getProcessObject(attributes.recordProcessContext) />
-										<cfset column.property = column.processObjectProperty />
-										<cfset column.edit = attributes.edit />
-										<cfset column.displayType = "plain" />
-										<cf_HibachiPropertyDisplay attributeCollection="#column#" />
+										<cfset attData = duplicate(column) />
+										<cfset attData.object = thisRecordProcessObject />
+										<cfset attData.property = column.processObjectProperty />
+										<cfset attData.edit = attributes.edit />
+										<cfset attData.displayType = "plain" />
+										<cf_HibachiPropertyDisplay attributeCollection="#attData#" />
 									</cfif>
 								</td>
 							</cfif>
@@ -370,7 +363,7 @@
 								
 								<!--- Process --->
 								<cfif len(attributes.recordProcessAction)>
-									<cf_HibachiProcessCaller action="#attributes.recordProcessAction#" entity="#attributes.recordProcessEntity#" processContext="#attributes.recordProcessContext#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn hibachi-ajax-submit" icon="plus" />
+									<cf_HibachiProcessCaller action="#attributes.recordProcessAction#" entity="#attributes.recordProcessEntity#" processContext="#attributes.recordProcessContext#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn hibachi-ajax-submit" />
 								</cfif>
 							</td>
 						</cfif>

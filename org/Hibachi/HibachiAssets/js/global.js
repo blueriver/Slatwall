@@ -509,22 +509,31 @@ function setupEventHandlers() {
 			}
 		});
 		
-		var ajax = {
+		jQuery.ajax({
 			url: hibachi.rootURL + '/' + jQuery(this).attr('href'),
 			method: 'post',
 			data: data,
 			dataType: 'json',
 			beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 			error: function( r ) {
-				console.log(r);
+				alert('There was an unexpected error');
 			},
 			success: function(r) {
 				console.log(r);
+				
+				if(("preProcessView" in r)) {
+					jQuery('#adminModal').html(r.preProcessView);
+					jQuery('#adminModal').modal();
+					initUIElements('#adminModal');
+					jQuery('#adminModal').css({
+						'width': 'auto',
+						'margin-left': function () {
+				            return -(jQuery('#adminModal').width() / 2);
+				        }
+					});
+				}
 			}
-		}
-		console.log(ajax);
-		
-		jQuery.ajax(ajax);
+		});
 		
 	});
 	

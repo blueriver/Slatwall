@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.order" type="any" />
-<cfparam name="rc.edit" type="boolean" /> 
+<cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
 	
@@ -67,7 +67,7 @@ Notes:
 	<cfif listFindNoCase("otSalesOrder,otExchangeOrder", rc.order.getOrderType().getSystemCode())>
 		<h4>#$.slatwall.rbKey('admin.entity.ordertabs.orderitems.saleItems')#</h4>
 		<cf_HibachiListingDisplay smartList="#rc.order.getSaleItemSmartList()#"
-								  recordDeleteAction="admin:entity.editorderitem"
+								  recordDeleteAction="admin:entity.deleteorderitem"
 								  recordDeleteActionQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#"
 								  recordDetailAction="admin:entity.detailorderitem"
 								  recordDetailQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#"
@@ -100,11 +100,6 @@ Notes:
 				<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
 				<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" />
 				<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
-				<!---
-				<cfif arrayLen(rc.order.getProcessObject("addSaleOrderItem").getOrderFulfillmentIDOptions()) gt 1>
-					<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" />
-				</cfif>
-				--->
 			</cf_HibachiListingDisplay>
 		</cfif>
 	</cfif>
