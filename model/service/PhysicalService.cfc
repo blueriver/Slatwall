@@ -64,16 +64,34 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Loop over physical for each location
 		for(var i=1; i <= ArrayLen(arguments.physical.getLocations()); i++) {
 			// Create a PhysicalCount Stock Adjustment
+			var stockAdjustmentIN = getStockService.newStockAdjustment();
 			
-			
+			// get the discrepancy records
+			var physicalCountDescrepancies = arguments.physical.getDiscrepancyQuery();
+
 			// Loop over discrepancy records
-			
-			// If the locationID in the discrepancy record is same as current location loop, then add StockAdjustmentItem
-				// If discrpancy > 0 make it quantityIn otherwise quantityOut
+			for(var rowCount=1; rowCount <= (physicalCountDescrepancies.recordCount); rowCount++) {
 				
-			// call getStockService().processStockAdjustment(stockAdjustment=stockAdjustmentIN, processContext="processAdjustment")
-			
+				// If the locationID in the discrepancy record is same as current location loop, then add StockAdjustmentItem
+				if( physicalCountDescrepancies["locationName"][rowCount] == arguments.physical.getLocations()[i].getlocationName() ){
+					//var stockAdjustmentItem = getStockService().newStockAdjustmentItem();
+					
+					// If discrepancy > 0 make it quantityIn otherwise quantityOut
+					if( physicalCountDescrepancies["discrepancy"][rowCount] > 0 ){
+						writedump(var=physicalCountDescrepancies["discrepancy"][rowCount]);
+						//stockAdjustmentItem.setQuantity(physicalCountDescrepancies["discrepancy"][rowCount]);
+						
+					} else {
+						writedump(var=physicalCountDescrepancies["discrepancy"][rowCount]);
+						//stockAdjustmentItem.setQuantityOut(physicalCountDescrepancies["discrepancy"][rowCount]);
+					}
+					
+					// call getStockService().processStockAdjustment(stockAdjustment=stockAdjustmentIN, processContext="processAdjustment")
+					
+				}
+			}abort;
 		}
+		
 	}
 	
 	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {

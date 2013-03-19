@@ -4,6 +4,7 @@
 		"brandName":			[{"contexts":"save","required":true}],
 		"brandWebsite":			[{"contexts":"save","dataType":"url"}],
 		"urlTitle":				[{"contexts":"save","required":true,"unique":true}],
-		"products":				[{"contexts":"delete","maxCollection":0}]
+		"products":				[{"contexts":"delete","maxCollection":0}],
+		"physicalCounts":		[{"contexts":"delete","maxCollection":0}]
 	}
 }
