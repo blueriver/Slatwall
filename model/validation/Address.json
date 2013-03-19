@@ -5,7 +5,7 @@
 	        "country.streetAddressRequiredFlag":{"eq":true}
 	    },
 	    "street2AddressRequired":{
-	        "country.streetAddress2RequiredFlag":{"eq":true}
+	        "country.street2AddressRequiredFlag":{"eq":true}
 	    },
 	    "localityRequired":{
 	        "country.localityRequiredFlag":{"eq":true}
