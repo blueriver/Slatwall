@@ -45,6 +45,7 @@ Notes:
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.physical#" property="PhysicalName" edit="true" />
 				<cf_HibachiPropertyDisplay object="#rc.physical#" property="locations" edit="true" />
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>

@@ -60,6 +60,7 @@ Notes:
 			<cf_HibachiTab property="brands" />
 			<cf_HibachiTab property="products" />
 			<cf_HibachiTab property="skus" />
+			<cf_SlatwallAdminTabComments object="#rc.physical#" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>
