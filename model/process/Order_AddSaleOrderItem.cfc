@@ -106,5 +106,13 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		}
 		variables.saveShippingAccountAddressFlag;
 	}
+	
+	public any function getAssignedOrderItemAttributeSets() {
+		if(!isNull(getSkuID()) && !isNull(getSku())) {
+			return getSku().getAssignedOrderItemAttributeSetSmartList().getRecords();	
+		}
+		
+		return [];
+	}
 
 }

@@ -785,11 +785,26 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public any function getAssignedAttributeSetSmartList(){
 		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
+			
 			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
-			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
+			
 			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
 			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProduct');
-			variables.assignedAttributeSetSmartList.addWhereCondition(" (aslatwallattributeset.globalFlag = 1 OR (aslatwallproducttype.productTypeID IN ('#replace(getProductType().getProductTypeIDPath(),",","','","all")#') ) )" );
+			
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "products", "left");
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "brands", "left");
+			
+			var wc = "(";
+			wc &= " aslatwallattributeset.globalFlag = 1";
+			wc &= " OR aslatwallproducttype.productTypeID IN ('#replace(getProductType().getProductTypeIDPath(),",","','","all")#')";
+			wc &= " OR aslatwallproduct.productID = '#getProductID()#'";
+			if(!isNull(getBrand())) {
+				wc &= " OR aslatwallbrand.brandID = '#getBrand().getBrandID()#'";	
+			}
+			wc &= ")";
+			
+			variables.assignedAttributeSetSmartList.addWhereCondition( wc );
 		}
 		
 		return variables.assignedAttributeSetSmartList;
