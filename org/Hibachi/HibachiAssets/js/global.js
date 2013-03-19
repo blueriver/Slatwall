@@ -163,6 +163,9 @@ function initUIElements( scopeSelector ) {
 
 function setupEventHandlers() {
 	
+	// Hide Alerts
+	jQuery('.alert-success').delay(2000).fadeOut(500);
+	
 	// Global Search
 	jQuery('body').on('keyup', '#global-search', function(e){
 		if(jQuery(this).val().length >= 2) {
@@ -516,7 +519,7 @@ function setupEventHandlers() {
 			dataType: 'json',
 			beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 			error: function( r ) {
-				alert('There was an unexpected error');
+				console.log(r);
 			},
 			success: function(r) {
 				console.log(r);

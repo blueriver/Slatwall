@@ -62,40 +62,33 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.o
 	}
 	
 	public void function updateListingDisplay(required struct rc) {
-		try {
-			
-			var entityService = getHibachiService().getServiceByEntityName( entityName=rc.entityName );
-			var smartList = entityService.invokeMethod( "get#getHibachiService().getProperlyCasedShortEntityName( rc.entityName )#SmartList", {1=rc} );
-			
-			var smartListPageRecords = smartList.getPageRecords();
-			var piArray = listToArray(rc.propertyIdentifiers);
+		var entityService = getHibachiService().getServiceByEntityName( entityName=rc.entityName );
+		var smartList = entityService.invokeMethod( "get#getHibachiService().getProperlyCasedShortEntityName( rc.entityName )#SmartList", {1=rc} );
+		
+		var smartListPageRecords = smartList.getPageRecords();
+		var piArray = listToArray(rc.propertyIdentifiers);
 
-			rc[ "recordsCount" ] = smartList.getRecordsCount();
-			rc[ "pageRecords" ] = [];
-			rc[ "pageRecordsCount" ] = arrayLen(smartList.getPageRecords());
-			rc[ "pageRecordsShow"] = smartList.getPageRecordsShow();
-			rc[ "pageRecordsStart" ] = smartList.getPageRecordsStart();
-			rc[ "pageRecordsEnd" ] = smartList.getPageRecordsEnd();
-			rc[ "currentPage" ] = smartList.getCurrentPage();
-			rc[ "totalPages" ] = smartList.getTotalPages();
-			rc[ "savedStateID" ] = smartList.getSavedStateID();
-			
-			for(var i=1; i<=arrayLen(smartListPageRecords); i++) {
-				var thisRecord = {};
-				for(var p=1; p<=arrayLen(piArray); p++) {
-					var value = smartListPageRecords[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );
-					if((len(value) == 3 and value eq "YES") or (len(value) == 2 and value eq "NO")) {
-						thisRecord[ piArray[p] ] = value & " ";
-					} else {
-						thisRecord[ piArray[p] ] = value;
-					}
+		rc.ajaxResponse[ "recordsCount" ] = smartList.getRecordsCount();
+		rc.ajaxResponse[ "pageRecords" ] = [];
+		rc.ajaxResponse[ "pageRecordsCount" ] = arrayLen(smartList.getPageRecords());
+		rc.ajaxResponse[ "pageRecordsShow"] = smartList.getPageRecordsShow();
+		rc.ajaxResponse[ "pageRecordsStart" ] = smartList.getPageRecordsStart();
+		rc.ajaxResponse[ "pageRecordsEnd" ] = smartList.getPageRecordsEnd();
+		rc.ajaxResponse[ "currentPage" ] = smartList.getCurrentPage();
+		rc.ajaxResponse[ "totalPages" ] = smartList.getTotalPages();
+		rc.ajaxResponse[ "savedStateID" ] = smartList.getSavedStateID();
+		
+		for(var i=1; i<=arrayLen(smartListPageRecords); i++) {
+			var thisRecord = {};
+			for(var p=1; p<=arrayLen(piArray); p++) {
+				var value = smartListPageRecords[i].getValueByPropertyIdentifier( propertyIdentifier=piArray[p], formatValue=true );
+				if((len(value) == 3 and value eq "YES") or (len(value) == 2 and value eq "NO")) {
+					thisRecord[ piArray[p] ] = value & " ";
+				} else {
+					thisRecord[ piArray[p] ] = value;
 				}
-				arrayAppend(rc[ "pageRecords" ], thisRecord);
 			}
-			
-		} catch(any e) {
-			writeOutput( serializeJSON(e) );
-			abort;
+			arrayAppend(rc.ajaxResponse[ "pageRecords" ], thisRecord);
 		}
 	}
 	
@@ -114,23 +107,22 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.o
 		smartLists['vendor'] = getVendorService().getVendorSmartList(data=rc);
 		
 		for(var key in smartLists) {
-			rc[ key ] = {};
-			rc[ key ][ 'records' ] = [];
-			rc[ key ][ 'recordCount' ] = smartLists[key].getRecordsCount();
+			rc.ajaxResponse[ key ] = {};
+			rc.ajaxResponse[ key ][ 'records' ] = [];
+			rc.ajaxResponse[ key ][ 'recordCount' ] = smartLists[key].getRecordsCount();
 			
 			for(var i=1; i<=arrayLen(smartLists[key].getPageRecords()); i++) {
 				var thisRecord = {};
 				thisRecord['value'] = smartLists[key].getPageRecords()[i].getPrimaryIDValue();
 				thisRecord['name'] = smartLists[key].getPageRecords()[i].getSimpleRepresentation();
 				
-				arrayAppend(rc[ key ][ 'records' ], thisRecord);
+				arrayAppend(rc.ajaxResponse[ key ][ 'records' ], thisRecord);
 			}
 		}
 	}
 	
 	public function updateSortOrder(required struct rc) {
 		getDataService().updateRecordSortOrder(argumentCollection=rc);
-		setView("admin:main.default");
 	}
 	
 }
