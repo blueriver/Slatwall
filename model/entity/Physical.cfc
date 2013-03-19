@@ -40,6 +40,7 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" 
 	
 	// Persistent Properties
 	property name="physicalID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="physicalName" ormtype="string" notNull="true";
 
 	// Related Object Properties (many-to-one)
 	property name="physicalStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="physicalStatusTypeID" hb_optionsSmartListData="f:parentType.systemCode=physicalStatusType";
@@ -226,10 +227,6 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" 
 	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
-	
-	public string function getSimpleRepresentationPropertyName() {
-		return "createdDateTime";
-	}
 	
 	// ==================  END:  Overridden Methods ========================
 	
