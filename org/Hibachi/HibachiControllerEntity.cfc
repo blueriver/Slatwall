@@ -3,7 +3,6 @@ component output="false" accessors="true" extends="HibachiController" {
 	property name="hibachiService" type="any";
 	
 	public void function before( required any rc ) {
-		arguments.rc.edit = false;
 		
 		// Setup a Private structure in the RC that can't be overridden by the form scope
 		arguments.rc.entityActionDetails = {};
@@ -322,8 +321,22 @@ component output="false" accessors="true" extends="HibachiController" {
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
 			
-			// Render or Redirect a Success
-			renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
+			// If this is an ajax request then setup the response
+			if(arguments.rc.ajaxRequest) {
+			
+				// Let AJAX know that this was a success
+				arguments.rc.ajaxResponse["success"] = true;
+			
+			// Otherwise do the standard render / redirect
+			} else {
+				
+				// Place the id in the URL for redirects in case this was a new entity before
+				url[ entity.getPrimaryIDPropertyName() ] = entity.getPrimaryIDValue();
+				
+				// Render or Redirect a Success
+				renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);	
+			}
+			
 			
 		// FAILURE
 		} else {
@@ -333,9 +346,24 @@ component output="false" accessors="true" extends="HibachiController" {
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
 			
-			// Render or Redirect a faluire
-			renderOrRedirectFailure( defaultAction="edit#arguments.rc.entityActionDetails.itemEntityName#", maintainQueryString=true, rc=arguments.rc);
+			// If this is an ajax request then setup the response
+			if(arguments.rc.ajaxRequest) {
+				
+				// Let AJAX know that this was a failure
+				arguments.rc.ajaxResponse["success"] = false;
+				
+				// Place the entities errors in the response
+				arguments.rc.ajaxResponse["entityErrors"] = entity.getErrors();
 			
+			// Otherwise do the standard render/redirect
+			} else {
+				
+				// Place the id in the URL for redirects in case this was a new entity before
+				url[ entity.getPrimaryIDPropertyName() ] = entity.getPrimaryIDValue();
+				
+				// Render or Redirect a faluire
+				renderOrRedirectFailure( defaultAction="edit#arguments.rc.entityActionDetails.itemEntityName#", maintainQueryString=true, rc=arguments.rc);
+			}
 		}
 	}
 	
@@ -387,9 +415,10 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Attempt to find the entity
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc[ entityPrimaryID ], 2=true} );
 		
+		var requirePreProcess = false;
+		
 		// Check to see if this is an AJAX Request, and there is a pre-process object... then call preprocess first
-		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "X-Hibachi-AJAX") && isBoolean(httpRequestData.headers["X-Hibachi-AJAX"]) && httpRequestData.headers["X-Hibachi-AJAX"] && getFW().getBeanFactory().containsBean( "#arguments.entityName#_#arguments.rc.processContext#")) {
+		if(arguments.rc.ajaxRequest && getFW().getBeanFactory().containsBean( "#arguments.entityName#_#arguments.rc.processContext#")) {
 			// Setup the processObject in the RC so that we can use it for our form if needed
 			rc.processObject = entity.getProcessObject( arguments.rc.processContext );
 			
@@ -414,43 +443,75 @@ component output="false" accessors="true" extends="HibachiController" {
 				rc.pageTitle = rbKey( "#replace(arguments.rc.entityActionDetails.thisAction,':','.','all')#.#rc.processContext#" );
 				
 				// Setup the response
-				var response = {};
-				response["preProcessView"] = getFW().view( "#replace(arguments.rc.entityActionDetails.preProcessAction,'.','/')#_#arguments.rc.processContext#" );
-				writeOutput( serializeJSON(response) );
-				abort;
+				arguments.rc.ajaxResponse["preProcessView"] = getFW().view( "#replace(arguments.rc.entityActionDetails.preProcessAction,'.','/')#_#arguments.rc.processContext#" );
 			}
 		}
 		
-		// Call the process method on the entity, and then populate it back into the RC
-		arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=arguments.rc, 3=arguments.rc.processContext} );
+		if(!requirePreProcess) {
 		
-		// Setup the message string replace data to be used by the generic rbKeys
-		var mesageReplaceData = {
-			itemEntityName = getHibachiScope().rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'),
-			entityName = getHibachiScope().rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#')
-		};
-		
-		// SUCCESS
-		if(!arguments.rc[ arguments.entityName ].hasErrors()) {
-			// Show the Generic Action Success Message
-			getHibachiScope().showMessage( getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.process_success", mesageReplaceData ), "success");
+			// Call the process method on the entity, and then populate it back into the RC
+			arguments.rc[ arguments.entityName ] = entityService.invokeMethod( "process#arguments.entityName#", {1=entity, 2=arguments.rc, 3=arguments.rc.processContext} );
 			
-			// Show all of the specific messages & error messages for the entity
-			entity.showErrorsAndMessages();
-			
-			// Render or Redirect a Success
-			renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
-			
-		// FAILURE
-		} else {
-			// Add the Generic Action Failure Message
-			getHibachiScope().showMessage( getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.process_error", mesageReplaceData ), "error");
-			
-			// Show all of the specific messages & error messages for the entity
-			entity.showErrorsAndMessages();
-			
-			// Render or Redirect a faluire
-			renderOrRedirectFailure( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
+			// SUCCESS
+			if(!arguments.rc[ arguments.entityName ].hasErrors()) {
+				
+				// Show the Generic Action Success Message
+				getHibachiScope().showMessage( getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#.#arguments.rc.processContext#_success" ), "success");
+					
+				// Show all of the specific messages & error messages for the entity
+				entity.showErrorsAndMessages();
+				
+				// If this is an ajax request then setup the response
+				if(arguments.rc.ajaxRequest) {
+					
+					// Let AJAX know that this was a success
+					arguments.rc.ajaxResponse["success"] = true;
+				
+				// Otherwise do the standard render / redirect
+				} else {
+					
+					// Place the id in the URL for redirects in case this was a new entity before
+					url[ entity.getPrimaryIDPropertyName() ] = entity.getPrimaryIDValue();
+					
+					// Render or Redirect a Success
+					renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);	
+				}
+				
+			// FAILURE
+			} else {
+				
+				// Add the Generic Action Failure Message
+				getHibachiScope().showMessage( getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#.#arguments.rc.processContext#_error" ), "error");
+				
+				// Show all of the specific messages & error messages for the entity
+				entity.showErrorsAndMessages();
+				
+				// If this is an ajax request then setup the response
+				if(arguments.rc.ajaxRequest) {
+					
+					// Let AJAX know that this was a failure
+					arguments.rc.ajaxResponse["success"] = false;
+					
+					// Place the entities errors in the response
+					arguments.rc.ajaxResponse["entityErrors"] = entity.getErrors();
+					
+					// Place the process objects errors in the response
+					if(getFW().getBeanFactory().containsBean( "#arguments.entityName#_#arguments.rc.processContext#")) {
+						arguments.rc.ajaxResponse["processObjectErrors"] = entity.getProcessObject(arguments.rc.processContext).getErrors();
+					}
+				
+				// Otherwise do the standard render / redirect
+				} else {
+					
+					// Place the id in the URL for redirects in case this was a new entity before
+					url[ entity.getPrimaryIDPropertyName() ] = entity.getPrimaryIDValue();
+				
+					// Render or Redirect a faluire
+					renderOrRedirectFailure( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
+					
+				}
+				
+			}
 		}
 		
 		

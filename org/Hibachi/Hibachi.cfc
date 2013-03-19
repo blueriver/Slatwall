@@ -157,6 +157,16 @@ component extends="FW1.framework" {
 		request.context.$[ variables.framework.applicationKey ] = getHibachiScope();
 		request.context.pagetitle = request.context.$[ variables.framework.applicationKey ].rbKey( request.context[ getAction() ] );
 		request.context.edit = false;
+		request.context.ajaxRequest = false;
+		request.context.ajaxResponse = {};
+		if(!structKeyExists(request.context, "messages")) {
+			request.context.messages = [];	
+		}
+		
+		var httpRequestData = getHTTPRequestData();
+		if(structKeyExists(httpRequestData.headers, "X-Hibachi-AJAX") && isBoolean(httpRequestData.headers["X-Hibachi-AJAX"]) && httpRequestData.headers["X-Hibachi-AJAX"]) {
+			request.context.ajaxRequest = true;
+		}
 		
 		// Check to see if any message keys were passed via the URL
 		if(structKeyExists(request.context, "messageKeys")) {
@@ -334,22 +344,15 @@ component extends="FW1.framework" {
 		// Announce the applicatoinRequestStart event
 		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationRequestEnd");
 		
-		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "X-Hibachi-AJAX") && isBoolean(httpRequestData.headers["X-Hibachi-AJAX"]) && httpRequestData.headers["X-Hibachi-AJAX"]) {
-			if(structKeyExists(request.context, "fw")) {
-				structDelete(request.context, "fw");
-			}
-			if(structKeyExists(request.context, "$")) {
-				structDelete(request.context, "$");
-			}
-			writeOutput( serializeJSON(request.context) );
+		if(request.context.ajaxRequest) {
+			request.context.ajaxResponse["messages"] = request.context.messages;
+			writeOutput( serializeJSON(request.context.ajaxResponse) );
 			abort;
 		}
 	}
 	
 	public void function setupView() {
-		var httpRequestData = getHTTPRequestData();
-		if(structKeyExists(httpRequestData.headers, "X-#variables.framework.applicationKey#-AJAX") && isBoolean(httpRequestData.headers["X-#variables.framework.applicationKey#-AJAX"]) && httpRequestData.headers["X-#variables.framework.applicationKey#-AJAX"]) {
+		if(request.context.ajaxRequest) {
 			setupResponse();
 		}
 		
