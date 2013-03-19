@@ -43,6 +43,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="locationService" type="any";
 	property name="skuService" type="any";
 	property name="stockService" type="any";
+	property name="typeService" type="any";
 	
 	// ===================== START: Logical Methods ===========================
 	
@@ -61,35 +62,49 @@ component extends="HibachiService" accessors="true" output="false" {
 	// Physical 
 	public any function processPhysical_commit(required any physical) {
 		
-		// Loop over physical for each location
-		for(var i=1; i <= ArrayLen(arguments.physical.getLocations()); i++) {
-			// Create a PhysicalCount Stock Adjustment
-			var stockAdjustmentIN = getStockService.newStockAdjustment();
+		// Setup a locations adjustment to only create 1 new stock adjustment per location
+		var locationAdjustments = {};
+		
+		// get the discrepancy records
+		var physicalCountDescrepancies = arguments.physical.getDiscrepancyQuery();
+		
+		// Loop over discrepancy records
+		for(var rowCount=1; rowCount <= physicalCountDescrepancies.recordCount; rowCount++) {
 			
-			// get the discrepancy records
-			var physicalCountDescrepancies = arguments.physical.getDiscrepancyQuery();
-
-			// Loop over discrepancy records
-			for(var rowCount=1; rowCount <= (physicalCountDescrepancies.recordCount); rowCount++) {
+			if(!structKeyExists(locationAdjustments, physicalCountDescrepancies["locationID"][rowCount])) {
+				var location = getLocationService().getLocation( physicalCountDescrepancies["locationID"][rowCount] );
+				locationAdjustments[ location.getLocationID() ] = getStockService.newStockAdjustment();
+				locationAdjustments[ location.getLocationID() ].setToLocation( locationsArray[i] );
+				locationAdjustments[ location.getLocationID() ].setFromLocation( locationsArray[i] );
+				locationAdjustments[ location.getLocationID() ].setStockAdjustmentType( getTypeService().getTypeBySystemCode("satPhysicalCount") );
+				locationAdjustments[ location.getLocationID() ].setPhysical( arguments.physical );
+			}
+			
+			var stockAdjustment = locationAdjustments[ physicalCountDescrepancies["locationID"][rowCount] ];
+			var stock = getStockService().getStock( physicalCountDescrepancies["stockID"][rowCount] );
+			var stockAdjustmentItem = getStockService().newStockAdjustmentItem();
+			
+			// Attach the item to the adjustment
+			stockAdjustmentItem.setStockAdjustment( stockAdjustment );
+			
+			// If discrepancy > 0 set the stockIn attribute
+			if( physicalCountDescrepancies["discrepancy"][rowCount] > 0 ){
 				
-				// If the locationID in the discrepancy record is same as current location loop, then add StockAdjustmentItem
-				if( physicalCountDescrepancies["locationName"][rowCount] == arguments.physical.getLocations()[i].getlocationName() ){
-					//var stockAdjustmentItem = getStockService().newStockAdjustmentItem();
-					
-					// If discrepancy > 0 make it quantityIn otherwise quantityOut
-					if( physicalCountDescrepancies["discrepancy"][rowCount] > 0 ){
-						writedump(var=physicalCountDescrepancies["discrepancy"][rowCount]);
-						//stockAdjustmentItem.setQuantity(physicalCountDescrepancies["discrepancy"][rowCount]);
-						
-					} else {
-						writedump(var=physicalCountDescrepancies["discrepancy"][rowCount]);
-						//stockAdjustmentItem.setQuantityOut(physicalCountDescrepancies["discrepancy"][rowCount]);
-					}
-					
-					// call getStockService().processStockAdjustment(stockAdjustment=stockAdjustmentIN, processContext="processAdjustment")
-					
-				}
-			}abort;
+				stockAdjustmentItem.setToStock( stock );
+				stockAdjustmentItem.setQuantity( physicalCountDescrepancies["discrepancy"][rowCount] );
+				
+			// If the discrepancy < 0 then set the stockOut attribute
+			} else {
+				
+				stockAdjustmentItem.setFromStock( stock );
+				stockAdjustmentItem.setQuantity( physicalCountDescrepancies["discrepancy"][rowCount]*-1 );
+			}
+			
+		}
+		
+		// process each of the the stockAdjustments
+		for(var key in locationAdjustments) {
+			getStockService().processStockAdjustment(stockAdjustment=locationAdjustments[key], processContext="processAdjustment");	
 		}
 		
 	}

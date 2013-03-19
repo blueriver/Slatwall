@@ -46,6 +46,7 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" 
 	
 	// Related Object Properties (one-to-many)
 	property name="physicalCounts" singularname="physicalCount" cfc="PhysicalCount" type="array" fieldtype="one-to-many" fkcolumn="physicalID" cascade="all-delete-orphan" inverse="true";
+	property name="stockAdjustments" singularname="stockAdjustment" cfc="StockAdjustment" type="array" fieldtype="one-to-many" fkcolumn="physicalID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 	property name="locations" singularname="location" cfc="Location" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalLocation" fkcolumn="physicalID" inversejoincolumn="locationID";
@@ -86,6 +87,14 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" 
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Stock Adjustments (one-to-many)    
+	public void function addStockAdjustment(required any stockAdjustment) {    
+		arguments.stockAdjustment.setPhysical( this );    
+	}    
+	public void function removeStockAdjustment(required any stockAdjustment) {    
+		arguments.stockAdjustment.removePhysical( this );    
+	}
 	
 	// Physical Counts (one-to-many)    
 	public void function addPhysicalCount(required any physicalCount) {    

@@ -285,13 +285,14 @@ component extends="HibachiService" accessors="true" output="false" {
 	//Process: StockAdjustment Context: processAdjustment 	
 	public any function processStockAdjustment_processAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
 		
-		// Incoming
-		if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualIn") {
+		// Incoming (Transfer or ManualIn)
+		if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+			
 			var stockReceiver = this.newStockReceiver();
 			stockReceiver.setReceiverType("stockAdjustment");
 			stockReceiver.setStockAdjustment(arguments.stockAdjustment);
 			
-			for(var i=1; i <= ArrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
+			for(var i=1; i <= arrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
 				var stockAdjustmentItem = arguments.stockAdjustment.getStockAdjustmentItems()[i];
 				var stockReceiverItem = this.newStockReceiverItem();
 				stockReceiverItem.setStockReceiver( stockReceiver );
@@ -304,12 +305,12 @@ component extends="HibachiService" accessors="true" output="false" {
 			this.saveStockReceiver( stockReceiver );
 		}
 		
-		// Outgoing
-		if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualOut") {
+		// Outgoing (Transfer or ManualOut)
+		if( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
 			var stockAdjustmentDelivery = this.newStockAdjustmentDelivery();
 			stockAdjustmentDelivery.setStockAdjustment(arguments.stockAdjustment);
 			
-			for(var i=1; i <= ArrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
+			for(var i=1; i <= arrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
 				var stockAdjustmentItem = arguments.stockAdjustment.getStockAdjustmentItems()[i];
 				var stockAdjustmentDeliveryItem = this.newStockAdjustmentDeliveryItem();
 				stockAdjustmentDeliveryItem.setStockAdjustmentDelivery(stockAdjustmentDelivery);
@@ -321,6 +322,52 @@ component extends="HibachiService" accessors="true" output="false" {
 			this.saveStockAdjustmentDelivery(stockAdjustmentDelivery);
 		}
 		
+		// Physical (Maybe Incoming, Maybe Outgoing)
+		if( listFindNoCase("satPhysicalCount", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+			
+			var headObjects = {};
+			
+			for(var i=1; i <= arrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
+				
+				var stockAdjustmentItem = arguments.stockAdjustment.getStockAdjustmentItems()[i];
+				
+				// If this is In, create receiver
+				if(!isNull(stockAdjustmentItem.getToStock())) {
+					
+					if(!structKeyExists(headObjects, "stockReceiver")) {
+						// Creating Header
+						headObjects.stockReceiver = this.newStockReceiver();
+						headObjects.stockReceiver.setReceiverType( "stockAdjustment" );
+						headObjects.stockReceiver.setStockAdjustment( arguments.stockAdjustment );	
+					}
+					
+					// Creating Detail
+					var stockReceiverItem = this.newStockReceiverItem();
+					stockReceiverItem.setStockReceiver( headObjects.stockReceiver );
+					stockReceiverItem.setStockAdjustmentItem( stockAdjustmentItem );
+					stockReceiverItem.setQuantity( stockAdjustmentItem.getQuantity() );
+					stockReceiverItem.setCost( 0 );
+					stockReceiverItem.setStock( stockAdjustmentItem.getToStock() );
+			
+				
+				// If this is Out, create delivery
+				} else if (!isNull(stockAdjustmentItem.getFromStock())) {
+					
+					// Creating Header
+					if(!structKeyExists(headObjects, "stockAdjustmentDelivery")) {
+						headObjects.stockAdjustmentDelivery = this.newStockAdjustmentDelivery();
+						headObjects.stockAdjustmentDelivery.setStockAdjustment( arguments.stockAdjustment );
+					}
+					
+					// Creating Detail
+					var stockAdjustmentDeliveryItem = this.newStockAdjustmentDeliveryItem();
+					stockAdjustmentDeliveryItem.setStockAdjustmentDelivery( headObjects.stockAdjustmentDelivery );
+					stockAdjustmentDeliveryItem.setStockAdjustmentItem( stockAdjustmentItem );
+					stockAdjustmentDeliveryItem.setQuantity( stockAdjustmentItem.getQuantity() );
+					stockAdjustmentDeliveryItem.setStock( stockAdjustmentItem.getFromStock() );
+				}
+			}
+		}
 		
 		// Set the status to closed
 		arguments.stockAdjustment.setStockAdjustmentStatusType( getSettingService().getTypeBySystemCode("sastClosed") );	

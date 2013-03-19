@@ -46,6 +46,7 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="toLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="toLocationID";
 	property name="stockAdjustmentType" cfc="Type" fieldtype="many-to-one" fkcolumn="stockAdjustmentTypeID" hb_optionsSmartListData="f:parentType.systemCode=stockAdjustmentType";
 	property name="stockAdjustmentStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="stockAdjustmentStatusTypeID" hb_optionsSmartListData="f:parentType.systemCode=stockAdjustmentStatusType";
+	property name="physical" cfc="Physical" fieldtype="many-to-one" fkcolumn="physicalID";
 	
 	// Related Object Properties (one-to-many)
 	property name="stockAdjustmentItems" singularname="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="one-to-many" fkcolumn="stockAdjustmentID" inverse="true" cascade="all-delete-orphan";
@@ -148,6 +149,24 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Physical (many-to-one)    
+	public void function setPhysical(required any physical) {    
+		variables.physical = arguments.physical;    
+		if(isNew() or !arguments.physical.hasStockAdjustment( this )) {    
+			arrayAppend(arguments.physical.getStockAdjustments(), this);    
+		}    
+	}    
+	public void function removePhysical(any physical) {    
+		if(!structKeyExists(arguments, "physical")) {    
+			arguments.physical = variables.physical;    
+		}    
+		var index = arrayFind(arguments.physical.getStockAdjustments(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.physical.getStockAdjustments(), index);    
+		}    
+		structDelete(variables, "physical");    
+	}
 	
 	// Stock Adjustment Items (one-to-many)
 	public void function addStockAdjustmentItem(required any stockAdjustmentItem) {
