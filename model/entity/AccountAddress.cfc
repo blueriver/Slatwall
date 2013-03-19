@@ -90,6 +90,13 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 		return getService("addressService").newAddress();
 	}
 	
+	public string function getSimpleRepresentation() {
+		if(!getAddress().isNew()) {
+			return "#getAccountAddressName()# - #getAddress().getSimpleRepresentation()#";
+		}
+		return rbKey('define.new');
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

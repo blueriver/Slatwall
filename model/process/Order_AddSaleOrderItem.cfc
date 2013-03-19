@@ -9,10 +9,14 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// Data Properties
 	property name="skuID";
 	property name="price";
+	property name="quantity";
 	property name="orderFulfillmentID" hb_formFieldType="select";
 	property name="fulfillmentMethodID" hb_formFieldType="select";
-	property name="quantity";
-	property name="misc";
+	property name="shippingAccountAddressID" hb_formFieldType="select";
+	property name="shippingAddress";
+	property name="saveShippingAccountAddressFlag" hb_formFieldType="yesno";
+	property name="saveShippingAccountAddressName";
+	property name="requiresCustomizationFlag";
 	
 	public any function init() {
 		return super.init();
@@ -32,7 +36,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 				variables.price = getSku().getPriceByCurrencyCode( getOrder().getCurrencyCode() );
 			}
 		}
-		return variables.sku;
+		return variables.price;
 	}
 	
 	public any function getQuantity() {
@@ -72,6 +76,35 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			arrayPrepend(variables.fulfillmentMethodIDOptions, {name=rbKey('define.select'), value='', fulfillmentMethodType=''});
 		}
 		return variables.fulfillmentMethodIDOptions;
+	}
+	
+	public array function getShippingAccountAddressIDOptions() {
+		if(!structKeyExists(variables, "shippingAccountAddressIDOptions")) {
+			variables.shippingAccountAddressIDOptions = [];
+			var s = getService("accountService").getAccountAddressSmartList();
+			s.addFilter(propertyIdentifier="account.accountID",value=getOrder().getAccount().getAccountID());
+			s.addOrder("accountAddressName|ASC");
+			var r = s.getRecords();
+			for(var i=1; i<=arrayLen(r); i++) {
+				arrayAppend(variables.shippingAccountAddressIDOptions, {name=r[i].getSimpleRepresentation(), value=r[i].getAccountAddressID()});	
+			}
+			arrayAppend(variables.shippingAccountAddressIDOptions, {name=getHibachiScope().rbKey('define.new'), value=""});
+		}
+		return variables.shippingAccountAddressIDOptions;
+	}
+	
+	public any function getShippingAddress() {
+		if(!structKeyExists(variables, "shippingAddress")) {
+			variables.shippingAddress = getService("addressService").newAddress();
+		}
+		return variables.shippingAddress;
+	}
+	
+	public any function getSaveShippingAccountAddressFlag() {
+		if(!structKeyExists(variables, "saveShippingAccountAddressFlag")) {
+			variables.saveShippingAccountAddressFlag = 1;
+		}
+		variables.saveShippingAccountAddressFlag;
 	}
 
 }
