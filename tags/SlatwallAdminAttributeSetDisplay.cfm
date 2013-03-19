@@ -43,19 +43,19 @@ Notes:
 
 <cfif thisTag.executionMode is "start">
 	<cfsilent>
-		<cfset local.attributeSmartList = attributes.attributeSet.getAttributesSmartList() />
-		<cfset local.attributeSmartList.addFilter('activeFlag', 1) />
+		<cfset thisTag.attributeSmartList = attributes.attributeSet.getAttributesSmartList() />
+		<cfset thisTag.attributeSmartList.addFilter('activeFlag', 1) />
 	</cfsilent>
 	<cfoutput>
 		<cf_SlatwallPropertyList>
-			<cfloop array="#local.attributeSmartList.getRecords()#" index="attribute">
-				<cfif attributes.edit>
-					<cfset request.context.attributeValueIndex++ />
-					<input type="hidden" name="attributeValues[#request.context.attributeValueIndex#].attributeValueType" value="#attributes.entity.getAttributeValue(attribute.getAttributeID(), true).getAttributeValueType()#" />
-					<input type="hidden" name="attributeValues[#request.context.attributeValueIndex#].attributeValueID" value="#attributes.entity.getAttributeValue(attribute.getAttributeID(), true).getAttributeValueID()#" />
-					<input type="hidden" name="attributeValues[#request.context.attributeValueIndex#].attribute.attributeID" value="#attribute.getAttributeID()#" />
+			<cfloop array="#thisTag.attributeSmartList.getRecords()#" index="attribute">
+				<cfset thisAttributeValue = "" />
+				<cfif isObject(attributes.entity)>
+					<cfset thisAttributeValue = attributes.entity.getAttributeValue(attribute.getAttributeID()) />
+				<cfelse>
+					<cfset thisAttributeValue = attribute.getDefaultValue() />	
 				</cfif>
-				<cf_SlatwallFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="attributeValues[#request.context.attributeValueIndex#].attributeValue" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#attributes.entity.getAttributeValue(attribute.getAttributeID())#" valueOptions="#attribute.getAttributeOptionsOptions()#" />
+				<cf_SlatwallFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="#attributes.fieldNamePrefix##attribute.getAttributeCode()#" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#thisAttributeValue#" valueOptions="#attribute.getAttributeOptionsOptions()#" />
 			</cfloop>
 		</cf_SlatwallPropertyList>
 	</cfoutput>

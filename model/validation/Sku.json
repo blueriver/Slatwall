@@ -5,9 +5,9 @@
 		"stocks":				[{"contexts":"delete","maxCollection":0}],
 		"skuCode":				[{"contexts":"save","required":true,"unique":true}],
 		"options":				[
-		 		{"contexts":"save","method":"hasUniqueOptions"},
-		 		{"contexts":"save","method":"hasOneOptionPerOptionGroup"},
+			{"contexts":"save","method":"hasUniqueOptions"},
+			{"contexts":"save","method":"hasOneOptionPerOptionGroup"}
+		],
 		"physicalCounts":		[{"contexts":"delete","maxCollection":0}]
-		]
 	}
 }
