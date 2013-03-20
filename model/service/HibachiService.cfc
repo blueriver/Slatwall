@@ -25,7 +25,12 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiService" {
 			// Remove any Many-to-Many relationships
 			arguments.entity.removeAllManyToManyRelationships();
 			
+			// Remove all of the entity settings
 			getService("settingService").removeAllEntityRelatedSettings( entity=arguments.entity );
+			
+			// Remove all of the entity comments and comments related to this entity
+			// TODO: Impliment This
+			//getService("commentService").removeAllCommentsAndCommentRelationships( entity=arguments.entity );
 			
 			// Call delete in the DAO
 			getHibachiDAO().delete(target=arguments.entity);
