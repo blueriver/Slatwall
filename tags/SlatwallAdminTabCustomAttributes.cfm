@@ -13,7 +13,9 @@
 	<cfsavecontent variable="attributes.tabcontent">
 		<div class="tab-pane" id="attSet#attributes.attributeSet.getAttributeSetCode()#">
 			<cf_HibachiPropertyRow>
-				<cf_SlatwallAdminAttributeSetDisplay attributeSet="#attributes.attributeSet#" entity="#attributes.object#" edit="#attributes.edit#" />
+				<cf_HibachiPropertyList>
+					<cf_SlatwallAdminAttributeSetDisplay attributeSet="#attributes.attributeSet#" entity="#attributes.object#" edit="#attributes.edit#" />
+				</cf_HibachiPropertyList>
 			</cf_HibachiPropertyRow>
 		</div>
 	</cfsavecontent>

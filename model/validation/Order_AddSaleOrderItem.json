@@ -1,8 +1,9 @@
 {
 	"properties":{
-		"skuID":				[{"required":true}],
-		"orderFulfillmentID":	[{"required":true,"minLength":1}],
-		"quantity":				[{"required":true,"dataType":"numeric"}],
-		"price":				[{"required":true,"dataType":"numeric"}]
+		"skuID":						[{"required":true}],
+		"orderFulfillmentID":			[{"required":true,"minLength":1}],
+		"quantity":						[{"required":true,"dataType":"numeric"}],
+		"price":						[{"required":true,"dataType":"numeric"}],
+		"customizationDisplayedFlag":	[{"eq":true}]
 	}
 }

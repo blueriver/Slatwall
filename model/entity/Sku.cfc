@@ -346,7 +346,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			if(!isNull(getProduct().getBrand())) {
 				wc &= " OR aslatwallbrand.brandID = '#getProduct().getBrand().getBrandID()#'";	
 			}
-			wc &= " OR aslatwallsku.skuID = '#getProduct().getProductID()#'";
+			wc &= " OR aslatwallsku.skuID = '#getSkuID()#'";
 			wc &= ")";
 			
 			variables.assignedOrderItemAttributeSetSmartList.addWhereCondition( wc );
@@ -684,7 +684,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			if(!isNull(getProduct().getBrand())) {
 				wc &= " OR aslatwallbrand.brandID = '#getProduct().getBrand().getBrandID()#'";	
 			}
-			wc &= " OR aslatwallsku.skuID = '#getProduct().getProductID()#'";
+			wc &= " OR aslatwallsku.skuID = '#getSkuID()#'";
 			wc &= ")";
 			
 			variables.assignedAttributeSetSmartList.addWhereCondition( wc );

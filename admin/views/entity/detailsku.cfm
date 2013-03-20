@@ -76,9 +76,9 @@ Notes:
 					</div>
 				</cfif>
 			</cf_HibachiPropertyList>
-			
 		</cf_HibachiPropertyRow>
-
+		
+		
 		<cf_HibachiTabGroup object="#rc.sku#">
 			<cfif rc.product.getBaseProductType() EQ "subscription">
 				<cf_HibachiTab view="admin:entity/skutabs/subscription" />

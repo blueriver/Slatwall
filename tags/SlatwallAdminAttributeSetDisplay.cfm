@@ -36,25 +36,28 @@
 Notes:
 
 --->
-<cfparam name="attributes.attributeSet" type="any" />
-<cfparam name="attributes.edit" type="boolean" default="false" />
-<cfparam name="attributes.fieldNamePrefix" type="string" default="" />
-<cfparam name="attributes.entity" type="any" default="" />
-
 <cfif thisTag.executionMode is "start">
-	<cfsilent>
-		<cfset thisTag.attributeSmartList = attributes.attributeSet.getAttributesSmartList() />
-		<cfset thisTag.attributeSmartList.addFilter('activeFlag', 1) />
-	</cfsilent>
-	<cfoutput>
-		<cf_HibachiPropertyList>
-			<cfloop array="#thisTag.attributeSmartList.getRecords()#" index="attribute">
-				<cfset thisValueOptions = [] />
-				<cfloop array="#attribute.getAttributeOptions()#" index="option">
-					<cfset arrayAppend(thisValueOptions, {name=option.getAttributeOptionLabel(), value=option.getAttributeOptionValue()}) />
-				</cfloop>
-				<cf_HibachiFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="#attributes.fieldNamePrefix##attribute.getAttributeCode()#" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#attributes.entity.getAttributeValue(attribute.getAttributeID())#" valueOptions="#thisValueOptions#" />
-			</cfloop>
-		</cf_HibachiPropertyList>
-	</cfoutput>
+	<cfparam name="attributes.attributeSet" type="any" />
+	<cfparam name="attributes.edit" type="boolean" default="false" />
+	<cfparam name="attributes.fieldNamePrefix" type="string" default="" />
+	<cfparam name="attributes.entity" type="any" default="" />
+	
+	<cfset thisTag.attributeSmartList = attributes.attributeSet.getAttributesSmartList() />
+	<cfset thisTag.attributeSmartList.addFilter('activeFlag', 1) />
+	
+	<cfloop array="#thisTag.attributeSmartList.getRecords()#" index="attribute">
+		<cfset thisAttributeValue = "" />
+		<cfif isObject(attributes.entity)>
+			<cfset thisAttributeValue = attributes.entity.getAttributeValue(attribute.getAttributeID()) />
+		<cfelseif !isNull(attribute.getDefaultValue())>
+			<cfset thisAttributeValue = attribute.getDefaultValue() />  
+		</cfif>
+		
+		<cfset thisValueOptions = [] />
+		<cfloop array="#attribute.getAttributeOptions()#" index="option">
+			<cfset arrayAppend(thisValueOptions, {name=option.getAttributeOptionLabel(), value=option.getAttributeOptionValue()}) />
+		</cfloop>
+		
+		<cf_HibachiFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="#attributes.fieldNamePrefix##attribute.getAttributeCode()#" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#thisAttributeValue#" valueOptions="#thisValueOptions#" />
+	</cfloop>
 </cfif>

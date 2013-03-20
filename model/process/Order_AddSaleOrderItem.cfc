@@ -16,7 +16,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="shippingAddress";
 	property name="saveShippingAccountAddressFlag" hb_formFieldType="yesno";
 	property name="saveShippingAccountAddressName";
-	property name="requiresCustomizationFlag";
+	property name="customizationDisplayedFlag";
 	
 	public any function init() {
 		return super.init();
@@ -114,5 +114,15 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		
 		return [];
 	}
-
+	
+	public boolean function customizationDisplayedFlag() {
+		if(!structKeyExists(variables, "customizationDisplayedFlag")) {
+			if(arrayLen(getAssignedOrderItemAttributeSets())) {
+				variables.customizationDisplayedFlag = 0;
+			} else {
+				variables.customizationDisplayedFlag = 1;
+			}
+		}
+		return variables.customizationDisplayedFlag;
+	}
 }
