@@ -527,7 +527,6 @@ function setupEventHandlers() {
 				displayError();
 			},
 			success: function( r ) {
-				console.log(r);
 				removeLoadingDiv( updateTableID );
 				if(r.success) {
 					listingDisplayUpdate(updateTableID, {});
@@ -625,7 +624,7 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 				dataType: 'json',
 				beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 				error: function( er ) {
-					alert('An Error Occured');
+					displayError();
 				},
 				success: function(r) {
 					if(r["p:current"] === 1) {
@@ -723,6 +722,13 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 		
 		data[ 'slatAction' ] = 'admin:ajax.updateListingDisplay';
 		data[ 'propertyIdentifiers' ] = jQuery('#' + tableID).data('propertyidentifiers');
+		data[ 'processObjectProperties' ] = jQuery('#' + tableID).data('processobjectproperties');
+		if(data[ 'processObjectProperties' ].length) {
+			data[ 'processContext' ] = jQuery('#' + tableID).data('processcontext');
+			data[ 'processEntity' ] = jQuery('#' + tableID).data('processentity');
+			data[ 'processEntityID' ] = jQuery('#' + tableID).data('processentityid');
+		}
+		data[ 'adminAttributes' ] = JSON.stringify(jQuery('#' + tableID).find('th.admin').data());
 		data[ 'savedStateID' ] = jQuery('#' + tableID).data('savedstateid');
 		data[ 'entityName' ] = jQuery('#' + tableID).data('entityname');
 		
@@ -743,7 +749,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 			error: function(result) {
 				removeLoadingDiv( tableID );
 				listingUpdateRelease();
-				alert('Error During Listing Display Update.');
+				displayError();
 			},
 			success: function(r) {
 				
@@ -771,6 +777,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 					
 					// Loop over each column of the header to pull the data out of the response and populate new td's
 					jQuery.each(jQuery(tableHeadRowSelector).children(), function(ci, cv){
+						
 						var newtd = '';
 						var link = '';
 						
@@ -784,7 +791,11 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								if(jQuery(cv).hasClass('primary') && afterRowID) {
 									newtd += '<td class="' + jQuery(cv).attr('class') + '"><a href="#" class="table-action-expand depth' + nextRowDepth + '" data-depth="' + nextRowDepth + '"><i class="icon-plus"></i></a> ' + jQuery.trim(rv[jQuery(cv).data('propertyidentifier')]) + '</td>';
 								} else {
-									newtd += '<td class="' + jQuery(cv).attr('class') + '">' + jQuery.trim(rv[jQuery(cv).data('propertyidentifier')]) + '</td>';
+									if(jQuery(cv).data('propertyidentifier') !== undefined) {
+										newtd += '<td class="' + jQuery(cv).attr('class') + '">' + jQuery.trim(rv[jQuery(cv).data('propertyidentifier')]) + '</td>';
+									} else if (jQuery(cv).data('processobjectproperty') !== undefined) {
+										newtd += '<td class="' + jQuery(cv).attr('class') + '">' + jQuery.trim(rv[jQuery(cv).data('processobjectproperty')]) + '</td>';
+									}
 								}
 							}
 							
@@ -811,45 +822,16 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								
 						} else if ( jQuery(cv).hasClass('admin') ){
 							
-							newtd += '<td>';
-							
-	
-							if( jQuery(cv).data('detailaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('detailaction') + '&' + idProperty + '=' + jQuery.trim(rv[ idProperty ]);
-								if( jQuery(cv).data('detailquerystring') !== undefined ) {
-									link += '&' + jQuery(cv).data('detailquerystring');
-								}
-								if( jQuery(cv).data('detailmodal') ) {
-									newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-eye-open"></i></a> ';
-								} else {
-									newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-eye-open"></i></a> ';	
-								}
-							}
-							
-							if( jQuery(cv).data('editaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('editaction') + '&' + idProperty + '=' + jQuery.trim(rv[ idProperty ]);
-								if( jQuery(cv).data('editquerystring') !== undefined ) {
-									link += '&' + jQuery(cv).data('editquerystring');
-								}
-								if( jQuery(cv).data('editmodal') ) {
-									newtd += '<a class="btn btn-mini modalload" href="' + link + '" data-toggle="modal" data-target="#adminModal"><i class="icon-pencil"></i></a> ';
-								} else {
-									newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-pencil"></i></a> ';	
-								}
-							}
-							
-							if( jQuery(cv).data('deleteaction') !== undefined ) {
-								link = '?slatAction=' + jQuery(cv).data('deleteaction') + '&' + idProperty + '=' + jQuery.trim(rv[ idProperty ]);
-								if( jQuery(cv).data('deletequerystring') !== undefined ) {
-									link += '&' + jQuery(cv).data('deletequerystring');
-								}
-								newtd += '<a class="btn btn-mini" href="' + link + '"><i class="icon-trash"></i></a> ';
-							}
-							newtd += '</td>';
+							newtd += '<td>' + jQuery.trim(rv[ 'admin' ]) + '</td>';
 							
 						}
 						
 						jQuery(rowSelector).append(newtd);
+						
+						// If there was a fieldClass then we need to add it to the input or select box
+						if(jQuery(cv).data('fieldclass') !== undefined) {
+							console.log(jQuery(rowSelector).children().last().find('input,select').addClass( jQuery(cv).data('fieldclass') ));
+						}
 					});
 					
 					if(!afterRowID) {

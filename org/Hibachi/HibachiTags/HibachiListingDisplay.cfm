@@ -47,6 +47,7 @@
 	<!--- ThisTag Variables used just inside --->
 	<cfparam name="thistag.columns" type="array" default="#arrayNew(1)#" />
 	<cfparam name="thistag.allpropertyidentifiers" type="string" default="" />
+	<cfparam name="thistag.allprocessobjectproperties" type="string" default="" />
 	<cfparam name="thistag.selectable" type="string" default="false" />
 	<cfparam name="thistag.multiselectable" type="string" default="false" />
 	<cfparam name="thistag.expandable" type="string" default="false" />
@@ -160,9 +161,13 @@
 		<cfif len(attributes.recordProcessAction)>
 			<cfset attributes.administativeCount++ />
 			
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-processcontext="#attributes.recordProcessContext#"', " ") />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-processentity="#attributes.recordProcessEntity.getClassName()#"', " ") />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-processentityid="#attributes.recordProcessEntity.getPrimaryIDValue()#"', " ") />
+			
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processaction="#attributes.recordProcessAction#"', " ") />
-			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processquerystring="#attributes.recordProcessQueryString#"', " ") />
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processcontext="#attributes.recordProcessContext#"', " ") />
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processquerystring="#attributes.recordProcessQueryString#"', " ") />
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processupdatetableid="#attributes.recordProcessUpdateTableID#"', " ") />
 		</cfif>
 		
@@ -183,7 +188,11 @@
 		
 		<!--- Setup the list of all property identifiers to be used later --->
 		<cfloop array="#thistag.columns#" index="column">
-			<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
+			<cfif len(column.propertyIdentifier)>
+				<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
+			<cfelseif len(column.processObjectProperty)>
+				<cfset thistag.allprocessobjectproperties = listAppend(thistag.allprocessobjectproperties, column.processObjectProperty) />
+			</cfif>
 			<cfif findNoCase("primary", column.tdClass) and thistag.expandable>
 				<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-expandsortproperty="#column.propertyIdentifier#"', " ") />
 				<cfset column.sort = false />
@@ -214,10 +223,7 @@
 		<cfif thistag.multiselectable>
 			<input type="hidden" name="#attributes.multiselectFieldName#" value="#attributes.multiselectValues#" />
 		</cfif>
-		<cfif len(attributes.recordProcessAction)>
-			<div id="MD#replace(attributes.smartList.getSavedStateID(),'-','','all')#"></div>
-		</cfif>
-		<table id="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" class="#attributes.tableclass#" data-norecordstext="#attributes.hibachiScope.rbKey("entity.#thistag.exampleEntity.getClassName()#.norecords", {entityNamePlural=attributes.hibachiScope.rbKey('entity.#thistag.exampleEntity.getClassName()#_plural')})#" data-savedstateid="#attributes.smartList.getSavedStateID()#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
+		<table id="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" class="#attributes.tableclass#" data-norecordstext="#attributes.hibachiScope.rbKey("entity.#thistag.exampleEntity.getClassName()#.norecords", {entityNamePlural=attributes.hibachiScope.rbKey('entity.#thistag.exampleEntity.getClassName()#_plural')})#" data-savedstateid="#attributes.smartList.getSavedStateID()#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-processobjectproperties="#thistag.allprocessobjectproperties#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
 			<thead>
 				<tr>
 					<!--- Selectable --->
@@ -240,13 +246,14 @@
 					<cfif thistag.sortable>
 						<th class="sort">&nbsp;</th>
 					</cfif>
+					<!--- Columns --->
 					<cfloop array="#thistag.columns#" index="column">
 						<cfsilent>
 							<cfif not len(column.title) and len(column.propertyIdentifier)>
 								<cfset column.title = thistag.exampleEntity.getTitleByPropertyIdentifier(column.propertyIdentifier) />
 							</cfif>
 						</cfsilent>
-						<th class="data #column.tdClass#" <cfif len(column.propertyIdentifier)>data-propertyIdentifier="#column.propertyIdentifier#"<cfelseif len(column.processObjectProperty)>data-processobjectproperty="#column.processObjectProperty#"</cfif>>
+						<th class="data #column.tdClass#" <cfif len(column.propertyIdentifier)>data-propertyIdentifier="#column.propertyIdentifier#"<cfelseif len(column.processObjectProperty)>data-processobjectproperty="#column.processObjectProperty#"<cfif structKeyExists(column, "fieldClass")> data-fieldclass="#column.fieldClass#"</cfif></cfif>>
 							<cfif not column.search and not column.sort and not column.filter and not column.range>
 								#column.title#
 							<cfelse>
@@ -292,6 +299,7 @@
 							</cfif>
 						</th>
 					</cfloop>
+					<!--- Admin --->
 					<cfif attributes.administativeCount>
 						<th class="admin admin#attributes.administativeCount#" #attributes.adminattributes#>&nbsp;</th>
 					</cfif>
@@ -363,7 +371,7 @@
 								
 								<!--- Process --->
 								<cfif len(attributes.recordProcessAction)>
-									<cf_HibachiProcessCaller action="#attributes.recordProcessAction#" entity="#attributes.recordProcessEntity#" processContext="#attributes.recordProcessContext#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#&#attributes.recordProcessQueryString#" class="btn hibachi-ajax-submit" />
+									<cf_HibachiProcessCaller action="#attributes.recordProcessAction#" entity="#attributes.recordProcessEntity#" processContext="#attributes.recordProcessContext#" queryString="#listPrepend(attributes.recordProcessQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn hibachi-ajax-submit" />
 								</cfif>
 							</td>
 						</cfif>
