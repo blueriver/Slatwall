@@ -54,10 +54,15 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		<cf_HibachiTabGroup object="#rc.brand#" allowCustomAttributes="true">
+		<cf_HibachiTabGroup object="#rc.brand#">
 			<cf_HibachiTab property="products" text="#$.slatwall.rbkey('entity.brand.products')#" />
 			<cf_HibachiTab property="vendors" />
 			<cf_HibachiTab view="admin:entity/brandtabs/brandsettings" />
+			
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.brand.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.brand#" attributeSet="#attributeSet#" />
+			</cfloop>
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

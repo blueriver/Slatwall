@@ -66,7 +66,7 @@ Notes:
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	
-	<cf_HibachiTabGroup object="#rc.account#" allowCustomAttributes="true">
+	<cf_HibachiTabGroup object="#rc.account#">
 		<cf_HibachiTab view="admin:entity/accounttabs/contactdetails" />
 		<cf_HibachiTab property="accountPaymentMethods" />
 		<cf_HibachiTab property="priceGroups" />
@@ -77,6 +77,13 @@ Notes:
 		<cf_HibachiTab view="admin:entity/accounttabs/subscriptionusage" />
 		<cf_HibachiTab property="permissionGroups" />
 		<cf_HibachiTab view="admin:entity/accounttabs/accountsettings" />
+		
+		<!--- Custom Attributes --->
+		<cfloop array="#rc.account.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+			<cf_SlatwallAdminTabCustomAttributes object="#rc.account#" attributeSet="#attributeSet#" />
+		</cfloop>
+		
+		<!--- Comments --->
 		<cf_SlatwallAdminTabComments object="#rc.account#" />
 	</cf_HibachiTabGroup>
 	

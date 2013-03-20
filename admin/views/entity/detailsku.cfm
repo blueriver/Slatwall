@@ -79,7 +79,7 @@ Notes:
 			
 		</cf_HibachiPropertyRow>
 
-		<cf_HibachiTabGroup object="#rc.sku#" allowCustomAttributes="true">
+		<cf_HibachiTabGroup object="#rc.sku#">
 			<cfif rc.product.getBaseProductType() EQ "subscription">
 				<cf_HibachiTab view="admin:entity/skutabs/subscription" />
 			<cfelseif rc.product.getBaseProductType() EQ "contentaccess">
@@ -91,6 +91,11 @@ Notes:
 			<cf_HibachiTab view="admin:entity/skutabs/currencies" />
 			<cf_HibachiTab view="admin:entity/skutabs/alternateskucodes" />
 			<cf_HibachiTab view="admin:entity/skutabs/skusettings" />
+			
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.sku.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.sku#" attributeSet="#attributeSet#" />
+			</cfloop>
 		</cf_HibachiTabGroup>
 
 	</cf_HibachiEntityDetailForm>

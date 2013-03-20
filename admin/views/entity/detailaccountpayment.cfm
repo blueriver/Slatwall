@@ -60,7 +60,10 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.accountPayment#">
-			<!--- <cf_HibachiTab view="admin:section/tabsfolder/view" /> --->
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.accountPayment.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.accountPayment#" attributeSet="#attributeSet#" />
+			</cfloop>
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

@@ -74,11 +74,20 @@ Notes:
 		<cf_HibachiTabGroup object="#rc.orderItem#" allowComments="true" allowCustomAttributes="true">
 			<cf_HibachiTab view="admin:entity/orderitemtabs/taxes" />
 			<cf_HibachiTab view="admin:entity/orderitemtabs/promotions" />
+			
 			<cfif rc.orderItem.getOrderItemType().getSystemCode() eq "oitSale">
 				<cf_HibachiTab view="admin:entity/orderitemtabs/deliveryitems" />
 			<cfelse>
 				<cf_HibachiTab view="admin:entity/orderitemtabs/stockReceiverItems" />
 			</cfif>
+			
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.orderItem.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.orderItem#" attributeSet="#attributeSet#" />
+			</cfloop>
+			
+			<!--- Comments --->
+			<cf_SlatwallAdminTabComments object="#rc.orderItem#" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

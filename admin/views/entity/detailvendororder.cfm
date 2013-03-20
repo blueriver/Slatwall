@@ -55,9 +55,17 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		<cf_HibachiTabGroup object="#rc.vendorOrder#" allowComments="true" allowCustomAttributes="true">
+		<cf_HibachiTabGroup object="#rc.vendorOrder#">
 			<cf_HibachiTab view="admin:entity/vendorordertabs/items" />
 			<cf_HibachiTab view="admin:entity/vendorordertabs/stockreceivers" />
+			
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.vendorOrder.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.vendorOrder#" attributeSet="#attributeSet#" />
+			</cfloop>
+			
+			<!--- Comments --->
+			<cf_SlatwallAdminTabComments object="#rc.vendorOrder#" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

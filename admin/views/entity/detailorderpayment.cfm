@@ -67,8 +67,13 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		<cf_HibachiTabGroup object="#rc.orderPayment#" allowCustomAttributes="true">
+		<cf_HibachiTabGroup object="#rc.orderPayment#">
 			<cf_HibachiTab view="admin:entity/orderpaymenttabs/paymenttransactions" />
+			
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.orderPayment.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.orderPayment#" attributeSet="#attributeSet#" />
+			</cfloop>
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

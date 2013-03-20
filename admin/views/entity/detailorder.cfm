@@ -110,21 +110,41 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		<cf_HibachiTabGroup object="#rc.order#" allowComments="true" allowCustomAttributes="true">
+		<!--- Tabs --->
+		<cf_HibachiTabGroup object="#rc.order#">
+			<!--- Items --->
 			<cf_HibachiTab view="admin:entity/ordertabs/orderitems" count="#rc.order.getOrderItemsCount()#" />
+			
+			<!--- Payments --->
 			<cf_HibachiTab view="admin:entity/ordertabs/orderpayments" count="#rc.order.getOrderPaymentsCount()#" />
+			
+			<!--- Fulfillment / Delivery --->
 			<cfif rc.order.getOrderType().getSystemCode() eq "otSalesOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
 				<cf_HibachiTab view="admin:entity/ordertabs/orderfulfillments" count="#rc.order.getOrderFulfillmentsCount()#" />
 				<cf_HibachiTab view="admin:entity/ordertabs/orderdeliveries" count="#rc.order.getOrderDeliveriesCount()#" />
 			</cfif>
+			
+			<!--- Returns / Receivers --->
 			<cfif rc.order.getOrderType().getSystemCode() eq "otReturnOrder" or rc.order.getOrderType().getSystemCode() eq "otExchangeOrder">
 				<cf_HibachiTab view="admin:entity/ordertabs/orderreturns" count="#rc.order.getOrderReturnsCount()#" />
 				<cf_HibachiTab view="admin:entity/ordertabs/stockreceivers" count="#rc.order.getStockReceiversCount()#" />
 			</cfif>
+			
+			<!--- Promotions --->
 			<cf_HibachiTab view="admin:entity/ordertabs/promotions" count="#rc.order.getPromotionCodesCount()#" />
+			
+			<!--- Referencing Orders --->
 			<cfif rc.order.getReferencingOrdersCount()>
 				<cf_HibachiTab view="admin:entity/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
 			</cfif>
+			
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.order.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.order#" attributeSet="#attributeSet#" />
+			</cfloop>
+			
+			<!--- Comments --->
+			<cf_SlatwallAdminTabComments object="#rc.order#" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

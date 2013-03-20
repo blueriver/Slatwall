@@ -59,13 +59,6 @@
 						<cfloop array="#thistag.tabs#" index="tab">
 							<cfoutput><li <cfif activeTab eq tab.tabid>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#<cfif len(tab.count) and tab.count gt 0> <span class="badge">#tab.count#</span></cfif></a></li></cfoutput>
 						</cfloop>
-						<!---
-						<cfif isObject(attributes.object) && attributes.allowCustomAttributes>
-							<cfloop array="#attributes.object.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
-								<cfoutput><li><a href="##tab#lcase(attributeSet.getAttributeSetCode())#" data-toggle="tab">#attributeSet.getAttributeSetName()#</a></li></cfoutput>
-							</cfloop>
-						</cfif>
-						--->
 						<cfif isObject(attributes.object)>
 							<cfoutput><li><a href="##tabSystem" data-toggle="tab">#attributes.hibachiScope.rbKey('define.system')#</a></li></cfoutput>
 						</cfif>
@@ -82,19 +75,6 @@
 								</div>
 							</cfoutput>
 						</cfloop>
-						<!---
-						<cfif isObject(attributes.object) && attributes.allowCustomAttributes>
-							<cfloop array="#attributes.object.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
-								<cfoutput>
-									<div class="tab-pane" id="tab#lcase(attributeSet.getAttributeSetCode())#">
-										<div class="row-fluid">
-											<cf_HibachiAttributeSetDisplay attributeSet="#attributeSet#" entity="#attributes.object#" edit="#request.context.edit#" />
-										</div>
-									</div>
-								</cfoutput>
-							</cfloop>
-						</cfif>
-						--->
 						<cfif isObject(attributes.object)>
 							<div <cfif arrayLen(thistag.tabs)>class="tab-pane"<cfelse>class="tab-pane active"</cfif> id="tabSystem">
 								<div class="row-fluid">

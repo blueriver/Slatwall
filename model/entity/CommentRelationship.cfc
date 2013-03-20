@@ -53,6 +53,7 @@ component displayname="Comment Relationship" entityname="SlatwallCommentRelation
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	property name="physical" cfc="Physical" fieldtype="many-to-one" fkcolumn="physicalID";
 	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
