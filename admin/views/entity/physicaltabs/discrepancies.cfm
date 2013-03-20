@@ -43,11 +43,11 @@ Notes:
 	<table class="table table-striped table-bordered table-condensed table-hover">
 		<thead>
 		<tr>
-			<th style="white-space:normal; vertical-align: text-bottom;">Sku Code</th>
-			<th style="white-space:normal; vertical-align: text-bottom;">Product Name</th>
-			<th style="white-space:normal; vertical-align: text-bottom;">Location Name</th>
-			<th style="white-space:normal; vertical-align: text-bottom;">Quantity On Hand</th>
-			<th style="white-space:normal; vertical-align: text-bottom;">Discrepancy</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey("entity.sku.skuCode")#</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey("entity.product.productName")#</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey("entity.location.locationName")#</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey("admin.entity.physicaltabs.discrepancies.qoh")#</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey("admin.entity.physicaltabs.discrepancies.discrepancy")#</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -67,7 +67,7 @@ Notes:
 			</cfloop>
 		<cfelse>
 			<tr>
-				<td style="text-align:center;" colspan="3">There aren't any Physical Count Items.</td>
+				<td style="text-align:center;" colspan="5">#$.slatwall.rbKey("admin.entity.physicaltabs.discrepancies.noRows")#</td>
 			</tr>
 		</cfif>
 		</tbody>
