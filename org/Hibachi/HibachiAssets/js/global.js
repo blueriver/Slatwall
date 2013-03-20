@@ -589,6 +589,7 @@ function updateTextAutocompleteUI( autocompleteField ) {
 }
 function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 	if(jQuery(autocompleteField).val().length) {
+		
 		// Setup the correct data
 		var thisData = {
 			slatAction: 'admin:ajax.updatelistingdisplay',
@@ -627,7 +628,7 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 					displayError();
 				},
 				success: function(r) {
-					if(r["p:current"] === 1) {
+					if(r["pageRecordsStart"] === 1) {
 						jQuery( '#' + jQuery(autocompleteField).data('sugessionsid') ).html('');
 					}
 					jQuery.each( r["pageRecords"], function(ri, rv) {
