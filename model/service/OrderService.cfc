@@ -633,18 +633,69 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function processOrder_addSaleOrderItem(required any order, required any processObject) {
 		
-		var sku = getSkuService().getSku(processObject.getSkuID());
-		var orderFulfillment = this.getOrderFulfillment(processObject.getOrderFulfillmentID());
+		// Create a new Order Item
 		var newOrderItem = this.newOrderItem();
 		
-		newOrderItem.setSku( sku );
+		// Set any customizations
+		newOrderItem.populate( arguments.data );
+		
+		// Setup the Order Fulfillment
+		if(len(processObject.getOrderFulfillmentID())) {
+			
+			// get the correct order fulfillment to attach this item to
+			var orderFulfillment = this.getOrderFulfillment( processObject.getOrderFulfillmentID() );	
+			
+		} else {
+			
+			// Setup a new order fulfillment
+			var orderFulfillment = this.newOrderFulfillment();
+			orderFulfillment.setFulfillmentMethod( getFulfillmentService().getFulfillmentMethod( arguments.processObject.getOrderFulfillmentMethodID() ) );
+			
+			// Populate the shipping address info
+			if(orderFulfillment.getFulfillmentMethod.getFulfillmentMethodType() eq "shipping") {
+				
+				// Check for an accountAddress
+				if(len(arguments.processObject.getShippingAccountAddressID())) {
+					
+					// Find the correct account address, and set it in the order fulfillment
+					var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
+					orderFulfillment.setAccountAddress( newAccountAddress );
+				
+				// Otherwise setup a new shipping address
+				} else {
+					
+					// If we are supposed to save the new address, then we can do that here
+					if(arguments.processObject.getSaveShippingAccountAddressFlag()) {
+						
+						var newAccountAddress = getAccountService().newAccountAddress();
+						newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
+						newAccountAddress.setAddress( arguments.processObject.getAddress() );
+						orderFulfillment.setAccountAddress( newAccountAddress );
+						
+					// Otherwise just set then new address in the order fulfillment
+					} else {
+						
+						orderFulfillment.setShippingAddress( arguments.processObject.getAddress() );
+					}
+				}
+			}
+		}
+		
+		// Set Header Info
 		newOrderItem.setOrderFulfillment( orderFulfillment );
 		newOrderItem.setOrder( arguments.order );
+		
+		// Setup the Sku / Quantity / Price details
+		newOrderItem.setSku( arguments.processObject.getSku() );
 		newOrderItem.setCurrencyCode( arguments.order.getCurrencyCode() );
 		newOrderItem.setQuantity( arguments.processObject.getQuantity() );
-		newOrderItem.setPrice( sku.getPriceByCurrencyCode( newOrderItem.getCurrencyCode() ) );
+		newOrderItem.setPrice( arguments.processObject.getPrice() );
 		newOrderItem.setSkuPrice( sku.getPriceByCurrencyCode( newOrderItem.getCurrencyCode() ) );
 		
+		// Save the new order items
+		this.saveOrderItem( newOrderItem );
+		
+		// Call the recalculate so that promotions get set
 		recalculateOrderAmounts( arguments.order );
 		
 		return arguments.order;

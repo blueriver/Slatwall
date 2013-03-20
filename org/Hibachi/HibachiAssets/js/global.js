@@ -523,11 +523,11 @@ function setupEventHandlers() {
 			dataType: 'json',
 			beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 			error: function( r ) {
-				console.log( r );
 				removeLoadingDiv( updateTableID );
 				displayError();
 			},
 			success: function( r ) {
+				console.log(r);
 				removeLoadingDiv( updateTableID );
 				if(r.success) {
 					listingDisplayUpdate(updateTableID, {});

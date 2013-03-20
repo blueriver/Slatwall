@@ -48,6 +48,9 @@ Notes:
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
+				<!--- Add the SkuID --->
+				<input type="hidden" name="skuID" value="#rc.processObject.getSkuID()#" />
+				
 				<h4>#$.slatwall.rbKey('admin.entity.preprocessorder_addsaleorderitem.itemDetails')#</h4>
 				<!--- Sku Properties --->
 				<cf_HibachiPropertyDisplay object="#rc.processObject.getSku()#" property="skuCode" edit="false">

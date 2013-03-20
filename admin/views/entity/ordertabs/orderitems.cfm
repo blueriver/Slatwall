@@ -103,7 +103,7 @@ Notes:
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
 				<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
-				<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" value="#defaultOrderFulfillmentID#" />
+				<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" value="#defaultOrderFulfillmentID#" fieldClass="span2" />
 				<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 			</cf_HibachiListingDisplay>
 		</cfif>

@@ -115,7 +115,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return [];
 	}
 	
-	public boolean function customizationDisplayedFlag() {
+	public boolean function getCustomizationDisplayedFlag() {
 		if(!structKeyExists(variables, "customizationDisplayedFlag")) {
 			if(arrayLen(getAssignedOrderItemAttributeSets())) {
 				variables.customizationDisplayedFlag = 0;

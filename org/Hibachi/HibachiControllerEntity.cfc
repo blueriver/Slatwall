@@ -447,6 +447,9 @@ component output="false" accessors="true" extends="HibachiController" {
 				
 				// Setup the response
 				arguments.rc.ajaxResponse["preProcessView"] = getFW().view( "#replace(arguments.rc.entityActionDetails.preProcessAction,'.','/')#_#arguments.rc.processContext#" );
+				
+				// Setup the errorBean errors in the response
+				arguments.rc.ajaxResponse["processObjectErrors"] = errorBean.getErrors();
 			}
 		}
 		
