@@ -67,6 +67,8 @@ component entityname="SlatwallPhysicalCountItem" table="SlatwallPhysicalCountIte
 	
 	// Non-Persistent Properties 
 	property name="physicalStatusTypeSystemCode" persistent="false";
+	property name="sku" persistent="false" cfc="Sku";
+	
 
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -112,6 +114,9 @@ component entityname="SlatwallPhysicalCountItem" table="SlatwallPhysicalCountIte
 	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
+	public string function getSimpleRepresentationPropertyName() {
+		return "skuCode";
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

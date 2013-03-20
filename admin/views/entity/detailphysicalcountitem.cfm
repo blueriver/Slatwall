@@ -36,19 +36,27 @@
 Notes:
 
 --->
-<cfparam name="rc.sku" type="any" />
+<cfparam name="rc.physicalCountItem" type="any">
+<cfparam name="rc.physicalCount" type="any" default="#rc.physicalCountItem.getphysicalCount()#" />
+<cfparam name="rc.edit" type="boolean">
+
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.sku.getAlternateSkuCodesSmartList()#"
-			recordEditAction="admin:entity.editalternateskucode"
-			recordEditQueryString="skuID=#rc.sku.getSkuID()#"
-			recordEditModal=true
-			recordDeleteAction="admin:entity.deletealternateskucode"
-			recordDeleteQueryString="skuID=#rc.sku.getSkuID()#&redirectAction=admin:entity.detailsku##tabalternateskucodes"
-			edit="#rc.edit#">
-			
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="alternateSkuCode" />
+	<cf_HibachiEntityDetailForm object="#rc.physicalCountItem#" edit="#rc.edit#" sRenderItem="detailphysicalCount">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.physicalCountItem#" edit="#rc.edit#" 
+					backAction="admin:entity.detailPhysicalCount" 
+					backQueryString="physicalCountID=#rc.physicalCount.getphysicalCountID()#"
+					cancelAction="admin:entity.detailPhysicalCount"
+					cancelQueryString="physicalCountID=#rc.physicalCount.getphysicalCountID()#">
+		</cf_HibachiEntityActionBar>
 		
-	</cf_HibachiListingDisplay>
-	
-	<cf_HibachiActionCaller action="admin:entity.createalternateskucode" class="btn btn-inverse" icon="plus icon-white" queryString="skuID=#rc.sku.getSkuID()#" modal="true" />
+		<input type="hidden" name="physicalCountID" value="#rc.physicalCount.getphysicalCountID()#" />
+		<input type="hidden" name="physicalCount.physicalCountID" value="#rc.physicalCount.getphysicalCountID()#" />
+		
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.physicalCountItem#" property="sku" edit="#rc.edit#" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,skuCode,product.productName,product.productType.productTypeName">
+				<cf_HibachiPropertyDisplay object="#rc.physicalCountItem#" property="quantity" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

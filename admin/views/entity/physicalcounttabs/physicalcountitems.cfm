@@ -39,10 +39,19 @@ Notes:
 <cfparam name="rc.physicalCount" type="any" />
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.physicalCount.getPhysicalCountItemsSmartList()#">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode"/>
+	<cf_HibachiListingDisplay smartList="#rc.physicalCount.getPhysicalCountItemsSmartList()#"
+							recordEditAction="admin:entity.editphysicalcountitem"
+							recordEditQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#"  
+							recordEditModal=true
+							recordDeleteAction="admin:entity.deletephysicalcountitem"
+							recordDeleteQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#&redirectAction=admin:entity.detailphysicalcount"
+							edit="#rc.edit#">
+							
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.productName" />
+		<cf_HibachiListingColumn propertyIdentifier="skuCode"/>	
 		<cf_HibachiListingColumn propertyIdentifier="quantity" />
+		
 	</cf_HibachiListingDisplay>	
 	
-	<!---<cf_HibachiProcessCaller entity="#rc.physicalCount#" action="admin:entity.preprocessPhysical_addPhysicalCount" processContext="addItems" class="btn btn-inverse" icon="plus icon-white" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal=true />--->
+	<cf_HibachiActionCaller entity="#rc.physicalCount#" action="admin:entity.createphysicalcountitem" class="btn" icon="plus" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal="true" />
 </cfoutput>
