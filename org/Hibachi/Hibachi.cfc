@@ -339,6 +339,9 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupResponse() {
+		param name="request.context.ajaxRequest" default="false";
+		param name="request.context.ajaxResponse" default="#structNew()#";
+		
 		endHibachiLifecycle();
 		
 		// Announce the applicatoinRequestStart event
@@ -352,6 +355,8 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupView() {
+		param name="request.context.ajaxRequest" default="false";
+		
 		if(request.context.ajaxRequest) {
 			setupResponse();
 		}

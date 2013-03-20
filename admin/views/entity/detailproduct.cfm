@@ -65,7 +65,7 @@ Notes:
 				<cf_HibachiFieldDisplay title="#$.slatwall.rbKey('define.qiats.full')#" value="#rc.product.getQuantity('QIATS')#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
-		<cf_HibachiTabGroup object="#rc.product#" allowCustomAttributes="true">
+		<cf_HibachiTabGroup object="#rc.product#">
 			<cf_HibachiTab property="skus" />
 			<cf_HibachiTab property="productDescription" />
 			<cf_HibachiTab property="listingPages" />
@@ -73,9 +73,16 @@ Notes:
 			<cf_HibachiTab property="productReviews" />
 			<cf_HibachiTab property="relatedProducts" />
 			<cf_HibachiTab property="vendors" />
+			
+			<!--- Settings --->
 			<cf_HibachiTab view="admin:entity/producttabs/alternateimages" />
 			<cf_HibachiTab view="admin:entity/producttabs/productsettings" />
 			<cf_HibachiTab view="admin:entity/producttabs/skusettings" />
+			
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.product.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.product#" attributeSet="#attributeSet#" />
+			</cfloop>
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

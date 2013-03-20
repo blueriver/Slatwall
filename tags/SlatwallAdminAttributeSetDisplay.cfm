@@ -47,16 +47,14 @@ Notes:
 		<cfset thisTag.attributeSmartList.addFilter('activeFlag', 1) />
 	</cfsilent>
 	<cfoutput>
-		<cf_SlatwallPropertyList>
+		<cf_HibachiPropertyList>
 			<cfloop array="#thisTag.attributeSmartList.getRecords()#" index="attribute">
-				<cfset thisAttributeValue = "" />
-				<cfif isObject(attributes.entity)>
-					<cfset thisAttributeValue = attributes.entity.getAttributeValue(attribute.getAttributeID()) />
-				<cfelse>
-					<cfset thisAttributeValue = attribute.getDefaultValue() />	
-				</cfif>
-				<cf_SlatwallFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="#attributes.fieldNamePrefix##attribute.getAttributeCode()#" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#thisAttributeValue#" valueOptions="#attribute.getAttributeOptionsOptions()#" />
+				<cfset thisValueOptions = [] />
+				<cfloop array="#attribute.getAttributeOptions()#" index="option">
+					<cfset arrayAppend(thisValueOptions, {name=option.getAttributeOptionLabel(), value=option.getAttributeOptionValue()}) />
+				</cfloop>
+				<cf_HibachiFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="#attributes.fieldNamePrefix##attribute.getAttributeCode()#" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#attributes.entity.getAttributeValue(attribute.getAttributeID())#" valueOptions="#thisValueOptions#" />
 			</cfloop>
-		</cf_SlatwallPropertyList>
+		</cf_HibachiPropertyList>
 	</cfoutput>
 </cfif>
