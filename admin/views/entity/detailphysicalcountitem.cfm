@@ -34,7 +34,7 @@
     exception statement from your version.
 
 Notes:
-
+,skuCode,product.productName,product.productType.productTypeName
 --->
 <cfparam name="rc.physicalCountItem" type="any">
 <cfparam name="rc.physicalCount" type="any" default="#rc.physicalCountItem.getphysicalCount()#" />
@@ -54,7 +54,7 @@ Notes:
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.physicalCountItem#" property="sku" edit="#rc.edit#" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,skuCode,product.productName,product.productType.productTypeName">
+				<cf_HibachiPropertyDisplay object="#rc.physicalCountItem#" property="sku" edit="#rc.edit#" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon">
 				<cf_HibachiPropertyDisplay object="#rc.physicalCountItem#" property="quantity" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>

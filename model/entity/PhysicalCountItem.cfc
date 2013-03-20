@@ -67,7 +67,7 @@ component entityname="SlatwallPhysicalCountItem" table="SlatwallPhysicalCountIte
 	
 	// Non-Persistent Properties 
 	property name="physicalStatusTypeSystemCode" persistent="false";
-	property name="sku" persistent="false" cfc="Sku";
+	property name="sku" persistent="false" cfc="Sku" fkcolumn="skuID" ;
 	
 
 	
