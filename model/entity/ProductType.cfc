@@ -245,6 +245,27 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return getProductTypeName();
 	}
 	
+	public any function getAssignedAttributeSetSmartList(){
+		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
+			
+			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
+			
+			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
+			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProduct');
+			
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
+			
+			var wc = "(";
+			wc &= " aslatwallattributeset.globalFlag = 1";
+			wc &= " OR aslatwallproducttype.productTypeID IN ('#replace(getProductType().getProductTypeIDPath(),",","','","all")#')";
+			wc &= ")";
+			
+			variables.assignedAttributeSetSmartList.addWhereCondition( wc );
+		}
+		
+		return variables.assignedAttributeSetSmartList;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

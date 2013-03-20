@@ -86,6 +86,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Non-Persistent Properties
 	property name="adminIcon" persistent="false";
+	property name="assignedOrderItemAttributeSetSmartList" persistent="false";
 	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
 	property name="currencyCode" type="string" persistent="false";
 	property name="currencyDetails" type="struct" persistent="false";
@@ -101,6 +102,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="salePriceDiscountType" type="string" persistent="false";
 	property name="salePriceDiscountAmount" type="string" persistent="false";
 	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
+	
 	
     public boolean function getDefaultFlag() {
     	if(getProduct().getDefaultSku().getSkuID() == getSkuID()) {
@@ -322,6 +324,35 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	public string function getAdminIcon() {
 		return getImage(width=55, height=55);
+	}
+	
+	public any function getAssignedOrderItemAttributeSetSmartList(){
+		if(!structKeyExists(variables, "assignedOrderItemAttributeSetSmartList")) {
+			
+			variables.assignedOrderItemAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
+			
+			variables.assignedOrderItemAttributeSetSmartList.addFilter('activeFlag', 1);
+			variables.assignedOrderItemAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astOrderItem');
+			
+			variables.assignedOrderItemAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
+			variables.assignedOrderItemAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "products", "left");
+			variables.assignedOrderItemAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "brands", "left");
+			variables.assignedOrderItemAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "skus", "left");
+			
+			var wc = "(";
+			wc &= " aslatwallattributeset.globalFlag = 1";
+			wc &= " OR aslatwallproducttype.productTypeID IN ('#replace(getProduct().getProductType().getProductTypeIDPath(),",","','","all")#')";
+			wc &= " OR aslatwallproduct.productID = '#getProduct().getProductID()#'";
+			if(!isNull(getProduct().getBrand())) {
+				wc &= " OR aslatwallbrand.brandID = '#getProduct().getBrand().getBrandID()#'";	
+			}
+			wc &= " OR aslatwallsku.skuID = '#getProduct().getProductID()#'";
+			wc &= ")";
+			
+			variables.assignedOrderItemAttributeSetSmartList.addWhereCondition( wc );
+		}
+		
+		return variables.assignedOrderItemAttributeSetSmartList;
 	}
 	
 	public string function getCurrencyCode() {
@@ -632,6 +663,35 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public string function getSimpleRepresentationPropertyName() {
     	return "skuCode";
     }
+    
+    public any function getAssignedAttributeSetSmartList(){
+		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
+			
+			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
+			
+			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
+			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astSku');
+			
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "products", "left");
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "brands", "left");
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "skus", "left");
+			
+			var wc = "(";
+			wc &= " aslatwallattributeset.globalFlag = 1";
+			wc &= " OR aslatwallproducttype.productTypeID IN ('#replace(getProduct().getProductType().getProductTypeIDPath(),",","','","all")#')";
+			wc &= " OR aslatwallproduct.productID = '#getProduct().getProductID()#'";
+			if(!isNull(getProduct().getBrand())) {
+				wc &= " OR aslatwallbrand.brandID = '#getProduct().getBrand().getBrandID()#'";	
+			}
+			wc &= " OR aslatwallsku.skuID = '#getProduct().getProductID()#'";
+			wc &= ")";
+			
+			variables.assignedAttributeSetSmartList.addWhereCondition( wc );
+		}
+		
+		return variables.assignedAttributeSetSmartList;
+	}
     
     // @help we override this so that the onMM below will work
 	public struct function getPropertyMetaData(string propertyName) {

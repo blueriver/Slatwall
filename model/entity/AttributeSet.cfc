@@ -58,6 +58,9 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	
 	// Related Object Properties (many-to-many - owner)
 	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProductType" fkcolumn="attributeSetID" inversejoincolumn="productTypeID";
+	property name="products" singularname="product" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProduct" fkcolumn="attributeSetID" inversejoincolumn="productID";
+	property name="brands" singularname="brand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetBrand" fkcolumn="attributeSetID" inversejoincolumn="brandID";
+	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetSku" fkcolumn="attributeSetID" inversejoincolumn="skuID";
 
 	// Related Object Properties (many-to-many - inverse)
 	
@@ -74,7 +77,6 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 			return getService("hibachiUtilityService").sortObjectArray(variables.Attributes,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
-
     
    	public numeric function getAttributeCount() {
 		return arrayLen(this.getAttributes());
@@ -117,6 +119,16 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
+	
+	public boolean function getGlobalFlag() {
+		if(!structKeyExists(variables, "globalFlag")) {
+			variables.globalFlag = 1;
+		}
+		if(!isNull(getAttributeSetType()) && !listFindNoCase("astProductType,astProduct,astSku,astOrderItem", getAttributeSetType().getSystemCode())) {
+			variables.globalFlag = 1;
+		}
+		return variables.globalFlag;
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 		

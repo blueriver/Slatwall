@@ -56,6 +56,7 @@ Notes:
 			<!--- Order Item Details --->
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="quantity" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="price" edit="#rc.edit#">
+			
 			<hr />
 			
 			<!--- Order Fulfillment --->
@@ -72,6 +73,7 @@ Notes:
 				<!--- Shipping Fulfillment Details --->
 				<cf_HibachiDisplayToggle selector="select[name='fulfillmentMethodID']" valueAttribute="fulfillmentmethodtype" showValues="shipping" loadVisible="false">
 					
+					<!--- Setup the primary address as the default account address --->
 					<cfset defaultValue = "" />
 					<cfif isNull(rc.processObject.getShippingAccountAddressID()) && !rc.order.getAccount().getPrimaryAddress().isNew()>
 						<cfset defaultValue = rc.order.getAccount().getPrimaryAddress().getAccountAddressID() />
@@ -101,8 +103,14 @@ Notes:
 				</cf_HibachiDisplayToggle>
 				
 			</cf_HibachiDisplayToggle>
-			
+		
 		</cf_HibachiPropertyList>
+			
+		<!--- Order Item Custom Attributes --->
+		<cfloop array="#rc.processObject.getAssignedOrderItemAttributeSets()#" index="attributeSet">
+			<cf_SlatwallAdminAttributeSetDisplay attributeSet="#attributeSet#" />
+		</cfloop>
+		
 	</cf_HibachiPropertyRow>
 	
 </cf_HibachiEntityProcessForm>
