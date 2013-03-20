@@ -89,9 +89,17 @@ function initUIElements( scopeSelector ) {
 	jQuery.each( jQuery( scopeSelector ).find( jQuery('.hibachi-display-toggle') ), function(index, value){
 		var bindData = {
 			showValues : jQuery(this).data('hibachi-show-values'),
-			hideValues : jQuery(this).data('hibachi-hide-values'),
 			valueAttribute : jQuery(this).data('hibachi-value-attribute'),
 			id : jQuery(this).attr('id')
+		}
+		
+		// Open the correct sections
+		var loadValue = jQuery( jQuery(this).data('hibachi-selector') ).val();
+		if(bindData.valueAttribute.length) {
+			var loadValue = jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").data(bindData.valueAttribute);
+		}
+		if( jQuery( this ).hasClass('hide') && bindData.showValues.toString().indexOf( loadValue ) > -1 ) {
+			jQuery( this ).removeClass('hide');
 		}
 		
 		jQuery( jQuery(this).data('hibachi-selector') ).on('change', bindData, function(e) {
@@ -105,6 +113,8 @@ function initUIElements( scopeSelector ) {
 				jQuery( '#' + bindData.id ).addClass('hide');
 			}
 		});
+		
+		
 	});
 	
 	// Form Empty value clear (IMPORTANT!!! KEEP THIS ABOVE THE VALIDATION ASIGNMENT)

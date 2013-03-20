@@ -1,9 +1,17 @@
 {
+    "conditions":{
+	    "newOrderFulfillment":{
+	        "orderFulfillmentID":{"eq":"new"}
+	    },
+	    "customizationsExist":{
+	        "assignedOrderItemAttributeSets":{"minCollection":1}
+	    }
+	},
 	"properties":{
 		"skuID":						[{"required":true}],
-		"orderFulfillmentID":			[{"required":true,"minLength":1}],
+		"orderFulfillmentID":			[{"required":true}],
 		"quantity":						[{"required":true,"dataType":"numeric"}],
 		"price":						[{"required":true,"dataType":"numeric"}],
-		"customizationDisplayedFlag":	[{"eq":true}]
+		"preProcessDisplayedFlag":		[{"conditions":"newOrderFulfillment,customizationsExist","eq":true}]
 	}
 }

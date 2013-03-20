@@ -51,7 +51,7 @@ Notes:
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="currencyCode" edit="#rc.edit#">
 			<hr />
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="newAccountFlag" edit="#rc.edit#" fieldType="yesno">
-			<cf_HibachiDisplayToggle selector="input[name='newAccountFlag']" loadVisible="#rc.processObject.getNewAccountFlag()#">	
+			<cf_HibachiDisplayToggle selector="input[name='newAccountFlag']">	
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="firstName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="lastName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="company" edit="#rc.edit#">
@@ -59,12 +59,12 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddress" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddressConfirm" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthenticationFlag" edit="#rc.edit#" fieldType="yesno">
-				<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']" loadVisible="#rc.processObject.getCreateAuthenticationFlag()#">
+				<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']">
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="password" edit="#rc.edit#">
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="passwordConfirm" edit="#rc.edit#">
 				</cf_HibachiDisplayToggle>
 			</cf_HibachiDisplayToggle>
-			<cf_HibachiDisplayToggle selector="input[name='newAccountFlag']" showValues="0" loadVisible="#!rc.processObject.getNewAccountFlag()#">
+			<cf_HibachiDisplayToggle selector="input[name='newAccountFlag']" showValues="0">
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accountID" autocompletePropertyIdentifiers="adminIcon,fullName,company,emailAddress,phoneNumber,address.simpleRepresentation" edit="true">
 			</cf_HibachiDisplayToggle>
 			<hr />

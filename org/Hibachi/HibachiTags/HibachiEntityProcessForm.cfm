@@ -18,6 +18,7 @@
 			<input type="hidden" name="#request.context.fw.getAction()#" value="#attributes.processAction#" />
 			<input type="hidden" name="processContext" value="#attributes.processContext#" />
 			<input type="hidden" name="#attributes.entity.getPrimaryIDPropertyName()#" value="#attributes.entity.getPrimaryIDValue()#" />
+			<input type="hidden" name="preProcessDisplayedFlag" value="1" />
 			<cfif len(attributes.sRedirectURL)><input type="hidden" name="sRedirectURL" value="#attributes.sRedirectURL#" /></cfif>
 			<cfif len(attributes.sRedirectAction)><input type="hidden" name="sRedirectAction" value="#attributes.sRedirectAction#" /></cfif>
 			<cfif len(attributes.sRenderItem)><input type="hidden" name="sRenderItem" value="#attributes.sRenderItem#" /></cfif>

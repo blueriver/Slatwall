@@ -6,17 +6,11 @@
 	<cfparam name="attributes.showValues" type="string" default="1">
 	<cfparam name="attributes.hideValues" type="string" default="">
 	
-	<cfparam name="attributes.loadVisible" type="boolean" default="false" />
-	
 	<cfparam name="attributes.valueAttribute" type="string" default="" />
 	
-	<cfset class="hibachi-display-toggle" />
-	<cfif !attributes.loadVisible>
-		<cfset class &= " hide" />
-	</cfif>
 	<cfset id = createUUID() />
 	
-	<cfoutput><div id="#id#" class="#class#" data-hibachi-selector="#attributes.selector#" data-hibachi-show-values="#attributes.showValues#" data-hibachi-hide-values="#attributes.hideValues#" data-hibachi-value-attribute="#attributes.valueAttribute#"></cfoutput>
+	<cfoutput><div id="#id#" class="hibachi-display-toggle hide" data-hibachi-selector="#attributes.selector#" data-hibachi-show-values="#attributes.showValues#" data-hibachi-hide-values="#attributes.hideValues#" data-hibachi-value-attribute="#attributes.valueAttribute#"></cfoutput>
 <cfelse>
 	</div>
 </cfif>

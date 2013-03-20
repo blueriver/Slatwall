@@ -2,7 +2,7 @@
 	"contexts":["save","edit","placeOrder","fulfillItems"],
 	"conditions":{
 	    "fulfillmentTypeShipping":{
-	        "fulfillmentMethodType":{"eq":"shipping"}
+	        "assignedOrderItemAttributeSets":{"minCollection":1}
 	    }
 	},
 	"properties":{
