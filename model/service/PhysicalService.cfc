@@ -236,6 +236,21 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ====================== START: Save Overrides ===========================
 	
+	
+	public any function savePhysicalCountItem(required any entity, struct data={}) {
+		
+		// Call the super to do the standard logic
+		arguments.entity = this.save(entity=arguments.entity, data=arguments.data);
+		
+		// As long as there is a physical count attached to this item, we can attach a stock that might not have been attached before, or if the sku has changed for this countItem, then we can update the stock to refelect
+		if(!isNull(arguments.entity.getPhysicalCount()) && ((isNull(arguments.entity.getStock()) && !isNull(arguments.entity.getSku())) || (!isNull(arguments.entity.getStock()) && !isNull(arguments.entity.getSku()) && arguments.entity.getStock().getSku().getSkuID() != arguments.entity.getSku().getSkuID()))) {
+			arguments.entity.setStock(getStockService().getStockBySkuAndLocation(sku=arguments.entity.getSku(), location=arguments.entity.getPhysicalCount().getLocation()));
+		}
+		
+		// Return the entity
+		return arguments.entity;
+	}
+	
 	// ======================  END: Save Overrides ============================
 	
 	// ==================== START: Smart List Overrides =======================

@@ -67,7 +67,7 @@ component entityname="SlatwallPhysicalCountItem" table="SlatwallPhysicalCountIte
 	
 	// Non-Persistent Properties 
 	property name="physicalStatusTypeSystemCode" persistent="false";
-	property name="sku" persistent="false" cfc="Sku" fkcolumn="skuID" ;
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID" persistent="false";
 	
 
 	
@@ -110,6 +110,24 @@ component entityname="SlatwallPhysicalCountItem" table="SlatwallPhysicalCountIte
 	// ===============  END: Custom Formatting Methods =====================
 	
 	// ============== START: Overridden Implicet Getters ===================
+	
+	public any function getSku() {
+		if(!isNull(getStock())) {
+			return getStock().getSku();
+		}
+		if(structKeyExists(variables, "sku")) {
+			return variables.sku;
+		}
+	}
+	
+	public string function getSkuCode() {
+		if(!isNull(getStock())) {
+			return getStock().getSku().getSkuCode();
+		}
+		if(structKeyExists(variables, "skuCode")) {
+			return variables.skuCode;
+		}
+	}
 	
 	// ==============  END: Overridden Implicet Getters ====================
 
