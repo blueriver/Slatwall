@@ -37,47 +37,32 @@ Notes:
 
 --->
 <cfparam name="rc.physical" type="any" />
-
 <cfset discrepancyQuery = rc.physical.getDiscrepancyQuery() />
-<!---
-
-
-Sku Code    |    Location Name    |    Discrepancy	
-0981208			San Diego					-2		
-0981208			New York					 2		
-0981209			San Diego					 1		
-
-
-
-
-
-TIME		| System Says | Counting | Picked for Shipping	
-10:00am			1000										
-10:10							100							
-10:20			997								3			
-10:30							300							
-10:40			995								2			
-10:50							595							 (Count finished)
-10:55			889								6			
-============================================================
-11:00 RECONCILE												
-				995				997							
-
---->
 
 <cfoutput>
-	<table class="table table-striped table-bordered table-condensed">
+	<table class="table table-striped table-bordered table-condensed table-hover">
+		<thead>
 		<tr>
 			<th style="white-space:normal; vertical-align: text-bottom;">Sku Code</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">Product Name</th>
 			<th style="white-space:normal; vertical-align: text-bottom;">Location Name</th>
+			<th style="white-space:normal; vertical-align: text-bottom;">Quantity On Hand</th>
 			<th style="white-space:normal; vertical-align: text-bottom;">Discrepancy</th>
 		</tr>
+		</thead>
+		<tbody>
 		<cfif discrepancyQuery.recordCount>
 			<cfloop query="discrepancyQuery" >
 				<tr>
-					<td>#discrepancyQuery.skuCode#</td>
+					<td><a href="?slatAction=entity.detailsku&skuID=#discrepancyQuery.skuID#&productID=#discrepancyQuery.productID#">#discrepancyQuery.skuCode#</a></td>
+					<td>#discrepancyQuery.productName#</td>
 					<td>#discrepancyQuery.locationName#</td>
-					<td>#discrepancyQuery.discrepancy#</td>
+					<td>#discrepancyQuery.Qoh#</td>
+					<cfif discrepancyQuery.discrepancy gt 0>
+						<td style="color:##468847;">+#discrepancyQuery.discrepancy#</td>
+					<cfelse>
+						<td style="color: ##b94a48;">#discrepancyQuery.discrepancy#</td>
+					</cfif>	
 				</tr>
 			</cfloop>
 		<cfelse>
@@ -85,5 +70,6 @@ TIME		| System Says | Counting | Picked for Shipping
 				<td style="text-align:center;" colspan="3">There aren't any Physical Count Items.</td>
 			</tr>
 		</cfif>
+		</tbody>
 	</table>	
 </cfoutput>
