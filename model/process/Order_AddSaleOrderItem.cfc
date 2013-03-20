@@ -16,7 +16,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="shippingAddress";
 	property name="saveShippingAccountAddressFlag" hb_formFieldType="yesno";
 	property name="saveShippingAccountAddressName";
-	property name="customizationDisplayedFlag";
+	property name="assignedOrderItemAttributeSets";
 	
 	public any function init() {
 		return super.init();
@@ -55,7 +55,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 					arrayAppend(variables.orderFulfillmentIDOptions, {name=ofArr[i].getSimpleRepresentation(), value=ofArr[i].getOrderFulfillmentID()});	
 				}
 			}
-			arrayAppend(variables.orderFulfillmentIDOptions, {name=getHibachiScope().rbKey('define.new'), value=""});
+			arrayAppend(variables.orderFulfillmentIDOptions, {name=getHibachiScope().rbKey('define.new'), value="new"});
 		}
 		return variables.orderFulfillmentIDOptions;
 	}
@@ -73,7 +73,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			sl.addSelect('fulfillmentMethodType', 'fulfillmentMethodType');
 			
 			variables.fulfillmentMethodIDOptions = sl.getRecords();
-			arrayPrepend(variables.fulfillmentMethodIDOptions, {name=rbKey('define.select'), value='', fulfillmentMethodType=''});
 		}
 		return variables.fulfillmentMethodIDOptions;
 	}
@@ -88,7 +87,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			for(var i=1; i<=arrayLen(r); i++) {
 				arrayAppend(variables.shippingAccountAddressIDOptions, {name=r[i].getSimpleRepresentation(), value=r[i].getAccountAddressID()});	
 			}
-			arrayAppend(variables.shippingAccountAddressIDOptions, {name=getHibachiScope().rbKey('define.new'), value=""});
+			arrayAppend(variables.shippingAccountAddressIDOptions, {name=getHibachiScope().rbKey('define.new'), value="new"});
 		}
 		return variables.shippingAccountAddressIDOptions;
 	}
@@ -115,14 +114,4 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return [];
 	}
 	
-	public boolean function getCustomizationDisplayedFlag() {
-		if(!structKeyExists(variables, "customizationDisplayedFlag")) {
-			if(arrayLen(getAssignedOrderItemAttributeSets())) {
-				variables.customizationDisplayedFlag = 0;
-			} else {
-				variables.customizationDisplayedFlag = 1;
-			}
-		}
-		return variables.customizationDisplayedFlag;
-	}
 }

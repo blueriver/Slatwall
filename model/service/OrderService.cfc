@@ -690,7 +690,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		newOrderItem.setCurrencyCode( arguments.order.getCurrencyCode() );
 		newOrderItem.setQuantity( arguments.processObject.getQuantity() );
 		newOrderItem.setPrice( arguments.processObject.getPrice() );
-		newOrderItem.setSkuPrice( sku.getPriceByCurrencyCode( newOrderItem.getCurrencyCode() ) );
+		newOrderItem.setSkuPrice( arguments.processObject.getSku().getPriceByCurrencyCode( newOrderItem.getCurrencyCode() ) );
 		
 		// Save the new order items
 		this.saveOrderItem( newOrderItem );

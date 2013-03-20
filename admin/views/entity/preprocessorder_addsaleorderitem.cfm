@@ -67,8 +67,6 @@ Notes:
 					<h4>#attributeSet.getAttributeSetName()#</h4>
 					<cf_SlatwallAdminAttributeSetDisplay attributeSet="#attributeSet#" edit="#rc.edit#" />
 				</cfloop>
-				<!--- Hidden field so that we pass validation on submit --->
-				<input type="hidden" name="customizationDisplayedFlag" value="1" />
 				
 				<!--- Order Fulfillment --->
 				<hr />
@@ -76,13 +74,13 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderFulfillmentID" edit="#rc.edit#">
 				
 				<!--- New Order Fulfillment --->
-				<cf_HibachiDisplayToggle selector="select[name='orderFulfillmentID']" showValues="" loadVisible="#!len(rc.processObject.getOrderFulfillmentID())#">
+				<cf_HibachiDisplayToggle selector="select[name='orderFulfillmentID']" showValues="new">
 					
 					<!--- Fulfillment Method --->
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="fulfillmentMethodID" edit="#rc.edit#">
 					
 					<!--- Shipping Fulfillment Details --->
-					<cf_HibachiDisplayToggle selector="select[name='fulfillmentMethodID']" valueAttribute="fulfillmentmethodtype" showValues="shipping" loadVisible="false">
+					<cf_HibachiDisplayToggle selector="select[name='fulfillmentMethodID']" valueAttribute="fulfillmentmethodtype" showValues="shipping">
 						
 						<!--- Setup the primary address as the default account address --->
 						<cfset defaultValue = "" />
@@ -96,7 +94,7 @@ Notes:
 						<cf_HibachiPropertyDisplay object="#rc.processObject#" property="shippingAccountAddressID" edit="#rc.edit#" value="#defaultValue#" />
 						
 						<!--- New Address --->
-						<cf_HibachiDisplayToggle selector="select[name='shippingAccountAddressID']" showValues="" loadVisible="#!len(defaultValue)#">
+						<cf_HibachiDisplayToggle selector="select[name='shippingAccountAddressID']" showValues="new">
 							
 							<!--- Address Display --->
 							<cf_SlatwallAdminAddressDisplay address="#rc.processObject.getShippingAddress()#" fieldNamePrefix="shippingAddress." />
@@ -105,7 +103,7 @@ Notes:
 							<cf_HibachiPropertyDisplay object="#rc.processObject#" property="saveShippingAccountAddressFlag" edit="#rc.edit#" />
 							
 							<!--- Save New Address Name --->
-							<cf_HibachiDisplayToggle selector="input[name='saveShippingAccountAddressFlag']" loadVisible="#rc.processObject.getSaveShippingAccountAddressFlag()#">
+							<cf_HibachiDisplayToggle selector="input[name='saveShippingAccountAddressFlag']">
 								<cf_HibachiPropertyDisplay object="#rc.processObject#" property="saveShippingAccountAddressName" edit="#rc.edit#" />
 							</cf_HibachiDisplayToggle>
 							

@@ -40,11 +40,6 @@ Notes:
 <cfparam name="rc.account" type="any" default="#rc.accountPaymentMethod.getAccount()#">
 <cfparam name="rc.edit" type="boolean">
 
-<cfset selectedPaymentMethodType = "" />
-<cfif !rc.accountPaymentMethod.isNew()>
-	<cfset selectedPaymentMethodType = rc.accountPaymentMethod.getPaymentMethodType() />
-</cfif>
-
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" sRenderItem="detailaccount">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPaymentMethod#" edit="#rc.edit#"
@@ -66,7 +61,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="paymentMethod" edit="#rc.edit#">
 				
 				<!--- Credit Card Details --->
-				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard" loadVisible="#selectedPaymentMethodType eq 'creditCard'#">
+				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard">
 					<hr />
 					<h4>#$.slatwall.rbKey('admin.entity.detailsAccountPaymentMethod.creditCardDetials')#</h4>
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="nameOnCreditCard" edit="#rc.edit#" />
@@ -84,7 +79,7 @@ Notes:
 				--->
 				
 				<!--- Check Payment Details --->
-				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="check" loadVisible="#selectedPaymentMethodType eq 'check'#">
+				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="check">
 					<hr />
 					<h4>#$.slatwall.rbKey('admin.entity.detailsAccountPaymentMethod.checkDetails')#</h4>
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="bankRoutingNumber" edit="#rc.edit#" />
@@ -92,14 +87,14 @@ Notes:
 				</cf_HibachiDisplayToggle>
 				
 				<!--- Gift Card Details --->
-				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="giftCard" loadVisible="#selectedPaymentMethodType eq 'giftCard'#">
+				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="giftCard">
 					<hr />
 					<h4>#$.slatwall.rbKey('admin.entity.detailsAccountPaymentMethod.giftCardDetails')#</h4>
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="giftCardNumber" edit="#rc.edit#" />
 				</cf_HibachiDisplayToggle>
 				
 				<!--- Billing Address Details --->
-				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard,termPayment,check" loadVisible="#listFindNoCase('creditCard,termPayment,check', selectedPaymentMethodType)#">
+				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard,termPayment,check">
 					<hr />
 					<h4>#$.slatwall.rbKey('entity.accountpaymentmethod.billingaddress')#</h4>
 					<cf_SlatwallAdminAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="billingaddress." edit="#rc.edit#">

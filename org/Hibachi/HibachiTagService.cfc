@@ -112,4 +112,15 @@
 		<cfheader attributecollection="#arguments#"  />
 	</cffunction>
 	
+	<cffunction name="cfmodule">
+		<cfargument name="name" type="string" required="true" />
+		<cfargument name="attributeCollection" type="struct" required="true" />
+		
+		<cfset var returnContent = "" /> 
+		<cfsavecontent variable="returnContent">
+			<cfmodule name="#arguments.name#" attributecollection="#arguments.attributeCollection#" />
+		</cfsavecontent>
+		<cfreturn returnContent />
+	</cffunction>
+	
 </cfcomponent>
