@@ -94,7 +94,7 @@ function initUIElements( scopeSelector ) {
 		}
 		
 		// Open the correct sections
-		var loadValue = jQuery( jQuery(this).data('hibachi-selector') ).val();
+		var loadValue = jQuery( jQuery(this).data('hibachi-selector') + ':checked' ).val() || jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").val();
 		if(bindData.valueAttribute.length) {
 			var loadValue = jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").data(bindData.valueAttribute);
 		}
@@ -841,7 +841,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 						
 						// If there was a fieldClass then we need to add it to the input or select box
 						if(jQuery(cv).data('fieldclass') !== undefined) {
-							console.log(jQuery(rowSelector).children().last().find('input,select').addClass( jQuery(cv).data('fieldclass') ));
+							jQuery(rowSelector).children().last().find('input,select').addClass( jQuery(cv).data('fieldclass') )
 						}
 					});
 					
