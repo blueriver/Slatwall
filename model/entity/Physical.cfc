@@ -40,7 +40,7 @@ component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" 
 	
 	// Persistent Properties
 	property name="physicalID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="physicalName" ormtype="string" notNull="true";
+	property name="physicalName" ormtype="string";
 
 	// Related Object Properties (many-to-one)
 	property name="physicalStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="physicalStatusTypeID" hb_optionsSmartListData="f:parentType.systemCode=physicalStatusType";
