@@ -52,4 +52,4 @@ Notes:
 	<cf_HibachiListingColumn propertyIdentifier="addressZone.addressZoneName" />
 </cf_HibachiListingDisplay>
 
-<cf_HibachiActionCaller action="admin:entity.createtaxcategoryrate" class="btn btn-inverse" icon="plus icon-white" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" modal=true />
+<cf_HibachiActionCaller action="admin:entity.createtaxcategoryrate" class="btn" icon="plus" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" modal=true />

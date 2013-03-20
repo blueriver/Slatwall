@@ -112,17 +112,17 @@ component entityname="SlatwallPhysicalCountItem" table="SlatwallPhysicalCountIte
 	// ============== START: Overridden Implicet Getters ===================
 	
 	public any function getSku() {
-		if(!isNull(getStock())) {
-			return getStock().getSku();
-		}
 		if(structKeyExists(variables, "sku")) {
 			return variables.sku;
+		}
+		if(!isNull(getStock())) {
+			return getStock().getSku();
 		}
 	}
 	
 	public string function getSkuCode() {
-		if(!isNull(getStock())) {
-			return getStock().getSku().getSkuCode();
+		if(!isNull(getSku())) {
+			return getSku().getSkuCode();
 		}
 		if(structKeyExists(variables, "skuCode")) {
 			return variables.skuCode;

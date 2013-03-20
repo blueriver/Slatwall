@@ -50,5 +50,5 @@ Notes:
 		
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createalternateskucode" class="btn btn-inverse" icon="plus icon-white" queryString="skuID=#rc.sku.getSkuID()#" modal="true" />
+	<cf_HibachiActionCaller action="admin:entity.createalternateskucode" class="btn" icon="plus" queryString="skuID=#rc.sku.getSkuID()#" modal="true" />
 </cfoutput>
