@@ -53,4 +53,4 @@ Notes:
 	</cf_HibachiListingDisplay>
 </cfoutput>
 
-<cf_HibachiActionCaller action="admin:entity.createaddresszonelocation" class="btn btn-inverse" icon="plus icon-white" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />
+<cf_HibachiActionCaller action="admin:entity.createaddresszonelocation" class="btn" icon="plus" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" modal=true />

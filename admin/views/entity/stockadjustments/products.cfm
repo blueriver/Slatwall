@@ -66,5 +66,5 @@ Notes:
 	<cf_HibachiListingColumn propertyIdentifier="quantity" />
 </cf_HibachiListingDisplay>
 
-<cf_HibachiProcessCaller entity="#rc.stockAdjustment#" action="admin:entity.processStockAdjustment" processContext="addItems" class="btn btn-inverse" icon="plus icon-white" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#" modal=true />
+<cf_HibachiProcessCaller entity="#rc.stockAdjustment#" action="admin:entity.processStockAdjustment" processContext="addItems" class="btn" icon="plus" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#" modal=true />
 

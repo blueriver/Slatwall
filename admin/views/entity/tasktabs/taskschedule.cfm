@@ -51,5 +51,5 @@ Notes:
 	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
 </cf_HibachiListingDisplay>
 
-<cf_HibachiActionCaller action="admin:entity.createTaskSchedule" class="btn btn-inverse" icon="plus icon-white" 
+<cf_HibachiActionCaller action="admin:entity.createTaskSchedule" class="btn" icon="plus" 
                       querystring="taskID=#rc.task.getTaskID()#" modal=true/>

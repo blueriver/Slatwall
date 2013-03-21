@@ -55,5 +55,5 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="imageType.type" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:main.createimage" class="btn btn-inverse" icon="plus icon-white" queryString="productID=#rc.product.getProductID()#&directory=product&redirectAction=admin:entity.detailproduct" modal=true />
+	<cf_HibachiActionCaller action="admin:main.createimage" class="btn" icon="plus" queryString="productID=#rc.product.getProductID()#&directory=product&redirectAction=admin:entity.detailproduct" modal=true />
 </cfoutput>

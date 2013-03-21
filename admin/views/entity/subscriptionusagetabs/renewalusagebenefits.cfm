@@ -46,5 +46,5 @@ Notes:
 		
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createrenewalsubscriptionusagebenefits" class="btn btn-inverse" icon="plus icon-white" queryString="SubscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" />
+	<cf_HibachiActionCaller action="admin:entity.createrenewalsubscriptionusagebenefits" class="btn" icon="plus" queryString="SubscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" />
 </cfoutput>
