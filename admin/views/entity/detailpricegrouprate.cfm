@@ -36,27 +36,28 @@
 Notes:
 
 --->
-<cfparam name="rc.pricegrouprate" type="any" />
-<cfparam name="rc.pricegroup" type="any" default="#rc.pricegrouprate.getPriceGroup()#" />
+<cfparam name="rc.priceGroupRate" type="any" />
+<cfparam name="rc.priceGroup" type="any" default="#rc.priceGroupRate.getPriceGroup()#" />
 <cfparam name="rc.edit" type="boolean" default="false" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.pricegrouprate#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.pricegrouprate#" edit="#rc.edit#" 
+	<cf_HibachiEntityDetailForm object="#rc.priceGroupRate#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.priceGroupRate#" edit="#rc.edit#" 
 							  cancelAction="admin:entity.detailpricegroup"
-							  cancelQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" 
+							  cancelQueryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#" 
 							  backAction="admin:entity.detailpricegroup" 
-							  backQueryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" />
-		<cf_HibachiPropertyRow>
-			
+							  backQueryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#" />
+							  			
+		<input type="hidden" name="priceGroupID" value="#rc.priceGroup.getPricegroupID()#" />
+		<input type="hidden" name="priceGroup.priceGroupID" value="#rc.priceGroup.getPricegroupID()#" />
+		
+		<cf_HibachiPropertyRow>	
 			<cf_HibachiPropertyList>
-				<input type="hidden" name="pricegroup.pricegroupID" value="#rc.pricegroup.getPricegroupID()#" />
-				<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="amountType" fieldType="select" edit="#rc.edit#" />
-				<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="amount" edit="#rc.edit#" />
-				<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="roundingRule" edit="#rc.edit#" displayVisible="amountType:percentageOff" />
+				<cf_HibachiPropertyDisplay object="#rc.priceGroupRate#" property="amountType" fieldType="select" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.priceGroupRate#" property="amount" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule" edit="#rc.edit#" displayVisible="amountType:percentageOff" />
 				<!---<cf_HibachiPropertyDisplay object="#rc.pricegrouprate#" property="globalFlag" edit="#rc.edit#" />--->
 			</cf_HibachiPropertyList>
-			
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.pricegrouprate#">
