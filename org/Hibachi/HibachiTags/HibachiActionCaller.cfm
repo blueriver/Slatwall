@@ -69,25 +69,8 @@
 		
 	</cfif>
 	
-	<cfif attributes.title eq "">
-		<cfset attributes.title = attributes.hibachiScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
-		<cfif right(attributes.title, 8) eq "_missing" >
-			
-			<cfif left(actionItem, 4) eq "list" and len(actionItem) gt 4>
-				<cfset attributes.title = replace(attributes.hibachiScope.rbKey('admin.define.list_title'), "${itemEntityNamePlural}", attributes.hibachiScope.rbKey('entity.#actionItemEntityName#_plural'), "all") />
-			<cfelseif left(actionItem, 4) eq "edit" and len(actionItem) gt 4>
-				<cfset attributes.title = replace(attributes.hibachiScope.rbKey('admin.define.edit_title'), "${itemEntityName}", attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
-			<cfelseif left(actionItem, 4) eq "save" and len(actionItem) gt 4>
-				<cfset attributes.title = replace(attributes.hibachiScope.rbKey('admin.define.save_title'), "${itemEntityName}", attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
-			<cfelseif left(actionItem, 6) eq "create" and len(actionItem) gt 6>
-				<cfset attributes.title = replace(attributes.hibachiScope.rbKey('admin.define.create_title'), "${itemEntityName}", attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
-			<cfelseif left(actionItem, 6) eq "detail" and len(actionItem) gt 6>
-				<cfset attributes.title = replace(attributes.hibachiScope.rbKey('admin.define.detail_title'), "${itemEntityName}", attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
-			<cfelseif left(actionItem, 6) eq "delete" and len(actionItem) gt 6>
-				<cfset attributes.title = replace(attributes.hibachiScope.rbKey('admin.define.delete_title'), "${itemEntityName}", attributes.hibachiScope.rbKey('entity.#actionItemEntityName#'), "all") />
-			</cfif>
-			
-		</cfif>
+	<cfif not len(attributes.title)>
+		<cfset attributes.title = attributes.text />
 	</cfif>
 	
 	<cfif attributes.disabled>
