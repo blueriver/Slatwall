@@ -6,8 +6,8 @@
 	    }
 	},
 	"properties":{
-		"priceGroupName":					[{"contexts":"save","required":true}],
-		"priceGroupCode":					[{"contexts":"save","required":true}],
-		"priceGroupCode":					[{"contexts":"save","required":true,"dataType":"numeric"}]
+		"priceGroup":				[{"contexts":"save","required":true}],
+		"amountType":				[{"contexts":"save","required":true}],
+		"amount":					[{"contexts":"save","required":true,"dataType":"numeric"}]
 	}
 }
