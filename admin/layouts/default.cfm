@@ -78,6 +78,7 @@ Notes:
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.products_nav')#" icon="tags icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.listproduct" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listproducttype" type="list">
+							<cf_HibachiActionCaller action="admin:entity.listsku" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listoptiongroup" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listbrand" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listsubscriptionterm" type="list">
