@@ -13,7 +13,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="orderFulfillmentID" hb_formFieldType="select";
 	property name="fulfillmentMethodID" hb_formFieldType="select";
 	property name="shippingAccountAddressID" hb_formFieldType="select";
-	property name="shippingAddress";
+	property name="shippingAddress" cfc="Address" fieldType="many-to-one" persistent="false" fkcolumn="addressID" hb_populateValidationContext="full";
 	property name="saveShippingAccountAddressFlag" hb_formFieldType="yesno";
 	property name="saveShippingAccountAddressName";
 	property name="assignedOrderItemAttributeSets";
