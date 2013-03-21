@@ -36,28 +36,21 @@
 Notes:
 
 --->
-<cfparam name="rc.priceGroup" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.priceGroup" type="any" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.priceGroup#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.priceGroup#" edit="#rc.edit#">
-			<cf_HibachiActionCaller action="admin:entity.createpricegrouprate"  type="list" queryString="pricegroupID=#rc.pricegroup.getpricegroupID()#" modal="true" />
-		</cf_HibachiEntityActionBar>
-		
-		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.priceGroup#" property="activeFlag" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.priceGroup#" property="priceGroupName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.priceGroup#" property="priceGroupCode" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.priceGroup#" property="parentPriceGroup" edit="#rc.edit#">
-			</cf_HibachiPropertyList>
-		</cf_HibachiPropertyRow>
-		
-		<cf_HibachiTabGroup object="#rc.priceGroup#">
-			<cf_HibachiTab view="admin:entity/pricegrouptabs/pricegrouprates" />
-			<cf_HibachiTab view="admin:entity/pricegrouptabs/assignedaccounts" />
-		</cf_HibachiTabGroup>
-		
-	</cf_HibachiEntityDetailForm>
+
+<cf_HibachiListingDisplay smartList="#rc.priceGroup.getAccountsSmartList()#"
+						   recordEditAction="admin:entity.editaccount"
+						   recordDetailAction="admin:entity.detailaccount">
+						      
+	<cf_HibachiListingColumn propertyIdentifier="firstName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="lastName" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="company" />
+	<cf_HibachiListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="guestAccountFlag" sort="false" />
+	
+</cf_HibachiListingDisplay>
+
 </cfoutput>
