@@ -640,7 +640,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		newOrderItem.populate( arguments.data );
 		
 		// Setup the Order Fulfillment
-		if(len(processObject.getOrderFulfillmentID())) {
+		if(len(processObject.getOrderFulfillmentID()) && processObject.getOrderFulfillmentID() neq "new") {
 			
 			// get the correct order fulfillment to attach this item to
 			var orderFulfillment = this.getOrderFulfillment( processObject.getOrderFulfillmentID() );	
@@ -649,13 +649,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// Setup a new order fulfillment
 			var orderFulfillment = this.newOrderFulfillment();
-			orderFulfillment.setFulfillmentMethod( getFulfillmentService().getFulfillmentMethod( arguments.processObject.getOrderFulfillmentMethodID() ) );
+			orderFulfillment.setFulfillmentMethod( getFulfillmentService().getFulfillmentMethod( arguments.processObject.getFulfillmentMethodID() ) );
 			
 			// Populate the shipping address info
 			if(orderFulfillment.getFulfillmentMethod.getFulfillmentMethodType() eq "shipping") {
 				
 				// Check for an accountAddress
-				if(len(arguments.processObject.getShippingAccountAddressID())) {
+				if(len(arguments.processObject.getShippingAccountAddressID()) && arguments.processObject.getShippingAccountAddressID() neq "new") {
 					
 					// Find the correct account address, and set it in the order fulfillment
 					var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
