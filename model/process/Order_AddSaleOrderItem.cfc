@@ -103,7 +103,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		if(!structKeyExists(variables, "saveShippingAccountAddressFlag")) {
 			variables.saveShippingAccountAddressFlag = 1;
 		}
-		variables.saveShippingAccountAddressFlag;
+		return variables.saveShippingAccountAddressFlag;
 	}
 	
 	public any function getAssignedOrderItemAttributeSets() {
