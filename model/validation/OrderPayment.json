@@ -27,6 +27,6 @@
 		    {"contexts":"chargePreAuthorization,authorizeAndCharge,authorize,credit","inList":"ostNew,ostProcessing,ostOnHold"},
 			{"contexts":"edit","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"}
 		],
-		"termPaymentAccount":	[{"contexts":"save","required":true,"condition":"paymentTypeTermPayment"}]
+		"termPaymentAccount":	[{"contexts":"save","required":true,"conditions":"paymentTypeTermPayment"}]
 	}
 }
