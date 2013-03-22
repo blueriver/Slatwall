@@ -329,13 +329,13 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 			rep &= "#getOrder().getOrderNumber()# - ";
 		}
 		rep &= "#rbKey('enity.orderFulfillment.orderFulfillmentType.#getFulfillmentMethodType()#')#";
-		if(getFulfillmentMethodType() eq "shipping" && !getAddress().isNew()) {
+		if(getFulfillmentMethodType() eq "shipping" && !isNull(getAddress()) && !getAddress().isNew() && !isNull(getAddress().getStreetAddress())) {
 			rep &= " - #getAddress().getStreetAddress()#";
 		}
-		if(getFulfillmentMethodType() eq "email" && !getEmailAddress()) {
+		if(getFulfillmentMethodType() eq "email" && !isNull(getEmailAddress())) {
 			rep &= " - #getEmailAddress()#";
 		}
-		if(getFulfillmentMethodType() eq "email" && !getAccountEmailAddress()) {
+		if(getFulfillmentMethodType() eq "email" && !isNull(getAccountEmailAddress())) {
 			rep &= " - #getAccountEmailAddress().getEmailAddress()#";
 		}
 		return rep;
