@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete"],
 	"properties":{
 		"addressZoneName":		[{"contexts":"save","required":true}],
 		"shippingMethods":		[{"contexts":"delete","maxCollection":0}],

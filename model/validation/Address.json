@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete"],
 	"conditions":{
 	    "streetAddressRequired":{
 	        "country.streetAddressRequiredFlag":{"eq":true}

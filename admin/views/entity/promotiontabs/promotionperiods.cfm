@@ -42,9 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.promotion.getPromotionPeriodsSmartList()#"
 							   recordEditAction="admin:entity.editPromotionPeriod"
-							   recorddetailaction="admin:entity.detailpromotionperiod"
-							   recordDeleteAction="admin:entity.deletepromotionperiod"
-							   recordDeleteQueryString="redirectAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotionperiods">
+							   recorddetailaction="admin:entity.detailpromotionperiod">
 		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
 		<cf_HibachiListingColumn propertyIdentifier="endDateTime" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUseCount" />

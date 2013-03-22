@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete","updateSkus","addOptionGroup","addOption","addSubscriptionTerm"],
 	"properties":{
 		"urlTitle":							[{"contexts":"save","required":true,"unique":true}],
 		"productName":						[{"contexts":"save","required":true}],

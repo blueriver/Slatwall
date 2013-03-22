@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete","createPassword"],
 	"properties":{
 		"firstName":							[{"contexts":"save","required":true}],
 		"lastName":								[{"contexts":"save","required":true}],

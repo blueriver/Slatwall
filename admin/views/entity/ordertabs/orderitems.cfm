@@ -67,8 +67,6 @@ Notes:
 	<cfif listFindNoCase("otSalesOrder,otExchangeOrder", rc.order.getOrderType().getSystemCode())>
 		<h4>#$.slatwall.rbKey('admin.entity.ordertabs.orderitems.saleItems')#</h4>
 		<cf_HibachiListingDisplay smartList="#rc.order.getSaleItemSmartList()#"
-								  recordDeleteAction="admin:entity.deleteorderitem"
-								  recordDeleteActionQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#"
 								  recordDetailAction="admin:entity.detailorderitem"
 								  recordDetailQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.order.getOrderID()#"
 								  recordEditAction="admin:entity.editorderitem"
