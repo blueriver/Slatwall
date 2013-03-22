@@ -210,24 +210,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 							// Set the value of the property as the loaded entity
 							_setProperty(currentProperty.name, thisEntity );
 							
-							/*
-							// Setup a save validation context so that the sub-property gets validated correctly
-							var saveValidationContext = "save";
-							
-							// if an hb_populateValidationContext exists for this property, then use that instead
-							if(structKeyExists(currentProperty,  "hb_populateValidationContext")) {
-								saveValidationContext = currentProperty.hb_populateValidationContext;
-							}
-							
-							// Call the save method for this sub property entity and pass in the data
-							thisEntity = entityService.invokeMethod( "save#listLast(currentProperty.cfc,'.')#", {1=thisEntity, 2=manyToOneStructData, 3=saveValidationContext});
-							
-							// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
-							if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
-								arrayAppend(getPopulatedSubProperties(), currentProperty.name);
-							}
-							*/
-							
 							// Populate the sub property
 							thisEntity.populate(manyToOneStructData);
 							
@@ -283,26 +265,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 							// If there were additional values in the data array, then we use those values to populate the entity, and validating it aswell.
 							if(structCount(oneToManyArrayData[a]) gt 1 && (!structKeyExists(currentProperty, "hb_populateEnabled") || currentProperty.hb_populateEnabled eq false)) {
 								
-								/*
-								// Setup a save validation context so that the sub-property gets validated correctly
-								var saveValidationContext = "save";
-							
-								// if an hb_populateValidationContext exists for this property, then use that instead
-								if(structKeyExists(currentProperty,  "hb_populateValidationContext")) {
-									saveValidationContext = currentProperty.hb_populateValidationContext;
-								}
-							
-								// Call the save method for this sub property entity and pass in the data
-								thisEntity = entityService.invokeMethod( "save#listLast(currentProperty.cfc,'.')#", {1=thisEntity, 2=oneToManyArrayData[a], 3=saveValidationContext});
-								
-								// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
-								if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
-									arrayAppend(getPopulatedSubProperties(), currentProperty.name);
-								}
-								*/
-								
 								// Populate the sub property
-								thisEntity.populate(oneToManyArrayData);
+								thisEntity.populate(oneToManyArrayData[a]);
 								
 								if(!structKeyExists(variables, "populatedSubProperties") || !structKeyExists(variables.populatedSubProperties, currentProperty.name)) {
 									variables.populatedSubProperties[ currentProperty.name ] = [];
