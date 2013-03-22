@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete","chargePreAuthorization","authorizeAndCharge","authorize","credit"],
 	"conditions":{
 	    "paymentTypeCreditCard":{
 	        "getPaymentMethodType":{"eq":"creditCard"}

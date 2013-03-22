@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete"],
 	"properties":{
 		"subscriptionTermName":			[{"contexts":"save","required":true}],
 		"initialTerm":					[{"contexts":"save","required":true}],

@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete"],
 	"conditions":{
 	    "isNotGlobal":{
 	        "getGlobalFlag":{"eq":0}

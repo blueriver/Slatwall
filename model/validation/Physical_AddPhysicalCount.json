@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete"],
 	"properties":{
 	    "location":								[{"required":true}],
 		"countPostDateTime":					[{"required":true,"dataType":"date"}],

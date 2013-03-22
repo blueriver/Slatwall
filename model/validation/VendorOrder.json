@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete","addOrderItems"],
 	"properties":{
 		"vendor":								[{"contexts":"save","required":true}],
 		"vendorOrderType":						[{"contexts":"save","required":true}],

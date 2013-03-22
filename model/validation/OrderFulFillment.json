@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","placeOrder","fulfillItems"],
 	"conditions":{
 	    "fulfillmentTypeShipping":{
 	        "fulfillmentMethodType":{"eq":"shipping"}

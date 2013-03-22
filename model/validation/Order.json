@@ -1,5 +1,4 @@
 {
-	"contexts":["save","edit","delete","addOrderItem","addOrderPayment","addPromotionCode","placeOnHold","placeOrder","takeOffHold","cancelOrder","closeOrder","createReturn"],
 	"properties":{
 		"orderType":		[{"contexts":"save","required":true}],
 		"orderStatusType":	[{"contexts":"save","required":true}],
