@@ -527,7 +527,7 @@ function setupEventHandlers() {
 		});
 		
 		jQuery.ajax({
-			url: hibachi.rootURL + '/' + jQuery(this).attr('href'),
+			url: jQuery(this).attr('href'),
 			method: 'post',
 			data: data,
 			dataType: 'json',
