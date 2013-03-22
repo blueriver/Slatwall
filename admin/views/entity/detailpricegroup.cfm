@@ -50,7 +50,9 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.priceGroup#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.priceGroup#" property="priceGroupName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.priceGroup#" property="priceGroupCode" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.priceGroup#" property="parentPriceGroup" edit="#rc.edit#">
+				<cfif not arrayLen(rc.priceGroup.getParentPriceGroupOptions())>
+					<cf_HibachiPropertyDisplay object="#rc.priceGroup#" property="parentPriceGroup" edit="#rc.edit#">
+				</cfif>
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
