@@ -2,7 +2,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 
 	property name="hibachiErrors" type="any" persistent="false";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
 	property name="hibachiMessages" type="any" persistent="false";
-	property name="populatedSubProperties" type="array" persistent="false";
+	property name="populatedSubProperties" type="struct" persistent="false";
 	property name="validations" type="struct" persistent="false";
 	
 	// ========================= START: ACCESSOR OVERRIDES ==========================================
@@ -22,15 +22,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		}
 		return variables.hibachiMessages;
 	}
-	
-	// @hint Returns the populatedSubProperties array, if one hasn't been setup yet it returns a new one
-	public array function getPopulatedSubProperties() {
-		if(!structKeyExists(variables, "populatedSubProperties")) {
-			variables.populatedSubProperties = [];
-		}
-		return variables.populatedSubProperties; 
-	}
-	
+
 	// =========================  END:  ACCESSOR OVERRIDES ==========================================
 	// ========================== START: ERRORS / MESSAGES ==========================================
 	
@@ -75,8 +67,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		var returnString = "";
 		
 		for(var errorName in getErrors()) {
-			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
-				returnString &= "<p class='error'>" & getErrors()[errorName][i] & "</p>";
+			
+			// Make sure the error isn't a processObjects error or populate error
+			if(!listFindNoCase("processObjects,populate", errorName)) {
+				for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
+					returnString &= "<p class='error'>" & getErrors()[errorName][i] & "</p>";
+				}
 			}
 		}
 		
@@ -85,10 +81,17 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint helper method to have these error messages be passed to the current hibachiScope
 	public void function showErrors() {
+		
+		// Loop over all errors
 		for(var errorName in getErrors()) {
-			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
-				getHibachiScope().showMessage(getErrors()[errorName][i], "error");
+			
+			// Make sure the error isn't a processObjects error or populate error
+			if(!listFindNoCase("processObjects,populate", errorName)) {
+				for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
+					getHibachiScope().showMessage(getErrors()[errorName][i], "error");
+				}	
 			}
+			
 		}
 	}
 	
@@ -151,8 +154,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint Public populate method to utilize a struct of data that follows the standard property form format
 	public any function populate( required struct data={} ) {
-		// Param the ignoreProperties key so that we can count on it later
-		param name="arguments.data.ignoreProperties" default="";
+		
 		
 		// Get an array of All the properties for this object
 		var properties = getProperties();
@@ -163,8 +165,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			// Set the current property into variable of meta data
 			var currentProperty = properties[p];
 			
-			// Check to see if this property has a key in the data that was passed in, and also make sure that key isn't in the ignoreProperties list
-			if( structKeyExists(arguments.data, currentProperty.name) && !listFindNoCase(arguments.data.ignoreProperties, currentProperty.name) ) {
+			// Check to see if this property has a key in the data that was passed in
+			if( structKeyExists(arguments.data, currentProperty.name) ) {
 			
 				// (SIMPLE) Do this logic if this property should be a simple value, and the data passed in is a simple value
 				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) ) {
@@ -208,6 +210,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 							// Set the value of the property as the loaded entity
 							_setProperty(currentProperty.name, thisEntity );
 							
+							/*
 							// Setup a save validation context so that the sub-property gets validated correctly
 							var saveValidationContext = "save";
 							
@@ -223,6 +226,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 							if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
 								arrayAppend(getPopulatedSubProperties(), currentProperty.name);
 							}
+							*/
+							
+							// Populate the sub property
+							thisEntity.populate(manyToOneStructData);
+							
+							// Tell the variables scope that we populated this sub-property
+							variables.populatedSubProperties[ currentProperty.name ] = thisEntity;
+							
 							
 						// If there were no additional values in the strucuture then we just try to get the entity and set it... in this way a null is a valid option
 						} else {
@@ -271,6 +282,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 							
 							// If there were additional values in the data array, then we use those values to populate the entity, and validating it aswell.
 							if(structCount(oneToManyArrayData[a]) gt 1 && (!structKeyExists(currentProperty, "hb_populateEnabled") || currentProperty.hb_populateEnabled eq false)) {
+								
+								/*
 								// Setup a save validation context so that the sub-property gets validated correctly
 								var saveValidationContext = "save";
 							
@@ -286,6 +299,15 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 								if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
 									arrayAppend(getPopulatedSubProperties(), currentProperty.name);
 								}
+								*/
+								
+								// Populate the sub property
+								thisEntity.populate(oneToManyArrayData);
+								
+								if(!structKeyExists(variables, "populatedSubProperties") || !structKeyExists(variables.populatedSubProperties, currentProperty.name)) {
+									variables.populatedSubProperties[ currentProperty.name ] = [];
+								}
+								arrayAppend(variables.populatedSubProperties[ currentProperty.name ], thisEntity);
 							}
 						}
 					}
@@ -358,28 +380,40 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		
 		getService("hibachiValidationService").validate(object=this, context=arguments.context);
 		
-		// Validate each of the objects that are in the populatedSubProperties array, This array has properties added to it during the populate method
-		for(var p=1; p<=arrayLen(getPopulatedSubProperties()); p++) {
+		// If there were sub properties that have been populated, then we should validate each of those
+		if(structKeyExists(variables, "populatedSubProperties")) {
 			
-			// Get the values of this sub property
-			var subPropertyValue = invokeMethod("get#getPopulatedSubProperties()[p]#");
-			
-			// If the value is Null then throw an error because the populatedSubProperties array should have never had this propertyName in it
-			if(!isNull(subPropertyValue)) {
-				// If the results are an array, then loop over them
-				if(isArray(subPropertyValue)) {
+			// Loop ove each property that was populated
+			for(var propertyName in variables.populatedSubProperties) {
+				
+				// setup the correct validation context for this property
+				var propertyContext = getService("hibachiValidationService").getPopulatedPropertyValidationContext( object=this, propertyName=propertyName, originalContext=arguments.context );
+				var entityService = getService( "hibachiService" ).getServiceByEntityName( listLast(getPropertyMetaData(propertyName).cfc,'.') );
+				
+				// If this was a one-to-many than validate each
+				if(isArray(variables.populatedSubProperties[ propertyName ])) {
 					
-					// Loop over each object in the subProperty array and validate it
-					for(var e=1; e<=arrayLen(subPropertyValue); e++ ) {
-					
-						// If after validation that sub object has errors, add a failure to this object
-						if(subPropertyValue[e].hasErrors()) {
-							getHibachiErrors().addError(getPopulatedSubProperties()[p], rbKey('validate.#getClassName()#.#getPopulatedSubProperties()[p]#.populate'));
+					// Loop over each one that was populated and call the validation
+					for(var i=1; i<=arrayLen(variables.populatedSubProperties[ propertyName ]); i++) {
+						
+						// Validate this one
+						variables.populatedSubProperties[ propertyName ][i].validate( propertyContext );
+						
+						// If it had errors, add an error to this entity
+						if(variables.populatedSubProperties[ propertyName ][i].hasErrors()) {
+							getHibachiErrors().addError('populate', propertyName);
 						}
 					}
-				} else if(isObject(subPropertyValue)) {
-					if(subPropertyValue.hasErrors()) {
-						getHibachiErrors().addError(getPopulatedSubProperties()[p], rbKey('validate.#getClassName()#.#getPopulatedSubProperties()[p]#.populate'));
+					
+				// If this was a many-to-one, then just validate it
+				} else {
+					
+					// Validate the property
+					variables.populatedSubProperties[ propertyName ].validate( propertyContext );
+					
+					// If it had errors, add an error to this entity
+					if(variables.populatedSubProperties[ propertyName ].hasErrors()) {
+						getHibachiErrors().addError('populate', propertyName);
 					}
 				}
 			}

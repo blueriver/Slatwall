@@ -350,7 +350,7 @@ component extends="FW1.framework" {
 		if(request.context.ajaxRequest) {
 			request.context.ajaxResponse["messages"] = request.context.messages;
 			if(structKeyExists(request, "exception")) {
-				request.context.ajaxResponse["exception"] = request.exception;	
+				request.context.ajaxResponse["exception"] = request.exception;
 			}
 			writeOutput( serializeJSON(request.context.ajaxResponse) );
 			abort;

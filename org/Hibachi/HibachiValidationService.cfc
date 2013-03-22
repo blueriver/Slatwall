@@ -31,17 +31,7 @@
 			}
 			
 			// Make sure that the validation struct has contexts & properties
-			param name="validation.contexts" default="#arrayNew(1)#";
 			param name="validation.properties" default="#structNew()#";
-			
-			// Add any custom contexts
-			if(structKeyExists(customValidation, "contexts")) {
-				for(var c=1; c<=arrayLen(customValidation.contexts); c++) {
-					if(!arrayFindNoCase(validation.contexts, customValidation.contexts[c])) {
-						arrayAppend(validation.contexts, customValidation.contexts[c]);
-					}
-				}
-			}
 			
 			// Add any additional rules
 			if(structKeyExists(customValidation, "properties")) {
@@ -91,7 +81,7 @@
 									constraintValue=rule[ constraint ]
 								};
 								if(structKeyExists(rule, "conditions")) {
-									constraintDetails.conditions = listToArray(rule.conditions);
+									constraintDetails.conditions = rule.conditions;
 								}
 								arrayAppend(contextValidations[ property ], constraintDetails);
 							}
@@ -104,6 +94,62 @@
 		return variables.validationByContextStructs["#arguments.object.getClassName()#-#arguments.context#"];
 	}
 	
+	public boolean function getConditionsMeetFlag( required any object, required string conditions) {
+		
+		var validationStruct = getValidationStruct(object=arguments.object);
+		var conditionsArray = listToArray(arguments.conditions);
+		
+		// Loop over each condition to check if it is true
+		for(var x=1; x<=arrayLen(conditionsArray); x++) {
+			
+			var conditionName = conditionsArray[x];
+			
+			// Make sure that the condition is defined in the meta data
+			if(structKeyExists(validationStruct, "conditions") && structKeyExists(validationStruct.conditions, conditionName)) {
+				
+				var allConditionConstraintsMeet = true;
+				
+				// Loop over each propertyIdentifier for this condition
+				for(var conditionPropertyIdentifier in validationStruct.conditions[ conditionName ]) {
+					
+					// Loop over each constraint for the property identifier to validate the constraint
+					for(var constraint in validationStruct.conditions[ conditionName ][ conditionPropertyIdentifier ]) {
+						if(structKeyExists(variables, "validate_#constraint#") && !invokeMethod("validate_#constraint#", {object=arguments.object, propertyIdentifier=conditionPropertyIdentifier, constraintValue=validationStruct.conditions[ conditionName ][ conditionPropertyIdentifier ][ constraint ]})) {
+							allConditionConstraintsMeet = false;	
+						}
+					}
+				}
+				
+				// If all constraints of this condition are meet, then we no that one condition is meet for this rule.
+				if( allConditionConstraintsMeet ) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public any function getPopulatedPropertyValidationContext(required any object, required string propertyName, string context="") {
+		
+		var validationStruct = getValidationStruct(object=arguments.object);
+		
+		if(structKeyExists(validationStruct, "populatedPropertyValidation") && structKeyExists(validationStruct.populatedPropertyValidation, arguments.propertyName)) {
+			for(var v=1; v <= arrayLen(validationStruct.populatedPropertyValidation[arguments.propertyName]); v++) {
+				var conditionsMeet = true;
+				if(structKeyExists(validationStruct.populatedPropertyValidation[arguments.propertyName][v], "conditions")) {
+					conditionsMeet = getConditionsMeetFlag(object=arguments.object, conditions=validationStruct.populatedPropertyValidation[arguments.propertyName][v].conditions);
+				}
+				if(conditionsMeet) {
+					return validationStruct.populatedPropertyValidation[arguments.propertyName][v].validate;
+				}
+			}
+
+		}
+		
+		return arguments.context;
+	}
+	
 	public any function validate(required any object, string context="", boolean setErrors=true) {
 		// Setup an error bean
 		if(setErrors) {
@@ -112,58 +158,31 @@
 			var errorBean = getTransient("hibachiErrors");
 		}
 		
-		// Get the valdiations for this context
-		var contextValidations = getValidationsByContext(object=arguments.object, context=arguments.context);
-		
-		// Loop over each property in the validations for this context
-		for(var propertyIdentifier in contextValidations) {
+		if(!isBoolean(arguments.context) || arguments.context) {
+			// Get the valdiations for this context
+			var contextValidations = getValidationsByContext(object=arguments.object, context=arguments.context);
 			
-			// First make sure that the proerty exists
-			if(arguments.object.hasProperty( propertyIdentifier )) {
+			// Loop over each property in the validations for this context
+			for(var propertyIdentifier in contextValidations) {
 				
-				// Loop over each of the constraints for this given property
-				for(var c=1; c<=arrayLen(contextValidations[ propertyIdentifier ]); c++) {
+				// First make sure that the proerty exists
+				if(arguments.object.hasProperty( propertyIdentifier )) {
 					
-					// Check that one of the conditions were meet if there were conditions for this constraint
-					var conditionMeet = true;
-					if(structKeyExists(contextValidations[ propertyIdentifier ][c], "conditions")) {
-						conditionMeet = false;
-						// Loop over each condition to check if it is true
-						for(var x=1; x<=arrayLen(contextValidations[ propertyIdentifier ][c].conditions); x++) {
-							
-							var conditionName = contextValidations[ propertyIdentifier ][c].conditions[x];
-							var fullValidationStruct = getValidationStruct( object=arguments.object );
-							
-							// Make sure that the condition is defined in the meta data
-							if(structKeyExists(fullValidationStruct, "conditions") && structKeyExists(fullValidationStruct.conditions, conditionName)) {
-								
-								var allConditionConstraintsMeet = true;
-								
-								// Loop over each propertyIdentifier for this condition
-								for(var conditionPropertyIdentifier in fullValidationStruct.conditions[ conditionName ]) {
-									
-									// Loop over each constraint for the property identifier to validate the constraint
-									for(var constraint in fullValidationStruct.conditions[ conditionName ][ conditionPropertyIdentifier ]) {
-										if(structKeyExists(variables, "validate_#constraint#") && !invokeMethod("validate_#constraint#", {object=arguments.object, propertyIdentifier=conditionPropertyIdentifier, constraintValue=fullValidationStruct.conditions[ conditionName ][ conditionPropertyIdentifier ][ constraint ]})) {
-											allConditionConstraintsMeet = false;	
-										}
-									}
-								}
-								
-								// If all constraints of this condition are meet, then we no that one condition is meet for this rule.
-								if( allConditionConstraintsMeet ) {
-									conditionMeet = true;
-									break;
-								}
-							}
+					// Loop over each of the constraints for this given property
+					for(var c=1; c<=arrayLen(contextValidations[ propertyIdentifier ]); c++) {
+						
+						// Check that one of the conditions were meet if there were conditions for this constraint
+						var conditionMeet = true;
+						if(structKeyExists(contextValidations[ propertyIdentifier ][c], "conditions")) {
+							conditionMeet = getConditionsMeetFlag( object=arguments.object, conditions="contextValidations[ propertyIdentifier ][ c ].conditions" );
 						}
-					}
-					
-					// Now if a condition was meet we can actually test the individual validation rule
-					if(conditionMeet) {
-						validateConstraint(object=arguments.object, propertyIdentifier=propertyIdentifier, constraintDetails=contextValidations[ propertyIdentifier ][c], errorBean=errorBean, context=arguments.context);	
-					}
-				}	
+						
+						// Now if a condition was meet we can actually test the individual validation rule
+						if(conditionMeet) {
+							validateConstraint(object=arguments.object, propertyIdentifier=propertyIdentifier, constraintDetails=contextValidations[ propertyIdentifier ][c], errorBean=errorBean, context=arguments.context);	
+						}
+					}	
+				}
 			}
 		}
 		

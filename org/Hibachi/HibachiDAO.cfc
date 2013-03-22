@@ -46,7 +46,23 @@
 	
 	
 		public any function save( required target ) {
+			
+			// Save this entity
 			entitySave( target );
+			
+			// Digg Deeper into any populatedSubProperties and save those as well.
+			if(!isNull(target.getPopulatedSubProperties())) {
+				for(var p in target.getPopulatedSubProperties()) {
+            		if(isArray(target.getPopulatedSubProperties()[p])) {
+            			for(var e=1; e<=arrayLen(target.getPopulatedSubProperties()[p]); e++) {
+            				this.save(target=target.getPopulatedSubProperties()[p][e]);	
+            			}
+            		} else {
+            			this.save(target=target.getPopulatedSubProperties()[p]);
+            		}
+            	}
+            }
+			
 			return target;
 		}
 		

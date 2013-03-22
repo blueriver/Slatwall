@@ -654,10 +654,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					
 					// Find the correct account address, and set it in the order fulfillment
 					var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
-					orderFulfillment.setAccountAddress( newAccountAddress );
+					orderFulfillment.setAccountAddress( accountAddress );
 				
 				// Otherwise setup a new shipping address
 				} else {
+					
+					// First we need to persist the address from the processObject
+					getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
 					
 					// If we are supposed to save the new address, then we can do that here
 					if(arguments.processObject.getSaveShippingAccountAddressFlag()) {
