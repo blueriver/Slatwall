@@ -416,9 +416,10 @@ component output="false" accessors="true" extends="HibachiController" {
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc[ entityPrimaryID ], 2=true} );
 		
 		var requirePreProcess = false;
+		var processObjectExists = getFW().getBeanFactory().containsBean( "#arguments.entityName#_#arguments.rc.processContext#");
 		
 		// Check to see if this is an AJAX Request, and there is a pre-process object... then call preprocess first
-		if(arguments.rc.ajaxRequest && getFW().getBeanFactory().containsBean( "#arguments.entityName#_#arguments.rc.processContext#")) {
+		if( arguments.rc.ajaxRequest && processObjectExists ) {
 			// Setup the processObject in the RC so that we can use it for our form if needed
 			rc.processObject = entity.getProcessObject( arguments.rc.processContext );
 			
@@ -445,6 +446,20 @@ component output="false" accessors="true" extends="HibachiController" {
 				// Set the page title to the correct rbKey
 				rc.pageTitle = rbKey( "#replace(arguments.rc.entityActionDetails.thisAction,':','.','all')#.#rc.processContext#" );
 				
+				// Load up any ID's that were passed in
+				loadEntitiesFromRCIDs( arguments.rc );
+				
+				// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
+				var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
+				if(!hasSuccess) {
+					arguments.rc.entityActionDetails.sRenderItem = "detail#arguments.rc.entityActionDetails.itemEntityName#";
+				}
+				var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
+				if(!hasFaliure) {
+					arguments.rc.entityActionDetails.fRenderItem = "preprocess#arguments.rc.entityActionDetails.itemEntityName#";
+				}
+				populateRedirectQS( arguments.rc );
+				
 				// Setup the response
 				arguments.rc.ajaxResponse["preProcessView"] = getFW().view( "#replace(arguments.rc.entityActionDetails.preProcessAction,'.','/')#_#arguments.rc.processContext#" );
 				
@@ -466,6 +481,12 @@ component output="false" accessors="true" extends="HibachiController" {
 					
 				// Show all of the specific messages & error messages for the entity
 				entity.showErrorsAndMessages();
+				
+				// If there was a processObject then show all of it's errors & messages as well
+				if(processObjectExists) {
+					// Show all of the specific messages & error messages for the process Object
+					entity.getProcessObject(rc.processContext).showErrorsAndMessages();
+				}
 				
 				// If this is an ajax request then setup the response
 				if(arguments.rc.ajaxRequest) {
@@ -491,6 +512,12 @@ component output="false" accessors="true" extends="HibachiController" {
 				
 				// Show all of the specific messages & error messages for the entity
 				entity.showErrorsAndMessages();
+				
+				// If there was a processObject then show all of it's errors & messages as well
+				if(processObjectExists) {
+					// Show all of the specific messages & error messages for the process Object
+					entity.getProcessObject(rc.processContext).showErrorsAndMessages();
+				}
 				
 				// If this is an ajax request then setup the response
 				if(arguments.rc.ajaxRequest) {
