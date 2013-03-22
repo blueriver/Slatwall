@@ -37,26 +37,25 @@ Notes:
 
 --->
 
-<cfparam name="rc.promotionperiod" type="any">
+<cfparam name="rc.promotionPeriod" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.promotionperiod.getPromotionQualifiersSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.promotionPeriod.getPromotionQualifiersSmartList()#"
 							   recordEditAction="admin:entity.editpromotionqualifier"
-							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
-							   recorddetailaction="admin:entity.detailpromotionqualifier"
-							   recordDeleteAction="admin:entity.deletepromotionqualifier"
-							   recordDeleteQueryString="redirectAction=admin:entity.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
+							   recordEditQueryString="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()#"
+							   recorddetailaction="admin:entity.detailpromotionqualifier">
+							      
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="qualifierType" filter="true" />
 	</cf_HibachiListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>
 		<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" buttonClass="btn-inverse">
-			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiermerchandise')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=merchandise" modal="true" />
-			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiersubscription')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=subscription" modal="true" />
-			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiercontentaccess')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=contentAccess" modal="true" />
-			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierfulfillment')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=fulfillment" modal="true" />
-			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierorder')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionperiod.getPromotionperiodID()#&qualifierType=order" modal="true" />
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiermerchandise')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()#&qualifierType=merchandise" modal="true" />
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiersubscription')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()#&qualifierType=subscription" modal="true" />
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifiercontentaccess')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()#&qualifierType=contentAccess" modal="true" />
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierfulfillment')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()#&qualifierType=fulfillment" modal="true" />
+			<cf_HibachiActionCaller text="#$.slatwall.rbKey('admin.pricing.createpromotionqualifierorder')#" action="admin:entity.createpromotionqualifier" querystring="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()#&qualifierType=order" modal="true" />
 		</cf_HibachiActionCallerDropdown>
 	</cfif>
 	

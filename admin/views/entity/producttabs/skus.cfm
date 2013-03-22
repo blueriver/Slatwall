@@ -46,8 +46,6 @@ Notes:
 							   recordDetailQueryString="productID=#rc.product.getProductID()#"
 							   recordEditAction="admin:entity.editsku"
 							   recordEditQueryString="productID=#rc.product.getProductID()#"
-							   recordDeleteAction="admin:entity.deletesku"
-							   recordDeleteQueryString="renderItem=detailproduct&productID=#rc.product.getProductID()#"
 							   selectFieldName="defaultSku.skuID"
 							   selectValue="#rc.product.getDefaultSku().getSkuID()#"
 							   selectTitle="#$.slatwall.rbKey('define.default')#">

@@ -44,15 +44,15 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.promotionperiod.getPromotionRewardsSmartList()#"
 							   recordEditAction="admin:entity.editpromotionreward"
 							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
-							   recorddetailaction="admin:entity.detailpromotionreward"
-							   recordDeleteAction="admin:entity.deletepromotionreward"
-							   recordDeleteQueryString="redirectAction=admin:entity.detailpromotionperiod&promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#">
+							   recorddetailaction="admin:entity.detailpromotionreward">
+							      
 		<cf_HibachiListingColumn propertyIdentifier="rewardType" tdclass="primary" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="amountType" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="amount" range="true" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerOrder" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerItem" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerQualification" filter="true" />
+		
 	</cf_HibachiListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>

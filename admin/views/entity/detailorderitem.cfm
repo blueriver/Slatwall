@@ -42,7 +42,8 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.orderItem#" sRenderItem="detailOrder" edit="#rc.edit#" >
-		<cf_HibachiEntityActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" showdelete="false" backaction="admin:entity.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
+		<cf_HibachiEntityActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#"
+								   backaction="admin:entity.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divclass="span4">
