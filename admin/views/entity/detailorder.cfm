@@ -143,10 +143,12 @@ Notes:
 				<cf_SlatwallAdminTabCustomAttributes object="#rc.order#" attributeSet="#attributeSet#" />
 			</cfloop>
 			
+			<!--- Account Details --->
+			<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" count="#rc.order.getPromotionCodesCount()#" />
+			
 			<!--- Comments --->
 			<cf_SlatwallAdminTabComments object="#rc.order#" />
 			
-			<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" count="#rc.order.getPromotionCodesCount()#" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

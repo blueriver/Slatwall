@@ -77,7 +77,7 @@ Notes:
 			<br />
 			
 			<!--- Term Account Info --->
-			<h4>Term Account Credit Details</h4>	
+			<h4>#$.slatwall.rbKey('admin.order.accountDetails.termAccountCreditDetails.info')#</h4>	
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
 			
