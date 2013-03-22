@@ -145,6 +145,8 @@ Notes:
 			
 			<!--- Comments --->
 			<cf_SlatwallAdminTabComments object="#rc.order#" />
+			
+			<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" count="#rc.order.getPromotionCodesCount()#" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>
