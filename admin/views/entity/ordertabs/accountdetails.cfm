@@ -37,16 +37,90 @@ Notes:
 
 --->
 <cfparam name="rc.order" type="any" />
-<cfparam name="rc.account" type="any" default="#rc.order.getaccount()#"/>
+<cfparam name="rc.account" type="any" default="#rc.order.getAccount()#"/>
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
 	<cf_HibachiPropertyRow>
-		<cf_HibachiPropertyList>		
-			<cf_HibachiPropertyDisplay object="#rc.account#" property="primaryAddress" edit="false">
-			<cf_HibachiPropertyDisplay object="#rc.account#" property="primaryEmailAddress" edit="false">
+		
+		<!--- Left Side --->
+		<cf_HibachiPropertyList divClass="span4">
+			
+			<!--- Email Addresses --->
+			<h4>#$.slatwall.rbKey('entity.accountEmailAddress_plural')#</h4>
+			<cf_HibachiListingDisplay smartList="#rc.account.getAccountEmailAddressesSmartList()#">
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailAddress" sort="true" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="accountEmailType.type" sort="true" filter="true" />
+				<cf_HibachiListingColumn propertyIdentifier="verifiedFlag" sort="true" filter="true" />
+			</cf_HibachiListingDisplay>
+			
+			<hr />
+			<br />
+			
+			<!--- Phone Numbers --->
+			<h4>#$.slatwall.rbKey('entity.accountPhoneNumber_plural')#</h4>
+			<cf_HibachiListingDisplay smartList="#rc.account.getAccountPhoneNumbersSmartList()#">
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="phoneNumber" sort="true" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="accountPhoneType.type" sort="true" filter="true" />
+			</cf_HibachiListingDisplay>
+			
+			<hr />
+			<br />
+			
+			<!--- Price Gruops --->
+			<h4>#$.slatwall.rbKey('entity.priceGroup_plural')#</h4>
+			<cf_HibachiListingDisplay smartList="#rc.account.getPriceGroupsSmartList()#">
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="priceGroupName" sort="true" search="true" />
+			</cf_HibachiListingDisplay>
+			
+			<hr />
+			<br />
+			
+			<!--- Term Account Info --->
+			<h4>Term Account Credit Details</h4>	
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
+			
 		</cf_HibachiPropertyList>
+		
+		<!--- Right Side --->
+		<cf_HibachiPropertyList divClass="span8">
+			
+			<!--- Payment Methods --->
+			<h4>#$.slatwall.rbKey('entity.accountPaymentMethod_plural')#</h4>
+			<cf_HibachiListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
+								  recordDetailAction="admin:entity.detailaccountpaymentmethod"
+								  recordDetailQueryString="accountID=#rc.account.getAccountID()#"
+								  recordDetailModal=true>
+								    
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" sort="true" />
+				<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" sort="true" filter="true" />
+			</cf_HibachiListingDisplay>
+			
+			<hr />
+			<br />
+			
+			<!--- Addresses --->
+			<h4>#$.slatwall.rbKey('entity.accountAddress_plural')#</h4>
+			<cf_HibachiListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#">
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountAddressName" sort="true" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="address.name" sort="true" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="address.streetAddress" sort="true" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="address.street2Address" sort="true" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="address.city" sort="true" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="address.stateCode" sort="true" search="true" filter="true" />
+				<cf_HibachiListingColumn propertyIdentifier="address.postalCode" sort="true" search="true" />
+			</cf_HibachiListingDisplay>	
+			
+			<hr />
+			<br />
+			
+			<!--- Comments --->
+			<h4>#$.slatwall.rbKey('entity.comment_plural')#</h4>
+			<cf_SlatwallAdminCommentsDisplay object="#rc.account#" adminComments="false" />
+			
+		</cf_HibachiPropertyList>
+		
 	</cf_HibachiPropertyRow>
+
 </cfoutput>
