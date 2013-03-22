@@ -2,12 +2,12 @@
 	"contexts":["save","edit","placeOrder","fulfillItems"],
 	"conditions":{
 	    "fulfillmentTypeShipping":{
-	        "assignedOrderItemAttributeSets":{"minCollection":1}
+	        "fulfillmentMethodType":{"eq":"shipping"}
 	    }
 	},
 	"properties":{
 		"orderFulfillmentID":		[{"contexts":"delete","maxValue":0}],
-		"orderFulfillmentItems":	[{"contexts":"save,placeOrder,fulfillItems","minCollection":1}],
+		"orderFulfillmentItems":	[{"contexts":"placeOrder,fulfillItems","minCollection":1}],
 		"quantityUndelivered":		[{"contexts":"fulfillItems","minValue":0}],
 		"address":					[{"contexts":"placeOrder","required":true}],
 		"shippingMethod":			[

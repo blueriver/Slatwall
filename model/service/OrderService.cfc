@@ -633,12 +633,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function processOrder_addSaleOrderItem(required any order, required any processObject) {
 		
-		// Create a new Order Item
-		var newOrderItem = this.newOrderItem();
-		
-		// Set any customizations
-		newOrderItem.populate( arguments.data );
-		
 		// Setup the Order Fulfillment
 		if(len(processObject.getOrderFulfillmentID()) && processObject.getOrderFulfillmentID() neq "new") {
 			
@@ -650,9 +644,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Setup a new order fulfillment
 			var orderFulfillment = this.newOrderFulfillment();
 			orderFulfillment.setFulfillmentMethod( getFulfillmentService().getFulfillmentMethod( arguments.processObject.getFulfillmentMethodID() ) );
+			orderFulfillment.setOrder( arguments.order );
 			
 			// Populate the shipping address info
-			if(orderFulfillment.getFulfillmentMethod.getFulfillmentMethodType() eq "shipping") {
+			if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
 				
 				// Check for an accountAddress
 				if(len(arguments.processObject.getShippingAccountAddressID()) && arguments.processObject.getShippingAccountAddressID() neq "new") {
@@ -668,32 +663,56 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					if(arguments.processObject.getSaveShippingAccountAddressFlag()) {
 						
 						var newAccountAddress = getAccountService().newAccountAddress();
+						newAccountAddress.setAccount( arguments.order.getAccount() );
 						newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
-						newAccountAddress.setAddress( arguments.processObject.getAddress() );
+						newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
 						orderFulfillment.setAccountAddress( newAccountAddress );
 						
 					// Otherwise just set then new address in the order fulfillment
 					} else {
 						
-						orderFulfillment.setShippingAddress( arguments.processObject.getAddress() );
+						orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
 					}
 				}
 			}
+			
+			orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
 		}
 		
-		// Set Header Info
-		newOrderItem.setOrderFulfillment( orderFulfillment );
-		newOrderItem.setOrder( arguments.order );
+		// Setup a boolean to see if we were able to just att this order item to an existing one
+		var foundItem = false;
 		
-		// Setup the Sku / Quantity / Price details
-		newOrderItem.setSku( arguments.processObject.getSku() );
-		newOrderItem.setCurrencyCode( arguments.order.getCurrencyCode() );
-		newOrderItem.setQuantity( arguments.processObject.getQuantity() );
-		newOrderItem.setPrice( arguments.processObject.getPrice() );
-		newOrderItem.setSkuPrice( arguments.processObject.getSku().getPriceByCurrencyCode( newOrderItem.getCurrencyCode() ) );
+		// Check for the sku in the orderFulfillment already
+		for(var i=1; i<=arrayLen(orderFulfillment.getOrderFulfillmentItems()); i++) {
+			if(orderFulfillment.getOrderFulfillmentItems()[i].getSku().getSkuID() eq arguments.processObject.getSku().getSkuID() && orderFulfillment.getOrderFulfillmentItems()[i].getPrice() eq arguments.processObject.getPrice()) {
+				foundItem = true;
+				orderFulfillment.getOrderFulfillmentItems()[i].setQuantity(orderFulfillment.getOrderFulfillmentItems()[i].getQuantity() + arguments.processObject.getQuantity());
+				break;
+			}
+		}
 		
-		// Save the new order items
-		this.saveOrderItem( newOrderItem );
+		// If we didn't already find the item in an orderFulfillment, then we can add it here.
+		if(!foundItem) {
+			// Create a new Order Item
+			var newOrderItem = this.newOrderItem();
+			
+			// Set any customizations
+			newOrderItem.populate( arguments.data );
+			
+			// Set Header Info
+			newOrderItem.setOrderFulfillment( orderFulfillment );
+			newOrderItem.setOrder( arguments.order );
+			
+			// Setup the Sku / Quantity / Price details
+			newOrderItem.setSku( arguments.processObject.getSku() );
+			newOrderItem.setCurrencyCode( arguments.order.getCurrencyCode() );
+			newOrderItem.setQuantity( arguments.processObject.getQuantity() );
+			newOrderItem.setPrice( arguments.processObject.getPrice() );
+			newOrderItem.setSkuPrice( arguments.processObject.getSku().getPriceByCurrencyCode( newOrderItem.getCurrencyCode() ) );
+			
+			// Save the new order items
+			this.saveOrderItem( newOrderItem );
+		}
 		
 		// Call the recalculate so that promotions get set
 		recalculateOrderAmounts( arguments.order );
@@ -1525,6 +1544,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
+	/*
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
 	
 		// If fulfillment method is shipping do this
@@ -1657,6 +1677,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Save the order Fulfillment
 		return getHibachiDAO().save(arguments.orderFulfillment);
 	}
+	*/
 	
 	// ======================  END: Save Overrides ============================
 	
