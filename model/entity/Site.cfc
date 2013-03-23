@@ -43,7 +43,6 @@ component displayname="Site" entityname="SlatwallSite" table="SlatwallSite" pers
 	property name="siteName" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
 	
-	
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
