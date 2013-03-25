@@ -40,9 +40,7 @@ Notes:
 
 <cfoutput>
 
-<cf_HibachiListingDisplay smartList="#rc.priceGroup.getAccountsSmartList()#"
-						   recordEditAction="admin:entity.editaccount"
-						   recordDetailAction="admin:entity.detailaccount">
+<cf_HibachiListingDisplay smartList="#rc.priceGroup.getAccountsOptionsSmartList()#" multiselectFieldName="accounts" multiselectValues="#rc.priceGroup.getAccountsAssignedIDList()#" edit="#rc.edit#">
 						      
 	<cf_HibachiListingColumn propertyIdentifier="firstName" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="lastName" search="true" />
