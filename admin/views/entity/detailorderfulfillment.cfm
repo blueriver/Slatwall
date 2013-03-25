@@ -57,7 +57,7 @@ Notes:
 			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="fulfillmentCharge" edit="#rc.edit#">
 				<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="false">
+					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="#rc.edit#">
 				</cfif>
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
