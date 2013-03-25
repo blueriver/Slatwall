@@ -168,7 +168,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Check for any redirect / render values that were passed in to be used by the create form, otherwise set them to a default
 		var hasSuccess = populateRenderAndRedirectSuccessValues( arguments.rc );
 		if(!hasSuccess) {
-			arguments.rc.entityActionDetails.sRedirectAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.list#arguments.rc.entityActionDetails.itemEntityName#";
+			arguments.rc.entityActionDetails.sRedirectAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.detail#arguments.rc.entityActionDetails.itemEntityName#";
 		}
 		var hasFaliure = populateRenderAndRedirectFailureValues( arguments.rc );
 		if(!hasFaliure) {
