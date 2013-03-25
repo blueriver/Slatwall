@@ -1,0 +1,5 @@
+{
+	"populatedPropertyValidation":{
+	    "address":[{"validate":"location"}]
+	}
+}

@@ -13,13 +13,24 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="orderFulfillmentID" hb_formFieldType="select";
 	property name="fulfillmentMethodID" hb_formFieldType="select";
 	property name="shippingAccountAddressID" hb_formFieldType="select";
-	property name="shippingAddress" cfc="Address" fieldType="many-to-one" persistent="false" fkcolumn="addressID" hb_populateValidationContext="full";
+	property name="shippingAddress" cfc="Address" fieldType="many-to-one" persistent="false" fkcolumn="addressID";
 	property name="saveShippingAccountAddressFlag" hb_formFieldType="yesno";
 	property name="saveShippingAccountAddressName";
 	property name="assignedOrderItemAttributeSets";
 	
 	public any function init() {
 		return super.init();
+	}
+	
+	public any function getFulfillmentMethodType() {
+		if(!isNull(getFulfillmentMethodID())) {
+			for(var i=1; i<=arrayLen(getFulfillmentMethodIDOptions()); i++) {
+				if(getFulfillmentMethodIDOptions()[i]['value'] eq getFulfillmentMethodID()) {
+					return getFulfillmentMethodIDOptions()[i]['fulfillmentMethodType'];
+				}
+			}
+		}
+		return "";
 	}
 	
 	public any function getSku() {

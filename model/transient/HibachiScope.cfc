@@ -44,6 +44,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	property name="content" type="any";
 	property name="product" type="any";
 	property name="productType" type="any";
+	property name="site" type="any";
 	
 	// Slatwall specific request smartList properties
 	property name="productSmartList" type="any";
@@ -95,6 +96,14 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 			variables.productType = getService("productService").newProductType();
 		}
 		return variables.productType;
+	}
+	
+	// Site
+	public any function getSite() {
+		if(!structKeyExists(variables, "site")) {
+			variables.site = getService("siteService").newSite();
+		}
+		return variables.site;
 	}
 	
 	// ================= Smart List Helper Methods =====================

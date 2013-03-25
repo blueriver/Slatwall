@@ -10,6 +10,12 @@
 			// Update Login / Logout if needed
 			autoLoginLogoutFromSlatwall( $=$ );
 			
+			// Setup the correct local in the request object for the current site
+			$.slatwall.setRBLocale( $.siteConfig('javaLocale') );
+			
+			// Setup the correct site in the request object
+			$.slatwall.setSite( $.slatwall.getService("siteService").getSiteByCMSSiteID( $.event('siteID') ) );
+			
 			// If we aren't on the homepage we can do our own URL inspection
 			if( len($.event('path')) ) {
 				
