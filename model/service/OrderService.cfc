@@ -1405,7 +1405,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}	
 	
 	// Process: Order Payment
-	public any function processOrderPayment_ProcessTransaction(required any orderPayment, required any processObject) {
+	public any function processOrderPayment_processTransaction(required any orderPayment, required any processObject) {
 		
 		if(arguments.processObject.getTransactionType()=="chargePreAuthorization") {
 			// We can loop over previous transactions for authroization codes to capture the amount we need.

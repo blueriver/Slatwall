@@ -36,7 +36,7 @@
 Notes:
 
 */
-component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="physicalService" hb_permission="this" {
+component entityname="SlatwallPhysical" table="SlatwallPhysical" output="false" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="physicalService" hb_permission="this" hb_processContexts="commit,addPhysicalCount" {
 	
 	// Persistent Properties
 	property name="physicalID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
