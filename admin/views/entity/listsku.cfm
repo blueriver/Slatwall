@@ -65,7 +65,7 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="listPrice" range=true />
 		<cf_HibachiListingColumn propertyIdentifier="price" range=true />
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="product.calculatedQATS" range=true />
+		<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range=true />
 	</cf_HibachiListingDisplay>
 	
 </cfoutput>
