@@ -42,9 +42,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" default="1";
 	property name="skuCode" ormtype="string" unique="true" length="50";
-	property name="listPrice" ormtype="big_decimal" formatType="currency" default="0";
-	property name="price" ormtype="big_decimal" formatType="currency" default="0";
-	property name="renewalPrice" ormtype="big_decimal" formatType="currency" default="0";
+	property name="listPrice" ormtype="big_decimal" hb_formatType="currency" default="0";
+	property name="price" ormtype="big_decimal" hb_formatType="currency" default="0";
+	property name="renewalPrice" ormtype="big_decimal" hb_formatType="currency" default="0";
 	property name="imageFile" ormtype="string" length="50";
 	property name="userDefinedPriceFlag" ormtype="boolean" default="0";
 	
@@ -87,21 +87,21 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Non-Persistent Properties
 	property name="adminIcon" persistent="false";
 	property name="assignedOrderItemAttributeSetSmartList" persistent="false";
-	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
+	property name="currentAccountPrice" type="numeric" hb_formatType="currency" persistent="false";
 	property name="currencyCode" type="string" persistent="false";
 	property name="currencyDetails" type="struct" persistent="false";
 	property name="defaultFlag" type="boolean" persistent="false";
 	property name="eligibleFulfillmentMethods" type="array" persistent="false";
 	property name="imageExistsFlag" type="boolean" persistent="false";
-	property name="livePrice" type="numeric" formatType="currency" persistent="false";
+	property name="livePrice" type="numeric" hb_formatType="currency" persistent="false";
 	property name="nextEstimatedAvailableDate" type="string" persistent="false";
 	property name="optionsDisplay" persistent="false";
 	property name="qats" type="numeric" persistent="false";
 	property name="salePriceDetails" type="struct" persistent="false";
-	property name="salePrice" type="numeric" formatType="currency" persistent="false";
+	property name="salePrice" type="numeric" hb_formatType="currency" persistent="false";
 	property name="salePriceDiscountType" type="string" persistent="false";
 	property name="salePriceDiscountAmount" type="string" persistent="false";
-	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
+	property name="salePriceExpirationDateTime" type="date" hb_formatType="datetime" persistent="false";
 	
 	
     public boolean function getDefaultFlag() {

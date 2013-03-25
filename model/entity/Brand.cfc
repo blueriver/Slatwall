@@ -44,7 +44,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="publishedFlag" ormtype="boolean";
 	property name="urlTitle" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
 	property name="brandName" ormtype="string" hint="This is the common name that the brand goes by.";
-	property name="brandWebsite" ormtype="string" formatType="url" hint="This is the Website of the brand";
+	property name="brandWebsite" ormtype="string" hb_formatType="url" hint="This is the Website of the brand";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";

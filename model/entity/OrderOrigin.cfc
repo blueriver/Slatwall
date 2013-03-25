@@ -40,7 +40,7 @@ component displayname="Order Origin" entityname="SlatwallOrderOrigin" table="Sla
 	
 	// Persistent Properties
 	property name="orderOriginID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="activeFlag" ormtype="boolean" formatType="yesno";
+	property name="activeFlag" ormtype="boolean" hb_formatType="yesno";
 	property name="orderOriginName" ormtype="string";
 	property name="orderOriginType" ormtype="string" hb_formFieldType="select";
 	

@@ -43,7 +43,7 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="packingSlipNumber" ormtype="string";
 	property name="boxCount" ormtype="integer";
-	property name="receiverType" ormtype="string" formatType="rbKey" notnull="true";
+	property name="receiverType" ormtype="string" hb_formatType="rbKey" notnull="true";
 	
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";

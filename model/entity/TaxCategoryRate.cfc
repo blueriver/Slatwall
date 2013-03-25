@@ -40,7 +40,7 @@ component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" t
 	
 	// Persistent Properties
 	property name="taxCategoryRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="taxRate" ormtype="float" formatType="percentage";
+	property name="taxRate" ormtype="float" hb_formatType="percentage";
 	
 	// Related Object Properties
 	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID" hb_optionsNullRBKey="define.all";

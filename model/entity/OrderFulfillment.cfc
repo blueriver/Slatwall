@@ -80,11 +80,11 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="quantityDelivered" type="numeric" persistent="false";
 	property name="shippingMethodRate" type="array" persistent="false";
 	property name="shippingMethodOptions" type="array" persistent="false";
-	property name="subtotal" type="numeric" persistent="false" formatType="currency";
-	property name="subtotalAfterDiscounts" type="array" persistent="false";
-	property name="subtotalAfterDiscountsWithTax" type="array" persistent="false";    
-	property name="taxAmount" type="numeric" persistent="false" formatType="currency";
-	property name="totalShippingWeight" type="numeric" persistent="false" formatType="weight";
+	property name="subtotal" type="numeric" persistent="false" hb_formatType="currency";
+	property name="subtotalAfterDiscounts" type="array" persistent="false" hb_formatType="currency";
+	property name="subtotalAfterDiscountsWithTax" type="array" persistent="false" hb_formatType="currency";    
+	property name="taxAmount" type="numeric" persistent="false" hb_formatType="currency";
+	property name="totalShippingWeight" type="numeric" persistent="false" hb_formatType="weight";
 	
 	public void function removeAccountAddress() {
 		structDelete(variables, "AccountAddress");

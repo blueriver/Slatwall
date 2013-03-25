@@ -75,15 +75,15 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
-	property name="discountAmount" persistent="false" formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ;
-	property name="extendedPrice" persistent="false" formatType="currency";
-	property name="extendedPriceAfterDiscount" persistent="false" formatType="currency" ; 
+	property name="discountAmount" persistent="false" hb_formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ;
+	property name="extendedPrice" persistent="false" hb_formatType="currency";
+	property name="extendedPriceAfterDiscount" persistent="false" hb_formatType="currency" ; 
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
 	property name="quantityReceived" persistent="false";
 	property name="quantityUnreceived" persistent="false";
-	property name="taxAmount" persistent="false" formatType="currency" ;
-	property name="itemTotal" persistent="false" formatType="currency" ; 
+	property name="taxAmount" persistent="false" hb_formatType="currency" ;
+	property name="itemTotal" persistent="false" hb_formatType="currency" ; 
 
 
 	public numeric function getMaximumOrderQuantity() {

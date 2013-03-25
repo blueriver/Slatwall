@@ -81,18 +81,18 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
-	property name="addOrderItemSkuOptionsSmartList" persistent="false" formatType="currency";
-	property name="discountTotal" persistent="false" formatType="currency";
-	property name="itemDiscountAmountTotal" persistent="false" formatType="currency";
-	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency";
-	property name="fulfillmentTotal" persistent="false" formatType="currency";
-	property name="fulfillmentRefundTotal" persistent="false" formatType="currency";
-	property name="fulfillmentChargeAfterDiscountTotal" persistent="false" formatType="currency";
-	property name="orderDiscountAmountTotal" persistent="false" formatType="currency";
-	property name="paymentAmountTotal" persistent="false" formatType="currency";
-	property name="paymentAmountReceivedTotal" persistent="false" formatType="currency";
-	property name="paymentAmountCreditedTotal" persistent="false" formatType="currency";
-	property name="referencingPaymentAmountCreditedTotal" persistent="false" formatType="currency";
+	property name="addOrderItemSkuOptionsSmartList" persistent="false" hb_formatType="currency";
+	property name="discountTotal" persistent="false" hb_formatType="currency";
+	property name="itemDiscountAmountTotal" persistent="false" hb_formatType="currency";
+	property name="fulfillmentDiscountAmountTotal" persistent="false" hb_formatType="currency";
+	property name="fulfillmentTotal" persistent="false" hb_formatType="currency";
+	property name="fulfillmentRefundTotal" persistent="false" hb_formatType="currency";
+	property name="fulfillmentChargeAfterDiscountTotal" persistent="false" hb_formatType="currency";
+	property name="orderDiscountAmountTotal" persistent="false" hb_formatType="currency";
+	property name="paymentAmountTotal" persistent="false" hb_formatType="currency";
+	property name="paymentAmountReceivedTotal" persistent="false" hb_formatType="currency";
+	property name="paymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
+	property name="referencingPaymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
 	property name="paymentMethodOptionsSmartList" persistent="false";
 	property name="orderPaymentRefundOptions" persistent="false";
 	property name="promotionCodeList" persistent="false";
@@ -102,10 +102,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="quantityUnreceived" persistent="false";
 	property name="returnItemSmartList" persistent="false";
 	property name="saleItemSmartList" persistent="false";
-	property name="subTotal" persistent="false" formatType="currency";
-	property name="subTotalAfterItemDiscounts" persistent="false" formatType="currency";
-	property name="taxTotal" persistent="false" formatType="currency";
-	property name="total" persistent="false" formatType="currency";
+	property name="subTotal" persistent="false" hb_formatType="currency";
+	property name="subTotalAfterItemDiscounts" persistent="false" hb_formatType="currency";
+	property name="taxTotal" persistent="false" hb_formatType="currency";
+	property name="total" persistent="false" hb_formatType="currency";
 	property name="totalItems" persistent="false";
 	property name="totalQuantity" persistent="false";
 	property name="totalSaleQuantity" persistent="false";

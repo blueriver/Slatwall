@@ -60,10 +60,14 @@ Notes:
 				
 				<!--- Totals --->
 				<cf_HibachiPropertyTable>
-					<cf_HibachiPropertyTableBreak header="Status" />
+					<cf_HibachiPropertyTableBreak header="Summary" />
 					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="quantityUndelivered" edit="false" displayType="table">
 					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="quantityDelivered" edit="false" displayType="table">
-					<cf_HibachiPropertyTableBreak header="Fees" />
+					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="totalShippingWeight" edit="false" displayType="table">
+					<cf_HibachiPropertyTableBreak header="Totals" />
+					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="subtotalAfterDiscounts" edit="false" displayType="table">
+					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="taxAmount" edit="false" displayType="table">
+					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="subtotalAfterDiscountsWithTax" edit="false" displayType="table">
 					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="fulfillmentCharge" edit="false" displayType="table">
 					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="discountAmount" edit="false" displayType="table">
 					<cf_HibachiPropertyTableBreak header="" />

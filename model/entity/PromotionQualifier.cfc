@@ -40,19 +40,19 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	
 	// Persistent Properties
 	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="qualifierType" ormtype="string" formatType="rbKey";
+	property name="qualifierType" ormtype="string" hb_formatType="rbKey";
 	
-	property name="minimumOrderQuantity" ormtype="integer" formatType="custom";
-	property name="maximumOrderQuantity" ormtype="integer" formatType="custom";
-	property name="minimumOrderSubtotal" ormtype="big_decimal" formatType="custom";
-	property name="maximumOrderSubtotal" ormtype="big_decimal" formatType="custom";
-	property name="minimumItemQuantity" ormtype="integer" formatType="custom";
-	property name="maximumItemQuantity" ormtype="integer" formatType="custom";
-	property name="minimumItemPrice" ormtype="big_decimal" formatType="custom";
-	property name="maximumItemPrice" ormtype="big_decimal" formatType="custom";
-	property name="minimumFulfillmentWeight" ormtype="big_decimal" formatType="custom";
-	property name="maximumFulfillmentWeight" ormtype="big_decimal" formatType="custom";
-	property name="rewardMatchingType" ormtype="string" formatType="rbKey" hb_formFieldType="select";
+	property name="minimumOrderQuantity" ormtype="integer" hb_formatType="custom";
+	property name="maximumOrderQuantity" ormtype="integer" hb_formatType="custom";
+	property name="minimumOrderSubtotal" ormtype="big_decimal" hb_formatType="custom";
+	property name="maximumOrderSubtotal" ormtype="big_decimal" hb_formatType="custom";
+	property name="minimumItemQuantity" ormtype="integer" hb_formatType="custom";
+	property name="maximumItemQuantity" ormtype="integer" hb_formatType="custom";
+	property name="minimumItemPrice" ormtype="big_decimal" hb_formatType="custom";
+	property name="maximumItemPrice" ormtype="big_decimal" hb_formatType="custom";
+	property name="minimumFulfillmentWeight" ormtype="big_decimal" hb_formatType="custom";
+	property name="maximumFulfillmentWeight" ormtype="big_decimal" hb_formatType="custom";
+	property name="rewardMatchingType" ormtype="string" hb_formatType="rbKey" hb_formFieldType="select";
 	
 	// Related Entities (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";

@@ -77,14 +77,14 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="amountAuthorized" persistent="false" type="numeric" formatType="currency";
-	property name="amountCredited" persistent="false" type="numeric" formatType="currency";
-	property name="amountReceived" persistent="false" type="numeric" formatType="currency";
-	property name="amountUnassigned" persistent="false" type="numeric" formatType="currency";
-	property name="amountUnauthorized" persistent="false" formatType="currency";	
-	property name="amountUncredited" persistent="false" formatType="currency";
-	property name="amountUncaptured" persistent="false" formatType="currency";
-	property name="amountUnreceived" persistent="false" formatType="currency";
+	property name="amountAuthorized" persistent="false" type="numeric" hb_formatType="currency";
+	property name="amountCredited" persistent="false" type="numeric" hb_formatType="currency";
+	property name="amountReceived" persistent="false" type="numeric" hb_formatType="currency";
+	property name="amountUnassigned" persistent="false" type="numeric" hb_formatType="currency";
+	property name="amountUnauthorized" persistent="false" hb_formatType="currency";	
+	property name="amountUncredited" persistent="false" hb_formatType="currency";
+	property name="amountUncaptured" persistent="false" hb_formatType="currency";
+	property name="amountUnreceived" persistent="false" hb_formatType="currency";
 	property name="creditCardNumber" persistent="false";
 	property name="expirationDate" persistent="false";
 	property name="experationMonthOptions" persistent="false";

@@ -65,13 +65,13 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
-	property name="total" persistent="false" formatType="currency"; 
-	property name="subTotal" persistent="false" formatType="currency"; 
-	//property name="taxTotal" persistent="false" formatType="currency";
-	//property name="itemAmountTotal" persistent="false" formatType="currency" ;
-	//property name="fulfillmentAmountTotal" persistent="false" formatType="currency"; 
-	property name="orderAmountTotal" persistent="false" formatType="currency"; 
-	property name="fulfillmentTotal" persistent="false" formatType="currency";
+	property name="total" persistent="false" hb_formatType="currency"; 
+	property name="subTotal" persistent="false" hb_formatType="currency"; 
+	//property name="taxTotal" persistent="false" hb_formatType="currency";
+	//property name="itemAmountTotal" persistent="false" hb_formatType="currency" ;
+	//property name="fulfillmentAmountTotal" persistent="false" hb_formatType="currency"; 
+	property name="orderAmountTotal" persistent="false" hb_formatType="currency"; 
+	property name="fulfillmentTotal" persistent="false" hb_formatType="currency";
 	property name="vendorSkus" persistent="false";
 	property name="vendorSkusSmartList" persistent="false";
 	

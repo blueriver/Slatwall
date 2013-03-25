@@ -40,8 +40,8 @@ component displayname="Sku Currency" entityname="SlatwallSkuCurrency" table="Sla
 	
 	// Persistent Properties
 	property name="skuCurrencyID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="price" ormtype="big_decimal" formatType="currency" default="0";
-	property name="listPrice" ormtype="big_decimal" formatType="currency" default="0";
+	property name="price" ormtype="big_decimal" hb_formatType="currency" default="0";
+	property name="listPrice" ormtype="big_decimal" hb_formatType="currency" default="0";
 	
 	// Related Object Properties (many-to-one)
 	property name="currency" cfc="Currency" fieldtype="many-to-one" fkcolumn="currencyCode";

@@ -45,7 +45,7 @@ component displayname="Shipping Method Rate" entityname="SlatwallShippingMethodR
 	property name="maximumShipmentWeight" ormtype="int";
 	property name="minimumShipmentItemPrice" ormtype="big_decimal";
 	property name="maximumShipmentItemPrice" ormtype="big_decimal";
-	property name="defaultAmount" ormtype="big_decimal" formatType="custom";
+	property name="defaultAmount" ormtype="big_decimal" hb_formatType="custom";
 	property name="shippingIntegrationMethod" ormtype="string";
 	
 	// Related Object Properties (many-to-one)

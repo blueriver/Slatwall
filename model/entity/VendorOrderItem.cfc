@@ -41,7 +41,7 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	// Persistent Properties
 	property name="vendorOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="quantity" ormtype="integer" default=0;
-	property name="cost" ormtype="big_decimal" formatType="currency";
+	property name="cost" ormtype="big_decimal" hb_formatType="currency";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="estimatedReceivalDateTime" ormtype="timestamp";
 	
@@ -63,7 +63,7 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	
 	
 	// Non-persistant properties
-	property name="extendedCost" persistent="false" formatType="currency";
+	property name="extendedCost" persistent="false" hb_formatType="currency";
 	property name="quantityReceived" persistent="false";
 	property name="quantityUnreceived" persistent="false";
 	

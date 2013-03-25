@@ -65,7 +65,7 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	
 	// Non-Persistent Properties
 	property name="discountAmountDetails" persistent="false";
-	property name="totalChargeAfterDiscount" persistent="false" formatType="currency";
+	property name="totalChargeAfterDiscount" persistent="false" hb_formatType="currency";
 	
 	public struct function getDiscountAmountDetails() {
 		if(!structKeyExists(variables, "discountAmountDetails")) {
@@ -137,7 +137,7 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	// ================== START: Overridden Methods ========================
 	
 	public any function getSimpleRepresentation() {
-		return "#getShippingMethodRate().getShippingMethod().getShippingMethodName()# - #getFormattedValue('totalCharge')#";
+		return '#getShippingMethodRate().getShippingMethod().getShippingMethodName()# - #getFormattedValue("totalChargeAfterDiscount")#';	
 	}
 	
 	// ==================  END:  Overridden Methods ========================

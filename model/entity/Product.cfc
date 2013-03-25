@@ -102,11 +102,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="currencyCode" persistent="false";
-	property name="price" formatType="currency" persistent="false";
-	property name="listPrice" formatType="currency" persistent="false";
-	property name="livePrice" formatType="currency" persistent="false";
-	property name="salePrice" formatType="currency" persistent="false";
-	property name="currentAccountPrice" formatType="currency" persistent="false";
+	property name="price" hb_formatType="currency" persistent="false";
+	property name="listPrice" hb_formatType="currency" persistent="false";
+	property name="livePrice" hb_formatType="currency" persistent="false";
+	property name="salePrice" hb_formatType="currency" persistent="false";
+	property name="currentAccountPrice" hb_formatType="currency" persistent="false";
 	
 	public any function getProductTypeOptions( string baseProductType ) {
 		if(!structKeyExists(variables, "productTypeOptions")) {

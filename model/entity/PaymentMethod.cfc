@@ -49,7 +49,7 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	// Persistent Properties
 	property name="paymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="paymentMethodName" ormtype="string";
-	property name="paymentMethodType" ormtype="string" formatType="rbKey";
+	property name="paymentMethodType" ormtype="string" hb_formatType="rbKey";
 	property name="allowSaveFlag" ormtype="boolean" default="false";
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";

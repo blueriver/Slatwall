@@ -42,8 +42,8 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	property name="promotionPeriodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
-	property name="maximumUseCount" ormtype="integer" notnull="false" formatType="custom";
-	property name="maximumAccountUseCount" ormtype="integer" notnull="false" formatType="custom";
+	property name="maximumUseCount" ormtype="integer" notnull="false" hb_formatType="custom";
+	property name="maximumAccountUseCount" ormtype="integer" notnull="false" hb_formatType="custom";
 	
 	// Related Object Properties (many-to-one)
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
