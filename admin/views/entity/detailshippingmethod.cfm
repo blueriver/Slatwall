@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfif !rc.shippingMethod.isNew() && rc.shippingMethod.getShippingMethodRatesCount() lt 1>
-	<cfset request.slatwallScope.showMessageKey('admin.setting.detailshippingmethod.norates_info') />
+	<cfset request.slatwallScope.showMessageKey('admin.entity.detailshippingmethod.norates_info') />
 </cfif>
 
 <cfoutput>

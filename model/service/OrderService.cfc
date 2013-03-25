@@ -1547,9 +1547,35 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	/*
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
-	
+		
+		// If the shipping method or address changes
+		var oldAddressSerialized = arguments.orderFulfillment.getAddress().getSimpleValuesSerialized();
+		var oldShippingMethodID = "";
+		if(!isNull(arguments.orderFulfillment.getShippingMethod())) {
+			oldShippingMethodID = arguments.orderFulfillment.getShippingMethod().getShippingMethodID();
+		}
+		
+		// Call the generic save method to populate and validate
+		arguments.orderFulfillment = save(arguments.orderFulfillment, arguments.data);
+		
+		// If there were no errors, then we can check to see if the shippingMethod or the address changed
+		if(!arguments.orderFulfillment.hasErrors()) {
+			
+			// Check Address
+			if(oldAddressSerialized != arguments.orderFulfillment.getAddress().getSimpleValuesSerialized()) {
+				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
+			}
+			
+			// Check Shipping Method, and update charge
+			if(!isNull(arguments.orderFulfillment.getShippingMethod()) && arguments.orderFulfillment.getShippingMethod().getShippingMethodID() != oldShippingMethodID) {
+				arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getSelectedShippingMethodOption().getTotalCharge() );
+			}
+		}
+		
+		return arguments.orderFulfillment;
+		/*
 		// If fulfillment method is shipping do this
 		if(arguments.orderFulfillment.getFulfillmentMethodType() == "shipping") {
 			// define some variables for backward compatibility
@@ -1679,8 +1705,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 		// Save the order Fulfillment
 		return getHibachiDAO().save(arguments.orderFulfillment);
+		*/
 	}
-	*/
+	
 	
 	// ======================  END: Save Overrides ============================
 	

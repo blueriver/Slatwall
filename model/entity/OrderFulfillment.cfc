@@ -72,8 +72,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// Non-Persistent Properties
 	property name="accountAddressOptions" type="array" persistent="false";
-	property name="chargeAfterDiscount" type="numeric" persistent="false" formatType="currency";
-	property name="discountAmount" type="numeric" persistent="false" formatType="currency";
+	property name="chargeAfterDiscount" type="numeric" persistent="false" hb_formatType="currency";
+	property name="discountAmount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="fulfillmentMethodType" type="numeric" persistent="false";
 	property name="orderStatusCode" type="numeric" persistent="false";
 	property name="quantityUndelivered" type="numeric" persistent="false";
@@ -187,32 +187,45 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     
     public any function getShippingMethodOptions() {
     	if( !structKeyExists(variables, "shippingMethodOptions")) {
-    		// Set the options to a new array
-    		variables.shippingMethodOptions = [];
-    		
     		// If there aren't any shippingMethodOptions available, then try to populate this fulfillment
-    		if( !arrayLen(variables.fulfillmentShippingMethodOptions) ) {
+    		if( !arrayLen(getFulfillmentShippingMethodOptions()) ) {
     			getService("shippingService").updateOrderFulfillmentShippingMethodOptions( this );
     		}
     		
     		// At this point they have either been populated just before, or there were already options
-    		variables.shippingMethodOptions = variables.fulfillmentShippingMethodOptions;
+    		var oArr = [];
+    		var fsmo = getFulfillmentShippingMethodOptions();
+    		for(var i=1; i<=arrayLen(fsmo); i++) {
+    			arrayAppend(oArr, {name=fsmo[i].getSimpleRepresentation(), value=fsmo[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()});	
+    		}
+    		if(arrayLen(oArr)) {
+    			arrayPrepend(oArr, {name=rbKey('define.select'), value=''});
+    		} else {
+    			arrayPrepend(oArr, {name=rbKey('define.none'), value=''});
+    		}
+    		variables.shippingMethodOptions = oArr;
     	}
     	return variables.shippingMethodOptions; 
     }
     
 	public any function getShippingMethodRate() {
-    	if(!structKeyExists(variables, "shippingMethodRate")) {
+    	if(!isNull(getSelectedShippingMethodOption())) {
+    		return getSelectedShippingMethodOption().getShippingMethodRate();
+    	}
+    }
+    
+    public any function getSelectedShippingMethodOption() {
+    	if(!structKeyExists(variables, "selectedShippingMethodOption")) {
     		if(!isNull(getShippingMethod())) {
 	    		for(var i=1; i<=arrayLen(getFulfillmentShippingMethodOptions()); i++) {
 	    			if(getShippingMethod().getShippingMethodID() == getFulfillmentShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()) {
-	    				variables.shippingMethodRate = getFulfillmentShippingMethodOptions()[i].getShippingMethodRate();
+	    				variables.selectedShippingMethodOption = getFulfillmentShippingMethodOptions()[i];
 	    			}		 	
 	    		}	
 	    	}	
     	}
-    	if(structKeyExists(variables, "shippingMethodRate")) {
-    		return variables.shippingMethodRate;	
+    	if(structKeyExists(variables, "selectedShippingMethodOption")) {
+    		return variables.selectedShippingMethodOption;	
     	}
     }
     
