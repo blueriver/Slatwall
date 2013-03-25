@@ -21,20 +21,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	this.secureMethods='';
 	
-	// Account Payment
-	/*
-	public any function createAccountPayment( required struct rc ) {
-		param name="rc.accountID" type="string" default="";
-		param name="rc.paymentMethodID" type="string" default="";
-		
-		rc.accountPayment = getAccountService().newAccountPayment();
-		rc.account = getAccountService().getAccount( rc.accountID );
-		rc.paymentMethod = getPaymentService().getPaymentMethod( rc.paymentMethodID );
-		
-		rc.edit = true;
-	}
-	*/
-	
 	// Address Zone Location
 	public void function createAddressZoneLocation(required struct rc) {
 		editAddressZoneLocation(rc);
@@ -116,49 +102,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.entityActionDetails.createAction="admin:entity.createOrder";
 		getFW().setView("admin:entity.listorder");
 	}
-	
-	// Order Item
-	public any function createOrderItem(required struct rc) {
-		param name="rc.orderID" type="string" default="";
-		
-		rc.orderItem = getOrderService().newOrderItem();
-		rc.order = getOrderService().getOrder(rc.orderID);
-
-	}
-	
-	public any function addOrderItem(required struct rc) {
-		param name="rc.orderID" type="any" default="";
-		param name="rc.skuID" type="any" default="";
-		param name="rc.quantity" type="any" default="";
-		param name="rc.orderFulfillmentID" type="any" default="";
-		
-		arguments.rc.order = getOrderService().getOrder(arguments.rc.orderID);
-		var sku = getSkuService().getSku(arguments.rc.skuID);
-		var orderFulfillment = getOrderService().getOrderFulfillment(arguments.rc.orderFulfillmentID);
-		
-		if(!isNull(orderFulfillment)) {
-			getOrderService().addOrderItem(order=arguments.rc.order, sku=sku, quantity=arguments.rc.quantity, orderFulfillment=orderFulfillment);	
-		} else {
-			getOrderService().addOrderItem(order=arguments.rc.order, sku=sku, quantity=arguments.rc.quantity, data=arguments.rc);
-		}
-		
-		// If no errors redirect to success
-		if(!rc.order.hasErrors()) {
-			getFW().redirect(action='admin:entity.detailOrder', queryString='orderID=#rc.orderID#&messagekeys=admin.order.saveorder_success');	
-		}
-		
-		for( var p in arguments.rc.order.getErrors() ) {
-			var thisErrorArray = arguments.order.getErrors()[p];
-			for(var i=1; i<=arrayLen(thisErrorArray); i++) {
-				showMessage(thisErrorArray[i], "error");
-			}
-		}
-		
-		getFW().setView(action='admin:entity.detailOrder');
-		arguments.rc.slatAction = 'admin:entity.detailOrder';
-		arguments.rc.pageTitle = replace(getHibachiScope().rbKey('admin.define.detail'), "${itemEntityName}", getHibachiScope().rbKey('entity.order'));	
-	}
-
 	
 	// Order Payment
 	public any function createorderpayment( required struct rc ) {
