@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.physicalCount" type="any" />
+<cfset physicalStatus = rc.physicalCount.getPhysical().getPhysicalStatusType().getSystemCode() />
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.physicalCount.getPhysicalCountItemsSmartList()#"
@@ -53,5 +54,7 @@ Notes:
 		
 	</cf_HibachiListingDisplay>	
 	
-	<cf_HibachiActionCaller entity="#rc.physicalCount#" action="admin:entity.createphysicalcountitem" class="btn" icon="plus" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal="true" />
+	<cfif physicalStatus neq "pstClosed">
+		<cf_HibachiActionCaller entity="#rc.physicalCount#" action="admin:entity.createphysicalcountitem" class="btn" icon="plus" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal="true" />
+	</cfif>
 </cfoutput>

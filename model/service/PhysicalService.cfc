@@ -107,6 +107,8 @@ component extends="HibachiService" accessors="true" output="false" {
 			getStockService().processStockAdjustment(stockAdjustment=locationAdjustments[key], processContext="processAdjustment");	
 		}
 		
+		//set physical status to closed
+		arguments.physical.setPhysicalStatusType( getSettingService().getTypeBySystemCode('pstClosed') );
 	}
 	
 	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {

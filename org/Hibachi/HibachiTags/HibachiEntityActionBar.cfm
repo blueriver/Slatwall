@@ -96,7 +96,7 @@
 								</div>
 								
 								<!--- Detail: Actions --->
-								<cfif !attributes.object.isNew() && len(thistag.generatedcontent)>
+								<cfif !attributes.object.isNew() && len( trim( thistag.generatedcontent ) ) gt 1>
 									<div class="btn-group">
 										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i> #attributes.hibachiScope.rbKey('define.actions')# <span class="caret"></span></button>
 										<ul class="dropdown-menu pull-right">

@@ -86,6 +86,8 @@ Notes:
 					((SlatwallPhysicalCountItem.countPostDateTime IS NULL AND SlatwallPhysicalCount.countPostDateTime IS NOT NULL AND SlatwallInventory.createdDateTime IS NOT NULL AND SlatwallInventory.createdDateTime <= SlatwallPhysicalCount.countPostDateTime) OR SlatwallPhysicalCount.countPostDateTime IS NULL OR SlatwallInventory.createdDateTime IS NULL)
 				  AND
 				  	a.stockID = SlatwallStock.stockID 
+				  AND 
+				  	SlatwallPhysicalCount.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />	
 				) as 'Discrepancy'
 			FROM
 				SlatwallStock

@@ -38,12 +38,15 @@ Notes:
 --->
 <cfparam name="rc.physical" type="any">
 <cfparam name="rc.edit" type="boolean">
+<cfset physicalStatus = rc.physical.getPhysicalStatusType().getSystemCode() />
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.physical#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.physical#" edit="#rc.edit#">
-			<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" modal="true" />
-			<cf_HibachiProcessCaller action="admin:entity.processphysical" entity="#rc.physical#" processContext="commit" />
+			<cfif physicalStatus neq "pstClosed">
+				<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" modal="true" />
+				<cf_HibachiProcessCaller action="admin:entity.processphysical" entity="#rc.physical#" processContext="commit" />
+			</cfif>
 		</cf_HibachiEntityActionBar>
 
 		<cf_HibachiPropertyRow>

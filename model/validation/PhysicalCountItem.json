@@ -2,6 +2,6 @@
 	"properties":{
 	    "physicalCount":						[{"contexts":"save","required":true}],
 		"quantity":								[{"contexts":"save","required":true}],
-		"physicalStatusTypeSystemCode":			[{"contexts":"delete","inList":"pstOpen"}]
+		"physicalStatusTypeSystemCode":			[{"contexts":"delete,edit","inList":"pstOpen"}]
 	}
 }

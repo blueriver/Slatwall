@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.physical" type="any" />
+<cfset physicalStatus = rc.physical.getPhysicalStatusType().getSystemCode() />
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.physical.getPhysicalCountsSmartList()#" 
@@ -46,5 +47,7 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="location.locationName" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" class="btn" icon="plus" modal="true" />
+	<cfif physicalStatus neq "pstClosed">
+		<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" class="btn" icon="plus" modal="true" />
+	</cfif>
 </cfoutput>
