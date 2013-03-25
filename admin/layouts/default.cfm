@@ -107,8 +107,8 @@ Notes:
 							<cf_HibachiActionCaller action="admin:entity.liststockadjustment" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listphysical" type="list">
 						</cf_HibachiActionCallerDropdown>
-						<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
-						<cfif len(local.integrationSubsystems)>
+						<cfset local.integrationSubsystems = $.slatwall.getService('integrationService').getActiveFW1Subsystems() />
+						<cfif arrayLen(local.integrationSubsystems)>
 							<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.integrations_nav')#" icon="random icon-white" type="nav">
 								<cfloop array="#local.integrationSubsystems#" index="local.intsys"><cfif request.slatwallScope.authenticateAction('#local.intsys.subsystem#:main.default')><li><a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a></li></cfif></cfloop>
 							</cf_HibachiActionCallerDropdown>
