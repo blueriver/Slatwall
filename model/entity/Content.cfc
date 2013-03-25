@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Content" entityname="SlatwallContent" table="SlatwallContent" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="contentService" hb_permission="this" hb_parentPropertyName="parentContent" {
+component displayname="Content" entityname="SlatwallContent" table="SlatwallContent" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="contentService" hb_permission="this" hb_parentPropertyName="parentContent" hb_processContexts="createSku" {
 	
 	// Persistent Properties
 	property name="contentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
