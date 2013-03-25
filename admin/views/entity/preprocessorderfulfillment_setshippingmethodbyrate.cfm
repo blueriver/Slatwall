@@ -36,19 +36,21 @@
 Notes:
 
 --->
-<cfparam name="rc.priceGroup" type="any" />
+<cfparam name="rc.orderFulfillment" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-<cfoutput>
-
-<cf_HibachiListingDisplay smartList="#rc.priceGroup.getAccountsOptionsSmartList()#" multiselectFieldName="accounts" multiselectValues="#rc.priceGroup.getAccountsAssignedIDList()#" edit="#rc.edit#">
-						      
-	<cf_HibachiListingColumn propertyIdentifier="firstName" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="lastName" search="true" />
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="company" />
-	<cf_HibachiListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="guestAccountFlag" sort="false" />
+<cf_HibachiEntityProcessForm entity="#rc.orderFulfillment#" edit="#rc.edit#" sRedirectAction="admin:entity.editorderfulfillment">
 	
-</cf_HibachiListingDisplay>
-
-</cfoutput>
+	<cf_HibachiEntityActionBar type="preprocess" object="#rc.orderFulfillment#">
+	</cf_HibachiEntityActionBar>
+	
+	<cf_HibachiPropertyRow>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyTable>
+				
+			</cf_HibachiPropertyTable>
+			<cfdump var="#rc.orderFulfillment.getShippingMethodOptions()#" top=3 />
+		</cf_HibachiPropertyList>
+	</cf_HibachiPropertyRow>
+	
+</cf_HibachiEntityProcessForm>

@@ -302,6 +302,19 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		
 	}
 	
+	public string function getPropertyAssignedIDList( required string propertyName ) {
+		var cacheKey = "#arguments.propertyName#AssignedIDList";
+			
+		if(!structKeyExists(variables, cacheKey)) {
+			variables[ cacheKey ] = "";
+			var arr = this.invokeMethod("get#arguments.propertyName#");
+			for(var i=1; i<=arrayLen(arr); i++) {
+				variables[ cacheKey ] = listAppend(arr[i].getPrimaryIDValue(), arr[i].getPrimaryIDValue());
+			}
+		}
+		return variables[ cacheKey ];
+	}
+	
 	// @hint returns an array of name/value pairs that can function as options for a many-to-one property
 	public array function getPropertyOptions( required string propertyName ) {
 		
@@ -446,6 +459,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		} else if( left(arguments.missingMethodName, 6) == "hasAny") {
 			
 			return hasAnyInProperty(propertyName=right(arguments.missingMethodName, len(arguments.missingMethodName) - 6), entityArray=arguments.missingMethodArguments[1]);
+
+		// getXXXAssignedIDList()		Where XXX is a one-to-many or many-to-many property that we need an array of valid options returned 		
+		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 14) == "AssignedIDList") {
+			
+			return getPropertyAssignedIDList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-17) );
 			
 		// getXXXOptions()		Where XXX is a one-to-many or many-to-many property that we need an array of valid options returned 		
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 7) == "Options") {

@@ -42,6 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.orderFulfillment#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.orderFulfillment#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.orderFulfillment.getOrder().getOrderID()#">
+			<cf_HibachiProcessCaller entity="#rc.orderFulfillment#" action="admin:entity.preprocessorderfulfillment" processContext="setShippingMethodByRate" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" />
 			<cf_HibachiProcessCaller entity="#rc.orderFulfillment#" action="admin:entity.processorderfulfillment" processContext="fulfillItems" querystring="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" type="list" />
 		</cf_HibachiEntityActionBar>
 		
@@ -57,7 +58,7 @@ Notes:
 			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="fulfillmentCharge" edit="#rc.edit#">
 				<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="false">
+					<cf_HibachiPropertyDisplay object="#rc.orderFulfillment#" property="shippingMethod" edit="#rc.edit#">
 				</cfif>
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>

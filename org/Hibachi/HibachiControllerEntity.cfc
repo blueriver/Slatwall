@@ -389,11 +389,17 @@ component output="false" accessors="true" extends="HibachiController" {
 			rc[ arguments.entityName ] = entityService.invokeMethod("new#arguments.entityName#");
 		}
 		
-		// Setup the processObject in the RC so that we can use it for our form
-		rc.processObject = arguments.rc[ arguments.entityName ].getProcessObject( arguments.rc.processContext );
+		// Check to see if there is a process object
+		var processObjectExists = getFW().getBeanFactory().containsBean( "#arguments.entityName#_#arguments.rc.processContext#");
 		
-		// Populate the processObject with any data that might have come into the RC
-		rc.processObject.populate( rc );
+		if(processObjectExists) {
+			// Setup the processObject in the RC so that we can use it for our form
+			rc.processObject = arguments.rc[ arguments.entityName ].getProcessObject( arguments.rc.processContext );
+		
+			// Populate the processObject with any data that might have come into the RC
+			rc.processObject.populate( rc );	
+		}
+		
 		
 		// Set rc.edit to true because all property displays should be taking inputs
 		rc.edit = true;

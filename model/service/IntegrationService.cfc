@@ -45,23 +45,16 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	variables.paymentIntegrationCFCs = {};
 	variables.shippingIntegrationCFCs = {};
 	variables.authenticationIntegrationCFCs = {};
-	
-	public any function saveIntegration() {
-		if( structKeyExists(variables, "activeFW1Subsystems") ) {
-			structDelete(variables, "activeFW1Subsystems");
-		}
-		getHibachiAuthenticationService().clearActionPermissions();
-		return super.save(argumentCollection=arguments);
-	}
+
 	
 	public array function getActiveFW1Subsystems() {
 		if( !structKeyExists(variables, "activeFW1Subsystems") ) {
-			variables.activeFW1Subsystems = [];
-			
+			var afs = [];
 			var integrations = this.listIntegration({fw1ActiveFlag=1, fw1ReadyFlag=1, installedFlag=1});
 			for(var i=1; i<=arrayLen(integrations); i++) {
-				arrayAppend(variables.activeFW1Subsystems, {subsystem=integrations[i].getIntegrationPackage(), name=integrations[i].getIntegrationName()});
+				arrayAppend(afs, {subsystem=integrations[i].getIntegrationPackage(), name=integrations[i].getIntegrationName()});
 			}
+			variables.activeFW1Subsystems = afs;
 		}
 		return variables.activeFW1Subsystems;
 	}
@@ -294,6 +287,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// =====================  END: Process Methods ============================
 	
 	// ====================== START: Save Overrides ===========================
+	
+	public any function saveIntegration() {
+		if( structKeyExists(variables, "activeFW1Subsystems") ) {
+			structDelete(variables, "activeFW1Subsystems");
+		}
+		getHibachiAuthenticationService().clearActionPermissionDetails();
+		return super.save(argumentCollection=arguments);
+	}
 	
 	// ======================  END: Save Overrides ============================
 	
