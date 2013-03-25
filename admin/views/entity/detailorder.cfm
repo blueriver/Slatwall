@@ -65,7 +65,7 @@ Notes:
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList divclass="span4">
+			<cf_HibachiPropertyList divclass="span6">
 				
 				<!--- Account --->
 				<cfif rc.edit>
@@ -79,35 +79,40 @@ Notes:
 				<!--- Origin --->
 				<cf_HibachiPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
 				
-				<cf_HibachiPropertyDisplay object="#rc.order#" property="orderStatusType">
+				
 				<cfif !isNull(rc.order.getReferencedOrder())>
 					<cf_HibachiPropertyDisplay object="#rc.order#" property="referencedOrder" valuelink="?slatAction=admin:entity.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
 				</cfif>
-				<cfif !isNull(rc.order.getOrderOpenDateTime())>
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
-				</cfif>
-				<cfif !isNull(rc.order.getOrderCloseDateTime())>
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="orderCloseDateTime">
-				</cfif>
+				
 			</cf_HibachiPropertyList>
-			<cf_HibachiPropertyList divclass="span4">
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountTotal">
-					<hr />
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal">
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountCreditedTotal">
-					<cfif arrayLen(rc.order.getReferencingOrders())>
-						<hr />
-						<cf_HibachiPropertyDisplay object="#rc.order#" property="referencingPaymentAmountCreditedTotal">
+			<cf_HibachiPropertyList divclass="span6">
+				
+				<!--- Totals --->
+				<cf_HibachiPropertyTable>
+					<cf_HibachiPropertyTableBreak header="Overview" />
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="orderStatusType" edit="false" displayType="table">
+					<cfif !isNull(rc.order.getOrderOpenDateTime())>
+						<cf_HibachiPropertyDisplay object="#rc.order#" property="orderOpenDateTime" edit="false" displayType="table">
 					</cfif>
+					<cfif !isNull(rc.order.getOrderCloseDateTime())>
+						<cf_HibachiPropertyDisplay object="#rc.order#" property="orderCloseDateTime" edit="false" displayType="table">
+					</cfif>
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="subtotal" edit="false" displayType="table">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="taxtotal" edit="false" displayType="table">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="fulfillmenttotal" edit="false" displayType="table">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="discounttotal" edit="false" displayType="table">
+					<cf_HibachiPropertyTableBreak header="Payments" />
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountReceivedTotal" edit="false" displayType="table">
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="paymentAmountCreditedTotal" edit="false" displayType="table">
+					<cfif arrayLen(rc.order.getReferencingOrders())>
+						<cf_HibachiPropertyDisplay object="#rc.order#" property="referencingPaymentAmountCreditedTotal" edit="false" displayType="table">
+					</cfif>
+					<cf_HibachiPropertyTableBreak header="" />
+					<cf_HibachiPropertyDisplay object="#rc.order#" property="total" edit="false" displayType="table" titleClass="table-total" valueClass="table-total">
+				</cf_HibachiPropertyTable>
+				
 			</cf_HibachiPropertyList>
-			<cf_HibachiPropertyList divclass="span4">
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="subtotal">
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="taxtotal">
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="fulfillmenttotal">
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="discounttotal">
-					<hr />
-					<cf_HibachiPropertyDisplay object="#rc.order#" property="total">
-			</cf_HibachiPropertyList>
+			
 		</cf_HibachiPropertyRow>
 		
 		<!--- Tabs --->

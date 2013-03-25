@@ -38,40 +38,67 @@ Notes:
 --->
 <cfparam name="rc.orderItem" type="any" />
 <cfparam name="rc.order" type="any" default="#rc.orderItem.getOrder()#" />
+<cfparam name="rc.sku" type="any" default="#rc.orderItem.getSku()#" />
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.orderItem#" sRenderItem="detailOrder" edit="#rc.edit#" >
-		<cf_HibachiEntityActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#"
-								   backaction="admin:entity.detailOrder" backquerystring="orderID=#rc.order.getOrderID()#" />
+	<cf_HibachiEntityDetailForm object="#rc.orderItem#" edit="#rc.edit#" >
+		<cf_HibachiEntityActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.order.getOrderID()#" />
+		
+		<cfif rc.edit>
+			<!--- Hidden field to allow rc.order to be set on invalid submit --->
+			<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
+			
+			<!--- Hidden field to attach this to the order --->
+			<input type="hidden" name="order.orderID" value="#rc.order.getOrderID()#" />
+		</cfif>
 		
 		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList divclass="span4">
-				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="orderItemStatusType" edit="false" />
-				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="sku" edit="#rc.orderItem.isNew()#">
-				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="skuPrice" edit="false" />
-			</cf_HibachiPropertyList>
-			<cf_HibachiPropertyList divclass="span4">
-				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantity" edit="#rc.edit#" />
-				<cfif rc.orderItem.getOrderItemType().getSystemCode() eq "oitSale">
-					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityDelivered" edit="false" />
-					<hr />
-					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityUndelivered" edit="false" />
-				<cfelse>
-					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityReceived" edit="false" />
-					<hr />
-					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityUnreceived" edit="false" />
-				</cfif>
-			</cf_HibachiPropertyList>	
-			<cf_HibachiPropertyList divclass="span4">
-				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="price" edit="false" />
-				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="extendedPrice" edit="#rc.edit#" />
-				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="discountAmount" edit="false" />
+			
+			<cf_HibachiPropertyList divclass="span6">
+				<div class="well">
+					#rc.sku.getImage(width=100, height=100)#
+				</div>
 				<hr />
-				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="extendedPriceAfterDiscount" edit="false" />
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="price" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantity" edit="#rc.edit#" />
+			</cf_HibachiPropertyList>
+			
+			<cf_HibachiPropertyList divclass="span6">
+				
+				<!--- Totals --->
+				<cf_HibachiPropertyTable>
+					<cf_HibachiPropertyTableBreak header="Sku Details" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="skuPrice" edit="false" displayType="table" />
+					<cf_HibachiPropertyDisplay object="#rc.sku#" property="skuCode" edit="false" displayType="table">
+					<cfloop array="#rc.sku.getAlternateSkuCodes()#" index="asc">
+						<cf_HibachiPropertyDisplay object="#asc#" title="#asc.getAlternateSkuCodeType().getType()#" property="alternateSkuCode" edit="false" displayType="table">	
+					</cfloop>
+					<cfloop array="#rc.sku.getOptions()#" index="option">
+						<cf_HibachiPropertyDisplay object="#option#" title="#option.getOptionGroup().getOptionGroupName()#" property="optionName" edit="false" displayType="table">
+					</cfloop>
+					<cf_HibachiPropertyTableBreak header="Status" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="orderItemStatusType" edit="false" displayType="table" />
+					<cfif rc.orderItem.getOrderItemType().getSystemCode() eq "oitSale">
+						<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityDelivered" edit="false" displayType="table" />
+						<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityUndelivered" edit="false" displayType="table" />
+					<cfelse>
+						<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityReceived" edit="false" displayType="table" />
+						<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="quantityUnreceived" edit="false" displayType="table" />
+					</cfif>
+					<cf_HibachiPropertyTableBreak header="Price Totals" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="extendedPrice" edit="false" displayType="table" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="taxAmount" edit="false" displayType="table" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="discountAmount" edit="false" displayType="table" />
+					<cf_HibachiPropertyTableBreak />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="extendedPriceAfterDiscount" edit="false" displayType="table" titleClass="table-total" valueClass="table-total" />	
+					
+				</cf_HibachiPropertyTable>
+				
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
+		<!--- Tabs --->
 		<cf_HibachiTabGroup object="#rc.orderItem#" allowComments="true" allowCustomAttributes="true">
 			<cf_HibachiTab view="admin:entity/orderitemtabs/taxes" />
 			<cf_HibachiTab view="admin:entity/orderitemtabs/promotions" />
