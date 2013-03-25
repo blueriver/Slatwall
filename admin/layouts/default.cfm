@@ -107,15 +107,17 @@ Notes:
 							<cf_HibachiActionCaller action="admin:entity.liststockadjustment" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listphysical" type="list">
 						</cf_HibachiActionCallerDropdown>
-						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.integrations_nav')#" icon="random icon-white" type="nav">
-							<cf_HibachiActionCaller action="admin:entity.listintegration" type="list">
-							<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
-							<cfloop array="#local.integrationSubsystems#" index="local.intsys"><cfif request.slatwallScope.authenticateAction('#local.intsys.subsystem#:main.default')><li><a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a></li></cfif></cfloop>
-						</cf_HibachiActionCallerDropdown>
+						<cfset local.integrationSubsystems = request.slatwallScope.getService('integrationService').getActiveFW1Subsystems() />
+						<cfif len(local.integrationSubsystems)>
+							<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.integrations_nav')#" icon="random icon-white" type="nav">
+								<cfloop array="#local.integrationSubsystems#" index="local.intsys"><cfif request.slatwallScope.authenticateAction('#local.intsys.subsystem#:main.default')><li><a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a></li></cfif></cfloop>
+							</cf_HibachiActionCallerDropdown>
+						</cfif>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.settings_nav')#" icon="cog icon-white" type="nav">
 							<cfsavecontent variable="local.settingGroupOne">
 								<cf_HibachiActionCaller action="admin:entity.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
-								<cf_HibachiActionCaller action="admin:entity.listattributeset" type="list" divideAfter="true">
+								<cf_HibachiActionCaller action="admin:entity.listattributeset" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listintegration" type="list">
 							</cfsavecontent>
 							<cfif len(local.settingGroupOne)>
 								#local.settingGroupOne#
@@ -123,7 +125,7 @@ Notes:
 							</cfif>
 							<cf_HibachiActionCaller action="admin:entity.listaddresszone" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listcategory" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listcontent" type="list" divideAfter="true">
+							<cf_HibachiActionCaller action="admin:entity.listcontent" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listcountry" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listcurrency" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listemail" type="list">
