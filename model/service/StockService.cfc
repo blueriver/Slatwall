@@ -372,7 +372,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Set the status to closed
 		arguments.stockAdjustment.setStockAdjustmentStatusType( getSettingService().getTypeBySystemCode("sastClosed") );	
 	
-	return arguments.stockAdjustment;
+		return arguments.stockAdjustment;
 	}
 	
 	/*public any function processStockAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
