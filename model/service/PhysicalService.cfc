@@ -129,8 +129,15 @@ component extends="HibachiService" accessors="true" output="false" {
 		// If A count file was uploaded, then we can use that
 		if(!isNull(arguments.processObject.getCountFile())) {
 			
+			// Get the temp directory
+			var tempDir = getTempDirectory();
+			
+			// Upload to temp directory
+			var documentData = fileUpload( tempDir,'countFile','','makeUnique' );
+			var fileName = documentData.serverFile;
+			
 			// Read the File from temp directory 
-			var fileObj = fileOpen( arguments.processObject.getCountFile(), "read" );
+			var fileObj = fileOpen( "#tempDir##fileName#", "read" );
 			
 			// Setup a valid entity boolean to be set to true once one line meets requirements
 			var valid = 0; 
@@ -197,7 +204,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				}
 				
 				// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhysicalCountID()}.txt
-				filemove( arguments.processObject.getCountFile(), "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt" );
+				filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt" );
 				
 				// Add info for how many were matched
 				arguments.physical.addMessage('validInfo', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.validInfo', {valid=valid}));
