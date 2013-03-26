@@ -58,6 +58,7 @@ Notes:
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.physicalCountItem#" property="sku" edit="#rc.edit#" fieldtype="textautocomplete" autocompletePropertyIdentifiers="adminIcon,skuCode,product.productName,product.productType.productTypeName">
 				<cf_HibachiPropertyDisplay object="#rc.physicalCountItem#" property="quantity" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.physicalCountItem#" property="countPostDateTime" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 	</cf_HibachiEntityDetailForm>

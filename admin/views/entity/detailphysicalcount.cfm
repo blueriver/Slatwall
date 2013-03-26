@@ -60,6 +60,7 @@ Notes:
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.physicalCount#" property="location" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.physicalCount#" property="countPostDateTime" edit="#rc.edit#" />
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
