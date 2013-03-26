@@ -126,6 +126,16 @@
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#Success", invokeArguments);
 			}
 			
+			// Do email events
+			
+			// Do print events
+			
+			// Do export events
+			
+			// Do import events
+			
+			// Do task events
+			
 			return arguments.entity;
 		}
 		

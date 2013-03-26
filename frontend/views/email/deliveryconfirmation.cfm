@@ -38,6 +38,7 @@ Notes:
 --->
 <cfparam name="$" type="any" />
 <cfparam name="orderFulfillment" type="any" />
+<cfparam name="emailDetails" type="struct" />
 
 <!--- Currently setup to only send the most recent delivery confirmation --->
 <cfset local.orderDeliveries = orderFulfillment.getOrder().getOrderDeliveries() />
