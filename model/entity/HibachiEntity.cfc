@@ -62,9 +62,9 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 			
 			for(var at=1; at<=arrayLen(attributes); at++) {
 				if(structKeyExists(arguments.data, attributes[at].getAttributeCode())) {
-					var av = getAttributeValue(at.getAttributeCode, true);
+					var av = getAttributeValue(attributes[at].getAttributeCode, true);
 					av.setAttributeValue( data[ attributes[at].getAttributeCode() ]);
-					av.setAttribute(at);
+					av.setAttribute(attributes[at]);
 					av.setAttributeType(attributeType);
 					av.invokeMethod("set#attributeType#", {1=this});
 				}
