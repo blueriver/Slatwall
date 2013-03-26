@@ -77,6 +77,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				locationAdjustments[ location.getLocationID() ].setToLocation( location );
 				locationAdjustments[ location.getLocationID() ].setFromLocation( location );
 				locationAdjustments[ location.getLocationID() ].setStockAdjustmentType( getSettingService().getTypeBySystemCode("satPhysicalCount") );
+				locationAdjustments[ location.getLocationID() ].setStockAdjustmentStatusType( getSettingService().getTypeBySystemCode("sastNew") );
 				locationAdjustments[ location.getLocationID() ].setPhysical( arguments.physical );
 			}
 			
@@ -102,13 +103,15 @@ component extends="HibachiService" accessors="true" output="false" {
 			
 		}
 		
+		
+		
 		// process each of the the stockAdjustments
 		for(var key in locationAdjustments) {
 			getStockService().processStockAdjustment(stockAdjustment=locationAdjustments[key], processContext="processAdjustment");	
 		}
-		
+		abort;
 		//set physical status to closed
-		arguments.physical.setPhysicalStatusType( getSettingService().getTypeBySystemCode('pstClosed') );
+		//arguments.physical.setPhysicalStatusType( getSettingService().getTypeBySystemCode('pstClosed') );
 	}
 	
 	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {

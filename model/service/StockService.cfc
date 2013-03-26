@@ -284,7 +284,8 @@ component extends="HibachiService" accessors="true" output="false" {
 
 	//Process: StockAdjustment Context: processAdjustment 	
 	public any function processStockAdjustment_processAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
-		
+		writedump(var=arguments.stockAdjustment.getStockAdjustmentType().getSystemCode());
+		abort;
 		// Incoming (Transfer or ManualIn)
 		if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
 			
@@ -322,8 +323,12 @@ component extends="HibachiService" accessors="true" output="false" {
 			this.saveStockAdjustmentDelivery(stockAdjustmentDelivery);
 		}
 		
+		
+		writedump(var=arguments.stockAdjustment.getStockAdjustmentType().getSystemCode());
+		
 		// Physical (Maybe Incoming, Maybe Outgoing)
 		if( listFindNoCase("satPhysicalCount", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+			writedump(var="in here satPhysicalCount");
 			
 			var headObjects = {};
 			
@@ -340,7 +345,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						headObjects.stockReceiver.setReceiverType( "stockAdjustment" );
 						headObjects.stockReceiver.setStockAdjustment( arguments.stockAdjustment );	
 					}
-					
+					writedump(var="in here create receiver");
 					// Creating Detail
 					var stockReceiverItem = this.newStockReceiverItem();
 					stockReceiverItem.setStockReceiver( headObjects.stockReceiver );
@@ -371,7 +376,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		// Set the status to closed
 		arguments.stockAdjustment.setStockAdjustmentStatusType( getSettingService().getTypeBySystemCode("sastClosed") );	
-	
+	abort;
 	return arguments.stockAdjustment;
 	}
 	
