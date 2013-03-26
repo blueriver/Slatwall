@@ -114,19 +114,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {
 		
-		// Create a new Physical count
-		var physicalCount = this.newPhysicalCount();
-		
-		// Set the physical for this count
-		physicalCount.setPhysical( arguments.physical );
-		
-		// Set the location for this count
-		physicalCount.setLocation( getLocationService().getLocation( arguments.processObject.getLocationID() ));
-		
-		// Set the count post date time
-		physicalCount.setCountPostDateTime( arguments.processObject.getCountPostDateTime() );
-		
-		// If A count file was uploaded, then we can use that
+		// If a count file was uploaded, then we can use that
 		if( !isNull(arguments.processObject.getCountFile()) ) {
 			
 			// Get the temp directory (the virtual file system)
@@ -142,9 +130,22 @@ component extends="HibachiService" accessors="true" output="false" {
 				fileDelete( "#tempDir##documentData.serverFile#" );
 				arguments.physical.addError('invalidFile', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.invalidFile'));
 				
-			} else {
+			} else {	
+						
+				// Create a new Physical count
+				var physicalCount = this.newPhysicalCount();
+				
+				// Set the physical for this count
+				physicalCount.setPhysical( arguments.physical );
+				
+				// Set the location for this count
+				physicalCount.setLocation( getLocationService().getLocation( arguments.processObject.getLocationID() ));
+				
+				// Set the count post date time
+				physicalCount.setCountPostDateTime( arguments.processObject.getCountPostDateTime() );
+				
 				// set meta data
-				var fileName = documentData.serverFile;
+				var fileName = documentData.serverFile;	
 				
 				// Read the File from temp directory 
 				var fileObj = fileOpen( "#tempDir##fileName#", "read" );
