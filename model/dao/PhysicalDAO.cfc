@@ -137,8 +137,6 @@ Notes:
 			  ) <> 0
 		</cfquery>
 		
-		<cfdump var='#rs#' abort />
-		
 		<cfreturn rs />
 	</cffunction>
 </cfcomponent>
