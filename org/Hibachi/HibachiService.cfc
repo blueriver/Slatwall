@@ -84,7 +84,9 @@
 		
 		
 		// @hint default process method
-		public any function process(required any entity, struct data={}, string processContext="process"){
+		public any function process(required any entity, struct data={}, string processContext=""){
+			
+			
 			
 			// Announce Generic Before Event
 			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Process", arguments);
@@ -101,7 +103,6 @@
 			// Verify the preProcess
 			arguments.entity.validate( context=arguments.processContext );
 			
-				
 			// If we pass preProcess validation then we can try to setup the processObject if the entity has one, and validate that
 			if(!arguments.entity.hasErrors() && arguments.entity.hasProcessObject(arguments.processContext)) {
 				invokeArguments[ "processObject" ] = arguments.entity.getProcessObject(arguments.processContext);

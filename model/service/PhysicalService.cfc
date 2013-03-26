@@ -105,12 +105,11 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		// process each of the the stockAdjustments
 		for(var key in locationAdjustments) {
-			getStockService().processStockAdjustment(stockAdjustment=locationAdjustments[key], data=structNew(), processContext="processAdjustment");	
+			getStockService().processStockAdjustment(locationAdjustments[key], structNew(), "processAdjustment");
 		}
 		
-		//abort;
 		//set physical status to closed
-		//arguments.physical.setPhysicalStatusType( getSettingService().getTypeBySystemCode('pstClosed') );
+		arguments.physical.setPhysicalStatusType( getSettingService().getTypeBySystemCode('pstClosed') );
 	}
 	
 	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {

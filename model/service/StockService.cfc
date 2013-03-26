@@ -283,9 +283,8 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 
 	//Process: StockAdjustment Context: processAdjustment 	
-	public any function processStockAdjustment_processAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
-		writedump(var="here");
-		abort;
+	public any function processStockAdjustment_processAdjustment(required any stockAdjustment) {
+		
 		// Incoming (Transfer or ManualIn)
 		if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
 			
@@ -324,11 +323,8 @@ component extends="HibachiService" accessors="true" output="false" {
 		}
 		
 		
-		writedump(var=arguments.stockAdjustment.getStockAdjustmentType().getSystemCode());
-		
 		// Physical (Maybe Incoming, Maybe Outgoing)
 		if( listFindNoCase("satPhysicalCount", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
-			writedump(var="in here satPhysicalCount");
 			
 			var headObjects = {};
 			
@@ -343,9 +339,10 @@ component extends="HibachiService" accessors="true" output="false" {
 						// Creating Header
 						headObjects.stockReceiver = this.newStockReceiver();
 						headObjects.stockReceiver.setReceiverType( "stockAdjustment" );
-						headObjects.stockReceiver.setStockAdjustment( arguments.stockAdjustment );	
+						headObjects.stockReceiver.setStockAdjustment( arguments.stockAdjustment );
+						this.saveStockReceiver( headObjects.stockReceiver );
 					}
-					writedump(var="in here create receiver");
+					
 					// Creating Detail
 					var stockReceiverItem = this.newStockReceiverItem();
 					stockReceiverItem.setStockReceiver( headObjects.stockReceiver );
@@ -362,6 +359,7 @@ component extends="HibachiService" accessors="true" output="false" {
 					if(!structKeyExists(headObjects, "stockAdjustmentDelivery")) {
 						headObjects.stockAdjustmentDelivery = this.newStockAdjustmentDelivery();
 						headObjects.stockAdjustmentDelivery.setStockAdjustment( arguments.stockAdjustment );
+						this.saveStockAdjustmentDelivery( headObjects.stockAdjustmentDelivery );
 					}
 					
 					// Creating Detail
