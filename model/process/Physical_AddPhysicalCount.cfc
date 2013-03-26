@@ -5,7 +5,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Data Properties
 	property name="locationID" hb_formFieldType="select";
-	property name="countPostDateTime" hb_formFieldType="datetime";
+	property name="countPostDateTime" hb_formFieldType="datetime" hb_rbKey="entity.define.countPostDateTime";
 	property name="countFile" hb_formFieldType="file";
 	
 	// Chached Properties

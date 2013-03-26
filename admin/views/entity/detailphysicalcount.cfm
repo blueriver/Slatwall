@@ -48,8 +48,13 @@ Notes:
 								    deleteQueryString="redirectAction=admin:entity.detailPhysical&physicalID=#rc.physical.getPhysicalID()#"
 									cancelAction="admin:entity.detailPhysicalCount"
 									cancelQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#">
+									
+			<cfif rc.physicalCount.getPhysical().getPhysicalStatusType().getSystemCode() eq "pstOpen">
+				<cf_HibachiActionCaller entity="#rc.physicalCount#" action="admin:entity.createphysicalcountitem" class="btn" icon="plus" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal="true" />
+			</cfif>
+		</cf_HibachiEntityActionBar>
 		
-		</cf_HibachiEntityActionBar>							
+		
 		<input type="hidden" name="physical.physicalID" value="#rc.physical.getPhysicalID()#" />
 		
 		<cf_HibachiPropertyRow>

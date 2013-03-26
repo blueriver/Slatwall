@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,36 +36,18 @@
 Notes:
 
 --->
-<cfparam name="rc.physical" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.physical" type="any" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.physical#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.physical#" edit="#rc.edit#">
-			<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" modal="true" />
-			<cf_HibachiProcessCaller action="admin:entity.processphysical" entity="#rc.physical#" processContext="commit" />
-		</cf_HibachiEntityActionBar>
-
-		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.physical#" property="physicalStatusType" edit="false">
-			</cf_HibachiPropertyList>
-		</cf_HibachiPropertyRow>
-		
-		<cf_HibachiTabGroup object="#rc.physical#">
-			<cf_HibachiTab property="physicalcounts" />
-			<cfif rc.physical.getPhysicalStatusType().getSystemCode() eq "pstClosed">
-				<cf_HibachiTab property="stockadjustments" />
-			<cfelse>
-				<cf_HibachiTab view="admin:entity/physicaltabs/discrepancies" />
-			</cfif>
-			<cf_HibachiTab property="locations" />
-			<cf_HibachiTab property="productTypes" />
-			<cf_HibachiTab property="brands" />
-			<cf_HibachiTab property="products" />
-			<cf_HibachiTab property="skus" />
-			<cf_SlatwallAdminTabComments object="#rc.physical#" />
-		</cf_HibachiTabGroup>
-		
-	</cf_HibachiEntityDetailForm>
+	<cf_HibachiListingDisplay smartList="#rc.physical.getStockAdjustmentsSmartList()#" recordDetailAction="admin:entity.detailstockadjustment">
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stockAdjustmentType.type" title="#$.slatwall.rbKey('entity.stockAdjustment.stockAdjustmentType')#" />
+		<cf_HibachiListingColumn propertyidentifier="stockAdjustmentStatusType.type" filter=true title="#$.slatwall.rbKey('entity.stockAdjustment.stockAdjustmentStatusType')#" />
+		<cf_HibachiListingColumn propertyidentifier="fromLocation.locationName" filter=true title="#$.slatwall.rbKey('entity.stockAdjustment.fromLocation')#" />
+		<cf_HibachiListingColumn propertyidentifier="toLocation.locationName" filter=true title="#$.slatwall.rbKey('entity.stockAdjustment.toLocation')#" />
+		<cf_HibachiListingColumn propertyidentifier="createdDateTime" range=true/>
+	</cf_HibachiListingDisplay>
+	
+	<cfif physicalStatus neq "pstClosed">
+		<cf_HibachiProcessCaller action="admin:entity.preprocessphysical" entity="#rc.physical#" processContext="addPhysicalCount" class="btn" icon="plus" modal="true" />
+	</cfif>
 </cfoutput>

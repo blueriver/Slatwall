@@ -126,105 +126,103 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Set the count post date time
 		physicalCount.setCountPostDateTime( arguments.processObject.getCountPostDateTime() );
 		
-		// Get the temp directory
-		var tempDir = getTempDirectory();
-		
-		// Upload to temp directory
-		var documentData = fileUpload( tempDir,'countFile','','makeUnique' );
-		var fileName = documentData.serverFile;
-		
-		// Read the File from temp directory 
-		var fileObj = fileOpen( "#tempDir##fileName#", "read" );
-		
-		// Setup a valid entity boolean to be set to true once one line meets requirements
-		var valid = 0; 
-		var rowError = 0;
-		var skuCodeError = 0;
-		
-		// Loop over the records in the file we just read
-		while( !fileIsEof( fileObj ) ) {
-			 
-			var fileRow = fileReadLine( fileObj ); 
-
-			if( listLen(fileRow) >= 2 && isNumeric(listGetAt(fileRow, 2)) ) {
-				valid++;
-				
-				// Create a PhysicalCountItem for each row in the file
-				var physicalCountItem = this.newPhysicalCountItem();
-				physicalCountItem.setPhysicalCount( physicalCount );
-				
-				// Set the original skuCode value
-				physicalCountItem.setSkuCode( listGetAt( fileRow, 1 ) );
-				
-				// Set the quantity that was verified above
-				physicalCountItem.setQuantity( listGetAt( fileRow, 2 ) );
-				
-				// Check for a countPostDateTime on the record
-				if(listLen(fileRow) >= 3 && isDate(listGetAt(fileRow, 3))) {
-					physicalCountItem.setCountPostDateTime(listGetAt(fileRow, 3));
-				}
-				
-				// Get sku from sku code
-				var sku = getSkuService().getSkuBySkuCode( physicalCountItem.getSkuCode() );
-				
-				if( !isNull(sku) ){
-					// Get stock by sku and location
-					var stock = getStockService().getStockBySkuAndLocation(sku, physicalCount.getLocation());
+		// If A count file was uploaded, then we can use that
+		if(!isNull(arguments.processObject.getCountFile())) {
+			
+			// Read the File from temp directory 
+			var fileObj = fileOpen( arguments.processObject.getCountFile(), "read" );
+			
+			// Setup a valid entity boolean to be set to true once one line meets requirements
+			var valid = 0; 
+			var rowError = 0;
+			var skuCodeError = 0;
+			
+			// Loop over the records in the file we just read
+			while( !fileIsEof( fileObj ) ) {
+				 
+				var fileRow = fileReadLine( fileObj ); 
+	
+				if( listLen(fileRow) >= 2 && isNumeric(listGetAt(fileRow, 2)) ) {
+					valid++;
 					
-					// Set physical stock from scanned data
-					physicalCountItem.setStock( stock );
+					// Create a PhysicalCountItem for each row in the file
+					var physicalCountItem = this.newPhysicalCountItem();
+					physicalCountItem.setPhysicalCount( physicalCount );
+					
+					// Set the original skuCode value
+					physicalCountItem.setSkuCode( listGetAt( fileRow, 1 ) );
+					
+					// Set the quantity that was verified above
+					physicalCountItem.setQuantity( listGetAt( fileRow, 2 ) );
+					
+					// Check for a countPostDateTime on the record
+					if(listLen(fileRow) >= 3 && isDate(listGetAt(fileRow, 3))) {
+						physicalCountItem.setCountPostDateTime(listGetAt(fileRow, 3));
+					}
+					
+					// Get sku from sku code
+					var sku = getSkuService().getSkuBySkuCode( physicalCountItem.getSkuCode() );
+					
+					if( !isNull(sku) ){
+						// Get stock by sku and location
+						var stock = getStockService().getStockBySkuAndLocation(sku, physicalCount.getLocation());
+						
+						// Set physical stock from scanned data
+						physicalCountItem.setStock( stock );
+					} else {
+						skuCodeError++;	
+					}
+					
+					// Save each physicalcountitem 
+					this.savePhysicalCountItem( physicalCountItem );
 				} else {
-					skuCodeError++;	
+					rowError++;
+				}
+			}
+			
+			// Close the file object
+			fileClose( fileObj ); 
+			
+			// As long as one count item was created we should save the count and just display a message
+			if(valid) {
+				// Save the physicalCount 
+				this.savePhysicalCount( physicalCount );
+				
+				// Get the assets folder from the global assets folder
+				var assetsFileFolderPath = getHibachiScope().setting('globalAssetsFileFolderPath');
+				
+				// Create the folder if it does not exist 
+				if(!directoryExists("#assetsFileFolderPath#/physicalcounts/")) {
+					directoryCreate("#assetsFileFolderPath#/physicalcounts/");
 				}
 				
-				// Save each physicalcountitem 
-				this.savePhysicalCountItem( physicalCountItem );
+				// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhysicalCountID()}.txt
+				filemove( arguments.processObject.getCountFile(), "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt" );
+				
+				// Add info for how many were matched
+				arguments.physical.addMessage('validInfo', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.validInfo', {valid=valid}));
+				
+				// Add message for non-processed rows
+				if(rowError) {
+					arguments.physical.addMessage('rowErrorWarning', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.rowErrorWarning', {rowError=rowError}));	
+				}
+				
+				// Add message for not found sku codes
+				if(skuCodeError) {
+					arguments.physical.addMessage('skuCodeErrorWarning', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.skuCodeErrorWarning', {skuCodeError=skuCodeError}));
+				}
+	
+			// If there were now rows imported then we can add the error message to the processObject
 			} else {
-				rowError++;
+				// Make sure that nothing is persisted
+				getHibachiScope().setORMHasErrors( true );
+				
+				// Add the count file error to the process object
+				arguments.processObject.addError('countFile', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.countFile'));
+				
 			}
 		}
 		
-		// Close the file object
-		fileClose( fileObj ); 
-		
-		// As long as one count item was created we should save the count and just display a message
-		if(valid) {
-			// Save the physicalCount 
-			this.savePhysicalCount( physicalCount );
-			
-			// Get the assets folder from the global assets folder
-			var assetsFileFolderPath = getHibachiScope().setting('globalAssetsFileFolderPath');
-			
-			// Create the folder if it does not exist 
-			if(!directoryExists("#assetsFileFolderPath#/physicalcounts/")) {
-				directoryCreate("#assetsFileFolderPath#/physicalcounts/");
-			}
-			
-			// Move a copy of the file from the temp directory to /custom/assets/files/physicalcounts/{physicalCount.getPhysicalCountID()}.txt
-			filemove( "#tempDir##fileName#", "#assetsFileFolderPath#/physicalcounts/#physicalCount.getPhysicalCountID()#.txt" );
-			
-			// Add info for how many were matched
-			arguments.physical.addMessage('validInfo', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.validInfo', {valid=valid}));
-			
-			// Add message for non-processed rows
-			if(rowError) {
-				arguments.physical.addMessage('rowErrorWarning', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.rowErrorWarning', {rowError=rowError}));	
-			}
-			
-			// Add message for not found sku codes
-			if(skuCodeError) {
-				arguments.physical.addMessage('skuCodeErrorWarning', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.skuCodeErrorWarning', {skuCodeError=skuCodeError}));
-			}
-
-		// If there were now rows imported then we can add the error message to the processObject
-		} else {
-			// Make sure that nothing is persisted
-			getHibachiScope().setORMHasErrors( true );
-			
-			// Add the count file error to the process object
-			arguments.processObject.addError('countFile', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.countFile'));
-			
-		}
 		
 		// Return the physical that came in from the arguments scope
 		return arguments.physical;

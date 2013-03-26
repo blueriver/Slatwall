@@ -45,7 +45,7 @@ Notes:
 						   recordeditaction="admin:warehouse.editStockAdjustmentItem"
 						   recordeditquerystring="redirectAction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#">
 						   	   
-	<cfif listFindNoCase("satLocationTransfer,satManualOut", rc.stockAdjustment.getStockAdjustmentType().getSystemCode())>
+	<cfif listFindNoCase("satLocationTransfer,satManualOut,satPhysicalCount", rc.stockAdjustment.getStockAdjustmentType().getSystemCode())>
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="fromstock.sku.skucode" />
 		<cf_HibachiListingColumn propertyIdentifier="fromstock.sku.product.brand.brandName" />
 		<cf_HibachiListingColumn propertyIdentifier="fromstock.sku.product.productName" />
