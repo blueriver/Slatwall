@@ -174,7 +174,7 @@
 						// Check that one of the conditions were meet if there were conditions for this constraint
 						var conditionMeet = true;
 						if(structKeyExists(contextValidations[ propertyIdentifier ][c], "conditions")) {
-							conditionMeet = getConditionsMeetFlag( object=arguments.object, conditions="contextValidations[ propertyIdentifier ][ c ].conditions" );
+							conditionMeet = getConditionsMeetFlag( object=arguments.object, conditions=contextValidations[ propertyIdentifier ][ c ].conditions );
 						}
 						
 						// Now if a condition was meet we can actually test the individual validation rule

@@ -16,7 +16,7 @@
 	    }
 	},
 	"properties":{
-	    "preProcessDisplayedFlag":		[{"conditions":"newOrderFulfillment,customizationsExist","eq":true}],
+	    "preProcessDisplayedFlag":		[{"conditions":"newOrderFulfillment,customizationsExist","eq":1}],
 		"skuID":						[{"required":true}],
 		"orderFulfillmentID":			[{"required":true}],
 		"quantity":						[{"required":true,"dataType":"numeric","minValue":0}],
