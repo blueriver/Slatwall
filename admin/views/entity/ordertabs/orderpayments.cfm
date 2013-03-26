@@ -52,9 +52,7 @@ Notes:
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderpayments.charges')#</h4>
 		<cf_HibachiListingDisplay smartList="#local.chargeList#" 
 				recordDetailAction="admin:entity.detailorderpayment"
-				recordEditAction="admin:entity.editorderpayment"
-				recordProcessAction="admin:entity.processorderpayment"
-				recordProcessModal="true">
+				recordEditAction="admin:entity.editorderpayment">
 			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
 			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
 			<cf_HibachiListingColumn propertyIdentifier="amount" />
@@ -67,9 +65,7 @@ Notes:
 		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderpayments.credits')#</h4>
 		<cf_HibachiListingDisplay smartList="#local.creditList#" 
 				recordDetailAction="admin:entity.detailorderpayment"
-				recordEditAction="admin:entity.editorderpayment"
-				recordProcessAction="admin:entity.processorderpayment"
-				recordProcessModal="true">
+				recordEditAction="admin:entity.editorderpayment">
 			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
 			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
 			<cf_HibachiListingColumn propertyIdentifier="amount" />
