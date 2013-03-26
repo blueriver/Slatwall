@@ -117,8 +117,8 @@ component extends="HibachiService" accessors="true" output="false" {
 		// If a count file was uploaded, then we can use that
 		if( !isNull(arguments.processObject.getCountFile()) ) {
 			
-			// Get the temp directory (the virtual file system)
-			var tempDir = getVirtualFileSystemPath() & "/";
+			// Get the temp directory
+			var tempDir = getTempDirectory();
 			
 			// Upload file to temp directory
 			var documentData = fileUpload( tempDir,'countFile','','makeUnique' );
