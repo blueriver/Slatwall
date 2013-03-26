@@ -44,7 +44,8 @@ Notes:
 	<cf_HibachiListingDisplay smartlist="#rc.physicalSmartList#" 
 	                          recordeditaction="admin:entity.editphysical"
 							  recorddetailaction="admin:entity.detailphysical">
-		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="physicalName" search=true />					    
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="physicalName" search=true />	
+		<cf_HibachiListingColumn propertyidentifier="physicalStatusType.type" sort=true title="#getHibachiScope().rbKey('admin.physical.listPhysical.status')#" />					    
 		<cf_HibachiListingColumn propertyidentifier="createdDateTime" range=true />
 	</cf_HibachiListingDisplay>
 
