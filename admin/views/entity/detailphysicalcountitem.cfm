@@ -37,11 +37,11 @@ Notes:
 
 --->
 <cfparam name="rc.physicalCountItem" type="any">
-<cfparam name="rc.physicalCount" type="any" default="#rc.physicalCountItem.getphysicalCount()#" />
+<cfparam name="rc.physicalCount" type="any" default="#rc.physicalCountItem.getPhysicalCount()#" />
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.physicalCountItem#" edit="#rc.edit#" sRenderItem="detailphysicalCount">
+	<cf_HibachiEntityDetailForm object="#rc.physicalCountItem#" edit="#rc.edit#" saveActionQueryString="physicalCountID=#rc.physicalCount.getphysicalCountID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.physicalCountItem#" edit="#rc.edit#" 
 					backAction="admin:entity.detailPhysicalCount" 
 					backQueryString="physicalCountID=#rc.physicalCount.getphysicalCountID()#"
@@ -49,8 +49,10 @@ Notes:
 					cancelQueryString="physicalCountID=#rc.physicalCount.getphysicalCountID()#">
 		</cf_HibachiEntityActionBar>
 		
-		<input type="hidden" name="physicalCountID" value="#rc.physicalCount.getphysicalCountID()#" />
-		<input type="hidden" name="physicalCount.physicalCountID" value="#rc.physicalCount.getphysicalCountID()#" />
+		<!--- Attach Count Item to Count --->
+		<cfif rc.edit>
+			<input type="hidden" name="physicalCount.physicalCountID" value="#rc.physicalCount.getphysicalCountID()#" />
+		</cfif>
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>

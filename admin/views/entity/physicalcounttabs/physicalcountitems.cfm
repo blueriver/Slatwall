@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.physicalCount.getPhysicalCountItemsSmartList()#"
 							recordEditAction="admin:entity.editphysicalcountitem"
-							recordEditQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#"  
+							recordEditQueryString="redirectAction=admin:entity.detailphysicalcount"  
 							recordEditModal=true
 							recordDeleteAction="admin:entity.deletephysicalcountitem"
 							recordDeleteQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#&redirectAction=admin:entity.detailphysicalcount"
@@ -55,6 +55,6 @@ Notes:
 	</cf_HibachiListingDisplay>	
 	
 	<cfif rc.physicalCount.getPhysical().getPhysicalStatusType().getSystemCode() eq "pstOpen">
-		<cf_HibachiActionCaller entity="#rc.physicalCount#" action="admin:entity.createphysicalcountitem" class="btn" icon="plus" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal="true" />
+		<cf_HibachiActionCaller entity="#rc.physicalCount#" action="admin:entity.createphysicalcountitem" class="btn" icon="plus" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#&redirectAction=admin:entity.detailphysicalcount" modal="true" />
 	</cfif>
 </cfoutput>

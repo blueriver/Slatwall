@@ -50,7 +50,7 @@ Notes:
 									cancelQueryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#">
 									
 			<cfif rc.physicalCount.getPhysical().getPhysicalStatusType().getSystemCode() eq "pstOpen">
-				<cf_HibachiActionCaller entity="#rc.physicalCount#" action="admin:entity.createphysicalcountitem" class="btn" icon="plus" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#" modal="true" />
+				<cf_HibachiActionCaller entity="#rc.physicalCount#" action="admin:entity.createphysicalcountitem" queryString="physicalCountID=#rc.physicalCount.getPhysicalCountID()#&redirectAction=admin:entity.detailphysicalcount" type="list" modal="true" />
 			</cfif>
 		</cf_HibachiEntityActionBar>
 		
