@@ -388,7 +388,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 		
 		// Check to see if there is a process object
-		var processObjectExists = getFW().getBeanFactory().containsBean( "#arguments.entityName#_#arguments.rc.processContext#");
+		var processObjectExists = rc[ arguments.entityName ].hasProcessObject( arguments.rc.processContext );
 		
 		if(processObjectExists) {
 			// Setup the processObject in the RC so that we can use it for our form
@@ -420,7 +420,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=arguments.rc[ entityPrimaryID ], 2=true} );
 		
 		var requirePreProcess = false;
-		var processObjectExists = getFW().getBeanFactory().containsBean( "#arguments.entityName#_#arguments.rc.processContext#");
+		var processObjectExists = entity.hasProcessObject( arguments.rc.processContext );
 		
 		// Check to see if this is an AJAX Request, and there is a pre-process object... then call preprocess first
 		if( arguments.rc.ajaxRequest && processObjectExists ) {
@@ -448,7 +448,7 @@ component output="false" accessors="true" extends="HibachiController" {
 				arguments.rc.edit = true;
 				
 				// Set the page title to the correct rbKey
-				rc.pageTitle = rbKey( "#replace(arguments.rc.entityActionDetails.thisAction,':','.','all')#.#rc.processContext#" );
+				rc.pageTitle = rbKey( "entity.#arguments.rc.entityActionDetails.itemEntityName#.process.#rc.processContext#" );
 				
 				// Load up any ID's that were passed in
 				loadEntitiesFromRCIDs( arguments.rc );
