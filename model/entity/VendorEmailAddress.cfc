@@ -40,7 +40,7 @@ component displayname="Vendor Email Address" entityname="SlatwallVendorEmailAddr
 	
 	// Persistent Properties
 	property name="vendorEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="emailAddress" ormtype="string" formatType="email";
+	property name="emailAddress" ormtype="string" hb_formatType="email";
 	
 	// Audit properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";

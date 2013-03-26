@@ -81,7 +81,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var integrationShippingAPI = integrations[i].getIntegrationCFC("shipping");  
 				
 				// Create rates request bean and populate it with the orderFulfillment Info
-				var ratesRequestBean = new Slatwall.com.utility.fulfillment.ShippingRatesRequestBean();
+				var ratesRequestBean = getTransient("ShippingRatesRequestBean");
 				ratesRequestBean.populateShippingItemsWithOrderFulfillmentItems( arguments.orderFulfillment.getOrderFulfillmentItems() );
 				ratesRequestBean.populateShipToWithAddress( arguments.orderFulfillment.getAddress() );
 				

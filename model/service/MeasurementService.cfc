@@ -41,11 +41,11 @@ component extends="HibachiService" output="false" {
 	// ===================== START: Logical Methods ===========================
 	
 	public numeric function convertWeightToGlobalWeightUnit(required numeric weight, required any measurementUnitCode) {
-		if(setting('globalWeightUnitCode') eq arguments.measurementUnitCode) {
+		if(getHibachiScope().setting('globalWeightUnitCode') eq arguments.measurementUnitCode) {
 			return arguments.weight;
 		}
 		
-		return convertWeight(arguments.weight, arguments.measurementUnitCode, setting('globalWeightUnitCode'));
+		return convertWeight(arguments.weight, arguments.measurementUnitCode, getHibachiScope().setting('globalWeightUnitCode'));
 	}
 	
 	public numeric function convertWeight(required numeric weight, required originalUnitCode, required convertToUnitCode) {

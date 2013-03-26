@@ -4,10 +4,11 @@
 
 // onEvent
 
-// onApplicationRequest
-// onApplicationBootstrapRequest
 // onApplicationSetup
 // onApplicationFullUpdate
+// onApplicationBootstrapRequestStart
+// onApplicationRequestStart
+// onApplicationRequestEnd
 
 // onSessionAccountLogin
 // onSessionAccountLogout
@@ -129,6 +130,55 @@ component output="false" update="true" extends="HibachiService" {
 				}
 			}
 		}
+	}
+	
+	public any function getEventNameOptions() {
+		var opArr = [];
+		arrayAppend(opArr, {name="#getHibachiScope().rbKey('define.select')#", value=""});
+		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onEvent')# | onEvent", value="onEvent"});
+		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationSetup')# | onApplicationSetup", value="onApplicationSetup"});
+		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationFullUpdate')# | onApplicationFullUpdate", value="onApplicationFullUpdate"});
+		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationBootstrapRequestStart')# | onApplicationBootstrapRequestStart", value="onApplicationBootstrapRequestStart"});
+		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationRequestStart')# | onApplicationRequestStart", value="onApplicationRequestStart"});
+		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationRequestEnd')# | onApplicationRequestEnd", value="onApplicationRequestEnd"});
+		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onSessionAccountLogin')# | onSessionAccountLogin", value="onSessionAccountLogin"});
+		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onSessionAccountLogout')# | onSessionAccountLogout", value="onSessionAccountLogout"});
+		
+		var emd = getEntitiesMetaData();
+		var entityNameArr = listToArray(structKeyList(emd));
+		arraySort(entityNameArr, "text");
+		for(var i=1; i<=arrayLen(entityNameArr); i++) {
+			var entityName = entityNameArr[i];
+			
+			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.save')# | before#entityName#Save", value="before#entityName#Save"});
+			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.save')# | after#entityName#Save", value="after#entityName#Save"});
+			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.save')# #getHibachiScope().rbKey('define.success')# | after#entityName#SaveSuccess", value="after#entityName#SaveSuccess"});
+			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.save')# #getHibachiScope().rbKey('define.failure')# | after#entityName#SaveFailure", value="after#entityName#SaveFailure"});
+			
+			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.delete')# | before#entityName#Delete", value="before#entityName#Delete"});
+			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# | after#entityName#Delete", value="after#entityName#Delete"});
+			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# #getHibachiScope().rbKey('define.success')# | after#entityName#DeleteSuccess", value="after#entityName#DeleteSuccess"});
+			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# #getHibachiScope().rbKey('define.failure')# | after#entityName#DeleteFailure", value="after#entityName#DeleteFailure"});
+			
+			if(structKeyExists(emd[entityName], "hb_processContexts")) {
+				
+				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.process')# | before#entityName#Process", value="before#entityName#Process"});
+				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.process')# | after#entityName#Process", value="after#entityName#Process"});
+				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.process')# #getHibachiScope().rbKey('define.success')# | after#entityName#ProcessSuccess", value="after#entityName#ProcessSuccess"});
+				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.process')# #getHibachiScope().rbKey('define.failure')# | after#entityName#ProcessFailure", value="after#entityName#ProcessFailure"});
+			
+				for(var c=1; c<=listLen(emd[entityName].hb_processContexts); c++) {
+					var thisContext = listGetAt(emd[entityName].hb_processContexts, c);
+					
+					arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# | before#entityName#Process_#thisContext#", value="before#entityName#Process_#thisContext#"});
+					arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# | after#entityName#Process_#thisContext#", value="after#entityName#Process_#thisContext#"});
+					arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# #getHibachiScope().rbKey('define.success')# | after#entityName#Process_#thisContext#Success", value="after#entityName#Process_#thisContext#Success"});
+					arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# #getHibachiScope().rbKey('define.failure')# | after#entityName#Process_#thisContext#Failure", value="after#entityName#Process_#thisContext#Failure"});
+				}
+			}
+		}
+		
+		return opArr;
 	}
 	
 }

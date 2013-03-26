@@ -89,17 +89,17 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Non Persistent
 	property name="address" persistent="false";
 	property name="adminIcon" persistent="false";
-	property name="adminAccountFlag" persistent="false" formatType="yesno";
-	property name="emailAddress" persistent="false" formatType="email";
+	property name="adminAccountFlag" persistent="false" hb_formatType="yesno";
+	property name="emailAddress" persistent="false" hb_formatType="email";
 	property name="fullName" persistent="false";
 	property name="gravatarURL" persistent="false"; 
-	property name="guestAccountFlag" persistent="false" formatType="yesno";
+	property name="guestAccountFlag" persistent="false" hb_formatType="yesno";
 	property name="ordersPlacedSmartList" persistent="false";
 	property name="ordersNotPlacedSmartList" persistent="false";
 	property name="phoneNumber" persistent="false";
 	property name="slatwallAuthenticationExistsFlag" persistent="false";
-	property name="termAccountAvailableCredit" persistent="false" formattype="currency";
-	property name="termAccountBalance" persistent="false" formattype="currency";
+	property name="termAccountAvailableCredit" persistent="false" hb_formatType="currency";
+	property name="termAccountBalance" persistent="false" hb_formatType="currency";
 	
 	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
 		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	

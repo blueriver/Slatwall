@@ -83,7 +83,7 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	public any function getParentPriceGroupOptions() {
 		var options = getPropertyOptions("parentPriceGroup");
 		for(var i=1; i<=arrayLen(options); i++) {
-			if(options[i]['value'] == getPriceGroupID()) {
+			if(len(options[i]['value']) && options[i]['value'] == getPriceGroupID()) {
 				arrayDeleteAt(options, i);
 				break;
 			}

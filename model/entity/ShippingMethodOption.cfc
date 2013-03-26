@@ -40,7 +40,7 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 
 	// Persistent Properties
 	property name="shippingMethodOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="totalCharge" ormtype="big_decimal";
+	property name="totalCharge" ormtype="big_decimal" hb_formatType="currency";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="totalShippingWeight" ormtype="string";
 	property name="totalShippingItemPrice" ormtype="string";
@@ -65,7 +65,7 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	
 	// Non-Persistent Properties
 	property name="discountAmountDetails" persistent="false";
-	property name="totalChargeAfterDiscount" persistent="false" formatType="currency";
+	property name="totalChargeAfterDiscount" persistent="false" hb_formatType="currency";
 	
 	public struct function getDiscountAmountDetails() {
 		if(!structKeyExists(variables, "discountAmountDetails")) {
@@ -135,6 +135,10 @@ component displayname="Shipping Method Option" entityname="SlatwallShippingMetho
 	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
+	
+	public any function getSimpleRepresentation() {
+		return '#getShippingMethodRate().getShippingMethod().getShippingMethodName()# - #getFormattedValue("totalChargeAfterDiscount")#';	
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

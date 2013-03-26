@@ -63,7 +63,7 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="totalQuantityDelivered" persistent="false" type="numeric" formatType="numeric";
+	property name="totalQuantityDelivered" persistent="false" type="numeric" hb_formatType="numeric";
 	
 	public any function getTotalQuantityDelivered() {
 		var totalDelivered = 0;

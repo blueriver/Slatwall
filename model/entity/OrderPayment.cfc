@@ -80,13 +80,13 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="amountAuthorized" type="numeric" formatType="currency" persistent="false";
-	property name="amountCredited" type="numeric" formatType="currency" persistent="false";
-	property name="amountReceived" type="numeric" formatType="currency" persistent="false";
-	property name="amountUnauthorized" persistent="false" formatType="currency";	
-	property name="amountUncredited" persistent="false" formatType="currency";
-	property name="amountUncaptured" persistent="false" formatType="currency";
-	property name="amountUnreceived" persistent="false" formatType="currency";
+	property name="amountAuthorized" type="numeric" hb_formatType="currency" persistent="false";
+	property name="amountCredited" type="numeric" hb_formatType="currency" persistent="false";
+	property name="amountReceived" type="numeric" hb_formatType="currency" persistent="false";
+	property name="amountUnauthorized" persistent="false" hb_formatType="currency";	
+	property name="amountUncredited" persistent="false" hb_formatType="currency";
+	property name="amountUncaptured" persistent="false" hb_formatType="currency";
+	property name="amountUnreceived" persistent="false" hb_formatType="currency";
 	property name="creditCardNumber" persistent="false";
 	property name="expirationDate" persistent="false";
 	property name="experationMonthOptions" persistent="false";
