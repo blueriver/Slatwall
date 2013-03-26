@@ -118,7 +118,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		if( !isNull(arguments.processObject.getCountFile()) ) {
 			
 			// Get the temp directory
-			var tempDir = getTempDirectory();
+			var tempDir = getHibachiTempDirectory();
 			
 			// Upload file to temp directory
 			var documentData = fileUpload( tempDir,'countFile','','makeUnique' );
