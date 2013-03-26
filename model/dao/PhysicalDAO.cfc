@@ -58,36 +58,37 @@ Notes:
 				  	SlatwallStock as a
 				  LEFT JOIN
 				    SlatwallInventory on a.stockID = SlatwallInventory.stockID
-				  LEFT JOIN
-				  	SlatwallPhysicalCountItem on a.stockID = SlatwallPhysicalCountItem.stockID
-				  LEFT JOIN
-				  	SlatwallPhysicalCount on SlatwallPhysicalCountItem.physicalCountID = SlatwallPhysicalCount.physicalCountID
 				WHERE
-				  	((SlatwallPhysicalCountItem.countPostDateTime IS NOT NULL AND SlatwallInventory.createdDateTime IS NOT NULL AND SlatwallInventory.createdDateTime <= SlatwallPhysicalCountItem.countPostDateTime) OR SlatwallPhysicalCountItem.countPostDateTime IS NULL OR SlatwallInventory.createdDateTime IS NULL)
-				  AND
-					((SlatwallPhysicalCountItem.countPostDateTime IS NULL AND SlatwallPhysicalCount.countPostDateTime IS NOT NULL AND SlatwallInventory.createdDateTime IS NOT NULL AND SlatwallInventory.createdDateTime <= SlatwallPhysicalCount.countPostDateTime) OR SlatwallPhysicalCount.countPostDateTime IS NULL OR SlatwallInventory.createdDateTime IS NULL)
-				  AND
-				  	a.stockID = SlatwallStock.stockID 
+				  	a.stockID = SlatwallStock.stockID
 				) as 'Qoh',
 				(
 				SELECT
-					(COALESCE(SUM(SlatwallInventory.quantityIn),0) - COALESCE(SUM(SlatwallInventory.quantityOut),0) - COALESCE(SUM(SlatwallPhysicalCountItem.quantity),0)) * -1
+					((COALESCE(SUM(i.quantityIn),0) - COALESCE(SUM(i.quantityOut),0)) - 
+					(SELECT
+						COALESCE(SUM(pci.quantity),0)
+					FROM
+						SlatwallPhysicalCountItem pci
+					  INNER JOIN
+					  	SlatwallPhysicalCount pc on pci.physicalCountID = pc.physicalCountID
+					WHERE
+						pci.stockID = SlatwallStock.stockID
+					  AND
+					  	pc.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />
+					  AND
+					  	(
+					  		(pci.countPostDateTime IS NOT NULL AND pci.countPostDateTime >= i.createdDateTime)
+					  	  OR
+					  	  	(pci.countPostDateTime IS NULL AND pc.countPostDateTime >= i.createdDateTime)
+					  	  OR
+					  	  	i.createdDateTime IS NULL
+					  	)
+					)) * -1
 				FROM
 				  	SlatwallStock as a
 				  LEFT JOIN
-				    SlatwallInventory on a.stockID = SlatwallInventory.stockID
-				  LEFT JOIN
-				  	SlatwallPhysicalCountItem on a.stockID = SlatwallPhysicalCountItem.stockID
-				  LEFT JOIN
-				  	SlatwallPhysicalCount on SlatwallPhysicalCountItem.physicalCountID = SlatwallPhysicalCount.physicalCountID
+				    SlatwallInventory i on a.stockID = i.stockID
 				WHERE
-				  	((SlatwallPhysicalCountItem.countPostDateTime IS NOT NULL AND SlatwallInventory.createdDateTime IS NOT NULL AND SlatwallInventory.createdDateTime <= SlatwallPhysicalCountItem.countPostDateTime) OR SlatwallPhysicalCountItem.countPostDateTime IS NULL OR SlatwallInventory.createdDateTime IS NULL)
-				  AND
-					((SlatwallPhysicalCountItem.countPostDateTime IS NULL AND SlatwallPhysicalCount.countPostDateTime IS NOT NULL AND SlatwallInventory.createdDateTime IS NOT NULL AND SlatwallInventory.createdDateTime <= SlatwallPhysicalCount.countPostDateTime) OR SlatwallPhysicalCount.countPostDateTime IS NULL OR SlatwallInventory.createdDateTime IS NULL)
-				  AND
 				  	a.stockID = SlatwallStock.stockID 
-				  AND 
-				  	SlatwallPhysicalCount.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />	
 				) as 'Discrepancy'
 			FROM
 				SlatwallStock
@@ -116,25 +117,38 @@ Notes:
 			
 			  <!--- Verify Discrepancy <> 0 --->		  
 			  ) AND (
-			  
 				SELECT
-					(COALESCE(SUM(SlatwallInventory.quantityIn),0) - COALESCE(SUM(SlatwallInventory.quantityOut),0) - COALESCE(SUM(SlatwallPhysicalCountItem.quantity),0)) * -1
+					((COALESCE(SUM(i.quantityIn),0) - COALESCE(SUM(i.quantityOut),0)) - 
+					(SELECT
+						COALESCE(SUM(pci.quantity),0)
+					FROM
+						SlatwallPhysicalCountItem pci
+					  INNER JOIN
+					  	SlatwallPhysicalCount pc on pci.physicalCountID = pc.physicalCountID
+					WHERE
+						pci.stockID = SlatwallStock.stockID
+					  AND
+					  	pc.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />
+					  AND
+					  	(
+					  		(pci.countPostDateTime IS NOT NULL AND pci.countPostDateTime >= i.createdDateTime)
+					  	  OR
+					  	  	(pci.countPostDateTime IS NULL AND pc.countPostDateTime >= i.createdDateTime)
+					  	  OR
+					  	  	i.createdDateTime IS NULL
+					  	)
+					)) * -1
 				FROM
 				  	SlatwallStock as a
 				  LEFT JOIN
-				    SlatwallInventory on a.stockID = SlatwallInventory.stockID
-				  LEFT JOIN
-				  	SlatwallPhysicalCountItem on a.stockID = SlatwallPhysicalCountItem.stockID
-				  LEFT JOIN
-				  	SlatwallPhysicalCount on SlatwallPhysicalCountItem.physicalCountID = SlatwallPhysicalCount.physicalCountID
+				    SlatwallInventory i on a.stockID = i.stockID
 				WHERE
-				  	((SlatwallPhysicalCountItem.countPostDateTime IS NOT NULL AND SlatwallInventory.createdDateTime IS NOT NULL AND SlatwallInventory.createdDateTime <= SlatwallPhysicalCountItem.countPostDateTime) OR SlatwallPhysicalCountItem.countPostDateTime IS NULL OR SlatwallInventory.createdDateTime IS NULL)
-				  AND
-					((SlatwallPhysicalCountItem.countPostDateTime IS NULL AND SlatwallPhysicalCount.countPostDateTime IS NOT NULL AND SlatwallInventory.createdDateTime IS NOT NULL AND SlatwallInventory.createdDateTime <= SlatwallPhysicalCount.countPostDateTime) OR SlatwallPhysicalCount.countPostDateTime IS NULL OR SlatwallInventory.createdDateTime IS NULL)
-				  AND
-				  	a.stockID = SlatwallStock.stockID
-				  	 
-			  ) <> 0
+				  	a.stockID = SlatwallStock.stockID 
+				) <> 0
+			ORDER BY
+				SlatwallProductType.productTypeName,
+				SlatwallProduct.productName,
+				SlatwallSku.skuCode
 		</cfquery>
 		
 		<cfreturn rs />
