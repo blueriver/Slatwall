@@ -65,6 +65,11 @@ component accessors="true" output="false" persistent="false" {
 		return vfsDirectory;
 	}
 	
+	// @hint return the correct tempDirectory for the application for uploads, ect
+	public string function getHibachiTempDirectory() {
+		return getTempDirectory();
+	} 
+	
 	// @hint helper function for returning the hibachiScope from the request scope
 	public any function getHibachiScope() {
 		return request[ "#getApplicationValue("applicationKey")#Scope" ];
