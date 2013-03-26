@@ -284,7 +284,7 @@ component extends="HibachiService" accessors="true" output="false" {
 
 	//Process: StockAdjustment Context: processAdjustment 	
 	public any function processStockAdjustment_processAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
-		writedump(var=arguments.stockAdjustment.getStockAdjustmentType().getSystemCode());
+		writedump(var="here");
 		abort;
 		// Incoming (Transfer or ManualIn)
 		if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
@@ -377,7 +377,6 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Set the status to closed
 		arguments.stockAdjustment.setStockAdjustmentStatusType( getSettingService().getTypeBySystemCode("sastClosed") );	
 
-	abort;
 	return arguments.stockAdjustment;
 
 	}
