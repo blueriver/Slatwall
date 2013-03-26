@@ -113,7 +113,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	} else if(!isNull(getAccountAddress())) {
     		return getAccountAddress().getAddress();
     	} else {
-    		return ;
+    		return getService("addressService").newAddress();
     	}
     }
 
