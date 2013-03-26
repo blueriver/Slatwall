@@ -239,6 +239,27 @@ component extends="HibachiService" accessors="true" output="false" {
 		return smartList;
 	}
 	
+	public any function getAccountEmailAddressSmartList(struct data={}, currentURL="") {
+		arguments.entityName = "SlatwallAccountEmailAddress";
+		
+		var smartList = getHibachiDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.joinRelatedProperty("SlatwallAccountEmailAddress", "accountEmailType", "left");
+		
+		return smartList;
+	}
+	
+	public any function getAccountPhoneNumberSmartList(struct data={}, currentURL="") {
+		arguments.entityName = "SlatwallAccountPhoneNumber";
+		
+		var smartList = getHibachiDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.joinRelatedProperty("SlatwallAccountPhoneNumber", "accountPhoneType", "left");
+		
+		return smartList;
+	}
+	
+	
 	// ====================  END: Smart List Overrides ========================
 	
 	// ====================== START: Get Overrides ============================
