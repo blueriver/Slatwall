@@ -257,16 +257,22 @@
 							<cfif not column.search and not column.sort and not column.filter and not column.range>
 								#column.title#
 							<cfelse>
+								<cfset hasDivider = false />
 								<div class="dropdown">
 									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
 									<ul class="dropdown-menu nav">
 										<cfif column.sort>
+											<cfset hasDivider = true />
+											<li class="divider"></li>
 											<li class="nav-header">#attributes.hibachiScope.rbKey('define.sort')#</li>
 											<li><a href="##" class="listing-sort" data-sortdirection="ASC"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
 											<li><a href="##" class="listing-sort" data-sortdirection="DESC"><i class="icon-arrow-up"></i> Sort Decending</a></li>
 										</cfif>
 										<cfif column.search>
-											<li class="divider"></li>
+											<cfif hasDivider>
+												<li class="divider"></li>
+											</cfif>
+											<cfset hasDivider = true />
 											<li class="nav-header">#attributes.hibachiScope.rbKey('define.search')#</li>
 											<li class="search-filter"><input type="text" class="listing-search span2" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
 										</cfif>
@@ -278,13 +284,20 @@
 													<cfset local.rangeClass = "datetimepicker" />	
 												</cfif>
 											</cfsilent>
-											<li class="divider"></li>
+											<cfif hasDivider>
+												<li class="divider"></li>
+											</cfif>
+											<cfset hasDivider = true />
 											<li class="nav-header">#attributes.hibachiScope.rbKey('define.range')#</li>
 											<li class="range-filter"><label for="">From</label><input type="text" class="#local.rangeClass# range-filter-lower span2" name="R:#column.propertyIdentifier#" value="" /></li>
 											<li class="range-filter"><label for="">To</label><input type="text" class="#local.rangeClass# range-filter-upper span2" name="R:#column.propertyIdentifier#" value="" /></li>
+											<li class="divider"></li>
 										</cfif>
 										<cfif column.filter>
-											<li class="divider"></li>
+											<cfif hasDivider>
+												<li class="divider"></li>
+											</cfif>
+											<cfset hasDivider = true />
 											<li class="nav-header">#attributes.hibachiScope.rbKey('define.filter')#</li>
 											<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
 											<div class="filter-scroll">

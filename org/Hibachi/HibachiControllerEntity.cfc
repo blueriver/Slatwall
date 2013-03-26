@@ -340,8 +340,6 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 		// FAILURE
 		} else {
-			// Add the Generic Action Failure Message
-			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.save_error" ), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'), "all" ) , "error");
 			
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
@@ -405,7 +403,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		rc.edit = true;
 		
 		// Set the page title to the correct rbKey
-		rc.pageTitle = rbKey( "#replace(arguments.rc.entityActionDetails.thisAction,':','.','all')#.#rc.processContext#" );
+		rc.pageTitle = rbKey( "entity.#arguments.rc.entityActionDetails.itemEntityName#.process.#rc.processContext#" );
 		
 		// Set the view correctly to use the context specific preProcess view
 		getFW().setView("#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#_#arguments.rc.processContext#");
@@ -512,9 +510,6 @@ component output="false" accessors="true" extends="HibachiController" {
 				
 			// FAILURE
 			} else {
-				
-				// Add the Generic Action Failure Message
-				getHibachiScope().showMessage( getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#.#arguments.rc.processContext#_error" ), "error");
 				
 				// Show all of the specific messages & error messages for the entity
 				entity.showErrorsAndMessages();
