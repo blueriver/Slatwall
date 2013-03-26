@@ -41,7 +41,7 @@ component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" p
 	// Persistent Properties
 	property name="emailID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="emailName" ormtype="string";
-	property name="eventName" ormtype="string";
+	property name="eventName" ormtype="string" hb_formFieldType="select";
 	
 	// Related Object Properties (many-to-one)
 	property name="emailTemplate" cfc="EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";
@@ -60,11 +60,16 @@ component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" p
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
-
+	property name="eventNameOptions" persistent="false";
 
 	
 	// ============ START: Non-Persistent Property Methods =================
+	public array function getEventNameOptions() {
+		if(!structKeyExists(variables, "eventNameOptions")) {
+			variables.eventNameOptions = getService("hibachiEventService").getEventNameOptions();
+		}
+		return variables.eventNameOptions;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

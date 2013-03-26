@@ -73,7 +73,7 @@ Notes:
 	
 	<!--- If the text wasn't defined, then add it --->
 	<cfif !len(attributes.text)>
-		<cfset attributes.text = attributes.hibachiScope.rbKey('#replace(attributes.action, ':', '.', 'all')#.#attributes.processContext#', {entityName=local.entityName}) />
+		<cfset attributes.text = attributes.hibachiScope.rbKey('entity.#local.entityName#.process.#attributes.processContext#') />
 	</cfif>
 	
 	<!--- If either no entity object was passed in, or if the entity object that was passed in is in fact processable, then deligate to the action caller for the actual info --->

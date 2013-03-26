@@ -15,6 +15,7 @@
 	
 	<!--- Variables Scope Used For Caching --->
 	<cfset variables.entitiesMetaData = {} />
+	<cfset variables.entitiesProcessContexts = {} />
 	<cfset variables.entityORMMetaDataObjects = {} />
 	<cfset variables.entityObjects = {} />
 	<cfset variables.entityHasProperty = {} />
@@ -696,7 +697,23 @@
 			return getEntityObject( arguments.entityName ).getPropertiesStruct(); 
 		}
 		
-		
+		/*
+		public any function getEntitiesProcessContexts() {
+			if(!structKeyExists(variables, "entitiesProcessContexts")) {
+				var processContexts = {};
+				var emd = getEntitiesMetaData();
+				
+				for(var entityName in emd) {
+					if(structKeyExists(emd[ entityName ], "hb_processContexts")) {
+						processContexts[ entityName ] = listToArray(emd[ entityName ].hb_processContexts);
+					}
+				}
+				
+				variables.entitiesProcessContexts = processContexts;
+			}
+			return variables.entitiesProcessContexts;
+		}
+		*/
 		
 		// =====================  END: Cached Entity Meta Data Methods ============================
 		

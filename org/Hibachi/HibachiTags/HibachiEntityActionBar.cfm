@@ -165,7 +165,7 @@
 								</cfif>
 								
 								<div class="btn-group">
-									<button type="submit" class="btn btn-primary">#attributes.hibachiScope.rbKey( "#replace(attributes.processAction, ':', '.', 'all')#.#attributes.processContext#" )#</button>
+									<button type="submit" class="btn btn-primary">#attributes.hibachiScope.rbKey( "entity.#attributes.object.getClassName()#.process.#attributes.processContext#" )#</button>
 								</div>
 							</cfif>
 							
