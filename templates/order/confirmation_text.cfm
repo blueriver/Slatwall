@@ -36,33 +36,28 @@
 Notes:
 
 --->
-<cfif thisTag.executionMode is "start">
-	<cfparam name="attributes.attributeSet" type="any" />
-	<cfparam name="attributes.edit" type="boolean" default="false" />
-	<cfparam name="attributes.fieldNamePrefix" type="string" default="" />
-	<cfparam name="attributes.entity" type="any" default="" />
-	
-	<cfset thisTag.attributeSmartList = attributes.attributeSet.getAttributesSmartList() />
-	<cfset thisTag.attributeSmartList.addFilter('activeFlag', 1) />
-	
-	<cfloop array="#thisTag.attributeSmartList.getRecords()#" index="attribute">
-		<cfset thisAttributeValue = "" />
-		<cfif isObject(attributes.entity)>
-			<cfset thisAttributeValue = attributes.entity.getAttributeValue(attribute.getAttributeID()) />
-		<cfelseif !isNull(attribute.getDefaultValue())>
-			<cfset thisAttributeValue = attribute.getDefaultValue() />  
-		</cfif>
-		
-		<cfset thisValueOptions = [] />
-		<cfloop array="#attribute.getAttributeOptions()#" index="option">
-			<cfset arrayAppend(thisValueOptions, {name=option.getAttributeOptionLabel(), value=option.getAttributeOptionValue()}) />
-		</cfloop>
-		
-		<cfset thisTag.fieldClass = "" />
-		<cfif attribute.getRequiredFlag()>
-			<cfset thisTag.fieldClass = listAppend(thisTag.fieldClass, "required", " ") />
-		</cfif>
-		
-		<cf_HibachiFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="#attributes.fieldNamePrefix##attribute.getAttributeCode()#" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" fieldClass="#thisTag.fieldClass#" value="#thisAttributeValue#" valueOptions="#thisValueOptions#" />
-	</cfloop>
+<cfparam name="order" type="any" />
+
+<cfoutput>
+Order Number: #order.getOrderNumber()#
+Order Placed: #DateFormat(order.getOrderOpenDateTime(), "DD/MM/YYYY")# - #TimeFormat(order.getOrderOpenDateTime(), "short")#
+Customer: #order.getAccount().getFirstName()# #order.getAccount().getLastName()#
+
+Items:
+===========================================================================
+<cfloop array="#order.getOrderItems()#" index="orderItem">
+#orderItem.getSku().getProduct().getTitle()#
+<cfif len(orderItem.getSku().displayOptions())>#orderItem.getSku().displayOptions()#</cfif>
+#orderItem.getFormattedValue('price', 'currency')# | #NumberFormat(orderItem.getQuantity())# | #orderItem.getFormattedValue('extendedPrice', 'currency')# 
+---------------------------------------------------------------------------
+</cfloop>
+
+===========================================================================
+Subtotal: #order.getFormattedValue('Subtotal', 'currency')#
+<cfif order.getDiscountTotal() GT 0> 
+	Discount: #order.getFormattedValue('discountTotal', 'currency')#
 </cfif>
+Delivery Charges: #order.getFormattedValue('fulfillmentTotal', 'currency')#
+Tax: #order.getFormattedValue('taxTotal', 'currency')#
+Total: #order.getFormattedValue('total', 'currency')#
+</cfoutput>

@@ -56,4 +56,37 @@ Notes:
 			UPDATE SlatwallSession SET accountID = null, accountAuthenticationID = null WHERE accountID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.accountID#" />
 		</cfquery>
 	</cffunction>
+	
+	<cffunction name="mergeAccount" returntype="void" access="public">
+		<cfargument name="newAccountID" type="string" required="true" />
+		<cfargument name="oldAccountID" type="string" required="true" />
+		
+		<cfset var rs = "" />
+		<cfset var tableInfo = "" />
+		<cfdbinfo type="Tables" name="tableInfo">
+		
+		<cfloop query="#tableInfo#">
+			<cfset var tableName = tableInfo.tableName />
+			
+			<cfif tableName neq "SlatwallAccount">
+				<cfset var columnInfo = "" />
+				<cfdbinfo type="Columns" table="#tableName#" name="columnInfo">
+				
+				<cfloop query="columnInfo">
+					<cfset var columnName = columnInfo.columnName />
+					
+					<cfif listFindNoCase("accountID,createdByAccountID,modifiedByAccountID", columnName)>>
+						<cfquery name="rs">
+							UPDATE #tableName# SET #columnName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.newAccountID#" /> WHERE #columnName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.oldAccountID#" />
+						</cfquery>
+					</cfif>
+				</cfloop>
+			</cfif>
+			
+		</cfloop>
+		
+		<cfquery name="rs">
+			DELETE FROM SlatwallAccount WHERE accountID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.oldAccountID#" />
+		</cfquery>
+	</cffunction>
 </cfcomponent>

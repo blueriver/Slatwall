@@ -40,25 +40,37 @@ Notes:
 <cfparam name="rc.processObject" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<cf_HibachiEntityProcessForm entity="#rc.account#" edit="#rc.edit#">
-	
-	<cf_HibachiEntityActionBar type="preprocess" object="#rc.account#">
-	</cf_HibachiEntityActionBar>
-	
-	<cf_HibachiPropertyRow>
-		<cf_HibachiPropertyList>
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="firstName" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="lastName" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="company" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="phoneNumber" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddress" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddressConfirm" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthenticationFlag" edit="#rc.edit#" fieldType="yesno">
-			<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']">
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="password" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="passwordConfirm" edit="#rc.edit#">
-			</cf_HibachiDisplayToggle>
-		</cf_HibachiPropertyList>
-	</cf_HibachiPropertyRow>
-	
-</cf_HibachiEntityProcessForm>
+<cfoutput>
+	<cf_HibachiEntityProcessForm entity="#rc.account#" edit="#rc.edit#">
+		
+		<cf_HibachiEntityActionBar type="preprocess" object="#rc.account#">
+		</cf_HibachiEntityActionBar>
+		
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
+				<!--- General Details --->
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="firstName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="lastName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="company" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="phoneNumber" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddress" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddressConfirm" edit="#rc.edit#">
+				
+				<!--- Authentication --->
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthenticationFlag" edit="#rc.edit#" fieldType="yesno">
+				<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']">
+					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="password" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="passwordConfirm" edit="#rc.edit#">
+				</cf_HibachiDisplayToggle>
+				
+				<!--- Account Custom Attributes --->
+				<cfloop array="#rc.account.getAttributeSets()#" index="attributeSet">
+					<hr />
+					<h4>#attributeSet.getAttributeSetName()#</h4>
+					<cf_SlatwallAdminAttributeSetDisplay attributeSet="#attributeSet#" edit="#rc.edit#" />
+				</cfloop>
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>
+		
+	</cf_HibachiEntityProcessForm>
+</cfoutput>
