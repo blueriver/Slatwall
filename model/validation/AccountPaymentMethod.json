@@ -1,0 +1,12 @@
+{
+	"conditions":{
+		"paymentTypeCreditCard":{
+		    "paymentMethod.paymentMethodType":{"eq":"creditCard"}
+		}  
+	},
+	"properties":{
+		"creditCardNumber":		[{"contexts":"save","conditions"="paymentTypeCreditCard","required":true,"dataType":"creditCardNumber"}],
+		"expirationMonth":		[{"contexts":"save","conditions"="paymentTypeCreditCard","required":true,"dataType":"numeric"}],
+		"expirationYear":		[{"contexts":"save","conditions"="paymentTypeCreditCard","required":true,"dataType":"numeric"}]
+	}
+}

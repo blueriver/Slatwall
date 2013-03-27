@@ -1,7 +1,0 @@
-{
-	"properties":{
-		"creditCardNumber":		[{"contexts":"save","required":true,"dataType":"creditCardNumber"}],
-		"expirationMonth":		[{"contexts":"save","required":true,"dataType":"numeric"}],
-		"expirationYear":		[{"contexts":"save","required":true,"dataType":"numeric"}]
-	}
-}
