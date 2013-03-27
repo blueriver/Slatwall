@@ -89,6 +89,8 @@ Notes:
 				    SlatwallInventory i on a.stockID = i.stockID
 				WHERE
 				  	a.stockID = SlatwallStock.stockID 
+				GROUP BY
+					i.createdDateTime
 				) as 'Discrepancy'
 			FROM
 				SlatwallStock
@@ -143,7 +145,9 @@ Notes:
 				  LEFT JOIN
 				    SlatwallInventory i on a.stockID = i.stockID
 				WHERE
-				  	a.stockID = SlatwallStock.stockID 
+				  	a.stockID = SlatwallStock.stockID
+				GROUP BY
+					i.createdDateTime
 				) <> 0
 			ORDER BY
 				SlatwallProductType.productTypeName,
