@@ -199,3 +199,32 @@ Notes:
 	</body>
 	</html>
 </cfoutput>
+
+
+
+
+
+
+<cfoutput>
+Order Number: #order.getOrderNumber()#
+Order Placed: #DateFormat(order.getOrderOpenDateTime(), "DD/MM/YYYY")# - #TimeFormat(order.getOrderOpenDateTime(), "short")#
+Customer: #order.getAccount().getFirstName()# #order.getAccount().getLastName()#
+
+Items:
+===========================================================================
+<cfloop array="#order.getOrderItems()#" index="orderItem">
+#orderItem.getSku().getProduct().getTitle()#
+<cfif len(orderItem.getSku().displayOptions())>#orderItem.getSku().displayOptions()#</cfif>
+#orderItem.getFormattedValue('price', 'currency')# | #NumberFormat(orderItem.getQuantity())# | #orderItem.getFormattedValue('extendedPrice', 'currency')# 
+---------------------------------------------------------------------------
+</cfloop>
+
+===========================================================================
+Subtotal: #order.getFormattedValue('Subtotal', 'currency')#
+<cfif order.getDiscountTotal() GT 0> 
+	Discount: #order.getFormattedValue('discountTotal', 'currency')#
+</cfif>
+Delivery Charges: #order.getFormattedValue('fulfillmentTotal', 'currency')#
+Tax: #order.getFormattedValue('taxTotal', 'currency')#
+Total: #order.getFormattedValue('total', 'currency')#
+</cfoutput>

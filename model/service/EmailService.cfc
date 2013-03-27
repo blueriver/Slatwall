@@ -39,10 +39,19 @@ Notes:
 <cfcomponent extends="HibachiService" persistent="false" accessors="true" output="false">
 	
 	
+	
+	
 	<cffunction name="onEvent" returnType="any" access="public">
 		<cfargument name="eventName" type="string" required="true" />
 		<cfargument name="eventArguments" type="struct" required="true" />
 		
+		<cfsavecontent variable="includeContent">
+			
+		</cfsavecontent>
+		<cfif structKeyExists(emailData, "htmlBody")>
+		</cfif>
+		<cfif structKeyExists(emailData, "htmlBody")>	
+		</cfif>
 		
 	</cffunction>
 	
