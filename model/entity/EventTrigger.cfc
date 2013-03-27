@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,19 +36,19 @@
 Notes:
 
 */
-component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="SlatwallEmailTemplate" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="emailService" hb_permission="this" {
+component entityname="SlatwallEventTrigger" table="SlatwallEventTrigger" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="eventTriggerService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="emailTemplateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="emailTemplateName" ormtype="string";
-	property name="emailTemplateFile" ormtype="string";
-	property name="emailBodyHTML" ormtype="string" length="4000";
-	property name="emailBodyText" ormtype="string" length="4000";
+	property name="eventTriggerID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="eventTriggerType" ormtype="string" hb_formFieldType="select";
+	property name="eventTriggerObjectType" ormtype="string" hb_formFieldType="select";
+	property name="eventName" ormtype="string" hb_formFieldType="select";
 	
 	// Related Object Properties (many-to-one)
+	property name="emailTemplate" cfc="EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";
+	property name="printTemplate" cfc="PrintTemplate" fieldtype="many-to-one" fkcolumn="printTemplateID";
 	
 	// Related Object Properties (one-to-many)
-	property name="emails" singularname="email" cfc="Email" type="array" fieldtype="one-to-many" fkcolumn="emailTemplateID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -62,23 +62,19 @@ component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
-
-
+	property name="eventNameOptions" persistent="false";
 	
 	// ============ START: Non-Persistent Property Methods =================
+	public array function getEventNameOptions() {
+		if(!structKeyExists(variables, "eventNameOptions")) {
+			variables.eventNameOptions = getService("hibachiEventService").getEventNameOptions();
+		}
+		return variables.eventNameOptions;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
-	// Emails (one-to-many)
-	public void function addEmail(required any email) {
-		arguments.email.setEmailTemplate( this );
-	}
-	public void function removeEmail(required any email) {
-		arguments.email.removeEmailTemplate( this );
-	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

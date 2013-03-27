@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,19 +36,17 @@
 Notes:
 
 */
-component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="SlatwallEmailTemplate" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="emailService" hb_permission="this" {
+component entityname="SlatwallPrintTemplate" table="SlatwallPrintTemplate" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="printService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="emailTemplateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="emailTemplateName" ormtype="string";
-	property name="emailTemplateFile" ormtype="string";
-	property name="emailBodyHTML" ormtype="string" length="4000";
-	property name="emailBodyText" ormtype="string" length="4000";
+	property name="printTemplateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="printTemplateName" ormtype="string";
+	property name="printTemplateFile" ormtype="string";
+	property name="printBody" ormtype="string" length="4000";
 	
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
-	property name="emails" singularname="email" cfc="Email" type="array" fieldtype="one-to-many" fkcolumn="emailTemplateID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -71,14 +69,6 @@ component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
-	// Emails (one-to-many)
-	public void function addEmail(required any email) {
-		arguments.email.setEmailTemplate( this );
-	}
-	public void function removeEmail(required any email) {
-		arguments.email.removeEmailTemplate( this );
-	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
