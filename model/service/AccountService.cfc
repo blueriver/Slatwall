@@ -302,6 +302,38 @@ component extends="HibachiService" accessors="true" output="false" {
 		return false;
 	}
 	
+	public boolean function deleteAccountPhoneNumber(required any accountPhoneNumber) {
+		
+		// Check delete validation
+		if(arguments.accountPhoneNumber.isDeletable()) {
+			
+			// If the primary email address is this e-mail address then set the primary to null
+			if(arguments.accountPhoneNumber.getAccount().getPrimaryPhoneNumber().getAccountPhoneNumberID() eq arguments.accountPhoneNumber.getAccountPhoneNumberID()) {
+				arguments.accountPhoneNumber.getAccount().setPrimaryPhoneNumber(javaCast("null",""));
+			}
+			
+			return delete(arguments.accountPhoneNumber);
+		}
+		
+		return false;
+	}
+	
+	public boolean function deleteAccountAddress(required any accountAddress) {
+		
+		// Check delete validation
+		if(arguments.accountAddress.isDeletable()) {
+
+			// If the primary email address is this e-mail address then set the primary to null
+			if(arguments.accountAddress.getAccount().getPrimaryAddress().getAccountAddressID() eq arguments.accountAddress.getAccountAddressID()) {
+				arguments.accountAddress.getAccount().setPrimaryAddress(javaCast("null",""));
+			}
+			
+			return delete(arguments.accountAddress);
+		}
+		
+		return false;
+	}
+	
 	// =====================  END: Delete Overrides ===========================
 	
 }
