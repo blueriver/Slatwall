@@ -294,6 +294,41 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	
 	// ================== START: Overridden Methods ========================
 	
+	// This overrides the base validation method to dynamically add rules based on setting specific requirements
+	public any function validate( string context="" ) {
+		
+		// Call the base method validate with any additional arguments passed in
+		super.validate(argumentCollection=arguments);
+		
+		// If the attribute is required
+		if(getAttribute().getRequiredFlag()){
+			var constraintDetail = {
+				constraintType = "required",
+				constraintValue = true
+			};
+			getService("hibachiValidationService").validateConstraint(object=this, propertyIdentifier="settingValue", constraintDetails=constraintDetail, errorBean=getHibachiErrors(), context=arguments.context);
+		}
+		
+	}
+	
+	// @hint public method for returning the validation class of a property
+	public string function getPropertyValidationClass( required string propertyName, string context="save" ) {
+		
+		// Call the base method first
+		var validationClass = super.getPropertyValidationClass(argumentCollection=arguments);
+		
+		// If the attribute is required
+		if(getAttribute().getRequiredFlag()){
+			validationClass = listAppend(validationClass, "required", " ");
+		}
+		
+		return validationClass;
+	}
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
 	public void function preInsert(){
 		if(getAttribute().getAttributeType().getSystemCode() == "atPassword" && structKeyExists(variables, "attributeValue")) {
 			variables.attributeValueEncrypted = encryptValue(variables.attributeValue);
@@ -311,10 +346,6 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 		
 		super.preUpdate(argumentcollection=arguments);
 	}
-	
-	// ==================  END:  Overridden Methods ========================
-		
-	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

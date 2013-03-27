@@ -58,6 +58,11 @@ Notes:
 			<cfset arrayAppend(thisValueOptions, {name=option.getAttributeOptionLabel(), value=option.getAttributeOptionValue()}) />
 		</cfloop>
 		
-		<cf_HibachiFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="#attributes.fieldNamePrefix##attribute.getAttributeCode()#" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" value="#thisAttributeValue#" valueOptions="#thisValueOptions#" />
+		<cfset thisTag.fieldClass = "" />
+		<cfif attribute.getRequiredFlag()>
+			<cfset thisTag.fieldClass = listAppend(thisTag.fieldClass, "required", " ") />
+		</cfif>
+		
+		<cf_HibachiFieldDisplay title="#attribute.getAttributeName()#" hint="#attribute.getAttributeHint()#" edit="#attributes.edit#" fieldname="#attributes.fieldNamePrefix##attribute.getAttributeCode()#" fieldType="#right(attribute.getAttributeType().getSystemCode(), len(attribute.getAttributeType().getSystemCode())-2)#" fieldClass="#thisTag.fieldClass#" value="#thisAttributeValue#" valueOptions="#thisValueOptions#" />
 	</cfloop>
 </cfif>
