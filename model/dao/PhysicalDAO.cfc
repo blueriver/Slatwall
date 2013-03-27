@@ -51,47 +51,42 @@ Notes:
 				SlatwallLocation.locationName,
 				SlatwallProduct.productName,
 				SlatwallProduct.productID,
-				(
-				SELECT
-					(COALESCE(SUM(SlatwallInventory.quantityIn),0) - COALESCE(SUM(SlatwallInventory.quantityOut),0))
-				FROM
-				  	SlatwallStock as a
-				  LEFT JOIN
-				    SlatwallInventory on a.stockID = SlatwallInventory.stockID
-				WHERE
-				  	a.stockID = SlatwallStock.stockID
-				) as 'Qoh',
-				(
-				SELECT
-					((COALESCE(SUM(i.quantityIn),0) - COALESCE(SUM(i.quantityOut),0)) - 
-					(SELECT
-						COALESCE(SUM(pci.quantity),0)
-					FROM
-						SlatwallPhysicalCountItem pci
-					  INNER JOIN
-					  	SlatwallPhysicalCount pc on pci.physicalCountID = pc.physicalCountID
-					WHERE
-						pci.stockID = SlatwallStock.stockID
-					  AND
-					  	pc.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />
-					  AND
-					  	(
-					  		(pci.countPostDateTime IS NOT NULL AND pci.countPostDateTime >= i.createdDateTime)
-					  	  OR
-					  	  	(pci.countPostDateTime IS NULL AND pc.countPostDateTime >= i.createdDateTime)
-					  	  OR
-					  	  	i.createdDateTime IS NULL
-					  	)
-					)) * -1
+				(SELECT
+					COALESCE(SUM(i.quantityIn),0) - COALESCE(SUM(i.quantityOut),0)
 				FROM
 				  	SlatwallStock as a
 				  LEFT JOIN
 				    SlatwallInventory i on a.stockID = i.stockID
 				WHERE
-				  	a.stockID = SlatwallStock.stockID 
-				GROUP BY
-					i.createdDateTime
-				) as 'Discrepancy'
+				  	a.stockID = SlatwallStock.stockID
+				) as 'Qoh',
+				(SELECT
+					(SELECT
+						COALESCE(SUM(i.quantityIn),0) - COALESCE(SUM(i.quantityOut),0)
+					FROM
+				  		SlatwallStock as a
+					  LEFT JOIN
+					    SlatwallInventory i on a.stockID = i.stockID
+					WHERE
+					  	a.stockID = SlatwallStock.stockID
+					  AND (
+					  	  (max(pci.countPostDateTime) is not null and i.createdDateTime < max(pci.countPostDateTime)) 
+						OR
+						  (max(pci.countPostDateTime) is null and max(pc.countPostDateTime) is not null and i.createdDateTime < max(pc.countPostDateTime))
+						OR
+						  (max(pc.countPostDateTime) is null)
+					  )
+					) -
+					COALESCE(SUM(pci.quantity),0)
+				FROM
+					SlatwallPhysicalCountItem pci
+				  INNER JOIN
+				  	SlatwallPhysicalCount pc on pci.physicalCountID = pc.physicalCountID
+				WHERE
+					pci.stockID = SlatwallStock.stockID
+				  AND
+				  	pc.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />
+				) * -1 as 'discrepancy'
 			FROM
 				SlatwallStock
 			  INNER JOIN
@@ -118,10 +113,23 @@ Notes:
 				  	EXISTS(SELECT SlatwallPhysicalBrand.brandID FROM SlatwallPhysicalBrand WHERE SlatwallPhysicalBrand.brandID=SlatwallBrand.brandID AND SlatwallPhysicalBrand.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />)
 			
 			  <!--- Verify Discrepancy <> 0 --->		  
-			  ) AND (
-				SELECT
-					((COALESCE(SUM(i.quantityIn),0) - COALESCE(SUM(i.quantityOut),0)) - 
-					(SELECT
+			  ) AND (SELECT
+						(SELECT
+							COALESCE(SUM(i.quantityIn),0) - COALESCE(SUM(i.quantityOut),0)
+						FROM
+					  		SlatwallStock as a
+						  LEFT JOIN
+						    SlatwallInventory i on a.stockID = i.stockID
+						WHERE
+						  	a.stockID = SlatwallStock.stockID
+						  AND (
+						  	  (max(pci.countPostDateTime) is not null and i.createdDateTime < max(pci.countPostDateTime)) 
+							OR
+							  (max(pci.countPostDateTime) is null and max(pc.countPostDateTime) is not null and i.createdDateTime < max(pc.countPostDateTime))
+							OR
+							  (max(pc.countPostDateTime) is null)
+						  )
+						) -
 						COALESCE(SUM(pci.quantity),0)
 					FROM
 						SlatwallPhysicalCountItem pci
@@ -131,24 +139,7 @@ Notes:
 						pci.stockID = SlatwallStock.stockID
 					  AND
 					  	pc.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />
-					  AND
-					  	(
-					  		(pci.countPostDateTime IS NOT NULL AND pci.countPostDateTime >= i.createdDateTime)
-					  	  OR
-					  	  	(pci.countPostDateTime IS NULL AND pc.countPostDateTime >= i.createdDateTime)
-					  	  OR
-					  	  	i.createdDateTime IS NULL
-					  	)
-					)) * -1
-				FROM
-				  	SlatwallStock as a
-				  LEFT JOIN
-				    SlatwallInventory i on a.stockID = i.stockID
-				WHERE
-				  	a.stockID = SlatwallStock.stockID
-				GROUP BY
-					i.createdDateTime
-				) <> 0
+					) <> 0
 			ORDER BY
 				SlatwallProductType.productTypeName,
 				SlatwallProduct.productName,
