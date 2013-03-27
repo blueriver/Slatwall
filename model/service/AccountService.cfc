@@ -270,37 +270,36 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public boolean function deleteAccount(required any account) {
 	
-		// Set the primary fields temporarily in the local scope so we can reset if delete fails
-		var accountID = arguments.account.getAccountID();
-		var primaryEmailAddress = arguments.account.getPrimaryEmailAddress();
-		var primaryPhoneNumber = arguments.account.getPrimaryPhoneNumber();
-		var primaryAddress = arguments.account.getPrimaryAddress();
-		
-		// Remove the primary fields so that we can delete this entity
-		arguments.account.setPrimaryEmailAddress(javaCast("null", ""));
-		arguments.account.setPrimaryPhoneNumber(javaCast("null", ""));
-		arguments.account.setPrimaryAddress(javaCast("null", ""));
-	
-		// Use the base delete method to check validation
-		var deleteOK = super.delete(arguments.account);
-		
-		// If the delete failed, then we just reset the primary fields in account and return false
-		if(deleteOK) {
+		// Check delete validation
+		if(arguments.account.isDeletable()) {
+			
+			// Remove the primary fields so that we can delete this entity
+			arguments.account.setPrimaryEmailAddress(javaCast("null", ""));
+			arguments.account.setPrimaryPhoneNumber(javaCast("null", ""));
+			arguments.account.setPrimaryAddress(javaCast("null", ""));
+			
 			getAccountDAO().removeAccountFromAllSessions( accountID );
 			
-			super.delete(primaryEmailAddress);
-			super.delete(primaryPhoneNumber);
-			super.delete(primaryAddress);
-			
-		} else {
-			arguments.account.setPrimaryEmailAddress(primaryEmailAddress);
-			arguments.account.setPrimaryPhoneNumber(primaryPhoneNumber);
-			arguments.account.setPrimaryAddress(primaryAddress);
-		
-			return false;
+			return delete(arguments.account);
 		}
+		
+		return false;
+	}
 	
-		return true;
+	public boolean function deleteAccountEmailAddress(required any accountEmailAddress) {
+		
+		// Check delete validation
+		if(arguments.accountEmailAddress.isDeletable()) {
+			
+			// If the primary email address is this e-mail address then set the primary to null
+			if(arguments.accountEmailAddress.getAccount().getPrimaryEmailAddress().getAccountEmailAddressID() eq arguments.accountEmailAddress.getAccountEmailAddressID()) {
+				arguments.accountEmailAddress.getAccount().setPrimaryEmailAddress(javaCast("null",""));
+			}
+			
+			return delete(arguments.accountEmailAddress);
+		}
+		
+		return false;
 	}
 	
 	// =====================  END: Delete Overrides ===========================
