@@ -34,11 +34,36 @@
     exception statement from your version.
 
 Notes:
-
+																			
+	This is an email template designed to be used to customize the emails	
+	that slatwall sends.  If you would like to customize this template, it	
+	should first be coppied into the /custom/templates/ directory in the	
+	same folder path naming convention that it currently resides inside.	
+																			
+	All email templates have 2 objects that are passed in (seen below):		
+																			
+	email: This is the actually email entity that will have things like a	
+	to, from, ext... that will eventually be persisted to the database as	
+	a log of this e-mail so long as the "Log Email" setting is set to true	
+																			
+	emailData: This is a structure used to set values that will get			
+	populated into the email entity once this processing is complete.		
+	Typically you will want to set emailData.htmlBody & emailData.textBody	
+	however, you can also set any of the other properties as well.  If you	
+	do not set emailData.htmlBody, then the output of this include will be 	
+	used as the htmlBody, and no textBody will be set.						
+	It will also be used as a final stringReplace() struct for any ${} keys	
+	that have not already been relpaced.  Another key field that you can	
+	set in the emailData is voidSend=true which will cancel the sending of	
+	this e-mail.															
+																			
+	Lastly, the base object that is being used for this email should also	
+	be injected into the template and paramed at the top.					
+																			
 --->
-<cfparam name="order" type="any" />
-<cfparam name="email" type="any" />
+<cfparam name="email" type="any" />	
 <cfparam name="emailData" type="struct" default="#structNew()#" />
+<cfparam name="order" type="any" />
 
 <cfsavecontent variable="emailData.htmlBody">
 	<cfoutput>
@@ -48,7 +73,7 @@ Notes:
 				
 				<!--- Add Logo Here  --->
 				<!--- <img src="http://Full_URL_Path_To_Company_Logo/logo.jpg" border="0" style="float: right;"> --->
-				#email.getHTMLBody#
+				
 				<div id="top" style="width: 325px; margin: 0; padding: 0;">
 					<h1 style="font-size: 20px;">Order Confirmation</h1>
 					
