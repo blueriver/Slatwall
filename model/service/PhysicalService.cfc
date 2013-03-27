@@ -113,6 +113,20 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	public any function processPhysical_addPhysicalCount(required any physical, required any processObject) {
+		// Create a new Physical count
+		var physicalCount = this.newPhysicalCount();
+		
+		// Set the physical for this count
+		physicalCount.setPhysical( arguments.physical );
+		
+		// Set the location for this count
+		physicalCount.setLocation( getLocationService().getLocation( arguments.processObject.getLocationID() ));
+		
+		// Set the count post date time
+		physicalCount.setCountPostDateTime( arguments.processObject.getCountPostDateTime() );
+		
+		// Save the physicalCount in hibernate scope
+		this.savePhysicalCount( physicalCount );
 		
 		// If a count file was uploaded, then we can use that
 		if( !isNull(arguments.processObject.getCountFile()) ) {
@@ -124,25 +138,16 @@ component extends="HibachiService" accessors="true" output="false" {
 			var documentData = fileUpload( tempDir,'countFile','','makeUnique' );
 			
 			//check uploaded file if its a valid text file
-			if( !documentData.serverFileExt == "txt" ){
+			if( documentData.serverFileExt != "txt" ){
+				
+				// Make sure that nothing is persisted
+				getHibachiScope().setORMHasErrors( true );
 				
 				//delete uploaded file if its not a text file
 				fileDelete( "#tempDir##documentData.serverFile#" );
-				arguments.physical.addError('invalidFile', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.invalidFile'));
+				arguments.processObject.addError('invalidFile', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.invalidFile'));
 				
 			} else {	
-						
-				// Create a new Physical count
-				var physicalCount = this.newPhysicalCount();
-				
-				// Set the physical for this count
-				physicalCount.setPhysical( arguments.physical );
-				
-				// Set the location for this count
-				physicalCount.setLocation( getLocationService().getLocation( arguments.processObject.getLocationID() ));
-				
-				// Set the count post date time
-				physicalCount.setCountPostDateTime( arguments.processObject.getCountPostDateTime() );
 				
 				// set meta data
 				var fileName = documentData.serverFile;	
@@ -203,8 +208,6 @@ component extends="HibachiService" accessors="true" output="false" {
 				
 				// As long as one count item was created we should save the count and just display a message
 				if(valid) {
-					// Save the physicalCount 
-					this.savePhysicalCount( physicalCount );
 					
 					// Get the assets folder from the global assets folder
 					var assetsFileFolderPath = getHibachiScope().setting('globalAssetsFileFolderPath');
