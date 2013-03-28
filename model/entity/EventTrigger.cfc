@@ -64,14 +64,40 @@ component entityname="SlatwallEventTrigger" table="SlatwallEventTrigger" persist
 	
 	// Non-Persistent Properties
 	property name="eventNameOptions" persistent="false";
+	property name="eventTriggerObjectTypeOptions" persistent="false";
+	property name="eventTriggerTypeOptions" persistent="false";
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
 	public array function getEventNameOptions() {
 		if(!structKeyExists(variables, "eventNameOptions")) {
 			variables.eventNameOptions = getService("hibachiEventService").getEventNameOptions();
 		}
 		return variables.eventNameOptions;
 	}
+	
+	public array function getEventTriggerObjectTypeOptions() {
+		if(!structKeyExists(variables, "eventTriggerObjectTypeOptions")) {
+			var emd = getService("hibachiService").getEntitiesMetaData();
+			var enArr = listToArray(structKeyList(emd));
+			arraySort(enArr,"text");
+			variables.eventTriggerObjectTypeOptions = [{name=getHibachiScope().rbKey('define.select'), value=''}];
+			for(var i=1; i<=arrayLen(enArr); i++) {
+				arrayAppend(variables.eventTriggerObjectTypeOptions, {name=rbKey('entity.#enArr[i]#'), value=enArr[i]});
+			}
+		}
+		return variables.eventTriggerObjectTypeOptions;
+	}
+	
+	public array function getEventTriggerTypeOptions() {
+		return [
+			{name=getHibachiScope().rbKey('define.select'), value=''},
+			{name=getHibachiScope().rbKey('define.email'), value='email'},
+			{name=getHibachiScope().rbKey('define.print'), value='print'}
+		];
+	}
+	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

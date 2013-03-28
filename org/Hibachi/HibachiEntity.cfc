@@ -1,5 +1,6 @@
 component output="false" accessors="true" persistent="false" extends="HibachiTransient" {
 
+	property name="newFlag" type="boolean" persistent="false";
 	property name="simpleRepresentation" type="string" persistent="false";
 	property name="processObjects" type="struct" persistent="false";
 	
@@ -140,14 +141,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	// @hint this method checks to see if there is a process object for a particular context
 	public boolean function hasProcessObject(required string context) {
 		if(getBeanFactory().containsBean("#getClassName()#_#arguments.context#")) {
-			return true;
-		}
-		return false;
-	}
-	
-	// @hint public method that returns if this entity has persisted to the database yet or not.
-	public boolean function isNew() {
-		if(getPrimaryIDValue() == "") {
 			return true;
 		}
 		return false;
@@ -502,6 +495,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
+	// @hint public method that returns if this entity has had entitySave() called on it yet or not.
+	public boolean function getNewFlag() {
+		if(getPrimaryIDValue() == "") {
+			return true;
+		}
+		return false;
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
@@ -619,4 +620,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	*/
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// @hint public method that returns if this entity has persisted to the database yet or not.
+	public boolean function isNew() {
+		return getNewFlag();
+	}
+	
+	// ==================  END:  Deprecated Methods ========================
 }

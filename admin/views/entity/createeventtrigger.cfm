@@ -46,8 +46,8 @@ Notes:
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerType" edit="false">
-				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerObjectType" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerObjectType" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
