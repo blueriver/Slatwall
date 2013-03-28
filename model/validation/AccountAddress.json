@@ -2,5 +2,8 @@
 	"properties":{
 		"accountAddressName":		[{"contexts":"save","required":true}],
 		"account":					[{"contexts":"save","required":true}]
+	},
+	"populatedPropertyValidation":{
+	    "address":[{"validate":"full"}]
 	}
 }
