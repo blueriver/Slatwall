@@ -49,7 +49,6 @@ component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" p
 	property name="emailBodyText" ormtype="string" length="4000";
 	
 	// Related Object Properties (many-to-one)
-	property name="emailTemplate" cfc="EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -65,41 +64,12 @@ component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" p
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="eventNameOptions" persistent="false";
-
-	// Deprecated Properties
-	property name="emailName" ormtype="string";
-	property name="eventName" ormtype="string" hb_formFieldType="select";
 	
 	// ============ START: Non-Persistent Property Methods =================
-	public array function getEventNameOptions() {
-		if(!structKeyExists(variables, "eventNameOptions")) {
-			variables.eventNameOptions = getService("hibachiEventService").getEventNameOptions();
-		}
-		return variables.eventNameOptions;
-	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-
-	// Email Template (many-to-one)
-	public void function setEmailTemplate(required any emailTemplate) {
-		variables.emailTemplate = arguments.emailTemplate;
-		if(isNew() or !arguments.emailTemplate.hasEmail( this )) {
-			arrayAppend(arguments.emailTemplate.getEmails(), this);
-		}
-	}
-	public void function removeEmailTemplate(any emailTemplate) {
-		if(!structKeyExists(arguments, "emailTemplate")) {
-			arguments.emailTemplate = variables.emailTemplate;
-		}
-		var index = arrayFind(arguments.emailTemplate.getEmails(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.emailTemplate.getEmails(), index);
-		}
-		structDelete(variables, "emailTemplate");
-	}
 
 	// =============  END:  Bidirectional Helper Methods ===================
 

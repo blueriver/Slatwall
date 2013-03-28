@@ -48,7 +48,6 @@ component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
-	property name="emails" singularname="email" cfc="Email" type="array" fieldtype="one-to-many" fkcolumn="emailTemplateID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -71,14 +70,6 @@ component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
-	// Emails (one-to-many)
-	public void function addEmail(required any email) {
-		arguments.email.setEmailTemplate( this );
-	}
-	public void function removeEmail(required any email) {
-		arguments.email.removeEmailTemplate( this );
-	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

@@ -40,14 +40,14 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.eventTrigger#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.eventTrigger#" edit="#rc.edit#" sRedirectAction="admin:entity.editeventtrigger">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.eventTrigger#" />
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerType" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerObjectType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerObject" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
