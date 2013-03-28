@@ -103,7 +103,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	
 	// Allows for custom views to be created for the admin, frontend or public subsystems
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
-		
+		arguments.fullPath = super.customizeViewOrLayoutPath(argumentcollection=arguments);
 		if(listFindNoCase("admin,frontend,public", arguments.pathInfo.subsystem)){
 			var customFullPath = "/custom" & arguments.fullPath;
 			if(fileExists(expandPath(customFullPath))) {

@@ -36,19 +36,21 @@
 Notes:
 
 --->
-<cfparam name="rc.physical" type="any">
+<cfparam name="rc.eventTrigger" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.physical#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.physical#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.eventTrigger#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.eventTrigger#" />
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.physical#" property="physicalName" edit="true" />
-				<cf_HibachiPropertyDisplay object="#rc.physical#" property="locations" edit="true" />
+				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerName" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
-		
+
+		<cf_HibachiTabGroup object="#rc.eventTrigger#">
+		</cf_HibachiTabGroup>
+
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

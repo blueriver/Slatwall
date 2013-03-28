@@ -40,6 +40,7 @@ component entityname="SlatwallEventTrigger" table="SlatwallEventTrigger" persist
 	
 	// Persistent Properties
 	property name="eventTriggerID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="eventTriggerName" ormtype="string";
 	property name="eventTriggerType" ormtype="string" hb_formFieldType="select";
 	property name="eventTriggerObjectType" ormtype="string" hb_formFieldType="select";
 	property name="eventName" ormtype="string" hb_formFieldType="select";

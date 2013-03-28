@@ -53,7 +53,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	public void function editCountry(required struct rc) {
 		rc.country = getAddressService().getCountry(rc.countryCode);
 		rc.edit = true;
-		getFW().setView("admin:entity.detailcountry");
 	}
 	
 	public void function detailCountry(required struct rc) {
@@ -65,7 +64,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	public void function editCurrency(required struct rc) {
 		rc.currency = getCurrencyService().getCurrency(rc.currencyCode);
 		rc.edit = true;
-		getFW().setView("admin:entity.detailcurrency");
 	}
 	
 	public void function detailCurrency(required struct rc) {
@@ -76,7 +74,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	public void function editMeasurementUnit(required struct rc) {
 		rc.measurementUnit = getMeasurementService().getMeasurementUnit(rc.unitCode);
 		rc.edit = true;
-		getFW().setView("admin:entity.detailmeasurementunit");
 	}
 	
 	public void function detailMeasurementUnit(required struct rc) {
@@ -152,13 +149,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 		
 		super.genericSaveMethod('Option',rc);
-	}
-	
-	// Physical
-	public void function createPhysical() {
-		super.genericCreateMethod('Physical', rc);
-		
-		getFW().setView('admin:entity.createphysical');
 	}
 	
 	// Permission Group

@@ -189,9 +189,6 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Set the edit to true
 		arguments.rc.edit = true;
-		
-		// Set the view to the correct one
-		getFW().setView(arguments.rc.entityActionDetails.detailAction);
 	}
 	
 	// EDIT
@@ -233,9 +230,6 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Setup the values needed for this type of layout
 		arguments.rc.pageTitle = arguments.rc[arguments.entityName].getSimpleRepresentation();
 		arguments.rc.edit = true;
-		
-		// Switch the view to use the same as the detail view
-		getFW().setView(arguments.rc.entityActionDetails.detailAction);
 	}
 	
 	// DETAIL

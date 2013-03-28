@@ -375,6 +375,17 @@ component extends="FW1.framework" {
 		}
 	}
 	
+	// Allows for custom views to be created for the admin, frontend or public subsystems
+	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
+		if(!fileExists(expandPath(arguments.fullPath)) && left(listLast(arguments.fullPath, "/"), 6) eq "create" && fileExists(expandPath(replace(arguments.fullPath, "/create", "/detail")))) {
+			return replace(arguments.fullPath, "/create", "/detail");
+		} else if(!fileExists(expandPath(arguments.fullPath)) && left(listLast(arguments.fullPath, "/"), 4) eq "edit" && fileExists(expandPath(replace(arguments.fullPath, "/edit", "/detail")))) {
+			return replace(arguments.fullPath, "/edit", "/detail");
+		}	
+	
+		return arguments.fullPath;
+	}
+	
 	
 	// This handels all of the ORM persistece.
 	public void function endHibachiLifecycle() {

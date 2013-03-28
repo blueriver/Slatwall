@@ -113,7 +113,7 @@ Notes:
 								<cfloop array="#local.integrationSubsystems#" index="local.intsys"><cfif request.slatwallScope.authenticateAction('#local.intsys.subsystem#:main.default')><li><a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a></li></cfif></cfloop>
 							</cf_HibachiActionCallerDropdown>
 						</cfif>
-						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.settings_nav')#" icon="cog icon-white" type="nav">
+						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.configure_nav')#" icon="cog icon-white" type="nav">
 							<cfsavecontent variable="local.settingGroupOne">
 								<cf_HibachiActionCaller action="admin:entity.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listattributeset" type="list">
@@ -143,23 +143,13 @@ Notes:
 							<cf_HibachiActionCaller action="admin:entity.listtype" type="list">
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.tools_nav')#" icon="magnet icon-white" type="nav">
-							<cfsavecontent variable="local.toolGroupOne">
-								<cfif $.slatwall.getCurrentAccount().getAdminAccountFlag()>
-									<li><a title="User Docs" href="#$.slatwall.getApplicationValue('baseURL')#/meta/docs/##user" target="_blank">User Docs</a></li>
-									<li><a title="Developer Docs" href="#$.slatwall.getApplicationValue('baseURL')#/meta/docs/" target="_blank">Developer Docs</a></li>
-								</cfif>
-								<cf_HibachiActionCaller action="admin:main.about" type="list">
-								<cf_HibachiActionCaller action="admin:main.log" type="list">
-							</cfsavecontent>
-							<cfif len(local.toolGroupOne)>
-								#local.toolGroupOne#
-								<li class="divider"></li>
-							</cfif>
 							<cfsavecontent variable="local.toolGroupTwo">
 								<cf_HibachiActionCaller action="admin:main.ckfinder" type="list" modal="true" />
+								<cf_HibachiActionCaller action="admin:entity.listeventtrigger" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listschedule" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listtask" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listtaskhistory" type="list">
+								<cf_HibachiActionCaller action="admin:main.log" type="list">
 							</cfsavecontent>
 							<cfif len(trim(local.toolGroupTwo))>
 								#local.toolGroupTwo#
@@ -178,8 +168,11 @@ Notes:
 								<cf_HibachiActionCallerDropdown title="" icon="user icon-white" dropdownclass="pull-right" type="nav">
 									<cf_HibachiActionCaller action="admin:entity.detailaccount" querystring="accountID=#$.slatwall.account('accountID')#" type="list">
 									<cf_HibachiActionCaller action="admin:main.logout" type="list">
+									<li class="divider"></li>
+									<li><a title="User Docs" href="http://docs.getslatwall.com/##users" target="_blank">User Docs</a></li>
+									<li><a title="Developer Docs" href="http://docs.getslatwall.com/##developer" target="_blank">Developer Docs</a></li>
+									<cf_HibachiActionCaller action="admin:main.about" type="list">
 								</cf_HibachiActionCallerDropdown>
-								<li class="divider-vertical"></li>
 							</ul>
 							<form name="search" class="navbar-search" action="/" onSubmit="return false;">
 								<input id="global-search" type="text" name="serach" class="search-query span2" placeholder="Search">
