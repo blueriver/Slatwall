@@ -215,8 +215,8 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 	
 	public array function getPrintTemplates() {
 		if(!structKeyExists(variables, "printTemplates")) {
-			var sl = getService("templateService").getEmailTemplateSmartList();
-			sl.addFilter('emailTemplateObject', getClassName());
+			var sl = getService("templateService").getPrintTemplateSmartList();
+			sl.addFilter('printTemplateObject', getClassName());
 			variables.printTemplates = sl.getRecords();
 		}
 		return variables.printTemplates;

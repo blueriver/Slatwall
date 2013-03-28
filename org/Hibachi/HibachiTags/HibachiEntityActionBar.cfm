@@ -105,16 +105,41 @@
 									</div>
 								</cfif>
 								
-								<!--- Detail: Email --->
-								<cfif arrayLen(attributes.object.getEmailTemplates())>
-									<div class="btn-group">
-										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-envelope"></i></button>
-										<ul class="dropdown-menu pull-right">
-											<cfloop array="#attributes.object.getEmailTemplates()#" index="template">
-												<li>#template.getEmailTemplateName()#</li>
-											</cfloop>
-										</ul>
-									</div>
+								<!--- Detail: Button Groups --->
+								<cfif structKeyExists(thistag, "buttonGroups") && arrayLen(thistag.buttonGroups)>
+									<cfloop array="#thisTag.buttonGroups#" index="buttonGroup">
+										<cfif structKeyExists(buttonGroup, "generatedContent") && len(buttonGroup.generatedContent)>
+											<div class="btn-group">
+												#buttonGroup.generatedContent#
+											</div>
+										</cfif>
+									</cfloop>
+								</cfif>
+								
+								<!--- Detail: Email / Print --->
+								<cfif arrayLen(attributes.object.getEmailTemplates()) || arrayLen(attributes.object.getPrintTemplates())>
+									<!--- Email --->
+									<cfif arrayLen(attributes.object.getEmailTemplates())>
+										<div class="btn-group">
+											<a class="btn dropdown-toggle" data-toggle="dropdown" href="##"><i class="icon-envelope"></i></a>
+											<ul class="dropdown-menu pull-right">
+												<cfloop array="#attributes.object.getEmailTemplates()#" index="template">
+													<cf_HibachiProcessCaller action="admin:entity.preprocessemail" entity="Email" processContext="addToQueue" queryString="emailTemplateID=#template.getEmailTemplateID()#&#attributes.object.getPrimaryIDPropertyName#=#attributes.object.getPrimaryIDValue()#" text="#template.getEmailTemplateName()#" modal="true" type="list" />
+												</cfloop>
+											</ul>
+										</div>
+									</cfif>
+									<!--- Print --->
+									<cfif arrayLen(attributes.object.getPrintTemplates())>
+										<div class="btn-group">
+											<a class="btn dropdown-toggle" data-toggle="dropdown" href="##"><i class="icon-print"></i></a>
+											<ul class="dropdown-menu pull-right">
+												<cfloop array="#attributes.object.getPrintTemplates()#" index="template">
+													<cf_HibachiProcessCaller action="admin:entity.preprocessprint" entity="Print" processContext="addToQueue" queryString="printTemplateID=#template.getPrintTemplateID()#&#attributes.object.getPrimaryIDPropertyName#=#attributes.object.getPrimaryIDValue()#" text="#template.getPrintTemplateName()#" modal="true" type="list" />
+												</cfloop>
+											</ul>
+										</div>
+									</cfif>
 								</cfif>
 									
 								<!--- Detail: Print --->
