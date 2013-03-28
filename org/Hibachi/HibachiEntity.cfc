@@ -1,6 +1,8 @@
 component output="false" accessors="true" persistent="false" extends="HibachiTransient" {
 
 	property name="newFlag" type="boolean" persistent="false";
+	property name="printTemplates" type="struct" persistent="false";
+	property name="emailTemplates" type="struct" persistent="false";
 	property name="simpleRepresentation" type="string" persistent="false";
 	property name="processObjects" type="struct" persistent="false";
 	
@@ -501,6 +503,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			return true;
 		}
 		return false;
+	}
+	
+	public array function getPrintTemplates() {
+		return [];
+	}
+	
+	public array function getEmailTemplates() {
+		return [];
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

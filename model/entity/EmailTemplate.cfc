@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="SlatwallEmailTemplate" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="emailService" hb_permission="this" {
+component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="SlatwallEmailTemplate" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="templateService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="emailTemplateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -83,7 +83,7 @@ component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="
 	
 	public array function getEmailTemplateFileOptions() {
 		if(!structKeyExists(variables, "emailTemplateFileOptions")) {
-			variables.emailTemplateFileOptions = getService("emailService").getEmailTemplateFileOptions( object=getEmailTemplateObject() );
+			variables.emailTemplateFileOptions = getService("templateService").getTemplateFileOptions( templateType="email", object=getEmailTemplateObject() );
 			arrayPrepend(variables.emailTemplateFileOptions, {name=getHibachiScope().rbKey('define.none'), value=''});
 		}
 		return variables.emailTemplateFileOptions;

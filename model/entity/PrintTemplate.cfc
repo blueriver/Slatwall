@@ -36,12 +36,13 @@
 Notes:
 
 */
-component entityname="SlatwallPrintTemplate" table="SlatwallPrintTemplate" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="printService" hb_permission="this" {
+component entityname="SlatwallPrintTemplate" table="SlatwallPrintTemplate" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="templateService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="printTemplateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="printTemplateName" ormtype="string";
-	property name="printTemplateFile" ormtype="string";
+	property name="printTemplateObject" ormtype="string" hb_formFieldType="select";
+	property name="printTemplateFile" ormtype="string" hb_formFieldType="select";
 	property name="printBody" ormtype="string" length="4000";
 	
 	// Related Object Properties (many-to-one)
@@ -60,11 +61,33 @@ component entityname="SlatwallPrintTemplate" table="SlatwallPrintTemplate" persi
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
+	property name="printTemplateObjectOptions" persistent="false";
+	property name="printTemplateFileOptions" persistent="false";
 
 
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public array function getPrintTemplateObjectOptions() {
+		if(!structKeyExists(variables, "printTemplateObjectOptions")) {
+			var emd = getService("hibachiService").getEntitiesMetaData();
+			var enArr = listToArray(structKeyList(emd));
+			arraySort(enArr,"text");
+			variables.printTemplateObjectOptions = [{name=getHibachiScope().rbKey('define.select'), value=''}];
+			for(var i=1; i<=arrayLen(enArr); i++) {
+				arrayAppend(variables.printTemplateObjectOptions, {name=rbKey('entity.#enArr[i]#'), value=enArr[i]});
+			}
+		}
+		return variables.printTemplateObjectOptions;
+	}
+	
+	public array function getPrintTemplateFileOptions() {
+		if(!structKeyExists(variables, "printTemplateFileOptions")) {
+			variables.printTemplateFileOptions = getService("templateService").getTemplateFileOptions( templateType="print", object=getPrintTemplateObject() );
+			arrayPrepend(variables.printTemplateFileOptions, {name=getHibachiScope().rbKey('define.none'), value=''});
+		}
+		return variables.printTemplateFileOptions;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

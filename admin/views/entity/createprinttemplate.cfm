@@ -36,16 +36,19 @@
 Notes:
 
 --->
-<cfparam name="rc.emailTemplateSmartList" type="any" />
+<cfparam name="rc.printTemplate" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	
-<cf_HibachiEntityActionBar type="listing" object="#rc.emailTemplateSmartList#" createModal="true" />
-
-<cf_HibachiListingDisplay smartList="#rc.emailTemplateSmartList#"
-						   recordDetailAction="admin:entity.detailemailTemplate"
-						   recordEditAction="admin:entity.editemailTemplate">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailTemplateName" sort="true" search="true" />
-</cf_HibachiListingDisplay>
-
+	<cf_HibachiEntityDetailForm object="#rc.printTemplate#" edit="#rc.edit#" sRedirectAction="admin:entity.editprinttemplate">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.printTemplate#" />
+		
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.printTemplate#" property="printTemplateName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.printTemplate#" property="printTemplateObject" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>
+		
+	</cf_HibachiEntityDetailForm>
 </cfoutput>
