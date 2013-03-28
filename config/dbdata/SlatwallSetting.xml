@@ -14,11 +14,12 @@
 		<Record settingID="dbb327f4e3ad1e47a1a932a8ad2a3ad8" settingName="emailFromAddress" settingValue="info@myslatwallStore.com" />
 		<Record settingID="dbb327f508d234f07c5c50064d14f223" settingName="emailToAddress" settingValue="info@myslatwallStore.com" />
 		<Record settingID="dbb327f6b9e0d4497b3cd2f9c9a6cc7a" settingName="emailSubject" settingValue="Message From MySlatwallStore" />
+		<!--
 		<Record settingID="dbb327f70a6671d22c58b7635e8f4921" settingName="emailToAddress" settingValue="${account.emailAddress}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
 		<Record settingID="dbb327f8d5114720d065a3009a4da731" settingName="emailSubject" settingValue="Order Confirmation - Order Number: ${orderNumber}" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
 		<Record settingID="dbb327f9dd92fd95a7c6fdf14f1b141c" settingName="emailToAddress" settingValue="${order.account.emailAddress}" emailTemplateID="dbb327e694534908c60ea354766bf0a8" />
 		<Record settingID="dbb327fafb738698d58c2fa990ae45dd" settingName="emailSubject" settingValue="Delivery Confirmation - Order Number: ${order.orderNumber}" emailTemplateID="dbb327e694534908c60ea354766bf0a8" />
-			
+		-->
 		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="globalCurrencyLocale" settingValue="English (US)" />
 		<Record settingID="dbb327b0b5496521002aa35ab68ab120" settingName="globalCurrencyType" settingValue="Local" />
 		<Record settingID="dbb32802d0afe98f27c73469f742355e" settingName="globalDefaultSite" settingValue="85aa4e16acdd4f665aabcd0ec826d07c" />
