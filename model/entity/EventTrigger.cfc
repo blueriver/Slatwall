@@ -42,12 +42,12 @@ component entityname="SlatwallEventTrigger" table="SlatwallEventTrigger" persist
 	property name="eventTriggerID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="eventTriggerName" ormtype="string";
 	property name="eventTriggerType" ormtype="string" hb_formFieldType="select";
-	property name="eventTriggerObjectType" ormtype="string" hb_formFieldType="select";
+	property name="eventTriggerObject" ormtype="string" hb_formFieldType="select";
 	property name="eventName" ormtype="string" hb_formFieldType="select";
 	
 	// Related Object Properties (many-to-one)
-	property name="emailTemplate" cfc="EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID";
-	property name="printTemplate" cfc="PrintTemplate" fieldtype="many-to-one" fkcolumn="printTemplateID";
+	property name="emailTemplate" cfc="EmailTemplate" fieldtype="many-to-one" fkcolumn="emailTemplateID" hb_optionsNullRBKey="define.select";
+	property name="printTemplate" cfc="PrintTemplate" fieldtype="many-to-one" fkcolumn="printTemplateID" hb_optionsNullRBKey="define.select";
 	
 	// Related Object Properties (one-to-many)
 	
@@ -64,14 +64,46 @@ component entityname="SlatwallEventTrigger" table="SlatwallEventTrigger" persist
 	
 	// Non-Persistent Properties
 	property name="eventNameOptions" persistent="false";
+	property name="eventTriggerObjectTypeOptions" persistent="false";
+	property name="eventTriggerTypeOptions" persistent="false";
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
 	public array function getEventNameOptions() {
 		if(!structKeyExists(variables, "eventNameOptions")) {
-			variables.eventNameOptions = getService("hibachiEventService").getEventNameOptions();
+			var eno = getService("hibachiEventService").getEventNameOptions();
+			variables.eventNameOptions = [{name=getHibachiScope().rbKey('define.select'), value=''}];
+			for(var i=1; i<=arrayLen(eno); i++){
+				if(isNull(getEventTriggerObject()) || (structKeyExists(eno[i], 'entityName') && eno[i].entityName eq getEventTriggerObject())) {
+					arrayAppend(variables.eventNameOptions, eno[i]);	
+				}
+			}
 		}
 		return variables.eventNameOptions;
 	}
+	
+	public array function getEventTriggerObjectOptions() {
+		if(!structKeyExists(variables, "eventTriggerObjectOptions")) {
+			var emd = getService("hibachiService").getEntitiesMetaData();
+			var enArr = listToArray(structKeyList(emd));
+			arraySort(enArr,"text");
+			variables.eventTriggerObjectOptions = [{name=getHibachiScope().rbKey('define.select'), value=''}];
+			for(var i=1; i<=arrayLen(enArr); i++) {
+				arrayAppend(variables.eventTriggerObjectOptions, {name=rbKey('entity.#enArr[i]#'), value=enArr[i]});
+			}
+		}
+		return variables.eventTriggerObjectOptions;
+	}
+	
+	public array function getEventTriggerTypeOptions() {
+		return [
+			{name=getHibachiScope().rbKey('define.select'), value=''},
+			{name=getHibachiScope().rbKey('define.email'), value='email'},
+			{name=getHibachiScope().rbKey('define.print'), value='print'}
+		];
+	}
+	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

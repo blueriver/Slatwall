@@ -105,6 +105,20 @@
 									</div>
 								</cfif>
 								
+								<!--- Detail: Email --->
+								<cfif arrayLen(attributes.object.getEmailTemplates())>
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-email"></i></button>
+										<ul class="dropdown-menu pull-right">
+											<cfloop array="#attributes.object.getEmailTemplates()#" index="template">
+												<li>#template.getEmailTemplateName()#</li>
+											</cfloop>
+										</ul>
+									</div>
+								</cfif>
+									
+								<!--- Detail: Print --->
+								
 								<!--- Detail: Additional Button Groups --->
 								<cfif structKeyExists(thistag, "buttonGroups") && arrayLen(thistag.buttonGroups)>
 									<cfloop array="#thisTag.buttonGroups#" index="buttonGroup">

@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiEntityActionBar type="listing" object="#rc.eventTriggerSmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.eventTriggerSmartList#" createModal=true />
 
 <cf_HibachiListingDisplay smartList="#rc.eventTriggerSmartList#"
 						   recordDetailAction="admin:entity.detaileventtrigger"

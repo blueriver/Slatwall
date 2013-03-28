@@ -40,13 +40,12 @@ Notes:
 
 <cfoutput>
 	
-<cf_HibachiEntityActionBar type="listing" object="#rc.emailTemplateSmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.emailTemplateSmartList#" createModal="true" />
 
 <cf_HibachiListingDisplay smartList="#rc.emailTemplateSmartList#"
 						   recordDetailAction="admin:entity.detailemailTemplate"
-						   recordEditAction="admin:entity.editemailTemplate"
-						   recordEditQueryString="redirectAction=admin:entity.listemailTemplate">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailTemplateName" search="true" />
+						   recordEditAction="admin:entity.editemailTemplate">
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailTemplateName" sort="true" search="true" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

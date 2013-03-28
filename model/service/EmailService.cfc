@@ -168,6 +168,31 @@ Notes:
 	
 		
 	<!--- ===================== START: Logical Methods =========================== --->
+		
+	<cffunction name="getEmailTemplateFileOptions" output="false" access="public">
+		<cfargument name="object" type="string" required="true" />
+		
+		<cfset var dir = "" />
+		<cfset var fileOptions = [] />
+		
+		<cfif directoryExists("#getApplicationValue('applicationRootMappingPath')#/templates/email/#arguments.object#")>
+			<cfdirectory action="list" directory="#getApplicationValue('applicationRootMappingPath')#/templates/email/#arguments.object#" name="dir" />
+			<cfloop query="dir">
+				<cfif listLast(dir.name, '.') eq 'cfm'>
+					<cfset arrayAppend(fileOptions, dir.name) />
+				</cfif>
+			</cfloop>
+		</cfif>
+		<cfif directoryExists("#getApplicationValue('applicationRootMappingPath')#/custom/templates/email/#arguments.object#")>
+			<cfdirectory action="list" directory="#getApplicationValue('applicationRootMappingPath')#/custom/templates/email/#arguments.object#" name="dir" />
+			<cfloop query="dir">
+				<cfif listLast(dir.name, '.') eq 'cfm' and !arrayFind(fileOptions, dir.name)>
+					<cfset arrayAppend(fileOptions, dir.name) />
+				</cfif>
+			</cfloop>
+		</cfif>
+		<cfreturn fileOptions />
+	</cffunction>
 	
 	<!--- =====================  END: Logical Methods ============================ --->
 	

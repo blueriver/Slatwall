@@ -167,7 +167,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 									
 									// Verify that this item now that it has a greater quantity isn't bigger than the qats
 									if((orderItems[i].getQuantity() + arguments.quantity) gt orderItems[i].getSku().getQuantity('qats')) {
-										orderItems[i].setQuantity(orderItems.getSku().getQuantity('qats'));
+										orderItems[i].setQuantity(orderItems[i].getSku().getQuantity('qats'));
 									} else {
 										orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);	
 									}

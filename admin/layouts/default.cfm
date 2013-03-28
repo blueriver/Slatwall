@@ -78,12 +78,16 @@ Notes:
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.products_nav')#" icon="tags icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.listproduct" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listproducttype" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listsku" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listoptiongroup" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listbrand" type="list">
+							<cf_HibachiActionCaller action="admin:entity.listsku" type="list">
+							<cf_HibachiActionCaller action="admin:entity.listproductreview" type="list">
+							<li class="divider"></li>
+							<cf_HibachiActionCaller action="admin:entity.listoptiongroup" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listsubscriptionterm" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listsubscriptionbenefit" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listproductreview" type="list">
+							<cf_HibachiActionCaller action="admin:entity.listcategory" type="list">
+							<cf_HibachiActionCaller action="admin:entity.listcontent" type="list">
+							<li class="divider"></li>
 							<cf_HibachiActionCaller action="admin:entity.listpromotion" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listpricegroup" type="list">
 						</cf_HibachiActionCallerDropdown>
@@ -93,14 +97,16 @@ Notes:
 							<cf_HibachiActionCaller action="admin:entity.listorderitem" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listorderfulfillment" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listorderpayment" type="list">
+							<li class="divider"></li>
 							<cf_HibachiActionCaller action="admin:entity.listvendororder" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listvendororderitem" type="list">
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.accounts_nav')#" icon="user icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.listaccount" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listvendor" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listsubscriptionusage" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listpermissiongroup" type="list">
+							<li class="divider"></li>
+							<cf_HibachiActionCaller action="admin:entity.listvendor" type="list">
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.warehouse_nav')#" icon="barcode icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.liststockreceiver" type="list">
@@ -124,11 +130,8 @@ Notes:
 								<li class="divider"></li>
 							</cfif>
 							<cf_HibachiActionCaller action="admin:entity.listaddresszone" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listcategory" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listcontent" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listcountry" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listcurrency" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listemail" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listemailtemplate" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listfulfillmentmethod" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listlocation" type="list">
@@ -136,6 +139,7 @@ Notes:
 							<cf_HibachiActionCaller action="admin:entity.listorderorigin" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listpaymentmethod" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listpaymentterm" type="list">
+							<cf_HibachiActionCaller action="admin:entity.listprinttemplate" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listroundingrule" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listsite" type="list">
 							<cf_HibachiActionCaller action="admin:entity.listtaxcategory" type="list">

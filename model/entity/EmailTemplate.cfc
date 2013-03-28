@@ -36,19 +36,19 @@
 Notes:
 
 */
-component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="SlatwallEmailTemplate" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="emailService" hb_permission="this" {
+component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="SlatwallEmailTemplate" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="templateService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="emailTemplateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="emailTemplateName" ormtype="string";
-	property name="emailTemplateFile" ormtype="string";
+	property name="emailTemplateObject" ormtype="string" hb_formFieldType="select";
+	property name="emailTemplateFile" ormtype="string" hb_formFieldType="select";
 	property name="emailBodyHTML" ormtype="string" length="4000";
 	property name="emailBodyText" ormtype="string" length="4000";
 	
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
-	property name="emails" singularname="email" cfc="Email" type="array" fieldtype="one-to-many" fkcolumn="emailTemplateID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -62,23 +62,36 @@ component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
-
+	property name="emailTemplateObjectOptions" persistent="false";
+	property name="emailTemplateFileOptions" persistent="false";
 
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
+	public array function getEmailTemplateObjectOptions() {
+		if(!structKeyExists(variables, "emailTemplateObjectOptions")) {
+			var emd = getService("hibachiService").getEntitiesMetaData();
+			var enArr = listToArray(structKeyList(emd));
+			arraySort(enArr,"text");
+			variables.emailTemplateObjectOptions = [{name=getHibachiScope().rbKey('define.select'), value=''}];
+			for(var i=1; i<=arrayLen(enArr); i++) {
+				arrayAppend(variables.emailTemplateObjectOptions, {name=rbKey('entity.#enArr[i]#'), value=enArr[i]});
+			}
+		}
+		return variables.emailTemplateObjectOptions;
+	}
+	
+	public array function getEmailTemplateFileOptions() {
+		if(!structKeyExists(variables, "emailTemplateFileOptions")) {
+			variables.emailTemplateFileOptions = getService("templateService").getTemplateFileOptions( templateType="email", object=getEmailTemplateObject() );
+			arrayPrepend(variables.emailTemplateFileOptions, {name=getHibachiScope().rbKey('define.none'), value=''});
+		}
+		return variables.emailTemplateFileOptions;
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
-	// Emails (one-to-many)
-	public void function addEmail(required any email) {
-		arguments.email.setEmailTemplate( this );
-	}
-	public void function removeEmail(required any email) {
-		arguments.email.removeEmailTemplate( this );
-	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

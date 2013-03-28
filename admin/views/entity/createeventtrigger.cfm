@@ -40,28 +40,16 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.eventTrigger#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.eventTrigger#" edit="#rc.edit#" sRedirectAction="admin:entity.editeventtrigger">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.eventTrigger#" />
 		
 		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList divClass="span6">
+			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerName" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventName" edit="#rc.edit#">
-				<cfif rc.eventTrigger.getEventTriggerType() eq "email">
-					<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="emailTemplate" edit="#rc.edit#">
-				</cfif>
-				<cfif rc.eventTrigger.getEventTriggerType() eq "print">
-					<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="printTemplate" edit="#rc.edit#">
-				</cfif>
-			</cf_HibachiPropertyList>
-			<cf_HibachiPropertyList divClass="span6">
-				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerType" edit="false">
-				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerObject" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.eventTrigger#" property="eventTriggerObject" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
-		
-		<cf_HibachiTabGroup object="#rc.eventTrigger#">
-		</cf_HibachiTabGroup>
 
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

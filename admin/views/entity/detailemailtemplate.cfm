@@ -44,8 +44,12 @@ Notes:
 		<cf_HibachiEntityActionBar type="detail" object="#rc.emailTemplate#" />
 		
 		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.emailTemplate#" property="emailTemplateName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.emailTemplate#" property="emailTemplateFile" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.emailTemplate#" property="emailTemplateObject" edit="false">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 

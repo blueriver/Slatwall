@@ -213,4 +213,22 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		arrayAppend(getPersistableErrors(), arguments.errorName);
 	}
 	
+	public array function getPrintTemplates() {
+		if(!structKeyExists(variables, "printTemplates")) {
+			var sl = getService("templateService").getEmailTemplateSmartList();
+			sl.addFilter('emailTemplateObject', getClassName());
+			variables.printTemplates = sl.getRecords();
+		}
+		return variables.printTemplates;
+	}
+	
+	public array function getEmailTemplates() {
+		if(!structKeyExists(variables, "emailTemplates")) {
+			var sl = getService("templateService").getEmailTemplateSmartList();
+			sl.addFilter('emailTemplateObject', getClassName());
+			variables.emailTemplates = sl.getRecords();
+		}
+		return variables.emailTemplates;
+	}
+	
 }
