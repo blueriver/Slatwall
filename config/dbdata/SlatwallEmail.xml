@@ -7,8 +7,10 @@
 		<column name="emailTemplateID" update="false" />
 	</Columns>
 	<Records>
+		<!--
 		<Record emailID="dbb327eeb3259c3f6b7c444aac996503" emailName="Order Confirmation Email" eventName="orderPlaced" emailTemplateID="dbb327e506090fde08cc4855fa14448d" />
 		<Record emailID="dbb327efc618a50d0e617472b7621fd0" emailName="Delivery Confirmation Email" eventName="processOrderFulfillment:deliveryConfirmation" emailTemplateID="dbb327e694534908c60ea354766bf0a8" />
+		-->
 	</Records>
 </Table>
 

@@ -7,8 +7,10 @@
 		<column name="emailBodyText" update="false" />
 	</Columns>
 	<Records>
+		<!--
 		<Record emailTemplateID="dbb327e506090fde08cc4855fa14448d" emailTemplateName="Order Confirmation Template" emailBodyHTML="${include:email.orderplaced}" emailBodyText="${include:email.orderplaced_text}" />
 		<Record emailTemplateID="dbb327e694534908c60ea354766bf0a8" emailTemplateName="Delivery Confirmation Template" emailBodyHTML="${include:email.deliveryconfirmation}" emailBodyText="${include:email.deliveryconfirmation_text}" />
+		-->
 	</Records>
 </Table>
 
