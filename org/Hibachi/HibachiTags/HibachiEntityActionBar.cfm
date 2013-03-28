@@ -108,7 +108,7 @@
 								<!--- Detail: Email --->
 								<cfif arrayLen(attributes.object.getEmailTemplates())>
 									<div class="btn-group">
-										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-email"></i></button>
+										<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-envelope"></i></button>
 										<ul class="dropdown-menu pull-right">
 											<cfloop array="#attributes.object.getEmailTemplates()#" index="template">
 												<li>#template.getEmailTemplateName()#</li>
