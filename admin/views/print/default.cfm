@@ -54,3 +54,6 @@ Notes:
 <p class="error">There are no documents in the queue to print</p>
 </cfif>
 </cfoutput>
+<script type="text/javascript">
+	window.close();
+</script>
