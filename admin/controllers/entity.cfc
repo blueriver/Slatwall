@@ -1,19 +1,17 @@
 component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiControllerEntity" {
 
-	property name="accountService" type="any";
+	property name="addressService" type="any";
+	property name="emailService" type="any";
 	property name="imageService" type="any";
-	property name="locationService" type="any";
 	property name="measurementService" type="any";
 	property name="optionService" type="any";
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
-	property name="productService" type="any";
+	property name="permissionService" type="any";
 	property name="promotionService" type="any";
 	property name="settingService" type="any";
 	property name="skuService" type="any";
-	property name="subscriptionService" type="any";
-	property name="permissionService" type="any";
-	property name="addressService" type="any";
+	
 	
 	this.publicMethods='';
 	
@@ -68,6 +66,12 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	public void function detailCurrency(required struct rc) {
 		rc.currency = getCurrencyService().getCurrency(rc.currencyCode);
+	}
+	
+	// Email
+	public void function preprocessEmail(required struct rc) {
+		genericPreProcessMethod(entityName="Email", rc=arguments.rc);
+		rc.email = getEmailService().processEmail(rc.email, rc, "createFromTemplate");
 	}
 	
 	// Measurement Unit

@@ -124,7 +124,7 @@
 											<a class="btn dropdown-toggle" data-toggle="dropdown" href="##"><i class="icon-envelope"></i></a>
 											<ul class="dropdown-menu pull-right">
 												<cfloop array="#attributes.object.getEmailTemplates()#" index="template">
-													<cf_HibachiProcessCaller action="admin:entity.preprocessemail" entity="Email" processContext="addToQueue" queryString="emailTemplateID=#template.getEmailTemplateID()#&#attributes.object.getPrimaryIDPropertyName#=#attributes.object.getPrimaryIDValue()#" text="#template.getEmailTemplateName()#" modal="true" type="list" />
+													<cf_HibachiProcessCaller action="admin:entity.preprocessemail" entity="Email" processContext="addToQueue" queryString="emailTemplateID=#template.getEmailTemplateID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#template.getEmailTemplateName()#" modal="true" type="list" />
 												</cfloop>
 											</ul>
 										</div>
@@ -135,7 +135,7 @@
 											<a class="btn dropdown-toggle" data-toggle="dropdown" href="##"><i class="icon-print"></i></a>
 											<ul class="dropdown-menu pull-right">
 												<cfloop array="#attributes.object.getPrintTemplates()#" index="template">
-													<cf_HibachiProcessCaller action="admin:entity.preprocessprint" entity="Print" processContext="addToQueue" queryString="printTemplateID=#template.getPrintTemplateID()#&#attributes.object.getPrimaryIDPropertyName#=#attributes.object.getPrimaryIDValue()#" text="#template.getPrintTemplateName()#" modal="true" type="list" />
+													<cf_HibachiProcessCaller action="admin:entity.processprint" entity="Print" processContext="addToQueue" queryString="printTemplateID=#template.getPrintTemplateID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#template.getPrintTemplateName()#" modal="true" type="list" />
 												</cfloop>
 											</ul>
 										</div>

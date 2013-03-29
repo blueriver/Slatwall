@@ -83,7 +83,7 @@ component entityname="SlatwallPrintTemplate" table="SlatwallPrintTemplate" persi
 	
 	public array function getPrintTemplateFileOptions() {
 		if(!structKeyExists(variables, "printTemplateFileOptions")) {
-			variables.printTemplateFileOptions = getService("templateService").getTemplateFileOptions( templateType="print", object=getPrintTemplateObject() );
+			variables.printTemplateFileOptions = getService("templateService").getTemplateFileOptions( templateType="print", objectName=getPrintTemplateObject() );
 			arrayPrepend(variables.printTemplateFileOptions, {name=getHibachiScope().rbKey('define.none'), value=''});
 		}
 		return variables.printTemplateFileOptions;

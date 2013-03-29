@@ -83,7 +83,7 @@ component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="
 	
 	public array function getEmailTemplateFileOptions() {
 		if(!structKeyExists(variables, "emailTemplateFileOptions")) {
-			variables.emailTemplateFileOptions = getService("templateService").getTemplateFileOptions( templateType="email", object=getEmailTemplateObject() );
+			variables.emailTemplateFileOptions = getService("templateService").getTemplateFileOptions( templateType="email", objectName=getEmailTemplateObject() );
 			arrayPrepend(variables.emailTemplateFileOptions, {name=getHibachiScope().rbKey('define.none'), value=''});
 		}
 		return variables.emailTemplateFileOptions;
@@ -96,6 +96,20 @@ component displayname="EmailTemplate" entityname="SlatwallEmailTemplate" table="
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================
+	
+	public any function getEmailBodyHTML() {
+		if(!structKeyExists(variables, "emailBodyHTML")) {
+			variables.emailBodyHTML = "";
+		}
+		return variables.emailBodyHTML;
+	}
+	
+	public any function getEmailBodyText() {
+		if(!structKeyExists(variables, "emailBodyText")) {
+			variables.emailBodyText = "";
+		}
+		return variables.emailBodyText;
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

@@ -42,21 +42,21 @@ Notes:
 		
 	<cffunction name="getTemplateFileOptions" output="false" access="public">
 		<cfargument name="templateType" type="string" required="true" />
-		<cfargument name="object" type="string" required="true" />
+		<cfargument name="objectName" type="string" required="true" />
 		
 		<cfset var dir = "" />
 		<cfset var fileOptions = [] />
 		
-		<cfif directoryExists("#getApplicationValue('applicationRootMappingPath')#/templates/#arguments.templateType#/#arguments.object#")>
-			<cfdirectory action="list" directory="#getApplicationValue('applicationRootMappingPath')#/templates/#arguments.templateType#/#arguments.object#" name="dir" />
+		<cfif directoryExists("#getApplicationValue('applicationRootMappingPath')#/templates/#lcase(arguments.templateType)#/#lcase(arguments.objectName)#")>
+			<cfdirectory action="list" directory="#getApplicationValue('applicationRootMappingPath')#/templates/#lcase(arguments.templateType)#/#lcase(arguments.objectName)#" name="dir" />
 			<cfloop query="dir">
 				<cfif listLast(dir.name, '.') eq 'cfm'>
 					<cfset arrayAppend(fileOptions, dir.name) />
 				</cfif>
 			</cfloop>
 		</cfif>
-		<cfif directoryExists("#getApplicationValue('applicationRootMappingPath')#/custom/templates/#arguments.templateType#/#arguments.object#")>
-			<cfdirectory action="list" directory="#getApplicationValue('applicationRootMappingPath')#/custom/templates/#arguments.templateType#/#arguments.object#" name="dir" />
+		<cfif directoryExists("#getApplicationValue('applicationRootMappingPath')#/custom/templates/#lcase(arguments.templateType)#/#lcase(arguments.objectName)#")>
+			<cfdirectory action="list" directory="#getApplicationValue('applicationRootMappingPath')#/custom/templates/#lcase(arguments.templateType)#/#lcase(arguments.objectName)#" name="dir" />
 			<cfloop query="dir">
 				<cfif listLast(dir.name, '.') eq 'cfm' and !arrayFind(fileOptions, dir.name)>
 					<cfset arrayAppend(fileOptions, dir.name) />
@@ -64,6 +64,20 @@ Notes:
 			</cfloop>
 		</cfif>
 		<cfreturn fileOptions />
+	</cffunction>
+	
+	<cffunction name="getTemplateFileIncludePath">
+		<cfargument name="templateType" type="string" required="true" />
+		<cfargument name="objectName" type="string" required="true" />
+		<cfargument name="fileName" type="string" />
+		
+		<cfif structKeyExists(arguments,"fileName") and fileExists("#getApplicationValue('applicationRootMappingPath')#/custom/templates/#lcase(arguments.templateType)#/#lcase(arguments.objectName)#/#arguments.fileName#")>
+			<cfreturn "#getApplicationValue('slatwallRootURL')#/custom/templates/#lcase(arguments.templateType)#/#lcase(arguments.objectName)#/#arguments.fileName#" />
+		<cfelseif structKeyExists(arguments,"fileName") and fileExists("#getApplicationValue('applicationRootMappingPath')#/templates/#lcase(arguments.templateType)#/#lcase(arguments.objectName)#/#arguments.fileName#")>
+			<cfreturn "#getApplicationValue('slatwallRootURL')#/templates/#lcase(arguments.templateType)#/#lcase(arguments.objectName)#/#arguments.fileName#" />
+		</cfif>
+		
+		<cfreturn "" />
 	</cffunction>
 	
 	<!--- =====================  END: Logical Methods ============================ --->
