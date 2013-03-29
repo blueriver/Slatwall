@@ -49,6 +49,9 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	// Slatwall specific request smartList properties
 	property name="productSmartList" type="any";
 	
+	// Slatwall Specific queue properties
+	property name="emailQueue" type="array";
+	
 	// Deprecated Properties
 	property name="currentAccount";
 	property name="currentBrand";
@@ -122,6 +125,30 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 			}
 		}
 		return variables.productSmartList;
+	}
+	
+	// ================= Queue Helper Methods =====================
+	
+	// Email
+	public array function getEmailQueue() {
+		if(!structKeyExists(variables, "emailQueue")) {
+			variables.emailQueue = [];
+		}
+		return variables.emailQueue;
+	}
+	
+	// Print
+	public array function getPrintQueue() {
+		if(!hasSessionValue('printQueue')) {
+			setSessionValue('printQueue', []);
+		}
+		return getSessionValue('printQueue');
+	}
+	
+	// Cleare
+	public void function clearEmailAndPrintQueue() {
+		variables.emailQueue = [];
+		setSessionValue('printQueue', []);
 	}
 	
 	// =================== Setting Access =========================

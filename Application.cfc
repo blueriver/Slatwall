@@ -88,6 +88,22 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	}
 	
 	// ===================================== END: HIBACHI HOOKS
+	// ===================================== Hibachi HOOKS
+	
+	public void function endHibachiLifecycle() {
+		
+		if(getHibachiScope().getORMHasErrors()) {
+			getHibachiScope().clearEmailAndPrintQueue();
+		} else {
+			getHibachiScope().getService("emailService").sendEmailQueue();
+			getHibachiScope().getService("printService").submitPrintQueue();
+		}
+		
+		// Call the super lifecycle end
+		super.endHibachiLifecycle();
+	}
+	
+	// ===================================== END: Hibachi HOOKS
 	// ===================================== FW1 HOOKS
 	
 	// Allows for integration services to have a seperate directory structure

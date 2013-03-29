@@ -2,6 +2,8 @@
 	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
 	<cfparam name="attributes.entity" type="any" />
 	<cfparam name="attributes.processAction" type="string" default="#request.context.entityActionDetails.processaction#" />
+	<cfparam name="attributes.processActionQueryString" type="string" default="" />
+	<cfparam name="attributes.processActionHash" type="string" default="" />
 	<cfparam name="attributes.processContext" type="string" default="#request.context.processcontext#" />
 	<cfparam name="attributes.enctype" type="string" default="application/x-www-form-urlencoded">
 	<cfparam name="attributes.sRedirectURL" type="string" default="#request.context.entityActionDetails.sRedirectURL#">
@@ -13,8 +15,18 @@
 	<cfparam name="attributes.sRedirectQS" type="string" default="#request.context.entityActionDetails.sRedirectQS#">
 	<cfparam name="attributes.fRedirectQS" type="string" default="#request.context.entityActionDetails.fRedirectQS#">
 	
+	<cfset formAction = "?s=1" />
+	
+	<cfif len(attributes.processActionQueryString)>
+		<cfset formAction &= "&#attributes.processActionQueryString#" />
+	</cfif>
+	
+	<cfif len(attributes.processActionHash)>
+		<cfset formAction &= "###attributes.processActionHash#" />
+	</cfif>
+	
 	<cfoutput>
-		<form method="post" action="?s=1" class="form-horizontal" enctype="#attributes.enctype#">
+		<form method="post" action="#formAction#" class="form-horizontal" enctype="#attributes.enctype#">
 			<input type="hidden" name="#request.context.fw.getAction()#" value="#attributes.processAction#" />
 			<input type="hidden" name="processContext" value="#attributes.processContext#" />
 			<input type="hidden" name="#attributes.entity.getPrimaryIDPropertyName()#" value="#attributes.entity.getPrimaryIDValue()#" />

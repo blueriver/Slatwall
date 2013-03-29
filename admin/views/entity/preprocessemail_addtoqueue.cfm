@@ -37,10 +37,13 @@ Notes:
 
 --->
 <cfparam name="rc.email" type="any" />
+<cfparam name="rc.emailTemplate" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
+<cfset primaryIDPropertyName = $.slatwall.getService('hibachiService').getPrimaryIDPropertyNameByEntityName(rc.emailTemplate.getEmailTemplateObject()) />
+
 <cfoutput>
-	<cf_HibachiEntityProcessForm entity="#rc.email#" edit="#rc.edit#">
+	<cf_HibachiEntityProcessForm entity="#rc.email#" edit="#rc.edit#" processActionQueryString="#primaryIDPropertyName#=#rc[primaryIDPropertyName]#">
 		
 		<cf_HibachiEntityActionBar type="preprocess" object="#rc.email#">
 		</cf_HibachiEntityActionBar>
@@ -55,11 +58,11 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		<hr />
-		#rc.email.getEmailBodyHTML()#
-		<!---
-		<div style="width:800px;">
-			<cf_HibachiPropertyDisplay object="#rc.email#" property="emailBodyHTML" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+		<div style="width:700px;">
+			<div style="width:685px;">
+				<cf_HibachiPropertyDisplay object="#rc.email#" property="emailBodyHTML" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+			</div>
 		</div>
-		--->
+		
 	</cf_HibachiEntityProcessForm>
 </cfoutput>

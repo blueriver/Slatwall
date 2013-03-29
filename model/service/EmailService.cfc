@@ -40,134 +40,43 @@ Notes:
 	
 	<cfproperty name="templateService" />
 	
-	
-	<cffunction name="onEvent" returnType="any" access="public">
-		<cfargument name="eventName" type="string" required="true" />
-		<cfargument name="eventArguments" type="struct" required="true" />
-		
-		<cfsavecontent variable="includeContent">
-			
-		</cfsavecontent>
-		<cfif structKeyExists(emailData, "htmlBody")>
-		</cfif>
-		<cfif structKeyExists(emailData, "htmlBody")>	
-		</cfif>
-		
-	</cffunction>
-	
-	<cffunction name="getRegisteredEmailEventNames">
-		
-	</cffunction>
-	
-	<cffunction name="sendEmailByEvent">
-		<cfargument name="eventName" type="string" required="true" />
-		<cfargument name="entity" type="any" required="true" />
-		
-		<cfset logHibachi("Email sending event triggered. eventName: #arguments.eventName#, entityName: #arguments.entity.getEntityName()#, entityID: #arguments.entity.getPrimaryIDValue()#") />
-		
-		<cfset emailsToSend = this.listEmail({eventName=arguments.eventName}) />
-		
-		<cfset var email = "" />
-		
-		<cfloop array="#emailsToSend#" index="email">
-			<cfset sendEmail(email, arguments.entity) />
-		</cfloop>
-	</cffunction>
-
-	<cffunction name="sendEmail" access="public" returntype="void" output="false">
-		<cfargument name="email" type="any" required="true" />
-		<cfargument name="entity" type="any" required="true" />
-		
-		<cfset logHibachi("Send email triggerd for emailID: #arguments.email.getEmailID()#") />
-		
-		<!--- Setup Scope so that it can be used by includes --->
-		<cfset var $ = request.context.$ />
-		<cfset var siteID = "default" />
-		<cfset var themeName = "" />
-		<cfif structKeyExists($,"siteConfig")>
-			<cfset themeName = $.siteConfig('theme') />
-		</cfif>
-		
-		<!--- Figure out the siteID: This needs to get changed --->
-		<cfif structKeyExists($,"event")>
-			<cfset var siteID = $.event('siteid') />
-		<cfelseif structKeyExists(session,"site")>
-			<cfset var siteID = session.siteid />
-		</cfif>
-		
-		<!--- Setup the object in a local variable --->
-		<cfset local[ replace(arguments.entity.getEntityName(),"Slatwall","") ] = arguments.entity />
-		
-		<!--- Setup the HTML body --->
-		<cfset var htmlBody = arguments.email.getEmailTemplate().getEmailBodyHTML() />
-		<cfset var includesToReplace = reMatch("\$\{include:email.[a-z|A-Z|0-9]*\}", htmlBody) />
-		<cfset var inc = "" />
-		
-		<cfloop array="#includesToReplace#" index="inc">
-			<cfset var fileName = mid(inc, 17, len(inc) - 17) />
-			<cfset var themeFileInclude = "#application.configBean.getContext()#/#siteID#/includes/themes/#themeName#/display_objects/custom/slatwall/email/#fileName#.cfm" />
-			<cfset var siteFileInclude = "#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/#fileName#.cfm" />
-			<cfset var includeContent = "" />
-			<cfif fileExists( expandPath(themeFileInclude) )>
-				<cfsavecontent variable="includeContent">
-					<cfinclude template="#themeFileInclude#" />
-				</cfsavecontent>
-			<cfelseif fileExists( expandPath(siteFileInclude) )>
-				<cfsavecontent variable="includeContent">
-					<cfinclude template="#siteFileInclude#" />
-				</cfsavecontent>
-			</cfif>
-			<cfset htmlBody = replaceNoCase(htmlBody, inc, includeContent) />
-		</cfloop>
-		
-		<!--- Setup the Text Body --->
-		<cfset var textBody = arguments.email.getEmailTemplate().getEmailBodyText() />
-		<cfset var includesToReplace = reMatch("\$\{include:email.[a-z|A-Z|0-9|\_]*\}", textBody) />
-		<cfset var inc = "" />
-		<cfloop array="#includesToReplace#" index="inc">
-			<cfset var fileName = mid(inc, 17, len(inc) - 17) />
-			<cfset var themeFileInclude = "#application.configBean.getContext()#/#siteID#/includes/themes/#themeName#/display_objects/custom/slatwall/email/#fileName#.cfm" />
-			<cfset var siteFileInclude = "#application.configBean.getContext()#/#siteID#/includes/display_objects/custom/slatwall/email/#fileName#.cfm" />
-			<cfset var includeContent = "" />
-			<cfif fileExists( expandPath(themeFileInclude) )>
-				<cfsavecontent variable="includeContent">
-					<cfinclude template="#themeFileInclude#" />
-				</cfsavecontent>
-			<cfelseif fileExists( expandPath(siteFileInclude) )>
-				<cfsavecontent variable="includeContent">
-					<cfinclude template="#siteFileInclude#" />
-				</cfsavecontent>
-			</cfif>
-			<cfset textBody = replaceNoCase(textBody, inc, includeContent) />
-		</cfloop>
-			
-		<cftry>
-			<!--- Send the actual E-mail --->
-			<cfmail to="#arguments.entity.stringReplace(email.setting('emailToAddress'))#"
-					from="#arguments.entity.stringReplace(email.setting('emailFromAddress'))#"
-					subject="#arguments.entity.stringReplace(email.setting('emailSubject'))#"
-					cc="#arguments.entity.stringReplace(email.setting('emailCCAddress'))#"
-					bcc="#arguments.entity.stringReplace(email.setting('emailBCCAddress'))#">
-				<cfmailpart type="text/plain">
-					#arguments.entity.stringReplace(textBody, true)#
-				</cfmailpart>
-				<cfmailpart type="text/html">
-					#arguments.entity.stringReplace(htmlBody, true)#
-				</cfmailpart>
-			</cfmail>
-			
-			<cfset logHibachi("Email Sent to SMTP Server") />
-			
-			<cfcatch>
-				<cfset logHibachi("There was an unexpected error while attempting to send this email") />
-				<cfset logHibachiException(cfcatch) />
-			</cfcatch>
-			
-		</cftry>
-	</cffunction>
-	
 		
 	<!--- ===================== START: Logical Methods =========================== --->
+		
+	<cffunction name="sendEmail" returntype="void" access="public">
+		<cfargument name="email" type="any" required="true" />
+		
+		<!--- Send the actual E-mail --->
+		<cfmail to="#arguments.email.getEmailTo()#"
+				from="#arguments.email.getEmailFrom()#"
+				subject="#arguments.email.getEmailSubject()#"
+				cc="#arguments.email.getEmailCC()#"
+				bcc="#arguments.email.getEmailBCC()#">
+			
+			<!--- If a Text Body exists --->
+			<cfif len(arguments.email.getEmailBodyText())>
+				<cfmailpart type="text/plain">
+					#arguments.email.getEmailBodyText()#
+				</cfmailpart>
+			</cfif>
+			
+			<cfmailpart type="text/html">
+				#arguments.email.getEmailBodyHTML()#
+			</cfmailpart>
+		</cfmail>
+		
+		<!--- If the email is set to be saved, then we persist to the DB --->
+		<cfif(arguments.email.getLogEmailFlag()) >
+			<cfset getHibachiDAO().save(arguments.email) />
+		</cfif>
+	</cffunction>
+		
+	<cffunction name="sendEmailQueue" returntype="void" access="public">
+		<cfset var email = "" />
+		<cfloop array="#getHibachiScope().getEmailQueue()#" index="email">
+			<cfset sendEmail(email) />
+		</cfloop>
+	</cffunction>
 		
 	<cffunction name="getEmailTemplateFileOptions" output="false" access="public">
 		<cfargument name="object" type="string" required="true" />
@@ -261,11 +170,6 @@ Notes:
 		
 		// Append the email to the email queue
 		arrayAppend(getHibachiScope().getEmailQueue(), arguments.email);
-		
-		// If the email is set to be saved, then we persist to the DB
-		if(arguments.email.getLogEmailFlag()) {
-			save(arguments.entity);
-		}
 		
 		return arguments.email;
 	}
