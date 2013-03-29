@@ -64,8 +64,15 @@ component displayname="Email" entityname="SlatwallEmail" table="SlatwallEmail" p
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="logEmailFlag" persistent="false"; 
 	
 	// ============ START: Non-Persistent Property Methods =================
+	public boolean function getLogEmailFlag() {
+		if(!structKeyExists(variables, "logEmailFlag")) {
+			variables.logEmailFlag = false;
+		}
+		return variables.logEmailFlag;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

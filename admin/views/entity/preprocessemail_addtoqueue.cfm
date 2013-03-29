@@ -37,7 +37,6 @@ Notes:
 
 --->
 <cfparam name="rc.email" type="any" />
-<cfparam name="rc.processObject" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
@@ -47,45 +46,20 @@ Notes:
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList divClass="span6">
+			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.email#" property="emailTo" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.email#" property="emailFrom" edit="#rc.edit#">
-				
-			</cf_HibachiPropertyList>
-			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.email#" property="emailCC" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.email#" property="emailBCC" edit="#rc.edit#">
-				
+				<cf_HibachiPropertyDisplay object="#rc.email#" property="emailSubject" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-				<!---
-				<hr />
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="newAccountFlag" edit="#rc.edit#" fieldType="yesno">
-				<cf_HibachiDisplayToggle selector="input[name='newAccountFlag']">	
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="firstName" edit="#rc.edit#">
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="lastName" edit="#rc.edit#">
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="company" edit="#rc.edit#">
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="phoneNumber" edit="#rc.edit#">
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddress" edit="#rc.edit#">
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddressConfirm" edit="#rc.edit#">
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthenticationFlag" edit="#rc.edit#" fieldType="yesno">
-					<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']">
-						<cf_HibachiPropertyDisplay object="#rc.processObject#" property="password" edit="#rc.edit#">
-						<cf_HibachiPropertyDisplay object="#rc.processObject#" property="passwordConfirm" edit="#rc.edit#">
-					</cf_HibachiDisplayToggle>
-				</cf_HibachiDisplayToggle>
-				<cf_HibachiDisplayToggle selector="input[name='newAccountFlag']" showValues="0">
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accountID" autocompletePropertyIdentifiers="adminIcon,fullName,company,emailAddress,phoneNumber,address.simpleRepresentation" edit="true">
-				</cf_HibachiDisplayToggle>
-				<hr />
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="fulfillmentMethodID" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderOriginID" edit="#rc.edit#">
-				--->
-			
 		</cf_HibachiPropertyRow>
-		
-		<div style="width:650px">
-			#rc.email.getEmailBodyHTML()#
+		<hr />
+		#rc.email.getEmailBodyHTML()#
+		<!---
+		<div style="width:800px;">
+			<cf_HibachiPropertyDisplay object="#rc.email#" property="emailBodyHTML" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
 		</div>
-		
+		--->
 	</cf_HibachiEntityProcessForm>
 </cfoutput>

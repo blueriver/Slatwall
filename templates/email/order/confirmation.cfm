@@ -65,10 +65,10 @@ Notes:
 <cfparam name="emailData" type="struct" default="#structNew()#" />
 <cfparam name="order" type="any" />
 
-<cfsavecontent variable="emailData.htmlBody">
+<cfsavecontent variable="emailData.emailBodyHTML">
 	<cfoutput>
 		<html>
-		<body style="font-family: arial; font-size: 12px;">
+		<body style="font-family: arial; font-size: 12px;background:##fff;">
 			<div id="container" style="width: 625px;">
 				
 				<!--- Add Logo Here  --->
@@ -143,19 +143,23 @@ Notes:
 		
 				<div id="bottom" style="margin-top: 15px; float: left; clear: both; width: 600px;">
 					<cfloop array="#order.getOrderFulfillments()#" index="local.orderFulfillment">
-						<cfif orderFulfillment.getFulfillmentMethodType() EQ "shipping">
-							<div id="shippingAddress" style="width:190px; margin-right:10px; float:left;">
-								<strong>Shipping Address</strong><br /><br />
-								<cfif len(local.orderFulfillment.getAddress().getName())>#local.orderFulfillment.getAddress().getName()#<br /></cfif>
-								<cfif len(local.orderFulfillment.getAddress().getStreetAddress())>#local.orderFulfillment.getAddress().getStreetAddress()#<br /></cfif>
-								<cfif len(local.orderFulfillment.getAddress().getStreet2Address())>#local.orderFulfillment.getAddress().getStreet2Address()#<br /></cfif>
-								#local.orderFulfillment.getAddress().getCity()#, #local.orderFulfillment.getAddress().getStateCode()# #local.orderFulfillment.getAddress().getPostalCode()#<br />
-								#local.orderFulfillment.getAddress().getCountryCode()#
-							</div>
-							<div id="shippingMethod" style="width:190px; margin-right:10px; float:left;">
-								<strong>Shipping Method</strong><br /><br />
-								#local.orderFulfillment.getShippingMethod().getShippingMethodName()#
-							</div>
+						<cfif local.orderFulfillment.getFulfillmentMethodType() EQ "shipping">
+							<cfif not local.orderFulfillment.getAddress().getNewFlag()>
+								<div id="shippingAddress" style="width:190px; margin-right:10px; float:left;">
+									<strong>Shipping Address</strong><br /><br />
+									<cfif len(local.orderFulfillment.getAddress().getName())>#local.orderFulfillment.getAddress().getName()#<br /></cfif>
+									<cfif len(local.orderFulfillment.getAddress().getStreetAddress())>#local.orderFulfillment.getAddress().getStreetAddress()#<br /></cfif>
+									<cfif len(local.orderFulfillment.getAddress().getStreet2Address())>#local.orderFulfillment.getAddress().getStreet2Address()#<br /></cfif>
+									#local.orderFulfillment.getAddress().getCity()#, #local.orderFulfillment.getAddress().getStateCode()# #local.orderFulfillment.getAddress().getPostalCode()#<br />
+									#local.orderFulfillment.getAddress().getCountryCode()#
+								</div>
+							</cfif>
+							<cfif not isNull(local.orderFulfillment.getShippingMethod())>
+								<div id="shippingMethod" style="width:190px; margin-right:10px; float:left;">
+									<strong>Shipping Method</strong><br /><br />
+									#local.orderFulfillment.getShippingMethod().getShippingMethodName()#
+								</div>
+							</cfif>
 						<cfelseif orderFulfillment.getFulfillmentMethodType() EQ "email">
 							<div id="emailAddress" style="width:190px; margin-right:10px; float:left;">
 								<strong>Delivery Email</strong><br /><br />
@@ -227,7 +231,7 @@ Notes:
 		</html>
 	</cfoutput>
 </cfsavecontent>
-<cfsavecontent variable="emailData.textBody">
+<cfsavecontent variable="emailData.emailBodyText">
 	<cfoutput>
 		Order Number: #order.getOrderNumber()#
 		Order Placed: #DateFormat(order.getOrderOpenDateTime(), "DD/MM/YYYY")# - #TimeFormat(order.getOrderOpenDateTime(), "short")#

@@ -255,6 +255,20 @@ Notes:
 		return arguments.email;
 	}
 	
+	public any function processEmail_addToQueue(required any email, required struct data) {
+		// Populate the email with any data that came in
+		arguments.email.populate( arguments.data );
+		
+		// Append the email to the email queue
+		arrayAppend(getHibachiScope().getEmailQueue(), arguments.email);
+		
+		// If the email is set to be saved, then we persist to the DB
+		if(arguments.email.getLogEmailFlag()) {
+			save(arguments.entity);
+		}
+		
+		return arguments.email;
+	}
 		
 	</cfscript>
 	
