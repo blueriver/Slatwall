@@ -508,35 +508,6 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: Delete Overrides ==========================
 	
-	public any function deleteStockAdjustment(required any entity) {
-		
-		// If the entity Passes validation
-		if(arguments.entity.isDeletable()) {
-			
-			// Remove any Many-to-Many relationships
-			arguments.entity.removeAllManyToManyRelationships();
-			
-			// Remove any Settings
-			getService("settingService").removeAllEntityRelatedSettings( entity=arguments.entity );
-			
-			// Remove any comments
-			getCommentService().deleteAllRelatedCommentsForEntity("stockAdjustmentID", arguments.entity.getStockAdjustmentID());
-			
-			// Call delete in the DAO
-			getHibachiDAO().delete(target=arguments.entity);
-			
-			// Return that the delete was sucessful
-			return true;
-			
-		}
-			
-		// Setup ormHasErrors because it didn't pass validation
-		getSlatwallScope().setORMHasErrors( true );
-
-		return false;
-		
-	}
-
 	// =====================  END: Delete Overrides ===========================
 	
 	

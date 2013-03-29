@@ -64,7 +64,7 @@ Notes:
 	</cffunction>
 	
 	
-	<cffunction name="deleteAllRelatedCommentsForEntity" returntype="boolean" access="public">
+	<cffunction name="deleteAllRelatedComments" returntype="boolean" access="public">
 		<cfargument name="primaryIDPropertyName" type="string" required="true" />
 		<cfargument name="primaryIDValue" type="string" required="true" />
 		

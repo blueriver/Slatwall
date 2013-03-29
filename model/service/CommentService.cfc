@@ -78,24 +78,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	public any function saveComment(required any comment, required any data) {
-		
-		arguments.comment.populate( arguments.data );
-		
-		parseCommentAndCreateRelationships( arguments.comment );
-		
-		arguments.comment.validate("save");
-		
-		// If the object passed validation then call save in the DAO, otherwise set the errors flag
-        if(!arguments.comment.hasErrors()) {
-            arguments.comment = getHibachiDAO().save(target=arguments.comment);
-        } else {
-            getSlatwallScope().setORMHasErrors( true );
-        }
-        
-        return arguments.comment;
-	}
-	
 	public string function getCommentWithLinks(required any comment) {
 		var returnCommentArray = listToArray(arguments.comment.getComment(), " ");
 		
@@ -126,8 +108,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getCommentDAO().getRelatedCommentsForEntity(argumentCollection=arguments);
 	}
 	
-	public boolean function deleteAllRelatedCommentsForEntity(required string primaryIDPropertyName, required string primaryIDValue) {
-		return getCommentDAO().deleteAllRelatedCommentsForEntity(argumentCollection=arguments);
+	public boolean function removeAllEntityRelatedComments(required any entity) {
+		return getCommentDAO().deleteAllRelatedComments(primaryIDPropertyName=arguments.entity.getPrimaryIDPropertyName(), primaryIDValue=arguments.entity.getPrimaryIDValue());
 	}
 	
 	// ===================== START: DAO Passthrough ===========================
@@ -137,6 +119,26 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// =====================  END: Process Methods ============================
 	
 	// ====================== START: Save Overrides ===========================
+	
+	
+	public any function saveComment(required any comment, required any data) {
+		
+		arguments.comment.populate( arguments.data );
+		
+		parseCommentAndCreateRelationships( arguments.comment );
+		
+		arguments.comment.validate("save");
+		
+		// If the object passed validation then call save in the DAO, otherwise set the errors flag
+        if(!arguments.comment.hasErrors()) {
+            arguments.comment = getHibachiDAO().save(target=arguments.comment);
+        } else {
+            getSlatwallScope().setORMHasErrors( true );
+        }
+        
+        return arguments.comment;
+	}
+	
 	
 	// ======================  END: Save Overrides ============================
 	

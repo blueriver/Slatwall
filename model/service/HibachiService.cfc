@@ -29,8 +29,7 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiService" {
 			getService("settingService").removeAllEntityRelatedSettings( entity=arguments.entity );
 			
 			// Remove all of the entity comments and comments related to this entity
-			// TODO: Impliment This
-			//getService("commentService").removeAllCommentsAndCommentRelationships( entity=arguments.entity );
+			getService("commentService").removeAllEntityRelatedComments( entity=arguments.entity );
 			
 			// Call delete in the DAO
 			getHibachiDAO().delete(target=arguments.entity);
