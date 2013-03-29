@@ -54,6 +54,7 @@ Notes:
 		</cf_HibachiPropertyRow>
 
 		<cf_HibachiTabGroup object="#rc.printTemplate#">
+			<cf_HibachiTab property="printContent" />
 		</cf_HibachiTabGroup>
 
 	</cf_HibachiEntityDetailForm>

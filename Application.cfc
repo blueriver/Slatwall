@@ -96,7 +96,6 @@ component extends="org.Hibachi.Hibachi" output="false" {
 			getHibachiScope().clearEmailAndPrintQueue();
 		} else {
 			getHibachiScope().getService("emailService").sendEmailQueue();
-			getHibachiScope().getService("printService").submitPrintQueue();
 		}
 		
 		// Call the super lifecycle end

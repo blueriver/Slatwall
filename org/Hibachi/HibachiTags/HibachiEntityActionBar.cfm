@@ -135,7 +135,7 @@
 											<a class="btn dropdown-toggle" data-toggle="dropdown" href="##"><i class="icon-print"></i></a>
 											<ul class="dropdown-menu pull-right">
 												<cfloop array="#attributes.object.getPrintTemplates()#" index="template">
-													<cf_HibachiProcessCaller action="admin:entity.processprint" entity="Print" processContext="addToQueue" queryString="printTemplateID=#template.getPrintTemplateID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#template.getPrintTemplateName()#" modal="true" type="list" />
+													<cf_HibachiProcessCaller action="admin:entity.processprint" entity="Print" processContext="addToQueue" queryString="printTemplateID=#template.getPrintTemplateID()#&printID=&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&redirectAction=#request.context.slatAction#" text="#template.getPrintTemplateName()#" type="list" />
 												</cfloop>
 											</ul>
 										</div>

@@ -43,7 +43,7 @@ component entityname="SlatwallPrintTemplate" table="SlatwallPrintTemplate" persi
 	property name="printTemplateName" ormtype="string";
 	property name="printTemplateObject" ormtype="string" hb_formFieldType="select";
 	property name="printTemplateFile" ormtype="string" hb_formFieldType="select";
-	property name="printBody" ormtype="string" length="4000";
+	property name="printContent" ormtype="string" length="4000" hb_formFieldType="wysiwyg";
 	
 	// Related Object Properties (many-to-one)
 	

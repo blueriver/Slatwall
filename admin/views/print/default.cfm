@@ -38,17 +38,18 @@ Notes:
 --->
 <cfoutput>
 <cfif arrayLen($.slatwall.getPrintQueue())>
-<cfloop array="#$.slatwall.getPrintQueue()#" index="print">
-<div style="page-break-before: always;">
-#print.getPrintContent()#
+<cfloop from="1" to="#arrayLen($.slatwall.getPrintQueue())#" index="i">
+<div style="<cfif i gt 1>page-break-before: always;</cfif>">
+#$.slatwall.getPrintQueue()[i].getPrintContent()#
 </div>
 <cfsilent>
-<cfif print.getLogPrintFlag()>
-<cfset entityMerge(print) />
-<cfset entitySave(print) />
+<cfif $.slatwall.getPrintQueue()[i].getLogPrintFlag()>
+<cfset entityMerge($.slatwall.getPrintQueue()[i]) />
+<cfset entitySave($.slatwall.getPrintQueue()[i]) />
 </cfif>
 </cfsilent>
 </cfloop>
+<cfset $.slatwall.clearPrintQueue() />
 <cfelse>
 <p class="error">There are no documents in the queue to print</p>
 </cfif>

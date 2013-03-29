@@ -145,7 +145,11 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		return getSessionValue('printQueue');
 	}
 	
-	// Cleare
+	// Clear
+	public void function clearPrintQueue() {
+		setSessionValue('printQueue', []);
+	}
+	
 	public void function clearEmailAndPrintQueue() {
 		variables.emailQueue = [];
 		setSessionValue('printQueue', []);
