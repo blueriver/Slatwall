@@ -723,35 +723,18 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	}
 
 	public array function getRecords(boolean refresh=false) {
-		try {
-			if( !structKeyExists(variables, "records") || arguments.refresh == true) {
-				variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
-			}
-			return variables.records;
-		} catch(any e) {
-			writeDump(variables.wheregroups);
-			writeDump(getHQL());
-			writeDump(getHQLParams());
-			writeDump(e);
-			abort;	
+		if( !structKeyExists(variables, "records") || arguments.refresh == true) {
+			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
 		}
 	}
 	
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
-		try {
-			if( !structKeyExists(variables, "pageRecords")) {
-				saveState();
-				variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
-			}
-			return variables.pageRecords;
-		} catch(any e) {
-			writeDump(variables.wheregroups);
-			writeDump(getHQL());
-			writeDump(getHQLParams());
-			writeDump(e);
-			abort;		
+		if( !structKeyExists(variables, "pageRecords")) {
+			saveState();
+			variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
 		}
+		return variables.pageRecords;
 	}
 	
 	public void function clearRecordsCount() {
