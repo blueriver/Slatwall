@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,17 +36,11 @@
 Notes:
 
 */
-component entityname="SlatwallEmail" table="SlatwallEmail" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="emailService" hb_permission="this" {
+component entityname="SlatwallPrint" table="SlatwallPrint" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="printService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="emailID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="emailTo" ormtype="string";
-	property name="emailFrom" ormtype="string";
-	property name="emailCC" ormtype="string";
-	property name="emailBCC" ormtype="string";
-	property name="emailSubject" ormtype="string";
-	property name="emailBodyHTML" ormtype="string" length="4000";
-	property name="emailBodyText" ormtype="string" length="4000";
+	property name="printID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="printContent" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	
@@ -64,14 +58,14 @@ component entityname="SlatwallEmail" table="SlatwallEmail" persistent="true" acc
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="logEmailFlag" persistent="false"; 
+	property name="logPrintFlag" persistent="false"; 
 	
 	// ============ START: Non-Persistent Property Methods =================
-	public boolean function getLogEmailFlag() {
-		if(!structKeyExists(variables, "logEmailFlag")) {
-			variables.logEmailFlag = false;
+	public boolean function getLogPrintFlag() {
+		if(!structKeyExists(variables, "logPrintFlag")) {
+			variables.logPrintFlag = false;
 		}
-		return variables.logEmailFlag;
+		return variables.logPrintFlag;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

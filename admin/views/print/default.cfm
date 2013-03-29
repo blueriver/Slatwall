@@ -36,26 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.returnAction" />
-<cfparam name="rc.returnQueryString" />
-<cfparam name="rc.printAction" />
-<cfparam name="rc.printQueryString" />
-
 <cfoutput>
-<html>
-	<head>
-		<title>Print Redirect</title>
-		<script type="text/javascript">
-			window.open('#buildURL(action=rc.printAction, queryString=rc.printQueryString)#', '_blank');
-			setTimeout('redirectME()', 100);
-			
-			function redirectME() {
-				window.location = '#buildURL(action=rc.returnAction, queryString=rc.returnQueryString)#';
-			} 
-		</script>
-	</head>
-	<body>
-		<!-- No Content -->
-	</body>
-</html>
+<cfif arrayLen($.slatwall.getPrintQueue())>
+<cfloop array="#$.slatwall.getPrintQueue()#" index="print">
+<div style="page-break-before: always;">
+#print.getPrintContent()#
+</div>
+<cfsilent>
+<cfif print.getLogPrintFlag()>
+<cfset entityMerge(print) />
+<cfset entitySave(print) />
+</cfif>
+</cfsilent>
+</cfloop>
+<cfelse>
+<p class="error">There are no documents in the queue to print</p>
+</cfif>
 </cfoutput>
