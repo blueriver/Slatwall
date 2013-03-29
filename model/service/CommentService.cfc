@@ -93,10 +93,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		return arrayToList(returnCommentArray, " ");
 	}
-	
-
-
-
+		
+	public boolean function removeAllEntityRelatedComments(required any entity) {
+		if(getHasPropertyByEntityNameAndPropertyIdentifier('CommentRelationship', arguments.entity.getClassName())) {
+			return getCommentDAO().deleteAllRelatedComments(primaryIDPropertyName=arguments.entity.getPrimaryIDPropertyName(), primaryIDValue=arguments.entity.getPrimaryIDValue());	
+		}
+		return true;
+	}
 	
 	// ===================== START: Logical Methods ===========================
 	
@@ -106,10 +109,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public array function getRelatedCommentsForEntity(required string primaryIDPropertyName, required string primaryIDValue) {
 		return getCommentDAO().getRelatedCommentsForEntity(argumentCollection=arguments);
-	}
-	
-	public boolean function removeAllEntityRelatedComments(required any entity) {
-		return getCommentDAO().deleteAllRelatedComments(primaryIDPropertyName=arguments.entity.getPrimaryIDPropertyName(), primaryIDValue=arguments.entity.getPrimaryIDValue());
 	}
 	
 	// ===================== START: DAO Passthrough ===========================
