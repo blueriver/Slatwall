@@ -726,6 +726,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		if( !structKeyExists(variables, "records") || arguments.refresh == true) {
 			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
 		}
+		return variables.records;
 	}
 	
 	// Paging Methods
