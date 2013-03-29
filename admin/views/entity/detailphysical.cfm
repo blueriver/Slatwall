@@ -53,17 +53,17 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.physical#">
+			<cf_HibachiTab property="productTypes" />
+			<cf_HibachiTab property="brands" />
+			<cf_HibachiTab property="products" />
+			<cf_HibachiTab property="skus" />
+			<cf_HibachiTab property="locations" />
 			<cf_HibachiTab property="physicalcounts" />
 			<cfif rc.physical.getPhysicalStatusType().getSystemCode() eq "pstClosed">
 				<cf_HibachiTab property="stockadjustments" />
 			<cfelse>
 				<cf_HibachiTab view="admin:entity/physicaltabs/discrepancies" />
 			</cfif>
-			<cf_HibachiTab property="locations" />
-			<cf_HibachiTab property="productTypes" />
-			<cf_HibachiTab property="brands" />
-			<cf_HibachiTab property="products" />
-			<cf_HibachiTab property="skus" />
 			<cf_SlatwallAdminTabComments object="#rc.physical#" />
 		</cf_HibachiTabGroup>
 		

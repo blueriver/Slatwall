@@ -5,8 +5,12 @@
 		}  
 	},
 	"properties":{
-		"creditCardNumber":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true,"dataType":"creditCardNumber"}],
+		"nameOnCreditCard":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
+		"creditCardNumber":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true,"dataType":"creditCard"}],
 		"expirationMonth":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true,"dataType":"numeric"}],
 		"expirationYear":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true,"dataType":"numeric"}]
+	},
+	"populatedPropertyValidation":{
+	    "address":[{"validate":"full"}]
 	}
 }
