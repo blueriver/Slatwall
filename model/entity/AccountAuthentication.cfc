@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Account Authentication" entityname="SlatwallAccountAuthentication" table="SlatwallAccountAuthentication" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="accountService" hb_permission="account.accountAuthentications" {
+component displayname="Account Authentication" entityname="SlatwallAccountAuthentication" table="SlatwallAccountAuthentication" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountAuthentications" {
 	
 	// Persistent Properties
 	property name="accountAuthenticationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

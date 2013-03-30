@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" table="SlatwallVendorOrderItem" persistent="true" accessors="true" output="false" extends="HibachiEntity" hb_serviceName="vendorOrderService" hb_permission="vendorOrder.vendorOrderItems" {
+component entityname="SlatwallVendorOrderItem" table="SlatwallVendorOrderItem" persistent="true" accessors="true" output="false" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="vendorOrderService" hb_permission="vendorOrder.vendorOrderItems" {
 	
 	// Persistent Properties
 	property name="vendorOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

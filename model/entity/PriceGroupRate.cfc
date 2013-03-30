@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" table="SlatwallPriceGroupRate" persistent=true output=false accessors=true extends="HibachiEntity" hb_serviceName="priceGroupService" hb_permission="priceGroup.priceGroupRates" {
+component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" table="SlatwallPriceGroupRate" persistent=true output=false accessors=true extends="HibachiEntity" cacheuse="transactional" hb_serviceName="priceGroupService" hb_permission="priceGroup.priceGroupRates" {
 	
 	// Persistent Properties
 	property name="priceGroupRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order Origin" entityname="SlatwallOrderOrigin" table="SlatwallOrderOrigin" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="settingService" hb_permission="this" {
+component entityname="SlatwallOrderOrigin" table="SlatwallOrderOrigin" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="settingService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="orderOriginID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
