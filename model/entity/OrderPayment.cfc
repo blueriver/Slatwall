@@ -36,20 +36,21 @@
 Notes:
 
 */
-component displayname="Order Payment" entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="HibachiEntity" hb_serviceName="orderService" hb_permission="order.orderPayments" hb_processContexts="processTransaction" {
+component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="orderService" hb_permission="order.orderPayments" hb_processContexts="processTransaction" {
 	
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormtype="big_decimal" notnull="true";
 	property name="currencyCode" ormtype="string" length="3";
-	
-	// Persistent Properties - creditCard Specific
-	property name="nameOnCreditCard" ormType="string";
+	property name="bankRoutingNumberEncrypted" ormType="string";
+	property name="bankAccountNumberEncrypted" ormType="string";
 	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string" hb_formfieldType="select";
 	property name="expirationYear" ormType="string" hb_formfieldType="select";
+	property name="giftCardNumberEncrypted" ormType="string";
+	property name="nameOnCreditCard" ormType="string";
 	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (many-to-one)
@@ -87,10 +88,13 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="amountUncredited" persistent="false" hb_formatType="currency";
 	property name="amountUncaptured" persistent="false" hb_formatType="currency";
 	property name="amountUnreceived" persistent="false" hb_formatType="currency";
+	property name="bankRoutingNumber" persistent="false";
+	property name="bankAccountNumber" persistent="false";
 	property name="creditCardNumber" persistent="false";
 	property name="expirationDate" persistent="false";
 	property name="experationMonthOptions" persistent="false";
 	property name="expirationYearOptions" persistent="false";
+	property name="giftCardNumber" persistent="false";
 	property name="paymentMethodType" persistent="false";
 	property name="orderStatusCode" persistent="false";
 	property name="securityCode" persistent="false";

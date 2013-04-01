@@ -251,7 +251,13 @@ function setupEventHandlers() {
 	// Modal Loading
 	jQuery('body').on('click', '.modalload', function(e){
 		
-		jQuery('#adminModal').html('');
+		jQuery('#adminModal').css({
+			'width': '106px',
+			'margin-left': function () {
+	            return -(jQuery('#adminModal').width() / 2);
+	        }
+		});
+		jQuery('#adminModal').html('<img src="/org/Hibachi/HibachiAssets/images/loading.gif" style="padding:20px;" />');
 		var modalLink = jQuery(this).attr( 'href' );
 		
 		if( modalLink.indexOf("?") !== -1) {
@@ -275,6 +281,7 @@ function setupEventHandlers() {
 		        }
 			});
 		});
+		
 	});
 	
 	// Listing Page - Searching

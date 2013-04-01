@@ -47,6 +47,25 @@ Notes:
 	
 	<cf_HibachiPropertyRow>
 		<cf_HibachiPropertyList>
+			
+			<!--- Update Order Fulfillment Details --->
+			<cfif listFindNoCase(rc.order.getOrderRequirementsList(), 'fulfillment')>
+				<cfloop array="#rc.order.getOrderFulfillments()#" index="orderFulfillment">
+					<cfif !orderFulfillment.isProcessable('placeOrder')>
+						<h4>Fulfillment Details</h4>
+						
+						<hr />
+					</cfif>
+				</cfloop>
+			</cfif>
+			
+			<!--- Update Order Payments --->
+			<cfif listFindNoCase(rc.order.getOrderRequirementsList(), 'payment')>
+				<h4>Payment Details</h4>
+				<hr />
+			</cfif>
+			
+			<!---
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderTypeID" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="currencyCode" edit="#rc.edit#">
 			<hr />
@@ -68,9 +87,9 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accountID" autocompletePropertyIdentifiers="adminIcon,fullName,company,emailAddress,phoneNumber,address.simpleRepresentation" edit="true">
 			</cf_HibachiDisplayToggle>
 			<hr />
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderOriginID" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="fulfillmentMethodID" edit="#rc.edit#">
-			
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderOriginID" edit="#rc.edit#">
+			--->
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	

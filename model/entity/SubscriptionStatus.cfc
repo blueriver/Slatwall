@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Subscription Status" entityname="SlatwallSubscriptionStatus" table="SlatwallSubscriptionStatus" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="subscriptionService" {
+component entityname="SlatwallSubscriptionStatus" table="SlatwallSubscriptionStatus" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="subscriptionService" {
 	
 	// Persistent Properties
 	property name="subscriptionStatusID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

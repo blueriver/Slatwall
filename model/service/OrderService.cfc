@@ -419,7 +419,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	public any function getOrderRequirementsList(required any order) {
+	public string function getOrderRequirementsList(required any order) {
 		var orderRequirementsList = "";
 		
 		// Check if the order still requires a valid account
@@ -431,7 +431,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderFulfillments()); i++) {
 			if(!arguments.order.getOrderFulfillments()[i].isProcessable( context="placeOrder" )) {
 				orderRequirementsList = listAppend(orderRequirementsList, "fulfillment");
-				orderRequirementsList = listAppend(orderRequirementsList, arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID());
 			}
 		}
 	
@@ -723,6 +722,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
+	public any function processOrder_addOrderPayment(required any order, required any processObject) {
+		writeDump("GOT HERE");
+		abort;	
+	}
+	
 	public any function processOrder_create(required any order, required any processObject, required struct data={}) {
 		// Setup Account
 		if(arguments.processObject.getNewAccountFlag()) {
@@ -775,8 +779,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		return arguments.order;
 	}
-	
-	
 	
 	public any function processOrder_placeOrder(required any order, struct data={}, string processContext="process") {
 		// First we need to lock the session so that this order doesn't get placed twice.

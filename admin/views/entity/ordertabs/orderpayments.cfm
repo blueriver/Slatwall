@@ -48,33 +48,31 @@ Notes:
 </cfsilent>
 
 <cfoutput>
-	<cfif local.chargeList.getRecordsCount() gt 0>
-		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderpayments.charges')#</h4>
-		<cf_HibachiListingDisplay smartList="#local.chargeList#" 
-				recordDetailAction="admin:entity.detailorderpayment"
-				recordEditAction="admin:entity.editorderpayment">
-			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
-			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
-			<cf_HibachiListingColumn propertyIdentifier="amount" />
-			<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
-			<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
-		</cf_HibachiListingDisplay>
-	</cfif>
+	<h4>#$.slatwall.rbKey('admin.entity.ordertabs.orderpayments.charges')#</h4>
+	<cf_HibachiListingDisplay smartList="#local.chargeList#" 
+			recordDetailAction="admin:entity.detailorderpayment"
+			recordEditAction="admin:entity.editorderpayment">
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" />
+		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
+		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
+	</cf_HibachiListingDisplay>
 	
-	<cfif local.creditList.getRecordsCount() gt 0>
-		<h4>#$.slatwall.rbKey('admin.order.ordertabs.orderpayments.credits')#</h4>
-		<cf_HibachiListingDisplay smartList="#local.creditList#" 
-				recordDetailAction="admin:entity.detailorderpayment"
-				recordEditAction="admin:entity.editorderpayment">
-			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
-			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
-			<cf_HibachiListingColumn propertyIdentifier="amount" />
-			<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
-			<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
-		</cf_HibachiListingDisplay>
-	</cfif>
+	<h4>#$.slatwall.rbKey('admin.entity.ordertabs.orderpayments.credits')#</h4>
+	<cf_HibachiListingDisplay smartList="#local.creditList#" 
+			recordDetailAction="admin:entity.detailorderpayment"
+			recordEditAction="admin:entity.editorderpayment">
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" />
+		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
+		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
+	</cf_HibachiListingDisplay>
 	
 	<cfif rc.order.getPaymentAmountTotal() neq rc.order.getTotal()>
+		<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="addOrderPayment" class="btn" icon="plus" modal="true" />
+		<!---
 		<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
 			<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
 				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()> 
@@ -84,6 +82,7 @@ Notes:
 				</cfif>
 			</cfloop>
 		</cf_HibachiActionCallerDropdown>
+		--->
 	</cfif>
 	
 </cfoutput>

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Vendor Email Address" entityname="SlatwallVendorEmailAddress" table="SlatwallVendorEmailAddress" persistent="true" extends="HibachiEntity" hb_serviceName="vendorService" hb_permission="vendor.vendorEmailAddresses" {
+component entityname="SlatwallVendorEmailAddress" table="SlatwallVendorEmailAddress" persistent="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="vendorService" hb_permission="vendor.vendorEmailAddresses" {
 	
 	// Persistent Properties
 	property name="vendorEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
