@@ -63,7 +63,7 @@ Notes:
 				<!--- Credit Card Details --->
 				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard">
 					<hr />
-					<h4>#$.slatwall.rbKey('admin.entity.detailsAccountPaymentMethod.creditCardDetials')#</h4>
+					<h4>#$.slatwall.rbKey('admin.define.creditCardDetials')#</h4>
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="nameOnCreditCard" edit="#rc.edit#" />
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="creditCardNumber" edit="#rc.edit#" />
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationMonth" edit="#rc.edit#" />
@@ -81,7 +81,7 @@ Notes:
 				<!--- Check Payment Details --->
 				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="check">
 					<hr />
-					<h4>#$.slatwall.rbKey('admin.entity.detailsAccountPaymentMethod.checkDetails')#</h4>
+					<h4>#$.slatwall.rbKey('admin.define.checkDetails')#</h4>
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="bankRoutingNumber" edit="#rc.edit#" />
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="bankAccountNumber" edit="#rc.edit#" />
 				</cf_HibachiDisplayToggle>
@@ -89,7 +89,7 @@ Notes:
 				<!--- Gift Card Details --->
 				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="giftCard">
 					<hr />
-					<h4>#$.slatwall.rbKey('admin.entity.detailsAccountPaymentMethod.giftCardDetails')#</h4>
+					<h4>#$.slatwall.rbKey('admin.define.giftCardDetails')#</h4>
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="giftCardNumber" edit="#rc.edit#" />
 				</cf_HibachiDisplayToggle>
 				

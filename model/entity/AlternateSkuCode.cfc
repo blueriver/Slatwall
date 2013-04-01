@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Alternate Sku Code" entityname="SlatwallAlternateSkuCode" table="SlatwallAlternateSkuCode" persistent=true accessors=true output=false extends="HibachiEntity" hb_serviceName="skuService" {
+component displayname="Alternate Sku Code" entityname="SlatwallAlternateSkuCode" table="SlatwallAlternateSkuCode" persistent=true accessors=true output=false extends="HibachiEntity" cacheuse="transactional" hb_serviceName="skuService" {
 	
 	// Persistent Properties
 	property name="alternateSkuCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

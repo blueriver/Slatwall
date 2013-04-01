@@ -35,11 +35,11 @@
 
 Notes:
 	
-	List of Appliet Type
+	List of Applied Type
 	
 	orderItem 
 */
-component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent="true" output="false" accessors="true" extends="HibachiEntity" hb_serviceName="taxService" {
+component entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent="true" output="false" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="taxService" {
 	
 	// Persistent Properties
 	property name="taxAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

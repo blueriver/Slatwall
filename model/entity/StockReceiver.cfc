@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table="SlatwallStockReceiver" persistent=true accessors=true output=false extends="HibachiEntity" hb_serviceName="stockService" {
+component entityname="SlatwallStockReceiver" table="SlatwallStockReceiver" persistent=true accessors=true output=false extends="HibachiEntity" cacheuse="transactional" hb_serviceName="stockService" {
 	
 	
 	// Persistent Properties

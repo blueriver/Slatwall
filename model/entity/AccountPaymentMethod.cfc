@@ -36,20 +36,20 @@
 Notes:
 
 */
-component displayname="Account Payment Method" entityname="SlatwallAccountPaymentMethod" table="SlatwallAccountPaymentMethod" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="accountService" hb_permission="account.accountPaymentMethods" {
+component displayname="Account Payment Method" entityname="SlatwallAccountPaymentMethod" table="SlatwallAccountPaymentMethod" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountPaymentMethods" {
 	
 	// Persistent Properties
 	property name="accountPaymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="accountPaymentMethodName" ormType="string";
-	property name="giftCardNumberEncrypted" ormType="string";
 	property name="bankRoutingNumberEncrypted" ormType="string";
 	property name="bankAccountNumberEncrypted" ormType="string";
 	property name="creditCardNumberEncrypted" ormType="string";
-	property name="nameOnCreditCard" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string" hb_formfieldType="select";
 	property name="expirationYear" ormType="string" hb_formfieldType="select";
+	property name="giftCardNumberEncrypted" ormType="string";
+	property name="nameOnCreditCard" ormType="string";
 	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (many-to-one)
@@ -193,10 +193,20 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	
 	public string function getSimpleRepresentation() {
-		if(getPaymentMethodType() == "creditCard") {
-			return getAccountPaymentMethodName() & " - " & " - " & getCreditCardType() & " - ***" & getCreditCardLastFour();
+		var rep = "";
+		if(!isNull(getAccountPaymentMethodName()) && len(getAccountPaymentMethodName())) {
+			var rep = getAccountPaymentMethodName() & " ";	
 		}
-		return getAccountPaymentMethodName();
+		if(getPaymentMethodType() == "creditCard") {
+			rep = listAppend(rep, " #getCreditCardType()# - *#getCreditCardLastFour()#", "|");
+		}
+		if(getPaymentMethodType() == "termPayment" && !getBillingAddress().getNewFlag()) {
+			rep = listAppend(rep, " #getBillingAddress().getSimpleRepresentation()#", "|");
+		}
+		if(getPaymentMethodType() == "giftCard" && !isNull(getGiftCardNumber()) && len(getGiftCardNumber())) {
+			rep = listAppend(rep, " #getGiftCardNumber()#", "|");
+		}
+		return rep;
 	}
 
 	// ==================  END:  Overridden Methods ========================

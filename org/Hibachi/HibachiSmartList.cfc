@@ -9,6 +9,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	property name="entityJoinOrder" type="array";
 	
 	property name="selects" type="struct" hint="This struct holds any selects that are to be used in creating the records array";
+	property name="selectDistinctFlag" type="boolean";
 	
 	property name="whereGroups" type="array" hint="this holds all filters and ranges";
 	property name="whereConditions" type="array";
@@ -55,6 +56,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		setCurrentPageDeclaration(1);
 		setCacheable(false);
 		setCacheName("");
+		setSelectDistinctFlag(0);
 		
 		// Set currentURL from the arguments
 		setCurrentURL(arguments.currentURL);
@@ -502,7 +504,11 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 				}
 				hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
 			} else {
-				hqlSelect &= "SELECT DISTINCT #variables.entities[getBaseEntityName()].entityAlias#";
+				hqlSelect &= "SELECT";
+				if(getSelectDistinctFlag()) {
+					hqlSelect &= " DISTINCT";	
+				}
+				hqlSelect &= " #variables.entities[getBaseEntityName()].entityAlias#";
 			}
 		}
 		return hqlSelect;

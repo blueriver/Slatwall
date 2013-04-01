@@ -7,9 +7,11 @@
 		<column name="orderOriginType" />
 	</Columns>
 	<Records>
+		<!--
 		<Record orderOriginID="f2b35ea90e140ce16f4638da7721ecdd" activeFlag="1" orderOriginName="Web" orderOriginType="web" />
 		<Record orderOriginID="f2b35eaacbafddfccc894d703bcda914" activeFlag="0" orderOriginName="POS" orderOriginType="inPerson" />
 		<Record orderOriginID="f2b35eabaf2d9a22f61677cc9ba80611" activeFlag="0" orderOriginName="Mail Order" orderOriginType="phone" />
+		-->
 	</Records>
 </Table>
 

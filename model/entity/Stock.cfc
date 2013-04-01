@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" persistent=true accessors=true output=false extends="HibachiEntity" hb_serviceName="stockService" {
+component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" persistent=true accessors=true output=false extends="HibachiEntity" cacheuse="read-only" hb_serviceName="stockService" {
 	
 	// Persistent Properties
 	property name="stockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -54,10 +54,6 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	// Audit properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
-	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	
 	
 	// Quantity
 	public numeric function getQuantity(required string quantityType) {
