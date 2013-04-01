@@ -81,7 +81,8 @@ Notes:
 			<cf_HibachiListingColumn propertyIdentifier="quantityDelivered" />
 		</cf_HibachiListingDisplay>
 		
-		<cfif rc.edit>
+		<!--- If in edit and order is of correct status then we can add sale order items --->
+		<cfif rc.edit and listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
 			<h4>#$.slatwall.rbKey('define.add')#</h4>
 			<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#"
 									  recordProcessAction="admin:entity.processOrder"

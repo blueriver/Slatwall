@@ -53,16 +53,34 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.order#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
-			<cf_HibachiProcessCaller action="admin:entity.preprocessorder" entity="#rc.order#" processContext="addPromotionCode" type="list" modal="true" />
-			<!---
-			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" queryString="orderID=#rc.order.getOrderID()#&process=1&redirectAction=admin:entity.detailorder" type="list" />
-			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOnHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="takeOffHold" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="cancelOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
-			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="closeOrder" queryString="orderID=#rc.order.getOrderID()#" type="list" modal="true" />
+			
+			<!--- Place Order --->
+			<cfif rc.order.getOrderStatusType().getSystemCode() eq "ostNotPlaced">
+				<cfif len(rc.order.getOrderRequirementsList())>
+					<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="placeOrder" type="list" modal="true" />
+				<cfelse>
+					<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" type="list" />
+				</cfif>
+			</cfif>
+			
+			<!--- Change Status (onHold, close, cancel, offHold) --->
+			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="placeOnHold" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="takeOffHold" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="cancelOrder" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="closeOrder" type="list" modal="true" />
+			
+			<!--- Create Return --->
 			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
-			--->
+			
+			<li class="divider"></li>
+			
+			<!--- Add Elements --->
+			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="addOrderPayment" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="addPromotionCode" type="list" modal="true" />
+			
 		</cf_HibachiEntityActionBar>
+		
+		
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divclass="span6">

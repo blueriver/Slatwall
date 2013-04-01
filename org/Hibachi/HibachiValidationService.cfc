@@ -158,6 +158,7 @@
 			var errorBean = getTransient("hibachiErrors");
 		}
 		
+		// If the context was 'false' then we don't do any validation
 		if(!isBoolean(arguments.context) || arguments.context) {
 			// Get the valdiations for this context
 			var contextValidations = getValidationsByContext(object=arguments.object, context=arguments.context);

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" persistent=true output=false accessors=true extends="HibachiEntity" cacheuse="transactional" hb_serviceName="orderService" hb_permission="this" hb_processContexts="addSaleOrderItem,create,placeOrder,createReturn,placeOnHold,takeOffHold,cancelOrder,addPromotionCode" {
+component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" persistent=true output=false accessors=true extends="HibachiEntity" cacheuse="transactional" hb_serviceName="orderService" hb_permission="this" hb_processContexts="create,addSaleOrderItem,placeOrder,createReturn,placeOnHold,takeOffHold,cancelOrder,addPromotionCode" {
 	
 	// Persistent Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -95,6 +95,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="referencingPaymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
 	property name="paymentMethodOptionsSmartList" persistent="false";
 	property name="orderPaymentRefundOptions" persistent="false";
+	property name="orderRequirementsList" persistent="false";
 	property name="promotionCodeList" persistent="false";
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
@@ -102,6 +103,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="quantityUnreceived" persistent="false";
 	property name="returnItemSmartList" persistent="false";
 	property name="saleItemSmartList" persistent="false";
+	property name="statusCode" persistent="false";
 	property name="subTotal" persistent="false" hb_formatType="currency";
 	property name="subTotalAfterItemDiscounts" persistent="false" hb_formatType="currency";
 	property name="taxTotal" persistent="false" hb_formatType="currency";
@@ -284,6 +286,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 
 		return discountAmount;
+	}
+	
+	public any function getOrderRequirementsList() {
+		if(!structKeyExists(variables, "orderRequirementsList")) {
+			variables.orderRequirementsList = getService("orderService").getOrderRequirementsList(order=this);
+		}
+		return variables.orderRequirementsList;
 	}
 	
 	public numeric function getPaymentAmountTotal() {

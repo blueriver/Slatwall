@@ -41,15 +41,15 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	// Persistent Properties
 	property name="accountPaymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="accountPaymentMethodName" ormType="string";
-	property name="giftCardNumberEncrypted" ormType="string";
 	property name="bankRoutingNumberEncrypted" ormType="string";
 	property name="bankAccountNumberEncrypted" ormType="string";
 	property name="creditCardNumberEncrypted" ormType="string";
-	property name="nameOnCreditCard" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string" hb_formfieldType="select";
 	property name="expirationYear" ormType="string" hb_formfieldType="select";
+	property name="giftCardNumberEncrypted" ormType="string";
+	property name="nameOnCreditCard" ormType="string";
 	property name="providerToken" ormType="string";
 	
 	// Related Object Properties (many-to-one)
