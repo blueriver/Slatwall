@@ -54,8 +54,11 @@
 			// Announce Before Event
 			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Delete", arguments);
 			
+			// Do delete validation
+			arguments.entity.validate(context="delete");
+			
 			// If the entity Passes validation
-			if(arguments.entity.isDeletable()) {
+			if(!arguments.entity.hasErrors()) {
 				
 				// Remove any Many-to-Many relationships
 				arguments.entity.removeAllManyToManyRelationships();

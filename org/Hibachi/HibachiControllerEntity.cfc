@@ -277,9 +277,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 		// FAILURE
 		} else {
-			// Add the Generic Action Failure Message
-			getHibachiScope().showMessage( replace(getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.error_success" ), "${itemEntityName}", rbKey('entity.#arguments.rc.entityActionDetails.itemEntityName#'), "all" ), "error");
-			
+				
 			// Show all of the specific messages & error messages for the entity
 			entity.showErrorsAndMessages();
 			
