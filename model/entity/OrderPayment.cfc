@@ -44,6 +44,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="currencyCode" ormtype="string" length="3";
 	property name="bankRoutingNumberEncrypted" ormType="string";
 	property name="bankAccountNumberEncrypted" ormType="string";
+	property name="checkNumberEncrypted" ormType="string";
 	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
@@ -90,6 +91,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="amountUnreceived" persistent="false" hb_formatType="currency";
 	property name="bankRoutingNumber" persistent="false";
 	property name="bankAccountNumber" persistent="false";
+	property name="checkNumber" persistent="false";
 	property name="creditCardNumber" persistent="false";
 	property name="expirationDate" persistent="false";
 	property name="experationMonthOptions" persistent="false";
@@ -400,6 +402,13 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	public any function getOrderPaymentType() {
 		if( !structKeyExists(variables, "orderPaymentType") ) {
 			variables.orderPaymentType = getService("settingService").getTypeBySystemCode("optCharge");
+		}
+		return variables.orderPaymentType;
+	}
+	
+	public any function getBillingAddress() {
+		if( !structKeyExists(variables, "billingAddress") ) {
+			return getService("addressService").newAddress();
 		}
 		return variables.orderPaymentType;
 	}
