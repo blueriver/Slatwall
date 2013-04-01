@@ -193,10 +193,20 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	
 	public string function getSimpleRepresentation() {
-		if(getPaymentMethodType() == "creditCard") {
-			return getAccountPaymentMethodName() & " - " & " - " & getCreditCardType() & " - ***" & getCreditCardLastFour();
+		var rep = "";
+		if(!isNull(getAccountPaymentMethodName()) && len(getAccountPaymentMethodName())) {
+			var rep = getAccountPaymentMethodName() & " ";	
 		}
-		return getAccountPaymentMethodName();
+		if(getPaymentMethodType() == "creditCard") {
+			rep = listAppend(rep, " #getCreditCardType()# - *#getCreditCardLastFour()#", "|");
+		}
+		if(getPaymentMethodType() == "termPayment" && !getBillingAddress().getNewFlag()) {
+			rep = listAppend(rep, " #getBillingAddress().getSimpleRepresentation()#", "|");
+		}
+		if(getPaymentMethodType() == "giftCard" && !isNull(getGiftCardNumber()) && len(getGiftCardNumber())) {
+			rep = listAppend(rep, " #getGiftCardNumber()#", "|");
+		}
+		return rep;
 	}
 
 	// ==================  END:  Overridden Methods ========================
