@@ -139,7 +139,7 @@ globalEncryptionKeySize
 					fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage"},
 					
 					// Global
-					globalCurrencyLocale = {fieldType="select"},
+					globalCurrencyLocale = {fieldType="select", defaultValue='English (US)'},
 					globalCurrencyType = {fieldType="select"},
 					globalDateFormat = {fieldType="text"},
 					globalAssetsImageFolderPath = {fieldType="text", defaultValue=getApplicationValue('applicationRootMappingPath') & '/custom/assets/images'},
