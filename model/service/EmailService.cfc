@@ -61,7 +61,9 @@ Notes:
 			</cfif>
 			
 			<cfmailpart type="text/html">
-				#arguments.email.getEmailBodyHTML()#
+				<html>
+					<body>#arguments.email.getEmailBodyHTML()#</body>
+				</html>
 			</cfmailpart>
 		</cfmail>
 		
