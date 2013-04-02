@@ -6,10 +6,10 @@
 		<cfoutput>
 			<ul class="thumbnails">
   				<cfloop array="#attributes.object.getImages()#" index="image">
-					<li class="span4">
+					<li class="span3">
 	    				<div class="thumbnail">
 	    					<a href="##">
-	      						#image.getImage(width=260, height=180)#
+	      						#image.getImage(width=180, height=180)#
 							</a>
 							<cfif !isNull(image.getImageName()) && len(image.getImageName())>
 	      						<h3>#image.getImageName()#</h3>

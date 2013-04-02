@@ -168,8 +168,23 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			// Check to see if this property has a key in the data that was passed in
 			if( structKeyExists(arguments.data, currentProperty.name) ) {
 			
+			
+				// (FILE UPLOAD)
+				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && structKeyExists(currentProperty, "hb_fileUpload") && currentProperty.hb_fileUpload && structKeyExists(currentProperty, "hb_fileAcceptMIMEType") && len(arguments.data[ currentProperty.name ]) ) {
+					
+					try {
+						var uploadDirectory = this.invokeMethod("get#currentProperty.name#UploadDirectory");
+						var uploadData = fileUpload( uploadDirectory, currentProperty.name, currentProperty.hb_fileAcceptMIMEType, 'makeUnique' );
+						if(!directoryExists(uploadDirectory)) {
+							directoryCreate(uploadDirectory);
+						}
+						_setProperty(currentProperty.name, uploadData.serverFile);
+					} catch(any e) {
+						this.addError(currentProperty.name, rbKey('validate.fileUpload'));
+					}
+					
 				// (SIMPLE) Do this logic if this property should be a simple value, and the data passed in is a simple value
-				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) ) {
+				} else if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && !structKeyExists(currentProperty, "hb_fileUpload") ) {
 					
 						// If the value is blank, then we check to see if the property can be set to NULL.
 						if( trim(arguments.data[ currentProperty.name ]) == "" && ( !structKeyExists(currentProperty, "notNull") || !currentProperty.notNull ) ) {
@@ -186,25 +201,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 							}
 						}
 						
-						// Check to see if there is a fileUpload attribute set, if so we can upload it, move it... and 
-						if(structKeyExists(currentProperty, "hb_fileUpload") && currentProperty.hb_fileUpload && structKeyExists(currentProperty, "hb_fileAccept") && len(arguments.data[ currentProperty.name ])) {
-							var uploadData = {};
-							var uploadDirectory = "";
-							try {
-								uploadData = fileUpload( getHibachiTempDirectory(), currentProperty.name, currentProperty.hb_fileAccept, 'makeUnique' );
-								uploadDirectory = this.invokeMethod("get#currentProperty.name#UploadDirectory");	
-							} catch(any e) {}
-							
-							if( len(uploadDirectory) ) {
-								if(!directoryExists(uploadDirectory)) {
-									directoryCreate(uploadDirectory);
-								}
-								uploadData = fileUpload( uploadDirectory, currentProperty.name, currentProperty.hb_fileAccept, 'makeUnique' );
-								_setProperty(currentProperty.name, uploadData.serverFile);
-							}
-						}
-						
-					
 				// (MANY-TO-ONE) Do this logic if this property is a many-to-one relationship, and the data passed in is of type struct
 				} else if( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-one" && isStruct( arguments.data[ currentProperty.name ] ) ) {
 					
