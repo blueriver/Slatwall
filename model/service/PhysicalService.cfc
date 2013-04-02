@@ -233,7 +233,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						arguments.physical.addMessage('skuCodeErrorWarning', getHibachiScope().rbKey('validate.processPhysical_addPhysicalCount.skuCodeErrorWarning', {skuCodeError=skuCodeError}));
 					}
 		
-				// If there were now rows imported then we can add the error message to the processObject
+				// If there were no rows imported then we can add the error message to the processObject
 				} else {
 					// Make sure that nothing is persisted
 					getHibachiScope().setORMHasErrors( true );
