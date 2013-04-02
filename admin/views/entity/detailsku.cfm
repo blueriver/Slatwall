@@ -67,7 +67,8 @@ Notes:
 						<cfif rc.sku.getImageExistsFlag()>
 							<cf_HibachiFieldDisplay fieldType="yesno" title="Delete Current Image" fieldname="deleteImage" edit="true" />
 						</cfif>
-						<cf_HibachiFieldDisplay fieldType="file" title="Upload New Image" fieldname="imageFileUpload" edit="true" />
+						<!---<cf_HibachiFieldDisplay fieldType="file" title="Upload New Image" fieldname="imageFileUpload" edit="true" />--->
+						<cf_SlatwallAdminImagesDisplay object="#rc.sku#" />	
 						<cf_HibachiFieldDisplay fieldType="radiogroup" title="Image Name" fieldname="imageExclusive" edit="true" valueOptions="#[{name=" Default Naming Convention<br />", value=0},{name=" Make Image Unique to Sku", value=1}]#" />
 					</div>
 				<cfelse>

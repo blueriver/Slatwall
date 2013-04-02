@@ -42,7 +42,8 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.product#" edit="#rc.edit#" sRedirectAction="admin:entity.detailProduct" sRedirectQS="productID=#rc.product.getProductID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.product#" edit="#rc.edit#">
-			<cf_HibachiActionCaller action="admin:main.createimage" queryString="productID=#rc.product.getProductID()#&directory=product&redirectAction=admin:entity.detailproduct" type="list" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createImage" querystring="productID=#rc.product.getProductID()#&objectName=product&redirectAction=#request.context.slatAction#" modal="true" type="list" />
+			<cf_HibachiActionCaller action="admin:entity.createcomment" querystring="productID=#rc.product.getProductID()#&redirectAction=#request.context.slatAction#" modal="true" type="list" />
 			<li class="divider"></li>
 			<cf_HibachiProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="updateSkus" type="list" modal="true" />
 			<cf_HibachiProcessCaller entity="#rc.product#" action="admin:entity.preprocessproduct" processContext="addOptionGroup" type="list" modal="true" />
@@ -75,8 +76,10 @@ Notes:
 			<cf_HibachiTab property="relatedProducts" />
 			<cf_HibachiTab property="vendors" />
 			
+			<!--- Images --->
+			<cf_SlatwallAdminTabImages object="#rc.product#" />
+			
 			<!--- Settings --->
-			<cf_HibachiTab view="admin:entity/producttabs/alternateimages" />
 			<cf_HibachiTab view="admin:entity/producttabs/productsettings" />
 			<cf_HibachiTab view="admin:entity/producttabs/skusettings" />
 			
