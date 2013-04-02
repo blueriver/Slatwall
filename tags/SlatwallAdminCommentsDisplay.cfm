@@ -49,7 +49,7 @@
 				</cfif>
 			</table>
 			<cfif attributes.adminComments>
-				<cf_HibachiActionCaller action="admin:entity.createcomment" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&sRedirectAction=#attributes.redirectAction#&fRedirectAction=#attributes.redirectAction#" modal="true" class="btn" icon="plus" />
+				<cf_HibachiActionCaller action="admin:entity.createcomment" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&redirectAction=#request.context.slatAction#" modal="true" class="btn" icon="plus" />
 			</cfif>
 		</cfoutput>
 	</div>
