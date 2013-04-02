@@ -8,16 +8,14 @@
   				<cfloop array="#attributes.object.getImages()#" index="image">
 					<li class="span3">
 	    				<div class="thumbnail">
-	    					<a href="?slatAction=admin:entity.detailImage">
-	      						#image.getImage(width=210, height=210)#
+	    					<a href="?slatAction=admin:entity.detailImage&imageID=#image.getImageID()#">
+								#image.getImage(width=210, height=210)#
 							</a>
-							<cfif !isNull(image.getImageName()) && len(image.getImageName())>
-	      						<h3>#image.getImageName()#</h3>
-							</cfif>
-							<cfif !isNull(image.getImageDescription()) && len(image.getImageDescription())>
-	      						#image.getImageDescription()#
-							</cfif>
-							<div class="small em image-caption" style="overflow:hidden;">#image.getImagePath()#</div>
+							<hr />
+							<div class="small em image-caption">#image.getImagePath()#</div>
+							<cf_HibachiActionCaller action="admin:entity.detailImage" querystring="imageID=#image.getImageID()#" class="btn" iconOnly="true" icon="eye-open" confirm="true" />
+							<cf_HibachiActionCaller action="admin:entity.editImage" querystring="imageID=#image.getImageID()#" class="btn" iconOnly="true" icon="pencil" />
+							<cf_HibachiActionCaller action="admin:entity.deleteImage" querystring="imageID=#image.getImageID()#" class="btn" iconOnly="true" icon="trash" />				
 	    				</div>
 	  				</li>
 				</cfloop>
