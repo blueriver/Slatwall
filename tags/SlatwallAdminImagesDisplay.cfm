@@ -8,8 +8,8 @@
   				<cfloop array="#attributes.object.getImages()#" index="image">
 					<li class="span3">
 	    				<div class="thumbnail">
-	    					<a href="##">
-	      						#image.getImage(width=180, height=180)#
+	    					<a href="?slatAction=admin:entity.detailImage">
+	      						#image.getImage(width=210, height=210)#
 							</a>
 							<cfif !isNull(image.getImageName()) && len(image.getImageName())>
 	      						<h3>#image.getImageName()#</h3>
@@ -17,7 +17,7 @@
 							<cfif !isNull(image.getImageDescription()) && len(image.getImageDescription())>
 	      						#image.getImageDescription()#
 							</cfif>
-							#image.getImagePath()#
+							<div class="small em image-caption" style="overflow:hidden;">#image.getImagePath()#</div>
 	    				</div>
 	  				</li>
 				</cfloop>
