@@ -75,8 +75,10 @@ Notes:
 			<cf_HibachiTab property="relatedProducts" />
 			<cf_HibachiTab property="vendors" />
 			
+			<!--- Images --->
+			<cf_SlatwallAdminTabImages object="#rc.product#" />
+			
 			<!--- Settings --->
-			<cf_HibachiTab view="admin:entity/producttabs/alternateimages" />
 			<cf_HibachiTab view="admin:entity/producttabs/productsettings" />
 			<cf_HibachiTab view="admin:entity/producttabs/skusettings" />
 			
