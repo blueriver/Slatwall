@@ -178,6 +178,11 @@
 			
 			<cfset attributes.errors = attributes.object.getError( attributes.property ) />
 		</cfif>
+		
+		<!--- If the field type is file, then look for an hb_fileAccept value --->
+		<cfif structKeyExists(attributes.object.getPropertyMetaData(attributes.property), "hb_fileAccept")>
+			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'accept="#attributes.object.getPropertyMetaData(attributes.property).hb_fileAccept#"', " ") />
+		</cfif>
 	</cfsilent>
 	
 	

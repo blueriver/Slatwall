@@ -36,19 +36,23 @@
 Notes:
 
 --->
-<cfparam name="rc.physical" type="any">
+<cfparam name="rc.image" type="any">
+<cfparam name="objectName" type="string" />
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.physical#" edit="#rc.edit#" sRedirectAction="admin:entity.editPhysical">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.physical#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.image#" edit="#rc.edit#" enctype="multipart/form-data" saveActionQueryString="#objectName#ID=#rc[ '#objectName#ID' ]#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.image#" edit="#rc.edit#" />
+		
+		<input type="hidden" name="#objectName#.#objectName#ID" value="#rc[ '#objectName#ID' ]#" />
+		<input type="hidden" name="directory" value="#lcase(objectName)#" />
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.physical#" property="physicalName" edit="true" />
-				<cf_HibachiPropertyDisplay object="#rc.physical#" property="locations" edit="true" />
+				<cf_HibachiPropertyDisplay object="#rc.image#" property="imageFile" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.image#" property="imageName" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
-		
+
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

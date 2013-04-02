@@ -50,7 +50,7 @@ Notes:
 		<cf_HibachiPropertyList>
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="locationID" edit="#rc.edit#" />
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="countPostDateTime" edit="#rc.edit#" />
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="countFile" fieldAttributes="acccept='text/plain,text/csv'" edit="#rc.edit#" />
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="countFile" edit="#rc.edit#" />
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	

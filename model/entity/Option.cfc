@@ -42,12 +42,15 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	property name="optionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="optionCode" ormtype="string";
 	property name="optionName" ormtype="string";
-	property name="optionImage" ormtype="string";
-	property name="optionDescription" ormtype="string" length="4000";
+	property name="optionDescription" ormtype="string" length="4000" hb_formFieldType="wysiwyg";
 	property name="sortOrder" ormtype="integer" sortContext="optionGroup";
 	
 	// Related Object Properties (many-to-one)
 	property name="optionGroup" cfc="OptionGroup" fieldtype="many-to-one" fkcolumn="optionGroupID";
+	property name="defaultImage" cfc="Image" fieldtype="many-to-one" fkcolumn="defaultImageID";
+	
+	// Related Object Properties (one-to-many)
+	property name="images" singularname="image" cfc="Image" type="array" fieldtype="one-to-many" fkcolumn="optionID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="optionID" inversejoincolumn="skuID" inverse="true"; 

@@ -1,6 +1,5 @@
 {
 	"properties":{
-		"imageName":			[{"contexts":"save","required":true}],
-		"imageType":			[{"contexts":"save","required":true}]
+		"imageFile":			[{"contexts":"save","required":true}]
 	}
 }

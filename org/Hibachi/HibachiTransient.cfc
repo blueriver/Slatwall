@@ -185,6 +185,25 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 								setPropertySessionDefault(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
 							}
 						}
+						
+						// Check to see if there is a fileUpload attribute set, if so we can upload it, move it... and 
+						if(structKeyExists(currentProperty, "hb_fileUpload") && currentProperty.hb_fileUpload && structKeyExists(currentProperty, "hb_fileAccept") && len(arguments.data[ currentProperty.name ])) {
+							var uploadData = {};
+							var uploadDirectory = "";
+							try {
+								uploadData = fileUpload( getHibachiTempDirectory(), currentProperty.name, currentProperty.hb_fileAccept, 'makeUnique' );
+								uploadDirectory = this.invokeMethod("get#currentProperty.name#UploadDirectory");	
+							} catch(any e) {}
+							
+							if( len(uploadDirectory) ) {
+								if(!directoryExists(uploadDirectory)) {
+									directoryCreate(uploadDirectory);
+								}
+								uploadData = fileUpload( uploadDirectory, currentProperty.name, currentProperty.hb_fileAccept, 'makeUnique' );
+								_setProperty(currentProperty.name, uploadData.serverFile);
+							}
+						}
+						
 					
 				// (MANY-TO-ONE) Do this logic if this property is a many-to-one relationship, and the data passed in is of type struct
 				} else if( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-one" && isStruct( arguments.data[ currentProperty.name ] ) ) {

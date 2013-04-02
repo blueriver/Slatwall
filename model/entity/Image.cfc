@@ -41,21 +41,30 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	// Persistent Properties
 	property name="imageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="imageName" ormtype="string";
-	property name="imageDescription" ormtype="string" length="4000";
-	property name="imageExtension" ormtype="string";
-	property name="imageFile" ormtype="string";
+	property name="imageDescription" ormtype="string" length="4000" hb_formFieldType="wysiwyg";
+	property name="imageFile" ormtype="string" hb_formFieldType="file" hb_fileUpload="true" hb_fileAccept=".png,.jpeg,.jpg,.gif";
 	property name="directory" ormtype="string";
 	
 	// Related entity properties (many-to-one)
 	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID" hb_optionsSmartListData="f:parentType.systemCode=imageType";
+	
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="option" cfc="Option" fieldtype="many-to-one" fkcolumn="optionID";
 	
 	// Audit properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
+	public string function getImageFileUploadDirectory() {
+		return setting('globalAssetsImageFolderPath') & "/" & getDirectory();
+	}
+	
+	public string function getImageExtension() {
+		return listLast(getImageFile(), ".");
+	}
 	
 	public string function getImagePath() {
 		return getImageDirectory() & getImageFile();

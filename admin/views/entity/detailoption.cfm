@@ -41,35 +41,23 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.option#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.option#" edit="#rc.edit#" />
+	<cf_HibachiEntityDetailForm object="#rc.option#" edit="#rc.edit#" saveActionQueryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.option#" edit="#rc.edit#" backAction="admin:entity.detailOptionGroup" backActionQueryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" />
+		
 		<input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
-		<input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionCode" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionDescription" edit="#rc.edit#">
-			
-				<cf_HibachiPropertyDisplay object="#rc.option#" property="optionImage" edit="#rc.edit#" fieldtype="file">
-
-				<cfif len(trim(rc.option.getOptionImage()))>
-					<cfif rc.edit>
-						<div class="control-group">
-							<label class="control-label">&nbsp;</label>
-							<div class="controls">
-								<img src="#rc.option.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /><br />
-								<input type="checkbox" name="deleteImage" value="1" /> Delete
-							</div>
-						</div>
-					<cfelse>
-						<dt class="title">&nbsp;</dt>
-						<dd class="value"><img src="#rc.option.getResizedImagePath(width="200",height="200")#" border="0" width="200px" height="200px" /></dd>
-					</cfif>	
-				</cfif>
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
+		<cf_HibachiTabGroup object="#rc.option#">
+			<!--- Images --->
+			<cf_SlatwallAdminTabImages object="#rc.option#" />
+		</cf_HibachiTabGroup>
+		
 	</cf_HibachiEntityDetailForm>
+	
 </cfoutput>
