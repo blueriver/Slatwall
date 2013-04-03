@@ -13,9 +13,9 @@
 							</a>
 							<hr />
 							<div class="small em image-caption">#image.getImagePath()#</div>
-							<cf_HibachiActionCaller action="admin:entity.detailImage" querystring="imageID=#image.getImageID()#&objectName=#attributes.object.getClassName()#" class="btn" iconOnly="true" icon="eye-open" confirm="true" />
+							<cf_HibachiActionCaller action="admin:entity.detailImage" querystring="imageID=#image.getImageID()#&objectName=#attributes.object.getClassName()#" class="btn" iconOnly="true" icon="eye-open" />
 							<cf_HibachiActionCaller action="admin:entity.editImage" querystring="imageID=#image.getImageID()#&objectName=#attributes.object.getClassName()#" class="btn" iconOnly="true" icon="pencil" />
-							<cf_HibachiActionCaller action="admin:entity.deleteImage" querystring="imageID=#image.getImageID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&redirectAction=#request.context.slatAction#" class="btn" iconOnly="true" icon="trash" />				
+							<cf_HibachiActionCaller action="admin:entity.deleteImage" querystring="imageID=#image.getImageID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&redirectAction=#request.context.slatAction#" class="btn" iconOnly="true" icon="trash" confirm="true" />				
 	    				</div>
 	  				</li>
 				</cfloop>
