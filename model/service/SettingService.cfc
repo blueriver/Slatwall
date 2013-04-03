@@ -135,8 +135,8 @@ globalEncryptionKeySize
 					fulfillmentMethodEmailCC = {fieldType="text"},
 					fulfillmentMethodEmailBCC = {fieldType="text"},
 					fulfillmentMethodEmailSubjectString = {fieldType="text"},
-					fulfillmentMethodAutoLocation = {fieldType="select"},
-					fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage"},
+					fulfillmentMethodAutoLocation = {fieldType="select", defaultValue="88e6d435d3ac2e5947c81ab3da60eba2"},
+					fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage", defaultValue=100},
 					
 					// Global
 					globalCurrencyLocale = {fieldType="select",defaultValue="English (US)"},
@@ -173,19 +173,19 @@ globalEncryptionKeySize
 					
 					// Product
 					productDisplayTemplate = {fieldType="select"},
-					productImageSmallWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageSmallHeight = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageMediumWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageMediumHeight = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageLargeWidth = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageLargeHeight = {fieldType="text", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageOptionCodeDelimiter = {fieldType="select"},
-					productMissingImagePath = {fieldType="text"},
-					productTitleString = {fieldType="text"},
+					productImageSmallWidth = {fieldType="text", defaultValue="150", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageSmallHeight = {fieldType="text", defaultValue="150", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageMediumWidth = {fieldType="text", defaultValue="300", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageMediumHeight = {fieldType="text", defaultValue="300", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageLargeWidth = {fieldType="text", defaultValue="600", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageLargeHeight = {fieldType="text", defaultValue="600", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageOptionCodeDelimiter = {fieldType="select", defaultValue="-"},
+					productMissingImagePath = {fieldType="text", defaultValue="/plugins/Slatwall/assets/images/missingimage.jpg"},
+					productTitleString = {fieldType="text", defaultValue="${brand.brandName} ${productName}"},
 					productHTMLTitleString = {fieldType="text"},
 					productMetaDescriptionString = {fieldType="textarea"},
 					productMetaKeywordsString = {fieldType="textarea"},
-					productShowDetailWhenNotPublishedFlag = {fieldType="yesno"},
+					productShowDetailWhenNotPublishedFlag = {fieldType="yesno", defaultValue=0},
 					
 					
 					// Product Type
@@ -195,32 +195,32 @@ globalEncryptionKeySize
 					productTypeMetaKeywordsString = {fieldType="textarea"},
 					
 					// Sku
-					skuAllowBackorderFlag = {fieldType="yesno"},
-					skuAllowPreorderFlag = {fieldType="yesno"},
-					skuCurrency = {fieldType="select"},
-					skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency"},
+					skuAllowBackorderFlag = {fieldType="yesno", defaultValue=0},
+					skuAllowPreorderFlag = {fieldType="yesno", defaultValue=0},
+					skuCurrency = {fieldType="select", defaultValue="USD"},
+					skuEligibleCurrencies = {fieldType="listingMultiselect", defaultValue="USD", listingMultiselectEntityName="Currency"},
 					skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
-					skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin"},
-					skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod"},
-					skuHoldBackQuantity = {fieldType="text"},
-					skuOrderMinimumQuantity = {fieldType="text"},
-					skuOrderMaximumQuantity = {fieldType="text"},
-					skuQATSIncludesQNROROFlag = {fieldType="yesno"},
-					skuQATSIncludesQNROVOFlag = {fieldType="yesno"},
-					skuQATSIncludesQNROSAFlag = {fieldType="yesno"},
-					skuShippingWeight = {fieldType="text"},
-					skuShippingWeightUnitCode = {fieldType="select"},
-					skuTaxCategory = {fieldType="select"},
-					skuTrackInventoryFlag = {fieldType="yesno"},
+					skuEligibleOrderOrigins = {fieldType="listingMultiselect", defaultValue="", listingMultiselectEntityName="OrderOrigin"},
+					skuEligiblePaymentMethods = {fieldType="listingMultiselect", defaultValue="", listingMultiselectEntityName="PaymentMethod"},
+					skuHoldBackQuantity = {fieldType="text", defaultValue=0},
+					skuOrderMinimumQuantity = {fieldType="text", defaultValue=1},
+					skuOrderMaximumQuantity = {fieldType="text", defaultValue=1000},
+					skuQATSIncludesQNROROFlag = {fieldType="yesno", defaultValue=0},
+					skuQATSIncludesQNROVOFlag = {fieldType="yesno", defaultValue=0},
+					skuQATSIncludesQNROSAFlag = {fieldType="yesno", defaultValue=0},
+					skuShippingWeight = {fieldType="text", defaultValue=1},
+					skuShippingWeightUnitCode = {fieldType="select", defaultValue="lb"},
+					skuTaxCategory = {fieldType="select", defaultValue="444df2c8cce9f1417627bd164a65f133"},
+					skuTrackInventoryFlag = {fieldType="yesno", defaultValue=0},
 					
 					// Shipping Method
-					shippingMethodQualifiedRateSelection = {fieldType="select"},
+					shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},
 					
 					// Shipping Method Rate
-					shippingMethodRateAdjustmentType = {fieldType="select"},
-					shippingMethodRateAdjustmentAmount = {fieldType="text"},
-					shippingMethodRateMinimumAmount = {fieldType="text"},
-					shippingMethodRateMaximumAmount = {fieldType="text"}
+					shippingMethodRateAdjustmentType = {fieldType="select", defaultValue="increasePercentage"},
+					shippingMethodRateAdjustmentAmount = {fieldType="text", defaultValue=0},
+					shippingMethodRateMinimumAmount = {fieldType="text", defaultValue=0},
+					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000}
 					
 				};
 				
