@@ -160,7 +160,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		var properties = getProperties();
 		
 		// Loop over properties looking for a value in the incomming data
-		for( var p=1; p <= arrayLen(properties); p++ ) {
+		for( var p=1; p <= arrayLen(properties); p++ ) { 
 			
 			// Set the current property into variable of meta data
 			var currentProperty = properties[p];
@@ -169,22 +169,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			if( structKeyExists(arguments.data, currentProperty.name) ) {
 			
 			
-				// (FILE UPLOAD)
-				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && structKeyExists(currentProperty, "hb_fileUpload") && currentProperty.hb_fileUpload && structKeyExists(currentProperty, "hb_fileAcceptMIMEType") && len(arguments.data[ currentProperty.name ]) ) {
-					
-					try {
-						var uploadDirectory = this.invokeMethod("get#currentProperty.name#UploadDirectory");
-						var uploadData = fileUpload( uploadDirectory, currentProperty.name, currentProperty.hb_fileAcceptMIMEType, 'makeUnique' );
-						if(!directoryExists(uploadDirectory)) {
-							directoryCreate(uploadDirectory);
-						}
-						_setProperty(currentProperty.name, uploadData.serverFile);
-					} catch(any e) {
-						this.addError(currentProperty.name, rbKey('validate.fileUpload'));
-					}
-					
-				// (SIMPLE) Do this logic if this property should be a simple value, and the data passed in is a simple value
-				} else if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && !structKeyExists(currentProperty, "hb_fileUpload") ) {
+				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && !structKeyExists(currentProperty, "hb_fileUpload") ) {
 					
 						// If the value is blank, then we check to see if the property can be set to NULL.
 						if( trim(arguments.data[ currentProperty.name ]) == "" && ( !structKeyExists(currentProperty, "notNull") || !currentProperty.notNull ) ) {
@@ -342,6 +327,28 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 						}
 					}
 				}	
+			}
+		}
+		
+		// Do any file upload properties
+		for( var p=1; p <= arrayLen(properties); p++ ) {
+			
+			currentProperty = properties[p];
+			
+			if( structKeyExists(arguments.data, currentProperty.name) && (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && structKeyExists(currentProperty, "hb_fileUpload") && currentProperty.hb_fileUpload && structKeyExists(currentProperty, "hb_fileAcceptMIMEType") && len(arguments.data[ currentProperty.name ]) ) {
+				
+				//try {
+					var uploadDirectory = this.invokeMethod("get#currentProperty.name#UploadDirectory");
+					if(!directoryExists(uploadDirectory)) {
+						directoryCreate(uploadDirectory);
+					}
+					var uploadData = fileUpload( uploadDirectory, currentProperty.name, currentProperty.hb_fileAcceptMIMEType, 'makeUnique' );
+					_setProperty(currentProperty.name, uploadData.serverFile);
+				//} catch(any e) {
+//						this.addError(currentProperty.name, rbKey('validate.fileUpload'));
+//				}
+				
+			// (SIMPLE) Do this logic if this property should be a simple value, and the data passed in is a simple value
 			}
 		}
 		
