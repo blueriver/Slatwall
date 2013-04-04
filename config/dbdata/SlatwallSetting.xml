@@ -40,7 +40,7 @@
 		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="globalURLKeyProduct" settingValue="sp" />
 		<Record settingID="dbb327c2f0ece6ff03d81c53d840d8bc" settingName="globalURLKeyProductType" settingValue="spt" />
 		<Record settingID="dbb327ce945924088883f9c07d7f04ae" settingName="globalWeightUnitCode" settingValue="lb" />-->
-
+		<!--  
 		<Record settingID="dbb32799a1090790de93f0b6dd6b36ef" settingName="productImageSmallWidth" settingValue="150" />
 		<Record settingID="dbb3278e9caff52a94d1999ca909a4bb" settingName="productImageSmallHeight" settingValue="150" />
 		<Record settingID="dbb3278dde43a5711cd8ea043d4bba1c" settingName="productImageMediumWidth" settingValue="300" />
@@ -51,15 +51,17 @@
 		<Record settingID="dbb327fbdba2dfd5a9d385ba7fa98ee0" settingName="productMissingImagePath" settingValue="/plugins/Slatwall/assets/images/missingimage.jpg" />
 		<Record settingID="dbb327ae9d9464c25a229dce1b18a0e5" settingName="productTitleString" settingValue="${brand.brandName} ${productName}" />
 		<Record settingID="dbb32800cda3d64df34a388d19eae81d" settingName="productShowDetailWhenNotPublishedFlag" settingValue="0" />
-		
+		-->
+		<!-- 
 		<Record settingID="dbb3279aa919ec2609ab33bfbfa732e6" settingName="skuAllowBackorderFlag" settingValue="0" />
 		<Record settingID="dbb3279708f5d43e0e5a45a1918b0e2b" settingName="skuAllowPreorderFlag" settingValue="0" />
 		<Record settingID="dbb327fce3c46bd94bdd602e435a431b" settingName="skuCurrency" settingValue="USD" />
-		<Record settingID="dbb327fdd9e6a7f22ad24c575c2e3f25" settingName="skuEligibleCurrencies" settingValue="USD" />
+		<Record settingID="dbb327fdd9e6a7f22ad24c575c2e3f25" settingName="skuEligibleCurrencies" settingValue="USD" />-->
 		<Record settingID="dbb327d3f6444d22ddcdc2afb43a899b" settingName="skuEligibleFulfillmentMethods" settingValue="444df2fb93d5fa960ba2966ba2017953,444df2ffeca081dc22f69c807d2bd8fe" />
 		<Record settingID="dbb327c3ebccc259a5484776f066cad5" settingName="skuEligibleFulfillmentMethods" settingValue="444df2fb93d5fa960ba2966ba2017953" productTypeID="444df2f7ea9c87e60051f3cd87b435a1" />
 		<Record settingID="dbb327cbea9fe180f55e9e8a06896138" settingName="skuEligibleFulfillmentMethods" settingValue="444df2ffeca081dc22f69c807d2bd8fe" productTypeID="444df2f9c7deaa1582e021e894c0e299" />
 		<Record settingID="dbb327ccf8fc943529d8fc067bc82886" settingName="skuEligibleFulfillmentMethods" settingValue="444df2ffeca081dc22f69c807d2bd8fe" productTypeID="444df313ec53a08c32d8ae434af5819a" />
+		<!--  
 		<Record settingID="dbb327c5e5742dfe73074902475aeecd" settingName="skuEligibleOrderOrigins" settingValue="f2b35ea90e140ce16f4638da7721ecdd" />
 		<Record settingID="dbb327c4e30a932e43deb4ca8d8ad783" settingName="skuEligiblePaymentMethods" settingValue="444df303dedc6dab69dd7ebcc9b8036a" />
 		<Record settingID="dbb327b10d50e926dfe4052ecb129cdc" settingName="skuHoldBackQuantity" settingValue="0" />
@@ -79,13 +81,13 @@
 		<Record settingID="dbb327d70434ec8ffb6d3702bfc41dcc" settingName="shippingMethodRateAdjustmentAmount" settingValue="0" />
 		<Record settingID="dbb327d89f25e6cde4b440208652cab4" settingName="shippingMethodRateMinimumAmount" settingValue="0" />
 		<Record settingID="dbb327d9ee2d8254cf6119c0f9b2fc88" settingName="shippingMethodRateMaximumAmount" settingValue="1000" />
-
+		-->	
 		<Record settingID="dbb327e0f1e951fd8214be2c6b3ddb9d" settingName="paymentMethodStoreCreditCardNumberWithOrder" settingValue="0" paymentMethodID="444df303dedc6dab69dd7ebcc9b8036a" />
 		<Record settingID="dbb327e1d2c1800a19bd9c82374b12a1" settingName="paymentMethodStoreCreditCardNumberWithAccount" settingValue="0" paymentMethodID="444df303dedc6dab69dd7ebcc9b8036a" />
 		<Record settingID="dbb327e2bfbef63ad4ae55e61c215760" settingName="paymentMethodCheckoutTransactionType" settingValue="none" paymentMethodID="444df303dedc6dab69dd7ebcc9b8036a" />
-		
+		<!--  
 		<Record settingID="dbb327e3c7e233a8163146fd2f22179d" settingName="fulfillmentMethodAutoLocation" settingValue="88e6d435d3ac2e5947c81ab3da60eba2" />
-		<Record settingID="dbb327fef478617cd0704c40883c7841" settingName="fulfillmentMethodAutoMinReceivedPercentage" settingValue="100" />
+		<Record settingID="dbb327fef478617cd0704c40883c7841" settingName="fulfillmentMethodAutoMinReceivedPercentage" settingValue="100" />-->
 	</Records>
 </Table>
 		
