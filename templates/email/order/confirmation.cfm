@@ -252,7 +252,3 @@ Notes:
 		Total: #order.getFormattedValue('total', 'currency')#
 	</cfoutput>
 </cfsavecontent>
-<cfsavecontent variable="emailData.textBody">
-	<cfoutput>
-	</cfoutput>
-</cfsavecontent>
