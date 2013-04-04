@@ -37,25 +37,22 @@ Notes:
 
 --->
 <cfparam name="rc.image" type="any">
+<cfparam name="objectName" type="string" />
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.image#" edit="#rc.edit#" enctype="multipart/form-data">
+	<cf_HibachiEntityDetailForm object="#rc.image#" edit="#rc.edit#" enctype="multipart/form-data" saveActionQueryString="#objectName#ID=#rc[ '#objectName#ID' ]#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.image#" edit="#rc.edit#" />
 		
+		<input type="hidden" name="#objectName#.#objectName#ID" value="#rc[ '#objectName#ID' ]#" />
+		<input type="hidden" name="directory" value="#lcase(objectName)#" />
+		
 		<cf_HibachiPropertyRow>
-			
-			<cf_HibachiPropertyList divclass="span8">
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.image#" property="imageFile" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.image#" property="imageName" edit="#rc.edit#">
-				#rc.image.getImage()#
-			</cf_HibachiPropertyList>
-			<cf_HibachiPropertyList divclass="span2">
-				<h4>Resize Preview</h4>
-				
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
-		
-		<cf_HibachiTabGroup object="#rc.image#">
-		</cf_HibachiTabGroup>
+
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
