@@ -77,7 +77,7 @@ Notes:
 			<cf_HibachiTab property="vendors" />
 			
 			<!--- Images --->
-			<cf_SlatwallAdminTabImages object="#rc.product#" />
+			<cf_HibachiTab view="admin:entity/producttabs/alternateimages" />
 			
 			<!--- Settings --->
 			<cf_HibachiTab view="admin:entity/producttabs/productsettings" />

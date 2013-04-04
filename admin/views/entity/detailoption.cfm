@@ -42,7 +42,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.option#" edit="#rc.edit#" saveActionQueryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.option#" edit="#rc.edit#" backAction="admin:entity.detailOptionGroup" backActionQueryString="optionGroupID=#rc.optionGroup.getOptionGroupID()#" />
+		<cf_HibachiEntityActionBar type="detail" object="#rc.option#" edit="#rc.edit#" />
 		
 		<input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 		

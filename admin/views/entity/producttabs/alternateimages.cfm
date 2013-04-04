@@ -39,6 +39,9 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cfoutput>
+	<cf_SlatwallAdminImagesDisplay object="#rc.product#" />	
+	<hr />
+	<!---
 	<cfset local.images = rc.product.getProductImages() />
 	
 	<cf_HibachiListingDisplay smartList="#rc.product.getProductImagesSmartList()#"
@@ -56,4 +59,5 @@ Notes:
 	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:main.createimage" class="btn" icon="plus" queryString="productID=#rc.product.getProductID()#&directory=product&redirectAction=admin:entity.detailproduct" modal=true />
+	--->
 </cfoutput>
