@@ -723,8 +723,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 	
 	public any function processOrder_addOrderPayment(required any order, required any processObject) {
-		writeDump("GOT HERE");
-		abort;	
+		arguments.order.addOrderPayment(processObject.getNewOrderPayment());
 	}
 	
 	public any function processOrder_create(required any order, required any processObject, required struct data={}) {
