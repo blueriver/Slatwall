@@ -1,6 +1,7 @@
 component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiControllerEntity" {
 
 	property name="addressService" type="any";
+	property name="currencyService" type="any";
 	property name="emailService" type="any";
 	property name="imageService" type="any";
 	property name="measurementService" type="any";
