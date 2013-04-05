@@ -167,7 +167,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentationPropertyName() {
-		return "imageName";
+		return "imageFile";
 	}
 	
 	// ==================  END:  Overridden Methods ========================
