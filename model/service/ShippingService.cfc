@@ -260,10 +260,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// If this is the one selected, then verify the details
 				if( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod().getShippingMethodID() == arguments.orderFulfillment.getShippingMethod().getShippingMethodID() ) {
 					if( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getTotalCharge() != arguments.orderFulfillment.getFulfillmentCharge() ||
-						nullReplace(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToPostalCode(), "") != coalesce(arguments.orderFulfillment.getAddress().getPostalCode(), "") ||
-						nullReplace(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToStateCode(), "") != coalesce(arguments.orderFulfillment.getAddress().getStateCode(), "") ||
-						nullReplace(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToCountryCode(), "") != coalesce(arguments.orderFulfillment.getAddress().getCountryCode(), "") ||
-						nullReplace(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToCity(), "") != coalesce(arguments.orderFulfillment.getAddress().getCity(), "")
+						nullReplace(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToPostalCode(), "") != nullReplace(arguments.orderFulfillment.getAddress().getPostalCode(), "") ||
+						nullReplace(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToStateCode(), "") != nullReplace(arguments.orderFulfillment.getAddress().getStateCode(), "") ||
+						nullReplace(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToCountryCode(), "") != nullReplace(arguments.orderFulfillment.getAddress().getCountryCode(), "") ||
+						nullReplace(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[i].getShipToCity(), "") != nullReplace(arguments.orderFulfillment.getAddress().getCity(), "")
 					) {
 						return false;
 					}
