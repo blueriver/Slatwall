@@ -167,7 +167,9 @@ Notes:
 			</cfloop>
 			
 			<!--- Account Details --->
-			<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" count="#rc.order.getPromotionCodesCount()#" />
+			<cfif !isNull(rc.order.getAccount())>
+				<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" count="#rc.order.getPromotionCodesCount()#" />
+			</cfif>
 			
 			<!--- Comments --->
 			<cf_SlatwallAdminTabComments object="#rc.order#" />
