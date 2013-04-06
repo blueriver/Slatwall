@@ -1,1 +1,5 @@
 key.xml.cfm
+configApplication.cfm
+configORM.cfm
+configFramework.cfm
+configMappings.cfm
