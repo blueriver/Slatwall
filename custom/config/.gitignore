@@ -1,5 +1,6 @@
 key.xml.cfm
 configApplication.cfm
-configORM.cfm
+configCustomTags.cfm
 configFramework.cfm
 configMappings.cfm
+configORM.cfm
