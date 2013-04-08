@@ -39,8 +39,48 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cfoutput>
-	<cf_SlatwallAdminImagesDisplay object="#rc.product#" />	
+	<h4>#$.slatwall.rbKey('admin.entity.producttabs.images.defaultImages')#</h4>
+	<ul class="thumbnails">
+		<cfloop array="#rc.product.getDefaultProductImageFiles()#" index="imageFile">
+			<li class="span3">
+				<div class="thumbnail">
+					<div class="small em image-caption">#imageFile#</div>
+					<!---
+					<a href="?slatAction=admin:entity.detailImage&imageID=#image.getImageID()#">
+						#image.getImage(width=210, height=210)#
+					</a>
+					<hr />
+					<div class="small em image-caption">#image.getImagePath()#</div>
+					<cf_HibachiActionCaller action="admin:entity.detailImage" querystring="imageID=#image.getImageID()#&objectName=#attributes.object.getClassName()#" class="btn" iconOnly="true" icon="eye-open" />
+					<cf_HibachiActionCaller action="admin:entity.editImage" querystring="imageID=#image.getImageID()#&objectName=#attributes.object.getClassName()#" class="btn" iconOnly="true" icon="pencil" />
+					<cf_HibachiActionCaller action="admin:entity.deleteImage" querystring="imageID=#image.getImageID()#&#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#&redirectAction=#request.context.slatAction#" class="btn" iconOnly="true" icon="trash" confirm="true" />
+					--->				
+				</div>
+				</li>
+		</cfloop>
+	</ul>
+	<!---
+	<cf_HibachiPropertyList divclass="span6">
+		<cfif rc.edit>
+			<div class="image pull-right">
+				<img src="#rc.sku.getResizedImagePath(width="150", height="150")#" border="0" width="150px" height="150px" /><br />
+				<cfif rc.sku.getImageExistsFlag()>
+					<cf_HibachiFieldDisplay fieldType="yesno" title="Delete Current Image" fieldname="deleteImage" edit="true" />
+				</cfif>
+				<!---<cf_HibachiFieldDisplay fieldType="file" title="Upload New Image" fieldname="imageFileUpload" edit="true" />--->
+				<cf_SlatwallAdminImagesDisplay object="#rc.sku#" />	
+				<cf_HibachiFieldDisplay fieldType="radiogroup" title="Image Name" fieldname="imageExclusive" edit="true" valueOptions="#[{name=" Default Naming Convention<br />", value=0},{name=" Make Image Unique to Sku", value=1}]#" />
+			</div>
+		<cfelse>
+			<div class="image pull-right">
+				<img src="#rc.sku.getResizedImagePath(width="150", height="150")#" border="0" width="150px" height="150px" /><br />
+			</div>
+		</cfif>
+	</cf_HibachiPropertyList>
+	--->
 	<hr />
+	<h4>#$.slatwall.rbKey('admin.entity.producttabs.images.alternateImages')#</h4>
+	<cf_SlatwallAdminImagesDisplay object="#rc.product#" />
 	<!---
 	<cfset local.images = rc.product.getProductImages() />
 	

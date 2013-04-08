@@ -49,7 +49,7 @@ Notes:
 					deleteQueryString="redirectAction=admin:entity.detailProduct&productID=#rc.product.getProductID()#" />
 		
 		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList divclass="span6">
+			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.sku#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.sku#" property="userDefinedPriceFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.sku#" property="price" edit="#rc.edit#">
@@ -58,24 +58,6 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.sku#" property="renewalPrice" edit="#rc.edit#">
 				</cfif>
 				<cf_HibachiPropertyDisplay object="#rc.sku#" property="skuCode" edit="#rc.edit#">
-			</cf_HibachiPropertyList>
-			
-			<cf_HibachiPropertyList divclass="span6">
-				<cfif rc.edit>
-					<div class="image pull-right">
-						<img src="#rc.sku.getResizedImagePath(width="150", height="150")#" border="0" width="150px" height="150px" /><br />
-						<cfif rc.sku.getImageExistsFlag()>
-							<cf_HibachiFieldDisplay fieldType="yesno" title="Delete Current Image" fieldname="deleteImage" edit="true" />
-						</cfif>
-						<!---<cf_HibachiFieldDisplay fieldType="file" title="Upload New Image" fieldname="imageFileUpload" edit="true" />--->
-						<cf_SlatwallAdminImagesDisplay object="#rc.sku#" />	
-						<cf_HibachiFieldDisplay fieldType="radiogroup" title="Image Name" fieldname="imageExclusive" edit="true" valueOptions="#[{name=" Default Naming Convention<br />", value=0},{name=" Make Image Unique to Sku", value=1}]#" />
-					</div>
-				<cfelse>
-					<div class="image pull-right">
-						<img src="#rc.sku.getResizedImagePath(width="150", height="150")#" border="0" width="150px" height="150px" /><br />
-					</div>
-				</cfif>
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		

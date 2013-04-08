@@ -68,16 +68,23 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.product#">
+			<!--- Skus --->
 			<cf_HibachiTab property="skus" />
-			<cf_HibachiTab property="productDescription" />
-			<cf_HibachiTab property="listingPages" />
-			<cf_HibachiTab property="categories" />
-			<cf_HibachiTab property="productReviews" />
-			<cf_HibachiTab property="relatedProducts" />
-			<cf_HibachiTab property="vendors" />
 			
 			<!--- Images --->
-			<cf_HibachiTab view="admin:entity/producttabs/alternateimages" />
+			<cf_HibachiTab view="admin:entity/producttabs/images" />
+			
+			<!--- Description --->
+			<cf_HibachiTab property="productDescription" />
+			
+			<!--- Relating --->
+			<cf_HibachiTab property="listingPages" />
+			<cf_HibachiTab property="categories" />
+			<cf_HibachiTab property="relatedProducts" />
+			
+			<!--- Reference --->
+			<cf_HibachiTab property="productReviews" />
+			<cf_HibachiTab property="vendors" />
 			
 			<!--- Settings --->
 			<cf_HibachiTab view="admin:entity/producttabs/productsettings" />

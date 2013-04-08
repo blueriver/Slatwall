@@ -498,7 +498,11 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			hqlSelect &= "SELECT count(distinct #variables.entities[getBaseEntityName()].entityAlias#.#getService('hibachiService').getPrimaryIDPropertyNameByEntityName(getBaseEntityName())#)";
 		} else {
 			if(structCount(variables.selects)) {
-				hqlSelect = "SELECT new map(";
+				hqlSelect = "SELECT";
+				if(getSelectDistinctFlag()) {
+					hqlSelect &= " DISTINCT";
+				}
+				hqlSelect &= " new map(";
 				for(var select in variables.selects) {
 					hqlSelect &= " #select# as #variables.selects[select]#,";
 				}

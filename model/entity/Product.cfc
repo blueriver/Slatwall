@@ -102,6 +102,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="currencyCode" persistent="false";
+	property name="defaultProductImageFiles" persistent="false";
 	property name="price" hb_formatType="currency" persistent="false";
 	property name="listPrice" hb_formatType="currency" persistent="false";
 	property name="livePrice" hb_formatType="currency" persistent="false";
@@ -474,6 +475,24 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public array function getDefaultProductImageFiles() {
+		if(!structKeyExists(variables, "defaultProductImageFiles")) {
+			variables.defaultProductImageFiles = [];
+			
+			var sl = getService("skuService").getSkuSmartList();
+			sl.addFilter('productID', getProductID);
+			sl.addSelect('imageFile', 'imageFile');
+			sl.setSelectDistinctFlag( true );
+			
+			var r = sl.getRecords();
+			
+			for(var i=1; i<=arrayLen(r); i++) {
+				arrayAppend(variables.defaultProductImageFiles, r[i]['imageFile']);
+			} 
+		}
+		return variables.defaultProductImageFiles;
+	}
 	
 	public struct function getSalePriceDetailsForSkus() {
 		if(!structKeyExists(variables, "salePriceDetailsForSkus")) {
