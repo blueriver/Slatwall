@@ -250,23 +250,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return arrayLen(getOptionGroups());
 	}
 	
-	// Start: Functions that delegate to the default sku
-    public string function getImageDirectory() {
-    	return getDefaultSku().getImageDirectory();	
-    }
-    
-	public string function getImage() {
-		return getDefaultSku().getImage(argumentCollection = arguments);
-	}
-	
-	public string function getImagePath() {
-		return getDefaultSku().getImagePath();
-	}
-	
-	public string function getResizedImagePath() {
-		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
-	}
-	
 	public array function getImageGalleryArray(array resizeSizes=[{size='s'},{size='m'},{size='l'}]) {
 		var imageGalleryArray = [];
 		var filenames = "";
@@ -319,6 +302,22 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return imageGalleryArray;
 	}
 	
+	// Start: Functions that delegate to the default sku
+    public string function getImageDirectory() {
+    	return getDefaultSku().getImageDirectory();	
+    }
+    
+	public string function getImagePath() {
+		return getDefaultSku().getImagePath();
+	}
+	
+	public string function getImage() {
+		return getDefaultSku().getImage(argumentCollection = arguments);
+	}
+	
+	public string function getResizedImagePath() {
+		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
+	}
 	 
 	public any function getBaseProductType() {
 		return getProductType().getBaseProductType();

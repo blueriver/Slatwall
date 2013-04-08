@@ -76,8 +76,8 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 		arguments.imagePath = getImagePath();
 		
 		// Alt Title Setting
-		if(!structKeyExists(arguments, "alt") && len(setting('imageAlt'))) {
-			arguments.alt = setting('imageAlt');
+		if(!structKeyExists(arguments, "alt") && len(setting('imageAltString'))) {
+			arguments.alt = stringReplace(setting('imageAltString'));
 		}
 		
 		// Missing Image Path Setting
@@ -85,7 +85,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 			arguments.missingImagePath = setting('imageMissingImagePath');
 		}
 		
-		// DEPRECATED SIZE LOGIC
+		// *** DEPRECATED SIZE LOGIC ***
 		if(structKeyExists(arguments, "size") && !isNull(getProduct()) && !structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
 			arguments.size = lcase(arguments.size);
 			if(arguments.size eq "l") {

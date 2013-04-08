@@ -75,6 +75,7 @@ globalEncryptionKeySize
 			"product",
 			"content",
 			"account",
+			"image",
 			"brand",
 			"email",
 			"stock",

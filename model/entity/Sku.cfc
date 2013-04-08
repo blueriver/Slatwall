@@ -208,69 +208,22 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	}
     
     // START: Image Methods
-	public string function getImageDirectory() {
-    	return getURLFromPath(setting('globalAssetsImageFolderPath')) & '/product/default/';
-    }
-    
-    public string function getImagePath() {
-    	return this.getImageDirectory() & this.getImageFile();
-    }
-    
-    public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
-		
-		var	path = getResizedImagePath(argumentcollection=arguments);
-		
-		// Setup Alt & Class for the image
-		if(arguments.alt == "" && !isNull(getProduct().getCalculatedTitle())) {
-			arguments.alt = "#getProduct().getCalculatedTitle()#";
-		}
-		if(arguments.class == "") {
-			arguments.class = "skuImage";
-		}
-		
-		// Try to read and return the image, otherwise don't specify the height and width
-		try {
-			var img = imageRead(expandPath(path));
-			return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';	
-		} catch(any e) {
-			return '<img src="#path#" alt="#arguments.alt#" class="#arguments.class#" />';
-		}
+    public string function getImageExtension() {
+		return listLast(getImageFile(), ".");
 	}
 	
-	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
-		
-		arguments.imagePath=getImagePath();
-		arguments.missingImagePath=getProduct().setting('productMissingImagePath');
-		
-		if(structKeyExists(arguments, "size")) {
-			arguments.size = lcase(arguments.size);
-			if(arguments.size eq "l" || arguments.size eq "large") {
-				arguments.size = "large";
-			} else if (arguments.size eq "m" || arguments.size eq "medium") {
-				arguments.size = "medium";
-			} else {
-				arguments.size = "small";
-			}
-			if(isNumeric(getProduct().setting("productImage#arguments.size#Width")) && getProduct().setting("productImage#arguments.size#Width") > 0) {
-				arguments.width = getProduct().setting("productImage#arguments.size#Width");	
-			}
-			if(isNumeric(getProduct().setting("productImage#arguments.size#Height")) && getProduct().setting("productImage#arguments.size#Height") > 0) {
-				arguments.height = getProduct().setting("productImage#arguments.size#Height");	
-			}
-		}
-		
-		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
-	}
-	
-	/*
+	public string function getImagePath() {
+    	return "#getHibachiScope().getBaseImageURL()#/product/default/#getImageFile()#";
+    }
+    
 	public string function getImage() {
 		
 		// Setup Image Path
 		arguments.imagePath = getImagePath();
 		
 		// Alt Title Setting
-		if(!structKeyExists(arguments, "alt") && len(setting('imageAlt'))) {
-			arguments.alt = setting('imageAlt');
+		if(!structKeyExists(arguments, "alt") && len(setting('imageAltString'))) {
+			arguments.alt = stringReplace(setting('imageAltString'));
 		}
 		
 		// Missing Image Path Setting
@@ -323,7 +276,6 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
-	*/
 	
 	public boolean function getImageExistsFlag() {
 		if( fileExists(expandPath(getImagePath())) ) {

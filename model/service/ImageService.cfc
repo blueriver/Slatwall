@@ -40,7 +40,7 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 
 	property name="utilityTagService" type="any";
 	
-	
+	// @hint Returns an image HTML element with the additional attributes
 	public string function getImage() {
 		
 		// Setup the core src
@@ -60,12 +60,6 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 	}
 	
 	
-	public string function getResizedImagePath( string imagePath, numeric width, numeric height, string resizeMethod, string cropLocation, numeric cropXStart, numeric cropYStart, numeric scaleWidth, numeric scaleHeight, string missingImagePath) {
-		
-	}
-	
-	
-	/*
 	// Image File Methods
 	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100,string missingImagePath) {
 		var resizedImagePath = "";
@@ -193,8 +187,6 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 			}
 		}
 	}
-	*/
-	
 	
 		
 	/*
@@ -205,7 +197,7 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 	2/29/2008 - Leap Day!
 	Part of ImageUtils.cfc library (http://imageutils.riaforge.org/)
 	Adapted for Slatwall by Tony Garcia 6/28/11
-	
+	*/
 	public any function aspectCrop(required any image, required numeric cropWidth, required numeric cropHeight, required position="center") {
 		
 		// Define local variables.
@@ -266,9 +258,7 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 		
 		return arguments.image;
 	}
-	*/
 	
-	/*
 	public any function customCrop(required any image, required numeric width, required numeric height, string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		
 		// Set the xy offset for cropping from location, if passed in
@@ -313,7 +303,7 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 			return aspectCrop(arguments.image,arguments.width,arguments.height,"center");			
 		}
 	}
-	*/
+	
 	
 	// ===================== START: Logical Methods ===========================
 	
