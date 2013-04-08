@@ -59,10 +59,6 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	// Related Object Properties
 	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
 
-	   
-    public string function getImageDirectory() {
-    	return getURLFromPath(setting('globalAssetsImageFolderPath')) & '/optionGroup/';
-    }
 	
 	public array function getOptions(orderby, sortType="text", direction="asc") {
 		if(!structKeyExists(arguments,"orderby")) {
@@ -71,43 +67,6 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 			return getService("hibachiUtilityService").sortObjectArray(variables.Options,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
-    
-	// Image Management methods
-	public string function getImage(numeric width=0, numeric height=0, string alt="", string class="") {
-		if( this.hasImage() ) {
-			
-			// If there were sizes specified, get the resized image path
-			if(arguments.width != 0 || arguments.height != 0) {
-				path = getResizedImagePath(argumentcollection=arguments);	
-			} else {
-				path = getImagePath();
-			}
-			
-			// Read the Image
-			var img = imageRead(expandPath(path));
-			
-			// Setup Alt & Class for the image
-			if(arguments.alt == "") {
-				arguments.alt = "#getOptionGroupName()#";
-			}
-			if(arguments.class == "") {
-				arguments.class = "optionGroupImage";	
-			}
-			return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
-		}
-	}
-	
-	public string function getResizedImagePath(numeric width=0, numeric height=0) {
-		return getService("imageService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
-	}
-	
-	public boolean function hasImage() {
-		return len(getOptionGroupImage());
-	}
-	
-    public string function getImagePath() {
-        return getImageDirectory() & getOptionGroupImage();
-    }
     
     public any function getOptionsSmartList() {
     	return getPropertySmartList(propertyName="options");

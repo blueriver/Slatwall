@@ -67,54 +67,65 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	}
 	
 	public string function getImagePath() {
-		return getImageDirectory() & getImageFile();
+		return "#getHibachiScope().getBaseImageURL()#/#getDirectory()#/#getImageFile()#";
 	}
 	
-	public string function getImageDirectory(){
-		return '#getURLFromPath(setting('globalAssetsImageFolderPath'))#/#getDirectory()#/';
-	}
-	
-	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+	public string function getImage() {
 		
-		var path = getResizedImagePath(argumentcollection=arguments);
-		
-		// Setup Alt & Class for the image
-		if(arguments.alt == "" && len(getImageName())) {
-			arguments.alt = "#getImageName()#";
-		}
-		if(arguments.class == "") {
-			arguments.class = "productImage";	
-		}
-		
-		// Try to read and return the image, otherwise don't specify the height and width
-		try {
-			var img = imageRead(expandPath(path));
-			return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';	
-		} catch(any e) {
-			return '<img src="#path#" alt="#arguments.alt#" class="#arguments.class#" />';
-		}
-		
-	}
-	
-	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
-		
+		// Setup Image Path
 		arguments.imagePath = getImagePath();
 		
-		if(!isNull(getProduct())) {
-			arguments.missingImagePath = getProduct().setting('productMissingImagePath');
+		// Alt Title Setting
+		if(!structKeyExists(arguments, "alt") && len(setting('imageAlt'))) {
+			arguments.alt = setting('imageAlt');
 		}
 		
-		if(structKeyExists(arguments, "size")) {
+		// Missing Image Path Setting
+		if(!structKeyExists(arguments, "missingImagePath")) {
+			arguments.missingImagePath = setting('imageMissingImagePath');
+		}
+		
+		// DEPRECATED SIZE LOGIC
+		if(structKeyExists(arguments, "size") && !isNull(getProduct()) && !structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
 			arguments.size = lcase(arguments.size);
-			if(arguments.size eq "l" || arguments.size eq "large") {
-				arguments.size = "large";
-			} else if (arguments.size eq "m" || arguments.size eq "medium") {
-				arguments.size = "medium";
+			if(arguments.size eq "l") {
+				arguments.size = "Large";
+			} else if (arguments.size eq "m") {
+				arguments.size = "Medium";
 			} else {
-				arguments.size = "small";
+				arguments.size = "Small";
 			}
-			arguments.width = setting("productImage#arguments.size#Width");
-			arguments.height = setting("productImage#arguments.size#Height");
+			arguments.width = getProduct().setting("productImage#arguments.size#Width");
+			arguments.height = getProduct().setting("productImage#arguments.size#Height");
+			structDelete(arguments, "size");
+		}
+		
+		return getService("imageService").getImage(argumentCollection=arguments);
+	}
+	
+	public string function getResizedImagePath() {
+		
+		// Setup Image Path
+		arguments.imagePath = getImagePath();
+		
+		// Missing Image Path Setting
+		if(!structKeyExists(arguments, "missingImagePath")) {
+			arguments.missingImagePath = setting('imageMissingImagePath');
+		}
+		
+		// DEPRECATED SIZE LOGIC
+		if(structKeyExists(arguments, "size") && !isNull(getProduct()) && !structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
+			arguments.size = lcase(arguments.size);
+			if(arguments.size eq "l") {
+				arguments.size = "Large";
+			} else if (arguments.size eq "m") {
+				arguments.size = "Medium";
+			} else {
+				arguments.size = "Small";
+			}
+			arguments.width = getProduct().setting("productImage#arguments.size#Width");
+			arguments.height = getProduct().setting("productImage#arguments.size#Height");
+			structDelete(arguments, "size");
 		}
 		
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);

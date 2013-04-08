@@ -39,7 +39,33 @@ Notes:
 component displayname="Image Service" persistent="false" extends="HibachiService" output="false" accessors="true" {
 
 	property name="utilityTagService" type="any";
+	
+	
+	public string function getImage() {
 		
+		// Setup the core src
+		var returnHTML = '<img src="#getResizedImagePath(argumentcollection=arguments)#"';
+		
+		// Loop over all arguments and add as attributes if they aren't the resizing keys
+		for(var key in arguments) {
+			if(!listFindNoCase("imagePath,size,resizeMethod,cropLocation,cropXStart,cropYStart,scaleWidth,scaleHeight,missingImagePath", key) && isSimpleValue(arguments[key])) {
+				returnHTML = listAppend(returnHTML, '#key#="#arguments[key]#"', ' ');
+			}
+		}
+		
+		// Close image tag
+		returnHTML &= ' />';
+		
+		return returnHTML;
+	}
+	
+	
+	public string function getResizedImagePath( string imagePath, numeric width, numeric height, string resizeMethod, string cropLocation, numeric cropXStart, numeric cropYStart, numeric scaleWidth, numeric scaleHeight, string missingImagePath) {
+		
+	}
+	
+	
+	/*
 	// Image File Methods
 	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100,string missingImagePath) {
 		var resizedImagePath = "";
@@ -149,58 +175,6 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 		return resizedImagePath;
 	}
 	
-	public string function displayImage(required string imagePath, numeric width=0, numeric height=0,string alt="",string class="") {
-		var resizedImagePath = getResizedImagePath(imagePath=arguments.imagePath, width=arguments.width, height=arguments.height);
-		var img = imageRead(expandPath(resizedImagePath));
-		var imageDisplay = '<img src="#resizedImagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
-		return imageDisplay;
-	}
-
-	public boolean function saveImageFile(required struct uploadResult, required string filePath, string allowedExtensions="", boolean overwrite=true) {
-		var result = arguments.uploadResult;
-		if(result.fileWasSaved){
-			var uploadPath = result.serverDirectory & "/" & result.serverFile;
-			var validFile = isImageFile(uploadPath);
-			if(len(arguments.allowedExtensions)) {
-				validFile = listFindNoCase(arguments.allowedExtensions,result.serverFileExt);
-			}
-			if(validFile) {
-				var img=imageRead(uploadPath);
-				var absPath = expandPath(arguments.filePath);
-				if(!directoryExists(getDirectoryFromPath(absPath))) {
-					directoryCreate(getDirectoryFromPath(absPath));
-				}
-				imageWrite(img,absPath,arguments.overwrite);
-				return true;
-			} else {
-				// file was not a valid image, so delete it
-				fileDelete(uploadPath);
-				return false;
-			}	
-		} else {
-			// upload was not successful
-			return false;
-		}
-	}
-	
-	public boolean function removeImage(required string filePath) {
-		var fileName = right(arguments.filePath,len(arguments.filePath)-len(getDirectoryFromPath(arguments.filePath)));
-		// pop off leading slash
-		if(fileName.startsWith("/") or fileName.startsWith("\")) {
-			fileName = right(fileName,len(filename)-1);
-		}
-		// get file name without extension
-		var baseFileName = listFirst(fileName,".");
-		var fileList = directoryList(expandPath(getDirectoryFromPath(arguments.filePath)),true,"query");
-		// loop through directory and delete base image and all resized versions in the cache subdirectory
-		for(var i = 1; i<= fileList.recordCount; i++) {
-			if(fileList.type[i] == "file" && fileList.name[i].startsWith(baseFileName)) {
-				fileDelete(fileList.directory[i] & "/" & fileList.name[i]);
-			}
-		}
-		return true;
-	}
-	
 	public void function clearImageCache(string directoryPath, string imageName){
 		var cacheFolder = expandpath(arguments.directoryPath & "/cache/");
 
@@ -219,6 +193,9 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 			}
 		}
 	}
+	*/
+	
+	
 		
 	/*
 	Function: aspectCrop
@@ -228,7 +205,7 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 	2/29/2008 - Leap Day!
 	Part of ImageUtils.cfc library (http://imageutils.riaforge.org/)
 	Adapted for Slatwall by Tony Garcia 6/28/11
-	*/
+	
 	public any function aspectCrop(required any image, required numeric cropWidth, required numeric cropHeight, required position="center") {
 		
 		// Define local variables.
@@ -289,7 +266,9 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 		
 		return arguments.image;
 	}
+	*/
 	
+	/*
 	public any function customCrop(required any image, required numeric width, required numeric height, string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		
 		// Set the xy offset for cropping from location, if passed in
@@ -334,7 +313,8 @@ component displayname="Image Service" persistent="false" extends="HibachiService
 			return aspectCrop(arguments.image,arguments.width,arguments.height,"center");			
 		}
 	}
-
+	*/
+	
 	// ===================== START: Logical Methods ===========================
 	
 	// =====================  END: Logical Methods ============================

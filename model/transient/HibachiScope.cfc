@@ -145,7 +145,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		return getSessionValue('printQueue');
 	}
 	
-	// Clear
+	// Clear Email & Print
 	public void function clearPrintQueue() {
 		setSessionValue('printQueue', []);
 	}
@@ -153,6 +153,20 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	public void function clearEmailAndPrintQueue() {
 		variables.emailQueue = [];
 		setSessionValue('printQueue', []);
+	}
+	
+	// =================== Image Access ===========================
+	
+	public string function getBaseImageURL() {
+		return getURLFromPath(setting('globalAssetsImageFolderPath'));
+	}
+	
+	public string function getImage() {
+		return getService("imageService").getImage(argumentCollection=arguments);
+	}
+	
+	public string function getResizedImagePath() {
+		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
 	// =================== Setting Access =========================

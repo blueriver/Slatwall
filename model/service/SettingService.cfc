@@ -165,6 +165,10 @@ globalEncryptionKeySize
 					globalURLKeyProductType = {fieldType="text",defaultValue="spt"},
 					globalWeightUnitCode = {fieldType="select",defaultValue="lb"},
 					
+					// Image
+					imageAltString = {fieldType="text",defaultValue=""},
+					imageMissingImagePath = {fieldType="text",defaultValue="/assets/images/missingimage.jpg"},
+					
 					// Payment Method
 					paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno", defaultValue=0},
 					paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno", defaultValue=0},
@@ -173,14 +177,7 @@ globalEncryptionKeySize
 					
 					// Product
 					productDisplayTemplate = {fieldType="select"},
-					productImageSmallWidth = {fieldType="text", defaultValue="150", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageSmallHeight = {fieldType="text", defaultValue="150", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageMediumWidth = {fieldType="text", defaultValue="300", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageMediumHeight = {fieldType="text", defaultValue="300", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageLargeWidth = {fieldType="text", defaultValue="600", formatType="pixels", validate={dataType="numeric", required=true}},
-					productImageLargeHeight = {fieldType="text", defaultValue="600", formatType="pixels", validate={dataType="numeric", required=true}},
 					productImageOptionCodeDelimiter = {fieldType="select", defaultValue="-"},
-					productMissingImagePath = {fieldType="text", defaultValue="/plugins/Slatwall/assets/images/missingimage.jpg"},
 					productTitleString = {fieldType="text", defaultValue="${brand.brandName} ${productName}"},
 					productHTMLTitleString = {fieldType="text"},
 					productMetaDescriptionString = {fieldType="textarea"},
@@ -220,7 +217,16 @@ globalEncryptionKeySize
 					shippingMethodRateAdjustmentType = {fieldType="select", defaultValue="increasePercentage"},
 					shippingMethodRateAdjustmentAmount = {fieldType="text", defaultValue=0},
 					shippingMethodRateMinimumAmount = {fieldType="text", defaultValue=0},
-					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000}
+					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000},
+					
+					// DEPRECATED
+					productImageSmallWidth = {fieldType="text", defaultValue="150", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageSmallHeight = {fieldType="text", defaultValue="150", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageMediumWidth = {fieldType="text", defaultValue="300", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageMediumHeight = {fieldType="text", defaultValue="300", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageLargeWidth = {fieldType="text", defaultValue="600", formatType="pixels", validate={dataType="numeric", required=true}},
+					productImageLargeHeight = {fieldType="text", defaultValue="600", formatType="pixels", validate={dataType="numeric", required=true}},
+					productMissingImagePath = {fieldType="text", defaultValue="/plugins/Slatwall/assets/images/missingimage.jpg"}
 					
 				};
 				

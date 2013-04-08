@@ -72,44 +72,6 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
     	return getURLFromPath(setting('globalAssetsImageFolderPath')) & '/option/';
     }
     
-    // Image Management methods
-	
-	public string function getImage(numeric width=0, numeric height=0, string alt="", string class="") {
-		if( this.hasImage() ) {
-			
-			// If there were sizes specified, get the resized image path
-			if(arguments.width != 0 || arguments.height != 0) {
-				path = getResizedImagePath(argumentcollection=arguments);	
-			} else {
-				path = getImagePath();
-			}
-			
-			// Read the Image
-			var img = imageRead(expandPath(path));
-			
-			// Setup Alt & Class for the image
-			if(arguments.alt == "" and len(getOptionName())) {
-				arguments.alt = "#getOptionName()#";
-			}
-			if(arguments.class == "") {
-				arguments.class = "optionImage";	
-			}
-			return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
-		}
-	}
-	
-	public string function getResizedImagePath(numeric width=0, numeric height=0) {
-		return getService("imageService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
-	}
-	
-	public boolean function hasImage() {
-		return len(getOptionImage());
-	}
-	
-    public string function getImagePath() {
-        return getImageDirectory() & getOptionImage();
-    }
-    
     // ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

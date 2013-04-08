@@ -262,6 +262,69 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
+	/*
+	public string function getImage() {
+		
+		// Setup Image Path
+		arguments.imagePath = getImagePath();
+		
+		// Alt Title Setting
+		if(!structKeyExists(arguments, "alt") && len(setting('imageAlt'))) {
+			arguments.alt = setting('imageAlt');
+		}
+		
+		// Missing Image Path Setting
+		if(!structKeyExists(arguments, "missingImagePath")) {
+			arguments.missingImagePath = setting('imageMissingImagePath');
+		}
+		
+		// DEPRECATED SIZE LOGIC
+		if(structKeyExists(arguments, "size") && !isNull(getProduct()) && !structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
+			arguments.size = lcase(arguments.size);
+			if(arguments.size eq "l") {
+				arguments.size = "Large";
+			} else if (arguments.size eq "m") {
+				arguments.size = "Medium";
+			} else {
+				arguments.size = "Small";
+			}
+			arguments.width = getProduct().setting("productImage#arguments.size#Width");
+			arguments.height = getProduct().setting("productImage#arguments.size#Height");
+			structDelete(arguments, "size");
+		}
+		
+		return getService("imageService").getImage(argumentCollection=arguments);
+	}
+	
+	public string function getResizedImagePath() {
+		
+		// Setup Image Path
+		arguments.imagePath = getImagePath();
+		
+		// Missing Image Path Setting
+		if(!structKeyExists(arguments, "missingImagePath")) {
+			arguments.missingImagePath = setting('imageMissingImagePath');
+		}
+		
+		// DEPRECATED SIZE LOGIC
+		if(structKeyExists(arguments, "size") && !isNull(getProduct()) && !structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
+			arguments.size = lcase(arguments.size);
+			if(arguments.size eq "l") {
+				arguments.size = "Large";
+			} else if (arguments.size eq "m") {
+				arguments.size = "Medium";
+			} else {
+				arguments.size = "Small";
+			}
+			arguments.width = getProduct().setting("productImage#arguments.size#Width");
+			arguments.height = getProduct().setting("productImage#arguments.size#Height");
+			structDelete(arguments, "size");
+		}
+		
+		return getService("imageService").getResizedImagePath(argumentCollection=arguments);
+	}
+	*/
+	
 	public boolean function getImageExistsFlag() {
 		if( fileExists(expandPath(getImagePath())) ) {
 			return true;

@@ -64,7 +64,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		return getAccountDAO().getAccountAuthenticationExists();
 	}
 	
-	// ===================== START: DAO Passthrough ===========================
+	// =====================  END: DAO Passthrough ============================
 	
 	// ===================== START: Process Methods ===========================
 	
