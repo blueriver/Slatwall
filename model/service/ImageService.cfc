@@ -61,9 +61,8 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 	
 	
 	// Image File Methods
-	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100,string missingImagePath) {
+	public string function getResizedImagePath(required string imagePath, numeric width, numeric height, string resizeMethod="scale", string cropLocation="center", numeric cropX, numeric cropY, numeric scaleWidth, numeric scaleHeight, string missingImagePath, string canvisColor="FFFFFF") {
 		var resizedImagePath = "";
-		
 		
 		// If the image can't be found default to a missing image
 		if(!fileExists(expandPath(arguments.imagePath))) {
@@ -76,28 +75,64 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 			}
 		}
 		
-		if(!arguments.width && !arguments.height) {
-			// if no width and height is passed in, display the original image
+		// if no width and height is passed in, display the original image
+		if(!structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
+			
 			resizedImagePath = arguments.imagePath;
+		
+		// if there was a width or a height passed in then we can resize
 		} else {
+			
 			// if dimensions are passed in, check to see if the image has already been created. If so, display it, if not create it first and then display it
-			var imageNameSuffix = (arguments.width && arguments.height) ? "_#arguments.width#w_#arguments.height#h" : (arguments.width ? "_#arguments.width#w" : "_#arguments.height#h");
-			// image name will reflect that resize method (defaults to "scale" so that one isn't indicated)
-			if(arguments.resizeMethod == "scaleAndCrop") {
-				imageNameSuffix &= "_sc_#arguments.cropLocation#";
-			} else if(arguments.resizeMethod == "crop") {
-				if(arguments.cropXStart || arguments.cropYStart) {
-					imageNameSuffix &= "_c_#arguments.cropXStart#x_#arguments.cropYStart#y";
-				} else {
-					imageNameSuffix &= "_c_#arguments.cropLocation#";
-				}
-				if(arguments.scaleWidth != 100) {
-					imageNameSuffix &= "_#arguments.scaleWidth#sw";
-				}
-				if(arguments.scaleHeight != 100) {
-					imageNameSuffix &= "_#arguments.scaleHeight#sh";
-				}
+			//var imageNameSuffix = (arguments.width && arguments.height) ? "_#arguments.width#w_#arguments.height#h" : (arguments.width ? "_#arguments.width#w" : "_#arguments.height#h");
+			
+			var imageNameSuffix = "";
+			
+			// Attach Width
+			if(structKeyExists(arguments, "width")) {
+				imageNameSuffix &= "_#arguments.width#w";
 			}
+			
+			// Attach Height
+			if(structKeyExists(arguments, "height")) {
+				imageNameSuffix &= "_#arguments.height#h";
+			}
+			
+			// Setup the crop or scaleAndCrop indicator
+			if(listFindNoCase("scaleAndCrop,Crop", arguments.resizeMethod)) {
+				
+				// If this is scale and crop, then we need to look for scaleWidth & scaleHeight, as well as define the resizeMode
+				if(lcase(arguments.resizeMethod) eq "scaleandcrop") {
+					imageNameSuffix &= "_sc";
+					
+					// check for scaleWidth
+					if(structKeyExists(arguments, "scaleWidth")) {
+						imageNameSuffix &= "_#arguments.scaleWidth#sw";
+					}
+					// check for scaleHeight
+					if(structKeyExists(arguments, "scaleHeight")) {
+						imageNameSuffix &= "_#arguments.scaleHeight#sh";
+					}
+				} else if ( lcase(arguments.resizeMethod) eq "crop" ) {
+					imageNameSuffix &= "_c";
+				}
+				
+				// check for cropX
+				if(structKeyExists(arguments, "cropX")) {
+					imageNameSuffix &= "_#arguments.cropX#cx";
+				}
+				// check for cropY
+				if(structKeyExists(arguments, "cropY")) {
+					imageNameSuffix &= "_#arguments.cropY#cy";
+				}
+				// If no X or Y, then use the cropLocation
+				if(!structKeyExists(arguments, "cropX") && !structKeyExists(arguments, "cropY")) {
+					imageNameSuffix &= "_#lcase(arguments.cropLocation)#cl";
+				}
+				
+			}
+			
+			// Figure out the image extension
 			var imageExt = listLast(arguments.imagePath,".");
 			
 			var cacheDirectory = replaceNoCase(expandPath(arguments.imagePath), listLast(arguments.imagePath, "/\"), "cache/");
@@ -110,57 +145,93 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 			
 			// Make sure that if a cached images exists that it is newer than the original
 			if(fileExists(expandPath(resizedImagePath))) {
+				
 				var originalFileObject = createObject("java","java.io.File").init(expandPath(arguments.imagePath));
 				var resizedFileObject = createObject("java","java.io.File").init(expandPath(resizedImagePath));
-				var originalLastModified = createObject("java","java.util.Date").init(originalFileObject.lastModified());
-				var resizedLastModified = createObject("java","java.util.Date").init(resizedFileObject.lastModified());;
 				
-				if(originalLastModified > resizedLastModified) {
+				if(originalFileObject.lastModified() > resizedFileObject.lastModified()) {
 					fileDelete(expandPath(resizedImagePath));
 				}
 			}
 			
 			if(!fileExists(expandPath(resizedImagePath))) {
+				
 				// wrap image functions in a try-catch in case the image uploaded is "problematic" for CF to work with
 				try{
+					
+					// Read the Image
 					var img = imageRead(expandPath(arguments.imagePath));
-					// scale to fit if both height and width are specified, else resize accordingly
-					if(arguments.resizeMethod == "scale") {
-						if(arguments.width && arguments.height) {
-							imageScaleToFit(img,arguments.width,arguments.height);
-						} else {
-							if(!arguments.width) {
-								arguments.width = "";
-							} else if(!arguments.height) {
-								arguments.height = "";
-							}
-							imageResize(img,arguments.width,arguments.height);
+					
+					// If the method is scale
+					if(lcase(arguments.resizeMethod) eq "scale") {
+						
+						if(structKeyExists(arguments, "width") && structKeyExists(arguments,"height")) {
+							img = scaleImage(image=img, width=arguments.width, height=arguments.height, canvisColor=arguments.canvisColor);
+						} else if (structKeyExists(arguments, "width")) {
+							img = scaleImage(image=img, width=arguments.width, canvisColor=arguments.canvisColor);
+						} else if (structKeyExists(arguments, "height")) {
+							img = scaleImage(image=img, height=arguments.height, canvisColor=arguments.canvisColor);
 						}
-					} else if(arguments.resizeMethod == "scaleAndCrop") {
-						if(!arguments.width) {
-							arguments.width = arguments.height;
-						}
-						if(!arguments.height) {
-							arguments.height = arguments.width;
-						}
-						// default location of scale and crop to center of image
-						if(len(arguments.cropLocation) == 0) {
-							arguments.cropLocation = "center";
-						}
-						// use aspectCrop() method for scale and crop
-						img = aspectCrop(img,arguments.width,arguments.height,arguments.cropLocation);
-					} else if(arguments.resizeMethod == "crop") {
-						if(!arguments.width) {
-						arguments.width = arguments.height;
-						}
-						if(!arguments.height) {
-							arguments.height = arguments.width;
-						}
-						img = customCrop(img,arguments.width,arguments.height,arguments.cropLocation,arguments.cropXStart,arguments.cropYStart,arguments.scaleWidth,arguments.scaleHeight);
+						
 					}
+					
+					// If the method is scaleAndCrop, then do the scale first based on scaleHeight
+					if(lcase(arguments.resizeMethod) eq "scaleandcrop") {
+						
+						if(structKeyExists(arguments, "scaleWidth") && structKeyExists(arguments,"scaleHeight")) {
+							img = scaleImage(image=img, width=arguments.scaleWidth, height=arguments.scaleHeight, canvisColor=arguments.canvisColor);
+						} else if (structKeyExists(arguments, "scaleWidth")) {
+							img = scaleImage(image=img, width=arguments.scaleWidth, canvisColor=arguments.canvisColor);
+						} else if (structKeyExists(arguments, "scaleHeight")) {
+							img = scaleImage(image=img, height=arguments.scaleHeight, canvisColor=arguments.canvisColor);
+						}
+						
+					}
+					
+					// If the method is crop or scaleAndCrop, then we need to do the crop next
+					if(listFindNoCase("crop,scaleAndCrop", arguments.resizeMethod)) {
+						
+						// Make sure a height and width are defined
+						if(!structKeyExists(arguments, "width")) {
+							arguments.width = img.width;
+						}
+						if(!structKeyExists(arguments, "height")) {
+							arguments.height = img.height;
+						}
+						
+						// Figure out the cropX & cropY
+						if(!structKeyExists(arguments, "cropX") && !structKeyExists(arguments, "cropY")) {
+							arguments.cropX = 0;
+							arguments.cropY = 0;
+							
+							// Setup the cropY
+							if(left(lcase(arguments.cropLocation), 6) eq "center") {
+								arguments.cropY = (img.height - arguments.height)/2;
+							} else if (left(lcase(arguments.cropLocation), 6) eq "bottom") {
+								arguments.cropY = img.height - arguments.height;
+							}
+							
+							// Setup the cropX
+							if(right(lcase(arguments.cropLocation), 6) eq "center") {
+								arguments.cropX = (img.width - arguments.width)/2;
+							} else if (right(lcase(arguments.cropLocation), 5) eq "right") {
+								arguments.cropX = img.width - arguments.width;
+							}
+						} else if (!structKeyExists(arguments, "cropX")) {
+							arguments.cropX = 0;
+						} else if (!structKeyExists(arguments, "cropY")) {
+							arguments.cropY = 0;
+						}
+						
+						// Crop the Image
+						imageCrop(img, arguments.cropX, arguments.cropY, arguments.width, arguments.height);
+						
+					}
+					
+					
+					// Write the image to the disk
 					imageWrite(img,expandPath(resizedImagePath));					
-				}
-				catch(any e) {
+				} catch(any e) {
 					// log the error
 					logHibachiException(e);
 				}
@@ -168,6 +239,59 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 		}
 		return resizedImagePath;
 	}
+	
+	private any function scaleImage(required any image, numeric height, numeric width, string canvisColor="FFFFFF") {
+		
+		// Scale Height And Widht - If Height and Width was defined then we need to add whitespace
+		if(structKeyExists(arguments, "width") && structKeyExists(arguments, "height")) {
+			
+			// If the aspect ratio is the same
+			if((arguments.height / arguments.image.height) == (arguments.width / arguments.image.width)) {
+				
+				imageResize(arguments.image, arguments.width, arguments.height);
+				
+			// If the aspect ratio is different
+			} else {
+				
+				// Setup variables for where the resized image is going to sit on the new canvis
+				var pasteX = 0;
+				var pasteY = 0;
+				
+				// Resize based on width
+				if((arguments.height / arguments.image.height) > (arguments.width / arguments.image.width)) {
+					imageResize(arguments.image, arguments.width, "");
+					pasteY = (arguments.height - arguments.image.height)/2;
+					
+				// Resize based on height
+				} else if ((arguments.height / arguments.image.height) < (arguments.width / arguments.image.width)) {
+					imageResize(image, "", arguments.height);
+					pasteX = (arguments.width - image.width)/2;
+				}
+				
+				// Create New Canvis
+				var imgBG = imageNew("", arguments.width, arguments.height, "rgb", arguments.canvisColor);
+				
+				// Place resized image in center of canvis
+				imagePaste(imgBG, arguments.image, pasteX, pasteY);
+				
+				// Set Canvis as image
+				arguments.image = imgBG;
+			}
+		
+		// Just Scale Height
+		} else if (structKeyExists(arguments, "height")) {
+			imageScaleToFit(arguments.image, "", arguments.height);
+			
+		// Just Scale Width
+		} else if (structKeyExists(arguments, "width")) {
+			imageScaleToFit(arguments.image, arguments.width, "");
+		}
+		
+		return arguments.image;
+	}
+	
+	
+	// =================== OLD FUNCTIONS =================================
 	
 	public void function clearImageCache(string directoryPath, string imageName){
 		var cacheFolder = expandpath(arguments.directoryPath & "/cache/");
@@ -185,122 +309,6 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 			if(fileExists(cachedFiles.directory[i] & '/' & cachedFiles.name)) {
 				fileDelete(cachedFiles.directory[i] & '/' & cachedFiles.name);	
 			}
-		}
-	}
-	
-		
-	/*
-	Function: aspectCrop
-	Author: Emmet McGovern
-	http://www.illequipped.com/blog
-	emmet@fullcitymedia.com
-	2/29/2008 - Leap Day!
-	Part of ImageUtils.cfc library (http://imageutils.riaforge.org/)
-	Adapted for Slatwall by Tony Garcia 6/28/11
-	*/
-	public any function aspectCrop(required any image, required numeric cropWidth, required numeric cropHeight, required position="center") {
-		
-		// Define local variables.
-		var nPercent = "";
-		var wPercent = "";
-		var hPercent = "";
-		var px = "";
-		var ycrop = "";
-		var xcrop = "";
-		
-		// if not image, assume path
-		if( !isImage(arguments.image) && !isImageFile(arguments.image) ) {
-			throw(message="The value passed to aspectCrop was not an image.");
-		}
-		
-		//  If we were given a path to an image, read the image into a ColdFusion image object. 
-		if(isImageFile(arguments.image)) {
-			arguments.image = imageRead(arguments.image);
-		}
-		
-		// Resize image without going over crop dimensions
-		wPercent = arguments.cropwidth / arguments.image.width;
-		hPercent = arguments.cropheight / arguments.image.height;
-		
-		if(wPercent > hPercent) {
-			nPercent = wPercent;
-			px = arguments.image.width * nPercent + 1;
-			imageResize(arguments.image,px,"");
-		} else {
-			nPercent = hPercent;
-			px = arguments.image.height * nPercent + 1;
-			imageResize(arguments.image,"",px);	
-		}
-		
-		//Set the xy offset for cropping, if not provided defaults to center 
-		if(listfindnocase("topleft,left,bottomleft", arguments.position)) {
-			xcrop = 0;
-		} else if( listfindnocase("topcenter,center,bottomcenter", arguments.position) ) {
-			xcrop = (arguments.image.width - arguments.cropwidth)/2;
-		} else if( listfindnocase("topright,right,bottomright", arguments.position) ) {
-			xcrop = arguments.image.width - arguments.cropwidth;
-		} else {
-			xcrop = (arguments.image.width - arguments.cropwidth)/2;
-		}
-	
-		if( listfindnocase("topleft,topcenter,topright", arguments.position) ) {
-			ycrop = 0;
-		} else if( listfindnocase("left,center,right", arguments.position) ) {
-			ycrop = (arguments.image.height - arguments.cropheight)/2;
-		} else if( listfindnocase("bottomleft,bottomcenter,bottomright", arguments.position) ) {
-			ycrop = arguments.image.height - arguments.cropheight;
-		} else {
-			ycrop = (arguments.image.height - arguments.cropheight)/2;
-		}
-	
-		// Return new cropped image.
-		imageCrop(arguments.image,xcrop,ycrop,arguments.cropwidth,arguments.cropheight);
-		
-		return arguments.image;
-	}
-	
-	public any function customCrop(required any image, required numeric width, required numeric height, string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
-		
-		// Set the xy offset for cropping from location, if passed in
-		if(len(arguments.cropLocation) > 0) {
-			if(listfindnocase("topleft,left,bottomleft", arguments.croplocation)) {
-				arguments.cropXStart = 0;
-			} else if( listfindnocase("topcenter,center,bottomcenter", arguments.croplocation) ) {
-				arguments.cropXStart = (arguments.image.width - arguments.width)/2;
-			} else if( listfindnocase("topright,right,bottomright", arguments.croplocation) ) {
-				arguments.cropXStart = arguments.image.width - arguments.width;
-			} 
-		
-			if( listfindnocase("topleft,topcenter,topright", arguments.croplocation) ) {
-				arguments.cropYStart = 0;
-			} else if( listfindnocase("left,center,right", arguments.croplocation) ) {
-				arguments.cropYStart = (arguments.image.height - arguments.height)/2;
-			} else if( listfindnocase("bottomleft,bottomcenter,bottomright", arguments.position) ) {
-				arguments.cropYStart = arguments.image.height - arguments.height;
-			}
-		}
-		
-		if(!arguments.scaleHeight && !arguments.scaleWidth) {
-		// if no scaling arguments are passed in, we simply crop the image using imageCrop
-			imageCrop(arguments.image,arguments.cropXStart,arguments.cropYStart,arguments.width,arguments.height);
-			return arguments.image;
-		} else {
-			// handle setting the scaling on the other dimension if only one was passed in.
-			if(!arguments.scaleHeight) {
-				arguments.scaleHeight = arguments.scaleWidth;
-			} else if (!arguments.scaleWidth) {
-				arguments.scaleWidth = arguments.scaleHeight;
-			}
-			// get the height and width of the crop on the original image from the scale arguments
-			var cropWidth = arguments.image.width * (arguments.scaleWidth/100);
-			var cropHeight = arguments.image.height * (arguments.scaleHeight/100);
-			
-			//crop the original image
-			imageCrop(arguments.image,arguments.cropXStart,arguments.cropYStart,cropWidth,cropHeight);
-			
-			// resize the cropped image to the passed in dimensions
-			// in case the aspect ratio of the size of the desired image is different than the aspect ratio calculated from scale arguments, we use the aspectCrop() method from the center of the image
-			return aspectCrop(arguments.image,arguments.width,arguments.height,"center");			
 		}
 	}
 	
