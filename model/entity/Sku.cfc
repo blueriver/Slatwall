@@ -216,7 +216,11 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
     	return "#getHibachiScope().getBaseImageURL()#/product/default/#getImageFile()#";
     }
     
-	public string function getImage() {
+    public string function getImage() {
+    	return getResizedImage(argumentcollection=arguments);
+    }
+    
+	public string function getResizedImage() {
 		
 		// Setup Image Path
 		arguments.imagePath = getImagePath();
@@ -246,7 +250,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 			structDelete(arguments, "size");
 		}
 		
-		return getService("imageService").getImage(argumentCollection=arguments);
+		return getService("imageService").getResizedImage(argumentCollection=arguments);
 	}
 	
 	public string function getResizedImagePath() {

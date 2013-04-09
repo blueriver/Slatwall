@@ -71,6 +71,10 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	}
 	
 	public string function getImage() {
+    	return getResizedImage(argumentcollection=arguments);
+    }
+    
+	public string function getResizedImage() {
 		
 		// Setup Image Path
 		arguments.imagePath = getImagePath();

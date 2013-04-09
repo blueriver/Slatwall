@@ -36,12 +36,12 @@
 Notes:
 
 */
-component displayname="Image Service" persistent="false" extends="HibachiService" output="false" accessors="true" {
+component persistent="false" extends="HibachiService" output="false" accessors="true" {
 
-	property name="utilityTagService" type="any";
+	property name="hibachiTagService" type="any";
 	
 	// @hint Returns an image HTML element with the additional attributes
-	public string function getImage() {
+	public string function getResizedImage() {
 		
 		// Setup the core src
 		var returnHTML = '<img src="#getResizedImagePath(argumentcollection=arguments)#"';

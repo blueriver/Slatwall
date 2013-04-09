@@ -143,35 +143,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		rc.edit = true;
 	}
 	
-	// Option
-	public void function saveOption(required struct rc){
-		var option = getOptionService().getOption(rc.optionID,true);
-		
-		if(rc.optionImage != ''){
-			var documentData = fileUpload(getTempDirectory(),'optionImage','','makeUnique');
-			
-			if(len(option.getOptionImage()) && fileExists(expandpath(option.getImageDirectory()) & option.getOptionImage())){
-				fileDelete(expandpath(option.getImageDirectory()) & option.getOptionImage());	
-			}
-			
-			//need to handle validation at some point
-			if(documentData.contentType eq 'image'){
-				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, expandpath(option.getImageDirectory()) & documentData.serverFile);
-				rc.optionImage = documentData.serverfile;
-			}else if (fileExists(expandpath(option.getImageDirectory()) & option.getOptionImage())){
-				fileDelete(expandpath(option.getImageDirectory()) & option.getOptionImage());	
-			}
-			
-		}else if(structKeyExists(rc,'deleteImage') && fileExists(expandpath(option.getImageDirectory()) & option.getOptionImage())){
-			fileDelete(expandpath(option.getImageDirectory()) & option.getOptionImage());	
-			rc.optionImage='';
-		}else{
-			rc.optionImage = option.getOptionImage();
-		}
-		
-		super.genericSaveMethod('Option',rc);
-	}
-	
 	// Permission Group
 	public void function editPermissionGroup(required struct rc){
 		//rc.permissions = getPermissionService().getPermissions();
@@ -194,12 +165,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		super.genericDetailMethod('PermissionGroup',rc);
 	}
 	
-	// Product
-	public void function createProduct(required struct rc) {
-		genericCreateMethod(entityName="Product", rc=arguments.rc);
-		getFW().setView("admin:entity.createproduct");
-	}
-	
 	// Promotion
 	public void function createPromotion(required struct rc) {
 		super.genericCreateMethod('Promotion', rc);
@@ -207,68 +172,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		if( rc.promotion.isNew() ) {
 			rc.promotionPeriod = getPromotionService().newPromotionPeriod();
 		}
-	}
-	
-	// Sku
-	public void function saveSku(required struct rc){
-		var sku = getSkuService().getSku(rc.skuID,true);
-		var imageNameToUse='';
-		
-		if(structKeyExists(rc,'imageFileUpload') && rc.imageFileUpload != ''){
-			var documentData = fileUpload(getTempDirectory(),'imageFileUpload','','makeUnique');
-			
-			//if overwriting old image, delete image			
-			if(len(sku.getImageFile()) && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
-				fileDelete(expandpath(sku.getImageDirectory()) & sku.getImageFile());	
-			}
-			
-			
-			//set up image name
-			if(structKeyExists(rc,'imageExclusive') && rc.imageExclusive){
-				if(left(setting('globalImageExtension'),1) eq '.') {
-					imageNameToUse = rc.skucode & setting('globalImageExtension');	
-				} else {
-					imageNameToUse = rc.skucode & '.' & setting('globalImageExtension');
-				}
-			}else{
-				imageNameToUse=sku.getImageFile();
-			}
-			
-			//need to handle validation at some point
-			if(documentData.contentType eq 'image'){
-				if(fileExists(expandpath(sku.getImageDirectory()) & imageNameToUse)){
-					fileDelete(expandpath(sku.getImageDirectory()) & imageNameToUse);
-				}
-				
-				if( !directoryExists( replaceNoCase(expandPath(sku.getImageDirectory()), 'index.cfm/', '', 'all') )) {
-					directoryCreate( replaceNoCase(expandPath(sku.getImageDirectory()), 'index.cfm/', '', 'all') );
-				}
-				
-				fileMove(documentData.serverDirectory & '/' & documentData.serverFile, replaceNoCase(expandPath(sku.getImageDirectory()), 'index.cfm/', '', 'all') & imageNameToUse);
-				
-				rc.imageFile = imageNameToUse;
-				
-			}else{
-				fileDelete(documentData.serverDirectory & '/' & documentData.serverFile);	
-			}
-			
-			getImageService().clearImageCache(sku.getImageDirectory(),sku.getImageFile());
-			
-		}else if(structKeyExists(rc,'deleteImage') && rc.deleteImage && fileExists(expandpath(sku.getImageDirectory()) & sku.getImageFile())){
-			// Clear the cache
-			getImageService().clearImageCache(sku.getImageDirectory(),sku.getImageFile());
-			
-			// Delete the file
-			fileDelete( expandPath(sku.getImageDirectory()) & sku.getImageFile());
-			
-			// Set the imageName back to whatever automatically gets generated
-			rc.imageFile=sku.generateImageFileName();
-		}else{
-			
-			rc.imageFile = sku.getImageFile();
-		}
-		
-		super.genericSaveMethod('Sku', rc);
 	}
 	
 	// Stock Adjustment

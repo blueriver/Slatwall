@@ -161,8 +161,8 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		return getURLFromPath(setting('globalAssetsImageFolderPath'));
 	}
 	
-	public string function getImage() {
-		return getService("imageService").getImage(argumentCollection=arguments);
+	public string function getResizedImage() {
+		return getService("imageService").getResizedImage(argumentCollection=arguments);
 	}
 	
 	public string function getResizedImagePath() {
