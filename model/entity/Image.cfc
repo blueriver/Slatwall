@@ -104,7 +104,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 			structDelete(arguments, "size");
 		}
 		
-		return getService("imageService").getImage(argumentCollection=arguments);
+		return getService("imageService").getResizedImage(argumentCollection=arguments);
 	}
 	
 	public string function getResizedImagePath() {
