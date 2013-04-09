@@ -480,7 +480,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			variables.defaultProductImageFiles = [];
 			
 			var sl = getService("skuService").getSkuSmartList();
-			sl.addFilter('productID', getProductID);
+			sl.addFilter('product.productID', getProductID());
 			sl.addSelect('imageFile', 'imageFile');
 			sl.setSelectDistinctFlag( true );
 			

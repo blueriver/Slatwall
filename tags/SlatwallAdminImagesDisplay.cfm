@@ -7,8 +7,8 @@
 				<cfloop array="#attributes.object.getImages()#" index="image">
 				<li class="span3">
     				<div class="thumbnail">
-    					<a href="?slatAction=admin:entity.detailImage&imageID=#image.getImageID()#">
-							#image.getImage(width=210, height=210)#
+    					<a href="#image.getResizedImagePath(width=210, height=210)#" target="_blank">
+							#image.getResizedImage(width=210, height=210)#
 						</a>
 						<hr />
 						<div class="small em image-caption">#image.getImagePath()#</div>
