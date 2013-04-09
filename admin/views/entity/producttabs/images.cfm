@@ -50,6 +50,7 @@ Notes:
 					</a>
 					<hr />
 					<div class="small em image-caption">#imageFile#</div>
+					<cf_HibachiProcessCaller entity="#rc.product#" processContext="uploadDefaultImage" action="admin:entity.preprocessproduct" queryString="imageFile=#imageFile#" class="btn" iconOnly="true" icon="upload" modal="true" />
 				</div>
 				</li>
 		</cfloop>

@@ -72,7 +72,7 @@ Notes:
 	</cfif>
 	
 	<!--- If the text wasn't defined, then add it --->
-	<cfif !len(attributes.text)>
+	<cfif !len(attributes.text) and !attributes.iconOnly>
 		<cfset attributes.text = attributes.hibachiScope.rbKey('entity.#local.entityName#.process.#attributes.processContext#') />
 	</cfif>
 	
