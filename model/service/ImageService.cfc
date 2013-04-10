@@ -61,7 +61,7 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 	
 	
 	// Image File Methods
-	public string function getResizedImagePath(required string imagePath, numeric width, numeric height, string resizeMethod="scale", string cropLocation="center", numeric cropX, numeric cropY, numeric scaleWidth, numeric scaleHeight, string missingImagePath, string canvisColor="FFFFFF") {
+	public string function getResizedImagePath(required string imagePath, numeric width, numeric height, string resizeMethod="scale", string cropLocation="center", numeric cropX, numeric cropY, numeric scaleWidth, numeric scaleHeight, string missingImagePath, string canvasColor="FFFFFF") {
 		var resizedImagePath = "";
 		
 		// If the image can't be found default to a missing image
@@ -166,11 +166,11 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 					if(lcase(arguments.resizeMethod) eq "scale") {
 						
 						if(structKeyExists(arguments, "width") && structKeyExists(arguments,"height")) {
-							img = scaleImage(image=img, width=arguments.width, height=arguments.height, canvisColor=arguments.canvisColor);
+							img = scaleImage(image=img, width=arguments.width, height=arguments.height, canvasColor=arguments.canvasColor);
 						} else if (structKeyExists(arguments, "width")) {
-							img = scaleImage(image=img, width=arguments.width, canvisColor=arguments.canvisColor);
+							img = scaleImage(image=img, width=arguments.width, canvasColor=arguments.canvasColor);
 						} else if (structKeyExists(arguments, "height")) {
-							img = scaleImage(image=img, height=arguments.height, canvisColor=arguments.canvisColor);
+							img = scaleImage(image=img, height=arguments.height, canvasColor=arguments.canvasColor);
 						}
 						
 					}
@@ -179,11 +179,11 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 					if(lcase(arguments.resizeMethod) eq "scaleandcrop") {
 						
 						if(structKeyExists(arguments, "scaleWidth") && structKeyExists(arguments,"scaleHeight")) {
-							img = scaleImage(image=img, width=arguments.scaleWidth, height=arguments.scaleHeight, canvisColor=arguments.canvisColor);
+							img = scaleImage(image=img, width=arguments.scaleWidth, height=arguments.scaleHeight, canvasColor=arguments.canvasColor);
 						} else if (structKeyExists(arguments, "scaleWidth")) {
-							img = scaleImage(image=img, width=arguments.scaleWidth, canvisColor=arguments.canvisColor);
+							img = scaleImage(image=img, width=arguments.scaleWidth, canvasColor=arguments.canvasColor);
 						} else if (structKeyExists(arguments, "scaleHeight")) {
-							img = scaleImage(image=img, height=arguments.scaleHeight, canvisColor=arguments.canvisColor);
+							img = scaleImage(image=img, height=arguments.scaleHeight, canvasColor=arguments.canvasColor);
 						}
 						
 					}
@@ -240,7 +240,7 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 		return resizedImagePath;
 	}
 	
-	private any function scaleImage(required any image, numeric height, numeric width, string canvisColor="FFFFFF") {
+	private any function scaleImage(required any image, numeric height, numeric width, string canvasColor="FFFFFF") {
 		
 		// Scale Height And Widht - If Height and Width was defined then we need to add whitespace
 		if(structKeyExists(arguments, "width") && structKeyExists(arguments, "height")) {
@@ -269,7 +269,7 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 				}
 				
 				// Create New Canvis
-				var imgBG = imageNew("", arguments.width, arguments.height, "rgb", arguments.canvisColor);
+				var imgBG = imageNew("", arguments.width, arguments.height, "rgb", arguments.canvasColor);
 				
 				// Place resized image in center of canvis
 				imagePaste(imgBG, arguments.image, pasteX, pasteY);
