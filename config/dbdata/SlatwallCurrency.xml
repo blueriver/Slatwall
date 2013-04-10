@@ -166,11 +166,11 @@
 		<Record currencyCode="VND" activeFlag="0" currencyName="VND - Viet Nam Dong" currencySymbol="&#8363;" />
 		<Record currencyCode="VUV" activeFlag="0" currencyName="VUV - Vanuatu Vatu" currencySymbol="&#164;" />
 		<Record currencyCode="WST" activeFlag="0" currencyName="WST - Samoa Tala" currencySymbol="&#164;" />
-		<Record currencyCode="XAF" activeFlag="0" currencyName="XAF - Communaute Financière Africaine (BEAC) CFA Franc BEAC" currencySymbol="&#164;" />
+		<Record currencyCode="XAF" activeFlag="0" currencyName="XAF - Communaute Financiere Africaine (BEAC) CFA Franc BEAC" currencySymbol="&#164;" />
 		<Record currencyCode="XCD" activeFlag="0" currencyName="XCD - East Caribbean Dollar" currencySymbol="$" />
 		<Record currencyCode="XDR" activeFlag="0" currencyName="XDR - International Monetary Fund (IMF) Special Drawing Rights" currencySymbol="&#164;" />
-		<Record currencyCode="XOF" activeFlag="0" currencyName="XOF - Communaute Financière Africaine (BCEAO) Franc" currencySymbol="&#164;" />
-		<Record currencyCode="XPF" activeFlag="0" currencyName="XPF - Comptoirs Français du Pacifique (CFP) Franc" currencySymbol="&#164;" />
+		<Record currencyCode="XOF" activeFlag="0" currencyName="XOF - Communaute Financiere Africaine (BCEAO) Franc" currencySymbol="&#164;" />
+		<Record currencyCode="XPF" activeFlag="0" currencyName="XPF - Comptoirs Francais du Pacifique (CFP) Franc" currencySymbol="&#164;" />
 		<Record currencyCode="YER" activeFlag="0" currencyName="YER - Yemen Rial" currencySymbol="&#65020;" />
 		<Record currencyCode="ZAR" activeFlag="0" currencyName="ZAR - South Africa Rand" currencySymbol="R" />
 		<Record currencyCode="ZMK" activeFlag="0" currencyName="ZMK - Zambia Kwacha" currencySymbol="&#164;" />
