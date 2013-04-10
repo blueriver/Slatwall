@@ -69,8 +69,6 @@ component entityname="SlatwallSubscriptionBenefit" table="SlatwallSubscriptionBe
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
-
 	
     public array function getAccessTypeOptions() {
 		if(!structKeyExists(variables, "accessTypeOptions")) {
@@ -88,7 +86,7 @@ component entityname="SlatwallSubscriptionBenefit" table="SlatwallSubscriptionBe
     public any function getContentsOptionsSmartList() {
 		if(!structKeyExists(variables, "contentsOptionsSmartList")) {
 			var smartList = getService("contentService").getContentSmartList();
-			smartList.addWhereCondition("exists (FROM SlatwallSetting ss WHERE ss.settingName='contentRestrictAccessFlag' AND ss.settingValue=1 AND ss.cmsContentID = aslatwallcontent.cmsContentID)");
+			//smartList.addWhereCondition("exists (FROM SlatwallSetting ss WHERE ss.settingName='contentRestrictAccessFlag' AND ss.settingValue=1 AND ss.cmsContentID = aslatwallcontent.cmsContentID)");
 			smartList.addOrder("title|ASC");
 			variables.contentsOptionsSmartList = smartList;
 		}
@@ -98,7 +96,7 @@ component entityname="SlatwallSubscriptionBenefit" table="SlatwallSubscriptionBe
     public any function getCategoriesOptionsSmartList() {
 		if(!structKeyExists(variables, "categoriesOptionsSmartList")) {
 			var smartList = getService("contentService").getCategorySmartList();
-			smartList.addFilter(propertyIdentifier="restrictAccessFlag", value="1");
+			//smartList.addFilter(propertyIdentifier="restrictAccessFlag", value="1");
 			smartList.addOrder("categoryName|ASC");
 			variables.categoriesOptionsSmartList = smartList;
 		}
