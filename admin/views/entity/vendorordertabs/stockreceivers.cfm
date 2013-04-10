@@ -47,5 +47,3 @@ Notes:
 	<cf_HibachiListingColumn propertyidentifier="boxCount"/>
 	<cf_HibachiListingColumn propertyidentifier="packingSlipNumber"/>
 </cf_HibachiListingDisplay>
-
-<cf_HibachiProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" class="btn" icon="plus" />
