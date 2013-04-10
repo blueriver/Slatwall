@@ -195,7 +195,29 @@ component extends="HibachiService" accessors="true" {
 		
 		updateImageFileNameForProductSkus( arguments.product );
 	
-	}			
+	}
+	
+	public any function processProduct_uploadDefaultImage(required any product, required any processObject) {
+		// Wrap in try/catch to add validation error based on fileAcceptMIMEType
+		try {
+			
+			// Get the upload directory for the current property
+			var uploadDirectory = getHibachiScope().setting('globalAssetsImageFolderPath') & "/product/default";
+			var fullFilePath = "#uploadDirectory#/#arguments.processObject.getImageFile()#";
+			
+			// If the directory where this file is going doesn't exists, then create it
+			if(!directoryExists(uploadDirectory)) {
+				directoryCreate(uploadDirectory);
+			}
+			
+			// Do the upload, and then move it to the new location
+			var uploadData = fileUpload( getHibachiTempDirectory(), 'uploadFile', arguments.processObject.getPropertyMetaData('uploadFile').hb_fileAcceptMIMEType, 'makeUnique' );
+			fileMove("#getHibachiTempDirectory()#/#uploadData.serverFile#", fullFilePath);
+			
+		} catch(any e) {
+			this.addError(currentProperty.name, getHibachiScope().rbKey('validate.fileUpload'));
+		}
+	}
 	
 	// =====================  END: Process Methods ============================
 	

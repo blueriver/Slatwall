@@ -333,22 +333,31 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		// Do any file upload properties
 		for( var p=1; p <= arrayLen(properties); p++ ) {
 			
+			// Setup the current property
 			currentProperty = properties[p];
 			
-			if( structKeyExists(arguments.data, currentProperty.name) && (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && structKeyExists(currentProperty, "hb_fileUpload") && currentProperty.hb_fileUpload && structKeyExists(currentProperty, "hb_fileAcceptMIMEType") && len(arguments.data[ currentProperty.name ]) ) {
+			// Check to see if we should upload this property
+			if( structKeyExists(arguments.data, currentProperty.name) && (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && structKeyExists(currentProperty, "hb_fileUpload") && currentProperty.hb_fileUpload && structKeyExists(currentProperty, "hb_fileAcceptMIMEType") && len(arguments.data[ currentProperty.name ]) && structKeyExists(form, currentProperty.name) ) {
 				
-				//try {
+				// Wrap in try/catch to add validation error based on fileAcceptMIMEType
+				try {
+					
+					// Get the upload directory for the current property
 					var uploadDirectory = this.invokeMethod("get#currentProperty.name#UploadDirectory");
+					
+					// If the directory where this file is going doesn't exists, then create it
 					if(!directoryExists(uploadDirectory)) {
 						directoryCreate(uploadDirectory);
 					}
+					
+					// Do the upload
 					var uploadData = fileUpload( uploadDirectory, currentProperty.name, currentProperty.hb_fileAcceptMIMEType, 'makeUnique' );
+					
+					// Update the property with the serverFile name
 					_setProperty(currentProperty.name, uploadData.serverFile);
-				//} catch(any e) {
-//						this.addError(currentProperty.name, rbKey('validate.fileUpload'));
-//				}
-				
-			// (SIMPLE) Do this logic if this property should be a simple value, and the data passed in is a simple value
+				} catch(any e) {
+					this.addError(currentProperty.name, rbKey('validate.fileUpload'));
+				}
 			}
 		}
 		
