@@ -983,31 +983,60 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	// =============== Saved State Logic ===========================
 	
 	public void function loadSavedState(required string savedStateID) {
-		if( structKeyExists(session.entitySmartList, savedStateID) ) {
-			for(var key in session.entitySmartList[ savedStateID ]) {
-				variables[key] = duplicate(session.entitySmartList[ savedStateID ][key]);
+		var savedStates = [];
+		if(hasSessionValue('smartListSavedState')) {
+			savedStates = getSessionValue('smartListSavedState');	
+		}
+		for(var s=1; s<=arrayLen(savedStates); s++) {
+			if(savedStates[s].savedStateID eq arguments.savedStateID) {
+				for(var key in savedStates[s]) {
+					variables[key] = duplicate(savedStates[s][key]);
+				}	
 			}
-		}
-	}
-	
-	private void function removeSavedState(required string savedStateID) {
-		if(structKeyExists(session.entitySmartList, arguments.savedStateID)) {
-			structDelete(session.entitySmartList, arguments.savedStateID);	
-		}
-		if(arrayFind(session.entitySmartList.savedStates, arguments.savedStateID)) {
-			arrayDeleteAt(session.entitySmartList.savedStates, arrayFind(session.entitySmartList.savedStates, arguments.savedStateID));	
 		}
 	}
 	
 	private void function saveState() {
-		if(!arrayFind(session.entitySmartList.savedStates, getSavedStateID())) {
-			arrayPrepend(session.entitySmartList.savedStates, variables.savedStateID);
-			for(var s=arrayLen(session.entitySmartList.savedStates); s>=100; s--) {
-				removeSavedState(session.entitySmartList.savedStates[s]);
-			}
+		// Make sure that the saved states structure and array exists
+		if(!hasSessionValue('smartListSavedState')) {
+			setSessionValue('smartListSavedState', []);
 		}
 		
-		session.entitySmartList[ getSavedStateID() ] = getStateStruct();
+		var sessionKey = "";
+		if(structKeyExists(COOKIE, "JSESSIONID")) {
+			sessionKey = COOKIE.JSESSIONID;
+		} else if (structKeyExists(COOKIE, "CFTOKEN")) {
+			sessionKey = COOKIE.CFTOKEN;
+		} else if (structKeyExists(COOKIE, "CFID")) {
+			sessionKey = COOKIE.CFID;
+		}
+		
+		// Lock the session so that we can manipulate based on saved state
+		lock name="#sessionKey#_#getHibachiInstanceApplicationScopeKey()#_smartListSavedStateUpdateLogic" timeout="10" {
+		
+			// Get the saved state struct
+			var states = getSessionValue('smartListSavedState');
+			
+			// Setup the state
+			var state = getStateStruct();
+			state.savedStateID = getSavedStateID();
+			
+			// If the savedState already existed, then delete it
+			for(var e=1; e<=arrayLen(states); e++) {
+				if(states[e].savedStateID eq state.savedStateID) {
+					arrayDeleteAt(states, e);
+				}
+			}
+			
+			// Add the state to the states array
+			arrayPrepend(states, state);
+				
+			for(var s=arrayLen(states); s>10; s--) {
+				arrayDeleteAt(states, s);
+			}
+			
+			setSessionValue('smartListSavedState', states);
+		}
 	}
 	
 	public string function getSavedStateID() {

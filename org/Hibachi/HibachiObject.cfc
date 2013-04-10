@@ -258,7 +258,15 @@ component accessors="true" output="false" persistent="false" {
 	
 	// @hint facade method to set values in the application scope 
 	public void function setSessionValue(required any key, required any value) {
-		lock name="session_#getHibachiInstanceApplicationScopeKey()#_#arguments.key#" timeout="10" {
+		var sessionKey = "";
+		if(structKeyExists(COOKIE, "JSESSIONID")) {
+			sessionKey = COOKIE.JSESSIONID;
+		} else if (structKeyExists(COOKIE, "CFTOKEN")) {
+			sessionKey = COOKIE.CFTOKEN;
+		} else if (structKeyExists(COOKIE, "CFID")) {
+			sessionKey = COOKIE.CFID;
+		}
+		lock name="#sessionKey#_#getHibachiInstanceApplicationScopeKey()#_#arguments.key#" timeout="10" {
 			if(!structKeyExists(session, getHibachiInstanceApplicationScopeKey())) {
 				session[ getHibachiInstanceApplicationScopeKey() ] = {};
 			}
