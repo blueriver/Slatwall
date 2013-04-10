@@ -3,6 +3,6 @@
 		"location":		[{"contexts":"save","required":true}]
 	},
 	"populatedPropertyValidation":{
-	    "address":[{"validate":"full"}]
+	    "address":[{"validate":"location"}]
 	}
 }

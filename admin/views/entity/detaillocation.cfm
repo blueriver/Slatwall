@@ -46,8 +46,6 @@ Notes:
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.location#" property="locationName" edit="#rc.edit#">
-				<input type="hidden" name="primaryAddress.locationAddressID" value="#rc.location.getPrimaryAddress().getLocationAddressID()#" />
-				<cf_SlatwallAdminAddressDisplay address="#rc.location.getPrimaryAddress().getAddress()#" showName="false" showCompany="false" edit="#rc.edit#" fieldNamePrefix="primaryAddress.address."  />
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 
