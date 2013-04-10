@@ -51,14 +51,16 @@ Notes:
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.product#" property="productType" edit="true" valueOptions="#rc.product.getProductTypeOptions(rc.baseProductType)#">
+				<cfif rc.baseProductType eq "merchandise">
+					<cf_HibachiPropertyDisplay object="#rc.product#" property="brand" edit="true">
+				</cfif>
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="productName" edit="true">
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="productCode" edit="true">
-				<cf_HibachiPropertyDisplay object="#rc.product#" property="brand" edit="true">
-				<cf_HibachiPropertyDisplay object="#rc.product#" property="productType" edit="true" valueOptions="#rc.product.getProductTypeOptions( rc.baseProductType )#">
 				<cf_HibachiPropertyDisplay object="#rc.product#" property="price" edit="true">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
-		
+		<hr />
 		<cfif rc.baseProductType eq "merchandise">
 			<div class="row-fluid">
 				<cfset optionsSmartList = $.slatwall.getService("optionService").getOptionSmartList() />
@@ -99,7 +101,7 @@ Notes:
 			<cfset contentAccessList = $.slatwall.getService("contentService").getContentSmartList() />
 			<!---<cfset contentAccessList.addFilter("allowPurchaseFlag", 1) />--->
 			<cf_SlatwallErrorDisplay object="#rc.product#" errorName="accessContents" />
-			<cf_HibachiFieldDisplay fieldType="yesno" fieldName="bundleContentAccess" value="0" title="Would you like to bundle all pages selected into a single sku?" edit="true" />
+			<cf_HibachiFieldDisplay fieldType="yesno" fieldName="bundleContentAccess" value="0" title="#$.slatwall.rbKey('admin.entity.createproduct.bundleContentAccess')#" hint="#$.slatwall.rbKey('admin.entity.createproduct.bundleContentAccess_hint')#" edit="true" />
 			<cf_HibachiListingDisplay smartList="#contentAccessList#" multiselectFieldName="accessContents" edit="true">
 				<cf_HibachiListingColumn propertyIdentifier="title" tdclass="primary" />
 			</cf_HibachiListingDisplay>

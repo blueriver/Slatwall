@@ -38,17 +38,21 @@ Notes:
 --->
 <cfparam name="rc.productSmartList" type="any" />
 
+<cfset contentDisabled = "" />
+<cfset subscriptionDisabled = "" />
+
 <cfoutput>
 	<cf_HibachiEntityActionBar type="listing" object="#rc.productSmartList#" showCreate="false">
 		
-		<!--- Create --->
+		<!--- Create ---> 
 		<cf_HibachiEntityActionBarButtonGroup>
 			<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" dropdownClass="pull-right">
-				<cf_HibachiActionCaller action="admin:entity.createproduct" text="#rc.$.slatwall.rbKey('define.contentAccess')# #rc.$.slatwall.rbKey('entity.product')#" querystring="baseProductType=contentAccess" />
+				<cf_HibachiActionCaller action="admin:entity.createproduct" text="#rc.$.slatwall.rbKey('define.contentAccess')# #rc.$.slatwall.rbKey('entity.product')#" querystring="baseProductType=contentAccess" disabled="#!$.slatwall.getService("contentService").getContentSmartList().getRecordsCount()#" disabledText="#$.slatwall.rbKey('admin.entity.listproduct.createNoContent')#" />
 				<cf_HibachiActionCaller action="admin:entity.createproduct" text="#rc.$.slatwall.rbKey('define.merchandise')# #rc.$.slatwall.rbKey('entity.product')#" querystring="baseProductType=merchandise" />
-				<cf_HibachiActionCaller action="admin:entity.createproduct" text="#rc.$.slatwall.rbKey('define.subscription')# #rc.$.slatwall.rbKey('entity.product')#" querystring="baseProductType=subscription" />
+				<cf_HibachiActionCaller action="admin:entity.createproduct" text="#rc.$.slatwall.rbKey('define.subscription')# #rc.$.slatwall.rbKey('entity.product')#" querystring="baseProductType=subscription" disabled="#!$.slatwall.getService("contentService").getSubscriptionTermSmartList().getRecordsCount() or !$.slatwall.getService("contentService").getSubscriptionBenefitSmartList().getRecordsCount()#"  disabledText="#$.slatwall.rbKey('admin.entity.listproduct.createNoSubscriptionBenefitOrTerm')#" />
 			</cf_HibachiActionCallerDropdown>
 		</cf_HibachiEntityActionBarButtonGroup>
+		
 		
 	</cf_HibachiEntityActionBar>
 	
