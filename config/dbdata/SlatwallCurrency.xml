@@ -143,7 +143,7 @@
 		<Record currencyCode="SOS" activeFlag="0" currencyName="SOS - Somalia Shilling" currencySymbol="S" />
 		<Record currencyCode="SPL" activeFlag="0" currencyName="SPL - Seborga Luigino" currencySymbol="&#164;" />
 		<Record currencyCode="SRD" activeFlag="0" currencyName="SRD - Suriname Dollar" currencySymbol="$" />
-		<Record currencyCode="STD" activeFlag="0" currencyName="STD - Sao Tome and Príncipe Dobra" currencySymbol="&#164;" />
+		<Record currencyCode="STD" activeFlag="0" currencyName="STD - Sao Tome and Principe Dobra" currencySymbol="&#164;" />
 		<Record currencyCode="SVC" activeFlag="0" currencyName="SVC - El Salvador Colon" currencySymbol="$" />
 		<Record currencyCode="SYP" activeFlag="0" currencyName="SYP - Syria Pound" currencySymbol="&#163;" />
 		<Record currencyCode="SZL" activeFlag="0" currencyName="SZL - Swaziland Lilangeni" currencySymbol="&#164;" />
