@@ -21,8 +21,9 @@ component output="false" accessors="true" extends="HibachiService"  {
 		var sessionEntity = this.getSession(getSessionValue('sessionID'), true);
 		getHibachiScope().setSession( sessionEntity );
 		
-		// Update the last request datetime
+		// Update the last request datetime, and IP Address
 		getHibachiScope().getSession().setLastRequestDateTime( now() );
+		getHibachiScope().getSession().setLastRequestIPAddress( CGI.REMOTE_ADDR );
 		
 		// Save the session
 		getHibachiDAO().save( getHibachiScope().getSession() );

@@ -42,6 +42,7 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	property name="sessionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="shippingAddressPostalCode" ormtype="string";
 	property name="lastRequestDateTime" ormtype="timestamp";
+	property name="lastRequestIPAddress" ormtype="string";
 	
 	// Related Entities
 	property name="account" type="any" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";

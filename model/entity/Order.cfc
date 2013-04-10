@@ -43,6 +43,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="orderNumber" ormtype="string";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="orderOpenDateTime" ormtype="timestamp";
+	property name="orderOpenIPAddress" ormtype="string";
 	property name="orderCloseDateTime" ormtype="timestamp";
 	
 	// Calculated Properties
@@ -187,6 +188,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			}
 			
 			setOrderOpenDateTime( now() );
+			setOrderOpenIPAddress( CGI.REMOTE_ADDR );
 		}
 		if(!isNull(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() == "ostClosed" && isNull(getOrderCloseDateTime())) {
 			setOrderCloseDateTime( now() );
