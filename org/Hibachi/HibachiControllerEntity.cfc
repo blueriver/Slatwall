@@ -398,7 +398,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		rc.pageTitle = rbKey( "entity.#arguments.rc.entityActionDetails.itemEntityName#.process.#rc.processContext#" );
 		
 		// Set the view correctly to use the context specific preProcess view
-		getFW().setView("#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#_#arguments.rc.processContext#");
+		getFW().setView("#lcase(arguments.rc.entityActionDetails.subsystemName)#:#lcase(arguments.rc.entityActionDetails.sectionName)#.#lcase(arguments.rc.entityActionDetails.itemName)#_#lcase(arguments.rc.processContext)#");
 	}
 	
 	// PROCESS

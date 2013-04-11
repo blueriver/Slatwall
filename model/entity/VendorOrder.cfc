@@ -65,27 +65,9 @@ component entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persisten
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
+	property name="addVendorOrderItemSkuOptionsSmartList" persistent="false";
+	property name="subTotal" persistent="false" hb_formatType="currency";
 	property name="total" persistent="false" hb_formatType="currency"; 
-	property name="subTotal" persistent="false" hb_formatType="currency"; 
-	//property name="taxTotal" persistent="false" hb_formatType="currency";
-	//property name="itemAmountTotal" persistent="false" hb_formatType="currency" ;
-	//property name="fulfillmentAmountTotal" persistent="false" hb_formatType="currency"; 
-	property name="orderAmountTotal" persistent="false" hb_formatType="currency"; 
-	property name="fulfillmentTotal" persistent="false" hb_formatType="currency";
-	property name="vendorSkus" persistent="false";
-	property name="vendorSkusSmartList" persistent="false";
-	
-	public array function getVendorSkus() {
-		if(!isNull(getVendor())) {
-			return getVendorSkusSmartList().getRecords();
-		}
-		
-		return [];
-	}
-	
-	public any function getVendorSkusSmartList() {
-		return getVendor().getVendorSkusSmartList();
-	}
 	
 	public numeric function getSubtotal() {
 		var subtotal = 0;
@@ -152,6 +134,15 @@ component entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persisten
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
+	
+	public any function getAddVendorOrderItemSkuOptionsSmartList() {
+		if(!structKeyExists(variables, "addVendorOrderItemSkuOptionsSmartList")) {
+			variables.addVendorOrderItemSkuOptionsSmartList = getService("skuService").getSkuSmartList();
+		}
+		return variables.addVendorOrderItemSkuOptionsSmartList;
+	}
+	
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
@@ -193,6 +184,13 @@ component entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persisten
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ============== START: Overridden Implicet Getters ===================
+	
+	public any function getCurrencyCode() {
+		if( !structKeyExists(variables, "currencyCode") ) {
+			variables.currencyCode = "USD";
+		}
+		return variables.currencyCode;
+	}
 
 	public any function getVendorOrderType() {
 		if( !structKeyExists(variables, "vendorOrderType") ) {

@@ -42,8 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.vendorOrder#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.vendorOrder#" edit="#rc.edit#">
-			<cf_HibachiProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="addOrderItems" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list">
-			<cf_HibachiProcessCaller entity="#rc.vendorOrder#" action="admin:entity.processvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" />
+			<cf_HibachiProcessCaller entity="#rc.vendorOrder#" action="admin:entity.preprocessvendororder" processContext="receiveStock" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#" type="list" />
 			<cf_HibachiActionCaller action="admin:entity.createcomment" querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#&redirectAction=#request.context.slatAction#" modal="true" type="list" />
 		</cf_HibachiEntityActionBar>
 		
@@ -57,7 +56,7 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.vendorOrder#">
-			<cf_HibachiTab view="admin:entity/vendorordertabs/items" />
+			<cf_HibachiTab property="vendorOrderItems" />
 			<cf_HibachiTab view="admin:entity/vendorordertabs/stockreceivers" />
 			
 			<!--- Custom Attributes --->

@@ -46,8 +46,9 @@ component entityname="SlatwallVendorOrderItem" table="SlatwallVendorOrderItem" p
 	property name="estimatedReceivalDateTime" ormtype="timestamp";
 	
 	// Related Object Properties (Many-to-One)
-	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
+	property name="vendorOrderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderItemTypeID" hb_optionsSmartListData="f:parentType.systemCode=venderOrderItemType";
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
+	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	
 	// Related Object Properties (One-to-Many)
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderItemID" cascade="all-delete-orphan" inverse="true";

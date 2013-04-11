@@ -41,12 +41,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="venderOrderDAO";
 	
 	property name="addressService";
-	property name="taxService";
-	property name="skuService";
-	property name="stockService";
 	property name="locationService";
 	property name="productService";
-	
+	property name="settingService";
+	property name="skuService";
+	property name="stockService";
+	property name="taxService";
 	
 	public any function getVendorOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallVendorOrder";
@@ -98,6 +98,22 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
+	
+	public any function processVendorOrder_addVendorOrderItem(required any vendorOrder, required any processObject){
+		
+		var vendorOrderItemType = getSettingService().getTypeBySystemCode( arguments.processObject.getVendorOrderItemTypeSystemCode() );
+		var deliverToLocation = getStockService().getStockBySkuAndLocation(arguments.processObject.getSku(),getLocationService().getLocation(arguments.processObject.getDeliverToLocationID()));
+		
+		var newVendorOrderItem = this.newVendorOrderItem();
+		newVendorOrderItem.setVendorOrderItemType( vendorOrderItemType );
+		newVendorOrderItem.setVendorOrder( arguments.vendorOrder );
+		newVendorOrderItem.setCurrencyCode( arguments.vendorOrder.getCurrencyCode() );
+		newVendorOrderItem.setStock( deliverToLocation );
+		newVendorOrderItem.setQuantity( arguments.processObject.getQuantity() );
+		newVendorOrderItem.setCost( arguments.processObject.getCost() );
+		
+		return arguments.vendorOrder;
+	}
 	
 	//Process: VendorOrder Context: addOrderItems 
 	public any function processVendorOrder_addOrderItems(required any vendorOrder, struct data={}, string processContext="process"){
