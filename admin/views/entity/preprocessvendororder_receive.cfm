@@ -37,23 +37,36 @@ Notes:
 
 --->
 <cfparam name="rc.vendorOrder" type="any" />
-Comming Soon
-<!---
 <cfparam name="rc.processObject" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiEntityProcessForm entity="#rc.product#" edit="#rc.edit#" enctype="multipart/form-data">
+	<cf_HibachiEntityProcessForm entity="#rc.vendorOrder#" edit="#rc.edit#">
 		
-		<cf_HibachiEntityActionBar type="preprocess" object="#rc.product#">
+		<cf_HibachiEntityActionBar type="preprocess" object="#rc.vendorOrder#">
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="location" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="locationID" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
+		<hr />
+		<cfset rc.vendorOrder.getVendorOrderItemsSmartList().setPageRecordsShow(10000) />
+		<cf_HibachiListingDisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#"
+								  recordProcessAction="admin:entity.processVendorOrder"
+								  recordProcessContext="receiveVendorOrderItem"
+								  recordProcessEntity="#rc.vendorOrder#">
+								    
+			<cf_HibachiListingColumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
+			<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
+			<cf_HibachiListingColumn propertyidentifier="stock.sku.skucode" search="true" />
+			<cf_HibachiListingColumn propertyidentifier="stock.location.locationName" filter="true" search="true" />
+			<cf_HibachiListingColumn propertyidentifier="quantity" range="true" />
+			<cf_HibachiListingColumn propertyidentifier="quantityReceived" sort="false" />
+			<cf_HibachiListingColumn propertyidentifier="quantityUnreceived" sort="false" />
+			<cf_HibachiListingColumn processObjectProperty="quantity" fieldName="vendorOrderItems[1].quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
+		</cf_HibachiListingDisplay>
 		
 	</cf_HibachiEntityProcessForm>
 </cfoutput>
---->

@@ -492,7 +492,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			
 		}
 		
-		return super.onMissingMethod(argumentCollection=arguments);
+		throw('You have called a method #arguments.missingMethodName#() which does not exists in the #getClassName()# entity.');
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
