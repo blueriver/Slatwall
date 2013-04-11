@@ -363,10 +363,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 										var addressIsInZone = true;
 										if(arrayLen(reward.getShippingAddressZones())) {
 											addressIsInZone = false;
-											for(var az=1; az<=arrayLen(reward.getShippingAddressZones()); az++) {
-												if(getAddressService().isAddressInZone(address=orderFulfillment.getAddress(), addressZone=reward.getShippingAddressZones()[az])) {
-													addressIsInZone = true;
-													break;
+											if(!isNull(orderFulfillment.getAddress()) && !orderFulfillment.getAddress().isNew()) {
+												for(var az=1; az<=arrayLen(reward.getShippingAddressZones()); az++) {
+													if(getAddressService().isAddressInZone(address=orderFulfillment.getAddress(), addressZone=reward.getShippingAddressZones()[az])) {
+														addressIsInZone = true;
+														break;
+													}
 												}
 											}
 										}
