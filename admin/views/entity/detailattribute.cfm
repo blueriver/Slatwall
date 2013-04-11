@@ -42,7 +42,10 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.attribute#" edit="#rc.edit#" sRedirectAction="admin:entity.detailAttributeSet" sRedirectQS="attributeSetID=#rc.attributeSet.getAttributeSetID()#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.attribute#" edit="#rc.edit#" backAction="admin:entity.detailAttributeSet" backQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
+		<cf_HibachiEntityActionBar type="detail" object="#rc.attribute#" edit="#rc.edit#"
+								   backAction="admin:entity.detailAttributeSet"
+								   backQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
+								   deleteQueryString="redirectAction=admin:entity.detailAttributeSet&attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
 		
 		<cfif rc.edit>
 			<!--- Hidden field to allow rc.attributeSet to be set on invalid submit --->

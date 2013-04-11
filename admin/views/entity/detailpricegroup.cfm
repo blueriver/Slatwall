@@ -57,7 +57,7 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.priceGroup#">
-			<cf_HibachiTab view="admin:entity/pricegrouptabs/pricegrouprates" />
+			<cf_HibachiTab property="pricegrouprates" />
 			<cf_HibachiTab view="admin:entity/pricegrouptabs/assignedaccounts" />
 		</cf_HibachiTabGroup>
 		

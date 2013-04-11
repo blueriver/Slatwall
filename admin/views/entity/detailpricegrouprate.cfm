@@ -43,13 +43,16 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.priceGroupRate#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.priceGroupRate#" edit="#rc.edit#" 
-							  cancelAction="admin:entity.detailpricegroup"
-							  cancelQueryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#" 
-							  backAction="admin:entity.detailpricegroup" 
-							  backQueryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#" />
-							  			
-		<input type="hidden" name="priceGroupID" value="#rc.priceGroup.getPricegroupID()#" />
-		<input type="hidden" name="priceGroup.priceGroupID" value="#rc.priceGroup.getPricegroupID()#" />
+								   backAction="admin:entity.detailpricegroup"
+								   backQueryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#"
+								   deleteQueryString="redirectAction=admin:entity.detailPriceGroup&priceGroupID=#rc.priceGroup.getPriceGroupID()#" />
+		<cfif rc.edit>
+			<!--- In Case of validation error --->
+			<input type="hidden" name="priceGroupID" value="#rc.priceGroup.getPricegroupID()#" />
+			
+			<!--- Attach to price group --->
+			<input type="hidden" name="priceGroup.priceGroupID" value="#rc.priceGroup.getPricegroupID()#" />
+		</cfif>
 		
 		<cf_HibachiPropertyRow>	
 			<cf_HibachiPropertyList>
