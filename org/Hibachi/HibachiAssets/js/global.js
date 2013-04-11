@@ -257,7 +257,7 @@ function setupEventHandlers() {
 	            return -(jQuery('#adminModal').width() / 2);
 	        }
 		});
-		jQuery('#adminModal').html('<img src="/org/Hibachi/HibachiAssets/images/loading.gif" style="padding:20px;" />');
+		jQuery('#adminModal').html('<img src="' + hibachi.rootURL + '/org/Hibachi/HibachiAssets/images/loading.gif" style="padding:20px;" />');
 		var modalLink = jQuery(this).attr( 'href' );
 		
 		if( modalLink.indexOf("?") !== -1) {
