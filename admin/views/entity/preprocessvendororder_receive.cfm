@@ -56,7 +56,8 @@ Notes:
 		<cf_HibachiListingDisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#"
 								  recordProcessAction="admin:entity.processVendorOrder"
 								  recordProcessContext="receiveVendorOrderItem"
-								  recordProcessEntity="#rc.vendorOrder#">
+								  recordProcessEntity="#rc.vendorOrder#"
+								  recordProcessButtonDisplayFlag="false">
 								    
 			<cf_HibachiListingColumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
 			<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
@@ -65,7 +66,7 @@ Notes:
 			<cf_HibachiListingColumn propertyidentifier="quantity" range="true" />
 			<cf_HibachiListingColumn propertyidentifier="quantityReceived" sort="false" />
 			<cf_HibachiListingColumn propertyidentifier="quantityUnreceived" sort="false" />
-			<cf_HibachiListingColumn processObjectProperty="quantity" fieldName="vendorOrderItems[1].quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
+			<cf_HibachiListingColumn processObjectProperty="quantity" recordFieldNamePrefix="vendorOrderItems" fieldName="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 		</cf_HibachiListingDisplay>
 		
 	</cf_HibachiEntityProcessForm>

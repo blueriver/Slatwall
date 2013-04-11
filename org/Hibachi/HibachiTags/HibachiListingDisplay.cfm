@@ -21,6 +21,7 @@
 	<cfparam name="attributes.recordProcessContext" type="string" default="" />
 	<cfparam name="attributes.recordProcessEntity" type="any" default="" />
 	<cfparam name="attributes.recordProcessUpdateTableID" type="any" default="" />
+	<cfparam name="attributes.recordProcessButtonDisplayFlag" type="any" default="true" />
 	
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expanable --->
@@ -158,7 +159,7 @@
 		</cfif>
 		
 		<!--- Process --->
-		<cfif len(attributes.recordProcessAction)>
+		<cfif len(attributes.recordProcessAction) and attributes.recordProcessButtonDisplayFlag>
 			<cfset attributes.administativeCount++ />
 			
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-processcontext="#attributes.recordProcessContext#"', " ") />
@@ -357,6 +358,9 @@
 										<cfset attData.property = column.processObjectProperty />
 										<cfset attData.edit = attributes.edit />
 										<cfset attData.displayType = "plain" />
+										<cfif structKeyExists(attData, "recordFieldNamePrefix") and len(attData.recordFieldNamePrefix)>
+											<cfset attData.fieldName = "#attData.recordFieldNamePrefix#[#thistag.loopIndex#].#attData.fieldName#" />
+										</cfif>
 										<cf_HibachiPropertyDisplay attributeCollection="#attData#" />
 									</cfif>
 								</td>

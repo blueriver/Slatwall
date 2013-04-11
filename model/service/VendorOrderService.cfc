@@ -115,66 +115,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.vendorOrder;
 	}
 	
-	//Process: VendorOrder Context: addOrderItems 
-	public any function processVendorOrder_addOrderItems(required any vendorOrder, struct data={}, string processContext="process"){
-	
-		for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-			
-			var thisRecord = arguments.data.records[i];
-			
-			if(val(thisRecord.quantity)) {
-				
-				var foundItem = false;
-				var sku = getSkuService().getSku( thisRecord.skuid );
-				var location = getLocationService().getLocation( arguments.data.locationID );
-				var stock = getStockService().getStockBySkuAndLocation( sku, location );
-				
-				// Look for the orderItem in the vendorOrder
-				for(var oi=1; oi<=arrayLen(arguments.vendorOrder.getVendorOrderItems()); oi++) {
-					
-					// If the location, sku, cost & estimated arrival are already the same as an item on the order then we can merge them.  Otherwise seperate
-					if(arguments.vendorOrder.getVendorOrderItems()[oi].getStock().getLocation().getLocationID() == arguments.data.locationID
-						&&
-						arguments.vendorOrder.getVendorOrderItems()[oi].getStock().getSku().getSkuID() == thisRecord.skuid
-						&&
-						nullReplace(arguments.vendorOrder.getVendorOrderItems()[oi].getCost(),"") == thisRecord.cost
-						&&
-						nullReplace(arguments.vendorOrder.getVendorOrderItems()[oi].getEstimatedReceivalDateTime(),"") == thisRecord.estimatedReceivalDateTime
-						) {
-							
-						foundItem = true;
-						arguments.vendorOrder.getVendorOrderItems()[oi].setQuantity( arguments.vendorOrder.getVendorOrderItems()[oi].getQuantity() + int(thisRecord.quantity) );
-					}
-				}
-				
-				if(!foundItem) {
-					var vendorOrderItem = new('VendorOrderItem');
-			
-					vendorOrderItem.populate( thisRecord );
-					vendorOrderItem.setStock( stock );
-					vendorOrderItem.setVendorOrder( arguments.vendorOrder );	
-				}
-				
-			}
-		}
-	
-	return arguments.vendorOrder;
-	}
-
-	//Process: VendorOrder Context: receiveStock 	
-	public any function processVendorOrder_receiveStock(required any vendorOrder, struct data={}, string processContext="process"){
-	
+	public any function processVendorOrder_receive(required any vendorOrder, required any processObject){
+		
 		var stockReceiver = getStockService().newStockReceiver();
 		stockReceiver.setReceiverType("vendorOrder");
-		stockReceiver.populate(arguments.data);
-		
 		stockReceiver.setVendorOrder( arguments.vendorOrder );
 		
-		var location = getLocationService().getLocation( arguments.data.locationID );
+		var location = getLocationService().getLocation( arguments.processObject.getLocationID() );
 		
-		for(var i=1; i<=arrayLen(arguments.data.records); i++) {
+		for(var i=1; i<=arrayLen(arguments.data.vendorOrderItems); i++) {
 			
-			var thisRecord = arguments.data.records[i];
+			var thisRecord = arguments.data.vendorOrderItems[i];
 			
 			if(val(thisRecord.quantity) gt 0) {
 				
@@ -194,88 +145,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		return arguments.vendorOrder;
 	}
-	
-	/*public any function processVendorOrder(required any vendorOrder, struct data={}, string processContext="process"){
-		
-		switch(arguments.processcontext){
-			case 'addOrderItems':
-				
-				for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-					
-					var thisRecord = arguments.data.records[i];
-					
-					if(val(thisRecord.quantity)) {
-						
-						var foundItem = false;
-						var sku = getSkuService().getSku( thisRecord.skuid );
-						var location = getLocationService().getLocation( arguments.data.locationID );
-						var stock = getStockService().getStockBySkuAndLocation( sku, location );
-						
-						// Look for the orderItem in the vendorOrder
-						for(var oi=1; oi<=arrayLen(arguments.vendorOrder.getVendorOrderItems()); oi++) {
-							
-							// If the location, sku, cost & estimated arrival are already the same as an item on the order then we can merge them.  Otherwise seperate
-							if(arguments.vendorOrder.getVendorOrderItems()[oi].getStock().getLocation().getLocationID() == arguments.data.locationID
-								&&
-								arguments.vendorOrder.getVendorOrderItems()[oi].getStock().getSku().getSkuID() == thisRecord.skuid
-								&&
-								nullReplace(arguments.vendorOrder.getVendorOrderItems()[oi].getCost(),"") == thisRecord.cost
-								&&
-								nullReplace(arguments.vendorOrder.getVendorOrderItems()[oi].getEstimatedReceivalDateTime(),"") == thisRecord.estimatedReceivalDateTime
-								) {
-									
-								foundItem = true;
-								arguments.vendorOrder.getVendorOrderItems()[oi].setQuantity( arguments.vendorOrder.getVendorOrderItems()[oi].getQuantity() + int(thisRecord.quantity) );
-							}
-						}
-						
-						if(!foundItem) {
-							var vendorOrderItem = new('VendorOrderItem');
-					
-							vendorOrderItem.populate( thisRecord );
-							vendorOrderItem.setStock( stock );
-							vendorOrderItem.setVendorOrder( arguments.vendorOrder );	
-						}
-						
-					}
-				}
-				break;
-			
-			case 'receiveStock':
-			
-				var stockReceiver = getStockService().newStockReceiver();
-				stockReceiver.setReceiverType("vendorOrder");
-				stockReceiver.populate(arguments.data);
-				
-				stockReceiver.setVendorOrder( arguments.vendorOrder );
-				
-				var location = getLocationService().getLocation( arguments.data.locationID );
-				
-				for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-					
-					var thisRecord = arguments.data.records[i];
-					
-					if(val(thisRecord.quantity) gt 0) {
-						
-						var foundItem = false;
-						var vendorOrderItem = this.getVendorOrderItem( thisRecord.vendorOrderItemID );
-						var stock = getStockService().getStockBySkuAndLocation( vendorOrderItem.getStock().getSku(), location );
-						
-						var stockreceiverItem = getStockService().newStockReceiverItem();
-					
-						stockreceiverItem.setQuantity( thisRecord.quantity );
-						stockreceiverItem.setStock( stock );
-						stockreceiverItem.setVendorOrderItem( vendorOrderItem );
-						stockreceiverItem.setStockReceiver( stockReceiver );
-						
-					}
-				}
-				
-				break;
-		}
-		
-		return arguments.vendorOrder;
-	}*/
 	
 	// =====================  END: Process Methods ============================
 	
