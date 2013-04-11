@@ -42,7 +42,7 @@ component entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persisten
 	property name="vendorOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="vendorOrderNumber" ormtype="string";
 	property name="estimatedReceivalDateTime" ormtype="timestamp";
-	property name="currencyCode" ormtype="string" length="3";
+	property name="currencyCode" ormtype="string" length="3" hb_formFieldType="select";
 	
 	// Related Object Properties (Many-To-One)
 	property name="billToLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
@@ -66,20 +66,11 @@ component entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persisten
 	
 	// Non persistent properties
 	property name="addVendorOrderItemSkuOptionsSmartList" persistent="false";
+	property name="currencyCodeOptions" persistent="false";
 	property name="subTotal" persistent="false" hb_formatType="currency";
 	property name="total" persistent="false" hb_formatType="currency"; 
 	
-	public numeric function getSubtotal() {
-		var subtotal = 0;
-		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
-			subtotal = precisionEvaluate(subtotal + getVendorOrderItems()[i].getExtendedCost());
-		}
-		return subtotal;
-	}
 	
-	public numeric function getTotal() {
-		return getSubtotal() /*+ getTaxTotal() + getFulfillmentTotal()*/;
-	}
 	
 	public void function removeAllVendorOrderItems() {
 		for(var i=arrayLen(getVendorOrderItems()); i >= 1; i--) {
@@ -134,6 +125,21 @@ component entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persisten
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
+	public array function getCurrencyCodeOptions() {
+		return getService("currencyService").getCurrencyOptions();
+	}
+	
+	public numeric function getSubtotal() {
+		var subtotal = 0;
+		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
+			subtotal = precisionEvaluate(subtotal + getVendorOrderItems()[i].getExtendedCost());
+		}
+		return subtotal;
+	}
+	
+	public numeric function getTotal() {
+		return getSubtotal() /*+ getTaxTotal() + getFulfillmentTotal()*/;
+	}
 	
 	public any function getAddVendorOrderItemSkuOptionsSmartList() {
 		if(!structKeyExists(variables, "addVendorOrderItemSkuOptionsSmartList")) {
