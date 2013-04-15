@@ -723,7 +723,37 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 	
 	public any function processOrder_addOrderPayment(required any order, required any processObject) {
-		arguments.order.addOrderPayment(processObject.getNewOrderPayment());
+		
+		// Setup the order payment
+		var newOrderPayment = processObject.getNewOrderPayment();
+		newOrderPayment.setAmount( arguments.processObject.getAmount() );
+		
+		// If this is an existing account payment method, then we can pull the data from there
+		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
+			
+			// Setup the newOrderPayment from the existing payment method
+			var accountPaymentMethod = getAccountService().getAccountPaymentMethod( arguments.processObject.getAccountPaymentMethodID() );
+			newOrderPayment.copyFromAccountPaymentMethod( accountPaymentMethod );
+			
+		// This is a new payment, so we need to setup the billing address and see if there is a need to save it against the account
+		} else {
+			
+			// Setup the billing address as an accountAddress if it existed
+			if(len(arguments.processObject.getAccountAddressID())) {
+				var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAcccountAddressID() );
+				
+				newOrderPayment.setBillingAddress( accountAddress.copyAddress( true ) );
+			}
+				
+		}
+		
+		// Save the newOrderPayment
+		getHibachiDAO().save( newOrderPayment );
+		
+		// Add this order payment to the order
+		arguments.order.addOrderPayment( newOrderPayment );
+		
+		return arguments.order;
 	}
 	
 	public any function processOrder_create(required any order, required any processObject, required struct data={}) {

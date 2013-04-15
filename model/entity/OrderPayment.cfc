@@ -98,6 +98,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="expirationYearOptions" persistent="false";
 	property name="giftCardNumber" persistent="false";
 	property name="paymentMethodType" persistent="false";
+	property name="paymentMethodOptions" persistent="false";
 	property name="orderStatusCode" persistent="false";
 	property name="securityCode" persistent="false";
 		
@@ -123,13 +124,25 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	}
 	
 	public void function copyFromAccountPaymentMethod(required any accountPaymentMethod) {
-		setNameOnCreditCard( accountPaymentMethod.getNameOnCreditCard() );
-		setPaymentMethod( accountPaymentMethod.getPaymentMethod() );
-		setCreditCardNumber( accountPaymentMethod.getCreditCardNumber() );
-		setExpirationMonth( accountPaymentMethod.getExpirationMonth() );
-		setExpirationYear( accountPaymentMethod.getExpirationYear() );
-		setBillingAddress( accountPaymentMethod.getBillingAddress().copyAddress( true ) );
+		
 		setAccountPaymentMethod( arguments.accountPaymentMethod );
+		
+		// Credit Card
+		if(arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
+			setNameOnCreditCard( arguments.accountPaymentMethod.getNameOnCreditCard() );
+			setCreditCardNumber( arguments.accountPaymentMethod.getCreditCardNumber() );
+			setProviderToken( arguments.accountPaymentMethod.getProviderToken() );
+			setExpirationMonth( arguments.accountPaymentMethod.getExpirationMonth() );
+			setExpirationYear( arguments.accountPaymentMethod.getExpirationYear() );
+			setCreditCardType( arguments.accountPaymentMethod.getCreditCardType() );
+			
+			setBillingAddress( arguments.accountPaymentMethod.getBillingAddress().copyAddress( true ) );
+			
+		// Gift Card
+		} else if (arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "giftCard") {
+			newOrderPayment.setGiftCardNumber( arguments.accountPaymentMethod.getGiftCardNumber() );
+		}
+		
 	}	
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -284,6 +297,20 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	
 	public any function getOrderStatusCode() {
 		return getOrder().getStatusCode();
+	}
+	
+	
+	public any function getPaymentMethodOptions() {
+		if(!structKeyExists(variables, "paymentMethodOptions")) {
+			var sl = getService("paymentService").getPaymentMethodSmartList();
+			sl.addFilter('activeFlag', 1);
+			sl.addSelect('paymentMethodID', 'value');
+			sl.addSelect('paymentMethodName', 'name');
+			sl.addSelect('paymentMethodType', 'paymentmethodtype');
+			
+			variables.paymentMethodOptions = sl.getRecords();
+		}
+		return variables.paymentMethodOptions;
 	}
 	
 	

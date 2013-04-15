@@ -1,10 +1,10 @@
 {
     "conditions":{
         "existingAccountPaymentMethod":{
-	        "accountPaymentMethodID":{"neq":"new"}
+	        "accountPaymentMethodID":{"neq":""}
 	    },
         "newAccountPaymentMethod":{
-	        "accountPaymentMethodID":{"eq":"new"}
+	        "accountPaymentMethodID":{"eq":""}
 	    }
 	},
 	"properties":{

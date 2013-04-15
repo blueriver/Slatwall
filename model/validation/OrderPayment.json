@@ -13,7 +13,7 @@
 	    }
 	},
 	"properties":{
-		"orderPaymentID":		[{"contexts":"delete","maxLength":0}],
+		"paymentTransactions":	[{"contexts":"delete","maxCollection":0}],
 		"paymentMethodType":	[{"contexts":"save","required":true}],
 		"nameOnCreditCard":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"creditCardNumber":		[{"contexts":"save","conditions":"paymentTypeCreditCard,paymentTypeCreditCardWithAmountAndNoAuthorization","required":true,"dataType":"creditCardNumber"}],

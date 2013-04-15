@@ -41,7 +41,10 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.orderPayment#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.orderPayment#" edit="#rc.edit#"
+								   backaction="admin:entity.detailorder"
+								   backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#"
+								   deleteQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.orderPayment.getOrder().getOrderID()#">
 			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="chargePreAuthorization" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="authorizeAndCharge" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
 			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="authorize" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
