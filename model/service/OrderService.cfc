@@ -820,11 +820,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
 				
 				// Make any updates to the orderFulfillments if needed
-				arguments.order = updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
+				updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
 				
 				// Add whatever orderPayment is necessary to complete the order
 				if(arguments.order.getTotal() gt arguments.order.getPaymentAmountTotal()) {
-					arguments.order = this.processOrder(arguments.order, "addOrderPayment", arguments.data);
+					arguments.order = this.processOrder(arguments.order, arguments.data, "addOrderPayment");
 				}
 				
 				// As long as the order doesn't have any errors we should be good
