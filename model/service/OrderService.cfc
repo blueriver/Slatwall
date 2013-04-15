@@ -809,7 +809,70 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	public any function processOrder_placeOrder(required any order, struct data={}, string processContext="process") {
+	public any function processOrder_placeOrder(required any order, required any processObject) {
+		// First we need to lock the session so that this order doesn't get placed twice.
+		lock scope="session" timeout="60" {
+		
+			// Reload the order in case it was already in cache
+			getHibachiDAO().reloadEntity(arguments.order);
+		
+			// Make sure that the entity is notPlaced before going any further
+			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
+				
+				// Make any updates to the orderFulfillments if needed
+				arguments.order = updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
+				
+				// Add whatever orderPayment is necessary to complete the order
+				if(arguments.order.getTotal() gt arguments.order.getPaymentAmountTotal()) {
+					arguments.order = this.processOrder(arguments.order, "addOrderPayment", arguments.data);
+				}
+				
+				// As long as the order doesn't have any errors we should be good
+				if(!arguments.order.hasErrors()) {
+					
+					// Process all of the order payments
+					var paymentsProcessed = processOrderPayments(order=arguments.order);
+						
+					// If processing was successfull then checkout
+					if(paymentsProcessed) {
+							
+						// Copy shipping address if needed
+						copyFulfillmentAddress(order=arguments.order);
+
+						// If this order is the same as the current cart, then set the current cart to a new order
+						if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {
+							getHibachiScope().getCurrentSession().setOrder(javaCast("null", ""));
+						}
+					
+						// Update the order status
+						order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostNew") );
+						
+						// Update the orderPlaced
+						order.confirmOrderNumberOpenDateCloseDate();
+					
+						// Save the order to the database
+						getHibachiDAO().save(order);
+					
+						// Do a flush so that the order is commited to the DB
+						getHibachiDAO().flushORMSession();
+					
+						// Log that the order was placed
+						logHibachi(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
+						
+					}
+					
+				} else {
+					getSlatwallScope().setORMHasErrors( true );
+				}
+			}
+			
+		}	// END OF LOCK
+		
+		return arguments.order;
+	}
+	
+	
+	public any function processOrder_placeCartOrder(required any order, struct data={}, string processContext="process") {
 		// First we need to lock the session so that this order doesn't get placed twice.
 		lock scope="session" timeout="60" {
 		

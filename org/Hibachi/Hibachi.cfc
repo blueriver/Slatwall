@@ -234,7 +234,8 @@ component extends="FW1.framework" {
 					//========================= IOC SETUP ====================================
 					
 					var coreBF = new DI1.ioc("/#variables.framework.applicationKey#/model", {
-						transients=["entity", "process", "transient"]
+						transients=["entity", "process", "transient"],
+						transientPattern="Bean$"
 					});
 					
 					coreBF.addBean("applicationKey", variables.framework.applicationKey);
