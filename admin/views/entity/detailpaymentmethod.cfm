@@ -54,10 +54,10 @@ Notes:
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="paymentMethodName" edit="#rc.edit#">
-				<cfif rc.paymentMethod.getPaymentMethodType() neq "cash" and rc.paymentMethod.getPaymentMethodType() neq "termPayment">
+				<cfif listFindNoCase("creditCard,giftCard,external", rc.paymentMethod.getPaymentMethodType())>
 					<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="paymentIntegration" edit="#rc.edit#">
 				</cfif>
-				<cfif rc.paymentMethod.getPaymentMethodType() eq "creditCard">
+				<cfif listFindNoCase("creditCard,giftCard,external,termPayment", rc.paymentMethod.getPaymentMethodType())>
 					<cf_HibachiPropertyDisplay object="#rc.paymentMethod#" property="allowSaveFlag" edit="#rc.edit#">
 				</cfif>
 			</cf_HibachiPropertyList>
