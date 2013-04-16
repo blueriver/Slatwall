@@ -58,6 +58,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" hb_optionsNullRBKey="define.select";
 	
 	// Related Object Properties (one-to-many)
+	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="accountPaymentMethodID" cascade="all" inverse="true" lazy="extra";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -119,6 +120,22 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
+	public array function getPaymentMethodOptions() {
+		if(!structKeyExists(variables, "paymentMethodOptions")) {
+			var sl = getService("paymentService").getPaymentMethodSmartList();
+			sl.addFilter('activeFlag', 1);
+			sl.addFilter('allowSaveFlag', 1);
+			sl.addInFilter('paymentMethodType', 'creditCard,giftCard,termPayment');
+			
+			sl.addSelect('paymentMethodName', 'name');
+			sl.addSelect('paymentMethodID', 'value');
+			sl.addSelect('paymentMethodType', 'paymentmethodtype');
+			
+			variables.paymentMethodOptions = sl.getRecords();
+		}
+		return variables.paymentMethodOptions;
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
@@ -157,6 +174,14 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 			arrayDeleteAt(arguments.paymentMethod.getAccountPaymentMethods(), index);
 		}
 		structDelete(variables, "paymentMethod");
+	}
+	
+	// Order Payments (one-to-many)    
+	public void function addOrderPayment(required any orderPayment) {    
+		arguments.orderPayment.setAccountPaymentMethod( this );    
+	}    
+	public void function removeOrderPayment(required any orderPayment) {    
+		arguments.orderPayment.removeAccountPaymentMethod( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

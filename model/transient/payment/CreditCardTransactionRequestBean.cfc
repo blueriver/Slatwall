@@ -172,33 +172,36 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 		}
 		
 		// Populate Billing Address Info
-		if(!isNull(arguments.orderPayment.getBillingAddress().getName())) {
-			setBillingName(arguments.orderPayment.getBillingAddress().getName());
+		if(!isNull(arguments.orderPayment.getBillingAddress())) {
+			if(!isNull(arguments.orderPayment.getBillingAddress().getName())) {
+				setBillingName(arguments.orderPayment.getBillingAddress().getName());
+			}
+			if(!isNull(arguments.orderPayment.getBillingAddress().getCompany())) {
+				setBillingCompany(arguments.orderPayment.getBillingAddress().getCompany());
+			}
+			if(!isNull(arguments.orderPayment.getBillingAddress().getStreetAddress())) {
+				setBillingStreetAddress(arguments.orderPayment.getBillingAddress().getStreetAddress());
+			}
+			if(!isNull(arguments.orderPayment.getBillingAddress().getStreet2Address())) {
+				setBillingStreet2Address(arguments.orderPayment.getBillingAddress().getStreet2Address());
+			}
+			if(!isNull(arguments.orderPayment.getBillingAddress().getLocality())) {
+				setBillingLocality(arguments.orderPayment.getBillingAddress().getLocality());
+			}
+			if(!isNull(arguments.orderPayment.getBillingAddress().getCity())) {
+				setBillingCity(arguments.orderPayment.getBillingAddress().getCity());
+			}
+			if(!isNull(arguments.orderPayment.getBillingAddress().getStateCode())) {
+				setBillingStateCode(arguments.orderPayment.getBillingAddress().getStateCode());
+			}
+			if(!isNull(arguments.orderPayment.getBillingAddress().getPostalCode())) {
+				setBillingPostalCode(arguments.orderPayment.getBillingAddress().getPostalCode());
+			}
+			if(!isNull(arguments.orderPayment.getBillingAddress().getCountryCode())) {
+				setBillingCountryCode(arguments.orderPayment.getBillingAddress().getCountryCode());
+			}
 		}
-		if(!isNull(arguments.orderPayment.getBillingAddress().getCompany())) {
-			setBillingCompany(arguments.orderPayment.getBillingAddress().getCompany());
-		}
-		if(!isNull(arguments.orderPayment.getBillingAddress().getStreetAddress())) {
-			setBillingStreetAddress(arguments.orderPayment.getBillingAddress().getStreetAddress());
-		}
-		if(!isNull(arguments.orderPayment.getBillingAddress().getStreet2Address())) {
-			setBillingStreet2Address(arguments.orderPayment.getBillingAddress().getStreet2Address());
-		}
-		if(!isNull(arguments.orderPayment.getBillingAddress().getLocality())) {
-			setBillingLocality(arguments.orderPayment.getBillingAddress().getLocality());
-		}
-		if(!isNull(arguments.orderPayment.getBillingAddress().getCity())) {
-			setBillingCity(arguments.orderPayment.getBillingAddress().getCity());
-		}
-		if(!isNull(arguments.orderPayment.getBillingAddress().getStateCode())) {
-			setBillingStateCode(arguments.orderPayment.getBillingAddress().getStateCode());
-		}
-		if(!isNull(arguments.orderPayment.getBillingAddress().getPostalCode())) {
-			setBillingPostalCode(arguments.orderPayment.getBillingAddress().getPostalCode());
-		}
-		if(!isNull(arguments.orderPayment.getBillingAddress().getCountryCode())) {
-			setBillingCountryCode(arguments.orderPayment.getBillingAddress().getCountryCode());
-		}
+		
 		
 		// Populate relavent Misc Info
 		setOrderPaymentID(arguments.orderPayment.getOrderPaymentID());

@@ -228,7 +228,6 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		return uncredited;
 	}
 	
-	
 	public void function setCreditCardNumber(required string creditCardNumber) {
 		if(len(arguments.creditCardNumber)) {
 			variables.creditCardNumber = arguments.creditCardNumber;
@@ -299,7 +298,6 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		return getOrder().getStatusCode();
 	}
 	
-	
 	public any function getPaymentMethodOptions() {
 		if(!structKeyExists(variables, "paymentMethodOptions")) {
 			var sl = getService("paymentService").getPaymentMethodSmartList();
@@ -314,9 +312,28 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	}
 	
 	
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account Payment Method (many-to-one)    
+	public void function setAccountPaymentMethod(required any accountPaymentMethod) {    
+		variables.accountPaymentMethod = arguments.accountPaymentMethod;    
+		if(isNew() or !arguments.accountPaymentMethod.hasOrderPayment( this )) {    
+			arrayAppend(arguments.accountPaymentMethod.getOrderPayments(), this);    
+		}    
+	}    
+	public void function removeAccountPaymentMethod(any accountPaymentMethod) {    
+		if(!structKeyExists(arguments, "accountPaymentMethod")) {    
+			arguments.accountPaymentMethod = variables.accountPaymentMethod;    
+		}    
+		var index = arrayFind(arguments.accountPaymentMethod.getOrderPayments(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.accountPaymentMethod.getOrderPayments(), index);    
+		}    
+		structDelete(variables, "accountPaymentMethod");    
+	}
 	
 	// Order (many-to-one)
 	public void function setOrder(required any order) {
