@@ -62,7 +62,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			var ofArr = getOrder().getOrderFulfillments();
 			variables.orderFulfillmentIDOptions = [];
 			for(var i=1; i<=arrayLen(ofArr); i++) {
-				if(listFindNoCase(ofArr[i].getFulfillmentMethod().getFulfillmentMethodID(), getSku().setting('skuEligibleFulfillmentMethods'))) {
+				if(listFindNoCase(getSku().setting('skuEligibleFulfillmentMethods'), ofArr[i].getFulfillmentMethod().getFulfillmentMethodID())) {
 					arrayAppend(variables.orderFulfillmentIDOptions, {name=ofArr[i].getSimpleRepresentation(), value=ofArr[i].getOrderFulfillmentID()});	
 				}
 			}
