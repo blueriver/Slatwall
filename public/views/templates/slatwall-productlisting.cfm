@@ -64,6 +64,65 @@ Notes:
 	$.slatwall.productList().getCurrentPage()													
 	$.slatwall.productList().getTotalPages()													
 																								
+																								
+																								
+	Inside of the main loop of a productList() you can use any of the following properties		
+	that will be be avaliable as part of the primary query.  If you ask for any additional		
+	properties, you will run the Risk of N+1 SQL Statements where each record will make			
+	1 or more additional database calls	and directly impact performance.  This is why we make	
+	use of the 'calculated' fields so that processing necessary is done ahead of time. All of	
+	the following values are safe to use in this listing without concern of lazy loading		
+																								
+	local.product.getProductID()																
+	local.product.getActiveFlag()																
+	local.product.getURLTitle()																	
+	local.product.getProductName()																
+	local.product.getProductCode()																
+	local.product.getProductDescription()														
+	local.product.getPublishedFlag()															
+	local.product.getSortOrder()																
+	local.product.getCalculatedSalePrice()														
+	local.product.getCalculatedQATS()															
+	local.product.getCalculatedAllowBackorderFlag()												
+	local.product.getCalculatedTitle()															
+	local.product.getCreatedDateTime()															
+	local.product.getModifiedDateTime()															
+	local.product.getRemoteID()																	
+																								
+	local.product.getDefaultSku().getSkuID()													
+	local.product.getDefaultSku().getActiveFlag()												
+	local.product.getDefaultSku().getSkuCode()													
+	local.product.getDefaultSku().getListPrice()												
+	local.product.getDefaultSku().getPrice()													
+	local.product.getDefaultSku().getRenewalPrice()												
+	local.product.getDefaultSku().getImageFile()												
+	local.product.getDefaultSku().getUserDefinedPriceFlag()										
+	local.product.getDefaultSku().getCreatedDateTime()											
+	local.product.getDefaultSku().getModifiedDateTime()											
+	local.product.getDefaultSku().getRemoteID()													
+																								
+	local.product.getBrand().getBrandID()														
+	local.product.getBrand().getActiveFlag()													
+	local.product.getBrand().getPublishedFlag()													
+	local.product.getBrand().getURLTitle()														
+	local.product.getBrand().getBrandName()														
+	local.product.getBrand().getBrandWebsite()													
+	local.product.getBrnad().getCreatedDateTime()												
+	local.product.getBrnad().getModifiedDateTime()												
+	local.product.getBrnad().getRemoteID()														
+																								
+	local.product.getProductType().getProductTypeID()											
+	local.product.getProductType().getProductTypeIDPath()										
+	local.product.getProductType().getActiveFlag()												
+	local.product.getProductType().getPublishedFlag()											
+	local.product.getProductType().getURLTitle()												
+	local.product.getProductType().getProductTypeName()											
+	local.product.getProductType().getProductTypeDescription()									
+	local.product.getProductType().getSystemCode()												
+	local.product.getProductType().getCreatedDateTime()											
+	local.product.getProductType().getModifiedDateTime()										
+	local.product.getProductType().getRemoteID()												
+																								
 	You can find detailed information on SmartList and all of the additional API methods at:	
 	http://docs.getslatwall.com/#developers-reference-smart-list								
 																								
@@ -74,13 +133,20 @@ Notes:
 
 <!--- Product Listing Example 1 --->
 <div class="container">
+	
+	<!--- Header Row --->
 	<div class="row">
 		<div class="span12">
 			<h2>Product Listing Example 1</h2>
 		</div>
 	</div>
+	
+	<!--- Main Content --->
 	<div class="row">
+		
+		<!--- Filters & Sorting on Left Side --->
 		<div class="span3">
+			
 			<!--- Filter Brand --->
 			<cfset brandFilterOptions = $.slatwall.getProductSmartList().getFilterOptions('brand.brandID', 'brand.brandName') />
 			<h4>Filter By Brand</h4>
@@ -111,30 +177,54 @@ Notes:
 				<li><a href="#$.slatwall.getProductSmartList().buildURL( 'orderBy=productName|DESC' )#">Product Name Z-A</a></li>
 			</ul>
 		</div>
+		
+		<!--- Primary Grid on Right side --->
 		<div class="span9">
+			
+			<!--- Make sure there are products in the list --->
 			<cfif $.slatwall.productList().getRecordsCount()>
 				<ul class="thumbnails">
+					
+					<!--- Primary Loop that displays all of the products in the grid format --->
 					<cfloop array="#$.slatwall.getProductSmartList().getPageRecords()#" index="product">
+						
+						<!--- Individual Product --->
 						<li class="span3">
+							
 							<div class="thumbnail">
+								
+								<!--- Product Image --->
 								<img src="#product.getResizedImagePath(size='m')#" alt="#product.getCalculatedTitle()#" />
+								
+								<!--- The Calculated Title allows you to setup a title string as a dynamic setting.  When you call getTitle() it generates the title based on that title string setting. To be more perfomant this value is cached as getCalculatedTitle() ---> 
 								<h5>#product.getCalculatedTitle()#</h5>
-	      						<p>#product.getDescription()#</p>
+	      						
+								<!--- Check to see if the products price is > the sale price.  If so, then display the original price with a line through it --->
 								<cfif product.getPrice() gt product.getCalculatedSalePrice()>
 									<p><span style="text-decoration:line-through;">#product.getPrice()#</span> <span class="text-error">#product.getFormattedValue('calculatedSalePrice')#</span></p>
 								<cfelse>
 									<p>#product.getFormattedValue('calculatedSalePrice')#</p>	
 								</cfif>
+								
+								<!--- This is the link to the product detail page.  By using the getListingProductURL() instead of getProductURL() it will append to the end of the URL string so that the breadcrumbs on the detail page can know what listing page you came from.  This is also good for SEO purposes as long as you remember to add a canonical url meta information to the detail page --->
 								<a href="#product.getListingProductURL()#">Details / Buy</a>
+								
 							</div>
+							
 						</li>
-					</cfloop>
+						
+					</cfloop> 
+					<!--- END: Primary loop --->
+						
 				</ul>
+			<!--- If there are no products for this current listing page, then tell the customer --->
 			<cfelse>
 				<p>There are currently no products to display.</p>
 			</cfif>
 		</div>
+		
 	</div>
+	
 </div>
 
 

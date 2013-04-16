@@ -36,20 +36,64 @@
 Notes: 
 	
 --->
-<cfinclude template="slatwall-inc/slatwall-header.cfm" />
-<div class="row">
-	<div class="span12">
-		<h2>#$.product.getTitle()#</h2>
-	</div>
-</div>
-<div class="row">
-	<div class="span4">
-		<div class="well">
-			<a href="#$.slatwall.Product().getImagePath()#" target="_blank">#$.slatwall.Product().getImage(size="m")#</a>
+<cfinclude template="_slatwall-header.cfm" />
+<cfoutput>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<h2>#$.slatwall.product().getTitle()#</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span4">
+				<div class="well">
+					<a href="#$.slatwall.product().getImagePath()#" target="_blank">#$.slatwall.product().getImage(size="m")#</a>
+				</div>
+			</div>
+			<div class="span8">
+				<dl class="dl-horizontal">
+					<!--- Product Description --->
+					<dt>Product Description</dt>
+					<dd>#$.slatwall.product().getProductDescription()#</dd>
+					
+					<!--- Product Code --->
+					<dt>Product Code</dt>
+					<dd>#$.slatwall.product().getProductCode()#</dd>
+					
+					<!--- List Price | This price is really just a place-holder type of price that can display the MSRP.  It is typically used to show the highest price --->
+					<dt>List Price</dt>
+					<dd>#$.slatwall.product().getFormattedValue('listPrice')#</dd>
+					
+					<!--- Current Account Price | This price is used for accounts that have Price Groups associated with their account.  Typically Price Groups are used for Wholesale pricing, or special employee / account pricing --->
+					<dt>Account Price</dt>
+					<dd>#$.slatwall.product().getFormattedValue('currentAccountPrice')#</dd>
+					
+					<!--- Sale Price | This value will be pulled from any current active promotions that don't require any promotion qualifiers or promotion codes --->
+					<dt>Sale Price</dt>
+					<dd>#$.slatwall.product().getFormattedValue('salePrice')#</dd>
+					
+					<!--- Live Price | The live price looks at both the salePrice and currentAccountPrice to figure out which is better and display that.  This is what the customer will see in their cart once the item has been added so it should be used as the primary price to display --->
+					<dt>Live Price</dt>
+					<dd>#$.slatwall.product().getFormattedValue('livePrice')#</dd>
+					
+					<!--- IMPORTANT NOTE ABOUT PRICING
+					
+					--->
+					
+				</dl>
+				
+				<!--- Add To Cart Form Example 1 --->
+				<h4>Add To Cart Form Example 1</h4>
+				<p></p>
+				<form action="?s=1" method="post">
+					<input type="hidden" name="slatAction" value="public:order.addItem" />
+					
+				</form>
+			</div>
 		</div>
 	</div>
-	<div class="span8">Test 2</div>
-</div>
+</cfoutput>
+<cfinclude template="_slatwall-footer.cfm" />
 <!---
 <div class="svoproductdetail">
 	<div class="image">
@@ -164,4 +208,3 @@ Notes:
 	</div>
 </div>
 --->
-<cfinclude template="slatwall-inc/slatwall-footer.cfm" />
