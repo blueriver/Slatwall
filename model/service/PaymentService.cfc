@@ -221,7 +221,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		getHibachiDAO().flushORMSession();
 
 		// Generate Process Request Bean
-		var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
+		var requestBean = getTransient("CreditCardTransactionRequestBean");
 		
 		// Setup generic info
 		requestBean.setTransactionID( transaction.getPaymentTransactionID() );

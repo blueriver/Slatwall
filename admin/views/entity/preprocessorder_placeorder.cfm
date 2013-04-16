@@ -62,7 +62,7 @@ Notes:
 							<input type="hidden" name="orderFulfillments[#ofIndex#].orderFulfillmentID" value="#orderFulfillment.getOrderFulfillmentID()#" />						
 							<cfif orderFulfillment.getFulfillmentMethodType() eq "shipping">
 								<cfif structKeyExists(thisErrorBean.getErrors(), "shippingMethod")>
-									<cf_HibachiPropertyDisplay object="#orderFulfillment#" property="shippingMethod" fieldName="orderFulfillments[#ofIndex#].shippingMethodID" edit="#rc.edit#" />
+									<cf_HibachiPropertyDisplay object="#orderFulfillment#" property="shippingMethod" fieldName="orderFulfillments[#ofIndex#].shippingMethodID" fieldClass="required" edit="#rc.edit#" />
 								</cfif>
 								<cfif structKeyExists(thisErrorBean.getErrors(), "shippingAddress")>
 									<cf_SlatwallAdminAddressDisplay address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#ofIndex#]." edit="#rc.edit#" />

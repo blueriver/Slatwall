@@ -123,7 +123,7 @@
 	</cffunction>
 	
 	<cffunction name="syncPull" access="public" returntype="Any" >
-		<cfset var responseBean = new Slatwall.com.utility.ResponseBean() />
+		<cfset var responseBean = getTransient("ResponseBean") />
 		
 		<cfset responseBean.addError("test", "This is a test error") />
 		
