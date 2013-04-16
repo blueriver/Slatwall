@@ -786,24 +786,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Determine the order type
 		var orderType = getSettingService().getType( processObject.getOrderTypeID() );
 		
-		// If the order type is sales or exchange then setup the first fulfillment
-		if(listFindNoCase("otSalesOrder,otExchangeOrder", orderType.getSystemCode())) {
-			
-			// Setup the first order fulfillment
-			var orderFulfillment = this.newOrderFulfillment();
-			var fulfillmentMethod = getFulfillmentService().getFulfillmentMethod(processObject.getFulfillmentMethodID());
-			
-			// Set the fulfillment method
-			orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
-			
-			// If this order fulfillment is shipping then set the account address as the
-			if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping" && !arguments.order.getAccount().getPrimaryAddress().isNew()) {
-				orderFulfillment.setAccountAddress( order.getAccount().getPrimaryAddress() );
-			}
-			
-			orderFulfillment.setOrder( arguments.order );
-		}
-		
 		// If the order type is a return or exchange then setup the first order return
 		if (listFindNoCase("otReturnOrder,otExchangeOrder", orderType.getSystemCode())) {
 			

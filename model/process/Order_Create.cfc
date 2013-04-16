@@ -17,7 +17,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="createAuthenticationFlag" hb_rbKey="processObject.account_create.createAuthenticationFlag";
 	property name="password";
 	property name="passwordConfirm";
-	property name="fulfillmentMethodID" hb_rbKey="entity.fulfillmentMethod" hb_formFieldType="select";
 	property name="orderOriginID" hb_rbKey="entity.orderOrigin" hb_formFieldType="select";
 	
 	// Cached Properties

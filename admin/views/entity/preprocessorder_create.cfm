@@ -69,8 +69,6 @@ Notes:
 			</cf_HibachiDisplayToggle>
 			<hr />
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderOriginID" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="fulfillmentMethodID" edit="#rc.edit#">
-			
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	
