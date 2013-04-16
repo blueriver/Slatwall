@@ -738,13 +738,23 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// This is a new payment, so we need to setup the billing address and see if there is a need to save it against the account
 		} else {
 			
+			// Setup the payment method
+			newOrderPayment.setPaymentMethod( getPaymentService().getPaymentMethod(arguments.processObject.getPaymentMethodID()) );
+			
 			// Setup the billing address as an accountAddress if it existed
 			if(len(arguments.processObject.getAccountAddressID())) {
 				var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAcccountAddressID() );
 				
 				newOrderPayment.setBillingAddress( accountAddress.copyAddress( true ) );
 			}
-				
+			
+			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
+			if(arguments.processObject.getSaveAccountPaymentMethodFlag()) {
+				var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
+				newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
+				newAccountPaymentMethod.setAccount( arguments.order.getAccount() );
+			}
+
 		}
 		
 		// Save the newOrderPayment

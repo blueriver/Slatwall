@@ -36,7 +36,9 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			variables.accountPaymentMethodIDOptions = [];
 			var pmArr = getOrder().getAccount().getAccountPaymentMethods();
 			for(var i=1; i<=arrayLen(pmArr); i++) {
-				arrayAppend(variables.accountPaymentMethodIDOptions, {name=pmArr[i].getSimpleRepresentation(), value=pmArr[i].getAccountPaymentMethodID()});
+				if(!isNull(pmArr[i].getActiveFlag()) && pmArr[i].getActiveFlag()) {
+					arrayAppend(variables.accountPaymentMethodIDOptions, {name=pmArr[i].getSimpleRepresentation(), value=pmArr[i].getAccountPaymentMethodID()});	
+				}
 			}
 			arrayAppend(variables.accountPaymentMethodIDOptions, {name=rbKey('define.new'), value=""});
 		}
@@ -85,7 +87,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	
 	public boolean function getSaveAccountPaymentMethodFlag() {
 		if(!structKeyExists(variables, "saveAccountPaymentMethodFlag")) {
-			variables.saveAccountPaymentMethodFlag = 1;
+			variables.saveAccountPaymentMethodFlag = 0;
 		}
 		return variables.saveAccountPaymentMethodFlag;
 	}

@@ -111,12 +111,33 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	}
 
 	public void function copyFromOrderPayment(required any orderPayment) {
-		setNameOnCreditCard( orderPayment.getNameOnCreditCard() );
-		setPaymentMethod( orderPayment.getPaymentMethod() );
-		setCreditCardNumber( orderPayment.getCreditCardNumber() );
-		setExpirationMonth( orderPayment.getExpirationMonth() );
-		setExpirationYear( orderPayment.getExpirationYear() );
-		setBillingAddress( orderPayment.getBillingAddress().copyAddress( true ) );
+		
+		// Make sure the payment method matches
+		setPaymentMethod( arguments.orderPayment.getPaymentMethod() );
+		
+		// Credit Card
+		if(listFindNoCase("creditCard", arguments.orderPayment.getPaymentMethod().getPaymentMethodType())) {
+			setNameOnCreditCard( arguments.orderPayment.getNameOnCreditCard() );
+			setCreditCardNumber( arguments.orderPayment.getCreditCardNumber() );
+			setExpirationMonth( arguments.orderPayment.getExpirationMonth() );
+			setExpirationYear( arguments.orderPayment.getExpirationYear() );
+		}
+		
+		// Gift Card
+		if(listFindNoCase("giftCard", arguments.orderPayment.getPaymentMethod().getPaymentMethodType())) {
+			setGiftCardNumber( arguments.orderPayment.getGiftCardNumber() );
+		}
+		
+		// Credit Card & Gift Card
+		if(listFindNoCase("creditCard,giftCard", arguments.orderPayment.getPaymentMethod().getPaymentMethodType())) {
+			setProviderToken( arguments.orderPayment.getProviderToken() );
+		}
+		
+		// Credit Card & Term Payment
+		if(listFindNoCase("creditCard,termPayment", arguments.orderPayment.getPaymentMethod().getPaymentMethodType())) {
+			setBillingAddress( arguments.orderPayment.getBillingAddress().copyAddress( true ) );
+		}
+		
 	}	
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -190,11 +211,10 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	// ================== START: Overridden Methods ========================
 	
 	public any function getBillingAddress() {
-		if(isNull(variables.billingAddress)) {
+		if( !structKeyExists(variables, "billingAddress") ) {
 			return getService("addressService").newAddress();
-		} else {
-			return variables.billingAddress;
 		}
+		return variables.billingAddress;
 	}
 	
 	public void function setCreditCardNumber(required string creditCardNumber) {

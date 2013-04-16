@@ -125,22 +125,33 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	
 	public void function copyFromAccountPaymentMethod(required any accountPaymentMethod) {
 		
+		// Connect this to the original account payment method
 		setAccountPaymentMethod( arguments.accountPaymentMethod );
 		
+		// Make sure the payment method matches
+		setPaymentMethod( arguments.accountPaymentMethod.getPaymentMethod() );
+		
 		// Credit Card
-		if(arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
+		if(listFindNoCase("creditCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
 			setNameOnCreditCard( arguments.accountPaymentMethod.getNameOnCreditCard() );
 			setCreditCardNumber( arguments.accountPaymentMethod.getCreditCardNumber() );
-			setProviderToken( arguments.accountPaymentMethod.getProviderToken() );
 			setExpirationMonth( arguments.accountPaymentMethod.getExpirationMonth() );
 			setExpirationYear( arguments.accountPaymentMethod.getExpirationYear() );
-			setCreditCardType( arguments.accountPaymentMethod.getCreditCardType() );
-			
-			setBillingAddress( arguments.accountPaymentMethod.getBillingAddress().copyAddress( true ) );
-			
+		}
+		
 		// Gift Card
-		} else if (arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "giftCard") {
-			newOrderPayment.setGiftCardNumber( arguments.accountPaymentMethod.getGiftCardNumber() );
+		if(listFindNoCase("giftCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
+			setGiftCardNumber( arguments.accountPaymentMethod.getGiftCardNumber() );
+		}
+		
+		// Credit Card & Gift Card
+		if(listFindNoCase("creditCard,giftCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
+			setProviderToken( arguments.accountPaymentMethod.getProviderToken() );
+		}
+		
+		// Credit Card & Term Payment
+		if(listFindNoCase("creditCard,termPayment", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
+			setBillingAddress( arguments.accountPaymentMethod.getBillingAddress().copyAddress( true ) );
 		}
 		
 	}	
@@ -443,16 +454,16 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	
 	// ============== START: Overridden Implicet Getters ===================
 
-	public any function getOrderPaymentType() {
-		if( !structKeyExists(variables, "orderPaymentType") ) {
-			variables.orderPaymentType = getService("settingService").getTypeBySystemCode("optCharge");
-		}
-		return variables.orderPaymentType;
-	}
-	
 	public any function getBillingAddress() {
 		if( !structKeyExists(variables, "billingAddress") ) {
 			return getService("addressService").newAddress();
+		}
+		return variables.billingAddress;
+	}
+	
+	public any function getOrderPaymentType() {
+		if( !structKeyExists(variables, "orderPaymentType") ) {
+			variables.orderPaymentType = getService("settingService").getTypeBySystemCode("optCharge");
 		}
 		return variables.orderPaymentType;
 	}
