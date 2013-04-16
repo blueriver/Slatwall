@@ -345,8 +345,11 @@
 						|| ($.slatwall.setting("integrationMuraAccountSyncType") == "siteUserOnly" && $.currentUser().getUserBean().getType() eq 1)
 					)) {
 				
+				
+				// Sync this account (even though it says all, it is just going to sync this single mura user)
+				syncMuraAccounts( $=$, accountSyncType="all", superUserSyncFlag=$.slatwall.setting("integrationMuraSuperUserSyncFlag"), muraUserID=$.currentUser('userID'));
+				
 				// Login Slatwall Account
-				syncMuraAccounts(accountSyncType="all", superUserSyncFlag=$.slatwall.setting("integrationMuraSuperUserSyncFlag"), muraUserID=$.currentUser('userID'));
 				var account = $.slatwall.getService("accountService").getAccountByCMSAccountID($.currentUser('userID'));
 				var accountAuth = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa WHERE aa.integration.integrationID = ? AND aa.account.accountID = ?", [getMuraIntegrationID(), account.getAccountID()]);
 				if (!isNull(account) && arrayLen(accountAuth)) {
