@@ -157,6 +157,7 @@ Notes:
 								<cf_HibachiActionCaller action="admin:main.ckfinder" type="list" modal="true" />
 								<cf_HibachiActionCaller action="admin:entity.listeventtrigger" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listschedule" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listsession" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listtask" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listtaskhistory" type="list">
 								<cf_HibachiActionCaller action="admin:main.log" type="list">
