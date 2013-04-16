@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" sRenderItem="detailaccount">
+	<cf_HibachiEntityDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" sRedirectAction="admin:entity.detailAccount" sRedirectQS="accountID=#rc.account.getAccountID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPaymentMethod#" edit="#rc.edit#"
 					backAction="admin:entity.detailAccount" 
 					backQueryString="accountID=#rc.account.getAccountID()#"
@@ -57,6 +57,7 @@ Notes:
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 			
+				<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="accountPaymentMethodName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="paymentMethod" edit="#rc.edit#">
 				

@@ -96,6 +96,32 @@ Notes:
 	</cfcatch>
 </cftry>
 
+<!--- Add Active Flag Where needed --->
+<cftry>
+	<cfquery name="local.activeflag" dbtype="query">
+		UPDATE
+			SlatwallAccountPaymentMethod
+		SET
+			activeFlag = 1
+		WHERE
+			activeFlag is null
+	</cfquery>
+	
+	<cfquery name="local.activeflag" dbtype="query">
+		UPDATE
+			SlatwallSku
+		SET
+			activeFlag = 1
+		WHERE
+			activeFlag is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - setting default activeFlag Has Errors">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
 <cfif local.scriptHasErrors>
 	<cflog file="Slatwall" text="General Log - Part of Script v2_3 had errors when running">
 	<cfthrow detail="Part of Script v2_3 had errors when running">

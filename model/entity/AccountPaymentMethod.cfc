@@ -40,6 +40,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	// Persistent Properties
 	property name="accountPaymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="activeFlag" ormType="boolean";
 	property name="accountPaymentMethodName" ormType="string";
 	property name="bankRoutingNumberEncrypted" ormType="string";
 	property name="bankAccountNumberEncrypted" ormType="string";
