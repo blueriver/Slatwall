@@ -105,7 +105,7 @@ Notes:
 							<cf_HibachiPropertyDisplay object="#aopProcessObject.getNewOrderPayment()#" property="paymentMethod" fieldName="newOrderPayment.paymentMethod.paymentMethodID" edit="#rc.edit#">
 							
 							<!--- Save Order Payment as Account Payment Method --->
-							<cf_HibachiDisplayToggle selector="select[name='newOrderPayment.paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard,giftCard,termPayment">
+							<cf_HibachiDisplayToggle selector="select[name='newOrderPayment.paymentMethod.paymentMethodID']" valueAttribute="allowsave">
 								
 								<!--- Save New Payment Method --->
 								<cf_HibachiPropertyDisplay object="#aopProcessObject#" property="saveAccountPaymentMethodFlag" edit="#rc.edit#" />

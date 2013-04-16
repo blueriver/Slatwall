@@ -53,6 +53,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			sl.addSelect('paymentMethodID', 'value');
 			sl.addSelect('paymentMethodName', 'name');
 			sl.addSelect('paymentMethodType', 'paymentmethodtype');
+			sl.addSelect('allowSaveFlag', 'allowsave');
 			
 			variables.paymentMethodIDOptions = sl.getRecords();
 		}
