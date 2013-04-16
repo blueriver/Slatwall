@@ -1031,7 +1031,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			// Add the state to the states array
 			arrayPrepend(states, state);
 				
-			for(var s=arrayLen(states); s>10; s--) {
+			for(var s=arrayLen(states); s>30; s--) {
 				arrayDeleteAt(states, s);
 			}
 			
