@@ -152,156 +152,169 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: Process Methods ===========================
 	
-	// This is a generic processPayment method that works of orderPayment or accountPayment
-	public boolean function processPayment(required any payment, required string transactionType, required numeric transactionAmount, any referencedPaymentTransaction) {
-		
-		var processOK = false;
-		
-		// Lock down this determination so that the values getting called and set don't overlap
-		lock scope="Session" timeout="45" {
-			
-			var paymentID = "";
-			var accountPaymentID = "";
-			
-			var isDuplicateTransaction = getPaymentDAO().isDuplicatePaymentTransaction(paymentID=arguments.payment.getPrimaryIDValue(), idColumnName=arguments.payment.getPrimaryIDPropertyName(), paymentType=arguments.payment.getPaymentMethodType(), transactionType=arguments.transactionType, transactionAmount=arguments.transactionAmount);
-			
-			if(isDuplicateTransaction){
-				processOK = true;
-				arguments.payment.addError('processing', "This transaction is duplicate of an already processed transaction.", true);
-			} else {
-				switch(arguments.payment.getPaymentMethodType()) {
-					case "cash" :
-							processOK = processCashPayment(argumentcollection=arguments);
-						break;
-					case "check" :
-							processOK = processCheckPayment(argumentcollection=arguments);
-						break;
-					case "creditCard" :
-							processOK = processCreditCardPayment(argumentcollection=arguments);
-						break;
-					case "external" :
-							processOK = processExternalPayment(argumentcollection=arguments);
-						break;
-					case "giftCard" :
-							processOK = processGiftCardPayment(argumentcollection=arguments);
-						break;
-				}
-			}
-			
-		}
-		
-		return processOK;
-	}
 	
-	public boolean function processCashPayment() {
-		return true;
-	}
-	
-	public boolean function processCheckPayment() {
-		return true;
-	}
-	
-	public boolean function processCreditCardPayment(required any payment, required string transactionType, required numeric transactionAmount, any referencedPaymentTransaction) {
-		// Get the relavent info and objects for this order payment
-		var processOK = false;
+	public any function processPaymentTransaction_runTransaction(required any paymentTransaction, required struct data) {
+		param name="arguments.data.amount" default="0";
+		param name="arguments.data.transactionType" default="0";
 		
-		var providerService = getIntegrationService().getPaymentIntegrationCFC( arguments.payment.getPaymentMethod().getPaymentIntegration() );
-		
-		// Create a new Credit Card Transaction
-		var transaction = this.newPaymentTransaction();
-		transaction.setTransactionType( arguments.transactionType );
-		if(arguments.payment.getEntityName() eq "SlatwallOrderPayment") {
-			transaction.setOrderPayment( arguments.payment );
-		} else if (arguments.payment.getEntityName() eq "SlatwallAccountPayment") {
-			transaction.setAccountPayment( arguments.payment );
-		}
-		
-		// Make sure that this transaction gets saved to the DB
-		this.savePaymentTransaction( transaction );
-		getHibachiDAO().flushORMSession();
+		// Make sure there is an orderPayment or accountPayment
+		if(!isNull(arguments.paymentTransaction.getPayment())) {
+			
+			// Lock the session scope to make sure that 
+			lock scope="Session" timeout="45" {
+				
+				// Check to make sure this isn't a duplicate transaction
+				var isDuplicateTransaction = getPaymentDAO().isDuplicatePaymentTransaction(paymentID=arguments.paymentTransaction.getPayment().getPrimaryIDValue(), idColumnName=arguments.paymentTransaction.getPayment().getPrimaryIDPropertyName(), paymentType=arguments.paymentTransaction.getPayment().getPaymentMethodType(), transactionType=arguments.data.transactionType, transactionAmount=arguments.data.transactionAmount);
+				
+				// Add the duplicate error to the payment, if this was
+				if(isDuplicateTransaction) {
+					
+					arguments.paymentTransaction.getPayment().addError('processing', "This transaction is duplicate of an already processed transaction.", true);
+					
+				// Otherwise continue with processing
+				} else {
+					
+					// Add the transaction to the hibernate scope
+					arguments.paymentTransaction.setTransactionStartTickCount( getTickCount() );
+					
+					// Add the transaction to the hibernate scope
+					getHibachiDAO().save(arguments.paymentTransaction);
+					
+					// Flush the ORMSession so this transaction gets added
+					getHibachiDAO().flushORMSession();
+					
+					// ======== CORE PROCESSING ==========
+					
+					// INTEGRATION EXISTS
+					if(listFindNoCase("creditCard,giftCard,external", arguments.paymentTransaction.getPayment().getPaymentMethod().getPaymentMethodType()) && !isNull(arguments.paymentTransaction.getPayment().getPaymentMethod().getPaymentIntegration())) {
+						
+						// Get the PaymentCFC
+						var integration = arguments.payment.getPaymentMethod().getPaymentIntegration();
+						var integrationPaymentCFC = getIntegrationService().getPaymentIntegrationCFC( integration ); 
+						
+						// Create a request Bean
+						var requestBean = getTransient("#arguments.paymentTransaction.getPayment().getPaymentMethod().getPaymentMethodType()#TransactionRequestBean");
+						
+						// Setup generic info into 
+						requestBean.setTransactionID( arguments.paymentTransaction.getPaymentTransactionID() );
+						requestBean.setTransactionType( arguments.data.transactionType );
+						requestBean.setTransactionAmount( arguments.transactionAmount );
+						requestBean.setTransactionCurrency( arguments.paymentTransaction.getPayment().getCurrencyCode() );
+						
+						// Move all of the info into the new request bean
+						if(arguments.paymentTransaction.getPayment().getClassName() eq "OrderPayment") {
+							requestBean.populatePaymentInfoWithOrderPayment( arguments.payment );	
+						} else if (arguments.paymentTransaction.getPayment().getClassName() eq "AccountPayment") {
+							requestBean.populatePaymentInfoWithAccountPayment( arguments.payment );
+						}
+						
+						// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
+						try {
+							
+							// Get Response Bean from provider service
+							logHibachi("#integration.getIntegrationName()# Payment Integration Transaction Request - Started (#arguments.data.transactionType#)", true);
+							
+							var response = providerService.invokeMethod("process#arguments.paymentTransaction.getPayment().getPaymentMethod().getPaymentMethodType()#", {requestBean=requestBean});
+							
+							logHibachi("#integration.getIntegrationName()# Payment Integration Transaction Request - Finished (#arguments.data.transactionType#)", true);
+							
+							// Populate the Credit Card Transaction with the details of this process
+							
+							// messages
+							transaction.setMessage(serializeJSON(response.getMessages()));
+							
+							// TransactionID
+							if(!isNull(response.getTransactionID())) {
+								arguments.paymentTransaction.setProviderTransactionID(response.getTransactionID());	
+							}
+							// amountAuthorized
+							if(!isNull(response.getAmountAuthorized())) {
+								arguments.paymentTransaction.setAmountAuthorized(response.getAmountAuthorized());
+							}
+							// amountReceived
+							if(!isNull(response.getAmountReceived())) {
+								arguments.paymentTransaction.setAmountReceived(response.getAmountReceived());
+							}
+							// amountCredited
+							if(!isNull(response.getAmountCredited())) {
+								arguments.paymentTransaction.setAmountCredited(response.getAmountCredited());
+							}
+							// authorizationCode
+							if(!isNull(response.getAuthorizationCode())) {
+								arguments.paymentTransaction.setAuthorizationCode(response.getAuthorizationCode());
+							}
+							// statusCode
+							if(!isNull(response.getStatusCode())) {
+								arguments.paymentTransaction.setStatusCode(response.getStatusCode());
+							}
+							// avsCode
+							if(!isNull(response.getAVSCode())) {
+								arguments.paymentTransaction.setAuthorizationCode(response.getAVSCode());
+							}
+							
+							// add the providerToken to the orderPayment & accountPayment
+							if(!isNull(response.getProviderToken())) {
+								
+								// Set the provider token if one was returned
+								arguments.paymentTransaction.getPayment().setProviderToken();
+								
+								// If this was an OrderPayment and it has an accountPaymentMethod then also update that token
+								if(arguments.paymentTransaction.getPayment().getClassName() eq "OrderPayment" && !isNull(arguments.paymentTransaction.getPayment().getAccountPaymentMethod())) {
+									arguments.paymentTransaction.getPayment().getAccountPaymentMethod().setProviderToken( response.getProviderToken() );	
+								}
+								
+							}
+							
+							// Make sure that this transaction with all of it's info gets added to the DB
+							getHibachiDAO().flushORMSession();
+							
+							// If the response had errors then add them to the payment
+							if(response.hasErrors()) {
+								arguments.paymentTransaction.getPayment().addError('processing', response.getAllErrorsHTML(), true);
+							}
+							
+						} catch (any e) {
+							
+							// Populate the orderPayment with the processing error and make it persistable
+							arguments.paymentTransaction.getPayment().addError('processing', rbKey('error.unexpected.checklog'), true);
+							
+							// Log the exception
+							logHibachiException(e);
 
-		// Generate Process Request Bean
-		var requestBean = getTransient("CreditCardTransactionRequestBean");
-		
-		// Setup generic info
-		requestBean.setTransactionID( transaction.getPaymentTransactionID() );
-		requestBean.setTransactionType( arguments.transactionType );
-		requestBean.setTransactionAmount( arguments.transactionAmount );
-		requestBean.setTransactionCurrency( arguments.payment.getCurrencyCode() );
-		
-		// Move all of the info into the new request bean
-		if(arguments.payment.getEntityName() eq "SlatwallOrderPayment") {
-			requestBean.populatePaymentInfoWithOrderPayment( arguments.payment );	
-		} else if (arguments.payment.getEntityName() eq "SlatwallAccountPayment") {
-			requestBean.populatePaymentInfoWithAccountPayment( arguments.payment );
-		}
-		
-		// If a referenced payment transaction was passed in, then we can assign the providerTransactionID
-		if(structKeyExists(arguments, "referencedPaymentTransaction")) {
-			requestBean.setProviderTransactionID( arguments.referencedPaymentTransaction.getProviderTransactionID() );
-			requestBean.setReferencedPaymentTransactionID( arguments.referencedPaymentTransaction.getPaymentTransactionID() );
-		}
-		
-		// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
-		try {
-			
-			// Get Response Bean from provider service
-			logHibachi("Payment Processing Request - Started", true);
-			var response = providerService.processCreditCard(requestBean);
-			logHibachi("Payment Processing Request - Finished", true);
-			
-			// Populate the Credit Card Transaction with the details of this process
-			transaction.setProviderTransactionID(response.getTransactionID());
-			transaction.setAuthorizationCode(response.getAuthorizationCode());
-			transaction.setAmountAuthorized(response.getAmountAuthorized());
-			transaction.setAmountReceived(response.getAmountCharged());
-			transaction.setAmountCredited(response.getAmountCredited());
-			transaction.setAVSCode(response.getAVSCode());
-			transaction.setStatusCode(response.getStatusCode());
-			transaction.setMessage(serializeJSON(response.getMessages()));
-			
-			// Make sure that this transaction with all of it's info gets added to the DB
-			getHibachiDAO().flushORMSession();
-			
-			if(!response.hasErrors()) {
-				processOK = true;
-			} else {
-				// Populate the orderPayment with the processing error
-				arguments.payment.addError('processing', response.getAllErrorsHTML(), true);
+						}
+						
+					// NO INTEGRATION
+					} else {
+						
+						// TODO: Future this is where internal giftCard logic would go
+						
+						// Setup amountReceived
+						if( listFindNoCase("receive", arguments.data.transactionType) ) {
+							arguments.paymentTransaction.setAmountReceived( arguments.data.amount );	
+						}
+						
+						// Setup amountCredited
+						if( listFindNoCase("credit", arguments.data.transactionType) ) {
+							arguments.paymentTransaction.setAmountCredited( arguments.data.amount );
+						}
+						
+					} 
+					
+					// ======== END CORE PROCESSING ==========
+					
+					// Set the transactionEndTickCount
+					arguments.paymentTransaction.setTransactionEndTickCount( getTickCount() );
+					
+					// Flush the ORMSession again this transaction gets updated
+					getHibachiDAO().flushORMSession();
+				}
+				
 			}
-		} catch (any e) {
-			// Populate the orderPayment with the processing error
-			arguments.payment.addError('processing', "An Unexpected Error Ocurred", true);
 			
-			// Log the exception
-			logHibachiException(e);
-			
-			rethrow;
 		}
 		
-		// Update the orderPayment, accountPaymentMethod or accountPayment with the providerToken if one was returned in the response bean
-		if(len(response.getProviderToken())) {
-			arguments.payment.setProviderToken( response.getProviderToken() );
-			if(!isNull(arguments.payment.getAccountPaymentMethod())) {
-				arguments.payment.getAccountPaymentMethod().setProviderToken( response.getProviderToken() );
-			}
-		}
-		
-		return processOK;
+		return arguments.paymentTransaction;
 	}
-	
-	public boolean function processExternalPayment() {
-		return true;
-	}
-	
-	public boolean function processGiftCardPayment() {
-		return true;
-	}
-	
-	public boolean function processTermAccountPayment() {
-		return true;
-	}
-	
 	
 	// =====================  END: Process Methods ============================
 	

@@ -41,14 +41,16 @@ component entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransact
 	// Persistent Properties
 	property name="paymentTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="transactionType" ormtype="string";
+	property name="transactionStartTickCount" ormtype="string";
+	property name="transactionEndTickCount" ormtype="string";
 	property name="providerTransactionID" ormtype="string";
 	property name="transactionDateTime" ormtype="timestamp";
 	property name="authorizationCode" ormtype="string";
 	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
-	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal"; // This property is deprecated DO NOT USE!
 	property name="amountReceived" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="currencyCode" ormtype="string" length="3";
+	property name="securityCodeMatchFlag" ormtype="boolean";
 	property name="avsCode" ormtype="string";				// @hint this is whatever the avs code was that got returned
 	property name="statusCode" ormtype="string";			// @hint this is the status code that was passed back in the response bean
 	property name="message" ormtype="string";  				// @hint this is a pipe and tilda delimited list of any messages that came back in the response.
@@ -72,10 +74,11 @@ component entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransact
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Deperecated Properties
+	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
+	
 	// Non-Persistent Properties
 
-
-	
 	public any function init() {
 		setAmountAuthorized(0);
 		setAmountCharged(0);
@@ -83,6 +86,14 @@ component entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransact
 		setAmountReceived(0);
 		
 		return super.init();
+	}
+	
+	public any function getPayment() {
+		if(!isNull(getOrderPayment())) {
+			return getOrderPayment();
+		} else if (!isNull(getAccountPayment())) {
+			return getAccountPayment();
+		}
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

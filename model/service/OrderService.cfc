@@ -1491,6 +1491,55 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}	
 	
 	// Process: Order Payment
+	
+	/*
+		Order Payments & Account Payments
+											
+		Credit Card													
+			authorize					{amount}					
+			authorizeAndCharge										
+			chargePreAuthorization									
+			credit													
+			generateToken											
+		Gift Card													
+			requestBalance											
+			increaseBalance											
+		Check														
+			receiveCheck {checkNumber,accountNumber,routingNumber}	
+		Cash														
+			receiveCash {cashAmount}								
+			refundCash  {cashAmount}								
+		TermPayment													
+																	
+		External													
+			verifyResponse											
+																	
+		ALL															
+			createOfflineTransaction								
+	*/
+	
+	public any function processOrderPayment_createTransaction(required any orderPayment, required any processObject) {
+		
+		// Create a new payment transaction
+		var paymentTransaction = getPaymentService().newPaymentTransaction();
+		
+		// Setup the orderPayment in the transaction to be used by the 'runTransaction'
+		paymentTransaction.setOrderPayment( arguments.orderPayment );
+		
+		// Setup the transaction data
+		transactionData = {
+			transactionType = processObject.getTransactionType(),
+			amount = processObject.getAmount()
+		};
+		
+		// Run the transaction
+		paymentTransaction = getPaymentService().processPaymentTransaction(paymentTransaction, transactionData, 'runTransaction');
+		
+		return arguments.orderPayment;
+	}
+	
+	
+	/*
 	public any function processOrderPayment_processTransaction(required any orderPayment, required any processObject) {
 		
 		if(arguments.processObject.getTransactionType()=="chargePreAuthorization") {
@@ -1560,6 +1609,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.orderPayment;
 		
 	}	
+	*/
 	
 	// =====================  END: Process Methods ============================
 	

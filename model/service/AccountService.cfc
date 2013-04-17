@@ -169,6 +169,32 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.account;
 	}
 	
+	public any function processAccount_addAccountPayment(required any account, required any processObject) {
+		return arguments.account;
+	}
+	
+	public any function processAccountPayment_createTransaction(required any accountPayment, required any processObject) {
+		
+		// Create a new payment transaction
+		var paymentTransaction = getPaymentService().newPaymentTransaction();
+		
+		// Setup the orderPayment in the transaction to be used by the 'runTransaction'
+		paymentTransaction.setAccountPayment( arguments.accountPayment );
+		
+		// Setup the transaction data
+		transactionData = {
+			transactionType = processObject.getTransactionType(),
+			amount = processObject.getAmount()
+		};
+		
+		// Run the transaction
+		paymentTransaction = getPaymentService().processPaymentTransaction(paymentTransaction, transactionData, 'runTransaction');
+		
+		return arguments.accountPayment;	
+	}
+	
+	
+	/*
 	public any function processAccountPayment_offlineTransaction(required any account, required struct data={}) {
 		var newPaymentTransaction = getPaymentService().newPaymentTransaction();
 		newPaymentTransaction.setTransactionType( "offline" );
@@ -182,32 +208,6 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processAccountPayment_process(required any account, required struct data={}) {
 		getPaymentService().processPayment(arguments.accountPayment, arguments.processContext, arguments.data.amount);
-	}
-	
-	/*
-	public any function processAccountPayment(required any accountPayment, struct data={}, string processContext="process") {
-		
-		param name="arguments.data.amount" default="0";
-		
-		// CONTEXT: offlineTransaction
-		if (arguments.processContext == "offlineTransaction") {
-		
-			var newPaymentTransaction = getPaymentService().newPaymentTransaction();
-			newPaymentTransaction.setTransactionType( "offline" );
-			newPaymentTransaction.setAccountPayment( arguments.accountPayment );
-			newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
-			
-			if(newPaymentTransaction.hasErrors()) {
-				arguments.accountPayment.addError('processing', rbKey('validate.accountPayment.offlineProcessingError'));	
-			}
-			
-		} else {
-			
-			getPaymentService().processPayment(arguments.accountPayment, arguments.processContext, arguments.data.amount);
-			
-		}
-		
-		return arguments.accountPayment;
 	}
 	*/
 	
