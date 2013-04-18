@@ -41,8 +41,8 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	// Persistent Properties
 	property name="settingID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="settingName" ormtype="string";
-	property name="settingValue" ormtype="string";
-	
+	property name="settingValue" ormtype="string" length="4000";
+
 	// Non-Constrained related entity
 	property name="cmsContentID" ormtype="string";
 	

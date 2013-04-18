@@ -54,7 +54,8 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			chargePreAuthorization="D",
 			credit="C",
 			void="V",
-			inquiry="I"
+			inquiry="I",
+			generateToken="L"
 		};
 		
 		return this;
@@ -77,10 +78,6 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		requestData = listAppend(requestData,getLoginNVP(),"&");
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
 		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
-		
-		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
-			requestData = listAppend(requestData,"ORIGID=#requestBean.getProviderTransactionID()#","&");
-		}
 		
 		// This is a bit of a hack because PayFlow Pro doesn't allow for second delay capture on an original authroization code.  So if the transactionType is delayed capture, and we have already captured a partial... then we will need to just recharge
 		var forceSale = false;
@@ -115,10 +112,29 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	
 	private string function getPaymentNVP(required any requestBean){
 		var paymentData = [];
-		arrayAppend(paymentData,"ACCT[#len(requestBean.getCreditCardNumber())#]=#requestBean.getCreditCardNumber()#");
-		arrayAppend(paymentData,"EXPDATE[4]=#numberFormat(Left(requestBean.getExpirationMonth(),2),'00')##Right(requestBean.getExpirationYear(),2)#");
+		
+		// If there is a creditCard present then we can use it
+		if(len(requestBean.getCreditCardNumber())) {
+			arrayAppend(paymentData,"ACCT[#len(requestBean.getCreditCardNumber())#]=#requestBean.getCreditCardNumber()#");
+			arrayAppend(paymentData,"EXPDATE[4]=#numberFormat(Left(requestBean.getExpirationMonth(),2),'00')##Right(requestBean.getExpirationYear(),2)#");
+			
+			// If this is a credit or delayed capture we still want to use the provider token
+			if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
+				listAppend(requestData,"ORIGID=#requestBean.getProviderToken()#","&");	
+			}
+			
+		// Otherwise use the provider token
+		} else {
+			listAppend(requestData,"ORIGID=#requestBean.getProviderToken()#","&");	
+		}
+		
+		// Always add a CVV2 in case one was passed in
 		arrayAppend(paymentData,"CVV2[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
-		arrayAppend(paymentData,"AMT[#len(requestBean.getTransactionAmount())#]=#requestBean.getTransactionAmount()#");
+		
+		// As long as this is the correct type of transaction, then we will add an amount
+		if(!listFindNoCase("generateToken,inquiry,void", arguments.requestBean.getTransactionType())) {
+			arrayAppend(paymentData,"AMT[#len(requestBean.getTransactionAmount())#]=#requestBean.getTransactionAmount()#");	
+		}
 		
 		// Try to populate the custom one and two for order payments
 		if(!isNull(requestBean.getOrderPaymentID()) && len(requestBean.getOrderPaymentID())) {
@@ -240,6 +256,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		
 		response.setTransactionID(responseData["pnref"]);
 		response.setAuthorizationCode(responseData["authcode"]);
+		response.setProviderToken(responseData["pnref"]);
 		
 		if(responseData["avsaddr"] == 'Y' && responseData["avszip"] == 'Y') {
 			response.setAVSCode("Y");

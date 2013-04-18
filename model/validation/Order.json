@@ -15,6 +15,6 @@
 												{"contexts":"createReturn","minValue":1}   
 		],
 		"quantityReceived":					[{"contexts":"cancelOrder","maxValue":0}],
-		"total":							[{"contexts":"placeOrder"}]
+		"orderItems":						[{"contexts":"placeOrder,addOrderPayment","minCollection":1}]
 	}
 }

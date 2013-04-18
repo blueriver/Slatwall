@@ -164,7 +164,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			lock scope="Session" timeout="45" {
 				
 				// Check to make sure this isn't a duplicate transaction
-				var isDuplicateTransaction = getPaymentDAO().isDuplicatePaymentTransaction(paymentID=arguments.paymentTransaction.getPayment().getPrimaryIDValue(), idColumnName=arguments.paymentTransaction.getPayment().getPrimaryIDPropertyName(), paymentType=arguments.paymentTransaction.getPayment().getPaymentMethodType(), transactionType=arguments.data.transactionType, transactionAmount=arguments.data.transactionAmount);
+				var isDuplicateTransaction = getPaymentDAO().isDuplicatePaymentTransaction(paymentID=arguments.paymentTransaction.getPayment().getPrimaryIDValue(), idColumnName=arguments.paymentTransaction.getPayment().getPrimaryIDPropertyName(), paymentType=arguments.paymentTransaction.getPayment().getPaymentMethodType(), transactionType=arguments.data.transactionType, transactionAmount=arguments.data.amount);
 				
 				// Add the duplicate error to the payment, if this was
 				if(isDuplicateTransaction) {
@@ -189,7 +189,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					if(listFindNoCase("creditCard,giftCard,external", arguments.paymentTransaction.getPayment().getPaymentMethod().getPaymentMethodType()) && !isNull(arguments.paymentTransaction.getPayment().getPaymentMethod().getPaymentIntegration())) {
 						
 						// Get the PaymentCFC
-						var integration = arguments.payment.getPaymentMethod().getPaymentIntegration();
+						var integration = arguments.paymentTransaction.getPayment().getPaymentMethod().getPaymentIntegration();
 						var integrationPaymentCFC = getIntegrationService().getPaymentIntegrationCFC( integration ); 
 						
 						// Create a request Bean
@@ -198,14 +198,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						// Setup generic info into 
 						requestBean.setTransactionID( arguments.paymentTransaction.getPaymentTransactionID() );
 						requestBean.setTransactionType( arguments.data.transactionType );
-						requestBean.setTransactionAmount( arguments.transactionAmount );
+						requestBean.setTransactionAmount( arguments.data.amount );
 						requestBean.setTransactionCurrency( arguments.paymentTransaction.getPayment().getCurrencyCode() );
 						
 						// Move all of the info into the new request bean
 						if(arguments.paymentTransaction.getPayment().getClassName() eq "OrderPayment") {
-							requestBean.populatePaymentInfoWithOrderPayment( arguments.payment );	
+							requestBean.populatePaymentInfoWithOrderPayment( arguments.paymentTransaction.getPayment() );	
 						} else if (arguments.paymentTransaction.getPayment().getClassName() eq "AccountPayment") {
-							requestBean.populatePaymentInfoWithAccountPayment( arguments.payment );
+							requestBean.populatePaymentInfoWithAccountPayment( arguments.paymentTransaction.getPayment() );
 						}
 						
 						// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
@@ -214,14 +214,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							// Get Response Bean from provider service
 							logHibachi("#integration.getIntegrationName()# Payment Integration Transaction Request - Started (#arguments.data.transactionType#)", true);
 							
-							var response = providerService.invokeMethod("process#arguments.paymentTransaction.getPayment().getPaymentMethod().getPaymentMethodType()#", {requestBean=requestBean});
+							var response = integrationPaymentCFC.invokeMethod("process#arguments.paymentTransaction.getPayment().getPaymentMethod().getPaymentMethodType()#", {requestBean=requestBean});
 							
 							logHibachi("#integration.getIntegrationName()# Payment Integration Transaction Request - Finished (#arguments.data.transactionType#)", true);
 							
 							// Populate the Credit Card Transaction with the details of this process
 							
 							// messages
-							transaction.setMessage(serializeJSON(response.getMessages()));
+							arguments.paymentTransaction.setMessage(serializeJSON(response.getMessages()));
 							
 							// TransactionID
 							if(!isNull(response.getTransactionID())) {
@@ -256,7 +256,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							if(!isNull(response.getProviderToken())) {
 								
 								// Set the provider token if one was returned
-								arguments.paymentTransaction.getPayment().setProviderToken();
+								arguments.paymentTransaction.getPayment().setProviderToken( response.getProviderToken() );
 								
 								// If this was an OrderPayment and it has an accountPaymentMethod then also update that token
 								if(arguments.paymentTransaction.getPayment().getClassName() eq "OrderPayment" && !isNull(arguments.paymentTransaction.getPayment().getAccountPaymentMethod())) {
@@ -280,7 +280,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							
 							// Log the exception
 							logHibachiException(e);
-
+							
+							rethrow;
 						}
 						
 					// NO INTEGRATION

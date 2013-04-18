@@ -572,6 +572,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Setup the order payment
 		var newOrderPayment = processObject.getNewOrderPayment();
 		newOrderPayment.setAmount( arguments.processObject.getAmount() );
+		newOrderPayment.setOrder( arguments.order );
 		
 		// If this is an existing account payment method, then we can pull the data from there
 		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
@@ -603,10 +604,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// Save the newOrderPayment
-		getHibachiDAO().save( newOrderPayment );
-		
-		// Add this order payment to the order
-		arguments.order.addOrderPayment( newOrderPayment );
+		this.saveOrderPayment( newOrderPayment );
 		
 		return arguments.order;
 	}
@@ -1247,8 +1245,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.orderPayment;
 		
 	}
-	
-	
+		
 	public any function processOrderPayment_runPlaceOrderTransaction(required any orderPayment) {
 						
 		var transactionType = "";
@@ -1344,8 +1341,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function saveOrder(required any order, struct data={}, string context="save") {
 	
-		// Call the super.save() method to do the base populate & validate logic
-		arguments.order = super.save(entity=arguments.order, data=arguments.data, context=arguments.context);
+		// Call the generic save method to populate and validate
+		arguments.order = save(entity=arguments.order, data=arguments.data, context=arguments.context);
 	
 		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
 		if(arguments.order.getStatusCode() == "ostNotPlaced") {
@@ -1362,7 +1359,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
+	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}, string context="save") {
 		
 		// If the shipping method or address changes
 		var oldAddressSerialized = arguments.orderFulfillment.getAddress().getSimpleValuesSerialized();
@@ -1372,7 +1369,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// Call the generic save method to populate and validate
-		arguments.orderFulfillment = save(arguments.orderFulfillment, arguments.data);
+		arguments.orderFulfillment = save(arguments.orderFulfillment, arguments.data, arguments.context);
 		
 		// If there were no errors, then we can check to see if the shippingMethod or the address changed
 		if(!arguments.orderFulfillment.hasErrors()) {
@@ -1390,137 +1387,24 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		return arguments.orderFulfillment;
-		/*
-		// If fulfillment method is shipping do this
-		if(arguments.orderFulfillment.getFulfillmentMethodType() == "shipping") {
-			// define some variables for backward compatibility
-			param name="data.saveAccountAddress" default="0";
-			param name="data.saveAccountAddressName" default="";
-			param name="data.addressIndex" default="0";
-
-			// Get Address
-			if(data.addressIndex != 0) {
-				var address = getAddressService().getAddress(data.accountAddresses[data.addressIndex].address.addressID, true);
-				var newAddressDataStruct = data.accountAddresses[data.addressIndex].address;
-			} else {
-				var address = getAddressService().getAddress(data.shippingAddress.addressID, true);
-				var newAddressDataStruct = data.shippingAddress;
-			}
-
-			// Populate Address And check if it has changed
-			var serializedAddressBefore = address.getSimpleValuesSerialized();
-			address.populate(newAddressDataStruct);
-			var serializedAddressAfter = address.getSimpleValuesSerialized();
-
-			// If it has changed we need to update Taxes and Shipping Options
-			if(serializedAddressBefore != serializedAddressAfter) {
-				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
-			}
-
-			// USING ACCOUNT ADDRESS
-			if(data.saveAccountAddress == 1 || data.addressIndex != 0) {
-				// new account address
-				if(data.addressIndex == 0) {
-					var accountAddress = getAddressService().newAccountAddress();
-				} else {
-					//Existing address
-					var accountAddress = getAddressService().getAccountAddress(data.accountAddresses[data.addressIndex].accountAddressID, 
-					                                                           true);
-				}
-				accountAddress.setAddress(address);
-				accountAddress.setAccount(arguments.orderFulfillment.getOrder().getAccount());
-			
-				// Figure out the name for this new account address, or update it if needed
-				if(data.addressIndex == 0) {
-					if(structKeyExists(data, "saveAccountAddressName") && len(data.saveAccountAddressName)) {
-						accountAddress.setAccountAddressName(data.saveAccountAddressName);
-					} else {
-						accountAddress.setAccountAddressName(address.getname());
-					}
-				} else if(structKeyExists(data, "accountAddresses") && structKeyExists(data.accountAddresses[data.addressIndex], "accountAddressName")) {
-					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
-				}
-			
-				// If there was previously a shipping Address we need to remove it and recalculate
-				if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
-					arguments.orderFulfillment.removeShippingAddress();
-					arguments.orderFulfillment.setAccountAddress(accountAddress);
-					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-				// If there was previously an account address and we switch it, then we need to recalculate
-				} else if (!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
-					arguments.orderFulfillment.setAccountAddress(accountAddress);
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				// Else just set the account address
-				} else {
-					arguments.orderFulfillment.setAccountAddress(accountAddress);	
-				}
-				
-			
-			// USING SHIPPING ADDRESS
-			} else {
-
-				// If there was previously an account address we need to remove and recalculate
-				if(!isNull(arguments.orderFulfillment.getAccountAddress())) {
-					arguments.orderFulfillment.removeAccountAddress();
-					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
-					getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				}
-				
-				// Set the address in the order Fulfillment as shipping address
-				arguments.orderFulfillment.setShippingAddress(address);
-			}
-		
-			// Validate & Save Address
-			address.validate(context="full");
-		
-			address = getAddressService().saveAddress(address);
-			
-			// Check for a shippingMethodOptionID selected
-			if(structKeyExists(arguments.data, "fulfillmentShippingMethodOptionID")) {
-				var methodOption = getShippingService().getShippingMethodOption(arguments.data.fulfillmentShippingMethodOptionID);
-				
-				// Verify that the method option is one for this fulfillment
-				if(!isNull(methodOption) && arguments.orderFulfillment.hasFulfillmentShippingMethodOption(methodOption)) {
-					// Update the orderFulfillment to have this option selected
-					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethodRate().getShippingMethod());
-					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCharge());
-				}
-			
-			// If no shippingMethodOption, then just check for a shippingMethodID that was passed in
-			} else if (structKeyExists(arguments.data, "shippingMethodID")) {
-				
-				var shippingMethod = getShippingService().getShippingMethod(arguments.data.shippingMethodID);
-				
-				// If this is a valid shipping method, then we can loop over all of the shippingMethodOptions and make sure this one exists
-				if(!isNull(shippingMethod)) {
-					for(var i=1; i<=arrayLen(arguments.orderFulfillment.getShippingMethodOptions()); i++) {
-						if(shippingMethod.getShippingMethodID() == arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()) {
-							arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod() );
-							arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getShippingMethodOptions()[i].getTotalCharge() );
-						}
-					}
-				}	
-			}
-			
-			// Validate the order Fulfillment
-			arguments.orderFulfillment.validate();
-			
-			// Set ORMHasErrors if the orderFulfillment has errors
-			if(arguments.orderFulfillment.hasErrors()) {
-				getSlatwallScope().setORMHasErrors( true );
-			}
-			
-			if(!getSlatwallScope().getORMHasErrors()) {
-				getHibachiDAO().flushORMSession();
-			}
-		}
+	}
 	
-		// Save the order Fulfillment
-		return getHibachiDAO().save(arguments.orderFulfillment);
-		*/
+	public any function saveOrderPayment(required any orderPayment, struct data={}, string context="save") {
+		
+		// Call the generic save method to populate and validate
+		arguments.orderPayment = save(arguments.orderPayment, arguments.data, arguments.context);
+		
+		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
+		if(!arguments.orderPayment.hasErrors() && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+			var transactionData = {
+				amount = arguments.orderPayment.getAmount(),
+				transactionType = arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()
+			};
+			arguments.orderPayment = this.processOrderPayment(arguments.orderPayment, transactionData, 'createTransaction');
+		}
+		
+		return arguments.orderPayment;
+		
 	}
 	
 	

@@ -50,9 +50,14 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.order" type="any" />
 
+<cfset deleteQueryString = "" />
+<cfif rc.order.getOrderStatusType().getSystemCode() eq "ostNotPlaced">
+	<cfset deleteQueryString = "redirectAction=admin:entity.listcartandquote" />		
+</cfif>
+
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.order#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.order#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.order#" edit="#rc.edit#" deleteQueryString="#deleteQueryString#">
 			
 			<!--- Place Order --->
 			<cfif rc.order.getOrderStatusType().getSystemCode() eq "ostNotPlaced">
