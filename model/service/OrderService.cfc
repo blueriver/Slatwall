@@ -1254,10 +1254,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var transactionType = "";
 		
 		if(!isNull(arguments.orderPayment.getPaymentMethod().getPlaceOrderChargeTransactionType()) && orderPayment.getOrderPaymentType().getSystemCode() eq "optCharge") {
-			var transactionType = arguments.orderPayment.getPaymentMethod().getPlaceOrderPaymentChargeTransactionType();
+			var transactionType = arguments.orderPayment.getPaymentMethod().getPlaceOrderChargeTransactionType();
 		}
 		if(!isNull(arguments.orderPayment.getPaymentMethod().getPlaceOrderCreditTransactionType()) && orderPayment.getOrderPaymentType().getSystemCode() eq "optCredit") {
-			var transactionType = arguments.orderPayment.getPaymentMethod().getPlaceOrderPaymentCreditTransactionType();
+			var transactionType = arguments.orderPayment.getPaymentMethod().getPlaceOrderCreditTransactionType();
 		}
 		
 		if(transactionType != '' && transactionType != 'none' && arguments.orderPayment.getAmount() > 0) {
@@ -1281,7 +1281,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			) {
 				
 				// Add a generic payment processing error and make it persistable
-				arguments.orderPayment.getOrder().setError('processing', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
+				arguments.orderPayment.getOrder().addError('processing', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
 				
 			}
 
