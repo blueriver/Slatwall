@@ -53,12 +53,12 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 	property name="allowSaveFlag" ormtype="boolean" default="false";
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";
-	property name="saveAccountPaymentMethodTransactionType" ormtype="string" hb_formFieldType="select";
+	property name="saveAccountPaymentMethodTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
 	property name="saveAccountPaymentMethodEncryptFlag" ormtype="boolean";
-	property name="saveOrderPaymentTransactionType" ormtype="string" hb_formFieldType="select";
+	property name="saveOrderPaymentTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
 	property name="saveOrderPaymentEncryptFlag" ormtype="boolean";
-	property name="placeOrderChargeTransactionType" ormtype="string" hb_formFieldType="select";
-	property name="placeOrderCreditTransactionType" ormtype="string" hb_formFieldType="select";
+	property name="placeOrderChargeTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
+	property name="placeOrderCreditTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
 	
 	// Related Object Properties (many-to-one)
 	property name="paymentIntegration" cfc="Integration" fieldtype="many-to-one" fkcolumn="paymentIntegrationID";
@@ -95,7 +95,7 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 			
 			// If the payment method type isn't null then we can look at the active integrations with those payment method types
 			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
-				arrayAppend(variables.saveAccountPaymentMethodTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.generateToken'), value="generateToken"});
+				arrayAppend(variables.saveAccountPaymentMethodTransactionTypeOptions, {name=rbKey('define.generateToken'), value="generateToken"});
 			}
 		}
 		return variables.saveAccountPaymentMethodTransactionTypeOptions;
@@ -107,7 +107,7 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 			
 			// If the payment method type isn't null then we can look at the active integrations with those payment method types
 			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
-				arrayAppend(variables.saveOrderPaymentTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.generateToken'), value="generateToken"});
+				arrayAppend(variables.saveOrderPaymentTransactionTypeOptions, {name=rbKey('define.generateToken'), value="generateToken"});
 			}
 		}
 		return variables.saveOrderPaymentTransactionTypeOptions;
@@ -119,13 +119,13 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 			
 			// If the payment method type isn't null then we can look at the active integrations with those payment method types
 			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
-				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.generateToken'), value="generateToken"});
-				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.authorize'), value="authorize"});
-				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.authorizeAndCharge'), value="authorizeAndCharge"});
+				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('define.generateToken'), value="generateToken"});
+				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('define.authorize'), value="authorize"});
+				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('define.authorizeAndCharge'), value="authorizeAndCharge"});
 			} else if (!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "external") {
 				// TODO: Get external transaction types
 			} else {
-				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.receive'), value="receive"});
+				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('define.receive'), value="receive"});
 			}
 		}
 		return variables.placeOrderChargeTransactionTypeOptions;
@@ -137,12 +137,12 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 			
 			// If the payment method type isn't null then we can look at the active integrations with those payment method types
 			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
-				arrayAppend(variables.placeOrderCreditTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.generateToken'), value="generateToken"});
+				arrayAppend(variables.placeOrderCreditTransactionTypeOptions, {name=rbKey('define.generateToken'), value="generateToken"});
 			} else if (!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "external") {
 				// TODO: Get external transaction types
 			}
 			
-			arrayAppend(variables.placeOrderCreditTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.credit'), value="credit"});
+			arrayAppend(variables.placeOrderCreditTransactionTypeOptions, {name=rbKey('define.credit'), value="credit"});
 			
 		}
 		return variables.placeOrderCreditTransactionTypeOptions;

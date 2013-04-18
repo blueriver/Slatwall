@@ -460,7 +460,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		if(arguments.formatType eq "custom") {
 			return this.invokeMethod("get#arguments.propertyName#Formatted");	
 		} else if(arguments.formatType eq "rbKey") {
-			return rbKey('entity.#replace(getEntityName(),getApplicationValue('applicationKey'),"")#.#arguments.propertyName#.#arguments.value#');
+			if(!isNull(arguments.value)) {
+				return rbKey('entity.#replace(getEntityName(),getApplicationValue('applicationKey'),"")#.#arguments.propertyName#.#arguments.value#');	
+			} else {
+				return '';
+			}
 		}
 		
 		// This is the null format option

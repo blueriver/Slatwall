@@ -1249,7 +1249,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 	
 	
-	public any function processOrderPayment_runPlaceOrderTransaction(required any orderPayment, required any processObject) {
+	public any function processOrderPayment_runPlaceOrderTransaction(required any orderPayment) {
 						
 		var transactionType = "";
 		

@@ -1,15 +1,15 @@
 {
 	"conditions":{
 	    "paymentTypeCreditCard":{
-	        "getPaymentMethodType":{"eq":"creditCard"}
+	        "paymentMethodType":{"eq":"creditCard"}
 	    },
 	    "paymentTypeTermPayment":{
-	        "getPaymentMethodType":{"eq":"termPayment"}
+	        "paymentMethodType":{"eq":"termPayment"}
 	    },
 	    "paymentTypeCreditCardWithAmountAndNoAuthorization":{
-	        "getPaymentMethodType":{"eq":"creditCard"},
-	        "getAmountAuthorized":{"eq":0},
-	        "getAmount":{"eq":0}
+	        "paymentMethodType":{"eq":"creditCard"},
+	        "amountAuthorized":{"eq":0},
+	        "amount":{"eq":0}
 	    }
 	},
 	"properties":{
