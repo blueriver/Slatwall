@@ -265,150 +265,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		recalculateOrderAmounts(arguments.order);
 	}
 	
-	public boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
-		var accountOK = true;
-		if(structKeyExists(data, "account")) {	
-			var accountData = data.account;
-			var account = getAccountService().getAccount(accountData.accountID, true);
-			account = getAccountService().saveAccount(account, accountData, data.siteID);
-			
-			// If the account has changed, then we need to duplicate the cart
-			if(!isNull(arguments.order.getAccount()) && arguments.order.getAccount().getAccountID() != account.getAccountID()) {
-				arguments.order = duplicateOrderWithNewAccount( arguments.order, account );
-				getSlatwallScope().getCurrentSession().setOrder( arguments.order );
-				getSlatwallScope().setCurrentCart( arguments.order );
-			} else {
-				arguments.order.setAccount(account);
-			}
-			
-		}
-	
-		if(isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
-			accountOK = false;
-		}
-		
-		return accountOK;
-	}
-	
-	public boolean function updateAndVerifyOrderFulfillments(required any order, required struct data) {
-		var fulfillmentsOK = true;
-		
-		if(structKeyExists(data, "orderFulfillments")) {
-		
-			var fulfillmentsDataArray = data.orderFulfillments;
-			
-			for(var i = 1; i <= arrayLen(fulfillmentsDataArray); i++) {
-			
-				var fulfillment = this.getOrderFulfillment(fulfillmentsDataArray[i].orderFulfillmentID, true);
-				
-				if(arguments.order.hasOrderFulfillment(fulfillment)) {
-					fulfillment = this.saveOrderFulfillment(fulfillment, fulfillmentsDataArray[i]);
-					if(fulfillment.hasErrors())	{
-						fulfillmentsOK = false;
-					}
-				}
-			}
-		}
-	
-		// Check each of the fulfillment methods to see if they are complete
-		for(var i = 1; i <= arrayLen(arguments.order.getOrderFulfillments()); i++) {
-			if(!arguments.order.getOrderFulfillments()[i].isProcessable( context="placeOrder" )) {
-				fulfillmentsOK = false;
-			}
-		}
-	
-		return fulfillmentsOK;
-	}
-	
-	public boolean function updateAndVerifyOrderPayments(required any order, required struct data) {
-		var paymentsOK = true;
-		var requirePayment = false;
-		
-		// check if payment method is required for subscription order, even if the amount is 0
-		// require payment if renewal price is not 0 and autoPayFlag is true
-		if(!arrayLen(order.getOrderPayments())) {
-			for(var orderItem in arguments.order.getOrderItems()) {
-				if(!isNull(orderItem.getSku().getSubscriptionTerm()) && orderItem.getSku().getRenewalPrice() != 0 && !isNull(orderItem.getSku().getSubscriptionTerm().getAutoPayFlag()) && orderItem.getSku().getSubscriptionTerm().getAutoPayFlag()) {
-					requirePayment = true;
-					break;
-				}
-			}
-		}
-		
-		if(structKeyExists(data, "orderPayments")) {
-			var paymentsDataArray = data.orderPayments;
-			for(var i = 1; i <= arrayLen(paymentsDataArray); i++) {
-				
-				if(!structKeyExists(data, "newOrderPaymentIndex") || data.newOrderPaymentIndex == i) {
-					
-					var payment = this.getOrderPayment(paymentsDataArray[i].orderPaymentID, true);
-				
-					if(requirePayment || (payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
-						if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i],"amount"))	{
-							paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
-						} else if(!payment.isNew() && (isNull(payment.getAmountAuthorized()) || payment.getAmountAuthorized() == 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
-							paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountAuthorizedTotal();
-						}
-						
-						// Make sure the payment is attached to the order
-						payment.setOrder(arguments.order);
-						
-						// Make sure the payment currency matches the order
-						payment.setCurrencyCode( arguments.order.getCurrencyCode() );
-						
-						// Attempt to Validate & Save Order Payment
-						payment = this.saveOrderPayment(payment, paymentsDataArray[i]);
-						
-						// Check to see if this payment has any errors and if so then don't proceed
-						if(payment.hasErrors()) {
-							paymentsOK = false;
-						}
-					}
-				}
-			}
-		}
-		
-		// Verify that there are enough payments applied to the order to proceed
-		if(order.getPaymentAmountTotal() < order.getTotal()) {
-			paymentsOK = false;
-		}
-		
-		// Verify that payment method is provided for subscription order, even if the amount is 0
-		if(!arrayLen(order.getOrderPayments()) && requirePayment) {
-			paymentsOK = false;
-		}
-		
-		return paymentsOK;
-	}
-	
-	private boolean function processOrderPayments(required any order) {
-		var allPaymentsProcessed = true;
-		
-		// Process All Payments and Save the ones that were successful
-		for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-			var transactionType = order.getOrderPayments()[i].getPaymentMethod().setting('paymentMethodCheckoutTransactionType');
-			
-			if(transactionType != '' && transactionType != 'none' && order.getOrderPayments()[i].getAmount() > 0) {
-			
-				var paymentOK = true;
-			
-				if(transactionType eq "authorize" && order.getOrderPayments()[i].getAmountAuthorized() < order.getOrderPayments()[i].getAmount()) {
-					paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount()-order.getOrderPayments()[i].getAmountAuthorized());
-				} else if (transactionType eq "authorizeAndCharge" && order.getOrderPayments()[i].getAmountReceived() < order.getOrderPayments()[i].getAmount()) {
-					paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType, order.getOrderPayments()[i].getAmount()-order.getOrderPayments()[i].getAmountReceived());
-				}
-				
-				if(!paymentOK) {
-					order.getOrderPayments()[i].setAmount(0);
-					order.getOrderPayments()[i].setCreditCardNumber("");
-					allPaymentsProcessed = false;
-				}
-			}
-		}
-	
-		return allPaymentsProcessed;
-	}
-	
 	public void function setupOrderItemContentAccess(required any orderItem) {
 		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
 			var accountContentAccess = getAccountService().newAccountContentAccess();
@@ -429,32 +285,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 		// Check each of the fulfillment methods to see if they are ready to process
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderFulfillments()); i++) {
-			if(!arguments.order.getOrderFulfillments()[i].isProcessable( context="placeOrder" )) {
+			if(!arguments.order.getOrderFulfillments()[i].isProcessable( context="placeOrder" ) || arguments.order.getOrderFulfillments()[i].hasErrors()) {
 				orderRequirementsList = listAppend(orderRequirementsList, "fulfillment");
+				break;
 			}
 		}
 	
-		// Make sure that the order total is the same as the total payments applied
-		if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal()) {
-			orderRequirementsList = listAppend(orderRequirementsList, "payment");
+		// Make sure that the order payments all pass the isProcessable for placeOrder
+		for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+			if(!arguments.order.getOrderPayments()[i].isProcessable( context="placeOrder" ) || arguments.order.getOrderPayments()[i].hasErrors()) {
+				orderRequirementsList = listAppend(orderRequirementsList, "payment");
+				break;
+			}
 		}
 	
 		return orderRequirementsList;
-	}
-	
-	public any function copyFulfillmentAddress(required any order) {
-		for(var orderFulfillment in order.getOrderFulfillments()) {
-			if(orderFulfillment.getFulfillmentMethodType() == "shipping") {
-				if(!isNull(orderFulfillment.getAccountAddress())) {
-					var shippingAddress = orderFulfillment.getAccountAddress().getAddress().copyAddress();
-					orderFulfillment.setShippingAddress( shippingAddress );
-					orderFulfillment.removeAccountAddress();
-					// since copy address creates a new address, call save for persistence
-					getAddressService().saveAddress(shippingAddress);
-					getHibachiDAO().save(orderFulfillment);
-				}
-			}
-		}
 	}
 	
 	public void function clearCart() {
@@ -536,7 +381,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		arguments.order.removePromotionCode(arguments.promotionCode);
 		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 	}
-	
 	
 	public any function forceItemQuantityUpdate(required any order, required any messageBean) {
 		// Loop over each order Item
@@ -630,6 +474,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: Process Methods ===========================
 	
+	// Process: Order
 	public any function processOrder_addSaleOrderItem(required any order, required any processObject) {
 		
 		// Setup the Order Fulfillment
@@ -801,7 +646,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	public any function processOrder_placeOrder(required any order, required any processObject) {
+	public any function processOrder_placeOrder(required any order, required struct data) {
 		// First we need to lock the session so that this order doesn't get placed twice.
 		lock scope="session" timeout="60" {
 		
@@ -811,125 +656,52 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Make sure that the entity is notPlaced before going any further
 			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
 				
-				// Make any updates to the orderFulfillments if needed
-				updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
+				// Call the saveOrder method so that accounts, fulfillments & payments are updated
+				arguments.order = this.saveOrder(arguments.order, arguments.data);
 				
-				// Add whatever orderPayment is necessary to complete the order
-				if(arguments.order.getTotal() gt arguments.order.getPaymentAmountTotal()) {
-					arguments.order = this.processOrder(arguments.order, arguments.data, "addOrderPayment");
-				}
-				
-				// As long as the order doesn't have any errors we should be good
+				// As long as the order doesn't have any errors after updating fulfillment & payments we can continue
 				if(!arguments.order.hasErrors()) {
 					
-					// Process all of the order payments
-					var paymentsProcessed = processOrderPayments(order=arguments.order);
-						
-					// If processing was successfull then checkout
-					if(paymentsProcessed) {
-							
-						// Copy shipping address if needed
-						copyFulfillmentAddress(order=arguments.order);
-
-						// If this order is the same as the current cart, then set the current cart to a new order
-						if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {
-							getHibachiScope().getCurrentSession().setOrder(javaCast("null", ""));
-						}
-					
-						// Update the order status
-						order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostNew") );
-						
-						// Update the orderPlaced
-						order.confirmOrderNumberOpenDateCloseDate();
-					
-						// Save the order to the database
-						getHibachiDAO().save(order);
-					
-						// Do a flush so that the order is commited to the DB
-						getHibachiDAO().flushORMSession();
-					
-						// Log that the order was placed
-						logHibachi(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
-						
-					}
-					
-				} else {
-					getSlatwallScope().setORMHasErrors( true );
-				}
-			}
-			
-		}	// END OF LOCK
-		
-		return arguments.order;
-	}
-	
-	
-	public any function processOrder_placeCartOrder(required any order, struct data={}, string processContext="process") {
-		// First we need to lock the session so that this order doesn't get placed twice.
-		lock scope="session" timeout="60" {
-		
-			// Make sure that the orderID passed in to the data is what we use because this could be a double click senario so we don't want to rely on the order passed in as the cart
-			arguments.order = this.getOrder(arguments.data.orderID);
-			
-			// Reload the order in case it was already in cache
-			getHibachiDAO().reloadEntity(arguments.order);
-		
-			// Make sure that the entity is notPlaced before going any further
-			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
-				
-				// update and validate all aspects of the order
-				
-				// populate extended attributes
-				if(structKeyExists(arguments.data, "attributeValues")) {
-					var extendedAttributeData = {};
-					extendedAttributeData.attributeValues = arguments.data.attributeValues;
-					arguments.order.populate( extendedAttributeData );
-				}
-				
-				// Update account
-				var validAccount = updateAndVerifyOrderAccount(order=arguments.order, data=arguments.data);
-				if(!validAccount) {
-					arguments.order.addError("processing", "The order account was invalid for one reason or another.");
-				}
-				
-				// Update payments
-				var validPayments = updateAndVerifyOrderPayments(order=arguments.order, data=arguments.data);
-				if(!validPayments) {
-					arguments.order.addError("processing", "One or more of the order payments were invalid for one reason or another.");
-				}
-				
-				// Update fulfillments
-				var validFulfillments = updateAndVerifyOrderFulfillments(order=arguments.order, data=arguments.data);
-				if(!validFulfillments) {
-					arguments.order.addError("processing", "One or more of the order fulfillments were invalid for one reason or another.");
-				}
-				
-				if(!arguments.order.hasErrors()) {
-					
-					// Double check that the order requirements list is blank
+					// Generate the order requirements list, to see if we still need action to be taken
 					var orderRequirementsList = getOrderRequirementsList( arguments.order );
 					
-					if(len(orderRequirementsList)) {
-						arguments.order.addError("processing", "More information is required before we can process this order.");
+					// Verify the order requirements list, to make sure that this order has everything it needs to continue
+					if(!len(orderRequirementsList)) {
 						
-					} else {
-						// Process all of the order payments
-						var paymentsProcessed = processOrderPayments(order=arguments.order);
+						// This will override the order.hasErrors() below in case one transaction goes through
+						var hadChargeCreditAuthorizeSuccess = false;
 						
-						// If processing was successfull then checkout
-						if(!paymentsProcessed) {
-							arguments.order.addError("processing", "One or more of the payments could not be processed.");	
-						} else {
-							// copy shipping address if needed
-							copyFulfillmentAddress(order=arguments.order);
+						// Process All Payments and Save the ones that were successful
+						for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+							
+							// Setup a flag to check if this is an authorize,credit,charge type of transaction
+							var chargeCreditAuthroizeTransaction = false;
+							if(!isNull(arguments.order.getOrderPayments()[i].getPaymentMethod().getPlaceOrderChargeTransactionType()) && listFindNoCase("charge,credit,authorize,authorizeAndCapture", arguments.order.getOrderPayments()[i].getPaymentMethod().getPlaceOrderChargeTransactionType())) {
+								chargeCreditAuthroizeTransaction = true;
+							}
+							
+							// Call the placeOrderTransactionType for the order payment
+							var thisOrderPayment = this.processOrderPayment(arguments.order.getOrderPayments()[i], {}, 'runPlaceOrderTransaction');
+							
+							// Tell the process that one transaction went through
+							if(!thisOrderPayment.hasErrors() && chargeCreditAuthroizeTransaction) {
+								hadChargeCreditAuthorizeSuccess = true;
+							}
+							
+						}
 						
+						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
+						if(!arguments.order.hasErrors() || hadChargeCreditAuthorizeSuccess) {
+							
 							// If this order is the same as the current cart, then set the current cart to a new order
-							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && order.getOrderID() == getSlatwallScope().getCurrentSession().getOrder().getOrderID()) {
-								getSlatwallScope().getCurrentSession().setOrder(JavaCast("null", ""));
+							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {
+								getHibachiScope().getCurrentSession().setOrder(javaCast("null", ""));
 							}
 						
 							// Update the order status
-							order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+							order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostNew") );
+							
+							// Update the orderPlaced
 							order.confirmOrderNumberOpenDateCloseDate();
 						
 							// Save the order to the database
@@ -938,46 +710,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							// Do a flush so that the order is commited to the DB
 							getHibachiDAO().flushORMSession();
 						
+							// Log that the order was placed
 							logHibachi(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
-						
-							// Send out the e-mail
-							if(!structKeyExists(arguments.data,"doNotSendOrderConfirmationEmail") || !arguments.data.doNotSendOrderConfirmationEmail) {
-								getEmailService().sendEmailByEvent("orderPlaced", order);
-							}
 							
-							// save account payment if needed (for renewal), do this only 1 orderpayment exists
-							// if there are multiple orderPayment, logic needs to get added for user to defined the paymentMethod for renewals
-							if(arrayLen(order.getOrderPayments()) == 1 && isNull(order.getOrderPayments()[1].getAccountPaymentMethod())) {
-								// if there is any subscription item, save the account payment for use in renewal
-								for(var orderItem in order.getOrderItems()) {
-									if(!isNull(orderItem.getSku().getSubscriptionTerm())) {
-										// TODO: change to find the appripriate order payment
-										var accountPaymentMethod = getAccountService().getAccountPaymentMethod({creditCardNumberEncrypted=order.getOrderPayments()[1].getCreditCardNumberEncrypted(),account=order.getAccount()},true);
-										if(accountPaymentMethod.isNew()) {
-											accountPaymentMethod.setAccount(order.getAccount());
-											accountPaymentMethod.copyFromOrderPayment(order.getOrderPayments()[1]);
-											accountPaymentMethod.setAccountPaymentMethodName(accountPaymentMethod.getNameOnCreditCard() & " " & accountPaymentMethod.getCreditCardType());
-											getAccountService().saveAccountPaymentMethod(accountPaymentMethod);
-										}
-										order.getOrderPayments()[1].setAccountPaymentMethod(accountPaymentMethod);
-										break;
-									}
-								}
-							}
-							
-							// Look for 'auto' order fulfillments
-							for(var i=1; i<=arrayLen(order.getOrderFulfillments()); i++) {
-								// As long as the amount received for this orderFulfillment is within the treshold of the auto fulfillment setting
-								if(order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto" && (order.getTotal() == 0 || order.getOrderFulfillments()[i].getFulfillmentMethod().setting('fulfillmentMethodAutoMinReceivedPercentage') <= (order.getPaymentAmountReceivedTotal()*100/order.getTotal())) ) {
-									processOrderFulfillment(order.getOrderFulfillments()[i], {locationID=order.getOrderFulfillments()[i].setting('fulfillmentMethodAutoLocation')}, "fulfillItems");
-								}
-							}
-							
-							processOK = true;
 						}
 					}
-				} else {
-					getSlatwallScope().setORMHasErrors( true );
+					
 				}
 			}
 			
@@ -986,7 +724,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	// Process: Order CONTEXT: createReturn
+	// (needs refactor)
 	public any function processOrder_createReturn(required any order, struct data={}, string processContext="process") {
 			
 		var hasAtLeastOneItemToReturn = false;
@@ -1104,7 +842,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	// Process: Order CONTEXT: placeOnHold
 	public any function processOrder_placeOnHold(required any order, struct data={}, string processContext="process") {
 		
 		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostOnHold") );
@@ -1112,7 +849,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	// Process: Order CONTEXT: takeOffHold
 	public any function processOrder_takeOffHold(required any order, struct data={}, string processContext="process") {
 		
 		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostProcessing") );
@@ -1121,7 +857,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	// Process: Order CONTEXT: cancelOrder
 	public any function processOrder_cancelOrder(required any order, struct data={}, string processContext="process") {
 			
 		// Loop over all the orderItems and set them to 0
@@ -1170,7 +905,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	// Process: Order CONTEXT: addPromotionCode
 	public any function processOrder_addPromotionCode(required any order, required any processObject) {
 			
 		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.processObject.getPromotionCode());
@@ -1191,7 +925,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 
-	// Process: Order Fulfillment CONTEXT: fulfillItems
+	// Process: Order Fulfillment
+	// (needs refactory)
 	public any function processOrderFulfillment_fulfillItems(required any orderFulfillment, struct data={}, string processContext="process") {
 		
 		// Make sure that a location was passed in
@@ -1384,7 +1119,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.orderFulfillment;
 	}
 	
-	// Process: Order Return CONTEXT: receiveReturn
+	// Process: Order Return
+	// (needs refactor)
 	public any function processOrderReturn_receiveReturn(required any orderReturn, struct data={}, string processContext="process") {
 			
 		var hasAtLeastOneItemToReturn = false;
@@ -1491,33 +1227,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}	
 	
 	// Process: Order Payment
-	
-	/*
-		Order Payments & Account Payments
-											
-		Credit Card													
-			authorize					{amount}					
-			authorizeAndCharge										
-			chargePreAuthorization									
-			credit													
-			generateToken											
-		Gift Card													
-			requestBalance											
-			increaseBalance											
-		Check														
-			receiveCheck {checkNumber,accountNumber,routingNumber}	
-		Cash														
-			receiveCash {cashAmount}								
-			refundCash  {cashAmount}								
-		TermPayment													
-																	
-		External													
-			verifyResponse											
-																	
-		ALL															
-			createOfflineTransaction								
-	*/
-	
 	public any function processOrderPayment_createTransaction(required any orderPayment, required any processObject) {
 		
 		// Create a new payment transaction
@@ -1536,80 +1245,50 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		paymentTransaction = getPaymentService().processPaymentTransaction(paymentTransaction, transactionData, 'runTransaction');
 		
 		return arguments.orderPayment;
+		
 	}
 	
 	
-	/*
-	public any function processOrderPayment_processTransaction(required any orderPayment, required any processObject) {
+	public any function processOrderPayment_runPlaceOrderTransaction(required any orderPayment, required any processObject) {
+						
+		var transactionType = "";
 		
-		if(arguments.processObject.getTransactionType()=="chargePreAuthorization") {
-			// We can loop over previous transactions for authroization codes to capture the amount we need.
-			var totalCaptured = 0;
-			
-			for(var i=1; i<=arrayLen(arguments.orderPayment.getPaymentTransactions()); i++) {
-				
-				// We can loop over previous transactions for authroization codes to capture the amount we need.
-				var totalCaptured = 0;
-				
-				for(var i=1; i<=arrayLen(arguments.orderPayment.getPaymentTransactions()); i++) {
-					
-					var originalTransaction = arguments.orderPayment.getPaymentTransactions()[i];
-					
-					if( originalTransaction.getAmountAuthorized() > 0 && originalTransaction.getAmountAuthorized() > originalTransaction.getAmountReceived() ) {
-						
-						var capturableAmount = originalTransaction.getAmountAuthorized() - originalTransaction.getAmountReceived();
-						var leftToCapture = arguments.data.amount - totalCaptured;
-						var captureAmount = 0;
-						
-						if(leftToCapture < capturableAmount) {
-							captureAmount = leftToCapture;
-						} else {
-							captureAmount = capturableAmount;
-						}
-						
-						arguments.data.providerTransactionID = originalTransaction.getProviderTransactionID();
-						
-						var paymentOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", captureAmount, originalTransaction);
-						
-						if(paymentOK) {
-							totalCaptured = precisionEvaluate(totalCaptured + capturableAmount);
-						}
-						
-						// If some payments failed but the total was finally captured, then we can can remove any processing errors
-						if(totalCaptured == arguments.data.amount) {
-							structDelete(arguments.orderPayment.getErrors(), 'processing');
-							break;
-						}
-					}
-				}
-			}
-			
-		} else if (arguments.processObject.getTransactionType()=="offlineTransaction") {
-		
-			var newPaymentTransaction = getPaymentService().newPaymentTransaction();
-			newPaymentTransaction.setTransactionType( "offline" );
-			newPaymentTransaction.setOrderPayment( arguments.orderPayment );
-			newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
-			
-			if(newPaymentTransaction.hasErrors()) {
-				arguments.orderPayment.addError('processing', 'There was an unknown error trying to add an offline transaction for this order payment.');	
-			}
-			
-		} else {
-			// Standard Payment Process
-			getPaymentService().processPayment(arguments.orderPayment, arguments.processObject.getTransactionType(), arguments.processObject.getAmount());
-		
+		if(!isNull(arguments.orderPayment.getPaymentMethod().getPlaceOrderChargeTransactionType()) && orderPayment.getOrderPaymentType().getSystemCode() eq "optCharge") {
+			var transactionType = arguments.orderPayment.getPaymentMethod().getPlaceOrderPaymentChargeTransactionType();
+		}
+		if(!isNull(arguments.orderPayment.getPaymentMethod().getPlaceOrderCreditTransactionType()) && orderPayment.getOrderPaymentType().getSystemCode() eq "optCredit") {
+			var transactionType = arguments.orderPayment.getPaymentMethod().getPlaceOrderPaymentCreditTransactionType();
 		}
 		
-		if(!arguments.orderPayment.hasErrors()) {
-			// Update the Order Status
-			updateOrderStatus( arguments.orderPayment.getOrder() );
+		if(transactionType != '' && transactionType != 'none' && arguments.orderPayment.getAmount() > 0) {
+			
+			// Setup payment processing info
+			var processData = {
+				transactionType = transactionType,
+				amount = arguments.orderPayment.getAmount()
+			};
+			
+			// Call the processing method
+			arguments.orderPayment = this.processOrderPayment(arguments.orderPayment, processData, 'createPaymentTransaction');
+			
+			// If there was expected authorize, receive, or credit
+			if( 
+				(arguments.orderPayment.hasErrors() || listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthroized() lt arguments.orderPayment.getAmount())
+					||
+				(arguments.orderPayment.hasErrors() || listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount())
+					||
+				(arguments.orderPayment.hasErrors() || listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount())
+			) {
+				
+				// Add a generic payment processing error and make it persistable
+				arguments.orderPayment.getOrder().setError('processing', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
+				
+			}
+
 		}
 		
 		return arguments.orderPayment;
-		
-	}	
-	*/
+	}
 	
 	// =====================  END: Process Methods ============================
 	

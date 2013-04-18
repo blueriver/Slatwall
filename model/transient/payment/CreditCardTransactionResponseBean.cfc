@@ -45,7 +45,7 @@ component displayname="Gateway Response"  accessors="true" output="false" extend
 	
 	// Deprecated Method - Use setSecurityCodeMatchFlag() instead
 	public void function setSecurityCodeMatch(required boolean securityCodeMatch) {
-		setSecurityCodeMatchFlag(arguments.securityCodeMathc);
+		setSecurityCodeMatchFlag(arguments.securityCodeMatch);
 	}
 
 }

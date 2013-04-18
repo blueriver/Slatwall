@@ -38,9 +38,6 @@ Notes:
 --->
 <cfoutput>
 	<cf_SlatwallSettingTable>
-		<cf_SlatwallSetting settingName="paymentMethodStoreCreditCardNumberWithOrder" />
-		<cf_SlatwallSetting settingName="paymentMethodStoreCreditCardNumberWithAccount" />
-		<cf_SlatwallSetting settingName="paymentMethodCheckoutTransactionType" />
 		<cf_SlatwallSetting settingName="paymentMethodMaximumOrderTotalPercentageAmount" />
 	</cf_SlatwallSettingTable>
 </cfoutput>

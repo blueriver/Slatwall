@@ -171,9 +171,6 @@ globalEncryptionKeySize
 					imageMissingImagePath = {fieldType="text",defaultValue="/assets/images/missingimage.jpg"},
 					
 					// Payment Method
-					paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno", defaultValue=0},
-					paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno", defaultValue=0},
-					paymentMethodCheckoutTransactionType = {fieldType="select", defaultValue="none"},
 					paymentMethodMaximumOrderTotalPercentageAmount = {fieldType="text", defaultValue=100, formatType="percentage", validate={dataType="numeric", minValue=0, maxValue=100}},
 					
 					// Product
@@ -221,6 +218,9 @@ globalEncryptionKeySize
 					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000},
 					
 					// DEPRECATED
+					paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno", defaultValue=0},
+					paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno", defaultValue=0},
+					paymentMethodCheckoutTransactionType = {fieldType="select", defaultValue="none"},
 					productImageSmallWidth = {fieldType="text", defaultValue="150", formatType="pixels", validate={dataType="numeric", required=true}},
 					productImageSmallHeight = {fieldType="text", defaultValue="150", formatType="pixels", validate={dataType="numeric", required=true}},
 					productImageMediumWidth = {fieldType="text", defaultValue="300", formatType="pixels", validate={dataType="numeric", required=true}},

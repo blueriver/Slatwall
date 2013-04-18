@@ -53,6 +53,12 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 	property name="allowSaveFlag" ormtype="boolean" default="false";
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";
+	property name="saveAccountPaymentMethodTransactionType" ormtype="string" hb_formFieldType="select";
+	property name="saveAccountPaymentMethodEncryptFlag" ormtype="boolean";
+	property name="saveOrderPaymentTransactionType" ormtype="string" hb_formFieldType="select";
+	property name="saveOrderPaymentEncryptFlag" ormtype="boolean";
+	property name="placeOrderChargeTransactionType" ormtype="string" hb_formFieldType="select";
+	property name="placeOrderCreditTransactionType" ormtype="string" hb_formFieldType="select";
 	
 	// Related Object Properties (many-to-one)
 	property name="paymentIntegration" cfc="Integration" fieldtype="many-to-one" fkcolumn="paymentIntegrationID";
@@ -75,26 +81,95 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
+	property name="saveAccountPaymentMethodTransactionTypeOptions" persistent="false";
+	property name="saveOrderPaymentTransactionTypeOptions" persistent="false";
+	property name="placeOrderChargeTransactionTypeOptions" persistent="false";
+	property name="placeOrderCreditTransactionTypeOptions" persistent="false";
+	property name="paymentIntegrationOptions" persistent="false";
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	public array function getSaveAccountPaymentMethodTransactionTypeOptions() {
+		if(!structKeyExists(variables, "saveAccountPaymentMethodTransactionTypeOptions")) {
+			variables.saveAccountPaymentMethodTransactionTypeOptions = [{name=rbKey('define.none'), value=""}];
+			
+			// If the payment method type isn't null then we can look at the active integrations with those payment method types
+			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
+				arrayAppend(variables.saveAccountPaymentMethodTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.generateToken'), value="generateToken"});
+			}
+		}
+		return variables.saveAccountPaymentMethodTransactionTypeOptions;
+	}
+	
+	public array function getSaveOrderPaymentTransactionTypeOptions() {
+		if(!structKeyExists(variables, "saveOrderPaymentTransactionTypeOptions")) {
+			variables.saveOrderPaymentTransactionTypeOptions = [{name=rbKey('define.none'), value=""}];
+			
+			// If the payment method type isn't null then we can look at the active integrations with those payment method types
+			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
+				arrayAppend(variables.saveOrderPaymentTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.generateToken'), value="generateToken"});
+			}
+		}
+		return variables.saveOrderPaymentTransactionTypeOptions;
+	}
+	
+	public array function getPlaceOrderChargeTransactionTypeOptions() {
+		if(!structKeyExists(variables, "placeOrderChargeTransactionTypeOptions")) {
+			variables.placeOrderChargeTransactionTypeOptions = [{name=rbKey('define.none'), value=""}];
+			
+			// If the payment method type isn't null then we can look at the active integrations with those payment method types
+			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
+				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.generateToken'), value="generateToken"});
+				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.authorize'), value="authorize"});
+				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.authorizeAndCharge'), value="authorizeAndCharge"});
+			} else if (!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "external") {
+				// TODO: Get external transaction types
+			} else {
+				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.receive'), value="receive"});
+			}
+		}
+		return variables.placeOrderChargeTransactionTypeOptions;
+	}
+	
+	public array function getPlaceOrderCreditTransactionTypeOptions() {
+		if(!structKeyExists(variables, "placeOrderCreditTransactionTypeOptions")) {
+			variables.placeOrderCreditTransactionTypeOptions = [{name=rbKey('define.none'), value=""}];
+			
+			// If the payment method type isn't null then we can look at the active integrations with those payment method types
+			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
+				arrayAppend(variables.placeOrderCreditTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.generateToken'), value="generateToken"});
+			} else if (!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "external") {
+				// TODO: Get external transaction types
+			}
+			
+			arrayAppend(variables.placeOrderCreditTransactionTypeOptions, {name=rbKey('entity.paymentTransaction.transactionType.credit'), value="credit"});
+			
+		}
+		return variables.placeOrderCreditTransactionTypeOptions;
+	}
+	
 	
 	public array function getPaymentIntegrationOptions() {
-		var returnArray = [{name=rbKey('define.select'), value=""}];
-		
-		var optionsSL = getService("integrationService").getIntegrationSmartList();
-		optionsSL.addFilter('installedFlag', '1');
-		optionsSL.addFilter('paymentReadyFlag', '1');
-		optionsSL.addFilter('paymentActiveFlag', '1');
-		
-		for(var i=1; i<=arrayLen(optionsSL.getRecords()); i++) {
-			if(listFindNoCase(optionsSL.getRecords()[i].getIntegrationCFC("payment").getPaymentMethodTypes(), getPaymentMethodType())) {
-				arrayAppend(returnArray, {name=optionsSL.getRecords()[i].getIntegrationName(), value=optionsSL.getRecords()[i].getIntegrationID()});	
+		if(!structKeyExists(variables, "paymentIntegrationOptions")) {
+			variables.paymentIntegrationOptions = [{name=rbKey('define.select'), value=""}];
+			
+			// If the payment method type isn't null then we can look at the active integrations with those payment method types
+			if(!isNull(getPaymentMethodType())) {
+				var optionsSL = getService("integrationService").getIntegrationSmartList();
+				optionsSL.addFilter('installedFlag', '1');
+				optionsSL.addFilter('paymentReadyFlag', '1');
+				optionsSL.addFilter('paymentActiveFlag', '1');
+				
+				for(var i=1; i<=arrayLen(optionsSL.getRecords()); i++) {
+					if(listFindNoCase(optionsSL.getRecords()[i].getIntegrationCFC("payment").getPaymentMethodTypes(), getPaymentMethodType())) {
+						arrayAppend(variables.paymentIntegrationOptions, {name=optionsSL.getRecords()[i].getIntegrationName(), value=optionsSL.getRecords()[i].getIntegrationID()});	
+					}
+				}	
 			}
 		}
 		
-		return returnArray;
+		return variables.paymentIntegrationOptions;
 	}
-	
-	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
@@ -127,6 +202,8 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 	// ===============  END: Custom Formatting Methods =====================
 	
 	// ============== START: Overridden Implicet Getters ===================
+	
+	
 	
 	// ==============  END: Overridden Implicet Getters ====================
 
