@@ -40,7 +40,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="amount" ormtype="big_decimal" notnull="true";
+	property name="amount" ormtype="big_decimal";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="bankRoutingNumberEncrypted" ormType="string";
 	property name="bankAccountNumberEncrypted" ormType="string";
@@ -101,14 +101,6 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="paymentMethodOptions" persistent="false";
 	property name="orderStatusCode" persistent="false";
 	property name="securityCode" persistent="false";
-		
-	public any function init() {
-		if(isNull(variables.amount)) {
-			variables.amount = 0;
-		}
-		
-		return super.init();
-	}
 	
 	public string function getMostRecentChargeProviderTransactionID() {
 		for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
@@ -453,6 +445,22 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	// ===============  END: Custom Formatting Methods =====================
 	
 	// ============== START: Overridden Implicet Getters ===================
+	
+	public numeric function getAmount() {
+		// If an amount has not been explicity set, then we can return another value if needed
+		if( !structKeyExists(variables, "amount") ) {
+			
+			// If there is an order, it has not been placed and there is only 1 order payment with no explicit value set... then we can return the order total.
+			if(!isNull(getOrder()) && getOrder().getOrderStatusType().getSystemCode() eq "ostNotPlaced" && arrayLen(getOrder().getOrderPayments()) lte 1) {
+				return getOrder().getTotal();
+			}
+			
+			// If neither were set, then return null
+			return ;
+		}
+		
+		return variables.amount;
+	}
 
 	public any function getBillingAddress() {
 		if( !structKeyExists(variables, "billingAddress") ) {

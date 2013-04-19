@@ -571,7 +571,27 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// Setup the order payment
 		var newOrderPayment = processObject.getNewOrderPayment();
-		newOrderPayment.setAmount( arguments.processObject.getAmount() );
+		
+		// Setup the payment type
+		newOrderPayment.setOrderPaymentType( getSettingService().getType( arguments.processObject.getOrderPaymentTypeID() ) );
+		
+		// If an amount was passed in then we can set it on the order payment
+		if(!isNull(arguments.processObject.getAmount())) {
+			newOrderPayment.setAmount( arguments.processObject.getAmount() );
+			
+		// If no amount was passed in, but there is already 1 order payment with no amount, then we need to set this amount to 0
+		} else if( arrayLen(arguments.order.getOrderPayments()) ) {
+			
+			// If a null payment of this type already exists, then we need to force this payment to be 0 because only 1 null credit payment and 1 null charge payment can exists
+			for(var i=1; i<=arrayLen(arguments.order.getOrderPayments()); i++) {
+				if( isNull(arguments.order.getOrderPayments()[i].getAmount()) && arguments.order.getOrderPayments()[i].getOrderPaymentType().getSystemCode() eq newOrderPayment.getOrderPaymentType().getSystemCode() ) {
+					newOrderPayment.setAmount( 0 );
+				}
+			}
+			
+		}
+		
+		// Add this new order payment to the order
 		newOrderPayment.setOrder( arguments.order );
 		
 		// If this is an existing account payment method, then we can pull the data from there
@@ -690,6 +710,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						
 						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
 						if(!arguments.order.hasErrors() || hadChargeCreditAuthorizeSuccess) {
+							
+							// If there was only 1 payment on the order, then we need to update the "amount" field with whatever is returned
+							if(arrayLen(arguments.order.getOrderPayments()) eq 1) {
+								arguments.order.getOrderPayments()[1].setAmount( arguments.order.getOrderPayments()[1].getAmount() );
+							}
 							
 							// If this order is the same as the current cart, then set the current cart to a new order
 							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {
@@ -1266,19 +1291,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			};
 			
 			// Call the processing method
-			arguments.orderPayment = this.processOrderPayment(arguments.orderPayment, processData, 'createPaymentTransaction');
+			arguments.orderPayment = this.processOrderPayment(arguments.orderPayment, processData, 'createTransaction');
 			
 			// If there was expected authorize, receive, or credit
 			if( 
-				(arguments.orderPayment.hasErrors() || listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthroized() lt arguments.orderPayment.getAmount())
+				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthroized() lt arguments.orderPayment.getAmount()))
 					||
-				(arguments.orderPayment.hasErrors() || listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount())
+				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount()))
 					||
-				(arguments.orderPayment.hasErrors() || listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount())
+				(arguments.orderPayment.hasErrors() || (listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount()))
 			) {
 				
 				// Add a generic payment processing error and make it persistable
 				arguments.orderPayment.getOrder().addError('processing', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
+				
+				logHibachi(arguments.orderPayment.hasErrors());
 				
 			}
 

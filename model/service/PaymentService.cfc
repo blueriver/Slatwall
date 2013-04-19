@@ -155,7 +155,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function processPaymentTransaction_runTransaction(required any paymentTransaction, required struct data) {
 		param name="arguments.data.amount" default="0";
-		param name="arguments.data.transactionType" default="0";
+		param name="arguments.data.transactionType" default="";
 		
 		// Make sure there is an orderPayment or accountPayment
 		if(!isNull(arguments.paymentTransaction.getPayment())) {
@@ -174,7 +174,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// Otherwise continue with processing
 				} else {
 					
-					// Add the transaction to the hibernate scope
+					// Setup the startTickCount & the transactionType
+					arguments.paymentTransaction.setTransactionType( arguments.data.transactionType );
 					arguments.paymentTransaction.setTransactionStartTickCount( getTickCount() );
 					
 					// Add the transaction to the hibernate scope

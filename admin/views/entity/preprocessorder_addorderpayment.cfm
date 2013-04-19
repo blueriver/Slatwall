@@ -48,7 +48,13 @@ Notes:
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="amount" edit="#rc.edit#">
+				
+				<!--- Only Show Payment Amount if this is the second account payment --->
+				<cfif arrayLen(rc.order.getOrderPayments())>
+					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="amount" edit="#rc.edit#">
+				</cfif>
+				
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderPaymentTypeID" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accountPaymentMethodID" edit="#rc.edit#">
 				
 				<!--- New Payment Method --->

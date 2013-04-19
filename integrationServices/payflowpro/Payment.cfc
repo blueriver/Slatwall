@@ -120,12 +120,12 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			
 			// If this is a credit or delayed capture we still want to use the provider token
 			if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
-				listAppend(requestData,"ORIGID=#requestBean.getProviderToken()#","&");	
+				arrayAppend(paymentData,"ORIGID=#requestBean.getProviderToken()#");	
 			}
 			
 		// Otherwise use the provider token
 		} else {
-			listAppend(requestData,"ORIGID=#requestBean.getProviderToken()#","&");	
+			arrayAppend(paymentData,"ORIGID=#requestBean.getProviderToken()#");	
 		}
 		
 		// Always add a CVV2 in case one was passed in

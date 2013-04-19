@@ -11,18 +11,12 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="accountAddressID" hb_rbKey="entity.accountAddress" hb_formFieldType="select";
 	property name="saveAccountPaymentMethodFlag" hb_formFieldType="yesno";
 	property name="saveAccountPaymentMethodName" hb_rbKey="entity.accountPaymentMethod.accountPaymentMethodName";
+	property name="orderPaymentTypeID" hb_rbKey="entity.orderPayment.orderPaymentType" hb_formFieldType="select";
 	
 	// Cached Properties
 	property name="accountPaymentMethodIDOptions";
 	property name="paymentMethodIDOptions";
 	property name="accountAddressIDOptions";
-	
-	public string function getAmount() {
-		if(!structKeyExists(variables, "amount")) {
-			variables.amount = precisionEvaluate(getOrder().getTotal() - getOrder().getPaymentAmountTotal());
-		}
-		return variables.amount;
-	}
 	
 	public string function getAccountPaymentMethodID() {
 		if(!structKeyExists(variables, "accountPaymentMethodID")) {
@@ -93,4 +87,11 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return variables.saveAccountPaymentMethodFlag;
 	}
 	
+	public string function getOrderPaymentTypeID() {
+		return getNewOrderPayment().getOrderPaymentType().getTypeID();
+	}
+	
+	public array function getOrderPaymentTypeIDOptions() {
+		return getNewOrderPayment().getOrderPaymentTypeOptions();
+	}
 }
