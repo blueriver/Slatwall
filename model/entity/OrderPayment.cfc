@@ -451,12 +451,13 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		if( !structKeyExists(variables, "amount") ) {
 			
 			// If there is an order, it has not been placed and there is only 1 order payment with no explicit value set... then we can return the order total.
-			if(!isNull(getOrder()) && getOrder().getOrderStatusType().getSystemCode() eq "ostNotPlaced" && arrayLen(getOrder().getOrderPayments()) lte 1) {
+			if(!isNull(getOrder()) && getOrder().getOrderStatusType().getSystemCode() eq "ostNotPlaced") {
 				return getOrder().getTotal();
 			}
 			
-			// If neither were set, then return null
-			return ;
+			// If for some reson the above logic did not fire then just set the amount to 0
+			variables.amount = 0;
+			
 		}
 		
 		return variables.amount;
