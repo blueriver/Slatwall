@@ -56,7 +56,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		setCurrentPageDeclaration(1);
 		setCacheable(false);
 		setCacheName("");
-		setSelectDistinctFlag(0);
+		setSelectDistinctFlag(1);
 		
 		// Set currentURL from the arguments
 		setCurrentURL(arguments.currentURL);
