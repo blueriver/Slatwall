@@ -306,10 +306,12 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	public any function getPaymentMethodOptions() {
 		if(!structKeyExists(variables, "paymentMethodOptions")) {
 			var sl = getService("paymentService").getPaymentMethodSmartList();
+			
 			sl.addFilter('activeFlag', 1);
 			sl.addSelect('paymentMethodID', 'value');
 			sl.addSelect('paymentMethodName', 'name');
 			sl.addSelect('paymentMethodType', 'paymentmethodtype');
+			sl.addSelect('allowSaveFlag', 'allowsave');
 			
 			variables.paymentMethodOptions = sl.getRecords();
 		}

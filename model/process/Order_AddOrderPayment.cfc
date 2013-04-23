@@ -6,7 +6,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// Data Properties
 	property name="amount";
 	property name="accountPaymentMethodID" hb_rbKey="entity.accountPaymentMethod" hb_formFieldType="select";
-	property name="paymentMethodID" hb_rbKey="entity.paymentMethod" hb_formFieldType="select";
 	property name="newOrderPayment" cfc="OrderPayment" fieldType="many-to-one" persistent="false" fkcolumn="orderPaymentID";
 	property name="accountAddressID" hb_rbKey="entity.accountAddress" hb_formFieldType="select";
 	property name="saveAccountPaymentMethodFlag" hb_formFieldType="yesno";
@@ -37,21 +36,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			arrayAppend(variables.accountPaymentMethodIDOptions, {name=rbKey('define.new'), value=""});
 		}
 		return variables.accountPaymentMethodIDOptions;
-	}
-	
-	public array function getPaymentMethodIDOptions() {
-		if(!structKeyExists(variables, "paymentMethodIDOptions")) {
-			var sl = getService("paymentService").getPaymentMethodSmartList();
-			sl.addFilter('activeFlag', 1);
-			
-			sl.addSelect('paymentMethodID', 'value');
-			sl.addSelect('paymentMethodName', 'name');
-			sl.addSelect('paymentMethodType', 'paymentmethodtype');
-			sl.addSelect('allowSaveFlag', 'allowsave');
-			
-			variables.paymentMethodIDOptions = sl.getRecords();
-		}
-		return variables.paymentMethodIDOptions;
 	}
 	
 	public string function getAccountAddressID() {
