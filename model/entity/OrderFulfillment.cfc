@@ -43,6 +43,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="fulfillmentCharge" ormtype="big_decimal" default=0;
 	property name="currencyCode" ormtype="string" length="3";
 	property name="emailAddress" ormtype="string";
+	property name="manualFulfillmentChargeFlag" ormtype="boolean" hb_populateEnabled="false";
 	
 	// Related Object Properties (many-to-one)
 	property name="accountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
@@ -108,11 +109,23 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// Helper method to return either the shippingAddress or accountAddress to be used
     public any function getAddress(){
+    	
+    	// If the shipping address is not null, then we can return it
     	if(!isNull(getShippingAddress())){
+    		
     		return getShippingAddress();
+    		
+    	// This is a hook to fix deprecated methodology
     	} else if(!isNull(getAccountAddress())) {
-    		return getAccountAddress().getAddress();
+    		
+    		// Get the account address, copy it, and save as the shipping address
+    		setShippingAddress( getAccountAddress().getAddress().copyAddress( true ) );
+    		
+    		// Now return the shipping address
+    		return getShippingAddress();
     	} else {
+    		
+    		// If no address, then just return a new one.
     		return getService("addressService").newAddress();
     	}
     }
@@ -124,7 +137,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		var smartList = getService("accountService").getAccountAddressSmartList();
 			smartList.addSelect(propertyIdentifier="accountAddressName", alias="name");
 			smartList.addSelect(propertyIdentifier="accountAddressID", alias="value"); 
-			smartList.addFilter(propertyIdentifier="account_accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
+			smartList.addFilter(propertyIdentifier="account.accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
 			smartList.addOrder("accountAddressName|ASC");
 			variables.accountAddressOptions = smartList.getRecords();
 		}
@@ -335,6 +348,44 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// ===============  END: Custom Formatting Methods =====================
 	
 	// ================== START: Overridden Methods ========================
+	
+	public boolean function getManualfulfillmentChargeFlag() {
+		if(!structKeyExists(variables, "manualFulfillmentChargeFlag")) {
+			variables.manualFulfillmentChargeFlag = 0;
+		}
+		return variables.manualFulfillmentChargeFlag;
+	}
+	
+	// sets it up so that if an accountAddressID is passed in, then we will automatically copy it as the billing address
+	public void function setAccountAddress(required any accountAddress) {
+		variables.accountAddress = arguments.accountAddress;
+		
+		setShippingAddress( variables.accountAddress.getAddress().copyAddress( true ) );
+	}
+	
+	// sets it up so that the charge for the shipping method is pulled out of the shippingMethodOptions
+	public void function setShippingMethod(required any shippingMethod) {
+		
+		// If there aren't any shippingMethodOptions available, then try to populate this fulfillment
+		if( !arrayLen(getFulfillmentShippingMethodOptions()) ) {
+			getService("shippingService").updateOrderFulfillmentShippingMethodOptions( this );
+		}
+		
+		// make sure that the shippingMethod exists in the fulfillmentShippingMethodOptions
+		for(var i=1; i<=arrayLen(getFulfillmentShippingMethodOptions()); i++) {
+			if(arguments.shippingMethod.getShippingMethodID() == getFulfillmentShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()) {
+				
+				// Set the method
+				variables.shippingMethod = arguments.shippingMethod;
+				
+				// Set the charge
+				if(!getManualfulfillmentChargeFlag()) {
+					setFulfillmentCharge( getFulfillmentShippingMethodOptions()[i].getTotalCharge() );	
+				}
+			}
+		}
+	}
+	
 	
 	public string function getSimpleRepresentation() {
 		var rep = "";

@@ -1375,49 +1375,69 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Call the generic save method to populate and validate
 		arguments.order = save(entity=arguments.order, data=arguments.data, context=arguments.context);
 	
-		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
-		if(arguments.order.getStatusCode() == "ostNotPlaced") {
+		// If the order has no errors & it has not been placed yet, then we can make necessary implicit updates
+		if(!arguments.order.hasErrors() && arguments.order.getStatusCode() == "ostNotPlaced") {
+			
+			// loop over the orderItems to remove any that have a qty of 0
 			for(var i = arrayLen(arguments.order.getOrderItems()); i >= 1; i--) {
 				if(arguments.order.getOrderItems()[i].getQuantity() < 1) {
 					arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
 				}
 			}
+			
+			// loop over any fulfillments and update the shippingMethodOptions for any shipping fulfillments
+			for(var f = arrayLen(arguments.order.getOrderFulfillments()); f >= 1; f--) {
+				if(arguments.order.getOrderFulfillments()[f].getFulfillmentMethodType() eq "shipping") {
+					getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.order.getOrderFulfillments()[f] );
+				}
+			}
+			
+			// Recalculate the order amounts for tax and promotions
+			recalculateOrderAmounts(arguments.order);
 		}
-	
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
-	
+		
 		return arguments.order;
 	}
 	
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}, string context="save") {
 		
-		// If the shipping method or address changes
-		var oldAddressSerialized = arguments.orderFulfillment.getAddress().getSimpleValuesSerialized();
-		var oldShippingMethodID = "";
-		if(!isNull(arguments.orderFulfillment.getShippingMethod())) {
-			oldShippingMethodID = arguments.orderFulfillment.getShippingMethod().getShippingMethodID();
-		}
-		
 		// Call the generic save method to populate and validate
 		arguments.orderFulfillment = save(arguments.orderFulfillment, arguments.data, arguments.context);
 		
-		// If there were no errors, then we can check to see if the shippingMethod or the address changed
-		if(!arguments.orderFulfillment.hasErrors()) {
+		// If there were no errors, and the order is not placed, then we can make necessary implicit updates
+		if(!arguments.orderFulfillment.hasErrors() && arguments.orderFulfillment.getOrder().getStatusCode() == "ostNotPlaced") {
 			
-			// Check Address
-			if(oldAddressSerialized != arguments.orderFulfillment.getAddress().getSimpleValuesSerialized()) {
-				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
+			// If this is a shipping fulfillment, then update the shippingMethodOptions and charge
+			if(arguments.orderFulfillment.getFulfillmentMethodType() eq "shipping") {
+				getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
 			}
 			
-			// Check Shipping Method, and update charge
-			if(!isNull(arguments.orderFulfillment.getShippingMethod()) && arguments.orderFulfillment.getShippingMethod().getShippingMethodID() != oldShippingMethodID) {
-				arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getSelectedShippingMethodOption().getTotalCharge() );
-			}
+			// Recalculate the order amounts for tax and promotions
+			recalculateOrderAmounts( arguments.orderFulfillment.getOrder() );
+			
 		}
 		
 		return arguments.orderFulfillment;
+	}
+	
+	public any function saveOrderItem(required any orderItem, struct data={}, string context="save") {
+		
+		// Call the generic save method to populate and validate
+		arguments.orderItem = save(arguments.orderItem, arguments.data, arguments.context);
+		
+		// If there were no errors, and the order is not placed, then we can make necessary implicit updates
+		if(!arguments.orderItem.hasErrors() && arguments.orderItem.getOrder().getStatusCode() == "ostNotPlaced") {
+			
+			// If this item was part of a shipping fulfillment then update that fulfillment
+			if(arguments.orderItem.getOrderFulfillment().getFulfillmentMethodType() eq "shipping") {
+				getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.orderItem.getOrderFulfillment() );
+			}
+			
+			// Recalculate the order amounts for tax and promotions
+			recalculateOrderAmounts( arguments.orderItem.getOrder() );
+		}
+		
+		return arguments.orderItem;
 	}
 	
 	public any function saveOrderPayment(required any orderPayment, struct data={}, string context="save") {

@@ -41,7 +41,7 @@ Notes:
 
 <!--- Move old mura settings into integration --->
 <cftry>
-	<cfquery name="local.oldmurasetting" dbtype="query">
+	<cfquery name="local.oldmurasetting">
 		UPDATE
 			SlatwallSetting
 		SET
@@ -49,7 +49,7 @@ Notes:
 		WHERE
 			settingName = 'globalPageShoppingCart'
 	</cfquery>
-	<cfquery name="local.oldmurasetting" dbtype="query">
+	<cfquery name="local.oldmurasetting">
 		UPDATE
 			SlatwallSetting
 		SET
@@ -57,7 +57,7 @@ Notes:
 		WHERE
 			settingName = 'globalPageOrderStatus'
 	</cfquery>
-	<cfquery name="local.oldmurasetting" dbtype="query">
+	<cfquery name="local.oldmurasetting">
 		UPDATE
 			SlatwallSetting
 		SET
@@ -65,7 +65,7 @@ Notes:
 		WHERE
 			settingName = 'globalPageOrderConfirmation'
 	</cfquery>
-	<cfquery name="local.oldmurasetting" dbtype="query">
+	<cfquery name="local.oldmurasetting">
 		UPDATE
 			SlatwallSetting
 		SET
@@ -73,7 +73,7 @@ Notes:
 		WHERE
 			settingName = 'globalPageMyAccount'
 	</cfquery>
-	<cfquery name="local.oldmurasetting" dbtype="query">
+	<cfquery name="local.oldmurasetting">
 		UPDATE
 			SlatwallSetting
 		SET
@@ -81,7 +81,7 @@ Notes:
 		WHERE
 			settingName = 'globalPageCreateAccount'
 	</cfquery>
-	<cfquery name="local.oldmurasetting" dbtype="query">
+	<cfquery name="local.oldmurasetting">
 		UPDATE
 			SlatwallSetting
 		SET
@@ -98,7 +98,7 @@ Notes:
 
 <!--- Add Active Flag Where needed --->
 <cftry>
-	<cfquery name="local.activeflag" dbtype="query">
+	<cfquery name="local.activeflag">
 		UPDATE
 			SlatwallAccountPaymentMethod
 		SET
@@ -107,7 +107,7 @@ Notes:
 			activeFlag is null
 	</cfquery>
 	
-	<cfquery name="local.activeflag" dbtype="query">
+	<cfquery name="local.activeflag">
 		UPDATE
 			SlatwallSku
 		SET
@@ -118,6 +118,39 @@ Notes:
 	
 	<cfcatch>
 		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - setting default activeFlag Has Errors">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<!--- Add other default flags --->
+<cftry>
+	<cfquery name="local.flag">
+		UPDATE
+			SlatwallOrderFulfillment
+		SET
+			manualFulfillmentChargeFlag = 0
+		WHERE
+			manualFulfillmentChargeFlag is null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - setting default flags Has Errors">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<!--- Allow for nulls in order payments --->
+<cftry>
+	<cfquery name="local.allowNull" dbtype="query">
+		<cfif getApplicationValue("databaseType") eq "MySQL">
+			ALTER TABLE SlatwallOrderPayment MODIFY COLUMN amount decimal(19,2) NULL
+		<cfelse>
+			ALTER TABLE SlatwallOrderPayment ALTER COLUMN amount decimal(19,2) NULL
+		</cfif>
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Allowing nulls in Order Payments">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
