@@ -454,6 +454,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return newOrder;
 	}
 	
+	
+	/*
+	return getService("orderService").getOrderAmountNeeded(orderTotal=getOrder().getTotal(), orderID=getOrder().getOrderID(), orderPaymentTypeID=getOrderPaymentType().getTypeID());
+	
+	variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").;
+	*/
+	
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
@@ -468,6 +475,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function getMaxOrderNumber() {
 		return getOrderDAO().getMaxOrderNumber();
+	}
+	
+	public boolean function getPeerOrderPaymentNullAmountExistsFlag(required string orderID, required string orderPaymentTypeID, required string orderPaymentID) {
+		return getOrderDAO().getPeerOrderPaymentNullAmountExistsFlag(argumentcollection=arguments);
+	}
+	
+	public numeric function getOrderPaymentNonNullAmountTotal(required string orderID) {
+		return getOrderDAO().getOrderPaymentNonNullAmountTotal(argumentcollection=arguments);
 	}
 	
 	// ===================== START: DAO Passthrough ===========================
@@ -578,17 +593,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// If an amount was passed in then we can set it on the order payment
 		if(!isNull(arguments.processObject.getAmount())) {
 			newOrderPayment.setAmount( arguments.processObject.getAmount() );
-			
-		// If no amount was passed in, but there is already 1 order payment with no amount, then we need to set this amount to 0
-		} else if( arrayLen(arguments.order.getOrderPayments()) ) {
-			
-			// If a null payment of this type already exists, then we need to force this payment to be 0 because only 1 null credit payment and 1 null charge payment can exists
-			for(var i=1; i<=arrayLen(arguments.order.getOrderPayments()); i++) {
-				if( isNull(arguments.order.getOrderPayments()[i].getAmount()) && arguments.order.getOrderPayments()[i].getOrderPaymentType().getSystemCode() eq newOrderPayment.getOrderPaymentType().getSystemCode() ) {
-					newOrderPayment.setAmount( 0 );
-				}
-			}
-			
 		}
 		
 		// Add this new order payment to the order
@@ -711,9 +715,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
 						if(!arguments.order.hasErrors() || hadChargeCreditAuthorizeSuccess) {
 							
-							// If there was only 1 payment on the order, then we need to update the "amount" field with whatever is returned
-							if(arrayLen(arguments.order.getOrderPayments()) eq 1) {
-								arguments.order.getOrderPayments()[1].setAmount( arguments.order.getOrderPayments()[1].getAmount() );
+							// Loop over the order payments to setAmount = getAmount so that any null payments get explicitly defined
+							for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+								arguments.order.getOrderPayments()[i].setAmount( arguments.order.getOrderPayments()[i].getAmount() );
 							}
 							
 							// If this order is the same as the current cart, then set the current cart to a new order

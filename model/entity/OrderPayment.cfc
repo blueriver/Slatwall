@@ -101,6 +101,8 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="paymentMethodOptions" persistent="false";
 	property name="orderStatusCode" persistent="false";
 	property name="securityCode" persistent="false";
+	property name="peerOrderPaymentNullAmountExistsFlag" persistent="false";
+	property name="orderAmountNeeded" persistent="false";
 	
 	public string function getMostRecentChargeProviderTransactionID() {
 		for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
@@ -314,7 +316,26 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		return variables.paymentMethodOptions;
 	}
 	
+	public any function getPeerOrderPaymentNullAmountExistsFlag() {
+		if(!structKeyExists(variables, "peerOrderPaymentNullAmountExistsFlag")) {
+			variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID(), orderPaymentTypeID=getOrderPaymentType().getTypeID(), orderPaymentID=getOrderPaymentID());
+		}
+		return variables.peerOrderPaymentNullAmountExistsFlag;
+	}
 	
+	// Important this can be a negative number
+	public any function getOrderAmountNeeded() {
+		
+		if(!structKeyExists(variables, "orderAmountNeeded")) {
+			
+			var total = getOrder().getTotal();
+			var paymentTotal = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrder().getOrderID());
+			
+			variables.orderAmountNeeded = precisionEvaluate( total - paymentTotal);
+		}
+		
+		return variables.orderAmountNeeded;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
@@ -451,8 +472,14 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		if( !structKeyExists(variables, "amount") ) {
 			
 			// If there is an order, it has not been placed and there is only 1 order payment with no explicit value set... then we can return the order total.
-			if(!isNull(getOrder()) && getOrder().getOrderStatusType().getSystemCode() eq "ostNotPlaced") {
-				return getOrder().getTotal();
+			if(!isNull(getOrder()) && getOrder().getOrderStatusType().getSystemCode() eq "ostNotPlaced" && !getPeerOrderPaymentNullAmountExistsFlag()) {
+				var orderAmountNeeded = getOrderAmountNeeded();
+				if(orderAmountNeeded gt 0 && getOrderPaymentType().getSystemCode() eq "optCharge") {
+					return orderAmountNeeded;
+				} else if (orderAmountNeeded gt 0 && getOrderPaymentType().getSystemCode() eq "optCredit") {
+					return orderAmountNeeded * -1;
+				}
+				return 0;
 			}
 			
 			// If for some reson the above logic did not fire then just set the amount to 0

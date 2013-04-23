@@ -91,5 +91,60 @@ Notes:
 			return ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
 		}
 	
+		public boolean function getPeerOrderPaymentNullAmountExistsFlag(required string orderID, required string orderPaymentTypeID, required string orderPaymentID) {
+			var result = ormExecuteQuery("SELECT orderPaymentID FROM SlatwallOrderPayment op WHERE op.order.orderID = ? AND op.orderPaymentType.typeID = ? AND op.amount IS NULL", [arguments.orderID, arguments.orderPaymentTypeID]);
+			
+			if(arrayLen(result) && result[1] neq arguments.orderPaymentID) {
+				return true;
+			}
+			
+			return false;
+		}
+		/*
+		public numeric function getOrderPaymentNonNullAmountTotal(required string orderID) {
+			//var result = ormExecuteQuery("SELECT COALESCE(charge.amount, 0) - COALESCE(credit.amount, 0) FROM SlatwallOrder o LEFT JOIN o.orderPayments charge LEFT JOIN o.orderPayments credit WHERE o.orderID = ? AND charge.amount is not null AND credit.amount is not null AND charge.orderPaymentType.systemCode = ? AND credit.orderPaymentType.systemCode = ?", [arguments.orderID, "optCharge", "optCredit"]);
+			
+			writeDump(arguments);
+			writeDump(ormExecuteQuery("SELECT charge.amount, credit.amount, COALESCE(SUM(charge.amount), 0) - COALESCE(SUM(credit.amount), 0) FROM SlatwallOrder o LEFT JOIN o.orderPayments charge LEFT JOIN o.orderPayments credit LEFT JOIN charge.orderPaymentType chargept LEFT JOIN credit.orderPaymentType creditpt WHERE o.orderID = ? AND charge.amount is not null AND credit.amount is not null AND chargept.systemCode = ? AND creditpt.systemCode = ?", [arguments.orderID, "optCharge", "optCredit"]));
+			abort;
+			
+			if(arrayLen(result)) {
+				return result[1];
+			}
+			
+			return 0;
+		}
+		*/
 	</cfscript>
+	
+	<cffunction name="getOrderPaymentNonNullAmountTotal" access="public" returntype="Numeric">
+		<cfargument name="orderID" type="string" required="true" />
+		
+		<cfset var rs = "" />
+		<cfset var total = 0 />
+		
+		<cfquery name="rs">
+			SELECT
+				SlatwallOrderPayment.amount,
+				SlatwallType.systemCode
+			FROM
+				SlatwallOrderPayment
+			  LEFT JOIN
+			  	SlatwallType on SlatwallOrderPayment.orderPaymentTypeID = SlatwallType.typeID	
+			WHERE
+				SlatwallOrderPayment.orderID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.orderID#" />
+			  AND
+			  	SlatwallOrderPayment.amount is not null
+		</cfquery>
+		
+		<cfloop query="rs">
+			<cfif rs.systemCode eq "optCharge">
+				<cfset total = precisionEvaluate(total + rs.amount) />
+			<cfelse>
+				<cfset total = precisionEvaluate(total - rs.amount) />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn total />
+	</cffunction>
 </cfcomponent>

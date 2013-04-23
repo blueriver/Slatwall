@@ -50,13 +50,14 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.orderSmartList#" 
 							  recordDetailAction="admin:entity.detailorder"
 							  recordEditAction="admin:entity.editorder">
+							    
 		<cfif rc.slatAction eq "admin:entity.listorder">
 			<cf_HibachiListingColumn propertyIdentifier="orderNumber" search="true" />
 			<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime"  range=true />
 		</cfif>
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.company" search="true"/>
 		<cf_HibachiListingColumn propertyIdentifier="account.firstName" search="true" />
 		<cf_HibachiListingColumn propertyIdentifier="account.lastName" search="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.company" search="true"/>
 		<cf_HibachiListingColumn propertyIdentifier="orderType.type" filter=true />
 		<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="orderOrigin.orderOriginName" filter="true" />
