@@ -51,7 +51,8 @@ Notes:
 				from="#arguments.email.getEmailFrom()#"
 				subject="#arguments.email.getEmailSubject()#"
 				cc="#arguments.email.getEmailCC()#"
-				bcc="#arguments.email.getEmailBCC()#">
+				bcc="#arguments.email.getEmailBCC()#"
+				charset="utf-8">
 			
 			<!--- If a Text Body exists --->
 			<cfif len(arguments.email.getEmailBodyText())>
