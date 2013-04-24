@@ -42,13 +42,15 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.subscriptionTerm#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.subscriptionTerm#" edit="#rc.edit#" />
-
+		
 		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionTermName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="initialTerm" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="renewalTerm" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="gracePeriodTerm" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="allowProrateFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="autoRenewFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="autoPayFlag" edit="#rc.edit#">
@@ -56,6 +58,9 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionTerm#" property="renewalReminderDays" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
+		
+		<cf_HibachiTabGroup object="#rc.subscriptionTerm#">
+		</cf_HibachiTabGroup>
 
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

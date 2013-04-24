@@ -452,7 +452,7 @@
 	
 	public boolean function validate_regex(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		if(!isNull(propertyValue) && isValid("regex", propertyValue, arguments.constraintValue)) {
+		if(isNull(propertyValue) || isValid("regex", propertyValue, arguments.constraintValue)) {
 			return true;
 		}
 		return false;
