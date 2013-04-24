@@ -47,6 +47,6 @@ Notes:
 		<cfloop collection="#skuOptions#" item="option" >
 			<cf_HibachiFieldDisplay fieldName="options" title="#option#" value="#skuValues[option]#" valueoptions="#skuOptions[option]#" fieldtype="select" edit="#rc.edit#">
 			<cfset count++ />
-		</cfloop>
+		</cfloop>		
 	</cf_HibachiPropertyList>
 </cfoutput>
