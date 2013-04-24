@@ -74,7 +74,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.o
 		var popArray = listToArray(rc.processObjectProperties);
 		
 		var admin = {};
-		if(len(arguments.rc.adminAttributes) && isJSON(arguments.rc.adminAttributes)) {
+		if(len(arguments.rc.adminAttributes) && arguments.rc.adminAttributes neq "null" && isJSON(arguments.rc.adminAttributes)) {
 			admin = deserializeJSON(arguments.rc.adminAttributes);
 		}
 		
