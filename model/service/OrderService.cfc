@@ -690,35 +690,20 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					// Verify the order requirements list, to make sure that this order has everything it needs to continue
 					if(!len(orderRequirementsList)) {
 						
-						// This will override the order.hasErrors() below in case one transaction goes through
-						var hadChargeCreditAuthorizeSuccess = false;
+						// Setup a value to log the amount received, credited or authorized.  If any of these exists then we need to place the order
+						var amountAuthorizeCreditReceive = 0;
 						
 						// Process All Payments and Save the ones that were successful
 						for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
 							
-							// Setup a flag to check if this is an authorize,credit,charge type of transaction
-							var chargeCreditAuthroizeTransaction = false;
-							if(!isNull(arguments.order.getOrderPayments()[i].getPaymentMethod().getPlaceOrderChargeTransactionType()) && listFindNoCase("charge,credit,authorize,authorizeAndCapture", arguments.order.getOrderPayments()[i].getPaymentMethod().getPlaceOrderChargeTransactionType())) {
-								chargeCreditAuthroizeTransaction = true;
-							}
-							
 							// Call the placeOrderTransactionType for the order payment
 							var thisOrderPayment = this.processOrderPayment(arguments.order.getOrderPayments()[i], {}, 'runPlaceOrderTransaction');
 							
-							// Tell the process that one transaction went through
-							if(!thisOrderPayment.hasErrors() && chargeCreditAuthroizeTransaction) {
-								hadChargeCreditAuthorizeSuccess = true;
-							}
-							
+							amountAuthorizeCreditReceive = precisionEvaluate(amountAuthorizeCreditReceive + arguments.order.getOrderPayments()[i].getAmountAuthorized() + arguments.order.getOrderPayments()[i].getAmountReceived() + arguments.order.getOrderPayments()[i].getAmountCredited());
 						}
 						
 						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
-						if(!arguments.order.hasErrors() || hadChargeCreditAuthorizeSuccess) {
-							
-							// Loop over the order payments to setAmount = getAmount so that any null payments get explicitly defined
-							for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-								arguments.order.getOrderPayments()[i].setAmount( arguments.order.getOrderPayments()[i].getAmount() );
-							}
+						if(!arguments.order.hasErrors() || amountAuthorizeCreditReceive gt 0) {
 							
 							// If this order is the same as the current cart, then set the current cart to a new order
 							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {

@@ -149,7 +149,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public any function getOrderNumber() {
 		if(isNull(variables.orderNumber)) {
 			variables.orderNumber = "";
-			confirmOrderNumberOpenDateCloseDate();
+			confirmOrderNumberOpenDateCloseDatePaymentAmount();
 		}
 		return variables.orderNumber;
 	}
@@ -174,7 +174,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
  	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
-	public void function confirmOrderNumberOpenDateCloseDate() {
+	public void function confirmOrderNumberOpenDateCloseDatePaymentAmount() {
+		
+		// If the order is open, and has no open dateTime
 		if((isNull(variables.orderNumber) || variables.orderNumber == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
 			if(setting('globalOrderNumberGeneration') == "Internal" || setting('globalOrderNumberGeneration') == "") {
 				var maxOrderNumber = getService("orderService").getMaxOrderNumber();
@@ -190,8 +192,15 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			setOrderOpenDateTime( now() );
 			setOrderOpenIPAddress( CGI.REMOTE_ADDR );
 		}
+		
+		// If the order is closed, and has no close dateTime
 		if(!isNull(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() == "ostClosed" && isNull(getOrderCloseDateTime())) {
 			setOrderCloseDateTime( now() );
+			
+			// Loop over the order payments to setAmount = getAmount so that any null payments get explicitly defined
+			for(var i = 1; i <= arrayLen(getOrderPayments()); i++) {
+				getOrderPayments()[i].setAmount( getOrderPayments()[i].getAmount() );
+			}
 		}
 	}
 	
@@ -720,12 +729,12 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		getOrderType();
 		getOrderStatusType();
 		
-		confirmOrderNumberOpenDateCloseDate();
+		confirmOrderNumberOpenDateCloseDatePaymentAmount();
 	}
 	
 	public void function preUpdate(Struct oldData){
 		super.preUpdate();
-		confirmOrderNumberOpenDateCloseDate();
+		confirmOrderNumberOpenDateCloseDatePaymentAmount();
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

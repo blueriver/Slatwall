@@ -45,11 +45,7 @@ Notes:
 								   backaction="admin:entity.detailorder"
 								   backquerystring="orderID=#rc.orderPayment.getOrder().getOrderID()#"
 								   deleteQueryString="redirectAction=admin:entity.detailOrder&orderID=#rc.orderPayment.getOrder().getOrderID()#">
-			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="chargePreAuthorization" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="authorizeAndCharge" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="authorize" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="credit" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
-			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.processorderpayment" processContext="offlineTransaction" querystring="orderPaymentID=#rc.orderPayment.getOrderPaymentID()#" type="list" modal="true">
+			<cf_HibachiProcessCaller entity="#rc.orderPayment#" action="admin:entity.preprocessorderpayment" processContext="createTransaction" type="list" modal="true">
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
@@ -65,6 +61,8 @@ Notes:
 			</cf_HibachiPropertyList>
 			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" />
+				<hr />
+				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amountAuthorized" />
 				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amountReceived" />
 				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amountCredited" />
 			</cf_HibachiPropertyList>

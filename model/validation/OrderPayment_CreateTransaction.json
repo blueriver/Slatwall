@@ -17,11 +17,11 @@
 	},
 	"properties":{
 		"amount":				[
-			{"required":true},
+			{"required":true,"minValue":".01","dataType":"numeric"},
 			{"conditions":"transactionTypeAuthorize","lteProperty":"orderPayment.amountUnAuthorized"},
-			{"conditions":"transactionTypeAuthorizeAndCharge","lteProperty":"orderPayment.getAmountUnreceived"},
-			{"conditions":"transactionTypeCredit","lteProperty":"orderPayment.getAmountUncredited"},
-			{"conditions":"transactionTypeChargePreAuthorization","lteProperty":"orderPayment.getAmountUncaptured"}
+			{"conditions":"transactionTypeAuthorizeAndCharge","lteProperty":"orderPayment.amountUnreceived"},
+			{"conditions":"transactionTypeCredit","lteProperty":"orderPayment.amountUncredited"},
+			{"conditions":"transactionTypeChargePreAuthorization","lteProperty":"orderPayment.amountUncaptured"}
 		],
 		"transactionType":		[{"required":true}]
 	}
