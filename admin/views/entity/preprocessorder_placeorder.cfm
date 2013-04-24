@@ -37,7 +37,6 @@ Notes:
 
 --->
 <cfparam name="rc.order" type="any" />
-<cfparam name="rc.processObject" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
@@ -62,10 +61,10 @@ Notes:
 							<input type="hidden" name="orderFulfillments[#ofIndex#].orderFulfillmentID" value="#orderFulfillment.getOrderFulfillmentID()#" />						
 							<cfif orderFulfillment.getFulfillmentMethodType() eq "shipping">
 								<cfif structKeyExists(thisErrorBean.getErrors(), "shippingMethod")>
-									<cf_HibachiPropertyDisplay object="#orderFulfillment#" property="shippingMethod" fieldName="orderFulfillments[#ofIndex#].shippingMethodID" fieldClass="required" edit="#rc.edit#" />
+									<cf_HibachiPropertyDisplay object="#orderFulfillment#" property="shippingMethod" fieldName="orderFulfillments[#ofIndex#].shippingMethod.shippingMethodID" fieldClass="required" edit="#rc.edit#" />
 								</cfif>
 								<cfif structKeyExists(thisErrorBean.getErrors(), "shippingAddress")>
-									<cf_SlatwallAdminAddressDisplay address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#ofIndex#]." edit="#rc.edit#" />
+									<cf_SlatwallAdminAddressDisplay address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#ofIndex#].shippingAddress" edit="#rc.edit#" />
 								</cfif>
 								<hr />
 							</cfif>
@@ -89,7 +88,7 @@ Notes:
 						</cfif>
 					</cfloop>
 					<!--- Add an order payment for the full amount --->
-					<cfif totalPaymentAmount lt rc.order.getTotal()>
+					<cfif totalPaymentAmount neq rc.order.getTotal()>
 						<h4>Add Order Payment</h4>
 						<cfset aopProcessObject = rc.order.getProcessObject("addOrderPayment") />
 						
@@ -165,9 +164,6 @@ Notes:
 					</cfif>
 				</cfif>
 				
-				
-				
-	
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		

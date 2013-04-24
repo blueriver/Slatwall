@@ -690,35 +690,20 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					// Verify the order requirements list, to make sure that this order has everything it needs to continue
 					if(!len(orderRequirementsList)) {
 						
-						// This will override the order.hasErrors() below in case one transaction goes through
-						var hadChargeCreditAuthorizeSuccess = false;
+						// Setup a value to log the amount received, credited or authorized.  If any of these exists then we need to place the order
+						var amountAuthorizeCreditReceive = 0;
 						
 						// Process All Payments and Save the ones that were successful
 						for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
 							
-							// Setup a flag to check if this is an authorize,credit,charge type of transaction
-							var chargeCreditAuthroizeTransaction = false;
-							if(!isNull(arguments.order.getOrderPayments()[i].getPaymentMethod().getPlaceOrderChargeTransactionType()) && listFindNoCase("charge,credit,authorize,authorizeAndCapture", arguments.order.getOrderPayments()[i].getPaymentMethod().getPlaceOrderChargeTransactionType())) {
-								chargeCreditAuthroizeTransaction = true;
-							}
-							
 							// Call the placeOrderTransactionType for the order payment
 							var thisOrderPayment = this.processOrderPayment(arguments.order.getOrderPayments()[i], {}, 'runPlaceOrderTransaction');
 							
-							// Tell the process that one transaction went through
-							if(!thisOrderPayment.hasErrors() && chargeCreditAuthroizeTransaction) {
-								hadChargeCreditAuthorizeSuccess = true;
-							}
-							
+							amountAuthorizeCreditReceive = precisionEvaluate(amountAuthorizeCreditReceive + arguments.order.getOrderPayments()[i].getAmountAuthorized() + arguments.order.getOrderPayments()[i].getAmountReceived() + arguments.order.getOrderPayments()[i].getAmountCredited());
 						}
 						
 						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
-						if(!arguments.order.hasErrors() || hadChargeCreditAuthorizeSuccess) {
-							
-							// Loop over the order payments to setAmount = getAmount so that any null payments get explicitly defined
-							for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-								arguments.order.getOrderPayments()[i].setAmount( arguments.order.getOrderPayments()[i].getAmount() );
-							}
+						if(!arguments.order.hasErrors() || amountAuthorizeCreditReceive gt 0) {
 							
 							// If this order is the same as the current cart, then set the current cart to a new order
 							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {
@@ -1375,49 +1360,69 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Call the generic save method to populate and validate
 		arguments.order = save(entity=arguments.order, data=arguments.data, context=arguments.context);
 	
-		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
-		if(arguments.order.getStatusCode() == "ostNotPlaced") {
+		// If the order has no errors & it has not been placed yet, then we can make necessary implicit updates
+		if(!arguments.order.hasErrors() && arguments.order.getStatusCode() == "ostNotPlaced") {
+			
+			// loop over the orderItems to remove any that have a qty of 0
 			for(var i = arrayLen(arguments.order.getOrderItems()); i >= 1; i--) {
 				if(arguments.order.getOrderItems()[i].getQuantity() < 1) {
 					arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
 				}
 			}
+			
+			// loop over any fulfillments and update the shippingMethodOptions for any shipping fulfillments
+			for(var f = arrayLen(arguments.order.getOrderFulfillments()); f >= 1; f--) {
+				if(arguments.order.getOrderFulfillments()[f].getFulfillmentMethodType() eq "shipping") {
+					getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.order.getOrderFulfillments()[f] );
+				}
+			}
+			
+			// Recalculate the order amounts for tax and promotions
+			recalculateOrderAmounts(arguments.order);
 		}
-	
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
-	
+		
 		return arguments.order;
 	}
 	
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}, string context="save") {
 		
-		// If the shipping method or address changes
-		var oldAddressSerialized = arguments.orderFulfillment.getAddress().getSimpleValuesSerialized();
-		var oldShippingMethodID = "";
-		if(!isNull(arguments.orderFulfillment.getShippingMethod())) {
-			oldShippingMethodID = arguments.orderFulfillment.getShippingMethod().getShippingMethodID();
-		}
-		
 		// Call the generic save method to populate and validate
 		arguments.orderFulfillment = save(arguments.orderFulfillment, arguments.data, arguments.context);
 		
-		// If there were no errors, then we can check to see if the shippingMethod or the address changed
-		if(!arguments.orderFulfillment.hasErrors()) {
+		// If there were no errors, and the order is not placed, then we can make necessary implicit updates
+		if(!arguments.orderFulfillment.hasErrors() && arguments.orderFulfillment.getOrder().getStatusCode() == "ostNotPlaced") {
 			
-			// Check Address
-			if(oldAddressSerialized != arguments.orderFulfillment.getAddress().getSimpleValuesSerialized()) {
-				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
-				getTaxService().updateOrderAmountsWithTaxes( arguments.orderFulfillment.getOrder() );
+			// If this is a shipping fulfillment, then update the shippingMethodOptions and charge
+			if(arguments.orderFulfillment.getFulfillmentMethodType() eq "shipping") {
+				getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
 			}
 			
-			// Check Shipping Method, and update charge
-			if(!isNull(arguments.orderFulfillment.getShippingMethod()) && arguments.orderFulfillment.getShippingMethod().getShippingMethodID() != oldShippingMethodID) {
-				arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getSelectedShippingMethodOption().getTotalCharge() );
-			}
+			// Recalculate the order amounts for tax and promotions
+			recalculateOrderAmounts( arguments.orderFulfillment.getOrder() );
+			
 		}
 		
 		return arguments.orderFulfillment;
+	}
+	
+	public any function saveOrderItem(required any orderItem, struct data={}, string context="save") {
+		
+		// Call the generic save method to populate and validate
+		arguments.orderItem = save(arguments.orderItem, arguments.data, arguments.context);
+		
+		// If there were no errors, and the order is not placed, then we can make necessary implicit updates
+		if(!arguments.orderItem.hasErrors() && arguments.orderItem.getOrder().getStatusCode() == "ostNotPlaced") {
+			
+			// If this item was part of a shipping fulfillment then update that fulfillment
+			if(arguments.orderItem.getOrderFulfillment().getFulfillmentMethodType() eq "shipping") {
+				getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.orderItem.getOrderFulfillment() );
+			}
+			
+			// Recalculate the order amounts for tax and promotions
+			recalculateOrderAmounts( arguments.orderItem.getOrder() );
+		}
+		
+		return arguments.orderItem;
 	}
 	
 	public any function saveOrderPayment(required any orderPayment, struct data={}, string context="save") {

@@ -103,6 +103,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="securityCode" persistent="false";
 	property name="peerOrderPaymentNullAmountExistsFlag" persistent="false";
 	property name="orderAmountNeeded" persistent="false";
+	property name="creditCardOrProviderTokenExistsFlag" persistent="false";
 	
 	public string function getMostRecentChargeProviderTransactionID() {
 		for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
@@ -233,37 +234,6 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		return uncredited;
 	}
 	
-	public void function setCreditCardNumber(required string creditCardNumber) {
-		if(len(arguments.creditCardNumber)) {
-			variables.creditCardNumber = arguments.creditCardNumber;
-			setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
-			setCreditCardType( getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber) );
-			if(getCreditCardType() != "Invalid" && !isNull(getPaymentMethod()) && getPaymentMethod().setting("paymentMethodStoreCreditCardNumberWithOrder") == 1) {
-				setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
-			}
-		} else {
-			setCreditCardType(javaCast("null", ""));
-			setCreditCardNumberEncrypted(javaCast("null", ""));
-		}
-	}
-	
-	public string function getCreditCardNumber() {
-		if(!structKeyExists(variables,"creditCardNumber")) {
-			if(nullReplace(getCreditCardNumberEncrypted(), "") NEQ "") {
-				variables.creditCardNumber = decryptValue(getCreditCardNumberEncrypted());
-			} else {	
-				variables.creditCardNumber = "";
-			}
-		}
-		return variables.creditCardNumber;
-	}
-	
-	public string function getExpirationDate() {
-		if(!structKeyExists(variables,"expirationDate")) {
-			variables.expirationDate = nullReplace(getExpirationMonth(),"") & "/" & nullReplace(getExpirationYear(), "");
-		}
-		return variables.expirationDate;
-	}
 	
 	public array function getExpirationMonthOptions() {
 		return [
@@ -303,13 +273,22 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		return getOrder().getStatusCode();
 	}
 	
+	public string function getExpirationDate() {
+		if(!structKeyExists(variables,"expirationDate")) {
+			variables.expirationDate = nullReplace(getExpirationMonth(),"") & "/" & nullReplace(getExpirationYear(), "");
+		}
+		return variables.expirationDate;
+	}
+	
 	public any function getPaymentMethodOptions() {
 		if(!structKeyExists(variables, "paymentMethodOptions")) {
 			var sl = getService("paymentService").getPaymentMethodSmartList();
+			
 			sl.addFilter('activeFlag', 1);
 			sl.addSelect('paymentMethodID', 'value');
 			sl.addSelect('paymentMethodName', 'name');
 			sl.addSelect('paymentMethodType', 'paymentmethodtype');
+			sl.addSelect('allowSaveFlag', 'allowsave');
 			
 			variables.paymentMethodOptions = sl.getRecords();
 		}
@@ -335,6 +314,23 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		}
 		
 		return variables.orderAmountNeeded;
+	}
+	
+	public string function getCreditCardNumber() {
+		if(!structKeyExists(variables,"creditCardNumber")) {
+			if(nullReplace(getCreditCardNumberEncrypted(), "") NEQ "") {
+				return decryptValue(getCreditCardNumberEncrypted());
+			}
+			return ;
+		}
+		return variables.creditCardNumber;
+	}
+	
+	public boolean function getCreditCardOrProviderTokenExistsFlag() {
+		if(isNull(getCreditCardNumber()) && isNull(getProviderToken())) {
+			return false;
+		}
+		return true;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -507,6 +503,22 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
+	
+	public void function setCreditCardNumber(required string creditCardNumber) {
+		if(len(arguments.creditCardNumber)) {
+			variables.creditCardNumber = arguments.creditCardNumber;
+			setCreditCardLastFour( right(arguments.creditCardNumber, 4) );
+			setCreditCardType( getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber) );
+			if(getCreditCardType() != "Invalid" && !isNull(getPaymentMethod()) && getPaymentMethod().getSaveOrderPaymentEncryptFlag()) {
+				setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+			}
+		} else {
+			structDelete(variables, "creditCardNumber");
+			setCreditCardType(javaCast("null", ""));
+			setCreditCardType(javaCast("null", ""));
+			setCreditCardNumberEncrypted(javaCast("null", ""));
+		}
+	}
 	
 	public any function getSimpleRepresentation() {
 		if(this.isNew()) {

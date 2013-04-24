@@ -43,6 +43,13 @@ Notes:
 		giftCard		
 		paymentTerm		
 						
+	paymentTransactionTypes
+		credit					
+		receive					
+		authorize				
+		authorizeAndCharge		
+		chargePreAuthorization	
+		generateToken
 */
 component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="HibachiEntity" cacheuse="transactional" hb_serviceName="paymentService" hb_permission="this" hb_processContexts="processPayment,processCashPayment,processCheckPayment,processCreditCardPayment,processExternalPayment,processGiftCardPayment,processTermAccountPayment" {
 	

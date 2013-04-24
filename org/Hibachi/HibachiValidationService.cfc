@@ -376,7 +376,7 @@
 	
 	public boolean function validate_lteProperty(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#arguments.constraintValue#");
+		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.constraintValue ).invokeMethod("get#listLast(arguments.constraintValue,'._')#");
 		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue <= compairPropertyValue) {
 			return true;
 		}
@@ -385,7 +385,7 @@
 	
 	public boolean function validate_ltProperty(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#arguments.constraintValue#");
+		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.constraintValue ).invokeMethod("get#listLast(arguments.constraintValue,'._')#");
 		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue < compairPropertyValue) {
 			return true;
 		}
@@ -394,7 +394,7 @@
 	
 	public boolean function validate_gteProperty(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#arguments.constraintValue#");
+		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.constraintValue ).invokeMethod("get#listLast(arguments.constraintValue,'._')#");
 		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue >= compairPropertyValue) {
 			return true;
 		}
@@ -403,7 +403,7 @@
 	
 	public boolean function validate_gtProperty(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#arguments.constraintValue#");
+		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.constraintValue ).invokeMethod("get#listLast(arguments.constraintValue,'._')#");
 		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue > compairPropertyValue) {
 			return true;
 		}
@@ -412,7 +412,7 @@
 	
 	public boolean function validate_eqProperty(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#arguments.constraintValue#");
+		var compairPropertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.constraintValue ).invokeMethod("get#listLast(arguments.constraintValue,'._')#");
 		if((isNull(propertyValue) && isNull(compairPropertyValue)) || (!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue == compairPropertyValue)) {
 			return true;
 		}
@@ -421,7 +421,7 @@
 	
 	public boolean function validate_neqProperty(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		var compairPropertyValue =  arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#arguments.constraintValue#");
+		var compairPropertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.constraintValue ).invokeMethod("get#listLast(arguments.constraintValue,'._')#");
 		if(!isNull(propertyValue) && !isNull(compairPropertyValue) && propertyValue != compairPropertyValue) {
 			return true;
 		}

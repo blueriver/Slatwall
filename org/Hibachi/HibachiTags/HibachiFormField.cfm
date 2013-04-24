@@ -144,7 +144,7 @@
 									<cfset thisOptionName = option[ key ] />
 								<cfelseif key eq "value">
 									<cfset thisOptionValue = option[ key ] />
-								<cfelse>
+								<cfelseif not isNull(key) and structKeyExists(option, key) and not isNull(option[key])>
 									<cfset thisOptionData = listAppend(thisOptionData, 'data-#replace(lcase(key), '_', '-', 'all')#="#option[key]#"', ' ') />
 								</cfif>
 							</cfloop>

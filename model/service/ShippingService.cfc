@@ -229,8 +229,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				if(!listFindNoCase(shippingMethodIDOptionsList, arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[c].getShippingMethodRate().getShippingMethod().getShippingMethodID())) {
 					arguments.orderFulfillment.removeFulfillmentShippingMethodOption( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[c] );
 					
-				// Else if this method option is the same shipping method that the user previously selected, then we can just update the fulfillmentCharge
-				} else if (!isNull(arguments.orderFulfillment.getShippingMethod()) && arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[c].getShippingMethodRate().getShippingMethod().getShippingMethodID() == arguments.orderFulfillment.getShippingMethod().getShippingMethodID()) {
+				// Else if this method option is the same shipping method that the user previously selected, then we can just update the fulfillmentCharge, as long as this wasn't set manually.
+				} else if (!isNull(arguments.orderFulfillment.getShippingMethod()) && arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[c].getShippingMethodRate().getShippingMethod().getShippingMethodID() == arguments.orderFulfillment.getShippingMethod().getShippingMethodID() && !arguments.orderFulfillment.getManualFulfillmentChargeFlag()) {
 					arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[c].getTotalCharge() );
 					
 				}
@@ -238,8 +238,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// Now if there is no method yet selected, and only one shippingMethod as an option, we can automatically just select it.
 			if(isNull(arguments.orderFulfillment.getShippingMethod()) && arrayLen(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()) == 1) {
-				arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[1].getTotalCharge() );
+				
+				// Set the method
 				arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[1].getShippingMethodRate().getShippingMethod() );
+				
+				// If the fulfillmentCharge wasn't done manually then this can be updated
+				if(!arguments.orderFulfillment.getManualFulfillmentChargeFlag()) {
+					arguments.orderFulfillment.setFulfillmentCharge( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[1].getTotalCharge() );	
+				}
 			}
 			
 		}
