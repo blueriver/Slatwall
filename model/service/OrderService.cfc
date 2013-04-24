@@ -490,7 +490,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: Process Methods ===========================
 	
 	// Process: Order
-	public any function processOrder_addSaleOrderItem(required any order, required any processObject) {
+	public any function processOrder_addOrderItem(required any order, required any processObject) {
 		
 		// Setup the Order Fulfillment
 		if(len(processObject.getOrderFulfillmentID()) && processObject.getOrderFulfillmentID() neq "new") {
