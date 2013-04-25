@@ -85,7 +85,12 @@ Notes:
 			</div>
 			<div class="tab-pane" id="tabsaddstock">
 				<div class="row-fluid">
-					<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemStockOptionsSmartList()#">
+					<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemStockOptionsSmartList()#"
+											  recordProcessAction="admin:entity.processOrder"
+											  recordProcessQueryString="orderItemTypeSystemCode=oitSale"
+											  recordProcessContext="addOrderItem"
+											  recordProcessEntity="#rc.order#"
+											  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">
 						
 						<cf_HibachiListingColumn propertyIdentifier="location.locationName" search="true" filter="true" />					    
 						<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" search="true" />
@@ -94,7 +99,8 @@ Notes:
 						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.productName" search="true" />
 						<cf_HibachiListingColumn propertyIdentifier="sku.product.productType.productTypeName" filter="true" />
 						<cf_HibachiListingColumn propertyIdentifier="sku.calculatedQATS" range="true" />
-						
+						<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
+						<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 					</cf_HibachiListingDisplay>
 				</div>
 			</div>
