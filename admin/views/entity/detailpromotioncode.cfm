@@ -42,7 +42,11 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.promotioncode#" edit="#rc.edit#" sRenderItem="detailPromotion" saveActionHash="tabpromotioncodes">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" />
+		<cf_HibachiEntityActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" 
+				backAction="admin:entity.detailpromotion" 
+				backQueryString="productID=#rc.promotion.getPromotionID()#" 
+				cancelAction="admin:entity.detailpromotion" 
+				cancelQueryString="promotionID=#rc.promotion.getPromotionID()#"/>
 		
 		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
