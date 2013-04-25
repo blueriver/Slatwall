@@ -56,13 +56,12 @@ Notes:
 	
 	<!--- If in edit and order is of correct status then we can add sale order items --->
 	<cfif rc.edit and listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
-		<h4>#$.slatwall.rbKey('define.add')#</h4>
 		<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#"
 								  recordProcessAction="admin:entity.processOrder"
-								  recordProcessQueryString="orderItemType=oitReturn"
+								  recordProcessQueryString="orderItemTypeSystemCode=oitReturn"
 								  recordProcessContext="addOrderItem"
 								  recordProcessEntity="#rc.order#"
-								  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">
+								  recordProcessUpdateTableID="LD#replace(rc.order.getReturnItemSmartList().getSavedStateID(),'-','','all')#">
 								    
 			<cf_HibachiListingColumn propertyIdentifier="skuCode" search="true" />
 			<cf_HibachiListingColumn propertyIdentifier="product.productCode" search="true" />
@@ -70,7 +69,7 @@ Notes:
 			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" search="true" />
 			<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
 			<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
-			<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
+			<cf_HibachiListingColumn processObjectProperty="orderReturnID" title="#$.slatwall.rbKey('entity.orderReturn')#" fieldClass="span2" />
 			<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 		</cf_HibachiListingDisplay>
 	</cfif>

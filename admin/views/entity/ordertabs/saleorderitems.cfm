@@ -67,7 +67,7 @@ Notes:
 				<div class="row-fluid">
 					<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#"
 											  recordProcessAction="admin:entity.processOrder"
-											  recordProcessQueryString="orderItemType=oitSale"
+											  recordProcessQueryString="orderItemTypeSystemCode=oitSale"
 											  recordProcessContext="addOrderItem"
 											  recordProcessEntity="#rc.order#"
 											  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">

@@ -74,14 +74,16 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				
 			} else if (orderItem.getOrderItemType().getSystemCode() == "oitReturn") {
 				
-				var originalAppliedTaxes = orderItem.getReferencedOrderItem().getAppliedTaxes();
-				for(var i=1; i<=arrayLen(originalAppliedTaxes); i++) {
-					var newAppliedTax = this.newTaxApplied();
-					newAppliedTax.setAppliedType("orderItem");
-					newAppliedTax.setTaxAmount(round(orderItem.getExtendedPriceAfterDiscount() * originalAppliedTaxes[i].getTaxRate()) / 100);
-					newAppliedTax.setTaxRate( originalAppliedTaxes[i].getTaxRate() );
-					newAppliedTax.setTaxCategoryRate( originalAppliedTaxes[i].getTaxCategoryRate() );
-					newAppliedTax.setOrderItem( orderItem );
+				if(!isNull(orderItem.getReferencedOrderItem())) {
+					var originalAppliedTaxes = orderItem.getReferencedOrderItem().getAppliedTaxes();
+					for(var i=1; i<=arrayLen(originalAppliedTaxes); i++) {
+						var newAppliedTax = this.newTaxApplied();
+						newAppliedTax.setAppliedType("orderItem");
+						newAppliedTax.setTaxAmount(round(orderItem.getExtendedPriceAfterDiscount() * originalAppliedTaxes[i].getTaxRate()) / 100);
+						newAppliedTax.setTaxRate( originalAppliedTaxes[i].getTaxRate() );
+						newAppliedTax.setTaxCategoryRate( originalAppliedTaxes[i].getTaxCategoryRate() );
+						newAppliedTax.setOrderItem( orderItem );
+					}
 				}
 				
 			}
