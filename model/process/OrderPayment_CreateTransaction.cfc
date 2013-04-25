@@ -7,6 +7,9 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="amount";
 	property name="transactionType" hb_formFieldType="select";
 	
+	// Option Properties
+	property name="transactionTypeOptions";
+	
 	public array function getTransactionTypeOptions() {
 		if(!structKeyExists(variables, "transactionTypeOptions")) {
 			

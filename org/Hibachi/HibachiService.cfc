@@ -89,8 +89,6 @@
 		// @hint default process method
 		public any function process(required any entity, struct data={}, string processContext=""){
 			
-			
-			
 			// Announce Generic Before Event
 			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Process", arguments);
 			

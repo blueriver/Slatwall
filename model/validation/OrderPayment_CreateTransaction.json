@@ -17,7 +17,7 @@
 	},
 	"properties":{
 		"amount":				[
-			{"required":true,"minValue":".01","dataType":"numeric"},
+			{"required":true,"minValue":0,"dataType":"numeric"},
 			{"conditions":"transactionTypeAuthorize","lteProperty":"orderPayment.amountUnAuthorized"},
 			{"conditions":"transactionTypeAuthorizeAndCharge","lteProperty":"orderPayment.amountUnreceived"},
 			{"conditions":"transactionTypeCredit","lteProperty":"orderPayment.amountUncredited"},

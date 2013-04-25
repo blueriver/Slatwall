@@ -470,13 +470,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return newOrder;
 	}
 	
-	
-	/*
-	return getService("orderService").getOrderAmountNeeded(orderTotal=getOrder().getTotal(), orderID=getOrder().getOrderID(), orderPaymentTypeID=getOrderPaymentType().getTypeID());
-	
-	variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").;
-	*/
-	
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
@@ -682,6 +675,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// Save the newOrderPayment
 		newOrderPayment = this.saveOrderPayment( newOrderPayment );
+		
+		if(newOrderPayment.hasErrors()) {
+			arguments.order.addError('orderPayment', rbKey('admin.entity.order.addOrderPayment_error'));
+		}
 		
 		return arguments.order;
 	}
@@ -996,7 +993,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 
 	// Process: Order Fulfillment
-	// (needs refactory)
+	// (needs refactor)
 	public any function processOrderFulfillment_fulfillItems(required any orderFulfillment, struct data={}, string processContext="process") {
 		
 		// Make sure that a location was passed in

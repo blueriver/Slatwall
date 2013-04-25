@@ -7,10 +7,12 @@
     	    "orderItemTypeSystemCode":{"eq":"oitReturn"}
     	},
 	    "newOrderFulfillment":{
-	        "orderFulfillmentID":{"eq":""}
+	        "orderFulfillmentID":{"eq":""},
+	        "orderItemTypeSystemCode":{"eq":"oitSale"}
 	    },
 	    "newOrderReturn":{
-	        "orderReturnID":{"eq":""}
+	        "orderReturnID":{"eq":""},
+	        "orderItemTypeSystemCode":{"eq":"oitReturn"}
 	    },
 	    "newShippingOrderFulfillmentWithNewAddress":{
 	        "fulfillmentMethodType":{"eq":"shipping"},
