@@ -5,9 +5,13 @@
 	    },
 	    "paymentTypeTermPayment":{
 	        "paymentMethodType":{"eq":"termPayment"}
+	    },
+	    "peerNullValueAlreadyExists":{
+	        "peerOrderPaymentNullAmountExistsFlag":{"eq":true}
 	    }
 	},
 	"properties":{
+	    "amount":				[{"contexts":"save","dataType":"numeric","minValue":0},{"contexts":"save","conditions":"peerNullValueAlreadyExists","required":true}],
 		"paymentTransactions":	[{"contexts":"delete","maxCollection":0}],
 		"expirationMonth":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"expirationYear":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],

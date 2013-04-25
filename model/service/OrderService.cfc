@@ -283,22 +283,38 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			orderRequirementsList = listAppend(orderRequirementsList, "account");
 		}
 	
-		// Check each of the fulfillment methods to see if they are ready to process
+		// Check each of the orderFulfillments to see if they are ready to process
 		for(var i = 1; i <= arrayLen(arguments.order.getOrderFulfillments()); i++) {
 			if(!arguments.order.getOrderFulfillments()[i].isProcessable( context="placeOrder" ) || arguments.order.getOrderFulfillments()[i].hasErrors()) {
 				orderRequirementsList = listAppend(orderRequirementsList, "fulfillment");
 				break;
 			}
 		}
-	
-		// Make sure that the order payments all pass the isProcessable for placeOrder
-		for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-			if(!arguments.order.getOrderPayments()[i].isProcessable( context="placeOrder" ) || arguments.order.getOrderPayments()[i].hasErrors()) {
-				orderRequirementsList = listAppend(orderRequirementsList, "payment");
+		
+		// Check each of the orderReturns to see if they are ready to process
+		for(var i = 1; i <= arrayLen(arguments.order.getOrderReturns()); i++) {
+			if(!arguments.order.getOrderReturns()[i].isProcessable( context="placeOrder" ) || arguments.order.getOrderReturns()[i].hasErrors()) {
+				orderRequirementsList = listAppend(orderRequirementsList, "return");
 				break;
 			}
 		}
-	
+
+		// If not enough payments have been defined then 
+		if(arguments.order.getPaymentAmountTotal() != arguments.order.getTotal()) {
+			orderRequirementsList = listAppend(orderRequirementsList, "payment");
+			
+		// Otherwise, make sure that the order payments all pass the isProcessable for placeOrder & does not have any errors
+		} else {
+			
+			for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+				if(!arguments.order.getOrderPayments()[i].isProcessable( context="placeOrder" ) || arguments.order.getOrderPayments()[i].hasErrors()) {
+					orderRequirementsList = listAppend(orderRequirementsList, "payment");
+					break;
+				}
+			}
+			
+		}
+		
 		return orderRequirementsList;
 	}
 	
@@ -477,7 +493,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getOrderDAO().getMaxOrderNumber();
 	}
 	
-	public boolean function getPeerOrderPaymentNullAmountExistsFlag(required string orderID, required string orderPaymentTypeID, required string orderPaymentID) {
+	public boolean function getPeerOrderPaymentNullAmountExistsFlag(required string orderID, required string orderPaymentID) {
 		return getOrderDAO().getPeerOrderPaymentNullAmountExistsFlag(argumentcollection=arguments);
 	}
 	
@@ -630,18 +646,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function processOrder_addOrderPayment(required any order, required any processObject) {
 		
-		// Setup the order payment
+		// Get the populated newOrderPayment out of the processObject
 		var newOrderPayment = processObject.getNewOrderPayment();
 		
-		// Setup the payment type
-		newOrderPayment.setOrderPaymentType( getSettingService().getType( arguments.processObject.getOrderPaymentTypeID() ) );
-		
-		// If an amount was passed in then we can set it on the order payment
-		if(!isNull(arguments.processObject.getAmount())) {
-			newOrderPayment.setAmount( arguments.processObject.getAmount() );
-		}
-		
-		// Add this new order payment to the order
+		// Make sure that this new orderPayment gets attached to the order
 		newOrderPayment.setOrder( arguments.order );
 		
 		// If this is an existing account payment method, then we can pull the data from there
@@ -654,14 +662,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// This is a new payment, so we need to setup the billing address and see if there is a need to save it against the account
 		} else {
 			
-			// Setup the payment method
-			newOrderPayment.setPaymentMethod( getPaymentService().getPaymentMethod(arguments.processObject.getPaymentMethodID()) );
-			
-			// Setup the billing address as an accountAddress if it existed
-			if(len(arguments.processObject.getAccountAddressID())) {
-				var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAcccountAddressID() );
+			// Setup the billing address as an accountAddress if it existed, otherwise the billing address will have most likely just been populated already
+			if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
+				var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAccountAddressID() );
 				
-				newOrderPayment.setBillingAddress( accountAddress.copyAddress( true ) );
+				if(!isNull(accountAddress)) {
+					newOrderPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
+				}
 			}
 			
 			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
@@ -674,7 +681,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// Save the newOrderPayment
-		this.saveOrderPayment( newOrderPayment );
+		newOrderPayment = this.saveOrderPayment( newOrderPayment );
 		
 		return arguments.order;
 	}
@@ -729,6 +736,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				
 				// As long as the order doesn't have any errors after updating fulfillment & payments we can continue
 				if(!arguments.order.hasErrors()) {
+					
+					// If the orderTotal is less than the orderPaymentTotal, then we can look in the data for a "newOrderPayment" record, and if one exists then try to add that orderPayment
+					if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal() && structKeyExists(arguments.data, "newOrderPayment")) {
+						arguments.order = this.processOrder(arguments.order, arguments.data, 'addOrderPayment');
+					}
 					
 					// Generate the order requirements list, to see if we still need action to be taken
 					var orderRequirementsList = getOrderRequirementsList( arguments.order );

@@ -477,7 +477,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			return "";
 		// This is a simple value, so now lets try to actually format the value
 		} else if (isSimpleValue(arguments.value)) {
-			return getService("hibachiUtilityService").formatValue(value=arguments.value, formatType=arguments.formatType);
+			var formatDetails = {};
+			if(this.hasProperty('currencyCode') && !isNull(getCurrencyCode())) {
+				formatDetails.currencyCode = getCurrencyCode();
+			}
+			return getService("hibachiUtilityService").formatValue(value=arguments.value, formatType=arguments.formatType, formatDetails=formatDetails);
 		}
 		
 		// If the value has not yet been returned, then it is because the value was complex
