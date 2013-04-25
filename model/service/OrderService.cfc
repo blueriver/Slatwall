@@ -760,7 +760,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostNew") );
 							
 							// Update the orderPlaced
-							order.confirmOrderNumberOpenDateCloseDatePayment();
+							order.confirmOrderNumberOpenDateCloseDatePaymentAmount();
 						
 							// Save the order to the database
 							getHibachiDAO().save(order);
