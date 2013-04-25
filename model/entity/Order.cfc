@@ -318,10 +318,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public any function getOrderRequirementsList() {
-		if(!structKeyExists(variables, "orderRequirementsList")) {
-			variables.orderRequirementsList = getService("orderService").getOrderRequirementsList(order=this);
-		}
-		return variables.orderRequirementsList;
+		return getService("orderService").getOrderRequirementsList(order=this);
 	}
 	
 	public numeric function getPaymentAmountTotal() {

@@ -643,7 +643,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var newOrderPayment = processObject.getNewOrderPayment();
 		
 		// Make sure that this new orderPayment gets attached to the order
-		newOrderPayment.setOrder( arguments.order );
+		if(isNull(newOrderPayment.gettOrder())) {
+			newOrderPayment.setOrder( arguments.order );
+		}
 		
 		// If this is an existing account payment method, then we can pull the data from there
 		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
@@ -743,7 +745,22 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					var orderRequirementsList = getOrderRequirementsList( arguments.order );
 					
 					// Verify the order requirements list, to make sure that this order has everything it needs to continue
-					if(!len(orderRequirementsList)) {
+					if(len(orderRequirementsList)) {
+						
+						if(listFindNoCase("account", orderRequirementsList)) {
+							arguments.order.addError('account',rbKey('entity.order.process.placeOrder.accountRequirementError'));	
+						}
+						if(listFindNoCase("fulfillment", orderRequirementsList)) {
+							arguments.order.addError('fulfillment',rbKey('entity.order.process.placeOrder.fulfillmentRequirementError'));
+						}
+						if(listFindNoCase("return", orderRequirementsList)) {
+							arguments.order.addError('return',rbKey('entity.order.process.placeOrder.returnRequirementError'));
+						}
+						if(listFindNoCase("payment", orderRequirementsList)) {
+							arguments.order.addError('payment',rbKey('entity.order.process.placeOrder.paymentRequirementError'));
+						}
+						
+					} else {
 						
 						// Setup a value to log the amount received, credited or authorized.  If any of these exists then we need to place the order
 						var amountAuthorizeCreditReceive = 0;
@@ -759,6 +776,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						
 						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
 						if(!arguments.order.hasErrors() || amountAuthorizeCreditReceive gt 0) {
+							
+							if(arguments.order.hasErrors()) {
+								arguments.order.addMessage('paymentProcessedMessage', rbKey('entity.order.process.placeOrder.paymentProcessedMessage'));
+							}
 							
 							// If this order is the same as the current cart, then set the current cart to a new order
 							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {
@@ -1339,7 +1360,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// If there was expected authorize, receive, or credit
 			if( 
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthroized() lt arguments.orderPayment.getAmount()))
+				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getAmount()))
 					||
 				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount()))
 					||
@@ -1348,8 +1369,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				
 				// Add a generic payment processing error and make it persistable
 				arguments.orderPayment.getOrder().addError('processing', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
-				
-				logHibachi(arguments.orderPayment.hasErrors());
 				
 			}
 
@@ -1469,7 +1488,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(!arguments.orderItem.hasErrors() && arguments.orderItem.getOrder().getStatusCode() == "ostNotPlaced") {
 			
 			// If this item was part of a shipping fulfillment then update that fulfillment
-			if(!isNull(arguments.orderItem.getOrderFulfillment()) && arguments.orderItem.getOrderFulfillment().getFulfillmentMethodType() eq "shipping") {
+			if(!isNull(arguments.orderItem.getOrderFulfillment()) && arguments.orderItem.getOrderFulfillment().getFulfillmentMethodType() eq "shipping" && !isNull(arguments.orderItem.getOrderFulfillment().getShippingMethod())) {
 				getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.orderItem.getOrderFulfillment() );
 			}
 			
