@@ -82,7 +82,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
-	property name="addOrderItemSkuOptionsSmartList" persistent="false" hb_formatType="currency";
+	property name="addOrderItemSkuOptionsSmartList" persistent="false";
+	property name="addOrderItemStockOptionsSmartList" persistent="false";
 	property name="discountTotal" persistent="false" hb_formatType="currency";
 	property name="itemDiscountAmountTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" hb_formatType="currency";
@@ -97,6 +98,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="paymentMethodOptionsSmartList" persistent="false";
 	property name="orderPaymentRefundOptions" persistent="false";
 	property name="orderRequirementsList" persistent="false";
+	property name="orderTypeOptions" persistent="false";
 	property name="promotionCodeList" persistent="false";
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
@@ -162,17 +164,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 	}
 	
-	public any function getActionOptions() {
-		var smartList = getService("orderService").getOrderStatusActionSmartList();
-		//smartList.joinRelatedProperty("SlatwallOrderStatusAction", "orderStatusType", "inner", false);
-		smartList.addFilter("orderStatusType_typeID", getOrderStatusType().getTypeID());
-		//smartList.addSelect(propertyIdentifier="orderActionType_type", alias="name");
-		//smartList.addSelect(propertyIdentifier="orderActionType_typeID", alias="value");
-		//return smartList.getHQL();
-		return smartList.getRecords(); 
-	}
-	
- 	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	public void function confirmOrderNumberOpenDateCloseDatePaymentAmount() {
 		
@@ -234,6 +225,17 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.addOrderItemSkuOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'brand');
 		}
 		return variables.addOrderItemSkuOptionsSmartList;
+	}
+	
+	public any function getAddOrderItemStockOptionsSmartList() {
+		if(!structKeyExists(variables, "addOrderItemStockOptionsSmartList")) {
+			variables.addOrderItemStockOptionsSmartList = getService("stockService").getStockSmartList();
+			variables.addOrderItemStockOptionsSmartList.addFilter('sku.activeFlag', 1);
+			variables.addOrderItemStockOptionsSmartList.addFilter('sku.product.activeFlag', 1);
+			variables.addOrderItemStockOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'productType');
+			variables.addOrderItemStockOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'brand');
+		}
+		return variables.addOrderItemStockOptionsSmartList;
 	}
 	
 	public numeric function getDiscountTotal() {
@@ -381,7 +383,26 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return variables.orderPaymentRefundOptions;
 	}
 	
-	public string function getpromotionCodeList() {
+	public array function getOrderTypeOptions() {
+		if(!structKeyExists(variables, "orderTypeOptions")) {
+			var sl = getPropertyOptionsSmartList("orderType");
+			var inFilter = "otExchangeOrder,otSalesOrder,otReturnOrder";
+			if(getSaleItemSmartList().getRecordsCount() gt 0) {
+				inFilter = listDeleteAt(inFilter, listFindNoCase(inFilter, "otReturnOrder"));
+			}
+			if(getReturnItemSmartList().getRecordsCount() gt 0) {
+				inFilter = listDeleteAt(inFilter, listFindNoCase(inFilter, "otSalesOrder"));
+			}
+			sl.addInFilter('systemCode', inFilter);
+			sl.addSelect('type', 'name');
+			sl.addSelect('typeID', 'value');
+			
+			variables.orderTypeOptions = sl.getRecords();
+		}
+		return variables.orderTypeOptions;
+	}
+	
+	public string function getPromotionCodeList() {
 		if(!structKeyExists(variables, "promotionCodeList")) {
 			variables.promotionCodeList = "";
 			for(var i=1; i<=arrayLen(getPromotionCodes()); i++) {
@@ -489,12 +510,12 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public any function getReturnItemSmartList() {
-		if(!structKeyExists(variables, "saleItemSmartList")) {
-			variables.saleItemSmartList = getService("orderService").getOrderItemSmartList();
-			variables.saleItemSmartList.addFilter('order.orderID', getOrderID());
-			variables.saleItemSmartList.addInFilter('orderItemType.systemCode', 'oitReturn');
+		if(!structKeyExists(variables, "returnItemSmartList")) {
+			variables.returnItemSmartList = getService("orderService").getOrderItemSmartList();
+			variables.returnItemSmartList.addFilter('order.orderID', getOrderID());
+			variables.returnItemSmartList.addInFilter('orderItemType.systemCode', 'oitReturn');
 		}
-		return variables.saleItemSmartList;	
+		return variables.returnItemSmartList;	
 	}
 	
 	public numeric function getSubtotal() {

@@ -40,11 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.order.getOrderReturnsSmartList()#" 
-			recordDetailAction="admin:entity.detailorderreturn"
-			recordProcessAction="admin:entity.processorderreturn"
-			recordProcessContext="receiveReturn"
-			recordProcessModal="true">
+	<cf_HibachiListingDisplay smartList="#rc.order.getOrderReturnsSmartList()#"
+							  recordDetailAction="admin:entity.detailorderreturn">
 		<cf_HibachiListingColumn tdClass="primary" propertyIdentifier="returnLocation.locationName" filter=true />
 		<!---
 		<cf_HibachiListingColumn propertyIdentifier="fulfillmentCharge" />

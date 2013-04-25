@@ -102,7 +102,10 @@ Notes:
 				<!--- Origin --->
 				<cf_HibachiPropertyDisplay object="#rc.order#" property="orderOrigin" edit="#rc.edit#">
 				
+				<!--- Order Type --->
+				<cf_HibachiPropertyDisplay object="#rc.order#" property="orderType" edit="#rc.edit#">
 				
+				<!--- Referenced Order --->
 				<cfif !isNull(rc.order.getReferencedOrder())>
 					<cf_HibachiPropertyDisplay object="#rc.order#" property="referencedOrder" valuelink="?slatAction=admin:entity.detailorder&orderID=#rc.order.getReferencedOrder().getOrderID()#">
 				</cfif>
@@ -140,8 +143,16 @@ Notes:
 		
 		<!--- Tabs --->
 		<cf_HibachiTabGroup object="#rc.order#">
-			<!--- Items --->
-			<cf_HibachiTab view="admin:entity/ordertabs/orderitems" count="#rc.order.getOrderItemsCount()#" />
+			
+			<!--- Sale Items --->
+			<cfif listFindNoCase("otSalesOrder,otExchangeOrder", rc.order.getOrderType().getSystemCode())>
+				<cf_HibachiTab view="admin:entity/ordertabs/saleorderitems" count="#rc.order.getSaleItemSmartList().getRecordsCount()#" />
+			</cfif>
+			
+			<!--- Return Items --->
+			<cfif listFindNoCase("otReturnOrder,otExchangeOrder", rc.order.getOrderType().getSystemCode())>
+				<cf_HibachiTab view="admin:entity/ordertabs/returnorderitems" count="#rc.order.getReturnItemSmartList().getRecordsCount()#" />
+			</cfif>
 			
 			<!--- Payments --->
 			<cf_HibachiTab view="admin:entity/ordertabs/orderpayments" count="#rc.order.getOrderPaymentsCount()#" />

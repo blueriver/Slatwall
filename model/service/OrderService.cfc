@@ -490,67 +490,106 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: Process Methods ===========================
 	
 	// Process: Order
-	public any function processOrder_addSaleOrderItem(required any order, required any processObject) {
-		
-		// Setup the Order Fulfillment
-		if(len(processObject.getOrderFulfillmentID()) && processObject.getOrderFulfillmentID() neq "new") {
-			
-			// get the correct order fulfillment to attach this item to
-			var orderFulfillment = this.getOrderFulfillment( processObject.getOrderFulfillmentID() );	
-			
-		} else {
-			
-			// Setup a new order fulfillment
-			var orderFulfillment = this.newOrderFulfillment();
-			orderFulfillment.setFulfillmentMethod( getFulfillmentService().getFulfillmentMethod( arguments.processObject.getFulfillmentMethodID() ) );
-			orderFulfillment.setOrder( arguments.order );
-			
-			// Populate the shipping address info
-			if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
-				
-				// Check for an accountAddress
-				if(len(arguments.processObject.getShippingAccountAddressID()) && arguments.processObject.getShippingAccountAddressID() neq "new") {
-					
-					// Find the correct account address, and set it in the order fulfillment
-					var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
-					orderFulfillment.setAccountAddress( accountAddress );
-				
-				// Otherwise setup a new shipping address
-				} else {
-					
-					// First we need to persist the address from the processObject
-					getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
-					
-					// If we are supposed to save the new address, then we can do that here
-					if(arguments.processObject.getSaveShippingAccountAddressFlag()) {
-						
-						var newAccountAddress = getAccountService().newAccountAddress();
-						newAccountAddress.setAccount( arguments.order.getAccount() );
-						newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
-						newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
-						orderFulfillment.setAccountAddress( newAccountAddress );
-						
-					// Otherwise just set then new address in the order fulfillment
-					} else {
-						
-						orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
-					}
-				}
-			}
-			
-			orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
-		}
+	public any function processOrder_addOrderItem(required any order, required any processObject) {
 		
 		// Setup a boolean to see if we were able to just att this order item to an existing one
 		var foundItem = false;
 		
-		// Check for the sku in the orderFulfillment already
-		for(var i=1; i<=arrayLen(orderFulfillment.getOrderFulfillmentItems()); i++) {
-			if(orderFulfillment.getOrderFulfillmentItems()[i].getSku().getSkuID() eq arguments.processObject.getSku().getSkuID() && orderFulfillment.getOrderFulfillmentItems()[i].getPrice() eq arguments.processObject.getPrice()) {
-				foundItem = true;
-				orderFulfillment.getOrderFulfillmentItems()[i].setQuantity(orderFulfillment.getOrderFulfillmentItems()[i].getQuantity() + arguments.processObject.getQuantity());
-				break;
+		// If this is a Sale Order Item then we need to setup the fulfillment
+		if(arguments.processObject.getOrderItemTypeSystemCode() eq "oitSale") {
+			
+			// First See if we can use an existing order fulfillment
+			if(!isNull(processObject.getOrderFulfillmentID()) && len(processObject.getOrderFulfillmentID())) {
+				var orderFulfillment = this.getOrderFulfillment( processObject.getOrderFulfillmentID() );
 			}
+			
+			// Next if we can't use an existing one, then we need to create a new one
+			if(isNull(orderFulfillment) || orderFulfillment.getOrder().getOrderID() != arguments.order.getOrderID()) {
+				
+				// Setup a new order fulfillment
+				var orderFulfillment = this.newOrderFulfillment();
+				orderFulfillment.setFulfillmentMethod( getFulfillmentService().getFulfillmentMethod( arguments.processObject.getFulfillmentMethodID() ) );
+				orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() );
+				orderFulfillment.setOrder( arguments.order );
+				
+				// Populate the shipping address info
+				if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
+					
+					// Check for an accountAddress
+					if(len(arguments.processObject.getShippingAccountAddressID()) && arguments.processObject.getShippingAccountAddressID() neq "new") {
+						
+						// Find the correct account address, and set it in the order fulfillment
+						var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
+						orderFulfillment.setAccountAddress( accountAddress );
+					
+					// Otherwise setup a new shipping address
+					} else {
+						
+						// First we need to persist the address from the processObject
+						getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
+						
+						// If we are supposed to save the new address, then we can do that here
+						if(arguments.processObject.getSaveShippingAccountAddressFlag()) {
+							
+							var newAccountAddress = getAccountService().newAccountAddress();
+							newAccountAddress.setAccount( arguments.order.getAccount() );
+							newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
+							newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
+							orderFulfillment.setAccountAddress( newAccountAddress );
+							
+						// Otherwise just set then new address in the order fulfillment
+						} else {
+							
+							orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
+						}
+					}
+				}
+				
+				orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
+			}
+			
+			// Check for the sku in the orderFulfillment already
+			for(var i=1; i<=arrayLen(orderFulfillment.getOrderFulfillmentItems()); i++) {
+				
+				var thisItem = orderFulfillment.getOrderFulfillmentItems()[i];
+				
+				// If the sku, price & stock all match then just increse the quantity
+				if( 	thisItem.getSku().getSkuID() == arguments.processObject.getSku().getSkuID()
+					  		&&
+						thisItem.getPrice() == arguments.processObject.getPrice()
+							&&
+						((isNull(thisItem.getStock()) && isNull(arguments.processObject.getStock())) || (!isNull(thisItem.getStock()) && !isNull(arguments.processObject.getStock()) && thisItem.getStock().getStockID() == arguments.processObject.getStock().getStockID() ))
+					) {
+						
+					foundItem = true;
+					orderFulfillment.getOrderFulfillmentItems()[i].setQuantity(orderFulfillment.getOrderFulfillmentItems()[i].getQuantity() + arguments.processObject.getQuantity());
+					
+					break;
+					
+				}
+			}
+			
+		// If this is a return order item, then we need to setup or find the orderReturn
+		} else if (arguments.processObject.getOrderItemTypeSystemCode() eq "oitReturn") {
+			
+			// First see if we can use an existing order return
+			if(!isNull(arguments.processObject.getOrderReturnID()) && len(arguments.processObject.getOrderReturnID())) {
+				var orderReturn = this.getOrderReturn( processObject.getOrderReturnID() );	
+			}
+			
+			// Next if we can't use an existing one, then we need to create a new one
+			if(isNull(orderReturn) || orderReturn.getOrder().getOrderID() neq arguments.order.getOrderID()) {
+				
+				// Setup a new order return
+				var orderReturn = this.newOrderReturn();
+				orderReturn.setOrder( arguments.order );
+				orderReturn.setCurrencyCode( arguments.order.getCurrencyCode() );
+				orderReturn.setReturnLocation( arguments.processObject.getReturnLocation() );
+				orderReturn.setFulfillmentRefundAmount( arguments.processObject.getFulfillmentRefundAmount() );
+				
+				orderReturn = this.saveOrderReturn( orderReturn );
+			}
+			
 		}
 		
 		// If we didn't already find the item in an orderFulfillment, then we can add it here.
@@ -562,8 +601,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			newOrderItem.populate( arguments.data );
 			
 			// Set Header Info
-			newOrderItem.setOrderFulfillment( orderFulfillment );
 			newOrderItem.setOrder( arguments.order );
+			if(arguments.processObject.getOrderItemTypeSystemCode() eq "oitSale") {
+				newOrderItem.setOrderFulfillment( orderFulfillment );
+				newOrderItem.setOrderItemType( getSettingService().getTypeBySystemCode('oitSale') );
+			} else if (arguments.processObject.getOrderItemTypeSystemCode() eq "oitReturn") {
+				newOrderItem.setOrderReturn( orderReturn );
+				newOrderItem.setOrderItemType( getSettingService().getTypeBySystemCode('oitReturn') );
+			}
 			
 			// Setup the Sku / Quantity / Price details
 			newOrderItem.setSku( arguments.processObject.getSku() );
@@ -575,6 +620,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Save the new order items
 			this.saveOrderItem( newOrderItem );
 		}
+		
 		
 		// Call the recalculate so that promotions get set
 		recalculateOrderAmounts( arguments.order );
@@ -714,7 +760,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostNew") );
 							
 							// Update the orderPlaced
-							order.confirmOrderNumberOpenDateCloseDate();
+							order.confirmOrderNumberOpenDateCloseDatePaymentAmount();
 						
 							// Save the order to the database
 							getHibachiDAO().save(order);
@@ -1414,7 +1460,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(!arguments.orderItem.hasErrors() && arguments.orderItem.getOrder().getStatusCode() == "ostNotPlaced") {
 			
 			// If this item was part of a shipping fulfillment then update that fulfillment
-			if(arguments.orderItem.getOrderFulfillment().getFulfillmentMethodType() eq "shipping") {
+			if(!isNull(arguments.orderItem.getOrderFulfillment()) && arguments.orderItem.getOrderFulfillment().getFulfillmentMethodType() eq "shipping") {
 				getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.orderItem.getOrderFulfillment() );
 			}
 			

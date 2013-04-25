@@ -120,8 +120,10 @@ component accessors="true" output="false" persistent="false" {
 			var theMethod = this[ arguments.methodName ];
 			return theMethod(argumentCollection = methodArguments);
 		}
-		
-		return this.onMissingMethod(missingMethodName=arguments.methodName, missingMethodArguments=arguments.methodArguments);
+		if(structKeyExists(this, "onMissingMethod")) {
+			return this.onMissingMethod(missingMethodName=arguments.methodName, missingMethodArguments=arguments.methodArguments);	
+		}
+		throw("You have attempted to call the method #arguments.methodName# which does not exist in #getClassFullName()#");
 	}
 	
 	// @help Public method to get everything in the variables scope, good for debugging purposes
