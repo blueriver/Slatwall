@@ -28,8 +28,8 @@
 	
 	<!--- Sorting --->
 	<cfparam name="attributes.sortProperty" type="string" default="" />  			<!--- Setting this value will turn on Sorting --->
-	<cfparam name="attributes.sortContextColumn" type="string" default="" />  		
-	<cfparam name="attributes.sortContextID" type="string" default="" />  					
+	<cfparam name="attributes.sortContextIDColumn" type="string" default="" />  		
+	<cfparam name="attributes.sortContextIDValue" type="string" default="" />  					
 	
 	<!--- Single Select --->
 	<cfparam name="attributes.selectFieldName" type="string" default="" />			<!--- Setting this value will turn on single Select --->
@@ -122,8 +122,8 @@
 				
 				<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, "#attributes.sortProperty#") />
 				
-				<cfif len(attributes.sortContextID) and len(attributes.sortContextIDValue)>
-					<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-sortcontextidcolumn="#attributes.sortContextID#"', " ") />
+				<cfif len(attributes.sortContextIDColumn) and len(attributes.sortContextIDValue)>
+					<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-sortcontextidcolumn="#attributes.sortContextIDColumn#"', " ") />
 					<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-sortcontextidvalue="#attributes.sortContextIDValue#"', " ") />
 				</cfif>
 			</cfif>

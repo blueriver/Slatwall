@@ -48,7 +48,7 @@ Notes:
 							   recordDeleteAction="admin:entity.deleteattribute"
 							   recordDeleteQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#&redirectAction=admin:entity.detailattributeset"
 							   sortProperty="sortOrder"
-							   sortContextID="attributeSetID"
+							   sortContextIDColumn="attributeSetID"
 							   sortContextIDValue="#rc.attributeSet.getAttributeSetID()#">
 							      
 		<cf_HibachiListingColumn propertyIdentifier="attributeCode" />
