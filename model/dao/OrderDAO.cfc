@@ -91,30 +91,15 @@ Notes:
 			return ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
 		}
 	
-		public boolean function getPeerOrderPaymentNullAmountExistsFlag(required string orderID, required string orderPaymentTypeID, required string orderPaymentID) {
-			var result = ormExecuteQuery("SELECT orderPaymentID FROM SlatwallOrderPayment op WHERE op.order.orderID = ? AND op.orderPaymentType.typeID = ? AND op.amount IS NULL", [arguments.orderID, arguments.orderPaymentTypeID]);
+		public boolean function getPeerOrderPaymentNullAmountExistsFlag(required string orderID, string orderPaymentID) {
+			var result = ormExecuteQuery("SELECT orderPaymentID FROM SlatwallOrderPayment op WHERE op.order.orderID = ? AND op.amount IS NULL", [arguments.orderID]);
 			
-			if(arrayLen(result) && result[1] neq arguments.orderPaymentID) {
+			if(arrayLen(result) && (!structKeyExists(arguments, "orderPaymentID") || result[1] neq arguments.orderPaymentID)) {
 				return true;
 			}
 			
 			return false;
 		}
-		/*
-		public numeric function getOrderPaymentNonNullAmountTotal(required string orderID) {
-			//var result = ormExecuteQuery("SELECT COALESCE(charge.amount, 0) - COALESCE(credit.amount, 0) FROM SlatwallOrder o LEFT JOIN o.orderPayments charge LEFT JOIN o.orderPayments credit WHERE o.orderID = ? AND charge.amount is not null AND credit.amount is not null AND charge.orderPaymentType.systemCode = ? AND credit.orderPaymentType.systemCode = ?", [arguments.orderID, "optCharge", "optCredit"]);
-			
-			writeDump(arguments);
-			writeDump(ormExecuteQuery("SELECT charge.amount, credit.amount, COALESCE(SUM(charge.amount), 0) - COALESCE(SUM(credit.amount), 0) FROM SlatwallOrder o LEFT JOIN o.orderPayments charge LEFT JOIN o.orderPayments credit LEFT JOIN charge.orderPaymentType chargept LEFT JOIN credit.orderPaymentType creditpt WHERE o.orderID = ? AND charge.amount is not null AND credit.amount is not null AND chargept.systemCode = ? AND creditpt.systemCode = ?", [arguments.orderID, "optCharge", "optCredit"]));
-			abort;
-			
-			if(arrayLen(result)) {
-				return result[1];
-			}
-			
-			return 0;
-		}
-		*/
 	</cfscript>
 	
 	<cffunction name="getOrderPaymentNonNullAmountTotal" access="public" returntype="Numeric">

@@ -89,11 +89,6 @@
 		// @hint default process method
 		public any function process(required any entity, struct data={}, string processContext=""){
 			
-			
-			
-			// Announce Generic Before Event
-			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Process", arguments);
-			
 			// Create the invoke arguments struct
 			var invokeArguments = {};
 			invokeArguments[ "data" ] = arguments.data;
@@ -119,13 +114,10 @@
 			}	
 			
 			// Announce the after events
-			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process", arguments);
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
 			if(arguments.entity.hasErrors()) {
-				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#ProcessFailure", arguments);
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#Failure", invokeArguments);
 			} else {
-				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#ProcessSuccess", arguments);
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#Success", invokeArguments);
 			}
 			

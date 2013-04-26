@@ -252,7 +252,7 @@ function setupEventHandlers() {
 	jQuery('body').on('click', '.modalload', function(e){
 		
 		jQuery('#adminModal').css({
-			'width': '106px',
+			'width': 'auto',
 			'margin-left': function () {
 	            return -(jQuery('#adminModal').width() / 2);
 	        }

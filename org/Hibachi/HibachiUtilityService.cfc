@@ -28,7 +28,11 @@
 		}
 		
 		public any function formatValue_currency( required string value, struct formatDetails={} ) {
-			return LSCurrencyFormat(arguments.value, "USD", "en_us");
+			if(structKeyExists(arguments.formatDetails, "currencyCode") && len(arguments.formatDetails.currencyCode) == 3 ) {
+				return LSCurrencyFormat(arguments.value, arguments.formatDetails.currencyCode, getHibachiScope().getRBLocale());	
+			}
+			// If no currency code was passed in then we can default to USD
+			return LSCurrencyFormat(arguments.value, "USD", getHibachiScope().getRBLocale());
 		}
 		
 		public any function formatValue_datetime( required string value, struct formatDetails={} ) {

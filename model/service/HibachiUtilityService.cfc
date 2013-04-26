@@ -43,16 +43,11 @@ Notes:
 	<cfscript>
 		
 		public any function formatValue_currency( required string value, struct formatDetails={} ) {
-			/*
-			TODO: IMPORTANT Fix this currency lookup
-			// Check to see if this object has a currencyCode
-			if( this.hasProperty("currencyCode") && !isNull(getCurrencyCode()) && len(getCurrencyCode()) eq 3 ) {
-				
-				var currency = getService("currencyService").getCurrency( getCurrencyCode() );
-				
+			if(structKeyExists(arguments.formatDetails, "currencyCode")) {
+				var currency = getService("currencyService").getCurrency( arguments.formatDetails.currencyCode );
 				return currency.getCurrencySymbol() & LSNumberFormat(arguments.value, ',.__');
 			}
-			*/
+			
 			// Otherwsie use the global currencyLocal
 			return LSCurrencyFormat(arguments.value, getSettingService().getSettingValue("globalCurrencyType"), getSettingService().getSettingValue("globalCurrencyLocale"));
 		}

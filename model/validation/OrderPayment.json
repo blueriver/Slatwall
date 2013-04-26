@@ -5,15 +5,19 @@
 	    },
 	    "paymentTypeTermPayment":{
 	        "paymentMethodType":{"eq":"termPayment"}
+	    },
+	    "peerNullValueAlreadyExists":{
+	        "peerOrderPaymentNullAmountExistsFlag":{"eq":true}
 	    }
 	},
 	"properties":{
+	    "amount":				[{"contexts":"save","dataType":"numeric","minValue":0},{"contexts":"save","conditions":"peerNullValueAlreadyExists","required":true}],
 		"paymentTransactions":	[{"contexts":"delete","maxCollection":0}],
 		"expirationMonth":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"expirationYear":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"nameOnCreditCard":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"orderStatusCode":		[
-		    {"contexts":"createTransaction","inList":"ostNew,ostProcessing,ostOnHold"},
+		    {"contexts":"createTransaction","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"},
 			{"contexts":"edit","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"}
 		],
 		"termPaymentAccount":	[{"contexts":"save","required":true,"conditions":"paymentTypeTermPayment"}]

@@ -84,6 +84,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Non persistent properties
 	property name="addOrderItemSkuOptionsSmartList" persistent="false";
 	property name="addOrderItemStockOptionsSmartList" persistent="false";
+	property name="addPaymentRequirementDetails" persistent="false";
 	property name="discountTotal" persistent="false" hb_formatType="currency";
 	property name="itemDiscountAmountTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" hb_formatType="currency";
@@ -140,6 +141,21 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			}
 		}
 		return true;
+	}
+	
+	public struct function getAddPaymentRequirementDetails() {
+		if(!structKeyExists(variables, "addPaymentRequirementDetails")) {
+			variables.addPaymentRequirementDetails = {};
+			var requiredAmount = precisionEvaluate(getTotal() - getPaymentAmountTotal());
+			if(requiredAmount > 0) {
+				variables.addPaymentRequirementDetails.amount = requiredAmount;
+				variables.addPaymentRequirementDetails.orderPaymentType = getService("settingService").getTypeBySystemCode("optCharge"); 
+			} else if (requiredAmount < 0) {
+				variables.addPaymentRequirementDetails.amount = requiredAmount * -1;
+				variables.addPaymentRequirementDetails.orderPaymentType = getService("settingService").getTypeBySystemCode("optCredit");
+			}
+		}
+		return variables.addPaymentRequirementDetails;
 	}
 	
 	public void function removeAllOrderItems() {
@@ -302,10 +318,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public any function getOrderRequirementsList() {
-		if(!structKeyExists(variables, "orderRequirementsList")) {
-			variables.orderRequirementsList = getService("orderService").getOrderRequirementsList(order=this);
-		}
-		return variables.orderRequirementsList;
+		return getService("orderService").getOrderRequirementsList(order=this);
 	}
 	
 	public numeric function getPaymentAmountTotal() {

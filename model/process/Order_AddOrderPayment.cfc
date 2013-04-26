@@ -4,13 +4,11 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="order";
 
 	// Data Properties
-	property name="amount";
 	property name="accountPaymentMethodID" hb_rbKey="entity.accountPaymentMethod" hb_formFieldType="select";
 	property name="newOrderPayment" cfc="OrderPayment" fieldType="many-to-one" persistent="false" fkcolumn="orderPaymentID";
 	property name="accountAddressID" hb_rbKey="entity.accountAddress" hb_formFieldType="select";
 	property name="saveAccountPaymentMethodFlag" hb_formFieldType="yesno";
 	property name="saveAccountPaymentMethodName" hb_rbKey="entity.accountPaymentMethod.accountPaymentMethodName";
-	property name="orderPaymentTypeID" hb_rbKey="entity.orderPayment.orderPaymentType" hb_formFieldType="select";
 	
 	// Cached Properties
 	property name="accountPaymentMethodIDOptions";
@@ -71,11 +69,4 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return variables.saveAccountPaymentMethodFlag;
 	}
 	
-	public string function getOrderPaymentTypeID() {
-		return getNewOrderPayment().getOrderPaymentType().getTypeID();
-	}
-	
-	public array function getOrderPaymentTypeIDOptions() {
-		return getNewOrderPayment().getOrderPaymentTypeOptions();
-	}
 }

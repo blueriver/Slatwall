@@ -297,7 +297,11 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	
 	public any function getPeerOrderPaymentNullAmountExistsFlag() {
 		if(!structKeyExists(variables, "peerOrderPaymentNullAmountExistsFlag")) {
-			variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID(), orderPaymentTypeID=getOrderPaymentType().getTypeID(), orderPaymentID=getOrderPaymentID());
+			if(!isNull(getOrderPaymentID())) {
+				variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID(), orderPaymentID=getOrderPaymentID());	
+			} else {
+				variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID());
+			}
 		}
 		return variables.peerOrderPaymentNullAmountExistsFlag;
 	}
@@ -468,7 +472,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		if( !structKeyExists(variables, "amount") ) {
 			
 			// If there is an order, it has not been placed and there is only 1 order payment with no explicit value set... then we can return the order total.
-			if(!isNull(getOrder()) && getOrder().getOrderStatusType().getSystemCode() eq "ostNotPlaced" && !getPeerOrderPaymentNullAmountExistsFlag()) {
+			if(!isNull(getOrder()) && listFindNoCase("ostNotPlaced,ostNew,ostOnHold,ostProcessing", getOrder().getOrderStatusType().getSystemCode()) && !getPeerOrderPaymentNullAmountExistsFlag()) {
 				var orderAmountNeeded = getOrderAmountNeeded();
 				if(orderAmountNeeded gt 0 && getOrderPaymentType().getSystemCode() eq "optCharge") {
 					return orderAmountNeeded;
