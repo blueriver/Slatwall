@@ -318,6 +318,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			
 				// Let AJAX know that this was a success
 				arguments.rc.ajaxResponse["success"] = true;
+				arguments.rc.ajaxResponse[ entity.getPrimaryIDPropertyName() ] = entity.getPrimaryIDValue();
 			
 			// Otherwise do the standard render / redirect
 			} else {
