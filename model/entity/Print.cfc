@@ -36,7 +36,7 @@
 Notes:
 
 */
-component entityname="SlatwallPrint" table="SlatwallPrint" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="read-only" hb_serviceName="printService" hb_permission="this" {
+component entityname="SlatwallPrint" table="SlatwallPrint" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="printService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="printID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

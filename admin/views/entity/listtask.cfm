@@ -40,16 +40,15 @@ Notes:
 
 <cfoutput>
 
-	<cf_HibachiEntityActionBar type="listing" object="#rc.taskSmartList#" createmodal="false"/>
+	<cf_HibachiEntityActionBar type="listing" object="#rc.taskSmartList#" createmodal="true" />
 
 	<cf_HibachiListingDisplay smartlist="#rc.taskSmartList#" 
-	                           recordeditaction="admin:entity.edittask" 
-	                           recordeditquerystring="redirectAction=admin:entity.listtask" 
-	                           recordeditmodal="false" recorddeleteaction="admin:entity.deletetask">
+	                          recorddetailaction="admin:entity.edittask"
+							  recordeditaction="admin:entity.edittask">
 		
-		
-		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="taskName" search="true" />
-		<cf_HibachiListingColumn propertyidentifier="runningFlag" filter="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="taskName" sort="true" search="true" />
+		<cf_HibachiListingColumn propertyidentifier="runningFlag" sort="true" filter="true" />
+		<cf_HibachiListingColumn propertyidentifier="activeFlag" sort="true" filter="true" />
 	</cf_HibachiListingDisplay>
 
 </cfoutput>

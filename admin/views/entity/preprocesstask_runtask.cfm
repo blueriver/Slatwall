@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -36,20 +36,23 @@
 Notes:
 
 --->
-<cfparam name="rc.task" type="any"/>
+<cfparam name="rc.task" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-<cf_HibachiListingDisplay smartlist="#rc.task.getTaskSchedulesSmartList()#" 
-                        recordeditaction="admin:entity.editTaskSchedule" recordeditmodal="true" 
-                        recordeditquerystring="taskID=#rc.task.getTaskID()#" 
-                        recorddeleteaction="admin:entity.deleteTaskSchedule"
-						recorddeletequerystring="redirectAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule"
-                        recordprocessaction="admin:entity.processtaskschedule"
-                        recordprocessmodal="true">
-	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="startDateTime"/>
-	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="endDateTime"/>
-	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="schedule.schedulename"/>
-	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
-</cf_HibachiListingDisplay>
-
-<cf_HibachiActionCaller action="admin:entity.createTaskSchedule" class="btn" icon="plus" 
-                      querystring="taskID=#rc.task.getTaskID()#" modal=true/>
+<cf_HibachiEntityProcessForm entity="#rc.task#" edit="#rc.edit#" sRedirectAction="admin:entity.detailtask">
+	
+	<cf_HibachiEntityActionBar type="preprocess" object="#rc.task#">
+	</cf_HibachiEntityActionBar>
+	
+	<cf_HibachiPropertyRow>
+		<cf_HibachiPropertyList>
+			<cfset runTaskConfigObject = rc.task.getProcessObject( rc.task.getTaskMethod() ) />
+			<cfloop array="#runTaskConfigObject.getProperties()#" index="property">
+				<cfif structKeyExists(property, "sw_taskConfig") and property.sw_taskConfig>
+					<cf_HibachiPropertyDisplay object="#runTaskConfigObject#" fieldName="runTaskConfig.#property.name#" property="#property.name#" edit="#rc.edit#">
+				</cfif>
+			</cfloop>
+		</cf_HibachiPropertyList>
+	</cf_HibachiPropertyRow>
+	
+</cf_HibachiEntityProcessForm>

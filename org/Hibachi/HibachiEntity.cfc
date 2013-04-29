@@ -44,7 +44,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 					}
 
 				// Then also look for any that have the cascadeCalculate set to true and call updateCalculatedProperties() on that object
-				} else if (structKeyExists(getProperties()[i], "cascadeCalculate") && getProperties()[i].cascadeCalculate) {
+				} else if (structKeyExists(getProperties()[i], "hb_cascadeCalculate") && getProperties()[i].hb_cascadeCalculate) {
 				
 					if( structKeyExists(variables, getProperties()[i].name) && isObject( variables[ getProperties()[i].name ] ) ) {
 						variables[ getProperties()[i].name ].updateCalculatedProperties();

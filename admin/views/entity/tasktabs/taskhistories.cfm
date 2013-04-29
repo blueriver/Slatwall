@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -36,4 +36,18 @@
 Notes:
 
 --->
-<cfoutput>#rc.taskResponse#</cfoutput>
+<cfparam name="rc.task" type="any"/>
+
+<cfif !arrayLen(rc.task.getTaskHistoriesSmartList().getOrders())>
+	<cfset rc.task.getTaskHistoriesSmartList().addOrder("createdDateTime|DESC") />
+</cfif>	
+
+<cfoutput>
+	<cf_HibachiListingDisplay smartlist="#rc.task.getTaskHistoriesSmartList()#">
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime"/>
+		<cf_HibachiListingColumn propertyidentifier="successFlag"/>
+		<cf_HibachiListingColumn propertyidentifier="response"/>
+		<cf_HibachiListingColumn propertyidentifier="startTime"/>
+		<cf_HibachiListingColumn propertyidentifier="endTime"/>
+	</cf_HibachiListingDisplay>
+</cfoutput>

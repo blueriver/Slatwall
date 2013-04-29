@@ -162,11 +162,13 @@ component output="false" update="true" extends="HibachiService" {
 			
 			if(structKeyExists(emd[entityName], "hb_processContexts")) {
 				
+				/*
 				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.process')# | before#entityName#Process", value="before#entityName#Process", entityName=entityName});
 				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.process')# | after#entityName#Process", value="after#entityName#Process", entityName=entityName});
 				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.process')# #getHibachiScope().rbKey('define.success')# | after#entityName#ProcessSuccess", value="after#entityName#ProcessSuccess", entityName=entityName});
 				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.process')# #getHibachiScope().rbKey('define.failure')# | after#entityName#ProcessFailure", value="after#entityName#ProcessFailure", entityName=entityName});
-			
+				*/
+				
 				for(var c=1; c<=listLen(emd[entityName].hb_processContexts); c++) {
 					var thisContext = listGetAt(emd[entityName].hb_processContexts, c);
 					

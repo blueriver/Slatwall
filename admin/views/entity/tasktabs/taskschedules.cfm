@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -36,4 +36,18 @@
 Notes:
 
 --->
-<cfoutput>#rc.taskResponse#</cfoutput>
+<cfparam name="rc.task" type="any"/>
+
+<cf_HibachiListingDisplay smartlist="#rc.task.getTaskSchedulesSmartList()#" 
+                        recordeditaction="admin:entity.editTaskSchedule" recordeditmodal="true" 
+                        recordeditquerystring="taskID=#rc.task.getTaskID()#" 
+                        recorddeleteaction="admin:entity.deleteTaskSchedule"
+						recorddeletequerystring="redirectAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule">
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="startDateTime"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="endDateTime"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="schedule.schedulename"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
+</cf_HibachiListingDisplay>
+
+<cf_HibachiActionCaller action="admin:entity.createTaskSchedule" class="btn" icon="plus" 
+                      querystring="taskID=#rc.task.getTaskID()#" modal=true/>

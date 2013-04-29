@@ -51,7 +51,7 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="content" cfc="Content" fieldtype="many-to-one" fkcolumn="contentID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID"; 
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" cascadeCalculate="true";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" hb_cascadeCalculate="true";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";

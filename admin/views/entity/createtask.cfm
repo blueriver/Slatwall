@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -36,18 +36,35 @@
 Notes:
 
 --->
-<cfparam name="rc.task" type="any"/>
-
-<cfif !arrayLen(rc.task.gettaskhistorySmartList().getOrders())>
-	<cfset rc.task.gettaskhistorySmartList().addOrder("createdDateTime|DESC") />
-</cfif>	
+<cfparam name="rc.task" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartlist="#rc.task.gettaskhistorySmartList()#">
-		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime"/>
-		<cf_HibachiListingColumn propertyidentifier="successFlag"/>
-		<cf_HibachiListingColumn propertyidentifier="response"/>
-		<cf_HibachiListingColumn propertyidentifier="startTime"/>
-		<cf_HibachiListingColumn propertyidentifier="endTime"/>
-	</cf_HibachiListingDisplay>
+	<cf_HibachiEntityDetailForm object="#rc.task#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.task#"></cf_HibachiEntityActionBar>    
+
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.task#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.task#" property="taskName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.task#" property="taskMethod" edit="#rc.edit#">
+				
+				<!--- Loop over all the taskMethods and get their processObjects if one exists --->
+				<cfloop array="#rc.task.getTaskMethodOptions()#" index="tmo">
+					<cfif rc.task.hasProcessObject( tmo.value )>
+						<cf_HibachiDisplayToggle selector="select[name='taskMethod']" showValues="#tmo.value#">
+							<cfset tmoProcessObject = rc.task.getProcessObject( tmo.value ) />
+							<cfloop array="#tmoProcessObject.getProperties()#" index="property">
+								<cfif structKeyExists(property, "sw_taskConfig") and property.sw_taskConfig>
+									<cf_HibachiPropertyDisplay object="#tmoProcessObject#" property="#property.name#" edit="#rc.edit#">
+								</cfif>
+							</cfloop>
+						</cf_HibachiDisplayToggle>
+					</cfif>
+				</cfloop>
+				
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>
+		
+	</cf_HibachiEntityDetailForm>
 </cfoutput>

@@ -52,7 +52,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	property name="calculatedQATS" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product" cascadeCalculated="true";
+	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product" hb_cascadeCalculate="true";
 	property name="subscriptionTerm" cfc="SubscriptionTerm" fieldtype="many-to-one" fkcolumn="subscriptionTermID";
 	
 	// Related Object Properties (one-to-many)

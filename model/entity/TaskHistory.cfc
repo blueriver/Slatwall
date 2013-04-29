@@ -36,7 +36,7 @@
 Notes:
 
 */
-component entityname="SlatwallTaskHistory" table="SlatwallTaskHistory" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="read-only" hb_serviceName="scheduleService" {
+component entityname="SlatwallTaskHistory" table="SlatwallTaskHistory" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="scheduleService" {
 	
 	// Persistent Properties
 	property name="taskHistoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -74,16 +74,16 @@ component entityname="SlatwallTaskHistory" table="SlatwallTaskHistory" persisten
 	public void function setTask(required any task) {    
 		variables.task = arguments.task;    
 		if(isNew() or !arguments.task.hasTaskHistory( this )) {    
-			arrayAppend(arguments.task.getTaskHistory(), this);    
+			arrayAppend(arguments.task.getTaskHistories(), this);    
 		}    
 	}    
 	public void function removeTask(any task) {    
 		if(!structKeyExists(arguments, "task")) {    
 			arguments.task = variables.task;    
 		}    
-		var index = arrayFind(arguments.task.getTaskHistory(), this);    
+		var index = arrayFind(arguments.task.getTaskHistories(), this);    
 		if(index > 0) {    
-			arrayDeleteAt(arguments.task.getTaskHistory(), index);    
+			arrayDeleteAt(arguments.task.getTaskHistories(), index);    
 		}    
 		structDelete(variables, "task");    
 	}
