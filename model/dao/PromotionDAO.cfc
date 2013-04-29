@@ -76,7 +76,9 @@ Notes:
 			<cfset hql &= " EXISTS( SELECT pq.promotionQualifierID FROM SlatwallPromotionQualifier pq WHERE pq.promotionPeriod.promotionPeriodID = spp.promotionPeriodID )" />
 			
 			<!--- Or a promotion code exists --->
-			<cfset hql &= " OR EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID AND c.promotionCode IN (:promotionCodeList) AND (c.startDateTime is null or c.startDateTime < :now) AND (c.endDateTime is null or c.endDateTime > :now) )" />
+			<cfif len(promotionCodeList)>
+				<cfset hql &= " OR EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID AND c.promotionCode IN (:promotionCodeList) AND (c.startDateTime is null or c.startDateTime < :now) AND (c.endDateTime is null or c.endDateTime > :now) )" />
+			</cfif>
 			
 			<!--- Or we still want these to show up because they are order/fulfillment rewards --->
 			<cfif len(noQualRequiredList)>
@@ -89,10 +91,16 @@ Notes:
 		
 		<!--- Regardless of if qualifications are required, we need to make sure that the promotion reward either doesn't need a promo code, or that the promo code used is ok --->
 		<cfset hql &= " AND (" />
+		
+		<!--- Make sure that the there are no promotion codes --->
 		<cfset hql &= " NOT EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID )" />
-		<cfif len(promotionCodeList)>
+		
+		<!--- Or if there are promotion codes then we have passed that pomotion code in --->
+		<cfif not arguments.qualificationRequired and len(promotionCodeList)>
 			<cfset hql &= " OR EXISTS ( SELECT c.promotionCodeID FROM SlatwallPromotionCode c WHERE c.promotion.promotionID = sp.promotionID AND c.promotionCode IN (:promotionCodeList) AND (c.startDateTime is null or c.startDateTime < :now) AND (c.endDateTime is null or c.endDateTime > :now) )" />	
 		</cfif>
+		
+		<!--- End additional where --->
 		<cfset hql &= " )" />
 			
 		<cfset var params = {
