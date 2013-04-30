@@ -36,7 +36,7 @@
 Notes:
 
 */
-component output="false" extends="Hibachi.HibachiControllerCRUD" {
+component output="false" extends="Slatwall.org.Hibachi.HibachiController" {
 
 	property name="fw" type="any";
 

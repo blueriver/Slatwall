@@ -2,6 +2,8 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	property name="hibachiService" type="any";
 	
+	this.restController = true;
+	
 	public void function get( required struct rc ) {
 		
 		// This is the response object that will be serialized and sent back
