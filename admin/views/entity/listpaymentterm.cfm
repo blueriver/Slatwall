@@ -42,10 +42,15 @@ Notes:
 	<cf_HibachiEntityActionBar type="listing" object="#rc.paymentTermSmartList#" createmodal="true" />
 	
 	<cf_HibachiListingDisplay smartList="#rc.paymentTermSmartList#"
-							   recordEditAction="admin:entity.editpaymentTerm"
-							   recordEditModal="true"
-							   recordDetailAction="admin:entity.detailpaymentTerm"
-							   recordDetailModal="true">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentTermName" />
+							  recordEditAction="admin:entity.editpaymentTerm"
+							  recordEditQueryString="redirectAction=admin:entity.listpaymentterm"
+							  recordEditModal="true"
+							  recordDetailAction="admin:entity.detailpaymentTerm"
+							  recordDetailModal="true"
+							  recordDeleteAction="admin:entity.detailpaymentTerm"
+							  recordDeleteQueryString="redirectAction=admin:entity.listpaymentterm">
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentTermName" sort="true" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="term.termName" sort="true" filter="true" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" sort="true" filter="true" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

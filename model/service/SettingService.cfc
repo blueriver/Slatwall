@@ -51,6 +51,7 @@ globalEncryptionKeySize
 	<cfproperty name="measurementService" type="any" />
 	<cfproperty name="paymentService" type="any" />
 	<cfproperty name="siteService" type="any" />
+	<cfproperty name="taskService" type="any" />
 	<cfproperty name="taxService" type="any" />
 	
 	<!--- Used For Caching --->
@@ -572,10 +573,10 @@ globalEncryptionKeySize
 				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName="fulfillmetnMethodID", columnID=arguments.entity.getFulfillmentMethodID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getShippingMethods()); a++) {
-					settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodID());
+					settingsRemoved += getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodID());
 					
 					for(var b=1; b<=arrayLen(arguments.entity.getShippingMethods()[a].getShippingMethodRates()); b++) {
-						settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodRates()[b].getShippingMethodRateID());
+						settingsRemoved += getSettingDAO().removeAllRelatedSettings(columnName="shippingMethodRateID", columnID=arguments.entity.getShippingMethods()[a].getShippingMethodRates()[b].getShippingMethodRateID());
 					}
 				}
 				
@@ -592,14 +593,35 @@ globalEncryptionKeySize
 				settingsRemoved = getSettingDAO().removeAllRelatedSettings(columnName="productID", columnID=arguments.entity.getProductID());
 				
 				for(var a=1; a<=arrayLen(arguments.entity.getSkus()); a++) {
-					settingsRemoved &= getSettingDAO().removeAllRelatedSettings(columnName="skuID", columnID=arguments.entity.getSkus()[a].getSkuID());
+					settingsRemoved += getSettingDAO().removeAllRelatedSettings(columnName="skuID", columnID=arguments.entity.getSkus()[a].getSkuID());
 				}
 				
 			}
 			
+			settingsRemoved += updateAllSettingValuesToRemoveSpecificID(primaryIDValue=arguments.entity.getPrimaryIDValue());
+			
 			if(settingsRemoved gt 0) {
 				clearAllSettingsCache();
 			}
+		}
+		
+		
+		public numeric function updateAllSettingValuesToRemoveSpecificID(required string primaryIDValue) {
+			return getSettingDAO().updateAllSettingValuesToRemoveSpecificID(primaryIDValue=arguments.primaryIDValue);
+		}
+		
+		public void function updateStockCalculated() {
+			
+			var updateStockThread = "";
+			
+			// We do this in a thread so that it doesn't hold anything else up
+			thread action="run" name="updateStockThread" {
+				setupData = {};
+				setupData["p:show"] = 200;
+				setupData["f:sku.activeFlag"] = 1;
+				setupData["f:sku.product.activeFlag"] = 1;
+				getTaskService().updateEntityCalculatedProperties("Stock", setupData);
+			} 
 		}
 		
 	</cfscript>
@@ -755,13 +777,26 @@ globalEncryptionKeySize
 	<cfscript>
 		public boolean function deleteSetting(required any entity) {
 			
+			// Check to see if we are going to need to update the 
+			var calculateStockNeeded = false;
+			if(listFindNoCase("skuAllowBackorderFlag,skuAllowPreorderFlag,skuQATSIncludesQNROROFlag,skuQATSIncludesQNROVOFlag,skuQATSIncludesQNROSAFlag,skuTrackInventoryFlag", arguments.entity.getSettingName())) {
+				calculateStockNeeded = true;
+			} 
+			
 			var deleteResult = super.delete(argumentcollection=arguments); 
 			
 			// If there aren't any errors then flush, and clear cache
 			if(deleteResult && !getHibachiScope().getORMHasErrors()) {
 				getHibachiDAO().flushORMSession();
 				clearAllSettingsCache();
+				
+				// If calculation is needed, then we should do it
+				if(calculateStockNeeded) {
+					updateStockCalculated();
+				}
 			}
+			
+			
 			
 			return deleteResult;
 		}
@@ -787,10 +822,17 @@ globalEncryptionKeySize
 			
 			// If there aren't any errors then flush, and clear cache
 			if(!getHibachiScope().getORMHasErrors()) {
+				
 				getHibachiDAO().flushORMSession();
 				clearAllSettingsCache();
+				
+				// If calculation is needed, then we should do it
+				if(listFindNoCase("skuAllowBackorderFlag,skuAllowPreorderFlag,skuQATSIncludesQNROROFlag,skuQATSIncludesQNROVOFlag,skuQATSIncludesQNROSAFlag,skuTrackInventoryFlag", arguments.entity.getSettingName())) {
+					updateStockCalculated();
+				}
 			}
-			return super.save(argumentcollection=arguments);
+			
+			return arguments.entity;
 		}
 	</cfscript>
 	

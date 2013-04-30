@@ -34,4 +34,21 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiService" {
 
 		return deleteOK;
 	}
+	
+	public any function save(required any entity, struct data={}, string context="save"){
+		
+		arguments.entity = super.save(argumentcollection=arguments);
+		
+		// If an entity was saved and the activeFlag is now 0 it needs to be removed from all setting values
+		if(!arguments.entity.hasErrors() && arguments.entity.hasProperty('activeFlag') && !arguments.entity.getActiveFlag()) {
+			
+			var settingsRemoved = getService("settingService").updateAllSettingValuesToRemoveSpecificID( arguments.entity.getPrimaryIDValue() );
+			
+			if(settingsRemoved gt 0) {
+				getService("settingService").clearAllSettingsCache();
+			}
+		}
+		
+		return arguments.entity;
+	}
 }
