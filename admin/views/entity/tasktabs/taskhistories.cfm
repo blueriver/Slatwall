@@ -1,6 +1,6 @@
-<!---
+﻿<!---
 
-    Slatwall - An e-commerce plugin for Mura CMS
+    Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,21 +36,18 @@
 Notes:
 
 --->
-<cfparam name="rc.paymentTermSmartList" type="any" />
+<cfparam name="rc.task" type="any"/>
+
+<cfif !arrayLen(rc.task.getTaskHistoriesSmartList().getOrders())>
+	<cfset rc.task.getTaskHistoriesSmartList().addOrder("createdDateTime|DESC") />
+</cfif>	
 
 <cfoutput>
-	<cf_HibachiEntityActionBar type="listing" object="#rc.paymentTermSmartList#" createmodal="true" />
-	
-	<cf_HibachiListingDisplay smartList="#rc.paymentTermSmartList#"
-							  recordEditAction="admin:entity.editpaymentTerm"
-							  recordEditQueryString="redirectAction=admin:entity.listpaymentterm"
-							  recordEditModal="true"
-							  recordDetailAction="admin:entity.detailpaymentTerm"
-							  recordDetailModal="true"
-							  recordDeleteAction="admin:entity.detailpaymentTerm"
-							  recordDeleteQueryString="redirectAction=admin:entity.listpaymentterm">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentTermName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="term.termName" sort="true" filter="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" sort="true" filter="true" />
+	<cf_HibachiListingDisplay smartlist="#rc.task.getTaskHistoriesSmartList()#">
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime"/>
+		<cf_HibachiListingColumn propertyidentifier="successFlag"/>
+		<cf_HibachiListingColumn propertyidentifier="response"/>
+		<cf_HibachiListingColumn propertyidentifier="startTime"/>
+		<cf_HibachiListingColumn propertyidentifier="endTime"/>
 	</cf_HibachiListingDisplay>
 </cfoutput>

@@ -1,6 +1,6 @@
-<!---
+﻿<!---
 
-    Slatwall - An e-commerce plugin for Mura CMS
+    Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,21 +36,18 @@
 Notes:
 
 --->
-<cfparam name="rc.paymentTermSmartList" type="any" />
+<cfparam name="rc.task" type="any"/>
 
-<cfoutput>
-	<cf_HibachiEntityActionBar type="listing" object="#rc.paymentTermSmartList#" createmodal="true" />
-	
-	<cf_HibachiListingDisplay smartList="#rc.paymentTermSmartList#"
-							  recordEditAction="admin:entity.editpaymentTerm"
-							  recordEditQueryString="redirectAction=admin:entity.listpaymentterm"
-							  recordEditModal="true"
-							  recordDetailAction="admin:entity.detailpaymentTerm"
-							  recordDetailModal="true"
-							  recordDeleteAction="admin:entity.detailpaymentTerm"
-							  recordDeleteQueryString="redirectAction=admin:entity.listpaymentterm">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentTermName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="term.termName" sort="true" filter="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" sort="true" filter="true" />
-	</cf_HibachiListingDisplay>
-</cfoutput>
+<cf_HibachiListingDisplay smartlist="#rc.task.getTaskSchedulesSmartList()#" 
+                        recordeditaction="admin:entity.editTaskSchedule" recordeditmodal="true" 
+                        recordeditquerystring="taskID=#rc.task.getTaskID()#" 
+                        recorddeleteaction="admin:entity.deleteTaskSchedule"
+						recorddeletequerystring="redirectAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule">
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="startDateTime"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="endDateTime"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="schedule.schedulename"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
+</cf_HibachiListingDisplay>
+
+<cf_HibachiActionCaller action="admin:entity.createTaskSchedule" class="btn" icon="plus" 
+                      querystring="taskID=#rc.task.getTaskID()#" modal=true/>

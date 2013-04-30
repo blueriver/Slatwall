@@ -40,94 +40,17 @@ component extends="HibachiService" output="false" accessors="true"{
 
 	property name="taskDAO" type="any";
 	
-	property name="utilityTagService" type="any";
+	
 	  
-	public void function executeTask( required any taskID, required any TaskScheduleID) {
-		//Pass in id's and not complex objects like entities. thread doesnt like that
-
-		 thread
-			action="run"
-			name="myThread"
-			taskID="#arguments.taskID#"
-			taskScheduleID="#arguments.TaskScheduleID#"
-			{
-				var taskResponse = "";
-				var taskHistory = new('TaskHistory');
-				var task = get('Task',attributes.taskID);
-				var taskSchedule = get('TaskSchedule',attributes.taskScheduleID);
-				
-				task.setRunningFlag(true);
-				taskHistory.setStartTime(now());
-				
-				getHibachiDAO().flushORMSession();
-		
-				try{
-					if( task.getTaskMethod() == "url") {
-						taskResponse = url( task.getTaskURL() );
-					} else {
-						taskResponse = this.invokeMethod( task.getTaskMethod() );
-					}
-					taskHistory.setsuccessFlag(true);
-					taskHistory.setResponse(taskResponse);
-					sendNotificationEmail(taskSchedule,'Success');
-					
-				} catch(any e){
-					taskHistory.setsuccessFlag(false);
-					taskHistory.setResponse(e.Message);
-					sendNotificationEmail(taskSchedule,'Failed',e);
-				}
-				
-				task.setRunningFlag(false);
-				taskHistory.setEndTime(now());
-				taskHistory.setTask(task);
-				
-				if(val(attributes.taskScheduleID)){
-					var taskSchedule = get('TaskSchedule',attributes.taskScheduleID);
-					schedule = taskSchedule.getSchedule();
-					TaskSchedule.setNextRunDateTime(schedule.getNextRunDateTime(TaskSchedule.getStartDateTime(),TaskSchedule.getEndDateTime()));
-				}
-				
-				save(taskHistory);
-				getHibachiDAO().flushORMSession();
-			}	
-			
-        } 
-	
-	public void function sendNotificationEmail(required any taskSchedule, required string status, any error){
-		
-		var subject = arguments.status & ': ' & arguments.taskSchedule.getTask().getTaskName();
-		var from = setting('globalOrderPlacedEmailFrom');
-		var type = 'HTML';
-
-		if(arguments.status eq "Failed"){
-			savecontent variable="errorString" { 
-				writeDump(var="#arguments.error#", top="2");
-			};
-			var to = arguments.taskSchedule.getFailureEmailList();
-			var body = "<p>The #arguments.taskSchedule.getTask().getTaskName()# task failed on <i>#dateformat(now(),"mm/dd/yyyy")# #timeformat(now(),"medium")#</i></p><h2>Error Details</h2>#arguments.error.message#" & errorString ;
-		}else{
-			var to = arguments.taskSchedule.getSuccessEmailList();
-			var body = "<p>The #arguments.taskSchedule.getTask().getTaskName()# task completed successfully on <i>#dateformat(now(),"mm/dd/yyyy")# #timeformat(now(),"medium")#</i></p>";
-		}
-		
-		getUtilityTagService().cfmail(from=from,to=to,subject=subject,body=body,type=type);
-
-	}
-	
-	
 	// ================== Start: Task Methods ============================
 	
-	public any function url( required string url ) {
-		var response = {};
-		// Call CFHTTP for a URL
-		
-		return response;
-	}
-	
+	// Subscription - Renew
 	public any function renewSubscriptionUsage() {
 		var response = '';
-		// Do Logic
+		
+		//   Do Logic
 		var subscriptionUsages = getService("subscriptionService").getTaskDAO().getSubscriptionUsageForRenewal();
+		
 		for(var subscriptionUsage in subscriptionUsages) {
 			getService("subscriptionService").processSubscriptionUsage(subscriptionUsage, {}, 'autoRenew');
 		}
@@ -135,6 +58,7 @@ component extends="HibachiService" output="false" accessors="true"{
 		return response;
 	}
 	
+	// Subscription - Renewal Reminder
 	public any function subscriptionUsageRenewalReminder() {
 		var response = '';
 		// Do Logic
@@ -150,8 +74,48 @@ component extends="HibachiService" output="false" accessors="true"{
 		return response;
 	}
 	
+	// Calculated Update
+	
+	// Clear Old Sessions & Carts
 
 	// ===================== START: Logical Methods ===========================
+	
+	public void function updateEntityCalculatedProperties(required any entityName, struct smartListData={}) {
+		
+		// Setup a smart list to figure out how many things to update
+		var smartList = getServiceByEntityName( arguments.entityName ).invokeMethod( "get#arguments.entityName#SmartList", {1=arguments.smartListData});
+		
+		// log the job started
+		logHibachi("updateEntityCalculatedProperties starting for #arguments.entityName# with #smartList.getRecordsCount()# records");
+		
+		for(var p=1; p <= smartList.getTotalPages(); p++) {
+			
+			// Log to hibachi the current page
+			logHibachi("updateEntityCalculatedProperties starting page: #p#");
+			
+			// Clear the session, so that it doesn't hog primary cache
+			ormClearSession();
+			
+			// Set the correct page
+			smartList.setCurrentPageDeclaration( p );
+			
+			// Get the records for this page, make sure to pass true so that the old records get cleared out
+			var records = smartList.getPageRecords( true );
+			
+			// Figure out the recordCount we need to loop to
+			var rc = arrayLen(records);
+			
+			// Loop over each record in the page and call update / flush
+			for(var r=1; r<=rc; r++) {
+				records[r].updateCalculatedProperties();
+				ormFlush();
+			}
+		}
+		
+		// log the job finished
+		logHibachi("updateEntityCalculatedProperties starting for #arguments.entityName# finished");
+		
+	}
 	
 	// =====================  END: Logical Methods ============================
 	
@@ -161,6 +125,143 @@ component extends="HibachiService" output="false" accessors="true"{
 	
 	// ===================== START: Process Methods ===========================
 	
+	public any function processTask_runTask(required any task, required struct data) {
+		
+		// Create variable for the thread to run as
+		var taskThread = "";
+		
+		// Setup the taskData that will be passed into the thread
+		var threadData = {};
+		threadData.taskID = arguments.task.getTaskID();
+		threadData.taskData = {};
+		
+		// If there was a schedule, pass that in as well
+		if(structKeyExists(arguments.data, "taskScheduleID")) {
+			threadData.taskScheduleID = arguments.data.taskScheduleID;
+		}
+		
+		// If there was a runTaskConfig then pass that in, otherwise we try to pull it out of the task object
+		if(structKeyExists(arguments.data, "runTaskConfig") && isStruct(arguments.data.runTaskConfig)) {
+			threadData.taskData = arguments.data.runTaskConfig;
+		} else if (!isNull(arguments.task.getTaskConfig()) && isJSON(arguments.task.getTaskConfig())) {
+			threadData.taskData = deserializeJSON(arguments.task.getTaskConfig());
+		}
+		
+		thread action="run" name="taskThread" threadData="#threadData#" {
+			
+			// Create a new taskHistory to be logged
+			var taskHistory = this.newTaskHistory();
+			
+			// Get the task from the DB
+			var task = this.getTask(attributes.threadData.taskID);
+			
+			// Setup the task as running, and initial the taskHistory data
+			task.setRunningFlag( true );
+			taskHistory.setTask( task );
+			taskHistory.setStartTime( now() );
+			
+			// Persist the info to the DB
+			getHibachiDAO().flushORMSession();
+
+			// Run the task inside of a try/catch so that errors are logged
+			try{
+				
+				// Call the processMethod for this task
+				task = this.processTask( task, attributes.threadData.taskData, task.getTaskMethod() );
+				
+				// Update the taskHistory
+				taskHistory.setSuccessFlag( true );
+				taskHistory.setResponse( "" );
+				
+			} catch(any e){
+				
+				// Log the error
+				logHibachi( "There was an error processing task: #task.getTaskName()#" );
+				logHibachiException( e );
+				
+				// Update the history
+				taskHistory.setSuccessFlag( false );
+				taskHistory.setResponse( e.Message );
+			}
+			
+			// Update the task, and set the end for history
+			task.setRunningFlag( false );
+			taskHistory.setEndTime( now() );
+			
+			// Persist the info to the DB
+			getHibachiDAO().flushORMSession();
+			
+			// If there was a taskSchedule, then we can update it
+			if(structKeyExists(attributes.threadData, "taskScheduleID")){
+				
+				// Get the taskSchedule
+				var taskSchedule = this.getTaskSchedule( attributes.threadData.taskScheduleID );
+				
+				// Update the taskSechedules nextRunDateTime
+				taskSchedule.setNextRunDateTime( taskSchedule.getSchedule().getNextRunDateTime( taskSchedule.getStartDateTime(), taskSchedule.getEndDateTime() ) );
+			}
+			
+			// Call save on the task history
+			taskHistory = this.saveTaskHistory( taskHistory );
+			
+			// Flush the DB again to persist all updates
+			getHibachiDAO().flushORMSession();
+		}
+		
+		return arguments.task;
+	}
+	
+	public any function processTask_customURL(required any task, required any processObject) {
+		
+	}
+	
+	public any function processTask_subscriptionUsageRenew(required any task) {
+		var subscriptionUsages = getService("subscriptionService").getTaskDAO().getSubscriptionUsageForRenewal();
+		
+		for(var subscriptionUsage in subscriptionUsages) {
+			subscriptionUsage = getService("subscriptionService").processSubscriptionUsage(subscriptionUsage, {}, 'autoRenew');
+		}
+		
+		return arguments.task;
+	}
+	
+	public any function processTask_subscriptionUsageSendRenewalReminder(required any task, required any processObject) {
+		var subscriptionUsages = getTaskDAO().getSubscriptionUsageForRenewalReminder();
+		
+		for(var subscriptionUsage in subscriptionUsages) {
+			if(!isNull(subscriptionUsage.getAutoPayFlag()) && subscriptionUsage.getAutoPayFlag()) {
+				getService("subscriptionService").processSubscriptionUsageRenewalReminder(subscriptionUsage, {eventName = 'subscriptionUsageAutoRenewalReminder'}, 'auto');
+			} else {
+				getService("subscriptionService").processSubscriptionUsageRenewalReminder(subscriptionUsage, {eventName = 'subscriptionUsageManualRenewalReminder'}, 'auto');
+			}
+		}
+		
+		return arguments.task;
+	}
+	
+	public any function processTask_updateCalculatedProperties(required any task, required any processObject) {
+		
+		var setupData = {};
+		
+		// Order
+		if(arguments.processObject.getUpdateOrderFlag()) {
+			setupData = {};
+			setupData["p:show"] = 200;
+			updateEntityCalculatedProperties("Order", setupData);
+		}
+		
+		// Stock / Sku / Product
+		if(arguments.processObject.getUpdateStockSkuProductFlag()) {
+			setupData = {};
+			setupData["p:show"] = 200;
+			setupData["f:sku.activeFlag"] = 1;
+			setupData["f:sku.product.activeFlag"] = 1;
+			updateEntityCalculatedProperties("Stock", setupData);
+		}
+		
+		return arguments.task;
+	}
+	
 	// =====================  END: Process Methods ============================
 	
 	// ====================== START: Status Methods ===========================
@@ -169,6 +270,44 @@ component extends="HibachiService" output="false" accessors="true"{
 	
 	// ====================== START: Save Overrides ===========================
 	
+	public any function saveTask(required any task, struct data={}, string context="save") {
+		
+		// Call the generic save method
+		arguments.task = save(arguments.task, arguments.data, arguments.context);
+		
+		// If this task has a taskMethod and that taskMethod has a processObject then we need to validate and persist the data
+		if(!isNull(arguments.task.getTaskMethod()) && arguments.task.hasProcessObject(arguments.task.getTaskMethod())) {
+			
+			
+			// Get the correct processObject
+			var processObject = arguments.task.getProcessObject( arguments.task.getTaskMethod() );
+			
+			// If there was a task config then we can populate with that first
+			if(structKeyExists(arguments.data, "taskConfig") && isStruct(arguments.data.taskConfig)) {
+				
+				// Populate the processObject with a taskConfig
+				processObject.populate(arguments.data.taskConfig);
+				
+				// Update the value we are going to save with this info.
+				arguments.task.setTaskConfig( serializeJSON( arguments.data.taskConfig ) );
+				
+			}
+			
+			// Validate that this taskConfig will work
+			processObject.validate( context=arguments.task.getTaskMethod() );
+			
+			// If the processObject has errors after validation, then setORMHasErrors() and add error to entity
+			if(processObject.hasErrors()) {
+				
+				getHibachiScope().setORMHasErrors( true );
+				arguments.task.addError( 'taskConfig', rbKey('entity.task.taskConfig.invalidConfig') );
+				
+			}
+		}
+		
+		return arguments.task;
+	}
+	
 	// ======================  END: Save Overrides ============================
 	
 	// ==================== START: Smart List Overrides =======================
@@ -176,6 +315,25 @@ component extends="HibachiService" output="false" accessors="true"{
 	// ====================  END: Smart List Overrides ========================
 	
 	// ====================== START: Get Overrides ============================
+	
+	public any function getTask( required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
+		
+		// Call the generic get method
+		var task = get(entityName="SlatwallTask", idOrFilter=arguments.idOrFilter, isReturnNewOnNotFound=isReturnNewOnNotFound);
+		
+		// If this task has a taskMethod and that taskMethod has a processObject then we need to validate and persist the data
+		if(!isNull(task.getTaskMethod()) && task.hasProcessObject(task.getTaskMethod()) && !isNull(task.getTaskConfig()) && isJSON(task.getTaskConfig())) {
+			
+			// Get the correct processObject
+			var processObject = task.getProcessObject( task.getTaskMethod() );
+			
+			// Populate the processObject with a taskConfig
+			processObject.populate( deserializeJSON(task.getTaskConfig()) );
+			
+		}
+		
+		return task;
+	}
 	
 	// ======================  END: Get Overrides =============================
 	

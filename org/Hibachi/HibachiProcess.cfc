@@ -8,7 +8,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	
 	public boolean function getPreProcessDisplayedFlag() {
 		if(!structKeyExists(variables, "preProcessDisplayedFlag")) {
-				variables.preProcessDisplayedFlag = 0;
+			variables.preProcessDisplayedFlag = 0;
 		}
 		return variables.preProcessDisplayedFlag;
 	}

@@ -36,23 +36,22 @@
 Notes:
 
 */
-component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="scheduleService" hb_permission="this" {
+component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="taskService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="taskID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" hb_formatType="yesno";
 	property name="taskName" ormtype="string";
-	property name="taskMethod" ormtype="string" hb_formFieldType="select";
+	property name="taskMethod" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
 	property name="taskUrl" ormtype="string";
+	property name="taskConfig" ormtype="string" length="4000";
 	property name="runningFlag" ormtype="boolean" hb_formatType="yesno";
 	property name="timeout" ormtype="int" ;
 
-	
 	// Related Object Properties (many-to-one)
 	
-	
 	// Related Object Properties (one-to-many)
-	property name="taskHistory" cfc="TaskHistory" type="array" fieldtype="one-to-many" fkcolumn="taskID" cascade="all-delete-orphan" inverse="true";
+	property name="taskHistories" singularname="taskHistory" cfc="TaskHistory" type="array" fieldtype="one-to-many" fkcolumn="taskID" cascade="all-delete-orphan" inverse="true";
 	property name="taskSchedules" singularname="taskSchedule" cfc="TaskSchedule" type="array" fieldtype="one-to-many" fkcolumn="taskID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
@@ -69,16 +68,17 @@ component displayname="Task" entityname="SlatwallTask" table="SlatwallTask" pers
 	// Non-Persistent Properties
 	property name="taskMethodOptions" persistent="false";
 
-	public array function getTaskMethodOptions() {
-		var options = [
-			{name="url", value="url"},
-			{name="Renew Subscription Usage", value="renewSubscriptionUsage"},
-			{name="Subscription Renewal Reminder", value="subscriptionUsageRenewalReminder"}
-		];
-		return options;
-	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
+	public array function getTaskMethodOptions() {
+		return [
+			{name="#rbKey('entity.task.taskMethod.customURL')#", value="customURL"},
+			{name="#rbKey('entity.task.taskMethod.subscriptionUsageRenew')#", value="subscriptionUsageRenew"},
+			{name="#rbKey('entity.task.taskMethod.subscriptionUsageRenewalReminder')#", value="subscriptionUsageRenewalReminder"},
+			{name="#rbKey('entity.task.taskMethod.updateCalculatedProperties')#", value="updateCalculatedProperties"}
+		];
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

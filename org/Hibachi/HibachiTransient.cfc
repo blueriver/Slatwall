@@ -662,7 +662,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		} else if( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-one" ) {
 			return "select";
 		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "one-to-many" ) {
-			throw("There is now property field type for one-to-many relationship properties");
+			throw("There is no property field type for one-to-many relationship properties, which means that you cannot get a fieldType for #arguments.propertyName#");
 		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-many" ) {
 			return "listingMultiselect";
 		}
