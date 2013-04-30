@@ -120,7 +120,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
 		arguments.fullPath = super.customizeViewOrLayoutPath(argumentcollection=arguments);
 		if(listFindNoCase("admin,frontend,public", arguments.pathInfo.subsystem)){
-			var customFullPath = "/custom" & arguments.fullPath;
+			var customFullPath = replace(replace(replace(arguments.fullPath, "/admin/", "/custom/admin/"), "/frontend/", "/custom/frontend/"), "/public/", "/custom/public/");
 			if(fileExists(expandPath(customFullPath))) {
 				arguments.fullPath = customFullPath;
 			}

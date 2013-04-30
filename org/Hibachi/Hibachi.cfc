@@ -54,6 +54,12 @@ component extends="FW1.framework" {
 	variables.framework.hibachi = {};
 	variables.framework.hibachi.fullUpdateKey = "Update";
 	variables.framework.hibachi.fullUpdatePassword = "true";
+	variables.framework.hibachi.authenticationSubsystemPaths = "admin,public";
+	variables.framework.hibachi.loginSubsystems = "admin,public";
+	variables.framework.hibachi.loginDefaultSubsystem = 'admin';
+	variables.framework.hibachi.loginDefaultSection = 'main';
+	variables.framework.hibachi.loginDefaultItem = 'default';
+	
 	
 	// Allow For Application Config
 	try{include "../../config/configFramework.cfm";}catch(any e){}
@@ -145,7 +151,16 @@ component extends="FW1.framework" {
 		
 		// Verify Authentication before anything happens
 		if(!getHibachiScope().getService("hibachiAuthenticationService").authenticateAction( action=request.context[ getAction() ], account=request[ "#variables.framework.applicationKey#Scope" ].getAccount() )) {
-			redirect(action="admin:main.login");
+			
+			// Get the hibachiConfig out of the application scope in case any changes were made to it
+			var hibachiConfig = getHibachiScope().getApplicationValue("hibachiConfig");
+			
+			// If the current subsytem is a 'login' subsystem, then we can use the current subsystem
+			if(listFindNoCase(hibachiConfig.loginSubsystems, getSubsystem(request.context[ getAction() ]))) {
+				redirect(action="#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
+			} else {
+				redirect(action="#hibachiConfig.loginDefaultSubsystem#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
+			}
 		}
 		
 		// Setup structured Data if a request context exists meaning that a full action was called
@@ -196,32 +211,31 @@ component extends="FW1.framework" {
 				// Check again so that the qued requests don't back up
 				if(!getHibachiScope().hasApplicationValue("initialized") || !getHibachiScope().getApplicationValue("initialized")) {
 					
+					// Setup the app init data
+					var applicationInitData = {}; 
+					applicationInitData["initialized"] = 				false;
+					applicationInitData["application"] = 				this;
+					applicationInitData["applicationKey"] = 			variables.framework.applicationKey;
+					applicationInitData["applicationRootMappingPath"] = this.mappings[ "/#variables.framework.applicationKey#" ];
+					applicationInitData["applicationReloadKey"] = 		variables.framework.reload;
+					applicationInitData["applicationReloadPassword"] =	variables.framework.password;
+					applicationInitData["applicationUpdateKey"] = 		variables.framework.hibachi.fullUpdateKey;
+					applicationInitData["applicationUpdatePassword"] =	variables.framework.hibachi.fullUpdatePassword;
+					applicationInitData["baseURL"] = 					variables.framework.baseURL;
+					applicationInitData["hibachiConfig"] =				variables.framework.hibachi;
+					
+					// Log the setup start with values
+					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application setup started.");
+					for(var key in applicationInitData) {
+						if(isSimpleValue(applicationInitData[key])) {
+							writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Init '#key#' as: #applicationInitData[key]#");	
+						}
+					}
+					
 					// Application Setup Started
-					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Setup Started");
+					application[ getHibachiInstanceApplicationScopeKey() ] = applicationInitData;
+					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application cache cleared, and init values set.");
 					
-					// Clear out application cache
-					application[ getHibachiInstanceApplicationScopeKey() ] = {};
-					application[ getHibachiInstanceApplicationScopeKey() ].initialized = false;
-					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Cache Cleared");
-					
-					// Setup the fw1ApplicationKey in the application scope to use it later
-					getHibachiScope().setApplicationValue("applicationKey", variables.framework.applicationKey);
-					
-					// Setup this application into an application variable
-					getHibachiScope().setApplicationValue("application", this);
-					
-					// Setup the baseURL
-					getHibachiScope().setApplicationValue("baseURL", variables.framework.baseURL);
-					
-					// Setup the applicationRootMappingPath
-					getHibachiScope().setApplicationValue("applicationRootMappingPath", this.mappings[ "/#variables.framework.applicationKey#" ]);
-					
-					// Setup the reload and update keys / passwords
-					getHibachiScope().setApplicationValue("applicationReloadKey", variables.framework.reload);
-					getHibachiScope().setApplicationValue("applicationReloadPassword", variables.framework.password);
-					getHibachiScope().setApplicationValue("applicationUpdateKey", variables.framework.hibachi.fullUpdateKey);
-					getHibachiScope().setApplicationValue("applicationUpdatePassword", variables.framework.hibachi.fullUpdatePassword);
-				
 					// =================== Required Application Setup ===================
 					// The FW1 Application had not previously been loaded so we are going to call onApplicationStart()
 					if(!structKeyExists(application, variables.framework.applicationKey)) {
@@ -288,7 +302,7 @@ component extends="FW1.framework" {
 					}
 					
 					// Setup the custom bean factory
-					if(directoryExists(expandPath("/#variables.framework.applicationKey#/custom/model"))) {
+					if(directoryExists("#getHibachiScope().getApplicationValue("applicationRootMappingPath")#/custom/model")) {
 						var customBF = new DI1.ioc("/#variables.framework.applicationKey#/custom/model", {
 							transients=["entity", "process", "transient"]
 						});

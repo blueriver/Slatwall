@@ -67,6 +67,28 @@ Notes:
 		<cfargument name="contextIDColumn" />
 		<cfargument name="contextIDValue" />
 		
+		<!--- 
+			UPDATE #tableName# SET sortOrder = sortOrder + 1 WHERE sortOrder >= #newSortOrder# AND #contextIDColumn# = #contextIDValue#
+			UPDATE #tableName# SET sortOrder = #newSortOrder# WHERE #recordIDColumn# = #recordID#
+			
+			SELECT #recordIDColumn# FROM #tableName# WHERE #contextIDColumn# = #contextIDValue# ORDER BY sortOrder
+			
+			SET VAR COUNT = 0
+			LOOP OVER SELECT
+				UPDATE #tableName# SET sortOrder = #count# WHERE #recordIDColumn# = #recordID#
+				COUNT ++
+			END LOOP
+			
+		--->
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		<cfset var rs = "" />
 		<cfset var topSortOrder = getTableTopSortOrder(argumentcollection=arguments) />
 		

@@ -132,7 +132,11 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	public struct function getActionPermissionDetails(){
+		
+		// First check to see if this is cached
 		if(!structKeyExists(variables, "actionPermissionDetails")){
+			
+			// Setup the all permis
 			var allPermissions={
 				admin={}
 			};
