@@ -88,7 +88,10 @@ component extends="HibachiService" output="false" accessors="true"{
 		// log the job started
 		logHibachi("updateEntityCalculatedProperties starting for #arguments.entityName# with #smartList.getRecordsCount()# records");
 		
-		for(var p=1; p <= smartList.getTotalPages(); p++) {
+		// create a local variable for the totalPages
+		var totalPages = smartList.getTotalPages();
+		
+		for(var p=1; p <= totalPages; p++) {
 			
 			// Log to hibachi the current page
 			logHibachi("updateEntityCalculatedProperties starting page: #p#");
