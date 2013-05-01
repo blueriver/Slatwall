@@ -2,6 +2,8 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	property name="hibachiService" type="any";
 	
+	this.entityController = true;
+	
 	public void function before( required any rc ) {
 		
 		// Setup a Private structure in the RC that can't be overridden by the form scope

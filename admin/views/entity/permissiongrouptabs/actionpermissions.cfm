@@ -1,6 +1,6 @@
 <!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,28 +36,6 @@
 Notes:
 
 --->
-<cfparam name="rc.permissiongroup" type="any" />
-<cfparam name="rc.edit" type="boolean" />
-<cfparam name="params.publicMethods" type="string" />
-<cfparam name="params.secureMethods" type="string" />
-<cfparam name="params.securePermissionOptions" type="array" />
+<cfparam name="rc.permissionGroup" type="any" />
 
-<cfoutput>
-	<table class="table table-striped table-bordered table-condensed table-multiselect" data-multiselectfield="permissions">
-		<thead>
-			<tr>
-				<th class="multiselect">&nbsp;</th>
-				<th class="data primary" data-propertyidentifier="permission">#$.slatwall.rbKey('define.permissions')#</th>
-			</tr>
-		</thead>
-		<tbody>
-			<cfloop array="#params.securePermissionOptions#" index="local.permission">
-				<tr id="#local.permission.value#">
-					<td><a href="##" class="table-action-multiselect<cfif !rc.edit> disabled</cfif>" data-idvalue="#local.permission.value#"><i class="slatwall-ui-checkbox"></i></a></td>
-					<td class="primary">#local.permission.name#</td>
-				</tr>
-			</cfloop>
-		</tbody>
-	</table>
-</cfoutput>
-
+<cf_HibachiPermissionGroupActionPermissions permissionGroup="#rc.permissionGroup#" />
