@@ -69,37 +69,12 @@ Notes:
 		
 		<cfset var rs = "" />
 		<cfset var rs2 = "" />
-		
-		<!--- 
-			UPDATE #tableName# SET sortOrder = sortOrder + 1 WHERE sortOrder >= #newSortOrder# AND #contextIDColumn# = #contextIDValue#
-			UPDATE #tableName# SET sortOrder = #newSortOrder# WHERE #recordIDColumn# = #recordID#
-			
-			SELECT #recordIDColumn# FROM #tableName# WHERE #contextIDColumn# = #contextIDValue# ORDER BY sortOrder
-			
-			SET VAR COUNT = 0
-			LOOP OVER SELECT
-				UPDATE #tableName# SET sortOrder = #count# WHERE #recordIDColumn# = #recordID#
-				COUNT ++
-			END LOOP
-			
-		--->
-		
-		<cftry>
+
+
 			<cflock timeout="60" name="updateSortOrder#arguments.tableName#">
 				<cftransaction>
 					<!--- new sortorder = old sortorder + 1 of all item below the dropped element--->				
-					<cfquery name="rs">
-						UPDATE
-							#arguments.tableName#
-						SET
-							sortOrder = sortOrder + 1
-						WHERE
-							sortOrder > <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" />
-							<cfif structKeyExists(arguments, "contextIDColumn") and len(arguments.contextIDColumn)>
-							  AND
-								#arguments.contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contextIDValue#" />
-							</cfif>
-					</cfquery>
+					
 					
 					<!--- get the current sort order of the dropped row --->
 					<cfquery name="rs">
@@ -109,9 +84,36 @@ Notes:
 					
 					<!--- if the dropped row is less than the new sort order increment the current sortorder by one else decrement it by one--->
 					<cfif arguments.newSortOrder gt rs.sortOrder> 
-						<cfset var newCurrentOrder = arguments.newSortOrder + 1 />
+						
+						<cfquery name="rs">
+							UPDATE
+								#arguments.tableName#
+							SET
+								sortOrder = sortOrder - 1
+							WHERE
+								sortOrder <= <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" />
+								AND
+									sortOrder > <cfqueryparam cfsqltype="cf_sql_integer" value="#rs.sortOrder#" />
+								<cfif structKeyExists(arguments, "contextIDColumn") and len(arguments.contextIDColumn)>
+								  AND
+									#arguments.contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contextIDValue#" />
+								</cfif>
+						</cfquery>
 					<cfelse>
-						<cfset var newCurrentOrder = arguments.newSortOrder - 1 />	
+						<cfquery name="rs">
+							UPDATE
+								#arguments.tableName#
+							SET
+								sortOrder = sortOrder + 1
+							WHERE
+								sortOrder >= <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" />
+								AND
+									sortOrder < <cfqueryparam cfsqltype="cf_sql_integer" value="#rs.sortOrder#" />
+								<cfif structKeyExists(arguments, "contextIDColumn") and len(arguments.contextIDColumn)>
+								  AND
+									#arguments.contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contextIDValue#" />
+								</cfif>
+						</cfquery>
 					</cfif>
 					
 					<!--- update the current sort order to the value calculated above --->
@@ -119,14 +121,14 @@ Notes:
 						UPDATE
 							#arguments.tableName#
 						SET
-							sortOrder = <cfqueryparam cfsqltype="cf_sql_integer" value="#newCurrentOrder#" />
+							sortOrder = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.newSortOrder#" />
 						WHERE
 							#recordIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.recordID#" />
 					</cfquery>
 					
 					<!--- get all the newly sorted rows --->
 					<cfquery name="rs2">
-						SELECT #recordIDColumn# FROM #arguments.tableName# 
+						SELECT #recordIDColumn#, sortOrder FROM #arguments.tableName# 
 						<cfif structKeyExists(arguments, "contextIDColumn") and len(arguments.contextIDColumn)>
 							WHERE #arguments.contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contextIDValue#" />
 						</cfif>
@@ -139,32 +141,21 @@ Notes:
 					
 					<!--- reset the sort order to fill any gaps --->
 					<cfloop query="rs2">
-						
-						<cfquery name="rs">
-							UPDATE
-								#arguments.tableName#
-							SET
-								sortOrder = <cfqueryparam cfsqltype="cf_sql_integer" value="#count#" />
-							WHERE
-								#recordIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#evaluate(recordIDCol)#" />
-						</cfquery>
-						
+						<cfif rs2.sortOrder neq count>
+							<cfquery name="rs">
+								UPDATE
+									#arguments.tableName#
+								SET
+									sortOrder = <cfqueryparam cfsqltype="cf_sql_integer" value="#count#" />
+								WHERE
+									#recordIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#evaluate(recordIDCol)#" />
+							</cfquery>
+						</cfif>
 						<cfset count++ />
 					</cfloop>
-					
-					<!---<cfquery name="rs">
-						UPDATE
-							#arguments.tableName# as a
-						SET sortOrder = (SELECT max(b.sortOrder) + 1 FROM #arguments.tableName# as b WHERE b.sortOrder < a.sortOrder)
-						ORDER BY
-							a.sortOrder ASC
-					</cfquery>--->
+
 				</cftransaction>
 			</cflock>
-			<cfcatch>
-				<cfset getService("UtilityLogService").logException(cfcatch) />
-			</cfcatch>
-		</cftry>
 		
 	</cffunction>
 
