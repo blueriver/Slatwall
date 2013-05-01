@@ -51,8 +51,5 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiService" {
 		
 		return arguments.entity;
 	}
-	
-	public any function updateRecordSortOrder(required string recordIDColumn, required string recordID, required string tableName, required numeric newSortOrder) {
-		getHibachiDAO().updateRecordSortOrder(argumentcollection=arguments);
-	}
+
 }
