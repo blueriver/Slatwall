@@ -213,7 +213,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.o
 	}
 	
 	public function updateSortOrder(required struct rc) {
-		getDataService().updateRecordSortOrder(argumentCollection=rc);
+		getHibachiService().updateRecordSortOrder(argumentCollection=rc);
 	}
 	
 }
