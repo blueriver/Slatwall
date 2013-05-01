@@ -284,6 +284,11 @@ function setupEventHandlers() {
 		
 	});
 	
+	//kill ckeditor on modal window close
+	jQuery('#adminModal').on('hidden', function(){
+		CKEDITOR.instances.emailBodyHTML.destroy(true);
+	});
+	
 	// Listing Page - Searching
 	jQuery('body').on('submit', '.action-bar-search', function(e){
 		e.preventDefault();
