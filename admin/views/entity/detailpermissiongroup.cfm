@@ -43,8 +43,6 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.permissionGroup#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
-		<!---<input type="hidden" name="permissions" value="#rc.permissionGroup.getPermissions()#">--->
-		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.permissionGroup#" property="permissionGroupName" edit="#rc.edit#">
@@ -54,27 +52,7 @@ Notes:
 		
 		<cf_HibachiTabGroup object="#rc.permissionGroup#">
 			<cf_HibachiTab view="admin:entity/permissiongrouptabs/entitypermissions">
-			<!---
-			<cf_HibachiTab view="admin:entity/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.product')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminproduct" params="#rc.permissions.admin.product#">
-			<cf_HibachiTab view="admin:entity/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.pricing')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminpricing" params="#rc.permissions.admin.pricing#">
-			<cf_HibachiTab view="admin:entity/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.account')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminaccount" params="#rc.permissions.admin.account#">
-			<cf_HibachiTab view="admin:entity/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.vendor')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminvendor" params="#rc.permissions.admin.vendor#">
-			<cf_HibachiTab view="admin:entity/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.order')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminorder" params="#rc.permissions.admin.order#">
-			<cf_HibachiTab view="admin:entity/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.warehouse')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminwarehouse" params="#rc.permissions.admin.warehouse#">
-			<cf_HibachiTab view="admin:entity/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.integration')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminintegration" params="#rc.permissions.admin.integration#">
-			<cf_HibachiTab view="admin:entity/permissiongrouptabs/permissionsection" text="#$.slatwall.rbKey('permission.setting')# #$.slatwall.rbKey('define.permissions')#" tabid="tabadminsetting" params="#rc.permissions.admin.setting#">
-			
-			<cfloop collection="#rc.permissions#" item="local.subsystem">
-				<cfif subsystem neq "admin">
-					<cfset local.integration = $.slatwall.getService("integrationService").getIntegrationByIntegrationPackage(local.subsystem)>
-					<cfloop collection="#rc.permissions[local.subsystem]#" item="local.section">
-						<cfif len(rc.permissions[local.subsystem][local.section].secureMethods)>
-							<cf_HibachiTab view="admin:entity/permissiongrouptabs/permissionsection" text="#local.integration.getIntegrationName()# - #local.section#" tabid="tabadmin#local.subsystem#" params="#rc.permissions[local.subsystem][local.section]#">
-						</cfif>	
-					</cfloop>
-				</cfif>
-			</cfloop>
-			--->
+			<cf_HibachiTab view="admin:entity/permissiongrouptabs/actionpermissions">
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

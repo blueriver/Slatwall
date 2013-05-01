@@ -34,19 +34,27 @@
     exception statement from your version.
 
 Notes:
-
+	Access Types
+	============
+	entity
+	action
 */
 component entityname="SlatwallPermission" table="SlatwallPermission" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="permissionGroup.permissions" {
 	
 	// Persistent Properties
 	property name="permissionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="action" ormtype="string";
-	property name="entityName" ormtype="string";
-	property name="propertyName" ormtype="string";
+	property name="accessType" ormtype="string";
+	property name="subsystem" ormtype="string";
+	property name="section" ormtype="string";
+	property name="item" ormtype="string";
 	property name="allowCreateFlag" ormtype="boolean";
 	property name="allowReadFlag" ormtype="boolean";
 	property name="allowUpdateFlag" ormtype="boolean";
 	property name="allowDeleteFlag" ormtype="boolean";
+	property name="allowProcessFlag" ormtype="boolean";
+	property name="entityClassName" ormtype="string";
+	property name="propertyName" ormtype="string";
+	property name="processContext" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	property name="permissionGroup" cfc="PermissionGroup" fieldtype="many-to-one" fkcolumn="permissionGroupID";

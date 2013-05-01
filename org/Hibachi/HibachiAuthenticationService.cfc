@@ -42,22 +42,22 @@ component output="false" accessors="true" extends="HibachiService" {
 			
 			// Check to see if this is a defined secure method, and if so we can test it against the account
 			if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].secureMethods, itemName)) {
-				return authenticateAccountAcction(action=arguments.action, account=getHibachiScope().getAccount());
+				return authenticateSecureActionByAccount(action=arguments.action, account=getHibachiScope().getAccount());
 			}
 			
 			// Check to see if the controller is an entity or rest controller, and then verify against the entity itself
 			if(getActionPermissionDetails()[ subsystemName ][ sectionName ].entityController || getActionPermissionDetails()[ subsystemName ][ sectionName ].apiController) {
 				
 				if ( left(itemName, 6) == "create" ) {
-					return authenticateEntity(crudType="create", entityName=right(itemName, len(itemName)-6), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-6), account=arguments.account);
 				} else if ( left(itemName, 6) == "detail" ) {
-					return authenticateEntity(crudType="read", entityName=right(itemName, len(itemName)-6), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-6), account=arguments.account);
 				} else if ( left(itemName, 6) == "delete" ) {
-					return authenticateEntity(crudType="delete", entityName=right(itemName, len(itemName)-6), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="delete", entityName=right(itemName, len(itemName)-6), account=arguments.account);
 				} else if ( left(itemName, 4) == "edit" ) {
-					return authenticateEntity(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
 				} else if ( left(itemName, 4) == "list" ) {
-					return authenticateEntity(crudType="read", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-4), account=arguments.account);
 				} else if ( left(itemName, 15) == "multiPreProcess" ) {
 					return true;
 				} else if ( left(itemName, 12) == "multiProcess" ) {
@@ -67,11 +67,11 @@ component output="false" accessors="true" extends="HibachiService" {
 				} else if ( left(itemName, 7) == "process" ) {
 					return true;
 				} else if ( left(itemName, 4) == "save" ) {
-					var createOK = authenticateEntity(crudType="create", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+					var createOK = authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-4), account=arguments.account);
 					if(createOK) {
 						return true;	
 					}
-					var updateOK = authenticateEntity(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+					var updateOK = authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
 					return updateOK;
 				}
 				
@@ -81,7 +81,11 @@ component output="false" accessors="true" extends="HibachiService" {
 		return false;
 	}
 	
-	public boolean function authenticateEntity(required string crudType, required string entityName, required any account) {
+	public boolean function authenticateSecureActionByAccount(required string crudType, required string entityName, required any account) {
+		
+	}
+	
+	public boolean function authenticateEntityCrudByAccount(required string crudType, required string entityName, required any account) {
 		var entityPermissions = getEntityPermissionDetails();
 		
 		// If the entity does not have the ability to have permissions set, then return false
@@ -96,52 +100,89 @@ component output="false" accessors="true" extends="HibachiService" {
 		return false;
 	}
 	
-	public boolean function authenticateEntityProperty(required string crud, required string entityName, required string propertyName, required any account) {
+	public boolean function authenticateEntityPropertyCrudByAccount(required string crud, required string entityName, required string propertyName, required any account) {
 		
 	}
 	
 	// ================================ PUBLIC META INFO ==========================================
 	
 	public struct function getEntityPermissionDetails() {
-		var entityDirectoryArray = directoryList(expandPath('/#getApplicationValue('applicationKey')#/model/entity'));
-		var entityPermissionDetails = {};
-		for(var e=1; e<=arrayLen(entityDirectoryArray); e++) {
-			if(listLast(entityDirectoryArray[e], '.') eq 'cfc') {
-				var entityName = listFirst(listLast(replace(entityDirectoryArray[e], '\', '/', 'all'), '/'), '.');
-				var entityMetaData = createObject('component', '#getApplicationValue('applicationKey')#.model.entity.#entityName#').getThisMetaData();
+		
+		// First check to see if this is cached
+		if(!structKeyExists(variables, "entityPermissionDetails")){
+			
+			// Create place holder struct for the data
+			var entityPermissions = {};
+			
+			// Get all of the entities in the application
+			var entityDirectoryArray = directoryList(expandPath('/#getApplicationValue('applicationKey')#/model/entity'));
+			
+			// Loop over each of the entities
+			for(var e=1; e<=arrayLen(entityDirectoryArray); e++) {
 				
-				if(structKeyExists(entityMetaData, "hb_permission") && (entityMetaData.hb_permission eq "this" || getHasPropertyByEntityNameAndPropertyIdentifier(entityName=entityName, propertyIdentifier=entityMetaData.hb_permission))) {
-					entityPermissionDetails[ entityName ] = {};
-					entityPermissionDetails[ entityName ].properties = {};
-					entityPermissionDetails[ entityName ].mtmproperties = {};
-					entityPermissionDetails[ entityName ].mtoproperties = {};
-					entityPermissionDetails[ entityName ].otmproperties = {};
-					if(entityMetaData.hb_permission neq "this") {
-						entityPermissionDetails[ entityName ].inheritPermissionEntityName = getLastEntityNameInPropertyIdentifier(entityName=entityName, propertyIdentifier=entityMetaData.hb_permission);
-						entityPermissionDetails[ entityName ].inheritPermissionPropertyName = listLast(entityMetaData.hb_permission, ".");	
-					}
-					for(var p=1; p<=arrayLen(entityMetaData.properties); p++) {
-						if( (!structKeyExists(entityMetaData.properties[p], "fieldtype") || entityMetaData.properties[p].fieldtype neq "ID")
-							&& (!structKeyExists(entityMetaData.properties[p], "persistent") || entityMetaData.properties[p].persistent)
-							&& (!structKeyExists(entityMetaData.properties[p], "hb_editable") || entityMetaData.properties[p].hb_editable)
-							&& !listFindNoCase("createdByAccount,createdDateTime,modifiedByAccount,modifiedDateTime", entityMetaData.properties[p].name)) {
-
-							if(structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "many-to-one") {
-								entityPermissionDetails[ entityName ].mtoproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
-							} else if (structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "one-to-many") {
-								entityPermissionDetails[ entityName ].otmproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
-							} else if (structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "many-to-many") {
-								entityPermissionDetails[ entityName ].mtmproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
-							} else {
-								entityPermissionDetails[ entityName ].properties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];	
+				// Make sure that this is a .cfc
+				if(listLast(entityDirectoryArray[e], '.') eq 'cfc') {
+					
+					// Get the entityName
+					var entityName = listFirst(listLast(replace(entityDirectoryArray[e], '\', '/', 'all'), '/'), '.');
+					
+					// Get the entityMetaData which contains all the important permissions setup stuff
+					var entityMetaData = createObject('component', '#getApplicationValue('applicationKey')#.model.entity.#entityName#').getThisMetaData();
+					
+					// Setup the permisions of this entity is setup for it
+					if(structKeyExists(entityMetaData, "hb_permission") && (entityMetaData.hb_permission eq "this" || getHasPropertyByEntityNameAndPropertyIdentifier(entityName=entityName, propertyIdentifier=entityMetaData.hb_permission))) {
+						
+						// Setup basic placeholder info
+						entityPermissions[ entityName ] = {};
+						entityPermissions[ entityName ].properties = {};
+						entityPermissions[ entityName ].mtmproperties = {};
+						entityPermissions[ entityName ].mtoproperties = {};
+						entityPermissions[ entityName ].otmproperties = {};
+						
+						// If for some reason this entities permissions are managed by a parent entity then define it as such
+						if(entityMetaData.hb_permission neq "this") {
+							entityPermissions[ entityName ].inheritPermissionEntityName = getLastEntityNameInPropertyIdentifier(entityName=entityName, propertyIdentifier=entityMetaData.hb_permission);
+							entityPermissions[ entityName ].inheritPermissionPropertyName = listLast(entityMetaData.hb_permission, ".");	
+						}
+						
+						// Loop over each of the properties
+						for(var p=1; p<=arrayLen(entityMetaData.properties); p++) {
+							
+							// Make sure that this property should be added as a property that can have permissions
+							if( (!structKeyExists(entityMetaData.properties[p], "fieldtype") || entityMetaData.properties[p].fieldtype neq "ID")
+								&& (!structKeyExists(entityMetaData.properties[p], "persistent") || entityMetaData.properties[p].persistent)
+								&& (!structKeyExists(entityMetaData.properties[p], "hb_editable") || entityMetaData.properties[p].hb_editable)
+								&& !listFindNoCase("createdByAccount,createdDateTime,modifiedByAccount,modifiedDateTime", entityMetaData.properties[p].name)) {
+								
+								// Add to ManyToMany Properties
+								if(structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "many-to-one") {
+									entityPermissions[ entityName ].mtoproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
+								
+								// Add to OneToMany Properties
+								} else if (structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "one-to-many") {
+									entityPermissions[ entityName ].otmproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
+									
+								// Add to ManyToMany Properties
+								} else if (structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "many-to-many") {
+									entityPermissions[ entityName ].mtmproperties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];
+								
+								// Add to regular field Properties
+								} else {
+									entityPermissions[ entityName ].properties[ entityMetaData.properties[p].name ] = entityMetaData.properties[p];	
+								}
 							}
 						}
+						
+						// Sort the structure in order by propertyName
+						structSort(entityPermissions[ entityName ].properties, "text", "ASC", "name");
 					}
-					structSort(entityPermissionDetails[ entityName ].properties, "text", "ASC", "name");
 				}
 			}
+			
+			// Update the cached value to be used in the future
+			variables.entityPermissionDetails = entityPermissions;
 		}
-		return entityPermissionDetails;
+		return variables.entityPermissionDetails;
 	}
 	
 	public struct function getActionPermissionDetails(){
