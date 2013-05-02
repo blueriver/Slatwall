@@ -51,4 +51,5 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiService" {
 		
 		return arguments.entity;
 	}
+
 }

@@ -45,7 +45,7 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.promotion.getPromotionCodesSmartList()#"
 							   recordEditAction="admin:entity.editpromotioncode"
 							   recordEditModal=true
-							   recordDeleteAction="admin:entity.deletePromotionCode"
+							   recordDeleteAction="admin:entity.deletepromotioncode"
 							   recordDeleteQueryString="redirectAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotionCode" search="true" />
 		<cf_HibachiListingColumn propertyIdentifier="startDateTime" range="true" />
@@ -54,5 +54,5 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="maximumAccountUseCount" range="true" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createpromotioncode" class="btn" icon="plus" queryString="promotionID=#rc.promotion.getPromotionID()#" modal="true" />
+	<cf_HibachiActionCaller action="admin:entity.createpromotioncode" class="btn" icon="plus" queryString="redirectAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()#" modal="true" />
 </cfoutput>

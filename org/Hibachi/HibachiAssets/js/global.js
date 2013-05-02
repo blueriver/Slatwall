@@ -253,7 +253,7 @@ function setupEventHandlers() {
 	jQuery('body').on('click', '.modalload', function(e){
 		
 		jQuery('#adminModal').css({
-			'width': '106px',
+			'width': 'auto',
 			'margin-left': function () {
 	            return -(jQuery('#adminModal').width() / 2);
 	        }
@@ -283,6 +283,11 @@ function setupEventHandlers() {
 			});
 		});
 		
+	});
+	
+	//kill ckeditor on modal window close
+	jQuery('#adminModal').on('hidden', function(){
+		CKEDITOR.instances.emailBodyHTML.destroy(true);
 	});
 	
 	// Listing Page - Searching
