@@ -53,17 +53,9 @@ Notes:
 			
 			// TODO: Remove this conditional when railo and ACF match how they handle arrays for 'IN' clause
 			if(arrayLen(arguments.productTypeIDs)){
-				if(structKeyExists(server, "railo")) {
-					var returnQuery = ormExecuteQuery(hql, {productTypeIDs=arrayToList(arguments.productTypeIDs), attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});	
-				} else {
-					var returnQuery = ormExecuteQuery(hql, {productTypeIDs=arguments.productTypeIDs, attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});
-				}
+				var returnQuery = ormExecuteQuery(hql, {productTypeIDs=arguments.productTypeIDs, attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});
 			} else {
-				if(structKeyExists(server, "railo")) {
-					var returnQuery = ormExecuteQuery(hql, {attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});
-				} else {
-					var returnQuery = ormExecuteQuery(hql, {attributeSetTypeCode=arguments.attributeSetTypeCode});		
-				}
+				var returnQuery = ormExecuteQuery(hql, {attributeSetTypeCode=arguments.attributeSetTypeCode});
 			}
 			return returnQuery;
 		}

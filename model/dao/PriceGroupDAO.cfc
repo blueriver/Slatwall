@@ -81,12 +81,8 @@ Notes:
 		
 		<cfif getpg.recordCount>
 			<cfset var hql = "FROM SlatwallPriceGroup pg WHERE pg.priceGroupID IN (:priceGroupIDs) AND pg.activeFlag = :activeFlag" />
-			<cfif structKeyExists(server, "railo")>
-				<cfset var returnQuery = ormExecuteQuery(hql, {priceGroupIDs=valueList(getpg.priceGroupID), activeFlag=1}) />
-			<cfelse>
-				<cfset var returnQuery = ormExecuteQuery(hql, {priceGroupIDs=listToArray(valueList(getpg.priceGroupID)), activeFlag=1}) />		
-			</cfif>
-			<cfreturn returnQuery />
+			
+			<cfreturn ormExecuteQuery(hql, {priceGroupIDs=listToArray(valueList(getpg.priceGroupID)), activeFlag=1}) />
 		</cfif>
 		
 		<cfreturn [] />
