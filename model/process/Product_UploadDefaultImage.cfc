@@ -5,6 +5,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Data Properties
 	property name="imageFile";
-	property name="uploadFile" hb_formFieldType="file" hb_fileAcceptMIMEType="image/*" hb_fileAcceptExtension=".jpeg,.jpg,.png,.gif";
+	property name="uploadFile" hb_formFieldType="file" hb_fileAcceptMIMEType="image/gif,image/jpeg,image/pjpeg,image/png,image/x-png" hb_fileAcceptExtension=".jpeg,.jpg,.png,.gif";
 	
 }

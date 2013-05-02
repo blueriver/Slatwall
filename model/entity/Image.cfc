@@ -42,7 +42,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	property name="imageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="imageName" ormtype="string";
 	property name="imageDescription" ormtype="string" length="4000" hb_formFieldType="wysiwyg";
-	property name="imageFile" ormtype="string" hb_formFieldType="file" hb_fileUpload="true" hb_fileAcceptMIMEType="image/*" hb_fileAcceptExtension=".jpeg,.jpg,.png,.gif";
+	property name="imageFile" ormtype="string" hb_formFieldType="file" hb_fileUpload="true" hb_fileAcceptMIMEType="image/gif,image/jpeg,image/pjpeg,image/png,image/x-png" hb_fileAcceptExtension=".jpeg,.jpg,.png,.gif";
 	property name="directory" ormtype="string";
 	
 	// Related entity properties (many-to-one)
