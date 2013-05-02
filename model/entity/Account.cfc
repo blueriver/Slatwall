@@ -41,7 +41,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Persistent Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="superUserFlag" ormtype="boolean";
-	property name="cmsAccountID" ormtype="string";
+	property name="cmsAccountID" ormtype="string" hb_populateEnabled="false";
 	property name="firstName" ormtype="string";
 	property name="lastName" ormtype="string";
 	property name="company" ormtype="string";
@@ -75,10 +75,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="promotionCodes" hb_populateEnabled="false" singularname="promotionCode" cfc="PromotionCode" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionCodeAccount" fkcolumn="accountID" inversejoincolumn="promotionCodeID" inverse="true";
 
 	// Remote properties
-	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
-	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
-	property name="remoteCustomerID" ormtype="string" hint="Only used when integrated with a remote system";
-	property name="remoteContactID" ormtype="string" hint="Only used when integrated with a remote system";
+	property name="remoteID" hb_populateEnabled="false" ormtype="string" hint="Only used when integrated with a remote system";
+	property name="remoteEmployeeID" hb_populateEnabled="false" ormtype="string" hint="Only used when integrated with a remote system";
+	property name="remoteCustomerID" hb_populateEnabled="false" ormtype="string" hint="Only used when integrated with a remote system";
+	property name="remoteContactID" hb_populateEnabled="false" ormtype="string" hint="Only used when integrated with a remote system";
 	
 	// Audit properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";

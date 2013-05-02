@@ -125,6 +125,7 @@ function initUIElements( scopeSelector ) {
 					jQuery(v).val('');
 				}
 			});
+			jQuery('.hibachi-permission-checkbox[disabled="disabled"]:checked').removeAttr('checked');
 		});
 	});
 	
@@ -567,6 +568,28 @@ function setupEventHandlers() {
 		
 	});
 	
+	// Permission Checkbox Bindings
+	jQuery('body').on('change', '.hibachi-permission-checkbox', function(e){
+		updatePermissionCheckboxDisplay( this );
+	});
+	jQuery('.hibachi-permission-checkbox:checked').change();
+	
+}
+
+function updatePermissionCheckboxDisplay( checkbox ) {
+	jQuery.each( jQuery('.hibachi-permission-checkbox[data-hibachi-parentcheckbox="' + jQuery( checkbox ).attr('name') + '"]'), function(i, v) {
+		
+		if(jQuery( checkbox ).attr('checked') || jQuery( checkbox ).attr('disabled') === 'disabled') {
+			jQuery( v ).attr('checked', 'checked');
+			jQuery( v ).attr('disabled', 'disabled');
+		} else {
+			jQuery( v ).removeAttr('disabled');
+			jQuery( v ).removeAttr('checked');
+		}
+		
+		updatePermissionCheckboxDisplay( v );
+		
+	});
 }
 
 function displayError( msg ) {

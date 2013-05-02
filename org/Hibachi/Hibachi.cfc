@@ -58,7 +58,7 @@ component extends="FW1.framework" {
 	variables.framework.hibachi.loginSubsystems = "admin,public";
 	variables.framework.hibachi.loginDefaultSubsystem = 'admin';
 	variables.framework.hibachi.loginDefaultSection = 'main';
-	variables.framework.hibachi.loginDefaultItem = 'default';
+	variables.framework.hibachi.loginDefaultItem = 'login';
 	
 	
 	// Allow For Application Config

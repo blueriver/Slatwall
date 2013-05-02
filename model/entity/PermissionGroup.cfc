@@ -61,6 +61,18 @@ component entityname="SlatwallPermissionGroup" table="SlatwallPermissionGroup" p
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="permissionsByDetails" persistent="false"; 
+	
+	public struct function getPermissionsByDetails() {
+		if(!structKeyExists(variables, "permissionsByDetails")) {
+			variables.permissionsByDetials = {};
+		}
+		return variables.permissionsByDetials;
+	}
+	
+	public any function getPermissionByDetails() {
+		return getService("accountService").newPermission();
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

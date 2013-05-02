@@ -38,6 +38,7 @@ Notes:
 --->
 <cfparam name="rc.permissionGroup" type="any" />
 <cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.editEntityName" type="string" default="" />
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.permissionGroup#" edit="#rc.edit#">

@@ -7,7 +7,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	public boolean function authenticateAction(required string action) {
 		
 		// Check if the user is a super admin, if true no need to worry about security
-		if( arguments.account.getSuperUserFlag() ) {
+		if( getHibachiScope().getAccount().getSuperUserFlag() ) {
 			return true;
 		}
 		
@@ -49,15 +49,15 @@ component output="false" accessors="true" extends="HibachiService" {
 			if(getActionPermissionDetails()[ subsystemName ][ sectionName ].entityController || getActionPermissionDetails()[ subsystemName ][ sectionName ].apiController) {
 				
 				if ( left(itemName, 6) == "create" ) {
-					return authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-6), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-6), account=getHibachiScope().getAccount());
 				} else if ( left(itemName, 6) == "detail" ) {
-					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-6), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-6), account=getHibachiScope().getAccount());
 				} else if ( left(itemName, 6) == "delete" ) {
-					return authenticateEntityCrudByAccount(crudType="delete", entityName=right(itemName, len(itemName)-6), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="delete", entityName=right(itemName, len(itemName)-6), account=getHibachiScope().getAccount());
 				} else if ( left(itemName, 4) == "edit" ) {
-					return authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=getHibachiScope().getAccount());
 				} else if ( left(itemName, 4) == "list" ) {
-					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-4), account=getHibachiScope().getAccount());
 				} else if ( left(itemName, 15) == "multiPreProcess" ) {
 					return true;
 				} else if ( left(itemName, 12) == "multiProcess" ) {
@@ -67,11 +67,11 @@ component output="false" accessors="true" extends="HibachiService" {
 				} else if ( left(itemName, 7) == "process" ) {
 					return true;
 				} else if ( left(itemName, 4) == "save" ) {
-					var createOK = authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+					var createOK = authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-4), account=getHibachiScope().getAccount());
 					if(createOK) {
 						return true;	
 					}
-					var updateOK = authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
+					var updateOK = authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=getHibachiScope().getAccount());
 					return updateOK;
 				}
 				
