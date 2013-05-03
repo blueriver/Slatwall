@@ -13,6 +13,7 @@
 	<cfparam name="attributes.disabled" type="boolean" default="false" />
 	<cfparam name="attributes.disabledtext" type="string" default="" />
 	<cfparam name="attributes.modal" type="boolean" default="false" />
+	<cfparam name="attributes.modalFull" type="boolean" default="false" />
 	
 	<cfset attributes.class = Replace(Replace(attributes.action, ":", "", "all"), ".", "", "all") & " " & attributes.class />
 	
@@ -87,7 +88,11 @@
 		<cfset attributes.class &= " alert-confirm" />
 	</cfif>
 	
-	<cfif attributes.modal && not attributes.disabled>
+	<cfif attributes.modalFull && not attributes.disabled>
+		<cfset attributes.class &= " modalFullload" />
+	</cfif>
+	
+	<cfif attributes.modal && not attributes.disabled && not attributes.modalFull >
 		<cfset attributes.class &= " modalload" />
 	</cfif>
 	

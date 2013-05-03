@@ -252,27 +252,10 @@ function setupEventHandlers() {
 	// Modal Loading
 	jQuery('body').on('click', '.modalload', function(e){
 		
-		jQuery('#adminModal').css({
-			'width': 'auto',
-			'margin-left': function () {
-	            return -(jQuery('#adminModal').width() / 2);
-	        }
-		});
-		jQuery('#adminModal').html('<img src="' + hibachi.rootURL + '/org/Hibachi/HibachiAssets/images/loading.gif" style="padding:20px;" />');
-		var modalLink = jQuery(this).attr( 'href' );
-		
-		if( modalLink.indexOf("?") !== -1) {
-			modalLink = modalLink + '&modal=1';
-		} else {
-			modalLink = modalLink + '?modal=1';
-		}
-		
-		if( jQuery(this).hasClass('modal-fieldupdate-textautocomplete') ) {
-			modalLink = modalLink + '&ajaxsubmit=1';
-		}
+		var modalLink = initModal( jQuery(this) );
 		
 		jQuery('#adminModal').load( modalLink, function(){
-			
+
 			initUIElements('#adminModal');
 			
 			jQuery('#adminModal').css({
@@ -282,6 +265,27 @@ function setupEventHandlers() {
 		        }
 			});
 		});
+		
+	});
+	
+	jQuery('body').on('click', '.modalFullload', function(e){
+		
+		var modalLink = initModal( jQuery(this) );
+		
+		jQuery('#adminModal').load( modalLink, function(){
+
+			initUIElements('#adminModal');			
+			
+			// make width 90% of screen
+			jQuery('#adminModal').css({	
+			    'width': function () { 
+			        return ( jQuery(document).width() * .9 ) + 'px';  
+			    },
+			    'margin-left': function () {
+		            return -(jQuery('#adminModal').width() / 2);
+			    }
+			});
+		});	
 		
 	});
 	
@@ -586,6 +590,24 @@ function setupEventHandlers() {
 	});
 	jQuery('.hibachi-permission-checkbox:checked').change();
 	
+}
+
+function initModal( scopeSelector ){
+	
+	jQuery('#adminModal').html('<img src="' + hibachi.rootURL + '/org/Hibachi/HibachiAssets/images/loading.gif" style="padding:20px;" />');
+	var modalLink = jQuery( scopeSelector ).attr( 'href' );
+	
+	if( modalLink.indexOf("?") !== -1) {
+		modalLink = modalLink + '&modal=1';
+	} else {
+		modalLink = modalLink + '?modal=1';
+	}
+	
+	if( jQuery( scopeSelector ).hasClass('modal-fieldupdate-textautocomplete') ) {
+		modalLink = modalLink + '&ajaxsubmit=1';
+	}
+	
+	return modalLink;
 }
 
 function updatePermissionCheckboxDisplay( checkbox ) {
