@@ -53,5 +53,5 @@ Notes:
 
 	<cf_HibachiActionCaller action="admin:entity.createoption" 
 	                         querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#&redirectAction=admin:entity.detailOptionGroup" 
-	                         class="btn" icon="plus" modal=true/>
+	                         class="btn" icon="plus" modal=true />
 </cfoutput>
