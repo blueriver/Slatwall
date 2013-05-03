@@ -720,6 +720,19 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 				hqlOrder &= " #variables.orders[i].property# #variables.orders[i].direction#,";
 			}
 			hqlOrder = left(hqlOrder, len(hqlOrder)-1);
+		} else {
+			
+			var baseEntityObject = getService('hibachiService').getEntityObject( getBaseEntityName() );
+			
+			if(structKeyExists(baseEntityObject.getThisMetaData(), "hb_defaultOrderProperty")) {
+				var obProperty = getAliasedProperty( baseEntityObject.getThisMetaData().hb_defaultOrderProperty );
+			} else if (baseEntityObject.hasProperty("createdDateTime")) {
+				var obProperty = getAliasedProperty( "createdDateTime" );
+			} else {
+				var obProperty = getService("hibachiService").getPrimaryIDPropertyNameByEntityName( getBaseEntityName() );
+			}
+			
+			hqlOrder &= " ORDER BY #obProperty# ASC";
 		}
 		
 		
