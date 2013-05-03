@@ -72,7 +72,7 @@ function initUIElements( scopeSelector ) {
 	jQuery( scopeSelector ).find(jQuery('.draggable')).draggable();
 	
 	// Wysiwyg
-	jQuery.each(jQuery( '.wysiwyg' ), function(i, v){
+	jQuery.each(jQuery( scopeSelector ).find(jQuery( '.wysiwyg' )), function(i, v){
 		var editor = CKEDITOR.replace( v );
 		CKFinder.setupCKEditor( editor, 'org/Hibachi/ckfinder/' );
 	});
@@ -285,9 +285,16 @@ function setupEventHandlers() {
 		
 	});
 	
-	//kill ckeditor on modal window close
+	//kill all ckeditor instances on modal window close
 	jQuery('#adminModal').on('hidden', function(){
-		CKEDITOR.instances.emailBodyHTML.destroy(true);
+		
+		for(var i in CKEDITOR.instances) {
+			
+			if( jQuery( 'textarea[name="' + i + '"]' ).parents( '#adminModal' ).length ){
+				CKEDITOR.instances[i].destroy(true);
+			}
+			
+		}
 	});
 	
 	// Listing Page - Searching
