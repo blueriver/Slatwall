@@ -720,7 +720,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 				hqlOrder &= " #variables.orders[i].property# #variables.orders[i].direction#,";
 			}
 			hqlOrder = left(hqlOrder, len(hqlOrder)-1);
-		} else {
+		} else if (!structCount(variables.selects)) {
 			
 			var baseEntityObject = getService('hibachiService').getEntityObject( getBaseEntityName() );
 			
@@ -734,7 +734,6 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			
 			hqlOrder &= " ORDER BY #obProperty# ASC";
 		}
-		
 		
 		return hqlOrder;
 	}
