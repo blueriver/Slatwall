@@ -401,6 +401,10 @@ component extends="FW1.framework" {
 		return arguments.fullPath;
 	}
 	
+	// Override from FW/1 so that we can make it public 
+	public string function getSubsystemDirPrefix( string subsystem ) {
+		return super.getSubsystemDirPrefix( arguments.subsystem );
+	}
 	
 	// This handels all of the ORM persistece.
 	public void function endHibachiLifecycle() {
