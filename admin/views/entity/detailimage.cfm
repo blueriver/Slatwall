@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.image#" edit="#rc.edit#" enctype="multipart/form-data">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.image#" edit="#rc.edit#" />
+		<cf_HibachiEntityActionBar type="detail" object="#rc.image#" edit="#rc.edit#"/>
 		
 		<cf_HibachiPropertyRow>
 			

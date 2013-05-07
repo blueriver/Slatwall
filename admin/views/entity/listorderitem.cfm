@@ -57,8 +57,8 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.orderItemSmartList#"
 							   recorddetailaction="admin:entity.detailorderitem"
 							   recordeditaction="admin:entity.editorderitem">
-		<cf_HibachiListingColumn propertyIdentifier="order.account.firstName" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="order.account.lastName" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="order.account.firstName" search="true" sort="true" />
+		<cf_HibachiListingColumn propertyIdentifier="order.account.lastName" search="true" sort="true" />
 		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" search="true" />
 		<cf_HibachiListingColumn propertyIdentifier="order.orderStatusType.type" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="order.orderOpenDateTime" range="true" />

@@ -47,7 +47,7 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.promotionSmartList#"
 						   recorddetailaction="admin:entity.detailpromotion"
 						   recordEditAction="admin:entity.editpromotion">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" sort="true" />
 	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" range="true" />
 	<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" range="true" />
 	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />

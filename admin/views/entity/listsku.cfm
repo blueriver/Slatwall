@@ -58,7 +58,7 @@ Notes:
 			recorddetailaction="admin:entity.detailsku">
 			
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode" search=true />
-		<cf_HibachiListingColumn propertyIdentifier="product.productName" search=true />
+		<cf_HibachiListingColumn propertyIdentifier="product.productName" search=true sort="true" />
 		<cf_HibachiListingColumn propertyIdentifier="product.productCode" search=true />		
 		<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter=true />
 		<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" filter=true />
