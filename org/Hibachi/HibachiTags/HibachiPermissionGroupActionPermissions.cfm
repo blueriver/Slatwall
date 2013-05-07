@@ -13,20 +13,22 @@
 				<!---<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='action', subsystemName=subsystemName) />--->
 			</tr>
 			<cfloop collection="#attributes.actionPermissionDetails#" item="subsystemName">
-				<tr>
-					<td>#subsystemName#</td>
-					<td></td>
-				</tr>
 				<cfset subsystemDetails = attributes.actionPermissionDetails[ subsystemName ] />
-				<cfloop collection="#subsystemDetails#" item="sectionName">
-					<cfset sectionDetails = subsystemDetails[ sectionName ] />
-					<cfloop list="#sectionDetails.secureMethods#" index="secureMethod">
-						<tr>
-							<td>#subsystemName# / #sectionName# / #secureMethod#</td>
-							<td></td>
-						</tr>
+				<cfif subsystemDetails.hasSecureMethods>
+					<tr>
+						<td>#subsystemName#</td>
+						<td></td>
+					</tr>
+					<cfloop collection="#subsystemDetails.sections#" item="sectionName">
+						<cfset sectionDetails = subsystemDetails.sections[ sectionName ] />
+						<cfloop list="#sectionDetails.secureMethods#" index="secureMethod">
+							<tr>
+								<td>#subsystemName# / #sectionName# / #secureMethod#</td>
+								<td></td>
+							</tr>
+						</cfloop>
 					</cfloop>
-				</cfloop>
+				</cfif>
 			</cfloop>
 		</table>
 	</cfoutput>

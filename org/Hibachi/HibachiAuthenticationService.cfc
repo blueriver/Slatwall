@@ -17,12 +17,12 @@ component output="false" accessors="true" extends="HibachiService" {
 		var actionPermissions = getActionPermissionDetails();
 		
 		// Check if the subsystem & section are defined, if not then return true because that means authentication was not turned on
-		if(!structKeyExists(actionPermissions, subsystemName) || !structKeyExists(actionPermissions[ subsystemName ], sectionName)) {
+		if(!structKeyExists(actionPermissions, subsystemName) || !structKeyExists(actionPermissions[ subsystemName ].sections, sectionName)) {
 			return true;
 		}
 
 		// Check if the action is public, if public no need to worry about security
-		if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].publicMethods, itemName)){
+		if(listFindNocase(actionPermissions[ subsystemName ].sections[ sectionName ].publicMethods, itemName)){
 			return true;
 		}
 		
@@ -31,22 +31,22 @@ component output="false" accessors="true" extends="HibachiService" {
 		if(getHibachiScope().getLoggedInFlag()) {
 			
 			// Check if the action is anyLogin, if so and the user is logged in, then we can return true
-			if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].anyLoginMethods, itemName) && getHibachiScope().getLoggedInFlag()) {
+			if(listFindNocase(actionPermissions[ subsystemName ].sections[ sectionName ].anyLoginMethods, itemName) && getHibachiScope().getLoggedInFlag()) {
 				return true;
 			}
 			
 			// Look for the anyAdmin methods next to see if this is an anyAdmin method, and this user is some type of admin
-			if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].anyAdminMethods, itemName) && getHibachiScope().getLoggedInAsAdminFlag()) {
+			if(listFindNocase(actionPermissions[ subsystemName ].sections[ sectionName ].anyAdminMethods, itemName) && getHibachiScope().getLoggedInAsAdminFlag()) {
 				return true;
 			}
 			
 			// Check to see if this is a defined secure method, and if so we can test it against the account
-			if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].secureMethods, itemName)) {
+			if(listFindNocase(actionPermissions[ subsystemName ].sections[ sectionName ].secureMethods, itemName)) {
 				return authenticateSecureActionByAccount(subsystemName=subsystemName, sectionName=sectionName, itemName=itemName, account=getHibachiScope().getAccount());
 			}
 			
 			// Check to see if the controller is an entity or rest controller, and then verify against the entity itself
-			if(getActionPermissionDetails()[ subsystemName ][ sectionName ].entityController || getActionPermissionDetails()[ subsystemName ][ sectionName ].restController) {
+			if(getActionPermissionDetails()[ subsystemName ].sections[ sectionName ].entityController || getActionPermissionDetails()[ subsystemName ].sections[ sectionName ].restController) {
 				
 				if ( left(itemName, 6) == "create" ) {
 					return authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-6), account=getHibachiScope().getAccount());
@@ -207,7 +207,10 @@ component output="false" accessors="true" extends="HibachiService" {
 				if(directoryExists(ssControllerPath)) {
 					
 					// Setup subsytem structure
-					allPermissions[ aspArr[s] ] = {};
+					allPermissions[ aspArr[s] ] = {
+						hasSecureMethods = false,
+						sections = {}
+					};
 					
 					// Grab a list of all the files in the controllers directory
 					var ssDirectoryList = directoryList(ssControllerPath);
@@ -219,7 +222,7 @@ component output="false" accessors="true" extends="HibachiService" {
 						var obj = createObject('component', '#replace(ssDirectory, '/','.','all')#controllers.#section#');
 						
 						// Setup section structure
-						allPermissions[ aspArr[s] ][ section ] = {
+						allPermissions[ aspArr[s] ].sections[ section ] = {
 							anyAdminMethods = "",
 							anyLoginMethods = "",
 							publicMethods = "",
@@ -230,24 +233,29 @@ component output="false" accessors="true" extends="HibachiService" {
 						
 						// Check defined permissions
 						if(structKeyExists(obj, 'anyAdminMethods')){
-							allPermissions[ aspArr[s] ][ section ].anyAdminMethods = obj.anyAdminMethods;
+							allPermissions[ aspArr[s] ].sections[ section ].anyAdminMethods = obj.anyAdminMethods;
 						}
 						if(structKeyExists(obj, 'anyLoginMethods')){
-							allPermissions[ aspArr[s] ][ section ].anyLoginMethods = obj.anyLoginMethods;
+							allPermissions[ aspArr[s] ].sections[ section ].anyLoginMethods = obj.anyLoginMethods;
 						}
 						if(structKeyExists(obj, 'publicMethods')){
-							allPermissions[ aspArr[s] ][ section ].publicMethods = obj.publicMethods;
+							allPermissions[ aspArr[s] ].sections[ section ].publicMethods = obj.publicMethods;
 						}
 						if(structKeyExists(obj, 'secureMethods')){
-							allPermissions[ aspArr[s] ][ section ].secureMethods = obj.secureMethods;
+							allPermissions[ aspArr[s] ].sections[ section ].secureMethods = obj.secureMethods;
 						}
 						
 						// Check for Controller types
 						if(structKeyExists(obj, 'entityController') && isBoolean(obj.entityController) && obj.entityController) {
-							allPermissions[ aspArr[s] ][ section ].entityController = true;
+							allPermissions[ aspArr[s] ].sections[ section ].entityController = true;
 						}
 						if(structKeyExists(obj, 'restController') && isBoolean(obj.restController) && obj.restController) {
-							allPermissions[ aspArr[s] ][ section ].restController = true;
+							allPermissions[ aspArr[s] ].sections[ section ].restController = true;
+						}
+						
+						// Setup the 'hasSecureMethods' value
+						if(len(allPermissions[ aspArr[s] ].sections[ section ].secureMethods)) {
+							allPermissions[ aspArr[s] ].hasSecureMethods = true;
 						}
 						
 					} // END Section Loop

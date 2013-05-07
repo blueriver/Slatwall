@@ -48,8 +48,6 @@ component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiC
 	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'link');
 	
 	this.secureMethods='';
-	this.secureMethods=listAppend(this.secureMethods, 'detailComment');
-	this.secureMethods=listAppend(this.secureMethods, 'editComment');
 	
     public void function link(required struct rc) {
     	param name="rc.entity";
