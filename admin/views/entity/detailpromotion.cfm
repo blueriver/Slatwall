@@ -44,7 +44,7 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.promotion#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.promotion#" edit="#rc.edit#" saveActionQueryString="promotionID=#rc.promotion.getPromotionID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotion#" edit="#rc.edit#" >
 			<cf_HibachiActionCaller action="admin:entity.createpromotioncode" querystring="promotionID=#rc.promotion.getPromotionID()#&redirectAction=#request.context.slatAction#" type="list" modal="true" />
 			<cf_HibachiActionCaller action="admin:entity.createpromotionperiod" querystring="promotionID=#rc.promotion.getPromotionID()#&redirectAction=#request.context.slatAction#" type="list" modal="true" />

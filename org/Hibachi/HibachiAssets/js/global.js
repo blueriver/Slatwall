@@ -268,7 +268,7 @@ function setupEventHandlers() {
 		
 	});
 	
-	jQuery('body').on('click', '.modalFullload', function(e){
+	jQuery('body').on('click', '.modalload-fullwidth', function(e){
 		
 		var modalLink = initModal( jQuery(this) );
 		
@@ -592,10 +592,10 @@ function setupEventHandlers() {
 	
 }
 
-function initModal( scopeSelector ){
+function initModal( modalWin ){
 	
 	jQuery('#adminModal').html('<img src="' + hibachi.rootURL + '/org/Hibachi/HibachiAssets/images/loading.gif" style="padding:20px;" />');
-	var modalLink = jQuery( scopeSelector ).attr( 'href' );
+	var modalLink = jQuery( modalWin ).attr( 'href' );
 	
 	if( modalLink.indexOf("?") !== -1) {
 		modalLink = modalLink + '&modal=1';
@@ -603,7 +603,7 @@ function initModal( scopeSelector ){
 		modalLink = modalLink + '?modal=1';
 	}
 	
-	if( jQuery( scopeSelector ).hasClass('modal-fieldupdate-textautocomplete') ) {
+	if( jQuery( modalWin ).hasClass('modal-fieldupdate-textautocomplete') ) {
 		modalLink = modalLink + '&ajaxsubmit=1';
 	}
 	

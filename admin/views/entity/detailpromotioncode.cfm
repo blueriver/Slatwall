@@ -41,7 +41,9 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.promotioncode#" edit="#rc.edit#" sRenderItem="detailPromotion" saveActionHash="tabpromotioncodes">
+	<cf_HibachiEntityDetailForm object="#rc.promotioncode#" edit="#rc.edit#"  
+								saveActionQueryString="promotionID=#rc.promotion.getPromotionID()#"
+								saveActionHash="tabpromotioncodes">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" 
 				backAction="admin:entity.detailpromotion" 
 				backQueryString="productID=#rc.promotion.getPromotionID()#" 

@@ -47,15 +47,15 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.promotionperiod#" sRenderItem="detailPromotion" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.promotionperiod#" edit="#rc.edit#" saveActionQueryString="promotionID=#rc.promotion.getPromotionID()#">
 						   	   
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionPeriod#" edit="#rc.edit#"
-							  backAction="admin:entity.detailpromotion"
-							  backQueryString="promotionID=#rc.promotion.getPromotionID()#"
-							  cancelAction="admin:entity.detailpromotion"
-							  cancelQueryString="promotionID=#rc.promotion.getPromotionID()#"/>
-		
-		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />					  	  
+							backAction="admin:entity.detailpromotion"
+							backQueryString="promotionID=#rc.promotion.getPromotionID()#"
+							cancelAction="admin:entity.detailpromotion"
+							cancelQueryString="promotionID=#rc.promotion.getPromotionID()#"								   
+							deleteQueryString="promotionID=#rc.promotion.getPromotionID()#&redirectAction=admin:entity.detailpromotion"   />
+							    			  	  
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
 
 		<cf_HibachiPropertyRow>
