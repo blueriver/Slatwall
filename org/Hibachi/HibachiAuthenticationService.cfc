@@ -41,7 +41,11 @@ component output="false" accessors="true" extends="HibachiService" {
 			
 			// Check to see if this is a defined secure method, and if so we can test it against the account
 			if(listFindNocase(actionPermissions[ subsystemName ].sections[ sectionName ].secureMethods, itemName)) {
-				return authenticateSecureActionByAccount(subsystemName=subsystemName, sectionName=sectionName, itemName=itemName, account=arguments.account);
+				var pgOK = false;
+				for(var p=1; p<=arrayLen(arguments.account.getPermissionGroups()); p++){
+					pgOK = authenticateSubsystemSectionItemActionByPermissionGroup(subsystem=subsystemName, section=sectionName, item=itemName, permissionGroup=arguments.account.getPermissionGroups()[p]); 
+				}
+				return pgOK;
 			}
 			
 			// Check to see if the controller is an entity or rest controller, and then verify against the entity itself
@@ -76,10 +80,6 @@ component output="false" accessors="true" extends="HibachiService" {
 			}
 		}
 		
-		return false;
-	}
-	
-	public boolean function authenticateSecureActionByAccount(required string subsystemName, required string sectionName, required string itemName, required any account) {
 		return false;
 	}
 	
@@ -297,8 +297,49 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	// ============================ PRIVATE HELPER FUNCTIONS =======================================
 	
-	public boolean function authenticateActionByPermissionGroup(required string action, required any permissionGroup) {
+	public boolean function authenticateSubsystemActionByPermissionGroup(required string subsystem, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
+		
+		if(structKeyExists(permissions.action.subsystems, arguments.subsystem) && structKeyExists(permissions.action.subsystems[arguments.subsystem], "permission") ) {
+			if( !isNull(permissions.action.subsystems[arguments.subsystem].permission.getAllowActionFlag()) && permissions.action.subsystems[arguments.subsystem].permission.getAllowActionFlag()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 		return false;
+	}
+	
+	public boolean function authenticateSubsystemSectionActionByPermissionGroup(required string subsystem, required string section, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
+		
+		if(structKeyExists(permissions.action.subsystems, arguments.subsystem) && structKeyExists(permissions.action.subsystems[arguments.subsystem].sections, arguments.section) && structKeyExists(permissions.action.subsystems[arguments.subsystem].sections[ arguments.section ], "permission") ) {
+			if( !isNull(permissions.action.subsystems[arguments.subsystem].sections[ arguments.section ].permission.getAllowActionFlag()) && permissions.action.subsystems[arguments.subsystem].sections[ arguments.section ].permission.getAllowActionFlag()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		return authenticateSubsystemActionByPermissionGroup(subsystem=arguments.subsystem, permissionGroup=arguments.permissionGroup);
+	}
+	
+	public boolean function authenticateSubsystemSectionItemActionByPermissionGroup(required string subsystem, required string section, required string item, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
+		
+		if(structKeyExists(permissions.action.subsystems, arguments.subsystem) && structKeyExists(permissions.action.subsystems[arguments.subsystem].sections, arguments.section) && structKeyExists(permissions.action.subsystems[arguments.subsystem].sections[arguments.section].items, arguments.item) ) {
+			if( !isNull(permissions.action.subsystems[arguments.subsystem].sections[arguments.section].items.getAllowActionFlag()) && permissions.action.subsystems[arguments.subsystem].sections[arguments.section].items.getAllowActionFlag()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		return authenticateSubsystemSectionActionByPermissionGroup(subsystem=arguments.subsystem, section=arguments.section, permissionGroup=arguments.permissionGroup);
 	}
 	
 	public boolean function authenticateEntityByPermissionGroup(required string crudType, required string entityName, required any permissionGroup) {
@@ -316,9 +357,9 @@ component output="false" accessors="true" extends="HibachiService" {
 		}
 		
 		// Check for an inherited permission
-		if(structKeyExists(permissionDetails[arguments.entityName], "inheritPermissionEntityName")) {
-			return authenticateEntityByPermissionGroup(crudType=arguments.crudType, entityName=permissionDetails[arguments.entityName].inheritPermissionEntityName, account=arguments.account);
-		}
+		if(structKeyExists(permissionDetails, arguments.entityName) && structKeyExists(permissionDetails[arguments.entityName], "inheritPermissionEntityName")) {
+			return authenticateEntityByPermissionGroup(crudType=arguments.crudType, entityName=permissionDetails[arguments.entityName].inheritPermissionEntityName, permissionGroup=arguments.permissionGroup);
+		}	
 		
 		// Check for generic permssion
 		if(structKeyExists(permissions.entity, "permission") && !isNull(permissions.entity.permission.invokeMethod("getAllow#arguments.crudType#Flag")) && permissions.entity.permission.invokeMethod("getAllow#arguments.crudType#Flag")) {

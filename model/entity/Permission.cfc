@@ -47,6 +47,7 @@ component entityname="SlatwallPermission" table="SlatwallPermission" persistent=
 	property name="subsystem" ormtype="string";
 	property name="section" ormtype="string";
 	property name="item" ormtype="string";
+	property name="allowActionFlag" ormtype="boolean";
 	property name="allowCreateFlag" ormtype="boolean";
 	property name="allowReadFlag" ormtype="boolean";
 	property name="allowUpdateFlag" ormtype="boolean";

@@ -71,7 +71,9 @@ component entityname="SlatwallPermissionGroup" table="SlatwallPermissionGroup" p
 				entity = {
 					entities = {}
 				},
-				action = {}
+				action = {
+					subsystems = {}
+				}
 			};
 			
 			// Get all of the permissions & the arrayLen
@@ -108,8 +110,28 @@ component entityname="SlatwallPermissionGroup" table="SlatwallPermissionGroup" p
 							variables.permissionsByDetails.entity.entities[ thisPermission.getEntityClassName() ].properties[ thisPermission.getPropertyName() ] = thisPermission;
 						}
 					}
-				} else if (thisPermission.getAccessType() eq "action") {
+				} else if (thisPermission.getAccessType() eq "action" && !isNull(thisPermission.getSubsystem())) {
 					
+					// Setup default data structure for subsystem
+					if(!structKeyExists(variables.permissionsByDetails.action.subsystems, thisPermission.getSubsystem())) {
+						variables.permissionsByDetails.action.subsystems[ thisPermission.getSubsystem() ] = {
+							sections = {}
+						};
+					}
+					// Setup default data structure for section
+					if(!isNull(thisPermission.getSection()) && !structKeyExists(variables.permissionsByDetails.action.subsystems[ thisPermission.getSubsystem() ].sections, thisPermission.getSection())) {
+						variables.permissionsByDetails.action.subsystems[ thisPermission.getSubsystem() ].sections[ thisPermission.getSection() ] = {
+							items = {}
+						};
+					}
+					
+					if(!isNull( thisPermission.getSubsystem() ) && !isNull( thisPermission.getSection()) && !isNull(thisPermission.getItem())) {
+						variables.permissionsByDetails.action.subsystems[ thisPermission.getSubsystem() ].sections[ thisPermission.getSection() ].items[ thisPermsission.getItem() ] = thisPermission;	
+					} else if (!isNull( thisPermission.getSubsystem() ) && !isNull( thisPermission.getSection())) {
+						variables.permissionsByDetails.action.subsystems[ thisPermission.getSubsystem() ].sections[ thisPermission.getSection() ].permission = thisPermission;
+					} else {
+						variables.permissionsByDetails.action.subsystems[ thisPermission.getSubsystem() ].permission = thisPermission;
+					}
 				}
 			}
 		}
@@ -132,7 +154,19 @@ component entityname="SlatwallPermissionGroup" table="SlatwallPermissionGroup" p
 				return getPermissionsByDetails().entity.permission;
 			}
 		} else if (arguments.accessType eq "action") {
-			
+			if(structKeyExists(arguments, "subsystem") && structKeyExists(arguments, "section") && structKeyExists(arguments, "item")) {
+				if(structKeyExists(getPermissionsByDetails().action.subsystems, arguments.subsystem) && structKeyExists(getPermissionsByDetails().action.subsystems[ arguments.subsystem ].sections, arguments.section) && structKeyExists(getPermissionsByDetails().action.subsystems[ arguments.subsystem ].sections[ arguments.section ].items, arguments.item)) {
+					return getPermissionsByDetails().action.subsystems[ arguments.subsystem ].sections[ arguments.section ].items[ item ];
+				}
+			} else if(structKeyExists(arguments, "subsystem") && structKeyExists(arguments, "section")){
+				if(structKeyExists(getPermissionsByDetails().action.subsystems, arguments.subsystem) && structKeyExists(getPermissionsByDetails().action.subsystems[ arguments.subsystem ].sections, arguments.section) && structKeyExists(getPermissionsByDetails().action.subsystems[ arguments.subsystem ].sections[ arguments.section ], "permission")) {
+					return getPermissionsByDetails().action.subsystems[ arguments.subsystem ].sections[ arguments.section ].permission;
+				}
+			} else if(structKeyExists(arguments, "subsystem")) {
+				if(structKeyExists(getPermissionsByDetails().action.subsystems, arguments.subsystem) && structKeyExists(getPermissionsByDetails().action.subsystems[ arguments.subsystem ], "permission")) {
+					return getPermissionsByDetails().action.subsystems[ arguments.subsystem ].permission;
+				}
+			}
 		}
 		
 		return getService("accountService").newPermission();
