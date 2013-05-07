@@ -5,17 +5,19 @@
 	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
 	<cfparam name="attributes.editEntityName" type="string" default="" />
 	
+	<cfset request.context.permissionFormIndex = 0 />
+	
 	<cfoutput>
 		<table class="table">
 			<tr>
-				<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='entity') />
 				<cfif attributes.edit and not len(attributes.editEntityName)>
+					<cfset request.context.permissionFormIndex++ />
+					<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='entity') />
+					
 					<input type="hidden" name="permissions[1].permissionID" value="#thisPermission.getPermissionID()#" />
 					<input type="hidden" name="permissions[1].accessType" value="entity" />
-				</cfif>
-				
-				<th class="primary" style="font-size:14px;">All Entities & Properties</th>
-				<cfif attributes.edit and not len(attributes.editEntityName)>
+					
+					<th class="primary" style="font-size:14px;">All Entities & Properties</th>
 					<th style="font-size:14px;"><input type="hidden" name="permissions[1].allowCreateFlag" value=""><input type="checkbox" name="permissions[1].allowCreateFlag" class="hibachi-permission-checkbox" value="1" <cfif !arrayLen(attributes.permissionGroup.getPermissions()) or (!isNull(thisPermission.getAllowCreateFlag()) and thisPermission.getAllowCreateFlag())>checked="checked"</cfif>> Create</th>
 					<th style="font-size:14px;"><input type="hidden" name="permissions[1].allowReadFlag" value=""><input type="checkbox" name="permissions[1].allowReadFlag" class="hibachi-permission-checkbox" value="1" <cfif !arrayLen(attributes.permissionGroup.getPermissions()) or (!isNull(thisPermission.getAllowReadFlag()) and thisPermission.getAllowReadFlag())>checked="checked"</cfif>> Read</th>
 					<th style="font-size:14px;"><input type="hidden" name="permissions[1].allowUpdateFlag" value=""><input type="checkbox" name="permissions[1].allowUpdateFlag" class="hibachi-permission-checkbox" value="1" <cfif !arrayLen(attributes.permissionGroup.getPermissions()) or (!isNull(thisPermission.getAllowUpdateFlag()) and thisPermission.getAllowUpdateFlag())>checked="checked"</cfif>> Update</th>
@@ -23,6 +25,7 @@
 					<th style="font-size:14px;"><input type="hidden" name="permissions[1].allowProcessFlag" value=""><input type="checkbox" name="permissions[1].allowProcessFlag" class="hibachi-permission-checkbox" value="1" <cfif !arrayLen(attributes.permissionGroup.getPermissions()) or (!isNull(thisPermission.getAllowProcessFlag()) and thisPermission.getAllowProcessFlag())>checked="checked"</cfif>> Process</th>
 					<th></th>
 				<cfelse>
+					<th class="primary" style="font-size:14px;">All Entities & Properties</th>
 					<th style="font-size:14px;">Create</th>
 					<th style="font-size:14px;">Read</th>
 					<th style="font-size:14px;">Update</th>
@@ -35,15 +38,13 @@
 			<cfset entities = listToArray(structKeyList(attributes.entityPermissionDetails)) />
 			<cfset arraySort(entities, "text") />
 			
-			<cfset request.context.permissionFormIndex = 1 />
-			
 			<cfloop array="#entities#" index="entityName">
 				<cfif not structKeyExists(attributes.entityPermissionDetails[entityName], "inheritPermissionEntityName")>
 					<tr>
 						<cfif attributes.edit and not len(attributes.editEntityName)>
 							<cfset request.context.permissionFormIndex++ />
-							
 							<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='entity', entityClassName=entityName) />
+							
 							<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
 							<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="entity" />
 							<input type="hidden" name="permissions[#request.context.permissionFormIndex#].entityClassName" value="#entityName#" />

@@ -150,7 +150,7 @@ component extends="FW1.framework" {
 		application[ "#variables.framework.applicationKey#Bootstrap" ] = this.bootstrap;
 		
 		// Verify Authentication before anything happens
-		if(!getHibachiScope().getService("hibachiAuthenticationService").authenticateAction( action=request.context[ getAction() ], account=request[ "#variables.framework.applicationKey#Scope" ].getAccount() )) {
+		if(!getHibachiScope().authenticateAction( action=request.context[ getAction() ] )) {
 			
 			// Get the hibachiConfig out of the application scope in case any changes were made to it
 			var hibachiConfig = getHibachiScope().getApplicationValue("hibachiConfig");

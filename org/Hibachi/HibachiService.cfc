@@ -698,6 +698,11 @@
 			return getEntityObject( arguments.entityName ).getPropertiesStruct(); 
 		}
 		
+		// @hint returns a property of a given entity
+		public any function getPropertyByEntityNameAndPropertyName( required string entityName, required string propertyName ) {
+			return getPropertiesStructByEntityName( entityName=arguments.entityName )[ arguments.propertyName ]; 
+		}
+		
 		/*
 		public any function getEntitiesProcessContexts() {
 			if(!structKeyExists(variables, "entitiesProcessContexts")) {

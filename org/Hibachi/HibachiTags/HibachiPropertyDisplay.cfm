@@ -71,120 +71,129 @@
 		plain
 	--->
 	
-	<cfsilent>
+	<!--- First Make sure that we have the ability to actually display this property --->
+	<cfif !attributes.object.isPersistent() || attributes.hibachiScope.authenticateEntityProperty('read', attributes.object.getClassName(), attributes.property)>
 		
-		<!--- Set Up whatever fieldtype this should be --->
-		<cfif attributes.fieldType eq "">
-			<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
-		</cfif>
-		
-		<!--- If this is in edit mode then get the pertinent field info --->
-		<cfif attributes.edit or attributes.fieldType eq "listingMultiselect">
-			<cfset attributes.fieldClass = listAppend(attributes.fieldClass, attributes.object.getPropertyValidationClass( attributes.property ), " ") />
-			<cfif attributes.fieldName eq "">
-				<cfset attributes.fieldName = attributes.object.getPropertyFieldName( attributes.property ) />
-			</cfif>
-			<cfif listFindNoCase("checkboxgroup,radiogroup,select,multiselect", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
-				<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
-			<cfelseif listFindNoCase("listingMultiselect", attributes.fieldType)>
-				<cfset attributes.valueOptionsSmartList = attributes.object.invokeMethod( "get#attributes.property#OptionsSmartList" ) />
-			</cfif>
-		</cfif>
-		
-		<!--- Setup textautocomplete values if they wern't passed in --->
-		<cfif attributes.fieldType eq "textautocomplete">
-			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acpropertyidentifiers="#attributes.autocompletePropertyIdentifiers#"', ' ') />
-			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-entityName="#listLast(attributes.object.getPropertyMetaData(attributes.property).cfc,'.')#"', ' ') />
-			<cfif not len(attributes.autocompleteValueProperty)>
-				<cfset attributes.autocompleteValueProperty = listLast(attributes.fieldName, '.') />
-			</cfif>
-			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acvalueproperty="#attributes.autocompleteValueProperty#"', ' ') />
-			<cfif not len(attributes.autocompleteNameProperty)>
-				<cfset attributes.autocompleteNameProperty = "simpleRepresentation" />
-			</cfif>
-			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acnameproperty="#attributes.autocompleteNameProperty#"', ' ') />
-		</cfif>
-		
-		<!--- Set Up The Value --->
-		<cfif attributes.value eq "">
-
-			<cfset attributes.value = attributes.object.getValueByPropertyIdentifier( attributes.property ) />
+		<cfsilent>
 			
-			<cfif isNull(attributes.value) || (isSimpleValue(attributes.value) && attributes.value eq "")>
-				<cfset attributes.value = attributes.valueDefault />
+			<!--- If this was originally set to edit... make sure that they have edit ability for this property --->
+			<cfif attributes.edit and not attributes.hibachiScope.authenticateEntityProperty('update', attributes.object.getClassName(), attributes.property)>
+				<cfset attributes.edit = false />
 			</cfif>
 			
-			<!--- If the value was an object, typically a MANY-TO-ONE, then we get either the identifierValue or for display a simpleRepresentation --->
-			<cfif isObject(attributes.value) && attributes.object.isPersistent()>
-				<cfif attributes.edit>
-					<!--- If this is a textautocomplete then we need to setup all of the propertyIdentifiers --->
-					<cfif attributes.fieldType eq "textautocomplete">
-						<cfloop list="#attributes.autocompletePropertyIdentifiers#" index="pi">
-							<cfset attributes.autocompleteSelectedValueDetails[ pi ] = attributes.value.getValueByPropertyIdentifier( pi ) />
-						</cfloop>
-						<cfif not structKeyExists(attributes.autocompleteSelectedValueDetails, attributes.autocompleteNameProperty)>
-							<cfset attributes.autocompleteSelectedValueDetails[ attributes.autocompleteNameProperty ] = attributes.value.getValueByPropertyIdentifier( attributes.autocompleteNameProperty ) />
-						</cfif>
-					</cfif>
-					<cfset attributes.value = attributes.value.getIdentifierValue() />  
-				<cfelse>
-					<cfset attributes.value = attributes.value.getSimpleRepresentation() />
+			<!--- Set Up whatever fieldtype this should be --->
+			<cfif attributes.fieldType eq "">
+				<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
+			</cfif>
+			
+			<!--- If this is in edit mode then get the pertinent field info --->
+			<cfif attributes.edit or attributes.fieldType eq "listingMultiselect">
+				<cfset attributes.fieldClass = listAppend(attributes.fieldClass, attributes.object.getPropertyValidationClass( attributes.property ), " ") />
+				<cfif attributes.fieldName eq "">
+					<cfset attributes.fieldName = attributes.object.getPropertyFieldName( attributes.property ) />
 				</cfif>
-
-			<!--- If the value was an array, typically a MANY-TO-MANY, then we loop over the array and create either a list of simpleRepresetnation or a list of identifier values --->	
-			<cfelseif isArray(attributes.value)>
-				<cfset thisValueList = "" />
-				<cfloop array="#attributes.value#" index="thisValue">
-					<cfif isObject(thisValue) && thisValue.isPersistent()>
-						<cfif attributes.edit or attributes.fieldType eq "listingMultiselect">
-							<cfset thisValueList = listAppend(thisValueList, thisValue.getIdentifierValue()) />
-						<cfelse>
-							<cfset thisValueList = listAppend(thisValueList, " #thisValue.getSimpleRepresentation()#") />
-						</cfif>
-					</cfif>
-				</cfloop>
-				<cfset attributes.value = trim(thisValueList) />
-			<cfelse>
-				<cfif not attributes.edit or attributes.object.getPropertyFormatType( attributes.property ) eq "datetime">
-					<cfif isNumeric(attributes.value) and attributes.value lt 0>
-						<cfset attributes.valueClass &= " negative" />
-					</cfif>
-					<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
+				<cfif listFindNoCase("checkboxgroup,radiogroup,select,multiselect", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
+					<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
+				<cfelseif listFindNoCase("listingMultiselect", attributes.fieldType)>
+					<cfset attributes.valueOptionsSmartList = attributes.object.invokeMethod( "get#attributes.property#OptionsSmartList" ) />
 				</cfif>
 			</cfif>
 			
-			<!--- Final check to make sure that the value is simple --->
-			<cfif not isSimpleValue(attributes.value)>
-				<cfif isSimpleValue(attributes.valueDefault)>
+			<!--- Setup textautocomplete values if they wern't passed in --->
+			<cfif attributes.fieldType eq "textautocomplete">
+				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acpropertyidentifiers="#attributes.autocompletePropertyIdentifiers#"', ' ') />
+				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-entityName="#listLast(attributes.object.getPropertyMetaData(attributes.property).cfc,'.')#"', ' ') />
+				<cfif not len(attributes.autocompleteValueProperty)>
+					<cfset attributes.autocompleteValueProperty = listLast(attributes.fieldName, '.') />
+				</cfif>
+				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acvalueproperty="#attributes.autocompleteValueProperty#"', ' ') />
+				<cfif not len(attributes.autocompleteNameProperty)>
+					<cfset attributes.autocompleteNameProperty = "simpleRepresentation" />
+				</cfif>
+				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acnameproperty="#attributes.autocompleteNameProperty#"', ' ') />
+			</cfif>
+			
+			<!--- Set Up The Value --->
+			<cfif attributes.value eq "">
+	
+				<cfset attributes.value = attributes.object.getValueByPropertyIdentifier( attributes.property ) />
+				
+				<cfif isNull(attributes.value) || (isSimpleValue(attributes.value) && attributes.value eq "")>
 					<cfset attributes.value = attributes.valueDefault />
+				</cfif>
+				
+				<!--- If the value was an object, typically a MANY-TO-ONE, then we get either the identifierValue or for display a simpleRepresentation --->
+				<cfif isObject(attributes.value) && attributes.object.isPersistent()>
+					<cfif attributes.edit>
+						<!--- If this is a textautocomplete then we need to setup all of the propertyIdentifiers --->
+						<cfif attributes.fieldType eq "textautocomplete">
+							<cfloop list="#attributes.autocompletePropertyIdentifiers#" index="pi">
+								<cfset attributes.autocompleteSelectedValueDetails[ pi ] = attributes.value.getValueByPropertyIdentifier( pi ) />
+							</cfloop>
+							<cfif not structKeyExists(attributes.autocompleteSelectedValueDetails, attributes.autocompleteNameProperty)>
+								<cfset attributes.autocompleteSelectedValueDetails[ attributes.autocompleteNameProperty ] = attributes.value.getValueByPropertyIdentifier( attributes.autocompleteNameProperty ) />
+							</cfif>
+						</cfif>
+						<cfset attributes.value = attributes.value.getIdentifierValue() />  
+					<cfelse>
+						<cfset attributes.value = attributes.value.getSimpleRepresentation() />
+					</cfif>
+	
+				<!--- If the value was an array, typically a MANY-TO-MANY, then we loop over the array and create either a list of simpleRepresetnation or a list of identifier values --->	
+				<cfelseif isArray(attributes.value)>
+					<cfset thisValueList = "" />
+					<cfloop array="#attributes.value#" index="thisValue">
+						<cfif isObject(thisValue) && thisValue.isPersistent()>
+							<cfif attributes.edit or attributes.fieldType eq "listingMultiselect">
+								<cfset thisValueList = listAppend(thisValueList, thisValue.getIdentifierValue()) />
+							<cfelse>
+								<cfset thisValueList = listAppend(thisValueList, " #thisValue.getSimpleRepresentation()#") />
+							</cfif>
+						</cfif>
+					</cfloop>
+					<cfset attributes.value = trim(thisValueList) />
 				<cfelse>
-					<cfset attributes.value = "" />
+					<cfif not attributes.edit or attributes.object.getPropertyFormatType( attributes.property ) eq "datetime">
+						<cfif isNumeric(attributes.value) and attributes.value lt 0>
+							<cfset attributes.valueClass &= " negative" />
+						</cfif>
+						<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
+					</cfif>
+				</cfif>
+				
+				<!--- Final check to make sure that the value is simple --->
+				<cfif not isSimpleValue(attributes.value)>
+					<cfif isSimpleValue(attributes.valueDefault)>
+						<cfset attributes.value = attributes.valueDefault />
+					<cfelse>
+						<cfset attributes.value = "" />
+					</cfif>
 				</cfif>
 			</cfif>
-		</cfif>
-		
-		<!--- Set up the property title --->
-		<cfif attributes.title eq "">
-			<cfset attributes.title = attributes.object.getPropertyTitle( attributes.property ) />
-		</cfif>
-		
-		<cfif attributes.hint eq "">
-			<cfset attributes.hint = attributes.object.getPropertyHint( attributes.property ) />
-		</cfif>
 			
-		<!--- Add the error class to the form field if it didn't pass validation --->
-		<cfif attributes.object.hasError(attributes.property)>
-			<cfset attributes.fieldClass = attributes.fieldClass & " error" />
+			<!--- Set up the property title --->
+			<cfif attributes.title eq "">
+				<cfset attributes.title = attributes.object.getPropertyTitle( attributes.property ) />
+			</cfif>
 			
-			<cfset attributes.errors = attributes.object.getError( attributes.property ) />
-		</cfif>
+			<cfif attributes.hint eq "">
+				<cfset attributes.hint = attributes.object.getPropertyHint( attributes.property ) />
+			</cfif>
+				
+			<!--- Add the error class to the form field if it didn't pass validation --->
+			<cfif attributes.object.hasError(attributes.property)>
+				<cfset attributes.fieldClass = attributes.fieldClass & " error" />
+				
+				<cfset attributes.errors = attributes.object.getError( attributes.property ) />
+			</cfif>
+			
+			<!--- If the field type is file, then look for an hb_fileAccept value --->
+			<cfif structKeyExists(attributes.object.getPropertyMetaData(attributes.property), "hb_fileAcceptExtension")>
+				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'accept="#attributes.object.getPropertyMetaData(attributes.property).hb_fileAcceptExtension#"', " ") />
+			</cfif>
+		</cfsilent>
 		
-		<!--- If the field type is file, then look for an hb_fileAccept value --->
-		<cfif structKeyExists(attributes.object.getPropertyMetaData(attributes.property), "hb_fileAcceptExtension")>
-			<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'accept="#attributes.object.getPropertyMetaData(attributes.property).hb_fileAcceptExtension#"', " ") />
-		</cfif>
-	</cfsilent>
-	
-	
-	<cf_HibachiFieldDisplay attributecollection="#attributes#" />
+		
+		<cf_HibachiFieldDisplay attributecollection="#attributes#" />
+	</cfif>
 </cfif>
