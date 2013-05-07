@@ -19,7 +19,7 @@
 	<cfparam name="attributes.createAction" type="string" default="#request.context.entityActionDetails.createAction#" />
 	<cfparam name="attributes.createQueryString" type="string" default="" />
 	
-	<cfparam name="attributes.backAction" type="string" default="#request.context.entityActionDetails.listAction#" />
+	<cfparam name="attributes.backAction" type="string" default="#request.context.entityActionDetails.backAction#" />
 	<cfparam name="attributes.backQueryString" type="string" default="" />
 	
 	<cfparam name="attributes.cancelAction" type="string" default="#request.context.entityActionDetails.cancelAction#" />
