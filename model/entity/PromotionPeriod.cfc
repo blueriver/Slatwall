@@ -64,6 +64,24 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
  	// Non-persistent properties
 	property name="currentFlag" type="boolean" persistent="false"; 
  
+ 
+ 	public boolean function isCurrent() {
+		var currentDateTime = now();
+		return getStartDateTime() <= currentDateTime && getEndDateTime() > currentDateTime;
+	}
+	
+	public boolean function isExpired() {
+		return isDate(getEndDateTime()) && getEndDateTime() < now();
+	}
+	
+	public boolean function isDeletable () {
+		return !isExpired() && getPromotion().isDeletable();
+	}
+	
+	public string function getSimpleRepresentation() {
+		return getPromotion().getPromotionName();
+	}
+
 	public any function getMaximumUseCountFormatted() {
 		if(isNull(getMaximumUseCount()) || !isNumeric(getMaximumUseCount()) || getMaximumUseCount() == 0) {
 			return rbKey('define.unlimited');
@@ -115,32 +133,20 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 		arguments.PromotionQualifier.removePromotion( this );    
 	}
 	
-   // =============  END:  Bidirectional Helper Methods ===================
+	// =============  END:  Bidirectional Helper Methods ===================
 
-	public boolean function isCurrent() {
-		var currentDateTime = now();
-		return getStartDateTime() <= currentDateTime && getEndDateTime() > currentDateTime;
-	}
 	
-	public boolean function isExpired() {
-		return isDate(getEndDateTime()) && getEndDateTime() < now();
-	}
-	
-	public boolean function isDeletable () {
-		return !isExpired() && getPromotion().isDeletable();
-	}
-	
-	public string function getSimpleRepresentation() {
-		return getPromotion().getPromotionName();
-	}
-
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public boolean function getCurrentFlag() {
-		if( ( !isNull(getStartDateTime()) && getStartDateTime() > now() ) || ( !isNull(getEndDateTime()) && getEndDateTime() < now() ) ) {
-			return false;
+		if(!structKeyExists(variables, "currentFlag")) {
+			variables.currentFlag = true;
+			if( ( !isNull(getStartDateTime()) && getStartDateTime() > now() ) || ( !isNull(getEndDateTime()) && getEndDateTime() < now() ) ) {
+				variables.currentFlag = false;
+			}	
 		}
-		return true;
+		
+		return variables.currentFlag;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

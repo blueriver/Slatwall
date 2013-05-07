@@ -67,10 +67,21 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	
+	property name="currentFlag" type="boolean" persistent="false";
 	
     
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function getCurrentFlag() {
+		if(!structKeyExists(variables, "currentFlag")) {
+			variables.currentFlag = true;
+			if( ( !isNull(getStartDateTime()) && getStartDateTime() > now() ) || ( !isNull(getEndDateTime()) && getEndDateTime() < now() ) ) {
+				variables.currentFlag = false;
+			}	
+		}
+		
+		return variables.currentFlag;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
