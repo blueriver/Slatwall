@@ -45,7 +45,7 @@ component entityname="SlatwallPermissionGroup" table="SlatwallPermissionGroup" p
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
-	property name="permissions" singularname="permission" cfc="Permission" type="array" fieldtype="one-to-many" fkcolumn="permissionID" cascade="all-delete-orphan" inverse="true";
+	property name="permissions" singularname="permission" cfc="Permission" type="array" fieldtype="one-to-many" fkcolumn="permissionGroupID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -65,12 +65,76 @@ component entityname="SlatwallPermissionGroup" table="SlatwallPermissionGroup" p
 	
 	public struct function getPermissionsByDetails() {
 		if(!structKeyExists(variables, "permissionsByDetails")) {
-			variables.permissionsByDetials = {};
+			
+			// Create the start of the structure
+			variables.permissionsByDetails = {
+				entity = {
+					entities = {}
+				},
+				action = {}
+			};
+			
+			// Get all of the permissions & the arrayLen
+			var permissions = getPermissions(); 
+			var l = arrayLen(permissions);
+			
+			// Loop over each permission
+			for(var p=1; p<=l; p++) {
+				
+				// setup a local variable for the permission
+				var thisPermission = permissions[p];
+				
+				// If the permission is an 'entity' access type
+				if(thisPermission.getAccessType() eq "entity") {
+					
+					// Check to see if this is the 'core' or very top level permission
+					if(isNull(thisPermission.getEntityClassName())) {
+						variables.permissionsByDetails.entity.permission = thisPermission;
+						
+					// Otherwise this is a property or entity level permission
+					} else {
+						
+						// Make sure the default data for this entity exists
+						if(!structKeyExists(variables.permissionsByDetails.entity.entities, thisPermission.getEntityClassName())) {
+							variables.permissionsByDetails.entity.entities[ thisPermission.getEntityClassName() ] = {
+								properties = {}
+							};	
+						}
+						
+						// Check if this is a property level permission
+						if(isNull(thisPermission.getPropertyName())) {
+							variables.permissionsByDetails.entity.entities[ thisPermission.getEntityClassName() ].permission = thisPermission;
+						} else {
+							variables.permissionsByDetails.entity.entities[ thisPermission.getEntityClassName() ].properties[ thisPermission.getPropertyName() ] = thisPermission;
+						}
+					}
+				} else if (thisPermission.getAccessType() eq "action") {
+					
+				}
+			}
 		}
-		return variables.permissionsByDetials;
+		return variables.permissionsByDetails;
 	}
 	
-	public any function getPermissionByDetails() {
+	public any function getPermissionByDetails(required string accessType, string entityClassName, string propertyName, string subsystem, string section, string item) {
+		
+		// We are looking for an entity permission
+		if(arguments.accessType eq "entity") {
+			if(structKeyExists(arguments, "entityClassName") && structKeyExists(arguments, "propertyName")) {
+				if(structKeyExists(getPermissionsByDetails().entity.entities, arguments.entityClassName) && structKeyExists(getPermissionsByDetails().entity.entities[ arguments.entityClassName ].properties, arguments.propertyName)) {
+					return getPermissionsByDetails().entity.entities[ arguments.entityClassName ].properties[ arguments.propertyName ];
+				}
+			} else if(structKeyExists(arguments, "entityClassName")){
+				if(structKeyExists(getPermissionsByDetails().entity.entities, arguments.entityClassName) && structKeyExists(getPermissionsByDetails().entity.entities[ arguments.entityClassName ], "permission")) {
+					return getPermissionsByDetails().entity.entities[ arguments.entityClassName ].permission;
+				}
+			} else if(structKeyExists(getPermissionsByDetails().entity, "permission")) {
+				return getPermissionsByDetails().entity.permission;
+			}
+		} else if (arguments.accessType eq "action") {
+			
+		}
+		
 		return getService("accountService").newPermission();
 	}
 	

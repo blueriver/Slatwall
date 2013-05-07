@@ -215,6 +215,44 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ====================== START: Save Overrides ===========================
 	
+	public any function savePermissionGroup(required any permissionGroup, struct data={}, string context="save") {
+	
+		arguments.permissionGroup.setPermissionGroupName( arguments.data.permissionGroupName );
+		
+		// As long as permissions were passed in we can set those up
+		if(structKeyExists(arguments.data, "permissions")) {
+			// Loop over all of the permissions that were passed in.
+			for(var i=1; i<=arrayLen(arguments.data.permissions); i++) {
+				
+				var pData = arguments.data.permissions[i];	
+				var pEntity = this.getPermission(arguments.data.permissions[i].permissionID, true);
+				pEntity.populate( pData );
+				
+				// Delete this permssion
+				if(!pEntity.isNew() && (isNull(pEntity.getAllowCreateFlag()) || !pEntity.getAllowCreateFlag()) && (isNull(pEntity.getAllowReadFlag()) || !pEntity.getAllowReadFlag()) && (isNull(pEntity.getAllowUpdateFlag()) || !pEntity.getAllowUpdateFlag()) && (isNull(pEntity.getAllowDeleteFlag()) || !pEntity.getAllowDeleteFlag()) && (isNull(pEntity.getAllowProcessFlag()) || !pEntity.getAllowProcessFlag()) ) {
+					arguments.permissionGroup.removePermission( pEntity );
+					this.deletePermission( pEntity );
+				// Otherwise Save This Entity
+				} else if ((!isNull(pEntity.getAllowCreateFlag()) && pEntity.getAllowCreateFlag()) || (!isNull(pEntity.getAllowReadFlag()) && pEntity.getAllowReadFlag()) || (!isNull(pEntity.getAllowUpdateFlag()) && pEntity.getAllowUpdateFlag()) || (!isNull(pEntity.getAllowDeleteFlag()) && pEntity.getAllowDeleteFlag()) || (!isNull(pEntity.getAllowProcessFlag()) && pEntity.getAllowProcessFlag())) {
+					getAccountDAO().save( pEntity );
+					arguments.permissionGroup.addPermission( pEntity );
+				}
+			}
+		}
+		
+		// Validate the permission group
+		arguments.permissionGroup.validate(context='save');
+		
+		// Setup hibernate session correctly if it has errors or not
+		if(!arguments.permissionGroup.hasErrors()) {
+			getAccountDAO().save( arguments.permissionGroup );
+		} else {
+			getHibachiScope().setORMHasErrors( true );
+		}
+		
+		return arguments.permissionGroup;
+	}
+	
 	// ======================  END: Save Overrides ============================
 	
 	// ==================== START: Smart List Overrides =======================

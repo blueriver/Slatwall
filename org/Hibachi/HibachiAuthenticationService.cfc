@@ -42,11 +42,11 @@ component output="false" accessors="true" extends="HibachiService" {
 			
 			// Check to see if this is a defined secure method, and if so we can test it against the account
 			if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].secureMethods, itemName)) {
-				return authenticateSecureActionByAccount(action=arguments.action, account=getHibachiScope().getAccount());
+				return authenticateSecureActionByAccount(subsystemName=subsystemName, sectionName=sectionName, itemName=itemName, account=getHibachiScope().getAccount());
 			}
 			
 			// Check to see if the controller is an entity or rest controller, and then verify against the entity itself
-			if(getActionPermissionDetails()[ subsystemName ][ sectionName ].entityController || getActionPermissionDetails()[ subsystemName ][ sectionName ].apiController) {
+			if(getActionPermissionDetails()[ subsystemName ][ sectionName ].entityController || getActionPermissionDetails()[ subsystemName ][ sectionName ].restController) {
 				
 				if ( left(itemName, 6) == "create" ) {
 					return authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-6), account=getHibachiScope().getAccount());
@@ -81,8 +81,8 @@ component output="false" accessors="true" extends="HibachiService" {
 		return false;
 	}
 	
-	public boolean function authenticateSecureActionByAccount(required string crudType, required string entityName, required any account) {
-		
+	public boolean function authenticateSecureActionByAccount(required string subsystemName, required string sectionName, required string itemName, required any account) {
+		return false;
 	}
 	
 	public boolean function authenticateEntityCrudByAccount(required string crudType, required string entityName, required any account) {
@@ -100,7 +100,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		return false;
 	}
 	
-	public boolean function authenticateEntityPropertyCrudByAccount(required string crud, required string entityName, required string propertyName, required any account) {
+	public boolean function authenticateEntityPropertyCrudByAccount(required string crudType, required string entityName, required string propertyName, required any account) {
 		
 	}
 	
@@ -275,16 +275,45 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	// ============================ PRIVATE HELPER FUNCTIONS =======================================
 	
-	private boolean function authenticateActionByPermissionGroup(required string action, required any permissionGroup) {
+	public boolean function authenticateActionByPermissionGroup(required string action, required any permissionGroup) {
 		return false;
 	}
 	
-	private boolean function authenticateEntityByPermissionGroup(required string crud, required string entityName, required any permissionGroup) {
+	public boolean function authenticateEntityByPermissionGroup(required string crudType, required string entityName, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
 		
+		// Check for entity specific values
+		if(structKeyExists(permissions.entity.entities, arguments.entityName) && structKeyExists(permissions.entity.entities[arguments.entityName], "permission") && !isNull(permissions.entity.entities[arguments.entityName].permission.invokeMethod("getAllow#arguments.crudType#Flag"))) {
+			if( permissions.entity.entities[arguments.entityName].permission.invokeMethod("getAllow#arguments.crudType#Flag") ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		// Check for generic permssion
+		if(structKeyExists(permissions.entity, "permission") && !isNull(permissions.entity.permission.invokeMethod("getAllow#arguments.crudType#Flag")) && permissions.entity.permission.invokeMethod("getAllow#arguments.crudType#Flag")) {
+			return true;
+		}
+		
+		return false;
 	}
 	
-	private boolean function authenticateEntityPropertyByPermissionGroup(required string crud, required string entityName, required string propertyName, required any permissionGroup) {
+	public boolean function authenticateEntityPropertyByPermissionGroup(required string crudType, required string entityName, required string propertyName, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
 		
+		// Check for entity specific values
+		if(structKeyExists(permissions.entity.entities, arguments.entityName) && structKeyExists(permissions.entity.entities[arguments.entityName].properties, arguments.propertyName) && !isNull(permissions.entity.entities[ arguments.entityName ].properties[ arguments.propertyName ].invokeMethod("getAllow#arguments.crudType#Flag"))) {
+			if( permissions.entity.entities[ arguments.entityName ].properties[ arguments.propertyName ].invokeMethod("getAllow#arguments.crudType#Flag") ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		return authenticateEntityByPermissionGroup(crudType=arguments.crudType, entityName=arguments.entityName, permissionGroup=arguments.permissionGroup);
 	}
 	
 	
