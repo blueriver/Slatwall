@@ -36,22 +36,26 @@
 Notes:
 	
 --->
-<cfinclude template="slatwall-inc/slatwall-header.cfm" />
+<cfinclude template="_slatwall-header.cfm" />
 <cfoutput>
-	<div class="row">
-		<div class="span12">
-			<h2>Shopping Cart</h2>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<h2>Shopping Cart</h2>
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="span9">
-			Order Items Here
+		<div class="row">
+			<div class="span9">
+				<cfloop array="#$.slatwall.cart().getOrderItems()#" index="orderItem">
+					#orderItem.getSku().getProduct().getTitle()#
+				</cfloop>
+			</div>
+			<div class="span3">
+				Order Summary Here
+			</div>
 		</div>
-		<div class="span3">
-			Order Summary Here
+		<div class="row">
 		</div>
-	</div>
-	<div class="row">
 	</div>
 </cfoutput>
-<cfinclude template="slatwall-inc/slatwall-footer.cfm" />
+<cfinclude template="_slatwall-footer.cfm" />

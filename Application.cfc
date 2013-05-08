@@ -109,7 +109,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		super.setupView();
 		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
-		if( !listFindNoCase("admin,frontend,public", request.context.slatAction) && (!structKeyExists(request,"layout") || request.layout)) {
+		if( !listFindNoCase("admin,frontend,public", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
 			setLayout("admin:main");
 		}
 	}

@@ -117,7 +117,7 @@ Notes:
 				
 				<!--- Start of form, note that the action can be set to whatever URL you would like the user to end up on. ---> 
 				<form action="?s=1" method="post">
-					<input type="hidden" name="slatAction" value="public:cart.addItem" />
+					<input type="hidden" name="slatAction" value="public:cart.addOrderItem" />
 					
 					<!--- Get the skus for the product, the sorted attribute will use the options groups to --->
 					<!--- NOTE: sorted=true allows for the list to be sorted based on the optionGroup and option sort order --->

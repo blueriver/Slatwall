@@ -49,10 +49,8 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		getFW().setView("public:main.blank");
 	}
 	
-	public void function addItem(required any rc) {
-		
+	public void function addOrderItem(required any rc) {
 		var cart = getOrderService().processOrder($.slatwall.cart(), arguments.rc, 'addOrderItem');
-		
 	}
 	
 }

@@ -106,10 +106,6 @@
 				invokeArguments[ "processObject" ] = arguments.entity.getProcessObject(arguments.processContext);
 				invokeArguments[ "processObject" ].populate( arguments.data );
 				invokeArguments[ "processObject" ].validate( context=arguments.processContext );
-				
-				if(invokeArguments[ "processObject" ].hasErrors()) {
-					arguments.entity.addError('processObject', arguments.processContext);
-				}
 			}
 			
 			// if the entity still has no errors then we call call the process method
