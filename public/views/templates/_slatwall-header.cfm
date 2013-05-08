@@ -54,19 +54,4 @@ Notes:
 		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
 		<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
 	</head>
-	<body style="margin-top:40px;">
-		<div class="container">
-			<div class="navbar navbar-inverse navbar-fixed-top">
-				<div class="navbar-inner">
-					<div class="container">
-						<div class="nav-collapse">
-							<ul class="nav">
-								<li><a href="?slatAction=frontend:page.slatwall-productlisting">Product List</a></li>
-								<li><a href="?slatAction=frontend:page.slatwall-account">Account</a></li>
-								<li><a href="?slatAction=frontend:page.slatwall-shoppingcart">Shopping Cart</a></li>
-								<li><a href="?slatAction=frontend:page.slatwall-checkout">Checkout</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
+	<body>
