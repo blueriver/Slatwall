@@ -94,16 +94,18 @@ Notes:
 		
 		var hql = "SELECT sku FROM SlatwallSku sku ";
 		if(fetchOptions) {
-			hql &= "INNER JOIN FETCH sku.options option ";	
+			if(arguments.product.getBaseProductType() eq "contentAccess") {
+				hql &= "INNER JOIN FETCH sku.accessContents contents ";	
+			} else if (arguments.product.getBaseProductType() eq "merchandise") {
+				hql &= "INNER JOIN FETCH sku.options option ";
+			} else if (arguments.product.getBaseProductType() eq "subscription") {
+				hql &= "INNER JOIN sku.subscriptionTerm st ";
+				hql &= "INNER JOIN FETCH sku.subscriptionBenefits sb ";
+			}
 		}
 		var hql &= "WHERE sku.product.productID = :productID ";
-		/*
-		if(fetchOptions) {
-			hql &= "ORDER BY option.optionGroup.sortOrder ";	
-		}
-		*/
 		
-		var skus = ORMExecuteQuery(hql,	{productID = arguments.product.getProductID()});
+		var skus = ORMExecuteQuery(hql,	{productID = arguments.product.getProductID()}, false, {ignoreCase="true"});
 		
 		return skus;
 	}
