@@ -39,26 +39,30 @@ Notes:
 <cfinclude template="_slatwall-header.cfm" />
 <cfoutput>
 	<div class="container">
+		
 		<div class="row">
 			<div class="span12">
+				<!--- We use the getTitle() method which uses the title template setting to pull in brand name or whatever else you might want in your titles --->
 				<h2>#$.slatwall.product().getTitle()#</h2>
 			</div>
 		</div>
 		<div class="row">
 			<div class="span4">
 				<div class="well">
+					<!--- This displays the primary image which is pulled from the default sku --->
 					<a href="#$.slatwall.product().getImagePath()#" target="_blank">#$.slatwall.product().getImage(size="m")#</a>
 				</div>
 			</div>
 			<div class="span8">
 				<dl class="dl-horizontal">
-					<!--- Product Description --->
-					<dt>Product Description</dt>
-					<dd>#$.slatwall.product().getProductDescription()#</dd>
 					
 					<!--- Product Code --->
 					<dt>Product Code</dt>
-					<dd>#$.slatwall.product().getProductCode()#</dd>
+					<dd>#$.slatwall.product().getProductCode()# </dd>
+					
+					<!--- Product Description --->
+					<dt>Product Description</dt>
+					<dd>#$.slatwall.product().getProductDescription()# &nbsp;</dd>
 					
 					<!--- List Price | This price is really just a place-holder type of price that can display the MSRP.  It is typically used to show the highest price --->
 					<dt>List Price</dt>
@@ -70,27 +74,130 @@ Notes:
 					
 					<!--- Sale Price | This value will be pulled from any current active promotions that don't require any promotion qualifiers or promotion codes --->
 					<dt>Sale Price</dt>
-					<dd>#$.slatwall.product().getFormattedValue('salePrice')#</dd>
+					<dd>#$.slatwall.product().getFormattedValue('salePrice')# </dd>
 					
 					<!--- Live Price | The live price looks at both the salePrice and currentAccountPrice to figure out which is better and display that.  This is what the customer will see in their cart once the item has been added so it should be used as the primary price to display --->
 					<dt>Live Price</dt>
-					<dd>#$.slatwall.product().getFormattedValue('livePrice')#</dd>
+					<dd>#$.slatwall.product().getFormattedValue('livePrice')# </dd>
 					
-					<!--- IMPORTANT NOTE ABOUT PRICING
-					
+					<!--- IMPORTANT NOTE ABOUT PRICING											
+																								
+						When asking for a price from a product, it automatically pulls			
+						that price from whichever has been defined as the 'Default Sku'			
+						in the admin.  If your skus have different prices, you will either		
+						want to update the price based on the sku selected in an addToCart		
+						form, or you might want to put the price in the dropdowns themselves.	
+						Another option would be to use the type of AddToCart form that lists	
+						out all of the skus.													
+																								
 					--->
-					
 				</dl>
 				
-				<!--- Add To Cart Form Example 1 --->
+				<hr />
+				
+				<!--- Start: PRICE DISPLAY EXAMPLE --->
+				<h4>Price Display Example</h4>
+				<p>This price is dynamic based on Sale / Account pricing</p>
+				<div>
+					<cfif $.slatwall.product('price') gt $.slatwall.product('livePrice')>
+						<span style="text-decoration:line-through;color:##cc0000;">#$.slatwall.product().getFormattedValue('price')#</span><br />
+						<span style="font-size:24px;color:##333333;">#$.slatwall.product().getFormattedValue('livePrice')#</span>		
+					<cfelse>
+						<span style="font-size:24px;color:##333333;">#$.slatwall.product().getFormattedValue('livePrice')#</span>
+					</cfif>
+				</div>
+				<!--- END: PRICE DISPLAY EXAMPLE --->
+				
+				<hr />
+				
+				<!--- START: ADD TO CART EXAMPLE 1 --->
 				<h4>Add To Cart Form Example 1</h4>
-				<p></p>
+				<h5>Simple sku selector</h5>
+				<p>This add to cart form will display a simple dropdown list of skus to select the one to add.  Note if there is only one sku, no dropdown will be shown but instead a hidden field of skuID will be added</p>
+				
+				<!--- Start of form, note that the action can be set to whatever URL you would like the user to end up on. ---> 
 				<form action="?s=1" method="post">
-					<input type="hidden" name="slatAction" value="public:order.addItem" />
+					<input type="hidden" name="slatAction" value="public:cart.addItem" />
+					
+					<!--- Get the skus for the product, the sorted attribute will use the options groups to --->
+					<!--- NOTE: sorted=true allows for the list to be sorted based on the optionGroup and option sort order --->
+					<!--- NOTE: fetchOptions=true optimizes the query to pull down the option details to be displayed --->
+					<cfset local.skus = $.slatwall.product().getSkus(sorted=true, fetchOptions=true) />
+						
+					<!--- Check to see if there are more than 1 skus, if so then display the options dropdown --->
+					<cfif arrayLen(local.skus) gt 1>
+						
+						<!--- Sku Selector --->
+						<select name="skuID" class="required">
+							
+							<!--- Blank option to force user to select (this is optional) --->	
+							<option value="">Select Option</option>
+							
+							<!--- Loop over the skus to display options --->
+							<cfloop array="#local.skus#" index="local.sku">
+								<!--- This provides an option for each sku, with the 'displayOptions' method to show the optionGroup / option names --->
+								<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
+							</cfloop>
+							
+						</select>
+						
+						<br />
+						
+					<!--- If there are only 1 skus, then add a hidden field --->
+					<cfelse> 
+						<input type="hidden" name="skuID" value="#$.slatwall.product().getDefaultSku().getSkuID()#" />
+					</cfif>
+					
+					<!--- Add to Cart Button --->
+					<button type="submit">Add To Cart</button>
+				</form>
+				<!--- END: ADD TO CART EXAMPLE 1 --->
+				
+				<hr />
+					
+				<!--- Start: Add To Cart Form Example 2 --->
+				<h4>Add To Cart Form Example 2</h4>
+				
+				<form action="?s=1" method="post">
+					<input type="hidden" name="slatAction" value="public:cart.addItem" />
+					
 					
 				</form>
+				
+				<!--- End: Add To Cart Form Example 2 --->
 			</div>
 		</div>
+		
+		<!--- Lower Section --->
+		<hr />
+		
+		<!--- Start: Add Product Review Example --->
+		<div class="row">
+			<div class="span12">
+				<h4>Add Product Review Example</h4>
+			</div>
+		</div>
+		<!--- End: Add Product Review Example --->
+			
+		<hr />
+			
+		<!--- Start: Related Products Example --->
+		<div class="row">
+			<div class="span12">
+				<h4>Related Products Example</h4>
+			</div>
+		</div>
+		<!--- End: Related Products Example --->
+		
+		<hr />
+		
+		<!--- Start: Image Gallery Example --->
+		<div class="row">
+			<div class="span12">
+				<h4>Image Gallery Example</h4>
+			</div>
+		</div>
+		<!--- End: Image Gallery Example --->
 	</div>
 </cfoutput>
 <cfinclude template="_slatwall-footer.cfm" />
