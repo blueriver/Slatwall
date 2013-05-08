@@ -77,7 +77,7 @@
 		<cfsilent>
 			
 			<!--- If this was originally set to edit... make sure that they have edit ability for this property --->
-			<cfif attributes.edit and not attributes.hibachiScope.authenticateEntityProperty('update', attributes.object.getClassName(), attributes.property)>
+			<cfif attributes.edit and attributes.object.isPersistent() and not attributes.hibachiScope.authenticateEntityProperty('update', attributes.object.getClassName(), attributes.property)>
 				<cfset attributes.edit = false />
 			</cfif>
 			
