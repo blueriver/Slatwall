@@ -88,7 +88,7 @@
 					<td><input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowProcessFlag" value=""><input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowProcessFlag" class="hibachi-permission-checkbox" data-hibachi-parentcheckbox="permissions[#attributes.parentIndex#].allowProcessFlag" value="1"> Process</td>
 					<td></td>
 				<cfelse>
-					<td class="primary"><span class="depth#attributes.depth#" /><strong>#attributes.hibachiScope.rbKey('entity.#attributes.entityName#.#propertyName#')#</strong></td>
+					<td class="primary"><span class="depth#attributes.depth#" /><strong>#attributes.hibachiScope.getService('hibachiService').getEntityObject( attributes.entityName ).getPropertyTitle( propertyName )#</strong></td>
 					<td>#attributes.hibachiScope.formatValue(attributes.hibachiScope.getService("hibachiAuthenticationService").authenticateEntityByPermissionGroup('create', subPropertyInheriting[ propertyName ], attributes.permissionGroup), "yesno")#</td>
 					<td>#attributes.hibachiScope.formatValue(attributes.hibachiScope.getService("hibachiAuthenticationService").authenticateEntityByPermissionGroup('read', subPropertyInheriting[ propertyName ], attributes.permissionGroup), "yesno")#</td>
 					<td>#attributes.hibachiScope.formatValue(attributes.hibachiScope.getService("hibachiAuthenticationService").authenticateEntityByPermissionGroup('update', subPropertyInheriting[ propertyName ], attributes.permissionGroup), "yesno")#</td>
