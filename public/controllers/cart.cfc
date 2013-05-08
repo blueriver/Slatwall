@@ -36,10 +36,9 @@
 Notes:
 
 */
-component output="false" extends="Slatwall.org.Hibachi.HibachiController" {
+component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiController" {
 
 	property name="fw" type="any";
-	
 	property name="orderService" type="any";
 
 	public void function init( required any fw ) {

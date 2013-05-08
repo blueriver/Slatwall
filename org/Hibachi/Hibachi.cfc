@@ -24,6 +24,8 @@ component extends="FW1.framework" {
 	variables.framework.applicationKey = 'Hibachi';
 	variables.framework.action = 'action';
 	variables.framework.baseURL = replaceNoCase(replace(replaceNoCase( getDirectoryFromPath(getCurrentTemplatePath()) , expandPath('/'), '/' ), '\', '/', 'all'),'/org/Hibachi/','');
+	variables.framework.base = variables.framework.baseURL;
+	variables.framework.basecfc = variables.framework.baseURL;
 	variables.framework.usingSubsystems = true;
 	variables.framework.defaultSubsystem = 'admin';
 	variables.framework.defaultSection = 'main';
@@ -423,34 +425,23 @@ component extends="FW1.framework" {
 	
 	// This method will execute an actions controller, render the view for that action and return it without going through an entire lifecycle
 	public string function doAction(required string action) {
+		
 		var response = "";
-		
-		// first, we double check to make sure all framework defaults are setup
-		setupFrameworkDefaults();
-		
+		var originalFW1 = {};
 		var originalContext = {};
-		var originalServices = [];
-		var originalViewOverride = "";
 		var originalCFCBase = "";
 		var originalBase = "";
 		
+		// If there was already a request._fw1, then we need to save it to be used later
+		if(structKeyExists(request, "_fw1")) {
+			originalFW1 = request._fw1;
+			structDelete(request, "_fw1");
+		}
 		
 		// If there was already a request.context, then we need to save it to be used later
 		if(structKeyExists(request, "context")) {
 			originalContext = request.context;
 			structDelete(request, "context");
-		}
-		
-		// If there was already a request.services, then we need to save it to be used later
-		if(structKeyExists(request, "services")) {
-			originalServices = request.services;
-			structDelete(request, "services");
-		}
-		
-		// If there was already a view override in the request, then we need to save it to be used later
-		if(structKeyExists(request, "overrideViewAction")) {
-			originalViewOverride = request.overrideViewAction;
-			structDelete(request, "overrideViewAction");
 		}
 		
 		// We also need to store the original cfcbase if there was one
@@ -467,8 +458,16 @@ component extends="FW1.framework" {
 		
 		// create a new request context to hold simple data, and an empty request services so that the view() function works
 		request.context = {};
-		request.services = [];
-		
+		request._fw1 = {
+	        cgiScriptName = CGI.SCRIPT_NAME,
+	        cgiRequestMethod = CGI.REQUEST_METHOD,
+	        controllers = [ ],
+	        requestDefaultsInitialized = false,
+	        services = [ ],
+	        trace = [ ]
+	    };
+	    
+		/*
 		// Place form and URL into the new structure
 		structAppend(request.context, form);
 		structAppend(request.context, url);
@@ -488,43 +487,17 @@ component extends="FW1.framework" {
 		var subsystem = getSubsystem( arguments.action );
 		var section = getSection( arguments.action );
 		var item = getItem( arguments.action );
+		*/
 		
-		// Setup the cfc base so that the getController method works
-		request.cfcbase = variables.framework.cfcbase;
-		request.base = variables.framework.base;
-
-		// Call the controller
-		var controller = getController( section = section, subsystem = subsystem );
-		if(isObject(controller)) {
-			doController( controller, 'before' );
-			doController( controller, 'start' & item );
-			doController( controller, item );
-			doController( controller, 'end' & item );
-			doController( controller, 'after' );
-		}
-				
-		// Was the view overridden in the controller
-		if ( structKeyExists( request, 'overrideViewAction' ) ) {
-			subsystem = getSubsystem( request.overrideViewAction );
-			section = getSection( request.overrideViewAction );
-			item = getItem( request.overrideViewAction );
-		}
-		
-		var viewPath = parseViewOrLayoutPath( subsystem & variables.framework.subsystemDelimiter & section & '/' & item, 'view' );
-		
-		// Place all of this formated data into a var named rc just like a regular request
-		var rc = request.context;
-		var $ = request.context.$;
-		
-		// Include the view
-		savecontent variable="response"  {
-			include "#viewPath#";
+		savecontent variable="response" {
+			onRequestStart('/index.cfm');
+			onRequest('/index.cfm');
+			onRequestEnd();	
 		}
 		
 		// Remove the cfcbase & base from the request so that future actions don't get screwed up
 		structDelete( request, 'context' );
-		structDelete( request, 'services' );
-		structDelete( request, 'overrideViewAction' );
+		structDelete( request, '_fw1' );
 		structDelete( request, 'cfcbase' );
 		structDelete( request, 'base' );
 		
@@ -534,13 +507,8 @@ component extends="FW1.framework" {
 		}
 		
 		// If there was an override view action before... place it back into the request
-		if(arrayLen(originalServices)) {
-			request.services = originalServices;
-		}
-		
-		// If there was an override view action before... place it back into the request
-		if(len(originalViewOverride)) {
-			request.overrideViewAction = originalViewOverride;
+		if(structCount(originalFW1)) {
+			request._fw1 = originalFW1;
 		}
 		
 		// If there was a different cfcbase before... place it back into the request
