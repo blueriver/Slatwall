@@ -383,12 +383,7 @@ component extends="FW1.framework" {
 		
 		if(structKeyExists(url, "modal") && url.modal) {
 			request.layout = false;
-			setLayout("admin:modal");
-		}
-		
-		// If this is an integration subsystem, then apply add the default layout to the request.layout
-		if( !listFind("admin,frontend", getSubsystem(request.context[ getAction() ])) && (!structKeyExists(request,"layout") || request.layout)) {
-			setLayout("admin:main");
+			setLayout("#getSubsystem(request.context[ getAction() ])#:modal");
 		}
 	}
 	
@@ -467,28 +462,6 @@ component extends="FW1.framework" {
 	        trace = [ ]
 	    };
 	    
-		/*
-		// Place form and URL into the new structure
-		structAppend(request.context, form);
-		structAppend(request.context, url);
-		
-		if(!structKeyExists(request.context, "$")) {
-			request.context.$ = {};
-			request.context.$[ variables.framework.applicationKey ] = getHibachiScope();
-		}
-		
-		// Add the action to the RC Scope
-		request.context[ getAction() ] = arguments.action;
-		
-		// Do structured data just like a normal request
-		getHibachiScope().getService("hibachiUtilityService").buildFormCollections(request.context);
-		
-		// Get Action Details
-		var subsystem = getSubsystem( arguments.action );
-		var section = getSection( arguments.action );
-		var item = getItem( arguments.action );
-		*/
-		
 		savecontent variable="response" {
 			onRequestStart('/index.cfm');
 			onRequest('/index.cfm');

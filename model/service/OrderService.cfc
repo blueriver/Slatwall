@@ -485,6 +485,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Setup a boolean to see if we were able to just att this order item to an existing one
 		var foundItem = false;
 		
+		// Make sure that the currencyCode gets set for this order
+		if(isNull(arguments.order.getCurrencyCode())) {
+			arguments.order.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+		}
+		
 		// If this is a Sale Order Item then we need to setup the fulfillment
 		if(arguments.processObject.getOrderItemTypeSystemCode() eq "oitSale") {
 			

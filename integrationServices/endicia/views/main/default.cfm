@@ -1,4 +1,4 @@
-<cf_SlatwallMessageDisplay />
+<cf_HibachiMessageDisplay />
 
 <a href="?slatAction=endicia:main.syncPush">Manual Sync Push</a><br /><br />
 <!---

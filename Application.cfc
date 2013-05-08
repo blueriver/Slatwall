@@ -105,6 +105,15 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	// ===================================== END: Hibachi HOOKS
 	// ===================================== FW1 HOOKS
 	
+	public void function setupView() {
+		super.setupView();
+		
+		// If this is an integration subsystem, then apply add the default layout to the request.layout
+		if( !listFindNoCase("admin,frontend,public", request.context.slatAction) && (!structKeyExists(request,"layout") || request.layout)) {
+			setLayout("admin:main");
+		}
+	}
+	
 	// Allows for integration services to have a seperate directory structure
 	public any function getSubsystemDirPrefix( string subsystem ) {
 		if ( arguments.subsystem eq '' ) {
