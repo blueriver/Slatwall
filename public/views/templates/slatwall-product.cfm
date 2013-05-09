@@ -106,7 +106,7 @@ Notes:
 						<cfelse>
 							<span style="font-size:24px;color:##333333;">#$.slatwall.product().getFormattedValue('livePrice')#</span>
 						</cfif>
-						<!---[ DEVELOPER NOTES ]													
+						<!---[ DEVELOPER NOTES ]														
 																										
 								When asking for a price from a product, it automatically pulls			
 								that price from whichever has been defined as the 'Default Sku'			
@@ -116,7 +116,7 @@ Notes:
 								Another option would be to use the type of AddToCart form that lists	
 								out all of the skus.													
 																										
-							--->
+						--->
 						<!--- END: PRICE DISPLAY EXAMPLE --->
 					</div>
 				</div>
