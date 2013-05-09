@@ -39,23 +39,140 @@ Notes:
 <cfinclude template="_slatwall-header.cfm" />
 <cfoutput>
 	<div class="container">
+		
+		<!--- START SHOPPING CART EXAMPLE 1 --->
 		<div class="row">
 			<div class="span12">
-				<h2>Shopping Cart</h2>
+				<h4>Shopping Cart Example 1</h4>
 			</div>
+			
+			<!--- Verify that there are items in the cart --->
+			<cfif arrayLen($.slatwall.cart().getOrderItems())>
+				
+				<!--- Left Side --->
+				<div class="span8">
+					
+					<cfloop array="#$.slatwall.cart().getOrderItems()#" index="orderItem">
+						#orderItem.getSku().getProduct().getTitle()#
+					</cfloop>
+					
+					<button type="submit">Update Cart</button>
+					
+				</div>
+				
+				<!--- Right Side --->
+				<div class="span4">
+					
+					<!--- Order Summary --->
+					<h4>Order Summary</h4>
+					
+					<table class="table">
+						<tr>
+							<td>Subtotal</td>
+							<td>#$.slatwall.cart().getFormattedValue('subtotal')#</td>
+						</tr>
+						<tr>
+							<td>Delivery</td>
+							<td>#$.slatwall.cart().getFormattedValue('fulfillmentTotal')#</td>
+						</tr>
+						<tr>
+							<td>Tax</td>
+							<td>#$.slatwall.cart().getFormattedValue('taxTotal')#</td>
+						</tr>
+						<cfif $.slatwall.cart().getDiscountTotal() gt 0>
+							<tr>
+								<td>Discounts</td>
+								<td>#$.slatwall.cart().getFormattedValue('discountTotal')#</td>
+							</tr>
+						</cfif>
+						<tr>
+							<td><strong>Total</strong></td>
+							<td><strong>#$.slatwall.cart().getFormattedValue('total')#</strong></td>
+						</tr>
+					</table>
+				</div>
+				
+			<!--- No Items In Cart --->
+			<cfelse>
+				<div class="span12">
+					<p>There are no items in your cart.</p>
+				</div>
+			</cfif>
 		</div>
+		<!--- END SHOPPING CART EXAMPLE 1 --->
+		
+		<hr />
+		
+		<!--- END SHOPPING CART EXAMPLE 2 --->
 		<div class="row">
-			<div class="span9">
-				<cfloop array="#$.slatwall.cart().getOrderItems()#" index="orderItem">
-					#orderItem.getSku().getProduct().getTitle()#
-				</cfloop>
-			</div>
-			<div class="span3">
-				Order Summary Here
-			</div>
-		</div>
-		<div class="row">
+			
 		</div>
 	</div>
+	<!---
+		<div class="svocartdetail">
+		#$.slatwall.getAllMessagesHTML()#
+		#$.slatwall.cart().getAllMessagesHTML()#
+		<form name="updateCart" method="post" action="?update=1">
+			<input type="hidden" name="slatAction" value="frontend:cart.update" />
+		<cfif not arrayLen($.slatwall.cart().getOrderItems())>
+			<p class="noitems">#$.slatwall.rbKey('frontend.cart.detail.noitems')#</p>
+		<cfelse>
+			<div class="orderItems">
+				<cfset formIndex = 0 />
+				<cfloop array="#$.slatwall.cart().getOrderItems()#" index="local.orderItem">
+					<cfset formIndex ++ />
+					<dl class="orderItem">
+						<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
+						<dt class="title"><a href="#local.orderItem.getSku().getProduct().getProductURL()#" title="#local.orderItem.getSku().getProduct().getTitle()#">#local.orderItem.getSku().getProduct().getTitle()#</a></dt>
+						<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
+						<dd class="customizations">#local.orderItem.displayCustomizations()#</dd>
+						<dd class="price">#local.orderItem.getFormattedValue('price', 'currency')#</dd>
+						<dd class="quantity">
+							<input type="hidden" name="orderItems[#formIndex#].orderItemID" value="#local.orderItem.getOrderItemID()#" />
+							<input name="orderItems[#formIndex#].quantity" value="#NumberFormat(local.orderItem.getQuantity(),"0")#" size="3" />
+							<a href="?slatAction=frontend:cart.removeItem&orderItemID=#local.orderItem.getOrderItemID()#">Remove</a>
+						</dd>
+						<cfif local.orderItem.getDiscountAmount() GT 0>
+							<dd class="extended">#local.orderItem.getFormattedValue('extendedPrice', 'currency')#</dd>
+							<dd class="discount">- #local.orderItem.getFormattedValue('discountAmount', 'currency')#</dd>
+							<dd class="extendedAfterDiscount">#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</dd>
+						<cfelse>
+							<dd class="extendedAfterDiscount">#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</dd>
+						</cfif>
+					</dl>
+				</cfloop>
+				<dl class="totals">
+					<dt class="subtotal">Subtotal</dt>
+					<dd class="subtotal">#$.slatwall.cart().getFormattedValue('subtotal', 'currency')#</dd>
+					<dt class="shipping">Delivery</dt>
+					<dd class="shipping">#$.slatwall.cart().getFormattedValue('fulfillmentTotal', 'currency')#</dd>
+					<dt class="tax">Tax</dt>
+					<dd class="tax">#$.slatwall.cart().getFormattedValue('taxTotal', 'currency')#</dd>
+					<cfif $.slatwall.cart().getDiscountTotal() gt 0>
+						<dt class="discount">Discount</dt>
+						<dd class="discount">- #$.slatwall.cart().getFormattedValue('discountTotal', 'currency')#</dd>
+					</cfif>
+					<dt class="total">Total</dt>
+					<dd class="total">#$.slatwall.cart().getFormattedValue('total', 'currency')#</dd>
+				</dl>
+			</div>
+			<div class="actionButtons">
+				<a href="#$.createHREF(filename='shopping-cart', querystring='slatAction=frontend:cart.clearCart')#" title="Clear Cart" class="frontendcartdetail clearCart button">Clear Cart</a>
+				<a href="#$.createHREF(filename='shopping-cart')#" title="Update Cart" class="frontendcartdetail updateCart button">Update Cart</a>
+				<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail checkout button">Checkout</a>
+			</div>
+		</cfif>
+		</form>
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				jQuery('div.actionButtons a.updateCart').click(function(e){
+					e.preventDefault();
+					jQuery('form[name="updateCart"]').submit();
+				});
+			});
+		</script>
+		#view("frontend:cart/promotioncode")#
+	</div>
+	--->
 </cfoutput>
 <cfinclude template="_slatwall-footer.cfm" />
