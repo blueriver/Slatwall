@@ -247,24 +247,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 	}
 	
-	public void function removeOrderItem(required any order, required string orderItemID) {
-	
-		// Loop over all of the items in this order
-		for(var i = 1; i <= arrayLen(arguments.order.getOrderItems()); i++)	{
-		
-			// Check to see if this item is the same ID as the one passed in to remove
-			if(arguments.order.getOrderItems()[i].getOrderItemID() == arguments.orderItemID) {
-			
-				// Actually Remove that Item
-				arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
-				break;
-			}
-		}
-		
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
-	}
-	
 	public void function setupOrderItemContentAccess(required any orderItem) {
 		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
 			var accountContentAccess = getAccountService().newAccountContentAccess();
@@ -372,11 +354,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Re-Calculate tax now that the new promotions and price groups have been applied
 			getTaxService().updateOrderAmountsWithTaxes( arguments.order );
 		}
-	}
-	
-	public void function removePromotionCode(required any order, required any promotionCode) {
-		arguments.order.removePromotionCode(arguments.promotionCode);
-		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 	}
 	
 	public any function forceItemQuantityUpdate(required any order, required any messageBean) {
@@ -644,6 +621,31 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// Call save order to place in the hibernate session and re-calculate all of the totals 
 		arguments.order = this.saveOrder( arguments.order );
+		
+		return arguments.order;
+	}
+	
+	public any function processOrder_removeOrderItem(required any order, required struct data) {
+		
+		// Make sure that an orderItemID was passed in
+		if(structKeyExists(arguments.data, "orderItemID")) {
+			
+			// Loop over all of the items in this order
+			for(var i = 1; i <= arrayLen(arguments.order.getOrderItems()); i++)	{
+			
+				// Check to see if this item is the same ID as the one passed in to remove
+				if(arguments.order.getOrderItems()[i].getOrderItemID() == arguments.data.orderItemID) {
+				
+					// Actually Remove that Item
+					arguments.order.removeOrderItem( arguments.order.getOrderItems()[i] );
+					break;
+				}
+			}
+			
+		}
+		
+		// Call saveOrder to recalculate all the orderTotal stuff
+		arguments.order = this.saveOrder(arguments.order);
 		
 		return arguments.order;
 	}
@@ -1024,6 +1026,23 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 
+	public any function processOrder_removePromotionCode(required any order, required struct data) {
+		
+		if(structKeyExists(arguments.data, "promotionCodeID")) {
+			var promotionCode = getPromotionService().getPromotionCode( arguments.data.promotionCodeID );
+		}
+		
+		if(!isNull(promotionCode)) {
+			arguments.order.removePromotionCode( promotionCode );
+		}
+		
+		// Call saveOrder to recalculate all the orderTotal stuff
+		arguments.order = this.saveOrder(arguments.order);
+		
+		return arguments.order;
+	}
+	
+	
 	// Process: Order Fulfillment
 	// (needs refactor)
 	public any function processOrderFulfillment_fulfillItems(required any orderFulfillment, struct data={}, string processContext="process") {

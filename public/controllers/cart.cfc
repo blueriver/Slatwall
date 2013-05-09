@@ -49,6 +49,8 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		getFW().setView("public:main.blank");
 	}
 	
+	
+	// Add Order Item
 	public void function addOrderItem(required any rc) {
 		// Setup the frontend defaults
 		param name="rc.preProcessDisplayedFlag" default="true";
@@ -60,4 +62,18 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 
 	}
 	
+	// Remove Order Item
+	public void function removeOrderItem(required any rc) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removeOrderItem');
+	}
+	
+	// Add Promotion Code
+	public void function addPromotionCode(required any rc) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addPromotionCode');
+	}
+	
+	// Remove Promotion Code
+	public void function removePromotionCode() {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removePromotionCode');
+	}
 }
