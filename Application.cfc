@@ -70,7 +70,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		
 		// Reload All Integrations
 		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-		writeLog(file="Slatwall", text="General Log - Integrations have been updated");	
+		writeLog(file="Slatwall", text="General Log - Integrations have been updated");
 	}
 	
 	public void function onUpdateRequest() {
