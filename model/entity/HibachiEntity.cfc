@@ -53,7 +53,7 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		
 		var attributeType = replace(getEntityName(),"Slatwall","");
 		attributeType = lcase(left(attributeType, 1)) & right(attributeType, len(attributeType)-1);
-					
+
 		// Loop over attribute sets
 		for(var ats=1; ats<=arrayLen(assignedAttributeSets); ats++) {
 			
