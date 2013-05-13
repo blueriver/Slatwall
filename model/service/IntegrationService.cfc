@@ -181,6 +181,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							}
 							case "fw1": {
 								integration.setFW1ReadyFlag(1);
+								
+								// Update the authentication subsystems
+								var hibachiConfig = getApplicationValue('hibachiConfig');
+								hibachiConfig.authenticationSubsystems = listAppend(hibachiConfig.authenticationSubsystems, integrationPackage);
+								setApplicationValue('hibachiConfig', hibachiConfig);
+								
 								break;
 							}
 							case "payment": {

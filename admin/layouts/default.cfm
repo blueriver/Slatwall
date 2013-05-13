@@ -128,7 +128,9 @@ Notes:
 						<cfset local.integrationSubsystems = $.slatwall.getService('integrationService').getActiveFW1Subsystems() />
 						<cfif arrayLen(local.integrationSubsystems)>
 							<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.integrations_nav')#" icon="random icon-white" type="nav">
-								<cfloop array="#local.integrationSubsystems#" index="local.intsys"><cfif request.slatwallScope.authenticateAction('#local.intsys.subsystem#:main.default')><li><a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a></li></cfif></cfloop>
+								<cfloop array="#local.integrationSubsystems#" index="local.intsys">
+									<cf_HibachiActionCaller action="#local.intsys.subsystem#:main.default" text="#local.intsys.name#" type="list">
+								</cfloop>
 							</cf_HibachiActionCallerDropdown>
 						</cfif>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.configure_nav')#" icon="cog icon-white" type="nav">
@@ -136,6 +138,7 @@ Notes:
 								<cf_HibachiActionCaller action="admin:entity.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listattributeset" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listintegration" type="list">
+								<li class="divider"></li>
 								<cf_HibachiActionCaller action="admin:entity.listaddresszone" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listcountry" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listcurrency" type="list">

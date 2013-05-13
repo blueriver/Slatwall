@@ -10,15 +10,18 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiRBService" {
 			var thisRB = super.getResourceBundle(argumentcollection=arguments);
 			var javaRB = new Slatwall.org.Hibachi.JavaRB.JavaRB();
 			
-			// Loop over the active FW/1 subsystems to look for a resource bundle there
-			var activeFW1Integrations = getIntegrationService().getActiveFW1Subsystems();
-			for(var i=1; i<=arrayLen(activeFW1Integrations); i++) {
+			// Loop over the integrations to look for a resource bundle there
+			var dirList = directoryList( expandPath("/Slatwall/integrationServices") );
+			
+			// Loop over each integration in the integration directory
+			for(var i=1; i<= arrayLen(dirList); i++) {
 				try {
-					structAppend(thisRB, javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/integrationServices/#activeFW1Integrations[i].subsystem#/config/resourceBundles/#arguments.locale#.properties")), true);
+					structAppend(thisRB, javaRB.getResourceBundle(expandPath("/#getApplicationValue('applicationKey')#/integrationServices/#listLast(dirList[i],'/\')#/config/resourceBundles/#arguments.locale#.properties")), true);
 				} catch (any e) {
 					// No RB File Found
-				}	
+				}
 			}
+				
 			variables.resourceBundles[ arguments.locale ] = thisRB;
 		}
 		return variables.resourceBundles[ arguments.locale ];

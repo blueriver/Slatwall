@@ -52,7 +52,7 @@ Notes:
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode" />
 		<cfif rc.product.getBaseProductType() eq "merchandise">
 			<cfloop collection="#rc.product.getOptionGroupsStruct()#" item="local.optionGroup">
-				<cf_HibachiListingColumn propertyIdentifier="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupID()#" title="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupName()#" sort="false" />
+				<cf_HibachiListingColumn propertyIdentifier="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupID()#" title="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupName()#" sort="false" filter="false" range="false" search="false" />
 			</cfloop>
 		<cfelseif  rc.product.getProductType().getBaseProductType() eq "subscription">
 			<cf_HibachiListingColumn propertyIdentifier="subscriptionTerm.subscriptionTermName" />

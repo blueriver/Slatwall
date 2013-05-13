@@ -196,51 +196,54 @@
 				<!--- Add to the all property identifiers --->
 				<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
 				
-				<!--- Get the entity object to get property metaData --->
-				<cfset thisEntityName = attributes.hibachiScope.getService("hibachiService").getLastEntityNameInPropertyIdentifier( attributes.smartList.getBaseEntityName(), column.propertyIdentifier ) />
-				<cfset thisPropertyName = listLast( column.propertyIdentifier, "._" ) />
-				<cfset thisPropertyMeta = attributes.hibachiScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName( thisEntityName, thisPropertyName ) />
-				
-				<!--- Setup automatic search, sort, filter & range --->
-				<cfif not len(column.search) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && (!structKeyExists(thisPropertyMeta, "ormType") || thisPropertyMeta.ormType eq 'string')>
-					<cfset column.search = true />
-				<cfelseif !isBoolean(column.search)>
-					<cfset column.search = false />
-				</cfif>
-				<cfif not len(column.sort) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent)>
-					<cfset column.sort = true />
-				<cfelseif !isBoolean(column.sort)>
-					<cfset column.sort = false />
-				</cfif>
-				<cfif not len(column.filter) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent)>
-					<cfset column.filter = false />
+				<!--- Check to see if we need to setup the dynamic filters, ect --->
+				<cfif not len(column.search) || not len(column.sort) || not len(column.filter) || not len(column.range)>
 					
-					<cfif structKeyExists(thisPropertyMeta, "ormtype") && thisPropertyMeta.ormtype eq 'boolean'>
-						<cfset column.filter = true />
+					<!--- Get the entity object to get property metaData --->
+					<cfset thisEntityName = attributes.hibachiScope.getService("hibachiService").getLastEntityNameInPropertyIdentifier( attributes.smartList.getBaseEntityName(), column.propertyIdentifier ) />
+					<cfset thisPropertyName = listLast( column.propertyIdentifier, "._" ) />
+					<cfset thisPropertyMeta = attributes.hibachiScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName( thisEntityName, thisPropertyName ) />
+					
+					<!--- Setup automatic search, sort, filter & range --->
+					<cfif not len(column.search) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && (!structKeyExists(thisPropertyMeta, "ormType") || thisPropertyMeta.ormType eq 'string')>
+						<cfset column.search = true />
+					<cfelseif !isBoolean(column.search)>
+						<cfset column.search = false />
 					</cfif>
-					
-					<cfif !column.filter && listLen(column.propertyIdentifier, '._') gt 1>
+					<cfif not len(column.sort) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent)>
+						<cfset column.sort = true />
+					<cfelseif !isBoolean(column.sort)>
+						<cfset column.sort = false />
+					</cfif>
+					<cfif not len(column.filter) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent)>
+						<cfset column.filter = false />
 						
-						<cfset oneUpPropertyIdentifier = column.propertyIdentifier />
-						<cfset listDeleteAt(oneUpPropertyIdentifier, listLen(oneUpPropertyIdentifier, '._'), '._') />
-						<cfset oneUpPropertyName = listLast(oneUpPropertyIdentifier, '.') />
-						<cfset twoUpEntityName = attributes.hibachiScope.getService("hibachiService").getLastEntityNameInPropertyIdentifier( attributes.smartList.getBaseEntityName(), oneUpPropertyIdentifier ) />
-						<cfset oneUpPropertyMeta = attributes.hibachiScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName( twoUpEntityName, oneUpPropertyName ) />
-						
-						<cfif structKeyExists(oneUpPropertyMeta, "fieldtype") && oneUpPropertyMeta.fieldtype eq 'many-to-one'>
+						<cfif structKeyExists(thisPropertyMeta, "ormtype") && thisPropertyMeta.ormtype eq 'boolean'>
 							<cfset column.filter = true />
 						</cfif>
+						
+						<cfif !column.filter && listLen(column.propertyIdentifier, '._') gt 1>
+							
+							<cfset oneUpPropertyIdentifier = column.propertyIdentifier />
+							<cfset listDeleteAt(oneUpPropertyIdentifier, listLen(oneUpPropertyIdentifier, '._'), '._') />
+							<cfset oneUpPropertyName = listLast(oneUpPropertyIdentifier, '.') />
+							<cfset twoUpEntityName = attributes.hibachiScope.getService("hibachiService").getLastEntityNameInPropertyIdentifier( attributes.smartList.getBaseEntityName(), oneUpPropertyIdentifier ) />
+							<cfset oneUpPropertyMeta = attributes.hibachiScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName( twoUpEntityName, oneUpPropertyName ) />
+							
+							<cfif structKeyExists(oneUpPropertyMeta, "fieldtype") && oneUpPropertyMeta.fieldtype eq 'many-to-one'>
+								<cfset column.filter = true />
+							</cfif>
+						</cfif>
+						
+					<cfelseif !isBoolean(column.filter)>
+						<cfset column.filter = false />
 					</cfif>
-					
-				<cfelseif !isBoolean(column.filter)>
-					<cfset column.filter = false />
+					<cfif not len(column.range) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && structKeyExists(thisPropertyMeta, "ormType") && (thisPropertyMeta.ormType eq 'integer' || thisPropertyMeta.ormType eq 'big_decimal' || thisPropertyMeta.ormType eq 'timestamp')>
+						<cfset column.range = true />
+					<cfelseif !isBoolean(column.range)>
+						<cfset column.range = false />
+					</cfif>
 				</cfif>
-				<cfif not len(column.range) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && structKeyExists(thisPropertyMeta, "ormType") && (thisPropertyMeta.ormType eq 'integer' || thisPropertyMeta.ormType eq 'big_decimal' || thisPropertyMeta.ormType eq 'timestamp')>
-					<cfset column.range = true />
-				<cfelseif !isBoolean(column.range)>
-					<cfset column.range = false />
-				</cfif>
-				
 			<!--- Otherwise this is a processObject property --->
 			<cfelseif len(column.processObjectProperty)>
 				<cfset column.search = false />

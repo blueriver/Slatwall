@@ -728,32 +728,68 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public boolean function getOrderItemInReward(required any reward, required any orderItem) {
 		
-		// Check the reward settings to see if this orderItem applies
-		if( ( arrayLen(arguments.reward.getProductTypes()) && !arguments.reward.hasProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
+		
+		// START: Check Exclusions
+		
+		var hasExcludedProductType = false;
+		// Check all of the exclusions for an excluded product type
+		if(arrayLen(arguments.reward.getExcludedPropductTypes())) {
+			var excludedProductTypeIDList = "";
+			for(var i=1; i<=arrayLen(arguments.reward.getExcludedPropductTypes()); i++) {
+				excludedProductTypeIDList = listAppend(excludedProductTypeIDList, arguments.reward.getExcludedPropductTypes()[i].getProductTypeID());
+			}
+		
+			for(var ptid=1; ptid<=listLen(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath()); ptid++) {
+				if(listFindNoCase(excludedProductTypeIDList, listGetAt(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath(), ptid))) {
+					hasExcludedProductType = true;
+					break;
+				}	
+			}
+		}
+		
+		// If anything is excluded then we return false
+		if(	hasExcludedProductType
 			||
-			( arguments.reward.hasExcludedProductType( arguments.orderItem.getSku().getProduct().getProductType() ) )
+			arguments.reward.hasExcludedProduct( arguments.orderItem.getSku().getProduct() )
 			||
-			( arrayLen( arguments.reward.getProducts() ) && !arguments.reward.hasProduct( arguments.orderItem.getSku().getProduct() ) )
-			||
-			( arguments.reward.hasExcludedProduct( arguments.orderItem.getSku().getProduct() ) )
-			||
-			( arrayLen( arguments.reward.getSkus() ) && !arguments.reward.hasSku( arguments.orderItem.getSku() ) )
-			||
-			( arguments.reward.hasExcludedSku( arguments.orderItem.getSku() ) )
-			||
-			( arrayLen( arguments.reward.getBrands() ) && ( !isNull(arguments.orderItem.getSku().getProduct().getBrand()) && !arguments.reward.hasBrand( arguments.orderItem.getSku().getProduct().getBrand() ) ) )
+			arguments.reward.hasExcludedSku( arguments.orderItem.getSku() )
 			||
 			( arrayLen( arguments.reward.getExcludedBrands() ) && ( isNull( arguments.orderItem.getSku().getProduct().getBrand() ) || arguments.reward.hasExcludedBrand( arguments.orderItem.getSku().getProduct().getBrand() ) ) )
 			||
-			( arrayLen( arguments.reward.getOptions() ) && !arguments.reward.hasAnyOption( arguments.orderItem.getSku().getOptions() ) )  	
-			||
 			( arguments.reward.hasAnyExcludedOption( arguments.orderItem.getSku().getOptions() ) )
 			) {
-				
 			return false;
 		}
 		
-		return true;
+		// START: Check Inclusions
+		
+		if(arrayLen(arguments.reward.getProductTypes())) {
+			var includedPropertyTypeIDList = "";
+			
+			for(var i=1; i<=arrayLen(arguments.reward.getProductTypes()); i++) {
+				includedPropertyTypeIDList = listAppend(includedPropertyTypeIDList, arguments.reward.getProductTypes()[i].getProductTypeID());
+			}
+			
+			for(var ptid=1; ptid<=listLen(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath()); ptid++) {
+				if(listFindNoCase(excludedProductTypeIDList, listGetAt(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath(), ptid))) {
+					return true;
+				}	
+			}
+		}
+		if(arguments.reward.hasProduct( arguments.orderItem.getSku().getProduct() )) {
+			return true;
+		}
+		if(arguments.reward.hasSku( arguments.orderItem.getSku() )) {
+			return true;
+		}
+		if(!isNull(arguments.orderItem.getSku().getProduct().getBrand()) && arguments.reward.hasBrand( arguments.orderItem.getSku().getProduct().getBrand() )) {
+			return true;
+		}
+		if(arguments.reward.hasAnyOption( arguments.orderItem.getSku().getOptions() )) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	private numeric function getDiscountAmount(required any reward, required numeric price, required numeric quantity) {
