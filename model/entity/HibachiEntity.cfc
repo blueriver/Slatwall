@@ -38,7 +38,6 @@ Notes:
 */
 component output="false" accessors="true" persistent="false" extends="Slatwall.org.Hibachi.HibachiEntity" {
 
-	property name="persistableErrors" type="array" persistent="false";
 	property name="assignedAttributeSetSmartList" type="struct" persistent="false";
 	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";
 	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
@@ -198,19 +197,6 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		if(structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
 			structDelete(variables, "attributeValuesByAttributeCodeStruct");
 		}
-	}
-	
-	// hint overriding the addError method to allow for saying that the error doesn't effect persistance
-	public void function addError( required string errorName, required string errorMessage, boolean persistableError=false ) {
-		if(persistableError) {
-			addPersistableError(arguments.errorName);
-		}
-		super.addError(argumentCollection=arguments);
-	}
-	
-	// @hint this allows you to add error names to the persistableErrors property, later used by the 'isPersistable' method
-	public void function addPersistableError(required string errorName) {
-		arrayAppend(getPersistableErrors(), arguments.errorName);
 	}
 	
 	public array function getPrintTemplates() {

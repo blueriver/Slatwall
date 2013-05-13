@@ -4,6 +4,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	property name="printTemplates" type="struct" persistent="false";
 	property name="emailTemplates" type="struct" persistent="false";
 	property name="simpleRepresentation" type="string" persistent="false";
+	property name="persistableErrors" type="array" persistent="false";
 	property name="processObjects" type="struct" persistent="false";
 	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
@@ -115,6 +116,19 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		
 		// Now that any processObject errors have been added we can recall the super.getErrors() method to give all errors
 		return super.getErrors();
+	}
+		
+	// @hint overriding the addError method to allow for saying that the error doesn't effect persistance
+	public void function addError( required string errorName, required string errorMessage, boolean persistableError=false ) {
+		if(persistableError) {
+			addPersistableError(arguments.errorName);
+		}
+		super.addError(argumentCollection=arguments);
+	}
+	
+	// @hint this allows you to add error names to the persistableErrors property, later used by the 'isPersistable' method
+	public void function addPersistableError(required string errorName) {
+		arrayAppend(getPersistableErrors(), arguments.errorName);
 	}
 	
 	// @hint Returns the persistableErrors array, if one hasn't been setup yet it returns a new one
