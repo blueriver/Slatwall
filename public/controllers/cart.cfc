@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,5 +35,45 @@
 
 Notes:
 
---->
-<cfoutput>#rc.taskResponse#</cfoutput>
+*/
+component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiController" {
+
+	property name="fw" type="any";
+	property name="orderService" type="any";
+
+	public void function init( required any fw ) {
+		setFW( arguments.fw );
+	}
+	
+	public void function before() {
+		getFW().setView("public:main.blank");
+	}
+	
+	
+	// Add Order Item
+	public void function addOrderItem(required any rc) {
+		// Setup the frontend defaults
+		param name="rc.preProcessDisplayedFlag" default="true";
+		param name="rc.saveShippingAccountAddressFlag" default="false";
+		param name="rc.orderFulfillmentID" default="";
+		param name="rc.fulfillmentMethodID" default="";
+		
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderItem');
+
+	}
+	
+	// Remove Order Item
+	public void function removeOrderItem(required any rc) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removeOrderItem');
+	}
+	
+	// Add Promotion Code
+	public void function addPromotionCode(required any rc) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addPromotionCode');
+	}
+	
+	// Remove Promotion Code
+	public void function removePromotionCode() {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removePromotionCode');
+	}
+}

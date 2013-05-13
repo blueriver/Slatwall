@@ -47,6 +47,7 @@ component entityname="SlatwallPermission" table="SlatwallPermission" persistent=
 	property name="subsystem" ormtype="string";
 	property name="section" ormtype="string";
 	property name="item" ormtype="string";
+	property name="allowActionFlag" ormtype="boolean";
 	property name="allowCreateFlag" ormtype="boolean";
 	property name="allowReadFlag" ormtype="boolean";
 	property name="allowUpdateFlag" ormtype="boolean";
@@ -77,21 +78,7 @@ component entityname="SlatwallPermission" table="SlatwallPermission" persistent=
 	// Non-Persistent Properties
 
 	public any function init() {
-		if(isNull(getAllowCreateFlag())) {
-			setAllowCreateFlag(0);
-		}
-		if(isNull(getAllowReadFlag())) {
-			setAllowCreateFlag(0);
-		}
-		if(isNull(getAllowUpdateFlag())) {
-			setAllowCreateFlag(0);
-		}
-		if(isNull(getAllowDeleteFlag())) {
-			setAllowCreateFlag(0);
-		}
-		if(isNull(getAllowProcessFlag())) {
-			setAllowCreateFlag(0);
-		}
+		
 		return super.init();
 	}
 

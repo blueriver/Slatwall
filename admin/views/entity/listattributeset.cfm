@@ -44,7 +44,7 @@ Notes:
 						   recordDetailAction="admin:entity.detailattributeset"
 						   recordEditAction="admin:entity.editattributeset"
 						   sortProperty="sortOrder">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="attributeSetName" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="attributeSetName" sort="true" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="attributeSetType.type" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="globalFlag" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />

@@ -60,10 +60,10 @@ Notes:
 								  recordProcessButtonDisplayFlag="false">
 								    
 			<cf_HibachiListingColumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
-			<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
-			<cf_HibachiListingColumn propertyidentifier="stock.sku.skucode" search="true" />
-			<cf_HibachiListingColumn propertyidentifier="stock.location.locationName" filter="true" search="true" />
-			<cf_HibachiListingColumn propertyidentifier="quantity" range="true" />
+			<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" />
+			<cf_HibachiListingColumn propertyidentifier="stock.sku.skucode" sort="true" search="true" />
+			<cf_HibachiListingColumn propertyidentifier="stock.location.locationName" filter="true" />
+			<cf_HibachiListingColumn propertyidentifier="quantity" sort="true" range="true" />
 			<cf_HibachiListingColumn propertyidentifier="quantityReceived" sort="false" />
 			<cf_HibachiListingColumn propertyidentifier="quantityUnreceived" sort="false" />
 			<cf_HibachiListingColumn processObjectProperty="quantity" recordFieldNamePrefix="vendorOrderItems" fieldName="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />

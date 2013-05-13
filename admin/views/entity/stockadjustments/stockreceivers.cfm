@@ -44,8 +44,8 @@ Notes:
 							   recorddetailmodal="true" 
 							   recorddetailquerystring="redirectAction=admin:warehouse.detailStockAdjustment&stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#">
 			
-		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime"/>
-		<cf_HibachiListingColumn propertyidentifier="boxCount"/>
-		<cf_HibachiListingColumn propertyidentifier="packingSlipNumber"/>
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="createdDateTime" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyidentifier="boxCount" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyidentifier="packingSlipNumber" sort="true" search="true" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

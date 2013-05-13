@@ -4,10 +4,10 @@ component output="false" accessors="true" extends="HibachiService" {
 
 	// ============================ PUBLIC AUTHENTICATION METHODS =================================
 	
-	public boolean function authenticateAction(required string action) {
+	public boolean function authenticateActionByAccount(required string action, required any account) {
 		
 		// Check if the user is a super admin, if true no need to worry about security
-		if( getHibachiScope().getAccount().getSuperUserFlag() ) {
+		if( arguments.account.getSuperUserFlag() ) {
 			return true;
 		}
 		
@@ -17,47 +17,49 @@ component output="false" accessors="true" extends="HibachiService" {
 		var actionPermissions = getActionPermissionDetails();
 		
 		// Check if the subsystem & section are defined, if not then return true because that means authentication was not turned on
-		if(!structKeyExists(actionPermissions, subsystemName) || !structKeyExists(actionPermissions[ subsystemName ], sectionName)) {
+		if(!structKeyExists(actionPermissions, subsystemName) || !structKeyExists(actionPermissions[ subsystemName ].sections, sectionName)) {
 			return true;
 		}
 
 		// Check if the action is public, if public no need to worry about security
-		if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].publicMethods, itemName)){
+		if(listFindNocase(actionPermissions[ subsystemName ].sections[ sectionName ].publicMethods, itemName)){
 			return true;
 		}
 		
-		
-		// All these potentials require the account to be logged in
-		if(getHibachiScope().getLoggedInFlag()) {
+		// All these potentials require the account to be logged in, and that it matches the hibachiScope
+		if(getHibachiScope().getLoggedInFlag() && arguments.account.getAccountID() == getHibachiScope().getAccount().getAccountID()) {
 			
 			// Check if the action is anyLogin, if so and the user is logged in, then we can return true
-			if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].anyLoginMethods, itemName) && getHibachiScope().getLoggedInFlag()) {
+			if(listFindNocase(actionPermissions[ subsystemName ].sections[ sectionName ].anyLoginMethods, itemName) && getHibachiScope().getLoggedInFlag()) {
 				return true;
 			}
 			
 			// Look for the anyAdmin methods next to see if this is an anyAdmin method, and this user is some type of admin
-			if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].anyAdminMethods, itemName) && getHibachiScope().getLoggedInAsAdminFlag()) {
+			if(listFindNocase(actionPermissions[ subsystemName ].sections[ sectionName ].anyAdminMethods, itemName) && getHibachiScope().getLoggedInAsAdminFlag()) {
 				return true;
 			}
 			
 			// Check to see if this is a defined secure method, and if so we can test it against the account
-			if(listFindNocase(actionPermissions[ subsystemName ][ sectionName ].secureMethods, itemName)) {
-				return authenticateSecureActionByAccount(action=arguments.action, account=getHibachiScope().getAccount());
+			if(listFindNocase(actionPermissions[ subsystemName ].sections[ sectionName ].secureMethods, itemName)) {
+				var pgOK = false;
+				for(var p=1; p<=arrayLen(arguments.account.getPermissionGroups()); p++){
+					pgOK = authenticateSubsystemSectionItemActionByPermissionGroup(subsystem=subsystemName, section=sectionName, item=itemName, permissionGroup=arguments.account.getPermissionGroups()[p]); 
+				}
+				return pgOK;
 			}
 			
 			// Check to see if the controller is an entity or rest controller, and then verify against the entity itself
-			if(getActionPermissionDetails()[ subsystemName ][ sectionName ].entityController || getActionPermissionDetails()[ subsystemName ][ sectionName ].apiController) {
-				
+			if(getActionPermissionDetails()[ subsystemName ].sections[ sectionName ].entityController || getActionPermissionDetails()[ subsystemName ].sections[ sectionName ].restController) {
 				if ( left(itemName, 6) == "create" ) {
-					return authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-6), account=getHibachiScope().getAccount());
+					return authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-6), account=arguments.account);
 				} else if ( left(itemName, 6) == "detail" ) {
-					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-6), account=getHibachiScope().getAccount());
+					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-6), account=arguments.account);
 				} else if ( left(itemName, 6) == "delete" ) {
-					return authenticateEntityCrudByAccount(crudType="delete", entityName=right(itemName, len(itemName)-6), account=getHibachiScope().getAccount());
+					return authenticateEntityCrudByAccount(crudType="delete", entityName=right(itemName, len(itemName)-6), account=arguments.account);
 				} else if ( left(itemName, 4) == "edit" ) {
-					return authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=getHibachiScope().getAccount());
+					return authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
 				} else if ( left(itemName, 4) == "list" ) {
-					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-4), account=getHibachiScope().getAccount());
+					return authenticateEntityCrudByAccount(crudType="read", entityName=right(itemName, len(itemName)-4), account=arguments.account);
 				} else if ( left(itemName, 15) == "multiPreProcess" ) {
 					return true;
 				} else if ( left(itemName, 12) == "multiProcess" ) {
@@ -67,11 +69,11 @@ component output="false" accessors="true" extends="HibachiService" {
 				} else if ( left(itemName, 7) == "process" ) {
 					return true;
 				} else if ( left(itemName, 4) == "save" ) {
-					var createOK = authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-4), account=getHibachiScope().getAccount());
+					var createOK = authenticateEntityCrudByAccount(crudType="create", entityName=right(itemName, len(itemName)-4), account=arguments.account);
 					if(createOK) {
 						return true;	
 					}
-					var updateOK = authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=getHibachiScope().getAccount());
+					var updateOK = authenticateEntityCrudByAccount(crudType="update", entityName=right(itemName, len(itemName)-4), account=arguments.account);
 					return updateOK;
 				}
 				
@@ -81,27 +83,40 @@ component output="false" accessors="true" extends="HibachiService" {
 		return false;
 	}
 	
-	public boolean function authenticateSecureActionByAccount(required string crudType, required string entityName, required any account) {
-		
-	}
-	
 	public boolean function authenticateEntityCrudByAccount(required string crudType, required string entityName, required any account) {
-		var entityPermissions = getEntityPermissionDetails();
-		
-		// If the entity does not have the ability to have permissions set, then return false
-		if(!structKeyExists(entityPermissions, arguments.entityName)) {
-			return false;
+		// Check if the user is a super admin, if true no need to worry about security
+		if( arguments.account.getSuperUserFlag() ) {
+			return true;
 		}
 		
-		// If this is an entity
-		
+		// Loop over each permission group for this account, and ckeck if it has access
+		for(var i=1; i<=arrayLen(arguments.account.getPermissionGroups()); i++){
+			var pgOK = authenticateEntityByPermissionGroup(crudType=arguments.crudType, entityName=arguments.entityName, permissionGroup=arguments.account.getPermissionGroups()[i]);
+			if(pgOK) {
+				return true;
+			}
+		}
 		
 		// If for some reason not of the above were meet then just return false
 		return false;
 	}
 	
-	public boolean function authenticateEntityPropertyCrudByAccount(required string crud, required string entityName, required string propertyName, required any account) {
+	public boolean function authenticateEntityPropertyCrudByAccount(required string crudType, required string entityName, required string propertyName, required any account) {
+		// Check if the user is a super admin, if true no need to worry about security
+		if( arguments.account.getSuperUserFlag() ) {
+			return true;
+		}
 		
+		// Loop over each permission group for this account, and ckeck if it has access
+		for(var i=1; i<=arrayLen(arguments.account.getPermissionGroups()); i++){
+			var pgOK = authenticateEntityPropertyByPermissionGroup(crudType=arguments.crudType, entityName=arguments.entityName, propertyName=arguments.propertyName, permissionGroup=arguments.account.getPermissionGroups()[i]);
+			if(pgOK) {
+				return true;
+			}
+		}
+		
+		// If for some reason not of the above were meet then just return false
+		return false;
 	}
 	
 	// ================================ PUBLIC META INFO ==========================================
@@ -151,8 +166,7 @@ component output="false" accessors="true" extends="HibachiService" {
 							// Make sure that this property should be added as a property that can have permissions
 							if( (!structKeyExists(entityMetaData.properties[p], "fieldtype") || entityMetaData.properties[p].fieldtype neq "ID")
 								&& (!structKeyExists(entityMetaData.properties[p], "persistent") || entityMetaData.properties[p].persistent)
-								&& (!structKeyExists(entityMetaData.properties[p], "hb_editable") || entityMetaData.properties[p].hb_editable)
-								&& !listFindNoCase("createdByAccount,createdDateTime,modifiedByAccount,modifiedDateTime", entityMetaData.properties[p].name)) {
+								&& (!structKeyExists(entityMetaData.properties[p], "hb_populateEnabled") || entityMetaData.properties[p].hb_populateEnabled)) {
 								
 								// Add to ManyToMany Properties
 								if(structKeyExists(entityMetaData.properties[p], "fieldtype") && entityMetaData.properties[p].fieldType eq "many-to-one") {
@@ -207,7 +221,10 @@ component output="false" accessors="true" extends="HibachiService" {
 				if(directoryExists(ssControllerPath)) {
 					
 					// Setup subsytem structure
-					allPermissions[ aspArr[s] ] = {};
+					allPermissions[ aspArr[s] ] = {
+						hasSecureMethods = false,
+						sections = {}
+					};
 					
 					// Grab a list of all the files in the controllers directory
 					var ssDirectoryList = directoryList(ssControllerPath);
@@ -219,7 +236,7 @@ component output="false" accessors="true" extends="HibachiService" {
 						var obj = createObject('component', '#replace(ssDirectory, '/','.','all')#controllers.#section#');
 						
 						// Setup section structure
-						allPermissions[ aspArr[s] ][ section ] = {
+						allPermissions[ aspArr[s] ].sections[ section ] = {
 							anyAdminMethods = "",
 							anyLoginMethods = "",
 							publicMethods = "",
@@ -230,24 +247,29 @@ component output="false" accessors="true" extends="HibachiService" {
 						
 						// Check defined permissions
 						if(structKeyExists(obj, 'anyAdminMethods')){
-							allPermissions[ aspArr[s] ][ section ].anyAdminMethods = obj.anyAdminMethods;
+							allPermissions[ aspArr[s] ].sections[ section ].anyAdminMethods = obj.anyAdminMethods;
 						}
 						if(structKeyExists(obj, 'anyLoginMethods')){
-							allPermissions[ aspArr[s] ][ section ].anyLoginMethods = obj.anyLoginMethods;
+							allPermissions[ aspArr[s] ].sections[ section ].anyLoginMethods = obj.anyLoginMethods;
 						}
 						if(structKeyExists(obj, 'publicMethods')){
-							allPermissions[ aspArr[s] ][ section ].publicMethods = obj.publicMethods;
+							allPermissions[ aspArr[s] ].sections[ section ].publicMethods = obj.publicMethods;
 						}
 						if(structKeyExists(obj, 'secureMethods')){
-							allPermissions[ aspArr[s] ][ section ].secureMethods = obj.secureMethods;
+							allPermissions[ aspArr[s] ].sections[ section ].secureMethods = obj.secureMethods;
 						}
 						
 						// Check for Controller types
 						if(structKeyExists(obj, 'entityController') && isBoolean(obj.entityController) && obj.entityController) {
-							allPermissions[ aspArr[s] ][ section ].entityController = true;
+							allPermissions[ aspArr[s] ].sections[ section ].entityController = true;
 						}
 						if(structKeyExists(obj, 'restController') && isBoolean(obj.restController) && obj.restController) {
-							allPermissions[ aspArr[s] ][ section ].restController = true;
+							allPermissions[ aspArr[s] ].sections[ section ].restController = true;
+						}
+						
+						// Setup the 'hasSecureMethods' value
+						if(len(allPermissions[ aspArr[s] ].sections[ section ].secureMethods)) {
+							allPermissions[ aspArr[s] ].hasSecureMethods = true;
 						}
 						
 					} // END Section Loop
@@ -275,16 +297,98 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	// ============================ PRIVATE HELPER FUNCTIONS =======================================
 	
-	private boolean function authenticateActionByPermissionGroup(required string action, required any permissionGroup) {
+	public boolean function authenticateSubsystemActionByPermissionGroup(required string subsystem, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
+		
+		if(structKeyExists(permissions.action.subsystems, arguments.subsystem) && structKeyExists(permissions.action.subsystems[arguments.subsystem], "permission") ) {
+			if( !isNull(permissions.action.subsystems[arguments.subsystem].permission.getAllowActionFlag()) && permissions.action.subsystems[arguments.subsystem].permission.getAllowActionFlag()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 		return false;
 	}
 	
-	private boolean function authenticateEntityByPermissionGroup(required string crud, required string entityName, required any permissionGroup) {
+	public boolean function authenticateSubsystemSectionActionByPermissionGroup(required string subsystem, required string section, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
 		
+		if(structKeyExists(permissions.action.subsystems, arguments.subsystem) && structKeyExists(permissions.action.subsystems[arguments.subsystem].sections, arguments.section) && structKeyExists(permissions.action.subsystems[arguments.subsystem].sections[ arguments.section ], "permission") ) {
+			if( !isNull(permissions.action.subsystems[arguments.subsystem].sections[ arguments.section ].permission.getAllowActionFlag()) && permissions.action.subsystems[arguments.subsystem].sections[ arguments.section ].permission.getAllowActionFlag()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		return authenticateSubsystemActionByPermissionGroup(subsystem=arguments.subsystem, permissionGroup=arguments.permissionGroup);
 	}
 	
-	private boolean function authenticateEntityPropertyByPermissionGroup(required string crud, required string entityName, required string propertyName, required any permissionGroup) {
+	public boolean function authenticateSubsystemSectionItemActionByPermissionGroup(required string subsystem, required string section, required string item, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
 		
+		if(structKeyExists(permissions.action.subsystems, arguments.subsystem) && structKeyExists(permissions.action.subsystems[arguments.subsystem].sections, arguments.section) && structKeyExists(permissions.action.subsystems[arguments.subsystem].sections[arguments.section].items, arguments.item) ) {
+			if( !isNull(permissions.action.subsystems[arguments.subsystem].sections[arguments.section].items.getAllowActionFlag()) && permissions.action.subsystems[arguments.subsystem].sections[arguments.section].items.getAllowActionFlag()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		return authenticateSubsystemSectionActionByPermissionGroup(subsystem=arguments.subsystem, section=arguments.section, permissionGroup=arguments.permissionGroup);
+	}
+	
+	public boolean function authenticateEntityByPermissionGroup(required string crudType, required string entityName, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
+		var permissionDetails = getEntityPermissionDetails();
+		
+		// Check for entity specific values
+		if(structKeyExists(permissions.entity.entities, arguments.entityName) && structKeyExists(permissions.entity.entities[arguments.entityName], "permission") && !isNull(permissions.entity.entities[arguments.entityName].permission.invokeMethod("getAllow#arguments.crudType#Flag"))) {
+			if( permissions.entity.entities[arguments.entityName].permission.invokeMethod("getAllow#arguments.crudType#Flag") ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		// Check for an inherited permission
+		if(structKeyExists(permissionDetails, arguments.entityName) && structKeyExists(permissionDetails[arguments.entityName], "inheritPermissionEntityName")) {
+			return authenticateEntityByPermissionGroup(crudType=arguments.crudType, entityName=permissionDetails[arguments.entityName].inheritPermissionEntityName, permissionGroup=arguments.permissionGroup);
+		}	
+		
+		// Check for generic permssion
+		if(structKeyExists(permissions.entity, "permission") && !isNull(permissions.entity.permission.invokeMethod("getAllow#arguments.crudType#Flag")) && permissions.entity.permission.invokeMethod("getAllow#arguments.crudType#Flag")) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean function authenticateEntityPropertyByPermissionGroup(required string crudType, required string entityName, required string propertyName, required any permissionGroup) {
+		// Pull the permissions detail struct out of the permission group
+		var permissions = arguments.permissionGroup.getPermissionsByDetails();
+		
+		// Check first to see if this entity was defined
+		if(structKeyExists(permissions.entity.entities, arguments.entityName) && structKeyExists(permissions.entity.entities[arguments.entityName].properties, arguments.propertyName) && !isNull(permissions.entity.entities[ arguments.entityName ].properties[ arguments.propertyName ].invokeMethod("getAllow#arguments.crudType#Flag"))) {
+			if( permissions.entity.entities[ arguments.entityName ].properties[ arguments.propertyName ].invokeMethod("getAllow#arguments.crudType#Flag") ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		// If there was an entity defined, and special property values have been defined then we need to return false
+		if (structKeyExists(permissions.entity.entities, arguments.entityName) && structCount(permissions.entity.entities[arguments.entityName].properties)) {
+			return false;
+			
+		}
+		
+		return authenticateEntityByPermissionGroup(crudType=arguments.crudType, entityName=arguments.entityName, permissionGroup=arguments.permissionGroup);
 	}
 	
 	

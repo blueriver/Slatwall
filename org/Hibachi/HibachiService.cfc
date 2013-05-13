@@ -106,10 +106,6 @@
 				invokeArguments[ "processObject" ] = arguments.entity.getProcessObject(arguments.processContext);
 				invokeArguments[ "processObject" ].populate( arguments.data );
 				invokeArguments[ "processObject" ].validate( context=arguments.processContext );
-				
-				if(invokeArguments[ "processObject" ].hasErrors()) {
-					arguments.entity.addError('processObject', arguments.processContext);
-				}
 			}
 			
 			// if the entity still has no errors then we call call the process method
@@ -696,6 +692,11 @@
 		public any function getPropertiesStructByEntityName( required string entityName ) {
 			// Pull the meta data from the object (which in turn will cache it in the application for the next time)
 			return getEntityObject( arguments.entityName ).getPropertiesStruct(); 
+		}
+		
+		// @hint returns a property of a given entity
+		public any function getPropertyByEntityNameAndPropertyName( required string entityName, required string propertyName ) {
+			return getPropertiesStructByEntityName( entityName=arguments.entityName )[ arguments.propertyName ]; 
 		}
 		
 		/*

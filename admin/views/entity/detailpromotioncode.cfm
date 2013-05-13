@@ -44,20 +44,23 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.promotioncode#" edit="#rc.edit#"  
 								saveActionQueryString="promotionID=#rc.promotion.getPromotionID()#"
 								saveActionHash="tabpromotioncodes">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#" 
-				backAction="admin:entity.detailpromotion" 
-				backQueryString="productID=#rc.promotion.getPromotionID()#" 
-				cancelAction="admin:entity.detailpromotion" 
-				cancelQueryString="promotionID=#rc.promotion.getPromotionID()#"/>
+								
+		<cf_HibachiEntityActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#"
+								   backAction="admin:entity.detailpromotion"
+								   backQueryString="productID=#rc.promotion.getPromotionID()#"
+								   cancelAction="admin:entity.detailpromotion"
+								   cancelQueryString="promotionID=#rc.promotion.getPromotionID()#" />
 		
-		<input type="hidden" name="promotionID" value="#rc.promotion.getPromotionID()#" />
 		<input type="hidden" name="promotion.promotionID" value="#rc.promotion.getPromotionID()#" />
-
-		<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="promotioncode" edit="#rc.edit#">
-		<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="startDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
-		<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="endDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
-		<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="maximumUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
-		<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="maximumAccountUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
-
+		
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="promotioncode" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="startDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="endDateTime" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.any')#">
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="maximumUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+				<cf_HibachiPropertyDisplay object="#rc.promotioncode#" property="maximumAccountUseCount" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

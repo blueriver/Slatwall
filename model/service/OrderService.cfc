@@ -247,24 +247,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 	}
 	
-	public void function removeOrderItem(required any order, required string orderItemID) {
-	
-		// Loop over all of the items in this order
-		for(var i = 1; i <= arrayLen(arguments.order.getOrderItems()); i++)	{
-		
-			// Check to see if this item is the same ID as the one passed in to remove
-			if(arguments.order.getOrderItems()[i].getOrderItemID() == arguments.orderItemID) {
-			
-				// Actually Remove that Item
-				arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
-				break;
-			}
-		}
-		
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
-	}
-	
 	public void function setupOrderItemContentAccess(required any orderItem) {
 		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
 			var accountContentAccess = getAccountService().newAccountContentAccess();
@@ -374,11 +356,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	public void function removePromotionCode(required any order, required any promotionCode) {
-		arguments.order.removePromotionCode(arguments.promotionCode);
-		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
-	}
-	
 	public any function forceItemQuantityUpdate(required any order, required any messageBean) {
 		// Loop over each order Item
 		for(var i = arrayLen(arguments.order.getOrderItems()); i >= 1; i--)	{
@@ -485,6 +462,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Setup a boolean to see if we were able to just att this order item to an existing one
 		var foundItem = false;
 		
+		// Make sure that the currencyCode gets set for this order
+		if(isNull(arguments.order.getCurrencyCode())) {
+			arguments.order.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+		}
+		
 		// If this is a Sale Order Item then we need to setup the fulfillment
 		if(arguments.processObject.getOrderItemTypeSystemCode() eq "oitSale") {
 			
@@ -493,12 +475,33 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var orderFulfillment = this.getOrderFulfillment( processObject.getOrderFulfillmentID() );
 			}
 			
-			// Next if we can't use an existing one, then we need to create a new one
+			// Next if orderFulfillment is still null, then we can check the order to see if there is already an orderFulfillment
+			if(isNull(orderFulfillment) && arrayLen(arguments.order.getOrderFulfillments())) {
+				for(var f=1; f<=arrayLen(arguments.order.getOrderFulfillments()); f++) {
+					if(listFindNoCase(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods'),arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID()) ) {
+						var orderFulfillment = this.getOrderFulfillment();
+						break;
+					}	
+				}
+			}
+			
+			// Last if we can't use an existing one, then we need to create a new one
 			if(isNull(orderFulfillment) || orderFulfillment.getOrder().getOrderID() != arguments.order.getOrderID()) {
 				
 				// Setup a new order fulfillment
 				var orderFulfillment = this.newOrderFulfillment();
-				orderFulfillment.setFulfillmentMethod( getFulfillmentService().getFulfillmentMethod( arguments.processObject.getFulfillmentMethodID() ) );
+				
+				// get the correct fulfillment method for this new order fulfillment
+				if(len(arguments.processObject.getFulfillmentMethodID())) {
+					var fulfillmentMethod = getFulfillmentService().getFulfillmentMethod( arguments.processObject.getFulfillmentMethodID() );
+				}
+				
+				// If the fulfillmentMethod is still null because the above didn't execute, then we can pull it in from the first ID in the sku settings
+				if(isNull(fulfillmentMethod)) {
+					var fulfillmentMethod = getFulfillmentService().getFulfillmentMethod( listFirst(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods')) );
+				}
+				
+				orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
 				orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() );
 				orderFulfillment.setOrder( arguments.order );
 				
@@ -512,25 +515,30 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
 						orderFulfillment.setAccountAddress( accountAddress );
 					
-					// Otherwise setup a new shipping address
+					// Otherwise try to setup a new shipping address
 					} else {
 						
-						// First we need to persist the address from the processObject
-						getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
+						// Check to see if the new shipping address passes full validation.
+						fullAddressErrors = getHibachiValidationService().validate( arguments.processObject.getShippingAddress(), 'full', false );
 						
-						// If we are supposed to save the new address, then we can do that here
-						if(arguments.processObject.getSaveShippingAccountAddressFlag()) {
+						if(!fullAddressErrors.hasErrors()) {
+							// First we need to persist the address from the processObject
+							getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
 							
-							var newAccountAddress = getAccountService().newAccountAddress();
-							newAccountAddress.setAccount( arguments.order.getAccount() );
-							newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
-							newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
-							orderFulfillment.setAccountAddress( newAccountAddress );
-							
-						// Otherwise just set then new address in the order fulfillment
-						} else {
-							
-							orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
+							// If we are supposed to save the new address, then we can do that here
+							if(arguments.processObject.getSaveShippingAccountAddressFlag() && !isNull(arguments.order.getAccount()) ) {
+								
+								var newAccountAddress = getAccountService().newAccountAddress();
+								newAccountAddress.setAccount( arguments.order.getAccount() );
+								newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
+								newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
+								orderFulfillment.setAccountAddress( newAccountAddress );
+								
+							// Otherwise just set then new address in the order fulfillment
+							} else {
+								
+								orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
+							}
 						}
 					}
 				}
@@ -611,9 +619,33 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			this.saveOrderItem( newOrderItem );
 		}
 		
+		// Call save order to place in the hibernate session and re-calculate all of the totals 
+		arguments.order = this.saveOrder( arguments.order );
 		
-		// Call the recalculate so that promotions get set
-		recalculateOrderAmounts( arguments.order );
+		return arguments.order;
+	}
+	
+	public any function processOrder_removeOrderItem(required any order, required struct data) {
+		
+		// Make sure that an orderItemID was passed in
+		if(structKeyExists(arguments.data, "orderItemID")) {
+			
+			// Loop over all of the items in this order
+			for(var i = 1; i <= arrayLen(arguments.order.getOrderItems()); i++)	{
+			
+				// Check to see if this item is the same ID as the one passed in to remove
+				if(arguments.order.getOrderItems()[i].getOrderItemID() == arguments.data.orderItemID) {
+				
+					// Actually Remove that Item
+					arguments.order.removeOrderItem( arguments.order.getOrderItems()[i] );
+					break;
+				}
+			}
+			
+		}
+		
+		// Call saveOrder to recalculate all the orderTotal stuff
+		arguments.order = this.saveOrder(arguments.order);
 		
 		return arguments.order;
 	}
@@ -994,6 +1026,23 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 
+	public any function processOrder_removePromotionCode(required any order, required struct data) {
+		
+		if(structKeyExists(arguments.data, "promotionCodeID")) {
+			var promotionCode = getPromotionService().getPromotionCode( arguments.data.promotionCodeID );
+		}
+		
+		if(!isNull(promotionCode)) {
+			arguments.order.removePromotionCode( promotionCode );
+		}
+		
+		// Call saveOrder to recalculate all the orderTotal stuff
+		arguments.order = this.saveOrder(arguments.order);
+		
+		return arguments.order;
+	}
+	
+	
 	// Process: Order Fulfillment
 	// (needs refactor)
 	public any function processOrderFulfillment_fulfillItems(required any orderFulfillment, struct data={}, string processContext="process") {
@@ -1430,6 +1479,19 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				if(arguments.order.getOrderFulfillments()[f].getFulfillmentMethodType() eq "shipping") {
 					getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.order.getOrderFulfillments()[f] );
 				}
+			}
+			
+			// Check to see if this order is the same as the currentCart
+			if(arguments.order.getOrderID() == getHibachiScope().getCart().getOrderID()) {
+				
+				// Make sure that this order gets attached to the current session
+				getHibachiScope().getSession().setOrder( arguments.order );
+
+				// Check to see if we can attach the current account to this order
+				if( isNull(arguments.order.getAccount()) && getHibachiScope().getLoggedInFlag() ) {
+					arguments.order.setAccount( getHibachiScope().getAccount() );
+				}
+			
 			}
 			
 			// Recalculate the order amounts for tax and promotions

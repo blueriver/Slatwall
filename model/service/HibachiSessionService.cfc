@@ -58,7 +58,7 @@ component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiS
 		getHibachiDAO().flushORMSession();
 		
 		// Add the CKFinder Permissions
-		session[ "#getApplicationValue('applicationKey')#CKFinderAccess"] = getHibachiAuthenticationService().authenticateAction("admin:main.ckeditor", getHibachiScope().getAccount());
+		session[ "#getApplicationValue('applicationKey')#CKFinderAccess"] = getHibachiScope().authenticateAction("admin:main.ckfinder");
 	}
 	
 	public void function setPropperSession() {

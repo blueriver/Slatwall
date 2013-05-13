@@ -59,12 +59,12 @@ Notes:
 							   recordeditaction="admin:entity.editorderitem">
 		<cf_HibachiListingColumn propertyIdentifier="order.account.firstName" search="true" sort="true" />
 		<cf_HibachiListingColumn propertyIdentifier="order.account.lastName" search="true" sort="true" />
-		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" sort="true" search="true" />
 		<cf_HibachiListingColumn propertyIdentifier="order.orderStatusType.type" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="order.orderOpenDateTime" range="true" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.calculatedTitle" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="price" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="quantity" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="extendedPrice" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="order.orderOpenDateTime" sort="true" range="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.calculatedTitle" sort="true" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="price" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="quantity" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="extendedPrice" sort="true" range="true" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

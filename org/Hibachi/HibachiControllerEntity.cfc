@@ -25,6 +25,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Setup EntityActionDetails with all next actions set to this action
 		arguments.rc.entityActionDetails.itemEntityName = "";
+		arguments.rc.entityActionDetails.backAction = arguments.rc.entityActionDetails.thisAction;
 		arguments.rc.entityActionDetails.cancelAction = arguments.rc.entityActionDetails.thisAction;
 		arguments.rc.entityActionDetails.createAction = arguments.rc.entityActionDetails.thisAction;
 		arguments.rc.entityActionDetails.deleteAction = arguments.rc.entityActionDetails.thisAction;
@@ -61,6 +62,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// Setup EntityActionDetails with correct actions
 		if(arguments.rc.entityActionDetails.itemEntityName != "") {
+			arguments.rc.entityActionDetails.backAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.list#arguments.rc.entityActionDetails.itemEntityName#";
 			if(left(arguments.rc.entityActionDetails.itemName, 6) == "create") {
 				arguments.rc.entityActionDetails.cancelAction = "#arguments.rc.entityActionDetails.subsystemName#:#arguments.rc.entityActionDetails.sectionName#.list#arguments.rc.entityActionDetails.itemEntityName#";	
 			} else {
@@ -107,6 +109,10 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 		if(structKeyExists(arguments.rc, "redirectQS") && !structKeyExists(arguments.rc, "fRedirectQS")) {
 			arguments.rc.fRedirectQS = arguments.rc.redirectQS;
+		}
+		// backAction
+		if(structKeyExists(arguments.rc, "backAction")) {
+			arguments.rc.entityActionDetails.backAction = arguments.rc.backAction;
 		}
 		
 		// Setup the page Title in the RC

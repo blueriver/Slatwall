@@ -27,6 +27,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	
 	// Data Properties (Inputs)
 	property name="price";
+	property name="currencyCode";
 	property name="quantity";
 	property name="orderItemTypeSystemCode";
 	property name="saveShippingAccountAddressFlag" hb_formFieldType="yesno";
@@ -301,10 +302,23 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		if(!structKeyExists(variables, "price")) {
 			variables.price = 0;
 			if(!isNull(getSku())) {
-				variables.price = getSku().getPriceByCurrencyCode( getOrder().getCurrencyCode() );
+				variables.price = getSku().getPriceByCurrencyCode( getCurrencyCode() );
 			}
 		}
 		return variables.price;
+	}
+	
+	public string function getCurrencyCode() {
+		if(!structKeyExists(variables, "currencyCode")) {
+			if(!isNull(getOrder().getCurrencyCode())) {
+				variables.currencyCode = getOrder().getCurrencyCode();
+			} else if (!isNull(getSku()) && len(getSku().setting('skuCurrency')) eq 3) {
+				variables.currencyCode = getSku().setting('skuCurrency');
+			} else {
+				variables.currencyCode = 'USD';
+			}
+		}
+		return variables.currencyCode;
 	}
 	
 	public any function getFulfillmentRefundAmount() {

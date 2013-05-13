@@ -43,8 +43,8 @@ Notes:
 <cf_HibachiEntityActionBar type="listing" object="#rc.measurementUnitSmartList#" showCreate="false" />
 
 <cf_HibachiListingDisplay smartList="#rc.measurementUnitSmartList#" recordDetailAction="admin:entity.detailmeasurementunit" recordDetailModal="true">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="unitName" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="unitCode" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="unitName" sort="true" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="unitCode" sort="true" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="measurementType" filter="true" />
 </cf_HibachiListingDisplay>
 

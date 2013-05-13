@@ -43,7 +43,7 @@ Notes:
 <cf_HibachiEntityActionBar type="listing" object="#rc.stateSmartList#" showCreate="false" />
 
 <cf_HibachiListingDisplay smartList="#rc.stateSmartList#">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stateName" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stateName" sort="true" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="stateCode" search="true" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="country.countryName" filter="true" />
 </cf_HibachiListingDisplay>

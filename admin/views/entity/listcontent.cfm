@@ -45,7 +45,7 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.contentSmartList#"
 						   recordDetailAction="admin:entity.detailcontent"
 						   recordEditAction="admin:entity.editcontent">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="title" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="title" search="true" sort="true" />
 	<cf_HibachiListingColumn propertyIdentifier="site.siteName" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="contentTemplateType.type" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="allowPurchaseFlag" filter="true" />

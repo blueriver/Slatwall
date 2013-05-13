@@ -48,8 +48,8 @@ Notes:
 						   recorddetailaction="admin:entity.detailpromotion"
 						   recordEditAction="admin:entity.editpromotion">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotionName" search="true" sort="true" />
-	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" range="true" />
-	<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" range="true" />
+	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true" range="true" />
+	<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" sort="true" range="true" />
 	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="currentFlag" sort="false" />
 </cf_HibachiListingDisplay>

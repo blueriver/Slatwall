@@ -44,7 +44,7 @@ Notes:
 		<cf_HibachiListingColumn propertyidentifier="stockAdjustmentStatusType.type" filter=true title="#$.slatwall.rbKey('entity.stockAdjustment.stockAdjustmentStatusType')#" />
 		<cf_HibachiListingColumn propertyidentifier="fromLocation.locationName" filter=true title="#$.slatwall.rbKey('entity.stockAdjustment.fromLocation')#" />
 		<cf_HibachiListingColumn propertyidentifier="toLocation.locationName" filter=true title="#$.slatwall.rbKey('entity.stockAdjustment.toLocation')#" />
-		<cf_HibachiListingColumn propertyidentifier="createdDateTime" range=true/>
+		<cf_HibachiListingColumn propertyidentifier="createdDateTime" sort="true" range=true/>
 	</cf_HibachiListingDisplay>
 	
 	<cfif physicalStatus neq "pstClosed">

@@ -63,8 +63,9 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-persistent properties
-	property name="currentFlag" type="boolean" persistent="false"; 
-	
+	property name="currentFlag" type="boolean" persistent="false";
+	property name="currentPromotionPeriodFlag" type="boolean" persistent="false";
+	property name="currentPromotionCodeFlag" type="boolean" persistent="false"; 
 	
 	// @hint this method validates that promotion codes are unique
 	public any function hasUniquePromotionCodes() {
@@ -83,12 +84,43 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	// ============ START: Non-Persistent Property Methods =================
 
 	public boolean function getCurrentFlag() {
-		for( var i=1; i<= arrayLen(getPromotionPeriods()); i++ ) {
-			if(getPromotionPeriods()[i].getCurrentFlag()) {
-				return true;
+		if(!structKeyExists(variables, "currentFlag")) {
+			variables.currentFlag = false;
+			if( getCurrentPromotionPeriodFlag() && ( !arrayLen(getPromotionCodes()) || getCurrentPromotionCodeFlag() ) ) {
+				variables.currentFlag = true;
 			}
 		}
-		return false;
+		
+		return variables.currentFlag;
+	}
+	
+	
+	public boolean function getCurrentPromotionPeriodFlag() {
+		if(!structKeyExists(variables, "currentPromotionPeriodFlag")) {
+			variables.currentPromotionPeriodFlag = false;
+			for( var i=1; i<= arrayLen(getPromotionPeriods()); i++ ) {
+				if(getPromotionPeriods()[i].getCurrentFlag()) {
+					variables.currentPromotionPeriodFlag = true;
+					break;
+				}
+			}
+		}
+		
+		return variables.currentPromotionPeriodFlag;
+	}
+	
+	public boolean function getCurrentPromotionCodeFlag() {
+		if(!structKeyExists(variables, "currentPromotionCodeFlag")) {
+			variables.currentPromotionCodeFlag = false;
+			for( var i=1; i<= arrayLen(getPromotionCodes()); i++ ) {
+				if(getPromotionCodes()[i].getCurrentFlag()) {
+					variables.currentPromotionCodeFlag = true;
+					break;
+				}
+			}	
+		}
+		
+		return variables.currentPromotionCodeFlag;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

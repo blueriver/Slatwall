@@ -555,14 +555,35 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
+		
 		var propertyMetaData = getPropertyMetaData( arguments.propertyName );
+		
 		if(structKeyExists(propertyMetaData, "hb_rbKey")) {
 			return rbKey(propertyMetaData.hb_rbKey);
+			
 		} else if (isPersistent()) {
-			return rbKey("entity.#getClassName()#.#arguments.propertyName#");	
+			
+			// See if we can add additional lookup locations
+			if(structKeyExists(propertyMetaData, "fieldtype") && structKeyExists(propertyMetaData, "cfc") && listFindNoCase("one-to-many,many-to-many", propertyMetaData.fieldtype)) {
+				return rbKey("entity.#getClassName()#.#arguments.propertyName#,entity.#propertyMetaData.cfc#_plural");
+			} else if (structKeyExists(propertyMetaData, "fieldtype") && structKeyExists(propertyMetaData, "cfc") && listFindNoCase("many-to-one", propertyMetaData.fieldtype)) {
+				return rbKey("entity.#getClassName()#.#arguments.propertyName#,entity.#propertyMetaData.cfc#");
+			}
+			
+			return rbKey("entity.#getClassName()#.#arguments.propertyName#");
+			
 		} else if (isProcessObject()) {
+			
+			// See if we can add additional lookup locations
+			if(structKeyExists(propertyMetaData, "fieldtype") && structKeyExists(propertyMetaData, "cfc") && listFindNoCase("one-to-many,many-to-many", propertyMetaData.fieldtype)) {
+				return rbKey("processObject.#getClassName()#.#arguments.propertyName#,entity.#propertyMetaData.cfc#_plural");
+			} else if (structKeyExists(propertyMetaData, "fieldtype") && structKeyExists(propertyMetaData, "cfc") && listFindNoCase("many-to-one", propertyMetaData.fieldtype)) {
+				return rbKey("processObject.#getClassName()#.#arguments.propertyName#,entity.#propertyMetaData.cfc#");
+			}
+			
 			return rbKey("processObject.#getClassName()#.#arguments.propertyName#");
 		}
+		
 		return rbKey("object.#getClassName()#.#arguments.propertyName#");	
 	}
 	

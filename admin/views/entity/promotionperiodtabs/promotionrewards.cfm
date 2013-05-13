@@ -48,7 +48,7 @@ Notes:
 							      
 		<cf_HibachiListingColumn propertyIdentifier="rewardType" tdclass="primary" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="amountType" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="amount" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" sort="true" range="true" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerOrder" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerItem" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerQualification" filter="true" />

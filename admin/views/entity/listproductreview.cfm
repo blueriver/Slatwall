@@ -48,7 +48,7 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="reviewerName" search="true" sort="true" />
 		<cf_HibachiListingColumn propertyIdentifier="rating" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="product.productName" search="true" sort="true" />
-		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true" range="true" />
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter=true />
 	</cf_HibachiListingDisplay>
 

@@ -39,58 +39,226 @@ Notes:
 <cfinclude template="_slatwall-header.cfm" />
 <cfoutput>
 	<div class="container">
+		
 		<div class="row">
 			<div class="span12">
+				<!--- We use the getTitle() method which uses the title template setting to pull in brand name or whatever else you might want in your titles --->
 				<h2>#$.slatwall.product().getTitle()#</h2>
 			</div>
 		</div>
 		<div class="row">
 			<div class="span4">
 				<div class="well">
+					<!--- This displays the primary image which is pulled from the default sku --->
 					<a href="#$.slatwall.product().getImagePath()#" target="_blank">#$.slatwall.product().getImage(size="m")#</a>
 				</div>
 			</div>
 			<div class="span8">
-				<dl class="dl-horizontal">
-					<!--- Product Description --->
-					<dt>Product Description</dt>
-					<dd>#$.slatwall.product().getProductDescription()#</dd>
-					
-					<!--- Product Code --->
-					<dt>Product Code</dt>
-					<dd>#$.slatwall.product().getProductCode()#</dd>
-					
-					<!--- List Price | This price is really just a place-holder type of price that can display the MSRP.  It is typically used to show the highest price --->
-					<dt>List Price</dt>
-					<dd>#$.slatwall.product().getFormattedValue('listPrice')#</dd>
-					
-					<!--- Current Account Price | This price is used for accounts that have Price Groups associated with their account.  Typically Price Groups are used for Wholesale pricing, or special employee / account pricing --->
-					<dt>Account Price</dt>
-					<dd>#$.slatwall.product().getFormattedValue('currentAccountPrice')#</dd>
-					
-					<!--- Sale Price | This value will be pulled from any current active promotions that don't require any promotion qualifiers or promotion codes --->
-					<dt>Sale Price</dt>
-					<dd>#$.slatwall.product().getFormattedValue('salePrice')#</dd>
-					
-					<!--- Live Price | The live price looks at both the salePrice and currentAccountPrice to figure out which is better and display that.  This is what the customer will see in their cart once the item has been added so it should be used as the primary price to display --->
-					<dt>Live Price</dt>
-					<dd>#$.slatwall.product().getFormattedValue('livePrice')#</dd>
-					
-					<!--- IMPORTANT NOTE ABOUT PRICING
-					
-					--->
-					
-				</dl>
+				<div class="row">
+					<div class="span5">
+						<!--- START: PRODUCT DETAILS EXAMPLE --->
+						<h4>Product Details Example</h4>
+						<dl class="dl-horizontal">
+							<!--- Product Code --->
+							<dt>Product Code</dt>
+							<dd>#$.slatwall.product().getProductCode()#</dd>
+							
+							<!--- Product Type --->
+							<dt>Product Type</dt>
+							<dd>#$.slatwall.product().getProductType().getProductTypeName()#</dd>
+							
+							<!--- Brand --->
+							<cfif !isNull($.slatwall.product().getBrand())>
+								<dt>Product Type</dt>
+								<dd>#$.slatwall.product().getBrand().getBrandName()#</dd>
+							</cfif>
+							
+							<!--- List Price | This price is really just a place-holder type of price that can display the MSRP.  It is typically used to show the highest price --->
+							<dt>List Price</dt>
+							<dd>#$.slatwall.product().getFormattedValue('listPrice')#</dd>
+							
+							<!--- Current Account Price | This price is used for accounts that have Price Groups associated with their account.  Typically Price Groups are used for Wholesale pricing, or special employee / account pricing --->
+							<dt>Current Account Price</dt>
+							<dd>#$.slatwall.product().getFormattedValue('currentAccountPrice')#</dd>
+							
+							<!--- Sale Price | This value will be pulled from any current active promotions that don't require any promotion qualifiers or promotion codes --->
+							<dt>Sale Price</dt>
+							<dd>#$.slatwall.product().getFormattedValue('salePrice')# </dd>
+							
+							<!--- Live Price | The live price looks at both the salePrice and currentAccountPrice to figure out which is better and display that.  This is what the customer will see in their cart once the item has been added so it should be used as the primary price to display --->
+							<dt>Live Price</dt>
+							<dd>#$.slatwall.product().getFormattedValue('livePrice')# </dd>
+							
+							<!--- Product Description --->
+							<dt>Product Description</dt>
+							<dd>#$.slatwall.product().getProductDescription()# &nbsp;</dd>
+						</dl>
+						<!--- END: PRODUCT DETAILS EXAMPLE --->
+					</div>
+					<div class="span3">
+						<!--- Start: PRICE DISPLAY EXAMPLE --->
+						<h4>Price Display Example</h4>
+						<p><em>This price is dynamic based on Sale / Account pricing</em></p>
+						<br />
+						<cfif $.slatwall.product('price') gt $.slatwall.product('livePrice')>
+							<span style="text-decoration:line-through;color:##cc0000;">#$.slatwall.product().getFormattedValue('price')#</span><br />
+							<span style="font-size:24px;color:##333333;">#$.slatwall.product().getFormattedValue('livePrice')#</span>		
+						<cfelse>
+							<span style="font-size:24px;color:##333333;">#$.slatwall.product().getFormattedValue('livePrice')#</span>
+						</cfif>
+						<!---[ DEVELOPER NOTES ]														
+																										
+								When asking for a price from a product, it automatically pulls			
+								that price from whichever has been defined as the 'Default Sku'			
+								in the admin.  If your skus have different prices, you will either		
+								want to update the price based on the sku selected in an addToCart		
+								form, or you might want to put the price in the dropdowns themselves.	
+								Another option would be to use the type of AddToCart form that lists	
+								out all of the skus.													
+																										
+						--->
+						<!--- END: PRICE DISPLAY EXAMPLE --->
+					</div>
+				</div>
 				
-				<!--- Add To Cart Form Example 1 --->
+				<hr />
+				
+				<!--- START: ADD TO CART EXAMPLE 1 --->
 				<h4>Add To Cart Form Example 1</h4>
-				<p></p>
+				<p><em>This add to cart form is extreamly simple, and will just display a dropdown list of skus to select the one to add.  Note if there is only one sku, no dropdown will be shown but instead a hidden field of skuID will be added</em></p>
+				
+				<!--- Start of form, note that the action can be set to whatever URL you would like the user to end up on. ---> 
 				<form action="?s=1" method="post">
-					<input type="hidden" name="slatAction" value="public:order.addItem" />
+					<input type="hidden" name="slatAction" value="public:cart.addOrderItem" />
+					
+					<!---[ DEVELOPER NOTES ]																				
+																															
+						$.slatwall.product().getSkus() returns all of the skus for a product								
+					 																										
+					 	sorted = true | allows for the list to be sorted based on the optionGroup and option sort order		
+						fetchOptions = true | optimizes the query to pull down the option details to be displayed			
+																															
+					--->
+					<cfset local.skus = $.slatwall.product().getSkus(sorted=true, fetchOptions=true) />
+						
+					<!--- Check to see if there are more than 1 skus, if so then display the options dropdown --->
+					<cfif arrayLen(local.skus) gt 1>
+						
+						<!--- Sku Selector --->
+						<select name="skuID" class="required">
+							
+							<!--- Blank option to force user to select (this is optional) --->	
+							<option value="">Select Option</option>
+							
+							<!--- Loop over the skus to display options --->
+							<cfloop array="#local.skus#" index="local.sku">
+								<!--- This provides an option for each sku, with the 'displayOptions' method to show the optionGroup / option names --->
+								<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
+							</cfloop>
+							
+						</select>
+						
+						<br />
+						
+					<!--- If there are only 1 skus, then add a hidden field --->
+					<cfelse> 
+						<input type="hidden" name="skuID" value="#$.slatwall.product().getDefaultSku().getSkuID()#" />
+					</cfif>
+					
+					<!--- Add to Cart Button --->
+					<button type="submit">Add To Cart</button>
+				</form>
+				<!--- END: ADD TO CART EXAMPLE 1 --->
+				
+				<hr />
+					
+				<!--- Start: Add To Cart Form Example 2 --->
+				<h4>Add To Cart Form Example 2</h4>
+				
+				<form action="?s=1" method="post">
+					<input type="hidden" name="slatAction" value="public:cart.addItem" />
+					
 					
 				</form>
+				
+				<!--- End: Add To Cart Form Example 2 --->
 			</div>
 		</div>
+		
+		<!--- Lower Section --->
+		<hr />
+		
+		<!--- Start: Add Product Review Example --->
+		<div class="row">
+			<div class="span12">
+				<h4>Add Product Review Example</h4>
+			</div>
+		</div>
+		<!--- End: Add Product Review Example --->
+			
+		<hr />
+			
+		<!--- Start: Related Products Example --->
+		<div class="row">
+			<div class="span12">
+				<h4>Related Products Example</h4>
+			</div>
+		</div>
+		<!--- End: Related Products Example --->
+		
+		<hr />
+		
+		<!--- Start: Image Gallery Example --->
+		<div class="row">
+			<div class="span12">
+				<h4>Image Gallery Example</h4>
+				
+				<cfset local.galleryDetails = $.slatwall.product().getImageGalleryArray() />
+				
+				<!---[ DEVELOPER NOTES ]																		
+																												
+					The primary method that makes images galleries possible is:									
+																												
+					$.slatwall.getImageGalleryArray( array resizedSizes )										
+																												
+					This is a very unique method to give you all the data you need to create an image gallery	
+					with whatever sizes.  The ImageGalleryArray will take whatever sizes you pass in, and pass	
+					back the details and resized image paths for all of the skus default images as well as any	
+					alternative images that were assigned to the product.										
+																												
+					For example, if you wanted to get 2 sizes back 100x100 and 500x500 so that you could		
+					display thumbnails ect.  You would just do:													
+																												
+					$.slatwall.getImageGalleryArray( [ {width=100, height=100}, {width=500, height=500} ] )		
+																												
+																												
+					By default if you don't pass in your own resizing array, it will just ask for the 3 sizes	
+					of Small, Medium, and Large which will get the actually sizes from the product settings.	
+					The logic it runs by default is the same as if you did this:								
+																												
+					$.slatwall.getImageGalleryArray( [ {size='small'},{size='medium'},{size='large'} ] )		
+																												
+																												
+					Basically every structure in the array, will just call the getResizedImagePath() method		
+					so you can pass in whatever resizing and cropping arguments you like based on the specs		
+					that you read more about here:																
+																												
+					http://docs.getslatwall.com/reference/product-images-and-cropping/							
+																												
+				--->
+				<cfloop array="#local.galleryDetails#" index="local.image">
+					
+					<!---[ DEVELOPER NOTES ]																		
+																													
+						Now that we are inside of the loop of images being returned, you have access to the			
+						following detials insilde of the local.image struct that came back in the array				
+																													
+					--->
+				</cfloop>
+				
+			</div>
+		</div>
+		<!--- End: Image Gallery Example --->
 	</div>
 </cfoutput>
 <cfinclude template="_slatwall-footer.cfm" />

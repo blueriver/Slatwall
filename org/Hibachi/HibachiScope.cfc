@@ -111,15 +111,15 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	}
 	
 	public boolean function authenticateAction( required string action ) {
-		return getService("hibachiAuthenticationService").authenticateAction( action=arguments.action, account=getAccount() );
+		return getService("hibachiAuthenticationService").authenticateActionByAccount( action=arguments.action, account=getAccount() );
 	}
 
-	public boolean function authenticateEntity( required string crud, required string entityName ) {
-		return getService("hibachiAuthenticationService").authenticateEntity( crud=arguments.crud, entityName=arguments.entityName, account=getAccount() );
+	public boolean function authenticateEntity( required string crudType, required string entityName ) {
+		return getService("hibachiAuthenticationService").authenticateEntityCrudByAccount( crudType=arguments.crudType, entityName=arguments.entityName, account=getAccount() );
 	}
 	
-	public boolean function authenticateEntityProperty( required string crud, required string entityName, required string propertyName ) {
-		return getService("hibachiAuthenticationService").authenticateEntityProperty( crud=arguments.crud, entityName=arguments.entityName, propertyName=arguments.propertyName, account=getAccount() );
+	public boolean function authenticateEntityProperty( required string crudType, required string entityName, required string propertyName ) {
+		return getService("hibachiAuthenticationService").authenticateEntityPropertyCrudByAccount( crudType=arguments.crudType, entityName=arguments.entityName, propertyName=arguments.propertyName, account=getAccount() );
 	}
 	
 	// =========================== onMissingMethod() ===================================

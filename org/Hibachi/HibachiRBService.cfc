@@ -4,6 +4,28 @@ component output="false" accessors="true" extends="HibachiService" {
 	variables.instantiaded = now();
 	
 	public string function getRBKey(required string key, string locale="en_us", string checkedKeys="", string originalKey) {
+		
+		// Check to see if a list was passed in as the key
+		if(listLen(arguments.key) gt 1) {
+			
+			// Set up "" as the key value to be passed as 'checkedKeys'
+			var keyValue = "";
+			
+			// If there was a list then try to get the key for each item in order
+			for(var l=1; l<=listLen(arguments.key); l++) {
+				
+				// Get the keyValue from this iteration
+				var keyValue = getRBKey(key=listGetAt(arguments.key, l), locale=arguments.locale, checkedKeys=keyValue);
+				
+				// If the keyValue was found, then we can break out of the loop
+				if(right(keyValue, "8") != "_missing") {
+					break;
+				}
+			}
+			
+			return keyValue;
+		}
+		
 		// Check the exact bundle file
 		var bundle = getResourceBundle( arguments.locale );
 		if(structKeyExists(bundle, arguments.key)) {

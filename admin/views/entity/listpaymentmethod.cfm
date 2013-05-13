@@ -58,7 +58,7 @@ Notes:
 						   recordDetailAction="admin:entity.detailpaymentmethod"
 						   recordEditAction="admin:entity.editpaymentmethod"
 						   sortProperty="sortOrder">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethodName" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethodName" sort="true" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="paymentMethodType" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_HibachiListingDisplay>

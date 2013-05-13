@@ -82,37 +82,43 @@ Notes:
 						<a href="#homeLink#" class="brand brand-two"><img src="#request.slatwallScope.getBaseURL()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
 						<li class="divider-vertical"></li>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.products_nav')#" icon="tags icon-white" type="nav">
-							<cf_HibachiActionCaller action="admin:entity.listproduct" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listproducttype" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listbrand" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listsku" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listproductreview" type="list">
-							<li class="divider"></li>
-							<cf_HibachiActionCaller action="admin:entity.listoptiongroup" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listsubscriptionterm" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listsubscriptionbenefit" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listcategory" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listcontent" type="list">
-							<li class="divider"></li>
-							<cf_HibachiActionCaller action="admin:entity.listpromotion" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listpricegroup" type="list">
+							<cf_HibachiDividerHider>
+								<cf_HibachiActionCaller action="admin:entity.listproduct" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listproducttype" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listbrand" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listsku" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listproductreview" type="list">
+								<li class="divider"></li>
+								<cf_HibachiActionCaller action="admin:entity.listoptiongroup" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listsubscriptionterm" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listsubscriptionbenefit" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listcategory" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listcontent" type="list">
+								<li class="divider"></li>
+								<cf_HibachiActionCaller action="admin:entity.listpromotion" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listpricegroup" type="list">
+							</cf_HibachiDividerHider>
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.orders_nav')#" icon="inbox icon-white" type="nav">
-							<cf_HibachiActionCaller action="admin:entity.listorder" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listcartandquote" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listorderitem" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listorderfulfillment" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listorderpayment" type="list">
-							<li class="divider"></li>
-							<cf_HibachiActionCaller action="admin:entity.listvendororder" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listvendororderitem" type="list">
+							<cf_HibachiDividerHider>
+								<cf_HibachiActionCaller action="admin:entity.listorder" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listcartandquote" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listorderitem" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listorderfulfillment" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listorderpayment" type="list">
+								<li class="divider"></li>
+								<cf_HibachiActionCaller action="admin:entity.listvendororder" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listvendororderitem" type="list">
+							</cf_HibachiDividerHider>
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.accounts_nav')#" icon="user icon-white" type="nav">
-							<cf_HibachiActionCaller action="admin:entity.listaccount" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listsubscriptionusage" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listpermissiongroup" type="list">
-							<li class="divider"></li>
-							<cf_HibachiActionCaller action="admin:entity.listvendor" type="list">
+							<cf_HibachiDividerHider>
+								<cf_HibachiActionCaller action="admin:entity.listaccount" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listsubscriptionusage" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listpermissiongroup" type="list">
+								<li class="divider"></li>
+								<cf_HibachiActionCaller action="admin:entity.listvendor" type="list">
+							</cf_HibachiDividerHider>
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.warehouse_nav')#" icon="barcode icon-white" type="nav">
 							<cf_HibachiActionCaller action="admin:entity.liststockreceiver" type="list">
@@ -126,34 +132,30 @@ Notes:
 							</cf_HibachiActionCallerDropdown>
 						</cfif>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.configure_nav')#" icon="cog icon-white" type="nav">
-							<cfsavecontent variable="local.settingGroupOne">
+							<cf_HibachiDividerHider>
 								<cf_HibachiActionCaller action="admin:entity.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listattributeset" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listintegration" type="list">
-							</cfsavecontent>
-							<cfif len(local.settingGroupOne)>
-								#local.settingGroupOne#
-								<li class="divider"></li>
-							</cfif>
-							<cf_HibachiActionCaller action="admin:entity.listaddresszone" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listcountry" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listcurrency" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listemailtemplate" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listfulfillmentmethod" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listlocation" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listmeasurementunit" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listorderorigin" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listpaymentmethod" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listpaymentterm" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listprinttemplate" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listroundingrule" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listsite" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listtaxcategory" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listterm" type="list">
-							<cf_HibachiActionCaller action="admin:entity.listtype" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listaddresszone" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listcountry" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listcurrency" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listemailtemplate" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listfulfillmentmethod" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listlocation" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listmeasurementunit" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listorderorigin" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listpaymentmethod" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listpaymentterm" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listprinttemplate" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listroundingrule" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listsite" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listtaxcategory" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listterm" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listtype" type="list">
+							</cf_HibachiDividerHider>
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.tools_nav')#" icon="magnet icon-white" type="nav">
-							<cfsavecontent variable="local.toolGroupTwo">
+							<cf_HibachiDividerHider>
 								<cf_HibachiActionCaller action="admin:main.ckfinder" type="list" modal="true" />
 								<cf_HibachiActionCaller action="admin:entity.listeventtrigger" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listschedule" type="list">
@@ -161,15 +163,11 @@ Notes:
 								<cf_HibachiActionCaller action="admin:entity.listtask" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listtaskhistory" type="list">
 								<cf_HibachiActionCaller action="admin:main.log" type="list">
-							</cfsavecontent>
-							<cfif len(trim(local.toolGroupTwo))>
-								#local.toolGroupTwo#
-								<li class="divider"></li>
-							</cfif>
-							<cf_HibachiActionCaller action="admin:main.update" type="list">
-							<cfif $.slatwall.getCurrentAccount().getSuperUserFlag()>
-								<cf_HibachiActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
-							</cfif>
+								<cf_HibachiActionCaller action="admin:main.update" type="list">
+								<cfif $.slatwall.getCurrentAccount().getSuperUserFlag()>
+									<cf_HibachiActionCaller action="admin:main.default" querystring="reload=true" type="list" text="Reload Slatwall">
+								</cfif>
+							</cf_HibachiDividerHider>
 						</cf_HibachiActionCallerDropdown>
 					</ul>
 					<cfif $.slatwall.getLoggedInAsAdminFlag()>

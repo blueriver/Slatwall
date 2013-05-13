@@ -50,8 +50,8 @@ Notes:
 			<h4>#$.slatwall.rbKey('entity.accountEmailAddress_plural')#</h4>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountEmailAddressesSmartList()#">
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailAddress" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="accountEmailType.type" sort="true" filter="true" />
-				<cf_HibachiListingColumn propertyIdentifier="verifiedFlag" sort="true" filter="true" />
+				<cf_HibachiListingColumn propertyIdentifier="accountEmailType.type" filter="true" />
+				<cf_HibachiListingColumn propertyIdentifier="verifiedFlag" filter="true" />
 			</cf_HibachiListingDisplay>
 			
 			<hr />
@@ -61,7 +61,7 @@ Notes:
 			<h4>#$.slatwall.rbKey('entity.accountPhoneNumber_plural')#</h4>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountPhoneNumbersSmartList()#">
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="phoneNumber" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="accountPhoneType.type" sort="true" filter="true" />
+				<cf_HibachiListingColumn propertyIdentifier="accountPhoneType.type" filter="true" />
 			</cf_HibachiListingDisplay>
 			
 			<hr />
@@ -94,7 +94,7 @@ Notes:
 								  recordDetailModal=true>
 								    
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountPaymentMethodName" sort="true" />
-				<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" sort="true" filter="true" />
+				<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" filter="true" />
 			</cf_HibachiListingDisplay>
 			
 			<hr />

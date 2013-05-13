@@ -46,6 +46,20 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="brandName" ormtype="string" hint="This is the common name that the brand goes by.";
 	property name="brandWebsite" ormtype="string" hb_formatType="url" hint="This is the Website of the brand";
 	
+	// Related Object Properties (one-to-many)
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="brandID" cascade="all-delete-orphan" inverse="true";
+	property name="products" singularname="product" cfc="Product" type="array" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";
+	
+	// Related Object Properties (many-to-many - owner)
+	
+	// Related Object Properties (many-to-many - inverse)
+	property name="promotionRewards" hb_populateEnabled="false" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionRewardExclusions" hb_populateEnabled="false" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" hb_populateEnabled="false" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionQualifierExclusions" hb_populateEnabled="false" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID" inverse="true";
+	property name="physicals" hb_populateEnabled="false" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalBrand" fkcolumn="brandID" inversejoincolumn="physicalID" inverse="true";
+	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
@@ -54,20 +68,6 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Related Object Properties (one-to-many)
-	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="brandID" cascade="all-delete-orphan" inverse="true";
-	property name="products" singularname="product" cfc="Product" type="array" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";
-	
-	// Related Object Properties (many-to-many - owner)
-	
-	// Related Object Properties (many-to-many - inverse)
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID" inverse="true";
-	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalBrand" fkcolumn="brandID" inversejoincolumn="physicalID" inverse="true";
 	
 	
 	// ============ START: Non-Persistent Property Methods =================
