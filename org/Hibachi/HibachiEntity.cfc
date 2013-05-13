@@ -109,7 +109,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		// Inject a generic error for any processObjects that have errors
 		for(var key in variables.processObjects) {
 			if(variables.processObjects[key].hasErrors() && ( !structKeyExists(originalErrors, "processObjects") || !arrayFindNoCase(originalErrors.processObjects, key) ) ) {
-				addError('processObjects', key);
+				addError('processObjects', key, true);
 			}
 		}
 		
