@@ -212,17 +212,26 @@
 				<cfelseif !isBoolean(column.sort)>
 					<cfset column.sort = false />
 				</cfif>
-				<cfif not len(column.filter) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && listLen(column.propertyIdentifier, '._')>
-					<cfset oneUpPropertyIdentifier = column.propertyIdentifier />
-					<cfset listDeleteAt(oneUpPropertyIdentifier, listLen(oneUpPropertyIdentifier, '._'), '._') />
-					<cfset oneUpPropertyName = listLast(oneUpPropertyIdentifier, '.') />
-					<cfset twoUpEntityName = attributes.hibachiScope.getService("hibachiService").getLastEntityNameInPropertyIdentifier( attributes.smartList.getBaseEntityName(), oneUpPropertyIdentifier ) />
-					<cfset oneUpPropertyMeta = attributes.hibachiScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName( twoUpEntityName, oneUpPropertyName ) />
-					<cfif structKeyExists(oneUpPropertyMeta, "fieldtype") && oneUpPropertyMeta.fieldtype eq 'many-to-one'>
+				<cfif not len(column.filter) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent)>
+					<cfset column.filter = false />
+					
+					<cfif structKeyExists(thisPropertyMeta, "ormtype") && thisPropertyMeta.ormtype eq 'boolean'>
 						<cfset column.filter = true />
-					<cfelse>
-						<cfset column.filter = false />
 					</cfif>
+					
+					<cfif !column.filter && listLen(column.propertyIdentifier, '._') gt 1>
+						
+						<cfset oneUpPropertyIdentifier = column.propertyIdentifier />
+						<cfset listDeleteAt(oneUpPropertyIdentifier, listLen(oneUpPropertyIdentifier, '._'), '._') />
+						<cfset oneUpPropertyName = listLast(oneUpPropertyIdentifier, '.') />
+						<cfset twoUpEntityName = attributes.hibachiScope.getService("hibachiService").getLastEntityNameInPropertyIdentifier( attributes.smartList.getBaseEntityName(), oneUpPropertyIdentifier ) />
+						<cfset oneUpPropertyMeta = attributes.hibachiScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName( twoUpEntityName, oneUpPropertyName ) />
+						
+						<cfif structKeyExists(oneUpPropertyMeta, "fieldtype") && oneUpPropertyMeta.fieldtype eq 'many-to-one'>
+							<cfset column.filter = true />
+						</cfif>
+					</cfif>
+					
 				<cfelseif !isBoolean(column.filter)>
 					<cfset column.filter = false />
 				</cfif>
