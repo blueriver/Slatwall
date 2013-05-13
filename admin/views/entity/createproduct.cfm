@@ -67,7 +67,7 @@ Notes:
 				<cfset optionsSmartList.addOrder("optionGroup.sortOrder|ASC") />
 				<cfif optionsSmartList.getRecordsCount()>
 					<cf_HibachiListingDisplay smartList="#optionsSmartList#" multiselectfieldname="options" edit="true">
-						<cf_HibachiListingColumn propertyIdentifier="optionGroup.optionGroupName" filter=true />
+						<cf_HibachiListingColumn propertyIdentifier="optionGroup.optionGroupName" />
 						<cf_HibachiListingColumn propertyIdentifier="optionName" tdclass="primary" />
 					</cf_HibachiListingDisplay>
 				</cfif>

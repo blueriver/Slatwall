@@ -41,9 +41,9 @@ Notes:
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.orderFulfillment.getOrderFulfillmentItemsSmartList()#">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
-		<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="orderItemStatusType.type" sort="true" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="quantity" sort="true" range=true />
+		<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
+		<cf_HibachiListingColumn propertyIdentifier="orderItemStatusType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="quantity" />
 		<cf_HibachiListingColumn propertyIdentifier="quantityDelivered" />
 		<cf_HibachiListingColumn propertyIdentifier="quantityUndelivered" />
 	</cf_HibachiListingDisplay>

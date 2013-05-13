@@ -72,12 +72,13 @@ Notes:
 											  recordProcessEntity="#rc.order#"
 											  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">
 											    
-						<cf_HibachiListingColumn propertyIdentifier="skuCode" search="true" />
-						<cf_HibachiListingColumn propertyIdentifier="product.productCode" search="true" />
-						<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" filter="true" />
-						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" search="true" />
-						<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
-						<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
+						<cf_HibachiListingColumn propertyIdentifier="skuCode" />
+						<cf_HibachiListingColumn propertyIdentifier="product.productCode" />
+						<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" />
+						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" />
+						<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
+						<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" />
+						<cf_HibachiListingColumn propertyIdentifier="price" />
 						<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
 						<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 					</cf_HibachiListingDisplay>
@@ -92,13 +93,14 @@ Notes:
 											  recordProcessEntity="#rc.order#"
 											  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">
 						
-						<cf_HibachiListingColumn propertyIdentifier="location.locationName" search="true" filter="true" />					    
-						<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" search="true" />
-						<cf_HibachiListingColumn propertyIdentifier="sku.product.productCode" search="true" />
-						<cf_HibachiListingColumn propertyIdentifier="sku.product.brand.brandName" filter="true" />
-						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.productName" search="true" />
-						<cf_HibachiListingColumn propertyIdentifier="sku.product.productType.productTypeName" filter="true" />
-						<cf_HibachiListingColumn propertyIdentifier="sku.calculatedQATS" range="true" />
+						<cf_HibachiListingColumn propertyIdentifier="location.locationName" />					    
+						<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
+						<cf_HibachiListingColumn propertyIdentifier="sku.product.productCode" />
+						<cf_HibachiListingColumn propertyIdentifier="sku.product.brand.brandName" />
+						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.productName" />
+						<cf_HibachiListingColumn propertyIdentifier="sku.product.productType.productTypeName" />
+						<cf_HibachiListingColumn propertyIdentifier="sku.calculatedQATS" />
+						<cf_HibachiListingColumn propertyIdentifier="sku.price" />
 						<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
 						<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 					</cf_HibachiListingDisplay>

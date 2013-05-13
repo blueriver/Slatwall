@@ -59,14 +59,14 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.productSmartList#"
 			recordEditAction="admin:entity.editproduct"
 			recorddetailaction="admin:entity.detailproduct">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" search=true sort="true"  />
-		<cf_HibachiListingColumn propertyIdentifier="productCode" search=true />
-		<cf_HibachiListingColumn propertyIdentifier="productType.productTypeName" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="brand.brandName" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="defaultSku.price" range=true />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="publishedFlag" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range=true />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName"  />
+		<cf_HibachiListingColumn propertyIdentifier="productCode" />
+		<cf_HibachiListingColumn propertyIdentifier="productType.productTypeName" />
+		<cf_HibachiListingColumn propertyIdentifier="brand.brandName" />
+		<cf_HibachiListingColumn propertyIdentifier="defaultSku.price" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="publishedFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" />
 	</cf_HibachiListingDisplay>
 	
 </cfoutput>

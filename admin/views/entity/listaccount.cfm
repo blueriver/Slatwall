@@ -53,12 +53,12 @@ Notes:
 						   recordEditAction="admin:entity.editaccount"
 						   recordDetailAction="admin:entity.detailaccount">
 						      
-	<cf_HibachiListingColumn propertyIdentifier="firstName" search="true" sort="true" />
-	<cf_HibachiListingColumn propertyIdentifier="lastName" search="true" sort="true" />
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="company" sort="true" />
-	<cf_HibachiListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="guestAccountFlag" sort="false" />
+	<cf_HibachiListingColumn propertyIdentifier="firstName" />
+	<cf_HibachiListingColumn propertyIdentifier="lastName" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="company" />
+	<cf_HibachiListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" />
+	<cf_HibachiListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" />
+	<cf_HibachiListingColumn propertyIdentifier="guestAccountFlag" />
 	
 </cf_HibachiListingDisplay>
 

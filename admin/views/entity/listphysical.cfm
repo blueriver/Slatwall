@@ -44,9 +44,9 @@ Notes:
 	<cf_HibachiListingDisplay smartlist="#rc.physicalSmartList#" 
 	                          recordeditaction="admin:entity.editphysical"
 							  recorddetailaction="admin:entity.detailphysical">
-		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="physicalName" sort=true search=true />	
-		<cf_HibachiListingColumn propertyidentifier="physicalStatusType.type" filter="true" title="#$.slatwall.rbKey('entity.physical.physicalStatusType')#" />					    
-		<cf_HibachiListingColumn propertyidentifier="createdDateTime" sort=true range=true />
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="physicalName" />	
+		<cf_HibachiListingColumn propertyidentifier="physicalStatusType.type" title="#$.slatwall.rbKey('entity.physical.physicalStatusType')#" />					    
+		<cf_HibachiListingColumn propertyidentifier="createdDateTime" />
 	</cf_HibachiListingDisplay>
 
 </cfoutput>

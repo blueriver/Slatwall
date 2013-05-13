@@ -51,10 +51,10 @@ Notes:
 							   sortContextIDColumn="attributeSetID"
 							   sortContextIDValue="#rc.attributeSet.getAttributeSetID()#">
 							      
-		<cf_HibachiListingColumn propertyIdentifier="attributeCode" sort="true" search="true" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="attributeName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="attributeType.type" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="attributeCode" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="attributeName" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="attributeType.type" />
 	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createattribute" class="btn" icon="plus" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />

@@ -47,14 +47,14 @@ Notes:
 	
 	<cf_HibachiListingDisplay smartList="#rc.orderPaymentSmartList#"
 							   recorddetailaction="admin:entity.detailorderpayment">
-		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="order.account.firstName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="order.account.lastName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true" range="true" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="orderPaymentType.type" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="amount" sort="true" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="amountReceived" sort="false" />
-		<cf_HibachiListingColumn propertyIdentifier="amountCredited" sort="false" />
+		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" />
+		<cf_HibachiListingColumn propertyIdentifier="order.account.firstName" />
+		<cf_HibachiListingColumn propertyIdentifier="order.account.lastName" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_HibachiListingColumn propertyIdentifier="orderPaymentType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" />
+		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
+		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

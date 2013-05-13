@@ -45,7 +45,7 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.printTemplateSmartList#"
 						   recordDetailAction="admin:entity.detailPrintTemplate"
 						   recordEditAction="admin:entity.editPrintTemplate">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="printTemplateName" sort="true" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="printTemplateName" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

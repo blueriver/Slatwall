@@ -46,16 +46,16 @@ Notes:
 						   recordDetailAction="admin:entity.detailsubscriptionUsage"
 						   recordEditAction="admin:entity.editsubscriptionUsage">
 
-	<cf_HibachiListingColumn propertyIdentifier="account.firstName" search="true" sort="true" />
-	<cf_HibachiListingColumn propertyIdentifier="account.lastName" search="true" sort="true" />
-	<cf_HibachiListingColumn propertyIdentifier="account.company" search="true" sort="true" />
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" filter="false" search="false" sort="false" />
-	<cf_HibachiListingColumn propertyIdentifier="currentStatusType" filter="false" search="false" sort="false" />
-	<cf_HibachiListingColumn propertyIdentifier="nextBillDate" sort="true" range="true" />
-	<cf_HibachiListingColumn propertyIdentifier="expirationDate" sort="true" range="true" />
+	<cf_HibachiListingColumn propertyIdentifier="account.firstName" />
+	<cf_HibachiListingColumn propertyIdentifier="account.lastName" />
+	<cf_HibachiListingColumn propertyIdentifier="account.company" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" />
+	<cf_HibachiListingColumn propertyIdentifier="currentStatusType" />
+	<cf_HibachiListingColumn propertyIdentifier="nextBillDate" />
+	<cf_HibachiListingColumn propertyIdentifier="expirationDate" />
 	<cf_HibachiListingColumn propertyIdentifier="gracePeriodTerm.termName" title="#$.slatwall.rbKey('define.gracePeriod')#" />
-	<cf_HibachiListingColumn propertyIdentifier="renewalPrice" sort="true" range="true" />
-	<cf_HibachiListingColumn propertyIdentifier="autoPayFlag" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="renewalPrice" />
+	<cf_HibachiListingColumn propertyIdentifier="autoPayFlag" />
 
 </cf_HibachiListingDisplay>
 

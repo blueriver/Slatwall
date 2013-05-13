@@ -54,9 +54,9 @@ Notes:
 									  selectTitle="#$.slatwall.rbKey('define.primary')#"
 									  edit="#rc.edit#">
 						
-				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailAddress" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="accountEmailType.type" filter="true" />
-				<cf_HibachiListingColumn propertyIdentifier="verifiedFlag" sort="true" filter="true" />
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailAddress" />
+				<cf_HibachiListingColumn propertyIdentifier="accountEmailType.type" />
+				<cf_HibachiListingColumn propertyIdentifier="verifiedFlag" />
 			</cf_HibachiListingDisplay>
 			
 			<cf_HibachiActionCaller action="admin:entity.createaccountemailaddress" class="btn" icon="plus" queryString="accountID=#rc.account.getAccountID()#" modal=true />
@@ -76,8 +76,8 @@ Notes:
 									  selectTitle="#$.slatwall.rbKey('define.primary')#"
 									  edit="#rc.edit#">
 						
-				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="phoneNumber" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="accountPhoneType.type" filter="true" />
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="phoneNumber" />
+				<cf_HibachiListingColumn propertyIdentifier="accountPhoneType.type" />
 				
 			</cf_HibachiListingDisplay>
 			
@@ -100,13 +100,13 @@ Notes:
 									  selectTitle="#$.slatwall.rbKey('define.primary')#"
 									  edit="#rc.edit#">
 						
-				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountAddressName" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="address.name" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="address.streetAddress" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="address.street2Address" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="address.city" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="address.stateCode" sort="true" search="true" filter="true" />
-				<cf_HibachiListingColumn propertyIdentifier="address.postalCode" sort="true" search="true" />
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountAddressName" />
+				<cf_HibachiListingColumn propertyIdentifier="address.name" />
+				<cf_HibachiListingColumn propertyIdentifier="address.streetAddress" />
+				<cf_HibachiListingColumn propertyIdentifier="address.street2Address" />
+				<cf_HibachiListingColumn propertyIdentifier="address.city" />
+				<cf_HibachiListingColumn propertyIdentifier="address.stateCode" />
+				<cf_HibachiListingColumn propertyIdentifier="address.postalCode" />
 			</cf_HibachiListingDisplay>
 			
 			<cf_HibachiActionCaller action="admin:entity.createaccountaddress" class="btn" icon="plus" queryString="accountID=#rc.account.getAccountID()#" modal=true />

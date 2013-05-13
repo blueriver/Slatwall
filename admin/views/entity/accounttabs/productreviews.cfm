@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_HibachiListingDisplay smartList="#rc.account.getProductReviewsSmartList()#">
-	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true" range="true" />
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="review" sort="true" />
-	<cf_HibachiListingColumn propertyIdentifier="rating" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="review" />
+	<cf_HibachiListingColumn propertyIdentifier="rating" />
 </cf_HibachiListingDisplay>

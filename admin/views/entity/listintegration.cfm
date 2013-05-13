@@ -43,10 +43,10 @@ Notes:
 	<cf_HibachiEntityActionBar type="listing" object="#rc.integrationSmartList#" showCreate="false" />
 	
 	<cf_HibachiListingDisplay smartList="#rc.integrationSmartList#" recordDetailAction="admin:entity.detailintegration" recordEditAction="admin:entity.editintegration">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="integrationName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="fw1ActiveFlag" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="paymentActiveFlag" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="shippingActiveFlag" filter="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="integrationName" />
+		<cf_HibachiListingColumn propertyIdentifier="fw1ActiveFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="paymentActiveFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="shippingActiveFlag" />
 	</cf_HibachiListingDisplay>
 
 </cfoutput>

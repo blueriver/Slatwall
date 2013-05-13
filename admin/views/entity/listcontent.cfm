@@ -45,12 +45,12 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.contentSmartList#"
 						   recordDetailAction="admin:entity.detailcontent"
 						   recordEditAction="admin:entity.editcontent">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="title" search="true" sort="true" />
-	<cf_HibachiListingColumn propertyIdentifier="site.siteName" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="contentTemplateType.type" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="allowPurchaseFlag" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="productListingPageFlag" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="title" />
+	<cf_HibachiListingColumn propertyIdentifier="site.siteName" />
+	<cf_HibachiListingColumn propertyIdentifier="contentTemplateType.type" />
+	<cf_HibachiListingColumn propertyIdentifier="allowPurchaseFlag" />
+	<cf_HibachiListingColumn propertyIdentifier="productListingPageFlag" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

@@ -52,16 +52,16 @@ Notes:
 							  recordEditAction="admin:entity.editorder">
 							    
 		<cfif rc.slatAction eq "admin:entity.listorder">
-			<cf_HibachiListingColumn propertyIdentifier="orderNumber" sort="true" search="true" />
-			<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" sort="true" range=true />
+			<cf_HibachiListingColumn propertyIdentifier="orderNumber" />
+			<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" />
 		</cfif>
-		<cf_HibachiListingColumn propertyIdentifier="account.firstName" search="true" sort="true" />
-		<cf_HibachiListingColumn propertyIdentifier="account.lastName" search="true" sort="true" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.company" search="true" sort="true" />
-		<cf_HibachiListingColumn propertyIdentifier="orderType.type" sort="true" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" sort="true" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="orderOrigin.orderOriginName" sort="true" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true"  range=true />
-		<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" sort="true" range=true />
+		<cf_HibachiListingColumn propertyIdentifier="account.firstName" />
+		<cf_HibachiListingColumn propertyIdentifier="account.lastName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.company" />
+		<cf_HibachiListingColumn propertyIdentifier="orderType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" title="#$.slatwall.rbKey('define.status')#" />
+		<cf_HibachiListingColumn propertyIdentifier="orderOrigin.orderOriginName" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

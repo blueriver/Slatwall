@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.order.getStockReceiversSmartList()#" 
 			recordDetailAction="admin:entity.detailstockreceiver">
-		<cf_HibachiListingColumn tdClass="primary" propertyIdentifier="packingSlipNumber" filter=true />
+		<cf_HibachiListingColumn tdClass="primary" propertyIdentifier="packingSlipNumber" />
 		<cf_HibachiListingColumn propertyIdentifier="boxCount" />
 		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
 	</cf_HibachiListingDisplay>

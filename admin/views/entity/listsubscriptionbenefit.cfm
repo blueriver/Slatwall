@@ -45,7 +45,7 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.subscriptionBenefitSmartList#"
 						   recordDetailAction="admin:entity.detailsubscriptionbenefit"
 						   recordEditAction="admin:entity.editsubscriptionbenefit">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionBenefitName" search="true" sort="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionBenefitName" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

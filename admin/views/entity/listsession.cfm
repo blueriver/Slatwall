@@ -43,9 +43,9 @@ Notes:
 <cf_HibachiEntityActionBar type="listing" object="#rc.sessionSmartList#" showCreate="false" />
 
 <cf_HibachiListingDisplay smartList="#rc.sessionSmartList#">
-	<cf_HibachiListingColumn propertyIdentifier="lastRequestDateTime" sort="true" range="true" />
-	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true" range="true" />
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="lastRequestIPAddress" sort="true" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="account.firstName" sort="true" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="account.lastName" sort="true" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="lastRequestDateTime" />
+	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="lastRequestIPAddress" />
+	<cf_HibachiListingColumn propertyIdentifier="account.firstName" />
+	<cf_HibachiListingColumn propertyIdentifier="account.lastName" />
 </cf_HibachiListingDisplay>
