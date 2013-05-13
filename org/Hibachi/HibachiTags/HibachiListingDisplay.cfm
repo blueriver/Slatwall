@@ -189,9 +189,47 @@
 		
 		<!--- Setup the list of all property identifiers to be used later --->
 		<cfloop array="#thistag.columns#" index="column">
+			
+			<!--- If this is a standard propertyIdentifier --->
 			<cfif len(column.propertyIdentifier)>
+				
+				<!--- Add to the all property identifiers --->
 				<cfset thistag.allpropertyidentifiers = listAppend(thistag.allpropertyidentifiers, column.propertyIdentifier) />
+				
+				<!--- Get the entity object to get property metaData --->
+				<cfset thisEntityName = attributes.hibachiScope.getService("hibachiService").getLastEntityNameInPropertyIdentifier( attributes.smartList.getBaseEntityName(), column.propertyIdentifier ) />
+				<cfset thisPropertyName = listLast( column.propertyIdentifier, "._" ) />
+				<cfset thisPropertyMeta = attributes.hibachiScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName( thisEntityName, thisPropertyName ) />
+				
+				<!--- Setup automatic search, sort, filter & range --->
+				<cfif not len(column.search) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && (!structKeyExists(thisPropertyMeta, "ormType") || thisPropertyMeta.ormType eq 'string')>
+					<cfset column.search = true />
+				<cfelseif !isBoolean(column.search)>
+					<cfset column.search = false />
+				</cfif>
+				<cfif not len(column.sort) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent)>
+					<cfset column.sort = false />
+				<cfelseif !isBoolean(column.sort)>
+					<cfset column.sort = false />
+				</cfif>
+				<cfif not len(column.filter) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && structKeyExists(thisPropertyMeta, "fieldtype") && thisPropertyMeta.fieldtype eq 'many-to-one'>
+					<cfset column.filter = false />
+				<cfelseif !isBoolean(column.filter)>
+					<cfset column.filter = false />
+				</cfif>
+				<cfif not len(column.range) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && structKeyExists(thisPropertyMeta, "ormType") && (thisPropertyMeta.ormType eq 'integer' || thisPropertyMeta.ormType eq 'big_decimal' || thisPropertyMeta.ormType eq 'timestamp')>
+					<cfset column.range = false />
+				<cfelseif !isBoolean(column.range)>
+					<cfset column.range = false />
+				</cfif>
+				
+			<!--- Otherwise this is a processObject property --->
 			<cfelseif len(column.processObjectProperty)>
+				<cfset column.search = false />
+				<cfset column.sort = false />
+				<cfset column.filter = false />
+				<cfset column.range = false />
+				
 				<cfset thistag.allprocessobjectproperties = listAppend(thistag.allprocessobjectproperties, column.processObjectProperty) />
 			</cfif>
 			<cfif findNoCase("primary", column.tdClass) and thistag.expandable>
