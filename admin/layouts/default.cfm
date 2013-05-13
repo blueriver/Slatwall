@@ -138,6 +138,7 @@ Notes:
 								<cf_HibachiActionCaller action="admin:entity.settings" title="#$.slatwall.rbKey('admin.setting_nav')#" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listattributeset" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listintegration" type="list">
+								<li class="divider"></li>
 								<cf_HibachiActionCaller action="admin:entity.listaddresszone" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listcountry" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listcurrency" type="list">
