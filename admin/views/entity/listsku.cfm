@@ -57,15 +57,15 @@ Notes:
 			recordEditAction="admin:entity.editsku"
 			recorddetailaction="admin:entity.detailsku">
 			
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode" sort="true" search=true />
-		<cf_HibachiListingColumn propertyIdentifier="product.productName" search=true sort="true" />
-		<cf_HibachiListingColumn propertyIdentifier="product.productCode" search=true sort="true" />		
-		<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="listPrice" sort="true" range=true />
-		<cf_HibachiListingColumn propertyIdentifier="price" sort="true" range=true />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" sort="true" range=true />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode" />
+		<cf_HibachiListingColumn propertyIdentifier="product.productName" />
+		<cf_HibachiListingColumn propertyIdentifier="product.productCode" />		
+		<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
+		<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" />
+		<cf_HibachiListingColumn propertyIdentifier="listPrice" />
+		<cf_HibachiListingColumn propertyIdentifier="price" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" />
 	</cf_HibachiListingDisplay>
 	
 </cfoutput>

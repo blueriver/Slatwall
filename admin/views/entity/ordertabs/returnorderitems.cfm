@@ -44,12 +44,12 @@ Notes:
 							   recordDetailAction="admin:entity.detailorderitem"
 							   recordEditAction="admin:entity.editorderitem">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.title" />
-		<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="sku.optionsDisplay" sort="false" />
-		<cf_HibachiListingColumn propertyIdentifier="orderItemStatusType.type" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="quantity" sort="true" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="price" sort="true" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="discountAmount" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
+		<cf_HibachiListingColumn propertyIdentifier="sku.optionsDisplay" />
+		<cf_HibachiListingColumn propertyIdentifier="orderItemStatusType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="quantity" />
+		<cf_HibachiListingColumn propertyIdentifier="price" />
+		<cf_HibachiListingColumn propertyIdentifier="discountAmount" />
 		<cf_HibachiListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
 		<cf_HibachiListingColumn propertyIdentifier="quantityReceived" />
 	</cf_HibachiListingDisplay>
@@ -63,12 +63,12 @@ Notes:
 								  recordProcessEntity="#rc.order#"
 								  recordProcessUpdateTableID="LD#replace(rc.order.getReturnItemSmartList().getSavedStateID(),'-','','all')#">
 								    
-			<cf_HibachiListingColumn propertyIdentifier="skuCode" sort="true" search="true" />
-			<cf_HibachiListingColumn propertyIdentifier="product.productCode" sort="true" search="true" />
-			<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" filter="true" />
-			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" sort="true" search="true" />
-			<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
-			<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" sort="true" range="true" />
+			<cf_HibachiListingColumn propertyIdentifier="skuCode" />
+			<cf_HibachiListingColumn propertyIdentifier="product.productCode" />
+			<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" />
+			<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" />
+			<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
+			<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" />
 			<cf_HibachiListingColumn processObjectProperty="orderReturnID" title="#$.slatwall.rbKey('entity.orderReturn')#" fieldClass="span2" />
 			<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 		</cf_HibachiListingDisplay>

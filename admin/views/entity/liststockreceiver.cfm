@@ -45,10 +45,10 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.stockReceiverSmartList#"
 						   recordDetailAction="admin:entity.detailstockreceiver"
 						   recordEditAction="admin:entity.editstockreceiver">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="packingSlipNumber" sort="true" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="boxCount" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="receiverType" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true" range="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="packingSlipNumber" />
+	<cf_HibachiListingColumn propertyIdentifier="boxCount" />
+	<cf_HibachiListingColumn propertyIdentifier="receiverType" />
+	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

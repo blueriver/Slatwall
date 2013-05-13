@@ -48,8 +48,8 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.orderFulfillmentSmartList#"
 		recorddetailaction="admin:entity.detailorderfulfillment"
 		recordeditaction="admin:entity.editorderfulfillment">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" sort="false" />
-	<cf_HibachiListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" sort="true" filter=true />
-	<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" sort="true" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="order.orderOpenDateTime" sort="true" range="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
+	<cf_HibachiListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" />
+	<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" />
+	<cf_HibachiListingColumn propertyIdentifier="order.orderOpenDateTime" />
 </cf_HibachiListingDisplay>

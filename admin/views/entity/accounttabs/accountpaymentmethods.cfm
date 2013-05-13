@@ -50,9 +50,9 @@ Notes:
 							  selectTitle="#$.slatwall.rbKey('define.primary')#"
 							  edit="#rc.edit#">
 		
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="simpleRepresentation" title="#$.slatwall.rbKey('entity.accountPaymentMethod')#" sort="true" />
-		<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" filter="true" />					    
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" sort="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="simpleRepresentation" title="#$.slatwall.rbKey('entity.accountPaymentMethod')#" />
+		<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" />					    
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="accountID=#rc.account.getAccountID()#" modal=true />

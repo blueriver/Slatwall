@@ -44,8 +44,8 @@ Notes:
 	
 	<cf_HibachiListingDisplay smartList="#rc.settingSmartList#"
 							   recordDeleteAction="admin:entity.deleteSetting">
-		<cf_HibachiListingColumn propertyIdentifier="settingName" filter="true" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="settingValue" sort="false" />
+		<cf_HibachiListingColumn propertyIdentifier="settingName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="settingValue" />
 		<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
 		<cf_HibachiListingColumn propertyIdentifier="product.productName" />
 		<cf_HibachiListingColumn propertyIdentifier="productType.productTypeName" />

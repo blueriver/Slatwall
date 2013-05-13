@@ -49,8 +49,8 @@ Notes:
 							  recordDetailModal="true"
 							  recordDeleteAction="admin:entity.detailpaymentTerm"
 							  recordDeleteQueryString="redirectAction=admin:entity.listpaymentterm">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentTermName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="term.termName" sort="true" filter="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" sort="true" filter="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentTermName" />
+		<cf_HibachiListingColumn propertyIdentifier="term.termName" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

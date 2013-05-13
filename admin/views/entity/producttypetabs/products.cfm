@@ -41,12 +41,12 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.productType.getProductsSmartList()#"
 							   recordEditAction="admin:entity.editproduct"
 							   recordDetailAction="admin:entity.detailproduct">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" search=true  sort="true" />
-		<cf_HibachiListingColumn propertyIdentifier="productCode" sort="true" search=true />
-		<cf_HibachiListingColumn propertyIdentifier="brand.brandName" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="publishedFlag" filter=true />
-		<cf_HibachiListingColumn propertyIdentifier="price"  sort="true" range=true />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" />
+		<cf_HibachiListingColumn propertyIdentifier="productCode" />
+		<cf_HibachiListingColumn propertyIdentifier="brand.brandName" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="publishedFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="price" />
 	</cf_HibachiListingDisplay>
 	
 </cfoutput>

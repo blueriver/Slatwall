@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.order.getOrderFulfillmentsSmartList()#"
 							   recordDetailAction="admin:entity.detailorderfulfillment"
 							   recordEditAction="admin:entity.editorderfulfillment">
-		<cf_HibachiListingColumn tdClass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" filter=true />
+		<cf_HibachiListingColumn tdClass="primary" propertyIdentifier="fulfillmentMethod.fulfillmentMethodName" />
 		<cf_HibachiListingColumn propertyIdentifier="fulfillmentCharge" />
 		<cf_HibachiListingColumn propertyIdentifier="discountAmount" />
 		<cf_HibachiListingColumn propertyIdentifier="chargeAfterDiscount" />

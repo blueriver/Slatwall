@@ -47,8 +47,8 @@ Notes:
 							   recordEditAction="admin:entity.editcurrency"
 							   recordEditModal="true">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="currencyName" />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="currencyCode" sort="true "search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="formattedExample" sort="false" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="currencyCode" />
+		<cf_HibachiListingColumn propertyIdentifier="formattedExample" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

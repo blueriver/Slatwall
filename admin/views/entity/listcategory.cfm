@@ -48,9 +48,9 @@ Notes:
 						   recordEditAction="admin:entity.editcategory"
 						   recordEditQueryString="redirectAction=admin:entity.listcategory"
 						   recordEditModal="true">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="categoryName" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="restrictAccessFlag" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="allowProductAssignmentFlag" filter="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="categoryName" />
+	<cf_HibachiListingColumn propertyIdentifier="restrictAccessFlag" />
+	<cf_HibachiListingColumn propertyIdentifier="allowProductAssignmentFlag" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

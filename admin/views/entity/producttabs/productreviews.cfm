@@ -43,7 +43,7 @@ Notes:
 						   recorddetailmodal="true"
 						   recordeditaction="admin:entity.editproductreview"
 						   recordeditmodal="true">
-	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true" range="true" />
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="review" sort="true" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="review" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 </cf_HibachiListingDisplay>

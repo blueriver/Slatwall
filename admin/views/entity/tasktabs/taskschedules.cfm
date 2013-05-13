@@ -43,10 +43,10 @@ Notes:
                         recordeditquerystring="taskID=#rc.task.getTaskID()#" 
                         recorddeleteaction="admin:entity.deleteTaskSchedule"
 						recorddeletequerystring="redirectAction=setting.editTask&taskID=#rc.task.getTaskID()###tabtaskschedule">
-	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="startDateTime" sort="true" range="true"/>
-	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="endDateTime" sort="true" range="true"/>
-	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="schedule.schedulename"/>
-	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="nextRunDateTime"/>
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="startDateTime" />
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="endDateTime" />
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="schedule.schedulename" />
+	<cf_HibachiListingColumn tdclass="primary" propertyidentifier="nextRunDateTime" />
 </cf_HibachiListingDisplay>
 
 <cf_HibachiActionCaller action="admin:entity.createTaskSchedule" class="btn" icon="plus" 

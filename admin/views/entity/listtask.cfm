@@ -46,9 +46,9 @@ Notes:
 	                          recorddetailaction="admin:entity.edittask"
 							  recordeditaction="admin:entity.edittask">
 		
-		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="taskName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyidentifier="runningFlag" sort="true" filter="true" />
-		<cf_HibachiListingColumn propertyidentifier="activeFlag" sort="true" filter="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="taskName" />
+		<cf_HibachiListingColumn propertyidentifier="runningFlag" />
+		<cf_HibachiListingColumn propertyidentifier="activeFlag" />
 	</cf_HibachiListingDisplay>
 
 </cfoutput>

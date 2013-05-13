@@ -45,7 +45,7 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.emailTemplateSmartList#"
 						   recordDetailAction="admin:entity.detailemailTemplate"
 						   recordEditAction="admin:entity.editemailTemplate">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailTemplateName" sort="true" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailTemplateName" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

@@ -48,11 +48,11 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.vendorOrderSmartList#"
 							   recordDetailAction="admin:entity.detailvendororder"
 							   recordEditAction="admin:entity.editvendororder">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="vendorOrderNumber" sort="true" search="true" />
-		<cf_HibachiListingColumn propertyIdentifier="vendorOrderType.type" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="estimatedReceivalDateTime" sort="true" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="total" sort="false" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="vendor.vendorName" />
+		<cf_HibachiListingColumn propertyIdentifier="vendorOrderNumber" />
+		<cf_HibachiListingColumn propertyIdentifier="vendorOrderType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="estimatedReceivalDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="total" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

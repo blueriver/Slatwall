@@ -46,7 +46,7 @@ Notes:
 							   recordEditQueryString="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()#"
 							   recorddetailaction="admin:entity.detailpromotionqualifier">
 							      
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="qualifierType" filter="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="qualifierType" />
 	</cf_HibachiListingDisplay>
 	
 	<cfif !rc.promotionperiod.isExpired()>

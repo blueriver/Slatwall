@@ -46,8 +46,8 @@ Notes:
 							   sortContextIDColumn="fulfillmentMethodID"
 							   sortContextIDValue="#rc.fulfillmentMethod.getFulfillmentMethodID()#">
 			
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="shippingMethodName" sort="true" search="true" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="activeFlag" filter="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="shippingMethodName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="activeFlag" />
 		
 	</cf_HibachiListingDisplay>
 	

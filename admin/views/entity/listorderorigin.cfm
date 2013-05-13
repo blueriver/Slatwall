@@ -47,9 +47,9 @@ Notes:
 		recordEditQueryString="redirectAction=admin:entity.listorderorigin"
 		recordDeleteAction="admin:entity.deleteorderorigin"
 		recordEditModal="true">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderOriginName" sort="true" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="orderOriginType" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderOriginName" />
+	<cf_HibachiListingColumn propertyIdentifier="orderOriginType" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

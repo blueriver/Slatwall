@@ -46,12 +46,12 @@ Notes:
 							   recordEditQueryString="promotionperiodID=#rc.promotionperiod.getPromotionPeriodID()#"
 							   recorddetailaction="admin:entity.detailpromotionreward">
 							      
-		<cf_HibachiListingColumn propertyIdentifier="rewardType" tdclass="primary" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="amountType" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="amount" sort="true" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerOrder" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerItem" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerQualification" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="rewardType" tdclass="primary" />
+		<cf_HibachiListingColumn propertyIdentifier="amountType" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerOrder" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerItem" />
+		<cf_HibachiListingColumn propertyIdentifier="maximumUsePerQualification" />
 		
 	</cf_HibachiListingDisplay>
 	

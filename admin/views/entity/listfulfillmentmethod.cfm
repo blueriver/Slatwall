@@ -44,7 +44,7 @@ Notes:
 		recordEditAction="admin:entity.editfulfillmentmethod"
 		recordDetailAction="admin:entity.detailfulfillmentmethod"
 		sortProperty="sortOrder">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="fulfillmentMethodType" filter="true" />
-	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="fulfillmentMethodName" />
+	<cf_HibachiListingColumn propertyIdentifier="fulfillmentMethodType" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 </cf_HibachiListingDisplay>

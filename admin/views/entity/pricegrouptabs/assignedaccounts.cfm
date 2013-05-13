@@ -42,12 +42,12 @@ Notes:
 
 <cf_HibachiListingDisplay smartList="#rc.priceGroup.getAccountsOptionsSmartList()#" multiselectFieldName="accounts" multiselectValues="#rc.priceGroup.getAccountsAssignedIDList()#" edit="#rc.edit#">
 						      
-	<cf_HibachiListingColumn propertyIdentifier="firstName" search="true" sort="true" />
-	<cf_HibachiListingColumn propertyIdentifier="lastName" search="true" sort="true" />
+	<cf_HibachiListingColumn propertyIdentifier="firstName" />
+	<cf_HibachiListingColumn propertyIdentifier="lastName" />
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="company" />
-	<cf_HibachiListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" search="true" sort="true" />
-	<cf_HibachiListingColumn propertyIdentifier="guestAccountFlag" sort="false" />
+	<cf_HibachiListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" />
+	<cf_HibachiListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" />
+	<cf_HibachiListingColumn propertyIdentifier="guestAccountFlag" />
 	
 </cf_HibachiListingDisplay>
 

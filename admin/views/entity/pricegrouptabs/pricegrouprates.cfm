@@ -41,8 +41,8 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.priceGroup.getPriceGroupRatesSmartList()#"
 						   recordDetailAction="admin:entity.detailpricegrouprate"
 						   recordEditAction="admin:entity.editpricegrouprate">
-	<cf_HibachiListingColumn propertyIdentifier="amount" sort="true" range="true" />
-	<cf_HibachiListingColumn propertyIdentifier="amountType" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="amount" />
+	<cf_HibachiListingColumn propertyIdentifier="amountType" />
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="appliesTo" />
 </cf_HibachiListingDisplay>
 

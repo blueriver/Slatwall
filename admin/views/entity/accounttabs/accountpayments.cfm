@@ -43,11 +43,11 @@ Notes:
 							   recordDetailAction="admin:entity.detailaccountpayment"
 							   recordEditAction="admin:entity.editaccountpayment">
 			
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="accountPaymentType.type" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="amount" sort="true" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="amountReceived" sort="true" range="true" />
-		<cf_HibachiListingColumn propertyIdentifier="amountCredited" sort="true" range="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
+		<cf_HibachiListingColumn propertyIdentifier="accountPaymentType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" />
+		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
+		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
 		
 	</cf_HibachiListingDisplay>
 	

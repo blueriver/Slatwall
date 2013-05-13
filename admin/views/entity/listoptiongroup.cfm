@@ -46,8 +46,8 @@ Notes:
 							   recordDetailAction="admin:entity.detailoptiongroup"
 							   recordEditAction="admin:entity.editoptiongroup"
 							   sortProperty="sortOrder">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="optionGroupName" search="true" sort="true" />
-		<cf_HibachiListingColumn propertyIdentifier="optionGroupCode" search="true" sort="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="optionGroupName" />
+		<cf_HibachiListingColumn propertyIdentifier="optionGroupCode" />
 	</cf_HibachiListingDisplay>
 	
 </cfoutput>

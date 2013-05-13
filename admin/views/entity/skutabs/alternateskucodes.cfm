@@ -46,7 +46,7 @@ Notes:
 			recordDeleteQueryString="skuID=#rc.sku.getSkuID()#&redirectAction=admin:entity.detailsku##tabalternateskucodes"
 			edit="#rc.edit#">
 			
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="alternateSkuCode" sort="true" search="true" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="alternateSkuCode" />
 		
 	</cf_HibachiListingDisplay>
 	
