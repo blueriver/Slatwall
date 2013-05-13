@@ -56,7 +56,8 @@ Notes:
 							  cancelAction="admin:entity.detailpromotionreward"
 							  cancelQueryString="promotionRewardID=#rc.promotionReward.getPromotionRewardID()#" 
 							  backAction="admin:entity.detailpromotionperiod" 
-							  backQueryString="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()###tabPromotionRewards" />
+							  backQueryString="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()###tabPromotionRewards" 
+							  deleteQueryString="promotionRewardID=#rc.promotionReward.getPromotionRewardID()#&redirectAction=admin:entity.detailpromotionperiod&promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()###tabPromotionRewards" />
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<input type="hidden" name="rewardType" value="#rc.rewardType#" />

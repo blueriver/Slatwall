@@ -53,11 +53,13 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.promotionQualifier#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionQualifier#" edit="#rc.edit#" 
 							  cancelAction="admin:entity.detailpromotionqualifier"
-							  cancelQueryString="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()#" 
+							  cancelQueryString="promotionQualifierID=#rc.promotionQualifier.getPromotionQualifierID()#" 
 							  backAction="admin:entity.detailpromotionperiod" 
-							  backQueryString="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()###tabpromotionqualifiers" />
+							  backQueryString="promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()###tabpromotionqualifiers" 
+							  deleteQueryString="promotionQualifierID=#rc.promotionQualifier.getPromotionQualifierID()#&redirectAction=admin:entity.detailpromotionperiod&promotionPeriodID=#rc.promotionPeriod.getPromotionPeriodID()###tabpromotionqualifiers" />
 		
 		<input type="hidden" name="qualifierType" value="#rc.qualifierType#" />
+		
 		<input type="hidden" name="promotionPeriod.promotionPeriodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 		<input type="hidden" name="promotionPeriodID" value="#rc.promotionperiod.getPromotionperiodID()#" />
 		
