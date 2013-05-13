@@ -208,17 +208,26 @@
 					<cfset column.search = false />
 				</cfif>
 				<cfif not len(column.sort) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent)>
-					<cfset column.sort = false />
+					<cfset column.sort = true />
 				<cfelseif !isBoolean(column.sort)>
 					<cfset column.sort = false />
 				</cfif>
-				<cfif not len(column.filter) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && structKeyExists(thisPropertyMeta, "fieldtype") && thisPropertyMeta.fieldtype eq 'many-to-one'>
-					<cfset column.filter = false />
+				<cfif not len(column.filter) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && listLen(column.propertyIdentifier, '._')>
+					<cfset oneUpPropertyIdentifier = column.propertyIdentifier />
+					<cfset listDeleteAt(oneUpPropertyIdentifier, listLen(oneUpPropertyIdentifier, '._'), '._') />
+					<cfset oneUpPropertyName = listLast(oneUpPropertyIdentifier, '.') />
+					<cfset twoUpEntityName = attributes.hibachiScope.getService("hibachiService").getLastEntityNameInPropertyIdentifier( attributes.smartList.getBaseEntityName(), oneUpPropertyIdentifier ) />
+					<cfset oneUpPropertyMeta = attributes.hibachiScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName( twoUpEntityName, oneUpPropertyName ) />
+					<cfif structKeyExists(oneUpPropertyMeta, "fieldtype") && oneUpPropertyMeta.fieldtype eq 'many-to-one'>
+						<cfset column.filter = true />
+					<cfelse>
+						<cfset column.filter = false />
+					</cfif>
 				<cfelseif !isBoolean(column.filter)>
 					<cfset column.filter = false />
 				</cfif>
 				<cfif not len(column.range) && (!structKeyExists(thisPropertyMeta, "persistent") || !thisPropertyMeta.persistent) && structKeyExists(thisPropertyMeta, "ormType") && (thisPropertyMeta.ormType eq 'integer' || thisPropertyMeta.ormType eq 'big_decimal' || thisPropertyMeta.ormType eq 'timestamp')>
-					<cfset column.range = false />
+					<cfset column.range = true />
 				<cfelseif !isBoolean(column.range)>
 					<cfset column.range = false />
 				</cfif>
