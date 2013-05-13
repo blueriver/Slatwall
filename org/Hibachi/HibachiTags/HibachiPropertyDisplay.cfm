@@ -197,4 +197,8 @@
 		
 		<cf_HibachiFieldDisplay attributecollection="#attributes#" />
 	</cfif>
+<<<<<<< HEAD
 </cfif>
+=======
+</cfif>
+>>>>>>> branch 'rc3' of https://github.com/ten24/Slatwall.git

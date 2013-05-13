@@ -48,11 +48,13 @@ Notes:
 							  recordEditModal=true
 							  recordDeleteAction="admin:entity.deletepromotioncode"
 							  recordDeleteQueryString="redirectAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()###tabpromotioncodes">
+
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="promotionCode" sort="true" search="true" />
 		<cf_HibachiListingColumn propertyIdentifier="startDateTime" sort="true" range="true" />
 		<cf_HibachiListingColumn propertyIdentifier="endDateTime" sort="true" range="true" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUseCount" sort="true" range="true" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumAccountUseCount" sort="true" range="true" />
+
 	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createpromotioncode" class="btn" icon="plus" queryString="redirectAction=admin:entity.detailpromotion&promotionID=#rc.promotion.getPromotionID()#" modal="true" />
