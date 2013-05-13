@@ -55,7 +55,7 @@ Notes:
 									  edit="#rc.edit#">
 						
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="emailAddress" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="accountEmailType.type" sort="true" filter="true" />
+				<cf_HibachiListingColumn propertyIdentifier="accountEmailType.type" filter="true" />
 				<cf_HibachiListingColumn propertyIdentifier="verifiedFlag" sort="true" filter="true" />
 			</cf_HibachiListingDisplay>
 			
@@ -77,7 +77,7 @@ Notes:
 									  edit="#rc.edit#">
 						
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="phoneNumber" sort="true" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="accountPhoneType.type" sort="true" filter="true" />
+				<cf_HibachiListingColumn propertyIdentifier="accountPhoneType.type" filter="true" />
 				
 			</cf_HibachiListingDisplay>
 			

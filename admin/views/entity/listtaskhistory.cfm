@@ -47,11 +47,11 @@ Notes:
 	<cf_HibachiEntityActionBar type="listing" object="#rc.taskHistorySmartList#" showCreate="false" />
 
 	<cf_HibachiListingDisplay smartlist="#rc.taskHistorySmartList#" >
-		<cf_HibachiListingColumn propertyidentifier="startTime" />
-		<cf_HibachiListingColumn propertyidentifier="endTime" />
-		<cf_HibachiListingColumn propertyidentifier="task.taskName" tdclass="primary" search="true" />
+		<cf_HibachiListingColumn propertyidentifier="startTime" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyidentifier="endTime" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyidentifier="task.taskName" tdclass="primary" sort="true" search="true" />
 		<cf_HibachiListingColumn propertyidentifier="successFlag" filter="true" />
-		<cf_HibachiListingColumn propertyidentifier="response" />
+		<cf_HibachiListingColumn propertyidentifier="response" sort="true" search="true" />
 	</cf_HibachiListingDisplay>
 
 </cfoutput>

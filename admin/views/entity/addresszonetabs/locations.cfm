@@ -46,10 +46,10 @@ Notes:
 			recordDeleteAction="admin:entity.deleteaddresszonelocation"
 			recordDeleteQueryString="addressZoneID=#rc.addressZone.getAddressZoneID()#">
 			
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="countryCode" />
-		<cf_HibachiListingColumn propertyIdentifier="stateCode" />
-		<cf_HibachiListingColumn propertyIdentifier="city" />
-		<cf_HibachiListingColumn propertyIdentifier="postalCode" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="countryCode" search="true" sort="true" />
+		<cf_HibachiListingColumn propertyIdentifier="stateCode" search="true" sort="true" />
+		<cf_HibachiListingColumn propertyIdentifier="city" search="true" sort="true"  />
+		<cf_HibachiListingColumn propertyIdentifier="postalCode" sort="true"  />
 	</cf_HibachiListingDisplay>
 </cfoutput>
 

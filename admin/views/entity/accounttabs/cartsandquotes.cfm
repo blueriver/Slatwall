@@ -44,7 +44,7 @@ Notes:
 						  recordDetailQueryString="accountID=#rc.account.getAccountID()#">
 
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
-	<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" sort="true" filter="true" />
+	<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" filter="true" />
 	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" sort="true" range="true" />
 	<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" sort="true" range="true" />
 	<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" sort="true" range="true" />

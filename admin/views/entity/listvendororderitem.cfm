@@ -49,12 +49,12 @@ Notes:
 							   recorddetailmodal="true"
 							   recordeditaction="admin:entity.editvendororderitem"
 							   recordeditmodal="true">
-		<cf_HibachiListingColumn propertyIdentifier="vendorOrder.vendor.vendorName" search="true" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="vendorOrder.vendorOrderNumber" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="vendorOrder.vendor.vendorName" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="vendorOrder.vendorOrderNumber" sort="true" search="true" />
 		<cf_HibachiListingColumn propertyIdentifier="vendorOrder.vendorOrderStatusType.type" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="stock.sku.product.brand.brandName" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="stock.sku.product.brand.brandName" sort="true" range="true" />
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.calculatedTitle" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="stock.sku.skuCode" filter="true" />
-		<cf_HibachiListingColumn propertyIdentifier="quantity" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="quantity" sort="true" range="true" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

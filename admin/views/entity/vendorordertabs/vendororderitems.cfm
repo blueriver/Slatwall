@@ -51,15 +51,15 @@ Notes:
 		                           recorddeletequerystring="redirectAction=admin:entity.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#">
 								      
 			<cf_HibachiListingColumn propertyidentifier="stock.sku.product.brand.brandName" filter="true" />
-			<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
-			<cf_HibachiListingColumn propertyidentifier="stock.sku.skucode" search="true" />
-			<cf_HibachiListingColumn propertyidentifier="stock.location.locationName" filter="true" search="true" />
-			<cf_HibachiListingColumn propertyidentifier="quantity" range="true" />
+			<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true"  />
+			<cf_HibachiListingColumn propertyidentifier="stock.sku.skucode" sort="true" search="true" />
+			<cf_HibachiListingColumn propertyidentifier="stock.location.locationName" filter="true" />
+			<cf_HibachiListingColumn propertyidentifier="quantity" sort="true" range="true" />
 			<cf_HibachiListingColumn propertyidentifier="quantityReceived" sort="false" />
 			<cf_HibachiListingColumn propertyidentifier="quantityUnreceived" sort="false" />
-			<cf_HibachiListingColumn propertyidentifier="cost" range="true" />
+			<cf_HibachiListingColumn propertyidentifier="cost" sort="true" range="true" />
 			<cf_HibachiListingColumn propertyidentifier="extendedCost" sort="false" />
-			<cf_HibachiListingColumn propertyidentifier="estimatedReceivalDateTime" range="true" />
+			<cf_HibachiListingColumn propertyidentifier="estimatedReceivalDateTime" sort="true" range="true" />
 			
 		</cf_HibachiListingDisplay>
 		
@@ -71,10 +71,10 @@ Notes:
 									  recordProcessEntity="#rc.vendorOrder#"
 									  recordProcessUpdateTableID="LD#replace(rc.vendorOrder.getVendorOrderItemsSmartList().getSavedStateID(),'-','','all')#">
 									    
-				<cf_HibachiListingColumn propertyIdentifier="skuCode" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="product.productCode" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="skuCode" sort="true" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="product.productCode" sort="true" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" filter="true" />
-				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" search="true" />
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" sort="true" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
 				<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 			</cf_HibachiListingDisplay>
@@ -96,12 +96,12 @@ Notes:
 			<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" filter="true" search="true" />
 			<cf_HibachiListingColumn propertyidentifier="stock.sku.skucode" search="true" />
 			<cf_HibachiListingColumn propertyidentifier="stock.location.locationName" filter="true" search="true" />
-			<cf_HibachiListingColumn propertyidentifier="quantity" range="true" />
+			<cf_HibachiListingColumn propertyidentifier="quantity" sort="true" range="true" />
 			<cf_HibachiListingColumn propertyidentifier="quantityReceived" sort="false" />
 			<cf_HibachiListingColumn propertyidentifier="quantityUnreceived" sort="false" />
-			<cf_HibachiListingColumn propertyidentifier="cost" range="true" />
+			<cf_HibachiListingColumn propertyidentifier="cost" sort="true" range="true" />
 			<cf_HibachiListingColumn propertyidentifier="extendedCost" sort="false" />
-			<cf_HibachiListingColumn propertyidentifier="estimatedReceivalDateTime" range="true" />
+			<cf_HibachiListingColumn propertyidentifier="estimatedReceivalDateTime" sort="true" range="true" />
 			
 		</cf_HibachiListingDisplay>
 		
@@ -115,12 +115,12 @@ Notes:
 									  recordProcessEntity="#rc.vendorOrder#"
 									  recordProcessUpdateTableID="LD#replace(rc.vendorOrder.getVendorOrderItemsSmartList().getSavedStateID(),'-','','all')#">
 									    
-				<cf_HibachiListingColumn propertyIdentifier="skuCode" search="true" />
-				<cf_HibachiListingColumn propertyIdentifier="product.productCode" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="skuCode" sort="true" search="true" />
+				<cf_HibachiListingColumn propertyIdentifier="product.productCode" sort="true" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" filter="true" />
-				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" search="true" />
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" sort="true" search="true" />
 				<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" filter="true" />
-				<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" range="true" />
+				<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" sort="true" range="true" />
 				<cf_HibachiListingColumn processObjectProperty="deliverToLocationID" title="#$.slatwall.rbKey('process.vendorOrder_AddVendorOrderItem.deliverToLocationID')#" fieldClass="span2" />
 				<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 				<cf_HibachiListingColumn processObjectProperty="cost" title="#$.slatwall.rbKey('define.cost')#" fieldClass="span1" />

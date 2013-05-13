@@ -49,7 +49,7 @@ Notes:
 							   selectFieldName="defaultSku.skuID"
 							   selectValue="#rc.product.getDefaultSku().getSkuID()#"
 							   selectTitle="#$.slatwall.rbKey('define.default')#">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="skuCode" sort="true" search="true" />
 		<cfif rc.product.getBaseProductType() eq "merchandise">
 			<cfloop collection="#rc.product.getOptionGroupsStruct()#" item="local.optionGroup">
 				<cf_HibachiListingColumn propertyIdentifier="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupID()#" title="#rc.product.getOptionGroupsStruct()[local.optionGroup].getOptionGroupName()#" sort="false" />
@@ -61,8 +61,8 @@ Notes:
 		</cfif>
 		<cf_HibachiListingColumn propertyIdentifier="imageFile" />
 		<cfif isNull(rc.product.getDefaultSku().getUserDefinedPriceFlag()) || !rc.product.getDefaultSku().getUserDefinedPriceFlag()>
-			<cf_HibachiListingColumn propertyIdentifier="listPrice" range="true" />
-			<cf_HibachiListingColumn propertyIdentifier="price" range="true" />
+			<cf_HibachiListingColumn propertyIdentifier="listPrice" sort="true" range="true" />
+			<cf_HibachiListingColumn propertyIdentifier="price" sort="true" range="true" />
 			<cf_HibachiListingColumn propertyIdentifier="salePrice" sort="false" />
 		</cfif>
 	</cf_HibachiListingDisplay>

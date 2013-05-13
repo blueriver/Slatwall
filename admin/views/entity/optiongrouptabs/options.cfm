@@ -47,8 +47,8 @@ Notes:
 							   sortproperty="sortOrder"
 							   sortContextIDColumn="optionGroupID"
 							   sortContextIDValue="#rc.optionGroup.getOptionGroupID()#">
-		<cf_HibachiListingColumn propertyidentifier="optionName" tdclass="primary"/>
-		<cf_HibachiListingColumn propertyidentifier="optionCode"/>
+		<cf_HibachiListingColumn propertyidentifier="optionName" tdclass="primary" search="true" sort="true" />
+		<cf_HibachiListingColumn propertyidentifier="optionCode" search="true" sort="true" />
 	</cf_HibachiListingDisplay>
 
 	<cf_HibachiActionCaller action="admin:entity.createoption" 

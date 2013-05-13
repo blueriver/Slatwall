@@ -43,8 +43,8 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.promotion.getPromotionPeriodsSmartList()#"
 							   recordEditAction="admin:entity.editPromotionPeriod"
 							   recorddetailaction="admin:entity.detailpromotionperiod">
-		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
-		<cf_HibachiListingColumn propertyIdentifier="endDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="endDateTime" sort="true" range="true" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumUseCount" />
 		<cf_HibachiListingColumn propertyIdentifier="maximumAccountUseCount" />
 		<cf_HibachiListingColumn propertyIdentifier="currentFlag" sort="false" />

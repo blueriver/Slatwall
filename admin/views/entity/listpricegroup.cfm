@@ -45,10 +45,10 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.priceGroupSmartList#" 
 							recordDetailAction="admin:entity.detailpricegroup"
 							recordEditAction="admin:entity.editpricegroup">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="priceGroupName" />
-	<cf_HibachiListingColumn propertyIdentifier="priceGroupCode" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="priceGroupName" search="true" sort="true" />
+	<cf_HibachiListingColumn propertyIdentifier="priceGroupCode" search="true" sort="true" />
 	<!---<cf_HibachiListingColumn propertyIdentifier="inheritsFrom" />--->
-	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

@@ -40,9 +40,9 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.orderItem.getAppliedTaxesSmartList()#">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="taxCategoryRate.taxCategory.taxCategoryName" />
-		<cf_HibachiListingColumn propertyIdentifier="taxCategoryRate.addressZone.addressZoneName" />
-		<cf_HibachiListingColumn propertyIdentifier="taxRate" />
-		<cf_HibachiListingColumn propertyIdentifier="taxAmount" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="taxCategoryRate.taxCategory.taxCategoryName" sort="true" search="true" />
+		<cf_HibachiListingColumn propertyIdentifier="taxCategoryRate.addressZone.addressZoneName" filter="true" />
+		<cf_HibachiListingColumn propertyIdentifier="taxRate" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="taxAmount" sort="true" range="true" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

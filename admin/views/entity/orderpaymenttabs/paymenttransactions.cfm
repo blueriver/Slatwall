@@ -44,7 +44,7 @@ Notes:
 			recordDetailModal="true">
 		
 		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />		
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="transactionType" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="transactionType" filter="true" />
 		<cf_HibachiListingColumn propertyIdentifier="amountAuthorized" />
 		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
 		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />

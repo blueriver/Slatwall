@@ -57,7 +57,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.image#" edit="#rc.edit#" enctype="multipart/form-data">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.image#" edit="#rc.edit#" backAction="#backAction#" backQueryString="#backQueryString#" />
-		
+
 		<cf_HibachiPropertyRow>
 			
 			<cf_HibachiPropertyList divclass="span8">
@@ -66,7 +66,6 @@ Notes:
 			</cf_HibachiPropertyList>
 			<cf_HibachiPropertyList divclass="span2">
 				<h4>Resize Preview</h4>
-				
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		

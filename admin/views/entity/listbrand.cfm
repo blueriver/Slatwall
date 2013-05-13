@@ -45,8 +45,8 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.brandSmartList#"
 						recordDetailAction="admin:entity.detailbrand"
 						recordEditAction="admin:entity.editbrand">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="brandName" search="true" />
-	<cf_HibachiListingColumn propertyIdentifier="brandWebsite" sort="false" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="brandName" search="true" sort="true" />
+	<cf_HibachiListingColumn propertyIdentifier="brandWebsite" sort="false" />
 	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_HibachiListingDisplay>
 

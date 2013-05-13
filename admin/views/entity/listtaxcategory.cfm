@@ -45,7 +45,7 @@ Notes:
 <cf_HibachiListingDisplay smartList="#rc.taxCategorySmartList#" rc="#rc#"
 						   recordEditAction="admin:entity.editTaxCategory"
 						   recordDetailAction="admin:entity.detailTaxCategory">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="taxCategoryName" search="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="taxCategoryName" sort="true" search="true" />
 	<cf_HibachiListingColumn propertyIdentifier="activeFlag" filter="true" />
 </cf_HibachiListingDisplay>
 

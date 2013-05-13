@@ -77,6 +77,7 @@
 		<cfsilent>
 			
 			<!--- If this was originally set to edit... make sure that they have edit ability for this property --->
+
 			<cfif attributes.edit and attributes.object.isPersistent() and not attributes.hibachiScope.authenticateEntityProperty('update', attributes.object.getClassName(), attributes.property)>
 				<cfset attributes.edit = false />
 			</cfif>
@@ -196,4 +197,8 @@
 		
 		<cf_HibachiFieldDisplay attributecollection="#attributes#" />
 	</cfif>
+<<<<<<< HEAD
 </cfif>
+=======
+</cfif>
+>>>>>>> branch 'rc3' of https://github.com/ten24/Slatwall.git

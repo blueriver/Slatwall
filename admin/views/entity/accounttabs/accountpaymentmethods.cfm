@@ -51,7 +51,7 @@ Notes:
 							  edit="#rc.edit#">
 		
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="simpleRepresentation" title="#$.slatwall.rbKey('entity.accountPaymentMethod')#" sort="true" />
-		<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" sort="true" filter="true" />					    
+		<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" filter="true" />					    
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" sort="true" />
 	</cf_HibachiListingDisplay>
 	

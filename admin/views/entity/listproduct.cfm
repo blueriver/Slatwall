@@ -59,7 +59,7 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.productSmartList#"
 			recordEditAction="admin:entity.editproduct"
 			recorddetailaction="admin:entity.detailproduct">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" search=true  />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" search=true sort="true"  />
 		<cf_HibachiListingColumn propertyIdentifier="productCode" search=true />
 		<cf_HibachiListingColumn propertyIdentifier="productType.productTypeName" filter=true />
 		<cf_HibachiListingColumn propertyIdentifier="brand.brandName" filter=true />

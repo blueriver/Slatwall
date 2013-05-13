@@ -46,7 +46,7 @@ Notes:
 						   recordDetailAction="admin:entity.detaileventtrigger"
 						   recordEditAction="admin:entity.editeventtrigger">
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="eventTriggerName" sort="true" search="true" />
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="eventTriggerType" sort="true" filter="true" />
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="eventTriggerType" filter="true" />
 </cf_HibachiListingDisplay>
 
 </cfoutput>

@@ -48,9 +48,9 @@ Notes:
 							edit="#rc.edit#">
 							
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.productName" />
-		<cf_HibachiListingColumn propertyIdentifier="skuCode"/>	
-		<cf_HibachiListingColumn propertyIdentifier="quantity" />
-		<cf_HibachiListingColumn propertyIdentifier="countPostDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="skuCode" sort="true" search="true" />	
+		<cf_HibachiListingColumn propertyIdentifier="quantity" sort="true" range="true" />
+		<cf_HibachiListingColumn propertyIdentifier="countPostDateTime" sort="true" range="true" />
 		
 	</cf_HibachiListingDisplay>	
 	
