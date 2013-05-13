@@ -78,6 +78,7 @@ Notes:
 						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" />
 						<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
 						<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" />
+						<cf_HibachiListingColumn propertyIdentifier="price" />
 						<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
 						<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 					</cf_HibachiListingDisplay>
@@ -99,6 +100,7 @@ Notes:
 						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.productName" />
 						<cf_HibachiListingColumn propertyIdentifier="sku.product.productType.productTypeName" />
 						<cf_HibachiListingColumn propertyIdentifier="sku.calculatedQATS" />
+						<cf_HibachiListingColumn propertyIdentifier="sku.price" />
 						<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
 						<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 					</cf_HibachiListingDisplay>
