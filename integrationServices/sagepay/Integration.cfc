@@ -54,8 +54,8 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 		var settings = {
 			vendorID = {fieldType="text", displayName="Vendor ID"},
 			currency = {fieldType="text", displayName="Currency"},
-			simulatorMode = {fieldType="yesno", displayName="Simulator Mode?", defaultValue="1"},
-			testMode = {fieldType="yesno", displayName="Test Mode?", defaultValue="1"}
+			simulatorMode = {fieldType="yesno", displayName="Simulator Mode", defaultValue="1"},
+			testMode = {fieldType="yesno", displayName="Test Mode", defaultValue="1"}
 		};
 		
 		return settings;
