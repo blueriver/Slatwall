@@ -54,7 +54,7 @@ component extends="FW1.framework" {
 	
 	// Hibachi Setup
 	variables.framework.hibachi = {};
-	variables.framework.hibachi.fullUpdateKey = "Update";
+	variables.framework.hibachi.fullUpdateKey = "update";
 	variables.framework.hibachi.fullUpdatePassword = "true";
 	variables.framework.hibachi.authenticationSubsystems = "admin,public";
 	variables.framework.hibachi.loginSubsystems = "admin,public";
