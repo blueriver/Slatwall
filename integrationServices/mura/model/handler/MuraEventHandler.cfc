@@ -415,6 +415,9 @@
 				integration.setAuthenticationActiveFlag(1);
 			}
 			
+			ormFlush();
+			$.slatwall.getService("integrationService").clearActiveFW1Subsystems();
+			
 			// Sync all of the settings defined in the plugin with the integration
 			syncMuraPluginSetting( $=$, settingName="accountSyncType", settingValue=getMuraPluginConfig().getSetting("accountSyncType") );
 			syncMuraPluginSetting( $=$, settingName="createDefaultPages", settingValue=getMuraPluginConfig().getSetting("createDefaultPages") );

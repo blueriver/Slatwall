@@ -47,6 +47,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	variables.authenticationIntegrationCFCs = {};
 
 	
+	public void function clearActiveFW1Subsystems() {
+		structDelete(variables, "activeFW1Subsystems");
+	}
+	
 	public array function getActiveFW1Subsystems() {
 		if( !structKeyExists(variables, "activeFW1Subsystems") ) {
 			var afs = [];
