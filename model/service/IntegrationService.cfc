@@ -122,11 +122,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		for(var i=1; i<=arrayLen(integrationList); i++) {
 			integrationList[i].setInstalledFlag(0);
 			
+			integrationList[i].setAuthenticationReadyFlag(0);
+			integrationList[i].setCustomReadyFlag(0);
 			integrationList[i].setFW1ReadyFlag(0);
 			integrationList[i].setPaymentReadyFlag(0);
 			integrationList[i].setShippingReadyFlag(0);
-			integrationList[i].setCustomReadyFlag(0);
 			
+			if(isNull(integrationList[i].getAuthenticationActiveFlag())) {
+				integrationList[i].setAuthenticationActiveFlag(0);
+			}
+			if(isNull(integrationList[i].getCustomActiveFlag())) {
+				integrationList[i].setCustomActiveFlag(0);
+			}
 			if(isNull(integrationList[i].getFW1ActiveFlag())) {
 				integrationList[i].setFW1ActiveFlag(0);
 			}
@@ -136,9 +143,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			if(isNull(integrationList[i].getShippingActiveFlag())) {
 				integrationList[i].setShippingActiveFlag(0);
 			}
-			if(isNull(integrationList[i].getCustomActiveFlag())) {
-				integrationList[i].setCustomActiveFlag(0);
-			}
+			
 			
 		}
 		
@@ -159,28 +164,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					integration.setInstalledFlag(1);
 					integration.setIntegrationPackage(integrationPackage);
 					integration.setIntegrationName(integrationCFC.getDisplayName());
-					
-					if(isNull(integration.getAuthenticationActiveFlag())) {
-						integration.setAuthenticationActiveFlag(0);
-					}
-					if(isNull(integration.getCustomActiveFlag())) {
-						integration.setCustomActiveFlag(0);
-					}
-					if(isNull(integration.getFW1ActiveFlag())) {
-						integration.setFW1ActiveFlag(0);
-					}
-					if(isNull(integration.getPaymentActiveFlag())) {
-						integration.setPaymentActiveFlag(0);
-					}
-					if(isNull(integration.getShippingActiveFlag())) {
-						integration.setShippingActiveFlag(0);
-					}
-					
-					integration.setAuthenticationReadyFlag(0);
-					integration.setCustomReadyFlag(0);
-					integration.setFW1ReadyFlag(0);
-					integration.setPaymentReadyFlag(0);
-					integration.setShippingReadyFlag(0);
 					
 					var integrationTypes = integrationCFC.getIntegrationTypes();
 					
@@ -225,24 +208,24 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								break;
 							}
 						}
-						
-						if(integration.getAuthenticationActiveFlag() && !integration.getAuthenticationReadyFlag()) {
-							integration.setAuthenticationActiveFlag(0);
-						}
-						if(integration.getCustomActiveFlag() && !integration.getCustomReadyFlag()) {
-							integration.setCustomActiveFlag(0);
-						}
-						if(integration.getFW1ActiveFlag() && !integration.getFW1ReadyFlag()) {
-							integration.setFW1ActiveFlag(0);
-						}
-						if(integration.getPaymentActiveFlag() && !integration.getPaymentReadyFlag()) {
-							integration.setPaymentActiveFlag(0);
-						}
-						if(integration.getShippingActiveFlag() && !integration.getShippingReadyFlag()) {
-							integration.setShippingActiveFlag(0);
-						}
-						
 					}
+					
+					if(integration.getAuthenticationActiveFlag() && !integration.getAuthenticationReadyFlag()) {
+						integration.setAuthenticationActiveFlag(0);
+					}
+					if(integration.getCustomActiveFlag() && !integration.getCustomReadyFlag()) {
+						integration.setCustomActiveFlag(0);
+					}
+					if(integration.getFW1ActiveFlag() && !integration.getFW1ReadyFlag()) {
+						integration.setFW1ActiveFlag(0);
+					}
+					if(integration.getPaymentActiveFlag() && !integration.getPaymentReadyFlag()) {
+						integration.setPaymentActiveFlag(0);
+					}
+					if(integration.getShippingActiveFlag() && !integration.getShippingReadyFlag()) {
+						integration.setShippingActiveFlag(0);
+					}
+					
 					
 					// Call Entity Save so that any new integrations get persisted
 					getHibachiDAO().save( integration );

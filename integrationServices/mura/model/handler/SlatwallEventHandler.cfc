@@ -36,7 +36,7 @@ component extends="handler" output="false" accessors="true" {
 
 	// Special Function to relay all events called in Slatwall over to mura
 	public void function onEvent( required any slatwallScope, required any eventName ) {
-		if(structKeyExists(application,"initialized") && application.initialized) {
+		if(structKeyExists(application,"appinitialized") && application.appinitialized) {
 			if(!structKeyExists(request.customMuraScopeKeys, "slatwall")) {
 				request.customMuraScopeKeys.slatwall = arguments.slatwallScope;	
 			}
@@ -59,7 +59,7 @@ component extends="handler" output="false" accessors="true" {
 
 	// Login to Mura when Slatwall user is logged in
 	public void function onSessionAccountLogin( required any slatwallScope ) {
-		if(structKeyExists(application,"initialized") && application.initialized) {
+		if(structKeyExists(application,"appinitialized") && application.appinitialized) {
 			if(!isNull(arguments.slatwallScope.getAccount().getCMSAccountID()) && len(arguments.slatwallScope.getAccount().getCMSAccountID())) {
 				var $ = getMuraScope(argumentCollection=arguments);
 				
@@ -71,7 +71,7 @@ component extends="handler" output="false" accessors="true" {
 	
 	// Logout of Mura when Slatwall user is logged out
 	public void function onSessionAccountLogout( required any slatwallScope ) {
-		if(structKeyExists(application,"initialized") && application.initialized) {
+		if(structKeyExists(application,"appinitialized") && application.appinitialized) {
 			// Auto Logout of Mura if needed
 			if(structKeyExists(session, "mura") && structKeyExists(session.mura, "isLoggedIn") && session.mura.isLoggedIn) {
 				getMuraScope(argumentCollection=arguments).getBean('loginManager').logout();
