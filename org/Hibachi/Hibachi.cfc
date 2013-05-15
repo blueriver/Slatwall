@@ -111,6 +111,10 @@ component extends="FW1.framework" {
 	// Allow For Instance Config
 	try{include "../../custom/config/configORM.cfm";}catch(any e){}
 	
+	if(!fileExists(expandPath('/#variables.framework.applicationKey#/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)) {
+		this.ormSettings.secondaryCacheEnabled = false;
+	}
+	
 	// Make Sure that the required values end up in the application scope so that we can get them from somewhere else
 	
 	// =======  END: ENVIORNMENT CONFIGURATION  =======
