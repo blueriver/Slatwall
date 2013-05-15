@@ -35,7 +35,7 @@ component output="false" accessors="true" extends="HibachiService"  {
 		// If the session has an account but no authentication, then remove the account
 		// Check to see if this session has an accountAuthentication, if it does then we need to verify that the authentication shouldn't be auto logged out
 		// If there was an integration, then check the verify method for any custom auto-logout logic
-		if(	(!isNull(getHibachiScope().getSession().getAccountAuthentication()) && getHibachiScope().getSession().getAccountAuthentication().getForceLogoutFlag()) || (isNull(getHibachiScope().getSession().getAccountAuthentication()) && !isNull(getHibachiScope().getSession().getAccount()))) {
+		if(	(!isNull(getHibachiScope().getSession().getAccountAuthentication()) && getHibachiScope().getSession().getAccountAuthentication().getForceLogoutFlag()) || (isNull(getHibachiScope().getSession().getAccountAuthentication()) && getHibachiScope().getLoggedInFlag())) {
 			logoutAccount();
 		}
 	}
