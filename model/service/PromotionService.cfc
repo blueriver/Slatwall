@@ -733,10 +733,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		var hasExcludedProductType = false;
 		// Check all of the exclusions for an excluded product type
-		if(arrayLen(arguments.reward.getExcludedPropductTypes())) {
+		if(arrayLen(arguments.reward.getExcludedProductTypes())) {
 			var excludedProductTypeIDList = "";
-			for(var i=1; i<=arrayLen(arguments.reward.getExcludedPropductTypes()); i++) {
-				excludedProductTypeIDList = listAppend(excludedProductTypeIDList, arguments.reward.getExcludedPropductTypes()[i].getProductTypeID());
+			for(var i=1; i<=arrayLen(arguments.reward.getExcludedProductTypes()); i++) {
+				excludedProductTypeIDList = listAppend(excludedProductTypeIDList, arguments.reward.getExcludedProductTypes()[i].getProductTypeID());
 			}
 		
 			for(var ptid=1; ptid<=listLen(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath()); ptid++) {
@@ -771,7 +771,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			
 			for(var ptid=1; ptid<=listLen(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath()); ptid++) {
-				if(listFindNoCase(excludedProductTypeIDList, listGetAt(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath(), ptid))) {
+				if(listFindNoCase(includedPropertyTypeIDList, listGetAt(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath(), ptid))) {
 					return true;
 				}	
 			}
