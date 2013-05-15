@@ -411,7 +411,7 @@
 					$.slatwall.getService("hibachiEventService").registerEventHandler(ehArr[e]);
 				}
 			}
-			if(!integration.getAuthenticationActiveFlag()) {
+			if(isNull(integration.getAuthenticationActiveFlag()) || !integration.getAuthenticationActiveFlag()) {
 				integration.setAuthenticationActiveFlag(1);
 			}
 			
