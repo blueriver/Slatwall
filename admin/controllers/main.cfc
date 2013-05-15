@@ -184,6 +184,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		
 		getFW().setView("admin:main.login");
 		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
+		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
 	}
 	
 	public void function logout(required struct rc) {

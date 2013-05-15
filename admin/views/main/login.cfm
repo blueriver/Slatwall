@@ -45,7 +45,7 @@ Notes:
 			<div class="well tabable" style="width:400px;margin: 0px auto;">
 				<h3>Login</h3>
 				<br />
-				<cfset authorizeProcessObject = rc.fw.getHibachiScope().getSession().getProcessObject("AuthorizeAccount") />
+				<cfset authorizeProcessObject = rc.fw.getHibachiScope().getSession().getProcessObject("authorizeAccount") />
 				<form action="?s=1" class="form-horizontal" method="post">
 					<input type="hidden" name="#rc.fw.getAction()#" value="admin:main.authorizelogin" />
 					<fieldset class="dl-horizontal">
