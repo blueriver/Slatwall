@@ -96,6 +96,7 @@
 				<cfif listFindNoCase("checkboxgroup,radiogroup,select,multiselect", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
 					<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
 				<cfelseif listFindNoCase("listingMultiselect", attributes.fieldType)>
+					<cfset attributes.multiselectPropertyIdentifier = "#attributes.hibachiScope.getService('hibachiService').getPrimaryIDPropertyNameByEntityName(attributes.object.getPropertyMetaData( attributes.property ).cfc)#" />
 					<cfset attributes.valueOptionsSmartList = attributes.object.invokeMethod( "get#attributes.property#OptionsSmartList" ) />
 				</cfif>
 			</cfif>

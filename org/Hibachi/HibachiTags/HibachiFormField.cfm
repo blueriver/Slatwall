@@ -12,6 +12,8 @@
 	<cfparam name="attributes.autocompleteNameProperty" type="string" default="" />
 	<cfparam name="attributes.autocompleteValueProperty" type="string" default="" /> 
 	<cfparam name="attributes.autocompleteSelectedValueDetails" type="struct" default="#structNew()#" />
+	
+	<cfparam name="attributes.multiselectPropertyIdentifier" type="string" default="" />
 	<!---
 		attributes.fieldType have the following options:
 		
@@ -77,7 +79,7 @@
 			</cfoutput>
 		</cfcase>
 		<cfcase value="listingMultiselect">
-			<cf_HibachiListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectFieldClass="#attributes.fieldClass#" multiselectvalues="#attributes.value#" edit="true"></cf_HibachiListingDisplay>
+			<cf_HibachiListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectFieldClass="#attributes.fieldClass#" multiselectvalues="#attributes.value#" multiselectPropertyIdentifier="#attributes.multiselectPropertyIdentifier#" edit="true"></cf_HibachiListingDisplay>
 		</cfcase>
 		<cfcase value="multiselect">
 			<cfoutput>

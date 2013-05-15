@@ -338,6 +338,30 @@ function setupEventHandlers() {
 		listingDisplayUpdate( jQuery(this).closest('.pagination').data('tableid'), data );
 	});
 	
+	// Listing Display - Multiselect Show / Hide
+	jQuery('body').on('click', '.multiselect-checked-filter', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		if( jQuery(this).find('i').hasClass('hibachi-ui-checkbox-checked') ) {
+			jQuery(this).find('i').removeClass('hibachi-ui-checkbox-checked');
+			jQuery(this).find('i').addClass('hibachi-ui-checkbox');
+			var data = {};
+			data[ 'FIR:' + jQuery(this).closest('table').data('multiselectpropertyidentifier') ] = 1;
+			listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+		} else {
+			jQuery(this).find('i').removeClass('hibachi-ui-checkbox');
+			jQuery(this).find('i').addClass('hibachi-ui-checkbox-checked');
+			var data = {};
+			var selectedValues = jQuery( 'input[name="' + jQuery(this).closest('table').data('multiselectfield') + '"]').val();
+			if(!selectedValues.length) {
+				selectedValues = '_';
+			}
+			data[ 'FI:' + jQuery(this).closest('table').data('multiselectpropertyidentifier') ] = selectedValues;
+			listingDisplayUpdate( jQuery(this).closest('.table').attr('id'), data);
+		}
+	});
+	
 	// Listing Display - Sorting
 	jQuery('body').on('click', '.listing-sort', function(e) {
 		e.preventDefault();

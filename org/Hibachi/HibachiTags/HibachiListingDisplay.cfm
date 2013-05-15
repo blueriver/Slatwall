@@ -38,6 +38,7 @@
 	
 	<!--- Multiselect --->
 	<cfparam name="attributes.multiselectFieldName" type="string" default="" />		<!--- Setting this value will turn on Multiselect --->
+	<cfparam name="attributes.multiselectPropertyIdentifier" type="string" default="" />	<!--- This is used for the show selected / all --->
 	<cfparam name="attributes.multiselectValues" type="string" default="" />
 	
 	<!--- Helper / Additional / Custom --->
@@ -80,6 +81,7 @@
 			
 			<cfset attributes.tableclass = listAppend(attributes.tableclass, 'table-multiselect', ' ') />
 			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectfield="#attributes.multiselectFieldName#"', " ") />
+			<cfset attributes.tableattributes = listAppend(attributes.tableattributes, 'data-multiselectpropertyidentifier="#attributes.multiselectPropertyIdentifier#"', " ") />
 		</cfif>
 		<cfif thistag.multiselectable and not arrayLen(thistag.columns) >
 			<cfif thistag.exampleEntity.hasProperty('activeFlag')>
@@ -277,12 +279,6 @@
 		</cfif>
 	</cfsilent>
 	<cfoutput>
-		<cfif thistag.selectable>
-			<input type="hidden" name="#attributes.selectFieldName#" value="#attributes.selectValue#" />
-		</cfif>
-		<cfif thistag.multiselectable>
-			<input type="hidden" name="#attributes.multiselectFieldName#" value="#attributes.multiselectValues#" />
-		</cfif>
 		<table id="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" class="#attributes.tableclass#" data-norecordstext="#attributes.hibachiScope.rbKey("entity.#thistag.exampleEntity.getClassName()#.norecords", {entityNamePlural=attributes.hibachiScope.rbKey('entity.#thistag.exampleEntity.getClassName()#_plural')})#" data-savedstateid="#attributes.smartList.getSavedStateID()#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-processobjectproperties="#thistag.allprocessobjectproperties#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
 			<thead>
 				<tr>
@@ -292,6 +288,7 @@
 						<cfif not attributes.edit>
 							<cfset class &= " disabled" />
 						</cfif>
+						<input type="hidden" name="#attributes.selectFieldName#" value="#attributes.selectValue#" />
 						<th class="#class#">#attributes.selectTitle#</th>
 					</cfif>
 					<!--- Multiselectable --->
@@ -300,7 +297,19 @@
 						<cfif not attributes.edit>
 							<cfset class &= " disabled" />
 						</cfif>
-						<th class="#class#">&nbsp;</th>
+						<input type="hidden" name="#attributes.multiselectFieldName#" value="#attributes.multiselectValues#" />
+						<th class="#class#">
+							<cfif not thistag.expandable and len(attributes.multiselectPropertyIdentifier)>
+								<div class="dropdown">
+									<a href="##" class="dropdown-toggle" data-toggle="dropdown">&nbsp;<i class="icon-check"></i> </a>
+									<ul class="dropdown-menu nav">
+										<li><a href="##" class="multiselect-checked-filter"><i class="hibachi-ui-checkbox#IIF(attributes.edit, DE(''), DE('-checked'))#"></i> Show Selected</a></li>
+									</ul>				
+								</div>
+							<cfelse>
+								&nbsp;
+							</cfif>
+						</th>
 					</cfif>
 					<!--- Sortable --->
 					<cfif thistag.sortable>
@@ -369,6 +378,13 @@
 			</thead>
 			<tbody <cfif thistag.sortable>class="sortable"</cfif>>
 				<cfset thistag.loopIndex = 0 />
+				<cfif not attributes.edit and thistag.multiselectable and not len(attributes.parentPropertyName) and len(attributes.multiselectPropertyIdentifier)>
+					<cfif len(attributes.multiselectValues)>
+						<cfset attributes.smartList.addInFilter(attributes.multiselectPropertyIdentifier, attributes.multiselectValues) />
+					<cfelse>
+						<cfset attributes.smartList.addInFilter(attributes.multiselectPropertyIdentifier, '_') />
+					</cfif>
+				</cfif>
 				<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
 					<cfset thistag.loopIndex++ />
 					<!--- If there is a recordProcessEntity then find the processObject and inject the necessary values --->

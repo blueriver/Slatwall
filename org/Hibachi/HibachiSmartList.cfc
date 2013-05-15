@@ -101,6 +101,10 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 					addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
 				} else if(left(i,3) == "FR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
 					removeFilter(propertyIdentifier=right(i, len(i)-3));
+				} else if(left(i,3) == "FI#variables.dataKeyDelimiter#") {
+					addInFilter(propertyIdentifier=right(i, len(i)-3), value=arguments.data[i]);
+				} else if(left(i,4) == "FIR#variables.dataKeyDelimiter#" && isBoolean(arguments.data[i]) && arguments.data[i]) {
+					removeInFilter(propertyIdentifier=right(i, len(i)-4));
 				} else if(left(i,3) == "FK#variables.dataKeyDelimiter#") {
 					var likeValueList = "";
 					for(var x=1; x<=listLen(arguments.data[i], variables.valueDelimiter); x++) {

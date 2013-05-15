@@ -27,6 +27,8 @@
 		
 	<cfparam name="attributes.modalCreateAction" type="string" default="" />			<!--- hint: This allows for a special admin action to be passed in where the saving of that action will automatically return the results to this field --->
 		
+	<cfparam name="attributes.multiselectPropertyIdentifier" type="string" default="" />
+		
 	<cfswitch expression="#attributes.displaytype#">
 		<!--- DL Case --->
 		<cfcase value="dl">
@@ -110,7 +112,7 @@
 						<a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a>
 					<cfelse>
 						<cfif attributes.fieldType eq "listingMultiselect">
-							<cf_HibachiListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectFieldClass="#attributes.fieldClass#" multiselectvalues="#attributes.value#" edit="false"></cf_HibachiListingDisplay>
+							<cf_HibachiListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectFieldClass="#attributes.fieldClass#" multiselectvalues="#attributes.value#" multiselectPropertyIdentifier="#attributes.multiselectPropertyIdentifier#" edit="false"></cf_HibachiListingDisplay>
 						<cfelse>
 							#attributes.value#
 						</cfif>
