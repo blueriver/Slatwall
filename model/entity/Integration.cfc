@@ -44,6 +44,8 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="integrationName" ormtype="string";
 	property name="installedFlag" ormtype="boolean";
 	
+	property name="authenticationReadyFlag" ormtype="boolean";
+	property name="authenticationActiveFlag" ormtype="boolean";
 	property name="customReadyFlag" ormtype="boolean";
 	property name="customActiveFlag" ormtype="boolean";
 	property name="fw1ReadyFlag" ormtype="boolean";

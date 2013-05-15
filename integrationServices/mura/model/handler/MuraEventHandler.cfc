@@ -411,6 +411,9 @@
 					$.slatwall.getService("hibachiEventService").registerEventHandler(ehArr[e]);
 				}
 			}
+			if(!integration.getAuthenticationActiveFlag()) {
+				integration.setAuthenticationActiveFlag(1);
+			}
 			
 			// Sync all of the settings defined in the plugin with the integration
 			syncMuraPluginSetting( $=$, settingName="accountSyncType", settingValue=getMuraPluginConfig().getSetting("accountSyncType") );

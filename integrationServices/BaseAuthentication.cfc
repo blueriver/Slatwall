@@ -46,4 +46,12 @@ component extends="Slatwall.org.Hibachi.HibachiObject" {
 		// This method will be called every time a request happens and the current session has an account that has been authenticated against this integration.  If that access is no longer valid return false
 		return true;
 	}
+	
+	public string function getAdminLoginHTML() {
+		return '';
+	}
+	
+	public string function getPublicLoginHTML() {
+		return '';
+	}
 }

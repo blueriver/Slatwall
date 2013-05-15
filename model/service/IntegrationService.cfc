@@ -156,16 +156,27 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					integration.setIntegrationPackage(integrationPackage);
 					integration.setIntegrationName(integrationCFC.getDisplayName());
 					
-					if(integration.isNew()) {
-						integration.setFW1ReadyFlag(0);
-						integration.setFW1ActiveFlag(0);
-						integration.setPaymentReadyFlag(0);
-						integration.setPaymentActiveFlag(0);
-						integration.setShippingReadyFlag(0);
-						integration.setShippingActiveFlag(0);
-						integration.setCustomReadyFlag(0);
+					if(isNull(integration.getAuthenticationActiveFlag())) {
+						integration.setAuthenticationActiveFlag(0);
+					}
+					if(isNull(integration.getCustomActiveFlag())) {
 						integration.setCustomActiveFlag(0);
 					}
+					if(isNull(integration.getFW1ActiveFlag())) {
+						integration.setFW1ActiveFlag(0);
+					}
+					if(isNull(integration.getPaymentActiveFlag())) {
+						integration.setPaymentActiveFlag(0);
+					}
+					if(isNull(integration.getShippingActiveFlag())) {
+						integration.setShippingActiveFlag(0);
+					}
+					
+					integration.setAuthenticationReadyFlag(0);
+					integration.setCustomReadyFlag(0);
+					integration.setFW1ReadyFlag(0);
+					integration.setPaymentReadyFlag(0);
+					integration.setShippingReadyFlag(0);
 					
 					var integrationTypes = integrationCFC.getIntegrationTypes();
 					
@@ -175,6 +186,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						var thisType = listGetAt(integrationTypes, it);
 						
 						switch (thisType) {
+							case "authentication": {
+								integration.setAuthenticationReadyFlag(1);
+								break;
+							}
 							case "custom": {
 								integration.setCustomReadyFlag(1);
 								break;
@@ -206,6 +221,23 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								break;
 							}
 						}
+						
+						if(integration.getAuthenticationActiveFlag() && !integration.getAuthenticationReadyFlag()) {
+							integration.setAuthenticationActiveFlag(0);
+						}
+						if(integration.getCustomActiveFlag() && !integration.getCustomReadyFlag()) {
+							integration.setCustomActiveFlag(0);
+						}
+						if(integration.getFW1ActiveFlag() && !integration.getFW1ReadyFlag()) {
+							integration.setFW1ActiveFlag(0);
+						}
+						if(integration.getPaymentActiveFlag() && !integration.getPaymentReadyFlag()) {
+							integration.setPaymentActiveFlag(0);
+						}
+						if(integration.getShippingActiveFlag() && !integration.getShippingReadyFlag()) {
+							integration.setShippingActiveFlag(0);
+						}
+						
 					}
 					
 					// Call Entity Save so that any new integrations get persisted
@@ -228,57 +260,23 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	public any function updateColdspringWithDataIntegration(required any serviceFactory, required xml originalXML) {
-		if(fileExists(expandPath('/Slatwall/config/custom/coldspring.xml'))) {
-			var newXML = xmlParse(fileRead(expandPath('/Slatwall/config/custom/coldspring.xml')));
-			
-			var newBeanCount = arrayLen(newXML.beans.bean);
-			for(var x=newBeanCount; x>=1; x--) {
-				var newBean = newXML.beans.bean[x];
-				for(var c=1; c<=arrayLen(arguments.originalXML.beans.bean); c++) {
-					if(arguments.originalXML.beans.bean[c].xmlAttributes.id == newBean.xmlAttributes.id) {
-						arguments.originalXML.beans.bean[c].xmlAttributes.class = newBean.xmlAttributes.class;
-						if(newBean.xmlAttributes.id != "utilityORMService") {
-							arrayDeleteAt(newXML.beans.XmlChildren, x);
-						} else {
-							var utilityORMServicePosOriginalXml = c;
-							var utilityORMServicePosNewXml = x;
-						}
-						break;
-					}
-				}
+	public array function getAdminLoginHTMLArray() {
+		var returnArr = [];
+		
+		var isl = this.getIntegrationSmartList();
+		isl.addFilter('authenticationActiveFlag', 1);
+		
+		var authInts = isl.getRecords();
+		for(var i=1; i<=arrayLen(authInts); i++) {
+			var intCFC = getAuthenticationIntegrationCFC(authInts[i]);
+			var adminLoginHTML = intCFC.getAdminLoginHTML();
+			if(len(trim(adminLoginHTML))) {
+				arrayAppend(returnArr, adminLoginHTML);
 			}
-			if(arrayLen(newXML.beans.XmlChildren)) {
-				// add service mapping if exists
-				var serviceMappingArray = xmlSearch(newXML,"beans/bean[@id = 'utilityORMService']/property/map/entry"); 
-				if(arrayLen(serviceMappingArray)) {
-					var serviceMapNode = arguments.originalXML.beans.bean[utilityORMServicePosOriginalXml].property.map[1];
-					for(var entry in serviceMappingArray) {
-						arrayAppend(serviceMapNode.XmlChildren,XmlElemNew(arguments.originalXML,"entry"));
-						var newChildIndex = arrayLen(serviceMapNode.XmlChildren);
-						serviceMapNode.XmlChildren[newChildIndex].xmlAttributes["key"] = entry.xmlAttributes.key;
-						arrayAppend(serviceMapNode.entry[newChildIndex].XmlChildren,XmlElemNew(arguments.originalXML,"value"));
-						serviceMapNode.XmlChildren[newChildIndex].XmlChildren[1].xmlText = entry.XmlChildren[1].xmlText;
-					}
-					// service mapping added now remove the utilityORMService node from the custom xml file
-					arrayDeleteAt(newXML.beans.XmlChildren, utilityORMServicePosNewXml);
-				}
-				// import all the custom beans to coldspring
-				var importedBeans = getHibachiUtilityService().xmlImport(arguments.originalXML,newXML.XmlRoot.XmlChildren);
-				for(var node in importedBeans) {
-					arrayAppend(arguments.originalXML.XmlRoot.XmlChildren,node);
-				}
-			}
-
-			var newFactory = createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
-			newFactory.loadBeansFromXmlObj( arguments.originalXML );
-			
-			return newFactory;
 		}
 		
-		return arguments.serviceFactory;
+		return returnArr;
 	}
-	
 	
 	// ===================== START: Logical Methods ===========================
 	

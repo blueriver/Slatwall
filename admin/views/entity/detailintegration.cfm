@@ -47,6 +47,9 @@ Notes:
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.integration#" property="integrationPackage" edit="false">
+				<cfif rc.integration.getAuthenticationReadyFlag()>
+					<cf_HibachiPropertyDisplay object="#rc.integration#" property="authenticationActiveFlag" edit="#rc.edit#" />
+				</cfif>
 				<cfif rc.integration.getFW1ReadyFlag()>
 					<cf_HibachiPropertyDisplay object="#rc.integration#" property="fw1ActiveFlag" edit="#rc.edit#" />
 				</cfif>

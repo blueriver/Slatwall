@@ -39,7 +39,7 @@ Notes:
 component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
 	public string function getIntegrationTypes() {
-		return "fw1";
+		return "authentication,fw1";
 	}
 	
 	public string function getDisplayName() {

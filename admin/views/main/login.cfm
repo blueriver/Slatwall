@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.accountAuthenticationExists" type="boolean" />
+<cfparam name="rc.integrationLoginHTMLArray" type="array" />
 		
 <cfoutput>
 	<div style="width:100%;">
@@ -55,6 +56,13 @@ Notes:
 						<button type="submit" class="btn btn-primary pull-right">Login</button>
 					</fieldset>
 				</form>
+				<br />
+				
+				<!--- Integration Logins --->
+				<cfloop array="#rc.integrationLoginHTMLArray#" index="loginHTML">
+					<hr />
+					#loginHTML#
+				</cfloop>
 			</div>
 		<cfelse>
 			<div class="well" style="width:400px;margin: 0px auto;">

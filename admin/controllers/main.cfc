@@ -45,6 +45,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="vendorService" type="any";
 	property name="dataService" type="any";
 	property name="imageService" type="any";
+	property name="integrationService" type="any";
 	property name="permissionService" type="any";
 	property name="updateService" type="any";
 	
@@ -171,6 +172,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	public void function login(required struct rc) {
 		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
+		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
 	}
 	
 	public void function authorizeLogin(required struct rc) {

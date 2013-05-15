@@ -47,5 +47,10 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 		}
 		return true;
 	}
+	
+	public string function getAdminLoginHTML() {
+		return '<a href="/admin">Login With Mura</a>';
+	}
+	
 
 }
