@@ -45,8 +45,8 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	property name="lastRequestIPAddress" ormtype="string";
 	
 	// Related Entities
-	property name="account" type="any" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountAuthentication" cfc="AccountAuthentication" fieldtype="many-to-one" fkcolumn="accountAuthenticationID";
+	property name="account" type="any" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" fetch="join";
+	property name="accountAuthentication" cfc="AccountAuthentication" fieldtype="many-to-one" fkcolumn="accountAuthenticationID" fetch="join";
 	property name="order" type="any" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	
 	// Audit properties
