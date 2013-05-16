@@ -71,10 +71,6 @@ Notes:
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<ul class="nav">
-						<!---
-						<a href="#application.configBean.getContext()#/admin" class="brand"><img src="#request.slatwallScope.getBaseURL()#/assets/images/mura.logo.png" style="width:25px;heigh:26px;" title="Mura" /></a>
-						<li class="divider-vertical"></li>
-						--->
 						<cfset homeLink = request.slatwallScope.getBaseURL() />
 						<cfif not len(homeLink)>
 							<cfset homeLink = "/" />
@@ -287,7 +283,7 @@ Notes:
 			<script type="text/javascript">
 				var _gaq = _gaq || [];
 				_gaq.push(['_setAccount', 'UA-22767386-5']);
-				_gaq.push(['_setCustomVar', 1, 'instance', '#createUUID()#']);
+				_gaq.push(['_setCustomVar', 1, 'instance', '#HASH(CGI.HTTP_HOST)#']);
 				_gaq.push(["_set", "title", "#request.context.pageTitle#"]);
 				_gaq.push(['_trackPageview']);
 				
