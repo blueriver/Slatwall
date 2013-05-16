@@ -511,6 +511,7 @@
 			<cfset thisPage.setIsLocked(0) />
 			<cfset thisPage.setParentID("00000000000000000000000000000000001") />
 			<cfset thisPage.setFilename(arguments.filename) />
+			<cfset thisPage.setTemplate(arguments.template) />
 			<cfset thisPage.setSiteID(arguments.muraSiteID) />
 			<cfset thisPage.save() />
 		</cfif>
