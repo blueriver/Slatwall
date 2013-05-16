@@ -141,6 +141,7 @@ globalEncryptionKeySize
 					fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage", defaultValue=100},
 					
 					// Global
+					globalUsageStats = {fieldType="yesno",defaultValue=1},
 					globalCurrencyLocale = {fieldType="select",defaultValue="English (US)"},
 					globalCurrencyType = {fieldType="select",defaultValue="Local"},
 					globalDateFormat = {fieldType="text",defaultValue="mmm dd, yyyy"},
