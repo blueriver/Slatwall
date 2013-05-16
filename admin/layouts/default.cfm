@@ -290,7 +290,7 @@ Notes:
 			  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 			  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 			
-			  ga('create', 'UA-22767386-3', 'getslatwall.com');
+			  ga('create', 'UA-22767386-3');
 			  ga('send', 'pageview');
 			</script>
 		</cfif>
