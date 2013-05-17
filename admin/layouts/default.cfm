@@ -284,7 +284,7 @@ Notes:
 				var _gaq = _gaq || [];
 				_gaq.push(['_setAccount', 'UA-22767386-5']);
 				_gaq.push(['_setCustomVar', 1, 'instance', '#HASH(CGI.HTTP_HOST)#']);
-				_gaq.push(["_set", "title", "#request.context.pageTitle#"]);
+				_gaq.push(["_set", "title", "#request.context.slatAction#"]);
 				_gaq.push(['_trackPageview']);
 				
 				(function() {
