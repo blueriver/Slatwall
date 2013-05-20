@@ -38,19 +38,17 @@ Notes:
 --->
 <cfparam name="rc.product" type="any" />
 
-<cf_SlatwallSettingTable>
-	<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageSmallWidth" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageSmallHeight" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageMediumWidth" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageMediumHeight" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageLargeWidth" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageLargeHeight" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageOptionCodeDelimiter" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productMissingImagePath" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productHTMLTitleString" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productMetaDescriptionString" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productMetaKeywordsString" settingObject="#rc.product#" />
-</cf_SlatwallSettingTable>
+<cfoutput>
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productImageOptionCodeDelimiter" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productHTMLTitleString" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productMetaDescriptionString" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productMetaKeywordsString" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productAutoApproveReviewsFlag" settingObject="#rc.product#" />
+		<!---
+		<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.product#" />
+		--->
+	</cf_SlatwallSettingTable>
+</cfoutput>
