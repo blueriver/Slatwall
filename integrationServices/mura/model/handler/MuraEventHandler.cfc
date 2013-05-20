@@ -19,8 +19,16 @@
 			// Call any public slatAction methods that are found
 			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "public") {
 				
-				// Call the correct public controller
-				$.slatwall.doAction( $.event('slatAction') );
+				// This allows for multiple actions to be called
+				var actionsArray = listToArray( $.event('slatAction') );
+				
+				// This loops over the actions that were passed in
+				for(var a=1; a<=arrayLen(actionsArray); a++) {
+				
+					// Call the correct public controller
+					$.slatwall.doAction( actionsArray[a] );
+					
+				}
 				
 			}
 			

@@ -6,7 +6,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// Data Properties
 	property name="newProductReview" cfc="ProductReview" fieldType="many-to-one" persistent="false" fkcolumn="productReviewID";
 	
-	public any function getNewProductReveiw() {
+	public any function getNewProductReview() {
 		if(!structKeyExists(variables, "newProductReview")) {
 			variables.newProductReview = getService("productService").newProductReview();
 		}
