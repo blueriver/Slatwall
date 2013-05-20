@@ -76,7 +76,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.addActionResult( "public:cart.addOrderItem", cart.hasErrors() );
 		
 		if(!cart.hasErrors()) {
-			product.clearProcessObject("addOrderItem");
+			cart.clearProcessObject("addOrderItem");
 		}
 	}
 	
@@ -94,7 +94,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.addActionResult( "public:cart.addPromotionCode", cart.hasErrors() );
 		
 		if(!cart.hasErrors()) {
-			product.clearProcessObject("addPromotionCode");
+			cart.clearProcessObject("addPromotionCode");
 		}
 	}
 	
