@@ -129,6 +129,8 @@ component extends="FW1.framework" {
 	}
 	
 	public any function reloadApplication() {
+		setupApplicationWrapper();
+		
 		lock name="application_#getHibachiInstanceApplicationScopeKey()#_initialized" timeout="10" {
 			if( !structKeyExists(application, getHibachiInstanceApplicationScopeKey()) ) {
 				application[ getHibachiInstanceApplicationScopeKey() ] = {};
