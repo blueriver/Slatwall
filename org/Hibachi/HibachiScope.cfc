@@ -3,10 +3,18 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	property name="account" type="any";
 	property name="session" type="any";
 	
+	property name="loggedInFlag" type="boolean";
+	property name="loggedInAsAdminFlag" type="boolean";
+	property name="calledActions" type="array";
+	property name="failureActions" type="array";
+	property name="sucessfulActions" type="array";
 	property name="ormHasErrors" type="boolean" default="false";
 	property name="rbLocale";
 	
 	public any function init() {
+		setCalledActions( [] );
+		setSucessfulActions( [] );
+		setFailureActions( [] );
 		setORMHasErrors( false );
 		setRBLocale( "en_us" );
 		
@@ -37,6 +45,43 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		return false;
 	}
 	
+	// ==================== GENERAL API METHODS ===============================
+	
+	// Action Methods ===
+	public string function doAction( required string action ) {
+		arrayAppend(getCalledActions(), arguments.action);
+		return getApplicationValue('application').doAction( arguments.action );
+	}
+	
+	public boolean function hasSuccessfulAction( required string action ) {
+		return arrayFindNoCase(getSucessfulActions(), arguments.action) > 0;
+	}
+	
+	public boolean function hasFailureAction( required string action ) {
+		return arrayFindNoCase(getFailureActions(), arguments.action) > 0;
+	}
+	
+	public void function addActionResult( required string action, required failure=false ) {
+		if(arguments.failure) {
+			arrayAppend(getSucessfulActions(), arguments.action);
+		} else {
+			arrayAppend(getSucessfulActions(), arguments.action);
+		}
+	}
+	
+	// Simple API Methods ===
+	public any function getEntity(required string entityName, string entityID="", boolean isReturnNewOnNotFound=false) {
+		var entityService = getService( "hibachiService" ).getServiceNameByEntityName( arguments.entityName );
+		
+		return entityService.invokeMethod("get#arguments.entityName#", {1=arguments.entityID, 2=arguments.isReturnNewOnNotFound});
+	}
+	
+	public any function getSmartList(required string entityName, struct data={}) {
+		var entityService = getService( "hibachiService" ).getServiceNameByEntityName( arguments.entityName );
+		
+		return entityService.invokeMethod("get#arguments.entityName#SmartList", {1=arguments.data});
+	}
+	
 	// ==================== SESSION / ACCOUNT SETUP ===========================
 	
 	public any function getSession() {
@@ -51,6 +96,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	}
 	
 	// ==================== REQUEST CACHING METHODS ===========================
+	
 	public boolean function hasValue(required string key) {
 		return structKeyExists(variables, arguments.key);
 	}
@@ -121,18 +167,5 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	public boolean function authenticateEntityProperty( required string crudType, required string entityName, required string propertyName ) {
 		return getService("hibachiAuthenticationService").authenticateEntityPropertyCrudByAccount( crudType=arguments.crudType, entityName=arguments.entityName, propertyName=arguments.propertyName, account=getAccount() );
 	}
-	
-	// =========================== onMissingMethod() ===================================
-	/*
-	public any function onMissingMethod() {
-		// getXXX() WHERE XXX is an entityName and the object gets stored in request cache
-		
-		// getXXXSmartList() WHERE XXX is an entityName and the smart list gets stored in request cache
-		
-		// setXXX() WHERE XXX is an entityName and the object will get stored in cache
-		
-		// xxx() WHERE XXX is an entity name and ('yyy') means get that yyy property, while ('yyy', 'simple') means set the property
-	}
-	*/
 	
 }
