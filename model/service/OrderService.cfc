@@ -733,6 +733,28 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
+	public any function processOrder_clear(required any order) {
+		
+		// Remove the cart from the session
+		getHibachiScope().getSession().removeOrder( arguments.order );
+		
+		var hasPaymentTransaction = false;
+		
+		// Loop over to make sure there are no payment transactions
+		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
+			if( arrayLen(arguments.order.getOrderPayments()[p].getPaymentTransactions()) ) {
+				hasPaymentTransaction = true;
+				break;
+			}	
+		}
+		
+		// As long as there is no payment transactions, then we can delete the order
+		if( !hasPaymentTransaction ) {
+			this.deleteOrder( arguments.order );
+		}
+	}
+	
+	
 	public any function processOrder_placeOrder(required any order, required struct data) {
 		// First we need to lock the session so that this order doesn't get placed twice.
 		lock scope="session" timeout="60" {

@@ -49,6 +49,19 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		getFW().setView("public:main.blank");
 	}
 	
+	// Update
+	public void function update( required struct rc ) {
+		var cart = getOrderService().saveOrder( rc.$.slatwall.cart(), arguments.rc );
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.update", cart.hasErrors() );
+	}
+	
+	// Clear
+	public void function clear( required struct rc ) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'clear');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.clear", cart.hasErrors() );
+	}
 	
 	// Add Order Item
 	public void function addOrderItem(required any rc) {
@@ -59,21 +72,36 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		param name="rc.fulfillmentMethodID" default="";
 		
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderItem');
-
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.addOrderItem", cart.hasErrors() );
+		
+		if(!cart.hasErrors()) {
+			product.clearProcessObject("addOrderItem");
+		}
 	}
 	
 	// Remove Order Item
 	public void function removeOrderItem(required any rc) {
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removeOrderItem');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.removeOrderItem", cart.hasErrors() );
 	}
 	
 	// Add Promotion Code
 	public void function addPromotionCode(required any rc) {
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addPromotionCode');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.addPromotionCode", cart.hasErrors() );
+		
+		if(!cart.hasErrors()) {
+			product.clearProcessObject("addPromotionCode");
+		}
 	}
 	
 	// Remove Promotion Code
 	public void function removePromotionCode() {
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removePromotionCode');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.removePromotionCode", cart.hasErrors() );
 	}
 }
