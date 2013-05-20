@@ -147,7 +147,7 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	// ===============  END: Custom Formatting Methods =====================
 
 	// ============== START: Overridden Implicet Getters ===================
-
+	
 	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
