@@ -104,7 +104,7 @@ Notes:
 									<td>#orderItem.getFormattedValue('extendedPriceAfterDiscount')#</td>
 									
 									<!--- Remove action to clear this line item from the cart --->
-									<td><a href="?slatAction=public:cart.removeItem&orderItemID=#orderItem.getOrderItemID()#" class="btn" title="Remove Item"><i class="icon-remove" /></a></td>
+									<td><a href="?slatAction=public:cart.removeOrderItem&orderItemID=#orderItem.getOrderItemID()#" class="btn" title="Remove Item"><i class="icon-remove" /></a></td>
 								</tr>
 							</cfloop>
 							
