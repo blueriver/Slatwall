@@ -65,18 +65,20 @@ Notes:
 		yesno				|	This is used by booleans and flags to create a radio group of Yes and No
 	--->
 	
+	
 	<cfsilent>
-		
 		<!--- If the value isn't explicitly defined, try to pull it out of the value object if one exists --->
 		<cfif not len(attributes.value) and isObject(attributes.valueObject) and len(attributes.valueObjectProperty) and attributes.valueObject.hasProperty(attributes.valueObjectProperty) and not isNull(attributes.valueObject.invokeMethod("get#attributes.valueObjectProperty#"))>
-			<cfset attributes.value = attributes.valueObject.invokeMethod("get#attributes.valueObjectProperty#") /> 
+			<cfset thistag.thisValue = attributes.valueObject.invokeMethod("get#attributes.valueObjectProperty#") />
+			<cfif isSimpleValue(thistag.thisValue)>
+				<cfset attributes.value = thistag.thisValue />
+			</cfif>
 		</cfif>
 		
 		<!--- If the field name isn't explicitly defined, but the valueObjectProperty is... then we can use that --->
 		<cfif not len(attributes.name) and len(attributes.valueObjectProperty)>
 			<cfset attributes.name = attributes.valueObjectProperty />
 		</cfif>
-		
 	</cfsilent>
 	
 	<cfswitch expression="#attributes.type#">

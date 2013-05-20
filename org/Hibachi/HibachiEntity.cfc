@@ -162,6 +162,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return false;
 	}
 	
+	// @hint allows for processObjects to be cleared out of the variables scope so that a new one will be added in
+	public void function clearProcessObject( required string context ) {
+		structDelete(variables.processObjects, arguments.context);
+	}
+	
 	// @hint public method to determine if this entity can be deleted
 	public boolean function isDeletable() {
 		return !getService("hibachiValidationService").validate(object=this, context="delete", setErrors=false).hasErrors();

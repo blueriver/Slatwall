@@ -93,7 +93,7 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public array function getRatingOptions() {
-		return [1,2,3,4,5];
+		return [5,4,3,2,1];
 	}
 
 	// ============  END:  Non-Persistent Property Methods =================

@@ -17,7 +17,7 @@
 			$.slatwall.setSite( $.slatwall.getService("siteService").getSiteByCMSSiteID( $.event('siteID') ) );
 			
 			// Call any public slatAction methods that are found
-			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "public") {
+			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") != "frontend") {
 				
 				// This allows for multiple actions to be called
 				var actionsArray = listToArray( $.event('slatAction') );
