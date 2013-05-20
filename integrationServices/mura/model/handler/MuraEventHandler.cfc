@@ -95,7 +95,7 @@
 		public void function onRenderStart( required any $ ) {
 			
 			// Check for any slatActions that might have been passed in and render that page as the first
-			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "public") {
+			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "frontend") {
 				
 				$.content('body', $.content('body') & $.slatwall.doAction($.event('slatAction')));	
 				

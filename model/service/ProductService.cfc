@@ -228,6 +228,11 @@ component extends="HibachiService" accessors="true" {
 			arguments.processObject.getNewProductReview().setActiveFlag(0);
 		}
 		
+		// Check to see if there is a current user logged in, if so attach to this review
+		if(getHibachiScope().getLoggedInFlag()) {
+			arguments.processObject.getNewProductReview().setAccount( getHibachiScope().getAccount() );
+		}
+		
 		return arguments.product;
 	}
 	

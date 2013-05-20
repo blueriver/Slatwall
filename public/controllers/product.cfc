@@ -51,9 +51,9 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 
 	// Add Product Review
 	public void function addProductReview(required any rc) {
-		param name="rc.product.productID" default="";
+		param name="rc.newProductReview.product.productID" default="";
 		
-		var product = getProductService().getProduct( rc.product.productID );
+		var product = getProductService().getProduct( rc.newProductReview.product.productID );
 		
 		if( !isNull(product) ) {
 			product = getProductService().processProduct( product, arguments.rc, 'addProductReview');
